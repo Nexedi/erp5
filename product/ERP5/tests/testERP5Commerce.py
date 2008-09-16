@@ -27,17 +27,10 @@
 ##############################################################################
 
 import os, sys
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
-os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-from Products.CMFCore.permissions import *
 from zLOG import LOG
 
 SESSION_ID = "12345678"
@@ -279,12 +272,9 @@ class TestCommerce(ERP5TypeTestCase):
                       len(portal.SaleOrder_getShoppingCartItemList()))
     
 
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(TestCommerce))
-        return suite
+import unittest
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestCommerce))
+  return suite
 
