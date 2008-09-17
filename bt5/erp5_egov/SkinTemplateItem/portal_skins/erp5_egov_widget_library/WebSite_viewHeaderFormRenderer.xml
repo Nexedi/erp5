@@ -41,7 +41,7 @@
 
 <div>\n
   <a name="top"></a>\n
-  <div style="background-image: url(img/erp5-website-logo.png); background-repeat:no-repeat; height: 40px;padding-top: 20px; padding-left: 130px;">\n
+  <div style="background-image: url(img/website-logo.png); background-repeat:no-repeat; height: 40px;padding-top: 20px; padding-left: 130px;">\n
     <ul class="onleft">\n
       <li><tal:block i18n:translate="" i18n:domain="ui">Application Number</tal:block> : <span class="value"><tal:block tal:replace="here/getId"></tal:block></span></li>\n
       <li><tal:block i18n:translate="" i18n:domain="ui">Status</tal:block> : <span class="value" tal:attributes="class python:\'%s_state\' % context.getValidationState()"><tal:block tal:replace="here/getTranslatedValidationStateTitle"/></span></li>\n

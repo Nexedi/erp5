@@ -123,7 +123,6 @@ if len(web_page_list) == 0:\n
 if len(web_page_list) == 0:\n
   name_without_web_site = \'-\'.join(name.split(\'-\')[:-1])\n
   if name_without_web_site:\n
-    name_without_web_site +=  \'%\'\n
     # Search again without the website\n
     web_page_list = portal_catalog(reference=name_without_web_site,\n
                                    portal_type=valid_portal_type_list,\n
@@ -136,7 +135,6 @@ if len(web_page_list) == 0:\n
 if len(web_page_list) == 0:\n
   name_without_portal_type = \'-\'.join(name.split(\'-\')[1:])\n
   if name_without_portal_type:\n
-    name_without_portal_type =  \'%\'+name_without_portal_type\n
     # Search again without the portal_type\n
     web_page_list = portal_catalog(reference=name_without_portal_type,\n
                                    portal_type=valid_portal_type_list,\n
@@ -149,7 +147,6 @@ if len(web_page_list) == 0:\n
 if len(web_page_list) == 0:\n
   name_without_portal_type_and_web_site = \'-\'.join(name.split(\'-\')[1:-1])\n
   if name_without_portal_type_and_web_site:\n
-    name_without_portal_type_and_web_site =  \'%\'+name_without_portal_type_and_web_site+\'%\'\n
     # Search again without the portal_type and web_site\n
     web_page_list = portal_catalog(reference=name_without_portal_type_and_web_site,\n
                                    portal_type=valid_portal_type_list,\n
@@ -162,7 +159,6 @@ if len(web_page_list) == 0:\n
 if len(web_page_list) == 0:\n
   name_without_web_site_and_view = \'-\'.join(name.split(\'-\')[:-2])\n
   if name_without_web_site_and_view:\n
-    name_without_web_site_and_view +=  \'%\'\n
     # Search again without the portal_type and view\n
     web_page_list = portal_catalog(reference=name_without_web_site_and_view,\n
                                    portal_type=valid_portal_type_list,\n
@@ -246,7 +242,6 @@ return web_page\n
                             <string>len</string>
                             <string>_getitem_</string>
                             <string>name_without_web_site</string>
-                            <string>_inplacevar_</string>
                             <string>name_without_portal_type</string>
                             <string>name_without_portal_type_and_web_site</string>
                             <string>name_without_web_site_and_view</string>
