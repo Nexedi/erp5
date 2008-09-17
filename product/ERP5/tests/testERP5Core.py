@@ -172,8 +172,6 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     """Test we can view tools."""
     for tool in ('portal_categories',
                  'portal_templates',
-                 'portal_orders',
-                 'portal_deliveries',
                  'portal_rules',
                  'portal_alarms',):
       response = self.publish('%s/%s/view' % (self.portal_id, tool), self.auth)
