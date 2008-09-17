@@ -45,6 +45,9 @@ class ParentExplanationMovementGroup(MovementGroup):
     property_dict['parent_explanation_value'] = parent_explanation_value
     return property_dict
 
-  def test(self, object, property_dict, property_list=None, **kw):
-    return object.getParentExplanationValue() == \
-           property_dict['parent_explanation_value']
+  def test(self, object, property_dict, **kw):
+    if object.getParentExplanationValue() == \
+       property_dict['parent_explanation_value']:
+      return True, property_dict
+    else:
+      return False, property_dict

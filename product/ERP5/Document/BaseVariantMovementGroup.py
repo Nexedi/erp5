@@ -44,13 +44,6 @@ class BaseVariantMovementGroup(MovementGroup):
     property_dict['_base_category_list'] = category_list
     return property_dict
 
-  def test(self, object, property_dict):
-    category_list = object.getVariationBaseCategoryList()
-    if category_list is None:
-      category_list = []
-    category_list.sort()
-    return property_dict['_base_category_list'] == category_list
-
-  def testToUpdate(self, object, property_dict, **kw):
+  def test(self, object, property_dict, **kw):
     # This movement group does not affect updating.
     return True, {}

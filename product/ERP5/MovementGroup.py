@@ -132,7 +132,7 @@ class MovementGroupNode:
     else:
       return movement
 
-  def testToUpdate(self, movement, divergence_list):
+  def test(self, movement, divergence_list):
     # Try to check if movement is updatable or not.
     #
     # 1. if Divergence has no scope: update anyway.
@@ -155,7 +155,7 @@ class MovementGroupNode:
           if not len(related_divergence_list):
             return True, {}
           property_list = [x.tested_property for x in related_divergence_list]
-      return self._movement_group.testToUpdate(movement, self._property_dict,
+      return self._movement_group.test(movement, self._property_dict,
                                                property_list=property_list)
     else:
       return True, {}

@@ -41,7 +41,8 @@ class CategoryMovementGroup(PropertyMovementGroup):
   def _getPropertyDict(self, movement, **kw):
     property_dict = {}
     for prop in self.getTestedPropertyList():
-      property_dict['%s_list' % prop] = movement.getPropertyList(prop, None)
+      property_dict['%s_list' % prop] = sorted(
+        movement.getPropertyList(prop, None))
     return property_dict
 
   def test(self, object, property_dict, property_list=None, **kw):
@@ -51,7 +52,7 @@ class CategoryMovementGroup(PropertyMovementGroup):
     else:
       target_property_list = self.getTestedPropertyList()
     for prop in target_property_list:
-      if sorted(property_dict['%s_list' % prop]) != \
+      if property_dict['%s_list' % prop] != \
              sorted(object.getPropertyList(prop, None)):
-        return False
-    return True
+        return False, property_dict
+    return True, property_dict

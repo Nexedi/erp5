@@ -52,5 +52,5 @@ class PropertyMovementGroup(MovementGroup):
       target_property_list = self.getTestedPropertyList()
     for prop in target_property_list:
       if property_dict[prop] != object.getProperty(prop, None):
-        return False
-    return True
+        return False, property_dict
+    return True, property_dict

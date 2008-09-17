@@ -47,7 +47,7 @@ class CausalityAssignmentMovementGroup(MovementGroup):
       self._addCausalityToEdit(movement, property_dict)
     return [[movement_list, property_dict]]
 
-  def testToUpdate(self, movement, property_dict, **kw):
+  def test(self, movement, property_dict, **kw):
     # We can always update.
     return True, property_dict
 

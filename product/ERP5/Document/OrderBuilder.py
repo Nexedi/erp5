@@ -235,12 +235,12 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     my_root_group.append(movement_list)
     return my_root_group
 
-  def _testToUpdate(self, instance, movement_group_list,
+  def _test(self, instance, movement_group_list,
                     divergence_list):
     result = True
     new_property_dict = {}
     for movement_group in movement_group_list:
-      tmp_result, tmp_property_dict = movement_group.testToUpdate(
+      tmp_result, tmp_property_dict = movement_group.test(
         instance, divergence_list)
       if tmp_result == False:
         result = tmp_result
@@ -266,7 +266,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         instance_list.sort(lambda a,b:cmp(b.getId()==original_id,
                                           a.getId()==original_id))
       for instance_to_update in instance_list:
-        result, property_dict = self._testToUpdate(
+        result, property_dict = self._test(
           instance_to_update, movement_group_list, divergence_list)
         if result == True:
           instance = instance_to_update

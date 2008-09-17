@@ -44,7 +44,7 @@ class OrderMovementGroup(MovementGroup):
     property_dict['causality'] = order_relative_url
     return property_dict
 
-  def testToUpdate(self, movement, property_dict, **kw):
+  def test(self, movement, property_dict, **kw):
     if movement.getCausality() == property_dict['causality']:
       return True, property_dict
     else:

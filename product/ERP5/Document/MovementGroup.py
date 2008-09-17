@@ -54,6 +54,10 @@ class MovementGroup(XMLObject):
     # This method should be defined in sub classes.
     raise NotImplementedError
 
+  def test(self, object, property_dict, **kw):
+    # This method should be defined in sub classes.
+    raise NotImplementedError
+
   def _separate(self, movement_list):
     # By default, we separate movements by _getPropertyDict() values.
     # You can override this method in each MovementGroup class.
@@ -75,12 +79,3 @@ class MovementGroup(XMLObject):
     return sorted([[sorted(x[0], lambda a,b:cmp(a.getId(), b.getId())), x[1]] \
                    for x in self._separate(movement_list)],
                   lambda a,b: cmp(a[0][0].getId(), b[0][0].getId()))
-
-  def test(self, object, property_dict, **kw):
-    raise NotImplementedError
-
-  def testToUpdate(self, object, property_dict, **kw):
-    if self.test(object, property_dict, **kw):
-      return True, property_dict
-    else:
-      return False, property_dict

@@ -65,17 +65,6 @@ class QuantitySignMovementGroup(MovementGroup):
         ]
 
   def test(self, object, property_dict, **kw):
-    quantity = object.getQuantity()
-    sign1 = property_dict['quantity_sign']
-    sign2 = cmp(quantity, 0)
-    if sign2 == 0:
-      return 1
-    if sign1 == 0:
-      property_dict['quantity_sign'] = sign2
-      return 1
-    return sign1 == sign2
-
-  def testToUpdate(self, object, property_dict, **kw):
     if object.getQuantitySign() == property_dict['quantity_sign']:
       return True, property_dict
     else:

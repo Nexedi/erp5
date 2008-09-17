@@ -49,4 +49,7 @@ class VariantMovementGroup(MovementGroup):
     if category_list is None:
       category_list = []
     category_list.sort()
-    return property_dict['variation_category_list'] == category_list
+    if property_dict['variation_category_list'] == category_list:
+      return True, property_dict
+    else:
+      return False, property_dict

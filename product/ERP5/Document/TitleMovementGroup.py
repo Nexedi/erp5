@@ -41,9 +41,6 @@ class TitleMovementGroup(MovementGroup):
     return property_dict
 
   def test(self, object, property_dict, **kw):
-    return self._getTitle(object) == property_dict['title']
-
-  def testToUpdate(self, object, property_dict, **kw):
     # If title is different, we want to update existing object instead
     # of creating a new one.
     return True, property_dict

@@ -38,7 +38,7 @@ class RequirementMovementGroup(MovementGroup):
   def _getPropertyDict(self, movement, **kw):
     return {'requirement':self._getRequirementList(movement)}
 
-  def testToUpdate(self, movement, property_dict, **kw):
+  def test(self, movement, property_dict, **kw):
     # We can always update
     return True, property_dict
 

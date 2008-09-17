@@ -44,7 +44,7 @@ class RootAppliedRuleCausalityMovementGroup(MovementGroup):
     property_dict['root_causality_value_list'] = [root_causality_value]
     return property_dict
 
-  def testToUpdate(self, movement, property_dict, **kw):
+  def test(self, movement, property_dict, **kw):
     # We can always update
     return True, property_dict
 
