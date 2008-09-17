@@ -153,17 +153,12 @@ for section in section_list:\n
         results =  context.DocumentationHelper_getDocumentationSectionListParams(class_name,\n
                            child_uri.uri_list)\n
         result+=results[0]\n
-        class_methods_list+=results[1]\n
-        property_sheets_list+=results[2]\n
         if root_class_name == "ERP5SiteDocumentationHelper":\n
           for sub_child_uri in child_uri.getSectionList():\n
             class_name = sub_child_uri.getClassName()\n
             results=context.DocumentationHelper_getDocumentationSectionListParams(class_name,\n
                             sub_child_uri.uri_list)\n
             result+=results[0]\n
-            class_methods_list+=results[1]\n
-            property_sheets_list+=results[2]\n
-\n
     elif portal_skin == "ODT" and root_class_name == "ERP5SiteDocumentationHelper":\n
       for child_uri in uri_object.getSectionList():\n
         class_name = child_uri.getClassName()\n
@@ -182,6 +177,18 @@ for section in section_list:\n
         result+=results[0]\n
         class_methods_list+=results[1]\n
         property_sheets_list+=results[2]\n
+        if root_class_name == "ERP5SiteDocumentationHelper" and class_name==\'DCWorkflowDocumentationHelper\':\n
+          for sub_child_uri in child_uri.uri_list:\n
+            sub_child_object = context.getDocumentationHelper(class_name, sub_child_uri)\n
+            for section in sub_child_object.getSectionList(): \n
+              if section.class_name == \'DCWorkflowScriptDocumentationHelper\':\n
+                class_name = section.class_name\n
+                results=context.DocumentationHelper_getDocumentationSectionListParams(class_name,\n
+                                section.uri_list, "%s:" % sub_child_object.getId())\n
+                result+=results[0]\n
+                class_methods_list+=results[1]\n
+                property_sheets_list+=results[2]\n
+\n
 if portal_skin is not None and portal_skin=="ODT":\n
   result.append(\n
     ReportSection(\n
@@ -288,6 +295,7 @@ return result\n
                             <string>sub_child_uri</string>
                             <string>getattr</string>
                             <string>child_uri_title</string>
+                            <string>sub_child_object</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>x</string>

@@ -74,6 +74,10 @@ REQUEST.set(\'is_documentation_report\', True)\n
 sub_result = []\n
 propertysheet_list = []\n
 class_method_list = []\n
+if class_name == \'DCWorkflowScriptDocumentationHelper\':\n
+  level=6\n
+else:\n
+  level=5\n
 for uri in uri_list:\n
     uri_object = context.getDocumentationHelper(class_name, uri)\n
     if class_name in [\'PortalTypeDocumentationHelper\',\'PortalTypeInstanceDocumentationHelper\']:\n
@@ -85,8 +89,8 @@ for uri in uri_list:\n
     sub_result.append(\n
       ReportSection(\n
         path=context.getPortalObject().portal_classes.getRelativeUrl(),\n
-        level=5,\n
-        title=getTitle(uri.split(\'.\')[-1]),\n
+        level=level,\n
+        title="%s%s" % (prefix_title, getTitle(uri.split(\'.\')[-1])),\n
         form_id=\'\')\n
     )\n
     sub_result.append(\n
@@ -100,7 +104,7 @@ for uri in uri_list:\n
     sub_result.append(\n
       ReportSection(\n
         path=context.getPortalObject().portal_classes.getRelativeUrl(),\n
-        level=4,\n
+        level=level,\n
         method_id=\'getDocumentationHelper\',\n
         form_id=\'%s_view\' % class_name,\n
         param_list=[class_name,\n
@@ -124,7 +128,7 @@ return (sub_result,class_method_list,propertysheet_list)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>class_name=\'\', uri_list=[]</string> </value>
+            <value> <string>class_name=\'\', uri_list=[], prefix_title=\'\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -144,7 +148,7 @@ return (sub_result,class_method_list,propertysheet_list)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -152,6 +156,7 @@ return (sub_result,class_method_list,propertysheet_list)\n
                           <tuple>
                             <string>class_name</string>
                             <string>uri_list</string>
+                            <string>prefix_title</string>
                             <string>getTitle</string>
                             <string>Products.ERP5Form.Report</string>
                             <string>ReportSection</string>
@@ -162,6 +167,7 @@ return (sub_result,class_method_list,propertysheet_list)\n
                             <string>sub_result</string>
                             <string>propertysheet_list</string>
                             <string>class_method_list</string>
+                            <string>level</string>
                             <string>_getiter_</string>
                             <string>uri</string>
                             <string>uri_object</string>
@@ -183,6 +189,7 @@ return (sub_result,class_method_list,propertysheet_list)\n
               <tuple>
                 <string></string>
                 <list/>
+                <string></string>
               </tuple>
             </value>
         </item>
