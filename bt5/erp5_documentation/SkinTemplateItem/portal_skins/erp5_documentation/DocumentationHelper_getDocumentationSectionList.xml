@@ -196,7 +196,7 @@ if portal_skin is not None and portal_skin=="ODT":\n
       title="Appendix",\n
       form_id=\'\')\n
   )\n
-  classmethod = dict().fromkeys([x.split(\'.\')[-1] for x in class_methods_list]).keys()\n
+  classmethod = dict().fromkeys([x for x in class_methods_list]).keys()\n
   propertysheet = dict().fromkeys([x.split(\'/\')[-1].split(\'.\')[0] for x in property_sheets_list]).keys()\n
   result.append(\n
     ReportSection(\n
