@@ -185,7 +185,7 @@ for section in section_list:\n
 if portal_skin is not None and portal_skin=="ODT":\n
   result.append(\n
     ReportSection(\n
-      level=3,\n
+      level=2,\n
       title="Appendix",\n
       form_id=\'\')\n
   )\n
@@ -193,7 +193,7 @@ if portal_skin is not None and portal_skin=="ODT":\n
   propertysheet = dict().fromkeys([x.split(\'/\')[-1].split(\'.\')[0] for x in property_sheets_list]).keys()\n
   result.append(\n
     ReportSection(\n
-      level=4,\n
+      level=3,\n
       title="Class Methods",\n
       form_id=\'\')\n
   )\n
@@ -206,7 +206,7 @@ if portal_skin is not None and portal_skin=="ODT":\n
   )\n
   result.append(\n
     ReportSection(\n
-      level=4,\n
+      level=3,\n
       title="Property Sheets",\n
       form_id=\'\')\n
   )\n
