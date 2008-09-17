@@ -338,7 +338,7 @@ AAA=</string> </value>
               <text:p text:style-name="P1">\n
                 <office:include_img tal:condition="python: image_path and image_width and image_height"\n
                                     maxwidth="6cm"\n
-                                    maxheigth="2cm"\n
+                                    maxheight="2cm"\n
                                     tal:attributes="path image_path;\n
                                     draw:style-name string:fr1;\n
                                     draw:z-index string:0;\n
