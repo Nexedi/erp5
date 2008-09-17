@@ -301,9 +301,8 @@ class DeliveryBuilder(OrderBuilder):
                                    [s_m]
 
     for s_m_list_per_movement in delivery_dict.values():
-      total_quantity = reduce(lambda x, y: \
-                              x + quantity_dict.get(y, y.getQuantity()),
-                              s_m_list_per_movement, 0)
+      total_quantity = sum([quantity_dict.get(s_m, s_m.getQuantity()) \
+                            for s_m in s_m_list_per_movement])
       if total_quantity != 0.0:
         for s_m in s_m_list_per_movement:
           delivery_ratio = quantity_dict.get(s_m, s_m.getQuantity()) \
