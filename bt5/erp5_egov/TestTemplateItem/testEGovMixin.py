@@ -32,6 +32,9 @@ from AccessControl.SecurityManagement import getSecurityManager
 from Products.ERP5Type.tests.utils import DummyMailHost
 from AccessControl import Unauthorized
 from Testing import ZopeTestCase
+from Products.ERP5Type.tests.Sequence import Step, Sequence, SequenceList
+from zLOG import LOG
+import random
 
 class TestEGovMixin(SecurityTestCase):
   """Usefull methods for eGov Unit Tests."""
@@ -65,6 +68,44 @@ class TestEGovMixin(SecurityTestCase):
   ADD = 'Add portal content'
   MODIFY = 'Modify portal content'
   DELETE = 'Delete objects'
+
+
+  # use modified method to render a more verbose output
+  def play(self, context, sequence=None, sequence_number=0, quiet=0):
+    if sequence is None:
+      for idx, step in enumerate(self._step_list):
+        step.play(context, sequence=self, quiet=quiet)
+        # commit transaction after each step
+        get_transaction().commit()
+  Sequence.play = play
+
+  def play(self, context, sequence=None, quiet=0):
+    method_name = 'step' + self._method_name
+    method = getattr(context,method_name)
+    # We can in same cases replay many times the same step,
+    # or not playing it at all
+    nb_replay = random.randrange(0,self._max_replay+1)
+    if self._required:
+      if nb_replay==0:
+        nb_replay=1
+    for i in range(0,nb_replay):
+      if not quiet:
+        ZopeTestCase._print('\n  Playing step %s' % self._method_name)
+        ZopeTestCase._print('\n    -> %s' % method.__doc__)
+        LOG('Step.play', 0, '  Playing step %s' % self._method_name)
+        LOG('Step.play', 0, '    -> %s' % method.__doc__)
+      method(sequence=sequence)
+  Step.play = play
+
+  def playSequence(self, sequence_string, quiet=0) :
+    ZopeTestCase._print('\n\n\n---------------------------------------------------------------------')
+    ZopeTestCase._print('\nStarting New Sequence %s :' % self._TestCase__testMethodName)
+    ZopeTestCase._print('\n * %s... \n' % self._TestCase__testMethodDoc)
+    LOG('Sequence.play', 0, 'Starting New Sequence %s :' % self._TestCase__testMethodName)
+    LOG('Sequence.play', 0, ' * %s... \n' % self._TestCase__testMethodDoc)
+    sequence_list = SequenceList()
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
 
   def getBusinessTemplateList(self):
     """return list of business templates to be installed. """
