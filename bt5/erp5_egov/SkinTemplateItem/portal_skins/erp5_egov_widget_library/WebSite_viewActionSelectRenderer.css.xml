@@ -54,7 +54,7 @@
   width: 122px;\n
 /*  margin-left:680px;\n
   margin-top: 10px;*/\n
-  margin-top: -10px;\n
+  margin: 5px 20px 0 0;\n
   float: right;\n
 }\n
 \n

@@ -264,8 +264,8 @@ form#main_form div#wrapper_header fieldset.widget hr{\n
 \n
 form#main_form div#wrapper_header fieldset.widget ul.onleft {\n
   list-style: none;\n
-  padding: 0;\n
-  margin: 0;\n
+  padding: 5px;\n
+  margin: 20px 0 0 0;\n
   margin-left: 15px;\n
   /*background: white;*/\n
   /*background: #fff url(erp5-website-field.png) top repeat-x;*/\n
@@ -383,6 +383,15 @@ ul.onleft li span {\n
   float:right;\n
   text-align:right;\n
 } \n
+\n
+form#main_form span.onright{\n
+  padding: 22px 1px 22px 1px;\n
+}\n
+\n
+#status{\n
+  float: right; \n
+  width: 20%;\n
+}\n
 \n
 \n
 form#main_form div .onright a.home{\n
@@ -551,12 +560,12 @@ div.inline_label label{\n
   float:none !important;\n
 }\n
 \n
-.document .actions,\n
-.adminSection{\n
+.document .actions{\n
   margin-left: auto;\n
   margin-right: auto;\n
   width: 802px !important;\n
   text-align: left;\n
+  margin-top: 20px;\n
 }\n
 \n
 \n

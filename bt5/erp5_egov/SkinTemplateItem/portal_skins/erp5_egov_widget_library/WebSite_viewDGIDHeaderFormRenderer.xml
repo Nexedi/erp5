@@ -41,7 +41,7 @@
 
 <div>\n
   <a name="top"></a>\n
-  <div style="background-image: url(img/flag_of_senegal.png); background-repeat:no-repeat; height: 40px;padding-top: 20px; padding-left: 95px; margin-left: 5px;">\n
+  <div style="background-image: url(img/flag_of_senegal.png); background-repeat:no-repeat; height: 60px; padding-left: 95px; margin-left: 5px;">\n
     <ul class="onleft">\n
       <li><tal:block i18n:translate="" i18n:domain="ui">Application Number</tal:block> : <span class="value"><tal:block tal:replace="here/getId"></tal:block></span></li>\n
       <li><tal:block i18n:translate="" i18n:domain="ui">Status</tal:block> : <span class="value" tal:attributes="class python:\'%s_state\' % context.getValidationState()"><tal:block tal:replace="here/getTranslatedValidationStateTitle"/></span></li>\n
@@ -57,7 +57,12 @@
       <a class="help" href="EGov_helpWithContext"  tal:attributes="href python:\'help/\' + here.EGov_helpWithContext()" onclick="window.open(this.href, \'safi_help\',\'width=800,height=500,menubar=yes,toolbar=yes,scrollbars=yes,resizable=yes\'); return false;" i18n:translate="" i18n:domain="ui">Help</a>\n
     </span>\n
     <div class="clear">\n
-    <div>  \n
+    </div>  \n
+  </div>\n
+</div>\n
+<div class="adminSection" tal:define="actions request/actions">\n
+  <tal:block metal:use-macro="here/context_box_render/macros/action"/>\n
+  <div class="clear">\n
   </div>\n
 </div>\n
 

@@ -42,7 +42,7 @@
 <div>\n
   <a name="top"></a>\n
 \n
-  <div style="background-image: url(img/flag_of_senegal.png); background-repeat:no-repeat; height: 40px;padding-top: 20px; padding-left: 95px; margin-left: 5px;">\n
+  <div style="background-image: url(img/flag_of_senegal.png); background-repeat:no-repeat; height: 60px; padding-left: 95px; margin-left: 5px;">\n
     <span class="onright">\n
       <tal:block tal:condition="here/portal_membership/isAnonymousUser">\n
         <a class="login" href="EGov_viewLoginForm" i18n:translate="" i18n:domain="ui">Login</a>\n

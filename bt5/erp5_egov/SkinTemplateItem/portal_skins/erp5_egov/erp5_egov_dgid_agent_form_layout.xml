@@ -92,7 +92,6 @@
                     <value>
                       <list>
                         <string>header_section</string>
-                        <string>action_select</string>
                       </list>
                     </value>
                 </item>
@@ -110,6 +109,7 @@
                         <string>search_action</string>
                         <string>applicable_layout</string>
                         <string>about_box</string>
+                        <string>action_select</string>
                       </list>
                     </value>
                 </item>
