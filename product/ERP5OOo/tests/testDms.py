@@ -618,7 +618,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def test_Base_getConversionFormatItemList(self):
     # tests Base_getConversionFormatItemList script (requires oood)
-    self.assertTrue(('Text CSV', 'csv') in
+    self.assertTrue(('Microsoft Excel 97/2000/XP', 'xls') in
         self.portal.Base_getConversionFormatItemList(base_content_type=
                   'application/vnd.oasis.opendocument.spreadsheet'))
     self.assertTrue(('DocBook', 'docbook.xml') in
@@ -738,7 +738,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals('I use reference to look up TEST\n',
                       document._convertToText())
     self.assert_('I use reference to look up TEST' in
-                 document._convertToHTML())
+                 document._convertToHTML().replace('&nbsp;', ' '))
     self.assert_('I use reference to look up TEST' in
                  document.SearchableText())
 
