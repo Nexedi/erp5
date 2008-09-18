@@ -59,8 +59,8 @@ Description:\n
           <p><tal:block i18n:translate="" i18n:domain="ui">Password</tal:block></p>\n
         </div>\n
         <div class="fields">\n
-          <p><input type="text" size="20" id="__ac_name" name="__ac_name"/></p>\n
-          <p><input type="password" size="20" id="password" name="__ac_password"/></p>\n
+          <p><input type="text" size="20" id="__ac_name" name="__ac_name" autocomplete="off"/></p>\n
+          <p><input type="password" size="20" id="password" name="__ac_password" autocomplete="off"/></p>\n
         </div>\n
       </div>\n
       <div class="clear"></div>\n
