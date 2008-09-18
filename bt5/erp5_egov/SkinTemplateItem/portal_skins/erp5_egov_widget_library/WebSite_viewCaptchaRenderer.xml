@@ -81,22 +81,19 @@ Description:\n
              tal:attributes="value request/actions" />\n
           <input type="hidden" name="current_action" value="" \n
              tal:attributes="value request/current_action" />-->\n
-    <div class="onright">\n
+    <div>\n
         <div class="erp5_captcha">\n
           <img src="Captcha_getCaptchaFile?display=thumbnail&amp;format=&amp;resolution=75" alt="captcha"/>\n
           <input class="captcha_text" type="text" size="6" name="captcha_text"/>\n
         </div>\n
-        <button class="nextStep" title="Refresh"\n
-          OnClick="javascript:window.history.go(0)" \n
-          i18n:attributes="title" i18n:domain="ui">\n
-          <span class="image"></span>\n
-          <span class="description"> <tal:block i18n:translate="" i18n:domain="ui">Refresh</tal:block></span>\n
-        </button>\n
-        <button class="nextStep" title="Next Step >>" name="EGov_register:method"  \n
-          i18n:attributes="title" i18n:domain="ui">\n
-          <span class="image"></span>\n
-          <span class="description"> <tal:block i18n:translate="" i18n:domain="ui">Next Step</tal:block> >></span>\n
-        </button>\n
+        <a class="onright" href="" OnClick="javascript:window.history.go(0)">\n
+          <img src="img/reload.png" alt="Refresh"/>\n
+        </a>\n
+      <div class="clear">\n
+      </div>\n
+        <div class="input onright">\n
+          <input class="hidden_label inline next_step" type="submit" tal:attributes="value python:context.getPortalObject().Base_translateString(\'Next Step >>\')" value="Next Step >>" name="EGov_register:method" src=""/>\n
+        </div>\n
       <div class="clear">\n
       </div>\n
     </div>\n

@@ -59,34 +59,19 @@
           CAPTCHA       python: 60;\n
 ">\n
 \n
-\n
-div.next_step_action button.nextStep {\n
-  height: <tal:block  replace="python: (\'%s%s\') % (HEIGHT_button, unit)"/>;\n
-  width: 11em;\n
-  background: #FF6633;\n
-  text-decoration: underline;\n
-  /*color: #637dc1;*/\n
-  color: white;\n
-  font-weight: bold;\n
-  font-size: 200%;\n
-  border: 1px solid black;\n
-  vertical-align: middle;\n
-  text-align: center;\n
-  display:inline;\n
-}\n
-\n
 div.next_step_action{  \n
   height: <tal:block  replace="python: (\'%s%s\') % (HEIGHT_button+MARGIN+(here.portal_membership.isAnonymousUser() and CAPTCHA or 0), unit)"/>;\n
   z-index:300;\n
 }\n
 \n
 div.next_step_action .erp5_captcha{\n
-  margin-bottom: 10px;\n
+  float:right;\n
+  margin-right:4em;\n
 }\n
 \n
 div.next_step_action img,\n
 div.next_step_action .captcha_text{\n
-  font-size: 250%;\n
+  font-size: 260%;\n
   vertical-align:middle;\n
 }\n
 \n

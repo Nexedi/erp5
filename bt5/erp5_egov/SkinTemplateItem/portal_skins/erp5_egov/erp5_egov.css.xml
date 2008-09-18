@@ -238,8 +238,8 @@ div#main_content input, textarea {\n
   padding: 1px;\n
 }\n
 \n
-div#main_content input.button, input[type="submit"] {\n
-  /* XXX Is this case happend in current web implementation ? */\n
+div#main_content input.button, input[type="submit"],\n
+button.nextStep{\n
   background: #fff url(erp5-website-button.png) bottom repeat-x;\n
 }\n
 \n

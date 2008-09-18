@@ -618,19 +618,27 @@ fieldset.register_informations{\n
   margin:1em;\n
 }\n
 \n
-.field .input .big_button{\n
+.field .input .big_button,\n
+.field .input .next_step{\n
   float:left;\n
   height: 2em;\n
-  width: 20%;\n
   background:#FF6633;\n
   text-decoration: underline;\n
   color:white;\n
   font-size:2em;\n
-  margin-left: 20%;\n
-  margin-top: 2em;\n
   border: 1px solid black;\n
   font-weight:bold;\n
   cursor:pointer;\n
+}\n
+\n
+.field .input .next_step{\n
+  margin: 1em;\n
+}\n
+\n
+.field .input .big_button{\n
+  width: 20%;\n
+  margin-left: 20%;\n
+  margin-top: 2em;\n
 }\n
 \n
 .white_background .big_button .input{\n

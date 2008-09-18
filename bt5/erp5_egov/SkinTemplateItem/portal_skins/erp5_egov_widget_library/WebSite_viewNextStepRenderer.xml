@@ -67,11 +67,9 @@
 \n
   </span>\n
   <div class="onright">\n
-    <button type="submit" class="nextStep" title="Next Step >>" name="EGov_Base_editAndNextStep:method"  \n
-      i18n:attributes="title" i18n:domain="ui">\n
-      <span class="image"></span>\n
-      <span class="description"> <tal:block i18n:translate="" i18n:domain="ui">Next Step</tal:block>>></span>\n
-    </button>\n
+    <div class="input">\n
+      <input class="hidden_label inline next_step" type="submit" tal:attributes="value python:context.getPortalObject().Base_translateString(\'Next Step >>\')" value="Next Step >>" name="EGov_Base_editAndNextStep:method" src=""/>\n
+    </div>\n
   </div>\n
   <div class="clear">\n
   </div>\n
