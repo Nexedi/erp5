@@ -76,5 +76,6 @@ Telephone | change_function
 Telephone | view
 Title Movement Group | view
 Variant Movement Group | view
+Variation Property Movement Group | view
 portal_actions | jump_query
 portal_actions | post_query

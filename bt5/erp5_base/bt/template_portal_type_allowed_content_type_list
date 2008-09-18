@@ -17,6 +17,7 @@ Delivery Builder | Root Applied Rule Causality Movement Group
 Delivery Builder | Split Movement Group
 Delivery Builder | Title Movement Group
 Delivery Builder | Variant Movement Group
+Delivery Builder | Variation Property Movement Group
 Delivery Tool | Delivery Builder
 Notification Message Module | Notification Message
 Notification Message | Role Definition
@@ -34,6 +35,7 @@ Order Builder | Root Applied Rule Causality Movement Group
 Order Builder | Split Movement Group
 Order Builder | Title Movement Group
 Order Builder | Variant Movement Group
+Order Builder | Variation Property Movement Group
 Order Tool | Order Builder
 Organisation Module | Organisation
 Organisation | Address
