@@ -42,7 +42,7 @@
 <div>\n
   <a name="top"></a>\n
 \n
-  <div style="background-image: url(img/website-logo.png); background-repeat:no-repeat; height: 40px;padding-top: 20px; padding-left: 130px;">\n
+  <div style="background-image: url(website-logo.png); background-repeat:no-repeat; height: 40px;padding-top: 20px; padding-left: 130px;">\n
     <span class="onright">\n
       <tal:block tal:condition="here/portal_membership/isAnonymousUser">\n
         <a class="login" tal:attributes="href python:\'%s/EGov_viewLoginForm\' % context.getWebSiteValue().absolute_url()"\n
