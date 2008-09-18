@@ -175,7 +175,7 @@ class SQLCache(BaseCache):
         ## we found results
         result = result[0]
         decoded_result = pickle.loads(base64.decodestring(result[0]))
-        self.markCacheHit()
+        #self.markCacheHit()
         cache_entry = CacheEntry(decoded_result, result[1], result[2])
         return cache_entry
       else:
@@ -197,7 +197,7 @@ class SQLCache(BaseCache):
     stored_at = int(time.time())
     sql_query = self.insert_key_sql %(self._db_cache_table_name, cache_id, value, scope, stored_at, cache_duration, calculation_time)
     self.execSQLQuery(sql_query)
-    self.markCacheMiss()
+    #self.markCacheMiss()
             
   def expireOldCacheEntries(self, forceCheck = False):
     now = time.time()

@@ -93,7 +93,7 @@ class DistributedRamCache(BaseCache):
     cache_storage = self.getCacheStorage()
     cache_id = self.checkAndFixCacheId(cache_id, scope)
     cache_entry = cache_storage.get(cache_id)
-    self.markCacheHit()
+    #self.markCacheHit()
     return cache_entry
        
   def set(self, cache_id, scope, value, cache_duration= None, calculation_time=0):
@@ -105,7 +105,7 @@ class DistributedRamCache(BaseCache):
       cache_duration = 360000
     cache_entry = CacheEntry(value, cache_duration, calculation_time)
     cache_storage.set(cache_id, cache_entry, cache_duration)
-    self.markCacheMiss()
+    #self.markCacheMiss()
    
   def expireOldCacheEntries(self, forceCheck = False):
     """ Memcache has its own built in expire policy """

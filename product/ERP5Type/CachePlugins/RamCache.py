@@ -69,8 +69,10 @@ class RamCache(BaseCache):
     cache = self.getCacheStorage()
     try:
       cache_entry = cache[(scope, cache_id)]
-      cache_entry.markCacheHit()
-      self.markCacheHit()
+      # Note: tracking down cache hit could be achieved by uncommenting
+      # methods below. In production environment this is likely uneeded
+      #cache_entry.markCacheHit()
+      #self.markCacheHit()
       return cache_entry
     except KeyError:
       pass
@@ -79,7 +81,7 @@ class RamCache(BaseCache):
   def set(self, cache_id, scope, value, cache_duration=None, calculation_time=0):
     cache = self.getCacheStorage()
     cache[(scope, cache_id)] = CacheEntry(value, cache_duration, calculation_time)
-    self.markCacheMiss()
+    #self.markCacheMiss()
 
   def expireOldCacheEntries(self, forceCheck = False):
     now = time.time()
