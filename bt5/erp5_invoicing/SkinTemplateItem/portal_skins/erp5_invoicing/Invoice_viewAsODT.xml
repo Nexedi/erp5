@@ -22,12 +22,6 @@ AAAAAAAAAAAAAAAAAAAAAE1FVEEtSU5GL21hbmlmZXN0LnhtbFBLBQYAAAAAAQABAEMAAABxAQAA
 AAA=</string> </value>
         </item>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -51,12 +45,6 @@ AAA=</string> </value>
                   </dictionary>
                 </state>
               </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -312,7 +300,7 @@ AAA=</string> </value>
                   <table:table-row table:style-name=\'Tableau2.1\'>\n
                     <table:table-cell table:style-name=\'Tableau2.A1\'\n
                                       office:value-type=\'string\'>\n
-                      <!--This PageTemplate is Used For Sale Order and Purchase Order-->\n
+                      <!--This PageTemplate is Used For Sale Invoice and Purchase Invoice-->\n
                       <tal:block tal:define="orig_string string:Supplier;\n
                                  orig_message python:here.Base_translateString(orig_string, lang=default_language);\n
                                  translated_message python:here.Base_translateString(orig_string);">\n
