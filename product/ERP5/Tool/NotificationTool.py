@@ -377,7 +377,7 @@ class NotificationTool(BaseTool):
       # CRM is not installed - only notification by email is possible
       # So create a temp object directly
       from Products.ERP5Type.Document import newTempEvent
-      new_event = newTempEvent(context, '_')
+      new_event = newTempEvent(self, '_')
       event_list = [new_event]
 
     if event in event_list:
