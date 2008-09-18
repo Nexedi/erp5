@@ -151,7 +151,7 @@ related_transaction_list = context.getCausalityRelatedValueList(\n
 for related_transaction in related_transaction_list:\n
   if related_transaction.getSimulationState() not in simulation_state:\n
     continue\n
-  if related_transaction.getProperty('origin_id') == \'MAJO\':\n
+  if related_transaction.getProperty(\'origin_id\') == \'MAJO\':\n
     continue\n
   \n
   # if we have a payment related to multiple invoices, we cannot say the\n
