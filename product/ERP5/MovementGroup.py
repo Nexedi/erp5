@@ -544,45 +544,6 @@ class OptionMovementGroup(RootMovementGroup):
 
 allow_class(OptionMovementGroup)
 
-class VariationPropertyMovementGroup(RootMovementGroup):
-  """
-  Compare variation property dict of movement.
-  """
-
-  def __init__(self, movement, **kw):
-    """
-    Store variation property dict of the first movement.
-    """
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    self.property_dict = movement.getVariationPropertyDict()
-    self.setGroupEdit(
-      variation_property_dict = self.property_dict
-    )
-
-  def test(self, movement):
-    """
-    Check if the movement can be inserted in the group.
-    """
-    identity = 0
-    variation_property_dict = movement.getVariationPropertyDict()
-    variation_property_list = variation_property_dict.keys()
-    if len(variation_property_list) == len(self.property_dict):
-      # Same number of property. Good point.
-      for variation_property in variation_property_list:
-        try:
-          if variation_property_dict[variation_property] != \
-              self.property_dict[variation_property]:
-            # Value is not the same for both movements
-            break
-        except KeyError:
-          # Key is not common to both movements
-          break
-      else:
-        identity = 1
-    return identity
-
-allow_class(VariationPropertyMovementGroup)
-
 # XXX This should not be here
 # I (seb) have commited this because movement groups are not
 # yet configurable through the zope web interface
