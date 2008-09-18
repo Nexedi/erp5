@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import socket
 
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile, get_request
