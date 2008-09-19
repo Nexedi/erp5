@@ -72,6 +72,7 @@ N_ = lambda msg, **kw: Message(\'erp5_ui\', msg, **kw)\n
 # first of all, validate the transaction itself\n
 container.validateTransaction(state_change)\n
 \n
+\n
 # Check that all lines uses open accounts, and doesn\'t use invalid third\n
 # parties or bank accounts\n
 for line in transaction.contentValues(filter=dict(\n
@@ -117,6 +118,32 @@ for line in transaction.contentValues(filter=dict(\n
             "uses ${bank_account_currency} as default currency.",\n
             mapping=dict(bank_account_reference=unicode(bank_account.getReference(), \'utf8\'),\n
                          bank_account_currency=unicode(bank_account.getPriceCurrencyReference(), \'utf8\')))\n
+\n
+  source_currency = None\n
+  source_section = line.getSourceSectionValue()\n
+  if source_section is not None:\n
+    source_currency = source_section.getProperty(\'price_currency\')\n
+\n
+  if source_currency == line.getResource():\n
+    if ((line.getSourceCredit() !=\n
+         line.getSourceInventoriatedTotalAssetCredit()) or (\n
+         line.getSourceDebit() !=\n
+         line.getSourceInventoriatedTotalAssetDebit())):\n
+      raise ValidationFailed(translateString(\n
+              "Source conversion should not be set."))\n
+\n
+  destination_currency = None\n
+  destination_section = line.getDestinationSectionValue()\n
+  if destination_section is not None:\n
+    destination_currency = destination_section.getProperty(\'price_currency\')\n
+\n
+  if destination_currency == line.getResource():\n
+    if ((line.getDestinationCredit() !=\n
+         line.getDestinationInventoriatedTotalAssetCredit()) or (\n
+         line.getDestinationDebit() !=\n
+         line.getDestinationInventoriatedTotalAssetDebit())):\n
+      raise ValidationFailed(translateString(\n
+              "Destination conversion should not be set."))\n
 \n
 # Delete empty lines\n
 transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
@@ -197,6 +224,10 @@ transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
                             <string>None</string>
                             <string>unicode</string>
                             <string>bank_account_currency</string>
+                            <string>source_currency</string>
+                            <string>source_section</string>
+                            <string>destination_currency</string>
+                            <string>destination_section</string>
                           </tuple>
                         </value>
                     </item>
