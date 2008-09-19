@@ -240,17 +240,21 @@ return result
       print 
       print "="*40
       print "TESTING:", cf_name
+      
+      # if the test fails because your machine is too fast, increase this value.
+      nb_iterations = 30000
+
       portal.portal_caches.clearCacheFactory(cf_name)
       ## 1st call
       start = time.time()
-      original =  my_cache(20000, portal_path=('', portal.getId()))
+      original =  my_cache(nb_iterations, portal_path=('', portal.getId()))
       end = time.time()
       calculation_time = end-start
       print "\n\tCalculation time (1st call)", calculation_time
       
       ## 2nd call - should be cached now
       start = time.time()
-      cached =  my_cache(20000, portal_path=('', portal.getId()))
+      cached =  my_cache(nb_iterations, portal_path=('', portal.getId()))
       end = time.time()
       calculation_time = end-start
       print "\n\tCalculation time (2nd call)", calculation_time
@@ -269,7 +273,7 @@ return result
         
       ## 1st call
       start = time.time()
-      original =  my_cache(20000, portal_path=('', portal.getId()))
+      original =  my_cache(nb_iterations, portal_path=('', portal.getId()))
       end = time.time()
       calculation_time = end-start
       print "\n\tCalculation time (after cache clear)", calculation_time
