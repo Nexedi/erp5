@@ -200,21 +200,23 @@ class AlarmTool(BaseTool):
       This method is called by TimerService in the interval given
       in zope.conf. The Default is every 5 seconds.
     """
-    # only start when we are the alarmNode
-    alarmNode = self.getAlarmNode()
-    current_node = self.getCurrentNode()
-    if alarmNode == '':
-      self.setAlarmNode(current_node)
-      alarmNode = current_node
-    if alarmNode == current_node:
-      global last_tic
-      last_tic_lock.acquire(1)
-      try:
+    acquired = last_tic_lock.acquire(0)
+    if not acquired:
+      return
+    try:
+      # only start when we are the alarmNode
+      alarmNode = self.getAlarmNode()
+      current_node = self.getCurrentNode()
+      if alarmNode == '':
+        self.setAlarmNode(current_node)
+        alarmNode = current_node
+      if alarmNode == current_node:
+        global last_tic
         if tick.timeTime() - last_tic >= self.interval:
           self.tic()
           last_tic = tick.timeTime()
-      finally:
-        last_tic_lock.release()
+    finally:
+      last_tic_lock.release()
 
   def getCurrentNode(self):
       """ Return current node in form ip:port """
