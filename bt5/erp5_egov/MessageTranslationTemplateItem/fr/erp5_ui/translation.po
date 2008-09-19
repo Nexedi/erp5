@@ -800,3 +800,6 @@ msgstr "brouillon"
 
 msgid "Owner"
 msgstr "Propriétaire"
+
+msgid "Declaration TVA"
+msgstr "Déclaration TVA"
