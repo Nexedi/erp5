@@ -1,4 +1,5 @@
 portal_caches/erp5_session_cache
 portal_caches/erp5_session_cache/default_ram_cache
 root_http_skin_cache
+web_page_module/15
 web_page_module/9
