@@ -136,7 +136,7 @@
                         </tuple>
                         <tuple>
                           <string>time</string>
-                          <string>Time</string>
+                          <string>Date</string>
                         </tuple>
                         <tuple>
                           <string>assigned_function</string>
