@@ -582,6 +582,84 @@ class TestTransactionValidation(AccountingTestCase):
     self.assertEquals('delivered', transaction.getSimulationState())
     self.assertFalse(_checkPermission('Modify portal content', transaction))
 
+  def test_UneededSourceAssetPrice(self):
+    # It is refunsed to validate an accounting transaction if lines have an
+    # asset price but the resource is the same as the accounting resource
+    transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.payable,
+                           source_debit=500,
+                           source_asset_debit=600),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=500,
+                           source_asset_credit=600)))
+
+    section = transaction.getSourceSectionValue()
+    self.assertEquals(section.getPriceCurrency(),
+                      transaction.getResource())
+
+    # validation is refused
+    doActionFor = self.portal.portal_workflow.doActionFor
+    self.assertRaises(ValidationFailed, doActionFor, transaction,
+                      'stop_action')
+    # and the source conversion tab is visible
+    self.failUnless(
+        transaction.AccountingTransaction_isSourceCurrencyConvertible())
+
+    # if asset price is set to the same value as quantity, validation is
+    # allowed
+    for line in transaction.getMovementList():
+      if line.getSourceValue() == self.account_module.payable:
+        line.setSourceAssetDebit(line.getSourceDebit())
+      elif line.getSourceValue() == self.account_module.receivable:
+        line.setSourceAssetCredit(line.getSourceCredit())
+      else:
+        self.fail('wrong line ?')
+    doActionFor(transaction, 'stop_action')
+    self.assertEquals('stopped', transaction.getSimulationState())
+
+
+  def test_UneededDestinationAssetPrice(self):
+    # It is refunsed to validate an accounting transaction if lines have an
+    # asset price but the resource is the same as the accounting resource
+    transaction = self._makeOne(
+               portal_type='Purchase Invoice Transaction',
+               start_date=DateTime('2007/01/02'),
+               source_section_value=self.organisation_module.client_1,
+               lines=(dict(destination_value=self.account_module.payable,
+                           destination_debit=500,
+                           destination_asset_debit=600),
+                      dict(destination_value=self.account_module.receivable,
+                           destination_credit=500,
+                           destination_asset_credit=600)))
+
+    section = transaction.getDestinationSectionValue()
+    self.assertEquals(section.getPriceCurrency(),
+                      transaction.getResource())
+
+    # validation is refused
+    doActionFor = self.portal.portal_workflow.doActionFor
+    self.assertRaises(ValidationFailed, doActionFor, transaction,
+                      'stop_action')
+    # and the destination conversion tab is visible
+    self.failUnless(
+        transaction.AccountingTransaction_isDestinationCurrencyConvertible())
+
+    # if asset price is set to the same value as quantity, validation is
+    # allowed
+    for line in transaction.getMovementList():
+      if line.getDestinationValue() == self.account_module.payable:
+        line.setDestinationAssetDebit(line.getDestinationDebit())
+      elif line.getDestinationValue() == self.account_module.receivable:
+        line.setDestinationAssetCredit(line.getDestinationCredit())
+      else:
+        self.fail('wrong line ?')
+
+    doActionFor(transaction, 'stop_action')
+    self.assertEquals('stopped', transaction.getSimulationState())
+
 
 class TestClosingPeriod(AccountingTestCase):
   """Various tests for closing the period.
