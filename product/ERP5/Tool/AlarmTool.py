@@ -92,6 +92,13 @@ class AlarmTool(BaseTool):
 
   _properties = ( {'id': 'interval', 'type': 'int', 'mode': 'w', }, )
   interval = 60 # Default interval for alarms is 60 seconds
+  # alarmNode possible values:
+  #  ''      Bootstraping. The first node to call process_timer will cause this
+  #          value to be set to its node id.
+  #  (other) Node id matching this value will be the alarmNode.
+  # Those values were chosen for backward compatibility with sites having an
+  # alarmNode set to '' but expecting alarms to be executed. Use None to
+  # disable alarm processing (see setAlarmNode).
   alarmNode = ''
 
   # API to manage alarms
@@ -193,10 +200,13 @@ class AlarmTool(BaseTool):
       This method is called by TimerService in the interval given
       in zope.conf. The Default is every 5 seconds.
     """
-    # only start when we are the alarmNode or if it's empty
+    # only start when we are the alarmNode
     alarmNode = self.getAlarmNode()
-    if (not alarmNode) \
-      or (alarmNode == self.getCurrentNode()):
+    current_node = self.getCurrentNode()
+    if alarmNode == '':
+      self.setAlarmNode(current_node)
+      alarmNode = current_node
+    if alarmNode == current_node:
       global last_tic
       last_tic_lock.acquire(1)
       try:
@@ -228,6 +238,17 @@ class AlarmTool(BaseTool):
       """ Return the alarmNode """
       return self.alarmNode
 
+  def setAlarmNode(self, alarm_node):
+    """
+      When alarm_node evaluates to false, set a None value:
+      Its meaning is that alarm processing is disabled.
+      This avoids an empty string to make the system re-enter boostrap mode.
+    """
+    if alarm_node:
+      self.alarmNode = alarm_node
+    else:
+      self.alarmNode = None
+
   def _isValidNodeName(self, node_name) :
     """Check we have been provided a good node name"""
     return isinstance(node_name, str) and NODE_RE.match(node_name)
@@ -236,7 +257,7 @@ class AlarmTool(BaseTool):
   def manage_setAlarmNode(self, alarmNode, REQUEST=None):
       """ set the alarm node """   
       if not alarmNode or self._isValidNodeName(alarmNode):
-        self.alarmNode = alarmNode
+        self.setAlarmNode(alarmNode)
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(
                 REQUEST.URL1 +
