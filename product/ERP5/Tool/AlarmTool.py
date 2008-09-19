@@ -212,9 +212,10 @@ class AlarmTool(BaseTool):
         alarmNode = current_node
       if alarmNode == current_node:
         global last_tic
-        if tick.timeTime() - last_tic >= self.interval:
+        now = tick.timeTime()
+        if now - last_tic >= self.interval:
           self.tic()
-          last_tic = tick.timeTime()
+          last_tic = now
     finally:
       last_tic_lock.release()
 
