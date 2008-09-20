@@ -71,6 +71,9 @@
   except AttributeError:\n
     return url.split(\'/\')[-1]\n
 \n
+def compareFileName(a, b):\n
+  return cmp(a.split(\'/\')[-1], b.split(\'/\')[-1])\n
+\n
 \n
 from Products.ERP5Form.Report import ReportSection\n
 REQUEST = context.REQUEST\n
@@ -197,7 +200,7 @@ if portal_skin is not None and portal_skin=="ODT":\n
       form_id=\'\')\n
   )\n
   classmethod = dict().fromkeys([x for x in class_methods_list]).keys()\n
-  propertysheet = dict().fromkeys([x.split(\'/\')[-1].split(\'.\')[0] for x in property_sheets_list]).keys()\n
+  propertysheet = dict(zip([x.split(\'/\')[-1] for x in property_sheets_list],property_sheets_list))\n
   result.append(\n
     ReportSection(\n
       level=3,\n
@@ -220,10 +223,23 @@ if portal_skin is not None and portal_skin=="ODT":\n
   result.append(\n
     ReportSection(\n
       form_id=\'PortalTypeDocumentationHelperAppendixPropertySheet_view\',\n
-      selection_params=dict(property_sheet_list=propertysheet, obj=uri_object),\n
+      selection_params=dict(property_sheet_list=propertysheet.keys(), obj=uri_object),\n
       selection_name=\'property_sheet_selection\',\n
       listbox_display_mode=\'FlatListMode\')\n
   )\n
+  class_name = \'PortalTypePropertySheetDocumentationHelper\'\n
+  propertysheets = propertysheet.values()\n
+  propertysheets.sort(compareFileName)\n
+  for uri in propertysheets:\n
+    result.append(\n
+      ReportSection(\n
+        path=context.getPortalObject().portal_classes.getRelativeUrl(),\n
+        method_id=\'getDocumentationHelper\',\n
+        form_id=\'%s_view\' % class_name,\n
+        param_list=[class_name,\n
+                    uri],\n
+        listbox_display_mode=\'FlatListMode\')\n
+    )\n
 return result\n
 </string> </value>
         </item>
@@ -268,6 +284,7 @@ return result\n
                         <value>
                           <tuple>
                             <string>getTitle</string>
+                            <string>compareFileName</string>
                             <string>Products.ERP5Form.Report</string>
                             <string>ReportSection</string>
                             <string>_getattr_</string>
@@ -300,7 +317,9 @@ return result\n
                             <string>$append0</string>
                             <string>x</string>
                             <string>classmethod</string>
+                            <string>zip</string>
                             <string>propertysheet</string>
+                            <string>propertysheets</string>
                           </tuple>
                         </value>
                     </item>
