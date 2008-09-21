@@ -103,7 +103,7 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
       DocumentationSection(
         id='base_category',
         title='Base Category',
-        class_name='PortalTypeInstanceDocumentationHelper',
+        class_name='BaseCategoryDocumentationHelper',
         uri_list=self.getBaseCategoryURIList(),
       ),
     ])
