@@ -76,7 +76,12 @@ class OrderLine(DeliveryLine):
       try:
         result = transactional_variable[call_method_key]
       except KeyError:
-        result = len(self.contentValues(meta_type=self.meta_type)) > 0
+        result = False
+        meta_type = self.meta_type
+        for i in self.objectValues():
+          if i.meta_type==meta_type:
+            result = True
+            break
         transactional_variable[call_method_key] = result
       return result
 
