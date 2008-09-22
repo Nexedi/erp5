@@ -102,7 +102,7 @@ form#main_form div#wrapper_header   /* Customisation of template_erp5_web is req
   width: 100%;\n
 /*  margin-left: <tal:block  replace="python: (\'-%s%s\') % (LC_fullwidth, unit)"/>;\n
   margin-right: <tal:block replace="python: (\'-%s%s\') % (RC_fullwidth + CC_padding, unit)"/>;*/\n
-  min-width:860px;\n
+  min-width: <tal:block replace="python: (\'%s%s\') % (min_width + LC_fullwidth + RC_fullwidth , unit)"/>;\n
 }\n
 \n
 \n
@@ -126,7 +126,7 @@ form#main_form div#wrapper_header{\n
 form#main_form div#main_content{\n
   width:100%;\n
   float: left;\n
-  padding-top: 70px;\n
+  padding-top: 100px;\n
 }\n
 \n
 /*** IE Fix ***/\n
