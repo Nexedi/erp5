@@ -803,3 +803,9 @@ msgstr "Propriétaire"
 
 msgid "Declaration TVA"
 msgstr "Déclaration TVA"
+
+msgid "And use the login"
+msgstr "Et utilisez l'identifiant"
+
+msgid "and the password"
+msgstr "et le mot de passe"
