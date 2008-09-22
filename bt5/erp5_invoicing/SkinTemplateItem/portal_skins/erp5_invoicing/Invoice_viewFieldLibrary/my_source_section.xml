@@ -58,6 +58,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -161,7 +165,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/Base_getPreferredSectionItemList</string> </value>
+            <value> <string>here/AccountingTransaction_getSourceSectionItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
