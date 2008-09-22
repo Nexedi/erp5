@@ -75,44 +75,28 @@ class BaseCategoryDocumentationHelper(DocumentationHelper):
     """
     Returns the value of acquisition append value of the documented base category
     """
-    value = getattr(self.getInstance(), 'acquisition_append_value', '')
-    if value:
-      return 'True'
-    else:
-      return 'False'
+    return self.getInstance().getAcquisitionAppendValue() and 'True' or 'False'
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getAcquisitionMaskValue')
   def getAcquisitionMaskValue(self):
     """
     Returns the value of acquisition mask value of the documented base category
     """
-    value =  getattr(self.getInstance(), 'acquisition_mask_value', '')
-    if value:
-      return 'True'
-    else:
-      return 'False'
+    return self.getInstance().getAcquisitionMaskValue() and 'True' or 'False'
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getAcquisitionCopyValue')
   def getAcquisitionCopyValue(self):
     """
     Returns the value of acquisition copy value of the documented base category
     """
-    value = getattr(self.getInstance(), 'acquisition_copy_value', '')
-    if value:
-      return 'True'
-    else:
-      return 'False'
+    return self.getInstance().getAcquisitionCopyValue() and 'True' or 'False'
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getAcquisitionSyncValue')
   def getAcquisitionSyncValue(self):
     """
     Returns the value of acquisition sync value of the documented base category
     """
-    value = getattr(self.getInstance(), 'acquisition_sync_value', '')
-    if value:
-      return 'True'
-    else:
-      return 'False'
+    return self.getInstance().getAcquisitionSyncValue() and 'True' or 'False'
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getAcquisitionBaseCategoryList')
   def getAcquisitionBaseCategoryList(self):
