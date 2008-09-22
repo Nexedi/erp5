@@ -415,7 +415,7 @@ class OOoChartWidget(Widget.Widget):
     """
 
     title = field.get_value('title')
-    alternate_name = field.get_value('alternate_name')
+    alt = field.get_value('description') or title
     form = field.aq_parent
 
     # Find the applicable context
@@ -439,7 +439,7 @@ class OOoChartWidget(Widget.Widget):
                        format,
                        display,
                        title,
-                       alternate_name)
+                       alt)
         return main_content
       elif format == 'raw':
         main_content = '''<div class="OOoChartContent">
