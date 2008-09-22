@@ -94,8 +94,9 @@ class OrderLine(DeliveryLine):
       if fast is argument true, then a SQL method will be used.
       """
       if self.hasLineContent():
+        meta_type = self.meta_type
         return sum(l.getTotalPrice(context=context)
-                   for l in self.contentValues(meta_type=self.meta_type))
+                   for l in self.contentValues() if l.meta_type==meta_type)
       return DeliveryLine._getTotalPrice(self,
                                          default=default,
                                          context=context,
@@ -113,8 +114,9 @@ class OrderLine(DeliveryLine):
       """
       base_id = 'movement'
       if self.hasLineContent():
+        meta_type = self.meta_type
         return sum(l.getTotalQuantity() for l in
-            self.contentValues(meta_type=self.meta_type))
+            self.contentValues() if l.meta_type==meta_type)
       elif self.hasCellContent(base_id=base_id):
         if fast : # Use MySQL
           aggregate = self.DeliveryLine_zGetTotal()[0]
