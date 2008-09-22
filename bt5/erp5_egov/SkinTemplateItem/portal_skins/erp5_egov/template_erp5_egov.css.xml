@@ -631,10 +631,6 @@ fieldset.register_informations{\n
   cursor:pointer;\n
 }\n
 \n
-.field .input .next_step{\n
-  margin: 1em;\n
-}\n
-\n
 .field .input .big_button{\n
   width: 20%;\n
   margin-left: 20%;\n
