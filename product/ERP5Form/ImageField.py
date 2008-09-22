@@ -45,8 +45,8 @@ class ImageFieldWidget(Widget.TextWidget):
     image_display = fields.StringField('image_display',
                                title='Image Display',
                                description=(
-        "The display size. See ERP5.Document.Image.defaultdisplays for "
-        "possible values. This is only used with ERP5 Images."),
+        "The display size. See ERP5.Document.Image.default_displays_id_list "
+        "for possible values. This is only used with ERP5 Images."),
                                default='thumbnail',
                                required=1)
 
@@ -81,11 +81,12 @@ class ImageFieldWidget(Widget.TextWidget):
         display = field.get_value('image_display')
         format = field.get_value('image_format')
         resolution = field.get_value('image_resolution')
-        html_string = """<img src="%s?display=%s&amp;format=%s&amp;resolution=%s" alt="%s"/>""" % \
-            (html_quote(image), 
-             html_quote(display), 
-             html_quote(format), 
-             html_quote(resolution), 
+        html_string = '<img src="%s?display=%s&amp;format=%s&amp;'\
+                      'resolution=%s" alt="%s"/>' % \
+            (html_quote(image),
+             html_quote(display),
+             html_quote(format),
+             html_quote(resolution),
              html_quote(alt))
         return html_string
 
