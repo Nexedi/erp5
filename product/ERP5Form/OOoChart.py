@@ -422,8 +422,6 @@ class OOoChartWidget(Widget.Widget):
     here = getattr(form, 'aq_parent', REQUEST)
     # Update the render format based on REQUEST parameters
     render_format = getattr(REQUEST, 'render_format', render_format)
-    UrlIconOOo='%s/misc_/ERP5OOo/OOo.png' % here.ERP5Site_getAbsoluteUrl()
-    UrlIconPdf='%s/misc_/ERP5Form/PDF.png' % here.ERP5Site_getAbsoluteUrl()
     if render_format == 'html':
       field_absolute_url = '%s/%s/%s' % (here.absolute_url(),
                                          form.getId(),
@@ -442,6 +440,7 @@ class OOoChartWidget(Widget.Widget):
                        alt)
         return main_content
       elif format == 'raw':
+        UrlIconOOo = '%s/misc_/ERP5OOo/OOo.png' % REQUEST['BASEPATH1']
         main_content = '''<div class="OOoChartContent">
           <a href="%s?render_format=&display=%s"><img src="%s" alt="OOo"/></a></div>
           ''' % (field_absolute_url,
@@ -449,6 +448,7 @@ class OOoChartWidget(Widget.Widget):
                  UrlIconOOo)
         return main_content
       elif format == 'pdf':
+        UrlIconPdf = '%s/misc_/ERP5Form/PDF.png' % REQUEST['BASEPATH1']
         main_content = '''<div class="OOoChartContent">
           <a href="%s?render_format=pdf&display=%s"><img src="%s" alt="PDF" /></a>
           </div>''' % (field_absolute_url,
