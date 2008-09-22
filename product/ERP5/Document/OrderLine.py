@@ -30,7 +30,6 @@ from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
 from Products.ERP5.Document.Movement import Movement
 
@@ -69,21 +68,12 @@ class OrderLine(DeliveryLine):
                               'hasLineContent')
     def hasLineContent(self):
       """Return true if the object contains lines.
-         We cache results in a volatile variable.
+
+      This method only checks the first sub document because all sub
+      documents should be Order Line in reality if we have Order Line
+      inside Order Line.
       """
-      transactional_variable = getTransactionalVariable(self)
-      call_method_key = ('Products.ERP5.Document.OrderLine.hasLineContent', self.getPhysicalPath())
-      try:
-        result = transactional_variable[call_method_key]
-      except KeyError:
-        result = False
-        meta_type = self.meta_type
-        for i in self.objectValues():
-          if i.meta_type==meta_type:
-            result = True
-            break
-        transactional_variable[call_method_key] = result
-      return result
+      return len(self) != 0 and self.objectValues()[0].meta_type == self.meta_type
 
     def _getTotalPrice(self, default=0.0, context=None, fast=0):
       """Returns the total price for this order line.
@@ -96,7 +86,7 @@ class OrderLine(DeliveryLine):
       if self.hasLineContent():
         meta_type = self.meta_type
         return sum(l.getTotalPrice(context=context)
-                   for l in self.contentValues() if l.meta_type==meta_type)
+                   for l in self.objectValues() if l.meta_type==meta_type)
       return DeliveryLine._getTotalPrice(self,
                                          default=default,
                                          context=context,
@@ -116,7 +106,7 @@ class OrderLine(DeliveryLine):
       if self.hasLineContent():
         meta_type = self.meta_type
         return sum(l.getTotalQuantity() for l in
-            self.contentValues() if l.meta_type==meta_type)
+            self.objectValues() if l.meta_type==meta_type)
       elif self.hasCellContent(base_id=base_id):
         if fast : # Use MySQL
           aggregate = self.DeliveryLine_zGetTotal()[0]
