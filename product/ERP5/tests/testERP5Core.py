@@ -28,6 +28,7 @@
 ##############################################################################
 
 import unittest
+import md5
 
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
@@ -64,6 +65,14 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.portal = self.getPortal()
     self.portal_id = self.portal.getId()
     self.auth = '%s:%s' % (self.manager_username, self.manager_password)
+
+  def beforeTearDown(self):
+    get_transaction().abort()
+    if 'test_folder' in self.portal.objectIds():
+      self.portal.manage_delObjects(['test_folder'])
+    self.portal.portal_selections.setSelectionFor('test_selection', None)
+    get_transaction().commit()
+    self.tic()
 
   def test_01_ERP5Site_createModule(self, quiet=quiet, run=run_all_test):
     """
@@ -289,6 +298,77 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
       1)
     response = self.publish('%s/view' % self.portal_id, self.auth)
     self.assertEquals(HTTP_OK, response.getStatus())
+
+  def test_Folder_delete(self):
+    module = self.portal.newContent(portal_type='Folder', id='test_folder')
+    document_1 = module.newContent(portal_type='Folder', id='1')
+    document_2 = module.newContent(portal_type='Folder', id='2')
+    uid_list = [document_1.getUid(), document_2.getUid()]
+    self.portal.portal_selections.setSelectionParamsFor(
+          'test_selection', dict(uids=uid_list))
+    get_transaction().commit()
+    self.tic()
+    md5_string = md5.new(str(sorted([str(x) for x in uid_list]))).hexdigest()
+    redirect = module.Folder_delete(selection_name='test_selection',
+                                    uids=uid_list,
+                                    md5_object_uid_list=md5_string)
+    self.assert_('Deleted.' in redirect, redirect)
+    get_transaction().commit(1)
+    self.assertEquals(len(module.objectValues()), 0)
+
+  def test_Folder_delete_related_object(self):
+    # deletion is refused if there are related objects
+    module = self.portal.newContent(portal_type='Folder', id='test_folder')
+    document_1 = module.newContent(portal_type='Folder', id='1')
+    document_2 = module.newContent(portal_type='Folder', id='2')
+    self.portal.portal_categories.setCategoryMembership(
+                                context=document_1,
+                                base_category_list=('source',),
+                                category_list=document_2.getRelativeUrl())
+    uid_list = [document_1.getUid(), document_2.getUid()]
+    self.portal.portal_selections.setSelectionParamsFor(
+                          'test_selection', dict(uids=uid_list))
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals([document_1],
+        self.portal.portal_categories.getRelatedValueList(document_2))
+    md5_string = md5.new(str(sorted([str(x) for x in uid_list]))).hexdigest()
+    redirect = module.Folder_delete(selection_name='test_selection',
+                                    uids=uid_list,
+                                    md5_object_uid_list=md5_string)
+    self.assert_('Sorry, 1 item is in use.' in redirect, redirect)
+    get_transaction().commit(1)
+    self.assertEquals(len(module.objectValues()), 2)
+
+
+  def test_Folder_delete_non_accessible_object(self):
+    # deletion is refused if there are related objects, even if those related
+    # objects cannot be accessed
+    module = self.portal.newContent(portal_type='Folder', id='test_folder')
+    document_1 = module.newContent(portal_type='Folder', id='1')
+    document_2 = module.newContent(portal_type='Folder', id='2')
+    self.portal.portal_categories.setCategoryMembership(
+                                context=document_1,
+                                base_category_list=('source',),
+                                category_list=document_2.getRelativeUrl())
+    uid_list = [document_2.getUid(), ]
+    self.portal.portal_selections.setSelectionParamsFor(
+                          'test_selection', dict(uids=uid_list))
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals([document_1],
+        self.portal.portal_categories.getRelatedValueList(document_2))
+    md5_string = md5.new(str(sorted([str(x) for x in uid_list]))).hexdigest()
+
+    document_1.manage_permission('View', [], acquire=0)
+    document_1.manage_permission('Access contents information', [], acquire=0)
+    redirect = module.Folder_delete(selection_name='test_selection',
+                                    uids=uid_list,
+                                    md5_object_uid_list=md5_string)
+    self.assert_('Sorry, 1 item is in use.' in redirect, redirect)
+    get_transaction().commit(1)
+    self.assertEquals(len(module.objectValues()), 2)
+
 
 def test_suite():
   suite = unittest.TestSuite()
