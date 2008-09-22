@@ -59,14 +59,9 @@
           CAPTCHA       python: 60;\n
 ">\n
 \n
-div.next_step_action{  \n
-  height: <tal:block  replace="python: (\'%s%s\') % (HEIGHT_button+MARGIN+(here.portal_membership.isAnonymousUser() and CAPTCHA or 0), unit)"/>;\n
-  z-index:300;\n
-}\n
-\n
 div.next_step_action .erp5_captcha{\n
   float:right;\n
-  margin-right:4em;\n
+  margin-right:2em;\n
 }\n
 \n
 div.next_step_action img,\n
@@ -90,6 +85,10 @@ form#main_form div .next_step_action .onleft{\n
   margin-right:auto;\n
   position:relative;\n
   margin-right: <tal:block  replace="python: (\'%s%s\') % (MARGIN, unit)"/>;\n
+}\n
+\n
+form#main_form div .next_step_action .next_step{\n
+  margin-top:1em;\n
 }\n
 \n
 </tal:block>\n
