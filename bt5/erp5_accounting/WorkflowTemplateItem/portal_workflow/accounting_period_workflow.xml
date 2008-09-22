@@ -23,7 +23,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Defines the differents steps of an accounting period, only when an accounting period is opened, a user can input transactions</string> </value>
+            <value> <string>Defines the differents steps of an accounting period. User can only input transactions when an accounting period is open.</string> </value>
         </item>
         <item>
             <key> <string>groups</string> </key>
