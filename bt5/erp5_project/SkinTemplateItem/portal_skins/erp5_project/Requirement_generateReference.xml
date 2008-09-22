@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -75,7 +63,7 @@ current_type = context.getPortalType()\n
 if not reference: reference=\'R\'\n
 \n
 def generateReference(prefix, order, portal_type):\n
-  for order_line in order.contentValues(portal_type=portal_type):\n
+  for order_line in order.contentValues(portal_type=portal_type, checked_permission=\'View\', sort_on=\'int_index\'):\n
     new_prefix = "%s-%s" % (prefix, order_line.getIntIndex(order_line.getId()))\n
     generateReference(new_prefix, order_line, portal_type)\n
     order_line.setReference(new_prefix)\n
@@ -90,18 +78,6 @@ return context.Base_redirect(form_id, keep_items = {\'portal_status_message\' : 
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
