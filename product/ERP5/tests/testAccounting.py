@@ -3170,7 +3170,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     
     # asset price have priority (ie. if asset price is not balanced,
     # refuses validation even if quantity is balanced)
-    transaction = self.createAccountingTransaction()
+    transaction = self.createAccountingTransaction(resource_value=self.YEN)
     line_list = transaction.getMovementList()
     line_list[0].setDestinationTotalAssetPrice(10)
     line_list[1].setDestinationTotalAssetPrice(100)
@@ -3179,7 +3179,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         transaction,
         'stop_action')
     
-    transaction = self.createAccountingTransaction()
+    transaction = self.createAccountingTransaction(resource_value=self.YEN)
     line_list = transaction.getMovementList()
     line_list[0].setSourceTotalAssetPrice(10)
     line_list[1].setSourceTotalAssetPrice(100)
@@ -3189,7 +3189,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         'stop_action')
     
     # only asset price needs to be balanced
-    transaction = self.createAccountingTransaction()
+    transaction = self.createAccountingTransaction(resource_value=self.YEN)
     line_list = transaction.getMovementList()
     line_list[0].setSourceTotalAssetPrice(100)
     line_list[0].setDestinationTotalAssetPrice(100)
