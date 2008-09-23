@@ -462,7 +462,7 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
       except AttributeError:
         pass
     finally:
-        request.set('format', format)
+      request.set('format', format)
     # Create a new builder instance
     ooo_builder = OOoBuilder(ooo_document)
     # Pass builder instance as extra_context
