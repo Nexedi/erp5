@@ -1845,7 +1845,7 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
 
 
 
-class TestSaleInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
+class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
   """Tests for sale invoice.
   """
   RUN_ALL_TESTS = 1
