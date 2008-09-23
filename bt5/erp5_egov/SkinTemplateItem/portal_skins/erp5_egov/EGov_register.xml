@@ -69,10 +69,6 @@ if not context.isCaptchaTextCorrect(captcha_text):\n
 module = context.getDefaultModule(portal_type=\'Subscription Form\')\n
 form = module.newContent(portal_type=\'Subscription Form\')\n
 \n
-# XXX this group is not good for a form\n
-# but it\'s used for security on subscription form module\n
-form.setGroup(\'dgid/di/cge\')\n
-\n
 web_site_url = context.getWebSiteValue().absolute_url()\n
 module_id = module.getId()\n
 new_object_id = form.getId()\n
