@@ -99,7 +99,7 @@ class CacheFactory:
           value = cache_entry.value
           ## update local cache
           self.quick_cache.set(cache_id, scope, value,
-                              cache_entry.cache_duration,
+                              cache_duration,
                               cache_entry.calculation_time)
           return value
 
