@@ -116,6 +116,8 @@ elif uids is not None:\n
       history_dict = object.Base_getWorkflowHistory()\n
       history_dict.pop(\'edit_workflow\', None)\n
       if history_dict == {} or object.aq_parent.portal_type==\'Preference\':\n
+        # templates inside preference will be unconditionnaly physically\n
+        # deleted\n
         object_to_remove_list.append(object)\n
       else:\n
         # If a workflow manage a history, \n
@@ -125,7 +127,9 @@ elif uids is not None:\n
     # Remove some objects\n
     try:\n
       if object_to_remove_list != []:\n
-        if portal.portal_type==\'Preference\':\n
+        if context.portal_type == \'Preference\':\n
+          # Templates inside preference are not indexed, so we cannot pass\n
+          # uids= to manage_delObjects and have to use ids=\n
           context.manage_delObjects(\n
                         ids=[x.getId() for x in object_to_remove_list],\n
                         REQUEST=REQUEST)\n
