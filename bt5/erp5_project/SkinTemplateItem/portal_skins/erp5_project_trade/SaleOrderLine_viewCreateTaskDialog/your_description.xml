@@ -58,7 +58,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>default</string> </key>
+                    <key> <string>default</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -95,11 +95,11 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>whitespace_preserve</string> </key>
+                    <key> <string>whitespace_preserve</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>width</string> </key>
+                    <key> <string>width</string> </key>
                     <value> <int>40</int> </value>
                 </item>
               </dictionary>

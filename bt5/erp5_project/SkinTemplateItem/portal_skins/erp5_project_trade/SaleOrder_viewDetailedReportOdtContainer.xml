@@ -18,20 +18,8 @@
             <value> <string>ts45484866.57</string> </value>
         </item>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>__name__</string> </key>
             <value> <string>SaleOrder_viewDetailedReportOdtContainer</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>

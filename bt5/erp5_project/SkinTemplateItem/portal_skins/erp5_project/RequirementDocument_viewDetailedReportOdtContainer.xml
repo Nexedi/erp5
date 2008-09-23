@@ -14,12 +14,6 @@
             <value> <string>ts19417795.27</string> </value>
         </item>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>__name__</string> </key>
             <value> <string>RequirementDocument_viewDetailedReportOdtContainer</string> </value>
         </item>

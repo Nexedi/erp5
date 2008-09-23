@@ -66,7 +66,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>items</string> </key>
+                    <key> <string>items</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
@@ -87,7 +87,7 @@
                     <value> <string>your_category</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>first_item</string> </key>
+                    <key> <string>first_item</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
@@ -99,7 +99,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Location</string> </value>
                 </item>
               </dictionary>
