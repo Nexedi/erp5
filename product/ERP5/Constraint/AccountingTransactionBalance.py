@@ -46,36 +46,41 @@ class AccountingTransactionBalance(Constraint):
     """Implement here the consistency checker
     """
     error_list = []
-    source_sum = 0
-    destination_sum = 0
+    source_sum = dict()
+    destination_sum = dict()
     for line in obj.getMovementList(
           portal_type=obj.getPortalAccountingMovementTypeList()):
       if line.getSourceValue() is not None:
-        source_sum += line.getSourceInventoriatedTotalAssetPrice() or 0
+        section = line.getSourceSectionValue()
+        source_sum[section] = source_sum.get(section, 0) + \
+            (line.getSourceInventoriatedTotalAssetPrice() or 0)
       if line.getDestinationValue() is not None:
-        destination_sum += \
-          line.getDestinationInventoriatedTotalAssetPrice() or 0
+        section = line.getDestinationSectionValue()
+        destination_sum[section] = destination_sum.get(section, 0) + \
+          (line.getDestinationInventoriatedTotalAssetPrice() or 0)
     
-    source_section = obj.getSourceSectionValue()
-    destination_section = obj.getDestinationSectionValue()
-    source_precision = destination_precision = 2
-
-    if source_section is not None and\
-                 source_section.getPortalType() == 'Organisation':
-      source_currency = source_section.getPriceCurrencyValue()
-      if source_currency is not None:
-        source_precision = source_currency.getQuantityPrecision()
-    if round(source_sum, source_precision) != 0:
-      error_list.append(self._generateError(obj, self._getMessage(
-            'message_transaction_not_balanced_for_source')))
-
-    if destination_section is not None and\
-                 destination_section.getPortalType() == 'Organisation':
-      destination_currency = destination_section.getPriceCurrencyValue()
-      if destination_currency is not None:
-        destination_precision = destination_currency.getQuantityPrecision()
-    if round(destination_sum, destination_precision) != 0:
-      error_list.append(self._generateError(obj, self._getMessage(
-              'message_transaction_not_balanced_for_destination')))
+    for section, total in source_sum.items():
+      precision = 2
+      if section is not None and\
+          section.getPortalType() == 'Organisation':
+        section_currency = section.getPriceCurrencyValue()
+        if section_currency is not None:
+          precision = section_currency.getQuantityPrecision()
+        if round(total, precision) != 0:
+          error_list.append(self._generateError(obj, self._getMessage(
+                'message_transaction_not_balanced_for_source')))
+          break
     
+    for section, total in destination_sum.items():
+      precision = 2
+      if section is not None and\
+          section.getPortalType() == 'Organisation':
+        section_currency = section.getPriceCurrencyValue()
+        if section_currency is not None:
+          precision = section_currency.getQuantityPrecision()
+        if round(total, precision) != 0:
+          error_list.append(self._generateError(obj, self._getMessage(
+                'message_transaction_not_balanced_for_source')))
+          break
+
     return error_list

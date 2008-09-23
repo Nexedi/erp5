@@ -514,6 +514,74 @@ class TestTransactionValidation(AccountingTestCase):
     # but if there are no accounts defined it's not a problem
     self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
 
+  def test_NonBalancedAccountingTransactionSectionOnLines(self):
+    transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               resource='currency_module/yen',
+               lines=(dict(source_value=self.account_module.goods_sales,
+                           destination_value=self.account_module.goods_purchase,
+                           destination_section_value=self.organisation_module.client_1,
+                           source_debit=500),
+                      dict(source_value=self.account_module.goods_purchase,
+                           source_credit=500)))
+
+    # This is not balanced for client 1
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        transaction, 'stop_action')
+
+    for line in transaction.getMovementList():
+      line.setDestinationSection(None)
+    self.assertEquals([], transaction.checkConsistency())
+    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+
+  def test_NonBalancedAccountingTransactionDifferentSectionOnLines(self):
+    transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               resource='currency_module/yen',
+               lines=(dict(source_value=self.account_module.goods_sales,
+                           destination_value=self.account_module.goods_purchase,
+                           destination_section_value=self.organisation_module.client_1,
+                           source_debit=500),
+                      dict(source_value=self.account_module.goods_purchase,
+                           destination_value=self.account_module.goods_sales,
+                           destination_section_value=self.organisation_module.client_2,
+                           source_credit=500)))
+
+    # This is not balanced for client 1 and client 2, but if you look globally,
+    # it looks balanced.
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        transaction, 'stop_action')
+    self.assertEquals(1, len(transaction.checkConsistency()),
+                         transaction.checkConsistency())
+
+    for line in transaction.getMovementList():
+      line.setDestinationSectionValue(
+          self.organisation_module.client_2)
+
+    self.assertEquals([], transaction.checkConsistency())
+    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+
+  def test_NonBalancedAccountingTransactionSectionPersonOnLines(self):
+    transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               resource='currency_module/yen',
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           destination_value=self.account_module.goods_purchase,
+                           destination_section_value=self.person_module.john_smith,
+                           source_debit=500),
+                      dict(source_value=self.account_module.goods_purchase,
+                           source_credit=500)))
+
+    # This is not balanced for john smith, but as he is a person, it's not a
+    # problem
+    self.assertEquals([], transaction.checkConsistency())
+    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+
   def test_AccountingTransactionValidationRefusedWithCategoriesAsSections(self):
     # Validating a transaction with categories as sections is refused.
     # See http://wiki.erp5.org/Discussion/AccountingProblems
