@@ -85,9 +85,7 @@ class DistributedRamCache(BaseCache):
     ## such behaviour when constructing cache_id we add scope in front
     cache_id = "%s.%s" %(scope, cache_id) 
     ## memcached will fail to store cache_id longer than MEMCACHED_SERVER_MAX_KEY_LENGTH.
-    if len(cache_id) > MEMCACHED_SERVER_MAX_KEY_LENGTH:
-      cache_id = cache_id[:MEMCACHED_SERVER_MAX_KEY_LENGTH]
-    return cache_id
+    return cache_id[:MEMCACHED_SERVER_MAX_KEY_LENGTH]
     
   def get(self, cache_id, scope, default=None):
     cache_storage = self.getCacheStorage()
