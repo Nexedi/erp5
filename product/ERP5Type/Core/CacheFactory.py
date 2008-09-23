@@ -67,7 +67,7 @@ class CacheFactory(XMLObject):
     """ get ordered list of installed cache plugins in ZODB """
     cache_plugins = self.objectValues(self.allowed_types)
     cache_plugins = map(None, cache_plugins)
-    cache_plugins.sort(lambda x,y: cmp(x.getIntIndex(0), y.getIntIndex(0)))
+    cache_plugins.sort(key=lambda x: x.getIntIndex(0))
     return  cache_plugins
     
   security.declareProtected(Permissions.AccessContentsInformation, 'getRamCacheFactory')

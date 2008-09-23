@@ -50,7 +50,7 @@ class OrderedPickler(Pickler):
 
         self.memoize(obj)
         item_list = obj.items() # New version by JPS for sorting
-        item_list.sort(lambda a, b: cmp(a[0], b[0])) # New version by JPS for sorting
+        item_list.sort(key=lambda x: x[0]) # New version by JPS for sorting
         self._batch_setitems(item_list.__iter__())
 
     dispatch[DictionaryType] = save_dict
@@ -160,7 +160,7 @@ def exportXML(jar, oid, file=None):
                     new_oidict[oid] = getattr(o, 'id', None)
                 except:
                     new_oidict[oid] = None # Ick, a broken reference
-            new_oids.sort(lambda a,b: cmp(new_oidict[a], new_oidict[b]))
+            new_oids.sort(key=lambda x: new_oidict[x])
             # Build new sorted oids
             oids = list(old_oids) + new_oids
     # Do real export

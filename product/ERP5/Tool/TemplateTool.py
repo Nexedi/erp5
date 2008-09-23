@@ -824,7 +824,7 @@ class TemplateTool (BaseTool):
                                       repository = repository, **property_dict)
         obj.setUid(uid)
         template_list.append(obj)
-      template_list.sort(lambda x,y:cmp(x.getTitle(), y.getTitle()))
+      template_list.sort(key=lambda x: x.getTitle())
       return template_list
 
     security.declareProtected( Permissions.AccessContentsInformation,

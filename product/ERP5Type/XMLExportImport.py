@@ -199,7 +199,7 @@ def Folder_asXML(object, ident=0):
   xml = xml[:xml.rfind('</object>')]
   # Make sure the list of sub objects is ordered
   object_value_list = list(self.objectValues())
-  object_value_list.sort(lambda x, y: cmp(x.getId(), y.getId()))
+  object_value_list.sort(key=lambda x: x.getId())
   # Append to the xml the xml of subobjects
   for o in object_value_list:
     aq_ob = aq_base(o)
