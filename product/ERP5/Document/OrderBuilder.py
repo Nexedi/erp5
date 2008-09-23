@@ -263,8 +263,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         original = None
       if original is not None:
         original_id = original.getId()
-        instance_list.sort(lambda a,b:cmp(b.getId()==original_id,
-                                          a.getId()==original_id))
+        instance_list.sort(key=lambda x: x.getId() != original_id and 1 or 0)
       for instance_to_update in instance_list:
         result, property_dict = self._test(
           instance_to_update, movement_group_list, divergence_list)

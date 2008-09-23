@@ -125,11 +125,11 @@ class Container(Movement, XMLObject):
       """
       result = ""
       container_line_list = list(self.objectValues())
-      container_line_list.sort(lambda x, y: cmp(x.getResource(), y.getResource()))
+      container_line_list.sort(key=lambda x: x.getResource())
       for container_line in container_line_list:
         if container_line.hasCellContent():
           container_cell_list = list(container_line.objectValues())
-          container_cell_list.sort(lambda x, y: cmp(x.getVariationText(), y.getVariationText()))
+          container_cell_list.sort(key=lambda x: x.getVariationText())
           for container_cell in container_cell_list:
             result += "%s %s %s\n" % (container_cell.getResource(), 
                                       container_cell.getQuantity(), 
@@ -137,7 +137,7 @@ class Container(Movement, XMLObject):
         else:
           result += "%s %s\n" % (container_line.getResource(), container_line.getQuantity())
       container_list = list(self.objectValues(spec = self.meta_type))
-      container_list.sort(lambda x, y: cmp(x.getContainerText(), y.getContainerText()))
+      container_list.sort(key=lambda x: x.getContainerText())
       more_result = ""
       for container in container_list:
         more_result += container.getContainerText()

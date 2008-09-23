@@ -234,6 +234,6 @@ class WebSite(WebSection):
       section_list = section_dict.values()
 
       # Sort by Index
-      section_list.sort(lambda x,y: cmp(x.getIntIndex(), y.getIntIndex()))
+      section_list.sort(key=lambda x: x.getIntIndex())
 
       return section_list

@@ -368,7 +368,7 @@ class AmortisationRule(Rule):
       for current_dict in (aggregated_period_dict, calculated_period_dict):
         for type_dict in current_dict.values():
           for movement_list in type_dict.values():
-            movement_list.sort( lambda a,b: cmp(a['stop_date'], b['stop_date']) )
+            movement_list.sort(key=lambda x: x['stop_date'])
       matched_dict = self._matchAmortisationPeriods(calculated_period_dict, aggregated_period_dict)
       
       # We can now apply the calculated movements on the applied rule

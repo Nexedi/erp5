@@ -1256,11 +1256,9 @@ class SkinTemplateItem(ObjectTemplateItem):
             new_selection.append(skin_id)
       new_selection.extend(selection)
       # sort the layer according to skin priorities
-      new_selection.sort(lambda a, b : cmp(
-        b in ps.objectIds() and ps[b].getProperty(
-            'business_template_skin_layer_priority', 0) or 0,
-        a in ps.objectIds() and ps[a].getProperty(
-            'business_template_skin_layer_priority', 0) or 0))
+      new_selection.sort(
+        key=lambda x: x in ps.objectIds() and -ps[x].getProperty(
+        'business_template_skin_layer_priority', 0) or 0)
       ps.manage_skinLayers(skinpath = tuple(new_selection), skinname = skin_name, add_skin = 1)
     # Make sure that skin data is up-to-date (see CMFCore/Skinnable.py).
     p.changeSkin(None)

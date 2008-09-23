@@ -76,6 +76,6 @@ class MovementGroup(XMLObject):
   def separate(self, movement_list):
     # We sort group of simulation movements by their IDs.
     # DO NOT OVERRIDE THIS METHOD. Override _separate() instead.
-    return sorted([[sorted(x[0], lambda a,b:cmp(a.getId(), b.getId())), x[1]] \
+    return sorted([[sorted(x[0], key=lambda x: x.getId()), x[1]] \
                    for x in self._separate(movement_list)],
                   lambda a,b: cmp(a[0][0].getId(), b[0][0].getId()))

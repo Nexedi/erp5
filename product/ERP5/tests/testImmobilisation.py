@@ -2265,7 +2265,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     
     c_transaction_list = self.getPortal().portal_catalog(portal_type='Amortisation Transaction')
     c_transaction_list = [o.getObject() for o in c_transaction_list]
-    c_transaction_list.sort(lambda a,b: cmp(a.getStopDate(),b.getStopDate()))
+    c_transaction_list.sort(key=lambda x: x.getStopDate())
     self._testAccountingBuild(c_transaction_list, e_transaction_list)
   
     
@@ -2298,7 +2298,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     
     c_transaction_list = self.getPortal().portal_catalog(portal_type='Amortisation Transaction')
     c_transaction_list = [o.getObject() for o in c_transaction_list]
-    #c_transaction_list.sort(lambda a,b: cmp(a.getStopDate(),b.getStopDate()))
+    #c_transaction_list.sort(key=lambda x: x.getStopDate())
     self._testAccountingBuild(c_transaction_list, e_transaction_list)
   
     
@@ -2994,9 +2994,9 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
           except:
             pass
           if type(c_value) == type([]):
-            c_value.sort(lambda a,b: cmp(a.getId(), b.getId()))
+            c_value.sort(key=lambda x: x.getId())
           if type(e_value) == type([]):
-            e_value.sort(lambda a,b: cmp(a.getId(), b.getId()))
+            e_value.sort(key=lambda x: x.getId())
           if is_float:
             wrong_transaction = (round(c_value,2) != round(e_value,2))
           else:
