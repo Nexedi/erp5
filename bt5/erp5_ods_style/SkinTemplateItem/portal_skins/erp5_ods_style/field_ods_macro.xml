@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -99,17 +93,62 @@
         </tal:block>\n
         <tal:block tal:condition="python: value is not None and not is_list">\n
           <tal:block tal:condition="is_float">\n
-           <table:table-cell tal:define="field python: editable_fields.get(column_id, None)"\n
-                             tal:attributes="office:value value;\n
-                                             table:style-name string:${style_prefix}figure"\n
-                             office:value-type="float"\n
-                             table:style-name="figure">\n
-            <text:p tal:condition="python: field is None"\n
-                    tal:content="python: value"/>\n
-            <text:p tal:condition="python: field is not None"\n
-                    tal:content="python: field.render_pdf(value)">\n
-            </text:p>\n
-           </table:table-cell>\n
+            <tal:block tal:condition="python: isinstance(value, (int, long))">\n
+              <table:table-cell tal:define="field python: editable_fields.get(column_id, None)"\n
+                                tal:attributes="office:value value;\n
+                                table:style-name string:${style_prefix}figure"\n
+                                office:value-type="float"\n
+                                table:style-name="figure">\n
+                <text:p tal:condition="python: field is None"\n
+                          tal:content="python: value"/>\n
+                <text:p tal:condition="python: field is not None"\n
+                          tal:content="python: field.render_pdf(value)">\n
+                </text:p>\n
+              </table:table-cell>\n
+            </tal:block>\n
+            <tal:block tal:condition="python: isinstance(value, float)">\n
+              <tal:block tal:define="field python: editable_fields.get(column_id, None)">\n
+                <tal:block tal:condition="python: field is not None">\n
+                  <tal:block tal:condition="python:field.meta_type==\'FloatField\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'FloatField\')">\n
+                    <tal:block tal:condition="python:field.get_value(\'precision\')>0">\n
+                      <table:table-cell tal:attributes="office:value value;\n
+                                        table:style-name python:style_prefix+str(field.get_value(\'precision\'))+\'_decimal\'"\n
+                                        office:value-type="float"\n
+                                        table:style-name="decimal">\n
+                        <text:p tal:content="python: field.render_pdf(value)" />\n
+                      </table:table-cell>\n
+                    </tal:block>\n
+                    <tal:block tal:condition="python: field.get_value(\'precision\') is None">\n
+                      <table:table-cell tal:attributes="office:value value;\n
+                                        table:style-name string:${style_prefix}decimal"\n
+                                        office:value-type="float"\n
+                                        table:style-name="decimal">\n
+                        <text:p tal:content="python: field.render_pdf(value)" />\n
+                      </table:table-cell>\n
+                    </tal:block> \n
+                  </tal:block>\n
+                  <tal:block tal:condition="python:field.meta_type!=\'FloatField\' and field.meta_type!=\'ProxyField\'">\n
+                    <table:table-cell tal:attributes="table:style-name string:${style_prefix}string;"\n
+                                      table:style-name="string"\n
+                                      office:value-type="string">\n
+                      <text:p>Error: field is not a FloatField</text:p>\n
+                    </table:table-cell>\n
+                  </tal:block>\n
+                </tal:block>\n
+                <tal:block tal:condition="python: field is None">\n
+                  <table:table-cell tal:attributes="office:value value;\n
+                                    table:style-name string:${style_prefix}decimal"\n
+                                    office:value-type="float"\n
+                                    table:style-name="decimal">\n
+                    <text:p tal:condition="python: field is None"\n
+                            tal:content="python: value"/>\n
+                    <text:p tal:condition="python: field is not None"\n
+                            tal:content="python: field.render_pdf(value)">\n
+                    </text:p>\n
+                  </table:table-cell>\n
+                </tal:block>\n
+              </tal:block>\n
+            </tal:block>\n
           </tal:block>\n
           <tal:block tal:condition="not: is_float">\n
             <tal:block tal:condition="python: isinstance(value, DateTime)">\n

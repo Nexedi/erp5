@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -144,6 +138,30 @@
       <number:seconds number:style="long"/>\n
     </number:date-style>\n
     <style:style style:name="date_with_time" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="date_style">\n
+      <style:table-cell-properties style:vertical-align=\'middle\' style:repeat-content=\'false\' style:text-align-source=\'fix\' fo:border-right=\'0.002cm solid #000000\' />\n
+    </style:style>\n
+    <number:number-style style:name="four_decimal">\n
+      <number:number number:decimal-places="4" number:min-integer-digits="1" number:grouping="true"/>\n
+    </number:number-style>\n
+    <number:number-style style:name="three_decimal">\n
+      <number:number number:decimal-places="3" number:min-integer-digits="1" number:grouping="true"/>\n
+    </number:number-style>\n
+    <number:number-style style:name="two_decimal">\n
+      <number:number number:decimal-places="2" number:min-integer-digits="1" number:grouping="true"/>\n
+    </number:number-style>\n
+    <number:number-style style:name="one_decimal">\n
+      <number:number number:decimal-places="1" number:min-integer-digits="1" number:grouping="true"/>\n
+    </number:number-style>\n
+    <style:style style:name="4_decimal" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="four_decimal">\n
+      <style:table-cell-properties style:vertical-align=\'middle\' style:repeat-content=\'false\' style:text-align-source=\'fix\' fo:border-right=\'0.002cm solid #000000\' />\n
+    </style:style>\n
+    <style:style style:name="3_decimal" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="three_decimal">\n
+      <style:table-cell-properties style:vertical-align=\'middle\' style:repeat-content=\'false\' style:text-align-source=\'fix\' fo:border-right=\'0.002cm solid #000000\' />\n
+    </style:style>\n
+    <style:style style:name="2_decimal" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="two_decimal">\n
+      <style:table-cell-properties style:vertical-align=\'middle\' style:repeat-content=\'false\' style:text-align-source=\'fix\' fo:border-right=\'0.002cm solid #000000\' />\n
+    </style:style>\n
+    <style:style style:name="1_decimal" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="one_decimal">\n
       <style:table-cell-properties style:vertical-align=\'middle\' style:repeat-content=\'false\' style:text-align-source=\'fix\' fo:border-right=\'0.002cm solid #000000\' />\n
     </style:style>\n
   </office:automatic-styles>\n
