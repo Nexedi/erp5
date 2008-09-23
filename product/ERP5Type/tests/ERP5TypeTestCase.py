@@ -764,7 +764,7 @@ class ERP5TypeTestCase(PortalTestCase):
                 ZopeTestCase._print('done\n')
               if not quiet:
                 ZopeTestCase._print('Dumping static files... ')
-              for dir in ('Constraint', 'Document', 'PropertySheet'):
+              for dir in ('Constraint', 'Document', 'PropertySheet', 'Extensions'):
                 os.system('rm -rf %s/%s.bak' % (instance_home, dir))
                 os.system('cp -ar %s/%s %s/%s.bak' % (instance_home, dir, instance_home, dir))
               if not quiet:

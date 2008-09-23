@@ -17,12 +17,16 @@ if os.environ.get('erp5_load_data_fs'):
   assert os.system("mysql %s < %s/dump.sql" % (
                 getMySQLArguments(), instance_home)) == 0
   print("Restoring static files ... ")
-  for dir in ('Constraint', 'Document', 'PropertySheet'):
+  for dir in ('Constraint', 'Document', 'PropertySheet', 'Extensions'):
     if os.path.exists('%s/%s.bak' % (instance_home, dir)):
       assert os.system('rm -rf %s/%s' % (instance_home, dir)) == 0
       assert os.system('cp -ar %s/%s.bak %s/%s' % (
                 instance_home, dir, instance_home, dir)) == 0
 elif os.environ.get('erp5_save_data_fs'):
+  print("Cleaning static files ... ")
+  for dir in ('Constraint', 'Document', 'PropertySheet', 'Extensions'):
+    if os.path.exists('%s/%s' % (instance_home, dir)):
+      assert os.system('rm -f %s/%s/*' % (instance_home, dir)) == 0
   if os.path.exists(new_data_fs_path):
     os.remove(new_data_fs_path)
   Storage = FileStorage(new_data_fs_path)

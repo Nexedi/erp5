@@ -77,11 +77,11 @@ def initializeInstanceHome(tests_framework_home,
                            instance_home):
   if not os.path.exists(instance_home):
     os.mkdir(instance_home)
-  for d in ('Constraint', 'Document', 'PropertySheet', 'bin', 'etc', 'tests', 'var', 'log'):
+  for d in ('Extensions', 'Constraint', 'Document', 'PropertySheet', 'bin', 'etc', 'tests', 'var', 'log'):
     path = os.path.join(instance_home, d)
     if not os.path.exists(path):
       os.mkdir(path)
-  for d in ('Extensions', 'Products', 'bt5', 'svn', 'lib'):
+  for d in ('Products', 'bt5', 'svn', 'lib'):
     src = os.path.join(real_instance_home, d)
     dst = os.path.join(instance_home, d)
     if not os.path.exists(dst):
