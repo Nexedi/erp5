@@ -37,6 +37,7 @@ TODO:
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5OOo.OOoUtils import OOoParser
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
 from Acquisition import aq_parent
@@ -663,6 +664,50 @@ class TestInvoice(TestInvoiceMixin):
     if err_list:
       self.fail(''.join(err_list))
 
+  def test_Invoice_viewAsODT_empty_image(self):
+    resource = self.portal.getDefaultModule(
+        self.resource_portal_type).newContent(
+                    portal_type=self.resource_portal_type,
+                    title='Resource',)
+    client = self.portal.organisation_module.newContent(
+                              portal_type='Organisation', title='Client')
+    client_logo = client.newContent(portal_type='Image',
+                                    id='default_image')
+    vendor = self.portal.organisation_module.newContent(
+                              portal_type='Organisation', title='Vendor')
+    vendor_logo = vendor.newContent(portal_type='Image',
+                                    id='default_image')
+    self.assertEquals(0, vendor_logo.getSize())
+    self.assertEquals(0, vendor.getDefaultImageWidth())
+    self.assertEquals(0, vendor.getDefaultImageHeight())
+    invoice = self.portal.getDefaultModule(self.invoice_portal_type).newContent(
+                              portal_type=self.invoice_portal_type,
+                              start_date=DateTime(2008, 12, 31),
+                              title='Invoice',
+                              source_value=vendor,
+                              source_section_value=vendor,
+                              destination_value=client,
+                              destination_section_value=client)
+    line = invoice.newContent(portal_type=self.invoice_line_portal_type,
+                            resource_value=resource,
+                            quantity=10,
+                            price=3)
+    invoice.confirm()
+    get_transaction().commit()
+    self.tic()
+
+    odt = invoice.Invoice_viewAsODT()
+    from Products.ERP5OOo.tests.utils import Validator
+    odf_validator = Validator()
+    err_list = odf_validator.validate(odt)
+    if err_list:
+      self.fail(''.join(err_list))
+
+    # the <draw:image> should not be present, because there's no logo
+    parser = OOoParser()
+    parser.openFromString(odt)
+    style_xml = parser.oo_files['styles.xml']
+    self.assert_('<draw:image' not in style_xml)
 
   def test_invoice_building_with_cells(self):
     # if the order has cells, the invoice built from that order must have
