@@ -756,11 +756,11 @@ msgstr "Brouillard"
 msgid "text entered at the right of the picture is wrong"
 msgstr "le texte saisi à droite de l'image est incorrect"
 
-msgid "You have to join the boss of the company identity card"
-msgstr "Vous devez joindre la carte d'identité du dirigeant de l'entreprise"
+msgid "You have to join a copy of the identy card of boss of the company"
+msgstr "Vous devez joindre une copie de la carte d'identité du dirigeant de l'entreprise"
 
-msgid "You have to provide a M0 form copy"
-msgstr "Vous devez fournir une copie du formulaire M0"
+msgid "You have to provide a NINEA copy"
+msgstr "Vous devez fournir une copie du NINEA"
 
 msgid "Sign"
 msgstr "Signer"
