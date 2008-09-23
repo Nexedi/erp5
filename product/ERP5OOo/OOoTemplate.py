@@ -456,11 +456,9 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
     format = request.get('format')
     try:
       # If style is dynamic, call it
-      try:
+      if getattr(aq_base(ooo_document), '__call__', None) is not None:
         request.set('format', None)
         ooo_document = ooo_document()
-      except AttributeError:
-        pass
     finally:
       request.set('format', format)
     # Create a new builder instance
