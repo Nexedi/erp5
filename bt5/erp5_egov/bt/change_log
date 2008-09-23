@@ -1,3 +1,6 @@
+2008-09-23 fabien
+* remove standardSecurity extension. The name was in conflict with an Extension in erp5_core. Move it in safi_egov bt and rename it in ERP5EGov_Security.
+
 2008-09-12 fabien
 * Change all indentation, thanks to julien patch
 * move annonymous_workflow from egov public bt to safi_egov private bt wich is a more appropriate place.
