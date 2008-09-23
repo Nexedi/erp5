@@ -55,7 +55,7 @@ Description:\n
       <h2 i18n:translate="" i18n:domain="ui">Login</h2>\n
       <div>\n
         <div class="fields">\n
-          <p><tal:block i18n:translate="" i18n:domain="ui">Email</tal:block></p>\n
+          <p><tal:block i18n:translate="" i18n:domain="ui">Login</tal:block></p>\n
           <p><tal:block i18n:translate="" i18n:domain="ui">Password</tal:block></p>\n
         </div>\n
         <div class="fields">\n
