@@ -2252,7 +2252,7 @@ class Base( CopyContainer,
       value = self._getCategoryTool().resolveCategory(path)
       if value is not None:
         result += [value]
-    result.sort(lambda x, y: cmp(getattr(x,sort_id)(),getattr(y,sort_id)()))
+    result.sort(key=lambda x: getattr(x,sort_id)())
     if method_id is None:
       return [(x, x) for x in membership_list]
     return [(x,getattr(x, method_id)()) for x in membership_list]
