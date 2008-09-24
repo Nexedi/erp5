@@ -100,7 +100,6 @@
                     <key> <string>white_background</string> </key>
                     <value>
                       <list>
-                        <string>explanation</string>
                         <string>listbox</string>
                         <string>listbox_application_income</string>
                         <string>listbox_application_outcome</string>
