@@ -61,7 +61,7 @@
                         id tab/id"><a href="view"\n
                                       tal:attributes="href python:\'%s/view?erp5_site_selected_tab=%s\' % (current_url, tab[\'id\'])">\n
                                        <span>\n
-                                        <img tal:attributes="src python:tab[\'icon\'] ; alt python:tab[\'id\']" width="16px" height="16px">\n
+                                        <img tal:attributes="src python:tab[\'icon\'] ; alt python:tab[\'id\']" width="16px" height="16px"/>\n
                                         <tal:block  i18n:translate="" i18n:domain="ui" tal:content="tab/title" /></span></a></li></ul>\n
 </tal:block>\n
 
