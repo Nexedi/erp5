@@ -201,8 +201,15 @@ class EmptyOrganisation:\n
     return \'\'\n
   def getDefaultAddressRegionTitle(self):\n
     return \'\'\n
+  def getDefaultImagePath(self):\n
+    return \'\'\n
+  def getDefaultImageHeight(self):\n
+    return 0\n
+  def getDefaultImageWidth(self):\n
+    return 0\n
   def getProperty(self, prop, d=\'\'):\n
     return d\n
+\n
 \n
 source_section = context.getSourceSectionValue(\n
                           portal_type=\'Organisation\')\n
