@@ -42,31 +42,35 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
-  <tal:block tal:replace="nothing">\n
-<!--\n
-IDEAS:\n
- - Add callbacks to ERP5Form object (selection ?) to gather needed fields -> put them in http_parameter_list.\n
--->\n
-  </tal:block>\n
   <tal:block metal:define-macro="master">\n
-    <tal:block\n
-              tal:define="ignore_layout          request/ignore_layout | nothing;\n
-              layout_form_id         request/layout_form_id | here/getApplicableLayout | nothing;\n
-              layout_form    python: layout_form_id and getattr(here, layout_form_id, None) or None;\n
-              is_web_mode    python: (layout_form is not None) and (not ignore_layout);\n
-              editable_mode  python: (not is_web_mode) or request.get(\'editable_mode\', False);\n
-              editable_mode_backup editable_mode;\n
-              dummy          python: request.set(\'editable_mode\', editable_mode);\n
-              dummy          python: request.set(\'is_web_mode\', is_web_mode);\n
-              page_template  python: is_web_mode and ((layout_form.meta_type==\'Page Template\' and layout_form.id) or getattr(layout_form, \'pt\', None)) or \'wizard_template_erp5_xhtml_style\';">\n
-      <tal:block metal:use-macro="python: getattr(here, page_template).macros[\'master\']">\n
-        <tal:block metal:fill-slot="context_bar">\n
-          <tal:block metal:define-slot="context_bar" />\n
-        </tal:block>\n
-        <tal:block metal:fill-slot="main"\n
-                   tal:define="editable_mode  editable_mode_backup;\n
-                   dummy python: request.set(\'editable_mode\', editable_mode);">\n
-          <tal:block metal:define-slot="main" />\n
+    <tal:block tal:define="form_action python: form.update_action or \'Base_callDialogMethod\';\n
+               dialog_id form/id | template/id;\n
+               form_id request/form_id | string:view;\n
+               dialog_method form/action | dialog_id;\n
+               update_action form/update_action;\n
+               global dialog_category request/dialog_category | nothing;\n
+\n
+               local_parameter_list local_parameter_list | python: {};\n
+               dummy python: local_parameter_list.update({\'dialog_id\': dialog_id, \'dialog_method\': dialog_method, \'update_method\': update_action, \'dialog_category\': dialog_category, \'cancel_url\': request.get(\'cancel_url\'), \'form_id\': form_id});\n
+               title python: here.Base_translateString(here.Base_getFormViewDialogActionButtonTitle(form))">\n
+      <tal:block metal:use-macro="here/wizard_main_template/macros/master">\n
+        <tal:block metal:fill-slot="main">\n
+          <div class="list_dialog">\n
+            <tal:block metal:define-slot="main" />\n
+            <tal:block metal:define-slot="bottom" />\n
+          </div>\n
+<!--\n
+          <input tal:condition="cancel_url|request/cancel_url|nothing"\n
+                 i18n:attributes="value" i18n:domain="ui" value="Cancel Action"\n
+                 id="dialog_cancel_button" name="Base_cancel:method" type="submit" />\n
+          <input i18n:attributes="value" i18n:domain="ui" value="Update"\n
+                 tal:condition="python: form.update_action!=\'\'"\n
+                 id="dialog_update_button"\n
+                 name="Base_showUpdateDialog:method" type="submit" />\n
+-->\n
+          <input tal:attributes="value python: here.Base_getFormViewDialogActionButtonTitle(form);"\n
+                 i18n:attributes="value" i18n:domain="ui" accesskey="V"\n
+                 id="dialog_submit_button" type="submit" name="Base_callDialogMethod:method" />\n
         </tal:block>\n
       </tal:block>\n
     </tal:block>\n
@@ -86,7 +90,7 @@ IDEAS:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>wizard_main_template</string> </value>
+            <value> <string>wizard_dialog_main</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
