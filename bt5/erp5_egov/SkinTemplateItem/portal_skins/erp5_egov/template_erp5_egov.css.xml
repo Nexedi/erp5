@@ -265,25 +265,21 @@ form#main_form div#wrapper_header fieldset.widget hr{\n
 form#main_form div#wrapper_header fieldset.widget ul.onleft {\n
   list-style: none;\n
   padding: 5px;\n
-  margin: 20px 0 0 0;\n
-  margin-left: 15px;\n
+  margin: 20px 0 0 5px;\n
   /*background: white;*/\n
   /*background: #fff url(erp5-website-field.png) top repeat-x;*/\n
   background: white url(img/title_gradient_bar.gif) right repeat-y; \n
 }\n
 \n
 form#main_form div#wrapper_header fieldset.widget ul.onleft li{\n
-  margin-right: 3em;\n
+  margin-right: 1em;\n
   display: inline;\n
 }\n
 \n
 form#main_form div#wrapper_header fieldset.widget .onright a{\n
   background-repeat:no-repeat;\n
   height: 40px;\n
-  padding-top: 20px; \n
-  padding-left: 40px;\n
-  padding-right: 20px;\n
-  padding-bottom: 20px;\n
+  padding: 20px 10px 20px 40px;\n
 }\n
 \n
 .draft_state,\n
