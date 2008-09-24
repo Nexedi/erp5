@@ -45,6 +45,7 @@ from urlparse import urlparse, urlunparse
 from base64 import encodestring, decodestring
 from urllib import quote, unquote
 from DateTime import DateTime
+from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlugin
 
 # global (RAM) cookie storage
 cookiejar = cookielib.CookieJar()
@@ -416,19 +417,11 @@ class WizardTool(BaseTool):
     """Updates parameter_dict to include local saved server info settings. """
     global _server_to_preference_ids_map
     for key, value in _server_to_preference_ids_map.items():
-      if key != 'password':
-        parameter_dict[key] = self.getExpressConfigurationPreference(value, None)
-      else:
-        parameter_dict['password'] = ''
+      parameter_dict[key] = self.getExpressConfigurationPreference(value, None)
     ## add local ERP5 instance url
     parameter_dict['erp5_url'] = self.getPortalObject().absolute_url()
     # add user preffered language
     parameter_dict['user_preferred_language'] = getattr(self, 'user_preferred_language', 'en')
-    # add password from cookie
-    __ac_express = self.REQUEST.get('__ac_express', None)
-    if __ac_express is not None: 
-      __ac_express = decodestring(unquote(__ac_express))
-      parameter_dict['password'] = __ac_express
 
   def _updateParameterDictWithFileUpload(self, parameter_dict):
     """Updates parameter_dict to replace file upload with their file content,
@@ -531,7 +524,7 @@ class WizardTool(BaseTool):
   ######################################################
 
   #security.declareProtected(Permissions.ModifyPortalContent, 'login')
-  def login(self, REQUEST):
+  def remoteLogin(self, REQUEST):
     """ Login client and show next form. """
     client_id = None
     user_id = REQUEST.get('field_my_ac_name', None) or self.getExpressConfigurationPreference('preferred_express_user_id')
@@ -570,9 +563,49 @@ class WizardTool(BaseTool):
             %(came_from_method, user_id, response['server_buffer']['message']))
       return 
 
+  def login(self, REQUEST):
+    """ Login client and show next form. """
+    user_id = self.getExpressConfigurationPreference('preferred_express_user_id')
+    password = REQUEST.get('field_my_ac_password', '')
+    if self._isCorrectConfigurationKey(user_id, password):
+      # set encoded __ac_express cookie at client's browser
+      __ac_express = quote(encodestring(password))
+      expires = (DateTime() + 1).toZone('GMT').rfc822()
+      REQUEST.RESPONSE.setCookie('__ac_express',
+                                 __ac_express,
+                                 expires = expires)
+      REQUEST.set('__ac_express', __ac_express)
+      return self.next(REQUEST=REQUEST)
+    else:
+      # incorrect user_id / password
+      REQUEST.set('portal_status_message', self.Base_translateString('Incorrect Configuration Key'))
+      return self.view()
+
+  def _isCorrectConfigurationKey(self, user_id, password):
+    """ Is configuration key correct """
+    uf = self.getPortalObject().acl_users
+    for plugin_name, plugin in uf._getOb('plugins').listPlugins(IAuthenticationPlugin):
+      if plugin.authenticateCredentials({'login':user_id, 
+                                                       'password': password}) is not None:
+        return 1
+    return 0
+
+  def _isUserAllowedAccess(self):
+    """ Can user access locally portal_wizard """
+    password = self.REQUEST.get('__ac_express', None)
+    if password is not None: 
+      user_id = self.getExpressConfigurationPreference('preferred_express_user_id')
+      password = decodestring(unquote(password))
+      return self._isCorrectConfigurationKey(user_id, password)
+    return 0
+
   #security.declareProtected(Permissions.ModifyPortalContent, 'next')
   def next(self, REQUEST):
     """ Validate settings and return a new form to the user.  """
+    # check if user is allowed to access service
+    if not self._isUserAllowedAccess():
+      REQUEST.set('portal_status_message', self.Base_translateString('Incorrect Configuration Key'))
+      return self.view()
     response = self._callRemoteMethod("next")
     if isinstance(response['server_buffer'], dict):
       ## Remote server may request us to save some data.
@@ -595,6 +628,10 @@ class WizardTool(BaseTool):
   #security.declareProtected(Permissions.ModifyPortalContent, 'previous')
   def previous(self, REQUEST):
     """ Display the previous form. """
+    # check if user is allowed to access service
+    if not self._isUserAllowedAccess():
+      REQUEST.set('portal_status_message', self.Base_translateString('Incorrect Configuration Key'))
+      return self.view()
     response = self._callRemoteMethod('previous')
     command = response["command"]
     html = response['data']
@@ -700,8 +737,11 @@ class WizardTool(BaseTool):
   security.declareProtected(Permissions.View, 'getExpressConfigurationPreference')
   def getExpressConfigurationPreference(self, preference_id, default = None):
     """ Get Express configuration preference """
+    _setSuperSecurityManager(self.getPortalObject())
     portal_preferences = getToolByName(self, 'portal_preferences')
-    return portal_preferences.getPreference(preference_id, default)
+    preference_value = portal_preferences.getPreference(preference_id, default)
+    noSecurityManager()
+    return preference_value
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setExpressConfigurationPreference')
   def setExpressConfigurationPreference(self, preference_id, value):
