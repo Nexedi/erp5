@@ -299,6 +299,15 @@ class TestBug(ERP5TypeTestCase):
     self.assertEquals("#%s" % bug.getId(), bug.getReference())
     #self.assertEquals(bug_message.getSourceTradeValue().getTitle(), 'dummy')
 
+  def stepCloneAndCheckBug(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create a dummy bug
+    """
+    bug_to_clone = sequence.get('bug')
+    bug = bug_to_clone.Base_createCloneDocument(batch_mode=1)
+    self.assertEquals("#%s" % bug.getId(), bug.getReference())
+    #self.assertEquals(bug_message.getSourceTradeValue().getTitle(), 'dummy')
+
   def stepOpenBug(self, sequence=None, sequence_list=None, **kw):
     """
       Open the bug.
@@ -483,6 +492,21 @@ class TestBug(ERP5TypeTestCase):
 #    sequence_string = ' '.join(step_list)
 #    sequence_list.addSequenceString(sequence_string)
 #    sequence_list.play(self, quiet=quiet)
+
+  def test_05_setCheckBugClone(self, quiet=QUIET, run=RUN_ALL_TEST):
+    """
+      Test that a closed bug has its stop date property updated.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    step_list = [ 'stepCreateBug',
+                  'stepCheckBugInit',
+                  'stepCloneAndCheckBug'
+                ]
+    sequence_string = ' '.join(step_list)
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
 
 def test_suite():
   suite = unittest.TestSuite()
