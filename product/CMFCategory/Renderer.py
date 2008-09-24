@@ -137,7 +137,7 @@ class Renderer(Filter):
     if self.sort_method is not None:
       value_list.sort(self.sort_method)
     elif self.sort_id is not None:
-      value_list.sort(lambda x,y: cmp(x.getProperty(self.sort_id), y.getProperty(self.sort_id)))
+      value_list.sort(key=lambda x: x.getProperty(self.sort_id))
 
     # If base=1 but base_category is None, it is necessary to guess the base category
     # by heuristic.

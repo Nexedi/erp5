@@ -710,7 +710,7 @@ class ERP5TypeInformationMixIn( FactoryTypeInformation,
     def reorderActions(self, REQUEST=None):
       """Reorder actions according to their priorities."""
       new_actions = self._cloneActions()
-      new_actions.sort(lambda x,y: cmp(x.getPriority(), y.getPriority()))
+      new_actions.sort(key=lambda x: x.getPriority())
       self._actions = tuple( new_actions )
 
       if REQUEST is not None:

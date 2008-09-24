@@ -551,7 +551,7 @@ class Catalog(Folder,
       if value is not None:
         property_list.append((property_id, value))
     # Sort for easy diff
-    property_list.sort(lambda x, y: cmp(x[0], y[0]))
+    property_list.sort(key=lambda x: x[0])
     for property in property_list:
       property_id = property[0]
       value       = property[1]
@@ -576,7 +576,7 @@ class Catalog(Folder,
         filter_definition = self.filter_dict[filter_id]
         filter_list.append((filter_id, filter_definition))
       # Sort for easy diff
-      filter_list.sort(lambda x, y: cmp(x[0], y[0]))
+      filter_list.sort(key=lambda x: x[0])
       for filter_item in filter_list:
         filter_id  = filter_item[0]
         filter_def = filter_item[1]

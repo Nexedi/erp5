@@ -639,9 +639,9 @@ class ERP5ShopOrderConduit(ERP5Conduit):
         erp5_ship_id_word_list = self.str2id(service_id).split("_")
         stor_ship_id_word_list = self.str2id(stor_ship_title).split("_")
         erp5_ship_title_word_list = self.str2id(erp5_ship_title).split("_")
-        erp5_ship_id_word_list.sort(lambda x, y: cmp(str(x), str(y)))
-        stor_ship_id_word_list.sort(lambda x, y: cmp(str(x), str(y)))
-        erp5_ship_title_word_list.sort(lambda x, y: cmp(str(x), str(y)))
+        erp5_ship_id_word_list.sort(key=lambda x: str(x))
+        stor_ship_id_word_list.sort(key=lambda x: str(x))
+        erp5_ship_title_word_list.sort(key=lambda x: str(x))
         if stor_ship_id_word_list in (erp5_ship_id_word_list, erp5_ship_title_word_list):
           shipment_id = service_id
           LOG("Service found with method 3 ! >>>>>>>>", 0, repr(shipment_id))
