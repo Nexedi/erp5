@@ -48,7 +48,7 @@
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test PlanningBox Next and Previous Lane</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test PlanningBox Next and Previous Lane Multiple Times</td></tr>\n
 </thead><tbody tal:define="year python: DateTime().year();\n
                            now python: DateTime();\n
                            sday python: DateTime()-DateTime().dow();\n
@@ -147,7 +147,7 @@
 <tal:block tal:repeat="page page_list" tal:define="lane_list python:range(1,9);">\n
   <tal:block tal:repeat="lane_num lane_list">\n
     <tr tal:define="d python:now-page">\n
-      <td>assertText</td>\n
+      <td>verifyText</td>\n
       <td tal:content=\'string: //div[@id="group_lane_${lane_num}"]\'></td>\n
       <td tal:content="python: \'%s %02d/%02d %02d:00\' % (d.Day(), d.month(), d.day(), (lane_num-1)*3)"> </td>\n
     </tr>\n
@@ -181,7 +181,7 @@
 <tal:block tal:repeat="page page_list" tal:define="lane_list python:range(1,9);">\n
   <tal:block tal:repeat="lane_num lane_list">\n
     <tr tal:define="d python:now+page">\n
-      <td>assertText</td>\n
+      <td>verifyText</td>\n
       <td tal:content=\'string: //div[@id="group_lane_${lane_num}"]\'></td>\n
       <td tal:content="python: \'%s %02d/%02d %02d:00\' % (d.Day(), d.month(), d.day(), (lane_num-1)*3)"> </td>\n
     </tr>\n
@@ -210,7 +210,7 @@
 <tal:block tal:repeat="page page_list" tal:define="lane_list python:range(1,8);">\n
   <tal:block tal:repeat="lane_num lane_list">\n
     <tr tal:define="d python:sday-(page*7)+lane_num-1">\n
-      <td>assertText</td>\n
+      <td>verifyText</td>\n
       <td tal:content=\'string: //div[@id="group_lane_${lane_num}"]\'></td>\n
       <td tal:content="python: \'%s %04d/%02d/%02d\' % (d.Day(), d.year(), d.month(), d.day())"> </td>\n
     </tr>\n
@@ -234,7 +234,7 @@
 <tal:block tal:repeat="page page_list" tal:define="lane_list python:range(1,8);">\n
   <tal:block tal:repeat="lane_num lane_list">\n
     <tr tal:define="d python:sday+(page*7)+lane_num-1">\n
-      <td>assertText</td>\n
+      <td>verifyText</td>\n
       <td tal:content=\'string: //div[@id="group_lane_${lane_num}"]\'></td>\n
       <td tal:content="python: \'%s %04d/%02d/%02d\' % (d.Day(), d.year(), d.month(), d.day())"> </td>\n
     </tr>\n
