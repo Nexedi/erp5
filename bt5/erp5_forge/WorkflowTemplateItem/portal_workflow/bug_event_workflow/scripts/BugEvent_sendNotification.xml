@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -71,21 +59,27 @@
 bug = bug_message.getParentValue()\n
 body = """\n
   Bug     : %s\n
-  Status : %s\n
+  Status  : %s\n
   Date    : %s\n
-  Link     : %s/view\n
+  Link    : %s/view\n
 """ %  (bug.getTitle(\'\'), bug.getSimulationStateTitle(),\n
             bug.getStartDate(\'\'),  bug.getAbsoluteUrl())\n
 \n
 if bug.getSourceTitle() is not None:\n
-  body += """  Requester : %s\n
+  body += """  Requester  : %s\n
   Assignee   : %s\n
-  Reporter    : %s\n
-""" % (bug.getDestinationTitle(\'\'), bug.getSourceTitle(\'\'),\n
-           bug.getSourceTradeTitle(\'\'))\n
+""" % (bug.getDestinationTitle(\'\'), bug.getSourceTitle(\'\'),)\n
+\n
+if bug.getSourceTradeTitle() is not None:\n
+  body += """  Reporter   : %s\n
+""" % (bug.getSourceTradeTitle(\'\'),)\n
+\n
+if bug.getSourceDecisionTitle() is not None:\n
+  body += """  Supervisor : %s\n
+""" % (bug.getSourceDecisionTitle(\'\'),)\n
 \n
 if bug.getDestinationProjectTitle() is not None:\n
-  body += """  Request Project   : %s\n
+  body += """  Request Project  : %s\n
 """ % bug.getDestinationProjectTitle()\n
 \n
 if bug.getSourceProjectTitle() is not None:\n
@@ -122,7 +116,7 @@ for message in bug_message_list:\n
     body += """\n
 ++++++ Message #%s submitted by %s on %s ++++++\n
 %s\n
-""" % (message_count, bug_message.getSourceTitle(\'\'),\n
+""" % (message_count, message.getSourceTitle(\'\'),\n
             message.getStartDate(),  text )\n
 \n
 recipient_list = bug_message.BugLine_getRecipientValueList()\n
@@ -136,12 +130,6 @@ portal.portal_notifications.sendMessage(sender=bug_message.getSourceValue(),\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
             <value>
               <none/>
             </value>
