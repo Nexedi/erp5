@@ -3102,11 +3102,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
         'stop_action')
     # mirror section can be set only on the line
     for line in transaction.getMovementList() :
-      if line.getSourceValue().isMemberOf(
-              'account_type/asset/receivable') or \
-         line.getSourceValue().isMemberOf(
-              'account_type/liability/payable') :
-        line.setDestinationSection(old_destination_section)
+      line.setDestinationSection(old_destination_section)
     try:
       self.getWorkflowTool().doActionFor(transaction, 'stop_action')
       self.assertEquals(transaction.getSimulationState(), 'stopped')
