@@ -132,8 +132,9 @@ for requirement_item in requirements_items:\n
     clean_requirements_key_list.append(new_1st_level_requirement_title)\n
 \n
 int_index = 0\n
-if len(destination_obj.contentValues()):\n
-  int_index = max([req.getIntIndex() for req in destination_obj.contentValues()])\n
+destination_object_subobject_list = destination_obj.contentValues(checked_permission=\'View\')\n
+if len(destination_object_subobject_list):\n
+  int_index = max([req.getIntIndex() for req in destination_object_subobject_list])\n
 \n
 sub_requirement_int_index = 0\n
 int_index_step = 10\n
@@ -227,6 +228,7 @@ return context.Base_redirect(form_id,\n
                             <string>new_1st_level_requirement_title</string>
                             <string>new_2nd_level_feat</string>
                             <string>int_index</string>
+                            <string>destination_object_subobject_list</string>
                             <string>len</string>
                             <string>max</string>
                             <string>append</string>

@@ -1,3 +1,6 @@
+2008-09-24 yusei
+* Fixed a bug in Requirement_generateRequirements.
+
 2008-09-22 yusei
 * Fixed Generate References bug.
 
