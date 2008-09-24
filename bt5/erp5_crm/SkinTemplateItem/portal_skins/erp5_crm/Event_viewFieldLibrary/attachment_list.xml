@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.EditorField</string>
-          <string>EditorField</string>
-        </tuple>
-        <none/>
+        <global name="EditorField" module="Products.ERP5Form.EditorField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value> <string>Events in this state are outgoing events which are waiting for the approval of the ticket manager who will eventually request them to be posted.</string> </value>
         </item>
