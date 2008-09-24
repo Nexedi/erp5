@@ -28,12 +28,6 @@
             </value>
         </item>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_client_id</string> </key>
             <value> <string>gjkpDZeWpzZDRdKkdTPX</string> </value>
         </item>
@@ -113,12 +107,6 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string>Wizard Tool</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>user_preferred_language</string> </key>
