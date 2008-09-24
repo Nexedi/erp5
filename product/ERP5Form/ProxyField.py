@@ -407,14 +407,22 @@ class ProxyField(ZMIField):
     """ 
     return self.getTemplateField().get_error_names()
 
-  def getTemplateField(self):
+  def getTemplateField(self, cache='auto'):
     """
     Return template field of the proxy field.
     """
-    try:
-      return self._getTemplateFieldCache()
-    except KeyError:
-      pass
+    if cache == 'auto':
+      tales = self.tales
+      if self._p_oid is None or tales['field_id'] or tales['form_id']:
+        cache = False
+      else:
+        cache = True
+
+    if cache is True:
+      try:
+        return self._getTemplateFieldCache()
+      except KeyError:
+        pass
 
     form = self.aq_parent
     object = form.aq_parent
@@ -427,7 +435,8 @@ class ProxyField(ZMIField):
           'Could not get a field from a proxy field %s in %s' % \
               (self.id, object.id))
       proxy_field = None
-    self._setTemplateFieldCache(proxy_field)
+    if cache is True:
+      self._setTemplateFieldCache(proxy_field)
     return proxy_field
 
   def getRecursiveTemplateField(self):
@@ -639,13 +648,22 @@ class ProxyField(ZMIField):
 
   security.declareProtected('Access contents information', 'get_value')
   def get_value(self, id, **kw):
-    REQUEST = get_request()
     if ((id in self.widget.property_names) or
         (not self.is_delegated(id))):
       return ZMIField.get_value(self, id, **kw)
 
+    # Don't use cache if field is not stored in zodb, or if target field is
+    # defined by a TALES
+    if self._p_oid is None or self.tales['field_id'] or self.tales['form_id']:
+      proxy_field = self.getTemplateField(cache=False)
+      if proxy_field is not None:
+        return proxy_field.get_value(id, **kw)
+      else:
+        return None
+
     field = self
-    proxy_field = self.getTemplateField()
+    proxy_field = self.getTemplateField(cache=True)
+    REQUEST = get_request()
     if proxy_field is not None and REQUEST is not None:
       field = REQUEST.get(
         'field__proxyfield_%s_%s_%s' % (self.id, self._p_oid, id),
@@ -653,11 +671,6 @@ class ProxyField(ZMIField):
       REQUEST.set(
         'field__proxyfield_%s_%s_%s' % (proxy_field.id, proxy_field._p_oid, id),
         field)
-
-    # Don't use cache if field is not stored in zodb, or if target field is
-    # defined by a TALES
-    if self._p_oid is None or self.tales['field_id'] or self.tales['form_id']:
-      return self._get_value(id, **kw)
 
     cache_id = ('ProxyField.get_value',
                 self._p_oid,
@@ -694,9 +707,10 @@ class ProxyField(ZMIField):
   def _getTemplateFieldCache(self):
     parent = self.aq_parent
     if parent is not None:
-      return getTransactionalVariable(self)[self._getCacheId()].__of__(parent)
-    else:
-      raise KeyError
+      cache = getTransactionalVariable(self)[self._getCacheId()]
+      if cache is not None:
+        return cache.__of__(parent)
+    raise KeyError
 
 
 #
