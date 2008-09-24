@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value> <string>A document which is part of another document and which acquired security from it.</string> </value>
         </item>

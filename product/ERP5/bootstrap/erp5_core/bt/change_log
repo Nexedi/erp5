@@ -1,3 +1,6 @@
+2008-09-24 yusei
+* Update xml format.
+
 2008-09-16 Kazuhiko
 * move Divergence Tester, Delivery Builder, Delivery Tool, Order Builder, Order Tool, delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, delivery_simulation_interaction_workflow, order_movement_simulation_interaction_workflow, order_simulation_interaction_workflow and simulation_movement_causality_interaction_workflow from erp5_core to erp5_base.
 

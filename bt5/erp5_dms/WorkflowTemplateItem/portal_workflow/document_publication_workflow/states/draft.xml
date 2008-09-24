@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value> <string>A document in draft state, which is still being worked by its author or its contributors (in a collaborative process)</string> </value>
         </item>

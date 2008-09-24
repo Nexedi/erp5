@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_arg</string> </key>
             <value>
               <object>
@@ -228,38 +222,38 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>uid</string>
-<string>security_uid</string>
-<string>getOwnerInfo</string>
-<string>getViewPermissionOwner</string>
-<string>getPath</string>
-<string>getRelativeUrl</string>
-<string>getParentUid</string>
-<string>id</string>
-<string>getDescription</string>
-<string>getTitle</string>
-<string>meta_type</string>
-<string>getPortalType</string>
-<string>getOpportunityState</string>
-<string>getCorporateRegistrationCode</string>
-<string>getEan13Code</string>
-<string>getSimulationState</string>
-<string>getCausalityState</string>
-<string>getInvoiceState</string>
-<string>getValidationState</string>
-<string>getPaymentState</string>
-<string>getEventState</string>
-<string>getImmobilisationState</string>
-<string>getReference</string>
-<string>getGroupingReference</string>
-<string>getSourceReference</string>
-<string>getDestinationReference</string>
-<string>getStringIndex</string>
-<string>getIntIndex</string>
-<string>getFloatIndex</string>
-<string>hasCellContent</string>
-<string>getCreationDate</string>
-<string>getModificationDate</string>
+                            <string>uid</string>
+                            <string>security_uid</string>
+                            <string>getOwnerInfo</string>
+                            <string>getViewPermissionOwner</string>
+                            <string>getPath</string>
+                            <string>getRelativeUrl</string>
+                            <string>getParentUid</string>
+                            <string>id</string>
+                            <string>getDescription</string>
+                            <string>getTitle</string>
+                            <string>meta_type</string>
+                            <string>getPortalType</string>
+                            <string>getOpportunityState</string>
+                            <string>getCorporateRegistrationCode</string>
+                            <string>getEan13Code</string>
+                            <string>getSimulationState</string>
+                            <string>getCausalityState</string>
+                            <string>getInvoiceState</string>
+                            <string>getValidationState</string>
+                            <string>getPaymentState</string>
+                            <string>getEventState</string>
+                            <string>getImmobilisationState</string>
+                            <string>getReference</string>
+                            <string>getGroupingReference</string>
+                            <string>getSourceReference</string>
+                            <string>getDestinationReference</string>
+                            <string>getStringIndex</string>
+                            <string>getIntIndex</string>
+                            <string>getFloatIndex</string>
+                            <string>hasCellContent</string>
+                            <string>getCreationDate</string>
+                            <string>getModificationDate</string>
                           </list>
                         </value>
                     </item>

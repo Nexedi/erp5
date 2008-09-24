@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value> <string>Events in this state are being drafted by the user. Outgoing events must be validated through the Submit action. Incoming events must be validated through the Assign action.</string> </value>
         </item>

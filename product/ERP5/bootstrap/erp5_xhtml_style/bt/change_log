@@ -1,3 +1,6 @@
+2008-09-24 yusei
+* Update xml format.
+
 2008-09-24 fabien
 * Add file fckstyles.xml to have one more style : "Python code" wich improve python code blocks displaying.
 * Modify erp5_editor.css file to display this new div class in a nice way.

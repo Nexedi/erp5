@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_arg</string> </key>
             <value>
               <object>
@@ -126,21 +120,21 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>isMovement</string>
-<string>uid</string>
-<string>getExplanationUid</string>
-<string>getSourceUid</string>
-<string>getDestinationUid</string>
-<string>getResourceUid</string>
-<string>getQuantity</string>
-<string>getStartDate</string>
-<string>getStopDate</string>
-<string>getPrice</string>
-<string>isAccountable</string>
-<string>isOrderable</string>
-<string>isDeliverable</string>
-<string>isDivergent</string>
-<string>getVariationText</string>
+                            <string>isMovement</string>
+                            <string>uid</string>
+                            <string>getExplanationUid</string>
+                            <string>getSourceUid</string>
+                            <string>getDestinationUid</string>
+                            <string>getResourceUid</string>
+                            <string>getQuantity</string>
+                            <string>getStartDate</string>
+                            <string>getStopDate</string>
+                            <string>getPrice</string>
+                            <string>isAccountable</string>
+                            <string>isOrderable</string>
+                            <string>isDeliverable</string>
+                            <string>isDivergent</string>
+                            <string>getVariationText</string>
                           </list>
                         </value>
                     </item>

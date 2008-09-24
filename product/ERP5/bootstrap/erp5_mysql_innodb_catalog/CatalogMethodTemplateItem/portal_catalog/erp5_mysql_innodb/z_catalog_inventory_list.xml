@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_arg</string> </key>
             <value>
               <object>
@@ -84,26 +78,20 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>isInventory</string>
-<string>uid</string>
-<string>getDestinationUid</string>
-<string>getDestinationSectionUid</string>
-<string>getDestinationPaymentUid</string>
-<string>getStartDate</string>
-<string>isFullInventory</string>
-<string>getSimulationState</string>
+                            <string>isInventory</string>
+                            <string>uid</string>
+                            <string>getDestinationUid</string>
+                            <string>getDestinationSectionUid</string>
+                            <string>getDestinationPaymentUid</string>
+                            <string>getStartDate</string>
+                            <string>isFullInventory</string>
+                            <string>getSimulationState</string>
                           </list>
                         </value>
                     </item>
                   </dictionary>
                 </state>
               </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>

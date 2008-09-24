@@ -79,7 +79,7 @@ if len(related_list) == 0:\n
   url = context.absolute_url()\n
   message = Base_translateString(\n
     \'No %s Related\' % portal_type[0],\n
-    default = unicode(Base_translateString(\'No ${portal_type} Related.\',\n
+    default = unicode(Base_translateString(\'No ${portal_type} related.\',\n
                                            mapping = { \'portal_type\': Base_translateString(portal_type[0])}), \'utf8\'))\n
 \n
 elif len(related_list) == 1:\n

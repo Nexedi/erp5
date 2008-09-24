@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_arg</string> </key>
             <value>
               <object>
@@ -180,42 +174,36 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>uid</string>
-<string>getResourceUid</string>
-<string>getInventoriatedQuantity</string>
-<string>getSourceUid</string>
-<string>getDestinationUid</string>
-<string>getSourceSectionUid</string>
-<string>getDestinationSectionUid</string>
-<string>isMovement</string>
-<string>getSourcePaymentUid</string>
-<string>getDestinationPaymentUid</string>
-<string>getSourceFunctionUid</string>
-<string>getDestinationFunctionUid</string>
-<string>getSourceProjectUid</string>
-<string>getDestinationProjectUid</string>
-<string>getSimulationState</string>
-<string>getSourceInventoriatedTotalAssetPrice</string>
-<string>getDestinationInventoriatedTotalAssetPrice</string>
-<string>getStartDate</string>
-<string>getStopDate</string>
-<string>isAccountable</string>
-<string>getPortalType</string>
-<string>getVariationText</string>
-<string>getSubVariationText</string>
-<string>isInventoryMovement</string>
+                            <string>uid</string>
+                            <string>getResourceUid</string>
+                            <string>getInventoriatedQuantity</string>
+                            <string>getSourceUid</string>
+                            <string>getDestinationUid</string>
+                            <string>getSourceSectionUid</string>
+                            <string>getDestinationSectionUid</string>
+                            <string>isMovement</string>
+                            <string>getSourcePaymentUid</string>
+                            <string>getDestinationPaymentUid</string>
+                            <string>getSourceFunctionUid</string>
+                            <string>getDestinationFunctionUid</string>
+                            <string>getSourceProjectUid</string>
+                            <string>getDestinationProjectUid</string>
+                            <string>getSimulationState</string>
+                            <string>getSourceInventoriatedTotalAssetPrice</string>
+                            <string>getDestinationInventoriatedTotalAssetPrice</string>
+                            <string>getStartDate</string>
+                            <string>getStopDate</string>
+                            <string>isAccountable</string>
+                            <string>getPortalType</string>
+                            <string>getVariationText</string>
+                            <string>getSubVariationText</string>
+                            <string>isInventoryMovement</string>
                           </list>
                         </value>
                     </item>
                   </dictionary>
                 </state>
               </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
