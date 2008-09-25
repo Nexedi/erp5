@@ -291,7 +291,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:context.portal_selections.getSelectionParamsFor(\'attachment_selection\', REQUEST=context.REQUEST)[\'requirement\'] == context.getPortalObject().Base_translateString(\'Required\') and not len(context.EGov_getAttachmentListFromReportSelection())</string> </value>
+            <value> <string>python:context.portal_selections.getSelectionParamsFor(\'attachment_selection\', REQUEST=context.REQUEST).has_key(\'requirement\') and context.portal_selections.getSelectionParamsFor(\'attachment_selection\', REQUEST=context.REQUEST)[\'requirement\'] == context.getPortalObject().Base_translateString(\'Required\') and not len(context.EGov_getAttachmentListFromReportSelection())</string> </value>
         </item>
       </dictionary>
     </pickle>

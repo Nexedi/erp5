@@ -273,7 +273,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:context.portal_selections.getSelectionParamsFor(\'attachment_selection\', REQUEST=context.REQUEST)[\'title\']</string> </value>
+            <value> <string>python:context.portal_selections.getSelectionParamsFor(\'attachment_selection\', REQUEST=context.REQUEST).has_key(\'title\') and context.portal_selections.getSelectionParamsFor(\'attachment_selection\', REQUEST=context.REQUEST)[\'title\']</string> </value>
         </item>
       </dictionary>
     </pickle>

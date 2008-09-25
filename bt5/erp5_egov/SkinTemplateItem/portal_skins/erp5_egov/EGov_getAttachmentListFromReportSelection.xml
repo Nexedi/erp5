@@ -55,8 +55,9 @@
             <key> <string>_body</string> </key>
             <value> <string>params = context.portal_selections.getSelectionParamsFor(\'attachment_selection\',\n
                                                     REQUEST=context.REQUEST)\n
-\n
-return params[\'attachment_list\']\n
+if params.has_key(\'attachment_list\'):\n
+  return params[\'attachment_list\']\n
+return []\n
 </string> </value>
         </item>
         <item>

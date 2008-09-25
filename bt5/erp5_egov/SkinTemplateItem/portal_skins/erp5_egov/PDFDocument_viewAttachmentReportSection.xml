@@ -98,7 +98,6 @@
                     <key> <string>white_background</string> </key>
                     <value>
                       <list>
-                        <string>debug</string>
                         <string>section_title</string>
                         <string>section_state</string>
                         <string>missing</string>
