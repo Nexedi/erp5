@@ -195,8 +195,6 @@ class EmptyOrganisation:\n
   """\n
   def getTitle(self):\n
     return \'\'\n
-  def getCorporateName(self):\n
-    return \'\'\n
   def getDefaultAddressText(self):\n
     return \'\'\n
   def getDefaultAddressRegionTitle(self):\n
@@ -211,13 +209,11 @@ class EmptyOrganisation:\n
     return d\n
 \n
 \n
-source_section = context.getSourceSectionValue(\n
-                          portal_type=\'Organisation\')\n
+source_section = context.getSourceSectionValue()\n
 if source_section is None:\n
   source_section = EmptyOrganisation()\n
 \n
-destination_section = context.getDestinationSectionValue(\n
-                          portal_type=\'Organisation\')\n
+destination_section = context.getDestinationSectionValue()\n
 if destination_section is None:\n
   destination_section = EmptyOrganisation()\n
 \n
@@ -237,7 +233,7 @@ if destination_administration is None:\n
 \n
 \n
 data_dict = {\n
-  \'source_section_title\': source_section.getCorporateName() or\\\n
+  \'source_section_title\': source_section.getProperty(\'corporate_name\') or\\\n
                             source_section.getTitle(),\n
   \'source_section_image_path\': context.getSourceSectionValue() is not None\\\n
           and context.getSourceSectionValue().getDefaultImagePath() or \'\',\n
@@ -265,8 +261,9 @@ data_dict = {\n
                            is not None and\\\n
                            context.getSourceSectionValue().getVatCode() or \'\'),\n
 \n
-  \'source_administration_title\': source_administration.getCorporateName()\\\n
-                                       or source_administration.getTitle(),\n
+  \'source_administration_title\': \\\n
+      source_administration.getProperty(\'corporate_name\') \\\n
+      or source_administration.getTitle(),\n
   \'source_administration_address\': getOneLineAddress(\n
                                       source_administration.getDefaultAddressText(),\n
                                       source_administration.getDefaultAddressRegionTitle()),\n
@@ -334,7 +331,7 @@ data_dict = {\n
   \'destination_vatid\': getVatId(context.getDestination() and\n
       context.getDestinationValue().getProperty(\'vat_code\', \'\') or \'\'),\n
 \n
-  \'destination_section_title\': destination_section.getCorporateName() or \\\n
+  \'destination_section_title\': destination_section.getProperty(\'corporate_name\') or \\\n
                                   destination_section.getTitle(),\n
   \'destination_section_image_path\': destination_section.getDefaultImagePath(),\n
   \'destination_section_image_width\': context.getDestinationSectionValue() is not None\\\n
@@ -353,7 +350,8 @@ data_dict = {\n
   \'destination_section_vatid\': getVatId(context.getDestinationSection() and\n
       context.getDestinationSectionValue().getProperty(\'vat_code\') or \'\'),\n
 \n
-  \'destination_administration_title\': destination_administration.getCorporateName() or \\\n
+  \'destination_administration_title\':\\\n
+    destination_administration.getProperty(\'corporate_name\') or \\\n
                                 destination_administration.getTitle(),\n
   \'destination_administration_address\': getOneLineAddress(\n
                                       destination_administration.getDefaultAddressText(),\n
