@@ -687,7 +687,7 @@ class ProxyField(ZMIField):
         _field_value_cache[cache_id] = value
 
     if value is _USE_ORIGINAL_GET_VALUE_MARKER:
-      return self.getTemplateField().get_value(id, **kw)
+      return proxy_field.get_value(id, **kw)
 
     if callable(value):
       return value(field, id, **kw)
