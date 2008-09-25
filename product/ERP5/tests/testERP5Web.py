@@ -881,6 +881,14 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
                                              field.get_value('form_id'),
                                              field.get_value('field_id')))
 
+  def test_15_getDocumentValueList(self, quiet=quiet, run=run_all_test):
+    """Make sure that getDocumentValueList works."""
+    self.setupWebSite()
+    website = self.web_site_module[self.website_id]
+    website.getDocumentValueList(
+      portal_type='Document',
+      sort_on=[('translated_portal_type', 'ascending')])
+
 
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
@@ -1161,6 +1169,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.assertEquals(1, len(section.WebSection_getDocumentValueList()))
     self.assertEquals(page_jp_0.getUid(), 
                       section.WebSection_getDocumentValueList()[0].getUid())
+
 
 def test_suite():
   suite = unittest.TestSuite()
