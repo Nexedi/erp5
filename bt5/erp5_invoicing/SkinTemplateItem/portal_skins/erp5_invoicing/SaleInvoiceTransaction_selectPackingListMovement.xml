@@ -53,29 +53,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>DEBUG = 1\n
-LOG = lambda msg:context.log("SaleInvoice_selectPackingListMovement", msg)\n
-\n
-kw[\'parent_specialise_portal_type\']  = \'Invoicing Rule\'\n
+            <value> <string>kw[\'parent_specialise_portal_type\']  = \'Invoicing Rule\'\n
 kw[\'explanation_portal_type\']        = [\'Sale Order\', \'Sale Packing List\']\n
 kw[\'portal_type\']                    = \'Simulation Movement\'\n
 kw[\'grand_parent_simulation_state\']  = [\'started\', \'stopped\',\'delivered\']\n
 \n
 kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
 \n
-if DEBUG : \n
-  LOG("SQL used = %s"%context.InvoiceTransaction_zSelectMovement(src__=1, **kw))\n
-\n
 movement_list = [] \n
 for movement in context.InvoiceTransaction_zSelectMovement(**kw) :\n
   movement = movement.getObject()\n
   if movement.getDeliveryValue() is None :\n
     movement_list.append(movement)\n
-  else : \n
-    LOG("simulation movement %s should not have been selected !" % movement.getPath())\n
-\n
-if DEBUG :\n
-  LOG("selected movement_list : %s"%movement_list)\n
+  else :\n
+    from Products.ERP5Type.Log import log\n
+    log("SaleInvoice_selectPackingListMovement", \\\n
+        "simulation movement %s should not have been selected !" % movement.getPath())\n
 \n
 return movement_list\n
 </string> </value>
@@ -115,8 +108,6 @@ return movement_list\n
                         <value>
                           <tuple>
                             <string>kw</string>
-                            <string>DEBUG</string>
-                            <string>LOG</string>
                             <string>_write_</string>
                             <string>_getattr_</string>
                             <string>_apply_</string>
@@ -125,6 +116,8 @@ return movement_list\n
                             <string>_getiter_</string>
                             <string>movement</string>
                             <string>None</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                           </tuple>
                         </value>
                     </item>

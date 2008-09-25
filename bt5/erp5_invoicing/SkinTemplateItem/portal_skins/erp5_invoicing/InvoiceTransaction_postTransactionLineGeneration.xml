@@ -58,8 +58,8 @@
 # after the sale_invoice_transaction_builder delivery builder\n
 # created Sale Invoice Transaction Line\n
 # \n
-\n
-LOG = lambda msg:context.log(\n
+from Products.ERP5Type.Log import log\n
+LOG = lambda msg:log(\n
           "SaleInvoiceTransaction_postTransactionLineGeneration", msg)\n
 \n
 sale_invoice = context\n
@@ -134,6 +134,8 @@ context.AccountingTransaction_roundDebitCredit()\n
                         <value>
                           <tuple>
                             <string>kw</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
                             <string>LOG</string>
                             <string>context</string>
                             <string>sale_invoice</string>
