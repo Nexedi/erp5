@@ -812,3 +812,6 @@ msgstr "Et utilisez l'identifiant"
 
 msgid "and the password"
 msgstr "et le mot de passe"
+
+msgid "Type the characters you see in the picture below. This is done to prevent access by spam bots. All letters are lowercase. If you are unable to read, click on "refresh" to generate a new image."
+msgstr "Tapez les caractères que vous voyez dans l'image suivante. Ceci est fait pour prévenir l'envoi de spam par des robots. Toutes les lettres sont des minuscules. Si vous n'êtes pas capable de lire l'image, cliquez sur "Rafraîchir" pour en générer une nouvelle."
