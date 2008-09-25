@@ -75,10 +75,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>A typical per unit volume of the resource</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_quantity</string> </value>
                 </item>
@@ -92,7 +88,11 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string encoding="base64">Vm9sdW1lIChtwrMp</string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+Volume (m&#179;)
+
+]]></string> </value>
                 </item>
               </dictionary>
             </value>
