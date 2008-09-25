@@ -34,6 +34,7 @@ from Products.ERP5.Document.Amount import Amount
 from Products.ERP5.MovementGroup import MovementGroupNode
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.CopySupport import CopyError, tryMethodCallWithTemporaryPermission
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from DateTime import DateTime
 from Acquisition import aq_parent, aq_inner
 
@@ -306,14 +307,19 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                           **kw)
     return delivery_list
 
-  def _deliveryGroupProcessing(self, delivery_module, movement_group,
-                               collect_order_list, movement_group_list=None,
-                               delivery_to_update_list=None,
-                               divergence_list=None,
-                               activate_kw=None, force_update=0, **kw):
+  def _deliveryGroupProcessing(self, *args, **kw):
     """
       Build empty delivery from a list of movement
     """
+    deliveryGroupProcessing = UnrestrictedMethod(self.__deliveryGroupProcessing)
+    return deliveryGroupProcessing(*args, **kw)
+
+  def __deliveryGroupProcessing(self, delivery_module, movement_group,
+                                collect_order_list, movement_group_list=None,
+                                delivery_to_update_list=None,
+                                divergence_list=None,
+                                activate_kw=None, force_update=0, **kw):
+    """This method is wrapped by UnrestrictedMethod."""
     if movement_group_list is None:
       movement_group_list = []
     if divergence_list is None:
