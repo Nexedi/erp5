@@ -231,7 +231,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>egov_workflow_selection</string> </value>
+                    <value> <string>egov_annonymous_workflow_history_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
