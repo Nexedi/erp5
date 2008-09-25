@@ -1,6 +1,5 @@
 2008-09-25 fabien
 * modify some selection_name on listbox to be unique and avoid conflic
-* modify some permission to assignee on draft state of egov_universal_workflow. Now it's allowed to add, delete and modify portal content .
 
 2008-09-23 fabien
 * remove standardSecurity extension. The name was in conflict with an Extension in erp5_core. Move it in safi_egov bt and rename it in ERP5EGov_Security.
