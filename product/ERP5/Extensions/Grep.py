@@ -46,7 +46,8 @@ def grep(self, pattern, A=0, B=0, r=1, i=0, highlight=1):
   if int(i) :
     re_flags = re.IGNORECASE
   result = []
-  traverse(self, re.compile(pattern, re_flags), result, command_line_arguments)
+  rx = re.compile(pattern, re_flags)
+  traverse(self, rx, result, command_line_arguments)
 
   doctype = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'
   html = '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">'
@@ -56,6 +57,8 @@ def grep(self, pattern, A=0, B=0, r=1, i=0, highlight=1):
     body{
       background-color: #F9F9F9;
       font-family: Verdana,Tahoma,Georgia,Geneva,Arial,Sans,sans-serif;
+      font-size: 90%;
+      white-space:nowrap;
     }
     img{
       border:0;
@@ -66,13 +69,14 @@ def grep(self, pattern, A=0, B=0, r=1, i=0, highlight=1):
   </style>
 </head>'''
   html_element_list = [doctype, html, head, '<body>' '<p>']
+  result_list = []
   for url, path, line in result:
     path = cgi.escape(path)
     line = cgi.escape(line)
     if highlight:
-      line = line.replace(pattern, '<span class="highlight">%s</span>' % pattern)
+      line = rx.sub('<span class="highlight">\g<0></span>', line)
     if ExternalEditor is None:
-      html_element_list.append(
+      result_list.append(
           '<a href="%s/manage_workspace">%s</a>: %s<br/>' %
           (url, path, line.replace('\n', '<br/>')))
     else:
@@ -80,12 +84,14 @@ def grep(self, pattern, A=0, B=0, r=1, i=0, highlight=1):
       path_element_list = url.split('/')
       external_editor_link = '%s/externalEdit_/%s' % (
          '/'.join(path_element_list[:-1]), path_element_list[-1])
-      html_element_list.append(
+      result_list.append(
         '<a href="%s/manage_workspace">%s</a>&nbsp;<a href="%s">'
         '<img src="misc_/ExternalEditor/edit_icon" '\
             'alt="externalEditor Icon"/></a> %s<br/>'
          % (url, path, external_editor_link, line.replace('\n', '<br/>')))
 
+  result_list.sort()
+  html_element_list.extend(result_list)
   html_element_list.extend(['</p>', '</body>', '</html>'])
   self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/html')
   return '\n'.join(html_element_list)
