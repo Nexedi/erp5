@@ -870,6 +870,18 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     request['PARENTS'] = [self.app]
     self.assertEquals(request.traverse(path)(), 'bar')
 
+  def test_14_deadProxyFields(self):
+    # check that all proxy fields defined in business templates have a valid
+    # target
+    skins_tool = self.portal.portal_skins
+    for field_path, field in skins_tool.ZopeFind(
+              skins_tool, obj_metatypes=['ProxyField'], search_sub=1):
+      self.assertNotEqual(None, field.getTemplateField(),
+          '%s\nform_id:%s\nfield_id:%s\n' % (field_path,
+                                             field.get_value('form_id'),
+                                             field.get_value('field_id')))
+
+
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
   Test for erp5_web with simple security.
