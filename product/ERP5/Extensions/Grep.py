@@ -34,22 +34,43 @@ def traverse(ob, r, result, command_line_arguments):
         result.append((ob.absolute_url(), path, "\n".join(context)))
         break
 
-def grep(self, pattern, A=0, B=0, r=1, i=0):
+def grep(self, pattern, A=0, B=0, r=1, i=0, highlight=1):
   if not _checkPermission(Permissions.ManagePortal, self):
     raise Unauthorized(self)
   command_line_arguments = {} # emulate grep command line args
   command_line_arguments['A'] = int(A)
   command_line_arguments['B'] = int(B)
   command_line_arguments['r'] = int(r)
+  highlight = int(highlight)
   re_flags = 0
   if int(i) :
     re_flags = re.IGNORECASE
   result = []
   traverse(self, re.compile(pattern, re_flags), result, command_line_arguments)
-  html_element_list = ['<html>', '<body>']
+
+  doctype = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'
+  html = '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">'
+  head = '''<head>
+  <title>Grep result</title>
+  <style type="text/css">
+    body{
+      background-color: #F9F9F9;
+      font-family: Verdana,Tahoma,Georgia,Geneva,Arial,Sans,sans-serif;
+    }
+    img{
+      border:0;
+    }
+    .highlight{
+      background-color: #8DFF6F;
+    }
+  </style>
+</head>'''
+  html_element_list = [doctype, html, head, '<body>' '<p>']
   for url, path, line in result:
     path = cgi.escape(path)
     line = cgi.escape(line)
+    if highlight:
+      line = line.replace(pattern, '<span class="highlight">%s</span>' % pattern)
     if ExternalEditor is None:
       html_element_list.append(
           '<a href="%s/manage_workspace">%s</a>: %s<br/>' %
@@ -61,11 +82,11 @@ def grep(self, pattern, A=0, B=0, r=1, i=0):
          '/'.join(path_element_list[:-1]), path_element_list[-1])
       html_element_list.append(
         '<a href="%s/manage_workspace">%s</a>&nbsp;<a href="%s">'
-        '<img border="0" src="misc_/ExternalEditor/edit_icon" '\
+        '<img src="misc_/ExternalEditor/edit_icon" '\
             'alt="externalEditor Icon"/></a> %s<br/>'
          % (url, path, external_editor_link, line.replace('\n', '<br/>')))
 
-  html_element_list.extend(['</body>', '</html>'])
+  html_element_list.extend(['</p>', '</body>', '</html>'])
   self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/html')
   return '\n'.join(html_element_list)
 
