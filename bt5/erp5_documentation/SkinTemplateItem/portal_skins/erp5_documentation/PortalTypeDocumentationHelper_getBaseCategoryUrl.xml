@@ -149,6 +149,12 @@ return "%s/getDocumentationHelper?uri=%s&class_name=BaseCategoryDocumentationHel
             <value> <string>PortalTypeDocumentationHelper_getBaseCategoryUrl</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

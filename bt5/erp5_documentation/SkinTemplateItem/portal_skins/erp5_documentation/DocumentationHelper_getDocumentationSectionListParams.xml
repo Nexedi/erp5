@@ -198,6 +198,12 @@ return (sub_result,class_method_list,propertysheet_list)\n
             <value> <string>DocumentationHelper_getDocumentationSectionListParams</string> </value>
         </item>
         <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>
