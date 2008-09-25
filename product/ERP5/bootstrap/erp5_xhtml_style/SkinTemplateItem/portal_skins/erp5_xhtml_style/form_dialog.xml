@@ -87,7 +87,7 @@
 \n
           <tal:block metal:define-macro="content">\n
             <div class="content"\n
-                 tal:define="group_list python: form.Form_getGroupTitleAndId();\n
+                 tal:define="group_list form/Form_getGroupTitleAndId;\n
                  gid_list   python: \' \'.join([x[\'gid\'] for x in group_list if x not in (\'bottom\', \'hidden\')]);">\n
               <tal:block tal:repeat="group group_list">\n
                 <tal:block tal:define="gid    group/gid">\n

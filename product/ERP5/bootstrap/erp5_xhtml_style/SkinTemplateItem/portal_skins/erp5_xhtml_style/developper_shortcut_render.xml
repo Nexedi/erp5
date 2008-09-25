@@ -45,23 +45,23 @@
   <tal:block metal:define-macro="edit_link">\n
     <a tabindex="1000" tal:condition="python: (getattr(object, \'meta_type\', None) is not None) and (getattr(object, \'getPortalObject\', None) is not None)"\n
        tal:attributes="href python: \'%s/manage_main\' % (\'/\'.join(object.getPhysicalPath()[len(object.getPortalObject().getPhysicalPath()):])) # XXX: quick hack to get path;\n
-       title info;"><img tal:attributes="src python: \'%s/images/%s\' % (portal_path, image);\n
+       title info;"><img tal:attributes="src string:$portal_path/images/$image;\n
                          alt info;" /></a>\n
   </tal:block>\n
   <tal:block metal:define-macro="translate_link">\n
     <a tabindex="1000" tal:define="image image | python: \'translate.png\'"\n
        tal:attributes="href python: \'%s/manage_messages?regex=^%s%%24&amp;lang=%s\' % (\'/\'.join(here.Localizer.erp5_ui.getPhysicalPath()[len(here.Localizer.erp5_ui.getPortalObject().getPhysicalPath()):]), message.replace(\'(\', \'\\(\').replace(\')\', \'\\)\'), selected_language);\n
-       title info;"><img tal:attributes="src python: \'%s/images/%s\' % (portal_path, image);\n
+       title info;"><img tal:attributes="src string:$portal_path/images/$image;\n
                          alt info;" /></a>\n
   </tal:block>\n
   <tal:block metal:define-macro="form">\n
-    <tal:block tal:define="image python: \'editform.png\';\n
-               info python: \'Edit this form\';\n
+    <tal:block tal:define="image string:editform.png;\n
+               info string:Edit this form;\n
                object nocall: form;">\n
       <tal:block metal:use-macro="developper_shortcut_render/macros/edit_link" />\n
     </tal:block>\n
-    <tal:block tal:define="image python: \'editformaction.png\';\n
-               info python: \'Edit this form\\\'s action\';\n
+    <tal:block tal:define="image string:editformaction.png;\n
+               info string:Edit this form\'s action;\n
                object python: getattr(here, form.action, None);">\n
       <tal:block metal:use-macro="developper_shortcut_render/macros/edit_link" />\n
       <div class="clear">\n
@@ -69,23 +69,23 @@
     </tal:block>\n
   </tal:block>\n
   <tal:block metal:define-macro="field_developper">\n
-    <tal:block tal:define="image python: \'editfield.png\';\n
-               info python: \'Edit this field\';\n
+    <tal:block tal:define="image string:editfield.png;\n
+               info string:Edit this field;\n
                object nocall: field;">\n
       <tal:block metal:use-macro="developper_shortcut_render/macros/edit_link" />\n
     </tal:block>\n
   </tal:block>\n
   <tal:block metal:define-macro="field_translator">\n
-    <tal:block tal:define="info python: \'Translate this field title\';\n
-               message python: field[\'title\'];\n
-               image python: \'translate.png\'">\n
+    <tal:block tal:define="info string:Translate this field title;\n
+               message field/title;\n
+               image string:translate.png">\n
       <tal:block metal:use-macro="developper_shortcut_render/macros/translate_link" />\n
     </tal:block>\n
     <tal:block tal:condition="field_description | nothing">\n
       <tal:block tal:define="message field_description;\n
-                 info python: \'Translate this field description\';\n
-                 image python: \'translate_tooltip.png\'"\n
-                 tal:condition="python: message not in (None, \'\')">\n
+                 info string:Translate this field description;\n
+                 image string:translate_tooltip.png"\n
+                 tal:condition="message | nothing">\n
         <tal:block metal:use-macro="developper_shortcut_render/macros/translate_link" />\n
       </tal:block>\n
     </tal:block>\n

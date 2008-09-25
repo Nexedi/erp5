@@ -56,13 +56,13 @@
           <tal:block tal:condition="python: here.getPortalTypeName() in portal.portal_types.objectIds() and portal.portal_types.getTypeInfo(here).Base_getSourceVisibility()">\n
             <option value="1" disabled="disabled" i18n:translate="" i18n:domain="ui">-- Developper Mode --</option>\n
             <option tal:attributes="value python: \'%s/manage_workspace\' % (here.portal_types.getTypeInfo(here).absolute_url(),)"\n
-                    i18n:translate="" i18n:domain="ui">Edit Portal Type \'<tal:block tal:content="python: here.getPortalTypeName()"\n
+                    i18n:translate="" i18n:domain="ui">Edit Portal Type \'<tal:block tal:content="here/getPortalTypeName"\n
                                            i18n:name="portal_type" i18n:translate="" i18n:domain="ui" />\'</option>\n
           </tal:block>\n
           <tal:block tal:condition="portal/portal_workflow/Base_getSourceVisibility">\n
             <option value="1" disabled="disabled" i18n:translate="" i18n:domain="ui">-- Workflows --</option>\n
             <tal:block tal:repeat="workflow python: portal.portal_workflow.getWorkflowsFor(here)">\n
-              <option tal:attributes="value python: \'%s/manage_properties\' % (workflow.absolute_url(), )" tal:content="workflow/title" />\n
+              <option tal:attributes="value string:${workflow/absolute_url}/manage_properties" tal:content="workflow/title" />\n
             </tal:block>\n
           </tal:block>\n
         </tal:block>\n
@@ -84,7 +84,7 @@
                 i18n:translate="" i18n:domain="ui">Action...</option>\n
         <tal:block tal:define="allowed_content_type_list here/getVisibleAllowedContentTypeList | python:[]">\n
           <tal:block tal:repeat="content_id allowed_content_type_list">\n
-            <option tal:attributes="value python: \'add %s\' % (content_id, )"\n
+            <option tal:attributes="value string:add $content_id"\n
                     i18n:translate="" i18n:domain="ui">Add <tal:block tal:content="content_id"\n
                              i18n:name="portal_type" i18n:translate="" i18n:domain="ui" /></option>\n
           </tal:block>\n
@@ -97,7 +97,7 @@
                    tal:condition="document_template_list">\n
           <option disabled="disabled">-- <tal:block i18n:translate="" i18n:domain="ui">Templates</tal:block> --</option>\n
           <tal:block tal:repeat="document_template document_template_list">\n
-            <option tal:attributes="value python:\'template %s\' % (document_template.getRelativeUrl(), )"\n
+            <option tal:attributes="value string:template ${document_template/getRelativeUrl}"\n
                     i18n:translate="" i18n:domain="ui">Add <tal:block tal:content="document_template/getTitle"\n
                              i18n:name="document_template" /></option>\n
           </tal:block>\n
@@ -105,13 +105,13 @@
         <option disabled="disabled">-- <tal:block i18n:translate="" i18n:domain="ui">Workflows</tal:block> --</option>\n
         <tal:block tal:repeat="action actions/workflow">\n
           <option tal:content="action/name"\n
-                  tal:attributes="value python: \'workflow %s\' % (action[\'url\'], )"\n
+                  tal:attributes="value string:workflow ${action/url}"\n
                   i18n:translate="" i18n:domain="ui" />\n
         </tal:block>\n
         <option disabled="disabled">-- <tal:block i18n:translate="" i18n:domain="ui">Object</tal:block> --</option>\n
         <tal:block tal:repeat="action actions/object_action | nothing">\n
           <option tal:content="action/name"\n
-                  tal:attributes="value python: \'object %s\' % (action[\'url\'], )"\n
+                  tal:attributes="value string:object ${action/url}"\n
                   i18n:translate="" i18n:domain="ui" />\n
         </tal:block>\n
         <tal:block tal:define="object_view_list actions/object_view|nothing;\n
@@ -119,7 +119,7 @@
                    tal:condition="module_view_list">\n
           <tal:block tal:repeat="action module_view_list">\n
             <option tal:content="action/name"\n
-                    tal:attributes="value python: \'object %s\' % (action[\'url\'],)"\n
+                    tal:attributes="value string:object ${action/url}"\n
                     i18n:translate="" i18n:domain="ui" />\n
           </tal:block>\n
         </tal:block>\n
@@ -128,7 +128,7 @@
           <option disabled="disabled">-- <tal:block i18n:translate="" i18n:domain="ui">Folder</tal:block> --</option>\n
           <tal:block tal:repeat="action actions/folder">\n
             <option tal:content="action/name"\n
-                    tal:attributes="value python: \'folder %s\' % (action[\'url\'], )"\n
+                    tal:attributes="value string:folder ${action/url}"\n
                     i18n:translate="" i18n:domain="ui" />\n
           </tal:block>\n
         </tal:block>\n
@@ -185,8 +185,8 @@
           <span class="description" i18n:translate="" i18n:domain="ui">New</span>\n
         </button>\n
         <button class="clone" type="submit" title="Clone"\n
-                tal:condition="python: not list_mode"\n
-                tal:attributes="name python: \'Base_createCloneDocument:method\'"\n
+                tal:condition="not: list_mode"\n
+                tal:attributes="name string:Base_createCloneDocument:method"\n
                 i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Clone</span>\n
@@ -200,13 +200,13 @@
           <tal:block tal:condition="request/selection_index | nothing">\n
             <span class="separator"><!--separator--></span>\n
             <a class="jump_first" title="First"\n
-               tal:attributes="href python: \'portal_selections/viewFirst?%s\' % (http_parameters, )"\n
+               tal:attributes="href string:portal_selections/viewFirst?$http_parameters"\n
                i18n:attributes="title" i18n:domain="ui">\n
               <span class="image"></span>\n
               <span class="description" i18n:translate="" i18n:domain="ui">First</span>\n
             </a>\n
             <a class="jump_previous" title="Previous"\n
-               tal:attributes="href python: \'portal_selections/viewPrevious?%s\' % (http_parameters, )"\n
+               tal:attributes="href string:portal_selections/viewPrevious?$http_parameters"\n
                i18n:attributes="title" i18n:domain="ui">\n
               <span class="image"></span>\n
               <span class="description" i18n:translate="" i18n:domain="ui">Previous</span>\n
@@ -217,13 +217,13 @@
               <span class="description" i18n:translate="" i18n:domain="ui">List Mode</span>\n
             </a>\n
             <a class="jump_next" title="Next"\n
-               tal:attributes="href python: \'portal_selections/viewNext?%s\' % (http_parameters, )"\n
+               tal:attributes="href string:portal_selections/viewNext?$http_parameters"\n
                i18n:attributes="title" i18n:domain="ui">\n
               <span class="image"></span>\n
               <span class="description" i18n:translate="" i18n:domain="ui">Next</span>\n
             </a>\n
             <a class="jump_last" title="Last"\n
-               tal:attributes="href python: \'portal_selections/viewLast?%s\' % (http_parameters, )"\n
+               tal:attributes="href string:portal_selections/viewLast?$http_parameters"\n
                i18n:attributes="title" i18n:domain="ui">\n
               <span class="image"></span>\n
               <span class="description" i18n:translate="" i18n:domain="ui">Last</span>\n
@@ -280,9 +280,9 @@
           <tal:block tal:repeat="button_action button_actions">\n
             <a tal:attributes="href python: \'%s%s%s\' % (button_action[\'url\'], \'?\' in button_action[\'url\'] and \'&amp;\' or \'?\', http_parameters)">\n
               <img i18n:attributes="title" i18n:domain="ui"\n
-                   tal:attributes="src python:button_action[\'icon\'];\n
-                   title python:button_action[\'name\'];\n
-                   alt python:button_action[\'name\']" />\n
+                   tal:attributes="src button_action/icon;\n
+                   title button_action/name;\n
+                   alt button_action/name" />\n
             </a>\n
           </tal:block>\n
         </tal:block>\n

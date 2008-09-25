@@ -68,7 +68,7 @@
             </tal:block>\n
           </label>\n
           <div class="input" tal:content="structure python: html_tuple[1]" />\n
-          <span tal:condition="python: field_has_error"\n
+          <span tal:condition="field_has_error"\n
                 class="error"\n
                 tal:content="python: field_errors[field_id].error_text"\n
                 i18n:translate="" i18n:domain="ui" />\n

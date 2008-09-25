@@ -71,7 +71,7 @@ It is possible to specify a group id and a group title by naming a group followi
     <tal:block\n
               tal:define="field_errors python: request.get(\'field_errors\', {});\n
               dummy        python: request.set(\'here\', here);\n
-              group_list   python: form.Form_getGroupTitleAndId();\n
+              group_list   form/Form_getGroupTitleAndId;\n
               gid_list     python: \' \'.join([x[\'gid\'] for x in group_list if x!=\'hidden\']);\n
               field_render nocall: here/field_render/macros/field_render">\n
       <tal:block tal:condition="preferred_html_style_developper_mode">\n
