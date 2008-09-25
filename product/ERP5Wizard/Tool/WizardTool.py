@@ -422,7 +422,7 @@ class WizardTool(BaseTool):
     parameter_dict['erp5_url'] = self.getPortalObject().absolute_url()
     # add user preffered language
     parameter_dict['user_preferred_language'] = getattr(self, 'user_preferred_language', 'en')
-
+    
   def _updateParameterDictWithFileUpload(self, parameter_dict):
     """Updates parameter_dict to replace file upload with their file content,
     encoded as XML-RPC Binary
@@ -568,6 +568,10 @@ class WizardTool(BaseTool):
     user_id = self.getExpressConfigurationPreference('preferred_express_user_id')
     password = REQUEST.get('field_my_ac_password', '')
     if self._isCorrectConfigurationKey(user_id, password):
+      # set user preferred configuration language
+      user_preferred_language = REQUEST.get('field_my_user_preferred_language', None)
+      if user_preferred_language:
+        self.user_preferred_language = user_preferred_language
       # set encoded __ac_express cookie at client's browser
       __ac_express = quote(encodestring(password))
       expires = (DateTime() + 1).toZone('GMT').rfc822()
