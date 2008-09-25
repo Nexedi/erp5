@@ -199,7 +199,9 @@ if portal_skin is not None and portal_skin=="ODT":\n
       title="Appendix",\n
       form_id=\'\')\n
   )\n
-  classmethod = dict().fromkeys([x for x in class_methods_list]).keys()\n
+  classmethods = dict().fromkeys([x for x in class_methods_list]).keys()\n
+  klasses = dict().fromkeys([\'.\'.join(x.split(\'.\')[:-2]) for x in classmethods]).keys()\n
+  klasses.sort()\n
   propertysheet = dict(zip([x.split(\'/\')[-1] for x in property_sheets_list],property_sheets_list))\n
   result.append(\n
     ReportSection(\n
@@ -207,13 +209,22 @@ if portal_skin is not None and portal_skin=="ODT":\n
       title="Class Methods",\n
       form_id=\'\')\n
   )\n
-  result.append(\n
-    ReportSection(\n
-      form_id=\'PortalTypeDocumentationHelperAppendixClassMethod_view\',\n
-      selection_params=dict(class_method_list=classmethod, obj=uri_object),\n
-      selection_name=\'class_method_selection\',\n
-      listbox_display_mode=\'FlatListMode\')\n
-  )\n
+  for klass in klasses:\n
+    classmethod = dict().fromkeys([x.split(\'.\')[-1] for x in classmethods if x.startswith(klass)]).keys()\n
+    classmethod.sort()\n
+    result.append(\n
+      ReportSection(\n
+        level=4,\n
+        title=klass,\n
+        form_id=\'\')\n
+    )\n
+    result.append(\n
+      ReportSection(\n
+        form_id=\'PortalTypeDocumentationHelperAppendixClassMethod_view\',\n
+        selection_params=dict(class_method_list=classmethod, obj=uri_object),\n
+        selection_name=\'class_method_selection\',\n
+        listbox_display_mode=\'FlatListMode\')\n
+    )\n
   result.append(\n
     ReportSection(\n
       level=3,\n
@@ -231,6 +242,12 @@ if portal_skin is not None and portal_skin=="ODT":\n
   propertysheets = propertysheet.values()\n
   propertysheets.sort(compareFileName)\n
   for uri in propertysheets:\n
+    result.append(\n
+      ReportSection(\n
+        level=4,\n
+        title=uri.split(\'/\')[-1].split(\'.\')[0],\n
+        form_id=\'\')\n
+    )\n
     result.append(\n
       ReportSection(\n
         path=context.getPortalObject().portal_classes.getRelativeUrl(),\n
@@ -316,9 +333,12 @@ return result\n
                             <string>append</string>
                             <string>$append0</string>
                             <string>x</string>
-                            <string>classmethod</string>
+                            <string>classmethods</string>
+                            <string>klasses</string>
                             <string>zip</string>
                             <string>propertysheet</string>
+                            <string>klass</string>
+                            <string>classmethod</string>
                             <string>propertysheets</string>
                           </tuple>
                         </value>
