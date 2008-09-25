@@ -429,8 +429,8 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     web_page_en.publish()
     get_transaction().commit()
     self.tic()
-    self.assertEquals(1,  len(websection.getDocumentValueList(anguage='en')))
-    self.assertEquals(web_page_en,  websection.getDocumentValueList(anguage='en')[0].getObject())
+    self.assertEquals(1,  len(websection.getDocumentValueList(language='en')))
+    self.assertEquals(web_page_en,  websection.getDocumentValueList(language='en')[0].getObject())
     
     # create pages belonging to this publication_section 'documentation' but for 'bg' language
     web_page_bg = portal.web_page_module.newContent(portal_type = 'Web Page', 
