@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -39,12 +33,6 @@
                   </dictionary>
                 </state>
               </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -72,8 +60,8 @@ Description:\n
           <input type="text" size="40" name="new_advanced_search_text" id="SearchableText" class="autofocus"/>\n
           <select size="1" class="input" name="new_advanced_search_portal_type">\n
             <tal:block metal:define-macro="search_type_option_list">\n
-              <option value="" selected value="" i18n:translate="" i18n:domain="ui">Everything</option>\n
-              <option value="all" selected value="" i18n:translate="" i18n:domain="ui">All Documents</option>\n
+              <option value="" selected="selected" i18n:translate="" i18n:domain="ui">Everything</option>\n
+              <option value="all" selected="selected" i18n:translate="" i18n:domain="ui">All Documents</option>\n
               <tal:block tal:repeat="ptype here/getPortalDocumentTypeList">\n
                 <option tal:attributes="value ptype"  tal:content="python:ptype"\n
                         i18n:translate="" i18n:domain="ui">Standard Type</option>\n
@@ -169,7 +157,7 @@ Description:\n
       <div>\n
         <textarea cols="80" rows="4" name="query_description"></textarea>\n
         <select size="1" class="input" name="query_portal_type">\n
-          <option value="all" selected value="" i18n:translate="" i18n:domain="ui">Any Documents</option>\n
+          <option value="all" selected="selected" value="" i18n:translate="" i18n:domain="ui">Any Documents</option>\n
             <option tal:repeat="ptype here/getPortalDocumentTypeList"\n
                     tal:attributes="value ptype"  tal:content="python:ptype"\n
                     i18n:translate="" i18n:domain="ui">Standard Type</option>\n
@@ -200,12 +188,6 @@ Description:\n
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
       </dictionary>
     </pickle>
