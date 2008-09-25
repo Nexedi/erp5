@@ -98,10 +98,7 @@
                       <list>
                         <string>my_header</string>
                         <string>my_user_preferred_language</string>
-                        <string>my_ac_name</string>
                         <string>my_ac_password</string>
-                        <string>submit_login</string>
-                        <string>my_next_action_header</string>
                       </list>
                     </value>
                 </item>
