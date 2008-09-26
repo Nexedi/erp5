@@ -154,12 +154,13 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       if REQUEST is None:
         return
 
-      if no_reset and REQUEST.form.has_key('reset'):
-        REQUEST.form['noreset'] = REQUEST.form['reset'] # Kept for compatibility - might no be used anymore
-        del REQUEST.form['reset']
-      if no_report_depth and REQUEST.form.has_key('report_depth'):
-        REQUEST.form['noreport_depth'] = REQUEST.form['report_depth'] # Kept for compatibility - might no be used anymore
-        del REQUEST.form['report_depth']
+      form = REQUEST.form
+      if no_reset and form.has_key('reset'):
+        form['noreset'] = form['reset'] # Kept for compatibility - might no be used anymore
+        del form['reset']
+      if no_report_depth and form.has_key('report_depth'):
+        form['noreport_depth'] = form['report_depth'] # Kept for compatibility - might no be used anymore
+        del form['report_depth']
 
       if query_string is not None:
         warnings.warn('DEPRECATED: _redirectToOriginalForm got called with a query_string. The variables must be passed in REQUEST.form.',
@@ -440,21 +441,22 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       # selection_name, sort_on and form_id params are kept only for bacward compatibilty
       # as some test call setSelectionQuickSortOrder in url with these params
       listbox_id = None
+      form = REQUEST.form
       if sort_on is None:
-        listbox_id, sort_on = REQUEST.form["setSelectionQuickSortOrder"].split(".", 1)
+        listbox_id, sort_on = form["setSelectionQuickSortOrder"].split(".", 1)
 
       if form_id is None:
         if REQUEST is not None:
-          if REQUEST.form.has_key('dialog_id'):
-            form_id = REQUEST.form['dialog_id']
+          if form.has_key('dialog_id'):
+            form_id = form['dialog_id']
           else:
-            form_id = REQUEST.form['form_id']
+            form_id = form['form_id']
 
       if listbox_id is not None:
           selection_name_key = "%s_list_selection_name" %listbox_id
-          selection_name = REQUEST.form[selection_name_key]
+          selection_name = form[selection_name_key]
       elif selection_name is None:
-          selection_name = REQUEST.form['selection_name']
+          selection_name = form['selection_name']
           
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
@@ -477,8 +479,8 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         selection.edit(sort_on=new_sort_on)
 
       if REQUEST is not None:
-        if REQUEST.form.has_key('listbox_uid') and \
-            REQUEST.form.has_key('uids'):
+        if form.has_key('listbox_uid') and \
+            form.has_key('uids'):
           self.uncheckAll(selection_name, REQUEST.get('listbox_uid'))
           self.checkAll(selection_name, REQUEST.get('uids'))
 

@@ -1378,8 +1378,9 @@ class ListBoxRenderer:
           param = unicode(param, self.getEncoding())
 
         # Obtain a search field, if any.
-        if self.getForm().has_field(alias):
-          search_field = self.getForm().get_field(alias)
+        form = self.getForm()
+        if form.has_field(alias):
+          search_field = form.get_field(alias)
         else:
           search_field = None
 
@@ -1513,6 +1514,7 @@ class ListBoxRenderer:
 
       for report_tree in report_tree_list:
         # Prepare query by defining selection report object.
+        report_tree_obj = report_tree.obj
 
         # FIXME: this code needs optimization. The query should be delayed
         # as late as possible, because this code queries all data, even if
@@ -1527,14 +1529,14 @@ class ListBoxRenderer:
         # If the domain has a context_url, list_method or stat_method
         # parameters, we should use them instead of the ListBox ones when
         # looking for objects in the domain.
-        domain_context = report_tree.obj.getProperty('context_url', None)
+        domain_context = report_tree_obj.getProperty('context_url', None)
         if domain_context is not None:
           domain_context = context.restrictedTraverse(domain_context)
         else:
           domain_context = context
-        domain_list_method = report_tree.obj.getProperty('list_method',
+        domain_list_method = report_tree_obj.getProperty('list_method',
             list_method)
-        domain_stat_method = report_tree.obj.getProperty('stat_method',
+        domain_stat_method = report_tree_obj.getProperty('stat_method',
             stat_method)
 
         if report_tree.is_pure_summary and self.showStat():
@@ -1546,7 +1548,7 @@ class ListBoxRenderer:
           # Query the stat.
           stat_brain = selection(method=domain_stat_method, context=domain_context, REQUEST=self.request)
 
-          domain_title = report_tree.obj.getTitle()# XXX Yusei Keep original domain title before overriding
+          domain_title = report_tree_obj.getTitle()# XXX Yusei Keep original domain title before overriding
 
           stat_result = {}
           for index, (k, v) in enumerate(self.getSelectedColumnList()):
@@ -1555,9 +1557,9 @@ class ListBoxRenderer:
             except IndexError:
               stat_result[k] = ''
 
-          stat_context = report_tree.obj.asContext(**stat_result)
+          stat_context = report_tree_obj.asContext(**stat_result)
           # XXX yo thinks that this code below is useless, so disabled.
-          #absolute_url_txt = report_tree.obj.absolute_url()
+          #absolute_url_txt = report_tree_obj.absolute_url()
           #stat_context.absolute_url = lambda: absolute_url_txt
           stat_context.domain_url = report_tree.domain_url
           report_section_list.append(ReportSection(is_summary = True, object_list = [stat_context],
@@ -1595,7 +1597,7 @@ class ListBoxRenderer:
                                                        selection_domain = report_tree.selection_domain,
                                                        depth = report_tree.depth))
           else:
-            stat_context = report_tree.obj.asContext()
+            stat_context = report_tree_obj.asContext()
             #absolute_url_txt = s[0].absolute_url()
             #stat_context.absolute_url = lambda : absolute_url_txt
             stat_context.domain_url = report_tree.domain_url
@@ -1620,7 +1622,7 @@ class ListBoxRenderer:
               if report_tree.exception_uid_list is not None:
                 # Display current parent domain.
                 report_section_list.append(ReportSection(is_summary = False,
-                                                         object_list = [report_tree.obj],
+                                                         object_list = [report_tree_obj],
                                                          object_list_len = 1,
                                                          is_open = report_tree.is_open,
                                                          selection_domain = report_tree.selection_domain,
@@ -1895,20 +1897,21 @@ class ListBoxRendererLine:
     Every processed value is guaranteed to be encoded in unicode.
     """
     # If this is a report line without statistics, just return an empty result.
+    renderer = self.renderer
     if self.getObject() is None:
-      return [(None, '')] * len(self.renderer.getSelectedColumnList())
+      return [(None, '')] * len(renderer.getSelectedColumnList())
 
     # Otherwise, evaluate each column.
-    stat_column_dict = dict(self.renderer.getStatColumnList())
+    stat_column_dict = dict(renderer.getStatColumnList())
     _marker = []
     value_list = []
-    selection = self.renderer.getSelection()
-    param_dict = self.renderer.getParamDict()
+    selection = renderer.getSelection()
+    param_dict = renderer.getParamDict()
 
     # Embed the selection index.
     selection.edit(index = self.index)
 
-    for (sql, title), alias in zip(self.renderer.getSelectedColumnList(), self.renderer.getColumnAliasList()):
+    for (sql, title), alias in zip(renderer.getSelectedColumnList(), renderer.getColumnAliasList()):
       editable_field = None
       original_value = None
       processed_value = None
@@ -1952,7 +1955,7 @@ class ListBoxRendererLine:
         brain = self.getBrain()
 
         # Use a widget, if any.
-        editable_field = self.renderer.getEditableField(alias)
+        editable_field = renderer.getEditableField(alias)
         tales = False
         if editable_field is not None:
           tales = editable_field.tales.get('default', '')
@@ -2015,7 +2018,7 @@ class ListBoxRendererLine:
       if processed_value is None:
         processed_value = u''
       elif not isinstance(processed_value, unicode):
-        processed_value = unicode(str(processed_value), self.renderer.getEncoding())
+        processed_value = unicode(str(processed_value), renderer.getEncoding())
 
       value_list.append((original_value, processed_value))
 
@@ -2030,16 +2033,18 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
     where each tuple consists of a piece of HTML, the original value and a boolean value which represents
     an error status. If the status is true, an error is detected.
     """
-    editable_column_id_set = self.renderer.getEditableColumnIdSet()
-    field_id = self.renderer.getId()
-    form = self.renderer.getForm()
-    error_dict = self.renderer.getFieldErrorDict()
+    renderer = self.renderer
+    request = renderer.request
+    editable_column_id_set = renderer.getEditableColumnIdSet()
+    field_id = renderer.getId()
+    form = renderer.getForm()
+    error_dict = renderer.getFieldErrorDict()
     brain = self.getBrain()
-    encoding = self.renderer.getEncoding()
-    url_column_dict = dict(self.renderer.getUrlColumnList())
-    selection = self.renderer.getSelection()
-    selection_name = self.renderer.getSelectionName()
-    ignore_layout = int(self.renderer.request.get('ignore_layout', 0))
+    encoding = renderer.getEncoding()
+    url_column_dict = dict(renderer.getUrlColumnList())
+    selection = renderer.getSelection()
+    selection_name = renderer.getSelectionName()
+    ignore_layout = int(request.get('ignore_layout', 0))
     ui_domain = 'erp5_ui'
 
     html_list = []
@@ -2061,7 +2066,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         break
 
     for (original_value, processed_value), (sql, title), alias \
-      in zip(self.getValueList(), self.renderer.getSelectedColumnList(), self.renderer.getColumnAliasList()):
+      in zip(self.getValueList(), renderer.getSelectedColumnList(), renderer.getColumnAliasList()):
       # By default, no error.
       error = False
 
@@ -2072,7 +2077,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
       # XXX why don't we generate an input form when a widget is not defined?
       editable_field = None
       if not self.isSummary():
-        editable_field = self.renderer.getEditableField(alias)
+        editable_field = renderer.getEditableField(alias)
 
       # Prepare link value - we now use it for both static and field rendering
       no_link = False
@@ -2127,7 +2132,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         if has_error: # If there is any error on listbox, we should use what the user has typed
           display_value = None
         else:
-          validated_value_dict = self.renderer.request.get(field_id, None)
+          validated_value_dict = request.get(field_id, None)
           if validated_value_dict is None:
             # If this is neither an error nor a validated listbox
             # we should use the original value
@@ -2162,8 +2167,8 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           # the REQUEST into the brain. In addition, the define a
           # cell property on the request itself so that forms may
           # use the 'cell' value (refer to get_value method in Form.py)
-          cell_request = brain.asContext( REQUEST = self.renderer.request
-                                        , form    = self.renderer.request.form
+          cell_request = brain.asContext( REQUEST = request
+                                        , form    = request.form
                                         , cell    = brain
                                         )
           if editable_field.get_value('enabled', REQUEST=cell_request):
@@ -2176,7 +2181,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
             cell_html = ''
         else:
           # If the brain does not support asContext (eg. it is None), no way
-          self.renderer.request.cell = self.getObject()
+          request.cell = self.getObject()
           cell_request = brain
           if editable_field.get_value('enabled', REQUEST=cell_request):
             cell_html = editable_field.render( value   = display_value
@@ -2309,7 +2314,7 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
     list_method = self.getListMethod()
     selection = self.getSelection()
     if list_method is not None:
-      method_path = getPath(self.getContext()) + '/' + self.getListMethodName()
+      method_path = '%s/%s' % (getPath(self.getContext()), self.getListMethodName())
       list_url = '%s?selection_name=%s' % (self.getUrl(), self.getRequestedSelectionName())
       selection_index = self.getSelectionIndex()
       if selection_index is not None:
@@ -2464,7 +2469,7 @@ class ListBoxValidator(Validator.Validator):
             # we can validate, so that we can use the same list
             # as the one used for displaying the listbox
             for sql in editable_column_ids:
-              alias = '_'.join(sql.split('.'))
+              alias = sql.replace('.', '_')
               if '.' in sql:
                 property_id = '.'.join(sql.split('.')[1:]) # Only take trailing part
               else:
@@ -2505,7 +2510,7 @@ class ListBoxValidator(Validator.Validator):
               o.uid = uid
             result[uid[4:]] = {}
             for sql in editable_column_ids:
-              alias = '_'.join(sql.split('.'))
+              alias = sql.replace('.', '_')
               if '.' in sql:
                 property_id = '.'.join(sql.split('.')[1:]) # Only take trailing part
               else:
@@ -2551,7 +2556,7 @@ class ListBoxValidator(Validator.Validator):
                       o = object
                       break
               for sql in editable_column_ids:
-                alias = '_'.join(sql.split('.'))
+                alias = sql.replace('.', '_')
                 if '.' in sql:
                   property_id = '.'.join(sql.split('.')[1:]) # Only take trailing part
                 else:
