@@ -191,8 +191,8 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       return self.getRelativeUrl()
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                             'getMovementList')
-    def getMovementList(self, portal_type=None, **kw):
+                             '_getMovementList')
+    def _getMovementList(self, portal_type=None, **kw):
       """
         Return a list of movements.
       """
@@ -221,6 +221,14 @@ class Delivery(XMLObject, ImmobilisationDelivery):
         else:
           add_movement(sub_object)
       return movement_list
+    
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getMovementList')
+    def getMovementList(self, portal_type=None, **kw):
+      """
+       Return a list of movements.
+      """
+      return self._getMovementList(portal_type=portal_type, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getSimulatedMovementList')
@@ -678,7 +686,6 @@ class Delivery(XMLObject, ImmobilisationDelivery):
 
       if rule_reference is None:
         return
-
       portal_rules = getToolByName(self, 'portal_rules')
       res = portal_rules.searchFolder(reference=rule_reference,
           validation_state="validated", sort_on='version',
