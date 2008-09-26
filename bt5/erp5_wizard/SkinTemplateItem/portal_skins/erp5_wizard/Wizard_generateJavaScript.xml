@@ -79,7 +79,7 @@ js_string = """\n
     }\n
 \n
     function checkClientInstallation() {\n
-       time_out = window.setTimeout( "checkClientInstallation()", 5000 );\n
+       time_out = window.setTimeout( "checkClientInstallation()", 15000 );\n
        var xhr_object = null;\n
        xhr_object = getNewXMLHTTP();\n
        xhr_object.onreadystatechange = function()\n
