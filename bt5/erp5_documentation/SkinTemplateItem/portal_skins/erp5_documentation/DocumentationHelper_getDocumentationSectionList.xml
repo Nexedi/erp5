@@ -183,11 +183,11 @@ for section in section_list:\n
         if root_class_name == "ERP5SiteDocumentationHelper" and class_name==\'DCWorkflowDocumentationHelper\':\n
           for sub_child_uri in child_uri.uri_list:\n
             sub_child_object = context.getDocumentationHelper(class_name, sub_child_uri)\n
-            for section in sub_child_object.getSectionList(): \n
-              if section.class_name == \'DCWorkflowScriptDocumentationHelper\':\n
-                class_name = section.class_name\n
+            for sektion in sub_child_object.getSectionList(): \n
+              if sektion.class_name == \'DCWorkflowScriptDocumentationHelper\':\n
+                class_name = sektion.class_name\n
                 results=context.DocumentationHelper_getDocumentationSectionListParams(class_name,\n
-                                section.uri_list, "%s:" % sub_child_object.getId())\n
+                                sektion.uri_list, "%s:" % sub_child_object.getId())\n
                 result+=results[0]\n
                 class_methods_list+=results[1]\n
                 property_sheets_list+=results[2]\n
@@ -241,11 +241,11 @@ if portal_skin is not None and portal_skin=="ODT":\n
   class_name = \'PortalTypePropertySheetDocumentationHelper\'\n
   propertysheets = propertysheet.values()\n
   propertysheets.sort(compareFileName)\n
-  for uri in propertysheets:\n
+  for urii in propertysheets:\n
     result.append(\n
       ReportSection(\n
         level=4,\n
-        title=uri.split(\'/\')[-1].split(\'.\')[0],\n
+        title=urii.split(\'/\')[-1].split(\'.\')[0],\n
         form_id=\'\')\n
     )\n
     result.append(\n
@@ -254,7 +254,7 @@ if portal_skin is not None and portal_skin=="ODT":\n
         method_id=\'getDocumentationHelper\',\n
         form_id=\'%s_view\' % class_name,\n
         param_list=[class_name,\n
-                    uri],\n
+                    urii],\n
         listbox_display_mode=\'FlatListMode\')\n
     )\n
 return result\n
@@ -330,6 +330,7 @@ return result\n
                             <string>getattr</string>
                             <string>child_uri_title</string>
                             <string>sub_child_object</string>
+                            <string>sektion</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>x</string>
@@ -340,6 +341,7 @@ return result\n
                             <string>klass</string>
                             <string>classmethod</string>
                             <string>propertysheets</string>
+                            <string>urii</string>
                           </tuple>
                         </value>
                     </item>
