@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -81,11 +69,11 @@ else:\n
 for uri in uri_list:\n
     uri_object = context.getDocumentationHelper(class_name, uri)\n
     if class_name in [\'PortalTypeDocumentationHelper\',\'PortalTypeInstanceDocumentationHelper\']:\n
-      for sectione in uri_object.getSectionList():\n
-        if sectione.class_name == \'ClassMethodDocumentationHelper\':\n
-          class_method_list+=sectione.uri_list\n
-        if sectione.class_name == \'PortalTypePropertySheetDocumentationHelper\':\n
-          propertysheet_list+=sectione.uri_list\n
+      for section in uri_object.getSectionList():\n
+        if section.class_name == \'ClassMethodDocumentationHelper\':\n
+          class_method_list+=section.uri_list\n
+        if section.class_name == \'PortalTypePropertySheetDocumentationHelper\':\n
+          propertysheet_list+=section.uri_list\n
     sub_result.append(\n
       ReportSection(\n
         path=context.getPortalObject().portal_classes.getRelativeUrl(),\n
@@ -116,12 +104,6 @@ return (sub_result,class_method_list,propertysheet_list)\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
             <value>
               <none/>
             </value>
@@ -171,7 +153,7 @@ return (sub_result,class_method_list,propertysheet_list)\n
                             <string>_getiter_</string>
                             <string>uri</string>
                             <string>uri_object</string>
-                            <string>sectione</string>
+                            <string>section</string>
                             <string>_inplacevar_</string>
                             <string>_getitem_</string>
                             <string>dict</string>
@@ -196,12 +178,6 @@ return (sub_result,class_method_list,propertysheet_list)\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>DocumentationHelper_getDocumentationSectionListParams</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

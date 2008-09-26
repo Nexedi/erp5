@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -183,11 +171,11 @@ for section in section_list:\n
         if root_class_name == "ERP5SiteDocumentationHelper" and class_name==\'DCWorkflowDocumentationHelper\':\n
           for sub_child_uri in child_uri.uri_list:\n
             sub_child_object = context.getDocumentationHelper(class_name, sub_child_uri)\n
-            for sektion in sub_child_object.getSectionList(): \n
-              if sektion.class_name == \'DCWorkflowScriptDocumentationHelper\':\n
-                class_name = sektion.class_name\n
+            for sub_child_section in sub_child_object.getSectionList(): \n
+              if sub_child_section.class_name == \'DCWorkflowScriptDocumentationHelper\':\n
+                class_name = sub_child_section.class_name\n
                 results=context.DocumentationHelper_getDocumentationSectionListParams(class_name,\n
-                                sektion.uri_list, "%s:" % sub_child_object.getId())\n
+                                sub_child_section.uri_list, "%s:" % sub_child_object.getId())\n
                 result+=results[0]\n
                 class_methods_list+=results[1]\n
                 property_sheets_list+=results[2]\n
@@ -200,8 +188,8 @@ if portal_skin is not None and portal_skin=="ODT":\n
       form_id=\'\')\n
   )\n
   classmethods = dict().fromkeys([x for x in class_methods_list]).keys()\n
-  klasses = dict().fromkeys([\'.\'.join(x.split(\'.\')[:-2]) for x in classmethods]).keys()\n
-  klasses.sort()\n
+  class_list = dict().fromkeys([\'.\'.join(x.split(\'.\')[:-2]) for x in classmethods]).keys()\n
+  class_list.sort()\n
   propertysheet = dict(zip([x.split(\'/\')[-1] for x in property_sheets_list],property_sheets_list))\n
   result.append(\n
     ReportSection(\n
@@ -209,13 +197,13 @@ if portal_skin is not None and portal_skin=="ODT":\n
       title="Class Methods",\n
       form_id=\'\')\n
   )\n
-  for klass in klasses:\n
-    classmethod = dict().fromkeys([x.split(\'.\')[-1] for x in classmethods if x.startswith(klass)]).keys()\n
+  for class_name in class_list:\n
+    classmethod = dict().fromkeys([x.split(\'.\')[-1] for x in classmethods if x.startswith(class_name)]).keys()\n
     classmethod.sort()\n
     result.append(\n
       ReportSection(\n
         level=4,\n
-        title=klass,\n
+        title=class_name,\n
         form_id=\'\')\n
     )\n
     result.append(\n
@@ -241,11 +229,11 @@ if portal_skin is not None and portal_skin=="ODT":\n
   class_name = \'PortalTypePropertySheetDocumentationHelper\'\n
   propertysheets = propertysheet.values()\n
   propertysheets.sort(compareFileName)\n
-  for urii in propertysheets:\n
+  for uri in propertysheets:\n
     result.append(\n
       ReportSection(\n
         level=4,\n
-        title=urii.split(\'/\')[-1].split(\'.\')[0],\n
+        title=uri.split(\'/\')[-1].split(\'.\')[0],\n
         form_id=\'\')\n
     )\n
     result.append(\n
@@ -254,7 +242,7 @@ if portal_skin is not None and portal_skin=="ODT":\n
         method_id=\'getDocumentationHelper\',\n
         form_id=\'%s_view\' % class_name,\n
         param_list=[class_name,\n
-                    urii],\n
+                    uri],\n
         listbox_display_mode=\'FlatListMode\')\n
     )\n
 return result\n
@@ -262,12 +250,6 @@ return result\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
             <value>
               <none/>
             </value>
@@ -330,18 +312,16 @@ return result\n
                             <string>getattr</string>
                             <string>child_uri_title</string>
                             <string>sub_child_object</string>
-                            <string>sektion</string>
+                            <string>sub_child_section</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>x</string>
                             <string>classmethods</string>
-                            <string>klasses</string>
+                            <string>class_list</string>
                             <string>zip</string>
                             <string>propertysheet</string>
-                            <string>klass</string>
                             <string>classmethod</string>
                             <string>propertysheets</string>
-                            <string>urii</string>
                           </tuple>
                         </value>
                     </item>
@@ -359,12 +339,6 @@ return result\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>DocumentationHelper_getDocumentationSectionList</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
