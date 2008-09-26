@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
@@ -62,7 +56,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>editable</string> </key>
+                    <key> <string>editable</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -85,7 +79,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>editable</string> </key>
+                    <key> <string>editable</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>

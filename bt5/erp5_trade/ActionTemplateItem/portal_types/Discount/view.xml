@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>action</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -55,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value>                 <string>View</string> </value>
+            <value> <string>View</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>

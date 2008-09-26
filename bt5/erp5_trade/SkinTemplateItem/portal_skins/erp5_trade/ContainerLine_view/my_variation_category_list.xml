@@ -630,8 +630,8 @@
                     <value>
                       <list>
                         <tuple>
-<string></string>
-<string></string>
+                          <string></string>
+                          <string></string>
                         </tuple>
                         <list>
                           <string>Colour/colour1</string>
@@ -897,8 +897,8 @@
                     <value>
                       <list>
                         <tuple>
-<string></string>
-<string></string>
+                          <string></string>
+                          <string></string>
                         </tuple>
                         <list>
                           <string>Morphology/morpho1</string>
@@ -1168,8 +1168,8 @@
                     <value>
                       <list>
                         <tuple>
-<string></string>
-<string></string>
+                          <string></string>
+                          <string></string>
                         </tuple>
                         <list>
                           <string>Size/46</string>
