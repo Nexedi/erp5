@@ -116,6 +116,7 @@ Description:\n
       <div class="clear"></div>\n
     </div>\n
   \n
+    <!--\n
     <div class="tabbertab">\n
       <h2 i18n:translate="" i18n:domain="ui">Authenticate</h2>\n
       <div class="work_in_progress" i18n:translate="" i18n:domain="ui">\n
@@ -125,6 +126,7 @@ Description:\n
       </div>\n
       <div class="clear"></div>\n
     </div>\n
+    -->\n
   \n
   </div>\n
 <div class="clear"></div>\n
