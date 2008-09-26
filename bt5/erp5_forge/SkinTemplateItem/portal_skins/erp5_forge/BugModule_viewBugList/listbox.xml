@@ -311,12 +311,6 @@
             </value>
         </item>
         <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>values</string> </key>
             <value>
               <dictionary>

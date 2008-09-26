@@ -514,19 +514,19 @@
                         </tuple>
                         <tuple>
                           <string>field_meta_type</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>field_note</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>field_title</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>term</string>
-<string></string>
+                          <string></string>
                         </tuple>
                       </list>
                     </value>
