@@ -76,7 +76,7 @@ if hasattr(request, \'listbox\'):\n
   keys_list = listbox.keys()\n
 \n
   if keys_list != []:\n
-    keys_list.sort(lambda x,y: cmp(int(x),int(y)))\n
+    keys_list.sort(key=lambda x: int(x))\n
     first_empty_line_id = int(keys_list[-1])+1\n
 \n
   for i in keys_list:\n

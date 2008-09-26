@@ -59,7 +59,7 @@ log(\'Category_getSortedCategoryChildValueList\', \'use getCategoryChildValueLis
 \n
 value_list = filter(lambda o: o.getRelativeUrl() != context.getRelativeUrl(),context.getCategoryChildValueList())\n
 sort_id=\'int_index\'\n
-value_list.sort(lambda x,y: cmp(x.getProperty(sort_id), y.getProperty(sort_id)))\n
+value_list.sort(key=lambda x: x.getProperty(sort_id))\n
 return value_list\n
 </string> </value>
         </item>

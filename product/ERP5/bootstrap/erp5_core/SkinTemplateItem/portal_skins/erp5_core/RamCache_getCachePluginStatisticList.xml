@@ -85,7 +85,7 @@ for cache_key,cache_key_memory in cache_plugin_stats_data.items():\n
 # sort result\n
 if kw.get(\'sort_on\', None) is not None:\n
   sort_on_attr, sort_on_order = kw[\'sort_on\'][0]\n
-  result.sort(lambda x,y: cmp(int(getattr(x, sort_on_attr)), int(getattr(y, sort_on_attr))))\n
+  result.sort(key=lambda x: int(getattr(x, sort_on_attr)))\n
   if sort_on_order == \'descending\':\n
     result.reverse()\n
 \n
