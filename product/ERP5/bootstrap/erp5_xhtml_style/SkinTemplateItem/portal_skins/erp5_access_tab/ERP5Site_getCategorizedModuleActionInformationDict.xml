@@ -78,7 +78,7 @@
 \n
     # It is necessary to sort the modules by translated titles for convenience.\n
     titled_module_list = [(module.getTranslatedTitle(), module) for module in module_list]\n
-    titled_module_list.sort(lambda a,b: cmp(a[0], b[0]))\n
+    titled_module_list.sort(key=lambda x: x[0])\n
 \n
     view_list = []\n
     add_list = []\n
