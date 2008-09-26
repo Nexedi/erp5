@@ -72,8 +72,9 @@
         </div>\n
         <br/>\n
   \n
-        <div id="client_installation_status">\n
-          <p> Loading ... </p>\n
+        <div id="client_installation_status"\n
+             style="background-color: #FFFFFF; padding: 0.5em;">\n
+          Loading ...\n
         </div>\n
       </div>\n
     </tal:block>\n
