@@ -405,7 +405,8 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
 
       actual_idx = self.document_counter.next()
       pic_name = 'Pictures/picture%d%s' \
-                 % (actual_idx, guess_extension(picture_type) or '')
+                 % (actual_idx,
+                    picture_type and guess_extension(picture_type) or '')
 
       # XXX: Pictures directory not managed (seems facultative)
       #  <manifest:file-entry manifest:media-type="" manifest:full-path="ObjBFE4F50D/Pictures/"/>
