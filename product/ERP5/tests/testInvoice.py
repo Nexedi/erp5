@@ -755,12 +755,6 @@ class TestInvoice(TestInvoiceMixin):
     if err_list:
       self.fail(''.join(err_list))
 
-    # the <draw:image> should not be present, because there's no logo
-    parser = OOoParser()
-    parser.openFromString(odt)
-    style_xml = parser.oo_files['styles.xml']
-    self.assert_('<draw:image' not in style_xml)
-
   def test_invoice_building_with_cells(self):
     # if the order has cells, the invoice built from that order must have
     # cells too
