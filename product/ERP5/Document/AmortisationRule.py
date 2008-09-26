@@ -677,7 +677,7 @@ class AmortisationRule(Rule):
       # We have each matching ratio. Now we need to match each amortisation period
       # according to these ratio : the highest ratio gets the priority, then the next
       # highest is taken into account if corresponding resources are free, and so on
-      matching_ratio_list.sort(key=lambda x: -x['ratio'])
+      matching_ratio_list.sort(key=lambda x: x['ratio'], reverse=True)
       calculated_to_match = calculated_period_dict.keys()
       aggregated_to_match = aggregated_period_dict.keys()
       match_dict = {}
