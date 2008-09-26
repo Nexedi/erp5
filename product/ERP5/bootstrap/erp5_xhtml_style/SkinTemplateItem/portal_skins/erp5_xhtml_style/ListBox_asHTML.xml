@@ -209,6 +209,7 @@
                     i18n:translate="" i18n:domain="ui"> - <tal:block tal:replace="python: len(here.getCheckedUidList())" i18n:name="number">0</tal:block> item(s) selected</span>\n
               </td>\n
 \n
+<tal:block tal:condition="python: here.total_pages > 1">\n
               <tal:block tal:condition="not: is_gadget_mode">\n
                 <td style="white-space: nowrap; vertical-align: middle; text-align: center;">\n
                   <input tal:condition="python: here.current_page > 0"\n
@@ -286,6 +287,7 @@
                                     onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box_relative_url,box_id,params)"/>\n
                 </td>\n
               </tal:block>\n
+</tal:block>\n
             </tr>\n
           </table>\n
         </div>\n
