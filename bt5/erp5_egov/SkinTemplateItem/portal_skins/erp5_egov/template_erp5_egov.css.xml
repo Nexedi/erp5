@@ -279,7 +279,7 @@ form#main_form div#wrapper_header fieldset.widget ul.onleft li{\n
 form#main_form div#wrapper_header fieldset.widget .onright a{\n
   background-repeat:no-repeat;\n
   height: 40px;\n
-  padding: 20px 10px 20px 40px;\n
+  padding: 20px 10px 10px 40px;\n
 }\n
 \n
 .draft_state,\n
