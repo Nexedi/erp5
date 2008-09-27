@@ -48,8 +48,7 @@
              dummy python: request.set(\'editable_mode\', editable_mode)">\n
     <tal:block metal:use-macro="here/dialog_main/macros/master">\n
       <tal:block metal:fill-slot="main">\n
-        <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
-                   dummy python: request.set(\'here\', here);\n
+        <tal:block tal:define="dummy python: request.set(\'here\', here);\n
                    dialog_actions python: here.Base_fixDialogActions(actions, dialog_category);\n
                    current_action python: here.ERP5Site_getCurrentDialogAction(current_url, dialog_actions);\n
                    field_render here/field_render/macros/field_render;">\n
@@ -87,8 +86,7 @@
 \n
           <tal:block metal:define-macro="content">\n
             <div class="content"\n
-                 tal:define="group_list form/Form_getGroupTitleAndId;\n
-                 gid_list   python: \' \'.join([x[\'gid\'] for x in group_list if x not in (\'bottom\', \'hidden\')]);">\n
+                 tal:define="group_list form/Form_getGroupTitleAndId">\n
               <tal:block tal:repeat="group group_list">\n
                 <tal:block tal:define="gid    group/gid">\n
                   <fieldset tal:condition="python: \'hidden\' not in gid and \'bottom\' not in gid"\n
@@ -111,8 +109,7 @@
 \n
      <tal:block metal:define-macro="bottom">\n
       <tal:block metal:fill-slot="bottom">\n
-        <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
-                   dummy python: request.set(\'here\', here);\n
+        <tal:block tal:define="dummy python: request.set(\'here\', here);\n
                    bottom_group python: form.get_fields_in_group(\'bottom\')">\n
           <div tal:condition="python: len(bottom_group) > 0"\n
             class="bottom">\n

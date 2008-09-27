@@ -274,8 +274,7 @@ div.listbox_dataline:hover {\n
         }\n
      //--></script>\n
       <span class="toggle" onclick="toggle_all()">Toggle all</span>\n
-      <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
-                             dummy python: request.set(\'here\',here)">\n
+      <tal:block tal:define="dummy python: request.set(\'here\',here)">\n
         <div class="frame">\n
           <div class="frame_title">General information</div>\n
           <table>\n

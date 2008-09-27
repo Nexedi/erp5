@@ -49,8 +49,7 @@
                                                                                                   \'saved_form_data\': dict(request[\'saved_form_data\'])});">\n
      <tal:block metal:use-macro="here/dialog_main/macros/master">\n
       <tal:block metal:fill-slot="main">\n
-        <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
-                   dummy python: request.set(\'here\', here);\n
+        <tal:block tal:define="dummy python: request.set(\'here\', here);\n
                    proxy_listbox_id python: context.Base_getRelationFieldProxyListBoxId();\n
                    field_render here/field_render/macros/field_render;">\n
 \n
@@ -89,8 +88,7 @@
       </tal:block>\n
 \n
       <tal:block metal:fill-slot="bottom">\n
-        <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
-                   dummy python: request.set(\'here\', here);\n
+        <tal:block tal:define="dummy python: request.set(\'here\', here);\n
                    bottom_group python: form.get_fields_in_group(\'bottom\')">\n
           <div tal:condition="python: len(bottom_group) > 0"\n
             class="bottom">\n
