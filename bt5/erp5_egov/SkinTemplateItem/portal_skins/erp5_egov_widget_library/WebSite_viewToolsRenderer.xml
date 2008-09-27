@@ -59,16 +59,18 @@ Description:\n
         <img alt="Track Application Logo" src="img/track_application.png"/>\n
         <div class="fields">\n
           <p><tal:block i18n:translate="" i18n:domain="ui">Application Number</tal:block></p>\n
+          <p><tal:block i18n:translate="" i18n:domain="ui">Password</tal:block></p>\n
         </div>\n
         <div class="fields">\n
-          <p><input type="text" size="20" name="application_number"/></p>\n
+          <p><input type="text" size="20" id="__ac_name" name="__ac_name" autocomplete="off"/></p>\n
+          <p><input type="password" size="20" id="password" name="__ac_password" autocomplete="off"/></p>\n
         </div>\n
-        <div class="clear"></div>\n
-        <div id="track_button">\n
-          <input i18n:domain="ui" i18n:attributes="value" type="submit"\n
-          value="Track" name="EGov_goToDocument:method"/>\n
-        </div>\n
-        <div class="clear"></div>\n
+      </div>\n
+      <div class="clear"></div>\n
+      <div id="track_button">\n
+        <input i18n:domain="ui" i18n:attributes="value" type="submit"\n
+        name="WebSite_login:method"\n
+        value="Track"/>\n
       </div>\n
       <div class="clear"></div>\n
     </div>\n
