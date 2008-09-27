@@ -55,9 +55,9 @@
             <key> <string>_body</string> </key>
             <value> <string>result = []\n
 \n
-for r in context.contentValues(filter={\'portal_type\': \'Requirement\'}):\n
+for r in context.contentValues(filter={\'portal_type\': \'Requirement\'}, checked_permission=\'View\'):\n
   if not r.getRequirementRelatedValueList():\n
-    if not r.contentValues(filter={\'portal_type\': \'Requirement\'}):\n
+    if not r.contentValues(filter={\'portal_type\': \'Requirement\'}, checked_permission=\'View\'):\n
       result.append(r.getUid())\n
   result.extend(r.RequirementDocument_getOrphanedRequirementUidList())\n
 \n

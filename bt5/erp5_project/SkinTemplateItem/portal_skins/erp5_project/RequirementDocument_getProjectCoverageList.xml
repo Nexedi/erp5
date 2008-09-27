@@ -55,9 +55,9 @@
             <key> <string>_body</string> </key>
             <value> <string>result = []\n
 \n
-for r in context.contentValues(portal_type= "Requirement", sort_on = ((\'int_index\',\'ascending\', \'int\'),)):\n
+for r in context.contentValues(portal_type= "Requirement", sort_on = ((\'int_index\',\'ascending\', \'int\'),), checked_permission=\'View\'):\n
   if not r.getRequirementRelatedValueList():\n
-    if not r.contentValues(portal_type= "Requirement", sort_on = ((\'int_index\',\'ascending\', \'int\'),)):\n
+    if not r.contentValues(portal_type= "Requirement", sort_on = ((\'int_index\',\'ascending\', \'int\'),), checked_permission=\'View\'):\n
       result.append({\'requirement_reference\': r.Requirement_getDefaultReference(),\n
                      \'requirement_title\': r.getTitle(),\n
                      \'project_reference\': \'Not covered\',\n

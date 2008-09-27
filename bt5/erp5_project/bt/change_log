@@ -1,3 +1,7 @@
+2008-09-27 yusei
+* Added checked_permission argument to contentValues method in
+RequirementDocument_getOrphanedRequirementUidList and RequirementDocument_getProjectCoverageList.
+
 2008-09-24 yusei
 * Fixed a bug in Requirement_generateRequirements.
 
