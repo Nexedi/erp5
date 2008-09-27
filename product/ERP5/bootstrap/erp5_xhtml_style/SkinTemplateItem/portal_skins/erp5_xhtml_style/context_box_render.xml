@@ -82,12 +82,10 @@
               onChange="submitAction(this.form,\'Base_doAction\')">\n
         <option selected="selected" value=""\n
                 i18n:translate="" i18n:domain="ui">Action...</option>\n
-        <tal:block tal:define="allowed_content_type_list here/getVisibleAllowedContentTypeList | python:[]">\n
-          <tal:block tal:repeat="content_id allowed_content_type_list">\n
-            <option tal:attributes="value string:add $content_id"\n
-                    i18n:translate="" i18n:domain="ui">Add <tal:block tal:content="content_id"\n
-                             i18n:name="portal_type" i18n:translate="" i18n:domain="ui" /></option>\n
-          </tal:block>\n
+        <tal:block tal:repeat="content_id here/getVisibleAllowedContentTypeList | nothing">\n
+          <option tal:attributes="value string:add $content_id"\n
+                  i18n:translate="" i18n:domain="ui">Add <tal:block tal:content="content_id"\n
+                           i18n:name="portal_type" i18n:translate="" i18n:domain="ui" /></option>\n
         </tal:block>\n
         <tal:block tal:repeat="action actions/object_add | nothing">\n
           <option tal:attributes="value string:object ${action/url}"\n
@@ -155,7 +153,7 @@
             print_actions actions/object_print | nothing;\n
             list_mode list_mode | nothing">\n
         <span class="separator"><!--separator--></span>\n
-        <tal:block tal:condition="list_mode | nothing">\n
+        <tal:block tal:condition="list_mode">\n
           <button class="cut" type="submit" name="Folder_cut:method" title="Cut"\n
                   i18n:attributes="title" i18n:domain="ui">\n
             <span class="image"></span>\n
