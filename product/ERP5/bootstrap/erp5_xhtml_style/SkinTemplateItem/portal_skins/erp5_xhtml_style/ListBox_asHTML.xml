@@ -46,8 +46,6 @@
   tal:define="field_id here/getId;\n
               form_id python: here.getForm().id;\n
               selection_name here/getSelectionName;\n
-              requested_selection_name here/getRequestedSelectionName;\n
-              selection_index here/getSelectionIndex;\n
               selection here/getSelection;\n
               portal_url_string here/getPortalUrlString;\n
               real_context here/getContext;\n
@@ -59,7 +57,7 @@
               is_domain_tree_supported here/isDomainTreeSupported;\n
               is_report_tree_supported here/isReportTreeSupported;\n
               show_select_column here/showSelectColumn;\n
-\t            show_anchor_column here/showAnchorColumn;\n
+              show_anchor_column here/showAnchorColumn;\n
               show_search_line here/showSearchLine;\n
               is_gadget_mode request/is_gadget_mode | nothing;">\n
   <!-- ListBox starts here.  -->\n
@@ -363,8 +361,10 @@
               <tal:block tal:condition="is_report_tree_mode">\n
                 <td class="Data" style="width: 50px; text-align: left; vertical-align: middle" colspan="1"\n
                   tal:attributes="colspan python: show_search_line and 1 or (len(here.getSelectedColumnList()) + show_select_column + show_anchor_column + 1)"\n
-                  tal:define="index python: selection_index is not None and \'&amp;selection_index=%s\' % selection_index or \'\';\n
+                  tal:define="selection_index here/getSelectionIndex;\n
+                              index python: selection_index is not None and \'&amp;selection_index=%s\' % selection_index or \'\';\n
                               is_report_opened python: int(not here.getSelection().isReportOpened());\n
+                              requested_selection_name here/getRequestedSelectionName;\n
                               url here/getUrl"><tal:block tal:repeat="i python: range(0, 6)">&nbsp;<a href="?selection_name=default&amp;selection_index=0&amp;report_depth:int=0"\n
                             tal:attributes="href string:${url}?selection_name=${requested_selection_name}${index}&amp;report_depth:int=${i}"\n
                             tal:content="i">0</a></tal:block>&nbsp;-&nbsp;<a href="?selection_name=default&amp;selection_index=0&amp;is_report_opened:int=0"\n
