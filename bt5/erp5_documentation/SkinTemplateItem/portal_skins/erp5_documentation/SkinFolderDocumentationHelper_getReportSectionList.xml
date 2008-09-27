@@ -54,7 +54,8 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Form.Report import ReportSection\n
-result = []\n
+\n
+#[\'ERP5 Form\', \'ERP5 OOo Template\', \'ERP5 PDF Template\', \'ERP5 Report\', \'Image\', \'Page Template\', \'Script (Python)\', \'Z SQL Method\']\n
 \n
 for meta_type in context.getMetaTypeList():\n
   result.append(\n
@@ -111,11 +112,11 @@ return result\n
                             <string>kw</string>
                             <string>Products.ERP5Form.Report</string>
                             <string>ReportSection</string>
-                            <string>result</string>
                             <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>meta_type</string>
+                            <string>result</string>
                           </tuple>
                         </value>
                     </item>

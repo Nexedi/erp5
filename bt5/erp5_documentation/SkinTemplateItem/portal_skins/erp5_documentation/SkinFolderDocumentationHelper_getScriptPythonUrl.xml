@@ -53,58 +53,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>def getTitle(url=\'\'):\n
-  return url.split(\'/\')[-1]\n
+            <value> <string encoding="cdata"><![CDATA[
+
+meta_type = brain.meta_type\n
+portal_url = context.getPortalObject().portal_classes.absolute_url()\n
+o = context.getPortalObject().restrictedTraverse(brain.base_uri)\n
 \n
-from Products.ERP5Form.Report import ReportSection\n
-REQUEST = context.REQUEST\n
-REQUEST.set(\'is_documentation_report\', True)\n
-sub_result = []\n
-propertysheet_list = []\n
-class_method_list = []\n
-sub_displayed_class = [\'DCWorkflowScriptDocumentationHelper\',\n
-                        \'PageTemplateDocumentationHelper\',\n
-                        \'ScriptPythonDocumentationHelper\',\n
-                        \'ZSQLMethodDocumentationHelper\']\n
-if class_name in sub_displayed_class:\n
-  level=6\n
-else:\n
-  level=5\n
-for uri in uri_list:\n
-    uri_object = context.getDocumentationHelper(class_name, uri)\n
-    if class_name in [\'PortalTypeDocumentationHelper\',\'PortalTypeInstanceDocumentationHelper\']:\n
-      for section in uri_object.getSectionList():\n
-        if section.class_name == \'ClassMethodDocumentationHelper\':\n
-          class_method_list+=section.uri_list\n
-        if section.class_name == \'PortalTypePropertySheetDocumentationHelper\':\n
-          propertysheet_list+=section.uri_list\n
-    sub_result.append(\n
-      ReportSection(\n
-        path=context.getPortalObject().portal_classes.getRelativeUrl(),\n
-        level=level,\n
-        title="%s%s" % (prefix_title, getTitle(uri.split(\'.\')[-1])),\n
-        form_id=\'\')\n
-    )\n
-    sub_result.append(\n
-      ReportSection(\n
-        selection_params=dict(description=uri_object.getDescription()),\n
-        selection_name=\'documentation_helper_selection\',\n
-        path=context.getPortalObject().portal_classes.getRelativeUrl(),\n
-        form_id=\'DocumentationHelper_viewReportSubSectionTitleDescription\',\n
-        listbox_display_mode=\'FlatListMode\')\n
-    )\n
-    sub_result.append(\n
-      ReportSection(\n
-        path=context.getPortalObject().portal_classes.getRelativeUrl(),\n
-        level=level,\n
-        method_id=\'getDocumentationHelper\',\n
-        form_id=\'%s_view\' % class_name,\n
-        param_list=[class_name,\n
-                    uri],\n
-        listbox_display_mode=\'FlatListMode\')\n
-    )\n
-return (sub_result,class_method_list,propertysheet_list)\n
-</string> </value>
+id = brain.id\n
+if callable(id): id = id()\n
+uri = brain.base_uri + \'/\' + id\n
+\n
+return "%s/getDocumentationHelper?uri=%s&class_name=ScriptPythonDocumentationHelper" % \\\n
+       (portal_url, uri)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -114,7 +77,7 @@ return (sub_result,class_method_list,propertysheet_list)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>class_name=\'\', uri_list=[], prefix_title=\'\'</string> </value>
+            <value> <string>brain=None, selection=None, **kwd</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -134,34 +97,23 @@ return (sub_result,class_method_list,propertysheet_list)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>class_name</string>
-                            <string>uri_list</string>
-                            <string>prefix_title</string>
-                            <string>getTitle</string>
-                            <string>Products.ERP5Form.Report</string>
-                            <string>ReportSection</string>
+                            <string>brain</string>
+                            <string>selection</string>
+                            <string>kwd</string>
                             <string>_getattr_</string>
+                            <string>meta_type</string>
                             <string>context</string>
-                            <string>REQUEST</string>
-                            <string>True</string>
-                            <string>sub_result</string>
-                            <string>propertysheet_list</string>
-                            <string>class_method_list</string>
-                            <string>sub_displayed_class</string>
-                            <string>level</string>
-                            <string>_getiter_</string>
+                            <string>portal_url</string>
+                            <string>o</string>
+                            <string>id</string>
+                            <string>callable</string>
                             <string>uri</string>
-                            <string>uri_object</string>
-                            <string>section</string>
-                            <string>_inplacevar_</string>
-                            <string>_getitem_</string>
-                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -174,15 +126,14 @@ return (sub_result,class_method_list,propertysheet_list)\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <string></string>
-                <list/>
-                <string></string>
+                <none/>
+                <none/>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DocumentationHelper_getDocumentationSectionListParams</string> </value>
+            <value> <string>SkinFolderDocumentationHelper_getScriptPythonUrl</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

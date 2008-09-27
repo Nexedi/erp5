@@ -14,6 +14,7 @@
             <value>
               <list>
                 <string>title</string>
+                <string>description</string>
                 <string>columns</string>
                 <string>list_method</string>
                 <string>selection_name</string>
@@ -24,7 +25,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>workflow_state_listbox</string> </value>
+            <value> <string>zsql_method_listbox</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -62,6 +63,10 @@
               <dictionary>
                 <item>
                     <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -113,36 +118,12 @@
                           <string>id</string>
                           <string>Id</string>
                         </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>owner_permissions</string>
-                          <string>Owner</string>
-                        </tuple>
-                        <tuple>
-                          <string>assignor_permissions</string>
-                          <string>Assignor</string>
-                        </tuple>
-                        <tuple>
-                          <string>assignee_permissions</string>
-                          <string>Assignee</string>
-                        </tuple>
-                        <tuple>
-                          <string>associate_permissions</string>
-                          <string>Associate</string>
-                        </tuple>
-                        <tuple>
-                          <string>author_permissions</string>
-                          <string>Author</string>
-                        </tuple>
-                        <tuple>
-                          <string>auditor_permissions</string>
-                          <string>Auditor</string>
-                        </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -164,7 +145,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>workflow_state_selection</string> </value>
+                    <value> <string>zsql_method_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -172,7 +153,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Workflow States</string> </value>
+                    <value> <string>Z SQL Method</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
@@ -180,35 +161,7 @@
                       <list>
                         <tuple>
                           <string>id</string>
-                          <string>DCWorkflowDocumentationHelper_getWorkflowStateUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>DCWorkflowDocumentationHelper_getWorkflowStateUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>owner_permissions</string>
-                          <string>DCWorkflowDocumentationHelper_getWorkflowStateUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>assignor_permissions</string>
-                          <string>DCWorkflowDocumentationHelper_getWorkflowStateUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>assignee_permissions</string>
-                          <string>DCWorkflowDocumentationHelper_getWorkflowStateUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>associate_permissions</string>
-                          <string>DCWorkflowDocumentationHelper_getWorkflowStateUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>author_permissions</string>
-                          <string>DCWorkflowDocumentationHelper_getWorkflowStateUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>auditor_permissions</string>
-                          <string>DCWorkflowDocumentationHelper_getWorkflowStateUrl</string>
+                          <string>SkinFolderDocumentationHelper_getZSQLMethodUrl</string>
                         </tuple>
                       </list>
                     </value>
@@ -230,7 +183,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.DCWorkflowDocumentationHelper_getWorkflowStateList() != []</string> </value>
+            <value> <string>python: context.SkinFolderDocumentationHelper_getZSQLMethodList() != []</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -246,7 +199,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>DCWorkflowDocumentationHelper_getWorkflowStateList</string> </value>
+            <value> <string>SkinFolderDocumentationHelper_getZSQLMethodList</string> </value>
         </item>
       </dictionary>
     </pickle>

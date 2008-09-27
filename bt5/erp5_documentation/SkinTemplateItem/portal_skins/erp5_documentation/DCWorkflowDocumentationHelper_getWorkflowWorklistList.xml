@@ -63,7 +63,7 @@ def compareId(a, b):\n
 state_list = context.getWorklistURIList()\n
 base_uri = context.getURI()\n
 result = map(\n
-  lambda x: context.asContext(id=x[0].split(\'.\')[-1], title=x[1], description=x[2],  role=x[3], uri=x[0], base_uri=base_uri),\n
+  lambda x: context.asContext(id=x[0].split(\'.\')[-1], description=x[2],  role=x[3], uri=x[0], base_uri=base_uri),\n
   state_list \n
 )\n
 result.sort(compareId)\n

@@ -113,7 +113,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here. PortalTypeDocumentationHeper_getListboxVisibilityFromContext()</string> </value>
+            <value> <string>python: here. PortalTypeDocumentationHeper_getListboxVisibilityFromContext() and context.DocumentationHelper_getClassMethodList() != []</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -168,11 +168,18 @@ for section in section_list:\n
         result+=results[0]\n
         class_methods_list+=results[1]\n
         property_sheets_list+=results[2]\n
-        if root_class_name == "ERP5SiteDocumentationHelper" and class_name==\'DCWorkflowDocumentationHelper\':\n
+        class_iterate_list = [\'DCWorkflowDocumentationHelper\', \n
+                              \'SkinFolderDocumentationHelper\']\n
+        section_class_name = class_name \n
+        sub_displayed_class = [\'DCWorkflowScriptDocumentationHelper\',\n
+                               \'PageTemplateDocumentationHelper\',\n
+                               \'ScriptPythonDocumentationHelper\',\n
+                               \'ZSQLMethodDocumentationHelper\']\n
+        if root_class_name == "ERP5SiteDocumentationHelper" and section_class_name in class_iterate_list:\n
           for sub_child_uri in child_uri.uri_list:\n
-            sub_child_object = context.getDocumentationHelper(class_name, sub_child_uri)\n
+            sub_child_object = context.getDocumentationHelper(section_class_name, sub_child_uri)\n
             for sub_child_section in sub_child_object.getSectionList(): \n
-              if sub_child_section.class_name == \'DCWorkflowScriptDocumentationHelper\':\n
+              if sub_child_section.class_name in sub_displayed_class: \n
                 class_name = sub_child_section.class_name\n
                 results=context.DocumentationHelper_getDocumentationSectionListParams(class_name,\n
                                 sub_child_section.uri_list, "%s:" % sub_child_object.getId())\n
@@ -311,6 +318,9 @@ return result\n
                             <string>sub_child_uri</string>
                             <string>getattr</string>
                             <string>child_uri_title</string>
+                            <string>class_iterate_list</string>
+                            <string>section_class_name</string>
+                            <string>sub_displayed_class</string>
                             <string>sub_child_object</string>
                             <string>sub_child_section</string>
                             <string>append</string>

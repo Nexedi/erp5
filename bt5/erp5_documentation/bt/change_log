@@ -1,3 +1,11 @@
+2008-09-27: mayoro
+- adding ERP5 Forms and python scripts for documenting skin_folder correctly
+- removing ERP5 Report Form for previous documentation of skin folder
+- removing title wich was just the name of the action on worklist workflow because description is enought
+- displaying whole python scripts, z sql methods and page templates in ODT mode
+- disable all empty listbox in html and odt mode
+
+
 2008-09-20: mayoro
 - Adding forms for the new  class of documentation BaseCategoryDocumentationHelper
 - Updating links concerning base categories
