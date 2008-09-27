@@ -30,6 +30,7 @@ from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
+from DocumentationSection import DocumentationSection
 from Products.ERP5Type import Permissions
 
 class SkinFolderDocumentationHelper(DocumentationHelper):
@@ -47,7 +48,32 @@ class SkinFolderDocumentationHelper(DocumentationHelper):
     """
     Returns a list of documentation sections
     """
-    return []
+    return map(lambda x: x.__of__(self), [
+      DocumentationSection(
+        id='erp5_form',
+        title='ERP5 Form',
+        class_name='ERP5FormDocumentationHelper',
+        uri_list=self.getFileURIList(meta_type='ERP5 Form'),
+      ),
+      DocumentationSection(
+        id='zsql_method',
+        title='Z SQL Method',
+        class_name='ZSQLMethodDocumentationHelper',
+        uri_list=self.getFileURIList(meta_type='Z SQL Method'),
+      ),
+      DocumentationSection(
+        id='page_template',
+        title='Page Template',
+        class_name='PageTemplateDocumentationHelper',
+        uri_list=self.getFileURIList(meta_type='Page Template'),
+      ),
+      DocumentationSection(
+        id='script_python',
+        title='Script (Python)',
+        class_name='ScriptPythonDocumentationHelper',
+        uri_list=self.getFileURIList(meta_type='Script (Python)'),
+      ),
+    ])
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
   def getType(self):
@@ -104,5 +130,13 @@ class SkinFolderDocumentationHelper(DocumentationHelper):
         if not meta_type or file.meta_type == meta_type:
           file_list.append((file.id, file.title, file.meta_type))
     return file_list
+  security.declareProtected( Permissions.AccessContentsInformation, 'getFileURIList' )
+  def getFileURIList(self, meta_type=None):
+    """
+    """
+    file_list = self.getFileIdList(meta_type)
+    base_uri = '/%s/portal_skins/%s' % (self.getPortalObject().id, self.getDocumentedObject().id)
+    return map(lambda x: ('%s/%s' % (base_uri, x)), file_list)
+
 
 InitializeClass(SkinFolderDocumentationHelper)
