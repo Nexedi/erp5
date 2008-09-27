@@ -80,7 +80,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>columns</string> </key>
+                    <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -91,7 +91,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>description</string> </key>
+                    <key> <string>description</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -103,13 +103,13 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>list_method</string> </key>
+                    <key> <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>base_category_selection</string> </value>
                 </item>
                 <item>
@@ -117,11 +117,11 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Base Category</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>url_columns</string> </key>
+                    <key> <string>url_columns</string> </key>
                     <value>
                       <list>
                         <tuple>

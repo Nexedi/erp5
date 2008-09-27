@@ -97,12 +97,6 @@
             </value>
         </item>
         <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>values</string> </key>
             <value>
               <dictionary>
@@ -180,19 +174,19 @@
                       <list>
                         <tuple>
                           <string>id</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>prefix_type</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>postfix_type</string>
-<string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>type</string>
-<string></string>
+                          <string></string>
                         </tuple>
                       </list>
                     </value>
