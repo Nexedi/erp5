@@ -110,8 +110,8 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
             <tal:block tal:condition="python:basic.report_axis_info[\'bound_start\']!=0">\n
               <b tal:replace="nothing"> previous page exists </b>\n
               <input type="image" src="/images/1leftarrowv.png" title="Previous Page" name="" border="0"\n
-                     tal:attributes="src string:${address}/images/1leftarrowv.png;\n
-                     name string:previousPage:method" />\n
+                     name="previousPage:method"\n
+                     tal:attributes="src string:${address}/images/1leftarrowv.png" />\n
             </tal:block>\n
             <select name="list_start" title="Change Page" size="1"\n
                     onChange=""\n
@@ -136,8 +136,8 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
             <tal:block tal:condition="python:basic.report_axis_info[\'bound_stop\']!=basic.report_axis_info[\'bound_end\']">\n
               <b tal:replace="nothing"> next page exists </b>\n
               <input type="image" src="/images/1rightarrowv.png" title="Next Page" name="" border="0"\n
-                     tal:attributes="src string:${address}/images/1rightarrowv.png;\n
-                     name string:nextPage:method" />\n
+                     name="nextPage:method"\n
+                     tal:attributes="src string:${address}/images/1rightarrowv.png" />\n
             </tal:block>\n
 \n
             <tal:block tal:repeat="nb python:range(8)"> &nbsp; </tal:block>\n
@@ -219,15 +219,15 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
           <tal:block tal:condition="python:basic.report_axis_info[\'bound_start\']!=0">\n
             <!-- previous page exists -->\n
             <input type="image" src="/images/1leftarrowv.png" title="Previous Page" name="" border="0"\n
+                   name="previousPage:method"\n
                    tal:attributes="src previous_src;\n
-                   name string:previousPage:method;\n
                    id python:axis.name + \'_previous\'" />\n
           </tal:block>\n
           <tal:block tal:condition="python:basic.report_axis_info[\'bound_stop\']!=basic.report_axis_info[\'bound_end\']">\n
             <!-- next page exists -->\n
             <input type="image" src="/images/1rightarrowv.png" title="Next Page" name="" border="0"\n
+                   name="nextPage:method"\n
                    tal:attributes="src next_src;\n
-                   name string:nextPage:method;\n
                    id python:axis.name + \'_next\'" />\n
           </tal:block>\n
           <!-- inserting depth widget -->\n
@@ -256,13 +256,13 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
           <!-- Lane page-->\n
           <!-- previous page exists -->\n
           <input type="image" src="/images/1leftarrowv.png" title="Previous Lane Page" name="" border="0"\n
+                 name="previousLanePage:method"\n
                  tal:attributes="src previous_src;\n
-                 name string:previousLanePage:method;\n
                  id python:axis.name + \'_previous\'" />\n
           <!-- next page exists -->\n
           <input type="image" src="/images/1rightarrowv.png" title="Next Lane Page" name="" border="0"\n
+                 name="nextLanePage:method"\n
                  tal:attributes="src next_src;\n
-                 name string:nextLanePage:method;\n
                  id python:axis.name + \'_next\'" />\n
         </tal:block>\n
       </div>\n
@@ -284,9 +284,9 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
              tal:attributes="id python:axis_group.name + \'_line\'"></div>\n
         <!-- display blocks -->\n
         <tal:block tal:repeat="block python:planning.content">\n
-          <div tal:condition="python:block.property_dict[\'stat\']== 0"\n
+          <div ondblclick="showGrips()"\n
+               tal:condition="python:block.property_dict[\'stat\']== 0"\n
                tal:attributes="id python:block.name;\n
-               ondblclick string:showGrips();\n
                title python:block.title;\n
                style python:\'text-align:center\'">\n
             <tal:block tal:condition="python:block.zone == 1">\n

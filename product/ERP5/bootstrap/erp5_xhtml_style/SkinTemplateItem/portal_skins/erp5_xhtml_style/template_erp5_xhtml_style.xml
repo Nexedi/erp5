@@ -73,9 +73,9 @@ IDEAS:\n
             <tal:block tal:repeat="group python: [x for x in form.get_groups(include_empty=0) if x != \'hidden\']">\n
               <tal:block tal:repeat="field python: form.get_fields_in_group(group)">\n
                 <tal:block tal:define="css python: field.render_css(REQUEST=request)">\n
-                  <style tal:condition="python: css is not None"\n
-                         tal:content="css"\n
-                         tal:attributes="type string:text/css">\n
+                  <style type="text/css"\n
+                         tal:condition="python: css is not None"\n
+                         tal:content="css">\n
                   </style>\n
                 </tal:block>\n
                 <tal:block tal:define="dummy python: css_list.extend(field.get_css_list(REQUEST=request))" />\n

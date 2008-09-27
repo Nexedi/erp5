@@ -63,7 +63,7 @@
               <label for="dialog_selector"\n
                      i18n:translate="" i18n:domain="ui">Select Template:</label>\n
               <select name="select_dialog" id="dialog_selector"\n
-                      tal:attributes="onChange string:submitAction(this.form,\'Base_doRelationDialog\')">\n
+                      onChange="submitAction(this.form,\'Base_doRelationDialog\')">\n
                   <option tal:attributes="value python: \'Base_viewRelatedObjectListBase/listbox\'"\n
                           tal:content="string:Default"\n
                           i18n:translate="" i18n:domain="ui"></option>\n

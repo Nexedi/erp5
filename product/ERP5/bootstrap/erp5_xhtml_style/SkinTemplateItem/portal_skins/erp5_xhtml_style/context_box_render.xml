@@ -45,7 +45,7 @@
   <tal:block metal:define-macro="master">\n
     <span id="jump" metal:define-macro="jump">\n
       <select name="select_jump"\n
-              tal:attributes="onChange string:submitAction(this.form,\'Base_doJump\')">\n
+              onChange="submitAction(this.form,\'Base_doJump\')">\n
         <option selected="selected" value=""\n
                 i18n:translate="" i18n:domain="ui">Jump...</option>\n
         <tal:block tal:repeat="jump actions/object_jump | nothing">\n
@@ -185,8 +185,8 @@
           <span class="description" i18n:translate="" i18n:domain="ui">New</span>\n
         </button>\n
         <button class="clone" type="submit" title="Clone"\n
+                name="Base_createCloneDocument:method"\n
                 tal:condition="not: list_mode"\n
-                tal:attributes="name string:Base_createCloneDocument:method"\n
                 i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Clone</span>\n
