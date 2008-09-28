@@ -65,62 +65,94 @@ from Accessor.TypeDefinition import list_types
 # Generic sort method
 #####################################################
 
+sort_kw_cache = {}
+
 def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
   """Sort values in a way compatible with ZSQLCatalog.
   """
   if sort_on is not None:
     if isinstance(sort_on, str):
       sort_on = (sort_on,)
-    reverse = (sort_order in ('descending', 'reverse', 'DESC'))
-    new_sort_on = []
-    for key in sort_on:
-      if isinstance(key, str):
-        new_sort_on.append((key, reverse, None))
-      else:
-        if len(key) == 1:
-          new_sort_on.append((key[0], reverse, None))
-        elif len(key) == 2:
-          new_sort_on.append((key[0],
-                              key[1] in ('descending', 'reverse', 'DESC'),
-                              None))
+    # try to cache keyword arguments for sort()
+    sort_on = tuple([isinstance(x, str) and x or tuple(x) for x in sort_on])
+    try:
+      sort_kw = sort_kw_cache[sort_on]
+    except KeyError:
+      new_sort_on = []
+      reverse_dict = {}
+      for key in sort_on:
+        if isinstance(key, str):
+          reverse = (sort_order in ('descending', 'reverse', 'DESC'))
+          new_sort_on.append((key, reverse, None))
+          reverse_dict[reverse] = True
         else:
-          # Emulate MySQL types
-          as_type = key[2].lower()
-          if as_type in ('int', 'bigint'):
-            f=int
-          elif as_type in ('float', 'real', 'double'):
-            f=float
+          if len(key) == 1:
+            reverse = (sort_order in ('descending', 'reverse', 'DESC'))
+            new_sort_on.append((key[0], reverse, None))
+            reverse_dict[reverse] = True
+          elif len(key) == 2:
+            reverse = (key[1] in ('descending', 'reverse', 'DESC'))
+            new_sort_on.append((key[0], reverse, None))
+            reverse_dict[reverse] = True
           else:
-            # XXX: For an unknown type, use a string.
-            f=str
-          new_sort_on.append((key[0],
-                              key[1] in ('descending', 'reverse', 'DESC'),
-                              f))
-    sort_on = new_sort_on
+            # Emulate MySQL types
+            as_type = key[2].lower()
+            if as_type in ('int', 'bigint'):
+              f=int
+            elif as_type in ('float', 'real', 'double'):
+              f=float
+            else:
+              # XXX: For an unknown type, use a string.
+              f=str
+            reverse = (key[1] in ('descending', 'reverse', 'DESC'))
+            new_sort_on.append((key[0], reverse, f))
+            reverse_dict[reverse] = True
 
-    def sortValues(a, b):
-      result = 0
-      for key, reverse, as_type in sort_on:
-        x = a.getProperty(key, None)
-        y = b.getProperty(key, None)
-        if as_type is not None:
-          try:
-            x = as_type(x)
-            y = as_type(y)
-          except TypeError:
-            pass
-        result = cmp(x, y)
-        if reverse:
-          result = -result
-        if result != 0:
-          break
-      return result
+      if len(reverse_dict) == 1:
+        # if we have only one kind of reverse value (i.e. all True or all
+        # False), we can use sort(key=func) that is faster than
+        # sort(cmp=func).
+        def sortValue(a):
+          value_list = []
+          for key, reverse, as_type in new_sort_on:
+            x = a.getProperty(key, None)
+            if as_type is not None:
+              try:
+                x = as_type(x)
+              except TypeError:
+                pass
+            value_list.append(x)
+          return value_list
+        sort_kw = {'key':sortValue, 'reverse':reverse}
+        sort_kw_cache[sort_on] = sort_kw
+      else:
+        # otherwise we use sort(cmp=func).
+        def sortValues(a, b):
+          result = 0
+          for key, reverse, as_type in new_sort_on:
+            x = a.getProperty(key, None)
+            y = b.getProperty(key, None)
+            if as_type is not None:
+              try:
+                x = as_type(x)
+                y = as_type(y)
+              except TypeError:
+                pass
+            result = cmp(x, y)
+            if reverse:
+              result = -result
+            if result != 0:
+              break
+          return result
+        sort_kw = {'cmp':sortValues, 'reverse':reverse}
+        sort_kw_cache[sort_on] = sort_kw
 
     if isinstance(value_list, LazyMap):
       new_value_list = [x for x in value_list]
       value_list = new_value_list
-    value_list.sort(sortValues)
-    
+
+    value_list.sort(**sort_kw)
+
   return value_list
       
 #####################################################
