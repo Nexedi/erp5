@@ -67,9 +67,9 @@
 \t<td> - 0 item(s) selected</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifySelected</td>\n
+\t<td>verifyElementNotPresent</td>\n
 \t<td>id=listbox_page_selection</td>\n
-\t<td>1 of 1</td>\n
+\t<td></td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyElementNotPresent</td>\n
