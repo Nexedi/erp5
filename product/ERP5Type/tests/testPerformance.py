@@ -34,12 +34,15 @@ from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.CMFCore.tests.base.testcase import LogInterceptor
+import os, hotshot
 
 # Define variable to chek if performance are good or not
 # XXX These variable are specific to the testing environment
 # (which has 31645.6 pystones/second)
 MIN_OBJECT_VIEW=0.112
 MAX_OBJECT_VIEW=0.122
+MIN_OBJECT_MANY_LINES_VIEW=0.2500
+MAX_OBJECT_MANY_LINES_VIEW=0.3000
 MIN_OBJECT_PROXYFIELD_VIEW=0.1990
 MAX_OBJECT_PROXYFIELD_VIEW=0.2200
 CURRENT_MIN_OBJECT_VIEW=0.1220
@@ -52,6 +55,9 @@ MIN_TIC=0.0260
 MAX_TIC=0.0355
 LISTBOX_COEF=0.02472
 DO_TEST = 1
+
+# set 1 to get hotshot profiler's result (unit_test/tests/<func_name>)
+PROFILE=0
 
 class TestPerformance(ERP5TypeTestCase, LogInterceptor):
 
@@ -126,9 +132,21 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       if not quiet:
           print "%s time to view object form %.4f < %.4f < %.4f\n" % \
               (prefix, min, req_time, max)
+      if PROFILE:
+          self.profile(bar.Bar_viewPerformance)
       if DO_TEST:
           self.failUnless(min < req_time < max,
                           '%.4f < %.4f < %.4f' % (min, req_time, max))
+
+    def profile(self, func):
+        prof_file = func.__name__
+        try:
+            os.unlink(prof_file)
+        except OSError:
+            pass
+        prof = hotshot.Profile(prof_file)
+        prof.runcall(func)
+        prof.close()
 
     def test_00_viewBarObject(self, quiet=quiet, run=run_all_test,
                               min=None, max=None):
@@ -189,6 +207,8 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
           tic_result[key] = (after_tic - before_tic)/100.
           add_result[key] = (after_add - before_add)/100.
 
+      if PROFILE:
+          self.profile(self.bar_module.BarModule_viewBarList)
       # check result
       keys = view_result.keys()
       keys.sort()
@@ -251,6 +271,39 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
               MIN_OBJECT_PROXYFIELD_VIEW,
               req_time,
               MAX_OBJECT_PROXYFIELD_VIEW))
+
+    def test_02_viewFooObjectWithManyLines(self, quiet=quiet):
+      """
+      Estimate average time to render object view with many lines
+      """
+      foo = self.foo_module.newContent(portal_type='Foo',
+                                       title='Foo Test')
+      for i in xrange(100):
+          foo.newContent(portal_type='Foo Line',
+                         title='Line %s' % i)
+      get_transaction().commit()
+      self.tic()
+      # Check performance
+      before_view = time()
+      for x in xrange(100):
+        foo.Foo_view()
+      after_view = time()
+      req_time = (after_view - before_view)/100.
+
+      if not quiet:
+        print "time to view object form with many lines %.4f < %.4f < %.4f\n" % \
+              ( MIN_OBJECT_MANY_LINES_VIEW,
+                req_time,
+                MAX_OBJECT_MANY_LINES_VIEW )
+      if PROFILE:
+          self.profile(foo.Foo_view)
+      if DO_TEST:
+        self.failUnless( MIN_OBJECT_MANY_LINES_VIEW < req_time
+                                    < MAX_OBJECT_MANY_LINES_VIEW,
+          '%.4f < %.4f < %.4f' % (
+              MIN_OBJECT_MANY_LINES_VIEW,
+              req_time,
+              MAX_OBJECT_MANY_LINES_VIEW))
 
 def test_suite():
   suite = unittest.TestSuite()
