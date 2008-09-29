@@ -1,20 +1,21 @@
 <base_category_list>
+ <portal_type id="Budget">
+  <item>budget_type</item>
+ </portal_type>
  <portal_type id="Budget Line">
   <item>group</item>
   <item>region</item>
   <item>budget_section</item>
   <item>financial_section</item>
- </portal_type>
- <portal_type id="Budget Module">
-  <item>business_application</item>
+  <item>budget_line_type</item>
  </portal_type>
  <portal_type id="Budget Transaction">
   <item>group</item>
  </portal_type>
- <portal_type id="Budget Transaction Module">
-  <item>business_application</item>
- </portal_type>
  <portal_type id="Budget Transfer Line">
   <item>group</item>
+ </portal_type>
+ <portal_type id="Purchase Supply Line">
+  <item>destination_account</item>
  </portal_type>
 </base_category_list>
