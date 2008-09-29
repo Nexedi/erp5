@@ -38,7 +38,20 @@
         </item>
         <item>
             <key> <string>action</string> </key>
+            <value> <string>Base_edit</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list>
+                <string>title</string>
+                <string>reference</string>
+              </list>
+            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -46,7 +59,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -67,25 +80,19 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>matrixbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>matrixbox_quantity</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -93,7 +100,8 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>your_total_available_budget</string>
+                        <string>my_destination_account</string>
+                        <string>my_destination_function</string>
                       </list>
                     </value>
                 </item>
@@ -108,7 +116,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BudgetLine_viewAvailableBudget</string> </value>
+            <value> <string>OrderLine_viewBudget</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -116,7 +124,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>BudgetLine_viewAvailableBudget</string> </value>
+            <value> <string>DeliveryLine_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -127,12 +135,22 @@
             <value> <int>4</int> </value>
         </item>
         <item>
+            <key> <string>store_order</string> </key>
+            <value>
+              <list>
+                <string>title</string>
+                <string>reference</string>
+                <string>int_index</string>
+              </list>
+            </value>
+        </item>
+        <item>
             <key> <string>stored_encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Available Budget</string> </value>
+            <value> <string>Budget</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

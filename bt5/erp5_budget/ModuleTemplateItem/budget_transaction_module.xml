@@ -344,9 +344,6 @@
    <name>Add portal topics</name>
    <role>Manager</role>
   </permission>
-  <permission type='list'>
-   <name>Approve draft changes</name>
-  </permission>
   <permission type='tuple'>
    <name>Change Browser Id Manager</name>
    <role>Manager</role>
@@ -538,9 +535,6 @@
   <permission type='tuple'>
    <name>Manage Access Rules</name>
    <role>Manager</role>
-  </permission>
-  <permission type='list'>
-   <name>Manage Five local sites</name>
   </permission>
   <permission type='tuple'>
    <name>Manage Groups</name>

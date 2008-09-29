@@ -76,7 +76,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>editable_attributes</string> </key>
+                    <key> <string>editable_attributes</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -95,7 +95,7 @@
                     <value> <string>BudgetLine_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>global_attributes</string> </key>
+                    <key> <string>global_attributes</string> </key>
                     <value>
                       <list/>
                     </value>

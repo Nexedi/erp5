@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -77,8 +65,10 @@ def getRangeBaseCategoryFromBudgetLineVariation(budget_line):\n
   budget_line_variation = context.getBudgetLineVariation()\n
   if budget_line_variation == \'budget_variation/node_category_budget_section\':\n
     return \'budget_section\'\n
-  if budget_line_variation == \'budget_variation/node_category_financial_section\':\n
+  elif budget_line_variation == \'budget_variation/node_category_financial_section\':\n
     return \'financial_section\'\n
+  elif budget_line_variation == \'budget_variation/budget_line_type\':\n
+    pass\n
   else:\n
     raise ValueError(\'Unknown budget line variation: %s\' %\n
                            budget_line_variation)\n
@@ -118,18 +108,6 @@ return [x for x in cell_range if x != []]\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
