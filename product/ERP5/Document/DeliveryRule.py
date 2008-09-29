@@ -121,6 +121,7 @@ class DeliveryRule(Rule):
 
               source=deliv_mvt.getSource(),
               source_section=deliv_mvt.getSourceSection(),
+              source_function=deliv_mvt.getSourceFunction(),
               destination=deliv_mvt.getDestination(),
               destination_section=deliv_mvt.getDestinationSection(),
               destination_function=deliv_mvt.getDestinationFunction(),
@@ -150,6 +151,7 @@ class DeliveryRule(Rule):
 
                 source=deliv_mvt.getSource(),
                 source_section=deliv_mvt.getSourceSection(),
+                source_function=deliv_mvt.getSourceFunction(),
                 destination=deliv_mvt.getDestination(),
                 destination_section=deliv_mvt.getDestinationSection(),
                 destination_function=deliv_mvt.getDestinationFunction(),

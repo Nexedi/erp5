@@ -175,6 +175,7 @@ class OrderRule(DeliveryRule):
       default_property_list = (
         'source',
         'source_section',
+        'source_function',
         'destination',
         'destination_section',
         'destination_function',
