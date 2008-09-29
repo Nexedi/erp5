@@ -1,0 +1,6 @@
+2008-09-29 fabrice
+* Initial commit
+* add budget_view Form on Purchase Order, Purchase Order Line and Account portal types
+* add budget_line_type category content
+* add destination_account base category
+* create a skin folder
