@@ -131,7 +131,6 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
             'source_payment': context_movement.getSourcePayment(),
             'destination': accounting_rule_cell_line.getDestination(),
             'destination_section': context_movement.getDestinationSection(),
-            'destination_section': context_movement.getDestinationSection(),
             'destination_decision': context_movement.getDestinationDecision(),
             'destination_administration': context_movement.getDestinationAdministration(),
             'destination_project': context_movement.getDestinationProject(),
