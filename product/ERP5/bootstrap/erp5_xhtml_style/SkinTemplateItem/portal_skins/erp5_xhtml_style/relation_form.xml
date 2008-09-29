@@ -60,7 +60,7 @@
             <div tal:condition="python: len(proxy_form_id_list) > 0"\n
               class="dialog_selector">\n
               <label for="dialog_selector"\n
-                     i18n:translate="" i18n:domain="ui">Select Template:</label>\n
+                     i18n:translate="" i18n:domain="ui">Select Template</label>\n
               <select name="select_dialog" id="dialog_selector"\n
                       onChange="submitAction(this.form,\'Base_doRelationDialog\')">\n
                   <option tal:attributes="value python: \'Base_viewRelatedObjectListBase/listbox\'"\n
