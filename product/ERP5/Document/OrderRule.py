@@ -177,6 +177,7 @@ class OrderRule(DeliveryRule):
         'source_section',
         'destination',
         'destination_section',
+        'destination_function',
         'start_date',
         'stop_date',
         'resource',
