@@ -83,8 +83,8 @@ class BudgetCell(Predicate, MetaNode):
               "Did not find title script for portal type: %r" %\
               self.getPortalType()
       return title
-    
-    security.declareProtected(Permissions.View, 'getCurrentInventory')  
+
+    security.declareProtected(Permissions.View, 'getCurrentInventory')
     def getCurrentInventory(self, **kw):
       """
       Returns current inventory
@@ -122,3 +122,18 @@ class BudgetCell(Predicate, MetaNode):
       Return available budget.
       """
       return self.getCurrentBalance() - self.getConsumedBudget()
+
+    security.declareProtected(Permissions.View, 'getEngagedBudget')
+    def getEngagedBudget(self, src__=0):
+      """
+      Return Engaged budget.
+      """
+      script = self._getTypeBasedMethod('getEngagedBudget')
+      try:
+        result = script(src__=src__)
+      except UnboundLocalError:
+        raise UnboundLocalError,\
+              "Did not find engaged budget script for portal type: %r" % \
+              self.getPortalType()
+      return result
+
