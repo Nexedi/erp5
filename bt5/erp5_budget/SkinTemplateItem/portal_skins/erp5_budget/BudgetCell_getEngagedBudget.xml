@@ -1,0 +1,202 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""FIXME: this script uses standard categories, but not membership criterion\n
+category list. This assumes that an interaction workflow is copying membership\n
+categories into standard categories. Afterall, this might not be needed and we_\n
+can probably get them from membership criterion category list.\n
+"""\n
+\n
+consumed_budget = context.BudgetCell_getConsumedBudget()\n
+\n
+mcbcl = context.getMembershipCriterionBaseCategoryList() \n
+\n
+kw = dict(\n
+  src__=src__,\n
+  from_date=context.getStartDateRangeMin(),\n
+  at_date=context.getStartDateRangeMax(),\n
+  simulation_state = [\'confirmed\', \'delivered\', \'stopped\', \'started\']\n
+)\n
+\n
+parent = context.getParentValue()\n
+\n
+# node\n
+if \'destination\' in mcbcl:\n
+  kw[\'node_uid\'] = context.getDestinationUid()\n
+\n
+# node category\n
+if parent.isMemberOf(\n
+    \'budget_line_variation/budget_variation/node_category_financial_section\'):\n
+  kw[\'node_category\'] = parent.getFinancialSection(base=1)\n
+if parent.isMemberOf(\n
+    \'budget_line_variation/budget_variation/node_category_budget_section\'):\n
+  kw[\'stock.function_uid\'] = parent.getBudgetSectionUid() #(base=1)\n
+  kw[\'node_category\'] = parent.getBudgetSection(base=1)\n
+\n
+# mirror node\n
+if context.getSourceUid():\n
+  kw[\'mirror_node_uid\'] = context.getSourceUid()\n
+\n
+# mirror node category\n
+\n
+# section category\n
+if (context.isMemberOf(\n
+    \'budget_cell_variation/budget_variation/section_category_group\') or\n
+    context.isMemberOf(\n
+      \'budget_line_variation/budget_variation/section_category_group\')):\n
+  kw[\'section_category\'] = parent.getGroup(base=1)\n
+elif (context.isMemberOf(\n
+    \'budget_cell_variation/budget_variation/section_category_region\') or\n
+    context.isMemberOf(\n
+      \'budget_line_variation/budget_variation/section_category_region\')):\n
+  kw[\'section_category\'] = parent.getRegion(base=1)\n
+\n
+# mirror section category\n
+if (context.isMemberOf(\n
+    \'budget_cell_variation/budget_variation/mirror_section_category_group\') or \n
+    context.isMemberOf(\n
+      \'budget_line_variation/budget_variation/mirror_section_category_group\')):\n
+  kw[\'mirror_section_category\'] = parent.getGroup(base=1)\n
+elif (context.isMemberOf(\n
+    \'budget_cell_variation/budget_variation/mirror_section_category_region\') or \n
+    context.isMemberOf(\n
+      \'budget_line_variation/budget_variation/mirror_section_category_region\')):\n
+  kw[\'mirror_section_category\'] = parent.getRegion(base=1)\n
+\n
+\n
+if (parent.isMemberOf(\'budget_cell_variation/budget_variation/budget_line_type\')):\n
+  if parent.getBudgetLineType() == \'expense\':\n
+    kw[\'explanation_portal_type\'] = [\'Purchase Order\', \'Purchase Invoice Transaction\', \'Purchase Packing List\']\n
+  elif parent.getBudgetLineType() == \'income\':\n
+    kw[\'explanation_portal_type\'] = [\'Sale Order\', \'Sale Invoice Transaction\', \'Sale Packing List\']\n
+    return -context.portal_simulation.getInventory(**kw) \n
+\n
+return context.portal_simulation.getInventory(**kw)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>src__=0</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>src__</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>consumed_budget</string>
+                            <string>mcbcl</string>
+                            <string>dict</string>
+                            <string>kw</string>
+                            <string>parent</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BudgetCell_getEngagedBudget</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

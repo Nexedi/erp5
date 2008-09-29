@@ -1,5 +1,6 @@
 2008-09-29 fabrice
 *Add budget_cell_interaction_workflow
+* Add the engaged budget tab on Budget Line views
 
 2008-07-30 fabrice
 * add the base category budget_section

@@ -1,8 +1,10 @@
+Account | view_budget
 Budget Cell | print
 Budget Cell | view
 Budget Line | available_view
 Budget Line | consumed_view
 Budget Line | current_view
+Budget Line | engaged_view
 Budget Line | initial_view
 Budget Module | view
 Budget Transaction Module | view
@@ -13,3 +15,4 @@ Budget | generate_structure
 Budget | original_budget
 Budget | transfer_line_list_view
 Budget | view
+Purchase Order Line | view_budget
