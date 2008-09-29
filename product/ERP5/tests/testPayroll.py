@@ -1764,7 +1764,8 @@ class TestPayroll(TestPayrollMixin):
     # AccountingTransactionModule_getPaySheetMovementMirrorSectionItemList is
     # used in the report dialog to display possible organisations.
     self.assertEquals(
-        [(other_provider.getTitle(), other_provider.getRelativeUrl()),
+        [('', ''),
+         (other_provider.getTitle(), other_provider.getRelativeUrl()),
          (provider.getTitle(), provider.getRelativeUrl())],
         self.portal.accounting_module\
     .AccountingTransactionModule_getPaySheetMovementMirrorSectionItemList())
