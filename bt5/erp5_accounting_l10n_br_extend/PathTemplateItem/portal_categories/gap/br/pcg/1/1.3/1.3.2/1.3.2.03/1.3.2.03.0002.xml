@@ -10,6 +10,20 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Copy_or_Move_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Author</string>
+                <string>Authenticated</string>
+                <string>Owner</string>
+              </list>
+            </value>
+        </item>
+        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
