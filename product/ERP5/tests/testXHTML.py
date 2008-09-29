@@ -71,6 +71,7 @@ target_business_templates = (
 ##   'erp5_banking_inventory',
 
   'erp5_budget',
+  'erp5_public_accounting_budget',
 
   'erp5_commerce',
 
