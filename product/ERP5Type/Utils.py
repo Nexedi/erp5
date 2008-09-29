@@ -144,7 +144,7 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
             if result != 0:
               break
           return result
-        sort_kw = {'cmp':sortValues, 'reverse':reverse}
+        sort_kw = {'cmp':sortValues}
         sort_kw_cache[sort_on] = sort_kw
 
     if isinstance(value_list, LazyMap):
