@@ -10,9 +10,17 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
+            <key> <string>_Copy_or_Move_Permission</string> </key>
             <value>
-              <none/>
+              <list>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Author</string>
+                <string>Authenticated</string>
+                <string>Owner</string>
+              </list>
             </value>
         </item>
         <item>
@@ -38,12 +46,6 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string>ICMS</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
       </dictionary>
     </pickle>
