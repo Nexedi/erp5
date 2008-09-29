@@ -73,7 +73,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>home</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -94,7 +96,6 @@
                       <list>
                         <string>login_information</string>
                         <string>logout</string>
-                        <string>home</string>
                       </list>
                     </value>
                 </item>

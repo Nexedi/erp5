@@ -629,7 +629,7 @@ fieldset.register_informations{\n
 \n
 .field .input .big_button{\n
   width: 20%;\n
-  margin-left: 20%;\n
+  margin-left: 40%;\n
   margin-top: 2em;\n
 }\n
 \n
