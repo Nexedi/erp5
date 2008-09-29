@@ -161,7 +161,7 @@ class TemplateTool (BaseTool):
       path = pathname2url(path)
       business_template.export(path=path, local=1)
       if REQUEST is not None:
-        psm = translateString('Saved in ${path}.',
+        psm = translateString('Saved in ${path} .',
                               mapping={'path':pathname2url(path)})
         ret_url = '%s/%s?portal_status_message=%s' % \
                   (business_template.absolute_url(),
