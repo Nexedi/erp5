@@ -1761,6 +1761,14 @@ class TestPayroll(TestPayrollMixin):
     get_transaction().commit()
     self.tic()
 
+    # AccountingTransactionModule_getPaySheetMovementMirrorSectionItemList is
+    # used in the report dialog to display possible organisations.
+    self.assertEquals(
+        [(other_provider.getTitle(), other_provider.getRelativeUrl()),
+         (provider.getTitle(), provider.getRelativeUrl())],
+        self.portal.accounting_module\
+    .AccountingTransactionModule_getPaySheetMovementMirrorSectionItemList())
+
     # set request variables and render
     request_form = self.portal.REQUEST
     request_form['at_date'] = DateTime(2006, 2, 2)
