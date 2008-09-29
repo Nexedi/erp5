@@ -104,6 +104,9 @@
    <name>Add CMFMailIn Tools</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Add Clouseaus</name>
+  </permission>
   <permission type='tuple'>
    <name>Add Configured CMF Sites</name>
    <role>Manager</role>
@@ -206,10 +209,6 @@
   </permission>
   <permission type='tuple'>
    <name>Add Formulator Forms</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Add Local File Systems</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -348,6 +347,9 @@
    <name>Add portal topics</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Approve draft changes</name>
+  </permission>
   <permission type='tuple'>
    <name>Change Browser Id Manager</name>
    <role>Manager</role>
@@ -386,10 +388,6 @@
   </permission>
   <permission type='tuple'>
    <name>Change Images and Files</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Change Local File System properties</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -457,6 +455,9 @@
    <name>Change proxy roles</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Clouseau: Debug</name>
+  </permission>
   <permission type='tuple'>
    <name>Copy or Move</name>
    <role>Assignee</role>
@@ -476,10 +477,6 @@
   </permission>
   <permission type='tuple'>
    <name>Define permissions</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Delete local files</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -548,6 +545,9 @@
    <name>Manage Access Rules</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Manage Five local sites</name>
+  </permission>
   <permission type='tuple'>
    <name>Manage Groups</name>
    <role>Manager</role>
@@ -585,10 +585,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Manage local files</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Manage messages</name>
    <role>Manager</role>
   </permission>
@@ -619,10 +615,6 @@
   </permission>
   <permission type='tuple'>
    <name>Open/Close Database Connections</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Overwrite local files</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -682,10 +674,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Upload local files</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Use Database Methods</name>
    <role>Manager</role>
   </permission>
@@ -710,10 +698,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>View Directory Index</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>View History</name>
    <role>Assignee</role>
    <role>Assignor</role>
@@ -725,6 +709,9 @@
   <permission type='tuple'>
    <name>View ZMailMessage</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>View documentation</name>
   </permission>
   <permission type='tuple'>
    <name>View management screens</name>
