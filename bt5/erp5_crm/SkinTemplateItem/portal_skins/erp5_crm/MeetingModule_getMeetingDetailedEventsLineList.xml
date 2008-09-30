@@ -101,7 +101,7 @@ for r_ticket in ticketlist: \n
   eventlist_sorted=[]\n
   for event in eventlist:\n
     eventlist_sorted.append(event.getObject())\n
-  eventlist_sorted.sort(lambda x,y: cmp(x.getDestinationTitle(), y.getDestinationTitle()))\n
+  eventlist_sorted.sort(key=lambda x: x.getDestinationTitle())\n
   for event in eventlist_sorted:\n
     line_list.append( Object(uid=\'new_\',\n
                            meeting = ticket.getTitle(),\n
@@ -145,7 +145,7 @@ for r_ticket in ticketlist: \n
   eventlist_sorted=[]\n
   for event in eventlist:\n
     eventlist_sorted.append(event.getObject())\n
-  eventlist_sorted.sort(lambda x,y: cmp(x.getSourceTitle(), y.getSourceTitle()))\n
+  eventlist_sorted.sort(key=lambda x: x.getSourceTitle())\n
   for event in eventlist_sorted:\n
     line_list.append( Object(uid=\'new_\',\n
                            meeting = ticket.getTitle(),\n

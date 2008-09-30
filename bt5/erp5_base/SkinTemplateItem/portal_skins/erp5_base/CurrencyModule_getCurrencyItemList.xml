@@ -70,7 +70,7 @@ def getCurrencyItemList(include_empty=1, portal_path=""):\n
       result.append((currency.getReference() or currency.getTitleOrId(),\n
                      currency.getRelativeUrl()))\n
   \n
-  result.sort(lambda x,y: cmp(x[0], y[0]))\n
+  result.sort(key=lambda x: x[0])\n
   return result\n
 \n
 from Products.ERP5Type.Cache import CachingMethod\n

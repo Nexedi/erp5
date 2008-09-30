@@ -81,7 +81,7 @@ for task in listbox:\n
     task_items.append(task_dict)\n
 \n
 # sort the requirements list by id to have the same order of the user\n
-task_items.sort(lambda x, y: cmp(x[\'id\'], y[\'id\']))\n
+task_items.sort(key=lambda x: x[\'id\'])\n
 \n
 \n
 \n

@@ -66,7 +66,7 @@ for career_step in all_career_step_list :\n
       career_step_list.append(career_step)\n
     \n
 # sort them by start date\n
-career_step_list.sort( lambda x, y: cmp(x.getStartDate(), y.getStartDate()) )\n
+career_step_list.sort(key=lambda x: x.getStartDate())\n
 for career_step in career_step_list :\n
   # TODO: take the first date of the last active career range.\n
   # for now, we only return the first one.\n
