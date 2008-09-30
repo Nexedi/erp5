@@ -117,7 +117,7 @@ for task_line in task_line_list:\n
     # This should not happens, so display an error message\n
     raise ValueError, context.Base_translateString(\\\n
         "This task should have a source : ${task_relative_url}",\n
-        mapping = {\'task_relative_url\': task.getRelativeUrl()})\n
+        mapping = {\'task_relative_url\': task_line.getRelativeUrl()})\n
   source_title = task_line.getSourceTitle()\n
   start_date_task = task_line.getStartDate()\n
   stop_date_task = task_line.getStopDate()\n
