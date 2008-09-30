@@ -1,4 +1,3 @@
-Account | view_budget
 Budget Cell | print
 Budget Cell | view
 Budget Line | available_view
@@ -15,4 +14,3 @@ Budget | generate_structure
 Budget | original_budget
 Budget | transfer_line_list_view
 Budget | view
-Purchase Order Line | view_budget
