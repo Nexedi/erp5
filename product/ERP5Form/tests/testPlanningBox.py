@@ -26,20 +26,11 @@
 #
 ##############################################################################
 
-import os, sys
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
-
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Testing import ZopeTestCase
 from Products.ERP5Type.Utils import get_request
-from Products.ERP5Type.tests.utils import createZODBPythonScript
-from ZPublisher.HTTPRequest import FileUpload
 from StringIO import StringIO
-from Products.ERP5Form.Selection import Selection
 from DateTime import DateTime
 
 class DummyFieldStorage:
@@ -156,12 +147,9 @@ class TestPlanningBox(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestPlanningBox))
-    return suite
+import unittest
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestPlanningBox))
+  return suite
 
