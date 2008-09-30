@@ -206,7 +206,7 @@
                 </item>
                 <item>
                     <key> <string>extra_item</string> </key>
-                    <value> <string>tabindex=1000 onclick="shiftCheck(event)"</string> </value>
+                    <value> <string>tabindex="1000" onclick="shiftCheck(event)"</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
