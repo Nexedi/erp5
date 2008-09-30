@@ -71,31 +71,36 @@ source_project_uid_list = [x.uid for x in context.portal_catalog(\n
 \n
 \n
 sql_kw = {}\n
-if kw.has_key(\'from_date\') and kw[\'from_date\'] is not None:\n
-  query_kw = {\'delivery.start_date\' : kw[\'from_date\'],\n
+if from_date is not None:\n
+  query_kw = {\'delivery.start_date\' : from_date,\n
               \'range\' : \'min\'}\n
   sql_kw[\'delivery.start_date\'] = Query(**query_kw)\n
-if kw.has_key(\'at_date\') and kw[\'at_date\'] is not None:\n
-  query_kw = {\'delivery.stop_date\' : kw[\'at_date\'],\n
+if at_date is not None:\n
+  query_kw = {\'delivery.stop_date\' : at_date,\n
               \'range\' : \'ngt\'}\n
   sql_kw[\'delivery.stop_date\'] = Query(**query_kw)\n
 \n
 # Make sure to not include "confirmed tasks" in any case, because in\n
 # this case we must take task reports\n
-if kw.has_key(\'simulation_state\') and len(kw[\'simulation_state\']) > 0 :\n
-  task_simulation_state = [x for x in kw[\'simulation_state\'] if x != \'confirmed\']\n
-  task_report_simulation_state = kw[\'simulation_state\']\n
+ignore_task = 0\n
+if simulation_state is not None and len(simulation_state) > 0 :\n
+  task_simulation_state = [x for x in simulation_state if x != \'confirmed\']\n
+  if len(task_simulation_state) == 0:\n
+    ignore_task = 1\n
+  task_report_simulation_state = simulation_state\n
 else:\n
   task_simulation_state = context.getPortalDraftOrderStateList() + \\\n
                           context.getPortalPlannedOrderStateList()\n
   task_report_simulation_state = None\n
 \n
-task_list = [x.getObject() for x in \\\n
-  context.portal_catalog(\n
-                         portal_type=\'Task\',\n
-                         source_project_uid = source_project_uid_list,\n
-                         simulation_state = task_simulation_state,\n
-                         **sql_kw)]\n
+task_list = []\n
+if not ignore_task:\n
+  task_list = [x.getObject() for x in \\\n
+    context.portal_catalog(\n
+                           portal_type=\'Task\',\n
+                           source_project_uid = source_project_uid_list,\n
+                           simulation_state = task_simulation_state,\n
+                           **sql_kw)]\n
 task_list.extend([x.getObject() for x in \\\n
   context.portal_catalog(\n
                          portal_type=\'Task Report\',\n
@@ -202,7 +207,7 @@ return context.Project_viewODSMonthlyReport()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>from_date=None, at_date=None, simulation_state=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -222,12 +227,15 @@ return context.Project_viewODSMonthlyReport()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>from_date</string>
+                            <string>at_date</string>
+                            <string>simulation_state</string>
                             <string>kw</string>
                             <string>Products.ZSQLCatalog.SQLCatalog</string>
                             <string>Query</string>
@@ -245,11 +253,11 @@ return context.Project_viewODSMonthlyReport()\n
                             <string>x</string>
                             <string>source_project_uid_list</string>
                             <string>sql_kw</string>
-                            <string>_getitem_</string>
                             <string>None</string>
                             <string>query_kw</string>
                             <string>_apply_</string>
                             <string>_write_</string>
+                            <string>ignore_task</string>
                             <string>len</string>
                             <string>task_simulation_state</string>
                             <string>task_report_simulation_state</string>
@@ -280,6 +288,7 @@ return context.Project_viewODSMonthlyReport()\n
                             <string>quantity_dict</string>
                             <string>worker_quantity_dict</string>
                             <string>temp_object</string>
+                            <string>_getitem_</string>
                             <string>current_temp_object</string>
                             <string>min</string>
                             <string>current_month_quantity</string>
@@ -297,7 +306,11 @@ return context.Project_viewODSMonthlyReport()\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+                <none/>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
