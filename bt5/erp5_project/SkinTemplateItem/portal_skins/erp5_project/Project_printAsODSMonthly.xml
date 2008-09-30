@@ -113,6 +113,11 @@ monthly_worker_quantity_dict = {} # Used to get quantity per month and per worke
 for task_line in task_line_list:\n
   # initialize some variables\n
   source = task_line.getSource()\n
+  if source is None:\n
+    # This should not happens, so display an error message\n
+    raise ValueError, context.Base_translateString(\\\n
+        "This task should have a source : ${task_relative_url}",\n
+        mapping = {\'task_relative_url\': task.getRelativeUrl()})\n
   source_title = task_line.getSourceTitle()\n
   start_date_task = task_line.getStartDate()\n
   stop_date_task = task_line.getStopDate()\n
@@ -254,6 +259,7 @@ return context.Project_viewODSMonthlyReport()\n
                             <string>monthly_worker_quantity_dict</string>
                             <string>task_line</string>
                             <string>source</string>
+                            <string>ValueError</string>
                             <string>source_title</string>
                             <string>start_date_task</string>
                             <string>stop_date_task</string>
