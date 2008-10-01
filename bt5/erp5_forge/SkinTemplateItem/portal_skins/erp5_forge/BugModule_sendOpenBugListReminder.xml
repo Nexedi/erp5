@@ -53,13 +53,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-portal = context.getPortalObject()\n
+            <value> <string>portal = context.getPortalObject()\n
 bug_module = portal.bug_module\n
-from_name = portal.getProperty(\'email_from_name\', \'ERP5\')\n
-from_address = portal.getProperty(\'email_from_address\', \'postmaster@localhost\')\n
-to_address = portal.getProperty(\'email_to_address\', from_address)\n
 server_url = portal.ERP5Site_getAbsoluteUrl()\n
 \n
 body_text_line_list = []\n
@@ -70,7 +65,7 @@ assigned_to_dict={}\n
 not_assigned_bug_list=[]\n
 \n
 for bug in bug_module.searchFolder(portal_type=\'Bug\',\n
-                                   simulation_state=\'confirmed\',\n
+                                   simulation_state=[\'confirmed\', \'set_ready\' ],\n
                                    sort_on=((\'id\', \'asc\', \'int\'),)):\n
   bug = bug.getObject()\n
   if bug.getDestination():\n
@@ -95,28 +90,11 @@ if not_assigned_bug_list:\n
     addBodyLine("    %s/%s/view" % (server_url, bug.getRelativeUrl()))\n
     addBodyLine(\'\')\n
 \n
-mail_text = """From: "%s" <%s>\n
-To: %s\n
-Subject: %s: %s Open Bugs\n
-MIME-Version: 1.0\n
-Content-Type: text/plain;\n
-  charset="utf-8"\n
-Content-Transfer-Encoding: 8bit\n
-Content-Disposition: inline\n
-\n
-%s""" % (\n
-  from_name,\n
-  from_address,\n
-  to_address,\n
-  portal.title_or_id(),\n
-  bug_count,\n
-  \'\\n\'.join(body_text_line_list)\n
-)\n
-if bug_count:\n
-  portal.MailHost.send(mail_text)\n
-
-
-]]></string> </value>
+portal.portal_notifications.sendMessage(sender=None,\n
+                          recipient=[],\n
+                          subject="%s: %s Open Bugs" % (portal.title_or_id(), bug_count,),\n
+                          message=\'\\n\'.join(body_text_line_list))\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -156,9 +134,6 @@ if bug_count:\n
                             <string>context</string>
                             <string>portal</string>
                             <string>bug_module</string>
-                            <string>from_name</string>
-                            <string>from_address</string>
-                            <string>to_address</string>
                             <string>server_url</string>
                             <string>body_text_line_list</string>
                             <string>addBodyLine</string>
@@ -171,7 +146,7 @@ if bug_count:\n
                             <string>assignee</string>
                             <string>bug_list</string>
                             <string>_getitem_</string>
-                            <string>mail_text</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
