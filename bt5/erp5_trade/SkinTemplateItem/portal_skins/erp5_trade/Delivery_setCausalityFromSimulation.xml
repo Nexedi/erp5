@@ -59,7 +59,9 @@ This script should be called in the after generation script of the DeliveryBuild
 \n
 IMPORTANT WARNING: this script will not work if your simulation movements are not\n
 reindexed yet ()\n
-\n
+It will also not work if strict security is set on simulation. It\'s recommended to use\n
+(Delivery) Causality Movement Group as delivery level movement group in the corresponding\n
+delivery builder.\n
 """\n
 from Products.ERP5Type.Log import log\n
 LOG = lambda msg:log(\n
