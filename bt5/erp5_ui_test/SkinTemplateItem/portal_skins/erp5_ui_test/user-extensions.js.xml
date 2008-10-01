@@ -11,23 +11,11 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts73479596.95</string> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>ts22862605.97</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
             <value> <string>user-extensions.js</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -86,6 +74,13 @@ Selenium.prototype.assertPortalStatusMessage = function(text) {\n
     Assert.matches(text, actualValue);\n
 };\n
 \n
+\n
+Selenium.prototype.doType = function(locator, newText) {\n
+    netscape.security.PrivilegeManager.enablePrivilege("UniversalFileRead");\n
+    var element = this.page().findElement(locator);\n
+    this.page().replaceText(element, newText);\n
+};\n
+\n
 
 
 ]]></string> </value>
@@ -96,7 +91,7 @@ Selenium.prototype.assertPortalStatusMessage = function(text) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1679</int> </value>
+            <value> <int>1917</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

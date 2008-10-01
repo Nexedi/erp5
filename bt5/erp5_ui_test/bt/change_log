@@ -1,3 +1,6 @@
+2008-10-01 fabien
+* redefine Selenium.prototype.doType function in user-extensions.js. This is made to be able to test file upload.
+
 2008-08-29 yusei
 * Replace N_ with translateString.
 
