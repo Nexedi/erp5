@@ -1,0 +1,300 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  Check that catalog tables contain data which is coherent with actual objects.\n
+  Due to the number of objects to check, this function creates activites working\n
+  on, at maximum, bundle_object_count objects.\n
+\n
+  bundle_object_count\n
+    Maximum number of objects to deal with in one transaction. \n
+    An activity is started after each successfull execution which\n
+    found bundle_object_count to work on.\n
+  bundle_offset\n
+    Offset the bundle, to allow walking along the catalog with\n
+    bundle_object_count increment.\n
+  property_override_method_id\n
+    Id of a method generating a property_override_dict as described below and\n
+    returning it.\n
+  property_override_dict (key: catalog column id, value: method id)\n
+    Defines custom methods to calculate reference column value.\n
+    None means that the column is not checked at all.\n
+    Otherwise, the function will be called on the object with no parameter\n
+    and must return the reference value for the column.\n
+"""\n
+context.log(\'ERP5Site_checkCatalogTable\', \'starting\')\n
+from DateTime import DateTime\n
+REFERENCE_DATETIME = DateTime()\n
+MARKER = tuple()\n
+bundle_object_count = 100\n
+bundle_object_count=int(bundle_object_count)\n
+null_value_list = (\'\', None, 0.0, 0) # Values which are all considered equal.\n
+portal_catalog = context.getPortalObject().portal_catalog\n
+\n
+if property_override_method_id is None:\n
+  property_override_dict = {}\n
+else:\n
+  property_override_dict = getattr(context, property_override_method_id)()\n
+\n
+if active_process is not None:\n
+  from Products.CMFActivity.ActiveResult import ActiveResult\n
+  result_list = []\n
+\n
+date_min = DateTime()-1\n
+# First get the list of all uids\n
+if catalog_uid_list is None:\n
+  catalog_uid_list = []\n
+\n
+current_catalog_uid_list = []\n
+\n
+if len(catalog_uid_list) > 0:\n
+  if len(catalog_uid_list) >= bundle_object_count:\n
+    current_catalog_uid_list = catalog_uid_list[0:bundle_object_count]\n
+    catalog_uid_list = catalog_uid_list[bundle_object_count:]\n
+  else:\n
+    current_catalog_uid_list = catalog_uid_list\n
+    catalog_uid_list = []\n
+  for brain in portal_catalog(uid=current_catalog_uid_list):\n
+    if brain.getObject() is None:\n
+      message = \'The object with uid %r (path %r) is not into the ZODB.\' % (brain[\'uid\'], brain[\'path\'])\n
+      result_list.append(message)\n
+\n
+active_context = context.getPortalObject().person_module\n
+# XXX to be removed\n
+if uid_min is None:\n
+  uid_min=0\n
+fresh_data = 0\n
+if len(catalog_uid_list) == 0 and get_from_catalog:\n
+  from DateTime import DateTime\n
+  date_min = DateTime() - 1\n
+  catalog_uid_list = [x.uid for x in context.portal_catalog(uid = {\'query\':uid_min, \'range\':\'nlt\'},\n
+    limit=10000, indexation_date = {\'query\':date_min, \'range\':\'min\'}, sort_on=((\'uid\',\'ascending\'),))]\n
+  fresh_data = 1\n
+  if initial_activity_count is None:\n
+    initial_activity_count = activity_count\n
+  if len(catalog_uid_list) > 0 :\n
+    uid_min = max(catalog_uid_list)\n
+if len(catalog_uid_list) > 0:\n
+  if fresh_data == 1:\n
+    activity_count = initial_activity_count\n
+  activity_uid_count = len(catalog_uid_list) / activity_count\n
+  for activity in xrange(activity_count):\n
+    if activity == (activity_count - 1):\n
+      activity_catalog_uid_list = catalog_uid_list[activity_uid_count * activity: ]\n
+    else:\n
+      activity_catalog_uid_list = catalog_uid_list[activity_uid_count * activity: activity_uid_count * (activity+1)]\n
+    active_context.activate(activity=\'SQLQueue\', priority=4,\n
+        lonely=1,\n
+        round_robin_scheduling=1,\n
+        tag=tag).ERP5Site_checkCatalogTable(\n
+      bundle_object_count=bundle_object_count,\n
+      catalog_uid_list = activity_catalog_uid_list,\n
+      property_override_method_id=property_override_method_id,\n
+      uid_min=uid_min,\n
+      get_from_catalog=get_from_catalog,\n
+      initial_activity_count=initial_activity_count,\n
+      active_process=active_process,\n
+      tag=tag)\n
+    # Make sure only one node will get new data\n
+    get_from_catalog = 0\n
+\n
+if len(current_catalog_uid_list)>0:\n
+  now = DateTime()\n
+  active_result = ActiveResult()\n
+  summary_list = []\n
+  begin = current_catalog_uid_list[0]\n
+  end = current_catalog_uid_list[-1]\n
+  entry_summary = \'Entries %s..%s\' % (begin, end)\n
+  summary_list.append(entry_summary)\n
+  context.log(\'summary\', entry_summary)\n
+  severity = len(result_list)\n
+  if severity == 0:\n
+    summary_list.append(\'Success\')\n
+  else:\n
+    summary_list.append(\'Failed\')\n
+  active_result.edit(summary=\', \'.join(summary_list), severity=severity, detail=\'\\n\'.join(result_list))\n
+  context.log(\'active result summary =>\', active_result.getProperty(\'summary\'))\n
+  context.log(\'active result severity =>\', active_result.getProperty(\'severity\'))\n
+  active_context.activate(active_process=active_process,\n
+            activity=\'SQLQueue\', \n
+            priority=2,\n
+            tag=tag).ERP5Site_saveCheckStockTableResult(active_result)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>bundle_object_count=100, catalog_uid_list=None, property_override_method_id=None, active_process=None, activity_count=1, get_from_catalog=1, initial_activity_count=None, uid_min=None, tag=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>9</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>bundle_object_count</string>
+                            <string>catalog_uid_list</string>
+                            <string>property_override_method_id</string>
+                            <string>active_process</string>
+                            <string>activity_count</string>
+                            <string>get_from_catalog</string>
+                            <string>initial_activity_count</string>
+                            <string>uid_min</string>
+                            <string>tag</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>DateTime</string>
+                            <string>REFERENCE_DATETIME</string>
+                            <string>tuple</string>
+                            <string>MARKER</string>
+                            <string>int</string>
+                            <string>None</string>
+                            <string>null_value_list</string>
+                            <string>portal_catalog</string>
+                            <string>property_override_dict</string>
+                            <string>getattr</string>
+                            <string>Products.CMFActivity.ActiveResult</string>
+                            <string>ActiveResult</string>
+                            <string>result_list</string>
+                            <string>date_min</string>
+                            <string>current_catalog_uid_list</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>_getiter_</string>
+                            <string>brain</string>
+                            <string>message</string>
+                            <string>active_context</string>
+                            <string>fresh_data</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>max</string>
+                            <string>activity_uid_count</string>
+                            <string>xrange</string>
+                            <string>activity</string>
+                            <string>activity_catalog_uid_list</string>
+                            <string>now</string>
+                            <string>active_result</string>
+                            <string>summary_list</string>
+                            <string>begin</string>
+                            <string>end</string>
+                            <string>entry_summary</string>
+                            <string>severity</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>100</int>
+                <none/>
+                <none/>
+                <none/>
+                <int>1</int>
+                <int>1</int>
+                <none/>
+                <none/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_checkCatalogTable</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
