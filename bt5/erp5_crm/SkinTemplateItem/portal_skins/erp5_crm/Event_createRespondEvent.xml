@@ -53,7 +53,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># this script allows to create a new follow up ticket for a given event\n
+            <value> <string>"""\n
+ TODO: This script does not work now. This needs proxy role, but if proxified, then this script can be a security hole.\n
+       Because anyone can create an email and send to everywhere. (Yusei)\n
+"""\n
+\n
+# this script allows to create a new follow up ticket for a given event\n
 event_object = context\n
 event_module = context.getPortalObject().getDefaultModule(respond_event_portal_type)\n
 # Create the outgoing\n

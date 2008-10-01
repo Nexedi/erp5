@@ -1,3 +1,10 @@
+2008-10-1 yusei
+* Added comment to Event_createRespondEvent.
+* Changed label message on acknowledge action dialog.
+* Changed action box name title of validate_action transition on sale_opportunity_workflow.
+* Description field on Ticket_viewNewEventDialog is not required now.
+* Assignee can see the new incoming event worklist.
+
 2008-09-26 yusei
 * Fixed unauthorized error bug if deleted events exists.
 

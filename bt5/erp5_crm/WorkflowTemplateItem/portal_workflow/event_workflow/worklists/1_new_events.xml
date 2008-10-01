@@ -51,11 +51,8 @@ event_module?simulation_state=new&portal_type=%(portal_type)s&local_roles=%(loca
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -65,6 +62,7 @@ event_module?simulation_state=new&portal_type=%(portal_type)s&local_roles=%(loca
             <value>
               <tuple>
                 <string>Assignor</string>
+                <string>Assignee</string>
               </tuple>
             </value>
         </item>
@@ -74,17 +72,14 @@ event_module?simulation_state=new&portal_type=%(portal_type)s&local_roles=%(loca
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
