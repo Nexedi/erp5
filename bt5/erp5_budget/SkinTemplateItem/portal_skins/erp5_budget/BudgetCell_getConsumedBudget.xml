@@ -81,7 +81,7 @@ if parent.isMemberOf(\n
   kw[\'node_category\'] = parent.getFinancialSection(base=1)\n
 if parent.isMemberOf(\n
     \'budget_line_variation/budget_variation/node_category_budget_section\'):\n
-#  kw[\'stock.function_uid\'] = parent.getBudgetSectionUid()\n
+  kw[\'stock.function_uid\'] = parent.getBudgetSectionUid()\n
   kw[\'node_category\'] = parent.getBudgetSection(base=1)\n
 \n
 # mirror node\n
