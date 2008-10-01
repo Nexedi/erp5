@@ -53,65 +53,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>REQUEST = context.REQUEST\n
-active_process_id = REQUEST.get(\'active_process_id\', None)\n
-erp5_site_id = context.getPortalObject().getId()\n
+            <value> <string>"""\n
+Estimate current installation status """\n
+activity_threshold = 46\n
 \n
-js_string = """\n
-    // Initialisation\n
-    window.onload = init;\n
 \n
-    function getNewXMLHTTP() {\n
-      try {\n
-\t    return new XMLHttpRequest();\n
-      } catch(e) {\t\n
-  \t    try {\n
-  \t      var aObj = new ActiveXObject("Msxml2.XMLHTTP");\n
-\t    } catch (e) {\n
-\t      try {\n
-\t\t    var aObj = new ActiveXObject("Microsoft.XMLHTTP");\n
-\t      } catch(e) {\n
-\t\t    return false;\n
-\t      }\n
-        }\n
-      }\n
-      return aObj;\n
-    }\n
-\n
-    function checkClientInstallation() {\n
-       time_out = window.setTimeout( "checkClientInstallation()", 5000 );\n
-       var xhr_object = null;\n
-       xhr_object = getNewXMLHTTP();\n
-       xhr_object.onreadystatechange = function()\n
-       {\n
-         var status = document.getElementById(\'client_installation_status\');\n
-         if(xhr_object.readyState == 4)\n
-         {\n
-           if(xhr_object.status == 200)\n
-           {\n
-             status.innerHTML = xhr_object.responseText;\n
-           }\n
-           else\n
-             status.innerHTML = "Error code " + xhr_object.status;\n
-         };\n
-       }\n
-       xhr_object.open( "GET",\n
-                        "portal_wizard/getInstallationStatusReportFromClient?active_process_id=%s",\n
-                        true);\n
-       //xhr_object.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");\n
-       xhr_object.setRequestHeader("Content-Type", "text/html");  \n
-       xhr_object.setRequestHeader("Cache-Control", "no-cache" ) \n
-       xhr_object.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 2000 00:00:00 GMT" ) \n
-       xhr_object.send(null);\n
-    }\n
-\n
-    function init() {\n
-      checkClientInstallation();\n
-    }\n
-\n
-""" %(active_process_id)\n
-\n
-return js_string\n
+return 100\n
 </string> </value>
         </item>
         <item>
@@ -148,13 +95,7 @@ return js_string\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>REQUEST</string>
-                            <string>None</string>
-                            <string>active_process_id</string>
-                            <string>erp5_site_id</string>
-                            <string>js_string</string>
+                            <string>activity_threshold</string>
                           </tuple>
                         </value>
                     </item>
@@ -171,11 +112,7 @@ return js_string\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Wizard_generateJavaScript</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Generate JavaScript code which will query wizard to get installation status</string> </value>
+            <value> <string>WizardTool_getCurrentInstallationStatus</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -39,17 +39,38 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<h3 i18n:translate=""\n
-    i18n:domain="ui"> \n
-  ERP5 installation process is running.</h3>\n
+<tal:block tal:define="percentage options/percentage;\n
+                       coefficient python: 4;">\n
 \n
-<p i18n:translate=""\n
-    i18n:domain="ui"> \n
-  Please be patient and do not move from current page until you get \n
-  confirmation that the installation is over. \n
-  It will last approximately 5 to 10 minutes.\n
-</p>\n
-
+  <div style="width:400px; \n
+              height:25px; \n
+              background-color:lightgray;\n
+              border:1px solid black;">\n
+    <div tal:attributes="style python: \'text-align:right;;\n
+                                        height: 25px;; \n
+                                        background-color:#f09400;; \n
+                                        width: %spx;;\' %(coefficient*percentage)">\n
+      <div style="height:20px; \n
+                  padding-top: 5px; \n
+                  padding-right: 3px; \n
+                  font-weight:bold;"\n
+           tal:condition="python: int(percentage) != 0">\n
+        <span tal:content="percentage"/>%\n
+      </div>\n
+    </div>\n
+  </div>\n
+  \n
+  <h3 i18n:translate=""\n
+      i18n:domain="ui"> \n
+    ERP5 installation process is running.</h3>\n
+  \n
+  <p i18n:translate=""\n
+      i18n:domain="ui"> \n
+    Please be patient and do not move from current page until you get \n
+    confirmation that the installation is over. \n
+    It will last approximately 5 to 10 minutes.\n
+  </p>\n
+</tal:block>
 
 ]]></string> </value>
         </item>
