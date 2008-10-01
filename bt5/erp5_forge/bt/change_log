@@ -1,4 +1,7 @@
 2008-10-01 yusei
+* Fixed UnboundLocalError in Bug_sendNotification.
+
+2008-10-01 yusei
 * Update xml format.
 
 2008-10-01 yusei
