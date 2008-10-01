@@ -1,3 +1,7 @@
+2008-10-1 vincentd
+* Add a js file for overwrite the js of normal access-tab (to access to the sales of Express products), and put a hight priority for
+the skin folder
+
 2008-09-25 ivan
 * Wizard uses client's preferred language settings
 
