@@ -50,6 +50,9 @@ from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlug
 # global (RAM) cookie storage
 cookiejar = cookielib.CookieJar()
 referer  = None
+installation_status = {'bt5': {'current': 0,
+                               'all': 0,},
+                       'activity_list': [],}
 
 def _isUserAcknowledged(cookiejar):
   """ Is user authenticated to remote system through a cookie. """
@@ -459,6 +462,7 @@ class WizardTool(BaseTool):
                                 install_customer_bt5=True,
                                 use_super_manager=True):
     """ Install or update BT5 files which we get from remote server. """
+    global installation_status
     if use_super_manager:
       # set current security manager to owner of site
       _setSuperSecurityManager(self.getPortalObject())
@@ -470,6 +474,7 @@ class WizardTool(BaseTool):
     counter = 0
     LOG("Wizard", INFO,
         "Starting installation for %s" %' '.join(bt5_filenames))
+    installation_status['bt5']['all'] = len(bt5_files)
     #execute_after_setup_script = install_standard_bt5 =  install_customer_bt5 = False # dev mode
     for bt5_id in bt5_filenames:
       if bt5_id.startswith('http://'):
@@ -477,6 +482,7 @@ class WizardTool(BaseTool):
         if install_standard_bt5:
           bt  = portal_templates.download(bt5_id)
           bt.install()
+          installation_status['bt5']['current'] = counter + 1
           LOG("Wizard", INFO,
               "[OK] standard bt5 installation (HTTP) from %s" %bt5_id)
       else:
@@ -484,6 +490,7 @@ class WizardTool(BaseTool):
         if install_customer_bt5:
           bt5_filedata = bt5_files[counter]
           self._importBT5FileData(bt5_id, bt5_filedata)
+          installation_status['bt5']['current'] = counter + 1
           LOG("Wizard", INFO,
               "[OK] customized bt5 installation (XML-RPC) %s, %s bytes" %
                (bt5_id, len(bt5_filedata)))
@@ -497,7 +504,6 @@ class WizardTool(BaseTool):
       ## we already have stored after setup script id
       bt5_after_setup_script_id = self.getExpressConfigurationPreference(
                            'preferred_express_after_setup_script_id', None)
-
     if execute_after_setup_script and bt5_after_setup_script_id is not None:
       ## Execute script provided (if) in customer specific business template.
       bt5_customer_template_id = server_response["server_buffer"]['filenames'][-1]
@@ -655,12 +661,17 @@ class WizardTool(BaseTool):
         If installation is over the installation activities and reindexing
         activities should not exists.
     """
+    global installation_status
     portal_activities = getToolByName(self.getPortalObject(), 'portal_activities')
-    if 0 == len(portal_activities.getMessageList()) and \
-       0 == portal_activities.countMessageWithTag('initialERP5Setup'):
+    is_bt5_installation_over = (portal_activities.countMessageWithTag('initialERP5Setup')==0)
+    if 0 == len(portal_activities.getMessageList()) and is_bt5_installation_over:
       html = self.WizardTool_successfulConfiguration()
     else:
-      html = self.WizardTool_viewRunningInstallationMessageRenderer()
+      if is_bt5_installation_over:
+        # only if bt5s are installed start tracking number of activities
+        activity_list = portal_activities.getMessageList()
+        installation_status['activity_list'].append(len(activity_list))
+      html = self.WizardTool_viewRunningInstallationMessage(installation_status = installation_status)
     return html
 
   security.declarePublic(Permissions.AccessContentsInformation, 'getInstallationStatusReportFromServer')
@@ -675,6 +686,11 @@ class WizardTool(BaseTool):
     """ Start installation process as an activity which will query generation server and
        download/install bt5 template files and meanwhile offer user a nice GUI to observe 
        what's happening. """
+    global installation_status
+    # init installation status
+    installation_status['bt5']['all'] = 0
+    installation_status['bt5']['current'] = 0
+    installation_status['activity_list'] = []
     active_process = self.portal_activities.newActiveProcess()
     REQUEST.set('active_process_id', active_process.getId())
     request_restore_dict = {'__ac_express': self.REQUEST.get('__ac_express', None),}
