@@ -1,4 +1,7 @@
 2008-10-01 yusei
+* Update xml format.
+
+2008-10-01 yusei
 * Fixed a bug in Bug_sendNotification in bug_workflow. Workflow history's action may be None.
 
 2008-09-04 yusei
