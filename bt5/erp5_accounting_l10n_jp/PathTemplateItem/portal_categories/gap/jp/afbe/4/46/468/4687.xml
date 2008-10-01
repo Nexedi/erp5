@@ -10,6 +10,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>4687</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>4687</string> </value>
         </item>

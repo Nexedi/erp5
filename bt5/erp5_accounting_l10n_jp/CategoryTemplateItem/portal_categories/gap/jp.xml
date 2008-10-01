@@ -40,6 +40,10 @@
             </value>
         </item>
         <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>jp</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>
