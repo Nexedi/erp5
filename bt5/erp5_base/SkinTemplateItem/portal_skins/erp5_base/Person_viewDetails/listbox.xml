@@ -108,7 +108,7 @@
                           <string>Role</string>
                         </tuple>
                         <tuple>
-                          <string>function_title</string>
+                          <string>function</string>
                           <string>Function</string>
                         </tuple>
                         <tuple>
@@ -145,6 +145,10 @@
                         <tuple>
                           <string>title</string>
                           <string>Career Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>function</string>
+                          <string>Career Function</string>
                         </tuple>
                       </list>
                     </value>
@@ -201,7 +205,7 @@
                           <string>Grade</string>
                         </tuple>
                         <tuple>
-                          <string>function_title</string>
+                          <string>function</string>
                           <string>Function</string>
                         </tuple>
                         <tuple>
@@ -255,7 +259,7 @@
                           <string>Grade</string>
                         </tuple>
                         <tuple>
-                          <string>function_title</string>
+                          <string>function</string>
                           <string>Function</string>
                         </tuple>
                         <tuple>

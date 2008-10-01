@@ -95,6 +95,7 @@
                         <string>listbox_start_date</string>
                         <string>listbox_stop_date</string>
                         <string>listbox_title</string>
+                        <string>listbox_function</string>
                       </list>
                     </value>
                 </item>
