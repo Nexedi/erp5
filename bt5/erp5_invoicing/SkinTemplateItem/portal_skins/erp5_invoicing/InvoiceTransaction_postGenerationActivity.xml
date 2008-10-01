@@ -75,9 +75,6 @@ from Products.ERP5Type.Log import log\n
 LOG = lambda msg:log(\n
           "InvoiceTransaction_postGenerationActivity on %s" % (invoice.getPath()), msg)\n
 \n
-# set the causality relation \n
-invoice.Delivery_setCausalityFromSimulation()\n
-\n
 related_packing_list = invoice.getDefaultCausalityValue()\n
 #LOG(\'causality %s \' %invoice.getCausalityValueList())\n
 \n
