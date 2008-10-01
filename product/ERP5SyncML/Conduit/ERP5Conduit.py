@@ -886,7 +886,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     It is possible that the xml change the value, for example
     there is some too much '\n' and some spaces. We have to do some extra
-    things so that we convert correctly the vlalue
+    things so that we convert correctly the value
+    XXXNicolas: I'm totally disagree with, so i comment this code
     """
     if data is None:
       if data_type in self.list_type_list:
@@ -894,7 +895,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       if data_type in self.text_type_list:
         data = ''
       return data
-    data = data.replace('\n','')
+    #data = data.replace('\n','')
     if type(data) is type(u"a"):
       data = data.encode(self.getEncoding())
     if data == 'None':
