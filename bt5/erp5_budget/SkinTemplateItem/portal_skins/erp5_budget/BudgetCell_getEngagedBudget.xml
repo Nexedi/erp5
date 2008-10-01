@@ -96,24 +96,24 @@ if (context.isMemberOf(\n
     \'budget_cell_variation/budget_variation/section_category_group\') or\n
     context.isMemberOf(\n
       \'budget_line_variation/budget_variation/section_category_group\')):\n
-  kw[\'section_category\'] = parent.getGroup(base=1)\n
+  kw[\'section_category\'] = context.getGroup(base=1)\n
 elif (context.isMemberOf(\n
     \'budget_cell_variation/budget_variation/section_category_region\') or\n
     context.isMemberOf(\n
       \'budget_line_variation/budget_variation/section_category_region\')):\n
-  kw[\'section_category\'] = parent.getRegion(base=1)\n
+  kw[\'section_category\'] = context.getRegion(base=1)\n
 \n
 # mirror section category\n
 if (context.isMemberOf(\n
     \'budget_cell_variation/budget_variation/mirror_section_category_group\') or \n
     context.isMemberOf(\n
       \'budget_line_variation/budget_variation/mirror_section_category_group\')):\n
-  kw[\'mirror_section_category\'] = parent.getGroup(base=1)\n
+  kw[\'mirror_section_category\'] = context.getGroup(base=1)\n
 elif (context.isMemberOf(\n
     \'budget_cell_variation/budget_variation/mirror_section_category_region\') or \n
     context.isMemberOf(\n
       \'budget_line_variation/budget_variation/mirror_section_category_region\')):\n
-  kw[\'mirror_section_category\'] = parent.getRegion(base=1)\n
+  kw[\'mirror_section_category\'] = context.getRegion(base=1)\n
 \n
 \n
 if (parent.isMemberOf(\'budget_cell_variation/budget_variation/budget_line_type\')):\n
