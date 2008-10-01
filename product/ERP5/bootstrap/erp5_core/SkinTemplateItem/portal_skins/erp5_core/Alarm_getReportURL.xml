@@ -61,7 +61,7 @@ if object is None:\n
 \n
 url = context.absolute_url()\n
 method = context.getReportMethodId(\'Alarm_viewReport\')\n
-kw = { \'active_process\' : \'portal_activities/%s\' % object.process_id,\n
+kw = { \'active_process\' : \'portal_activities/%s\' % object.id,\n
        \'reset\' : \'1\', \n
      }\n
 \n

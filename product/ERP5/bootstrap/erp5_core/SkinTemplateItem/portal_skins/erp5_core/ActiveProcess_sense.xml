@@ -53,31 +53,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Returns active processes related to an Alarm \n
-  ordered by data. sense_value is calculated\n
-  using the Alarm itself.\n
-\n
-  TODO: optimisation of list method to compute values\n
-        only on the currently displayed range\n
-  TODO2: optimisation of sense_value through cache\n
-"""\n
-\n
-def sort_date(a,b):\n
-  return - cmp(a.getStartDate(), b.getStartDate())\n
-\n
-process_list = context.getCausalityRelatedValueList()\n
-process_list.sort(sort_date)\n
-return_list = []\n
-for process in process_list:\n
-  process_id = process.getId()\n
-  start_date = process.getStartDate()\n
-  sense_value = context.sense(process=process)\n
-  return_list.append(context.asContext(process_id=process.getId(), \n
-                     start_date=process.getStartDate(),\n
-                     sense_value=sense_value))\n
-return return_list\n
-</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+for result in context.getResultList():\n
+  # This is useful is result is returned as a Return instance\n
+  if result.severity > result.INFO:\n
+    return True\n
+  # This is the default case\n
+  if getattr(result, \'result\', False):\n
+    return True\n
+return False\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -114,16 +102,13 @@ return return_list\n
                         <value>
                           <tuple>
                             <string>kw</string>
-                            <string>sort_date</string>
+                            <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>process_list</string>
-                            <string>return_list</string>
-                            <string>_getiter_</string>
-                            <string>process</string>
-                            <string>process_id</string>
-                            <string>start_date</string>
-                            <string>sense_value</string>
+                            <string>result</string>
+                            <string>True</string>
+                            <string>getattr</string>
+                            <string>False</string>
                           </tuple>
                         </value>
                     </item>
@@ -140,7 +125,7 @@ return return_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_getOrderedActiveProcessList</string> </value>
+            <value> <string>ActiveProcess_sense</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
