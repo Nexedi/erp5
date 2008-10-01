@@ -169,9 +169,6 @@ user_pref("signed.applets.codebase_principal_support", true);
 user_pref("capability.principal.codebase.p1.id", %s);
 user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
     '%s:%s' % (host, port)
-  
-#  pref = file(os.path.join(os.path.dirname(__file__), 'prefs.js')).read()
- 
   pref_file = open(os.path.join(profile_dir, 'prefs.js'), 'w')
   pref_file.write(prefs_js)
   pref_file.close()
