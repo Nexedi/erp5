@@ -59,6 +59,7 @@ bug = state_change["object"]\n
 history = bug.portal_workflow.getInfoFor(bug, \'history\',\n
                                          wf_id=\'bug_workflow\')\n
 is_re_assign_action = False\n
+send_event = None\n
 for history_item in history[::-1]:\n
   if same_type(history_item[\'action\'], \'\') and history_item[\'action\'].endswith(\'action\'):\n
     send_event = history_item[\'send_event\']\n
@@ -139,10 +140,11 @@ else:\n
                             <string>history</string>
                             <string>False</string>
                             <string>is_re_assign_action</string>
+                            <string>None</string>
+                            <string>send_event</string>
                             <string>_getiter_</string>
                             <string>history_item</string>
                             <string>same_type</string>
-                            <string>send_event</string>
                             <string>bool</string>
                             <string>valid_transaction_list</string>
                             <string>append</string>
