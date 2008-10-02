@@ -702,7 +702,7 @@ class TestTaxLineCalculation(TradeConditionTestCase):
     self.assertEquals(20, tax_line.getTotalPrice())
     
     # delete the order line
-    order.manage_delObjects([order_line.getId()])
+    self.order.manage_delObjects([order_line.getId()])
     # the tax line is updated
     self.assertEquals(0, tax_line.getQuantity())
     self.assertEquals(0, tax_line.getTotalPrice())
