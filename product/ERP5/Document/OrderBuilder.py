@@ -273,11 +273,16 @@ class OrderBuilder(XMLObject, Amount, Predicate):
           break
     return instance, property_dict
 
-  def buildDeliveryList(self, movement_group, delivery_relative_url_list=None,
-                        movement_list=None,**kw):
+  def buildDeliveryList(self, *args, **kw):
     """
       Build deliveries from a list of movements
     """
+    buildDeliveryList = UnrestrictedMethod(self._buildDeliveryList)
+    return buildDeliveryList(*args, **kw)
+
+  def _buildDeliveryList(self, movement_group, delivery_relative_url_list=None,
+                         movement_list=None,**kw):
+    """This method is wrapped by UnrestrictedMethod."""
     # Parameter initialization
     if delivery_relative_url_list is None:
       delivery_relative_url_list = []
