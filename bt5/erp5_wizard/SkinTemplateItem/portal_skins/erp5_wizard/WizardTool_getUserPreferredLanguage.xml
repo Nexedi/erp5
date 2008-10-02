@@ -63,9 +63,10 @@ if user_preferred_language is not None:\n
 for item in context.WizardTool_getConfigurationLanguageList():\n
   configuration_language_list.append(item[1])\n
 accept_language = context.REQUEST.get(\'HTTP_ACCEPT_LANGUAGE\', \'en\')\n
-accept_language = accept_language.split(\';\')[0].split(\',\')[0]\n
-if accept_language in configuration_language_list:\n
-  return accept_language\n
+accept_language_tag = accept_language.split(\';\')[0].split(\',\')[0]\n
+primary_language = accept_language_tag.split(\'-\')[0]\n
+if primary_language in configuration_language_list:\n
+  return primary_language\n
 return \'en\'\n
 </string> </value>
         </item>
@@ -113,6 +114,8 @@ return \'en\'\n
                             <string>item</string>
                             <string>_getitem_</string>
                             <string>accept_language</string>
+                            <string>accept_language_tag</string>
+                            <string>primary_language</string>
                           </tuple>
                         </value>
                     </item>
