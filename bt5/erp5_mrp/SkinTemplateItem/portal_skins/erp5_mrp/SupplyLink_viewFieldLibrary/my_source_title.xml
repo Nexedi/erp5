@@ -65,13 +65,13 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>parameter_list</string> </key>
+                    <key> <string>parameter_list</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>portal_type</string> </key>
+                    <key> <string>portal_type</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -94,7 +94,7 @@
                     <value> <string>ProductionOrder_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>parameter_list</string> </key>
+                    <key> <string>parameter_list</string> </key>
                     <value>
                       <list/>
                     </value>

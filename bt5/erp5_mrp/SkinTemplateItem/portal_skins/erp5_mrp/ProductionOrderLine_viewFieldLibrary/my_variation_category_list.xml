@@ -91,11 +91,11 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>hash_script_id</string> </key>
+                    <key> <string>hash_script_id</string> </key>
                     <value> <string>DeliveryLine_hashVariationCategoryItemList</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>items</string> </key>
+                    <key> <string>items</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -105,7 +105,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Variation</string> </value>
                 </item>
               </dictionary>

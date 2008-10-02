@@ -83,7 +83,7 @@
                     <value> <string>ProductionOrderLine_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>hash_script_id</string> </key>
+                    <key> <string>hash_script_id</string> </key>
                     <value> <string>Base_getMultiListFieldPropertyDictList</string> </value>
                 </item>
                 <item>

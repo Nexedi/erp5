@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -179,18 +167,6 @@ return cell_range\n
             </value>
         </item>
         <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>base_id=\'path\', matrixbox=0, display_base_category=1, option_variation=0, **kw</string> </value>
         </item>
@@ -275,12 +251,6 @@ return cell_range\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>SupplyLine_asCellRange</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -87,7 +87,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>columns</string> </key>
+                    <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -126,7 +126,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>domain_root_list</string> </key>
+                    <key> <string>domain_root_list</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -137,7 +137,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>domain_tree</string> </key>
+                    <key> <string>domain_tree</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
@@ -149,17 +149,17 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>list_action</string> </key>
+                    <key> <string>list_action</string> </key>
                     <value> <string>ProductionDelivery_viewInventory</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>list_method</string> </key>
+                    <key> <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>production_delivery_current_inventory</string> </value>
                 </item>
                 <item>
@@ -167,7 +167,7 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Stock By Variation</string> </value>
                 </item>
               </dictionary>
