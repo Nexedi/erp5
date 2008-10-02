@@ -53,7 +53,7 @@ Description:\n
   \n
   <div class="tabber">\n
   \n
-    <div class="tabbertab">\n
+    <div class="tabbertab" tal:condition="here/portal_membership/isAnonymousUser">\n
       <h2 i18n:translate="" i18n:domain="ui">Track Application</h2>\n
       <div>\n
         <img alt="Track Application Logo" src="img/track_application.png"/>\n
@@ -75,6 +75,28 @@ Description:\n
       <div class="clear"></div>\n
     </div>\n
   \n
+\n
+    <div class="tabbertab" tal:condition="not: here/portal_membership/isAnonymousUser">\n
+      <h2 i18n:translate="" i18n:domain="ui">Track Application</h2>\n
+      <div>\n
+        <img alt="Track Application Logo" src="img/track_application.png"/>\n
+        <div class="fields">\n
+          <p><tal:block i18n:translate="" i18n:domain="ui">Application Number</tal:block></p>\n
+        </div>\n
+        <div class="fields">\n
+          <p><input type="text" size="20"  name="application_number" autocomplete="off"/></p>\n
+        </div>\n
+      </div>\n
+      <div class="clear"></div>\n
+      <div id="track_button">\n
+        <input i18n:domain="ui" i18n:attributes="value" type="submit"\n
+        name="EGov_goToDocument:method"\n
+        value="Track"/>\n
+      </div>\n
+      <div class="clear"></div>\n
+    </div>\n
+\n
+\n
     <div class="tabbertab">\n
       <h2 i18n:translate="" i18n:domain="ui">New Application</h2>\n
       <div>\n

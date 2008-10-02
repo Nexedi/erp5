@@ -66,7 +66,6 @@ request=context.REQUEST\n
 message = \'\'\n
 \n
 # add the attachments :\n
-request = context.REQUEST\n
 translateString = context.Base_translateString\n
 result, mode = context.Base_edit(\'PDFDocument_viewAttachmentReportSection\', silent_mode=1, field_prefix=\'your_\')\n
 attachment_count = 0\n
