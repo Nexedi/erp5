@@ -3115,7 +3115,7 @@ class Base( CopyContainer,
         if len(history):
           # Then get the first line of edit_workflow
           return history[0].get('time', None)
-    if hasattr(self, 'CreationDate') :
+    if getattr(aq_base(self), 'CreationDate', None) is not None:
       return asDate(self.CreationDate())
     return None
 
