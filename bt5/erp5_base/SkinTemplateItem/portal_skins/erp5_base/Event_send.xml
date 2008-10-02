@@ -105,6 +105,10 @@ for attachment in context.getAggregateValueList():\n
                           \'content\':content,\n
                           \'name\':name})\n
 \n
+  # Allow to embed image in HTML by setting the relative URL of the image with FCKeditor\n
+  attachment_url = attachment.getRelativeUrl()\n
+  body = body.replace(\'src="%s"\' % attachment_url, \'src="cid:%s"\' % \'\'.join([\'%s\' % ord(i) for i in name]))\n
+\n
 # Build message per destination\n
 mail_message = None\n
 if context.getTextFormat()==\'text/html\':\n
@@ -206,6 +210,11 @@ if download:\n
                             <string>mime_type</string>
                             <string>content</string>
                             <string>name</string>
+                            <string>attachment_url</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>i</string>
+                            <string>ord</string>
                             <string>mail_message</string>
                             <string>mail_template</string>
                             <string>multipart</string>
