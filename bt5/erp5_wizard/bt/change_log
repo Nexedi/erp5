@@ -1,4 +1,7 @@
 2008-10-2 yusei
+* Use cookie to store user's preferred language and set the language value to REQUEST so that next page after login can use correct language.
+
+2008-10-2 yusei
 * Update xml format.
 
 2008-10-2 yusei
