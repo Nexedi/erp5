@@ -165,8 +165,9 @@ user_pref("security.warn_viewing_mixed.show_once", false);
 user_pref("signon.rememberSignons", false);
 
 // this is required to upload files
+user_pref("capability.principal.codebase.p1.granted", "UniversalFileRead");
 user_pref("signed.applets.codebase_principal_support", true);
-user_pref("capability.principal.codebase.p1.id", %s);
+user_pref("capability.principal.codebase.p1.id", "http://%s");
 user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
     '%s:%s' % (host, port)
   pref_file = open(os.path.join(profile_dir, 'prefs.js'), 'w')
