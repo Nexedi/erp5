@@ -77,6 +77,8 @@ class MTMultipart(MIMEMultipart):
         msg = MIMEBase(*content_type.split('/'))
         msg.set_payload(data)
         Encoders.encode_base64(msg)
+        msg.add_header('Content-ID', '<%s>' % \
+            ''.join(['%s' % ord(i) for i in filename]))
         msg.add_header('Content-Disposition', 'attachment',
                        filename=filename)
         self.attach(msg)
