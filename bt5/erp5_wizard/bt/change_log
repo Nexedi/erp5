@@ -1,4 +1,7 @@
 2008-10-2 yusei
+* Update xml format.
+
+2008-10-2 yusei
 * Fixed a bug on language selection. Remove country code from language tag.
 
 2008-10-1 vincentd
