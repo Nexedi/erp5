@@ -71,7 +71,7 @@ accept_language_tag = accept_language.split(\';\')[0].split(\',\')[0]\n
 primary_language = accept_language_tag.split(\'-\')[0]\n
 if primary_language in configuration_language_list:\n
   # Set language to REQUEST so that next page will use the correct language.\n
-  REQUEST.RESPONSE.set(COOKIE_NAME, primary_language)\n
+  REQUEST.set(COOKIE_NAME, primary_language)\n
   return primary_language\n
 return \'en\'\n
 </string> </value>
