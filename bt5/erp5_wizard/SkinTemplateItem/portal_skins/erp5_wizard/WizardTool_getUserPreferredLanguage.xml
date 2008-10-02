@@ -53,16 +53,20 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>configuration_language_list = []\n
-user_preferred_language = getattr(context, \'user_preferred_language\', None)\n
+            <value> <string>REQUEST = context.REQUEST\n
+\n
+# First, find a cookie already made before.\n
+COOKIE_NAME = \'configurator_user_preferred_language\'\n
+user_preferred_language = REQUEST.cookies.get(COOKIE_NAME, None)\n
 if user_preferred_language is not None:\n
   # user already have explicitly selected language\n
-  return user_preferred_language \n
+  return user_preferred_language\n
 \n
 # use language from browser\'s settings\n
+configuration_language_list = []\n
 for item in context.WizardTool_getConfigurationLanguageList():\n
   configuration_language_list.append(item[1])\n
-accept_language = context.REQUEST.get(\'HTTP_ACCEPT_LANGUAGE\', \'en\')\n
+accept_language = REQUEST.get(\'HTTP_ACCEPT_LANGUAGE\', \'en\')\n
 accept_language_tag = accept_language.split(\';\')[0].split(\',\')[0]\n
 primary_language = accept_language_tag.split(\'-\')[0]\n
 if primary_language in configuration_language_list:\n
@@ -104,13 +108,14 @@ return \'en\'\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>configuration_language_list</string>
-                            <string>getattr</string>
+                            <string>_getattr_</string>
                             <string>context</string>
+                            <string>REQUEST</string>
+                            <string>COOKIE_NAME</string>
                             <string>None</string>
                             <string>user_preferred_language</string>
+                            <string>configuration_language_list</string>
                             <string>_getiter_</string>
-                            <string>_getattr_</string>
                             <string>item</string>
                             <string>_getitem_</string>
                             <string>accept_language</string>
