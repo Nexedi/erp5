@@ -155,7 +155,7 @@ class ActiveProcess(Base):
       """
       return self.hasActivity(processing_node = VALIDATE_ERROR_STATE)
 
-    def CreationDate(self):
+    def getCreationDate(self):
       """
         Define a Creation Date for an active process
         thanks to the start date
