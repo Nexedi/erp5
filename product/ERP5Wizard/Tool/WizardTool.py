@@ -54,6 +54,9 @@ installation_status = {'bt5': {'current': 0,
                                'all': 0,},
                        'activity_list': [],}
 
+# cookie name to store user's preferred language name
+LANGUAGE_COOKIE_NAME = 'configurator_user_preferred_language'
+
 def _isUserAcknowledged(cookiejar):
   """ Is user authenticated to remote system through a cookie. """
   for cookie in cookiejar:
@@ -428,7 +431,7 @@ class WizardTool(BaseTool):
     configurator_user_preferred_language = 'en'
     if REQUEST is not None:
       # language value will be in cookie or REQUEST itself.
-      configurator_user_preferred_language = REQUEST.get('configurator_user_preferred_language', configurator_user_preferred_language)
+      configurator_user_preferred_language = REQUEST.get(LANGUAGE_COOKIE_NAME, configurator_user_preferred_language)
     parameter_dict['user_preferred_language'] = configurator_user_preferred_language
 
   def _updateParameterDictWithFileUpload(self, parameter_dict):
@@ -582,7 +585,11 @@ class WizardTool(BaseTool):
       # set user preferred configuration language
       user_preferred_language = REQUEST.get('field_my_user_preferred_language', None)
       if user_preferred_language:
-        REQUEST.RESPONSE.setCookie('configurator_user_preferred_language',
+        # Set language value to request so that next page after login
+        # can get the value. Because cookie value is available from
+        # next request.
+        REQUEST.set(LANGUAGE_COOKIE_NAME, user_preferred_language)
+        REQUEST.RESPONSE.setCookie(LANGUAGE_COOKIE_NAME,
                                    user_preferred_language,
                                    expires=(DateTime()+30).rfc822())
       # set encoded __ac_express cookie at client's browser
