@@ -441,7 +441,8 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       # selection_name, sort_on and form_id params are kept only for bacward compatibilty
       # as some test call setSelectionQuickSortOrder in url with these params
       listbox_id = None
-      form = REQUEST.form
+      if REQUEST is not None:
+        form = REQUEST.form
       if sort_on is None:
         listbox_id, sort_on = form["setSelectionQuickSortOrder"].split(".", 1)
 
@@ -452,11 +453,12 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
           else:
             form_id = form['form_id']
 
-      if listbox_id is not None:
-          selection_name_key = "%s_list_selection_name" %listbox_id
-          selection_name = form[selection_name_key]
-      elif selection_name is None:
-          selection_name = form['selection_name']
+      if REQUEST is not None:
+        if listbox_id is not None:
+            selection_name_key = "%s_list_selection_name" %listbox_id
+            selection_name = form[selection_name_key]
+        elif selection_name is None:
+            selection_name = form['selection_name']
           
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
