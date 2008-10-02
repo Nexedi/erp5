@@ -425,11 +425,12 @@ class WizardTool(BaseTool):
     parameter_dict['erp5_url'] = self.getPortalObject().absolute_url()
     # add user preffered language
     REQUEST = getattr(self, 'REQUEST', None)
-    if REQUEST is None:
-      parameter_dict['user_preferred_language'] = 'en'
-    else:
-      parameter_dict['user_preferred_language'] = REQUEST.cookies.get('configurator_user_preferred_language', 'en')
-    
+    configurator_user_preferred_language = 'en'
+    if REQUEST is not None:
+      # language value will be in cookie or REQUEST itself.
+      configurator_user_preferred_language = REQUEST.get('configurator_user_preferred_language', configurator_user_preferred_language)
+    parameter_dict['user_preferred_language'] = configurator_user_preferred_language
+
   def _updateParameterDictWithFileUpload(self, parameter_dict):
     """Updates parameter_dict to replace file upload with their file content,
     encoded as XML-RPC Binary
