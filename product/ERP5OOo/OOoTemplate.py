@@ -347,31 +347,24 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
 
       picture = self._resolvePath(options_dict.pop('path').encode())
 
-      # "standard" filetype == Image or File , for ERP objects the
-      # manipulations are different
-      is_standard_filetype = True
-
       # If this is not a File, build a new file with this content
       if not isinstance(picture, File):
         tmp_picture = Products.ERP5Type.Document.newTempImage(self, 'tmp')
         tmp_picture.setData(picture())
         picture = tmp_picture
 
-      if getattr(aq_base(picture), 'data', None) is None \
-                  or callable(aq_base(picture).content_type):
-        is_standard_filetype = False
-
-      if is_standard_filetype:
-        picture_data = str(picture.getData())
-      else:
-        picture_data = picture.Base_download()
-
-      # fetch the content-type of the picture (generally guessed by zope)
       picture_type = options_dict.pop('type', None)
-      if picture_type is None:
-        picture_type = picture.content_type
-        if not is_standard_filetype:
-          picture_type = picture_type()
+
+      picture_data = getattr(aq_base(picture), 'data', None)
+      if picture_data is None:
+        picture_data = picture.Base_download()
+        if picture_type is None:
+          picture_type = picture.content_type()
+      else:
+        # "standard" filetype case (Image or File)
+        picture_data = str(picture_data)
+        if picture_type is None:
+          picture_type = picture.getContentType()
 
       w, h, maxwidth, maxheight = getLengthInfos(options_dict,
                                   ('width', 'height', 'maxwidth', 'maxheight'))
@@ -405,8 +398,7 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
 
       actual_idx = self.document_counter.next()
       pic_name = 'Pictures/picture%d%s' \
-                 % (actual_idx,
-                    picture_type and guess_extension(picture_type) or '')
+                 % (actual_idx, guess_extension(picture_type) or '')
 
       # XXX: Pictures directory not managed (seems facultative)
       #  <manifest:file-entry manifest:media-type="" manifest:full-path="ObjBFE4F50D/Pictures/"/>
