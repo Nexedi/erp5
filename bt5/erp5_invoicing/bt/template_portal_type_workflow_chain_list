@@ -13,5 +13,7 @@ Invoice Transaction Rule | rule_interaction_workflow
 Invoice Transaction Rule | rule_validation_workflow
 Invoicing Rule | edit_workflow
 Invoicing Rule | rule_validation_workflow
+Purchase Invoice Transaction | delivery_tax_interaction_workflow
+Sale Invoice Transaction | delivery_tax_interaction_workflow
 Tax Rule | edit_workflow
 Tax Rule | rule_validation_workflow
