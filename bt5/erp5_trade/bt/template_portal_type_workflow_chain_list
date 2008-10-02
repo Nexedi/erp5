@@ -44,6 +44,7 @@ Purchase Order Line | order_movement_simulation_interaction_workflow
 Purchase Order Line | pricing_interaction_workflow
 Purchase Order Line | tax_interaction_workflow
 Purchase Order Line | trade_matrix_workflow
+Purchase Order | delivery_tax_interaction_workflow
 Purchase Order | edit_workflow
 Purchase Order | order_simulation_interaction_workflow
 Purchase Order | order_workflow
@@ -75,6 +76,7 @@ Sale Order Line | order_movement_simulation_interaction_workflow
 Sale Order Line | pricing_interaction_workflow
 Sale Order Line | tax_interaction_workflow
 Sale Order Line | trade_matrix_workflow
+Sale Order | delivery_tax_interaction_workflow
 Sale Order | edit_workflow
 Sale Order | order_simulation_interaction_workflow
 Sale Order | order_workflow

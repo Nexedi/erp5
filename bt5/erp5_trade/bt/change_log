@@ -1,3 +1,6 @@
+2008-10-02 Jerome
+* Add delivery_tax_interaction workflow to update tax line when delivery line is deleted.
+
 2008-09-16 Kazuhiko
 * revise purchase_packing_list_builder and sale_packing_list_builder using new API.
 * use  delivery_causality_workflow instead of invoice_causality_workflow in Internal Packing List, Purchase Packing List and Sale Packing List.

@@ -57,7 +57,7 @@
  </chain>
  <chain>
   <type>Purchase Order</type>
-  <workflow>edit_workflow, order_workflow, order_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow, order_workflow, order_simulation_interaction_workflow, delivery_tax_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Order Cell</type>
@@ -97,7 +97,7 @@
  </chain>
  <chain>
   <type>Sale Order</type>
-  <workflow>edit_workflow, order_workflow, order_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow, order_workflow, order_simulation_interaction_workflow, delivery_tax_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Order Cell</type>
