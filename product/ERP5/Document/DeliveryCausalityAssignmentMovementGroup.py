@@ -45,10 +45,11 @@ class DeliveryCausalityAssignmentMovementGroup(CausalityAssignmentMovementGroup)
       parent = parent.getParentValue()
     delivery_movement = parent.getDeliveryValue()
     if delivery_movement is not None:
+      delivery = delivery_movement.getExplanationValue()
       causality = property_dict.get('causality_list', [])
-      delivery_movement_url = delivery_movement.getRelativeUrl()
-      if delivery_movement_url not in causality:
-        causality.append(delivery_movement_url)
+      delivery_url = delivery.getRelativeUrl()
+      if delivery_url not in causality:
+        causality.append(delivery_url)
         property_dict['causality_list'] = causality
     return property_dict
 
