@@ -1151,6 +1151,24 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                 portal_type='Organisation',
                 title={'query': ('B', 'C'), 'range': 'minngt'})])
 
+  def test_QueryDictFromRequest(self):
+    """use a dict from REQUEST as a keyword parameter.
+    """
+    org_a = self._makeOrganisation(title='A')
+    org_b = self._makeOrganisation(title='B')
+    org_c = self._makeOrganisation(title='C')
+    
+    query_dict = {'query': ('B', 'C'), 'range': 'minngt'}
+    from ZPublisher.HTTPRequest import record
+    query_record = record()
+    for k, v in query_dict.items():
+      setattr(query_record, k, v)
+
+    self.assertEquals(set([org_b.getPath(), org_c.getPath()]),
+        set([x.path for x in self.getCatalogTool()(
+                portal_type='Organisation',
+                title=query_record)]))
+
   def test_39_DeferredConnection(self, quiet=quiet, run=run_all_test):
     """ERP5Catalog uses a deferred connection for full text indexing.
     """
