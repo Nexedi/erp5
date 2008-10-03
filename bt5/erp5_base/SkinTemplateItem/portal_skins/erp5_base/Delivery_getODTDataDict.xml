@@ -208,6 +208,13 @@ class EmptyOrganisation:\n
   def getProperty(self, prop, d=\'\'):\n
     return d\n
 \n
+source = context.getSourceValue()\n
+if source is None:\n
+  source = EmptyOrganisation()\n
+\n
+destination = context.getDestinationSectionValue()\n
+if destination is None:\n
+  destination = EmptyOrganisation()\n
 \n
 source_section = context.getSourceSectionValue()\n
 if source_section is None:\n
@@ -275,7 +282,7 @@ data_dict = {\n
   \'source_administration_vatid\':\n
           getVatId(source_administration.getProperty(\'vat_code\', \'\')),\n
 \n
-  \'source_title\': context.getSourceTitle() or \'\',\n
+  \'source_title\': source.getProperty(\'corporate_name\') or source.getTitle(),\n
   \'source_address\': getOneLineAddress(\n
           context.getSource() and\n
               context.getSourceValue().getDefaultAddressText() or \'\',\n
@@ -317,7 +324,7 @@ data_dict = {\n
                            is not None and\\\n
                            context.getSourceDecisionValue().getVatCode() or \'\'),\n
 \n
-  \'destination_title\': context.getDestinationTitle() or \'\',\n
+  \'destination_title\': destination.getProperty(\'corporate_name\') or destination.getTitle(),\n
   \'destination_address\': getOneLineAddress(\n
       context.getDestination() and \\\n
           context.getDestinationValue().getDefaultAddressText() or \'\',\n
@@ -463,6 +470,8 @@ return unicodeDict(data_dict)\n
                             <string>_inplacevar_</string>
                             <string>inch_cm_ratio</string>
                             <string>EmptyOrganisation</string>
+                            <string>source</string>
+                            <string>destination</string>
                             <string>source_section</string>
                             <string>destination_section</string>
                             <string>source_administration</string>
