@@ -910,7 +910,10 @@ msgid "Copy"
 msgstr "Copier"
 
 msgid "Corporate Name"
-msgstr "Société"
+msgstr "Dénomination"
+
+msgid "The official name of this organisation"
+msgstr "Le nom officiel de l'entreprise"
 
 msgid "Corporate Registration Code"
 msgstr "SIRET"
