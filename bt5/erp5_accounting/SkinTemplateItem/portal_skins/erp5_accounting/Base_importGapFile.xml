@@ -55,22 +55,6 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-def convertToUpperCase(key):\n
-  """\n
-    This function turns an attribute name into\n
-    a method name according to the ERP5 naming conventions\n
-  """\n
-  import string\n
-  result = \'\'\n
-  if key != \'\':\n
-    parts = string.split(str(key),\'_\')\n
-    for part in parts:\n
-      letter_list = list(part)\n
-      letter_list[0] = string.upper(letter_list[0])\n
-      result = result + string.join(letter_list,\'\')\n
-  return result\n
-\n
-\n
 def splitCsvLine(str_line):\n
   unclean_list = []\n
   pieces_of_line = str_line.split(\',\')\n
@@ -105,6 +89,12 @@ def splitCsvLine(str_line):\n
   return clean_list\n
 \n
 \n
+def getSubCategory(parent, id):\n
+  try:\n
+    return parent[id]\n
+  except KeyError:\n
+    return parent.newContent(id=id)\n
+  \n
 \n
 request  = context.REQUEST\n
 csv_file_line_list = import_file.readlines()\n
@@ -131,6 +121,9 @@ for csv_line in csv_line_list[2:]:\n
 \n
   object_list.append(object)\n
 \n
+root = context.getPortalObject().portal_categories\n
+for path in gap_root_path.split(\'/\'):\n
+  root = getSubCategory(root, path)\n
 \n
 for object in object_list:\n
   description = object.get(\'Description\', None) or \'\'\n
@@ -140,21 +133,14 @@ for object in object_list:\n
   if gap:\n
     gap = gap.replace(\'CLASSE \', \'\')\n
     print \'%s - %s - %s\' % (gap or \'\', title or \'\', description or \'\')\n
-    root = context.getPortalObject()\n
-    root = root.portal_categories.restrictedTraverse(gap_root_path)\n
+    path = root\n
     b = \'\'\n
     for a in gap:\n
       b = b + a\n
-      if root.has_key(b):\n
-        root = root[b]\n
-      else:\n
-        root = root.newContent(id=b)\n
-    root.edit(title=title, description=description)\n
+      path = getSubCategory(path, b)\n
+    path.edit(reference=gap, title=title, description=description)\n
 \n
 return printed\n
-\n
-redirect_url = \'%s?%s\' % ( context.absolute_url()+\'/\'+\'view\', \'portal_status_message=Importing+CSV+file.\')\n
-request[ \'RESPONSE\' ].redirect( redirect_url )\n
 
 
 ]]></string> </value>
@@ -199,8 +185,8 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>kw</string>
                             <string>_print_</string>
                             <string>_print</string>
-                            <string>convertToUpperCase</string>
                             <string>splitCsvLine</string>
+                            <string>getSubCategory</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
@@ -219,15 +205,15 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>property</string>
                             <string>_write_</string>
                             <string>_inplacevar_</string>
+                            <string>root</string>
+                            <string>path</string>
                             <string>None</string>
                             <string>description</string>
                             <string>gap</string>
                             <string>title</string>
                             <string>str</string>
-                            <string>root</string>
                             <string>b</string>
                             <string>a</string>
-                            <string>redirect_url</string>
                           </tuple>
                         </value>
                     </item>
