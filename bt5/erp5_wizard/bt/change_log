@@ -1,3 +1,6 @@
+2008-10-3 yusei
+* Don't use Localizer in wizard side if message is generated in witch side. All dynamic messages should be translated when wizard receives.
+
 2008-10-2 yusei
 * Use cookie to store user's preferred language and set the language value to REQUEST so that next page after login can use correct language.
 
