@@ -77,6 +77,13 @@ except ImportError:
   enableReadOnlyTransactionCache = doNothing
   disableReadOnlyTransactionCache = doNothing
  
+try:
+  from ZPublisher.HTTPRequest import record
+  dict_type_list = (dict, record)
+except ImportError:
+  dict_type_list = (dict, )
+   
+     
 UID_BUFFER_SIZE = 300
 OBJECT_LIST_SIZE = 300
 MAX_PATH_LEN = 255
@@ -1782,7 +1789,7 @@ class Catalog(Folder,
         new_k = k[0:-usage_len]
         if not new_kw.has_key(new_k):
           new_kw[new_k] = {}
-        if not isinstance(new_kw[new_k], dict):
+        if not isinstance(new_kw[new_k], dict_type_list):
           new_kw[new_k] = {'query': new_kw[new_k]}
         split_v = v.split(':')
         new_kw[new_k] = {split_v[0]: split_v[1]}
@@ -1832,7 +1839,7 @@ class Catalog(Folder,
             current_query = search_key_instance.buildQuery('', value)
           if hasattr(current_query, 'order_by'): query_group_by_list = current_query.order_by
         else:
-          if isinstance(value, dict):
+          if isinstance(value, dict_type_list):
             new_query_dict = value.copy()
             if 'query' in new_query_dict:
               new_query_dict[key] = new_query_dict.pop('query')
