@@ -1,3 +1,6 @@
+2008-10-03 yusei
+* Fixed a bug which prevent to access to document_module/list.
+
 2008-09-24 yusei
 * Update xml format.
 
