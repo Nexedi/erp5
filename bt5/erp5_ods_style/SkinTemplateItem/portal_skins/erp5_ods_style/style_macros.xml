@@ -152,16 +152,16 @@
     <number:number-style style:name="one_decimal">\n
       <number:number number:decimal-places="1" number:min-integer-digits="1" number:grouping="true"/>\n
     </number:number-style>\n
-    <style:style style:name="4_decimal" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="four_decimal">\n
+    <style:style style:name="decimal_4" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="four_decimal">\n
       <style:table-cell-properties style:vertical-align=\'middle\' style:repeat-content=\'false\' style:text-align-source=\'fix\' fo:border-right=\'0.002cm solid #000000\' />\n
     </style:style>\n
-    <style:style style:name="3_decimal" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="three_decimal">\n
+    <style:style style:name="decimal_3" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="three_decimal">\n
       <style:table-cell-properties style:vertical-align=\'middle\' style:repeat-content=\'false\' style:text-align-source=\'fix\' fo:border-right=\'0.002cm solid #000000\' />\n
     </style:style>\n
-    <style:style style:name="2_decimal" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="two_decimal">\n
+    <style:style style:name="decimal_2" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="two_decimal">\n
       <style:table-cell-properties style:vertical-align=\'middle\' style:repeat-content=\'false\' style:text-align-source=\'fix\' fo:border-right=\'0.002cm solid #000000\' />\n
     </style:style>\n
-    <style:style style:name="1_decimal" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="one_decimal">\n
+    <style:style style:name="decimal_1" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="one_decimal">\n
       <style:table-cell-properties style:vertical-align=\'middle\' style:repeat-content=\'false\' style:text-align-source=\'fix\' fo:border-right=\'0.002cm solid #000000\' />\n
     </style:style>\n
   </office:automatic-styles>\n

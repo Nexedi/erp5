@@ -112,7 +112,7 @@
                   <tal:block tal:condition="python:field.meta_type==\'FloatField\' or (field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'FloatField\')">\n
                     <tal:block tal:condition="python:field.get_value(\'precision\')>0">\n
                       <table:table-cell tal:attributes="office:value value;\n
-                                        table:style-name python:style_prefix+str(field.get_value(\'precision\'))+\'_decimal\'"\n
+                                        table:style-name python: \'decimal_%s_%s\' % (style_prefix , field.get_value(\'precision\'))"\n
                                         office:value-type="float"\n
                                         table:style-name="decimal">\n
                         <text:p tal:content="python: field.render_pdf(value)" />\n
