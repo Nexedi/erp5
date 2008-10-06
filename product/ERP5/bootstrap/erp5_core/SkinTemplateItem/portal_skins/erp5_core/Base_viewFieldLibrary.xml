@@ -109,6 +109,8 @@
                         <string>my_comment</string>
                         <string>my_multi_list_field</string>
                         <string>my_checkbox</string>
+                        <string>my_text_content</string>
+                        <string>my_text_format</string>
                       </list>
                     </value>
                 </item>
