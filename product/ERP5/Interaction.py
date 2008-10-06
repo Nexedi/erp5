@@ -256,6 +256,7 @@ class Interaction (ContainerTab):
 
     all_meta_types = ({'name':InteractionDefinition.meta_type,
                        'action':'addInteraction',
+                       'permission': 'Manage portal',
                        },)
 
     _manage_interaction = DTMLFile('interactions', _dtmldir)
