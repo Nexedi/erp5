@@ -659,7 +659,7 @@ class ERP5Site(FolderMixIn, CMFSite):
                               'getPortalProjectTypeList')
   def getPortalProjectTypeList(self):
     """
-      Return document types.
+      Return project types.
     """
     return self._getPortalGroupedTypeList('project')
 
@@ -683,7 +683,7 @@ class ERP5Site(FolderMixIn, CMFSite):
                             'getPortalFileDocumentTypeList')
   def getPortalFileDocumentTypeList(self):
     """
-      Return web page types.
+      Return file document types.
     """
     return self._getPortalGroupedTypeList('file_document')
 
@@ -691,7 +691,7 @@ class ERP5Site(FolderMixIn, CMFSite):
                             'getPortalRecentDocumentTypeList')
   def getPortalRecentDocumentTypeList(self):
     """
-      Return web page types.
+      Return recent document types.
     """
     return self._getPortalGroupedTypeList('recent_document')
 
@@ -699,7 +699,7 @@ class ERP5Site(FolderMixIn, CMFSite):
                             'getPortalTemplateDocumentTypeList')
   def getPortalTemplateDocumentTypeList(self):
     """
-      Return web page types.
+      Return template document types.
     """
     return self._getPortalGroupedTypeList('template_document')
 
@@ -707,7 +707,7 @@ class ERP5Site(FolderMixIn, CMFSite):
                             'getPortalMyDocumentTypeList')
   def getPortalMyDocumentTypeList(self):
     """
-      Return web page types.
+      Return my document types.
     """
     return self._getPortalGroupedTypeList('my_document')
 
@@ -715,7 +715,7 @@ class ERP5Site(FolderMixIn, CMFSite):
                             'getPortalCrawlerIndexTypeList')
   def getPortalCrawlerIndexTypeList(self):
     """
-      Return web page types.
+      Return crawler index types.
     """
     return self._getPortalGroupedTypeList('crawler_index')
 
@@ -723,7 +723,7 @@ class ERP5Site(FolderMixIn, CMFSite):
                             'getPortalSupplyPathTypeList')
   def getPortalSupplyPathTypeList(self):
     """
-      Return supply movement types.
+      Return supply path types.
     """
     return self._getPortalGroupedTypeList('supply_path') or \
            self._getPortalConfiguration('portal_supply_path_type_list')
