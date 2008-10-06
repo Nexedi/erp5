@@ -19,10 +19,8 @@
                 <string>search_columns</string>
                 <string>sort_columns</string>
                 <string>sort</string>
-                <string>list_method</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
-                <string>anchor</string>
                 <string>domain_tree</string>
                 <string>domain_root_list</string>
               </list>
@@ -113,12 +111,20 @@
                           <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
+                        <tuple>
+                          <string>causality_title</string>
+                          <string>Original English Term</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>anchor</string> </key>
-                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
@@ -161,11 +167,11 @@
                       <list>
                         <tuple>
                           <string>language/business_field</string>
-                          <string>language</string>
+                          <string>Language</string>
                         </tuple>
                         <tuple>
                           <string>business_field/language</string>
-                          <string>business_field</string>
+                          <string>Business Field</string>
                         </tuple>
                       </list>
                     </value>
@@ -181,12 +187,6 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -226,6 +226,18 @@
                         <tuple>
                           <string>translated_validation_state_title</string>
                           <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>causality_title</string>
+                          <string>Original English Term</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -273,6 +285,18 @@
                           <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
+                        <tuple>
+                          <string>causality_title</string>
+                          <string>Original English Term</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -286,22 +310,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>
