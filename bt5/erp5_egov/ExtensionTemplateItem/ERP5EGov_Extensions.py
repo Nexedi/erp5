@@ -15,7 +15,7 @@ Thanks for registrering to SAFI, now you can connect in on www.safi.sn with the 
 
 Login: %s
 Password: %s
-""" % ('fabien@nexedi.com', user_email, 'your credential for www.safi.sn',
+""" % ('no-reply@safi.sn', user_email, 'your credential for www.safi.sn',
      login, password)
 
   try:
