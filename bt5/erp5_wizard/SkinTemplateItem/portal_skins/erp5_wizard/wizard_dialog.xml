@@ -89,6 +89,8 @@
      <input type="Submit"  \n
             value="Previous" \n
             name="previous:method"\n
+            i18n:attributes="value" \n
+            i18n:domain="ui" \n
             tal:attributes="value python: options.get(\'previous\')"/>\n
    </tal:block>\n
 \n
@@ -97,6 +99,8 @@
      <input type="Submit"  \n
             value="Search"\n
             name="next:method"\n
+            i18n:attributes="value" \n
+            i18n:domain="ui"\n
             tal:attributes="value python: options.get(\'next\')" />\n
             </span>\n
    </tal:block>\n

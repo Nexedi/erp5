@@ -59,17 +59,10 @@
       </div>\n
     </div>\n
   </div>\n
-  \n
-  <h3 i18n:translate=""\n
-      i18n:domain="ui"> \n
-    ERP5 installation process is running.</h3>\n
-  \n
-  <p i18n:translate=""\n
-      i18n:domain="ui"> \n
-    Please be patient and do not move from current page until you get \n
-    confirmation that the installation is over. \n
-    It will last approximately 5 to 10 minutes.\n
-  </p>\n
+\n
+  <tal:block \n
+     tal:replace="structure python: here.portal_wizard.callRemoteProxyMethod(\'WizardTool_viewPatienceMessageRenderer\')"/>\n
+\n
 </tal:block>
 
 ]]></string> </value>

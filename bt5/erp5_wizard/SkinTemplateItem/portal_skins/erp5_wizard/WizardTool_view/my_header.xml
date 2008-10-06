@@ -156,7 +156,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/WizardTool_viewWelcomeMessageRenderer</string> </value>
+            <value> <string>python: here.portal_wizard.callRemoteProxyMethod(\'WizardTool_viewWelcomeMessageRenderer\')</string> </value>
         </item>
       </dictionary>
     </pickle>
