@@ -1,0 +1,3 @@
+Integration for Web Site is included in 'erp5_knowledge_pad_web'.   
+To use this bt5 you need to create respective security settings so an user has an 'Author' role on knowledge_pad_module.   
+   If required (using knowledge_pad_interaction_workflow) when an user is validated it's possible to create all needed knowledge pads for user in an advance.

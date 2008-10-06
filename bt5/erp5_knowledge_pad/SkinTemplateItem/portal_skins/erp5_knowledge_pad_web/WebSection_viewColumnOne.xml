@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<link href="erp5_knowledge_box_web_1column.css" \n
+      rel="stylesheet" \n
+      type="text/css" /> \n
+\n
+<tal:block \n
+  tal:define="isAnon python: context.portal_membership.isAnonymousUser();\n
+              mode python: \'web_section\';\n
+              default_pad_group python: options.get(\'default_pad_group\', None);\n
+              knowledge_pads python: \n
+              here.ERP5Site_getKnowledgePadListForUser(mode=mode,\n
+                                                       default_pad_group=default_pad_group);\n
+              struct python:\n
+               here.WebSite_getActiveKnowledgePadForUser(knowledge_pads, \n
+                                                         default_pad_group);\n
+              active_knowledge_pad python: struct[0];\n
+              knowledge_pads python: struct[1];\n
+              hasUserActivity python:\n
+                      here.ERP5Site_hasUserActivity(active_knowledge_pad,\n
+                                                    mode=\'web_section\');\n
+              pending_activities python: active_knowledge_pad is None or \n
+                                         hasUserActivity;\n
+              createDefaultPadForUser  python: len(knowledge_pads)==0 and\n
+                                                hasUserActivity;\n
+              waitForActivitiesOnServer python: pending_activities and \n
+                                                len(knowledge_pads)>=1 and \n
+                                                active_knowledge_pad is None;\n
+              current_web_section python:\n
+                  context.REQUEST.get(\'current_web_section\', here);\n
+              current_web_section python:\n
+                  test(current_web_section.getPortalType()==\'Web Site\',\n
+                                               here, current_web_section);\n
+              current_web_section_url python: current_web_section.absolute_url();\n
+              isUserAllowedToCreateKnowledgePads\n
+                  context/Base_isUserAllowedToUseKnowledgePad;\n
+              isKnowledgePadTemplateUsed python:\n
+                  request.get(\'is_knowledge_pad_template_used\', 0);\n
+              cancel_url current_web_section_url;">\n
+\n
+    <tal:block tal:condition="python: not createDefaultPadForUser and \n
+                                      not waitForActivitiesOnServer and\n
+                                      active_knowledge_pad is not None">\n
+\n
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/disable_server_integration"> Disable slot</span>\n
+\n
+      <div class="portal-column" \n
+           id="portal-column-0"\n
+           tal:attributes="class python: test(isAnon, \n
+                                              \'portal-column-undraggable\', \n
+                                              \'portal-column\')"\n
+           tal:define="layout active_knowledge_pad/KnowledgePad_getBoxColumnLayout;">\n
+        <div tal:condition="not: isAnon" id="add-stick-gadget-tool-section">\n
+          <div style="float:left; width:60%;">\n
+            <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/add_new_gadget"> Add Gadgets</span>\n
+          </div>\n
+          <div style="float:left; width:38%; text-align:right;">\n
+            <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/stick"> Stick/Unstick</span>\n
+          </div>\n
+        </div>\n
+          \n
+        <span tal:condition="python: len(layout)>=1"\n
+              tal:replace="structure python:\n
+                  active_knowledge_pad.KnowledgePad_viewColumnWidget(section_layout=layout[0],  \n
+                                                                     real_context=here,\n
+                                                                     cancel_url=cancel_url)"/>\n
+    </div>\n
+\n
+    </tal:block>\n
+\n
+    <div tal:condition="python: createDefaultPadForUser and not isAnon \n
+                                  and isUserAllowedToCreateKnowledgePads">\n
+\n
+      <div class="wait_block">\n
+        <h6 i18n:translate="" i18n:domain="ui"> \n
+          Please wait until your area is being prepared.\n
+        </h6>\n
+        <p i18n:translate="" i18n:domain="ui"> \n
+          You\'ll be automatically redirected in few seconds.\n
+        </p>\n
+\n
+        <script type="text/javascript"\n
+          tal:content="structure python: \n
+          \'\'\'createDefaultPadOnServer(5000,\n
+          \'%s/ERP5Site_createDefaultKnowledgePadListForUser\', \n
+          \'%s\', \'%s/view\', \'web_section\');\'\'\' \n
+           %(current_web_section_url, default_pad_group, current_web_section_url)">\n
+        </script>\n
+      </div>\n
+\n
+    </div>\n
+    \n
+   <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/knowledge_pad_security_check"> Security check\n
+   </span>\n
+    \n
+  </tal:block>\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_viewColumnOne</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Left Column</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

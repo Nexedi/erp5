@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  Save desired user box layout to current knowledge pad.\n
+  This script is called by drag and drop framework when user\n
+  drags and/or drops a knowledge box to a column.\n
+"""\n
+if not context.portal_membership.isAnonymousUser():\n
+  box_url = None\n
+  new_user_layout = []\n
+  for item in user_layout.split(\'##\'):\n
+    if item != \'\':\n
+      l = []\n
+      sub_items=item.split(\'|\')\n
+      # get box relative url\n
+      try:  box_url=sub_items[0]\n
+      except indexError: pass\n
+      # remove box_relative_url from layout string\n
+      for sub_item in sub_items:\n
+        dummy1, dummy2, knowledge_box = sub_item.split(\'/\')\n
+        l.append(knowledge_box)\n
+      # join boxes\n
+      new_user_layout.append(\'|\'.join(l))\n
+    else:\n
+      new_user_layout.append(item)\n
+  # parent is part of layout element\n
+  knowledge_pad = context.restrictedTraverse(box_url).getParent()\n
+  # join columns \n
+  new_user_layout = \'##\'.join(new_user_layout)\n
+  #  update only if necessary\n
+  if getattr(knowledge_pad, \'user_layout\', None)!=new_user_layout:\n
+    knowledge_pad.edit(user_layout=new_user_layout)\n
+return "OK"\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>user_layout = \'\'</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>user_layout</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>None</string>
+                            <string>box_url</string>
+                            <string>new_user_layout</string>
+                            <string>_getiter_</string>
+                            <string>item</string>
+                            <string>l</string>
+                            <string>sub_items</string>
+                            <string>_getitem_</string>
+                            <string>indexError</string>
+                            <string>sub_item</string>
+                            <string>dummy1</string>
+                            <string>dummy2</string>
+                            <string>knowledge_box</string>
+                            <string>knowledge_pad</string>
+                            <string>getattr</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <string></string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>KnowledgePad_saveBoxColumnLayout</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Save user preffered layout</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

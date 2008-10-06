@@ -1,0 +1,270 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
+           tal:define="field_id here/getId;\n
+                       form_id python: here.getForm().id;\n
+                       selection_name here/getSelectionName;\n
+                       line_start python: here.getLineStart();\n
+                       real_context here/getContext;\n
+                       absolute_url real_context/absolute_url;\n
+                       box_relative_url python: request.get(\'box_relative_url\', \'\');\n
+                       line_list here/query;\n
+                       selection_params python: here.getSelection().getParams();\n
+                       read_item_list python:selection_params.get(\'rss_read_item:list\', {});\n
+                       read_items_count python:len(read_item_list);\n
+                       rss_title python:request.get(\'rss_title\',\'\');\n
+                       rss_link python:request.get(\'rss_link\',None);\n
+                       rss_logo python:request.get(\'rss_logo\',None);\n
+                       search_text python: selection_params.get(\'search_text\', \'\');\n
+                       show_search_line here/showSearchLine;\n
+                       is_domain_tree_mode here/isDomainTreeMode;\n
+                       listbox_max_lines  python: int(here.getMaxLineNumber());\n
+                       total_line         python: here.total_size;\n
+                       total_page         python: here.total_pages;\n
+                       page_id            python: here.current_page;\n
+                       current_page       python: page_id + 1;\n
+                       previous_page      python: current_page - 1;\n
+                       next_page          python: current_page + 1;\n
+                       current_page_max   python: listbox_max_lines * current_page;\n
+                       current_page_start python: (listbox_max_lines * (current_page - 1)) + 1;\n
+                       current_page_stop  python: (total_line < current_page_max) and total_line or current_page_max;\n
+                       box_relative_url python: request.get(\'box_relative_url\', \'\');\n
+                       box python: real_context.restrictedTraverse(box_relative_url); \n
+                       box_id python: \'visual_\'+box.getId();\n
+                       dummy python: context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \n
+                                                                        \'text/html;; charset=utf-8\');"\n
+           metal:define-macro="main">\n
+\n
+  <!-- ListBox starts here -->\n
+  <input type="hidden" \n
+         name="list_selection_name" \n
+         value="default" \n
+         tal:attributes="value selection_name" />\n
+\n
+  <input type="hidden" \n
+         name="list_selection_name" \n
+         value="default" \n
+         tal:attributes="name python:field_id+\'_list_selection_name\';value selection_name" />\n
+\n
+  <input type="hidden" \n
+         name="search_text" \n
+         value="default" \n
+         tal:attributes="value python: request.get(\'search_text\',\'\')" />\n
+\n
+  <input type="hidden" \n
+         name="list_start" \n
+         tal:attributes="value here/getLineStart" />\n
+\n
+  <input type="hidden" \n
+         name="gadget_form_id" \n
+         tal:attributes="value form_id" />\n
+\n
+  <tal:replace tal:content="nothing">\n
+    Because TAL cannot accept unbalanced tags, the support for a domain tree is realized by a macro.\n
+    The macro ListBoxContainer is a no-op, if not in domain tree mode. Otherwise, the macro constructs\n
+    a domain tree and extracts the body in an extra table.\n
+  </tal:replace>\n
+\n
+  <tal:block tal:define="expand python: 0">\n
+    <tal:block metal:define-macro="ListBoxContainer">\n
+      <tal:block tal:condition="expand">\n
+        <tal:block tal:condition="not: is_domain_tree_mode">\n
+          <tal:block metal:define-slot="ListBoxBody" />\n
+        </tal:block>\n
+      </tal:block>\n
+    </tal:block>\n
+  </tal:block>\n
+\n
+  <tal:block tal:define="expand python: 1;\n
+             table_form_id request/current_form_id | form_id;\n
+             N_ python: real_context.Base_translateString;">\n
+    <tal:block metal:use-macro="template/macros/ListBoxContainer">\n
+      <tal:block metal:fill-slot="ListBoxBody">\n
+\n
+        <div class="list_style">\n
+\n
+          <!-- Refresh -->\n
+\n
+            <a class="right" tal:attributes="onclick python:real_context.KnowledgePad_generateAjaxCall(absolute_url+\'/\'+form_id,box,box_id)"><img alt="" tal:attributes="onload python:\'if(\\\'\'+rss_title.replace(\'\\\'\',\'\')+\'\\\'==\\\'Please enter a valid Rss or Atom url in the edit form\\\'){showElement(\\\'edit_form_\'+box.getId()+\'\\\');;}\'" src="refresh.png"/></a>\n
+\n
+          <!-- Feed Title -->\n
+\n
+              <a class="title"\n
+                 tal:attributes="href rss_link; target string:_blank; id python:\'rss_title_\'+box.getId()"\n
+                 tal:content="python:real_context.Base_formatRssTitleWithUnreadItemCount(rss_title=rss_title,selection_name=selection_name,total_line=total_line)"/>\n
+\n
+          <p class="clear"></p>\n
+\n
+          <!-- Message list -->\n
+\n
+          <ul>\n
+            <tal:block tal:repeat="line line_list">\n
+              <li tal:define="value line/getBrain"\n
+                  tal:attributes="id python: (getattr(value,\'field_img\',None) and  \'with_img\') or \'\';">\n
+                <input tal:condition="not: repeat/line/index"\n
+                       type="hidden" value="1" name="listbox_uid:list"\n
+                       tal:attributes="value python: line.getUid() or \'\';\n
+                                       name string:${field_id}_uid:list" />\n
+                <img alt="" width="87" class="left" tal:condition="python: getattr(value,\'field_img\',None)" tal:attributes="src python: value.field_img[0]"/>\n
+                <div onmouseover="this.style.backgroundColor=\'#ECECEC\';" \n
+                     onmouseout="this.style.backgroundColor=\'inherit\';"\n
+                     tal:attributes="id python: (getattr(value,\'field_img\',None) and  \'title_img\') or \'title\';\n
+                                     class python:value.field_md5 in read_item_list and \'read\' or \'\';\n
+                                     title python:getattr(value,\'field_sender\',\'\');\n
+                                     onclick python:\'if(this.className!=\\\'read\\\'){MochiKit.Async.doSimpleXMLHttpRequest(\\\'Base_setRssItemReadInSelection\\\', {\\\'selection_name\\\':\\\'\'+selection_name+\'\\\',\\\'item\\\':\\\'\'+value.field_md5+\'\\\'});;this.className=\\\'read\\\';;\'+real_context.KnowledgePad_generateAjaxCall(absolute_url+\'/\'+\'Base_formatRssTitleWithUnreadItemCount\',box,\'rss_title_\'+box.getId(),{\'rss_title\':rss_title,\'total_line\':total_line,\'selection_name\':selection_name})+\'}toggle(\\\'description_\'+box.getId()+\'_\'+str(repeat[\'line\'].index)+\'\\\');;\'">\n
+                  <span tal:content="value/field_title">value</span>\n
+                  <span tal:condition="python:getattr(value,\'field_date\',None)" class="transparent" tal:content="python: \' - \'+str(getattr(value,\'field_date\',\'\'))">value</span>\n
+                </div>\n
+                <p class="clear"></p>\n
+                <div tal:attributes="id python:\'description_\'+box.getId()+\'_\'+str(repeat[\'line\'].index)"\n
+                     class="content"\n
+                     style="display:none;">\n
+                  <p tal:condition="python:getattr(value,\'field_content\',None)" tal:content="structure python: getattr(value,\'field_content\',\'\')"/>\n
+                  <div id="others_links">\n
+                    <tal:block tal:repeat="other_link python: getattr(value,\'field_others_links\',[])">\n
+                      <a tal:content="structure other_link" />\n
+                      <br/>\n
+                    </tal:block>\n
+                  </div>\n
+                  <tal:block tal:condition="python:len(getattr(value,\'field_img\',[]))>1">\n
+                   <img tal:repeat="img python:getattr(value,\'field_img\',[])[1:]"\n
+                        tal:attributes="src img; alt python:\'\'"/>\n
+                    <br/>\n
+                  </tal:block>\n
+                  <a tal:condition="python:getattr(value,\'field_link\',None)" tal:attributes="href value/field_link;target string:_blank">Show original item</a>\n
+\n
+                </div>\n
+              </li>\n
+            </tal:block>\n
+          </ul>\n
+\n
+          <!-- Page navigation -->\n
+\n
+          <div tal:condition="python: total_line > listbox_max_lines" \n
+                class="pageNavigation"> \n
+            <tal:block tal:condition="python: current_page > 1">\n
+\n
+              <button tal:define ="params python: {field_id+\'_firstPage:method\':\'\'}"\n
+                      title="First page: Page 1" name="firstPage"\n
+                      type = "button" \n
+                      tal:attributes="id string:${field_id}_first_page;\n
+                                      value string:|&lt;;\n
+                                      onclick python: real_context.KnowledgePad_generateAjaxCall(absolute_url+\'/\'+form_id,box,box_id,params)">|&lt;\n
+              </button>\n
+\n
+              <button tal:define ="params python: {field_id+\'_previousPage:method\':\'\'}"\n
+                      name="previous"\n
+                      type="button"\n
+                      tal:attributes="title python: \'Previous Page: page %s\' % previous_page;\n
+                                      id    string:${field_id}_previous_page;\n
+                                      value string:&lt;&lt;;\n
+                                      onclick python: real_context.KnowledgePad_generateAjaxCall(absolute_url+\'/\'+form_id,box,box_id,params)">&lt;&lt;\n
+              </button>\n
+            </tal:block>\n
+\n
+            <select tal:define ="params python: {field_id+\'_setPage:method\':\'\',\'list_start\':\'this.value\'}"\n
+                    title="Change Page" size="1"\n
+                    tal:attributes=\'id string:${field_id}_page_selection;\n
+                                    onChange python: real_context.KnowledgePad_generateAjaxCall(absolute_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")\'\n
+                                    i18n:domain="ui" i18n:attributes="title">\n
+              <option tal:repeat="p python: range(total_page)"\n
+                      tal:attributes="selected python: p == page_id;\n
+                                      value    python: p * listbox_max_lines"\n
+                      i18n:domain="ui" i18n:translate="">Page <tal:block tal:replace="python: p + 1" i18n:name="page">0</tal:block> of <tal:block tal:replace="total_page" i18n:name="total_pages">1</tal:block>\n
+              </option>\n
+            </select>\n
+\n
+            <tal:block tal:condition="python: current_page < total_page">\n
+              <button tal:define ="params python: {field_id+\'_nextPage:method\':\'\'}"\n
+                      name="next"\n
+                      type="button"\n
+                      tal:attributes="title python: \'Next Page: page %s\' % next_page;\n
+                                      id    string:${field_id}_next_page;\n
+                                      onclick python: real_context.KnowledgePad_generateAjaxCall(absolute_url+\'/\'+form_id,box,box_id,params)">&gt;&gt;\n
+              </button>\n
+\n
+              <button tal:define ="params python: {field_id+\'_lastPage:method\':\'\',\'total_size\':total_line}"\n
+                      name="lastPage"\n
+                      type="button"\n
+                      tal:attributes="title python: N_(\'Last page: Page ${total_page}\', mapping={\'total_page\': total_page});\n
+                                      id    string:${field_id}_last_page;\n
+                                      onclick python: real_context.KnowledgePad_generateAjaxCall(absolute_url+\'/\'+form_id,box,box_id,params)">&gt;|\n
+              </button>\n
+            </tal:block>\n
+          </div>\n
+          <br/>\n
+          <img tal:condition="rss_logo" tal:attributes="src rss_logo" alt="" height="20" class="right"/>\n
+\n
+        </div>\n
+      </tal:block>\n
+    </tal:block>\n
+  </tal:block>\n
+\n
+  <!-- ListBox ends here -->\n
+\n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ListBox_asListStyleHTML</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Listbox as list renderer</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

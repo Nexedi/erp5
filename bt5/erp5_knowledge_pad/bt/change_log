@@ -1,0 +1,49 @@
+2008-10-6 yusei
+* Update xml format.
+
+2008-09-08 yusei
+* Use Base_translateString instead of translate.
+
+2008-07-31 thomas
+* Add RSS gadget and Worklist gadget.
+
+2008-07-31 thomas
+* Support password field in preference.
+
+2008-07-01 ivan
+* Remove from Person's workflow chain respective interaction workflow. Still leave it in case an use case requires explicitly creting knowledge pads on Person validation.
+
+2008-06-26 ivan
+* Add gadget_type and enable showing only right gadgets for a context
+
+2008-06-24 ivan
+* Use default knowledge pads from templates.
+* Clean up
+
+2008-06-16 thomas
+* accept more parameters in updater() for asynchronous listbox gadgets.
+
+2008-05-06 thomas
+* support multi fields in gadgets' preferences.
+* support overflow in gadgets.
+
+2008-4-9 yusei
+* Turned off acquire local roles on Knowledge Pad portal type.
+
+2008-03-04 Ivan
+* Add integration for Web Site
+
+2008-02-22 Ivan
+* Add workflows and minimal working security model
+
+2008-02-15 Ivan
+* Replace scriptaculous with MochiKit
+
+2008-02-04 Ivan
+* Rename 'bento' to 'knowledge pad'
+
+2008-01-22 Ivan
+* Update to latest (1.8.1) scriptaculous lib
+
+2007-05-22 Ivan
+* Initial import

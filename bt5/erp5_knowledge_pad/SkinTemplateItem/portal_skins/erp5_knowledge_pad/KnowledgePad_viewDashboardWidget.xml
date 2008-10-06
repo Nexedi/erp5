@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<div id="page_wrapper"  \n
+     tal:define="layout here/KnowledgePad_getBoxColumnLayout;\n
+                 real_context python: options.get(\'real_context\', None);\n
+                 cancel_url python: options.get(\'cancel_url\', None);\n
+                 is_tab_empty python: (len(layout)==1 and len(layout[0])==0) or\n
+                                     (len(layout)==3 and len(layout[0]+layout[1]+layout[2])==0) ">\n
+    <div tal:condition="is_tab_empty">\n
+      <h3 i18n:translate="" \n
+          i18n:domain="ui"> \n
+        Your tab is empty.\n
+      </h3>\n
+      <h4 i18n:translate="" \n
+          i18n:domain="ui"> \n
+        Please  use link above (\'Add gadget\') to prepare it yourself.\n
+      </h4>\n
+    </div>\n
+\n
+    <table id="table_column_layout">\n
+    <tr>\n
+      <td>\n
+        <div class="portal-column" id="portal-column-0">\n
+          <tal:block tal:condition="python: len(layout)>=1">\n
+            <span tal:replace="structure python: here.KnowledgePad_viewColumnWidget(section_layout=layout[0],\n
+                                               real_context=real_context,\n
+                                               cancel_url=cancel_url)"/>\n
+          </tal:block> \n
+        </div>\n
+      </td>\n
+\n
+      <td>\n
+        <div class="portal-column" id="portal-column-1">\n
+          <tal:block tal:condition="python: len(layout)>=2">\n
+            <span tal:replace="structure python: here.KnowledgePad_viewColumnWidget(section_layout=layout[1],\n
+                                               real_context=real_context,\n
+                                               cancel_url=cancel_url)"/>\n
+          </tal:block>\n
+        </div>\n
+      </td>\n
+\n
+    <td>\n
+      <div class="portal-column" id="portal-column-2">\n
+        <tal:block tal:condition="python: len(layout)>=3">\n
+          <span tal:replace="structure python: here.KnowledgePad_viewColumnWidget(section_layout=layout[2],\n
+                                             real_context=real_context,\n
+                                             cancel_url=cancel_url)"/>\n
+        </tal:block>\n
+      </div>\n
+    </td>\n
+    </tr>\n
+    </table>\n
+\n
+</div>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>KnowledgePad_viewDashboardWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Render draggable and droppable column structure</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

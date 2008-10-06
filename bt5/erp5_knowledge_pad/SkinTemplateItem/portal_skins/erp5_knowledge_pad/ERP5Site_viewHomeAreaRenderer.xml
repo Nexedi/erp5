@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block  \n
+  tal:define="mode python: \'erp5_front\';\n
+              default_pad_group python: \'\';\n
+              knowledge_pads python:\n
+                 here.ERP5Site_getKnowledgePadListForUser(mode=mode);\n
+              struct python:\n
+                      here.ERP5Site_getActiveKnowledgePadForUser(\n
+                         knowledge_pads,\n
+                         );\n
+              active_knowledge_pad python: struct[0];\n
+              knowledge_pads python: struct[1];\n
+              hasUserActivity python:\n
+                      here.ERP5Site_hasUserActivity(active_knowledge_pad,\n
+                                                    mode=mode);\n
+              isAnon python: here.portal_membership.isAnonymousUser();\n
+              createDefaultPadForUser  python:  len(knowledge_pads)==0 and\n
+                                                hasUserActivity;\n
+              waitForActivitiesOnServer python: len(knowledge_pads)>=1 and \n
+                                                active_knowledge_pad is None and\n
+                                                hasUserActivity;\n
+              isUserAllowedToCreateKnowledgePads\n
+                       context/Base_isUserAllowedToUseKnowledgePad;\n
+              isKnowledgePadTemplateUsed python:\n
+                       request.get(\'is_knowledge_pad_template_used\', 0);\n
+              cancel_url here/absolute_url;">\n
+\n
+  <div id="gadget_area_wrapper">\n
+\n
+    <div tal:condition="isAnon">\n
+      <h3 i18n:translate="" i18n:domain="ui"> You are not logged in.</h3>\n
+      <h5><a href="login_form" i18n:translate="" i18n:domain="ui">Log in</a></h5>\n
+    </div>\n
+\n
+   <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/knowledge_pad_security_check"> Security check\n
+   </span>\n
+   \n
+   <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/disable_server_integration"> Disable slot</span>\n
+   \n
+    <tal:block tal:condition="python: not isAnon and \n
+                                      not createDefaultPadForUser and \n
+                                      not waitForActivitiesOnServer">\n
+\n
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/navigation"> Navigation\n
+      </span>\n
+\n
+      <!-- Render active Knowledge pad -->\n
+      <span tal:condition="active_knowledge_pad"\n
+          tal:replace="structure python: active_knowledge_pad.KnowledgePad_viewDashboardWidget(real_context=here,\n
+                                                                cancel_url=cancel_url)"/>\n
+      \n
+      <!-- Dialogs -->\n
+      <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/hidden_dialogs"> Dialogs\n
+      </span>\n
+      \n
+    </tal:block>\n
+     \n
+    <div tal:condition="python: waitForActivitiesOnServer and isUserAllowedToCreateKnowledgePads">\n
+      <div class="wait_block">\n
+        <h2 i18n:translate="" i18n:domain="ui"> \n
+          Please wait until your home is being updated.</h2>\n
+        <p i18n:translate="" i18n:domain="ui"> You\'ll be automatically redirected.</p>\n
+        <script type="text/javascript">\n
+          checkForActivitiesOnServer(5000, \'view\');\n
+        </script>\n
+      </div>\n
+    </div>\n
+\n
+    <div tal:condition="python: createDefaultPadForUser and isUserAllowedToCreateKnowledgePads">\n
+      <div class="wait_block">\n
+        <h2 i18n:translate="" i18n:domain="ui"> \n
+          Please wait until your tab is being prepared.\n
+        </h2>\n
+        <p i18n:translate="" i18n:domain="ui"> You\'ll be automatically redirected.</p>\n
+        <script type="text/javascript">\n
+          createDefaultPadOnServer(5000,\n
+          \'ERP5Site_createDefaultKnowledgePadListForUser\',\n
+          \'\',\n
+          \'view\', \'erp5_front\');\n
+        </script>\n
+      </div>\n
+  </div>\n
+\n
+  </div>\n
+  \n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_viewHomeAreaRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
