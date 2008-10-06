@@ -365,7 +365,14 @@ class WizardTool(BaseTool):
     witch_tool = server.portal_witch
     return witch_tool
 
-  def _callRemoteMethod(self, distant_method, server_url=None):
+  def callRemoteProxyMethod(self, distant_method, server_url=None):
+    """ Call proxy method on server. """
+    # set real method_id
+    form = self.REQUEST.form
+    form['method_id'] = distant_method
+    return self._callRemoteMethod('proxyMethodHandler', wrap_result=0)
+
+  def _callRemoteMethod(self, distant_method, server_url=None, wrap_result=1):
     """ Call remote method on server and get result. """
     result_call = GeneratorCall()
     if server_url is None:
@@ -405,6 +412,9 @@ class WizardTool(BaseTool):
                           "next": None,
                           "previous": None})
     else:
+      if not wrap_result:
+        # simply return raw result
+        return html
       result_call.load(html)
       command = result_call["command"]
       html = result_call["data"]
@@ -679,7 +689,7 @@ class WizardTool(BaseTool):
     portal_activities = getToolByName(self.getPortalObject(), 'portal_activities')
     is_bt5_installation_over = (portal_activities.countMessageWithTag('initialERP5Setup')==0)
     if 0 == len(portal_activities.getMessageList()) and is_bt5_installation_over:
-      html = self.WizardTool_successfulConfiguration()
+      html = self.callRemoteProxyMethod('WizardTool_successfulConfiguration')
     else:
       if is_bt5_installation_over:
         # only if bt5s are installed start tracking number of activities
