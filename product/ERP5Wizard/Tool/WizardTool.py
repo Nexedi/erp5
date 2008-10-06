@@ -689,7 +689,7 @@ class WizardTool(BaseTool):
     portal_activities = getToolByName(self.getPortalObject(), 'portal_activities')
     is_bt5_installation_over = (portal_activities.countMessageWithTag('initialERP5Setup')==0)
     if 0 == len(portal_activities.getMessageList()) and is_bt5_installation_over:
-      html = self.callRemoteProxyMethod('WizardTool_successfulConfiguration')
+      html = self.callRemoteProxyMethod('WizardTool_viewSuccessfulConfigurationMessageRenderer')
     else:
       if is_bt5_installation_over:
         # only if bt5s are installed start tracking number of activities
