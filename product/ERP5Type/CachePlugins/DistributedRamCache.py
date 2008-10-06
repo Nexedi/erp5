@@ -148,4 +148,4 @@ class DistributedRamCache(BaseCache):
 
   def getCachePluginTotalMemorySize(self):
     """ Calculate total RAM memory size of cache plugin. """
-    return 0    
+    return 0, {}
