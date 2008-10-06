@@ -68,7 +68,7 @@ for bug in bug_module.searchFolder(portal_type=\'Bug\',\n
                                    simulation_state=(\'confirmed\', \'set_ready\',),\n
                                    sort_on=((\'id\', \'asc\', \'int\'),)):\n
   bug = bug.getObject()\n
-  if bug.getDestination():\n
+  if bug.getSource():\n
     assigned_to_dict.setdefault(bug.getSource(), []).append(bug)\n
   else:\n
     not_assigned_bug_list.append(bug)\n
