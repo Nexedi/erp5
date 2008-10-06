@@ -1,1 +1,1 @@
-* The glossary module "Update Workflows by English Glossary" Action uses DCorkflow's API method "setProperties". In case of future patches or updates, this must be reviewed, as there is a risk of overwriting important data
+* The glossary module "Update Workflows by English Glossary" Action uses DCWorkflow's API method "setProperties". In case of future patches or updates, this must be reviewed, as there is a risk of overwriting important data
