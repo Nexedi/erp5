@@ -791,7 +791,7 @@ if USE_BASE_TYPE:
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getPortalTypeGroupList')
     def getPortalTypeGroupList( self ):
-        return self.defined_group_list
+        return sorted(self.defined_group_list)
 
 else:
   class ERP5TypeInformation(ERP5TypeInformationMixIn):
@@ -830,7 +830,7 @@ else:
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getGroupList')
     def getGroupList( self ):
-        return self.defined_group_list
+        return sorted(self.defined_group_list)
 
 InitializeClass( ERP5TypeInformation )
 
