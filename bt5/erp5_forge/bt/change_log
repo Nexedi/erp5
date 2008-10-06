@@ -1,3 +1,6 @@
+2008-10-6 yusei
+* Set original English term to a new term when create a new term from English ones.
+
 2008-10-2 yusei
 * Added a causality field to Glossary Term to specify a original English term.
 
