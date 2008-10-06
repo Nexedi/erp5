@@ -63,10 +63,14 @@ if active_process is None:\n
 else:\n
   active_process = context.getPortalObject().restrictedTraverse(active_process)\n
 \n
-if active_process is not None:\n
-  return active_process.getResultList()\n
+result_list = []\n
 \n
-return []\n
+if active_process is not None:\n
+  result_list = [x for x in active_process.getResultList()]\n
+  # High severity will be displayed first\n
+  result_list.sort(key=lambda x: -x.severity)\n
+\n
+return result_list\n
 </string> </value>
         </item>
         <item>
@@ -108,6 +112,11 @@ return []\n
                             <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>result_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
                           </tuple>
                         </value>
                     </item>
