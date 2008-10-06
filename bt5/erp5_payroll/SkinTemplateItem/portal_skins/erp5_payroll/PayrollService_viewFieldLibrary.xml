@@ -79,7 +79,6 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_source_title</string>
                         <string>my_quantity_unit</string>
                         <string>my_product_line</string>
                         <string>my_base_amount_list</string>
