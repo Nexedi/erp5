@@ -1,0 +1,3074 @@
+msgid "${number} item(s) selected"
+msgstr "${number} élément(s) sélectionné(s)"
+
+msgid "${number} record(s)"
+msgstr "${number} enregistrements "
+
+msgid "${page} of ${total_pages}"
+msgstr "${page} sur ${total_pages}"
+
+msgid "- ${number} item(s) selected"
+msgstr "- ${number} item(s) selectionné(s)"
+
+msgid "-- Developper Mode --"
+msgstr ""
+
+msgid "-- Directory --"
+msgstr ""
+
+msgid "-- Object --"
+msgstr "-- Action sur l'Objet --"
+
+msgid "-- Others --"
+msgstr "-- Autres --"
+
+msgid "-- Quick Search --"
+msgstr "-- Recherche Rapide --"
+
+msgid "-- User --"
+msgstr "-- Utilisateur --"
+
+msgid "Accept"
+msgstr "Accepter"
+
+msgid "Accomplishment of all administratives procedures on the same platform"
+msgstr "réalisation de toutes les procédures administratives sur une seule et même plateforme."
+
+msgid "Account"
+msgstr "Compte"
+
+msgid "Account Module"
+msgstr "Module des Comptes"
+
+msgid "Account Type"
+msgstr "Type de Compte"
+
+msgid "Accounting"
+msgstr "Comptabilité"
+
+msgid "Accounting Date"
+msgstr "Journée comptable"
+
+msgid "Accounting Date Module"
+msgstr "Journée comptable"
+
+msgid "Accounting Dates"
+msgstr "Journées comptables"
+
+msgid "Accounting Lines"
+msgstr "Lignes de Comptabilité"
+
+msgid "Accounting Preferences"
+msgstr "Préférences comptables"
+
+msgid "Accounting Transaction"
+msgstr "Transaction Comptable"
+
+msgid "Accounting Transaction Line"
+msgstr "Ligne de Transaction Comptable"
+
+msgid "Accounting Transaction Line added."
+msgstr "Ligne comptable ajoutée"
+
+msgid "Accounting Transaction Lines"
+msgstr "Lignes de Transaction Comptable"
+
+msgid "Accounting Transaction Title"
+msgstr "Libellé"
+
+msgid "Accounting Transactions"
+msgstr "Transactions Comptables"
+
+msgid "Accounting View"
+msgstr "Vue de la Comptabilité"
+
+msgid "Accounts"
+msgstr "Comptes"
+
+msgid "Acronym"
+msgstr "Sigle"
+
+msgid "Action impossible : credit is greater than debit"
+msgstr "Action impossible : l'écriture n'est pas équilibrée"
+
+msgid "Action impossible : credit is smaller than debit"
+msgstr "Action impossible : l'écriture n'est pas équilibrée"
+
+msgid "Action impossible : destination_section is not defined"
+msgstr "Action impossible : le tiers n'est pas spécifié"
+
+msgid "Action impossible : source_section is not defined"
+msgstr "Action impossible : La source n'est pas spécifiée"
+
+msgid "Action impossible : transaction is not balanced for destination section"
+msgstr "Action impossible : l'écriture n'est pas équilibrée"
+
+msgid "Action impossible : transaction is not balanced for source section"
+msgstr "Action impossible : l'écriture n'est pas équilibrée"
+
+msgid "Action..."
+msgstr "Action ..."
+
+msgid "Actions"
+msgstr "Actions"
+
+<<<<<<< .mine
+=======
+msgid "Activities Stopped"
+msgstr "Activités stoppés"
+
+>>>>>>> .r23142
+msgid "Activity"
+msgstr "Activité"
+
+msgid "Activity Code"
+msgstr "Code A.P.E."
+
+msgid "Activity Pending"
+msgstr "Activité en suspens"
+
+msgid "Activity text"
+msgstr "Texte Activité"
+
+msgid "Actor"
+msgstr "Utilisateur"
+
+msgid "Actors"
+msgstr "Utilisateurs"
+
+msgid "Add ${portal_type}"
+msgstr "Ajouter ${portal_type}"
+
+msgid "Add Apparel Fabric Colour Variation"
+msgstr "Ajouter Coloris"
+
+msgid "Add Attachment"
+msgstr "Ajouter une pièce jointe"
+
+msgid "Added ${attachment_count} attachment(s) to the current form."
+msgstr "Ajout de ${attachment_count} pièce(s) jointe(s) au dossier courant."
+
+msgid "Additional Payments"
+msgstr "Echéancier"
+
+msgid "Additional Term (days)"
+msgstr "Terme additionnel (jours)"
+
+msgid "Address"
+msgstr "Adresse"
+
+msgid "Addresses"
+msgstr "Adresses"
+
+msgid "Adopt prevision"
+msgstr "Adoptez la prévision"
+
+msgid "Advanced Search"
+msgstr "Recherche avancée"
+
+msgid "Advantage in nature"
+msgstr "Avantage en nature"
+
+msgid "Agent"
+msgstr "Mandataire"
+
+msgid "Agents"
+msgstr "Mandataires"
+
+msgid "Aggregated BOM"
+msgstr "Composants indiqués sur le Modèle"
+
+msgid "Aggregated Industrial Process"
+msgstr "Explications données sur le Modèle"
+
+msgid "Alarm"
+msgstr "Alarme"
+
+msgid "Alarm Tool"
+msgstr "Outil Alarme"
+
+msgid "All Documents"
+msgstr "Tous les documents"
+
+msgid "All Rights Reserved to the DGID"
+msgstr "Tous Droits réservés à la DGID"
+
+msgid "All documents add to your requests"
+msgstr "Tous les documents ajoutés à votre demande"
+
+msgid "All documents resulting of your requests"
+msgstr "Tous les documents résultants de votre demande"
+
+msgid "All pending Applications"
+msgstr "Toutes les demandes en cours"
+
+msgid "All your requests"
+msgstr "Toutes vos demandes"
+
+msgid "Amount"
+msgstr "Montant"
+
+msgid "An Agent will review your application shortly. You will be notified by email whenever your application will start being processed. To further track your application, connect and login any time to the following site"
+msgstr "Un agent va rapidement vérifier votre demande. Vous serez avertis par mel lorsque elle commencera à être traitée. Pour suivre l'évolution de votre demande, connectez-vous à tout moment sur le site suivant"
+
+msgid "An Agent will review your request shortly. You will be notified by email whenever your request will start being processed. To further track your request, connect and login any time to the following site"
+msgstr "Un agent va rapidement vérifier votre demande. Vous serez avertis par mel lorsque elle commencera à être traitée. Pour suivre l'évolution de votre demande, connectez-vous à tout moment sur le site suivant"
+
+msgid "Anonymous user"
+msgstr "Utilisateur anonyme"
+
+msgid "Application Attachments"
+msgstr "Pièces jointes"
+
+msgid "Application Certificate"
+msgstr "Demande de certificat"
+
+msgid "Application Number"
+msgstr "Numéro de Dossier"
+
+msgid "Application Outcomes"
+msgstr "Resultats"
+
+msgid "Application Steps"
+msgstr "Étapes de la demande"
+
+msgid "Applications to assign"
+msgstr "Demandes à assigner"
+
+msgid "Applications to submit"
+msgstr "Demandes à soumettre"
+
+msgid "Apply Purchase Trade Condition"
+msgstr "Importer les conditions d'achat"
+
+msgid "Apply Sale Trade Condition"
+msgstr "Importer les conditions de vente"
+
+msgid "Archive"
+msgstr "Archiver"
+
+msgid "Archive Request"
+msgstr "Archiver la demande"
+
+msgid "Archived"
+msgstr "Archivé"
+
+msgid "Area"
+msgstr "Zone"
+
+msgid "Articles"
+msgstr "Produits Finis"
+
+msgid "Asset"
+msgstr "Actif"
+
+msgid "Assign"
+msgstr "Affecter"
+
+msgid "Assigned"
+msgstr "Affecté"
+
+msgid "Assignment"
+msgstr "Affectation"
+
+msgid "Assignment(s) added."
+msgstr "Affectation ajoutée(s)"
+
+msgid "Assignment Start Date"
+msgstr "Date Début Affectation"
+
+msgid "Assignment Stop Date"
+msgstr "Date Fin Affectation"
+
+msgid "Assignments"
+msgstr "Affectations"
+
+msgid "At Date"
+msgstr "Date de fin (inclu)"
+
+msgid "Attach Files"
+msgstr "Attacher Fichiers"
+
+msgid "Attachment ${file_name} has been deleted"
+msgstr "La pièce jointe ${file_name} à été supprimée"
+
+msgid "Attachments"
+msgstr "Pièces Jointes"
+
+msgid "August"
+msgstr "Août"
+
+msgid "Authenticate"
+msgstr "Authentifier"
+
+msgid "Available"
+msgstr "Disponible"
+
+msgid "BBAN"
+msgstr "N° de compte complet"
+
+msgid "BBAN Key"
+msgstr "Clé n° de compte"
+
+msgid "Balance"
+msgstr "Solde"
+
+msgid "Balance Side Required"
+msgstr "Solde du compte nécessairement créditeur ou débiteur"
+
+msgid "Balance Transaction"
+msgstr "Écriture de reprise des à nouveaux"
+
+msgid "Balance Transaction Line"
+msgstr "Ligne comptable de reprise"
+
+msgid "Balance Transaction Lines"
+msgstr "Lignes comptables"
+
+msgid "Balance at Stop Date (${date})"
+msgstr "Solde a la fin de la période (${date})"
+
+msgid "Bank"
+msgstr "Banque"
+
+msgid "Bank Account"
+msgstr "Compte bancaire"
+
+msgid "Bank Account Key"
+msgstr "Clé R.I.B."
+
+msgid "Bank Account Number"
+msgstr "N° de compte"
+
+msgid "Bank Account Title"
+msgstr "Domiciliation bancaire"
+
+msgid "Bank Accounts"
+msgstr "Comptes banquaires"
+
+msgid "Bank Branch"
+msgstr "Code guichet"
+
+msgid "Bank Code"
+msgstr "Code établ."
+
+msgid "Bank Country Code"
+msgstr "Code pays"
+
+msgid "Base Apparel Shape"
+msgstr "Base reprise"
+
+msgid "Base Categories"
+msgstr "Catégories de base"
+
+msgid "Base Category"
+msgstr "Catégorie de Base"
+
+msgid "Base size"
+msgstr "Taille de base"
+
+msgid "Become a VIP Member"
+msgstr "Devenez utilisateur privilégié"
+
+msgid "Begin"
+msgstr "Début"
+
+msgid "Begin Date"
+msgstr "Date Début"
+
+msgid "Beginning of this career step"
+msgstr "Début de carrière"
+
+msgid "Bill of material description"
+msgstr "Description des composants"
+
+msgid "Birth Name"
+msgstr "Nom de Naissance"
+
+msgid "Birthdate"
+msgstr "Date de Naissance"
+
+msgid "Birthday"
+msgstr "Date de Naissance"
+
+msgid "Birthplace"
+msgstr "Lieu de Naissance"
+
+msgid "Branch"
+msgstr "Guichet"
+
+msgid "Brand"
+msgstr "Vignette"
+
+msgid "Budget"
+msgstr "Budget"
+
+msgid "Budget Cell"
+msgstr "Cellule Budgétaire"
+
+msgid "Budget Line"
+msgstr "Ligne Budgétaire"
+
+msgid "Budget Lines"
+msgstr "Lignes Budgétaires"
+
+msgid "Budget Module"
+msgstr "Budget"
+
+msgid "Budget Start Date"
+msgstr "Debut periode budgetaire"
+
+msgid "Budget Stop Date"
+msgstr "Fin periode budgetaire"
+
+msgid "Budget Transaction"
+msgstr "Transaction Budgétaire"
+
+msgid "Budget Transaction Module"
+msgstr "Transaction Budgétaire"
+
+msgid "Budget Transactions"
+msgstr "Transactions Budgétaires"
+
+msgid "Budget Transfert"
+msgstr "Transfert Budgétaire"
+
+msgid "Budget Transfert Line"
+msgstr "Ligne de Tranfert Budgétaire"
+
+msgid "Budget title"
+msgstr "Intitule du budget"
+
+msgid "Budget transactions"
+msgstr "Transactions Budgétaires"
+
+msgid "BudgetCell_view"
+msgstr "Vue de Cellule Budgétaire"
+
+msgid "Budgets"
+msgstr "Budgets"
+
+msgid "Bug"
+msgstr "Bogue"
+
+msgid "Buyer"
+msgstr "Acheteur"
+
+msgid "CAD Library"
+msgstr "Nom du fichier Lectra"
+
+msgid "Calculate the Pay Sheet Transaction"
+msgstr "Calcul de la fiche de paye"
+
+msgid "Calculated Price"
+msgstr "Prix calculé"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Cancel Action"
+msgstr "Annuler Action"
+
+msgid "Cancel Assignment"
+msgstr "Annuler Affectation"
+
+msgid "Cancel Form"
+msgstr "Annuler la demande"
+
+msgid "Cancel the Form"
+msgstr "Annuler le Formulaire"
+
+msgid "Cancel Request"
+msgstr "Annuler la demande"
+
+msgid "Cancel Transaction"
+msgstr "Annuler la transaction"
+
+msgid "Cancelled"
+msgstr "Annulé"
+
+msgid "Career"
+msgstr "Carrière"
+
+msgid "Career Begin"
+msgstr "Début de Carrière"
+
+msgid "Career Begin Date"
+msgstr "Date Début de Carrière"
+
+msgid "Career Comments"
+msgstr "Commentaires sur la carrière"
+
+msgid "Career End"
+msgstr "Fin de carrière"
+
+msgid "Career End Date"
+msgstr "Date Fin de Carrière"
+
+msgid "Career Function"
+msgstr "Fonction exercée"
+
+msgid "Career Start"
+msgstr "Début de carrière"
+
+msgid "Career Start Date"
+msgstr "Date Début de Carrière"
+
+msgid "Career Step"
+msgstr "Étape De Carrière"
+
+msgid "Career Steps"
+msgstr "Etapes de Carrière"
+
+msgid "Career Title"
+msgstr "Carrière"
+
+msgid "Career end"
+msgstr "Fin de carrière"
+
+msgid "Carte ID"
+msgstr "Carte d'identité"
+
+msgid "Case sensitive search"
+msgstr "Recherche sensible à la casse"
+
+msgid "Cash"
+msgstr "Trésorerie"
+
+msgid "Cash Classification"
+msgstr "Ventilation de billets reçus"
+
+msgid "Cash Exchange"
+msgstr "Virement de fonds"
+
+msgid "Cash Extraction"
+msgstr "Retrait des Externes"
+
+msgid "Cash Extraction Line"
+msgstr "ligne de retrait des externes"
+
+msgid "Cash Extraction Module"
+msgstr "Module de retrait des externes"
+
+msgid "Cash Status"
+msgstr "Etat de valeur"
+
+msgid "Cash To Currency Purchase"
+msgstr "Achat de devises contre espèces"
+
+msgid "Cash To Currency Sale"
+msgstr "Vente de devises contre espèces"
+
+msgid "Cash Transfer"
+msgstr "Transfert Intercaisse"
+
+msgid "Cash Transfer Line"
+msgstr "ligne de transfert intercaisse"
+
+msgid "Cash Transfers"
+msgstr "Transfert Intercaisse"
+
+msgid "Categories"
+msgstr "Catégories"
+
+msgid "Causality"
+msgstr "Commande"
+
+msgid "Causality (Invoices ...)"
+msgstr "Causes (Factures ...)"
+
+msgid "Causality State"
+msgstr "État Commande"
+
+msgid "Change Function"
+msgstr "Change Fonction"
+
+msgid "Change Language"
+msgstr "Changer la langue"
+
+msgid "Change Page"
+msgstr "Changement de page"
+
+msgid "Change State"
+msgstr "Change l'état"
+
+msgid "Change the state to Imported"
+msgstr "change l'état à importé"
+
+msgid "Check All"
+msgstr "Cocher Tous"
+
+msgid "Check the authencity of the documents"
+msgstr "Vérification de l'authenticité des documents."
+
+msgid "Checkbook"
+msgstr "Formules numérotées"
+
+msgid "Checkbook Deliveries"
+msgstr "Delivrance de formules numérotées"
+
+msgid "Checkbook Delivery"
+msgstr "Delivrance de formules numérotées"
+
+msgid "Checkbook Delivery Module"
+msgstr "Delivrance de formules numérotées"
+
+msgid "Checkbook Reception"
+msgstr "Réception de formules numérotées"
+
+msgid "Checkbook Reception Module"
+msgstr "Réception de formules numérotées"
+
+msgid "Checkbook Request"
+msgstr "Demande de formules numérotées"
+
+msgid "Checkbook Request Module"
+msgstr "Demande de formules numérotées"
+
+msgid "Checkbook Requests"
+msgstr "Demande de formules numérotées"
+
+msgid "Checkbook Type"
+msgstr "Type de formules numérotées"
+
+msgid "Checkbook Type Module"
+msgstr "Type de formules numérotées"
+
+msgid "Checkbooks"
+msgstr "Formules numérotées"
+
+msgid "Children"
+msgstr "Nombre d'enfants"
+
+msgid "Choice"
+msgstr "Choix"
+
+msgid "City"
+msgstr "Ville"
+
+msgid "Client"
+msgstr "Client"
+
+msgid "Client Project"
+msgstr "Projet client"
+
+msgid "Close Assignment"
+msgstr "Fermer Affectation"
+
+msgid "Close-Submit Assignment"
+msgstr ""
+
+msgid "Close Submitted"
+msgstr "Partiellement Fermé"
+
+msgid "Closed"
+msgstr "Fermé"
+
+msgid "Closing Date"
+msgstr "Date de Cloture"
+
+msgid "Cloth"
+msgstr "Vêtement"
+
+msgid "Collected VAT"
+msgstr "TVA collectée"
+
+msgid "Collection"
+msgstr "Saison"
+
+msgid "Collection Net width (cm)"
+msgstr "Laize collection (cm)"
+
+msgid "Collection Order Date"
+msgstr "Collection cdée le"
+
+msgid "Collection Order Quantity"
+msgstr "Métrage cdé"
+
+msgid "Collection Path"
+msgstr "Saison/Collection"
+
+msgid "Collection Received Quantity"
+msgstr "Métrage reçu"
+
+msgid "Collection Reception Date"
+msgstr "Réception Collection"
+
+msgid "Collective Agreement"
+msgstr "Convention Collective"
+
+msgid "Collective agreement"
+msgstr "Convention collective"
+
+msgid "Color Range"
+msgstr "Coloris"
+
+msgid "Color Reference"
+msgstr "Ref coloris"
+
+msgid "Color count"
+msgstr "Nb de coloris"
+
+msgid "Colour"
+msgstr "Couleur"
+
+msgid "Colour List"
+msgstr "Couleur"
+
+msgid "Colour Range Created."
+msgstr "Coloris ajouté"
+
+msgid "Colour Title"
+msgstr "Ref Coloris"
+
+msgid "Colour Variation"
+msgstr "Coloris"
+
+msgid "Colour referential"
+msgstr "Couleur"
+
+msgid "Colours"
+msgstr "Coordonnés"
+
+msgid "Comment"
+msgstr "Commentaire"
+
+msgid "Comments"
+msgstr "Commentaires"
+
+msgid "Companies Exploited"
+msgstr "Etablissements Exploités"
+
+msgid "Complete Form"
+msgstr "Valider les pièces jointes"
+
+msgid "Complete quantity matrix"
+msgstr "Quantités variables"
+
+msgid "Complete variation matrix"
+msgstr "Autres variantes"
+
+msgid "Completed"
+msgstr "Complet"
+
+msgid "Component"
+msgstr "Composant"
+
+msgid "Component List"
+msgstr "Liste des Fournitures"
+
+msgid "Component Variation"
+msgstr "Nom de la variante"
+
+msgid "Configure"
+msgstr "Configurer"
+
+msgid "Confirm"
+msgstr "Envoyer en validation"
+
+msgid "Confirm Transaction"
+msgstr "Confirmer la transaction"
+
+msgid "Confirmed"
+msgstr "Confirmé"
+
+msgid "Consumption"
+msgstr "Table de Consommation"
+
+msgid "Consumption Table"
+msgstr "Table de Consommation"
+
+msgid "Consumption applied."
+msgstr "Consommations modifiées"
+
+msgid "Contact Type"
+msgstr "Type de contact"
+
+msgid "Containing these words"
+msgstr "Contenant ces mots"
+
+msgid "Contents"
+msgstr "Contenu"
+
+msgid "Contributors"
+msgstr "Contributeurs"
+
+msgid "Converted quantity"
+msgstr "Quantité convertie"
+
+msgid "Coordinate Function"
+msgstr "Fonction Coordonnée"
+
+msgid "Coordinate Type"
+msgstr "Type Coordonnée"
+
+msgid "Coordinated Apparel Fabric"
+msgstr "Tissus coordonnés"
+
+msgid "Coordinates"
+msgstr "Coordonnées"
+
+msgid "Copy"
+msgstr "Copier"
+
+msgid "Corporate Name"
+msgstr "Société"
+
+msgid "Corporate Registration Code"
+msgstr "SIRET"
+
+msgid "Count"
+msgstr "Nombre"
+
+msgid "Counter"
+msgstr "Guichet"
+
+msgid "Counterpart Account"
+msgstr "Compte de contrepartie"
+
+msgid "Counters"
+msgstr "Guichets"
+
+msgid "Country"
+msgstr "Pays"
+
+msgid "Country of origin"
+msgstr "Pays d'origine"
+
+msgid "Country prefix"
+msgstr "Préfixe Pays"
+
+msgid "Create New Document(s)"
+msgstr "Création"
+
+msgid "Create Related Payment"
+msgstr "Créer la transaction de payment correspondante"
+
+msgid "Created by"
+msgstr "Créé par"
+
+msgid "Created within last"
+msgstr "Créé dans le dernier"
+
+msgid "Creation Date"
+msgstr "Date de création"
+
+msgid "Creation date"
+msgstr "Date de Création"
+
+msgid "Credit"
+msgstr "Crédit"
+
+msgid "Credit Account"
+msgstr "Compte Créditeur"
+
+msgid "Credit Balance"
+msgstr "Solde Créditeur"
+
+msgid "Credits and legal notices"
+msgstr "Crédits et mentions légales"
+
+msgid "Currencies"
+msgstr "Devises"
+
+msgid "Currency"
+msgstr "Devise"
+
+msgid "Currency Exchange Cell"
+msgstr "Taux de change"
+
+msgid "Currency Exchange Line"
+msgstr "Taux de change"
+
+msgid "Currency Exchange Lines"
+msgstr "Taux de change"
+
+msgid "Currency List"
+msgstr "Devises"
+
+msgid "Currency Module"
+msgstr "Module Devises"
+
+msgid "Currency Purchase"
+msgstr "Achat de devises par crédit de compte"
+
+msgid "Currency Sale"
+msgstr "Vente de devises par débit de compte"
+
+msgid "Current"
+msgstr "Courant"
+
+msgid "Current Function"
+msgstr "CSP"
+
+msgid "Current career comments"
+msgstr "Commentaires"
+
+msgid "Current grade"
+msgstr "Classification"
+
+msgid "Current organisation"
+msgstr "Fait partie de"
+
+msgid "Current salary coefficient"
+msgstr "Coefficient"
+
+msgid "Current salary level"
+msgstr "Salaire actuel"
+
+msgid "Current skills"
+msgstr "Aptitudes"
+
+msgid "Customer"
+msgstr "Client"
+
+msgid "Customer Account"
+msgstr "Compte Client"
+
+msgid "Customer Measure"
+msgstr "Mesures Client"
+
+msgid "Customer Reference"
+msgstr "Référence client"
+
+msgid "Customer Size"
+msgstr "Correspondance"
+
+msgid "Customer Transaction Reference"
+msgstr "Référence de transaction chez le client"
+
+msgid "Customer reference"
+msgstr "Réf. client"
+
+msgid "Cut"
+msgstr "Couper"
+
+msgid "Data Updated."
+msgstr "Données Enregistrées."
+
+msgid "Data+Updated."
+msgstr "Données enregistrées."
+
+msgid "Debit"
+msgstr "Débit"
+
+msgid "Debit Balance"
+msgstr "Solde Débiteur"
+
+msgid "Default Address"
+msgstr "Adresse principale"
+
+msgid "Define Assignments"
+msgstr "Créer Les Affectations"
+
+msgid "Define Sort Order"
+msgstr "Définir l'ordre de tri."
+
+msgid "Delete"
+msgstr "Effacer"
+
+msgid "Delete The Objects"
+msgstr "Supprimer les objets"
+
+msgid "Deleted objects: ${object_ids}"
+msgstr "Objets suprimés: ${object_ids}"
+
+msgid "Deleted."
+msgstr "Eléments supprimés"
+
+msgid "Deliver"
+msgstr "Valider"
+
+msgid "Deliver to"
+msgstr "Livrez à "
+
+msgid "Delivered Quantity"
+msgstr "Qté livrée"
+
+msgid "Delivery Date"
+msgstr "Date de livraison souhaitée"
+
+msgid "Delivery Line"
+msgstr "Ligne de commande"
+
+msgid "Delivery State"
+msgstr "Etat livraison"
+
+msgid "Destination"
+msgstr "Destination"
+
+msgid "Destination Reference"
+msgstr "Référence de destination"
+
+msgid "Destination Vault"
+msgstr "Encaisse Destination"
+
+msgid "Destination administration organisation"
+msgstr "Facturer à"
+
+msgid "Destination administration person"
+msgstr "Responsable interne"
+
+msgid "Destination decision organisation"
+msgstr "Commandé par (Sté)"
+
+msgid "Destination decision person"
+msgstr "Nom de l'acheteur"
+
+msgid "Destination payment"
+msgstr "Payé par"
+
+msgid "Destination section"
+msgstr "Pour le compte de"
+
+msgid "Destination site"
+msgstr "Lieu de livraison"
+
+msgid "Details"
+msgstr "Détail"
+
+msgid "Don't forget to logout or exit your browser when you're done."
+msgstr "N'oubliez pas de vous déconnecter ou de fermer votre navigateur quand vous avez terminé."
+
+msgid "Draft"
+msgstr "Brouillon"
+
+msgid "Drafts to Validate"
+msgstr "Brouillons à valider"
+
+msgid "Effective Date"
+msgstr "Valable Du"
+
+msgid "Effective date"
+msgstr "Valable du"
+
+msgid "Emit date"
+msgstr "Date"
+
+msgid "Employee"
+msgstr "Employé"
+
+msgid "Employee Number"
+msgstr "Numéro Employé"
+
+msgid "Employee share rate (%)"
+msgstr "Part Employé (%)"
+
+msgid "Employer"
+msgstr "Employeur"
+
+msgid "Employer share rate (%)"
+msgstr "Part employeur (%)"
+
+msgid "Enable Preference"
+msgstr "Activer la préférence"
+
+msgid "Enabled"
+msgstr "Activé"
+
+msgid "End"
+msgstr "Fin"
+
+msgid "End Date"
+msgstr "Date de Fin"
+
+msgid "End of Month"
+msgstr "Fin de mois"
+
+msgid "End of current career step"
+msgstr "Fin de carrière"
+
+msgid "End of this current career step"
+msgstr "Fin de carrière"
+
+msgid "English"
+msgstr "Anglais"
+
+msgid "Equity"
+msgstr "Capital"
+
+msgid "Errand ratio"
+msgstr "Taux de commission repr."
+
+msgid "Error Message"
+msgstr "Message d'erreur"
+
+msgid "Event Date"
+msgstr "Date Evénement"
+
+msgid "Event Type"
+msgstr "Type Evénement"
+
+msgid "Events"
+msgstr "Evénements"
+
+msgid "Expanded transformation"
+msgstr "Nomenclature"
+
+msgid "Expense"
+msgstr "Charges"
+
+msgid "Expiration Date"
+msgstr "Au"
+
+msgid "Expiration date"
+msgstr "Au"
+
+msgid "Family"
+msgstr "Famille"
+
+msgid "Fast Input"
+msgstr "Saisie Ordre"
+
+msgid "Favorite"
+msgstr "Favori"
+
+msgid "File"
+msgstr "Fichier"
+
+msgid "Files and Images"
+msgstr "Fichiers et Images"
+
+msgid "Fill Form"
+msgstr "Remplir Formulaire"
+
+msgid "Filter"
+msgstr "Filtrer"
+
+msgid "Financial Information"
+msgstr "Information financière"
+
+msgid "Financial Section"
+msgstr "Section financière"
+
+msgid "Find"
+msgstr "Chercher"
+
+msgid "Finish"
+msgstr "Arrivée"
+
+msgid "First"
+msgstr "Premier"
+
+msgid "First Name"
+msgstr "Prénom"
+
+msgid "Fiscal Report"
+msgstr "Rapport fiscal"
+
+msgid "Flat List"
+msgstr "Tout"
+
+msgid "Flow capacity"
+msgstr "Délais"
+
+msgid "Folder Contents"
+msgstr "Liste"
+
+msgid "Forms"
+msgstr "Formulaires liés"
+
+msgid "French"
+msgstr "Français"
+
+msgid "From Date"
+msgstr "Date de début"
+
+msgid "From Date N-1"
+msgstr "Date de début (N-1)"
+
+msgid "From period"
+msgstr "De la période du"
+
+msgid "Function"
+msgstr "Fonction"
+
+msgid "Future"
+msgstr "Futur"
+
+msgid "GAP"
+msgstr "N° de Compte"
+
+msgid "GAP ID"
+msgstr "N° de Compte"
+
+msgid "GAP No"
+msgstr "N° de Compte"
+
+msgid "GAP Root"
+msgstr "Plan comptable"
+
+msgid "GSM"
+msgstr "Portable"
+
+msgid "Gender"
+msgstr "Sexe"
+
+msgid "General Ledger"
+msgstr "Grand livre"
+
+msgid "Geographic incorporate code"
+msgstr "N° SIRET"
+
+msgid "Go back to the homepage"
+msgstr "Retour à l'accueil"
+
+msgid "Godfather"
+msgstr "Parrain"
+
+msgid "Gross Salary"
+msgstr "Salaire Brut"
+
+msgid "Gross Weight"
+msgstr "Poids Brut"
+
+msgid "Group"
+msgstr "Groupe"
+
+msgid "Grouping"
+msgstr "Lettrage"
+
+msgid "Having trouble logging in? Make sure to enable cookies in your web browser."
+msgstr "En cas de problème de connexion, vérifiez que vous avez autorisé les cookies dans votre navigateur."
+
+msgid "Height (cm)"
+msgstr "Hauteur (cm)"
+
+msgid "Height (m)"
+msgstr "Hauteur (m)"
+
+msgid "Help"
+msgstr "Aide"
+
+msgid "History"
+msgstr "Historique"
+
+msgid "Home"
+msgstr "Accueil"
+
+msgid "Hours"
+msgstr "Heures"
+
+msgid "I forgot my password!"
+msgstr "J'ai oublié mon mot de passe !"
+
+msgid "IBAN Key"
+msgstr "Clé IBAN"
+
+msgid "Image View"
+msgstr "Aperçu"
+
+msgid "Immediate discount"
+msgstr "Remise immédiate"
+
+msgid "Import / Export"
+msgstr "Importer / Exporter"
+
+msgid "Imported"
+msgstr "Importé"
+
+msgid "Income"
+msgstr "Produits"
+
+msgid "Industrial Description"
+msgstr "Données techniques"
+
+msgid "Industrial description"
+msgstr "Description"
+
+msgid "Industrial process description"
+msgstr "Explications pour la fabrication"
+
+msgid "Input is required but no input given."
+msgstr "Ce champ est obligatoire."
+
+msgid "Installation State"
+msgstr "Etat de l'Installation"
+
+msgid "Internal Money Deposit"
+msgstr "Dépôt sur compte d'ordre"
+
+msgid "Internal Money Deposit Module"
+msgstr "Dépôt sur compte d'ordre"
+
+msgid "Invalidate"
+msgstr "Invalider"
+
+msgid "Invalidated"
+msgstr "Invalidé"
+
+msgid "Inventory"
+msgstr "Inventaire"
+
+msgid "Inventory Module"
+msgstr "Inventaire"
+
+msgid "Invoice Date"
+msgstr "Date de Facture"
+
+msgid "Invoice Line"
+msgstr "Ligne de Facture"
+
+msgid "Invoice Number"
+msgstr "Numéro de Facture"
+
+msgid "Invoice Recipient"
+msgstr "Destinataire facture"
+
+msgid "Invoice Rule"
+msgstr "Règle de Facture"
+
+msgid "Invoice Sender"
+msgstr "Emetteur facture"
+
+msgid "Invoice View"
+msgstr "Vue de Facture"
+
+msgid "Invoice to"
+msgstr "Facturé à "
+
+msgid "Invoicing Rule"
+msgstr "Régle de Facturation"
+
+msgid "It is possible to make requests without being registred (anonymous request)."
+msgstr "Il est possible d'effectuer des demandes sans être inscrit (demande anonymes)."
+
+msgid "Item(s)+Copied."
+msgstr "Eléments+copiés"
+
+msgid "Item(s)+Cut."
+msgstr "Eléments+coupés"
+
+msgid "Item(s)+Pasted."
+msgstr "Eléments+collés"
+
+msgid "Items+Copied."
+msgstr "Eléments+copiés"
+
+msgid "Items+Cut."
+msgstr "Eléments+coupés"
+
+msgid "Items+Pasted."
+msgstr "Eléments+collés"
+
+msgid "Journal Type"
+msgstr "Type d'écriture"
+
+msgid "Jump"
+msgstr "Allez"
+
+msgid "Jump to Accounting Preference"
+msgstr "Aller à la préférence active"
+
+msgid "Jump to Active Preference"
+msgstr "Aller à la préférence active"
+
+msgid "Jump to Bank Accounts"
+msgstr "Aller aux comptes en banque"
+
+msgid "Jump to Related Payment"
+msgstr "Aller au payement"
+
+msgid "Jump..."
+msgstr "Aller à ..."
+
+msgid "Language"
+msgstr "Langue"
+
+msgid "Last"
+msgstr "Dernier"
+
+msgid "Last Name"
+msgstr "Nom"
+
+msgid "Last Report"
+msgstr "Dernier Rapport"
+
+msgid "Legal Form"
+msgstr "Forme Légale"
+
+msgid "Length (cm)"
+msgstr "Longueur (cm)"
+
+msgid "Length (m)"
+msgstr "Longueur (m)"
+
+msgid "Length quantity"
+msgstr "Longueur équivalente"
+
+msgid "Liability"
+msgstr "Passif"
+
+msgid "Lines created."
+msgstr "Ordre enregistré"
+
+msgid "List Report"
+msgstr "Edition"
+
+msgid "Log in"
+msgstr "Connexion"
+
+msgid "Log out"
+msgstr "Déconnexion"
+
+msgid "Logged In as"
+msgstr "Utilisateur"
+
+msgid "Logged In as :"
+msgstr "Utilisateur :"
+
+msgid "Login"
+msgstr "Connexion"
+
+msgid "Login Information"
+msgstr ""
+
+msgid "Login failure"
+msgstr "La connexion a échoué."
+
+msgid "Login success"
+msgstr "Connexion réussie"
+
+msgid "Login+and/or+password+is+incorrect."
+msgstr "Login+et/ou+mot de passe+est+incorrect."
+
+msgid "Logout"
+msgstr "Déconnexion"
+
+msgid "M0"
+msgstr "Formulaire M0"
+
+msgid "M0 Bis"
+msgstr "Formulaire M0 Bis"
+
+msgid "M2"
+msgstr "Formulaire M2"
+
+msgid "M2 Bis"
+msgstr "Formulaire M2 Bis"
+
+msgid "M4"
+msgstr "Formulaire M4"
+
+msgid "Main Apparel Fabric"
+msgstr "Tissu principal"
+
+msgid "Main Apparel Fabric Supplier"
+msgstr "Fournisseur Tissu principal"
+
+msgid "Main resource"
+msgstr "Nomenclature du (Modèle ou Article)"
+
+msgid "Marital Status"
+msgstr "Situation Familliale"
+
+msgid "Max Amount"
+msgstr "Montant Max."
+
+msgid "Max. delay (day)"
+msgstr "Délai Max (jours)"
+
+msgid "Measure"
+msgstr "Tableau de Mesures"
+
+msgid "Measure drawing"
+msgstr "Cote"
+
+msgid "Measure type"
+msgstr "Nature mesure"
+
+msgid "Member ID"
+msgstr "ID du Membre"
+
+msgid "Metadata"
+msgstr "Métadonnées"
+
+msgid "Middle Name"
+msgstr "Deuxième Prénom"
+
+msgid "Min Amount"
+msgstr "Montant Min."
+
+msgid "Min. delay (day)"
+msgstr "Délai min (jours)"
+
+msgid "Min. flow"
+msgstr "Minimum de commande"
+
+msgid "Mirror Account"
+msgstr "Compte Miroir"
+
+msgid "Missing"
+msgstr "Manquant"
+
+msgid "Mobile Telephone"
+msgstr "Téléphone mobile"
+
+msgid "Monetary Destruction"
+msgstr "Destruction de billets"
+
+msgid "Monetary Issue"
+msgstr "Emission"
+
+msgid "Monetary Recall"
+msgstr "Retrait de circulation"
+
+msgid "Motive"
+msgstr "Motif"
+
+msgid "Movement Date"
+msgstr "Date "
+
+msgid "My Documents"
+msgstr "Mes documents"
+
+msgid "My documents"
+msgstr "Mes documents"
+
+msgid "My favourites"
+msgstr "Mes favoris"
+
+msgid "My language"
+msgstr "Langue"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "National ID"
+msgstr "Code carte d'identité"
+
+msgid "Nationality"
+msgstr "Nationalité"
+
+msgid "Net Width"
+msgstr "Laize des collections"
+
+msgid "Net width (cm)"
+msgstr "Laize utile (collection)(cm)"
+
+msgid "New"
+msgstr "Nouveau"
+
+msgid "New Application"
+msgstr "Nouvelle demande"
+
+msgid "New Function"
+msgstr "Nouvelle fonction"
+
+msgid "New Request"
+msgstr "Nouveau Dossier"
+
+msgid "Next"
+msgstr "Suivant"
+
+msgid "Next Page"
+msgstr "Page suivante"
+
+msgid "Next Step"
+msgstr "Étape Suivante"
+
+msgid "Next Step >>"
+msgstr "Etape Suivante >>"
+
+msgid "No Trade Condition."
+msgstr "Conditions de vente non définies."
+
+msgid "No attachment was added. Please select a file to add an attachment."
+msgstr "Aucun fichier ajouté. Selectionner un fichier pour ajouter une pièce jointe."
+
+msgid "No new Apparel Colour Range Variation defined."
+msgstr "Aucun coloris à rajouter."
+
+msgid "No new Apparel Component defined."
+msgstr "Aucune ligne n'a pu être ajoutée."
+
+msgid "No pending request."
+msgstr "Pas de demandes en cours."
+
+msgid "No quantity is defined on this line."
+msgstr "Aucune quantité n'est indiquée !"
+
+msgid "No such document was found."
+msgstr "Aucun document correspondant n'a été trouvé."
+
+msgid "Number"
+msgstr "Numéro"
+
+msgid "OHADA Business Life Cycle Workflow"
+msgstr "Workflow Cycle de Vie des Entreprises OHADA"
+
+msgid "Object+Created."
+msgstr "Création+effectuée"
+
+msgid "Ohada Assignment Validation Workflow"
+msgstr "Workflow de validation Affectation OHADA"
+
+msgid "Old Function"
+msgstr "Ancienne fonction"
+
+msgid "Old Registry"
+msgstr "Ancien Registre"
+
+msgid "Omit \"Grouped References\""
+msgstr "Sans les écritures lettrées"
+
+msgid "Omit Balanced Account"
+msgstr "Sans compte soldés"
+
+msgid "Omit Empty Accounts"
+msgstr "Sans comptes vides"
+
+msgid "Once register you can benefit from following avantages :"
+msgstr "Une fois inscrit, vous pouvez bénéficier des avantages suivants:"
+
+msgid "Only document of type"
+msgstr "Seulement les document de type"
+
+msgid "Open"
+msgstr "Ouvert"
+
+msgid "Open Assignment"
+msgstr "Ouvrir Affectation"
+
+msgid "Open-Submit Assignment"
+msgstr ""
+
+msgid "Open-Submitted"
+msgstr "Ouvert Partiellement"
+
+msgid "Opening Date"
+msgstr "Date d'ouverture"
+
+msgid "Operation"
+msgstr "Opérations"
+
+msgid "Operation Date"
+msgstr "Date d'Opération"
+
+msgid "Operation List"
+msgstr "Liste des Opérations"
+
+msgid "Operation Resource"
+msgstr "Opération"
+
+msgid "Operation Title"
+msgstr "Opération"
+
+msgid "Optional"
+msgstr "Facultatif"
+
+msgid "Order date"
+msgstr "Date de la commande"
+
+msgid "Order reference"
+msgstr "N° d'Ordre"
+
+msgid "Order type"
+msgstr "Type d'ordre"
+
+msgid "Order updated."
+msgstr "Données actualisées."
+
+msgid "Ordered Quantity"
+msgstr "Qté commandée"
+
+msgid "Organisation"
+msgstr "Personne Morale"
+
+msgid "Organisation Login"
+msgstr "Login Personne Morale"
+
+msgid "Organisation Module"
+msgstr "Module Sociétés"
+
+msgid "Organisation Password"
+msgstr "Mot de Passe Personne Morale"
+
+msgid "Organisations"
+msgstr "Personnes Morales"
+
+msgid "Organisations to validate"
+msgstr "Personnes Morales à valider"
+
+msgid "Origin"
+msgstr "Origine"
+
+msgid "Origin Reference"
+msgstr "Ref. Commande client"
+
+msgid "Original Supplier or Worker"
+msgstr "Fournisseur d'origine ou agent"
+
+msgid "Other Application"
+msgstr "Autre demande"
+
+msgid "Other Request"
+msgstr "Autre demande"
+
+msgid "Outsourcing Sort"
+msgstr "Tri Tiers"
+
+msgid "Outsourcing Sort Line In"
+msgstr "Provision de tri tiers"
+
+msgid "Outsourcing Sort Line Out"
+msgstr "Résultat de tri tiers"
+
+msgid "Overview on all pending cases"
+msgstr "Vue d'ensemble sur toutes les procédures en cours."
+
+msgid "P0"
+msgstr "Formulaire P0"
+
+msgid "P2"
+msgstr "Formulaire P2"
+
+msgid "P4"
+msgstr "Formulaire P4 "
+
+msgid "Packing List Line"
+msgstr "Ligne Article"
+
+msgid "Partners"
+msgstr "Nombre d'épouses"
+
+msgid "Password"
+msgstr "Mot de passe"
+
+msgid "Password Confirmation"
+msgstr "Confirmation Mot de Passe"
+
+msgid "Paste"
+msgstr "Coller"
+
+msgid "Pay Service"
+msgstr "Payer le service"
+
+msgid "Pay Sheet Line"
+msgstr "Ligne de Feuille de Salaire"
+
+msgid "Pay Sheet Lines"
+msgstr "Lignes de Feuille de Salaire"
+
+msgid "Pay Sheet Transaction"
+msgstr "Transaction de Feuille de Salaire"
+
+msgid "Pay Sheet Transaction Line"
+msgstr "Ligne de Transaction de Feuille de Salaire"
+
+msgid "Pay Sheet Transaction Lines"
+msgstr "Lignes comptables"
+
+msgid "Pay Sheet View"
+msgstr "Feuille de Paie"
+
+msgid "Pay sheet calculation done."
+msgstr "Calcul de feuille de salaire effectué."
+
+msgid "Payable"
+msgstr "Dettes"
+
+msgid "Payee"
+msgstr "Encaisseur"
+
+msgid "Payer"
+msgstr "Payeur"
+
+msgid "Payment"
+msgstr "Règlement"
+
+msgid "Payment Condition"
+msgstr "Conditions de Règlement"
+
+msgid "Payment Date"
+msgstr "Date de paiement"
+
+msgid "Payment Delay (days)"
+msgstr "Délai de paiement"
+
+msgid "Payment Mode"
+msgstr "Moyen de paiement"
+
+msgid "Payment Transaction"
+msgstr "Transaction de Paiement"
+
+msgid "Payment Transaction Lines"
+msgstr "Lignes comptables"
+
+msgid "Payment additional term (day)"
+msgstr "le"
+
+msgid "Payment date"
+msgstr "Date du payement"
+
+msgid "Payment end of month"
+msgstr "Fin de mois"
+
+msgid "Payment mode"
+msgstr "Mode de règlement"
+
+msgid "Payment term (day)"
+msgstr "Terme du payement"
+
+msgid "Pending Applications"
+msgstr "Demandes en cours"
+
+msgid "Pending Requests"
+msgstr "Demandes en cours"
+
+msgid "People"
+msgstr "Personnes"
+
+msgid "Percentage Of Total"
+msgstr "Pourcentage du total"
+
+msgid "Percentage of Total"
+msgstr "Pourcentage du total"
+
+msgid "Percentage of total"
+msgstr "% sur Total"
+
+msgid "Permanent Delivered quantity"
+msgstr "Quantité livrée si constante"
+
+msgid "Permanent price"
+msgstr "Prix si constant"
+
+msgid "Permanent quantity"
+msgstr "Quantité si constante"
+
+msgid "Permanent variation"
+msgstr "Choix si constant"
+
+msgid "Person"
+msgstr "Personne Physique"
+
+msgid "Person Assignment View"
+msgstr "Affectation"
+
+msgid "Person Career"
+msgstr "Carrière"
+
+msgid "Person Career View"
+msgstr "Carrière"
+
+msgid "Person to Assign to"
+msgstr "Personne à affecter à"
+
+msgid "Personal Name"
+msgstr "Prénom"
+
+msgid "Persons"
+msgstr "Personnes Physiques"
+
+msgid "Persons to validate"
+msgstr "Personnes Physiques à valider"
+
+msgid "Phone"
+msgstr "Téléphone"
+
+msgid "Plan"
+msgstr "Planifier"
+
+msgid "Plan Transaction"
+msgstr "Planifier la transaction"
+
+msgid "Planned"
+msgstr "Plannifié"
+
+msgid "Plans of purchase orders"
+msgstr "Planifier des ordres d'achat"
+
+msgid "Please select one (or more) object."
+msgstr "Veuillez sélectionner un (ou plusieurs) objet."
+
+msgid "Please select one object."
+msgstr "Veuillez sélectionner un objet."
+
+msgid "Post Code"
+msgstr "Code Postal"
+
+msgid "Preferences"
+msgstr "Préférences"
+
+msgid "Preferences control and selection the means of procedures follow-up (email, sms)"
+msgstr "Réglage des préférences et séléction d'un moyen de suivi des procédures (mail, sms)."
+
+msgid "Prefix"
+msgstr "Préfixe"
+
+msgid "Previous"
+msgstr "Précédent"
+
+msgid "Previous Page"
+msgstr "Page précédante"
+
+msgid "Price"
+msgstr "Prix"
+
+msgid "Price Currency"
+msgstr "Devise de facturation"
+
+msgid "Price Validity"
+msgstr "Validité du prix"
+
+msgid "Price Variation axes"
+msgstr "Prix variable selon"
+
+msgid "Price validity"
+msgstr "Date de validité"
+
+msgid "Priced Quantity"
+msgstr "Quantité pour le prix"
+
+msgid "Priced quantity"
+msgstr "Prix pour (Qté)"
+
+msgid "Print"
+msgstr "Imprimer"
+
+msgid "Printed by %(user)s at %(date)s"
+msgstr "Imprime par %(user)s le %(date)s"
+
+msgid "Priority"
+msgstr "Priorité"
+
+msgid "Product"
+msgstr "Produit"
+
+msgid "Product Interest"
+msgstr "Intéressé par"
+
+msgid "Product Line"
+msgstr "Ligne de produit"
+
+msgid "Product Module"
+msgstr "Produit"
+
+msgid "Product or Service"
+msgstr "Produit ou service"
+
+msgid "Products"
+msgstr "Produits"
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Project"
+msgstr "Projet"
+
+msgid "Property existence error for property ${property_id}, this document has no such property"
+msgstr "Le Champ ${property_id} est obligatoire"
+
+msgid "Purchase Invoice Transaction"
+msgstr "Écriture d'achat"
+
+msgid "Purchase Invoice Transaction Line"
+msgstr "Ligne Comptable"
+
+msgid "Purchase Invoice Transaction Lines"
+msgstr "Ligne Comptable"
+
+msgid "Purchase Order"
+msgstr "Commande Fournisseur"
+
+msgid "Purchase Order Line"
+msgstr "Ligne de commande"
+
+msgid "Purchase Orders"
+msgstr "Commandes Fournisseur"
+
+msgid "Purchase Packing List"
+msgstr "Réception commande"
+
+msgid "Purchase Packing List Line"
+msgstr "Ligne"
+
+msgid "Purchase Packing List List"
+msgstr "Réceptions"
+
+msgid "Purchase Price"
+msgstr "Prix d'achat"
+
+msgid "Purchase Trade Condition"
+msgstr "Conditions Fournisseurs"
+
+msgid "Purchase Trade Condition List"
+msgstr "Condition Fournisseur"
+
+msgid "Purchase orders not confirmed"
+msgstr "Commandes non confirmées"
+
+msgid "Purchase trade condition"
+msgstr "Conditions d'Achat"
+
+msgid "Quality"
+msgstr "Qualité"
+
+msgid "Quality Reference"
+msgstr "Qualité"
+
+msgid "Quality reference"
+msgstr "Ref Qualité Support"
+
+msgid "Quantity"
+msgstr "Quantité"
+
+msgid "Quantity Step"
+msgstr "Echelle de prix"
+
+msgid "Quantity Unit"
+msgstr "Unité de gestion"
+
+msgid "Quantity axes"
+msgstr "Quantité variable selon"
+
+msgid "Quantity ratio"
+msgstr "Coefficients"
+
+msgid "Quantity step"
+msgstr "Tranches"
+
+msgid "Quantity unit"
+msgstr "Unité"
+
+msgid "Radiee du RCCM"
+msgstr "Radiée du RCCM"
+
+msgid "Ratio"
+msgstr "Taux (%)"
+
+msgid "Raw width (cm)"
+msgstr "Laize commerciale (cm)"
+
+msgid "Re-use easy documents already used in a procedure"
+msgstr "Réutilisation facile de documents déjà utilisés dans une procédure."
+
+msgid "Receivable"
+msgstr "Créances"
+
+msgid "Received date"
+msgstr "Commande Reçue le"
+
+msgid "Recipient"
+msgstr "Organisme"
+
+msgid "Recipient or Beneficiary"
+msgstr "Destinataire ou bénéficiaire"
+
+msgid "Reconfigure Portal"
+msgstr "Configurer l'application"
+
+msgid "Reference"
+msgstr "Référence"
+
+msgid "Reference Currency"
+msgstr "Devise de référence"
+
+msgid "Reference Date"
+msgstr "Date"
+
+msgid "Reference categories"
+msgstr "Pour"
+
+msgid "Refundable VAT"
+msgstr "TVA déductible"
+
+msgid "Region"
+msgstr "Pays"
+
+msgid "Register >>"
+msgstr "S'enregistrer >>"
+
+msgid "Registered Capital"
+msgstr "Capital"
+
+msgid "Registration Number"
+msgstr "Numéro de formalité du formulaire"
+
+msgid "Registry"
+msgstr "Registre"
+
+msgid "Registry Number"
+msgstr "Numéro de Registre"
+
+msgid "Registry of Commerce"
+msgstr "Registre de Commerce"
+
+msgid "Reject Form"
+msgstr "Rejeter Formulaire"
+
+msgid "Rejected"
+msgstr "Rejeté"
+
+msgid "Rejeter"
+msgstr "Envoyer en erreur"
+
+msgid "Related Agents"
+msgstr "Mandataires"
+
+msgid "Related Apparel Cloth"
+msgstr "Vêtements"
+
+msgid "Related Apparel Colour Range Colour Variation"
+msgstr "Gammes dépendantes"
+
+msgid "Related Apparel Colour Range Variation"
+msgstr "Coloris coordonné"
+
+msgid "Related Apparel Fabrics"
+msgstr "Tissus fournis"
+
+msgid "Related Apparel Model"
+msgstr "Produits Finis dépendants"
+
+msgid "Related Apparel Shape"
+msgstr "Modèles repris"
+
+msgid "Related Apparel Transformation"
+msgstr "Nomenclatures dépendantes"
+
+msgid "Related Colour Range Colour Variation"
+msgstr "Gammes Matières concernées"
+
+msgid "Related Components"
+msgstr "Composants fournis"
+
+msgid "Related Documents"
+msgstr "Documents Liés"
+
+msgid "Related Forms"
+msgstr "Formulaires Créés"
+
+msgid "Related Objects"
+msgstr "Objets liés"
+
+msgid "Related Objects Qtty"
+msgstr "Nombre d'objets liés"
+
+msgid "Related Organisations"
+msgstr "Organisations liées"
+
+msgid "Related Payment Created"
+msgstr "Écriture de payement correspondante crée"
+
+msgid "Related Persons"
+msgstr "Interlocuteurs"
+
+msgid "Related Purchase Trade Condition"
+msgstr "Conditions d'achat"
+
+msgid "Related Sale Trade Condition"
+msgstr "Conditions de vente"
+
+msgid "Related Transformation"
+msgstr "Nomenclatures dépendantes"
+
+msgid "Relation Unchanged."
+msgstr "Lien inchangé"
+
+msgid "Remember my name"
+msgstr "Mémoriser mon nom"
+
+msgid "Remember my name."
+msgstr "Mémoriser mon Nom"
+
+msgid "Report"
+msgstr "Editions"
+
+msgid "Report Select:"
+msgstr "Type d'édition"
+
+msgid "Request Number"
+msgstr "Numéro du Dossier"
+
+msgid "Request Steps"
+msgstr "Étapes de la demande"
+
+msgid "Required"
+msgstr "Requis"
+
+msgid "Resource"
+msgstr "Nature"
+
+msgid "Resource List"
+msgstr "Eléments"
+
+msgid "Resource Title"
+msgstr "Article"
+
+msgid "Resource quantity unit"
+msgstr "Unité de compte"
+
+msgid "Results"
+msgstr "Liste"
+
+msgid "Results per page"
+msgstr "Resultat par page"
+
+msgid "Revision"
+msgstr "Révision"
+
+msgid "Revision Number"
+msgstr "Numéro de Révision"
+
+msgid "Rights"
+msgstr "Droits"
+
+msgid "Role"
+msgstr "Rôle"
+
+msgid "S1"
+msgstr "Formulaire S1"
+
+msgid "S5"
+msgstr "Formulaire S5"
+
+msgid "Safi is a major Internet portal for performing administrative formalities online. It is a quick and easy way to make a statement, or a application for jutificatif,... without having to move or to queue. For more information, please click"
+msgstr "Safi est un grand portail internet qui permet d'effectuer des formalités administratives directement en ligne. C'est est un moyen simple et rapide de faire faire une télé-déclaration, ou une demande de jutificatif,... sans avoir à se déplacer ou faire la queue. Pour plus d'information, cliquez"
+
+msgid "Salary Coefficient"
+msgstr "Coefficient"
+
+msgid "Salary Level"
+msgstr "Échelon"
+
+msgid "Salary coefficient"
+msgstr "Coefficient"
+
+msgid "Salary level"
+msgstr "Echelon"
+
+msgid "Sale Invoice Lines"
+msgstr "Lignes de facture"
+
+msgid "Sale Invoice Transaction"
+msgstr "Écriture de vente"
+
+msgid "Sale Invoice Transaction Line"
+msgstr "Ligne comptable"
+
+msgid "Sale Invoice Transaction Lines"
+msgstr "Lignes comptables"
+
+msgid "Sale Order"
+msgstr "Ordres Clients"
+
+msgid "Sale Order Line"
+msgstr "Ligne d'ordre"
+
+msgid "Sale Order List"
+msgstr "Ordre"
+
+msgid "Sale Price"
+msgstr "Prix de vente"
+
+msgid "Sale Trade Condition"
+msgstr "Conditions Clients"
+
+msgid "Sale Trade Condition List"
+msgstr "Conditions de Vente"
+
+msgid "Sale orders not confirmed"
+msgstr "Ordres non confirmés"
+
+msgid "Sale trade condition"
+msgstr "Conditions de vente"
+
+msgid "Sales Price"
+msgstr "Prix de vente"
+
+msgid "Save"
+msgstr "Enregistrer"
+
+msgid "Save draft and continue later"
+msgstr "Enregistrer en tant que brouillon et continuer plus tard"
+
+msgid "Search"
+msgstr "Rechercher"
+
+msgid "Search Application"
+msgstr "Recherche de demande"
+
+msgid "Search Request"
+msgstr "Recherche de dossier"
+
+msgid "Search Results"
+msgstr "Recherche"
+
+msgid "Search Select:"
+msgstr "Recherche:"
+
+msgid "Search Type:"
+msgstr "Sélectionner une Action:"
+
+msgid "Second Administrator"
+msgstr "Deuxième Dirigeant"
+
+msgid "Second Associate"
+msgstr "Second Actionnaire"
+
+msgid "Second Auditor"
+msgstr "Commissaire aux Comptes Suppléant"
+
+msgid "Second Shareholder"
+msgstr "Deuxième Actionnaire"
+
+msgid "Section Account"
+msgstr "Compte de Section"
+
+msgid "Section Bank Account"
+msgstr "Compte en banque"
+
+msgid "Section Transaction Reference"
+msgstr "N° de Référence"
+
+msgid "Segment"
+msgstr "Typologie"
+
+msgid "Select Favorite"
+msgstr "Sélectionner un favori"
+
+msgid "Select Module"
+msgstr "Sélectionner un module"
+
+msgid "Select Variation"
+msgstr "Variante(s) à commander"
+
+msgid "Select appropriate document in the list."
+msgstr "Sélectionnez le document approprié dans la liste."
+
+msgid "Seller"
+msgstr "Vendeur"
+
+msgid "Sender"
+msgstr "Expéditeur"
+
+msgid "Sender or Provider"
+msgstr "Expéditeur ou prestataire"
+
+msgid "Set List Settting"
+msgstr "Appliquer"
+
+msgid "Setting the 'Remember my name' option will set a cookie with your username, so that when you next log in, your user name will already be filled in for you."
+msgstr "Cocher 'Mémoriser mon Nom'  permettra de le faire apparaître lors de votre prochaine connexion."
+
+msgid "Shape"
+msgstr "Modèle"
+
+msgid "Shape type"
+msgstr "Forme"
+
+msgid "Shipping Date"
+msgstr "Date d'expédition"
+
+msgid "Show All"
+msgstr "Tout Montrer"
+
+msgid "Sign"
+msgstr "Enseigne"
+
+msgid "Signature Preview"
+msgstr "Aperçu de la signature"
+
+msgid "Simulation State"
+msgstr "État de simulation"
+
+msgid "Site"
+msgstr "Site"
+
+msgid "Site Map"
+msgstr "Plan du site"
+
+msgid "Site or Warehouse"
+msgstr "Site ou entrepôt"
+
+msgid "Size"
+msgstr "Gamme de Tailles"
+
+msgid "Skills"
+msgstr "Compétences"
+
+msgid "Social Name"
+msgstr "Raison Sociale"
+
+msgid "Social Service"
+msgstr "Service social"
+
+msgid "Social capital"
+msgstr "Capital Social"
+
+msgid "Social capital currency"
+msgstr "En (devise)"
+
+msgid "Social code"
+msgstr "Numéro de Sécurité Sociale"
+
+msgid "Social form"
+msgstr "Forme de la Sté"
+
+msgid "Sorry your selection has changed"
+msgstr "Désolé, votre séléction a changé"
+
+msgid "Sorry+You+Can+Not+Delete+${count}+Item."
+msgstr "Vous+ne+pouvez+pas+supprimer+${count}+document."
+
+msgid "Sorry+You+Can+Not+Delete+${count}+Items."
+msgstr "Vous+ne+pouvez+pas+supprimer+${count}+documents."
+
+msgid "Sorry, a ${portal_type} with reference '${reference}' and version '${version} [${language}]' already exists. Please select another reference or version."
+msgstr ""
+
+msgid "Sorry,+${count}+Items+Are+In+Use."
+msgstr "Suppression+impossible.+D'autres+objets+dépendent+de+celui-ci."
+
+msgid "Sorry,+1+Item+Is+In+Use."
+msgstr "Suppression+impossible.+Un+autre+objet+dépend+de+celui-ci."
+
+msgid "Sort"
+msgstr "Trier"
+
+msgid "Source"
+msgstr "Source"
+
+msgid "Source Account"
+msgstr "Compte"
+
+msgid "Source Credit"
+msgstr "Crédit"
+
+msgid "Source Debit"
+msgstr "Débit"
+
+msgid "Source Group"
+msgstr "Groupement"
+
+msgid "Source Ref"
+msgstr "Ref Fourn."
+
+msgid "Source Reference"
+msgstr "Référence"
+
+msgid "Source Section"
+msgstr "Section Source"
+
+msgid "Source Title"
+msgstr "Fournisseur"
+
+msgid "Source Vault"
+msgstr "Encaisse Source"
+
+msgid "Source administration"
+msgstr "Chargé de clientèle"
+
+msgid "Source decision"
+msgstr "Représentant"
+
+msgid "Source payment"
+msgstr "Facturer par"
+
+msgid "Source section"
+msgstr "Pour le compte de"
+
+msgid "Specific Customer"
+msgstr "Spécifique pour le client"
+
+msgid "Specific condition"
+msgstr "A compter de"
+
+msgid "Start"
+msgstr "Départ"
+
+msgid "Start Date"
+msgstr "Date de début"
+
+msgid "Start Processing"
+msgstr "Démarrer le traîtement"
+
+msgid "State"
+msgstr "État"
+
+msgid "Status"
+msgstr "État"
+
+msgid "Status changed."
+msgstr "Etat modifié."
+
+msgid "Stock"
+msgstr "Stock"
+
+msgid "Stock per Variation"
+msgstr "Stock par variante"
+
+msgid "Stop Date"
+msgstr "Date de fin"
+
+msgid "Stopped"
+msgstr "Brouillard"
+
+msgid "Stopped (Accounting)"
+msgstr "Brouillard"
+
+msgid "Street Address"
+msgstr "Adresse"
+
+msgid "Submit"
+msgstr "Soumettre"
+
+msgid "Submit Form"
+msgstr "Envoyer la demande"
+
+msgid "Submit Request"
+msgstr "Soumettre la demande"
+
+msgid "Submitted"
+msgstr "Formulaire Soumis"
+
+msgid "Subscription Form"
+msgstr "Formulaire d'inscription"
+
+msgid "Subscription Form Module"
+msgstr "Module Formulaire d'inscription"
+
+msgid "Suffix"
+msgstr "Suffixe"
+
+msgid "Supplier"
+msgstr "Fournisseur"
+
+msgid "Supplier / Worker"
+msgstr "Origine / Personnel "
+
+msgid "Supplier Colour Reference"
+msgstr "Ref Coloris Fourn"
+
+msgid "Supplier Price"
+msgstr "Prix Fournisseur"
+
+msgid "Supplier Project"
+msgstr "Projet fournisseur"
+
+msgid "Supplier Ref"
+msgstr "Ref Fourn"
+
+msgid "Supplier Reference"
+msgstr "Référence fournisseur"
+
+msgid "Supplier colour"
+msgstr "Coloris Fourn"
+
+msgid "Supplier price"
+msgstr "Prix d'Achat"
+
+msgid "Supplier reference"
+msgstr "Ref Fournisseur"
+
+msgid "Surname"
+msgstr "Prénom"
+
+msgid "Tariff nomenclature"
+msgstr "Code nomenclature douanière"
+
+msgid "Tax title"
+msgstr "Cotisations et taxes"
+
+msgid "Technical Drawing"
+msgstr "Dossier Technique"
+
+msgid "Technical drawing type"
+msgstr "Elémént du dossier"
+
+msgid "Telephone"
+msgstr "Téléphone"
+
+msgid "Term (days)"
+msgstr "Terme (jours)"
+
+msgid "The SAFI portal allows to make on-line administratives formalities. It is possible to make requests without being registred (anonymous request). However the registration is deeply advised."
+msgstr "Le portail SAFI permet d'effectuer des formalités administratives en ligne. Il est possible d'effectuer des demandes sans être inscrit (demande anonyme). Toutefois, l'inscription est vivement conseillée."
+
+msgid "The activity code of the organisation.\n\nThis code is specific to the local legislation. For instance, in France this is called \"Code APE\""
+msgstr ""
+
+msgid "The corporate registration code of this organisation"
+msgstr "Le numéro de SIRET de l'organisation"
+
+msgid "The current step is displayed with a red border. Step displayed in green can be repeated by clicking on them."
+msgstr "L'étape courrante est affichée avec une bordure rouge. Les étapes affichées en vert peuvent être répétées en cliquant dessus."
+
+msgid "The date of birth for the person."
+msgstr "La date de naissance de la personne"
+
+msgid "The following documents are missing to submit the request :"
+msgstr "Les documents suivants sont manquants pour soumettre cette demande :"
+
+msgid "The integer you entered was out of range."
+msgstr "Ce nombre est hors limites..."
+
+msgid "The values above are the parameters of the transaction list displayed below.<br/>Those parameters have a portal wide scope and can be edited in the <a href='${url}'>preference screen</a>."
+msgstr "Les <a href='${url}'>préférences comptables</a> permettent de modifier les paramètres de filtrage de la liste de transactions ci-dessous. "
+
+msgid "There is no such document in the database. You may create an new document of type ${portal_type} in relation with ${title} according to relation ${base_category}. Use the form bellow to enter the ${catalog_index} values of new documents."
+msgstr "Il n'y a pas d'enregistrement à ce nom. Vous pouvez le créer maintenant."
+
+msgid "Third Associate"
+msgstr "Troisième Actionnaire"
+
+msgid "Third Parties"
+msgstr "Associés, et co"
+
+msgid "Third Party"
+msgstr "Tiers"
+
+msgid "Third Party Account"
+msgstr "Compte de Tiers"
+
+msgid "Third Party Bank Account"
+msgstr "Compte en banque chez le tiers"
+
+msgid "Third Party Transaction Reference"
+msgstr "Référence pour le tiers"
+
+msgid "Third Shareholder"
+msgstr "Troisième Actionnaire"
+
+msgid "This price is not defined in tariff. Enter a value."
+msgstr "Ce prix n'est pas dans le tarif. Veuillez saisir le prix."
+
+msgid "This price is not equal to tariff price. Are you sure of your price ?"
+msgstr "Ce prix n'est pas celui du tarif. Vous devez cocher la case correspondante pour le valider."
+
+msgid "This price is not equal to tariff price. Check your price !"
+msgstr "Ce prix n'est pas celui du tarif. Vous devez cocher la case correspondante pour le valider."
+
+msgid "This size is not possible."
+msgstr "Cette taille est hors standard"
+
+msgid "Thumbnail"
+msgstr "Aperçu"
+
+msgid "Time"
+msgstr "Temps"
+
+msgid "Time-saving: no longer a need to move to line up in the reception desk"
+msgstr "Gain de temps: plus besoin de se déplacer pour faire la queue au guichet."
+
+msgid "Title"
+msgstr "Titre"
+
+msgid "To Date"
+msgstr "Date de fin"
+
+msgid "To Date N-1"
+msgstr "Date de fin (N-1)"
+
+msgid "To period"
+msgstr "À la période du"
+
+msgid "Too many documents were found."
+msgstr "Trop de possibilités trouvées."
+
+msgid "Top"
+msgstr "Haut"
+
+msgid "Topic"
+msgstr "Thème"
+
+msgid "Total Price"
+msgstr "Montant"
+
+msgid "Total Quantity"
+msgstr "Quantité Totale"
+
+msgid "Total price"
+msgstr "Coût Total"
+
+msgid "Total quantity"
+msgstr "Quantité totale"
+
+msgid "Track"
+msgstr "Suivre"
+
+msgid "Track Application"
+msgstr "Suivre une demande"
+
+msgid "Track Request"
+msgstr "Suivre un dossier"
+
+msgid "Trade Date"
+msgstr "Date de référence"
+
+msgid "Trade Description"
+msgstr "Libellé"
+
+msgid "Trade condition Title"
+msgstr "Libellé"
+
+msgid "Trade date"
+msgstr "Date"
+
+msgid "Trade description"
+msgstr "Libellé"
+
+msgid "Transaction Reference"
+msgstr "N° de référence"
+
+msgid "Transaction Simulation State"
+msgstr "État de la transaction"
+
+msgid "Transactions Related To This Account"
+msgstr "Transaction liées à ce compte"
+
+msgid "Transactions Related To This Bank Account"
+msgstr "Transaction liées à ce compte en banque"
+
+msgid "Transactions Related To This Entity"
+msgstr "Transaction liées à ce tiers"
+
+msgid "Transactions Simulation State"
+msgstr "État de la transaction"
+
+msgid "Transformation"
+msgstr "Nomenclature"
+
+msgid "Transformation State"
+msgstr "Etat"
+
+msgid "Transformation description"
+msgstr "Libellé pour nomenclatures"
+
+msgid "Transformed Resource"
+msgstr "Fournitures"
+
+msgid "Transformed Resource List"
+msgstr "Liste des Fournitures"
+
+msgid "Trial Balance"
+msgstr "Balance"
+
+msgid "Type Width"
+msgstr "Laize coupe-Type (cm)"
+
+msgid "Type Width (cm)"
+msgstr "Laize coupe-type (cm)"
+
+msgid "Uncheck All"
+msgstr "Décocher Tous"
+
+msgid "Undo"
+msgstr "Annuler"
+
+msgid "Unit"
+msgstr "Unité"
+
+msgid "Unit Price"
+msgstr "Prix unitaire"
+
+msgid "Update"
+msgstr "Actualiser"
+
+msgid "Update Assignment"
+msgstr "Mettre à jour l'affectation"
+
+msgid "Update Relation"
+msgstr "Etablir le lien"
+
+msgid "Update variations"
+msgstr "Actualiser les variantes"
+
+msgid "Upkeep Code"
+msgstr "Codes de lavage"
+
+msgid "Upkeep code"
+msgstr "Code lavage"
+
+msgid "Upload"
+msgstr "Charger le fichier"
+
+msgid "User"
+msgstr "Utilisateur"
+
+msgid "User :"
+msgstr "Utilisateur :"
+
+msgid "User Login"
+msgstr "Login Utilisateur"
+
+msgid "User Password"
+msgstr "Mot de Passe Utilisateur"
+
+msgid "Usual Name"
+msgstr "Nom courant"
+
+msgid "Usual name"
+msgstr "Nom de l'utilisateur"
+
+msgid "VAT Application"
+msgstr "Déclaration de TVA"
+
+msgid "VAT Request"
+msgstr "Déclaration de TVA"
+
+msgid "VAT code"
+msgstr "N° TVA"
+
+msgid "Validate"
+msgstr "Valider"
+
+msgid "Validate Accounting Transaction"
+msgstr "Valider le brouillard"
+
+msgid "Validate Form"
+msgstr "Valider Formulaire"
+
+msgid "Validate Transaction"
+msgstr "Passer l'écriture au brouillard"
+
+msgid "Validate Workflow Action"
+msgstr "Valider le Changement d'État"
+
+msgid "Validated"
+msgstr "Validé"
+
+msgid "Validation State"
+msgstr "Etat"
+
+msgid "Validation Workflow"
+msgstr "Workflow de Validation"
+
+msgid "Value"
+msgstr "Valeur"
+
+msgid "Variation"
+msgstr "Variante"
+
+msgid "Variation axes"
+msgstr "Variantes selon"
+
+msgid "Variation matrix updated."
+msgstr "Variantes prises en compte."
+
+msgid "Vendor"
+msgstr "Fournisseur"
+
+msgid "Vendor Account"
+msgstr "Compte de Fournisseur"
+
+msgid "Vendor Transaction Reference"
+msgstr "Référence pour le tiers"
+
+msgid "View"
+msgstr "Général"
+
+msgid "Visual Pattern"
+msgstr "Type pour placement"
+
+msgid "Voter ID"
+msgstr "Code du votant"
+
+msgid "Weight (g)"
+msgstr "Poids (kg)"
+
+msgid "Weight (g/m2)"
+msgstr "Poids (g/m2)"
+
+msgid "Weight (kg)"
+msgstr "Poids (kg)"
+
+msgid "Welcome to ERP5"
+msgstr "Bienvenue dans ERP5"
+
+msgid "Welcome. You are currently logged in."
+msgstr "Bienvenue. Vous êtes connecté."
+
+msgid "Width"
+msgstr "Laize"
+
+msgid "Width (cm)"
+msgstr "Largeur (cm)"
+
+msgid "Width (m)"
+msgstr "Largeur (m)"
+
+msgid "Work in progress"
+msgstr "Travail en cours"
+
+msgid "Workflow History"
+msgstr "Historique"
+
+msgid "Workflow Modification in Progress"
+msgstr "Modification de Workflow en cours"
+
+msgid "Workflows"
+msgstr "Workflows"
+
+msgid "You are not currently logged in. Your username and or password may be incorrect. Your browser may also not be configured to accept HTTP cookies. If you need help please contact ${admin_email}."
+msgstr "Vous n'êtes pas connecté. Votre Nom ou votre Mot de passe sont peut-être incorrects. En cas de besoin, contactez  ${admin_email}."
+
+msgid "You can log in with another user name"
+msgstr "Vous pouvez vous connecter avec un autre identifiant"
+
+msgid "You can log in with another user name or <a href=\"javascript:history.back();\">go back</a>."
+msgstr "Vous pouvez vous connecter sous un autre profil ou <a href=\"javascript:history.back();\">retourner à la page précédante</a>."
+
+msgid "You did not enter a floating point number."
+msgstr "Vous devez entrer un numérique."
+
+msgid "You did not enter a valid date and time."
+msgstr "La date n'est pas correcte !"
+
+msgid "You did not enter an integer."
+msgstr "Vous devez saisir un nombre entier."
+
+msgid "You don't have enough permissions to access this page"
+msgstr "Vous n'avez pas la permission d'acceder à cette page"
+
+msgid "You don't have the permissions to edit the object."
+msgstr "Vous n'avez pas la permission d'éditer l'objet"
+
+msgid "You have been logged out."
+msgstr "Vous avez été déconnecté"
+
+msgid "You have been logged out. Thank you for using this website."
+msgstr "Vous avez été déconnecté. Merci d'avoir utilisé ce site web."
+
+msgid "You may now logout or go home and proceed to other applications:"
+msgstr "Vous pouvez maintenant vous déconnecter ou retourner à l'accueil pour effectuer d'autres demandes :"
+
+msgid "You may now logout or go home and proceed to other requests:"
+msgstr "Vous pouvez maintenant vous déconnecter ou retourner à l'accueil pour effectuer d'autres demandes :"
+
+msgid "You selected an item that was not in the list."
+msgstr "Cet élément n'est pas dans la liste"
+
+msgid "You will find bellow the list of attachments which must or may be provided"
+msgstr "Vous trouverez ci-dessous la liste des pièces jointe qui doivent ou peuvent être fournies"
+
+msgid "Your application has been submitted successfully"
+msgstr "Votre demande à bien été prise en compte"
+
+msgid "Your request has been submitted successfully"
+msgstr "Votre demande à bien été prise en compte"
+
+msgid "Zip Code"
+msgstr "Code Postal"
+
+msgid "accounting_workflow"
+msgstr "Workflow de Comptabilité"
+
+msgid "action"
+msgstr "Action"
+
+msgid "actor"
+msgstr "Utilisateur"
+
+msgid "added by"
+msgstr "ajouté par"
+
+msgid "at"
+msgstr "le"
+
+msgid "auto_planned"
+msgstr "Plannifié (automatiquement)"
+
+msgid "collection"
+msgstr "Collection"
+
+msgid "comment"
+msgstr "Commentaire"
+
+msgid "complete"
+msgstr "compléter"
+
+msgid "completed"
+msgstr "complété"
+
+msgid "confirmed"
+msgstr "Confirmé"
+
+msgid "eGov Form Validation Workflow"
+msgstr "Workflow de Validation des Formulaires"
+
+msgid "edit_workflow"
+msgstr "Workflow d'édition"
+
+msgid "en_cessation"
+msgstr "en cessation"
+
+msgid "en_redressement"
+msgstr "en redressement"
+
+msgid "error_message"
+msgstr "Message d'erreur"
+
+msgid "female"
+msgstr "femme"
+
+msgid "file"
+msgstr "Fichier Image"
+
+msgid "here"
+msgstr "ici"
+
+msgid "history"
+msgstr "Historique"
+
+msgid "if checked, if will install all the missing tools in the site when installing the business template"
+msgstr ""
+
+msgid "imported"
+msgstr "importé"
+
+msgid "invalidated"
+msgstr "invalidé"
+
+msgid "liquidee"
+msgstr "liquidée"
+
+msgid "listbox"
+msgstr "Liste"
+
+msgid "logged_in"
+msgstr "Vous êtes connecté."
+
+msgid "logged_out"
+msgstr "Vous êtes déconnecté."
+
+msgid "login_form"
+msgstr "Page de Connexion"
+
+msgid "male"
+msgstr "homme"
+
+msgid "numberLineToAdd"
+msgstr "Lignes à ajouter"
+
+msgid "planned"
+msgstr "Plannifié"
+
+msgid "quantity"
+msgstr "Quantité"
+
+msgid "rejected"
+msgstr "rejeté"
+
+msgid "simulation_state"
+msgstr "État de Simulation"
+
+msgid "state"
+msgstr "État"
+
+msgid "status"
+msgstr "Etat"
+
+msgid "stopped"
+msgstr "Brouillard"
+
+msgid "time"
+msgstr "Date"
+
+msgid "validation_state"
+msgstr "État de Validation"
+
+msgid "validation_workflow"
+msgstr "Worflow de Validation"
