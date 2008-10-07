@@ -830,3 +830,6 @@ msgstr "Tapez les caractères que vous voyez dans l'image suivante. Ceci est fai
 
 msgid "Assign Application to User"
 msgstr "Assigner le dossier à un agent"
+
+msgid "Sorry, this document is not available"
+msgstr "Désolé, ce document n'est pas disponible"
