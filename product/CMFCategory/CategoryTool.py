@@ -1688,6 +1688,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         else:
           stack = list(relative_url)
         stack.reverse()
+        __traceback_info__ = relative_url
 
         validate = getSecurityManager().validate
         def restrictedGetOb(container, key, default):
