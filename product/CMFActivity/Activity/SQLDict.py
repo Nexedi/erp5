@@ -38,6 +38,7 @@ from types import ClassType
 #from time import time
 from SQLBase import SQLBase
 from Products.CMFActivity.ActivityRuntimeEnvironment import setActivityRuntimeValue, updateActivityRuntimeValue, clearActivityRuntimeEnvironment
+from zExceptions import ExceptionFormatter
 
 try:
   from transaction import get as get_transaction
@@ -491,8 +492,16 @@ class SQLDict(RAMDict, SQLBase):
           except:
             LOG('SQLDict', PANIC, 'Failed to abort executed messages which also failed to commit. Some objects may be modified accidentally.')
             raise
+        exc_info = sys.exc_info()
+        exc_type = exc_info[0]
+        exc_value = str(exc_info[1])
+        traceback = ''.join(ExceptionFormatter.format_exception(
+                            *exc_info))
         for x in message_uid_priority_list:
           x[1].is_executed = MESSAGE_NOT_EXECUTED
+          x[1].exc_type = exc_type
+          x[1].exc_value = exc_value
+          x[1].traceback = traceback
         failed_message_uid_list = [x[0] for x in message_uid_priority_list]
         try:
           makeMessageListAvailable(failed_message_uid_list, uid_to_duplicate_uid_list_dict)

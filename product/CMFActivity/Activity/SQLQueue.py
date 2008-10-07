@@ -39,6 +39,7 @@ from time import time
 from sets import ImmutableSet
 from SQLBase import SQLBase
 from Products.CMFActivity.ActivityRuntimeEnvironment import setActivityRuntimeValue, updateActivityRuntimeValue, clearActivityRuntimeEnvironment
+from zExceptions import ExceptionFormatter
 
 try:
   from transaction import get as get_transaction
@@ -320,6 +321,11 @@ class SQLQueue(RAMQueue, SQLBase):
           # It is possible that the message is executed but the commit
           # of the transaction fails
           value[1].is_executed = MESSAGE_NOT_EXECUTED
+          exc_info = sys.exc_info()
+          value[1].exc_type = exc_info[0]
+          value[1].exc_value = str(exc_info[1])
+          value[1].traceback = ''.join(ExceptionFormatter.format_exception(
+                                       *exc_info))
           try:
             makeMessageListAvailable([value[0]])
           except:
