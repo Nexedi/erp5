@@ -1,3 +1,6 @@
+2008-10-07 yusei
+* Update field titles for translation.
+
 2008-09-27 yusei
 * Added checked_permission argument to contentValues method in
 RequirementDocument_getOrphanedRequirementUidList and RequirementDocument_getProjectCoverageList.

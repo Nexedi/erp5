@@ -118,7 +118,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Paid to</string> </value>
+                    <value> <string>Payee</string> </value>
                 </item>
               </dictionary>
             </value>
