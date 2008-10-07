@@ -1218,9 +1218,6 @@ class ActivityTool (Folder, UniqueObject):
       new_id = str(self.generateNewId())
       return addActiveProcess(self, new_id, **kw)
 
-    def reindexObject(self):
-      self.immediateReindexObject()
-
     # Active synchronisation methods
     security.declarePrivate('validateOrder')
     def validateOrder(self, message, validator_id, validation_value):
