@@ -58,8 +58,8 @@
               <list>
                 <string>left (Document Reference)</string>
                 <string>right (Publication Information)</string>
-                <string>left</string>
-                <string>right</string>
+                <string>center_left</string>
+                <string>center_right</string>
                 <string>center</string>
                 <string>hidden</string>
               </list>
@@ -78,17 +78,25 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left</string> </key>
+                    <key> <string>center_left</string> </key>
                     <value>
                       <list>
                         <string>my_contributor_title_list</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center_right</string> </key>
+                    <value>
+                      <list>
+                        <string>my_subject_list</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -106,14 +114,6 @@
                         <string>my_translated_portal_type</string>
                         <string>my_translated_external_processing_state_title</string>
                         <string>my_revision</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
-                      <list>
-                        <string>my_subject_list</string>
                       </list>
                     </value>
                 </item>
