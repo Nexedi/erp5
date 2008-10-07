@@ -106,16 +106,10 @@ IDEAS:\n
               <tal:block metal:use-macro="global_definitions_macros/http_definitions" />\n
             </fieldset>\n
             <tal:block metal:define-slot="layout">\n
-              <div style="padding: 0.1em; \n
-                          margin: 0.5em; \n
-                          border:1px solid #3D5474;\n
-                          background-color: #BAD0F0;">\n
-                <h1 i18n:translate=""\n
-                    i18n:domain="ui"\n
-                    style="padding: 0.4em;\n
-                           padding-left: 0.3em; \n
-                           margin: 0em;" > ERP5 Express Configuration </h1>\n
-              </div>\n
+\n
+            <tal:block tal:replace="structure python: \n
+              here.portal_wizard.callRemoteProxyMethod(\'WizardTool_viewExpressMainTemplateHeaderRenderer\')"/>\n
+           \n
 <!--\n
               <div id="bars">\n
                 <div id="main_bar"\n
