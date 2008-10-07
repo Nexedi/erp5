@@ -3657,3 +3657,5 @@ msgstr "Les mots de passe ne correspondent pas."
 msgid "User ID is not specified."
 msgstr "L'identifiant de l'utilisateur n'es pas spécifié."
 
+msgid "Sorry, this document is not available"
+msgstr "Désolé, ce document n'est pas disponible"
