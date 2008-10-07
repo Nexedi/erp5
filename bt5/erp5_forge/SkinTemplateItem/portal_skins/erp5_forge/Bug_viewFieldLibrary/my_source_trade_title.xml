@@ -22,7 +22,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_destination_decision_title</string> </value>
+            <value> <string>my_source_trade_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -79,7 +79,7 @@
               <dictionary>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>destination_decision</string> </value>
+                    <value> <string>source_trade</string> </value>
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
@@ -98,6 +98,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>Organisation</string>
+                          <string>Organisation</string>
+                        </tuple>
+                        <tuple>
                           <string>Person</string>
                           <string>Person</string>
                         </tuple>
@@ -110,7 +114,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Destination Decision</string> </value>
+                    <value> <string>Reporter</string> </value>
                 </item>
               </dictionary>
             </value>
