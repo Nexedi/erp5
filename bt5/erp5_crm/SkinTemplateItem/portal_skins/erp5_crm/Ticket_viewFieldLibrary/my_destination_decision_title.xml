@@ -127,7 +127,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Requested by</string> </value>
+                    <value> <string>Requester</string> </value>
                 </item>
               </dictionary>
             </value>
