@@ -94,7 +94,7 @@ class DCWorkflowScriptDocumentationHelper(DocumentationHelper):
       if REQUEST is not None:
         if REQUEST.get('portal_skin', 'View' ) != 'View':
           doc_string = source_code.split('"""')
-          if len(doc_string)>1:
+          if len(doc_string)>1 and not doc_string[0]:
             return doc_string[1]
           else:
             return ""
