@@ -1,3 +1,6 @@
+2008-10-07: mayoro
+adding new field to display template_path_list of  documented business templates
+
 2008-09-27: mayoro
 - adding ERP5 Forms and python scripts for documenting skin_folder correctly
 - removing ERP5 Report Form for previous documentation of skin folder

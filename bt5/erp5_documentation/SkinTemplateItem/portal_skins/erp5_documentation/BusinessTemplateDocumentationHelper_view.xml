@@ -68,6 +68,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
+                        <string>template_path_list_listbox</string>
                         <string>module_listbox</string>
                         <string>portal_type_listbox</string>
                         <string>dc_workflow_listbox</string>
