@@ -188,70 +188,73 @@ for section in section_list:\n
                 property_sheets_list+=results[2]\n
 \n
 if portal_skin is not None and portal_skin=="ODT":\n
-  result.append(\n
-    ReportSection(\n
-      level=2,\n
-      title="Appendix",\n
-      form_id=\'\')\n
-  )\n
+  if class_methods_list !=[] or property_sheets_list !=[]:\n
+    result.append(\n
+      ReportSection(\n
+        level=2,\n
+        title="Appendix",\n
+        form_id=\'\')\n
+    )\n
   classmethods = dict().fromkeys([x for x in class_methods_list]).keys()\n
   class_list = dict().fromkeys([\'.\'.join(x.split(\'.\')[:-2]) for x in classmethods]).keys()\n
   class_list.sort()\n
   propertysheet = dict(zip([x.split(\'/\')[-1] for x in property_sheets_list],property_sheets_list))\n
-  result.append(\n
-    ReportSection(\n
-      level=3,\n
-      title="Class Methods",\n
-      form_id=\'\')\n
-  )\n
-  for class_name in class_list:\n
-    classmethod = dict().fromkeys([x.split(\'.\')[-1] for x in classmethods if x.startswith(class_name)]).keys()\n
-    classmethod.sort()\n
+  if classmethods !=[]:\n
     result.append(\n
       ReportSection(\n
-        level=4,\n
-        title=class_name,\n
+        level=3,\n
+        title="Class Methods",\n
+        form_id=\'\')\n
+    )\n
+    for class_name in class_list:\n
+      classmethod = dict().fromkeys([x.split(\'.\')[-1] for x in classmethods if x.startswith(class_name)]).keys()\n
+      classmethod.sort()\n
+      result.append(\n
+        ReportSection(\n
+          level=4,\n
+          title=class_name,\n
+          form_id=\'\')\n
+      )\n
+      result.append(\n
+        ReportSection(\n
+          form_id=\'PortalTypeDocumentationHelperAppendixClassMethod_view\',\n
+          selection_params=dict(class_method_list=classmethod, obj=uri_object),\n
+          selection_name=\'class_method_selection\',\n
+          listbox_display_mode=\'FlatListMode\')\n
+      )\n
+  if propertysheet.keys() != []:\n
+    result.append(\n
+      ReportSection(\n
+        level=3,\n
+        title="Property Sheets",\n
         form_id=\'\')\n
     )\n
     result.append(\n
       ReportSection(\n
-        form_id=\'PortalTypeDocumentationHelperAppendixClassMethod_view\',\n
-        selection_params=dict(class_method_list=classmethod, obj=uri_object),\n
-        selection_name=\'class_method_selection\',\n
+        form_id=\'PortalTypeDocumentationHelperAppendixPropertySheet_view\',\n
+        selection_params=dict(property_sheet_list=propertysheet.keys(), obj=uri_object),\n
+        selection_name=\'property_sheet_selection\',\n
         listbox_display_mode=\'FlatListMode\')\n
     )\n
-  result.append(\n
-    ReportSection(\n
-      level=3,\n
-      title="Property Sheets",\n
-      form_id=\'\')\n
-  )\n
-  result.append(\n
-    ReportSection(\n
-      form_id=\'PortalTypeDocumentationHelperAppendixPropertySheet_view\',\n
-      selection_params=dict(property_sheet_list=propertysheet.keys(), obj=uri_object),\n
-      selection_name=\'property_sheet_selection\',\n
-      listbox_display_mode=\'FlatListMode\')\n
-  )\n
-  class_name = \'PortalTypePropertySheetDocumentationHelper\'\n
-  propertysheets = propertysheet.values()\n
-  propertysheets.sort(compareFileName)\n
-  for uri in propertysheets:\n
-    result.append(\n
-      ReportSection(\n
-        level=4,\n
-        title=uri.split(\'/\')[-1].split(\'.\')[0],\n
-        form_id=\'\')\n
-    )\n
-    result.append(\n
-      ReportSection(\n
-        path=context.getPortalObject().portal_classes.getRelativeUrl(),\n
-        method_id=\'getDocumentationHelper\',\n
-        form_id=\'%s_view\' % class_name,\n
-        param_list=[class_name,\n
-                    uri],\n
-        listbox_display_mode=\'FlatListMode\')\n
-    )\n
+    class_name = \'PortalTypePropertySheetDocumentationHelper\'\n
+    propertysheets = propertysheet.values()\n
+    propertysheets.sort(compareFileName)\n
+    for uri in propertysheets:\n
+      result.append(\n
+        ReportSection(\n
+          level=4,\n
+          title=uri.split(\'/\')[-1].split(\'.\')[0],\n
+          form_id=\'\')\n
+      )\n
+      result.append(\n
+        ReportSection(\n
+          path=context.getPortalObject().portal_classes.getRelativeUrl(),\n
+          method_id=\'getDocumentationHelper\',\n
+          form_id=\'%s_view\' % class_name,\n
+          param_list=[class_name,\n
+                      uri],\n
+          listbox_display_mode=\'FlatListMode\')\n
+      )\n
 return result\n
 </string> </value>
         </item>
