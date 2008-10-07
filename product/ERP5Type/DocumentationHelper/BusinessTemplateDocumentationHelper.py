@@ -271,4 +271,10 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
     base_uri = '/'+self.uri.split('/')[1]+'/portal_catalog'
     return map(lambda x: ('%s/%s' % (base_uri, x)), catalog_method_list)
 
+  security.declareProtected( Permissions.AccessContentsInformation, 'getTemplatePathList' )
+  def getTemplatePathList(self):
+    """
+    """
+    return self.getDocumentedObject().getTemplatePathList()
+
 InitializeClass(BusinessTemplateDocumentationHelper)

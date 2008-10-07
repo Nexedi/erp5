@@ -93,7 +93,11 @@ class DCWorkflowScriptDocumentationHelper(DocumentationHelper):
       REQUEST = getattr(self, 'REQUEST', None)
       if REQUEST is not None:
         if REQUEST.get('portal_skin', 'View' ) != 'View':
-          return source_code
+          doc_string = source_code.split('"""')
+          if len(doc_string)>1:
+            return doc_string[1]
+          else:
+            return ""
     else:
       LOG('DCWorkflowScriptDocumentationHelper', INFO,
           'Transformation Tool is not installed. No convertion of python script to html')
