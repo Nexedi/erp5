@@ -70,9 +70,6 @@ if application_number:\n
     if document.getPortalType() == \'Subscription Form\':\n
       if document.getValidationState() != \'draft\':\n
         form_id=\'PDFDocument_viewAnonymousHistory\'\n
-      #keep_items = dict(application_number=application_number, __ac_password=pin_number)\n
-\n
-      #form_id = \'subscription_form_module/%s/%s\' % (application_number, form_id)\n
     return document.Base_redirect(form_id=form_id, keep_items=keep_items)\n
 # Prepare message\n
 msg = N_(\'Sorry, this document is not available\')\n
@@ -92,9 +89,7 @@ return context.Base_redirect(form_id=\'view\', keep_items = {\'portal_status_mes
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
