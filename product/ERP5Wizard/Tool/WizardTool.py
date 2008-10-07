@@ -370,7 +370,8 @@ class WizardTool(BaseTool):
     # set real method_id
     form = self.REQUEST.form
     form['method_id'] = distant_method
-    return self._callRemoteMethod('proxyMethodHandler', wrap_result=0)
+    rc = self._callRemoteMethod('proxyMethodHandler')
+    return rc['data']    
 
   def _callRemoteMethod(self, distant_method, server_url=None, wrap_result=1):
     """ Call remote method on server and get result. """
@@ -412,9 +413,6 @@ class WizardTool(BaseTool):
                           "next": None,
                           "previous": None})
     else:
-      if not wrap_result:
-        # simply return raw result
-        return html
       result_call.load(html)
       command = result_call["command"]
       html = result_call["data"]
@@ -713,6 +711,8 @@ class WizardTool(BaseTool):
         activity_list = portal_activities.getMessageList()
         installation_status['activity_list'].append(len(activity_list))
       html = self.WizardTool_viewRunningInstallationMessage(installation_status = installation_status)
+    # set encoding as this is usually called from asynchronous JavaScript call
+    self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/html; charset=utf-8');
     return html
 
   security.declarePublic(Permissions.AccessContentsInformation, 'getInstallationStatusReportFromServer')
