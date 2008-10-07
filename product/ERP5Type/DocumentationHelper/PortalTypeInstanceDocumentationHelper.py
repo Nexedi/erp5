@@ -68,26 +68,35 @@ class PortalTypeInstanceDocumentationHelper(DocumentationHelper):
     """
     Returns a list of documentation sections
     """
-    return [
-      DocumentationSection(
-        id='workflow_method',
-        title='Workflow Method',
-        class_name='WorkflowMethodDocumentationHelper',
-        uri_list=self.getWorkflowMethodURIList(inherited=0),
-      ),
-      DocumentationSection(
-        id='accessor',
-        title='Accessor',
-        class_name='AccessorMethodDocumentationHelper',
-        uri_list=self.getAccessorMethodURIList(inherited=0),
-      ),
-      DocumentationSection(
-        id='class_method',
-        title='Class Methods',
-        class_name='ClassMethodDocumentationHelper',
-        uri_list=self.getClassMethodURIList(inherited=0),
-      ).__of__(self.getInstance()),
-    ]
+    section_list = []
+    if self.getWorkflowMethodURIList(inherited=0) != []:
+      section_list.append(
+        DocumentationSection(
+          id='workflow_method',
+          title='Workflow Method',
+          class_name='WorkflowMethodDocumentationHelper',
+          uri_list=self.getWorkflowMethodURIList(inherited=0),
+        )
+      )
+    if self.getAccessorMethodURIList(inherited=0) != []:
+      section_list.append(   
+        DocumentationSection(
+          id='accessor',
+          title='Accessor',
+          class_name='AccessorMethodDocumentationHelper',
+          uri_list=self.getAccessorMethodURIList(inherited=0),
+        )
+      )
+    if self.getClassMethodURIList(inherited=0) != []:  
+      section_list.append(
+        DocumentationSection(
+          id='class_method',
+          title='Class Methods',
+          class_name='ClassMethodDocumentationHelper',
+          uri_list=self.getClassMethodURIList(inherited=0),
+        )
+      )
+    return map(lambda x: x.__of__(self.getInstance()), section_list)
 
   # Specific methods
   security.declareProtected( Permissions.AccessContentsInformation, 'getPortalType' )

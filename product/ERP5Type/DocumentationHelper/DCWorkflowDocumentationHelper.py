@@ -105,44 +105,62 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
     Returns a list of documentation sections
     """
-    return map(lambda x: x.__of__(self), [
-      DocumentationSection(
-        id='state',
-        title='Workflow States',
-        class_name='DCWorkflowStateDocumentationHelper',
-        uri_list=self.getStateUriList(),
-      ),
-      DocumentationSection(
-        id='transition',
-        title='Workflow Transitions',
-        class_name='DCWorkflowTransitionDocumentationHelper',
-        uri_list=self.getTransitionUriList(),
-      ),
-      DocumentationSection(
-        id='variable',
-        title='Workflow Variables',
-        class_name='DCWorkflowVariableDocumentationHelper',
-        uri_list=self.getVariableUriList(),
-      ),
-      DocumentationSection(
-        id='permission',
-        title='Workflow Permissions',
-        class_name='DCWorkflowPermissionDocumentationHelper',
-        uri_list=self.getPermissionUriList(),
-      ),
-      DocumentationSection(
-        id='worklist',
-        title='Workflow Worklists',
-        class_name='DCWorkflowWorklistDocumentationHelper',
-        uri_list=self.getWorklistUriList(),
-      ),
-      DocumentationSection(
-        id='script',
-        title='Workflow Scripts',
-        class_name='DCWorkflowScriptDocumentationHelper',
-        uri_list=self.getScriptUriList(),
-      ),
-    ])
+    section_list = []
+    if self.getStateUriList() != []:
+      section_list.append(
+        DocumentationSection(
+          id='state',
+          title='Workflow States',
+          class_name='DCWorkflowStateDocumentationHelper',
+          uri_list=self.getStateUriList(),
+        )
+      )
+    if self.getTransitionUriList() != []:
+      section_list.append(
+        DocumentationSection(
+          id='transition',
+          title='Workflow Transitions',
+          class_name='DCWorkflowTransitionDocumentationHelper',
+          uri_list=self.getTransitionUriList(),
+        )
+      )
+    if self.getVariableUriList() != []: 
+      section_list.append(
+        DocumentationSection(
+          id='variable',
+          title='Workflow Variables',
+          class_name='DCWorkflowVariableDocumentationHelper',
+          uri_list=self.getVariableUriList(),
+        )
+      )
+    if self.getPermissionUriList() != []:
+      section_list.append(
+        DocumentationSection(
+          id='permission',
+          title='Workflow Permissions',
+          class_name='DCWorkflowPermissionDocumentationHelper',
+          uri_list=self.getPermissionUriList(),
+        )
+      )
+    if self.getWorklistUriList() != []:
+      section_list.append(
+        DocumentationSection(
+          id='worklist',
+          title='Workflow Worklists',
+          class_name='DCWorkflowWorklistDocumentationHelper',
+          uri_list=self.getWorklistUriList(),
+        )
+      )
+    if self.getScriptUriList() != []:  
+      section_list.append(
+        DocumentationSection(
+          id='script',
+          title='Workflow Scripts',
+          class_name='DCWorkflowScriptDocumentationHelper',
+          uri_list=self.getScriptUriList(),
+        )
+      )
+    return map(lambda x: x.__of__(self), section_list)
 
   # Specific methods
   security.declareProtected( Permissions.AccessContentsInformation, 'getStateIdList' )

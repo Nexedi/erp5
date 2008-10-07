@@ -63,50 +63,71 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
     """
     Returns a list of documentation sections
     """
-    return map(lambda x: x.__of__(self), [
-      DocumentationSection(
-        id='portal_type',
-        title='Portal Types',
-        class_name='PortalTypeDocumentationHelper',
-        uri_list=self.getPortalTypeURIList(),
-      ),
-      DocumentationSection(
-        id='dc_workflow',
-        title='DC Workflows',
-        class_name='DCWorkflowDocumentationHelper',
-        uri_list=self.getDCWorkflowURIList(),
-      ),
-      DocumentationSection(
-        id='interaction_workflow',
-        title='Interaction Workflows',
-        class_name='InteractionWorkflowDocumentationHelper',
-        uri_list=self.getInteractionWorkflowURIList(),
-      ),
-      DocumentationSection(
-        id='skin_folder',
-        title='Skin Folders',
-        class_name='SkinFolderDocumentationHelper',
-        uri_list=self.getSkinFolderURIList(),
-      ),
-      DocumentationSection(
-        id='module',
-        title='Module',
-        class_name='PortalTypeInstanceDocumentationHelper',
-        uri_list=self.getModuleURIList(),
-      ),
-      DocumentationSection(
-        id='catalog_method',
-        title='Catalog Method',
-        class_name='CatalogMethodDocumentationHelper',
-        uri_list=self.getCatalogMethodURIList(),
-      ),
-      DocumentationSection(
-        id='base_category',
-        title='Base Category',
-        class_name='BaseCategoryDocumentationHelper',
-        uri_list=self.getBaseCategoryURIList(),
-      ),
-    ])
+    section_list = []
+    if self.getPortalTypeURIList() != []:
+      section_list.append(
+        DocumentationSection(
+          id='portal_type',
+          title='Portal Types',
+          class_name='PortalTypeDocumentationHelper',
+          uri_list=self.getPortalTypeURIList(),
+        )
+      )
+    if self.getDCWorkflowURIList() != []:
+      section_list.append(
+        DocumentationSection(
+          id='dc_workflow',
+          title='DC Workflows',
+          class_name='DCWorkflowDocumentationHelper',
+          uri_list=self.getDCWorkflowURIList(),
+        )
+      )
+    if self.getInteractionWorkflowURIList() != []:
+      section_list.append(
+        DocumentationSection(
+          id='interaction_workflow',
+          title='Interaction Workflows',
+          class_name='InteractionWorkflowDocumentationHelper',
+          uri_list=self.getInteractionWorkflowURIList(),
+        )
+      )
+    if self.getSkinFolderURIList() != []:
+      section_list.append(
+        DocumentationSection(
+          id='skin_folder',
+          title='Skin Folders',
+          class_name='SkinFolderDocumentationHelper',
+          uri_list=self.getSkinFolderURIList(),
+        )
+      )
+    if self.getModuleURIList() != []:
+      section_list.append(
+        DocumentationSection(
+          id='module',
+          title='Module',
+          class_name='PortalTypeInstanceDocumentationHelper',
+          uri_list=self.getModuleURIList(),
+        )
+      )
+    if self.getCatalogMethodURIList() != []:
+      section_list.append( 
+        DocumentationSection(
+          id='catalog_method',
+          title='Catalog Method',
+          class_name='CatalogMethodDocumentationHelper',
+          uri_list=self.getCatalogMethodURIList(),
+        )
+      )
+    if self.getBaseCategoryURIList() != []:
+      section_list.append(
+        DocumentationSection(
+          id='base_category',
+          title='Base Category',
+          class_name='BaseCategoryDocumentationHelper',
+          uri_list=self.getBaseCategoryURIList(),
+        )
+      )
+    return map(lambda x: x.__of__(self), section_list)
 
   # Specific methods
   security.declareProtected( Permissions.AccessContentsInformation, 'getDescription' )

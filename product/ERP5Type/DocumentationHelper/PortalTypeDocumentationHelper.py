@@ -97,56 +97,89 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     """
     Returns a list of documentation sections
     """
-    return map(lambda x: x.__of__(self), [
-      DocumentationSection(
-        id='action',
-        title='Actions',
-        class_name='PortalTypeActionDocumentationHelper',
-        uri_list=self.getActionUriList(),
-      ),
-      DocumentationSection(
-        id='role',
-        title='Role Definitions',
-        class_name='PortalTypeRoleDocumentationHelper',
-        uri_list=self.getRoleUriList(),
-      ),
-      DocumentationSection(
-        id='allowed_content_type',
-        title='Allowed Content Type',
-        class_name='PortalTypeDocumentationHelper',
-        uri_list=self.getAllowedContentTypeURIList(),
-      ),
-      DocumentationSection(
-        id='hidden_content_type',
-        title='Hidden Content Type',
-        class_name='PortalTypeDocumentationHelper',
-        uri_list=self.getHiddenContentTypeURIList(),
-      ),
-      DocumentationSection(
-        id='property_sheet',
-        title='Property Sheet',
-        class_name='PortalTypePropertySheetDocumentationHelper',
-        uri_list=self.getPropertySheetURIList(),
-      ),
-      DocumentationSection(
-        id='workflow_method',
-        title='Workflow Method',
-        class_name='WorkflowMethodDocumentationHelper',
-        uri_list=self.getWorkflowMethodUriList(inherited=0),
-      ),
-      DocumentationSection(
-        id='accessor',
-        title='Accessor',
-        class_name='AccessorMethodDocumentationHelper',
-        uri_list=self.getAccessorMethodUriList(inherited=0),
-      ),
-      DocumentationSection(
-        id='class_method',
-        title='Class Methods',
-        class_name='ClassMethodDocumentationHelper',
-        uri_list=self.getClassMethodURIList(inherited=0),
-      ),
-    ])
+    section_list = []
+    if self.getActionUriList() != []:
+      section_list.append(
+        DocumentationSection(
+          id='action',
+          title='Actions',
+          class_name='PortalTypeActionDocumentationHelper',
+          uri_list=self.getActionUriList(),
+        )
+      )
+    if self.getRoleUriList() != []:
+      section_list.append(
+        DocumentationSection(
+          id='role',
+          title='Role Definitions',
+          class_name='PortalTypeRoleDocumentationHelper',
+          uri_list=self.getRoleUriList(),
+        )
+      )
+    if self.getRoleUriList() != []:
+      section_list.append(
+        DocumentationSection(
+          id='role',
+          title='Role Definitions',
+          class_name='PortalTypeRoleDocumentationHelper',
+          uri_list=self.getRoleUriList(),
+        )
+      )
+    if self.getAllowedContentTypeURIList() != []:
+      section_list.append(
+        DocumentationSection(
+          id='allowed_content_type',
+          title='Allowed Content Type',
+          class_name='PortalTypeDocumentationHelper',
+          uri_list=self.getAllowedContentTypeURIList(),
+        )
+      )
+    if self.getHiddenContentTypeURIList() != []:
+      section_list.append(
+        DocumentationSection(
+          id='hidden_content_type',
+          title='Hidden Content Type',
+          class_name='PortalTypeDocumentationHelper',
+          uri_list=self.getHiddenContentTypeURIList(),
+        )
+      )
+    if self.getPropertySheetURIList() != []:
+      section_list.append(
+        DocumentationSection(
+          id='property_sheet',
+          title='Property Sheet',
+          class_name='PortalTypePropertySheetDocumentationHelper',
+          uri_list=self.getPropertySheetURIList(),
+        )
+      )
+    if self.getWorkflowMethodUriList(inherited=0) != []:
+      section_list.append(
+        DocumentationSection(
+          id='workflow_method',
+          title='Workflow Method',
+          class_name='WorkflowMethodDocumentationHelper',
+          uri_list=self.getWorkflowMethodUriList(inherited=0),
+        )
+      )
+    if self.getAccessorMethodUriList(inherited=0) != []:
+      section_list.append(
+        DocumentationSection(
+          id='accessor',
+          title='Accessor',
+          class_name='AccessorMethodDocumentationHelper',
+          uri_list=self.getAccessorMethodUriList(inherited=0),
+        )
+      )
+    if self.getClassMethodURIList(inherited=0) != []:
+      section_list.append(
+        DocumentationSection(
+          id='class_method',
+          title='Class Methods',
+          class_name='ClassMethodDocumentationHelper',
+          uri_list=self.getClassMethodURIList(inherited=0),
+        )
+      )
+    return map(lambda x: x.__of__(self), section_list)
 
   # Specific methods
   security.declareProtected( Permissions.AccessContentsInformation, 'getDescription' )

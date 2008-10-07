@@ -48,32 +48,44 @@ class SkinFolderDocumentationHelper(DocumentationHelper):
     """
     Returns a list of documentation sections
     """
-    return map(lambda x: x.__of__(self), [
-      DocumentationSection(
-        id='erp5_form',
-        title='ERP5 Form',
-        class_name='ERP5FormDocumentationHelper',
-        uri_list=self.getFileURIList(meta_type='ERP5 Form'),
-      ),
-      DocumentationSection(
-        id='zsql_method',
-        title='Z SQL Method',
-        class_name='ZSQLMethodDocumentationHelper',
-        uri_list=self.getFileURIList(meta_type='Z SQL Method'),
-      ),
-      DocumentationSection(
-        id='page_template',
-        title='Page Template',
-        class_name='PageTemplateDocumentationHelper',
-        uri_list=self.getFileURIList(meta_type='Page Template'),
-      ),
-      DocumentationSection(
-        id='script_python',
-        title='Script (Python)',
-        class_name='ScriptPythonDocumentationHelper',
-        uri_list=self.getFileURIList(meta_type='Script (Python)'),
-      ),
-    ])
+    section_list = []
+    if self.getFileURIList(meta_type='ERP5 Form') != []:
+      section_list.append(
+        DocumentationSection(
+          id='erp5_form',
+          title='ERP5 Form',
+          class_name='ERP5FormDocumentationHelper',
+          uri_list=self.getFileURIList(meta_type='ERP5 Form'),
+        )
+      )
+    if self.getFileURIList(meta_type='Z SQL Method') != []: 
+      section_list.append(
+        DocumentationSection(
+          id='zsql_method',
+          title='Z SQL Method',
+          class_name='ZSQLMethodDocumentationHelper',
+          uri_list=self.getFileURIList(meta_type='Z SQL Method'),
+        )
+      )
+    if self.getFileURIList(meta_type='Page Template') != []:  
+      section_list.append(
+        DocumentationSection(
+          id='page_template',
+          title='Page Template',
+          class_name='PageTemplateDocumentationHelper',
+          uri_list=self.getFileURIList(meta_type='Page Template'),
+        )
+      )
+    if self.getFileURIList(meta_type='Script (Python)') != []:
+      section_list.append(
+        DocumentationSection(
+          id='script_python',
+          title='Script (Python)',
+          class_name='ScriptPythonDocumentationHelper',
+          uri_list=self.getFileURIList(meta_type='Script (Python)'),
+        )
+      )
+    return map(lambda x: x.__of__(self), section_list)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
   def getType(self):
