@@ -245,10 +245,11 @@ class TestAlarm(ERP5TypeTestCase):
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
 
-    right_first_date = DateTime(self.date_format % (2006,10,7,14,00,00))
-    right_second_date = DateTime(self.date_format  % (2006,10,7,15,00,00))
-    right_third_date = DateTime(self.date_format  % (2006,10,7,17,00,00))
-    right_fourth_date = DateTime(self.date_format  % (2006,10,11,14,00,00))
+    right_first_date = DateTime(self.date_format % (2006,10,7,13,00,00))
+    right_second_date = DateTime(self.date_format  % (2006,10,8,14,00,00))
+    right_third_date = DateTime(self.date_format  % (2006,10,8,15,00,00))
+    right_fourth_date = DateTime(self.date_format  % (2006,10,8,17,00,00))
+    right_fifth_date = DateTime(self.date_format  % (2006,10,12,14,00,00))
     alarm = self.newAlarm()
     alarm.setPeriodicityStartDate(right_first_date)
     alarm.setPeriodicityDayFrequency(4)
@@ -262,6 +263,8 @@ class TestAlarm(ERP5TypeTestCase):
     self.assertEquals(alarm.getAlarmDate(),right_third_date)
     alarm.setNextAlarmDate(current_date=right_third_date)
     self.assertEquals(alarm.getAlarmDate(),right_fourth_date)
+    alarm.setNextAlarmDate(current_date=right_fourth_date)
+    self.assertEquals(alarm.getAlarmDate(),right_fifth_date)
 
   def test_08_SomeWeekDaysSomeHours(self, quiet=0, run=run_all_test):
     """- every monday and friday, at 6 and 15"""
@@ -272,9 +275,10 @@ class TestAlarm(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
 
     right_first_date = DateTime(self.date_format  % (2006,9,27,6,00,00))
-    right_second_date = DateTime(self.date_format  % (2006,9,29,15,00,00))
-    right_third_date = DateTime(self.date_format  % (2006,10,2,6,00,00))
-    right_fourth_date = DateTime(self.date_format  % (2006,10,2,15,00,00))
+    right_second_date = DateTime(self.date_format  % (2006,9,29,6,00,00))
+    right_third_date = DateTime(self.date_format  % (2006,9,29,15,00,00))
+    right_fourth_date = DateTime(self.date_format  % (2006,10,2,6,00,00))
+    right_fifth_date = DateTime(self.date_format  % (2006,10,2,15,00,00))
     alarm = self.newAlarm()
     get_transaction().commit()
     self.tic()
@@ -282,14 +286,6 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setPeriodicityWeekDayList(('Monday','Friday'))
     alarm.setPeriodicityHourList((6,15))
     self.checkDate(alarm, right_first_date, right_second_date, right_third_date, right_fourth_date)
-    #self.assertEquals(alarm.getAlarmDate(),right_first_date)
-    #alarm.setNextAlarmDate(current_date=right_first_date)
-    #self.assertEquals(alarm.getAlarmDate(),right_second_date)
-    #alarm.setNextAlarmDate(current_date=right_second_date)
-    #self.assertEquals(alarm.getAlarmDate(),right_third_date)
-    #alarm.setNextAlarmDate(current_date=right_third_date)
-    #self.assertEquals(alarm.getAlarmDate(),right_fourth_date)
-
 
   def checkDate(self,alarm,*args):
     """
