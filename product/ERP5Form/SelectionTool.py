@@ -1551,8 +1551,7 @@ def createFolderMixInPageSelectionMethod(listbox_id):
       list_start_property_id = "%s_list_start" % listbox_id
       # Rename request parameters
       if request.has_key(selection_name_property_id):
-        request.form['list_selection_name'] = request.form['selection_name'] \
-                                              = request[selection_name_property_id]
+        request.form['list_selection_name'] = request[selection_name_property_id]
       if request.has_key(listbox_uid_property_id):
         request.form['listbox_uid'] = request[listbox_uid_property_id]
       if request.has_key(list_start_property_id):
