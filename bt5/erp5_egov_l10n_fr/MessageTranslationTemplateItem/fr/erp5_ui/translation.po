@@ -112,12 +112,9 @@ msgstr "Action ..."
 msgid "Actions"
 msgstr "Actions"
 
-<<<<<<< .mine
-=======
 msgid "Activities Stopped"
 msgstr "Activités stoppés"
 
->>>>>>> .r23142
 msgid "Activity"
 msgstr "Activité"
 
