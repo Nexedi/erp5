@@ -36,7 +36,6 @@ from BTrees.IOBTree import IOBTree
 from BTrees.Length import Length
 from Products.CMFActivity.ActiveObject import DISTRIBUTABLE_STATE, INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from random import randint
-from DateTime import DateTime
 from zLOG import LOG
 
 manage_addActiveProcessForm=DTMLFile('dtml/ActiveProcess_add', globals())
