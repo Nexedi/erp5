@@ -1,5 +1,6 @@
 import os
 import shutil
+import glob
 import ZODB
 from ZODB.DemoStorage import DemoStorage
 from ZODB.FileStorage import FileStorage
@@ -30,7 +31,8 @@ elif os.environ.get('erp5_save_data_fs'):
   for dir in ('Constraint', 'Document', 'PropertySheet', 'Extensions'):
     full_path = os.path.join(instance_home, dir)
     if os.path.exists(full_path):
-      shutil.rmtree(full_path)
+      for f in glob.glob('%s/*' % full_path):
+        os.unlink(f)
   if os.path.exists(new_data_fs_path):
     os.remove(new_data_fs_path)
   Storage = FileStorage(new_data_fs_path)
