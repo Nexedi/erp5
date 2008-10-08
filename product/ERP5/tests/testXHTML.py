@@ -238,8 +238,9 @@ def validate_xhtml(validator, source, view_name, bt_name):
 
   # display some information when test faild to facilitate debugging
   message = []
-  message.append('Using %s validator to parse the view "%s" (from %s bt) with warning %s displayed :' %\
-      (validator.name, view_name, bt_name, validator.show_warnings and '' or 'NOT'))
+  message.append('Using %s validator to parse the view "%s" (from %s bt) with warning %sdisplayed :' %\
+      (validator.name, view_name, bt_name, 
+        validator.show_warnings and ' ' or 'NOT '))
 
   error_list, warning_list = validator.getErrorAndWarningList(source)
 
