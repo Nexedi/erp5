@@ -241,7 +241,7 @@ class Message:
     try:
       obj = self.getObject(activity_tool)
     except KeyError:
-      self.is_executed = MESSAGE_NOT_EXECUTABLE
+      self.setExecutionState(MESSAGE_NOT_EXECUTABLE, context=activity_tool)
     else:
       try:
         old_security_manager = getSecurityManager()
@@ -253,7 +253,7 @@ class Message:
         method = getattr(obj, self.method_id, None)
         try:
           if method is None:
-            self.is_executed = MESSAGE_NOT_EXECUTABLE
+            self.setExecutionState(MESSAGE_NOT_EXECUTABLE, context=activity_tool)
           else:
             result = method(*self.args, **self.kw)
         finally:
@@ -261,20 +261,9 @@ class Message:
 
         if method is not None:
           self.activateResult(activity_tool, result, obj)
-          self.is_executed = MESSAGE_EXECUTED
+          self.setExecutionState(MESSAGE_EXECUTED)
       except:
-        self.is_executed = MESSAGE_NOT_EXECUTED
-        exc_info = sys.exc_info()
-        LOG('ActivityTool', WARNING,
-            'Could not call method %s on object %s. Activity created at:\n%s' % (
-            self.method_id, self.object_path, self.call_traceback), error=exc_info)
-        # push the error in ZODB error_log
-        if getattr(activity_tool, 'error_log', None) is not None:
-          activity_tool.error_log.raising(exc_info)
-        self.exc_type = exc_info[0]
-        self.exc_value = str(exc_info[1])
-        self.traceback = ''.join(ExceptionFormatter.format_exception(
-                                 *exc_info))
+        self.setExecutionState(MESSAGE_NOT_EXECUTED, context=activity_tool)
 
   def validate(self, activity, activity_tool, check_order_validation=1):
     return activity.validate(activity_tool, self,
@@ -333,6 +322,51 @@ Exception: %s %s
       # Use again the previous user
       if user is not None:
         self.changeUser(current_user, activity_tool)
+
+  def setExecutionState(self, is_executed, exc_info=None, log=True, context=None):
+    """
+      Set message execution state.
+
+      is_executed can be one of MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED and
+      MESSAGE_NOT_EXECUTABLE (variables defined above).
+      
+      exc_info must be - if given - similar to sys.exc_info() return value.
+
+      log must be - if given - True or False. If True, a log line will be
+      emited with failure details. This parameter should only be used when
+      invoking this method on a list of messages to avoid log flood. It is
+      caller's responsability to output a log line summing up all errors, and
+      to store error in Zope's error_log.
+
+      context must be - if given - an object wrapped in acquisition context.
+      It is used to access Zope's error_log object. It is not used if log is
+      False.
+
+      If given state is not MESSAGE_EXECUTED, it will also store given
+      exc_info. If not given, it will extract one using sys.exc_info().
+      If final exc_info does not contain any exception, current stack trace
+      will be stored instead: it will hopefuly help understand why message
+      is in an error state.
+    """
+    assert is_executed in (MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED, MESSAGE_NOT_EXECUTABLE)
+    self.is_executed = is_executed
+    if is_executed != MESSAGE_EXECUTED:
+      if exc_info is None:
+        exc_info = sys.exc_info()
+      if extract_stack is not None and exc_info == (None, None, None):
+        exc_info = (None, None, extract_stack())
+      if log:
+        LOG('ActivityTool', WARNING, 'Could not call method %s on object %s. Activity created at:\n%s' % (self.method_id, self.object_path, self.call_traceback), error=exc_info)
+        # push the error in ZODB error_log
+        error_log = getattr(context, 'error_log', None)
+        if error_log is not None:
+          error_log.raising(exc_info)
+      self.exc_type = exc_info[0]
+      self.exc_value = str(exc_info[1])
+      self.traceback = ''.join(ExceptionFormatter.format_exception(*exc_info))
+
+  def getExecutionState(self):
+    return self.is_executed
 
 class Method:
 
@@ -968,7 +1002,7 @@ class ActivityTool (Folder, UniqueObject):
         try:
           obj = m.getObject(self)
         except KeyError:
-          m.is_executed = MESSAGE_NOT_EXECUTABLE
+          m.setExecutionState(MESSAGE_NOT_EXECUTABLE, context=self)
           continue
         try:
           i = len(new_message_list) # This is an index of this message in new_message_list.
@@ -1008,15 +1042,7 @@ class ActivityTool (Folder, UniqueObject):
           object_list.append(obj)
           new_message_list.append(m)
         except:
-          m.is_executed = MESSAGE_NOT_EXECUTED
-          exc_info = sys.exc_info()
-          m.exc_type = exc_info[0]
-          m.exc_value = str(exc_info[1])
-          m.traceback = ''.join(ExceptionFormatter.format_exception(
-                                *exc_info))
-          LOG('WARNING ActivityTool', 0,
-              'Could not call method %s on object %s' %
-              (m.method_id, m.object_path), error=exc_info)
+          m.setExecutionState(MESSAGE_NOT_EXECUTED, context=self)
 
       try:
         if len(expanded_object_list) > 0:
@@ -1030,15 +1056,8 @@ class ActivityTool (Folder, UniqueObject):
       except:
         # In this case, the group method completely failed.
         exc_info = sys.exc_info()
-        exc_type = exc_info[0]
-        exc_value = str(exc_info[1])
-        traceback = ''.join(ExceptionFormatter.format_exception(
-                            *exc_info))
         for m in new_message_list:
-          m.is_executed = MESSAGE_NOT_EXECUTED
-          m.exc_type = exc_type
-          m.exc_value = exc_value
-          m.traceback = traceback
+          m.setExecutionState(MESSAGE_NOT_EXECUTED, exc_info=exc_info, log=False)
         LOG('WARNING ActivityTool', 0,
             'Could not call method %s on objects %s' %
             (method_id, expanded_object_list), error=exc_info)
@@ -1058,21 +1077,14 @@ class ActivityTool (Folder, UniqueObject):
           object = object_list[i]
           m = new_message_list[i]
           if i in failed_message_dict:
-            m.is_executed = MESSAGE_NOT_EXECUTED
-            LOG('ActivityTool', WARNING,
-                'the method %s partially failed on object %s' %
-                (m.method_id, m.object_path,))
+            m.setExecutionState(MESSAGE_NOT_EXECUTED, context=self)
           else:
             try:
               m.activateResult(self, result, object)
             except:
-              m.is_executed = MESSAGE_NOT_EXECUTED
-              m.exc_type = sys.exc_info()[0]
-              LOG('ActivityTool', WARNING,
-                  'Could not call method %s on object %s' % (
-                  m.method_id, m.object_path), error=sys.exc_info())
+              m.setExecutionState(MESSAGE_NOT_EXECUTED, context=self)
             else:
-              m.is_executed = MESSAGE_EXECUTED
+              m.setExecutionState(MESSAGE_EXECUTED, context=self)
       if logging:
         LOG('Activity Tracking', INFO, 'invoked group messages')
 
