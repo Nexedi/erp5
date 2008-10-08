@@ -1062,13 +1062,14 @@ class ActivityTool (Folder, UniqueObject):
           else:
             try:
               m.activateResult(self, result, object)
-              m.is_executed = MESSAGE_EXECUTED
             except:
               m.is_executed = MESSAGE_NOT_EXECUTED
               m.exc_type = sys.exc_info()[0]
               LOG('ActivityTool', WARNING,
                   'Could not call method %s on object %s' % (
                   m.method_id, m.object_path), error=sys.exc_info())
+            else:
+              m.is_executed = MESSAGE_EXECUTED
       if logging:
         LOG('Activity Tracking', INFO, 'invoked group messages')
 
