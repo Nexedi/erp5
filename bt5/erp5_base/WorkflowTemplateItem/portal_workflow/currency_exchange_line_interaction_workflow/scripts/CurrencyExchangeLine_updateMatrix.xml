@@ -61,7 +61,7 @@ kwd = {\'base_id\': base_id}\n
 \n
 context.updateCellRange(script_id=\'CurrencyExchangeLine_asCellRange\', base_id=base_id)\n
 cell_range_key_list = context.getCellRangeKeyList(base_id = base_id)\n
-resource_list = [\'resource/%s\' % context.getParent().getRelativeUrl()]\n
+resource_list = [\'resource/%s\' % context.getParentValue().getRelativeUrl()]\n
 price_currency_list = [\'price_currency/%s\' % context.getPriceCurrency()]\n
 membership_list = resource_list+price_currency_list\n
 context.setMembershipCriterionBaseCategoryList([x.split(\'/\')[0] for x in membership_list])\n
