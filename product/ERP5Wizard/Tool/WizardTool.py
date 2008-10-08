@@ -131,7 +131,8 @@ class GeneratorCall(UserDict):
     """ Encode data to transmitable text. """
     fp = StringIO()
     try:
-      xmlrpclib.Binary(data=data).encode(fp)
+      # data might be ERP5Type.Message.Message instance.
+      xmlrpclib.Binary(data=str(data)).encode(fp)
       return fp.getvalue()
     finally:
       fp.close()
