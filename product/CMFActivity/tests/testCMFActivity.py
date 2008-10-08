@@ -2965,6 +2965,69 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     self.CheckLocalizerWorks('SQLDict')
 
+  def testMessageContainsFailureTraceback(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nCheck message contains failure traceback'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    portal = self.getPortalObject()
+    activity_tool = self.getActivityTool()
+    def checkMessage(message):
+      self.assertNotEqual(message.getExecutionState(), 1) # 1 == MESSAGE_EXECUTED
+      self.assertEqual(message.exc_type, KeyError)
+      self.assertNotEqual(message.traceback, None)
+    # With Message.__call__
+    # 1: activity context does not exist when activity is executed
+    organisation = portal.organisation_module.newContent(portal_type='Organisation')
+    get_transaction().commit()
+    self.tic()
+    organisation.activate().getTitle() # This generates the mssage we want to test.
+    get_transaction().commit()
+    message_list = activity_tool.getMessageList()
+    self.assertEqual(len(message_list), 1)
+    message = message_list[0]
+    portal.organisation_module._delOb(organisation.id)
+    message(activity_tool)
+    checkMessage(message)
+    activity_tool.manageCancel(message.object_path, message.method_id)
+    # 2: activity method does not exist when activity is executed
+    portal.organisation_module.activate().this_method_does_not_exist()
+    get_transaction().commit()
+    message_list = activity_tool.getMessageList()
+    self.assertEqual(len(message_list), 1)
+    message = message_list[0]
+    message(activity_tool)
+    checkMessage(message)
+    activity_tool.manageCancel(message.object_path, message.method_id)
+
+    # With ActivityTool.invokeGroup
+    # 1: activity context does not exist when activity is executed
+    organisation = portal.organisation_module.newContent(portal_type='Organisation')
+    get_transaction().commit()
+    self.tic()
+    organisation.activate().getTitle() # This generates the mssage we want to test.
+    get_transaction().commit()
+    message_list = activity_tool.getMessageList()
+    self.assertEqual(len(message_list), 1)
+    message = message_list[0]
+    portal.organisation_module._delOb(organisation.id)
+    activity_tool.invokeGroup('getTitle', [message])
+    checkMessage(message)
+    activity_tool.manageCancel(message.object_path, message.method_id)
+    # 2: activity method does not exist when activity is executed
+    portal.organisation_module.activate().this_method_does_not_exist()
+    get_transaction().commit()
+    message_list = activity_tool.getMessageList()
+    self.assertEqual(len(message_list), 1)
+    message = message_list[0]
+    activity_tool.invokeGroup('this_method_does_not_exist', [message])
+    checkMessage(message)
+    activity_tool.manageCancel(message.object_path, message.method_id)
+
+    # Unadressed error paths (in both cases):
+    #  3: activity commit raises
+    #  4: activity raises
 
 def test_suite():
   suite = unittest.TestSuite()
