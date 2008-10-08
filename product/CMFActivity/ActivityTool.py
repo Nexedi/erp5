@@ -353,17 +353,21 @@ Exception: %s %s
     if is_executed != MESSAGE_EXECUTED:
       if exc_info is None:
         exc_info = sys.exc_info()
-      if extract_stack is not None and exc_info == (None, None, None):
-        exc_info = (None, None, extract_stack())
       if log:
         LOG('ActivityTool', WARNING, 'Could not call method %s on object %s. Activity created at:\n%s' % (self.method_id, self.object_path, self.call_traceback), error=exc_info)
         # push the error in ZODB error_log
         error_log = getattr(context, 'error_log', None)
         if error_log is not None:
           error_log.raising(exc_info)
+      if exc_info == (None, None, None):
+        if format_list is not None:
+          self.traceback = ''.join(format_list(extract_stack()[:-1]))
+        else:
+          self.traceback = ''
+      else:
+        self.traceback = ''.join(ExceptionFormatter.format_exception(*exc_info))
       self.exc_type = exc_info[0]
       self.exc_value = str(exc_info[1])
-      self.traceback = ''.join(ExceptionFormatter.format_exception(*exc_info))
 
   def getExecutionState(self):
     return self.is_executed
