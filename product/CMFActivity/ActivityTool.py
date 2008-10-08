@@ -1042,6 +1042,9 @@ class ActivityTool (Folder, UniqueObject):
         LOG('WARNING ActivityTool', 0,
             'Could not call method %s on objects %s' %
             (method_id, expanded_object_list), error=exc_info)
+        error_log = getattr(self, 'error_log', None)
+        if error_log is not None:
+          error_log.raising(exc_info)
       else:
         # Obtain all indices of failed messages. Note that this can be a partial failure.
         failed_message_dict = {}
