@@ -338,9 +338,9 @@ class SQLDict(RAMDict, SQLBase):
     message_with_active_process_list = []
     notify_user_list = []
     non_executable_message_list = []
-    something_failed = (len([x for x in message_uid_priority_list if x[1].is_executed == MESSAGE_NOT_EXECUTED]) != 0)
+    something_failed = (len([x for x in message_uid_priority_list if x[1].getExecutionState() == MESSAGE_NOT_EXECUTED]) != 0)
     for uid, m, priority in message_uid_priority_list:
-      if m.is_executed == MESSAGE_EXECUTED:
+      if m.getExecutionState() == MESSAGE_EXECUTED:
         if something_failed:
           make_available_uid_list.append(uid)
           make_available_uid_list.extend(uid_to_duplicate_uid_list_dict.get(uid, []))
@@ -351,7 +351,7 @@ class SQLDict(RAMDict, SQLBase):
             # XXX: Bug here: Even if a duplicate message has an active_process,
             # it won't be called on the duplicate.
             message_with_active_process_list.append(m)
-      elif m.is_executed == MESSAGE_NOT_EXECUTED:
+      elif m.getExecutionState() == MESSAGE_NOT_EXECUTED:
         # Should duplicate messages follow strictly the original message, or
         # should they be just made available again ?
         make_available_uid_list.extend(uid_to_duplicate_uid_list_dict.get(uid, []))
@@ -476,7 +476,7 @@ class SQLDict(RAMDict, SQLBase):
         else:
           LOG('SQLDict', TRACE, 'Freed messages %r' % (to_free_uid_list))
       # Abort if something failed.
-      if len([x for x in message_uid_priority_list if x[1].is_executed == MESSAGE_NOT_EXECUTED]) != 0:
+      if len([x for x in message_uid_priority_list if x[1].getExecutionState() == MESSAGE_NOT_EXECUTED]) != 0:
         endTransaction = abortTransactionSynchronously
       else:
         endTransaction = get_transaction().commit
@@ -493,15 +493,8 @@ class SQLDict(RAMDict, SQLBase):
             LOG('SQLDict', PANIC, 'Failed to abort executed messages which also failed to commit. Some objects may be modified accidentally.')
             raise
         exc_info = sys.exc_info()
-        exc_type = exc_info[0]
-        exc_value = str(exc_info[1])
-        traceback = ''.join(ExceptionFormatter.format_exception(
-                            *exc_info))
         for x in message_uid_priority_list:
-          x[1].is_executed = MESSAGE_NOT_EXECUTED
-          x[1].exc_type = exc_type
-          x[1].exc_value = exc_value
-          x[1].traceback = traceback
+          x[1].setExecutionState(MESSAGE_NOT_EXECUTED, exc_info=exc_info, log=False)
         failed_message_uid_list = [x[0] for x in message_uid_priority_list]
         try:
           makeMessageListAvailable(failed_message_uid_list, uid_to_duplicate_uid_list_dict)
@@ -553,7 +546,7 @@ class SQLDict(RAMDict, SQLBase):
               validate_value = m.validate(self, activity_tool)
               if validate_value is VALID:
                 activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
-                if m.is_executed != MESSAGE_EXECUTED:                                                 # Make sure message could be invoked
+                if m.getExecutionState() != MESSAGE_EXECUTED:                                                 # Make sure message could be invoked
                   # The message no longer exists
                   raise ActivityFlushError, (
                       'Could not evaluate %s on %s' % (m.method_id , path))
@@ -586,8 +579,7 @@ class SQLDict(RAMDict, SQLBase):
 #             LOG('SQLDict.flush validate_value',0,validate_value)
             if validate_value is VALID:
               activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
-#               LOG('SQLDict.flush m.is_executed',0,m.is_executed)
-              if m.is_executed != MESSAGE_EXECUTED:                                                 # Make sure message could be invoked
+              if m.getExecutionState() != MESSAGE_EXECUTED:                                                 # Make sure message could be invoked
                 # The message no longer exists
                 raise ActivityFlushError, (
                     'Could not evaluate %s on %s' % (m.method_id , path))

@@ -70,7 +70,7 @@ class RAMQueue(Queue):
         get_transaction().commit() # Start a new transaction
         return 0    # Keep on ticking
       activity_tool.invoke(m)
-      if m.is_executed == MESSAGE_EXECUTED:
+      if m.getExecutionState() == MESSAGE_EXECUTED:
         self.deleteMessage(activity_tool, m) # Trash messages which are not validated (no error handling)
         get_transaction().commit() # Start a new transaction
         return 0    # Keep on ticking
@@ -117,7 +117,7 @@ class RAMQueue(Queue):
         else:
           if invoke:
             activity_tool.invoke(m)
-            if m.is_executed == MESSAGE_EXECUTED:
+            if m.getExecutionState() == MESSAGE_EXECUTED:
               activity_tool.unregisterMessage(self, m)
           else:
             activity_tool.unregisterMessage(self, m)
@@ -130,7 +130,7 @@ class RAMQueue(Queue):
         else:
           if invoke:
             activity_tool.invoke(m)
-            if m.is_executed == MESSAGE_EXECUTED:
+            if m.getExecutionState() == MESSAGE_EXECUTED:
               self.deleteMessage(activity_tool, m) # Only delete if no error happens
           else:
             self.deleteMessage(activity_tool, m)

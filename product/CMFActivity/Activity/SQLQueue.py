@@ -200,11 +200,11 @@ class SQLQueue(RAMQueue, SQLBase):
     notify_user_list = []
     non_executable_message_list = []
     for uid, m, priority in message_uid_priority_list:
-      if m.is_executed == MESSAGE_EXECUTED:
+      if m.getExecutionState() == MESSAGE_EXECUTED:
         deletable_uid_list.append(uid)
         if m.active_process:
           message_with_active_process_list.append(m)
-      elif m.is_executed == MESSAGE_NOT_EXECUTED:
+      elif m.getExecutionState() == MESSAGE_NOT_EXECUTED:
         if type(m.exc_type) is ClassType and \
            issubclass(m.exc_type, ConflictError):
           delay_uid_list.append(uid)
@@ -300,7 +300,7 @@ class SQLQueue(RAMQueue, SQLBase):
         # Try to invoke
         try:
           activity_tool.invoke(value[1])
-          if value[1].is_executed != MESSAGE_NOT_EXECUTED:
+          if value[1].getExecutionState() != MESSAGE_NOT_EXECUTED:
             # Commit so that if a message raises it doesn't causes previous
             # successfull messages to be rolled back. This commit might fail,
             # so it is protected the same way as activity execution by the
@@ -320,12 +320,7 @@ class SQLQueue(RAMQueue, SQLBase):
           # We must make sure that the message is not set as executed.
           # It is possible that the message is executed but the commit
           # of the transaction fails
-          value[1].is_executed = MESSAGE_NOT_EXECUTED
-          exc_info = sys.exc_info()
-          value[1].exc_type = exc_info[0]
-          value[1].exc_value = str(exc_info[1])
-          value[1].traceback = ''.join(ExceptionFormatter.format_exception(
-                                       *exc_info))
+          value[1].setExecutionState(MESSAGE_NOT_EXECUTED, context=activity_tool)
           try:
             makeMessageListAvailable([value[0]])
           except:
@@ -386,7 +381,7 @@ class SQLQueue(RAMQueue, SQLBase):
             validate_value = m.validate(self, activity_tool)
             if validate_value is VALID:
               activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
-              if m.is_executed != MESSAGE_EXECUTED:                                                 # Make sure message could be invoked
+              if m.getExecutionState() != MESSAGE_EXECUTED:                                                 # Make sure message could be invoked
                 # The message no longer exists
                 raise ActivityFlushError, (
                     'Could not evaluate %s on %s' % (m.method_id , path))
@@ -412,7 +407,7 @@ class SQLQueue(RAMQueue, SQLBase):
             validate_value = VALID
           if validate_value is VALID:
             activity_tool.invoke(m) # Try to invoke the message - what happens if invoke calls flushActivity ??
-            if m.is_executed != MESSAGE_EXECUTED:                                                 # Make sure message could be invoked
+            if m.getExecutionState() != MESSAGE_EXECUTED:                                                 # Make sure message could be invoked
               # The message no longer exists
               raise ActivityFlushError, (
                   'Could not evaluate %s on %s' % (method_id , path))
