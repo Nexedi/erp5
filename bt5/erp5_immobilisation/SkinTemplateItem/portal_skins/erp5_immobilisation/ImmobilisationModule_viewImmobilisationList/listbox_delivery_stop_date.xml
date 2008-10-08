@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.StandardFields</string>
-          <string>DateTimeField</string>
-        </tuple>
-        <none/>
+        <global name="DateTimeField" module="Products.Formulator.StandardFields"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -423,28 +420,28 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>Default</string> </key>
+                    <key> <string>Default</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>date</string> </key>
+                    <key> <string>date</string> </key>
                     <value>
                       <list>
-<string>year</string>
-<string>month</string>
-<string>day</string>
+                        <string>year</string>
+                        <string>month</string>
+                        <string>day</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>time</string> </key>
+                    <key> <string>time</string> </key>
                     <value>
                       <list>
-<string>hour</string>
-<string>minute</string>
-<string>ampm</string>
+                        <string>hour</string>
+                        <string>minute</string>
+                        <string>ampm</string>
                       </list>
                     </value>
                 </item>
