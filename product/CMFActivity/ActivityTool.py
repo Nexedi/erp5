@@ -358,7 +358,7 @@ Exception: %s %s
         # push the error in ZODB error_log
         error_log = getattr(context, 'error_log', None)
         if error_log is not None:
-          error_log.raising(exc_info)
+          error_log.raising(1)
       if exc_info == (None, None, None):
         if format_list is not None:
           self.traceback = ''.join(format_list(extract_stack()[:-1]))
