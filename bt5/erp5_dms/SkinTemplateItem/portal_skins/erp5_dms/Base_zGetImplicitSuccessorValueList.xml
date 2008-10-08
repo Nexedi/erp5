@@ -94,8 +94,8 @@
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-SET @current_path = \'\'; <dtml-var "\'\\0\'">\n
-SET @current_reference = \'\'; <dtml-var "\'\\0\'">\n
+SET @current_path = NULL; <dtml-var sql_delimiter>\n
+SET @current_reference = NULL; <dtml-var sql_delimiter>\n
 \n
 <dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(), portal_type=getPortalDocumentTypeList())">\n
 <dtml-let user_language="Localizer.get_selected_language()">\n
@@ -181,8 +181,8 @@ LIMIT 1000\n
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
-SET @current_path = \'\'; <dtml-var "\'\\0\'">\n
-SET @current_reference = \'\'; <dtml-var "\'\\0\'">\n
+SET @current_path = NULL; <dtml-var sql_delimiter>\n
+SET @current_reference = NULL; <dtml-var sql_delimiter>\n
 \n
 <dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(), portal_type=getPortalDocumentTypeList())">\n
 <dtml-let user_language="Localizer.get_selected_language()">\n
