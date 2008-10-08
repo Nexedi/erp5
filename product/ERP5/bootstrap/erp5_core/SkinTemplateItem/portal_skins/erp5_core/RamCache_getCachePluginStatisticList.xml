@@ -63,7 +63,7 @@ from Products.ERP5Type.Document import newTempBase\n
 cache_stats = context.getPortalObject().portal_caches.getCacheTotalMemorySize()\n
 cache_factory_list_stats = cache_stats[\'stats\']\n
 cache_plugin_id = context.getId()\n
-cache_factory_id = context.getParent().getId()\n
+cache_factory_id = context.getParentValue().getId()\n
 cache_plugin_stats = cache_factory_list_stats[cache_factory_id]\n
 cache_plugin_stats_data = cache_plugin_stats[\'cp_cache_keys_total_size\']\n
 \n
