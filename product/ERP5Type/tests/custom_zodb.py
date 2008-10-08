@@ -1,5 +1,6 @@
-import ZODB
 import os
+import shutil
+import ZODB
 from ZODB.DemoStorage import DemoStorage
 from ZODB.FileStorage import FileStorage
 from Products.ERP5Type.tests.utils import getMySQLArguments
@@ -14,19 +15,22 @@ if os.environ.get('erp5_load_data_fs'):
   else:
     Storage = DemoStorage(base=FileStorage(new_data_fs_path), quota=(1<<20))
   print("Restoring MySQL database ... ")
-  assert os.system("mysql %s < %s/dump.sql" % (
-                getMySQLArguments(), instance_home)) == 0
+  ret = os.system("mysql %s < %s/dump.sql" % (
+                getMySQLArguments(), instance_home))
+  assert ret == 0
   print("Restoring static files ... ")
   for dir in ('Constraint', 'Document', 'PropertySheet', 'Extensions'):
-    if os.path.exists('%s/%s.bak' % (instance_home, dir)):
-      assert os.system('rm -rf %s/%s' % (instance_home, dir)) == 0
-      assert os.system('cp -ar %s/%s.bak %s/%s' % (
-                instance_home, dir, instance_home, dir)) == 0
+    if os.path.exists(os.path.join(instance_home, '%s.bak' % dir)):
+      full_path = os.path.join(instance_home, dir)
+      shutil.rmtree(full_path)
+      shutil.copytree(os.path.join(instance_home, '%s.bak' % dir),
+                      full_path, symlinks=True)
 elif os.environ.get('erp5_save_data_fs'):
   print("Cleaning static files ... ")
   for dir in ('Constraint', 'Document', 'PropertySheet', 'Extensions'):
-    if os.path.exists('%s/%s' % (instance_home, dir)):
-      assert os.system('rm -f %s/%s/*' % (instance_home, dir)) == 0
+    full_path = os.path.join(instance_home, dir)
+    if os.path.exists(full_path):
+      shutil.rmtree(full_path)
   if os.path.exists(new_data_fs_path):
     os.remove(new_data_fs_path)
   Storage = FileStorage(new_data_fs_path)
