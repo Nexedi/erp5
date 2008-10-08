@@ -746,7 +746,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       return
     # Retrieve the list of users with a role and delete default roles
     if reset_local_roles:
-      user_role_list = map(lambda x:x[0], object.get_local_roles())
+      user_role_list = [x[0] for x in object.get_local_roles()]
       object.manage_delLocalRoles(user_role_list)
     if getattr(object, 'workflow_history', None) is not None and reset_workflow:
       object.workflow_history = PersistentMapping()
@@ -821,8 +821,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       result += xml.attributes.values()[0].nodeValue
       for subnode in self.getElementNodeList(xml):  #getElementNodeList
         if subnode.nodeName == 'xupdate:attribute':
-          result += ' ' + subnode.attributes.values()[0].nodeValue + '='
-          result += '"' + subnode.childNodes[0].nodeValue + '"'
+          result += ' %s=' % subnode.attributes.values()[0].nodeValue
+          result += '"%s"' % subnode.childNodes[0].nodeValue
       result += '>'
       # Then dumps the xml and remove what we does'nt want
       #xml_string = StringIO()
@@ -836,7 +836,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       maxi = max(xml_string.find('>')+1,\
                  xml_string.rfind('</xupdate:attribute>')+len('</xupdate:attribute>'))
       result += xml_string[maxi:xml_string.find('</xupdate:element>')]
-      result += '</' + xml.attributes.values()[0].nodeValue + '>'
+      result += '</%s>' % xml.attributes.values()[0].nodeValue
       return self.convertToXml(result.encode('utf-8'))
     if xml.nodeName in (self.XUPDATE_UPDATE+self.XUPDATE_DEL):
       result = u'<'
@@ -862,7 +862,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       xml_string = unicode(xml_string,encoding='utf-8')
       maxi = xml_string.find('>')+1
       result += xml_string[maxi:xml_string.find('</%s>' % xml.nodeName)]
-      result += '</' + property + '>'
+      result += '</%s>' % (property)
       #LOG('getElementFromXupdate, result:',0,repr(result))
       return self.convertToXml(result)
     return xml
@@ -896,7 +896,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         data = ''
       return data
     #data = data.replace('\n','')
-    if type(data) is type(u"a"):
+    if isinstance(data, unicode):
       data = data.encode(self.getEncoding())
     if data == 'None':
       return None
