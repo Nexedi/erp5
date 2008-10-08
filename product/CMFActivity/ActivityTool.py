@@ -248,11 +248,13 @@ class Message:
         # Change user if required (TO BE DONE)
         # We will change the user only in order to execute this method
         user = self.changeUser(self.user_name, activity_tool)
-        # XXX: There is no check to see if user is allowed to access
-        # that method !
-        method = getattr(obj, self.method_id, None)
         try:
-          if method is None:
+          try:
+            # XXX: There is no check to see if user is allowed to access
+            # that method !
+            method = obj.unrestrictedTraverse(self.method_id)
+          except AttributeError:
+            method = None
             self.setExecutionState(MESSAGE_NOT_EXECUTABLE, context=activity_tool)
           else:
             result = method(*self.args, **self.kw)
@@ -353,21 +355,22 @@ Exception: %s %s
     if is_executed != MESSAGE_EXECUTED:
       if exc_info is None:
         exc_info = sys.exc_info()
+      if exc_info == (None, None, None):
+        # Raise a dummy exception, ignore it, fetch it and use it as if it was the error causing message non-execution. This will help identifyting the cause of this misbehaviour.
+        try:
+          raise Exception, 'Message execution failed, but there is no exception to explain it. This is a dummy exception so that one can track down why we end up here outside of an exception handling code path.'
+        except:
+          pass
+        exc_info = sys.exc_info()
       if log:
         LOG('ActivityTool', WARNING, 'Could not call method %s on object %s. Activity created at:\n%s' % (self.method_id, self.object_path, self.call_traceback), error=exc_info)
         # push the error in ZODB error_log
         error_log = getattr(context, 'error_log', None)
         if error_log is not None:
-          error_log.raising(1)
-      if exc_info == (None, None, None):
-        if format_list is not None:
-          self.traceback = ''.join(format_list(extract_stack()[:-1]))
-        else:
-          self.traceback = ''
-      else:
-        self.traceback = ''.join(ExceptionFormatter.format_exception(*exc_info))
+          error_log.raising(exc_info)
       self.exc_type = exc_info[0]
       self.exc_value = str(exc_info[1])
+      self.traceback = ''.join(ExceptionFormatter.format_exception(*exc_info))
 
   def getExecutionState(self):
     return self.is_executed
