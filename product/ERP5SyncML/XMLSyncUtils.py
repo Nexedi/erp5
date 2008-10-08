@@ -206,8 +206,8 @@ class XMLSyncUtilsMixin(SyncCode):
     This is used in order to confirm that an object was correctly
     synchronized
     """
-    if remote_xml is not None :
-      msg_ref=remote_xml.xpath("string(//MsgID)").encode('utf-8')
+    if remote_xml is not None:
+      msg_ref=remote_xml.xpath("string(/SyncML/SyncHdr/MsgID)").encode('utf-8')
       cmd_ref=remote_xml.xpath("string(.//CmdID)").encode('utf-8')
       target_ref=remote_xml.xpath("string(.//Target/LocURI)").encode('utf-8')
       source_ref=remote_xml.xpath("string(.//Source/LocURI)").encode('utf-8')
