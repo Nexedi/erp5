@@ -79,6 +79,7 @@ while bound_start.Day() is not \'Sunday\':\n
    bound_start =  bound_start - 1\n
 current_date =  bound_start + 7 * bound_variation\n
 bound_stop  = current_date + 7\n
+current_date =  DateTime(current_date.year() , current_date.month() , current_date.day())\n
 \n
 default_link_url =\'setLanePath?form_id=%s&list_selection_name=%s\' %(\n
                                  form_id, selection_name)\n
@@ -123,6 +124,7 @@ if depth == 0:\n
 \n
     category_list.append(o)\n
     current_date = current_date + 1\n
+    current_date =  DateTime(current_date.year() , current_date.month() , current_date.day())\n
 else:\n
   return domain_list\n
 \n

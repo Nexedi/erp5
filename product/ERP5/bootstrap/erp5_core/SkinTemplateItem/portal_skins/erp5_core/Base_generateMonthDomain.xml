@@ -127,6 +127,7 @@ if depth == 0:\n
 \n
     # go to next date\n
     current_date = current_date + 3\n
+    current_date =  DateTime(current_date.year() , current_date.month() , current_date.day())\n
 else:\n
   return domain_list  \n
 \n
