@@ -627,7 +627,8 @@ class WizardTool(BaseTool):
       return self.next(REQUEST=REQUEST)
     else:
       # incorrect user_id / password
-      REQUEST.set('portal_status_message', self.Base_translateString('Incorrect Configuration Key'))
+      REQUEST.set('portal_status_message', 
+                  self.callRemoteProxyMethod('WizardTool_viewIncorrectConfigurationKeyMessageRenderer'))
       return self.view()
 
   def _isCorrectConfigurationKey(self, user_id, password):
