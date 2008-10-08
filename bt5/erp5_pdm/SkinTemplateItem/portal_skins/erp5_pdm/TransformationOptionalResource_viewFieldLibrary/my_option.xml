@@ -114,7 +114,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getParent().getResourceValue().getVariationCategoryItemList(base_category_list=here.getPortalOptionBaseCategoryList())</string> </value>
+            <value> <string>python: here.getParentValue().getResourceValue().getVariationCategoryItemList(base_category_list=here.getPortalOptionBaseCategoryList())</string> </value>
         </item>
       </dictionary>
     </pickle>
