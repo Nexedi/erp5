@@ -67,10 +67,15 @@
                  tal:condition="python: form.update_action!=\'\'"\n
                  id="dialog_update_button"\n
                  name="Base_showUpdateDialog:method" type="submit" />\n
--->\n
+\n
           <input tal:attributes="value python: here.Base_getFormViewDialogActionButtonTitle(form);"\n
                  i18n:attributes="value" i18n:domain="ui" accesskey="V"\n
                  id="dialog_submit_button" type="submit" name="Base_callDialogMethod:method" />\n
+-->\n
+       \n
+<tal:block tal:replace="structure python: \n
+                          here.portal_wizard.callRemoteProxyMethod(\'WizardTool_viewStartButtonLabelMessageRenderer\')"/>\n
+\n
         </tal:block>\n
       </tal:block>\n
     </tal:block>\n
