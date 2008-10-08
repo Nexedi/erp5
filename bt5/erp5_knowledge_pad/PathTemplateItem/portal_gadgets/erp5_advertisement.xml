@@ -14,7 +14,13 @@
             <value>
               <list>
                 <string>Assignor</string>
-                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Copy_or_Move_Permission</string> </key>
+            <value>
+              <list>
                 <string>Owner</string>
               </list>
             </value>
@@ -63,6 +69,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>multiple_instances_allowed</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -71,6 +87,7 @@
             <value>
               <tuple>
                 <string>gadget_type/web_front</string>
+                <string>gadget_type/erp5_front</string>
               </tuple>
             </value>
         </item>
@@ -83,6 +100,10 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>erp5_advertisement</string> </value>
+        </item>
+        <item>
+            <key> <string>multiple_instances_allowed</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

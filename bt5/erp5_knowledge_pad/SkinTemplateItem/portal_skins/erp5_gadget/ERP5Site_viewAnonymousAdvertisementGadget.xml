@@ -39,17 +39,20 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<h4>Management Solutions</h4>\n
+<div class=\'gadget_advertisement\'>\n
+  <h4>Management Solutions</h4>\n
 \n
-<h5>Accounting</h5>\n
-<p>ERP5 Accounting provides modern multidimensional accounting which meets \n
-   IFRS and complex analytical budgeting requirements.</p>\n
+  <h5>Accounting</h5>\n
+  <p>ERP5 Accounting provides modern multidimensional accounting which meets \n
+     IFRS and complex analytical budgeting requirements.</p>\n
 \n
-<h5>Customer Relation</h5>\n
-<p>ERP5 CRM provides sales automation and issue management.</p>\n
+  <h5>Customer Relation</h5>\n
+  <p>ERP5 CRM provides sales automation and issue management.</p>\n
 \n
-<h5>Production Management</h5>\n
-<p>ERP5 MRP provides supply chain and production management.</p>
+  <h5>Production Management</h5>\n
+  <p>ERP5 MRP provides supply chain and production management.</p>\n
+</div>\n
+
 
 ]]></string> </value>
         </item>
