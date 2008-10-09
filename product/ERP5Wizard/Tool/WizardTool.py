@@ -57,6 +57,16 @@ installation_status = {'bt5': {'current': 0,
 # cookie name to store user's preferred language name
 LANGUAGE_COOKIE_NAME = 'configurator_user_preferred_language'
 
+def getAvailableLanguageFromHttpAcceptLanguage(http_accept_language,
+                                               available_language_list,
+                                               default='en'):
+  for language_set in http_accept_language.split(','):
+    language_tag = language_set.split(';')[0]
+    language = language_tag.split('-')[0]
+    if language in available_language_list:
+      return language
+  return default
+
 def _isUserAcknowledged(cookiejar):
   """ Is user authenticated to remote system through a cookie. """
   for cookie in cookiejar:
@@ -445,19 +455,14 @@ class WizardTool(BaseTool):
 
       if configurator_user_preferred_language is None:
         # Find a preferred language from HTTP_ACCEPT_LANGUAGE
-        accept_language = REQUEST.get('HTTP_ACCEPT_LANGUAGE', 'en')
-        accept_language_tag = accept_language.split(';')[0].split(',')[0]
-        primary_language = accept_language_tag.split('-')[0]
-
-        configuration_language_list = [language_set[1]
-                                       for language_set in self.WizardTool_getConfigurationLanguageList()]
-
-        if primary_language in configuration_language_list:
-          configurator_user_preferred_language = primary_language
+        available_language_list = [i[1] for i in self.WizardTool_getConfigurationLanguageList()]
+        configurator_user_preferred_language = getAvailableLanguageFromHttpAcceptLanguage(
+          REQUEST.get('HTTP_ACCEPT_LANGUAGE', 'en'),
+          available_language_list)
 
     if configurator_user_preferred_language is None:
       configurator_user_preferred_language = 'en'
-    
+
     parameter_dict['user_preferred_language'] = configurator_user_preferred_language
 
   def _updateParameterDictWithFileUpload(self, parameter_dict):
