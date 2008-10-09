@@ -1,3 +1,6 @@
+2008-10-9 yusei
+* Handle HTTP_ACCEPT_LANGUAGE better.
+
 2008-10-06 ivan
 * User server side rendered messages (for i18n)
 
