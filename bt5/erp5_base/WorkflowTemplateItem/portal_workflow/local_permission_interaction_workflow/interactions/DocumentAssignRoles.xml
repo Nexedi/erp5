@@ -24,15 +24,15 @@
         <item>
             <key> <string>activate_script_name</string> </key>
             <value>
-              <list>
-                <string>Document_assignRoleToGroup</string>
-              </list>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
             <value>
-              <tuple/>
+              <list>
+                <string>Document_assignRoleToGroup</string>
+              </list>
             </value>
         </item>
         <item>
@@ -60,7 +60,7 @@
         </item>
         <item>
             <key> <string>once_per_transaction</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>portal_type_filter</string> </key>
