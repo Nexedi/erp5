@@ -90,7 +90,8 @@ if not_assigned_bug_list:\n
     addBodyLine("    %s/%s/view" % (server_url, bug.getRelativeUrl()))\n
     addBodyLine(\'\')\n
 \n
-portal.portal_notifications.sendMessage(sender=None,\n
+if bug_count:\n
+  portal.portal_notifications.sendMessage(sender=None,\n
                           recipient=[],\n
                           subject="%s: %s Open Bugs" % (portal.title_or_id(), bug_count,),\n
                           message=\'\\n\'.join(body_text_line_list))\n
