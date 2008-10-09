@@ -77,6 +77,8 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
     sort_on = tuple([isinstance(x, str) and x or tuple(x) for x in sort_on])
     try:
       sort_kw = sort_kw_cache[sort_on]
+      if sort_order is not None:
+        sort_kw["reverse"] = (sort_order in ('descending', 'reverse', 'DESC'))
     except KeyError:
       new_sort_on = []
       reverse_dict = {}
