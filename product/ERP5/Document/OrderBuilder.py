@@ -629,12 +629,12 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         self._setDeliveryMovementProperties(
                             object_to_update, movement, property_dict,
                             update_existing_movement=update_existing_movement,
-                            force_update=force_update)
+                            force_update=force_update, activate_kw=activate_kw)
 
   def _setDeliveryMovementProperties(self, delivery_movement,
                                      simulation_movement, property_dict,
                                      update_existing_movement=0,
-                                     force_update=0):
+                                     force_update=0, activate_kw=None):
     """
       Initialize or update delivery movement properties.
       Set delivery ratio on simulation movement.

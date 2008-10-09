@@ -144,7 +144,7 @@ class DeliveryBuilder(OrderBuilder):
   def _setDeliveryMovementProperties(self, delivery_movement,
                                      simulation_movement, property_dict,
                                      update_existing_movement=0,
-                                     force_update=0):
+                                     force_update=0, activate_kw=None):
     """
       Initialize or update delivery movement properties.
       Set delivery ratio on simulation movement.
@@ -155,8 +155,10 @@ class DeliveryBuilder(OrderBuilder):
                             self, delivery_movement,
                             simulation_movement, property_dict,
                             update_existing_movement=update_existing_movement,
-                            force_update=force_update)
-    simulation_movement.edit(delivery_value=delivery_movement)
+                            force_update=force_update, 
+                            activate_kw=activate_kw)
+    simulation_movement.edit(delivery_value=delivery_movement,
+                             activate_kw=activate_kw)
 
   # Simulation consistency propagation
   security.declareProtected(Permissions.ModifyPortalContent,

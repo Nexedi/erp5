@@ -466,10 +466,13 @@ class FakeMovement:
     return self.__movement_list[0].getVariationCategoryList(
         omit_optional_variation=omit_optional_variation, **kw)
 
-  def edit(self, **kw):
+  def edit(self, activate_kw=None, **kw):
     """
       Written in order to call edit in delivery builder,
       as it is the generic way to modify object.
+
+      activate_kw is here for compatibility reason with Base.edit,
+      it will not be used here.
     """
     for key in kw.keys():
       if key == 'delivery_ratio':
