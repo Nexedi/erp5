@@ -695,11 +695,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     Retrieve the portal type from an xml
     """
     portal_type = None
-    for subnode in self.getAttributeNodeList(xml):
-      if subnode.nodeName == 'portal_type':
-        portal_type = subnode.nodeValue
-        portal_type = self.convertXmlValue(portal_type)
-        return portal_type
+    attr_list = xml.xpath('.//@portal_type[1]')
+    if attr_list:
+      portal_type = attr_list[0].value.encode('utf-8')
     return portal_type
 
   security.declareProtected(Permissions.AccessContentsInformation,'getPropertyType')
@@ -707,12 +705,11 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     Retrieve the portal type from an xml
     """
-    p_type = None # use getElementsByTagName !!!! XXX
-    for subnode in self.getAttributeNodeList(xml):
-      if subnode.nodeName == 'type':
-        p_type = subnode.nodeValue
-        p_type = self.convertXmlValue(p_type,data_type='string')
-        return p_type
+    p_type = None
+    attr_list = xml.xpath('.//@type[1]')
+    if attr_list:
+      p_type = attr_list[0].value.encode('utf-8')
+      p_type = self.convertXmlValue(p_type, data_type='string')
     return p_type
 
   security.declareProtected(Permissions.AccessContentsInformation,'getXupdateObjectType')
