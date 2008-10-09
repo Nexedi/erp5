@@ -76,10 +76,8 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
     # try to cache keyword arguments for sort()
     sort_on = tuple([isinstance(x, str) and x or tuple(x) for x in sort_on])
     try:
-      sort_kw = sort_kw_cache[sort_on]
-      if sort_order is not None:
-        sort_kw["reverse"] = (sort_order in ('descending', 'reverse', 'DESC'))
-    except KeyError:
+      sort_kw = sort_kw_cache[(sort_on, sort_order)]
+    except (KeyError, TypeError):
       new_sort_on = []
       reverse_dict = {}
       for key in sort_on:
@@ -126,7 +124,7 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
             value_list.append(x)
           return value_list
         sort_kw = {'key':sortValue, 'reverse':reverse}
-        sort_kw_cache[sort_on] = sort_kw
+        sort_kw_cache[(sort_on, sort_order)] = sort_kw
       else:
         # otherwise we use sort(cmp=func).
         def sortValues(a, b):
@@ -147,7 +145,7 @@ def sortValueList(value_list, sort_on=None, sort_order=None, **kw):
               break
           return result
         sort_kw = {'cmp':sortValues}
-        sort_kw_cache[sort_on] = sort_kw
+        sort_kw_cache[(sort_on, sort_order)] = sort_kw
 
     if isinstance(value_list, LazyMap):
       new_value_list = [x for x in value_list]
