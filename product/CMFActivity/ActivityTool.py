@@ -252,8 +252,8 @@ class Message:
           try:
             # XXX: There is no check to see if user is allowed to access
             # that method !
-            method = obj.unrestrictedTraverse(self.method_id)
-          except KeyError:
+            method = getattr(obj, self.method_id)
+          except:
             method = None
             self.setExecutionState(MESSAGE_NOT_EXECUTABLE, context=activity_tool)
           else:

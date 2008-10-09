@@ -2973,9 +2973,9 @@ class TestCMFActivity(ERP5TypeTestCase):
       LOG('Testing... ',0,message)
     portal = self.getPortalObject()
     activity_tool = self.getActivityTool()
-    def checkMessage(message):
+    def checkMessage(message, exception_type):
       self.assertNotEqual(message.getExecutionState(), 1) # 1 == MESSAGE_EXECUTED
-      self.assertEqual(message.exc_type, KeyError)
+      self.assertEqual(message.exc_type, exception_type)
       self.assertNotEqual(message.traceback, None)
     # With Message.__call__
     # 1: activity context does not exist when activity is executed
@@ -2989,7 +2989,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     message = message_list[0]
     portal.organisation_module._delOb(organisation.id)
     message(activity_tool)
-    checkMessage(message)
+    checkMessage(message, KeyError)
     activity_tool.manageCancel(message.object_path, message.method_id)
     # 2: activity method does not exist when activity is executed
     portal.organisation_module.activate().this_method_does_not_exist()
@@ -2998,7 +2998,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.assertEqual(len(message_list), 1)
     message = message_list[0]
     message(activity_tool)
-    checkMessage(message)
+    checkMessage(message, AttributeError)
     activity_tool.manageCancel(message.object_path, message.method_id)
 
     # With ActivityTool.invokeGroup
@@ -3013,7 +3013,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     message = message_list[0]
     portal.organisation_module._delOb(organisation.id)
     activity_tool.invokeGroup('getTitle', [message])
-    checkMessage(message)
+    checkMessage(message, KeyError)
     activity_tool.manageCancel(message.object_path, message.method_id)
     # 2: activity method does not exist when activity is executed
     portal.organisation_module.activate().this_method_does_not_exist()
@@ -3022,7 +3022,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.assertEqual(len(message_list), 1)
     message = message_list[0]
     activity_tool.invokeGroup('this_method_does_not_exist', [message])
-    checkMessage(message)
+    checkMessage(message, KeyError)
     activity_tool.manageCancel(message.object_path, message.method_id)
 
     # Unadressed error paths (in both cases):
