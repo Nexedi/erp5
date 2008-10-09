@@ -861,7 +861,7 @@ class ListBoxRenderer:
 
     # Create a selection, if not present, with the default sort order.
     if selection is None:
-      selection = Selection(params = self.getDefaultParamList(), default_sort_on = self.getDefaultSortColumnList())
+      selection = Selection(params = dict(self.getDefaultParamList()), default_sort_on = self.getDefaultSortColumnList())
       selection = selection.__of__(selection_tool)
     # Or make sure all sort arguments are valid.
     else:
