@@ -89,18 +89,14 @@
      <input type="Submit"  \n
             value="Previous" \n
             name="previous:method"\n
-            i18n:attributes="value" \n
-            i18n:domain="ui" \n
             tal:attributes="value python: options.get(\'previous\')"/>\n
    </tal:block>\n
 \n
    <tal:block tal:condition="python: options.get(\'next\') is not None">\n
      <span tal:condition="python: form.action!=\'\'">\n
      <input type="Submit"  \n
-            value="Search"\n
+            value="Next"\n
             name="next:method"\n
-            i18n:attributes="value" \n
-            i18n:domain="ui"\n
             tal:attributes="value python: options.get(\'next\')" />\n
             </span>\n
    </tal:block>\n
