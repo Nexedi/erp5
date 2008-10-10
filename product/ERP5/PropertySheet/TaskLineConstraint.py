@@ -35,8 +35,8 @@ class TaskLineConstraint:
       'description'   : 'Property quantity must be defined',
       'type'          : 'PropertyExistence',
       'quantity'    : None,
-      "message_property_not_set" : 'Quantity must be defined at Lines',
-      "message_no_such_property" : 'Quantity must be defined at Lines'
+      "message_property_not_set" : 'Quantity must be defined in lines',
+      "message_no_such_property" : 'Quantity must be defined in lines'
     },
     { 'id'            : 'resource',
       'description'   : 'Resource must be defined',
@@ -45,6 +45,6 @@ class TaskLineConstraint:
       'max_arity'     : '1',
       'portal_type'   : ( ),
       'base_category' : ('resource',),
-      'message_arity_not_in_range' : 'Resource must be defined at Lines.' , 
+      'message_arity_not_in_range' : 'Service must be defined in lines',
     },
   )

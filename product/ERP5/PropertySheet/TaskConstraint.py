@@ -33,13 +33,6 @@ class TaskConstraint:
   """
       
   _constraints = (
-    { 'id'            : 'title_existence',
-      'description'   : 'Title must be defined',
-      'type'          : 'PropertyExistence',
-      'title'         :  None,
-      'message_property_not_set': 'Title must be defined',
-      'message_no_such_property' : 'Title must be defined',
-    },
     { 'id'            : 'source_category_membership_arity',
       'description'   : 'Source must be defined',
       'type'          : 'CategoryMembershipArity',
@@ -76,6 +69,6 @@ class TaskConstraint:
       'type'          : 'ContentExistence',
       'portal_type'   : ('Task Line', 'Task Report Line' ),
       'message_no_subobject_portal_type' : \
-                                'It is required create at least one Line.',
+                                'At least one line is required',
     },
   )
