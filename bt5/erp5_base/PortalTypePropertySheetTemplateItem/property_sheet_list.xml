@@ -1,6 +1,7 @@
 <property_sheet_list>
  <portal_type id="Notification Message">
   <item>Reference</item>
+  <item>ItemAggregation</item>
  </portal_type>
  <portal_type id="Organisation">
   <item>DefaultImage</item>

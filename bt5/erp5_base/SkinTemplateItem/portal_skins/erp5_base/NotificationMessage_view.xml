@@ -85,6 +85,7 @@
                     <value>
                       <list>
                         <string>my_description</string>
+                        <string>my_aggregate_title_list</string>
                       </list>
                     </value>
                 </item>
