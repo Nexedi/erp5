@@ -60,13 +60,13 @@ if not application_number and id:\n
   application_number = id\n
 \n
 keep_items = {}\n
-state = document.getValidationState()\n
 \n
 # default view is history view\n
 form_id=\'PDFDocument_viewHistory\'\n
 \n
 if application_number:\n
   document = context.portal_catalog.getResultValue(id=application_number)\n
+  state = document.getValidationState()\n
   if document is not None:\n
     if state == \'draft\':\n
       form_id=\'view\'\n
@@ -128,9 +128,9 @@ return context.Base_redirect(form_id=\'view\', keep_items = {\'portal_status_mes
                             <string>portal</string>
                             <string>N_</string>
                             <string>keep_items</string>
+                            <string>form_id</string>
                             <string>document</string>
                             <string>state</string>
-                            <string>form_id</string>
                             <string>None</string>
                             <string>msg</string>
                           </tuple>
