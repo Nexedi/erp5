@@ -1,8 +1,0 @@
-<type_roles>
-  <role id='Author'>
-   <property id='title'>Knowledge User</property>
-   <property id='priority'>10.0</property>
-   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromAssignment</property>
-   <multi_property id='category'>function/knowledge_user</multi_property>
-  </role>
-</type_roles>
