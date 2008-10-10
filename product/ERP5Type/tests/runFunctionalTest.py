@@ -264,7 +264,7 @@ Following tests failed:
     print summary
     print '-' * 79
     print file_content
-  return failures
+  return int(failures)
 
 if __name__ == "__main__":
   parseArgs()
