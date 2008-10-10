@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+from copy import deepcopy
+
 from Products.Formulator.Form import Form, BasicForm, ZMIForm
 from Products.Formulator.Form import manage_addForm, manage_add, initializeForm
 from Products.Formulator.Errors import FormValidationError, ValidationError
@@ -573,6 +575,19 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
     def _exec(self, bound_names, args, kw):
         pt = getattr(self,self.pt)
         return pt._exec(self, bound_names, args, kw)
+
+    def manage_renameObject(self, id, new_id, REQUEST=None):
+      # overriden to keep the order of a field after rename
+      groups = deepcopy(self.groups)
+      ret = ZMIForm.manage_renameObject(self, id, new_id, REQUEST=REQUEST)
+      for group_id, field_id_list in groups.items():
+        if id in field_id_list:
+          index = field_id_list.index(id)
+          field_id_list.pop(index)
+          field_id_list.insert(index, new_id)
+          groups[group_id] = field_id_list
+      self.groups = groups
+      return ret
 
     # Utilities
     def ErrorFields(self, validation_errors):
