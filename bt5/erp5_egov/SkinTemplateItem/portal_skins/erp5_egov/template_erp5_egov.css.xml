@@ -614,6 +614,20 @@ fieldset.register_informations{\n
   margin:1em;\n
 }\n
 \n
+.login_and_password{\n
+  font-size: 2em;\n
+  line-height: 1em;\n
+  margin-bottom: 0.2em;\n
+}\n
+\n
+.login_and_password .password,\n
+.login_and_password .login{\n
+  font-weight: bold;\n
+  background: #EEE;\n
+  border: solid grey 1px;\n
+  padding: 0 4px;\n
+}\n
+\n
 .field .input .big_button,\n
 .field .input .next_step{\n
   float:left;\n

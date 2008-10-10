@@ -42,7 +42,7 @@
 <div class="title">\n
   <tal:bloc i18n:translate="" i18n:domain="ui">\n
     Your application has been submitted successfully under the reference\n
-  </tal:bloc>\n
+  </tal:bloc> :\n
   <div class="reference"> \n
     <tal:bloc tal:content="here/getId">20080512-CF1</tal:bloc>\n
   </div>\n
@@ -58,16 +58,15 @@
   <a href="http://www.safi.sn">http://www.safi.sn</a>\n
 </div>\n
 <tal:bloc tal:condition="python: here.getPortalType() == \'Subscription Form\'">\n
-  <div class="explanation">\n
+  <div class="login_and_password">\n
     <tal:bloc i18n:translate="" i18n:domain="ui">\n
       And use the login \n
     </tal:bloc>\n
-    "<b tal:content="here/getId">20080512-CF1</b>"\n
+    <span class="login" tal:content="here/getId">20080512-CF1</span>\n
     <tal:bloc i18n:translate="" i18n:domain="ui">\n
     and the password \n
     </tal:bloc>\n
-    "<b tal:content="here/getPassword">pin02nuz</b>"\n
-  \n
+    <span class="password" tal:content="here/getPassword">pin02nuz</span>\n
   </div>\n
 </tal:bloc>\n
 <div class="explanation">\n
