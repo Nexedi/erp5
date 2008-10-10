@@ -71,10 +71,37 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 bank_account = state_change[\'object\']\n
 \n
 # use of the constraint\n
-if bank_account.getParentValue().getPortalType()!=\'Person\':\n
+if bank_account.getParentValue().getPortalType()!= \'Person\':\n
   vliste = bank_account.checkConsistency()\n
   if len(vliste) != 0:\n
     raise ValidationFailed, (vliste[0].getTranslatedMessage(),)\n
+\n
+if bank_account.getParentValue().getPortalType()== \'Person\':\n
+  # Can\'t have two bank account\n
+  for obj in bank_account.getParentValue().objectValues():\n
+    if obj.getPortalType() == "Bank Account" and obj.getValidationState() not in (\'draft\', \'closed\') \\\n
+           and obj.getSource() == bank_account.getSource():\n
+      raise ValidationFailed, "You cannot open two bank account for the same person in the same site"\n
+\n
+valid_state = ["valid", "being_closed", "validating_closing",\n
+               "being_modified", "validating_modification", "closed"]\n
+\n
+# Check same reference do not already exists\n
+same_ref_list = context.portal_catalog(validation_state=valid_state,\n
+                                       portal_type="Bank Account",\n
+                                       reference=bank_account.getReference())\n
+\n
+if len(same_ref_list):\n
+  raise ValidationFailed, "Bank account with same reference already exists"\n
+\n
+# Same for internal reference if exists\n
+if bank_account.getInternalBankAccountNumber() not in ("", None):\n
+  same_ref_list = context.portal_catalog(validation_state=valid_state,\n
+                                         portal_type="Bank Account",\n
+                                         string_index=bank_account.getInternalBankAccountNumber())\n
+  \n
+  if len(same_ref_list):\n
+    raise ValidationFailed, "Bank account with same internal reference already exists"\n
 </string> </value>
         </item>
         <item>
@@ -128,6 +155,12 @@ if bank_account.getParentValue().getPortalType()!=\'Person\':\n
                             <string>_getattr_</string>
                             <string>vliste</string>
                             <string>len</string>
+                            <string>_getiter_</string>
+                            <string>obj</string>
+                            <string>valid_state</string>
+                            <string>context</string>
+                            <string>same_ref_list</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
