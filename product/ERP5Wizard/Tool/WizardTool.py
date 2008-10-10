@@ -46,6 +46,7 @@ from base64 import encodestring, decodestring
 from urllib import quote, unquote
 from DateTime import DateTime
 from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlugin
+from Products.ERP5Type.Cache import CachingMethod
 
 # global (RAM) cookie storage
 cookiejar = cookielib.CookieJar()
@@ -241,8 +242,12 @@ class WizardTool(BaseTool):
   def _getSubsribedUserAndPassword(self):
     """Retrieve the username and password for the subscription from
     the system."""
-    user = self.getExpressConfigurationPreference('preferred_express_user_id', '')
-    pw =  self.getExpressConfigurationPreference('preferred_express_password', '')
+    user = CachingMethod(self.getExpressConfigurationPreference,  \
+                         'WizardTool_preferred_express_user_id', \
+                         cache_factory='erp5_content_long')('preferred_express_user_id', '')
+    pw = CachingMethod(self.getExpressConfigurationPreference,  \
+                       'WizardTool_preferred_express_password', \
+                       cache_factory='erp5_content_long')('preferred_express_password', '')
     return (user, pw)
 
   # This is a custom opener director for not handling redirections
@@ -797,11 +802,15 @@ class WizardTool(BaseTool):
 
   security.declareProtected(Permissions.View, 'getServerUrl')
   def getServerUrl(self):
-    return self.getExpressConfigurationPreference('preferred_witch_tool_server_url', '')
+    return CachingMethod(self.getExpressConfigurationPreference,  \
+                         'WizardTool_preferred_witch_tool_server_url', \
+                         cache_factory='erp5_content_long')('preferred_witch_tool_server_url', '')
 
   security.declareProtected(Permissions.View, 'getServerRoot')
   def getServerRoot(self):
-    return self.getExpressConfigurationPreference('preferred_witch_tool_server_root', '')
+    return CachingMethod(self.getExpressConfigurationPreference,  \
+                         'WizardTool_preferred_witch_tool_server_root', \
+                         cache_factory='erp5_content_long')('preferred_witch_tool_server_root', '')
 
   security.declareProtected(Permissions.View, 'getExpressConfigurationPreference')
   def getExpressConfigurationPreference(self, preference_id, default = None):
