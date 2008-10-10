@@ -57,19 +57,22 @@
 
 changed_object = state_change[\'object\']\n
 login = changed_object.getCompanyName().lower()\n
+portal_catalog = changed_object.portal_catalog\n
+ninea = changed_object.getNinea()\n
 \n
-# check that no existing organisation have the same RCCM number or login\n
+# check that no existing organisation have the same NINEA number or login\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
-result = changed_object.portal_catalog(portal_type=\'Organisation\',\n
-           corporate_registration_code=changed_object.getRccm())\n
+result = portal_catalog( portal_type=\'Organisation\',\n
+                         vat_code=changed_object.getNinea())\n
+\n
 if len(result) > 1:\n
   raise ValidationFailed, "Error : There is more than one company with the "\\\n
-    " registration code \'%s\'" % changed_object.getRccm()\n
+    " NINEA code \'%s\'" % ninea \n
 \n
 if len(result) == 1 and result[0].getObject().getReference():\n
-  raise ValidationFailed, "Error : A company with the registration code \'%s\'"\\\n
-    " already exists and have already an account" % changed_object.getRccm()\n
+  raise ValidationFailed, "Error : A company with the NINEA code \'%s\'"\\\n
+    " already exists and have already an account" % ninea\n
 \n
 if len((changed_object.portal_catalog(portal_type=\'Organisation\',\n
     reference=login))):\n
@@ -126,6 +129,8 @@ if len((changed_object.portal_catalog(portal_type=\'Organisation\',\n
                             <string>changed_object</string>
                             <string>_getattr_</string>
                             <string>login</string>
+                            <string>portal_catalog</string>
+                            <string>ninea</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>result</string>

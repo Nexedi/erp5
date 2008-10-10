@@ -59,7 +59,8 @@
   <input type="hidden" name="current_action" value=""\n
          tal:attributes="value request/current_action" />-->\n
   <span class="onleft">\n
-    <button type="submit" class="save" title="Save" name="Base_edit:method"  \n
+    <input type="hidden" name="next_url" value="PDFDocument_viewLoginInformation" />\n
+    <button type="submit" class="save" title="Save" name="EGov_Base_editAndRedirect:method"  \n
       i18n:attributes="title" i18n:domain="ui">\n
       <span class="image"></span>\n
       <span class="description" i18n:translate="" i18n:domain="ui">Save draft and continue later</span>\n

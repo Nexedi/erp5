@@ -120,7 +120,7 @@ class TestEGovMixin(SecurityTestCase):
     # add a dummy mailhost not to send real messages
     if 'MailHost' in self.portal.objectIds():
       self.portal.manage_delObjects(['MailHost'])
-      self.portal._setObject('MailHost', DummyMailHost('MailHost'))
+    self.portal._setObject('MailHost', DummyMailHost('MailHost'))
 
     # remove all message in the message_table because
     # the previous test might have failed

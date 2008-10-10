@@ -54,9 +54,15 @@
                  dummy python: response.redirect(url);" />\n
     </tal:block>\n
     <tal:block tal:condition="not: isAnon">\n
-      <tal:block tal:condition="python: here.EGov_checkUserIsAPersonOrOrganisation()==False and here.EGov_getUserDocumentUrl() !=None">\n
-        <tal:block tal:define="came_from python: \'%s/PDFDocument_viewAnonymousHistory\' % here.EGov_getUserDocumentUrl();\n
-                   dummy python: response.redirect(came_from);" />\n
+      <tal:block tal:condition="python: here.EGov_checkUserIsAPersonOrOrganisation() == False and here.EGov_getUserDocumentUrl() != None">\n
+        <tal:block tal:condition="python: here.restrictedTraverse(here.EGov_getUserDocumentRelativeUrl()).getValidationState() == \'draft\'">\n
+          <tal:block tal:define="came_from python: \'%s/view\' % here.EGov_getUserDocumentUrl();\n
+                     dummy python: response.redirect(came_from);" />\n
+        </tal:block>\n
+        <tal:block tal:condition="python: here.restrictedTraverse(here.EGov_getUserDocumentRelativeUrl()).getValidationState() != \'draft\'">\n
+          <tal:block tal:define="came_from python: \'%s/PDFDocument_viewAnonymousHistory\' % here.EGov_getUserDocumentUrl();\n
+                     dummy python: response.redirect(came_from);" />\n
+        </tal:block>\n
       </tal:block>\n
       <tal:block tal:condition="python: here.EGov_checkUserIsAPersonOrOrganisation()==True or here.EGov_getUserDocumentUrl()==None">\n
         <tal:block tal:define="came_from python: request.get(\'came_from\') or request.get(\'field_came_from\') or request.get(\'field_came_from\') or here.absolute_url() + \'/view\';\n

@@ -1,0 +1,207 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># Retrieve the edit action\n
+"""\n
+  Special edit method which returns to next_url view.\n
+  The next_url is used to define the URL to return to\n
+  after editing the document.\n
+"""\n
+\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+request=context.REQUEST\n
+\n
+message = \'\'\n
+\n
+# add the attachments :\n
+translateString = context.Base_translateString\n
+result, mode = context.Base_edit(\'PDFDocument_viewAttachmentReportSection\', silent_mode=1, field_prefix=\'your_\')\n
+attachment_count = 0\n
+\n
+if mode == \'edit\':\n
+  (kw, encapsulated_editor_list) = result\n
+  if kw.has_key(\'attachment\') and kw.has_key(\'attachment_title\'):\n
+    attachment_list = zip(kw[\'attachment\'], kw[\'attachment_title\'])\n
+    message = translateString("No attachment was added. Please select a file to add an attachment.")\n
+    # XXX make sure it is a list\n
+    for attachment, title in attachment_list:\n
+      if attachment:\n
+        attachment_count += 1\n
+        file = context.newContent(portal_type=\'File\', file=attachment, title=title)\n
+\n
+if attachment_count:\n
+  message = translateString("Added ${attachment_count} attachment(s) to the current form.",\n
+                                mapping = dict(attachment_count=attachment_count))\n
+\n
+# edit the document with the entered data before to change of state\n
+base_edit_result = context.Base_edit(form_id=form_id, \n
+                  selection_index=selection_index, \n
+                  selection_name=selection_name, \n
+                  dialog_id=dialog_id, \n
+                  ignore_layout=ignore_layout, \n
+                  editable_mode=editable_mode, \n
+                  silent_mode=silent_mode, \n
+                  field_prefix=field_prefix)\n
+\n
+# if there is somme errors (like required field not filled),\n
+# return to the same page, and display Base_edit error message\n
+if request.get(\'field_errors\', \'\'):\n
+  return base_edit_result\n
+\n
+return context.Base_redirect(next_url, keep_items = dict(portal_status_message=message), **kw)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id, next_url, selection_index=0, selection_name=\'\', dialog_id=\'\', ignore_layout=0, editable_mode=1, silent_mode=0, field_prefix=\'my_\', **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>9</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>next_url</string>
+                            <string>selection_index</string>
+                            <string>selection_name</string>
+                            <string>dialog_id</string>
+                            <string>ignore_layout</string>
+                            <string>editable_mode</string>
+                            <string>silent_mode</string>
+                            <string>field_prefix</string>
+                            <string>kw</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>message</string>
+                            <string>translateString</string>
+                            <string>_getiter_</string>
+                            <string>result</string>
+                            <string>mode</string>
+                            <string>attachment_count</string>
+                            <string>encapsulated_editor_list</string>
+                            <string>zip</string>
+                            <string>_getitem_</string>
+                            <string>attachment_list</string>
+                            <string>attachment</string>
+                            <string>title</string>
+                            <string>_inplacevar_</string>
+                            <string>file</string>
+                            <string>dict</string>
+                            <string>base_edit_result</string>
+                            <string>_apply_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+                <string></string>
+                <string></string>
+                <int>0</int>
+                <int>1</int>
+                <int>0</int>
+                <string>my_</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>EGov_Base_editAndRedirect</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

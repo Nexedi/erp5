@@ -53,31 +53,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-N_ = portal.Base_translateString\n
+            <value> <string>\'\'\'\n
+  In case of the user is a document, return the url of the this document\n
+\'\'\'\n
 \n
-if not application_number and id:\n
-  application_number = id\n
+document_type_list = context.EGov_getAllowedFormTypeList()\n
+portal = context.getPortalObject()\n
 \n
-keep_items = {}\n
-state = document.getValidationState()\n
+user_name = context.portal_membership.getAuthenticatedMember().getUserName()\n
 \n
-# default view is history view\n
-form_id=\'PDFDocument_viewHistory\'\n
+form_list = portal.portal_catalog(\\\n
+                                portal_type=document_type_list, \n
+                                reference=user_name)\n
 \n
-if application_number:\n
-  document = context.portal_catalog.getResultValue(id=application_number)\n
-  if document is not None:\n
-    if state == \'draft\':\n
-      form_id=\'view\'\n
-    elif document.getPortalType() == \'Subscription Form\':\n
-      if state != \'draft\':\n
-        form_id=\'PDFDocument_viewAnonymousHistory\'\n
-    return document.Base_redirect(form_id=form_id, keep_items=keep_items)\n
-\n
-# Prepare message\n
-msg = N_(\'Sorry, this document is not available\')\n
-return context.Base_redirect(form_id=\'view\', keep_items = {\'portal_status_message\' : msg})\n
+if len(form_list) == 0:\n
+  return None\n
+return form_list[0].getRelativeUrl()\n
 </string> </value>
         </item>
         <item>
@@ -88,7 +79,7 @@ return context.Base_redirect(form_id=\'view\', keep_items = {\'portal_status_mes
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>application_number=None, id=None, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -114,25 +105,21 @@ return context.Base_redirect(form_id=\'view\', keep_items = {\'portal_status_mes
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>application_number</string>
-                            <string>id</string>
-                            <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>document_type_list</string>
                             <string>portal</string>
-                            <string>N_</string>
-                            <string>keep_items</string>
-                            <string>document</string>
-                            <string>state</string>
-                            <string>form_id</string>
+                            <string>user_name</string>
+                            <string>form_list</string>
+                            <string>len</string>
                             <string>None</string>
-                            <string>msg</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -144,15 +131,12 @@ return context.Base_redirect(form_id=\'view\', keep_items = {\'portal_status_mes
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>EGov_goToDocument</string> </value>
+            <value> <string>EGov_getUserDocumentRelativeUrl</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

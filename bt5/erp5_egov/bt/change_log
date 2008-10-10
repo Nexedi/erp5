@@ -1,3 +1,12 @@
+2008-10-10 fabien
+bring some corrections after the Mme Ba review :
+* remove Mandate form from the allowed form list because it's not implemented yet
+* improve EGov_goToDocument script
+* update WebSite_login page template to redirect form user on view if the state of the document is draft (to be able to continue the subscription)
+* modify checkAccountInexistance workflow script to use ninea number instead of rccm one to check that the company don't exists
+* modify "Save draft and continue later" button behavior. Now when you click on, data are saved and a page is displayed with your credentials (if it's an anonymous application)
+* add EGov_Base_editAndRedirect script that save the data of the current form and redirect to
+
 2008-09-25 fabien
 * modify some selection_name on listbox to be unique and avoid conflic
 
