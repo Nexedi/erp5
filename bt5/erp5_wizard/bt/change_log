@@ -1,3 +1,6 @@
+2008-10-10 yusei
+* Removed business_template_skin_layer_priority from erp5_wizard skin folder. Now express_customisation bt will control customisation stuff.
+
 2008-10-9 yusei
 * Handle HTTP_ACCEPT_LANGUAGE better.
 
