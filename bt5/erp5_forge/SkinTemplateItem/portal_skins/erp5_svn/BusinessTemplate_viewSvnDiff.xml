@@ -64,10 +64,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 </tal:block>\n
 <tal:block tal:define="portal_path here/portal_url;\n
                        css_list python: [\'%s/ERP5Subversion_movableMenu.css\' % portal_path,];\n
-                       js_list python: [\'%s/erp5.js\' % portal_path,\n
+                       js_list python: [\'%s/MochiKit/MochiKit.js\' % portal_path,\n
+                                        \'%s/erp5.js\' % portal_path,\n
                                         \'%s/ERP5Subversion_menuico.js\' % portal_path,\n
                                         \'%s/ERP5Subversion_movableMenu.js\' % portal_path,\n
-                                        \'%s/MochiKit/MochiKit.js\' % portal_path,\n
                                         \'%s/ERP5Subversion_doCreateJavaScriptDiff.js\' % portal_path]">\n
   <tal:block metal:use-macro="here/view_master/macros/master">\n
     <tal:block metal:fill-slot="main">\n
