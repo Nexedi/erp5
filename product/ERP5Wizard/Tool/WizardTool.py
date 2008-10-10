@@ -622,6 +622,7 @@ class WizardTool(BaseTool):
         REQUEST.set(LANGUAGE_COOKIE_NAME, user_preferred_language)
         REQUEST.RESPONSE.setCookie(LANGUAGE_COOKIE_NAME,
                                    user_preferred_language,
+                                   path='/',
                                    expires=(DateTime()+30).rfc822())
       # set encoded __ac_express cookie at client's browser
       __ac_express = quote(encodestring(password))
