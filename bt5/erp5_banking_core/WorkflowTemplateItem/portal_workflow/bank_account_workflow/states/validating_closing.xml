@@ -68,6 +68,12 @@
                       <tuple/>
                     </value>
                 </item>
+                <item>
+                    <key> <string>Modify portal content</string> </key>
+                    <value>
+                      <tuple/>
+                    </value>
+                </item>
               </dictionary>
             </value>
         </item>

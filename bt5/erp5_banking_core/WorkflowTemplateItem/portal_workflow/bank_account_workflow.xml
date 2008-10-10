@@ -46,6 +46,7 @@
             <value>
               <tuple>
                 <string>Delete objects</string>
+                <string>Modify portal content</string>
               </tuple>
             </value>
         </item>
