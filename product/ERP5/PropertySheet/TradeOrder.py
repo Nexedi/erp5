@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from Products.CMFCore.Expression import Expression
 
 class TradeOrder:
   """
@@ -92,5 +93,12 @@ class TradeOrder:
       'type'          : 'TALESConstraint',
       'expression'    : 'python: object.getStopDate() >= object.getStartDate()',
       'message_expression_false': 'Delivery Date must be after Shipping Date',
+    },
+    { 'id'            : 'lines',
+      'description'   : 'Lines must be defined',
+      'type'          : 'ContentExistence',
+      'portal_type'   : Expression('portal/getPortalOrderMovementTypeList'),
+      'message_no_subobject_portal_type' : \
+                                'At least one line is required',
     },
   )
