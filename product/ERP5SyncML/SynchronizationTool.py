@@ -858,12 +858,13 @@ class SynchronizationTool( SubscriptionSynchronization,
           #LOG('sendResponse, will start sendHttpResponse, xml', DEBUG, '')
           activity = self.getActivityType(domain=domain)
           self.activate(activity=activity,
-                          tag = domain.getId()).sendHttpResponse(
-                                           sync_id=sync_id,
-                                           to_url=to_url,
-                                           xml=xml,
-                                           domain_path=domain.getPath(),
-                                           content_type=content_type)
+                        tag=domain.getId(),
+                        priority=self.PRIORITY).sendHttpResponse(
+                                              sync_id=sync_id,
+                                              to_url=to_url,
+                                              xml=xml,
+                                              domain_path=domain.getPath(),
+                                              content_type=content_type)
         elif to_url.find('file://') == 0:
           filename = to_url[len('file:/'):]
           stream = file(filename,'w')
@@ -939,12 +940,13 @@ class SynchronizationTool( SubscriptionSynchronization,
     except socket.error, msg:
       activity = self.getActivityType(domain=domain)
       self.activate(activity=activity,
-                        tag = domain.getId()).sendHttpResponse(
-                                              to_url=to_url,
-                                              sync_id=sync_id,
-                                              xml=xml,
-                                              domain_path=domain.getPath(),
-                                              content_type=content_type)
+                    tag=domain.getId(),
+                    priority=self.PRIORITY).sendHttpResponse(
+                                                  to_url=to_url,
+                                                  sync_id=sync_id,
+                                                  xml=xml,
+                                                  domain_path=domain.getPath(),
+                                                  content_type=content_type)
       LOG('sendHttpResponse, socket ERROR:', INFO, msg)
       LOG('sendHttpResponse, url, data', INFO, (to_url, data))
       return
@@ -976,7 +978,8 @@ class SynchronizationTool( SubscriptionSynchronization,
         newSecurityManager(None, user)
         activity = self.getActivityType(domain=subscription)
         subscription.activate(activity=activity,
-                                  tag = subscription.getId()
+                              tag=subscription.getId(),
+                              priority=self.PRIORITY
                                   ).SubSync(subscription.getPath())
 
   security.declarePublic('readResponse')
@@ -1038,7 +1041,8 @@ class SynchronizationTool( SubscriptionSynchronization,
             #use activities to send SyncML data.
             activity = self.getActivityType(domain=publication)
             publication.activate(activity=activity,
-                                      tag=publication.getId()).PubSync(
+                                tag=publication.getId(),
+                                priority=self.PRIORITY).PubSync(
                                                         publication.getPath(),
                                                         text)
             return ' '
@@ -1056,7 +1060,8 @@ class SynchronizationTool( SubscriptionSynchronization,
               subscription_path = subscription.getPath()
               activity = self.getActivityType(domain=subscription)
               self.activate(activity=activity,
-                                 tag=subscription.getId()).SubSync(
+                            tag=subscription.getId(),
+                            priority=self.PRIORITY).SubSync(
                                                       subscription_path,
                                                       text)
               return ' '

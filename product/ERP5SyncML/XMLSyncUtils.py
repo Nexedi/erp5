@@ -1453,17 +1453,18 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
         PrettyPrint(remote_xml,stream=string_io)
         remote_xml = string_io.getvalue()
       domain.activate(activity='SQLQueue',
-                           tag=domain.getId()).activateSyncModif(
+                      tag=domain.getId(),
+                      priority=self.PRIORITY).activateSyncModif(
                       domain_relative_url = domain.getRelativeUrl(),
-                      remote_xml = remote_xml,
-                      subscriber_relative_url = subscriber.getRelativeUrl(),
-                      cmd_id = cmd_id,
-                      xml_confirmation = xml_confirmation,
-                      syncml_data = '',
-                      cmd_id_before_getsyncmldata = cmd_id_before_getsyncmldata,
-                      xml_list = xml_list,
-                      has_status_list = has_status_list,
-                      has_response = has_response )
+                      remote_xml=remote_xml,
+                      subscriber_relative_url=subscriber.getRelativeUrl(),
+                      cmd_id=cmd_id,
+                      xml_confirmation=xml_confirmation,
+                      syncml_data='',
+                      cmd_id_before_getsyncmldata=cmd_id_before_getsyncmldata,
+                      xml_list=xml_list,
+                      has_status_list=has_status_list,
+                      has_response=has_response )
       return {'has_response':1, 'xml':''}
     else:
       result = self.getSyncMLData(domain=domain,
@@ -1494,7 +1495,8 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
       sliced_gid_list = [gid_list.pop() for i in gid_list[:self.MAX_OBJECTS]]
       #Split List Processing in activities
       self.activate(activity='SQLQueue',
-                    tag=domain.getId()).activateDeleteRemainObjectList(domain_path,
+                    tag=domain.getId(),
+                    priority=self.PRIORITY).activateDeleteRemainObjectList(domain_path,
                                                                        subscriber_path,
                                                                        sliced_gid_list)
 
@@ -1529,7 +1531,8 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     finished = result['finished']
     if not finished:
       domain.activate(activity='SQLQueue',
-                           tag=domain.getId()).activateSyncModif(**kw)
+                      tag=domain.getId(),
+                      priority=self.PRIORITY).activateSyncModif(**kw)
     else:
       xml_confirmation = result['xml_confirmation']
       cmd_id = result['cmd_id']

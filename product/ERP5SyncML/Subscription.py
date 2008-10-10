@@ -1342,10 +1342,11 @@ class Subscription(Folder, XMLSyncUtils):
     """
     object_id_list = [id for id in self.getObjectIds()]
     object_list_len = len(object_id_list)
-    for i in xrange(0, object_list_len, 100):
-      current_id_list = object_id_list[i:i+100]
+    for i in xrange(0, object_list_len, self.MAX_OBJECTS):
+      current_id_list = object_id_list[i:i+self.MAX_OBJECTS]
       self.activate(activity='SQLQueue',
-                          tag = self.getId()).manage_delObjects(current_id_list)
+                    tag=self.getId(),
+                    priority=self.PRIORITY).manage_delObjects(current_id_list)
 
   def getConflictList(self):
     """

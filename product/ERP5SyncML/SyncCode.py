@@ -129,3 +129,6 @@ class SyncCode(Persistent):
   CONTENT_TYPE = {}
   CONTENT_TYPE['SYNCML_XML'] = 'application/vnd.syncml+xml'
   CONTENT_TYPE['SYNCML_WBXML'] = 'application/vnd.syncml+wbxml'
+
+  #Activity priority
+  PRIORITY = 5
