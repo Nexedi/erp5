@@ -84,7 +84,7 @@ class PageTemplateDocumentationHelper(DocumentationHelper):
       REQUEST = getattr(self, 'REQUEST', None)
       if REQUEST is not None:
         if REQUEST.get('portal_skin', 'View' ) != 'View':
-          return getattr(self.getDocumentedObject(), "description", '')
+          return source_code
     else:
       LOG('DCWorkflowScriptDocumentationHelper', INFO,
           'Transformation Tool is not installed. No convertion of python script to html')

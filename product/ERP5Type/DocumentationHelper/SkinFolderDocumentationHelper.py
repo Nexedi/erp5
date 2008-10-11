@@ -140,7 +140,10 @@ class SkinFolderDocumentationHelper(DocumentationHelper):
     if files is not None:
       for file in files.objectValues():
         if not meta_type or file.meta_type == meta_type:
-          file_list.append((file.id, file.title, file.meta_type))
+          file_list.append((file.id, 
+                            getattr(file, "title", ""), 
+                            getattr(file, "description", ""),
+                            getattr(file, "meta_type", "")))
     return file_list
   security.declareProtected( Permissions.AccessContentsInformation, 'getFileURIList' )
   def getFileURIList(self, meta_type=None):
