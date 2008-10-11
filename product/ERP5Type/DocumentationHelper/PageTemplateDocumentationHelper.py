@@ -64,6 +64,14 @@ class PageTemplateDocumentationHelper(DocumentationHelper):
     """
     return getattr(self.getDocumentedObject(), "title", '')
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDescription' )
+  def getDescription(self):
+    """
+    Returns the description of the documentation helper
+    """
+    return getattr(self.getDocumentedObject(), "description", '')
+
+
   security.declareProtected( Permissions.AccessContentsInformation, 'getSourceCode' )
   def getSourceCode(self):
     """
@@ -76,7 +84,7 @@ class PageTemplateDocumentationHelper(DocumentationHelper):
       REQUEST = getattr(self, 'REQUEST', None)
       if REQUEST is not None:
         if REQUEST.get('portal_skin', 'View' ) != 'View':
-          return source_code
+          return getattr(self.getDocumentedObject(), "description", '')
     else:
       LOG('DCWorkflowScriptDocumentationHelper', INFO,
           'Transformation Tool is not installed. No convertion of python script to html')
