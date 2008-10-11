@@ -63,7 +63,6 @@ class TestDocumentationHelper(ERP5TypeTestCase):
     LOG('Testing... ', 0, 'Documentation of test_01_ERP5Site')
     site_uri = self.portal.getUrl()
     site_do = ERP5SiteDocumentationHelper(site_uri).__of__(self.portal)
-    self.assertEquals(len(site_do.getSectionList()), 1)
     bt_title_set = set(bt[1] for bt in site_do.getBusinessTemplateItemList())
     self.assertTrue('erp5_core' in bt_title_set)
     self.assertTrue('erp5_documentation' in bt_title_set)
@@ -81,7 +80,6 @@ class TestDocumentationHelper(ERP5TypeTestCase):
     bt_uri = bt_ui_test.getUrl()
     #do means documented_object
     bt_do = BusinessTemplateDocumentationHelper(bt_uri).__of__(self.portal)
-    self.assertEquals(len(bt_do.getSectionList()), 7)
     self.assertTrue('Foo' in bt_do.getPortalTypeIdList())
     self.assertTrue('Bar' in bt_do.getPortalTypeIdList())
     self.assertTrue('foo_module' in bt_do.getModuleIdList())
@@ -94,10 +92,9 @@ class TestDocumentationHelper(ERP5TypeTestCase):
 
   def test_03_PortalType(self):
     ZopeTestCase._print('\nTest Documentation Portal Type')
-    LOG('Testing... ', 0, 'Documentation of test_02_PortalType')
+    LOG('Testing... ', 0, 'Documentation of test_03_PortalType')
     portal_type_uri = '%s/portal_types/Foo' % self.portal.getUrl()
     portal_type_do = PortalTypeDocumentationHelper(portal_type_uri).__of__(self.portal)
-    self.assertEquals(len(portal_type_do.getSectionList()), 8)
     self.assertTrue('Foo Line' in portal_type_do.getAllowedContentTypeList())
     self.assertTrue('foo_category' in portal_type_do.getBaseCategoryList())
     self.assertTrue('bar_category' in portal_type_do.getBaseCategoryList())
@@ -114,7 +111,6 @@ class TestDocumentationHelper(ERP5TypeTestCase):
     #test an instance of Foo Module
     instance_uri = '%s/foo_module' % self.portal.getUrl()
     instance_foo = PortalTypeInstanceDocumentationHelper(instance_uri).__of__(self.portal)
-    self.assertEquals(len(instance_foo.getSectionList()), 3)
     self.assertTrue('getPropertyType__roles__' in instance_foo.getClassPropertyIdList())
     self.assertTrue('restrictedTraverse' in instance_foo.getClassMethodIdList())
     self.assertTrue('_baseGetDescription' in instance_foo.getAccessorMethodIdList())
