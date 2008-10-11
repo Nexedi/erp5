@@ -54,10 +54,10 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>meta_type=\'ERP5 Form\'\n
-skin_list = context.getFileIdList(meta_type=meta_type)\n
+skin_list = context.getFileItemList(meta_type=meta_type)\n
 base_uri = context.getURI()\n
 result = map(\n
-  lambda x: context.asContext(id=x, base_uri=base_uri,\n
+  lambda x: context.asContext(id=x[0], description=x[2], base_uri=base_uri,\n
                               meta_type=meta_type),\n
                  skin_list)\n
 return result\n

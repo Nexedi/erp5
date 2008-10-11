@@ -180,7 +180,6 @@ for section in section_list:\n
                               \'SkinFolderDocumentationHelper\']\n
         section_class_name = class_name \n
         sub_displayed_class = [\'DCWorkflowScriptDocumentationHelper\',\n
-                               \'PageTemplateDocumentationHelper\',\n
                                \'ScriptPythonDocumentationHelper\',\n
                                \'ZSQLMethodDocumentationHelper\']\n
         if root_class_name == "ERP5SiteDocumentationHelper" and section_class_name in class_iterate_list:\n
