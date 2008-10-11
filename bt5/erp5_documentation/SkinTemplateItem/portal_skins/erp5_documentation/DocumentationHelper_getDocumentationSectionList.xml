@@ -163,6 +163,14 @@ for section in section_list:\n
             title=child_uri_title,\n
             form_id=\'\')\n
         )\n
+        result.append(\n
+          ReportSection(\n
+            selection_params=dict(description=child_uri_title),\n
+            selection_name=\'documentation_helper_selection\',\n
+            path=context.getPortalObject().portal_classes.getRelativeUrl(),\n
+            form_id=\'DocumentationHelper_viewReportPortalTitleDescription\',\n
+            listbox_display_mode=\'FlatListMode\')\n
+        )\n
         results =  context.DocumentationHelper_getDocumentationSectionListParams(class_name,\n
                            child_uri.uri_list)\n
         result+=results[0]\n
@@ -195,6 +203,16 @@ if portal_skin is not None and portal_skin=="ODT":\n
         title="Appendix",\n
         form_id=\'\')\n
     )\n
+    appendix_description="This section resume class methods and property sheets"\n
+    appendix_description+=" used for documented business templates"\n
+    result.append(\n
+      ReportSection(\n
+        selection_params=dict(description=appendix_description),\n
+        selection_name=\'documentation_helper_selection\',\n
+        path=context.getPortalObject().portal_classes.getRelativeUrl(),\n
+        form_id=\'DocumentationHelper_viewReportSubSectionTitleDescription\',\n
+        listbox_display_mode=\'FlatListMode\')\n
+    )\n
   classmethods = dict().fromkeys([x for x in class_methods_list]).keys()\n
   class_list = dict().fromkeys([\'.\'.join(x.split(\'.\')[:-2]) for x in classmethods]).keys()\n
   class_list.sort()\n
@@ -205,6 +223,16 @@ if portal_skin is not None and portal_skin=="ODT":\n
         level=3,\n
         title="Class Methods",\n
         form_id=\'\')\n
+    )\n
+    class_method_description="This section describe the documentation of common class methods"\n
+    class_method_description+=" used for documented business templates"\n
+    result.append(\n
+      ReportSection(\n
+        selection_params=dict(description=class_method_description),\n
+        selection_name=\'documentation_helper_selection\',\n
+        path=context.getPortalObject().portal_classes.getRelativeUrl(),\n
+        form_id=\'DocumentationHelper_viewReportSubSectionTitleDescription\',\n
+        listbox_display_mode=\'FlatListMode\')\n
     )\n
     for class_name in class_list:\n
       classmethod = dict().fromkeys([x.split(\'.\')[-1] for x in classmethods if x.startswith(class_name)]).keys()\n
@@ -228,6 +256,16 @@ if portal_skin is not None and portal_skin=="ODT":\n
         level=3,\n
         title="Property Sheets",\n
         form_id=\'\')\n
+    )\n
+    property_sheet_description="This section describe the documentation of common class methods"\n
+    property_sheet_description+=" used for documented business templates"\n
+    result.append(\n
+      ReportSection(\n
+        selection_params=dict(description=property_sheet_description),\n
+        selection_name=\'documentation_helper_selection\',\n
+        path=context.getPortalObject().portal_classes.getRelativeUrl(),\n
+        form_id=\'DocumentationHelper_viewReportSubSectionTitleDescription\',\n
+        listbox_display_mode=\'FlatListMode\')\n
     )\n
     result.append(\n
       ReportSection(\n
@@ -326,6 +364,7 @@ return result\n
                             <string>sub_displayed_class</string>
                             <string>sub_child_object</string>
                             <string>sub_child_section</string>
+                            <string>appendix_description</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>x</string>
@@ -333,7 +372,9 @@ return result\n
                             <string>class_list</string>
                             <string>zip</string>
                             <string>propertysheet</string>
+                            <string>class_method_description</string>
                             <string>classmethod</string>
+                            <string>property_sheet_description</string>
                             <string>propertysheets</string>
                           </tuple>
                         </value>
