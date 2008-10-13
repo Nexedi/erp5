@@ -511,6 +511,7 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
     self.assertEqual(document.getContentInformation().get('To'), 'crm@erp5.org')
     self.assertEqual(document.getSourceValue().getTitle(), 'Sender')
     self.assertEqual(document.getDestinationValue().getTitle(), 'Me')
+    self.assertEqual(document.getTitle(), 'Simple Mail Test')
 
   def test_forwarder_mail_with_attachment(self):
     """
