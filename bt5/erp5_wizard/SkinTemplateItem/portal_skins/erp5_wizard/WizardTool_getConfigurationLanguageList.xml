@@ -55,7 +55,7 @@
             <key> <string>_body</string> </key>
             <value> <string># XXX: take this list from remote server using portal_wizard calls\n
 return ((\'English\', \'en\'), \n
-        (\'French\', \'fr\'))\n
+        (\'Fran\xc3\xa7ais\', \'fr\'))\n
 </string> </value>
         </item>
         <item>
