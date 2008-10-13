@@ -336,8 +336,10 @@ class WizardTool(BaseTool):
     for cookie in cookiejar:
       # unconditionally send all cookies (no matter if expired or not) as URL is always the same
       header_dict['Cookie']  +=  '%s=%s;' %(cookie.name, cookie.value)
-    # XXX: include cookies from local browser (like show/hide tabs) which are set directly
+    #  include cookies from local browser (like show/hide tabs) which are set directly
     # by client JavaScript code (i.e. not sent from server)
+    for cookie_name, cookie_value in self.REQUEST.cookies.items():
+      header_dict['Cookie']  +=  '%s=%s;' %(cookie_name, cookie_value)
 
     # add HTTP referer (especially useful in Localizer when changing language)
     header_dict['REFERER'] = self.REQUEST.get('HTTP_REFERER', None) or referer
