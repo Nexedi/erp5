@@ -1405,13 +1405,11 @@ class Base( CopyContainer,
     # rather than through implicit aquisition
     if getattr(aq_self, accessor_name, None) is not None:
       method = getattr(self, accessor_name)
-      method(value, **kw)
-      return
+      return method(value, **kw)
     public_accessor_name = 'set' + UpperCase(key)
     if getattr(aq_self, public_accessor_name, None) is not None:
       method = getattr(self, public_accessor_name)
-      method(value, **kw)
-      return
+      return method(value, **kw)
     # Try to get a portal_type property (Implementation Dependent)
     aq_key = self._aq_key()
     if not Base.aq_portal_type.has_key(aq_key):
@@ -1419,12 +1417,10 @@ class Base( CopyContainer,
     if getattr(Base.aq_portal_type[aq_key], accessor_name, None) is not None:
       method = getattr(self, accessor_name)
       # LOG("Base.py", 0, "method = %s, name = %s" %(method, accessor_name))
-      method(value, **kw)
-      return
+      return method(value, **kw)
     if getattr(Base.aq_portal_type[aq_key], public_accessor_name, None) is not None:
       method = getattr(self, public_accessor_name)
-      method(value, **kw)
-      return
+      return method(value, **kw)
     # Finaly use standard PropertyManager
     #LOG("Changing attr: ",0, key)
     # If we are here, this means we do not use a property that
@@ -1440,6 +1436,7 @@ class Base( CopyContainer,
     #except:
     #  # This should be removed if we want strict property checking
     #  setattr(self, key, value)
+    return (self,)
 
   def _setPropValue(self, key, value, **kw):
     self._wrapperCheck(value)
@@ -1562,6 +1559,7 @@ class Base( CopyContainer,
       hasProperty is False will be updated.
     """
     modified_property_dict = self._v_modified_property_dict = {}
+    modified_object_set = set()
 
     key_list = kw.keys()
     unordered_key_list = [k for k in key_list if k not in edit_order]
@@ -1609,7 +1607,12 @@ class Base( CopyContainer,
                 guarded_getattr(self, accessor_name)
             modified_property_dict[key] = old_value
             if key != 'id':
-              self._setProperty(key, kw[key])
+              modified_object_list = self._setProperty(key, kw[key])
+              # BBB: if the setter does not return anything, assume
+              # that self has been modified.
+              if modified_object_list is None:
+                modified_object_list = (self,)
+              modified_object_set.update(modified_object_list)
             else:
               self.setId(kw['id'], reindex=reindex_object)
         else:
@@ -1622,9 +1625,8 @@ class Base( CopyContainer,
     setChangedPropertyList(ordered_key_list)
 
     if reindex_object:
-      # We do not want to reindex the object if nothing is changed
-      if (modified_property_dict != {}):
-        self.reindexObject(activate_kw=activate_kw)
+      for o in modified_object_set:
+        o.reindexObject(activate_kw=activate_kw)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setId' )
   def setId(self, id, reindex = 1):
