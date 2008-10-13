@@ -230,9 +230,13 @@ class Publication(Subscription):
     """
       Reset all subscribers
     """
-    id_list = [o.id for o in self.getSubscriberList()]
+    id_list = []
+    for subscriber in self.getSubscriberList():
+      subscriber.resetAllSignatures()
+      id_list.append(subscriber.getId())
     self.activate(activity='SQLQueue',
                   tag=self.getId(),
+                  after_tag=id_list,
                   priority=self.PRIORITY).manage_delObjects(id_list)
 
   def getConflictList(self):
