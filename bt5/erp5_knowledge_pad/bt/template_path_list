@@ -2,6 +2,7 @@ portal_categories/gadget_type/**
 portal_gadgets/clock
 portal_gadgets/clock/**
 portal_gadgets/erp5_advertisement
+portal_gadgets/erp5_documentation
 portal_gadgets/erp5_persons
 portal_gadgets/erp5_persons/**
 portal_gadgets/erp5_rss
