@@ -125,8 +125,12 @@ except ValidationFailed, error_message:\n
 \n
 portal_status_message = request.get(\'portal_status_message\', translateString(\'Status changed.\'))\n
 \n
+# Allow to redirect to another document\n
+redirect_document_path = request.get(\'redirect_document_path\', context.getRelativeUrl())\n
+redirect_document = context.restrictedTraverse(redirect_document_path)\n
+\n
 return context.ERP5Site_redirect(\n
-                \'%s/%s\' % (context.absolute_url(), form_id),\n
+                \'%s/%s\' % (redirect_document.absolute_url(), form_id),\n
                 keep_items={\'portal_status_message\': portal_status_message})\n
 </string> </value>
         </item>
@@ -203,6 +207,8 @@ return context.ERP5Site_redirect(\n
                             <string>same_type</string>
                             <string>str</string>
                             <string>portal_status_message</string>
+                            <string>redirect_document_path</string>
+                            <string>redirect_document</string>
                           </tuple>
                         </value>
                     </item>
