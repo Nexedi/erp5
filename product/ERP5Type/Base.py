@@ -1559,7 +1559,7 @@ class Base( CopyContainer,
       hasProperty is False will be updated.
     """
     modified_property_dict = self._v_modified_property_dict = {}
-    modified_object_set = set()
+    modified_object_dict = {}
 
     key_list = kw.keys()
     unordered_key_list = [k for k in key_list if k not in edit_order]
@@ -1612,7 +1612,11 @@ class Base( CopyContainer,
               # that self has been modified.
               if modified_object_list is None:
                 modified_object_list = (self,)
-              modified_object_set.update(modified_object_list)
+              for o in modified_object_list:
+                # XXX using id is not quite nice, but getUID causes a
+                # problem at the bootstrap of an ERP5 site. Therefore,
+                # objects themselves cannot be used as keys.
+                modified_object_dict[id(o)] = o
             else:
               self.setId(kw['id'], reindex=reindex_object)
         else:
@@ -1625,7 +1629,7 @@ class Base( CopyContainer,
     setChangedPropertyList(ordered_key_list)
 
     if reindex_object:
-      for o in modified_object_set:
+      for o in modified_object_dict.itervalues():
         o.reindexObject(activate_kw=activate_kw)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setId' )
