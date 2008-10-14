@@ -1,3 +1,6 @@
+2008-10-14 yusei
+* Start to develop version 5.3.
+
 2008-10-10 yusei
 * Set default security to portal_gadgets.
 * Remove default role setting of Knowledge Pad Module. Generic business template should not have any role settings.

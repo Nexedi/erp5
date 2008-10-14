@@ -1,3 +1,6 @@
+2008-10-14 yusei
+* Start to develop version 5.3.
+
 2008-10-02 Jerome
 * Add delivery_tax_interaction workflow to update tax line when delivery line is deleted.
 

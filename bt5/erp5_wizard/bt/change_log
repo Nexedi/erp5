@@ -1,3 +1,6 @@
+2008-10-14 yusei
+* Start to develop version 5.3.
+
 2008-10-10 yusei
 * Removed business_template_skin_layer_priority from erp5_wizard skin folder. Now express_customisation bt will control customisation stuff.
 

@@ -1,3 +1,6 @@
+2008-10-14 yusei
+* Start to develop version 5.3.
+
 2008-09-16 Kazuhiko
 * remove payment_transaction_builder because now it is included in erp5_invoicing.
 * use  delivery_causality_workflow instead of invoice_causality_workflow in Purchase Invoice Transaction and Sale Invoice Transaction.

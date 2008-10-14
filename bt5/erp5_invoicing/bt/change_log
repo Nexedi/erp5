@@ -1,3 +1,6 @@
+2008-10-14 yusei
+* Start to develop version 5.3.
+
 2008-09-16 Kazuhiko
 * revise payment_transaction_builder, purchase_invoice_builder, purchase_invoice_tax_builder, purchase_invoice_transaction_builder, sale_invoice_builder, sale_invoice_tax_builder and sale_invoice_transaction_builder using new API.
 
