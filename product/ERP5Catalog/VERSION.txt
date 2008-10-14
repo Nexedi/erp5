@@ -1,1 +1,1 @@
-ERP5Catalog 5.2
+ERP5Catalog 5.3
