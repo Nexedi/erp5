@@ -79,9 +79,10 @@ except ImportError:
  
 try:
   from ZPublisher.HTTPRequest import record
-  dict_type_list = (dict, record)
 except ImportError:
   dict_type_list = (dict, )
+else:
+  dict_type_list = (dict, record)
    
      
 UID_BUFFER_SIZE = 300
