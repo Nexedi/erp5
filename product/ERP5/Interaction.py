@@ -54,6 +54,7 @@ class InteractionDefinition (SimpleItem):
     var_exprs = None  # A mapping.
     script_name = ()  # Executed before transition
     after_script_name = ()  # Executed after transition
+    before_commit_script_name = () #Executed Before Commit Transaction
     activate_script_name = ()  # Executed as activity
     method_id = ()
     portal_type_filter = None
@@ -120,6 +121,7 @@ class InteractionDefinition (SimpleItem):
                       once_per_transaction=False,
                       script_name=(),
                       after_script_name=(),
+                      before_commit_script_name=(),
                       activate_script_name=(),
                       actbox_name='', actbox_url='',
                       actbox_category='workflow',
@@ -149,6 +151,7 @@ class InteractionDefinition (SimpleItem):
         self.once_per_transaction = bool(once_per_transaction)
         self.script_name = script_name
         self.after_script_name = after_script_name
+        self.before_commit_script_name = before_commit_script_name
         self.activate_script_name = activate_script_name
         g = Guard()
         if g.changeFromProperties(props or REQUEST):

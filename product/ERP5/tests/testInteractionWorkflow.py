@@ -81,13 +81,16 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
   def createInteractionWorkflow(self):
     id = 'test_workflow'
     wf_type = "interaction_workflow (Web-configurable interaction workflow)"
-    self.getWorkflowTool().manage_addWorkflow(workflow_type=wf_type,id=id)
+    if getattr(self.getWorkflowTool(), id, None) is None:
+      self.getWorkflowTool().manage_addWorkflow(workflow_type=wf_type,id=id)
     wf = self.getWorkflowTool()[id]
     self.wf = wf
-    wf.scripts.manage_addProduct['PythonScripts']\
-                  .manage_addPythonScript(id='afterEdit')
+    if getattr(wf.scripts, 'afterEdit', None) is None:
+      wf.scripts.manage_addProduct['PythonScripts']\
+                    .manage_addPythonScript(id='afterEdit')
     self.script = wf.scripts['afterEdit']
-    wf.interactions.addInteraction(id='edit_interaction')
+    if getattr(wf.interactions, 'edit_interaction', None) is None:
+      wf.interactions.addInteraction(id='edit_interaction')
     self.interaction = wf.interactions['edit_interaction']
     self.getWorkflowTool().setChainForPortalTypes(
                   [self.portal_type],'test_workflow, validation_workflow')
@@ -495,6 +498,34 @@ context.setDescription('%s,%s,%s' % (d, args, result))
     organisation.getProperty('description', d='toto')
     value = organisation.getDescription()
     self.assertEquals(value, "toto,('description',),bad")
+
+  def test_16_BeforeCommitParameters(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('Before Commit Script Parameters')
+    self.createInteractionWorkflow()
+    self.interaction.setProperties(
+            'beforeCommit',
+            method_id='getProperty',
+            before_commit_script_name=('afterEdit',))
+    params = 'sci, **kw'
+    body = """\
+context = sci['object']
+kwargs = sci['kwargs'] or {}
+d = kwargs.get('d', None)
+args = kwargs.get('workflow_method_args', ())
+result = kwargs.get('workflow_method_result', None)
+context.setDescription('%s,%s,%s' % (d, args, result))
+"""
+    self.script.ZPythonScript_edit(params, body)
+    self.createData()
+    organisation = self.organisation
+    organisation.setDescription('bad')
+    self.assertEquals(organisation.getDescription(), 'bad')
+    organisation.getProperty('description', d='toto')
+    self.assertEquals(organisation.getDescription(), 'bad')
+    get_transaction().commit()
+    self.assertEquals(organisation.getDescription(), "toto,('description',),bad")
 
   def test_regular_expression(self):
     # test that we can add an interaction by defining methods using regular

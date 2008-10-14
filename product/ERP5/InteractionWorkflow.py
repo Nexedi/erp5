@@ -301,20 +301,27 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
                     ob, self, former_status, tdef, None, None, kwargs=kw)
                 script(sci)  # May throw an exception
 
+              # Execute Before Commit
+              for script_name in tdef.before_commit_script_name:
+                method = getattr(self, 'activeScript')
+                get_transaction().beforeCommitHook(method, script_name,
+                                                   ob.getRelativeUrl(),
+                                                   status, tdef.id, kw)
+
               # Execute "activity" scripts
               for script_name in tdef.activate_script_name:
                 self.activate(activity='SQLQueue')\
                     .activeScript(script_name, ob.getRelativeUrl(), status, tdef.id)
 
     security.declarePrivate('activeScript')
-    def activeScript(self, script_name, ob_url, status, tdef_id):
+    def activeScript(self, script_name, ob_url, status, tdef_id, kwargs=None):
           script = self.scripts[script_name]
           ob = self.unrestrictedTraverse(ob_url)
           tdef = self.interactions.get(tdef_id)
           sci = StateChangeInfo(
-                        ob, self, status, tdef, None, None, None)
+                        ob, self, status, tdef, None, None, kwargs)
           script(sci)
-  
+
     def _getWorkflowStateOf(self, ob, id_only=0):
           return None
 

@@ -82,6 +82,20 @@
 </tr>
 
 <tr>
+<th align="left">Script (end of transaction)</th>
+<td>
+<select name="before_commit_script_name:list" multiple size="5">
+<option value="None">(None)</option>
+<dtml-in getAvailableScriptIds sort>
+ <dtml-let selected="_['sequence-item'] in before_commit_script_name and 'selected' or ' '">
+  <option value="&dtml-sequence-item;" &dtml-selected;>&dtml-sequence-item;</option>
+ </dtml-let>
+</dtml-in>
+</select>
+</td>
+</tr>
+
+<tr>
 <th align="left">Activities (later)</th>
 <td>
 <select name="activate_script_name:list" multiple size="5">
