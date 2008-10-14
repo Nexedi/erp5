@@ -82,9 +82,9 @@ for tax_line in sorted(\n
       for base_contribution in movement.getBaseContributionList():\n
         # XXX non optimal loops, may needs optimisation\n
         if base_contribution == base_application:\n
-          applicable_movement_list[movement.getRelativeUrl()] = 1\n
+          applicable_movement_list[id(movement)] = movement\n
   \n
-  for movement in [portal.restrictedTraverse(x) for x in applicable_movement_list.keys()]:\n
+  for movement in applicable_movement_list.values():\n
     movement_price = movement.getTotalPrice(fast=0) or 0\n
     if tax_line.getProperty(\'calculation_script_id\'):\n
       raise NotImplementedError\n
@@ -156,7 +156,7 @@ for tax_line in sorted(\n
                             <string>base_contribution_list</string>
                             <string>base_contribution</string>
                             <string>_write_</string>
-                            <string>x</string>
+                            <string>id</string>
                             <string>movement_price</string>
                             <string>NotImplementedError</string>
                             <string>base_amount</string>
