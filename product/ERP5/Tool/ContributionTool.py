@@ -255,35 +255,28 @@ class ContributionTool(BaseTool):
     ob.isIndexable = 0
 
     # Then put the file inside ourselves for a short while
-    BaseTool._setObject(self, object_id, ob)
-    document = BaseTool._getOb(self, object_id)
 
+    if container_path is not None:
+      container = self.getPortalObject().restrictedTraverse(container_path)
+    document = self._setObject(object_id, ob, user_login=user_login, id=id,
+                               container=container,
+                               discover_metadata=discover_metadata,
+                               )
+    document = self._getOb(object_id) # Call _getOb to purge cache
     rewrite_method = document._getTypeBasedMethod('rewriteIngestionData')
     if rewrite_method is not None:
       modified_kw = rewrite_method(**kw.copy())
       if modified_kw is not None:
         kw.update(modified_kw)
 
-    try:
-      # Then edit the document contents (so that upload can happen)
-      if 'set_filename__' in inspect.getargspec(document._edit)[0]:
-        # Only a few classes supports set_filename__.
-        document._edit(set_filename__=0, **kw)
-      else:
-        document._edit(**kw)
-      if url:
-        document.fromURL(url)
-    finally:
-      # Remove the object from ourselves
-      BaseTool._delObject(self, object_id)
-
-    # Move the document to where it belongs
-    if container_path is not None:
-      container = self.getPortalObject().restrictedTraverse(container_path)
-    document = self._setObject(object_id, ob, user_login=user_login, id=id,
-                               container=container, discover_metadata=discover_metadata,
-                               )
-    document = self._getOb(object_id) # Call _getOb to purge cache
+    # Then edit the document contents (so that upload can happen)
+    if 'set_filename__' in inspect.getargspec(document._edit)[0]:
+      # Only a few classes supports set_filename__.
+      document._edit(set_filename__=0, **kw)
+    else:
+      document._edit(**kw)
+    if url:
+      document.fromURL(url)
 
     # Notify workflows
     #document.notifyWorkflowCreated()
