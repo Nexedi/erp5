@@ -25,7 +25,7 @@ CREATE TABLE `message_queue` (
   KEY (`method_id`),
   KEY `processing_node_processing` (`processing_node`, `processing`),
   KEY `processing_node_date` (`processing_node`, `date`),
-  KEY `processing_node_serialization_tag` (`processing_node`, `serialization_tag`),
+  KEY `serialization_tag_processing_node` (`serialization_tag`, `processing_node`),
   KEY (`priority`),
   KEY (`tag`)
 ) TYPE = InnoDB;
