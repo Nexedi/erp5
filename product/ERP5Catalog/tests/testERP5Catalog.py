@@ -2752,6 +2752,77 @@ VALUES
     self.assertEqual(len(person_module.searchFolder()),
                      len(person_module.searchFolder(sort_on=[('subordination_title', 'ascending')])))
 
+  def test_multipleRelatedKeyDoMultipleJoins(self, quiet=quiet, run=run_all_test):
+    """
+      Check that when multiple related keys are present in the same query,
+      each one does a separate join.
+      ie:
+        Searching for an object whose site_title is "foo" and
+        site_description is "bar" will yeld a result set which is the union
+        of:
+          - objects whose site_title is foo
+          - objects whose site_description is bar
+    """
+    portal = self.getPortalObject()
+    def _create(**kw):
+      return portal.organisation_module.newContent(portal_type='Organisation', **kw)
+    def create(id, related_obect_list):
+      return _create(id=id,
+        site_value_list=related_obect_list,
+        function_value_list=related_obect_list)
+    def check(expected_result, description, query):
+      result = [x.getObject() for x in portal.portal_catalog(portal_type='Organisation', query=query)]
+      self.assertSameSet(expected_result, result,
+        '%s:\nExpected: %r\nGot: %r' % (description,
+           [x.getId() for x in expected_result],
+           [x.getId() for x in result]))
+    # completely artificial example, we just need relations
+    related_1 = _create(title='foo1', reference='foo', description='bar')
+    related_2 = _create(title='foo2', reference='foo'                   )
+    related_3 = _create(                               description='bar')
+    related_4 = _create()
+    object_1  = create('object_1',  [related_1])
+    object_2  = create('object_2',  [related_2])
+    object_3  = create('object_3',  [related_3])
+    object_4  = create('object_4',  [related_4])
+    object_12 = create('object_12', [related_1, related_2])
+    object_13 = create('object_13', [related_1, related_3])
+    object_14 = create('object_14', [related_1, related_4])
+    object_23 = create('object_23', [related_2, related_3])
+    object_24 = create('object_24', [related_2, related_4])
+    object_34 = create('object_34', [related_3, related_4])
+    reference_object_list =   [object_1, object_2,                     object_12, object_13, object_14, object_23, object_24           ]
+    description_object_list = [object_1,           object_3,           object_12, object_13, object_14, object_23,            object_34]
+    both_object_list =        [object_1,                               object_12, object_13, object_14, object_23                      ]
+    title_object_list =       [                                        object_12                                                       ]
+    get_transaction().commit()
+    self.tic()
+    # Single join
+    check(reference_object_list,
+          'site_reference="foo"',
+          Query(site_reference='foo'))
+    check(description_object_list,
+          'site_description="bar"',
+          Query(site_description='bar'))
+    # Double join on different relations
+    check(both_object_list,
+          'site_reference="foo" AND function_description="bar"',
+          ComplexQuery(Query(site_reference='foo'),
+                       Query(function_description='bar'),
+                       operator='AND'))
+    # Double join on same relation
+    check(both_object_list,
+          'site_reference="foo" AND site_description="bar"',
+          ComplexQuery(Query(site_reference='foo'),
+                       Query(site_description='bar'),
+                       operator='AND'))
+    # Double join on same related key
+    check(title_object_list,
+          'site_title="foo1" AND site_title="foo2"',
+          ComplexQuery(Query(site_title='=foo1'),
+                       Query(site_title='=foo2'),
+                       operator='AND'))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Catalog))
