@@ -477,7 +477,7 @@
                           <string>Procedure</string>
                         </tuple>
                         <tuple>
-                          <string>translated_validation_state</string>
+                          <string>translated_validation_state_title</string>
                           <string>Validation State</string>
                         </tuple>
                         <tuple>
