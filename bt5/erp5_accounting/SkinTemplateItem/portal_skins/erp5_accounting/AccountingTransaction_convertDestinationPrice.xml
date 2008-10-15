@@ -91,7 +91,7 @@ for line in line_list:\n
    if exchange_ratio is None:\n
      return context.Base_redirect(form_id,\n
                                   keep_items=dict(\n
-                portal_status_message=context.Base_translateString(\'No exchange ratio was found.\'))) \n
+                portal_status_message=context.Base_translateString(\'No exchange ratio found.\'))) \n
 #update the corresponding price and round it according to the precision of\n
 #the converted currency\n
    line.setDestinationTotalAssetPrice(\n
