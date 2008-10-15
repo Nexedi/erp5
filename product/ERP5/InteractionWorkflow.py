@@ -311,15 +311,15 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
               for script_name in tdef.activate_script_name:
                 self.activate(activity='SQLQueue')\
                     .activeScript(script_name, ob.getRelativeUrl(),
-                                  status, tdef.id, kw)
+                                  status, tdef.id)
 
     security.declarePrivate('activeScript')
-    def activeScript(self, script_name, ob_url, status, tdef_id, kwargs=None):
+    def activeScript(self, script_name, ob_url, status, tdef_id):
           script = self.scripts[script_name]
           ob = self.unrestrictedTraverse(ob_url)
           tdef = self.interactions.get(tdef_id)
           sci = StateChangeInfo(
-                        ob, self, status, tdef, None, None, kwargs)
+                        ob, self, status, tdef, None, None, None)
           script(sci)
 
     def _getWorkflowStateOf(self, ob, id_only=0):

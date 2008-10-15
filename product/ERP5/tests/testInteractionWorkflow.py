@@ -527,6 +527,33 @@ context.setDescription('%s,%s,%s' % (d, args, result))
     get_transaction().commit()
     self.assertEquals(organisation.getDescription(), "toto,('description',),bad")
 
+  def test_17_activity_interaction(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('Later Script (In activity)')
+    self.createInteractionWorkflow()
+    self.interaction.setProperties(
+            'editObject',
+            once_per_transaction=1,
+            method_id='_setGroup.*',
+            activate_script_name=('afterEdit',))
+    params = 'sci, **kw'
+    body = """\
+context = sci['object']
+context.setTitle('Bar')
+"""
+    self.script.ZPythonScript_edit(params, body)
+    self.createData()
+    organisation = self.organisation
+    organisation.setTitle('Foo')
+    organisation.setGroupValue(organisation)
+    self.assertEquals(organisation.getTitle(), 'Foo')
+    get_transaction().commit()
+    self.assertEquals(organisation.getTitle(), 'Foo')
+    self.tic()
+    self.assertEquals(organisation.getTitle(), 'Bar')
+
+
   def test_regular_expression(self):
     # test that we can add an interaction by defining methods using regular
     # expression
