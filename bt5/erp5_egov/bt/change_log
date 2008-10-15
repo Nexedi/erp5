@@ -2,7 +2,8 @@
 * update some listbox to display the last application in first
 * update css
 * add some rights on assignee to the validated state on egov_universal_workflow. This avoid a security error if an agent have an assigned application and refuse it (it will change the state of the application to validated and redirect the agent on it).
-* update some listbox to be able to handle searchable text and to be able to sort application by modification date (descending).
+* update some listbox to be able to handle searchable text and to be able to sort application by modification date (descending)
+* make possible to return on the form page, even if the form has been submitted, this permit to see what have been entered in the form, but it's not possible to modify it.
 
 2008-10-10 fabien
 bring some corrections after the Mme Ba review :

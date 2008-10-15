@@ -98,7 +98,8 @@
   background: #DDF;\n
 }\n
 \n
-.submission_wizard .actions li .enable{\n
+.submission_wizard .actions li .enable,\n
+.submission_wizard .actions li .disable{\n
   text-decoration: underline;\n
 }\n
 \n

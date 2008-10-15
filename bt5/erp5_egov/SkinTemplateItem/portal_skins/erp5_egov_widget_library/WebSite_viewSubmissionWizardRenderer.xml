@@ -75,15 +75,23 @@
               <li>\n
                 <tal:block tal:condition="python: here.getValidationState() in state_dict[action[\'name\']]">\n
                   <tal:block tal:condition="python: current_action[\'name\'] != action[\'name\']">\n
-                    <a tal:attributes="href python: \'%s%s%s\' % (action[\'url\'], \'?\' in action[\'url\'] and \'&amp;\' or \'?\', http_parameters)"\n
-                      ><span class="enable" i18n:translate="" i18n:domain="ui" tal:content="python:action_dict.get(action[\'name\'])">action_name</span></a>\n
+                    <a tal:attributes="href python: \'%s%s%s\' % (action[\'url\'], \'?\' in action[\'url\'] and \'&amp;\' or \'?\', http_parameters)">\n
+                      <span class="enable" i18n:translate="" i18n:domain="ui" tal:content="python:action_dict.get(action[\'name\'])">action_name</span>\n
+                    </a>\n
                   </tal:block>\n
                   <tal:block tal:condition="python: current_action[\'name\'] == action[\'name\']">\n
                     <span class="current" i18n:translate="" i18n:domain="ui" tal:content="python:action_dict.get(action[\'name\'])">action_name</span>\n
                   </tal:block>\n
                 </tal:block>\n
                 <tal:block tal:condition="python: here.getValidationState() not in state_dict[action[\'name\']]">\n
-                  <span class="disable" i18n:translate="" i18n:domain="ui" tal:content="python:action_dict.get(action[\'name\'])">action_name</span>\n
+                  <a tal:attributes="href python: \'%s%s%s\' % (action[\'url\'], \'?\' in action[\'url\'] and \'&amp;\' or \'?\', http_parameters)">\n
+                    <tal:block tal:condition="python:current_action[\'name\'] == action[\'name\']">\n
+                      <span class="disable current" i18n:translate="" i18n:domain="ui" tal:content="python:action_dict.get(action[\'name\'])">action_name</span>\n
+                    </tal:block>\n
+                    <tal:block tal:condition="python:current_action[\'name\'] != action[\'name\']">\n
+                      <span class="disable" i18n:translate="" i18n:domain="ui" tal:content="python:action_dict.get(action[\'name\'])">action_name</span>\n
+                    </tal:block>\n
+                  </a>\n
                 </tal:block>\n
                 <span class="fleche" tal:condition="python: actions.index(action) < len(actions)-(action_not_in_dict_count+1)">\n
                   <img alt="Arrow image" src="img/fleche.png"/>\n
