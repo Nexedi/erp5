@@ -3659,3 +3659,9 @@ msgstr "L'identifiant de l'utilisateur n'es pas spécifié."
 
 msgid "Sorry, this document is not available"
 msgstr "Désolé, ce document n'est pas disponible"
+
+msgid "You did not enter an email address."
+msgstr "Vous devez entrer une adresse email."
+
+msgid "Modification Date"
+msgstr "Date de modification"
