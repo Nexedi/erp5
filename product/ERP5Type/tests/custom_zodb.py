@@ -31,6 +31,7 @@ elif os.environ.get('erp5_save_data_fs'):
   for dir in ('Constraint', 'Document', 'PropertySheet', 'Extensions'):
     full_path = os.path.join(instance_home, dir)
     if os.path.exists(full_path):
+      assert os.path.isdir(full_path)
       for f in glob.glob('%s/*' % full_path):
         os.unlink(f)
   if os.path.exists(new_data_fs_path):

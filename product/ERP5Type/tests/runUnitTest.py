@@ -77,6 +77,15 @@ def initializeInstanceHome(tests_framework_home,
                            instance_home):
   if not os.path.exists(instance_home):
     os.mkdir(instance_home)
+
+  # Before r23751, Extensions dir was initialized to be a symlink to real
+  # instance home Extensions folder, now it's initialized as an independant
+  # folder. If this test instance still have a symlink for Extensions, change
+  # it in a foler.
+  extensions_path = os.path.join(instance_home, 'Extensions')
+  if os.path.islink(extensions_path):
+    os.unlink(extensions_path)
+
   for d in ('Extensions', 'Constraint', 'Document', 'PropertySheet', 'bin', 'etc', 'tests', 'var', 'log'):
     path = os.path.join(instance_home, d)
     if not os.path.exists(path):
