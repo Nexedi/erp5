@@ -334,7 +334,7 @@
                         </tuple>
                         <tuple>
                           <string>cache_expire_check_interval</string>
-                          <string>Expire Check Interval(s)</string>
+                          <string>Cache Expire Check Interval</string>
                         </tuple>
                         <tuple>
                           <string>int_index</string>
