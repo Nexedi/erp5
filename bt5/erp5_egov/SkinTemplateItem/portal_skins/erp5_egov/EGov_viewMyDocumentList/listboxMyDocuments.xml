@@ -475,7 +475,7 @@
                       <list>
                         <tuple>
                           <string>modification_date</string>
-                          <string>Modification Date</string>
+                          <string>descending</string>
                         </tuple>
                       </list>
                     </value>
@@ -504,6 +504,12 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>My Documents</string> </value>
+                </item>
+                <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>

@@ -349,8 +349,8 @@
                           <string>Validation State</string>
                         </tuple>
                         <tuple>
-                          <string>getCreationDate</string>
-                          <string>Creation Date</string>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -392,7 +392,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>getCreationDate</string>
+                          <string>modification_date</string>
                           <string>Modification Date</string>
                         </tuple>
                       </list>
@@ -469,7 +469,7 @@
                           <string>Application Number</string>
                         </tuple>
                         <tuple>
-                          <string>owner</string>
+                          <string>getOwner</string>
                           <string>Actor</string>
                         </tuple>
                         <tuple>
@@ -481,8 +481,8 @@
                           <string>Validation State</string>
                         </tuple>
                         <tuple>
-                          <string>getCreationDate</string>
-                          <string>Creation Date</string>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -500,8 +500,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>getCreationDate</string>
-                          <string>getCreationDate</string>
+                          <string>modification_date</string>
+                          <string>descending</string>
                         </tuple>
                       </list>
                     </value>
@@ -511,8 +511,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>getCreationDate</string>
-                          <string>getCreationDate</string>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>

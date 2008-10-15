@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_getCreationDate</string> </value>
+            <value> <string>listbox_modification_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -342,7 +342,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Creation Date</string> </value>
+                    <value> <string>Modification Date</string> </value>
                 </item>
               </dictionary>
             </value>

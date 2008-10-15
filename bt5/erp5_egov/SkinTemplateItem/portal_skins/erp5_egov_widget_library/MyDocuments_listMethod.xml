@@ -56,10 +56,12 @@
             <value> <string># get user name\n
 user_name = context.portal_membership.getAuthenticatedMember().getUserName()\n
 \n
-return context.portal_catalog(portal_type=context.getPortalDocumentTypeList(), \n
-                              sort_on=\'creation_date\', \n
-                              sort_order=\'reverse\',\n
-                              owner=user_name);\n
+if not kw.has_key(\'portal_type\'):\n
+  kw[\'portal_type\'] = context.getPortalDocumentTypeList()\n
+if not kw.has_key(\'sort_on\'): \n
+  kw[\'sort_on\']=[(\'modification_date\', \'descending\')]\n
+return context.portal_catalog(owner=user_name,\n
+                              **kw);\n
 </string> </value>
         </item>
         <item>
@@ -101,6 +103,8 @@ return context.portal_catalog(portal_type=context.getPortalDocumentTypeList(), \
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>user_name</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>

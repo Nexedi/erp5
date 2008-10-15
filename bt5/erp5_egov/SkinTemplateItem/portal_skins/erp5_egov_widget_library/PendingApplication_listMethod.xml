@@ -55,26 +55,16 @@
             <key> <string>_body</string> </key>
             <value> <string>portal_type_list = context.EGov_getAllowedFormTypeList()\n
 \n
-validation_state_list=[ \'draft\',\n
-                        \'submitted\', \n
-                        \'paid\', \n
-                        \'validated\', \n
-                        \'assigned\', \n
-                        \'open\', \n
-                        \'requested\', \n
-                        \'suspended\', \n
-                        \'completed\', \n
-                        \'disapproved\',\n
-                        \'approved\',\n
-                        \'signed\']\n
 # get user name\n
 user_name = context.portal_membership.getAuthenticatedMember().getUserName()\n
 \n
-return context.portal_catalog(portal_type=portal_type_list,\n
-                              owner=user_name,\n
-                              sort_on=\'creation_date\', \n
-                              sort_order=\'reverse\',\n
-                              validation_state=validation_state_list)\n
+if not kw.has_key(\'portal_type\'):\n
+  kw[\'portal_type\'] = portal_type_list\n
+if not kw.has_key(\'sort_on\'): \n
+  kw[\'sort_on\']=[(\'modification_date\', \'descending\')]\n
+result = context.portal_catalog(owner=user_name,\n
+                                **kw)\n
+return result\n
 </string> </value>
         </item>
         <item>
@@ -116,8 +106,10 @@ return context.portal_catalog(portal_type=portal_type_list,\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal_type_list</string>
-                            <string>validation_state_list</string>
                             <string>user_name</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
+                            <string>result</string>
                           </tuple>
                         </value>
                     </item>

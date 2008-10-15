@@ -92,7 +92,7 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_getCreationDate</string>
+                        <string>listbox_modification_date</string>
                       </list>
                     </value>
                 </item>
