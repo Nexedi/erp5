@@ -142,10 +142,10 @@ msgid "Authenticate"
 msgstr "Authentifier"
 
 msgid "Become VIP"
-msgstr "Devenez membre privilégié"
+msgstr "Devenez utilisateur privilégié"
 
 msgid "Become a VIP Member"
-msgstr "Devenez utilisateur privilégié"
+msgstr "Devenez membre privilégié"
 
 msgid "Bills referred to exemption"
 msgstr "Factures visées en exonération"
@@ -816,7 +816,7 @@ msgstr "Validé"
 msgid "Open"
 msgstr "ouvert"
 
-msgid "Open"
+msgid "open"
 msgstr "ouvert"
 
 msgid "assigned"
