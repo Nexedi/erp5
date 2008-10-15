@@ -61,6 +61,16 @@ msgid %(english)s\n
 msgstr %(translation)s\n
 \'\'\'\n
 \n
+def formatMessage(english, translation, term=None):\n
+  if term is not None:\n
+    return \'\'\'\\\n
+#: %s [Glossary term %s]\n
+msgid %s\n
+msgstr %s\n
+\'\'\' % (term.getComment(), term.getId(), english, translation)\n
+  return MESSAGE_TEMPLATE % dict(english=english, translation=translation)\n
+\n
+\n
 def format(string):\n
   line_list = string.split(\'\\n\')\n
   length = len(line_list)\n
@@ -111,16 +121,18 @@ for i in catalog(portal_type=\'Glossary Term\',\n
     if not english_title:\n
       raise ValueError, \'Title of corresponding English term(%s) to "%s" is empty.\' % (english_relative_url, translated_title)\n
     if translated_title!=english_title:\n
-      print MESSAGE_TEMPLATE % {\'english\':format(english_title),\n
-                                \'translation\':format(translated_title)}\n
+      print formatMessage(english=format(english_title),\n
+                          translation=format(translated_title),\n
+                          term=term)\n
 \n
   if translated_description:\n
     if not english_description:\n
       raise ValueError, \'Description of corresponding English term(%s) to "%s" is empty.\' % (english_relative_url, translated_description)\n
 \n
     if translated_description!=english_description:\n
-      print MESSAGE_TEMPLATE % {\'english\':format(english_description),\n
-                                \'translation\':format(translated_description)}\n
+      print formatMessage(english=format(english_description),\n
+                          translation=format(translated_description),\n
+                          term=term)\n
 \n
 RESPONSE = context.REQUEST.RESPONSE\n
 RESPONSE.setHeader(\'Content-disposition\', \'attachment;filename=translation.po\')\n
@@ -172,6 +184,8 @@ return printed\n
                             <string>_print</string>
                             <string>DateTime</string>
                             <string>MESSAGE_TEMPLATE</string>
+                            <string>None</string>
+                            <string>formatMessage</string>
                             <string>format</string>
                             <string>_getattr_</string>
                             <string>now</string>
@@ -184,7 +198,6 @@ return printed\n
                             <string>reference</string>
                             <string>business_field</string>
                             <string>english_term</string>
-                            <string>None</string>
                             <string>ValueError</string>
                             <string>translated_title</string>
                             <string>translated_description</string>
