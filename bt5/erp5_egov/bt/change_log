@@ -1,5 +1,7 @@
 2008-10-15 fabien
 * update some listbox to display the last application in first
+* update css
+* add some rights on assignee to the validated state on egov_universal_workflow. This avoid a security error if an agent have an assigned application and refuse it (it will change the state of the application to validated and redirect the agent on it).
 
 2008-10-10 fabien
 bring some corrections after the Mme Ba review :
