@@ -166,6 +166,8 @@ def buildEmailMessage(from_url, to_url, msg=None,
 
     part.add_header('Content-Disposition',
                     'attachment; filename=%s' % attachment_name)
+    part.add_header('Content-ID',
+                    '%s' % attachment_name)
     message.attach(part)
 
   return message
