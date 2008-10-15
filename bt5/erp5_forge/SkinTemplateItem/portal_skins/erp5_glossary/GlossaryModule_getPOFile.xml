@@ -86,7 +86,7 @@ catalog = context.portal_catalog\n
 \n
 for i in catalog(portal_type=\'Glossary Term\',\n
                  validation_state=\'validated\',\n
-                 business_field_title=business_field_list,\n
+                 business_field_id=business_field_list,\n
                  language_id=language):\n
   term = i.getObject()\n
   reference = term.getReference()\n
@@ -96,7 +96,7 @@ for i in catalog(portal_type=\'Glossary Term\',\n
                                         validation_state=\'validated\',\n
                                         language_id=\'en\',\n
                                         reference=reference,\n
-                                        business_field_title=business_field)\n
+                                        business_field_uid=term.getBusinessFieldUid())\n
   if english_term is None:\n
     raise ValueError, \'Corresponding English term to "%s" does not exist in glossary.\' % term.Title()\n
 \n
