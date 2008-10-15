@@ -293,25 +293,25 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
                   value = expr(econtext)
                 status[id] = value
 
+              sci = StateChangeInfo(
+                    ob, self, former_status, tdef, None, None, kwargs=kw)
               # Execute the "after" script.
               for script_name in tdef.after_script_name:
                 script = self.scripts[script_name]
                 # Pass lots of info to the script in a single parameter.
-                sci = StateChangeInfo(
-                    ob, self, former_status, tdef, None, None, kwargs=kw)
                 script(sci)  # May throw an exception
 
               # Execute Before Commit
+              transaction = get_transaction()
               for script_name in tdef.before_commit_script_name:
-                method = getattr(self, 'activeScript')
-                get_transaction().beforeCommitHook(method, script_name,
-                                                   ob.getRelativeUrl(),
-                                                   status, tdef.id, kw)
+                script = self.scripts[script_name]
+                transaction.beforeCommitHook(script, sci)
 
               # Execute "activity" scripts
               for script_name in tdef.activate_script_name:
                 self.activate(activity='SQLQueue')\
-                    .activeScript(script_name, ob.getRelativeUrl(), status, tdef.id)
+                    .activeScript(script_name, ob.getRelativeUrl(),
+                                  status, tdef.id, kw)
 
     security.declarePrivate('activeScript')
     def activeScript(self, script_name, ob_url, status, tdef_id, kwargs=None):
