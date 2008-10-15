@@ -372,8 +372,8 @@ class EmailDocument(File, TextDocument):
     """
     if html_text is None:
       html_text = self.getTextContent()
-    if html_text is None:
-      return None
+    if not html_text:
+      return html_text
     if not import_libxml2:
       return html_text
     #Null char. is not allowed by parser
