@@ -102,14 +102,8 @@ msgstr "Demandes à assigner"
 msgid "Applications to submit"
 msgstr "Dossiers à soumettre"
 
-msgid "Archive"
-msgstr "Archiver"
-
 msgid "Archive Request"
 msgstr "Archiver la demande"
-
-msgid "Archived"
-msgstr "Archivé"
 
 msgid "Archived Requests"
 msgstr "Demandes archivées"
@@ -128,9 +122,6 @@ msgstr "Assigner à un agent"
 
 msgid "Assign To Form"
 msgstr "Associer à un Formulaire"
-
-msgid "Assigned"
-msgstr "Assigné"
 
 msgid "Assigned Procedures"
 msgstr "Procédures assignées"
@@ -194,12 +185,6 @@ msgstr "Fermé"
 
 msgid "Complete Form"
 msgstr "Valider les pièces jointes"
-
-msgid "Completed"
-msgstr "Complet"
-
-msgid "Complete"
-msgstr "Completer"
 
 msgid "Confirm"
 msgstr "Envoyer en validation"
@@ -768,29 +753,104 @@ msgstr "Vous devez joindre une copie de la pièce d'identité du dirigeant de l'
 msgid "You have to provide a NINEA copy"
 msgstr "Vous devez fournir une copie du NINEA"
 
-msgid "Sign"
-msgstr "Signer"
+msgid "Submit"
+msgstr "Soumettre"
+
+msgid "submit"
+msgstr "soumettre"
 
 msgid "submitted"
 msgstr "soumis"
 
+msgid "Submitted"
+msgstr "Soumis"
+
+msgid "Sign"
+msgstr "Signer"
+
+msgid "sign"
+msgstr "signer"
+
 msgid "signed"
 msgstr "signé"
+
+msgid "Signed"
+msgstr "Signé"
+
+msgid "Archived"
+msgstr "Archivé"
 
 msgid "archived"
 msgstr "archivé"
 
+msgid "Archive"
+msgstr "Archiver"
+
+msgid "archive"
+msgstr "archiver"
+
+msgid "Requested"
+msgstr "Document requise"
+
+msgid "requested"
+msgstr "document requise"
+
+msgid "Request"
+msgstr "Demander des documents"
+
+msgid "request"
+msgstr "demander des docements"
+
 msgid "validated"
 msgstr "validé"
 
-msgid "open"
+msgid "validate"
+msgstr "valider"
+
+msgid "Validate"
+msgstr "Valider"
+
+msgid "Validated"
+msgstr "Validé"
+
+msgid "Open"
+msgstr "ouvert"
+
+msgid "Open"
 msgstr "ouvert"
 
 msgid "assigned"
 msgstr "assigné"
 
+msgid "Assigned"
+msgstr "Assigné"
+
+msgid "Assigne"
+msgstr "Assigner"
+
+msgid "assigne"
+msgstr "assigner"
+
+msgid "Assign Application to User"
+msgstr "Assigner ce dossier à un utilisateur"
+
+msgid "Completed"
+msgstr "Complet"
+
 msgid "completed"
-msgstr "Complété"
+msgstr "complet"
+
+msgid "Complete"
+msgstr "Completer"
+
+msgid "complete"
+msgstr "completer"
+
+msgid "suspend"
+msgstr "suspendre"
+
+msgid "Suspend"
+msgstr "Suspendre"
 
 msgid "suspended"
 msgstr "suspendu"
@@ -804,11 +864,23 @@ msgstr "désapprouvé"
 msgid "Disapproved"
 msgstr "Désapprouvé"
 
+msgid "disapprove"
+msgstr "désapprouver"
+
+msgid "Disapprove"
+msgstr "Désapprouver"
+
 msgid "approved"
 msgstr "approuvé"
 
 msgid "Approved"
 msgstr "Approuvé"
+
+msgid "approve"
+msgstr "approuver"
+
+msgid "Approve"
+msgstr "Approuver"
 
 msgid "draft"
 msgstr "brouillon"
@@ -833,3 +905,12 @@ msgstr "Assigner le dossier à un agent"
 
 msgid "Sorry, this document is not available"
 msgstr "Désolé, ce document n'est pas disponible"
+
+msgid "Error : There is more than one company with the NINEA code '${ninea}'"
+msgstr "Erreur : il y a plus d'une organisation avec le numéro NINEA '${ninea}'"
+
+msgid "Error : A company with the NINEA code '${ninea}' already exists and have already an account"
+msgstr "Erreur : une organisation avec le numéro NINEA '${ninea}' existe déjà et possède déjà un compte"
+
+msgid "Error : A company with the login '${login}'already exists"
+msgstr "Erreur : une organisation avec l'identifiant ${login} existe déjà"
