@@ -1,3 +1,6 @@
+2008-10-15 fabien
+* update some listbox to display the last application in first
+
 2008-10-10 fabien
 bring some corrections after the Mme Ba review :
 * remove Mandate form from the allowed form list because it's not implemented yet

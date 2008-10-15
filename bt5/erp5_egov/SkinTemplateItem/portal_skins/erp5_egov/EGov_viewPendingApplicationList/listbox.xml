@@ -334,7 +334,7 @@
                       <list>
                         <tuple>
                           <string>id</string>
-                          <string>Document Number</string>
+                          <string>Application Number</string>
                         </tuple>
                         <tuple>
                           <string>getOwner</string>
@@ -466,7 +466,7 @@
                       <list>
                         <tuple>
                           <string>id</string>
-                          <string>Document Number</string>
+                          <string>Application Number</string>
                         </tuple>
                         <tuple>
                           <string>owner</string>
@@ -530,6 +530,12 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Pending Applications</string> </value>
+                </item>
+                <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
