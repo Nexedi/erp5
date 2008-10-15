@@ -51,7 +51,7 @@
     <span class="onright">\n
       <a class="home" tal:condition="python: context.EGov_checkUserIsAPersonOrOrganisation()==True" tal:attributes="href python:context.getWebSiteValue().absolute_url()" href="./home" \n
         i18n:translate="" i18n:domain="ui">Home</a>\n
-      <a class="logout" tal:condition="python: context.EGov_checkUserIsAPersonOrOrganisation()==False " href="WebSite_logout" i18n:translate="" i18n:domain="ui">Logout</a> \n
+      <a class="logout" href="WebSite_logout" i18n:translate="" i18n:domain="ui">Logout</a> \n
       <tal:block tal:condition="python: context.getPrintFormUrl() is not None">\n
         <a class="print" href="DeclarationTVA_viewDeclarationTVAAsPdf"\n
           tal:attributes="href python: context.getPrintFormUrl()" i18n:translate="" i18n:domain="ui">Print</a>\n

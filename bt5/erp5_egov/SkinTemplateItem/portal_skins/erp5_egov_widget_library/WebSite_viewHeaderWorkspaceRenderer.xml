@@ -48,7 +48,7 @@
         <a class="login" tal:attributes="href python:\'%s/EGov_viewLoginForm\' % context.getWebSiteValue().absolute_url()"\n
         href="EGov_viewLoginForm" i18n:translate="" i18n:domain="ui">Login</a>\n
       </tal:block>\n
-      <tal:block tal:condition="python: not here.portal_membership.isAnonymousUser() and request[\'current_form_id\'] == \'view\'">\n
+      <tal:block tal:condition="python: not here.portal_membership.isAnonymousUser()">\n
         <a class="logout" href="WebSite_logout" i18n:translate="" i18n:domain="ui">Logout</a>\n
       </tal:block>\n
         <a class="home" tal:attributes="href python:context.getWebSiteValue().absolute_url()" \n

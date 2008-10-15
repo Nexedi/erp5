@@ -47,7 +47,7 @@
       <tal:block tal:condition="here/portal_membership/isAnonymousUser">\n
         <a class="login" href="EGov_viewLoginForm" i18n:translate="" i18n:domain="ui">Login</a>\n
       </tal:block>\n
-      <tal:block tal:condition="python: not here.portal_membership.isAnonymousUser() and request[\'current_form_id\'] == \'eGov_viewAdvancedSearchDialog\'">\n
+      <tal:block tal:condition="python: not here.portal_membership.isAnonymousUser()">\n
         <a class="logout" href="WebSite_logout" i18n:translate="" i18n:domain="ui">Logout</a>\n
       </tal:block>\n
       <tal:block tal:condition="python:request[\'current_form_id\'] != \'eGov_viewAdvancedSearchDialog\'">\n
