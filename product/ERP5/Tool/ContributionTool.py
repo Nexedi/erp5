@@ -243,25 +243,16 @@ class ContributionTool(BaseTool):
         extension = '.%s' % file_name.split('.')[-1]
       file_name = '%s%s' % (self.generateNewId(), extension)
 
-    ob = self.PUT_factory(file_name, mime_type, data)
-
-    # Raise an error if we could not guess the portal type
-    if ob is None:
-      raise ValueError, "Could not determine the document type"
-
-    object_id = ob.getId()
-
-    # Prevent any reindexing operations
-    ob.isIndexable = 0
+    portal_type = self._guessPortalType(file_name, mime_type, data)
 
     # Then put the file inside ourselves for a short while
-
     if container_path is not None:
       container = self.getPortalObject().restrictedTraverse(container_path)
-    document = self._setObject(object_id, ob, user_login=user_login, id=id,
+    document = self._setObject(file_name, portal_type, user_login=user_login, id=id,
                                container=container,
                                discover_metadata=discover_metadata,
                                )
+    object_id = document.getId()
     document = self._getOb(object_id) # Call _getOb to purge cache
     rewrite_method = document._getTypeBasedMethod('rewriteIngestionData')
     if rewrite_method is not None:
@@ -341,35 +332,25 @@ class ContributionTool(BaseTool):
     return property_dict
 
   # WebDAV virtual folder support
-  def _setObject(self, name, ob, user_login=None, container=None,
+  def _setObject(self, name, portal_type, user_login=None, container=None,
                        id=None, discover_metadata=1):
     """
-      The strategy is to let NullResource.PUT do everything as
-      usual and at the last minute put the object in a different
-      location with a different portal type. This means that
-      NullResource.PUT creates an empty document with PUT_factory
-      then upload document data by invoking PUT on the empty
-      document and finally sets the object. By overriding _setObject
-      we get a chance to fix the portal_type of the document
-      (as long as the one we find is compatible) and move the
-      document to the appropriate module.
-
       portal_contribution_registry will find appropriate portal type
       name by file_name and content itself.
 
       The ContributionTool instance must be configured in such
       way that _verifyObjectPaste will return TRUE.
 
-      Refer to: NullResource.PUT
     """
     # _setObject is called by constructInstance at a time
     # when the object has no portal_type defined yet. It
     # will be removed later on. We can safely store the
     # document inside us at this stage. Else we
     # must find out where to store it.
-    if not ob.__dict__.has_key('portal_type'):
-      BaseTool._setObject(self, name, ob)
-      document = self[name]
+    if not portal_type:
+      document = BaseTool.newContent(self, id=name,
+                                     portal_type=portal_type,
+                                     is_indexable=0)
     else:
       # We give the system a last chance to analyse the
       # portal_type based on the document content
@@ -379,21 +360,21 @@ class ContributionTool(BaseTool):
       # Now we know the portal_type, let us find the module
       # to which we should move the document to
       if container is None:
-        module = self.getDefaultModule(ob.portal_type)
+        module = self.getDefaultModule(portal_type)
       else:
         module = container
       if id is None:
         new_id = module.generateNewId()
       else:
         new_id = id
-      ob.id = new_id
       existing_document = module.get(new_id, None)
       if existing_document is None:
         # There is no preexisting document - we can therefore
         # set the new object
-        module._setObject(new_id, ob)
+        document = module.newContent(id=new_id,
+                                     portal_type=portal_type,
+                                     is_indexable=0)
         # We can now discover metadata
-        document = module[new_id]
         if discover_metadata:
           # Metadata disovery is done as an activity by default
           # If we need to discoverMetadata synchronously, it must
@@ -421,12 +402,11 @@ class ContributionTool(BaseTool):
           # to support in place contribution (ie. for a given ID)
           # but is this really useful ?
           raise NotImplementedError
-
       # Keep the document close to us - this is only useful for
       # file upload from webdav
       if not hasattr(self, '_v_document_cache'):
         self._v_document_cache = {}
-      self._v_document_cache[name] = document.getRelativeUrl()
+      self._v_document_cache[document.getId()] = document.getRelativeUrl()
 
     # Return document to newContent method
     return document
@@ -700,5 +680,24 @@ class ContributionTool(BaseTool):
                     activity="SQLQueue").newContentFromURL(
                       container_path=container_path, id=id,
                       repeat=repeat - 1, **kw)
+
+  def _guessPortalType(self, name, typ, body):
+    """
+       Call Portal Contribution Registry
+       to know which portal_type should be used
+    """
+    findPortalTypeName = None
+    registry = getToolByName(self, 'portal_contribution_registry', None)
+    if registry is not None:
+      findPortalTypeName = registry.findPortalTypeName
+    else:
+      # Keep backward compatibility
+      registry = getToolByName(self, 'content_type_registry', None)
+      if registry is None:
+        return None
+      findPortalTypeName = registry.findTypeName
+
+    portal_type = findPortalTypeName(name, typ, body)
+    return portal_type
 
 InitializeClass(ContributionTool)
