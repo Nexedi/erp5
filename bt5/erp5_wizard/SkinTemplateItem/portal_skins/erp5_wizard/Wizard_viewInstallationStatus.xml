@@ -64,16 +64,16 @@
               tal:content="here/Wizard_generateJavaScript"/>\n
 \n
       <div class="dialog_box">\n
-<!--\n
-        <h2 i18n:translate=""\n
-            i18n:domain="ui">Installation Report</h2>-->\n
   \n
         <div id="server_installation_status" \n
             tal:content="structure here/portal_wizard/getInstallationStatusReportFromServer">\n
         </div>\n
 \n
         <div id="client_installation_status"\n
-             style="background-color: #FFFFFF; padding: 0.5em; margin-top: 0.5em;">\n
+             style="background-color: #FFFFFF; \n
+                    padding: 0.5em;\n
+                    border-top: 1px solid #000000; \n
+                    width: 480px;">\n
           Loading ...\n
         </div>\n
       </div>\n
