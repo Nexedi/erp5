@@ -85,7 +85,7 @@ Test default display of Account Module With Employees.\n
   <tr>\n
     <td>verifyText</td>\n
     <td>//tr[@id=\'listbox_data_line_0\']/td[4]/a</td>\n
-    <td>Openned Account</td>\n
+    <td>Open</td>\n
   </tr>\n
   <tr>\n
     <td>verifyText</td>\n
@@ -125,7 +125,7 @@ Test default display of Account Module With Employees.\n
   <tr>\n
     <td>verifyText</td>\n
     <td>//tr[@id=\'listbox_data_line_1\']/td[4]/a</td>\n
-    <td>Openned Account</td>\n
+    <td>Open</td>\n
   </tr>\n
   <tr>\n
     <td>verifyFloat</td>\n
@@ -165,7 +165,7 @@ Test default display of Account Module With Employees.\n
   <tr>\n
     <td>verifyText</td>\n
     <td>//tr[@id=\'listbox_data_line_2\']/td[4]/a</td>\n
-    <td>Openned Account</td>\n
+    <td>Open</td>\n
   </tr>\n
   <tr>\n
     <td>verifyFloat</td>\n
@@ -205,7 +205,7 @@ Test default display of Account Module With Employees.\n
   <tr>\n
     <td>verifyText</td>\n
     <td>//tr[@id=\'listbox_data_line_3\']/td[4]/a</td>\n
-    <td>Openned Account</td>\n
+    <td>Open</td>\n
   </tr>\n
   <tr>\n
     <td>verifyFloat</td>\n
@@ -245,7 +245,7 @@ Test default display of Account Module With Employees.\n
   <tr>\n
     <td>verifyText</td>\n
     <td>//tr[@id=\'listbox_data_line_4\']/td[4]/a</td>\n
-    <td>Openned Account</td>\n
+    <td>Open</td>\n
   </tr>\n
   <tr>\n
     <td>verifyFloat</td>\n
@@ -285,7 +285,7 @@ Test default display of Account Module With Employees.\n
   <tr>\n
     <td>verifyText</td>\n
     <td>//tr[@id=\'listbox_data_line_5\']/td[4]/a</td>\n
-    <td>Openned Account</td>\n
+    <td>Open</td>\n
   </tr>\n
   <tr>\n
     <td>verifyFloat</td>\n
@@ -325,7 +325,7 @@ Test default display of Account Module With Employees.\n
   <tr>\n
     <td>verifyText</td>\n
     <td>//tr[@id=\'listbox_data_line_6\']/td[4]/a</td>\n
-    <td>Openned Account</td>\n
+    <td>Open</td>\n
   </tr>\n
   <tr>\n
     <td>verifyFloat</td>\n
@@ -365,7 +365,7 @@ Test default display of Account Module With Employees.\n
   <tr>\n
     <td>verifyText</td>\n
     <td>//tr[@id=\'listbox_data_line_7\']/td[4]/a</td>\n
-    <td>Openned Account</td>\n
+    <td>Open</td>\n
   </tr>\n
   <tr>\n
     <td>verifyFloat</td>\n
@@ -405,7 +405,7 @@ Test default display of Account Module With Employees.\n
   <tr>\n
     <td>verifyText</td>\n
     <td>//tr[@id=\'listbox_data_line_8\']/td[4]/a</td>\n
-    <td>Openned Account</td>\n
+    <td>Open</td>\n
   </tr>\n
   <tr>\n
     <td>verifyFloat</td>\n
@@ -445,7 +445,7 @@ Test default display of Account Module With Employees.\n
   <tr>\n
     <td>verifyText</td>\n
     <td>//tr[@id=\'listbox_data_line_9\']/td[4]/a</td>\n
-    <td>Openned Account</td>\n
+    <td>Open</td>\n
   </tr>\n
   <tr>\n
     <td>verifyFloat</td>\n
