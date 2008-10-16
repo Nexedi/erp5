@@ -396,7 +396,7 @@ def addTestMethodDynamically(validator):
   for business_template_info in business_template_info_list:
     for module_id, module_portal_type in business_template_info.modules.items():
       portal_type_list = [module_portal_type, ] + \
-            business_template_info.allowed_content_types.get(module_portal_type, ())
+            business_template_info.allowed_content_types.get(module_portal_type, [])
       portal_type_path_dict = {}
       portal_type_path_dict = dict(map(None,portal_type_list,portal_type_list))
       testPortalTypeViewRecursivly(validator=validator,
