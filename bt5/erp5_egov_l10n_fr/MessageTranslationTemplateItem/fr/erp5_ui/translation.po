@@ -819,6 +819,18 @@ msgstr "ouvert"
 msgid "open"
 msgstr "ouvert"
 
+msgid "refuse"
+msgstr "refuser"
+
+msgid "refused"
+msgstr "refusé"
+
+msgid "Refuse"
+msgstr "Refuser"
+
+msgid "Refused"
+msgstr "Refusé"
+
 msgid "assigned"
 msgstr "assigné"
 
