@@ -59,7 +59,7 @@ RESPONSE =  request.RESPONSE\n
 portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
 active_process = portal.portal_activities.newActiveProcess()\n
-email_to = \'jerome@nexedi.com\' # XXX \n
+user_name = context.portal_membership.getAuthenticatedMember().getUserName()\n
 \n
 skin_name = \'ODT\' # hardcoded for now\n
 tag = \'active-report-%s\' % random.randint(0, 1000)\n
@@ -100,7 +100,7 @@ portal.portal_simulation.activate(after_tag=tag).Base_report(\n
            title=form.getProperty(\'title\'),\n
            request_other=request_other,\n
            form_path=form.getPhysicalPath(),\n
-           email_to=email_to,\n
+           user_name=user_name,\n
           )\n
 \n
 context.activate(after_tag=tag).getTitle()\n
@@ -155,7 +155,7 @@ return context.Base_redirect(\'view\', keep_items=dict(\n
                             <string>portal</string>
                             <string>N_</string>
                             <string>active_process</string>
-                            <string>email_to</string>
+                            <string>user_name</string>
                             <string>skin_name</string>
                             <string>random</string>
                             <string>tag</string>

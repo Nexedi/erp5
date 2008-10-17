@@ -53,9 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-request = container.REQUEST\n
+            <value> <string>request = container.REQUEST\n
 request.other.update(request_other)\n
 portal = context.getPortalObject()\n
 ap = portal.restrictedTraverse(active_process_url)\n
@@ -76,52 +74,25 @@ report_data = context.report_view.pt_render(\n
                          rendered_report_item_list=[r[1] for r in report_section_list],\n
                          form=portal.restrictedTraverse(form_path)))\n
 \n
-email_from = portal.getProperty(\'email_from_address\')\n
-if portal.getProperty(\'email_from_name\'):\n
-  email_from = \'"%s" <%s>\' % (portal.getProperty(\'email_from_name\'), email_from)\n
+attachment_list = (\n
+  {\'mime_type\': request.RESPONSE.getHeader(\'content-type\').split(\';\')[0],\n
+   \'content\': report_data,\n
+   \'name\': [x[len(\'filename=\'):] for x in request.RESPONSE.getHeader(\n
+               \'content-disposition\').split(\';\') \\\n
+               if x.startswith(\'filename=\')][0]},)\n
 \n
-if 0: # send an email ?\n
-  portal.MailHost.send(\'\'\'From:%(mfrom)s\n
-To:%(mto)s\n
-Subject:%(subject)s\n
-Content-Type: Multipart/Mixed;\n
-  boundary="Boundary-00=_GJWGGr2lsPnqbw0"\n
-\n
---Boundary-00=_GJWGGr2lsPnqbw0\n
-Content-Type: text/plain;\n
-  charset="utf-8"\n
-Content-Transfer-Encoding: 7bit\n
-Content-Disposition: inline\n
-\n
-Your report is attached.\n
-\n
-Maybe here we could sum up the parameters, date, user etc ?\n
-\n
---Boundary-00=_GJWGGr2lsPnqbw0\n
-Content-Type: application/pdf;\n
-  name="CasParticuliers.pdf"\n
-Content-Transfer-Encoding: 8bit\n
-Content-Disposition: attachment;\n
-\tfilename="%(subject)s.pdf"\n
-\n
-%(report_data)s\n
-\'\'\' % dict(subject=title,\n
-           mfrom=email_from,\n
-           mto=email_to,\n
-           report_data=report_data))\n
-\n
-# TODO: this should use portal_contributions\n
-doc = portal.document_module.newContent(portal_type=\'File\',\n
-                                  title=N_(title),\n
-                                  language=localizer_language,\n
-                                  data=report_data)\n
-\n
-content_type = request.RESPONSE.getHeader(\'Content-Type\')\n
-if content_type:\n
-  doc.setContentType(content_type.split(\';\')[0])\n
-
-
-]]></string> </value>
+# XXX Use notification message to improve message content\n
+portal.portal_notifications.sendMessage(\n
+  recipient=user_name,\n
+  subject=title,\n
+  message=\'\\nYour report is attached.\\n\\n\' \\\n
+          \'Maybe here we could sum up the parameters, date, user etc ?\\n\\n\',\n
+  message_text_format=\'text/plain\',\n
+  notifier_list=(\'Mail Message\',),\n
+  store_as_event=False,\n
+  attachment_list=attachment_list,\n
+  )\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -131,7 +102,7 @@ if content_type:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>active_process_url, skin_name, localizer_language, title, request_other, form_path, email_to</string> </value>
+            <value> <string>active_process_url, skin_name, localizer_language, title, request_other, form_path, user_name</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -163,7 +134,7 @@ if content_type:\n
                             <string>title</string>
                             <string>request_other</string>
                             <string>form_path</string>
-                            <string>email_to</string>
+                            <string>user_name</string>
                             <string>_getattr_</string>
                             <string>container</string>
                             <string>request</string>
@@ -180,9 +151,10 @@ if content_type:\n
                             <string>dict</string>
                             <string>_getitem_</string>
                             <string>report_data</string>
-                            <string>email_from</string>
-                            <string>doc</string>
-                            <string>content_type</string>
+                            <string>x</string>
+                            <string>len</string>
+                            <string>attachment_list</string>
+                            <string>False</string>
                           </tuple>
                         </value>
                     </item>
