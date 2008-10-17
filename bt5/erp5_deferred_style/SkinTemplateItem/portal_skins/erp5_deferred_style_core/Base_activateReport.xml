@@ -58,6 +58,19 @@ RESPONSE =  request.RESPONSE\n
 \n
 portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
+\n
+try:\n
+  person_value = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
+except ValueError:\n
+  portal.changeSkin(None)\n
+  return context.Base_redirect(\'view\', keep_items=dict(\n
+              portal_status_message=N_("You didn\'t defined your email address")))\n
+\n
+if person_value.getDefaultEmailText(\'\') == \'\':\n
+  portal.changeSkin(None)\n
+  return context.Base_redirect(\'view\', keep_items=dict(\n
+              portal_status_message=N_("You didn\'t defined your email address")))\n
+  \n
 active_process = portal.portal_activities.newActiveProcess()\n
 user_name = context.portal_membership.getAuthenticatedMember().getUserName()\n
 \n
@@ -164,6 +177,10 @@ return context.Base_redirect(\'view\', keep_items=dict(\n
                             <string>context</string>
                             <string>portal</string>
                             <string>N_</string>
+                            <string>person_value</string>
+                            <string>ValueError</string>
+                            <string>None</string>
+                            <string>dict</string>
                             <string>active_process</string>
                             <string>user_name</string>
                             <string>skin_name</string>
@@ -171,7 +188,6 @@ return context.Base_redirect(\'view\', keep_items=dict(\n
                             <string>tag</string>
                             <string>priority</string>
                             <string>report_section_list</string>
-                            <string>dict</string>
                             <string>request_other</string>
                             <string>_getiter_</string>
                             <string>k</string>
@@ -182,7 +198,6 @@ return context.Base_redirect(\'view\', keep_items=dict(\n
                             <string>idx</string>
                             <string>report_section</string>
                             <string>doc</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
