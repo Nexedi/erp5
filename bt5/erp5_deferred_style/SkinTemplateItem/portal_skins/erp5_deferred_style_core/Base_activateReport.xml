@@ -63,6 +63,7 @@ user_name = context.portal_membership.getAuthenticatedMember().getUserName()\n
 \n
 skin_name = \'ODT\' # hardcoded for now\n
 tag = \'active-report-%s\' % random.randint(0, 1000)\n
+priority = 3\n
 \n
 # compute list of report section to render\n
 report_section_list = report_method()\n
@@ -87,6 +88,7 @@ for idx, report_section in enumerate(report_section_list):\n
   doc.activate(activity=\'SQLQueue\',\n
                active_process=active_process,\n
                tag=tag,\n
+               priority=priority,\n
               ).Base_renderReportSection(skin_name=skin_name,\n
                                          localizer_language=localizer_language,\n
                                          report_section=report_section,\n
@@ -101,6 +103,7 @@ portal.portal_simulation.activate(after_tag=tag).Base_report(\n
            request_other=request_other,\n
            form_path=form.getPhysicalPath(),\n
            user_name=user_name,\n
+           priority=priority,\n
           )\n
 \n
 context.activate(after_tag=tag).getTitle()\n
@@ -167,6 +170,7 @@ return context.Base_redirect(\'view\', keep_items=dict(\n
                             <string>skin_name</string>
                             <string>random</string>
                             <string>tag</string>
+                            <string>priority</string>
                             <string>report_section_list</string>
                             <string>dict</string>
                             <string>request_other</string>
