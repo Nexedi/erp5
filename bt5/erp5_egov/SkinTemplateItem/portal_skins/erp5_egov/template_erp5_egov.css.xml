@@ -557,7 +557,7 @@ div.inline_label label{\n
 }\n
 \n
 .document .actions{\n
-  margin-left: auto;\n
+/*  margin-left: auto;*/\n
   margin-right: auto;\n
   width: 802px !important;\n
   text-align: left;\n
@@ -575,7 +575,7 @@ fieldset.white_background,\n
 fieldset.register_informations{\n
   background: white !important;\n
   margin-right: auto !important;\n
-  margin-left: auto !important;\n
+/*  margin-left: auto !important;*/\n
   padding: 2em 0 2em 0 !important;\n
   border: 1px solid #999 !important;\n
   width:800px !important;\n

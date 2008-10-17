@@ -1,3 +1,6 @@
+2008-10-16 fabien
+* change css to have all the tabs of the forms (actions) on the right instead of have the first on right and the others in the middle
+
 2008-10-15 fabien
 * update some listbox to display the last application in first
 * update css
