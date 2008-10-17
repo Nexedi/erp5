@@ -911,6 +911,3 @@ msgstr "Erreur : une organisation avec l'identifiant ${login} existe déjà"
 
 msgid "User to Assign to"
 msgstr "Dossier associé à l'utilisateur"
-
-msgid "Creation Date"
-msgstr "Date de création"
