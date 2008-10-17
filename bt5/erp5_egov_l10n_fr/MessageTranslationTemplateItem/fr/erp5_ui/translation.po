@@ -828,7 +828,7 @@ msgstr "Assigné"
 msgid "Assigne"
 msgstr "Assigner"
 
-msgid "assigne"
+msgid "assign"
 msgstr "assigner"
 
 msgid "Assign Application to User"
@@ -908,3 +908,9 @@ msgstr "Erreur : une organisation avec le numéro NINEA '${ninea}' existe déjà
 
 msgid "Error : A company with the login '${login}'already exists"
 msgstr "Erreur : une organisation avec l'identifiant ${login} existe déjà"
+
+msgid "User to Assign to"
+msgstr "Dossier associé à l'utilisateur"
+
+msgid "Creation Date"
+msgstr "Date de création"
