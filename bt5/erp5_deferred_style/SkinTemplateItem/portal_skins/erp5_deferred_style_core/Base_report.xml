@@ -105,6 +105,14 @@ portal.portal_notifications.sendMessage(\n
             <value> <string>active_process_url, skin_name, localizer_language, title, request_other, form_path, user_name</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>errors</string> </key>
             <value>
               <tuple/>
