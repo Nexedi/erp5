@@ -95,7 +95,7 @@ for idx, report_section in enumerate(report_section_list):\n
                                          report_section_idx=idx,\n
                                          request_other=request_other)\n
 \n
-portal.portal_simulation.activate(after_tag=tag).Base_report(\n
+portal.portal_simulation.activate(after_tag=tag, priority=priority).Base_report(\n
            active_process_url=active_process.getRelativeUrl(),\n
            skin_name=skin_name,\n
            localizer_language=localizer_language,\n
@@ -103,7 +103,6 @@ portal.portal_simulation.activate(after_tag=tag).Base_report(\n
            request_other=request_other,\n
            form_path=form.getPhysicalPath(),\n
            user_name=user_name,\n
-           priority=priority,\n
           )\n
 \n
 context.activate(after_tag=tag).getTitle()\n
