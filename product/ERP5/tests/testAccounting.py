@@ -1596,7 +1596,6 @@ class TestClosingPeriod(AccountingTestCase):
                               section_uid=self.section.getUid(),
                               node_uid=node_uid))
 
-
   def test_InventoryIndexingNodeDiffOnNode(self):
     # Balance Transactions are indexed as Inventories.
     transaction1 = self._makeOne(
@@ -1638,6 +1637,47 @@ class TestClosingPeriod(AccountingTestCase):
     node_uid = self.account_module.stocks.getUid()
     self.assertEquals(-90, stool.getInventory(
                               section_uid=self.section.getUid(),
+                              node_uid=node_uid))
+
+  def test_IndexingBalanceTransactionLinesWithSameNodes(self):
+    # Indexes balance transaction without any previous inventory.
+    # This make sure that indexing two balance transaction lines with same
+    # categories does not try to insert duplicate keys in category table.
+    balance = self.accounting_module.newContent(
+                          portal_type='Balance Transaction',
+                          destination_section_value=self.section,
+                          start_date=DateTime(2006, 12, 31),
+                          resource_value=self.currency_module.euro,)
+    balance.newContent(
+                portal_type='Balance Transaction Line',
+                source_section_value=self.organisation_module.client_1,
+                destination_value=self.account_module.receivable,
+                destination_debit=150,)
+    balance.newContent(
+                portal_type='Balance Transaction Line',
+                source_section_value=self.organisation_module.client_2,
+                destination_value=self.account_module.receivable,
+                destination_debit=30,)
+
+    balance.stop()
+    get_transaction().commit()
+    self.tic()
+    
+    stool = self.portal.portal_simulation
+    # the account 'receivable' has a balance of 150 + 30
+    node_uid = self.account_module.receivable.getUid()
+    self.assertEquals(180, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid))
+    self.assertEquals(150, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              mirror_section_uid=self.organisation_module\
+                                                    .client_1.getUid(),
+                              node_uid=node_uid))
+    self.assertEquals(30, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              mirror_section_uid=self.organisation_module\
+                                                    .client_2.getUid(),
                               node_uid=node_uid))
     
 
