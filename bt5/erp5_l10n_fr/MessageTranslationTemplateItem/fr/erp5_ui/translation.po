@@ -2354,10 +2354,6 @@ msgstr "Commentaires"
 msgid "Comments which can be read by internal users but which, unlike description, are not printed out on official documents."
 msgstr "Commentaires accessibles aux utilisateurs internes de l'application qui, contrairement à la description, ne sont pas repris ou imprimés sur les documents officiels."
 
-#: portal_skins/erp5_svn/BusinessTemplate_viewSvnChangelog
-msgid "Commit"
-msgstr "Commettre"
-
 #: portal_skins/erp5_glossary/GlossaryModule_viewFieldUpdateDialog
 #: portal_skins/erp5_glossary/GlossaryModule_viewWorkflowUpdateDialog
 msgid "Compare"
