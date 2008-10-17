@@ -831,6 +831,9 @@ class TestClosingPeriod(AccountingTestCase):
     period = self.section.newContent(portal_type='Accounting Period')
     period.setStartDate(DateTime(2006, 1, 1))
     period.setStopDate(DateTime(2006, 12, 31))
+    pl = self.portal.account_module.newContent(
+              portal_type='Account',
+              account_type='equity')
 
     transaction1 = self._makeOne(
         start_date=DateTime(2006, 1, 1),
@@ -853,7 +856,7 @@ class TestClosingPeriod(AccountingTestCase):
                     source_credit=200)))
 
     period.AccountingPeriod_createBalanceTransaction(
-                             profit_and_loss_account=None)
+                             profit_and_loss_account=pl.getRelativeUrl())
     accounting_transaction_list = self.accounting_module.contentValues()
     self.assertEquals(3, len(accounting_transaction_list))
     balance_transaction_list = self.accounting_module.contentValues(
@@ -907,19 +910,20 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEquals(200., client2_movement.getDestinationCredit())
 
     pl_movement_list = [m for m in movement_list
-                         if m.getDestination() is None]
+                        if m.getDestinationValue() == pl]
     self.assertEquals(1, len(pl_movement_list))
     pl_movement = pl_movement_list[0]
     self.assertEquals([], pl_movement.getValueList('resource'))
     self.assertEquals(None, pl_movement.getSource())
-    self.assertEquals(None,
+    self.assertEquals(pl,
                       pl_movement.getDestinationValue())
     self.assertEquals(None,
                       pl_movement.getSourceSection())
     self.assertEquals(None, pl_movement.getDestinationTotalAssetPrice())
     self.assertEquals(None, pl_movement.getSourceTotalAssetPrice())
     self.assertEquals(300., pl_movement.getDestinationDebit())
-
+    get_transaction().commit()
+    self.tic()
 
   def test_createBalanceOnPayment(self):
     organisation_module = self.organisation_module
