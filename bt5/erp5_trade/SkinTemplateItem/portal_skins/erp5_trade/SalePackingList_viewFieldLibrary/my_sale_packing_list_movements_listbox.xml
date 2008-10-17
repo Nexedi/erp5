@@ -99,7 +99,7 @@
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
-                          <string>Resource</string>
+                          <string>Product or Service</string>
                         </tuple>
                         <tuple>
                           <string>variation_category_item_list</string>
@@ -146,7 +146,7 @@
                         </tuple>
                         <tuple>
                           <string>resource_title</string>
-                          <string>Resource</string>
+                          <string>Product or Service</string>
                         </tuple>
                         <tuple>
                           <string>variation_category_item_list</string>
