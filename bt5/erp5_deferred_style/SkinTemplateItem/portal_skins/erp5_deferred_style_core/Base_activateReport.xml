@@ -61,7 +61,7 @@ N_ = portal.Base_translateString\n
 active_process = portal.portal_activities.newActiveProcess()\n
 user_name = context.portal_membership.getAuthenticatedMember().getUserName()\n
 \n
-skin_name = \'ODT\' # hardcoded for now\n
+skin_name = \'ODT\' # XXX hardcoded for now\n
 tag = \'active-report-%s\' % random.randint(0, 1000)\n
 priority = 3\n
 \n

@@ -69,8 +69,9 @@ portal.portal_skins.changeSkin(skin_name)\n
 report_section_list = [r.getResult() for r in ap.getResultList()]\n
 report_section_list.sort(lambda a, b:cmp(a[0], b[0]))\n
 \n
+# XXX Hardcoded format\n
 report_data = context.report_view.pt_render(\n
-      extra_context=dict(options={},\n
+      extra_context=dict(options={\'format\': \'pdf\'},\n
                          rendered_report_item_list=[r[1] for r in report_section_list],\n
                          form=portal.restrictedTraverse(form_path)))\n
 \n
