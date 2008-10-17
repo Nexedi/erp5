@@ -200,6 +200,10 @@
                           <string>Price</string>
                         </tuple>
                         <tuple>
+                          <string>total_price</string>
+                          <string>Total Price</string>
+                        </tuple>
+                        <tuple>
                           <string>stop_date</string>
                           <string>Delivery Date</string>
                         </tuple>
