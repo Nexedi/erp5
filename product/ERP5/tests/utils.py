@@ -26,7 +26,7 @@
 ##############################################################################
 
 import os.path
-import tarfile
+from Products.ERP5Type import tarfile
 import xml.parsers.expat
 import xml.dom.minidom
 from urllib import url2pathname

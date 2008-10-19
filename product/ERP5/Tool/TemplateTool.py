@@ -29,14 +29,14 @@
 from webdav.client import Resource
 
 from App.config import getConfiguration
-import os, tarfile
+import os
 import shutil
 
 from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ERP5Type import Permissions
+from Products.ERP5Type import Permissions, tarfile
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateMissingDependency
 from tempfile import mkstemp, mkdtemp
 from Products.ERP5 import _dtmldir
