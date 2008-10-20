@@ -73,12 +73,6 @@ AAAIAPCOATeB4XqibAEAABQIAAAVAAAAAAAAAAAAAAAAAOgKAABNRVRBLUlORi9tYW5pZmVzdC54
 bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
         </item>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -102,12 +96,6 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                   </dictionary>
                 </state>
               </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -392,8 +380,17 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                     </tal:block>\n
                   </tal:block>\n
                   <tal:block tal:condition="python: (not (same_type(value,[]) or same_type(value,()) )) and (value != None)">\n
-                    <text:p text:style-name=\'field-content-center\'\n
+                    <tal:block tal:condition="python: field_type==\'EditorField\' and field.get_value(\'text_editor\')==\'fck_editor\'">\n
+                      <tal:block tal:content="structure python: field.render_pdf(value)" />\n
+                    </tal:block>\n
+                    <tal:block tal:condition="python: field_type in (\'EditorField\',) and field.get_value(\'text_editor\')==\'text_area\'">\n
+                      <text:p text:style-name=\'field-content-center\'\n
                   tal:content="structure python: field.render_pdf(value).replace(\'&amp;\', \'&amp;amp;\').replace(\'&gt;\', \'&amp;gt;\').replace(\'&lt;\', \'&amp;lt;\').replace(\'\\n\', \'&lt;text:line-break/&gt;\')"/>\n
+                    </tal:block>\n
+                    <tal:block tal:condition="python: field_type!=\'EditorField\'">\n
+                      <text:p text:style-name=\'field-content-center\'\n
+                              tal:content="structure python: field.render_pdf(value).replace(\'&amp;\', \'&amp;amp;\').replace(\'&gt;\', \'&amp;gt;\').replace(\'&lt;\', \'&amp;lt;\').replace(\'\\n\', \'&lt;text:line-break/&gt;\')"/>\n
+                    </tal:block>\n
                   </tal:block>\n
                   <tal:block tal:condition="python: value is None">\n
                     <text:p text:style-name=\'field-content\' tal:content="python: \' \'" />\n
