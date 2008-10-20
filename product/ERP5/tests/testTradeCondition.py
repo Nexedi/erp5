@@ -905,7 +905,88 @@ class TestTaxLineCalculation(TradeConditionTestCase):
     tax_3_movement = [m for m in tax_movement_list if m.getPrice() == 0.3][0]
     self.assertEquals(tax_3_movement.getQuantity(), 9)
     
-    
+  def test_temp_order(self):
+    base_1 = self.base_amount.newContent(
+                          portal_type='Category',
+                          title='Base 1')
+    self.resource.setBaseContributionValue(base_1)
+
+    tax_model_line = self.trade_condition.newContent(
+                  portal_type='Tax Model Line',
+                  base_application_value=base_1,
+                  float_index=1,
+                  efficiency=0.2,
+                  resource_value=self.tax)
+
+    order = self.portal.getDefaultModule(self.order_type).newContent(
+                          portal_type=self.order_type,
+                          temp_object=1)
+    order.Order_applyTradeCondition(self.trade_condition, force=1)
+
+    tax_line_list = order.contentValues(portal_type='Tax Line')
+    self.assertEquals(1, len(tax_line_list))
+    tax_line = tax_line_list[0]
+    self.assertEquals(0, tax_line.getQuantity())
+    self.assertEquals(self.tax, tax_line.getResourceValue())
+    self.assertEquals(0.2, tax_line.getPrice())
+
+    order_line = order.newContent(
+                          portal_type=self.order_line_type,
+                          resource_value=self.resource,
+                          quantity=10,
+                          price=40)
+
+    tax_line_list = order.contentValues(portal_type='Tax Line')
+    self.assertEquals(1, len(tax_line_list))
+    tax_line = tax_line_list[0]
+    self.assertEquals(400, tax_line.getQuantity())
+    self.assertEquals(self.tax, tax_line.getResourceValue())
+    self.assertEquals(0.2, tax_line.getPrice())
+  
+  def test_temp_order_hierarchical(self):
+    base_1 = self.base_amount.newContent(
+                          portal_type='Category',
+                          title='Base 1')
+    self.resource.setBaseContributionValue(base_1)
+
+    tax_model_line = self.trade_condition.newContent(
+                  portal_type='Tax Model Line',
+                  base_application_value=base_1,
+                  float_index=1,
+                  efficiency=0.2,
+                  resource_value=self.tax)
+
+    order = self.portal.getDefaultModule(self.order_type).newContent(
+                          portal_type=self.order_type,
+                          temp_object=1)
+    order.Order_applyTradeCondition(self.trade_condition, force=1)
+
+    tax_line_list = order.contentValues(portal_type='Tax Line')
+    self.assertEquals(1, len(tax_line_list))
+    tax_line = tax_line_list[0]
+    self.assertEquals(0, tax_line.getQuantity())
+    self.assertEquals(self.tax, tax_line.getResourceValue())
+    self.assertEquals(0.2, tax_line.getPrice())
+
+    order_line = order.newContent(
+                          portal_type=self.order_line_type,
+                          resource_value=self.resource,)
+    suborder_line1 = order_line.newContent(
+                          portal_type=self.order_line_type,
+                          quantity=4,
+                          price=5)
+    suborder_line2 = order_line.newContent(
+                          portal_type=self.order_line_type,
+                          quantity=2,
+                          price=40)
+
+    tax_line_list = order.contentValues(portal_type='Tax Line')
+    self.assertEquals(1, len(tax_line_list))
+    tax_line = tax_line_list[0]
+    self.assertEquals(100, tax_line.getQuantity())
+    self.assertEquals(self.tax, tax_line.getResourceValue())
+    self.assertEquals(0.2, tax_line.getPrice())
+  
 
 class TestTaxLineOrderSimulation(AccountingBuildTestCase):
   """Test Simulation of Tax Lines on Orders
@@ -1641,11 +1722,13 @@ class TestTaxLineCalculationSaleInvoice(
   def not_available(self):
     pass
   test_hierarchical_order_line_and_tax_line = not_available
+  test_temp_order_hierarchical = not_available
 class TestTaxLineCalculationPurchaseInvoice(
     TestTaxLineCalculation, TestWithPurchaseInvoice):
   def not_available(self):
     pass
   test_hierarchical_order_line_and_tax_line = not_available
+  test_temp_order_hierarchical = not_available
 
 class TestTaxLineOrderSimulationSaleOrder(
       TestTaxLineOrderSimulation, TestWithSaleOrder):
