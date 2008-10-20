@@ -135,10 +135,8 @@ def buildEmailMessage(from_url, to_url, msg=None,
   message.add_header('To', to_url)
 
   for attachment in attachment_list:
-    if attachment.has_key('name'):
-      attachment_name = attachment['name']
-    else:
-      attachment_name = ''
+    attachment_name = attachment.get('name', '')
+
     # try to guess the mime type
     if not attachment.has_key('mime_type'):
       type, encoding = guess_type( attachment_name )
@@ -164,8 +162,8 @@ def buildEmailMessage(from_url, to_url, msg=None,
         part.set_payload(attachment['content'])
         Encoders.encode_base64(part)
 
-    part.add_header('Content-Disposition',
-                    'attachment; filename=%s' % attachment_name)
+    part.add_header('Content-Disposition', 'attachment',
+                    filename=attachment_name)
     part.add_header('Content-ID', '<%s>' % \
                     ''.join(['%s' % ord(i) for i in attachment_name]))
     message.attach(part)
