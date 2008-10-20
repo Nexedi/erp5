@@ -79,23 +79,31 @@ The parameters are\n
 \n
 NOTE: for now, this script requires proxy manager\n
 """\n
+from Products.CMFCore.WorkflowCore import WorkflowException\n
 \n
 portal_workflow = context.getPortalObject().portal_workflow\n
 \n
-history_list = context.portal_workflow.getInfoFor(ob=context, \n
-                                          name=\'history\', wf_id=\'egov_universal_workflow\')\n
-# reverse the list to get the first assign user\n
-history_list = list(history_list)\n
-history_list.reverse()\n
-\n
 last_site, last_group, last_function, last_user = (None, None, None, None)\n
-for history_line in history_list:\n
-  if history_line.has_key(\'assigned_group\') and history_line[\'assigned_group\']:\n
-    last_group = history_line[\'assigned_group\']\n
-    last_function = history_line[\'assigned_function\']\n
-    last_site = history_line[\'assigned_site\']\n
-  if history_line.has_key(\'assigned_user\') and history_line[\'assigned_user\']:\n
-    last_user = history_line[\'assigned_user\']\n
+\n
+wf_list = [x for x, y in context.getWorkflowStateItemList()]\n
+for wf_id in wf_list: \n
+  try:\n
+    history_list = context.portal_workflow.getInfoFor(ob=context, \n
+                                              name=\'history\', wf_id=wf_id)\n
+  except WorkflowException:\n
+    continue\n
+\n
+  # reverse the list to get the first assign user\n
+  history_list = list(history_list)\n
+  history_list.reverse()\n
+\n
+  for history_line in history_list:\n
+    if history_line.has_key(\'assigned_group\') and history_line[\'assigned_group\']:\n
+      last_group = history_line[\'assigned_group\']\n
+      last_function = history_line[\'assigned_function\']\n
+      last_site = history_line[\'assigned_site\']\n
+    if history_line.has_key(\'assigned_user\') and history_line[\'assigned_user\']:\n
+      last_user = history_line[\'assigned_user\']\n
 \n
 if last_group:\n
   return [{\'function\': last_function,\n
@@ -159,17 +167,25 @@ return []\n
                             <string>user_name</string>
                             <string>object</string>
                             <string>portal_type</string>
+                            <string>Products.CMFCore.WorkflowCore</string>
+                            <string>WorkflowException</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal_workflow</string>
-                            <string>history_list</string>
-                            <string>list</string>
                             <string>None</string>
                             <string>_getiter_</string>
                             <string>last_site</string>
                             <string>last_group</string>
                             <string>last_function</string>
                             <string>last_user</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>y</string>
+                            <string>wf_list</string>
+                            <string>wf_id</string>
+                            <string>history_list</string>
+                            <string>list</string>
                             <string>history_line</string>
                             <string>_getitem_</string>
                             <string>user</string>
