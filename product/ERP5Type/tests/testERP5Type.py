@@ -30,6 +30,7 @@ import md5
 import unittest
 import sys
 
+import transaction
 from random import randint
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -307,6 +308,13 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
           raise self.failureException, "Container last ID modified"
       finally:
         delattr(portal.person_module.__class__, '_setLastId')
+
+      # the module is not changed from ZODB point of view
+      self.assertFalse(portal.person_module._p_changed)
+      # the object is not in ZODB
+      self.assertEquals(o._p_jar, None)
+      transaction.commit()
+      self.assertEquals(o._p_jar, None)
 
       # Check that creating 2 consecutive temp object automatically increases
       # their ID
