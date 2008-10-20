@@ -53,7 +53,6 @@
             <value>
               <list>
                 <string>left</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -62,18 +61,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list>
-                        <string>your_workflow_action</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
                         <string>your_comment</string>
+                        <string>your_workflow_action</string>
                         <string>your_user</string>
                       </list>
                     </value>
