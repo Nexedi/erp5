@@ -64,6 +64,15 @@ portal = context.getPortalObject()\n
 valid_movement_type_list = [t for t in portal.getPortalMovementTypeList()\n
                                 if t != \'Tax Line\']\n
 \n
+def getRelatedPath(parent, child):\n
+  """returns child\'s relative path in parent, as a tuple that can later be used\n
+  as an argument to parent.restrictedTraverse to find back the child.\n
+  """\n
+  parent_path_length = len(parent.getPhysicalPath())\n
+  child_path = child.getPhysicalPath()\n
+  context.log((child, child_path, child_path[parent_path_length:]))\n
+  return child_path[parent_path_length:]\n
+\n
 def sorted(seq, comp):\n
   seq = seq[::]\n
   seq.sort(comp)\n
@@ -82,7 +91,7 @@ for tax_line in sorted(\n
       for base_contribution in movement.getBaseContributionList():\n
         # XXX non optimal loops, may needs optimisation\n
         if base_contribution == base_application:\n
-          applicable_movement_list[id(movement)] = movement\n
+          applicable_movement_list[getRelatedPath(context, movement)] = movement\n
   \n
   for movement in applicable_movement_list.values():\n
     movement_price = movement.getTotalPrice(fast=0) or 0\n
@@ -146,6 +155,7 @@ for tax_line in sorted(\n
                             <string>_getiter_</string>
                             <string>t</string>
                             <string>valid_movement_type_list</string>
+                            <string>getRelatedPath</string>
                             <string>sorted</string>
                             <string>tax_line</string>
                             <string>applicable_movement_list</string>
@@ -156,7 +166,6 @@ for tax_line in sorted(\n
                             <string>base_contribution_list</string>
                             <string>base_contribution</string>
                             <string>_write_</string>
-                            <string>id</string>
                             <string>movement_price</string>
                             <string>NotImplementedError</string>
                             <string>base_amount</string>
