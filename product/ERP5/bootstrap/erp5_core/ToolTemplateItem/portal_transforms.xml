@@ -13041,7 +13041,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>nicolas</string> </key>
+                    <key> <string>tibo</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -13146,7 +13146,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>nicolas</string> </key>
+                    <key> <string>tibo</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -13251,7 +13251,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>nicolas</string> </key>
+                    <key> <string>tibo</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -13453,7 +13453,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>nicolas</string> </key>
+                    <key> <string>tibo</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -13560,7 +13560,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>nicolas</string> </key>
+                    <key> <string>tibo</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -13667,7 +13667,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>nicolas</string> </key>
+                    <key> <string>tibo</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -13774,7 +13774,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>nicolas</string> </key>
+                    <key> <string>tibo</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -13881,7 +13881,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>nicolas</string> </key>
+                    <key> <string>tibo</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -13988,7 +13988,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>nicolas</string> </key>
+                    <key> <string>tibo</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -14095,7 +14095,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>nicolas</string> </key>
+                    <key> <string>tibo</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -14202,7 +14202,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>nicolas</string> </key>
+                    <key> <string>tibo</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -14365,7 +14365,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>html_to_text</string> </value>
+            <value> <string>w3m_dump</string> </value>
         </item>
         <item>
             <key> <string>inputs</string> </key>
@@ -14377,7 +14377,7 @@
         </item>
         <item>
             <key> <string>module</string> </key>
-            <value> <string>Products.PortalTransforms.transforms.html_to_text</string> </value>
+            <value> <string>Products.ERP5Type.patches.transforms.w3m_dump</string> </value>
         </item>
         <item>
             <key> <string>output</string> </key>
@@ -14392,12 +14392,6 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
       </dictionary>
     </pickle>
@@ -14416,7 +14410,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>nicolas</string> </key>
+                    <key> <string>tibo</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -14523,7 +14517,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>nicolas</string> </key>
+                    <key> <string>tibo</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -14579,7 +14573,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>w3m_dump</string> </value>
+            <value> <string>html_to_text</string> </value>
         </item>
         <item>
             <key> <string>inputs</string> </key>
@@ -14591,7 +14585,7 @@
         </item>
         <item>
             <key> <string>module</string> </key>
-            <value> <string>Products.ERP5Type.patches.transforms.w3m_dump</string> </value>
+            <value> <string>Products.PortalTransforms.transforms.html_to_text</string> </value>
         </item>
         <item>
             <key> <string>output</string> </key>
@@ -14606,6 +14600,12 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>
@@ -14624,7 +14624,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>nicolas</string> </key>
+                    <key> <string>tibo</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -14793,7 +14793,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>nicolas</string> </key>
+                    <key> <string>tibo</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -14914,7 +14914,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>nicolas</string> </key>
+                    <key> <string>tibo</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -15021,7 +15021,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>nicolas</string> </key>
+                    <key> <string>tibo</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -15249,7 +15249,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>nicolas</string> </key>
+                    <key> <string>tibo</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>
@@ -15380,7 +15380,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>nicolas</string> </key>
+                    <key> <string>tibo</string> </key>
                     <value>
                       <list>
                         <string>Owner</string>

@@ -1,3 +1,6 @@
+2008-10-20 Thibaut
+* Allow portal_transforms to extract content.xml file from odt file (zip file).
+
 2008-10-16 Nicolas
 * Allow portal_transforms to convert html content to odt, pdf, doc by using oood
 
