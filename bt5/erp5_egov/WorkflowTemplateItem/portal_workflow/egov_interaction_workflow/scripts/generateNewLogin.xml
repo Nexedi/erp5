@@ -55,27 +55,35 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-changed_object = state_change[\'object\']\n
-login = changed_object.getCompanyName().lower()\n
-portal_catalog = changed_object.portal_catalog\n
-ninea = changed_object.getNinea()\n
+\'\'\'\n
+This script remove accents and spaces and other things from the text to generate a new login\n
+\'\'\'\n
 \n
-# check that no existing organisation have the same NINEA number or login\n
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+inc = 1\n
+new_login = login\n
 \n
-result = portal_catalog( portal_type=\'Organisation\',\n
-                         vat_code=changed_object.getNinea())\n
+# XXX here it should be possible to use a regular expression\n
+login = text.lower()\n
+login = login.replace(\' \', \'_\')\n
+login = login.replace(\'\xc3\xa9\', \'e\')\n
+login = login.replace(\'\xc3\xa8\', \'e\')\n
+login = login.replace(\'\xc3\xa0\', \'a\')\n
+login = login.replace(\'\xc3\xa7\', \'c\')\n
 \n
+# search if the login already exists\n
+result = context.portal_catalog(reference=login)\n
 \n
-if len(result) > 1:\n
-  msg = "Error : There is more than one company with the NINEA code ${code}"\n
-  msg = translateString(msg, mapping=dict(code=ninea))\n
-  raise ValidationFailed, msg \n
+while len(result) > 0:\n
 \n
-if len(result) == 1 and result[0].getObject().getReference():\n
-  msg = "Error : A company with the NINEA code ${code} already exists and have already an account"\n
-  msg = translateString(msg, mapping=dict(code=ninea))\n
-  raise ValidationFailed, msg\n
+  if new_login.rfind(\'-\'):\n
+    # if a number has already been added to the end of the login, increase it\n
+    if new_login[new_login.rfind(\'-\')+1:].isdigit():\n
+      inc = int(new_login[new_login.rfind(\'-\')+1:]) + 1\n
+\n
+  new_login = \'%s-%s\' % (login, inc)\n
+  result = context.portal_catalog(reference=new_login)\n
+\n
+return new_login\n
 
 
 ]]></string> </value>
@@ -88,15 +96,7 @@ if len(result) == 1 and result[0].getObject().getReference():\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>text</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -122,20 +122,16 @@ if len(result) == 1 and result[0].getObject().getReference():\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>changed_object</string>
-                            <string>_getattr_</string>
+                            <string>text</string>
+                            <string>inc</string>
                             <string>login</string>
-                            <string>portal_catalog</string>
-                            <string>ninea</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
+                            <string>new_login</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
                             <string>result</string>
                             <string>len</string>
-                            <string>msg</string>
-                            <string>translateString</string>
-                            <string>dict</string>
+                            <string>_getitem_</string>
+                            <string>int</string>
                           </tuple>
                         </value>
                     </item>
@@ -152,7 +148,7 @@ if len(result) == 1 and result[0].getObject().getReference():\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>checkAccountInexistance</string> </value>
+            <value> <string>generateNewLogin</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

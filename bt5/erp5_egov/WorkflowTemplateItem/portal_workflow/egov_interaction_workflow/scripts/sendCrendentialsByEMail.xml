@@ -3,27 +3,186 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ExternalMethod" module="Products.ExternalMethod.ExternalMethod"/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
         <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_function</string> </key>
-            <value> <string>sendCrendentialsByEMail</string> </value>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
         </item>
         <item>
-            <key> <string>_module</string> </key>
-            <value> <string>ERP5EGov_Extensions</string> </value>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+This script tries to send a message containing the credentials to the\n
+organisation. It uses portal_notifications and the getObject API of ERP5Catalog.\n
+"""\n
+object = state_change[\'object\']\n
+\n
+translateString = object.Base_translateString\n
+portal_catalog = object.portal_catalog\n
+\n
+# get the new organisation :\n
+result = portal_catalog(portal_type=\'Organisation\',\n
+    vat_code=object.getNinea())\n
+\n
+if len(result) > 1:\n
+  msg = "Error : There is more than one company with the NINEA code ${code}"\n
+  msg = translateString(msg, mapping=dict(code=ninea))\n
+  raise ValidationFailed, msg \n
+\n
+if len(result) == 0 and result[0].getObject().getReference():\n
+  msg = "No organisation with the NINEA code ${code}"\n
+  msg = translateString(msg, mapping=dict(code=ninea))\n
+  raise ValidationFailed, msg \n
+\n
+organisation = result[0]\n
+\n
+# Build the message and translate it\n
+subject = translateString("Your credential for ${site_address}", mapping=dict(site_address=\'www.safi.sn\'))\n
+msg = """Thanks for registrering to SAFI, now you can connect in on ${site_address} with this credentials : \n
+\n
+Login : ${login}\n
+Password : ${password}\n
+\n
+This credentials are usefull to follow your application and more. Please visit ${site_address} for more information.\n
+"""\n
+msg = translateString(msg,\n
+             mapping=dict(site_address=\'www.safi.sn\',\n
+                          login=organisation.getReference(),\n
+                          password=organisation.getPassword())\n
+            )\n
+\n
+# We can now notify the owner through the notification tool\n
+object.portal_notifications.sendMessage(sender=\'no-reply\',\n
+    recipient=organisation.getReference(), subject=subject, message=msg,\n
+    portal_type_list=(\'Person\', \'Organisation\'))\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>_getitem_</string>
+                            <string>object</string>
+                            <string>_getattr_</string>
+                            <string>translateString</string>
+                            <string>portal_catalog</string>
+                            <string>result</string>
+                            <string>len</string>
+                            <string>msg</string>
+                            <string>dict</string>
+                            <string>ninea</string>
+                            <string>ValidationFailed</string>
+                            <string>organisation</string>
+                            <string>subject</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>sendCrendentialsByEMail</string> </value>
         </item>
         <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>

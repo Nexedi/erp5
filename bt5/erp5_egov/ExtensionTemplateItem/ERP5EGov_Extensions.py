@@ -1,28 +1,5 @@
 from zLOG import LOG
 
-def sendCrendentialsByEMail(self, login, password, user_email):
-  activity_tool = self.getPortalObject().portal_activities
-  from Products.MailHost.MailHost import MailHostError
-  from Products.CMFActivity.ActivityTool import Message
-  import socket
-  portal = activity_tool.getPortalObject()
-
-  mail_text="""From: %s
-To: %s
-Subject: %s
-
-Thanks for registrering to SAFI, now you can connect in on www.safi.sn with the followin credentials :
-
-Login: %s
-Password: %s
-""" % ('no-reply@safi.sn', user_email, 'your credential for www.safi.sn',
-     login, password)
-
-  try:
-    activity_tool.MailHost.send( mail_text )
-  except (socket.error, MailHostError), message:
-    LOG('ActivityTool.notifyUser', 0, 'Mail containing failure information failed to be sent: %s.' % (message))
-
 def getPoralTypeListForWorkflow(self, workflow):
   '''
     return a list of portal_types that use workflow

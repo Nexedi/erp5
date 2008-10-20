@@ -72,21 +72,17 @@ if not len(result):\n
       address_city=changed_object.getAddressCity(),\n
       address_region=changed_object.getAddressRegion(),\n
       corporate_registration_code=changed_object.getRccm(),\n
-      vat_code=changed_object.getNinea())\n
+      vat_code=changed_object.getNinea(),\n
+      default_email_text=changed_object.getEmail()\n
+      )\n
 else:\n
   organisation = result[0].getObject()\n
 \n
 # set the login and password required a manager role, so a script with a \n
 # proxy role is used\n
-login = changed_object.getCompanyName().lower()\n
+login = context.generateNewLogin(text=changed_object.getCompanyName())\n
 password = changed_object.Person_generatePassword()\n
 context.EGov_setLoginAndPasswordAsManager(organisation, login, password)\n
-\n
-# here, call a method to send credentials by email\n
-# XXX in the future, it should be possible to chose the mean to receive\n
-# credentials (email, sms, postal mail)\n
-user_email = changed_object.getEmail()\n
-context.sendCrendentialsByEMail(login, password, user_email)\n
 </string> </value>
         </item>
         <item>
@@ -138,10 +134,9 @@ context.sendCrendentialsByEMail(login, password, user_email)\n
                             <string>result</string>
                             <string>len</string>
                             <string>organisation</string>
+                            <string>context</string>
                             <string>login</string>
                             <string>password</string>
-                            <string>context</string>
-                            <string>user_email</string>
                           </tuple>
                         </value>
                     </item>

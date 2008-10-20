@@ -1,5 +1,7 @@
 2008-10-20 fabien
 * update ERP5Site_getSecurityFromLatestWorkflowHistory  to remove workflow hardcoded value
+* add a script generateNewLogin to generate new login (remove spaces and accents, add a number at the end if the login already exists, ...)
+* send credentials using portal_notification
 
 2008-10-16 fabien
 * change css to have all the tabs of the forms (actions) on the right instead of have the first on right and the others in the middle
