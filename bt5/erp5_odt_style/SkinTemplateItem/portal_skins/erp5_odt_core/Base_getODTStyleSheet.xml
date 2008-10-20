@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -78,12 +66,6 @@ return context.Base_getODTPortraitStyleSheet\n
             </value>
         </item>
         <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
@@ -112,9 +94,9 @@ return context.Base_getODTPortraitStyleSheet\n
                         <value>
                           <tuple>
                             <string>_getattr_</string>
-<string>container</string>
+                            <string>container</string>
                             <string>request</string>
-<string>context</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
