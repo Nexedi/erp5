@@ -110,9 +110,109 @@ class TestPropertyMovementGroup(MovementGroupTestCase):
                                        start_date=DateTime(2001, 1, 2))]))
 
 
+class TestPropertyAssignmentMovementGroup(MovementGroupTestCase):
+  def test_property_assignment_movement_group_max(self):
+    movement_list = ( self.folder.newContent(
+                        temp_object=1,
+                        portal_type='Simulation Movement',
+                        start_date=DateTime(2001, 1, 1)),
+                      self.folder.newContent(
+                        temp_object=1,
+                        portal_type='Simulation Movement',
+                        start_date=DateTime(2001, 1, 2)))
+    self.builder.newContent(
+                  portal_type='Property Assignment Movement Group',
+                  collect_order_group='delivery',
+                  tested_property_list=('start_date',),
+                  grouping_method='max',)
+    movement_group_node = self.builder.collectMovement(movement_list)
+    group_list = movement_group_node.getGroupList()
+    self.assertEquals(1, len(group_list))
+    self.assertEquals(dict(start_date=DateTime(2001, 1, 2)),
+                      group_list[0].getGroupEditDict())
+
+  def test_property_assignment_movement_group_min(self):
+    movement_list = ( self.folder.newContent(
+                        temp_object=1,
+                        portal_type='Simulation Movement',
+                        start_date=DateTime(2001, 1, 1)),
+                      self.folder.newContent(
+                        temp_object=1,
+                        portal_type='Simulation Movement',
+                        start_date=DateTime(2001, 1, 2)))
+    self.builder.newContent(
+                  portal_type='Property Assignment Movement Group',
+                  collect_order_group='delivery',
+                  tested_property_list=('start_date',),
+                  grouping_method='min',)
+    movement_group_node = self.builder.collectMovement(movement_list)
+    group_list = movement_group_node.getGroupList()
+    self.assertEquals(1, len(group_list))
+    self.assertEquals(dict(start_date=DateTime(2001, 1, 1)),
+                      group_list[0].getGroupEditDict())
+
+  def test_property_assignment_movement_group_avg(self):
+    movement_list = ( self.folder.newContent(
+                        temp_object=1,
+                        portal_type='Simulation Movement',
+                        int_index=1,),
+                      self.folder.newContent(
+                        temp_object=1,
+                        portal_type='Simulation Movement',
+                        int_index=3,),)
+    self.builder.newContent(
+                  portal_type='Property Assignment Movement Group',
+                  collect_order_group='delivery',
+                  tested_property_list=('int_index',),
+                  grouping_method='avg',)
+    movement_group_node = self.builder.collectMovement(movement_list)
+    group_list = movement_group_node.getGroupList()
+    self.assertEquals(1, len(group_list))
+    self.assertEquals(dict(int_index=2),
+                      group_list[0].getGroupEditDict())
+
+  def test_property_assignment_movement_group_common_match(self):
+    movement_list = ( self.folder.newContent(
+                        temp_object=1,
+                        portal_type='Simulation Movement',
+                        start_date=DateTime(2001, 1, 1)),
+                      self.folder.newContent(
+                        temp_object=1,
+                        portal_type='Simulation Movement',
+                        start_date=DateTime(2001, 1, 1)))
+    self.builder.newContent(
+                  portal_type='Property Assignment Movement Group',
+                  collect_order_group='delivery',
+                  tested_property_list=('start_date',),
+                  grouping_method='common',)
+    movement_group_node = self.builder.collectMovement(movement_list)
+    group_list = movement_group_node.getGroupList()
+    self.assertEquals(1, len(group_list))
+    self.assertEquals(dict(start_date=DateTime(2001, 1, 1)),
+                      group_list[0].getGroupEditDict())
+
+  def test_property_assignment_movement_group_common_doesnot_match(self):
+    movement_list = ( self.folder.newContent(
+                        temp_object=1,
+                        portal_type='Simulation Movement',
+                        start_date=DateTime(2001, 1, 1)),
+                      self.folder.newContent(
+                        temp_object=1,
+                        portal_type='Simulation Movement',
+                        start_date=DateTime(2001, 1, 2)))
+    self.builder.newContent(
+                  portal_type='Property Assignment Movement Group',
+                  collect_order_group='delivery',
+                  tested_property_list=('start_date',),
+                  grouping_method='common',)
+    movement_group_node = self.builder.collectMovement(movement_list)
+    group_list = movement_group_node.getGroupList()
+    self.assertEquals(1, len(group_list))
+    self.assertEquals(dict(), group_list[0].getGroupEditDict())
+
 
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPropertyMovementGroup))
-#  suite.addTest(unittest.makeSuite(TestPropertyAssignementMovementGroup))
+  suite.addTest(unittest.makeSuite(TestPropertyAssignmentMovementGroup))
   return suite
