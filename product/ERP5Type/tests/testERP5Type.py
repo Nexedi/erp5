@@ -316,8 +316,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       transaction.commit()
       self.assertEquals(o._p_jar, None)
 
-      # Check that creating 2 consecutive temp object automatically increases
-      # their ID
+      # Temp objects always get 'None' ID by default.
       o = portal.person_module.newContent(portal_type="Person", 
                                           temp_object=1)
       first_id = o.getId()
