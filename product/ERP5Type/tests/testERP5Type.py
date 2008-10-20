@@ -326,6 +326,30 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       second_id = o.getId()
       self.assertEquals(first_id, second_id)
       self.assertEquals('None', second_id)
+    
+      # Check temp objects subobjects can be accessed with OFS API
+      parent = portal.person_module.newContent(portal_type="Person",
+                                               temp_object=1)
+      child1 = parent.newContent(portal_type='Person', id='1')
+      child11 = child1.newContent(portal_type='Person', id='1')
+      child2 = parent.newContent(portal_type='Person', id='2')
+
+      self.assertEquals(child1, parent._getOb('1'))
+      self.assertEquals(child2, parent._getOb('2'))
+
+      self.assertEquals(child1, parent['1'])
+      self.assertEquals(child2, parent['2'])
+
+      self.assertEquals(child1, getattr(parent, '1'))
+      self.assertEquals(child2, getattr(parent, '2'))
+
+      self.assertEquals(child1, parent.restrictedTraverse('1'))
+      self.assertEquals(child11, parent.restrictedTraverse('1/1'))
+      self.assertEquals(child2, parent.restrictedTraverse('2'))
+
+      self.assertEquals(('person_module', 'None', '1', '1'),
+          self.portal.portal_url.getRelativeContentPath(child11))
+
 
     def test_04_CategoryAccessors(self, quiet=quiet, run=run_all_test):
       """
