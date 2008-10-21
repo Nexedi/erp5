@@ -130,6 +130,26 @@ class TestResource(ERP5TypeTestCase):
       'industrial_phase':self.industrial_phase_category_list
     }
 
+    quantity_unit_weight = self.portal.portal_categories.quantity_unit._getOb(
+                                        'weight', None)
+    if quantity_unit_weight is None:
+      quantity_unit_weight = self.portal.portal_categories.quantity_unit\
+                                  .newContent(id='weight',
+                                              portal_type='Category')
+    self.quantity_unit_gram = quantity_unit_weight._getOb('gram', None)
+    if self.quantity_unit_gram is None:
+      self.quantity_unit_gram = quantity_unit_weight.newContent(
+                                      portal_type='Category',
+                                      quantity=0.001,
+                                      id='gram')
+    self.quantity_unit_kilo = quantity_unit_weight._getOb('kilo', None)
+    if self.quantity_unit_kilo is None:
+      self.quantity_unit_kilo = quantity_unit_weight.newContent(
+                                      portal_type='Category',
+                                      quantity=1,
+                                      id='kilo')
+
+
   def stepTic(self,**kw):
     self.tic()
 
@@ -942,6 +962,31 @@ class TestResource(ERP5TypeTestCase):
     purchase_order_line.setPrice(None)
     self.assertEquals(purchase_order_line.getPrice(), 20.0)
   
+  def testGetPriceWithQuantityUnit(self):
+    resource = self.portal.getDefaultModule(self.product_portal_type)\
+                .newContent(portal_type=self.product_portal_type)
+    resource.setDefaultQuantityUnitValue(self.quantity_unit_kilo)
+    supply_line = resource.newContent(
+                    portal_type=self.sale_supply_line_portal_type)
+    supply_line.setBasePrice(1000)
+    get_transaction().commit()
+    self.tic()
+    sale_order = self.portal.getDefaultModule("Sale Order").newContent(
+                              portal_type='Sale Order',)
+    sale_order_line = sale_order.newContent(
+                          resource_value=resource,
+                          quantity=5)
+    self.assertEquals(1000, sale_order_line.getPrice())
+    self.assertEquals(5000, sale_order_line.getTotalPrice())
+    
+    # if we give the quantity unit in grams
+    sale_order_line = sale_order.newContent(
+                          resource_value=resource,
+                          quantity=5000,
+                          quantity_unit_value=self.quantity_unit_gram)
+    self.assertEquals(1, sale_order_line.getPrice())
+    self.assertEquals(5000, sale_order_line.getTotalPrice())
+
   def testQuantityPrecision(self):
     """test how to define quantity precision on resources.
     """
