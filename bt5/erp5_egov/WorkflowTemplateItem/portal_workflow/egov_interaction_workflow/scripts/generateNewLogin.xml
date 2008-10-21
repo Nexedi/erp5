@@ -60,7 +60,6 @@ This script remove accents and spaces and other things from the text to generate
 \'\'\'\n
 \n
 inc = 1\n
-new_login = login\n
 \n
 # XXX here it should be possible to use a regular expression\n
 login = text.lower()\n
@@ -69,6 +68,8 @@ login = login.replace(\'\xc3\xa9\', \'e\')\n
 login = login.replace(\'\xc3\xa8\', \'e\')\n
 login = login.replace(\'\xc3\xa0\', \'a\')\n
 login = login.replace(\'\xc3\xa7\', \'c\')\n
+\n
+new_login = login\n
 \n
 # search if the login already exists\n
 result = context.portal_catalog(reference=login)\n
@@ -124,9 +125,9 @@ return new_login\n
                           <tuple>
                             <string>text</string>
                             <string>inc</string>
+                            <string>_getattr_</string>
                             <string>login</string>
                             <string>new_login</string>
-                            <string>_getattr_</string>
                             <string>context</string>
                             <string>result</string>
                             <string>len</string>
