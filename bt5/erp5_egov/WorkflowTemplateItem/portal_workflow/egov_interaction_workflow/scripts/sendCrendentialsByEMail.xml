@@ -59,14 +59,17 @@
 This script tries to send a message containing the credentials to the\n
 organisation. It uses portal_notifications and the getObject API of ERP5Catalog.\n
 """\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+\n
 object = state_change[\'object\']\n
 \n
 translateString = object.Base_translateString\n
 portal_catalog = object.portal_catalog\n
+ninea = object.getNinea()\n
 \n
 # get the new organisation :\n
 result = portal_catalog(portal_type=\'Organisation\',\n
-    vat_code=object.getNinea())\n
+    vat_code=ninea)\n
 \n
 if len(result) > 1:\n
   msg = "Error : There is more than one company with the NINEA code ${code}"\n
@@ -96,9 +99,8 @@ msg = translateString(msg,\n
             )\n
 \n
 # We can now notify the owner through the notification tool\n
-object.portal_notifications.sendMessage(sender=\'no-reply\',\n
-    recipient=organisation.getReference(), subject=subject, message=msg,\n
-    portal_type_list=(\'Person\', \'Organisation\'))\n
+object.portal_notifications.sendMessage(recipient=organisation.getReference(), \n
+    subject=subject, message=msg, portal_type_list=(\'Person\', \'Organisation\'))\n
 
 
 ]]></string> </value>
@@ -147,17 +149,18 @@ object.portal_notifications.sendMessage(sender=\'no-reply\',\n
                         <value>
                           <tuple>
                             <string>state_change</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
                             <string>_getitem_</string>
                             <string>object</string>
                             <string>_getattr_</string>
                             <string>translateString</string>
                             <string>portal_catalog</string>
+                            <string>ninea</string>
                             <string>result</string>
                             <string>len</string>
                             <string>msg</string>
                             <string>dict</string>
-                            <string>ninea</string>
-                            <string>ValidationFailed</string>
                             <string>organisation</string>
                             <string>subject</string>
                           </tuple>

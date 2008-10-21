@@ -1,3 +1,6 @@
+2008-10-21 fabien
+* fix some mistakes in sendCrendentialsByEMail workflow script and remove sender because it's not required
+
 2008-10-20 fabien
 * update ERP5Site_getSecurityFromLatestWorkflowHistory  to remove workflow hardcoded value
 * add a script generateNewLogin to generate new login (remove spaces and accents, add a number at the end if the login already exists, ...)
