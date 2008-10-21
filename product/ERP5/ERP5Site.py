@@ -1339,7 +1339,7 @@ class ERP5Generator(PortalGenerator):
       # it's not compatible with the hot reindexing feature.
       # Though, it has nothing to do with activities.
       # The only difference compared to activity connection is the
-      # minux prepended to the conneciton string.
+      # minus prepended to the connection string.
       if not p.hasObject('erp5_sql_transactionless_connection'):
         addSQLConnection = p.manage_addProduct['ZMySQLDA'].\
                                      manage_addZMySQLConnection
