@@ -1283,12 +1283,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         del(self._getPersistentContainer(user_id)[selection_name])
 
     def _deleteGlobalSelectionFromContainer(self, selection_name):
-      id_list = []
-      if self.isMemcachedUsed():
-        for k in self._getMemcachedContainer().keys():
-          if k.split('-')[1] == selection_name:
-            del(self._getMemcachedContainer()[k])
-      else:
+      if not self.isMemcachedUsed():
         if getattr(aq_base(self), 'selection_data', None) is not None:
           for user_id in self.selection_data.keys():
             mapping = self._getPersistentContainer(user_id)
