@@ -55,7 +55,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-portal = context.getPortalObject()  \n
+portal = context.getPortalObject()\n
 if clear_catalog:\n
   # clear the catalog before reindexing\n
   catalog = portal.portal_catalog.getSQLCatalog(sql_catalog_id)\n
@@ -159,9 +159,14 @@ folder_after_tag = (\'category\', \'person_stage_1\', \'group_person_stage_1\')\
 object_tag = \'document\'\n
 object_after_tag = folder_after_tag\n
 object_priority = 2 + additional_priority\n
-for folder in [context.portal_templates, context.portal_trash,\n
-               context.portal_domains, context.portal_rules,\n
-               context.portal_deliveries, context.portal_orders]:\n
+tool_list = [portal.portal_templates, portal.portal_trash,\n
+             portal.portal_domains, portal.portal_rules,\n
+             portal.portal_deliveries, portal.portal_orders,\n
+             portal.portal_caches]\n
+if hasattr(portal, \'portal_gadgets\'):\n
+  tool_list.append(portal.portal_gadgets)\n
+\n
+for folder in tool_list:\n
   folder.activate(\n
                     tag=folder_tag,\n
                     priority=object_priority,\n
@@ -296,6 +301,8 @@ return printed\n
                             <string>object_priority</string>
                             <string>_getiter_</string>
                             <string>folder</string>
+                            <string>tool_list</string>
+                            <string>hasattr</string>
                           </tuple>
                         </value>
                     </item>
