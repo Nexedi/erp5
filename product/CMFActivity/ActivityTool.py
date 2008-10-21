@@ -292,6 +292,7 @@ Subject: %s
 %s
 
 Server: %s
+User name: %r
 Document: %s
 Method: %s
 Arguments: %r
@@ -302,7 +303,7 @@ Exception: %s %s
 
 %s
 """ % (activity_tool.email_from_address, user_email, message, message,
-       self.request_info.get('SERVER_URL', ''),
+       self.request_info.get('SERVER_URL', ''), self.user_name,
        '/'.join(self.object_path), self.method_id, self.args, self.kw,
        call_traceback, self.exc_type, self.exc_value, self.traceback)
     try:
