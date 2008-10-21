@@ -923,3 +923,29 @@ msgstr "Erreur : une organisation avec l'identifiant ${login} existe déjà"
 
 msgid "User to Assign to"
 msgstr "Dossier associé à l'utilisateur"
+
+msgid "Error : There is more than one company with the NINEA code ${code}"
+msgstr "Erreur : il a plus d'une organisation avec le le numéro NINEA ${code}"
+
+msgid "Error : A company with the NINEA code ${code} already exists and have already an account"
+msgstr "Erreur : une organisation avec le numéro NINEA ${code} existe déjà et possède déjà un compte"
+
+msgid "No organisation with the NINEA code ${code}"
+msgstr "Aucune organisation ne comporte le numéro NINEA ${code}"
+
+msgid "Your credential for ${site_address}"
+msgstr "Vos identifiants pour ${site_address}"
+
+msgid "Thanks for registrering to SAFI. Now you can connect in on ${site_address} with this credentials :
+
+Login : ${login}
+Password : ${password}
+
+This credentials are usefull to track your application and more. Please visit ${site_address} for more information.
+"
+msgstr "Merci pour votre inscription à SAFI. Maintenant, vous pouvez vous connecter sur ${site_address} avec ces identifiants :
+
+Login : ${login}
+Mot de passe : ${password}
+
+Ces identifiants sont utiles pour suivre votre dossier et plus. Merci de visiter ${site_address} pour plus d'information."
