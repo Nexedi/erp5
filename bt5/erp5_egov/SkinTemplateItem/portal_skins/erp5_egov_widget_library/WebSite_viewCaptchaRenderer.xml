@@ -59,7 +59,7 @@ Description:\n
       <tal:block i18n:domain="ui" i18n:translate="">\n
         Type the characters you see in the picture below. \n
         This is done to prevent access by spam bots. All letters are \n
-        lowercase. If you are unable to read, click on "refresh" \n
+        lowercase. If you are unable to read, click on \'refresh\' \n
         to generate a new image.\n
       </tal:block>\n
     </div>\n
