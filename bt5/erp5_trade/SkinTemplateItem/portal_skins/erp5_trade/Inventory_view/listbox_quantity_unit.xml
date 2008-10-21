@@ -121,7 +121,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getResource() and cell.getResourceValue().getQuantityUnitList() and [(\'\', \'\')] + [(x.getLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in cell.getResourceValue().getQuantityUnitValueList()] or getattr(here.portal_categories[\'quantity_unit\'], preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))(base=0, local_sort_id=(\'int_index\', \'translated_title\'), checked_permission=\'View\')</string> </value>
+            <value> <string>python: (\'cell\' in CONTEXTS and cell.getResource()) and cell.getResourceValue().getQuantityUnitList() and [(\'\', \'\')] + [(x.getLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in cell.getResourceValue().getQuantityUnitValueList()] or [(\'\', \'\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
