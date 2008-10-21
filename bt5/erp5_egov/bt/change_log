@@ -1,5 +1,6 @@
 2008-10-21 fabien
 * fix some mistakes in sendCrendentialsByEMail workflow script and remove sender because it's not required
+* update testEgovMixin to add some other generic methods
 
 2008-10-20 fabien
 * update ERP5Site_getSecurityFromLatestWorkflowHistory  to remove workflow hardcoded value
