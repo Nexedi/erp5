@@ -56,6 +56,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 changed_object = state_change[\'object\']\n
+translateString = changed_object.Base_translateString\n
 login = changed_object.getCompanyName().lower()\n
 portal_catalog = changed_object.portal_catalog\n
 ninea = changed_object.getNinea()\n
@@ -65,7 +66,6 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
 result = portal_catalog( portal_type=\'Organisation\',\n
                          vat_code=changed_object.getNinea())\n
-\n
 \n
 if len(result) > 1:\n
   msg = "Error : There is more than one company with the NINEA code ${code}"\n
@@ -126,6 +126,7 @@ if len(result) == 1 and result[0].getObject().getReference():\n
                             <string>_getitem_</string>
                             <string>changed_object</string>
                             <string>_getattr_</string>
+                            <string>translateString</string>
                             <string>login</string>
                             <string>portal_catalog</string>
                             <string>ninea</string>
@@ -134,7 +135,6 @@ if len(result) == 1 and result[0].getObject().getReference():\n
                             <string>result</string>
                             <string>len</string>
                             <string>msg</string>
-                            <string>translateString</string>
                             <string>dict</string>
                           </tuple>
                         </value>
