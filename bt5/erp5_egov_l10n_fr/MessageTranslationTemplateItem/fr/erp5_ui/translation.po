@@ -909,8 +909,8 @@ msgstr "Et utilisez l'identifiant"
 msgid "and the password"
 msgstr "et le mot de passe"
 
-msgid "Type the characters you see in the picture below. This is done to prevent access by spam bots. All letters are lowercase. If you are unable to read, click on "refresh" to generate a new image."
-msgstr "Tapez les caractères que vous voyez dans l'image suivante. Ceci est fait pour prévenir l'envoi de spam par des robots. Toutes les lettres sont des minuscules. Si vous n'êtes pas capable de lire l'image, cliquez sur "Rafraîchir" pour en générer une nouvelle."
+msgid "Type the characters you see in the picture below. This is done to prevent access by spam bots. All letters are lowercase. If you are unable to read, click on 'refresh to generate a new image."
+msgstr "Tapez les caractères que vous voyez dans l'image suivante. Ceci est fait pour prévenir l'envoi de spam par des robots. Toutes les lettres sont des minuscules. Si vous n'êtes pas capable de lire l'image, cliquez sur 'Rafraîchir' pour en générer une nouvelle."
 
 msgid "Error : There is more than one company with the NINEA code '${ninea}'"
 msgstr "Erreur : il y a plus d'une organisation avec le numéro NINEA '${ninea}'"
@@ -936,16 +936,5 @@ msgstr "Aucune organisation ne comporte le numéro NINEA ${code}"
 msgid "Your credential for ${site_address}"
 msgstr "Vos identifiants pour ${site_address}"
 
-msgid "Thanks for registrering to SAFI. Now you can connect in on ${site_address} with this credentials :
-
-Login : ${login}
-Password : ${password}
-
-This credentials are usefull to track your application and more. Please visit ${site_address} for more information.
-"
-msgstr "Merci pour votre inscription à SAFI. Maintenant, vous pouvez vous connecter sur ${site_address} avec ces identifiants :
-
-Login : ${login}
-Mot de passe : ${password}
-
-Ces identifiants sont utiles pour suivre votre dossier et plus. Merci de visiter ${site_address} pour plus d'information."
+msgid "Thanks for registrering to SAFI. Now you can connect in on ${site_address} with this credentials : \n\nLogin : ${login}\nPassword : ${password}\n\nThis credentials are usefull to track your application and more. Please visit ${site_address} for more information."
+msgstr "Merci pour votre inscription à SAFI. Maintenant, vous pouvez vous connecter sur ${site_address} avec ces identifiants : \n\nLogin : ${login}\nMot de passe : ${password}\n\nCes identifiants sont utiles pour suivre votre dossier et plus. Merci de visiter ${site_address} pour plus d'information."
