@@ -632,10 +632,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       """
       id_tool = self.getPortalObject().portal_ids
       try:
-        # Call generate new id in order to store the last id into
-        # the zodb
-        id_tool.generateNewLengthId(id_group='portal_activity')
-        id_tool.generateNewLengthId(id_group='portal_activity_queue')
+        id_tool.dumpDictLengthIdsItems()
       except ConflictError:
         raise
       except:

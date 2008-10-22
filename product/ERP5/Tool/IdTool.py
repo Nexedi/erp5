@@ -148,6 +148,32 @@ class IdTool(BaseTool):
       self.dict_length_ids = PersistentMapping()
     return self.dict_length_ids.items()
 
+  security.declarePrivate('dumpDictLengthIdsItems')
+  def dumpDictLengthIdsItems(self):
+    """
+      Store persistently data from SQL table portal_ids.
+    """
+    portal_catalog = getToolByName(self, 'portal_catalog').getSQLCatalog()
+    query = getattr(portal_catalog, 'z_portal_ids_dump')
+    dict_length_ids = getattr(self, 'dict_length_ids', None)
+    if dict_length_ids is None:
+      dict_length_ids = self.dict_length_ids = PersistentMapping()
+    for line in query().dictionaries():
+      id_group = line['id_group']
+      last_id = line['last_id']
+      stored_last_id = self.dict_length_ids.get(id_group)
+      if stored_last_id is None:
+        self.dict_length_ids[id_group] = Length(last_id)
+      else:
+        stored_last_id_value = stored_last_id()
+        if stored_last_id_value < last_id:
+          stored_last_id.set(last_id)
+        else:
+          if stored_last_id_value > last_id:
+            LOG('IdTool', WARNING, 'ZODB value (%r) for group %r is higher ' \
+                'than SQL value (%r). Keeping ZODB value untouched.' % \
+                (stored_last_id, id_group, last_id))
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getLastLengthGeneratedId')
   def getLastLengthGeneratedId(self, id_group, default=None):
