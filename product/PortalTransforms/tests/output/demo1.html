@@ -1,0 +1,209 @@
+<A name=1></a>Chapter 44<br>
+Writing Basic Unit Tests<br>
+Diﬃculty<br>
+Newcomer<br>
+Skills<br>
+• All you need to know is some Python.<br>
+Problem/Task<br>
+As you know by now, Zope 3 gains its incredible stability from testing any code in great detail. The<br>currently most common method is to write unit tests. This chapter introduces unit tests – which<br>are Zope 3 independent – and introduces some of the subtleties.<br>
+Solution<br>
+44.1<br>
+Implementing the Sample Class<br>
+Before we can write tests, we have to write some code that we can test. Here, we will implement<br>a simple class called Sample with a public attribute title and description that is accessed<br>via getDescription() and mutated using setDescription(). Further, the description must be<br>either a regular or unicode string.<br>
+Since this code will not depend on Zope, open a ﬁle named test sample.py anywhere and add<br>
+the following class:<br>
+1 Sample(object):<br>
+2<br>
+&quot;&quot;&quot;A trivial Sample object.&quot;&quot;&quot;<br>
+3<br>
+4<br>
+title = None<br>
+5<br>
+6<br>
+def __init__(self):<br>
+7<br>
+&quot;&quot;&quot;Initialize object.&quot;&quot;&quot;<br>
+8<br>
+self._description = ’’<br>
+9<br>
+1<br>
+<hr>
+<A name=2></a>2<br>
+CHAPTER 44. WRITING BASIC UNIT TESTS<br>
+10<br>
+def setDescription(self, value):<br>
+11<br>
+&quot;&quot;&quot;Change the value of the description.&quot;&quot;&quot;<br>
+12<br>
+assert isinstance(value, (str, unicode))<br>
+13<br>
+self._description = value<br>
+14<br>
+15<br>
+def getDescription(self):<br>
+16<br>
+&quot;&quot;&quot;Change the value of the description.&quot;&quot;&quot;<br>
+17<br>
+return self._description<br>
+Line 4: The title is just publicly declared and a value of None is given. Therefore this is just<br>a regular attribute.<br>
+Line 8: The actual description string will be stored in description.<br>
+Line 12: Make sure that the description is only a regular or unicode string, like it was stated in<br>the requirements.<br>
+If you wish you can now manually test the class with the interactive Python shell. Just start<br>
+Python by entering python in your shell prompt. Note that you should be in the directory in<br>which test sample.py is located when starting Python (an alternative is of course to specify the<br>directory in your PYTHONPATH.)<br>
+1 &gt;&gt;&gt; from test_sample import Sample<br>2 &gt;&gt;&gt; sample = Sample()<br>
+3 &gt;&gt;&gt; print sample.title<br>4 None<br>
+5 &gt;&gt;&gt; sample.title = ’Title’<br>
+6 &gt;&gt;&gt; print sample.title<br>7 Title<br>
+8 &gt;&gt;&gt; print sample.getDescription()<br>9<br>
+10 &gt;&gt;&gt; sample.setDescription(’Hello World’)<br>
+11 &gt;&gt;&gt; print sample.getDescription()<br>12 Hello World<br>
+13 &gt;&gt;&gt; sample.setDescription(None)<br>
+14 Traceback (most recent call last):<br>
+15<br>
+File &quot;&lt;stdin&gt;&quot;, line 1, in ?<br>
+16<br>
+File &quot;test_sample.py&quot;, line 31, in setDescription<br>
+17<br>
+assert isinstance(value, (str, unicode))<br>
+18 AssertionError<br>
+As you can see in the last test, non-string object types are not allowed as descriptions and an<br>
+AssertionError is raised.<br>
+44.2<br>
+Writing the Unit Tests<br>
+The goal of writing the unit tests is to convert this informal, manual, and interactive testing session<br>into a formal test class. Python provides already a module called unittest for this purpose, which<br>is a port of the Java-based unit testing product, JUnit, by Kent Beck and Erich Gamma. There are<br>three levels to the testing framework (this list deviates a bit from the original deﬁnitions as found<br>in the Python library documentation. 1).<br>
+1 http://www.python.org/doc/current/lib/module-unittest.html<br>
+<hr>
+<A name=3></a>44.2. WRITING THE UNIT TESTS<br>
+3<br>
+The smallest unit is obviously the “test”, which is a single method in a TestCase class that<br>
+tests the behavior of a small piece of code or a particular aspect of an implementation. The “test<br>case” is then a collection tests that share the same setup/inputs. On top of all of this sits the “test<br>suite” which is a collection of test cases and/or other test suites. Test suites combine tests that<br>should be executed together. With the correct setup (as shown in the example below), you can<br>then execute test suites. For large projects like Zope 3, it is useful to know that there is also the<br>concept of a test runner, which manages the test run of all or a set of tests. The runner provides<br>useful feedback to the application, so that various user interaces can be developed on top of it.<br>
+But enough about the theory. In the following example, which you can simply put into the same<br>
+ﬁle as your code above, you will see a test in common Zope 3 style.<br>
+1 import unittest<br>2<br>
+3 class SampleTest(unittest.TestCase):<br>4<br>
+&quot;&quot;&quot;Test the Sample class&quot;&quot;&quot;<br>
+5<br>
+6<br>
+def test_title(self):<br>
+7<br>
+sample = Sample()<br>
+8<br>
+self.assertEqual(sample.title, None)<br>
+9<br>
+sample.title = ’Sample Title’<br>
+10<br>
+self.assertEqual(sample.title, ’Sample Title’)<br>
+11<br>
+12<br>
+def test_getDescription(self):<br>
+13<br>
+sample = Sample()<br>
+14<br>
+self.assertEqual(sample.getDescription(), ’’)<br>
+15<br>
+sample._description = &quot;Description&quot;<br>
+16<br>
+self.assertEqual(sample.getDescription(), ’Description’)<br>
+17<br>
+18<br>
+def test_setDescription(self):<br>
+19<br>
+sample = Sample()<br>
+20<br>
+self.assertEqual(sample._description, ’’)<br>
+21<br>
+sample.setDescription(’Description’)<br>
+22<br>
+self.assertEqual(sample._description, ’Description’)<br>
+23<br>
+sample.setDescription(u’Description2’)<br>
+24<br>
+self.assertEqual(sample._description, u’Description2’)<br>
+25<br>
+self.assertRaises(AssertionError, sample.setDescription, None)<br>
+26<br>
+27<br>
+28 def test_suite():<br>29<br>
+return unittest.TestSuite((<br>
+30<br>
+unittest.makeSuite(SampleTest),<br>
+31<br>
+))<br>
+32<br>
+33 if __name__ == ’__main__’:<br>34<br>
+unittest.main(defaultTest=’test_suite’)<br>
+Line 3–4: We usually develop test classes which must inherit from TestCase. While often not<br>done, it is a good idea to give the class a meaningful docstring that describes the purpose of the<br>tests it includes.<br>
+Line 6, 12 &amp; 18: When a test case is run, a method called runTests() is executed. While it<br>is possible to overrride this method to run tests diﬀerently, the default option will look for any<br>method whose name starts with test and execute it as a single test. This way we can create<br>a “test method” for each aspect, method, function or property of the code to be tested. This<br>default is very sensible and is used everywhere in Zope 3.<br>
+<hr>
+<A name=4></a>4<br>
+CHAPTER 44. WRITING BASIC UNIT TESTS<br>
+Note that there is no docstring for test methods. This is intentional. If a docstring is speciﬁed,<br>it is used instead of the method name to identify the test. When specifying a docstring, we have<br>noticed that it is very diﬃcult to identify the test later; therefore the method name is a much<br>better choice.<br>
+Line 8, 10, 14, . . . : The TestCase class implements a handful of methods that aid you with the<br>testing. Here are some of the most frequently used ones. For a complete list see the standard<br>Python documentation referenced above.<br>
+• assertEqual(first,second[,msg])<br>
+Checks whether the first and second value are equal. If the test fails, the msg or None<br>is returned.<br>
+• assertNotEqual(first,second[,msg])<br>
+This is simply the opposite to assertEqual() by checking for non-equality.<br>
+• assertRaises(exception,callable,...)<br>
+You expect the callable to raise exception when executed. After the callable you can<br>specify any amount of positional and keyword arguments for the callable. If you expect<br>a group of exceptions from the execution, you can make exception a tuple of possible<br>exceptions.<br>
+• assert (expr[,msg])<br>
+Assert checks whether the speciﬁed expression executes correctly. If not, the test fails and<br>msg or None is returned.<br>
+• failUnlessEqual()<br>
+This testing method is equivalent to assertEqual().<br>
+• failUnless(expr[,msg])<br>
+This method is equivalent to assert (expr[,msg]).<br>
+• failif()<br>
+This is the opposite to failUnless().<br>
+• fail([msg])<br>
+Fails the running test without any evaluation. This is commonly used when testing various<br>possible execution paths at once and you would like to signify a failure if an improper path<br>was taken.<br>
+Line 6–10: This method tests the title attribute of the Sample class. The ﬁrst test should<br>be of course that the attribute exists and has the expected initial value (line 8). Then the title<br>attribute is changed and we check whether the value was really stored. This might seem like<br>overkill, but later you might change the title in a way that it uses properties instead. Then it<br>becomes very important to check whether this test still passes.<br>
+Line 12–16: First we simply check that getDescription() returns the correct default value.<br>Since we do not want to use other API calls like setDescription() we set a new value of the<br>description via the implementation-internal description attribute (line 15). This is okay! Unit<br>tests can make use of implementation-speciﬁc attributes and methods. Finally we just check that<br>the correct value is returned.<br>
+<hr>
+<A name=5></a>44.3. RUNNING THE TESTS<br>
+5<br>
+Line 18–25: On line 21–24 it is checked that both regular and unicode strings are set correctly.<br>In the last line of the test we make sure that no other type of objects can be set as a description<br>and that an error is raised.<br>
+28–31: This method returns a test suite that includes all test cases created in this module. It is<br>used by the Zope 3 test runner when it picks up all available tests. You would basically add the<br>line unittest.makeSuite(TestCaseClass) for each additional test case.<br>
+33–34: In order to make the test module runnable by itself, you can execute unittest.main()<br>when the module is run.<br>
+44.3<br>
+Running the Tests<br>
+You can run the test by simply calling pythontest sample.py from the directory you saved the<br>ﬁle in. Here is the result you should see:<br>
+.<br>--------------------------------------------------------------------<br>n 3 tests in 0.001s<br>
+The three dots represent the three tests that were run. If a test had failed, it would have been<br>
+reported pointing out the failing test and providing a small traceback.<br>
+When using the default Zope 3 test runner, tests will be picked up as long as they follow some<br>
+conventions.<br>
+• The tests must either be in a package or be a module called tests.<br>
+• If tests is a package, then all test modules inside must also have a name starting with test,<br>
+as it is the case with our name test sample.py.<br>
+• The test module must be somewhere in the Zope 3 source tree, since the test runner looks<br>
+only for ﬁles there.<br>
+In our case, you could simply create a tests package in ZOPE3/src (do not forget the<br>
+init .<br>
+py ﬁle). Then place the test sample.py ﬁle into this directory.<br>
+You you can use the test runner to run only the sample tests as follows from the Zope 3 root<br>
+directory:<br>
+python test.py -vp tests.test_sample<br>
+The -v option stands for verbose mode, so that detailed information about a test failure is<br>
+provided. The -p option enables a progress bar that tells you how many tests out of all have been<br>completed. There are many more options that can be speciﬁed. You can get a full list of them with<br>the option -h: pythontest.py-h.<br>
+The output of the call above is as follows:<br>
+nfiguration file found.<br>nning UNIT tests at level 1<br>nning UNIT tests from /opt/zope/Zope3<br>
+3/3 (100.0%): test_title (tests.test_sample.SampleTest)<br>
+--------------------------------------------------------------------<br>n 3 tests in 0.002s<br>
+<hr>
+<A name=6></a>6<br>
+CHAPTER 44. WRITING BASIC UNIT TESTS<br>
+nning FUNCTIONAL tests at level 1<br>nning FUNCTIONAL tests from /opt/zope/Zope3<br>
+--------------------------------------------------------------------<br>n 0 tests in 0.000s<br>
+Line 1: The test runner uses a conﬁguration ﬁle for some setup. This allows developers to use<br>the test runner for other projects as well. This message simply tells us that the conﬁguration ﬁle<br>was found.<br>
+Line 2–8: The unit tests are run. On line 4 you can see the progress bar.<br>
+Line 9–15: The functional tests are run, since the default test runner runs both types of tests.<br>Since we do not have any functional tests in the speciﬁed module, there are no tests to run. To<br>just run the unit tests, use option -u and -f for just running the functional tests. See “Writing<br>Functional Tests” for more detials on functional tests.<br>
+<hr>
+<A name=7></a>44.3. RUNNING THE TESTS<br>
+7<br>
+Exercises<br>
+1. It is not very common to do the setup – in our case sample=Sample() – in every test<br>
+method. Instead there exists a method called setUp() and its counterpart tearDown that<br>are run before and after each test, respectively. Change the test code above, so that it uses<br>the setUp() method. In later chapters and the rest of the book we will frequently use this<br>method of setting up tests.<br>
+2. Currently the test setDescription() test only veriﬁes that None is not allowed as input<br>
+value.<br>
+(a) Improve the test, so that all other builtin types are tested as well.<br>
+(b) Also, make sure that any objects inheriting from str or unicode pass as valid values.<br>
+<hr>

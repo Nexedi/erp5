@@ -1,0 +1,73 @@
+<h1 tal:replace="structure here/manage_page_header|nothing">Header</h1>
+<h2 tal:define="manage_tabs_message options/manage_tabs_message | nothing"
+    tal:replace="structure here/manage_tabs">Tabs</h2>
+
+
+   <div class="form-title">
+     Chain <span tal:replace="here/title_or_id"/>.
+   </div>
+
+   <div align="right">
+     <form method="POST" action="manage_addObject">
+       <select name="id">
+         <option tal:repeat="id here/listAddableObjectIds"
+                 tal:attributes="value id;"
+                 tal:content="id"/>
+       </select>
+       <input type="submit" value="Add"/>
+     </form>
+   </div>
+
+   <p>Transform inputs : <b tal:content="python:', '.join(here.inputs)"/>
+   <p>Transform output : <b tal:content="here/output"/>
+
+
+   <div tal:content="here/description"/>
+
+   <div tal:define="status request/portal_status' | nothing"
+        tal:condition="status" class="error"
+        tal:content="status" />
+
+   <form method="POST" action="manage_delObjects"
+         tal:define="transforms here/objectValues" tal:condition="transforms">
+
+     <table width="60%" >
+       <tr>
+	 <th colspan="2">transform</th>
+	 <th>input</th>
+	 <th>output</th>
+	 <th colspan="2">&nbsp;</th>
+       </tr>
+
+       <tr tal:repeat="tr transforms">
+	   <td>
+	     <input type="checkbox" name="ids:list"
+     	            tal:attributes="value tr/getId"/>
+	   </td>
+	   <td tal:content="tr/title_or_id">
+	   </td>
+	   <td tal:content="python:tr.inputs[0]">
+	   </td>
+	   <td tal:content="tr/output">
+	   </td>
+	   <td>
+             <a tal:attributes="href string:${here/absolute_url}/move_object_down?id=${tr/getId}"
+                tal:condition="not:repeat/tr/end">
+  	       <img tal:attributes="src string:${here/portal_url}/down.png"/>
+             </a>
+	   </td>
+	   <td>
+             <a tal:attributes="href string:${here/absolute_url}/move_object_up?id=${tr/getId}"
+                tal:condition="not:repeat/tr/start">
+  	       <img tal:attributes="src string:${here/portal_url}/up.png"/>
+             </a>
+	   </td>
+       </tr>
+     </table>
+
+     <input type="submit" value="delete selected"/>
+
+   </form>
+
+
+<tal:footer tal:replace="structure here/manage_page_footer|nothing">footer</tal:footer>

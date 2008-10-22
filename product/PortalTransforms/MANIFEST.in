@@ -1,0 +1,11 @@
+include ChangeLog
+include README
+include TODO
+include version.txt
+include bin/transform
+include bin/transform.bat
+recursive-include docs *.txt
+recursive-include docs *.rst
+recursive-include docs *.html
+recursive-include tests/input *
+recursive-include tests/output *

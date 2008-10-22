@@ -1,0 +1,29 @@
+<configure
+    xmlns="http://namespaces.zope.org/five"
+    >
+ 
+  <bridge
+      zope2=".interfaces.idatastream"
+      package=".z3.interfaces"
+      name="IDataStream"
+      /> 
+
+  <bridge
+      zope2=".interfaces.itransform"
+      package=".z3.interfaces"
+      name="ITransform"
+      /> 
+
+  <bridge
+      zope2=".interfaces.ichain"
+      package=".z3.interfaces"
+      name="IChain"
+      /> 
+
+  <bridge
+      zope2=".interfaces.iengine"
+      package=".z3.interfaces"
+      name="IEngine"
+      />
+
+</configure>
