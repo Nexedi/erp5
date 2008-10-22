@@ -68,6 +68,7 @@ erp5_mysql_innodb/z_delete_uid
 erp5_mysql_innodb/z_getitem_by_path
 erp5_mysql_innodb/z_getitem_by_uid
 erp5_mysql_innodb/z_portal_ids_commit
+erp5_mysql_innodb/z_portal_ids_dump
 erp5_mysql_innodb/z_portal_ids_generate_id
 erp5_mysql_innodb/z_portal_ids_get_last_id
 erp5_mysql_innodb/z_produce_reserved_uid_list
