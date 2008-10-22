@@ -2,4 +2,3 @@ mimetypes_registry
 portal_contribution_registry
 portal_notifications
 portal_transforms
-portal_transforms/*
