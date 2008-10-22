@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from threading import local
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions, _dtmldir
 from AccessControl import ClassSecurityInfo
@@ -62,6 +63,8 @@ if memcache is not None:
   DELETE_ACTION = 'delete'
   MEMCACHED_MINIMUM_KEY_CHAR_ORD = ord(' ')
   
+  memcached_dict_pool = local()
+
   class MemcachedDict(TM):
     """
       Present memcached similarly to a dictionary (not all method are
@@ -266,10 +269,11 @@ if memcache is not None:
         Return used memcached dict.
         Create it if does not exist.
       """
-      dictionary = getattr(self, '_v_memcached_dict', None)
-      if dictionary is None:
+      try:
+        dictionary = memcached_dict_pool.memcached_dict
+      except AttributeError:
         dictionary = MemcachedDict(self.getServerAddressList())
-        self._v_memcached_dict = dictionary
+        memcached_dict_pool.memcached_dict = dictionary
       return dictionary
   
     security.declareProtected(Permissions.AccessContentsInformation, 'getMemcachedDict')
@@ -290,8 +294,6 @@ if memcache is not None:
         Set a memcached server address.
       """
       self.setServerAddressList([value, ])
-      self.server_address_list = [value, ]
-      self._v_memcached_dict = None
   
     security.declareProtected(Permissions.AccessContentsInformation, 'getServerAddress')
     def getServerAddress(self):
@@ -320,7 +322,10 @@ if memcache is not None:
         to reconnect to memcached.
       """
       self.server_address_list = value
-      self._v_memcached_dict = None
+      try:
+        del(memcached_dict_pool.memcached_dict)
+      except AttributeError:
+        pass
 
 else:  
   # Placeholder memcache tool
