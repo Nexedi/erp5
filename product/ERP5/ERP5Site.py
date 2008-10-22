@@ -1063,11 +1063,14 @@ class ERP5Site(FolderMixIn, CMFSite):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getDefaultModule')
-  def getDefaultModule(self, portal_type):
+  def getDefaultModule(self, portal_type, default=MARKER):
     """
       Return default module where a object with portal_type can be created
     """
-    return getattr(self, self.getDefaultModuleId(portal_type), None)
+    module_id = self.getDefaultModuleId(portal_type, default)
+    if module_id:
+      return getattr(self, module_id, None)
+    return None
 
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
   def newContent(self, id=None, portal_type=None, immediate_reindex=0, **kw):
