@@ -1,5 +1,6 @@
 2008-10-22 Romain
 * portal_transforms subobject should exported with the path parameter of the business template
+* Add png_to_text transformation
 
 2008-10-20 Thibaut
 * Allow portal_transforms to extract content.xml file from odt file (zip file).
