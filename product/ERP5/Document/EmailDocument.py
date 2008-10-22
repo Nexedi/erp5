@@ -129,7 +129,11 @@ class EmailDocument(File, TextDocument):
     for (name, value) in self._getMessage().items():
       for text, encoding in decode_header(value):
         if encoding is not None:
-          text = text.decode(encoding).encode('utf-8')
+          try:
+            text = text.decode(encoding).encode('utf-8')
+          except UnicodeDecodeError:
+            encoding = self._guessEncoding(text)
+            text = text.decode(encoding).encode('utf-8')
         if name in result:
           result[name] = '%s %s' % (result[name], text)
         else:
@@ -595,6 +599,20 @@ class EmailDocument(File, TextDocument):
       Send one by one
     """
     self.MailHost.send(message)
+
+  def _guessEncoding(self, string):
+    """
+    Some Email Clients indicate wrong encoding
+    This method try to guess which encoding is used.
+    """
+    from encodings.aliases import aliases
+    codec_list = set(aliases.values())
+    for codec in codec_list:
+      try:
+        string.decode(codec)
+      except (UnicodeDecodeError, IOError):
+        continue
+      return codec
 
 ## Compatibility layer
 #from Products.ERP5Type import Document
