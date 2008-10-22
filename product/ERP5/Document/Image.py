@@ -50,8 +50,9 @@ from OFS.Image import Image as OFSImage
 from OFS.Image import getImageInfo
 from OFS.content_types import guess_content_type
 
-from zLOG import LOG
+from zLOG import LOG, WARNING
 
+from Products.CMFCore.utils import getToolByName
 
 default_displays_id_list = ('nano', 'micro', 'thumbnail',
                             'xsmall', 'small', 'medium',
@@ -310,7 +311,25 @@ class Image(File, OFSImage):
     Implementation of conversion for PDF files
     """
     if format in ('text', 'txt', 'html', 'base_html', 'stripped-html'):
-      return None, None
+      mime_type = getToolByName(self, 'mimetypes_registry').\
+                                  lookupExtension('name.%s' % format)
+      src_mimetype = self.getContentType()
+      content = '%s' % self.getData()
+      if content is not None:
+        portal_transforms = getToolByName(self, 'portal_transforms')
+        result = portal_transforms.convertToData(mime_type, content,
+                                                 object=self, context=self,
+                                                 filename=self.title_or_id(),
+                                                 mimetype=src_mimetype)
+        if result is None:
+            # portal_transforms fails to convert.
+            LOG('TextDocument.convert', WARNING,
+                'portal_transforms failed to convert to %s: %r' % (mime_type, self))
+            result = ''
+        return mime_type, result
+      else:
+        # text_content is not set, return empty string instead of None
+        return mime_type, ''
     image_size = self.getSizeFromImageDisplay(display)
     if (display is not None or resolution is not None or quality != 75 or format != ''\
                             or frame is not None) and image_size:
@@ -327,6 +346,17 @@ class Image(File, OFSImage):
                                          frame=frame, image_size=image_size)
         return mime, image.data
     return self.getContentType(), self.getData()
+
+  security.declareProtected(Permissions.View, 'getSearchableText')
+  def getSearchableText(self, md=None):
+    """
+      Converts the content of the document to a textual representation.
+    """
+    mime, data = self.convert(format='txt')
+    return str(data)
+
+  # Compatibility with CMF Catalog
+  SearchableText = getSearchableText
 
   # Display
   security.declareProtected('View', 'index_html')
