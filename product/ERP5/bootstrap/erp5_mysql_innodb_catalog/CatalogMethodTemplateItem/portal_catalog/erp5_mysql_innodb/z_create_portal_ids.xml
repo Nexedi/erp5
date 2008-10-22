@@ -99,7 +99,8 @@ CREATE TABLE `portal_ids` (\n
 <dtml-in expr="getPortalObject().portal_ids.getDictLengthIdsItems()">\n
 INSERT INTO `portal_ids` (`id_group`, `last_id`) VALUES (<dtml-sqlvar sequence-key type="string">, <dtml-sqlvar sequence-item type="int">)\n
 <dtml-var sql_delimiter>\n
-</dtml-in>
+</dtml-in>\n
+COMMIT
 
 ]]></string> </value>
         </item>
@@ -148,7 +149,8 @@ CREATE TABLE `portal_ids` (\n
 <dtml-in expr="getPortalObject().portal_ids.getDictLengthIdsItems()">\n
 INSERT INTO `portal_ids` (`id_group`, `last_id`) VALUES (<dtml-sqlvar sequence-key type="string">, <dtml-sqlvar sequence-item type="int">)\n
 <dtml-var sql_delimiter>\n
-</dtml-in>
+</dtml-in>\n
+COMMIT
 
 ]]></string> </value>
                     </item>
