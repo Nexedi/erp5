@@ -2468,6 +2468,9 @@ msgstr "Aide contextuelle"
 msgid "Contribute Content"
 msgstr "Contribuer au contenu"
 
+msgid "Aggregation Level"
+msgstr "Niveau d'aggrégation"
+
 #: portal_skins/erp5_payroll/PaySheetTransaction_viewPreview/listbox
 msgid "Contribution"
 msgstr "Contribution"
@@ -2479,7 +2482,7 @@ msgstr "Prédicat de la contribution"
 #: portal_skins/erp5_core/ContributionRegistryTool_viewContributionPredicateList
 #: portal_skins/erp5_core/ContributionRegistryTool_viewContributionPredicateList/listbox
 msgid "Contribution Predicates"
-msgstr "Prédicats de la contribution"
+msgstr "Prédicats de fichiers contribués"
 
 #: portal type [Glossary term 8315]
 msgid "Contribution Registry Tool"
@@ -2574,6 +2577,10 @@ msgstr "En cours de conversion"
 #: portal_skins/erp5_base/Person_view/listbox
 msgid "Coordinate Function"
 msgstr "Fonction de la coordonnée"
+
+#: portal_skins/erp5_ingestion/ContributionTool_viewMyContentList/listbox
+msgid "My Contributed Content"
+msgstr "Mes fichiers partagés"
 
 #: portal_skins/erp5_base/Organisation_viewDetails/listbox
 #: portal_skins/erp5_base/Person_view/listbox
@@ -8976,7 +8983,7 @@ msgstr "l'adresse email de réponse au message."
 #: Alarm Person portal_skins/erp5_core/Folder_viewWorkflowReport/listbox
 #: portal_skins/erp5_xhtml_style/context_box_render
 msgid "Report"
-msgstr "Éditions"
+msgstr "Rapport"
 
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_report_format [Glossary
 #: term 3433]
@@ -8986,9 +8993,6 @@ msgstr "Format des rapports"
 #: erp5_core/Alarm_view/my_report_method_id [Glossary term 3607]
 msgid "Report Method"
 msgstr "Méthode d'affichage des résultats de l'alarme"
-
-msgid "Report Select:"
-msgstr "Type d'édition"
 
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_report_style [Glossary term
 #: 3642]
@@ -9682,7 +9686,7 @@ msgstr "Typologie"
 #: portal_skins/erp5_core/BusinessTemplate_viewInstallationDialog/listbox
 #: portal_skins/erp5_core/TemplateTool_viewMultiInstallationDialog/listbox
 msgid "Select Actions"
-msgstr "Sélectionner des actions"
+msgstr "Type d'action"
 
 msgid "Select Exchange"
 msgstr "Type d'import/export"
@@ -9704,6 +9708,9 @@ msgstr "Type d'impression"
 
 msgid "Select Report"
 msgstr "Type de rapport"
+
+msgid "Select Search"
+msgstr "Type de recherche"
 
 #: portal_skins/erp5_xhtml_style/relation_form
 msgid "Select Template"
