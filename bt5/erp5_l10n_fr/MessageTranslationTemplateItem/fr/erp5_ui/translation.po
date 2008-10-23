@@ -183,12 +183,6 @@ msgstr "Un coefficient  lié à la classification du salaire de la personne conc
 msgid "A default per unit price used for internal price calculations"
 msgstr "Le prix unitaire de base utilisé pour les calculs internes."
 
-msgid "A flag indicating if we have to update business template workflows"
-msgstr ""
-
-msgid "A flag indicating if we have to update tools"
-msgstr ""
-
 #: erp5_trade/BaseTradePurchase_FieldLibrary/my_discount_ratio [Glossary term
 #: 1414]
 msgid "A global discount ratio depending on the context, on the options or on the variations. All discount ratios may sum up to form a higher discount ratio."
@@ -199,12 +193,6 @@ msgstr "Taux de remise global dépendant du contexte, des options ou variantes c
 msgid "A global surcharge ratio depending on the context, on the options or on the variations. All surcharge ratios may sum up to form a higher surcharge ratio."
 msgstr "Taux global de majoration dépendant du contexte, des options ou variantes choisies. Différents taux de majoration peuvent se cumuler."
 
-msgid "A list of ERP5Types for which we want to add the roles in the template"
-msgstr ""
-
-msgid "A list of Tool ids used by this template"
-msgstr ""
-
 #: erp5_pdm/IndividualVariation_view/my_variation_base_category [Glossary term
 #: 3620]
 msgid "A list of base categories which defines possible discrete variations."
@@ -213,36 +201,6 @@ msgstr "Une liste de catégories de base qui définit de possible variations."
 #: erp5_core/BusinessTemplate_view/my_change_log [Glossary term 3246]
 msgid "A list of changes done on the document"
 msgstr "Liste des changements effectués sur un document"
-
-msgid "A list of ids of constraints used by this template"
-msgstr ""
-
-msgid "A list of ids of documents used by this template"
-msgstr ""
-
-msgid "A list of ids of extensions used by this template"
-msgstr ""
-
-msgid "A list of ids of products used by this template"
-msgstr ""
-
-msgid "A list of ids of property sheets used by this template"
-msgstr ""
-
-msgid "A list of ids of roles used by this template"
-msgstr ""
-
-msgid "A list of ids of site properties used by this template"
-msgstr ""
-
-msgid "A list of ids of tests used by this template"
-msgstr ""
-
-msgid "A list of local roles used by this template"
-msgstr ""
-
-msgid "A list of message translations used by this template"
-msgstr ""
 
 #: erp5_pdm/Service_view/my_individual_variation_base_category [Glossary term
 #: 3726]
@@ -366,6 +324,9 @@ msgstr "Nom du compte"
 msgid "Account Number Method"
 msgstr "Méthode d'affichage du numéro de compte"
 
+msgid "Account Reference"
+msgstr "Référence du compte"
+
 #: Accounting Transaction Module
 #: portal_skins/erp5_accounting/AccountModule_viewAccountStatementReportDialog
 msgid "Account Statement"
@@ -382,6 +343,9 @@ msgstr "Workflow de compte"
 #: /home/glossary/zope_glossary/Products/ERP5/Constraint/AccountTypeConstraint.py
 msgid "Account does not have account_type category."
 msgstr "Le compte n'a pas de account_type category."
+
+msgid "Account for Bank Line"
+msgstr "Compte pour la ligne de banque"
 
 #: /home/glossary/zope_glossary/Products/ERP5/Constraint/AccountTypeConstraint.py
 msgid "Account is member of ${category}, this should have account_type in ${account_type_list}."
@@ -419,6 +383,9 @@ msgstr "Période comptable"
 #: portal_workflow/accounting_period_workflow
 msgid "Accounting Period Workflow"
 msgstr "Workflow de la période comptable"
+
+msgid "Accounting Periods"
+msgstr "Périodes comptables"
 
 #: Account Module Bank Cash Register
 msgid "Accounting Preference"
@@ -488,7 +455,7 @@ msgstr "Libellé"
 #: portal_skins/erp5_accounting/AccountingTransactionModule_viewAccountingTransactionList
 #: portal_skins/erp5_accounting/AccountingTransactionModule_viewAccountingTransactionList/listbox
 msgid "Accounting Transactions"
-msgstr "Transactions Comptables"
+msgstr "Ecritures comptables"
 
 #: portal_workflow/accounting_workflow/worklists/5_stopped_transaction_list
 msgid "Accounting Transactions to Close"
@@ -504,7 +471,7 @@ msgstr "Écritures comptables à valider"
 
 #: Sale Invoice Transaction
 msgid "Accounting View"
-msgstr "Vue de la Comptabilité"
+msgstr "Comptabilité"
 
 #: portal_workflow/accounting_workflow
 msgid "Accounting Workflow"
@@ -567,10 +534,6 @@ msgstr "Action: (${task_count} total.)"
 msgid "Actions"
 msgstr "Actions"
 
-#: portal_skins/erp5_core/PreferenceTool_viewPreferenceList/listbox
-msgid "Active"
-msgstr "Actif"
-
 #: Account Accounting Transaction Module Organisation
 msgid "Active Preference"
 msgstr "Préférence active"
@@ -591,7 +554,7 @@ msgstr "Activité"
 #: erp5_base/Organisation_viewFieldLibrary/my_activity_code [Glossary term
 #: 3623]
 msgid "Activity Code"
-msgstr "Code APE"
+msgstr "Code NAF"
 
 #: portal_skins/erp5_xhtml_style/context_box_render
 msgid "Activity Pending"
@@ -667,7 +630,7 @@ msgstr "Adoptez la prévision"
 
 #: portal_skins/erp5_dms/Base_viewAdvancedSearchDialog
 msgid "Advanced Document Search"
-msgstr "Recherche avancée de documents"
+msgstr "Recherche avancée "
 
 #: Document Module
 #: portal_skins/erp5_web_widget_library/WebSite_viewSearchRenderer
@@ -825,12 +788,6 @@ msgstr "Résolu"
 msgid "Any Documents"
 msgstr "N'importe quel document"
 
-msgid "Apparel Assortments"
-msgstr ""
-
-msgid "Apparel Baths"
-msgstr ""
-
 msgid "Apparel Cloth"
 msgstr "Vêtements"
 
@@ -842,9 +799,6 @@ msgstr "Module Vêtements"
 
 msgid "Apparel Cloth to design"
 msgstr "Vêtements à définir"
-
-msgid "Apparel Clothes"
-msgstr ""
 
 msgid "Apparel Colour Range"
 msgstr "Gammes Matières"
@@ -864,9 +818,6 @@ msgstr "Gamme Matières"
 msgid "Apparel Colour Range Variation"
 msgstr "Coloris Gamme"
 
-msgid "Apparel Colour Ranges"
-msgstr ""
-
 msgid "Apparel Component"
 msgstr "Fournitures"
 
@@ -876,9 +827,6 @@ msgstr "Module Fournitures"
 msgid "Apparel Component Variation"
 msgstr "Coloris / variante"
 
-msgid "Apparel Components"
-msgstr ""
-
 msgid "Apparel Consumption"
 msgstr "Tables de Consommation"
 
@@ -887,9 +835,6 @@ msgstr "Tables de Consommation"
 
 msgid "Apparel Consumption Module"
 msgstr "Tables de Consommation"
-
-msgid "Apparel Consumptions"
-msgstr ""
 
 msgid "Apparel Fabric"
 msgstr "Tissus"
@@ -904,9 +849,6 @@ msgstr "Coloris"
 msgid "Apparel Fabric Item Fast Input"
 msgstr "Saisie rapide des appareils de fabrique"
 
-msgid "Apparel Fabric Items"
-msgstr ""
-
 msgid "Apparel Fabric List"
 msgstr "Tissus"
 
@@ -919,9 +861,6 @@ msgstr "Réf Qualité Tissu"
 msgid "Apparel Fabric to validate"
 msgstr "Tissus à définir"
 
-msgid "Apparel Fabrics"
-msgstr ""
-
 msgid "Apparel Measurement"
 msgstr "Correspondances de Mesures"
 
@@ -930,9 +869,6 @@ msgstr "Correspondances de Mesures"
 
 msgid "Apparel Measurement Module"
 msgstr "Module Mesures"
-
-msgid "Apparel Measurements"
-msgstr ""
 
 msgid "Apparel Model"
 msgstr "Produit Fini"
@@ -982,9 +918,6 @@ msgstr "Vêtements repris"
 msgid "Apparel Shape to design"
 msgstr "Modèles à définir"
 
-msgid "Apparel Shapes"
-msgstr ""
-
 msgid "Apparel Size"
 msgstr "Correspondances de Tailles"
 
@@ -993,9 +926,6 @@ msgstr "Correspondance de Tailles"
 
 msgid "Apparel Size Module"
 msgstr "Module Tailles"
-
-msgid "Apparel Sizes"
-msgstr ""
 
 msgid "Apparel Technical Drawing"
 msgstr "Figurine"
@@ -1029,9 +959,6 @@ msgstr "un Composant"
 
 msgid "Apparel Transformation Updated."
 msgstr "La Nomenclature est actualisée."
-
-msgid "Apparel Transformations"
-msgstr ""
 
 msgid "Apparel fabric"
 msgstr "Tissu"
@@ -1164,10 +1091,6 @@ msgstr "Workflow de validation des affectations"
 #: portal_skins/erp5_base/Person_viewAssignment/listbox
 msgid "Assignments"
 msgstr "Affectations"
-
-#: Transformation
-msgid "Assorted Resource"
-msgstr ""
 
 #: portal_skins/erp5_accounting/AccountingTransactionModule_viewJournalAsPdf
 #: erp5_accounting/Preference_viewAccounting/my_preferred_accounting_transaction_at_date
@@ -1309,9 +1232,6 @@ msgstr "Code établ."
 msgid "Bank Country Code"
 msgstr "Code pays"
 
-msgid "Bars"
-msgstr ""
-
 #: Preference portal_skins/erp5_base/Preference_viewBasePreference
 #: portal_skins/erp5_payroll/AccountingTransactionModule_viewPaySheetLineReportSection/listbox
 #: portal_skins/erp5_payroll/PaySheetTransaction_view/listbox
@@ -1365,12 +1285,11 @@ msgstr "Participation de base"
 msgid "Base Price"
 msgstr "Prix de base"
 
+msgid "Base Price Variation Axes"
+msgstr "Axes de variation du prix de base"
+
 msgid "Base Salary"
 msgstr "Salaire de base"
-
-#: portal type
-msgid "Base Variant Movement Group"
-msgstr ""
 
 msgid "Base size"
 msgstr "Taille de base"
@@ -1422,7 +1341,7 @@ msgstr "Description des composants"
 #: erp5_invoicing/SaleInvoiceTransaction_viewInvoice/my_destination_section_title
 #: [Glossary term 3644]
 msgid "Billable Client"
-msgstr "Client à facturer"
+msgstr "Client (facturer à)"
 
 #: portal_skins/erp5_project/ExpenseModule_viewExpenseList/listbox
 msgid "Billable Expense"
@@ -1431,7 +1350,7 @@ msgstr "Dépense à facturer"
 #: erp5_crm/Ticket_viewFieldLibrary/my_source_section_title [Glossary term
 #: 3409]
 msgid "Billing Supplier"
-msgstr "Fournisseur de factures"
+msgstr "Fournisseur (facturé par)"
 
 #: portal_skins/erp5_base/OrganisationModule_viewOrganisationList/listbox
 msgid "Birth Date"
@@ -1446,6 +1365,9 @@ msgstr "Nom à la naissance"
 msgid "Birthday"
 msgstr "Date de naissance"
 
+msgid "Birthplace"
+msgstr "Lieu de naissance"
+
 #: portal_workflow/account_workflow/transitions/invalidate_action
 msgid "Block Account"
 msgstr "Bloquer le compte"
@@ -1453,10 +1375,6 @@ msgstr "Bloquer le compte"
 #: erp5_crm/Event_viewFieldLibrary/my_text_content [Glossary term 3324]
 msgid "Body"
 msgstr "Contenu de la page"
-
-#: erp5_base/BankAccount_viewFieldLibrary/my_branch [Glossary term 3605]
-msgid "Branch"
-msgstr ""
 
 msgid "Brand"
 msgstr "Vignette"
@@ -1476,7 +1394,7 @@ msgstr "Un court titre du site web."
 
 #: portal_skins/erp5_web_widget_library/WebSite_viewSearchRenderer
 msgid "Browse"
-msgstr "Naviguer"
+msgstr "Navigation"
 
 msgid "Budget"
 msgstr "Budget"
@@ -1592,9 +1510,6 @@ msgstr "État d'avancement"
 msgid "Built"
 msgstr "Construit"
 
-msgid "Business Configurations"
-msgstr ""
-
 #: portal_skins/erp5_core/Folder_viewWorkflowActionDocumentListDialogRenderer/listbox
 #: portal_skins/erp5_glossary/GlossaryModule_viewGlossaryTermList/listbox
 msgid "Business Field"
@@ -1657,7 +1572,10 @@ msgstr "Nom du fichier Lectra"
 #: System Preference
 #: portal_skins/erp5_crm/SystemPreference_viewCustomerRelation
 msgid "CRM"
-msgstr "GRC"
+msgstr "CRM"
+
+msgid "CSV Style"
+msgstr "Style CSV"
 
 #: portal_skins/erp5_core/CacheTool_viewCacheFactoryList/listbox
 msgid "Cache Duration"
@@ -1735,7 +1653,7 @@ msgstr "Campagne"
 #: portal_skins/erp5_crm/CampaignModule_viewCampaignDetailedEventsList
 #: portal_skins/erp5_crm/CampaignModule_viewCampaignDetailedReportDialog
 msgid "Campaign Detailed Report"
-msgstr "Rapport détaillé de la campagne"
+msgstr "Rapport détaillé"
 
 #: portal type [Glossary term 8440]
 msgid "Campaign Module"
@@ -1744,7 +1662,13 @@ msgstr "Module des campagnes"
 #: Campaign Module portal_skins/erp5_crm/CampaignModule_viewCampaignStatusList
 #: portal_skins/erp5_crm/CampaignModule_viewCampaignStatusReportDialog
 msgid "Campaign Status"
-msgstr "État de la campagne"
+msgstr "État"
+
+msgid "Campaign Type"
+msgstr "Type de campagne"
+
+msgid "Campaign Types"
+msgstr "Types de campagnes"
 
 #: portal_skins/erp5_crm/CampaignModule_getCampaignDetailedReportSectionList
 #: portal_skins/erp5_crm/CampaignModule_getCampaignStatusReportSectionList
@@ -1919,10 +1843,6 @@ msgstr "ligne de transfert inter-caisse"
 msgid "Cash Transfers"
 msgstr "Transfert Inter-caisse"
 
-#: Business Template
-msgid "Catalog Methods"
-msgstr ""
-
 msgid "Categories"
 msgstr "Catégories"
 
@@ -1944,10 +1864,6 @@ msgstr "Ajout rapide de catégories"
 msgid "Category Item List Method"
 msgstr "Méthode d'affichage des catégories"
 
-#: portal type
-msgid "Category Movement Group"
-msgstr ""
-
 #: portal type [Glossary term 8317]
 msgid "Category Tool"
 msgstr "Outil de catégorie"
@@ -1957,20 +1873,12 @@ msgstr "Outil de catégorie"
 msgid "Causality"
 msgstr "Commande"
 
-#: TODO: Predecessor transactions ? 
+#: TODO: Predecessor transactions ?
 msgid "Causality (Invoices ...)"
 msgstr "Causes (Factures ...)"
 
-#: portal type
-msgid "Causality Assignment Movement Group"
-msgstr ""
-
-#: portal type
-msgid "Causality Movement Group"
-msgstr ""
-
 msgid "Causality State"
-msgstr "État causalité"
+msgstr "État de causalité"
 
 #: portal_workflow/invoice_causality_workflow
 msgid "Causality Workflow"
@@ -2144,9 +2052,6 @@ msgstr "Nettoyer le business template"
 msgid "Clean SVN Unversioned Files"
 msgstr "Nettoyer les fichiers SVN non versionnés"
 
-msgid "Clean SVN unversioned files"
-msgstr ""
-
 #: Business Template
 msgid "Clean Up SVN Locks"
 msgstr "Nettoyer les cadenas SVN"
@@ -2263,11 +2168,6 @@ msgstr "Vêtement"
 #: portal_skins/erp5_core/Category_viewFieldLibrary/listbox
 msgid "Codification"
 msgstr "Codification"
-
-#: portal_skins/erp5_base/DeliveryBuilder_view/listbox
-#: portal_skins/erp5_base/OrderBuilder_view/listbox
-msgid "Collect Order Group"
-msgstr ""
 
 msgid "Collected VAT"
 msgstr "TVA collectée"
@@ -2426,7 +2326,7 @@ msgstr "Confirmer"
 
 #: portal_workflow/accounting_workflow/transitions/confirm_action
 msgid "Confirm Transaction"
-msgstr "Confirmer la transaction"
+msgstr "Confirmer l'écriture"
 
 #: portal_skins/erp5_xhtml_style/reset_password_form
 msgid "Confirmation"
@@ -2441,10 +2341,6 @@ msgstr "Confirmer "
 #: [Glossary term 1450]
 msgid "Confirmed"
 msgstr "Confirmé"
-
-#: portal_skins/erp5_svn/BusinessTemplate_viewConflicted/listbox
-msgid "Conflicted Files"
-msgstr ""
 
 #: Project Line Milestone Task
 msgid "Constraints"
@@ -2516,6 +2412,9 @@ msgstr "Ligne de contenant"
 msgid "Container Quantity"
 msgstr "Nombre de contenants"
 
+msgid "Container State"
+msgstr "Etat du container"
+
 #: portal_workflow/packing_list_container_workflow
 msgid "Container Workflow"
 msgstr "Workflow de container"
@@ -2565,19 +2464,9 @@ msgstr "Contenu"
 msgid "Contextual Help"
 msgstr "Aide contextuelle"
 
-#: Organisation Person
-#: portal_skins/erp5_web_widget_library/WebSite_viewContributeRenderer
-msgid "Contribute"
-msgstr "Contribuer"
-
 #: Contribution Tool Document Module
 msgid "Contribute Content"
 msgstr "Contribuer au contenu"
-
-#: portal_skins/erp5_dms/Entity_viewContributeFileDialog
-#: portal_skins/erp5_ingestion/ContributionTool_viewContributeFileDialog
-msgid "Contribute File"
-msgstr "Contribuer en envoyant un fichier"
 
 #: portal_skins/erp5_payroll/PaySheetTransaction_viewPreview/listbox
 msgid "Contribution"
@@ -2710,7 +2599,7 @@ msgstr "Copier ou couper un ou plusieurs objets pour coller en premier"
 #: erp5_base/Organisation_viewFieldLibrary/my_corporate_name [Glossary term
 #: 3384]
 msgid "Corporate Name"
-msgstr "Dénomination"
+msgstr "Dénomination sociale"
 
 #: erp5_base/Organisation_viewFieldLibrary/my_corporate_registration_code
 #: [Glossary term 3436]
@@ -3117,11 +3006,11 @@ msgstr "Couper"
 
 #: System Preference
 msgid "DMS"
-msgstr "SGD"
+msgstr "GED"
 
 #: portal_skins/erp5_dms/SystemPreference_viewDocument
 msgid "DMS Preferences"
-msgstr "Préférences du SGD"
+msgstr "Préférences de la GED"
 
 msgid "Data Updated."
 msgstr "Données Enregistrées."
@@ -3195,6 +3084,12 @@ msgstr "La date n'est pas dans une période comptable ouverte pour la section so
 #: term 3262]
 msgid "Date transaction takes effect"
 msgstr "La date à laquelle la transaction est effective."
+
+msgid "Day"
+msgstr "Jour"
+
+msgid "Day / Month / Year"
+msgstr "Jour / Mois / Année"
 
 #: portal_skins/erp5_base/Delivery_getODTDataDict
 #: portal_skins/erp5_project/ProjectLine_viewReport/listbox
@@ -3274,11 +3169,14 @@ msgstr "Script de calcul par défaut"
 
 #: portal_skins/erp5_ods_core/Base_getExportModeItemList
 msgid "Default Export of Each Document"
-msgstr "Exportation par défaut de chaque document"
+msgstr "Export par défaut de chaque document"
 
 #: portal_skins/erp5_ods_core/Base_getExportModeItemList
 msgid "Default Export of Each Document (One sheet per view)"
-msgstr "Exportation par défaut de chaque document (une feuille par page)"
+msgstr "Export par défaut de chaque document (une feuille par page)"
+
+msgid "Default Image"
+msgstr "Logo"
 
 #: erp5_pdm/Measure_view/my_default_metric_type [Glossary term 8139]
 msgid "Default Metric Type"
@@ -3454,10 +3352,6 @@ msgstr "Qté livrée"
 #: 8314]
 msgid "Delivery Builder"
 msgstr "Constructeur de livraisons"
-
-#: portal type
-msgid "Delivery Causality Assignment Movement Group"
-msgstr ""
 
 #: portal type portal_skins/erp5_trade/DeliveryCell_view [Glossary term 8284]
 msgid "Delivery Cell"
@@ -3635,14 +3529,6 @@ msgstr "Responsable des tâches administratives pour le client"
 msgid "Destination Conversion"
 msgstr "Conversion de la destination"
 
-#: portal_skins/erp5_project/RequirementModule_viewRequirementList/listbox
-#: portal_skins/erp5_trade/PurchaseOrder_viewFieldLibrary/listbox
-#: portal_skins/erp5_trade/ReturnedSalePackingListModule_viewReturnedSalePackingListList/listbox
-#: erp5_project/Project_viewFieldLibrary/my_destination_decision_title
-#: [Glossary term 8195]
-msgid "Destination Decision"
-msgstr ""
-
 #: erp5_project_trade/BaseTradeProject_FieldLibrary/my_destination_payment_title
 #: [Glossary term 8174]
 msgid "Destination Payment"
@@ -3689,6 +3575,9 @@ msgstr "Pour le compte de"
 
 msgid "Destination site"
 msgstr "Lieu de livraison"
+
+msgid "Detailed Beginning Balance"
+msgstr "Détail du solde initial"
 
 #: Project Requirement Document Sale Order
 #: portal_skins/erp5_project/Project_viewDetailedReportDialog
@@ -3742,6 +3631,9 @@ msgstr "Différences"
 #: portal_skins/erp5_forge/BugModule_viewBugList/listbox
 msgid "Difficulty"
 msgstr "Difficulté"
+
+msgid "Dig"
+msgstr "Recherche"
 
 #: portal_skins/erp5_core/DeliveryBuilder_viewPredicateGroupList/listbox
 #: portal_skins/erp5_invoicing/InvoiceTransactionRule_view/listbox
@@ -3878,9 +3770,6 @@ msgstr "Document"
 msgid "Document Categories"
 msgstr "Catégories de documents"
 
-msgid "Document Classes"
-msgstr ""
-
 msgid "Document Date"
 msgstr "Date du document"
 
@@ -3926,14 +3815,6 @@ msgstr "Workflow de publication d'un document"
 msgid "Document Reference"
 msgstr "Référence du document"
 
-#: Document Module portal_skins/erp5_dms/DocumentModule_viewSearchDialog
-msgid "Document Search"
-msgstr "Rechercher de document"
-
-#: portal_workflow/document_staging_workflow
-msgid "Document Staging Workflow"
-msgstr ""
-
 #: portal_skins/erp5_base/Person_viewPersonDetailedContributionList/listbox
 msgid "Document Type"
 msgstr "Type de document"
@@ -3961,6 +3842,9 @@ msgstr "Le document a été chargé avec succés"
 #: portal_skins/erp5_core/Documentation_view
 msgid "Documentation"
 msgstr "Documentation"
+
+msgid "Documentation URL"
+msgstr "Lien vers la documentation"
 
 #: Accounting Transaction Bug Line Campaign Meeting Organisation Payment
 #: Person Project Milestone Purchase Invoice Sale Opportunity Support Request
@@ -4093,7 +3977,7 @@ msgstr "Événements à l'état brouillon"
 
 #: portal_workflow/ticket_workflow/worklists/1A_draft_meeting_list
 msgid "Draft Meetings"
-msgstr "Rendez-vous à l'état brouillon"
+msgstr "Réunions à l'état brouillon"
 
 #: portal_workflow/ticket_workflow/worklists/2A_draft_support_request_list
 msgid "Draft Support Requests"
@@ -4353,6 +4237,12 @@ msgstr "Anglais"
 msgid "Enquired"
 msgstr "Demandé"
 
+msgid "Entity"
+msgstr "Entité"
+
+msgid "Entity Role"
+msgstr "Rôle de l'entité"
+
 #: /home/glossary/zope_glossary/Products/ERP5Form/Extensions/Folder_viewSearchDialog.py
 msgid "Equals To"
 msgstr "Égal à "
@@ -4401,7 +4291,7 @@ msgstr "Événement"
 #: Event Module portal_skins/erp5_crm/EventModule_viewEventActivityList
 #: portal_skins/erp5_crm/EventModule_viewEventActivityReportDialog
 msgid "Event Activity"
-msgstr "Activité de l'événement"
+msgstr "Rapport d'activité"
 
 #: portal_skins/erp5_crm/Entity_viewEventList/listbox
 msgid "Event Date"
@@ -4410,7 +4300,7 @@ msgstr "Date de l'événement"
 #: Event Module portal_skins/erp5_crm/EventModule_viewEventDetailedList
 #: portal_skins/erp5_crm/EventModule_viewEventDetailedReportDialog
 msgid "Event Detailed Report"
-msgstr "Rapport détaillé de l'événement"
+msgstr "Rapport détaillé"
 
 #: portal type [Glossary term 8439]
 msgid "Event Module"
@@ -4477,6 +4367,9 @@ msgstr "Tous les résultats"
 #: /home/glossary/zope_glossary/Products/ERP5Form/Extensions/Folder_viewSearchDialog.py
 msgid "Exact Match"
 msgstr "Correspondance exacte"
+
+msgid "Exchange"
+msgstr "Export"
 
 #: portal_skins/erp5_base/Currency_view/listbox
 msgid "Exchange Rage"
@@ -4557,7 +4450,10 @@ msgstr "Exporter le modèle"
 
 #: erp5_invoicing/Invoice_viewODTPrintDialog/your_format [Glossary term 3447]
 msgid "Export Format"
-msgstr "Format d'exportation"
+msgstr "Format d'export"
+
+msgid "Export Mode"
+msgstr "Mode d'export"
 
 #: portal_skins/erp5_glossary/GlossaryModule_viewPOFileExportDialog
 msgid "Export Terms As PO File"
@@ -4569,10 +4465,10 @@ msgstr "Exporter les messages dans un fichier PO"
 
 #: portal_properties portal_skins/erp5_ods_core/Base_viewAsODSDialog
 msgid "Export to Spreadsheet"
-msgstr "Exporter vers un tableur"
+msgstr "Exporter"
 
-msgid "Extensions"
-msgstr ""
+msgid "Express Support"
+msgstr "Assistance"
 
 #: portal_workflow/external_document_publication_workflow
 msgid "External Document Publication Workflow"
@@ -4676,6 +4572,9 @@ msgstr "Nom du fichier"
 #: portal_skins/erp5_forge/Base_viewOrphanObjectList/listbox
 msgid "File Path"
 msgstr "Chemin du fichier"
+
+msgid "File State"
+msgstr "Etat du document"
 
 #: erp5_svn/BusinessTemplate_viewSvnLog/your_title [Glossary term 3662]
 msgid "File commited"
@@ -4825,12 +4724,12 @@ msgstr "Suivi"
 msgid "Follow Up Ticket"
 msgstr "Ticket de suivi"
 
+msgid "Follow up"
+msgstr "Suivi"
+
 #: portal_workflow/event_workflow/scripts/Event_checkConsistencyForAcknowledge
 msgid "Follow up must be set to acknowledge an Event."
 msgstr "Le suivi doit être renseignée pour prendre en compte un événement."
-
-msgid "Foos"
-msgstr ""
 
 msgid "Force"
 msgstr "Forcer"
@@ -4935,6 +4834,9 @@ msgstr "Fonction"
 #: portal_skins/erp5_base/Base_changeId
 msgid "Function changed."
 msgstr "Fonction changée."
+
+msgid "Functions"
+msgstr "Fonctions"
 
 #: portal_skins/erp5_pdm/ResourceModule_viewConvertedInventoryReportDialog/listbox
 #: portal_skins/erp5_pdm/Resource_viewInventory/listbox
@@ -5110,15 +5012,12 @@ msgstr "Lettrage"
 msgid "Grouping Reference Fast Input"
 msgstr "Saisie rapide du lettrage"
 
-msgid "Guess Portal Types From Modules"
-msgstr ""
+msgid "Groups"
+msgstr "Groupes"
 
 #: Business Template
 msgid "Guess Portal Types from Modules"
 msgstr "Trouver les portal types depuis les modules"
-
-msgid "Guess Properties Of Portal Types"
-msgstr ""
 
 #: Business Template
 msgid "Guess Properties of Portal Types"
@@ -5128,10 +5027,8 @@ msgstr "Trouver les propriétés des protal types"
 msgid "HTML Representation"
 msgstr "Représentation HTML"
 
-#: portal_skins/erp5_project/Project_viewBugList/listbox
-#: erp5_crm/Ticket_view/my_source_project_title [Glossary term 3273]
 msgid "Handled Project"
-msgstr ""
+msgstr "Nom du projet (fournisseur)"
 
 #: portal_skins/erp5_crm/CampaignModule_viewCampaignStatusList/listbox
 #: portal_skins/erp5_crm/Folder_viewTicketList/listbox
@@ -5352,7 +5249,7 @@ msgstr "Importer le Business Template"
 
 #: portal_skins/erp5_accounting/Base_importGapFileForm
 msgid "Import CSV File"
-msgstr "Fichier CSV pour l'import"
+msgstr "Importer un fichier CSV"
 
 #: portal_skins/erp5_core/CategoryTool_viewImportCategoryFileDialog
 msgid "Import Categories"
@@ -5387,7 +5284,7 @@ msgstr "Produits"
 #: portal_skins/erp5_crm/SupportRequestModule_getSupportRequestDetailedEventsLineList
 #: portal_skins/erp5_crm/SupportRequestModule_viewSupportRequestStatusList/listbox
 msgid "Incoming"
-msgstr "En cours"
+msgstr "Entrant"
 
 #: portal_workflow/event_workflow
 msgid "Incoming and Outgoing Events"
@@ -5596,9 +5493,6 @@ msgstr "Ce champ est obligatoire."
 msgid "Inspect Object"
 msgstr "Inspecter l'objet"
 
-msgid "Inspect object"
-msgstr ""
-
 #: portal_workflow/business_template_installation_workflow/transitions/install_action
 msgid "Install Business Template"
 msgstr "Installer le business template"
@@ -5806,7 +5700,7 @@ msgstr "Règle de facturation"
 
 #: Purchase Invoice Transaction Sale
 msgid "Invoice View"
-msgstr "Vue de Facture"
+msgstr "Facture"
 
 msgid "Invoice to"
 msgstr "Facturé à "
@@ -5864,7 +5758,7 @@ msgstr "Type d'écriture"
 
 #: Accounting Transaction Module
 msgid "Journal from Selection"
-msgstr "Journal depuis la sélection"
+msgstr "Journal"
 
 #: portal_workflow/accounting_workflow/transitions/start_action
 msgid "Journalise"
@@ -5921,6 +5815,12 @@ msgstr "Mot clé"
 msgid "Keywords"
 msgstr "Mots-clés"
 
+msgid "Kind of report"
+msgstr "Type de rapport"
+
+msgid "Landscape"
+msgstr "Paysage"
+
 #: portal_skins/erp5_base/NotificationMessageModule_viewNotificationMessageList/listbox
 #: portal_skins/erp5_core/Base_viewDocumentList/listbox
 #: portal_skins/erp5_core/Folder_viewWorkflowActionDocumentListDialogRenderer/listbox
@@ -5968,7 +5868,7 @@ msgstr "Langue:"
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_large_image_height
 #: [Glossary term 3336]
 msgid "Large Image Height"
-msgstr "Longueur des grandes images"
+msgstr "Hauteur des grandes images"
 
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_large_image_width [Glossary
 #: term 3687]
@@ -6021,6 +5921,12 @@ msgstr "Configuration du design"
 #: portal_skins/erp5_web_widget_library/WebSite_viewDashboardRenderer
 msgid "Learn"
 msgstr "Apprendre"
+
+msgid "Legal Form"
+msgstr "Forme juridique"
+
+msgid "Legal form of business company."
+msgstr "Forme juridique de l'entreprise"
 
 msgid "Length (cm)"
 msgstr "Longueur (cm)"
@@ -6246,6 +6152,9 @@ msgstr "Critère max"
 msgid "Max. Delay (Day)"
 msgstr "Délai Max. (Jour)"
 
+msgid "Max. delay (day)"
+msgstr "Délai Max (jours)"
+
 msgid "May"
 msgstr "Mai"
 
@@ -6270,7 +6179,7 @@ msgstr "Mesures"
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_medium_image_height
 #: [Glossary term 3404]
 msgid "Medium Image Height"
-msgstr "Longueur des images de taille moyenne"
+msgstr "Hauteur des images de taille moyenne"
 
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_medium_image_width
 #: [Glossary term 3724]
@@ -6281,22 +6190,28 @@ msgstr "Largeur des images de taille moyenne"
 #: portal_skins/erp5_crm/MeetingModule_viewMeetingDetailedEventsList/listbox
 #: [Glossary term 8435]
 msgid "Meeting"
-msgstr "Rendez-vous"
+msgstr "Réunion"
 
 #: Meeting Module
 #: portal_skins/erp5_crm/MeetingModule_viewMeetingDetailedEventsList
 #: portal_skins/erp5_crm/MeetingModule_viewMeetingDetailedReportDialog
 msgid "Meeting Detailed Report"
-msgstr "Rapport détaillé du rendez-vous"
+msgstr "Rapport détaillé"
 
 #: portal type [Glossary term 8434]
 msgid "Meeting Module"
-msgstr "Module des rendez-vous"
+msgstr "Module des réunions"
 
 #: Meeting Module portal_skins/erp5_crm/MeetingModule_viewMeetingStatusList
 #: portal_skins/erp5_crm/MeetingModule_viewMeetingStatusReportDialog
 msgid "Meeting Status"
-msgstr "État du rendez-vous"
+msgstr "État"
+
+msgid "Meeting Type"
+msgstr "Type de réunion"
+
+msgid "Meeting Types"
+msgstr "Types de réunion"
 
 #: portal_skins/erp5_crm/MeetingModule_getMeetingDetailedReportSectionList
 #: portal_skins/erp5_crm/MeetingModule_getMeetingStatusReportSectionList
@@ -6304,7 +6219,7 @@ msgstr "État du rendez-vous"
 #: portal_skins/erp5_crm/MeetingModule_viewMeetingList/listbox
 #: portal_skins/erp5_crm/MeetingModule_viewMeetingStatusList/listbox
 msgid "Meetings"
-msgstr "Rendez-vous"
+msgstr "Réunions"
 
 msgid "Member ID"
 msgstr "ID du Membre"
@@ -6320,9 +6235,6 @@ msgstr "Fusionner les livraisons"
 #: portal_skins/erp5_trade/Delivery_viewMergedDeliveryList/listbox
 msgid "Merged Deliveries"
 msgstr "Livraison regroupées"
-
-msgid "Message Translations"
-msgstr ""
 
 #: erp5_forge/BugLine_view/my_text_content [Glossary term 8149]
 msgid "Message explaining the content of the bug line."
@@ -6348,7 +6260,7 @@ msgstr "Type métrique"
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_micro_image_height
 #: [Glossary term 3719]
 msgid "Micro Image Height"
-msgstr "Longueur des micro-images"
+msgstr "Hauteur des micro-images"
 
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_micro_image_width [Glossary
 #: term 3625]
@@ -6398,6 +6310,9 @@ msgstr "Délai Min. (Jour)"
 #: erp5_pdm/Resource_viewFlowCapacity/my_min_flow [Glossary term 3718]
 msgid "Min. Flow"
 msgstr "Débit Minimum"
+
+msgid "Min. delay (day)"
+msgstr "Délai min (jours)"
 
 msgid "Min. flow"
 msgstr "Minimum de commande"
@@ -6509,7 +6424,10 @@ msgstr "Retrait de circulation"
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_money_quantity_field_width
 #: [Glossary term 3626]
 msgid "Money Amounts Fields Width"
-msgstr "Largeur des champs représentant des valeurs monétaires"
+msgstr "Largeur des champs de valeurs monétaires"
+
+msgid "Month / Day / Year"
+msgstr "Mois / Jour / Année"
 
 #: portal_skins/erp5_project/Project_viewODSMonthlyReport
 #: portal_skins/erp5_project/Project_viewODSMonthlyReport/listbox
@@ -6534,16 +6452,6 @@ msgstr "Motif"
 msgid "Movement Date"
 msgstr "Date "
 
-#: portal_skins/erp5_base/MovementGroup_view
-#: portal_skins/erp5_base/PropertyMovementGroup_view
-msgid "Movement Group"
-msgstr ""
-
-#: portal_skins/erp5_base/DeliveryBuilder_view/listbox
-#: portal_skins/erp5_base/OrderBuilder_view/listbox
-msgid "Movement Groups"
-msgstr ""
-
 #: portal_skins/erp5_pdm/Resource_viewMovementHistory/listbox
 msgid "Movements"
 msgstr "Mouvements"
@@ -6555,10 +6463,6 @@ msgstr "Plusieurs (${document_count}) documents ${document_reference} - ${docume
 #: portal_skins/erp5_ingestion/ContributionTool_viewMyContentList
 msgid "My Content List"
 msgstr "Liste de mon contenu"
-
-#: portal_skins/erp5_ingestion/ContributionTool_viewMyContentList/listbox
-msgid "My Contributed Content"
-msgstr "Le contenu auquel j'ai contribué"
 
 #: portal_workflow/accounting_workflow/worklists/1_draft_transaction_list
 msgid "My Drafts of Accounting Transactions"
@@ -6606,7 +6510,7 @@ msgstr "Méthode utilisée pour montrer les résultats de l'alarme."
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_nano_image_height [Glossary
 #: term 3699]
 msgid "Nano Image Height"
-msgstr "Longueur des nano-images"
+msgstr "Hauteur des nano-images"
 
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_nano_image_width [Glossary
 #: term 3654]
@@ -6890,12 +6794,12 @@ msgstr "Numéro"
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_listbox_list_mode_line_count
 #: [Glossary term 3693]
 msgid "Number of Lines Displayed in List Mode ListBoxs"
-msgstr "Nombre de lignes affichées dans une listbox en mode liste"
+msgstr "Nombre de lignes affichées en mode Liste"
 
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_listbox_view_mode_line_count
 #: [Glossary term 3341]
 msgid "Number of Lines Displayed in View Mode ListBoxs"
-msgstr "Nombre de lignes affichées dans une listbox en mode view"
+msgstr "Nombre de lignes affichées en mode Aperçu"
 
 #: portal_skins/erp5_core/Folder_viewDeleteDialog/listbox
 msgid "Number of Related Objects"
@@ -6905,6 +6809,12 @@ msgstr "Nombre d'objets en relation"
 #: 3351]
 msgid "Number of units involved in base prices"
 msgstr "Nombre d'unités dans les prix de base"
+
+msgid "ODS Style"
+msgstr "Style ODS"
+
+msgid "ODT Style"
+msgstr "Style ODT"
 
 #: portal_skins/erp5_core/BusinessTemplate_viewInstallationDialog/listbox
 #: portal_skins/erp5_core/TemplateTool_viewDiff/listbox
@@ -6961,14 +6871,14 @@ msgstr "Document Office"
 msgid "Old Value"
 msgstr "Ancienne valeur"
 
-msgid "Omit \"Grouped References\""
-msgstr "Sans les écritures lettrées"
-
 msgid "Omit Balanced Account"
 msgstr "Sans compte soldés"
 
 msgid "Omit Empty Accounts"
-msgstr "Sans comptes vides"
+msgstr "Sans comptes non mouvementés"
+
+msgid "Omit Grouped References"
+msgstr "Sans les références groupées"
 
 #: portal_workflow/assignment_workflow/states/open
 #: portal_workflow/bug_workflow/states/confirmed
@@ -7007,7 +6917,7 @@ msgstr "Campagnes en cours"
 
 #: portal_workflow/ticket_workflow/worklists/1C_open_meeting_list
 msgid "Open Meetings"
-msgstr "Rendez-vous en cours"
+msgstr "Réunions en cours"
 
 #: portal_workflow/project_workflow/transitions/validate_action
 msgid "Open Project"
@@ -7047,9 +6957,15 @@ msgstr "Limite haute de l'opération"
 msgid "Operations"
 msgstr "Opérations"
 
+msgid "Operations Manager"
+msgstr "Manager"
+
 #: portal_skins/erp5_crm/Folder_viewTicketList/listbox
 msgid "Operator"
 msgstr "Opérateur"
+
+msgid "Operators"
+msgstr "Opérateurs"
 
 #: Transformation
 #: portal_skins/erp5_pdm/Transformation_viewTransformationOptionalResourceList
@@ -7100,10 +7016,6 @@ msgstr "Étape d'une commande"
 msgid "Order Milestones"
 msgstr "Étapes d'une commande"
 
-#: portal type
-msgid "Order Movement Group"
-msgstr ""
-
 #: portal_workflow/order_movement_simulation_interaction_workflow
 msgid "Order Movement Interaction Workflow"
 msgstr "Workflow d'interaction des mouvements de commande"
@@ -7127,6 +7039,9 @@ msgstr "Résumé de la commande"
 #: portal type [Glossary term 8304]
 msgid "Order Tool"
 msgstr "Outil des commandes"
+
+msgid "Order Type"
+msgstr "Type de commande"
 
 #: portal_workflow/order_workflow
 msgid "Order Workflow"
@@ -7194,11 +7109,6 @@ msgstr "Origine"
 msgid "Origin Reference"
 msgstr "Réf. Commande client"
 
-#: portal_skins/erp5_core/Folder_viewDeleteDialog/listbox
-#: portal_skins/erp5_glossary/GlossaryModule_viewGlossaryTermList/listbox
-msgid "Original English Term"
-msgstr ""
-
 #: portal_skins/erp5_dms/DocumentModule_viewDocumentList/listbox
 #: portal_skins/erp5_dms/DocumentModule_viewFieldLibrary/listbox
 #: portal_skins/erp5_dms/ExternalSourceModule_viewExternalSourceList/listbox
@@ -7234,7 +7144,7 @@ msgstr "Rapport des expressions de besoin orphelines"
 
 #: portal_skins/erp5_accounting/AccountModule_viewOtherPartiesReportDialog
 msgid "Other Parties"
-msgstr "Tierces"
+msgstr "Tiers"
 
 msgid "Others"
 msgstr "Autres"
@@ -7333,10 +7243,6 @@ msgstr "Page ${page} sur ${total_pages}"
 #: erp5_web/WebPage_viewEditor/my_text_content [Glossary term 3282]
 msgid "Page Content"
 msgstr "Contenu de la page"
-
-#: portal type
-msgid "Parent Explanation Movement Group"
-msgstr ""
 
 #: erp5_base/Person_viewDetails/my_partner_count [Glossary term 3391]
 msgid "Partners"
@@ -7514,6 +7420,9 @@ msgstr "Écriture de trésorerie"
 msgid "Payment Transaction Lines"
 msgstr "Lignes comptables"
 
+msgid "Payment additional term (day)"
+msgstr "le"
+
 #: portal_skins/erp5_accounting/AccountingTransactionModule_createRelatedPaymentTransactionList
 msgid "Payment creation already in progress, abandon."
 msgstr "Création des écritures de trésorerie déjà en cours."
@@ -7679,6 +7588,9 @@ msgstr "Planifié"
 msgid "Planning"
 msgstr "Planning"
 
+msgid "Plans of purchase orders"
+msgstr "Planifier des ordres d'achat"
+
 #: /home/glossary/zope_glossary/Products/ERP5Form/SelectionTool.py
 msgid "Please select one (or more) object."
 msgstr "Veuillez sélectionner un (ou plusieurs) objet."
@@ -7731,9 +7643,6 @@ msgstr "Portal Type"
 #: portal_skins/erp5_base/ERP5Site_importObjectFromOOoFastInput/listbox
 msgid "Portal Type Property"
 msgstr "Propriété du Portal Type"
-
-msgid "Portal Type Roles"
-msgstr ""
 
 #: Business Template
 msgid "Portal Types"
@@ -7898,7 +7807,7 @@ msgid "Price"
 msgstr "Prix"
 
 msgid "Price Currency"
-msgstr "Devise de facturation"
+msgstr "Devise"
 
 msgid "Price Validity"
 msgstr "Validité du prix"
@@ -7924,7 +7833,7 @@ msgstr "Date de validité"
 #: erp5_trade/BaseTradeSale_FieldLibrary/my_priced_quantity [Glossary term
 #: 3351]
 msgid "Priced Quantity"
-msgstr "Quantité vendue"
+msgstr "Quantité correspondant au prix"
 
 msgid "Priced quantity"
 msgstr "Prix pour (Qté)"
@@ -7945,6 +7854,9 @@ msgstr "Imprimer"
 msgid "Print Invoice"
 msgstr "Imprimer la facture"
 
+msgid "Print Mode"
+msgstr "Mode d'impression"
+
 #: Purchase Order Sale portal_skins/erp5_trade/Order_viewODSSummaryPrintDialog
 #: portal_skins/erp5_trade/Order_viewODTPrintDialog
 msgid "Print Order"
@@ -7955,12 +7867,18 @@ msgstr "Imprimer le bon de commande"
 msgid "Print Packing List"
 msgstr "Imprimer le bon de livraison"
 
+msgid "Print Style"
+msgstr "Style impression"
+
 msgid "Printed by %(user)s at %(date)s"
 msgstr "Imprime par %(user)s le %(date)s"
 
 #: erp5_core/Base_viewPrintDialog/your_format [Glossary term 3271]
 msgid "Printing format"
 msgstr "Format d'impression"
+
+msgid "Printouts"
+msgstr "Impressions"
 
 #: portal_skins/erp5_core/CacheFactory_view/listbox
 #: portal_skins/erp5_forge/BugModule_viewBugList/listbox
@@ -8031,9 +7949,6 @@ msgstr "Produits"
 #: portal_workflow/validation_workflow/worklists/4_draft_product_list
 msgid "Products to Validate"
 msgstr "Produits à valider"
-
-msgid "Products to validate"
-msgstr ""
 
 #: Accounting Transaction Delivery Builder Internal Packing List Order Pay
 #: Sheet Model Payment Purchase Invoice Trade Condition Sale Line Milestone
@@ -8196,16 +8111,9 @@ msgstr "Critère de propriété"
 msgid "Property Divergence Tester"
 msgstr "Test de divergence de la propriété"
 
-#: portal type
-msgid "Property Movement Group"
-msgstr ""
-
 #: portal_skins/erp5_core/Base_viewHistoricalComparison/listbox
 msgid "Property Name"
 msgstr "Nom de la propriété"
-
-msgid "Property Sheets"
-msgstr ""
 
 #: portal_skins/erp5_trade/Delivery_viewDivergence/listbox
 msgid "Property Tester"
@@ -8235,6 +8143,9 @@ msgstr "Date de publication"
 #: portal_skins/erp5_dms/WebPageModule_viewWebPageList/listbox
 msgid "Publication Section"
 msgstr "Section de publication"
+
+msgid "Publication State"
+msgstr "Etat de publication"
 
 #: portal_workflow/publication_workflow
 msgid "Publication Workflow"
@@ -8492,7 +8403,7 @@ msgstr "Test de divergence sur la quantité"
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_quantity_field_width
 #: [Glossary term 3624]
 msgid "Quantity Fields Width"
-msgstr "Largeur des champs représentant une quantité"
+msgstr "Largeur des champs de quantité"
 
 #: portal_skins/erp5_base/CurrencyModule_viewCurrencyList/listbox
 msgid "Quantity Precision"
@@ -8509,10 +8420,6 @@ msgstr "Rapport de quantité"
 #: portal_skins/erp5_project/Project_viewQuantityReport/listbox
 msgid "Quantity Reports"
 msgstr "Rapports de quantité"
-
-#: portal type
-msgid "Quantity Sign Movement Group"
-msgstr ""
 
 msgid "Quantity Step"
 msgstr "Échelle de prix"
@@ -8584,6 +8491,9 @@ msgstr "Question"
 #: portal_skins/erp5_base/Base_postQuery
 msgid "Question can not be empty."
 msgstr "Une question ne peut être vide."
+
+msgid "Quick Search"
+msgstr "Recherche rapide"
 
 #: portal type [Glossary term 8357]
 msgid "RSS Feed"
@@ -8822,6 +8732,9 @@ msgstr "La référence a été mise à jour"
 #: portal_skins/erp5_web_widget_library/Document_viewProfileWidget
 msgid "Reference:"
 msgstr "Référence:"
+
+msgid "Referenced Documents"
+msgstr "Documents référencés"
 
 #: portal_skins/erp5_pdm/Resource_viewDefaultSupplyLineReference
 #: portal_skins/erp5_pdm/SupplyLine_viewReference
@@ -9087,14 +9000,12 @@ msgstr "Style des rapports"
 msgid "Reporter"
 msgstr "Reporter"
 
-#: portal_skins/erp5_project/RequirementDocument_viewOrderMappingReportAsOdt
-#: portal_skins/erp5_project/RequirementDocument_viewProjectMappingReportAsOdt
-msgid "Req. ID"
-msgstr ""
+msgid "Reports"
+msgstr "Rapports"
 
 #: portal_workflow/event_workflow/transitions/order_action
 msgid "Request"
-msgstr "Demande"
+msgstr "Demander"
 
 #: portal_workflow/sale_opportunity_workflow/transitions/submit_action
 msgid "Request Approval"
@@ -9107,7 +9018,7 @@ msgstr "Demander la traduction"
 #: portal_skins/erp5_project/Project_viewBugList/listbox
 #: erp5_crm/Ticket_view/my_destination_project_title [Glossary term 3442]
 msgid "Requested Project"
-msgstr "Projet demandeur"
+msgstr "Nom du projet (client)"
 
 #: portal_skins/erp5_crm/CampaignModule_viewCampaignStatusList/listbox
 #: portal_skins/erp5_crm/Folder_viewTicketList/listbox
@@ -9166,10 +9077,6 @@ msgstr "Documents de description de besoins"
 msgid "Requirement Module"
 msgstr "Module des descriptions de besoins"
 
-#: portal type
-msgid "Requirement Movement Group"
-msgstr ""
-
 #: portal_skins/erp5_project/RequirementDocument_view/listbox
 #: portal_skins/erp5_project/Requirement_view/listbox
 msgid "Requirement State"
@@ -9211,9 +9118,6 @@ msgstr "Résoudre"
 #: Business Template
 msgid "Resolve SVN Conflicted Files"
 msgstr "Résoudre les fichiers SVN en conflit"
-
-msgid "Resolve SVN conflicted files"
-msgstr ""
 
 #: portal_workflow/bug_workflow/states/stopped
 msgid "Resolved"
@@ -9325,10 +9229,6 @@ msgstr "Cellule de produits retournés"
 msgid "Returned Sale Packing List Line"
 msgstr "Ligne de produits retournés"
 
-#: portal_skins/erp5_trade/ReturnedSalePackingList_view/listbox
-msgid "Returned Sale Packing List Lines"
-msgstr ""
-
 #: portal type [Glossary term 8257]
 msgid "Returned Sale Packing List Module"
 msgstr "Module des produits retournés"
@@ -9353,9 +9253,6 @@ msgstr "Contrepassation pour ${title} (${specific_reference})"
 #: Business Template
 msgid "Revert & Update Business Template from SVN"
 msgstr "Annuler et mettre à jour le Business Template depuis SVN"
-
-msgid "Revert &amp; Update Business Template from SVN"
-msgstr ""
 
 #: portal_skins/erp5_core/Base_viewDocumentList/listbox
 #: portal_skins/erp5_core/Folder_viewDeleteDialog/listbox
@@ -9391,10 +9288,6 @@ msgstr "Rôle"
 #: portal type [Glossary term 8328]
 msgid "Role Definition"
 msgstr "Définition des rôles"
-
-#: portal type
-msgid "Root Applied Rule Causality Movement Group"
-msgstr ""
 
 #: portal_skins/erp5_core/Rule_view
 msgid "Rule"
@@ -9502,7 +9395,7 @@ msgstr "Opportunité de vente"
 #: portal_skins/erp5_crm/SaleOpportunityModule_viewSaleOpportunityDetailedEventsList
 #: portal_skins/erp5_crm/SaleOpportunityModule_viewSaleOpportunityDetailedReportDialog
 msgid "Sale Opportunity Detailed Report"
-msgstr "Rapport détaillé d'une opportunité de vente"
+msgstr "Rapport détaillé"
 
 #: portal type [Glossary term 8430]
 msgid "Sale Opportunity Module"
@@ -9512,7 +9405,10 @@ msgstr "Module des opportunités de vente"
 #: portal_skins/erp5_crm/SaleOpportunityModule_viewSaleOpportunityStatusList
 #: portal_skins/erp5_crm/SaleOpportunityModule_viewSaleOpportunityStatusReportDialog
 msgid "Sale Opportunity Status"
-msgstr "État de l'opportunité de vente"
+msgstr "État"
+
+msgid "Sale Opportunity Type"
+msgstr "Type de l'opportunité de vente"
 
 #: Organisation Person portal type portal_skins/erp5_trade/SaleOrder_view
 #: [Glossary term 4069]
@@ -9718,11 +9614,6 @@ msgstr "Rechercher"
 msgid "Search Key"
 msgstr "Clé de recherche"
 
-#: Template Tool
-#: portal_skins/erp5_forge/TemplateTool_viewSearchPortalTypeDialog
-msgid "Search Portal Type Definition"
-msgstr ""
-
 #: portal_skins/erp5_access_tab/ERP5Site_viewAdvancedSearchResultList/listbox
 #: portal_skins/erp5_core/Base_viewSearchResultList/listbox
 #: portal_skins/erp5_dms/Base_viewAdvancedSearchResultList/listbox
@@ -9735,10 +9626,6 @@ msgstr "Recherche:"
 #: portal_skins/erp5_web_widget_library/WebSite_viewSearchRenderer
 msgid "Search Tips"
 msgstr "Astuces pour la recherche"
-
-#: Accounting Transaction Module
-msgid "Search Transactions"
-msgstr "Chercher les écritures"
 
 msgid "Search Type:"
 msgstr "Sélectionner une Action:"
@@ -9764,7 +9651,7 @@ msgstr "Compte en banque"
 #: erp5_core/Preference_view/my_preferred_section_category [Glossary term
 #: 3396]
 msgid "Section Category"
-msgstr "Catégorie de section"
+msgstr "Groupe"
 
 #: portal_skins/erp5_web/WebSection_viewContent/listbox
 #: portal_skins/erp5_web/WebSection_viewContentList/listbox
@@ -9797,6 +9684,9 @@ msgstr "Typologie"
 msgid "Select Actions"
 msgstr "Sélectionner des actions"
 
+msgid "Select Exchange"
+msgstr "Type d'import/export"
+
 #: portal_skins/erp5_xhtml_style/navigation_box_render
 msgid "Select Favorite"
 msgstr "Sélectionner un favori"
@@ -9811,6 +9701,9 @@ msgstr "Sélectionner un module"
 
 msgid "Select Print"
 msgstr "Type d'impression"
+
+msgid "Select Report"
+msgstr "Type de rapport"
 
 #: portal_skins/erp5_xhtml_style/relation_form
 msgid "Select Template"
@@ -9859,11 +9752,6 @@ msgstr "Envoyer par email"
 #: portal_skins/erp5_forge/Bug_viewFieldLibrary/listbox
 msgid "Sender"
 msgstr "Expéditeur"
-
-#: erp5_dms/DocumentIngestionMessage_viewFieldLibrary/my_source_title
-#: [Glossary term 3350]
-msgid "Sender / Caller"
-msgstr "Expéditeur/Appelant"
 
 #: portal_skins/erp5_trade/InternalPackingListModule_viewInternalPackingListList/listbox
 #: portal_skins/erp5_trade/PurchaseOrderModule_viewPurchaseOrderList/listbox
@@ -9921,13 +9809,6 @@ msgstr "Services"
 #: portal_workflow/validation_workflow/worklists/5_draft_service_list
 msgid "Services to Validate"
 msgstr "Services à valider"
-
-msgid "Services to validate"
-msgstr ""
-
-#: portal_skins/erp5_core/Base_viewUIDialog
-msgid "Set List Setting"
-msgstr ""
 
 msgid "Set List Settting"
 msgstr "Appliquer"
@@ -10036,6 +9917,9 @@ msgstr "Description qui apparait dans les resultats de recherche"
 msgid "Short title is diplayed in any navigation widget (breadrumb, navigation menu, section list, ...) with a higher priority than long title, except in Site Map"
 msgstr "Le court titre est affiché dans les outils de navigation avec une priorité plus élevée que le titre long sauf dans un Plan du Site."
 
+msgid "Show Accounts Without Transactions"
+msgstr "Inclure les comptes non mouvementés"
+
 #: portal_skins/erp5_xhtml_style/context_box_render
 msgid "Show All"
 msgstr "Tout Montrer"
@@ -10090,9 +9974,6 @@ msgstr "Outil de simulation"
 msgid "Site"
 msgstr "Site"
 
-msgid "Site Properties"
-msgstr ""
-
 #: portal_skins/erp5_web/WebSite_viewAsWeb/listbox
 msgid "Site Sections"
 msgstr "Sections du site"
@@ -10131,7 +10012,7 @@ msgstr "Tranches"
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_small_image_height
 #: [Glossary term 3309]
 msgid "Small Image Height"
-msgstr "Longueur des petites images"
+msgstr "Hauteur des petites images"
 
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_small_image_width [Glossary
 #: term 3664]
@@ -10140,7 +10021,7 @@ msgstr "Largeur des petites images"
 
 #: erp5_base/Person_viewDetails/my_social_code [Glossary term 3316]
 msgid "Social Code"
-msgstr "Code social"
+msgstr "Numéro de sécurité sociale"
 
 #: portal_skins/erp5_base/OrganisationModule_viewOrganisationList/listbox
 msgid "Social Form"
@@ -10314,12 +10195,6 @@ msgstr "Crédit"
 msgid "Source Debit"
 msgstr "Débit"
 
-#: portal_skins/erp5_project/RequirementModule_viewRequirementList/listbox
-#: erp5_project_trade/BaseTradeProject_FieldLibrary/my_source_decision_title
-#: [Glossary term 8204]
-msgid "Source Decision"
-msgstr ""
-
 msgid "Source Group"
 msgstr "Groupement"
 
@@ -10339,11 +10214,6 @@ msgstr "Réf Fournisseur."
 #: portal_skins/erp5_accounting/AccountingTransactionModule_viewAccountingTransactionList/listbox
 msgid "Source Reference"
 msgstr "Référence"
-
-#: erp5_project_trade/BaseTradeProject_FieldLibrary/my_source_section_title
-#: [Glossary term 8186]
-msgid "Source Section"
-msgstr ""
 
 msgid "Source Title"
 msgstr "Fournisseur"
@@ -10615,7 +10485,7 @@ msgstr "Adresse"
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_string_field_width
 #: [Glossary term 3441]
 msgid "String Fields Width"
-msgstr "Largeur des champs représentant une chaîne de caractères"
+msgstr "Largeur des champs de caractères"
 
 #: erp5_core/Documentation_view/my_source_path [Glossary term 3641]
 msgid "String representation of the path of the place 'where the documented item is defined"
@@ -10673,7 +10543,7 @@ msgstr "Date de soumission"
 
 #: portal_workflow/ticket_workflow/worklists/1B_submitted_meeting_list
 msgid "Submitted Meetings"
-msgstr "Rendez-vous soumis"
+msgstr "Réunions à l'état soumis"
 
 #: portal_workflow/sale_opportunity_workflow/worklists/1_submitted_opportunity_list
 msgid "Submitted Sale Opportunities to Validate"
@@ -10686,9 +10556,6 @@ msgstr "Demandes d'assistance soumises"
 #: portal_skins/erp5_dms/ExternalWebPage_viewWebPageList
 msgid "Subpages"
 msgstr "Sous-pages"
-
-msgid "Subscription Plans"
-msgstr ""
 
 #: portal_skins/erp5_web/WebSection_view/listbox
 msgid "Subsections"
@@ -10725,6 +10592,9 @@ msgstr "Soumis"
 #: portal_skins/erp5_project/Project_viewSummaryList/listbox
 msgid "Summary"
 msgstr "Résumé"
+
+msgid "Summary for each Account Class"
+msgstr "Solde intermédiaire pour chaque classe"
 
 #: portal_skins/erp5_trade/Order_viewODSSummary/listbox
 msgid "Summary per Resource, Line, Worker"
@@ -10826,7 +10696,7 @@ msgstr "Demande d'assistance"
 #: portal_skins/erp5_crm/SupportRequestModule_viewSupportRequestDetailedEventsList
 #: portal_skins/erp5_crm/SupportRequestModule_viewSupportRequestDetailedReportDialog
 msgid "Support Request Detailed Report"
-msgstr "Rapport détaillé de la demande d'assistance"
+msgstr "Rapport détaillé"
 
 #: portal type [Glossary term 8428]
 msgid "Support Request Module"
@@ -10836,7 +10706,13 @@ msgstr "Module de demande d'assistance"
 #: portal_skins/erp5_crm/SupportRequestModule_viewSupportRequestStatusList
 #: portal_skins/erp5_crm/SupportRequestModule_viewSupportRequestStatusReportDialog
 msgid "Support Request Status"
-msgstr "État de la demande d'assistance"
+msgstr "État"
+
+msgid "Support Request Type"
+msgstr "Type de la demande d'assistance"
+
+msgid "Support Request Types"
+msgstr "Types des demandes d'assistance"
 
 #: portal_skins/erp5_crm/SupportRequestModule_getSupportRequestDetailedReportSectionList
 #: portal_skins/erp5_crm/SupportRequestModule_getSupportRequestStatusReportSectionList
@@ -11124,7 +11000,7 @@ msgstr "Template créé"
 #: portal_skins/erp5_core/Preference_viewTemplateList/listbox
 #: portal_skins/erp5_xhtml_style/context_box_render
 msgid "Templates"
-msgstr "Templates"
+msgstr "Modèles"
 
 #: portal_workflow/accounting_period_workflow/transitions/stop_action
 msgid "Temporary Close Accounting Period"
@@ -11189,12 +11065,12 @@ msgstr "Format de texte"
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_textarea_height [Glossary
 #: term 3715]
 msgid "TextArea Field Height"
-msgstr "Longueur des champs de typeTextArea"
+msgstr "Hauteur des champs de texte"
 
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_textarea_width [Glossary
 #: term 3327]
 msgid "TextArea Field Width"
-msgstr "Largeur des champs de type TextArea"
+msgstr "Largeur des champs de texte"
 
 #: erp5_base/Organisation_viewFieldLibrary/my_ean13_code [Glossary term 3342]
 msgid "The EAN 13 code of this document"
@@ -11268,6 +11144,12 @@ msgstr "Définit le projet auquel le ticket est lié."
 #: erp5_crm/Ticket_view/my_source_project_title [Glossary term 1431]
 msgid "The accountable project on the supplier side."
 msgstr "Projet correspondant du côté fournisseur."
+
+msgid ""
+"The activity code of the organisation.\n"
+"\n"
+"This code is specific to the local legislation. For instance, in France this is called \"Code APE\""
+msgstr "Code correspondant à l'activité de l'entreprise. En France, ce code est appelé NAF (Nomenclature d'activité Française)"
 
 #: erp5_base/Organisation_viewFieldLibrary/my_activity_code [Glossary term
 #: 3623]
@@ -12045,9 +11927,6 @@ msgstr "Le tiers qui est associé à la transaction."
 msgid "This document is not converted yet."
 msgstr "Ce document n'est pas encore converti"
 
-msgid "This size is not possible."
-msgstr "Cette taille est hors standard"
-
 #: portal_skins/erp5_core/Base_viewDocumentList/listbox
 #: portal_skins/erp5_dms/DocumentModule_viewDocumentList/listbox
 #: portal_skins/erp5_dms/DocumentModule_viewFieldLibrary/listbox
@@ -12062,7 +11941,7 @@ msgstr "Aperçu"
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_thumbnail_image_height
 #: [Glossary term 3346]
 msgid "Thumbnail Image Height"
-msgstr "Longueur des aperçus d'image"
+msgstr "Hauteur des aperçus d'image"
 
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_thumbnail_image_width
 #: [Glossary term 3365]
@@ -12275,10 +12154,6 @@ msgstr "Fuseau horaire"
 msgid "Title"
 msgstr "Titre"
 
-#: portal type
-msgid "Title Movement Group"
-msgstr ""
-
 #: erp5_forge/Bug_view/my_title [Glossary term 3343]
 msgid "Title of the bug, brief description of the problem"
 msgstr "Titre du bogue."
@@ -12344,9 +12219,6 @@ msgstr "Afin de changer votre mot de passe, entrez votre nom d'utilisateur ci-de
 
 msgid "Too many documents were found."
 msgstr "Trop de possibilités trouvées."
-
-msgid "Tools"
-msgstr ""
 
 msgid "Topic"
 msgstr "Thème"
@@ -12448,6 +12320,9 @@ msgstr "Coût Total"
 msgid "Total quantity"
 msgstr "Quantité totale"
 
+msgid "Trade"
+msgstr "Négoce"
+
 #: portal_skins/erp5_trade/TradeCondition_viewPayment/listbox
 msgid "Trade Date"
 msgstr "Date de référence"
@@ -12497,6 +12372,15 @@ msgstr "L'écriture n'est pas équilibrée."
 #: portal_skins/erp5_accounting/Entity_viewAccountingTransactionList
 msgid "Transactions"
 msgstr "Transactions"
+
+msgid "Transactions Related To This Account"
+msgstr "Transaction liées à ce compte"
+
+msgid "Transactions Related To This Bank Account"
+msgstr "Transaction liées à ce compte en banque"
+
+msgid "Transactions Related To This Entity"
+msgstr "Transaction liées à ce tiers"
 
 #: portal_skins/erp5_accounting/Account_viewAccountingTransactionList/listbox
 #: portal_skins/erp5_accounting/Account_viewNotGroupedAccountingTransactionList/listbox
@@ -12583,7 +12467,7 @@ msgstr "Traductions à revoir"
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_html_style_translator_mode
 #: [Glossary term 3239]
 msgid "Translator Mode"
-msgstr "Affichage de la traduction"
+msgstr "Mode traducteur"
 
 #: portal type [Glossary term 8290]
 msgid "Trash Bin"
@@ -12751,9 +12635,6 @@ msgstr "Unité"
 msgid "Unit Price"
 msgstr "Prix unitaire"
 
-msgid "Unit Test Classes"
-msgstr ""
-
 #: /home/glossary/zope_glossary/Products/ERP5/Extensions/InventoryBrain.py
 msgid "Unknown"
 msgstr "Inconnu"
@@ -12772,9 +12653,6 @@ msgstr "Actualiser"
 #: portal_workflow/assignment_workflow/transitions/update_action
 msgid "Update Assignment"
 msgstr "Mettre à jour l'affectation"
-
-msgid "Update Business Template Workflows"
-msgstr ""
 
 #: Business Template
 msgid "Update Business Template from SVN"
@@ -12918,6 +12796,9 @@ msgstr "N° TVA"
 msgid "VAT ID"
 msgstr "ID de la TVA"
 
+msgid "VAT code"
+msgstr "N° TVA"
+
 #: portal_workflow/notification_message_workflow/transitions/validate_action
 #: portal_workflow/rule_validation_workflow/transitions/validate_action
 #: portal_workflow/sale_opportunity_workflow/transitions/validate_action
@@ -13005,10 +12886,6 @@ msgstr "la valeur qui indique le rang dans une liste."
 msgid "Variable Additional Price"
 msgstr "Prix additionnel variable"
 
-#: portal type
-msgid "Variant Movement Group"
-msgstr ""
-
 #: Transformation Operation Transformed Resource
 #: portal_skins/erp5_pdm/Resource_viewInventory/listbox
 #: portal_skins/erp5_pdm/Resource_viewMovementHistory/listbox
@@ -13027,10 +12904,6 @@ msgstr "Variante"
 
 msgid "Variation Base"
 msgstr "Axes de variantage"
-
-#: portal type
-msgid "Variation Property Movement Group"
-msgstr ""
 
 msgid "Variation Range"
 msgstr "Variantes"
@@ -13130,19 +13003,15 @@ msgstr "Comptabilité"
 
 #: Accounting Rule Cell
 msgid "View Destination"
-msgstr "Vue Destination"
+msgstr "Destination"
 
 #: portal_skins/erp5_core/TemplateTool_viewDiff/listbox
 msgid "View Diff"
-msgstr "Voir la différence"
+msgstr "Différence"
 
 #: portal_skins/erp5_svn/BusinessTemplate_viewSvnLog
 msgid "View Diff between Revisions"
-msgstr "Voir les différences entre révisions"
-
-#: portal_skins/erp5_core/Base_viewDocumentList
-msgid "View Files and Images"
-msgstr "Voir les images et les fichiers"
+msgstr "Différences entre les révisions"
 
 #: portal_skins/erp5_core/Base_viewFieldLibrary/my_view_mode_listbox
 msgid "View Mode Listbox"
@@ -13150,22 +13019,28 @@ msgstr "Listbox mode vue"
 
 #: Task Module Report
 msgid "View Planning Report"
-msgstr "Voir le rapport du planning"
+msgstr "Rapport du planning"
+
+msgid "View Related Documents"
+msgstr "Documents correspondant"
 
 #: Template Tool
 msgid "View SVN History"
-msgstr "Voir l'historique SVN"
+msgstr "Historique SVN"
 
 #: Business Template
 msgid "View SVN Repository Information"
-msgstr "Voir les informations du dépôt SVN"
+msgstr "Informations sur le dépôt SVN"
 
 msgid "View SVN Repository Infos"
-msgstr ""
+msgstr "Informations sur le dépôt SVN"
 
 #: Accounting Rule Cell
 msgid "View Source"
-msgstr "Vue source"
+msgstr "Source"
+
+msgid "View Style"
+msgstr "Style vue"
 
 #: portal type [Glossary term 8427]
 msgid "Visit"
@@ -13274,22 +13149,6 @@ msgstr "Largeur (cm)"
 msgid "Width (m)"
 msgstr "Largeur (m)"
 
-#: Drawing File Image PDF Presentation Spreadsheet Text
-msgid "Wiki Predecessors"
-msgstr ""
-
-#: Drawing PDF Presentation Spreadsheet Text
-msgid "Wiki Successors"
-msgstr ""
-
-#: portal_skins/erp5_web_widget_library/Document_viewImplicitRelationListWidget
-msgid "Wiki predecessors"
-msgstr ""
-
-#: portal_skins/erp5_web_widget_library/Document_viewImplicitRelationListWidget
-msgid "Wiki successors"
-msgstr ""
-
 #: portal_skins/erp5_web_widget_library/Document_viewProfileWidget
 msgid "Word count:"
 msgstr "Nombre de mots"
@@ -13335,11 +13194,6 @@ msgstr "Chemin d'un objet de workflow"
 msgid "Workflow Modification in Progress"
 msgstr "Changement d'état en cours"
 
-#: Event Module Internal Packing List Returned Sale Order Task Report
-#: portal_skins/erp5_core/Folder_viewWorkflowReport
-msgid "Workflow Report"
-msgstr "Rapport des états"
-
 #: portal_skins/erp5_core/Folder_generateWorkflowReportDialog
 msgid "Workflow Report Dialog"
 msgstr "Dialogue de rapport du workflow"
@@ -13368,7 +13222,7 @@ msgstr "Axe X"
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_xlarge_image_height
 #: [Glossary term 3637]
 msgid "Xlarge Image Height"
-msgstr "Longueur des très grandes images"
+msgstr "Hauteur des très grandes images"
 
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_xlarge_image_width
 #: [Glossary term 3290]
@@ -13378,7 +13232,7 @@ msgstr "Largeur des très grandes images"
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_xsmall_image_height
 #: [Glossary term 3616]
 msgid "Xsmall Image Height"
-msgstr "Longueur des très petites images"
+msgstr "Hauteur des très petites images"
 
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_xsmall_image_width
 #: [Glossary term 3378]
@@ -13388,6 +13242,9 @@ msgstr "Largeur des très petites images"
 #: portal_skins/erp5_xhtml_style/planning_content
 msgid "Y Axis"
 msgstr "Axe Y"
+
+msgid "Year / Month / Day"
+msgstr "Année / Mois / Jour"
 
 #: portal_skins/erp5_core/Base_createNewDocument
 msgid "You are not allowed to add ${portal_type} in this context."
@@ -13484,12 +13341,6 @@ msgstr "Votre compte a été crée avec succés."
 
 msgid "Zip Code"
 msgstr "Code Postal"
-
-msgid "Zope Products"
-msgstr ""
-
-msgid "Zope Roles"
-msgstr ""
 
 msgid "accounting_workflow"
 msgstr "Workflow de Comptabilité"
@@ -13712,25 +13563,4 @@ msgstr "La largeur en pixel des images nano."
 
 msgid "time"
 msgstr "Date"
-
-msgid "Detailed Beginning Balance"
-msgstr "Détail du solde initial"
-
-msgid "Select Exchange"
-msgstr "Type d'import/export"
-
-msgid "Select Report"
-msgstr "Type de rapport"
-
-msgid "Account for Bank Line"
-msgstr "Compte pour la ligne de banque"
-
-msgid "Default Image"
-msgstr "Logo"
-
-msgid "Summary for each Account Class"
-msgstr "Solde intermédiaire pour chaque classe"
-
-msgid "Show Accounts Without Transactions"
-msgstr "Inclure les comptes non mouvementés"
 
