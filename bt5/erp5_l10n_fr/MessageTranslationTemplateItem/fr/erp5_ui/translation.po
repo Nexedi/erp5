@@ -456,7 +456,7 @@ msgstr "Libellé"
 #: portal_skins/erp5_accounting/AccountingTransactionModule_viewAccountingTransactionList
 #: portal_skins/erp5_accounting/AccountingTransactionModule_viewAccountingTransactionList/listbox
 msgid "Accounting Transactions"
-msgstr "Ecritures comptables"
+msgstr "Écritures comptables"
 
 #: portal_workflow/accounting_workflow/worklists/5_stopped_transaction_list
 msgid "Accounting Transactions to Close"
@@ -2468,6 +2468,11 @@ msgstr "Contenu"
 msgid "Contextual Help"
 msgstr "Aide contextuelle"
 
+#: Organisation Person
+#: portal_skins/erp5_web_widget_library/WebSite_viewContributeRenderer
+msgid "Contribute"
+msgstr "Partage"
+
 #: Contribution Tool Document Module
 msgid "Contribute Content"
 msgstr "Contribuer au contenu"
@@ -3823,6 +3828,10 @@ msgstr "Workflow de publication d'un document"
 #: portal_skins/erp5_accounting/AccountingTransactionModule_viewAccountingTransactionList/listbox
 msgid "Document Reference"
 msgstr "Référence du document"
+
+#: Document Module portal_skins/erp5_dms/DocumentModule_viewSearchDialog
+msgid "Document Search"
+msgstr "Documents"
 
 #: portal_skins/erp5_base/Person_viewPersonDetailedContributionList/listbox
 msgid "Document Type"
@@ -6884,6 +6893,9 @@ msgstr "Document Office"
 msgid "Old Value"
 msgstr "Ancienne valeur"
 
+msgid "Omit \"Grouped References\""
+msgstr "Sans les écritures lettrées"
+
 msgid "Omit Balanced Account"
 msgstr "Sans compte soldés"
 
@@ -9637,8 +9649,9 @@ msgstr "Recherche:"
 msgid "Search Tips"
 msgstr "Astuces pour la recherche"
 
-msgid "Search Type:"
-msgstr "Sélectionner une Action:"
+#: Accounting Transaction Module
+msgid "Search Transactions"
+msgstr "Écritures"
 
 #: portal_skins/erp5_dms/Base_viewAdvancedSearchResultList
 msgid "Search results"
@@ -13211,6 +13224,11 @@ msgstr "Chemin d'un objet de workflow"
 
 msgid "Workflow Modification in Progress"
 msgstr "Changement d'état en cours"
+
+#: Event Module Internal Packing List Returned Sale Order Task Report
+#: portal_skins/erp5_core/Folder_viewWorkflowReport
+msgid "Workflow Report"
+msgstr "Rapport des workflows"
 
 #: portal_skins/erp5_core/Folder_generateWorkflowReportDialog
 msgid "Workflow Report Dialog"
