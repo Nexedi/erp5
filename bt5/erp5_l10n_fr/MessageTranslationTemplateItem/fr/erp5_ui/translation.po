@@ -1,5 +1,6 @@
 msgid ""
-msgstr "Project-Id-Version: ERP5 Localized Interface\n"
+msgstr ""
+"Project-Id-Version: ERP5 Localized Interface\n"
 "POT-Creation-Date: 2008-02-18 11:02+CET\n"
 "PO-Revision-Date: 2008-02-18 11:02+CET\n"
 "Last-Translator:  <>\n"
@@ -662,6 +663,9 @@ msgstr "Composants indiqués sur le Modèle"
 
 msgid "Aggregated Industrial Process"
 msgstr "Explications données sur le Modèle"
+
+msgid "Aggregation Level"
+msgstr "Niveau d'aggrégation"
 
 #: portal type portal_skins/erp5_core/Alarm_view [Glossary term 8326]
 msgid "Alarm"
@@ -2468,8 +2472,10 @@ msgstr "Aide contextuelle"
 msgid "Contribute Content"
 msgstr "Contribuer au contenu"
 
-msgid "Aggregation Level"
-msgstr "Niveau d'aggrégation"
+#: portal_skins/erp5_dms/Entity_viewContributeFileDialog
+#: portal_skins/erp5_ingestion/ContributionTool_viewContributeFileDialog
+msgid "Contribute File"
+msgstr "Partager un fichier"
 
 #: portal_skins/erp5_payroll/PaySheetTransaction_viewPreview/listbox
 msgid "Contribution"
@@ -2577,10 +2583,6 @@ msgstr "En cours de conversion"
 #: portal_skins/erp5_base/Person_view/listbox
 msgid "Coordinate Function"
 msgstr "Fonction de la coordonnée"
-
-#: portal_skins/erp5_ingestion/ContributionTool_viewMyContentList/listbox
-msgid "My Contributed Content"
-msgstr "Mes fichiers partagés"
 
 #: portal_skins/erp5_base/Organisation_viewDetails/listbox
 #: portal_skins/erp5_base/Person_view/listbox
@@ -6471,6 +6473,10 @@ msgstr "Plusieurs (${document_count}) documents ${document_reference} - ${docume
 msgid "My Content List"
 msgstr "Liste de mon contenu"
 
+#: portal_skins/erp5_ingestion/ContributionTool_viewMyContentList/listbox
+msgid "My Contributed Content"
+msgstr "Mes fichiers partagés"
+
 #: portal_workflow/accounting_workflow/worklists/1_draft_transaction_list
 msgid "My Drafts of Accounting Transactions"
 msgstr "Mes écritures comptables au brouillon"
@@ -9759,6 +9765,11 @@ msgstr "Envoyer par email"
 #: portal_skins/erp5_forge/Bug_viewFieldLibrary/listbox
 msgid "Sender"
 msgstr "Expéditeur"
+
+#: erp5_dms/DocumentIngestionMessage_viewFieldLibrary/my_source_title
+#: [Glossary term 3350]
+msgid "Sender / Caller"
+msgstr "Emetteur"
 
 #: portal_skins/erp5_trade/InternalPackingListModule_viewInternalPackingListList/listbox
 #: portal_skins/erp5_trade/PurchaseOrderModule_viewPurchaseOrderList/listbox
@@ -13570,4 +13581,3 @@ msgstr "La largeur en pixel des images nano."
 
 msgid "time"
 msgstr "Date"
-
