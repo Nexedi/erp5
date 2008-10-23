@@ -222,6 +222,9 @@ msgstr "Developpeur"
 msgid "Developer for a Project"
 msgstr "Developpeur pour un projet"
 
+msgid "Discounted"
+msgstr "Remisé"
+
 msgid "Distribution and Conditioning Systems and Equipment and Components"
 msgstr "Équipements, composants et systèmes de conditionnement et de distribution de fluides"
 
@@ -872,6 +875,9 @@ msgstr "Industrie du cuir et de la chaussure"
 
 msgid "Tax Category"
 msgstr "Catégorie de Taxe"
+
+msgid "Taxable"
+msgstr "Taxable"
 
 msgid "Team"
 msgstr "Equipe"
