@@ -1,3 +1,19 @@
+1.4.0-nexedi - 2008-10-22
+========================
+
+  * remove PortalTransforms/configure.zcml that is not compatible with
+    Zope-2.8's five.
+
+  * let the user configure 'initial_header_level' (cf
+    'rest-header-level' directive).
+
+  * remove id parameter from log method's arguments.
+
+  * use self.aq_parent instead of getToolByName(self,
+    'portal_transforms') because while building business template,
+    transform tool will be copied and this transform will be removed
+    from copied one.
+
 1.4.0-final - 2006-06-16
 ========================
 
