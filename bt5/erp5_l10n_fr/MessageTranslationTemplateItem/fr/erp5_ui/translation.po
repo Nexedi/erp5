@@ -7261,6 +7261,9 @@ msgstr "Workflow des livraisons"
 msgid "Packing List updated."
 msgstr "Livraison mise à jour."
 
+msgid "Packing Lists"
+msgstr "Livraisons"
+
 #: portal_skins/erp5_web_widget_library/ListBox_asWebStyleHTML
 msgid "Page ${page} of ${total_pages}"
 msgstr "Page ${page} sur ${total_pages}"
