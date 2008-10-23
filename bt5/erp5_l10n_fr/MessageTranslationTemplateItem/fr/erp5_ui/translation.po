@@ -2960,7 +2960,7 @@ msgstr "CSP"
 #: portal_skins/erp5_accounting/AccountModule_viewBalanceSheetReport
 #: portal_skins/erp5_accounting/AccountModule_viewProfitAndLossReport
 msgid "Current Period"
-msgstr "Période actuelle"
+msgstr "Exercice N"
 
 #: portal_skins/erp5_core/Base_viewHistoricalComparison/listbox
 msgid "Current Value"
@@ -7803,7 +7803,7 @@ msgstr "Page précédente"
 #: portal_skins/erp5_accounting/AccountModule_viewBalanceSheetReport
 #: portal_skins/erp5_accounting/AccountModule_viewProfitAndLossReport
 msgid "Previous Period"
-msgstr "Période précédente"
+msgstr "Exercice N-1"
 
 #: portal_skins/erp5_trade/PackingList_viewSolveActionsDialog/listbox
 msgid "Prevision Quantity"
@@ -12283,7 +12283,7 @@ msgstr "Total ${category_level_1_title} ${level1_counter}"
 #: portal_skins/erp5_accounting/AccountModule_viewBalanceSheetReport
 #: portal_skins/erp5_accounting/AccountModule_viewProfitAndLossReport
 msgid "Total ${class}"
-msgstr "Total ${category_level_1_title} ${level1_counter}"
+msgstr "Total ${class}"
 
 #: portal_skins/erp5_payroll/AccountingTransactionModule_getPaySheetLineReportSectionLineList
 msgid "Total ${salary_range_title}"
