@@ -3026,15 +3026,9 @@ msgstr "GED"
 msgid "DMS Preferences"
 msgstr "Préférences de la GED"
 
-msgid "Data Updated."
-msgstr "Données Enregistrées."
-
 #: portal_skins/erp5_core/Base_edit
 #: portal_skins/erp5_core/Base_editUnrestricted
 msgid "Data updated."
-msgstr "Données mises à jours"
-
-msgid "Data+Updated."
 msgstr "Données enregistrées."
 
 #: portal_skins/erp5_accounting/Account_viewAccountingTransactionList/listbox
