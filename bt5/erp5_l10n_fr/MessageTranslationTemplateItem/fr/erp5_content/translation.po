@@ -1,5 +1,6 @@
 msgid ""
-msgstr "Project-Id-Version: \n"
+msgstr ""
+"Project-Id-Version: \n"
 "POT-Creation-Date: 2006-03-04 05:03+EST\n"
 "PO-Revision-Date: 2006-03-04 05:03+EST\n"
 "Last-Translator:  <>\n"
@@ -8,41 +9,68 @@ msgstr "Project-Id-Version: \n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Accounting"
+msgstr "Comptabilité"
+
+msgid "Accounting & Finance"
+msgstr "Comptabilité & finance"
+
+msgid "Accounting & Finance Manager"
+msgstr "Chef comptable et financier"
+
+msgid "Accounting Agent"
+msgstr "Comptable"
+
+msgid "Accounting Manager"
+msgstr "Chef comptable"
+
+msgid "Activities of membership organizations"
+msgstr "Hébergement médico-social et social"
+
+msgid "Activities of private households"
+msgstr "Activités des ménages en tant qu'employeurs ; activités indifférenciées des ménages en tant que producteurs de biens et services pour usage propre"
+
+msgid "Administration"
+msgstr "Administration"
+
+msgid "Afghan"
+msgstr "Afghan"
+
+msgid "Afghanistan"
+msgstr "Afghanistan"
+
+msgid "Agent"
+msgstr "Employé"
+
+msgid "Agriculture & Hunting"
+msgstr "Culture et production animale, chasse et services annexes"
+
+msgid "Agriculture & forestry"
+msgstr "Agriculture, sylviculture et pêche"
+
+msgid "Agriculture & hunting"
+msgstr "Culture et production animale, chasse et services annexes"
+
+msgid "Air transport"
+msgstr "Transports aériens"
+
+msgid "Albania"
+msgstr "Albanie"
+
+msgid "Apparel and Luggage and Personal Care Products"
+msgstr "Habillement, bagages et produits d'hygiène personnelle"
+
+msgid "Area"
+msgstr "Surface"
+
 msgid "Asset"
 msgstr "Actif"
 
-msgid "Income"
-msgstr "Produits"
-
-msgid "Expense"
-msgstr "Charges"
-
-msgid "Liability"
-msgstr "Passif"
-
-msgid "Receivable"
-msgstr "Créances"
-
-msgid "Equity"
-msgstr "Capital"
-
-msgid "Refundable VAT"
-msgstr "TVA déductible"
-
-msgid "Collected VAT"
-msgstr "TVA collectée"
+msgid "Auxiliary activities"
+msgstr "Activités auxiliaires de services financiers et d'assurance"
 
 msgid "Bank"
 msgstr "Banque"
-
-msgid "Payable"
-msgstr "Dettes"
-
-msgid "Cash"
-msgstr "Trésorerie"
-
-msgid "Tax Category"
-msgstr "Catégorie de Taxe"
 
 msgid "Base Application"
 msgstr "Appliqué sur"
@@ -50,17 +78,482 @@ msgstr "Appliqué sur"
 msgid "Base Contribution"
 msgstr "Contribue à"
 
-msgid "Salary Range"
-msgstr "Tranches"
-
 msgid "Base Salary"
 msgstr "Salaire de base"
+
+msgid "Basic Metal"
+msgstr "Métallurgie"
+
+msgid "Building and Construction Machinery and Accessories"
+msgstr "Engins et accessoires de chantier et de construction"
+
+msgid "Building and Construction and Maintenance Services"
+msgstr "Services de construction et d'entretien de bâtiment"
+
+msgid "By Air"
+msgstr "Aérien"
+
+msgid "By Mail"
+msgstr "Courrier"
+
+msgid "By Road"
+msgstr "Routier"
+
+msgid "By Sea"
+msgstr "Maritime"
+
+msgid "Campaigns"
+msgstr "Campagnes"
+
+msgid "Carriage Paid To"
+msgstr "Carriage Paid To (CPT)"
+
+msgid "Carriage and Insurance Paid to"
+msgstr "Carriage and Insurance Paid to (CIP)"
+
+msgid "Cash"
+msgstr "Trésorerie"
+
+msgid "Chemical products"
+msgstr "Industrie chimique"
+
+msgid "Chemicals including Bio Chemicals and Gas Materials"
+msgstr "Produits chimiques, biochimiques et gazeux"
+
+msgid "Cheque"
+msgstr "Chèque"
+
+msgid "Cleaning Equipment and Supplies"
+msgstr "Matériel et fournitures de nettoyage"
+
+msgid "Client"
+msgstr "Client"
+
+msgid "Coal & lignite"
+msgstr "Extraction de houille et de lignite"
+
+msgid "Cohabitating"
+msgstr "Concubinage"
+
+msgid "Coke, refined petroleum & nuclear fuel"
+msgstr "Cokéfaction et raffinage"
+
+msgid "Collaborative"
+msgstr "Collaboratif"
+
+msgid "Collected VAT"
+msgstr "TVA collectée"
+
+msgid "Collection, purification & distribution of water"
+msgstr "Captage, traitement et distribution d'eau"
+
+msgid "Commercial and Military and Private Vehicles and their Accessories"
+msgstr "Véhicules commerciaux, militaires et privés, accessoires et composants"
+
+msgid "Company"
+msgstr "Entreprise"
+
+msgid "Company Agent"
+msgstr "Employé"
+
+msgid "Company Executive"
+msgstr "Cadre"
+
+msgid "Company Manager"
+msgstr "Directeur"
+
+msgid "Computer & related activities"
+msgstr "Programmation, conseil et autres activités informatiques"
+
+msgid "Conference"
+msgstr "Conference"
+
+msgid "Construction"
+msgstr "Construction"
+
+msgid "Consumers' cooperative"
+msgstr "Coopérative"
+
+msgid "Cost and Freight"
+msgstr "Cost and Freight (CFR)"
+
+msgid "Cost, Insurance and Freight"
+msgstr "Cost, Insurance and Freight (CIF)"
+
+msgid "Credit Card"
+msgstr "Carte de crédit"
+
+msgid "Cubic Meter"
+msgstr "Mètre cube"
+
+msgid "Custom"
+msgstr "Douane"
+
+msgid "Day"
+msgstr "Jour"
 
 msgid "Deductible Tax"
 msgstr "Cotisation déductible"
 
+msgid "Defense and Law Enforcement and Security and Safety Equipment"
+msgstr "Équipements et fournitures pour la défense, l'application de la loi, la sécurité et la protection"
+
+msgid "Delivered At Frontier"
+msgstr "Delivered At Frontier (DAF)"
+
+msgid "Delivered Duty Paid"
+msgstr "Delivered Duty Paid (DDP)"
+
+msgid "Delivered Duty Unpaid"
+msgstr "Delivered Duty Unpaid (DDU)"
+
+msgid "Delivered Ex Quay"
+msgstr "Delivered Ex Quay (DEQ)"
+
+msgid "Delivered Ex Ship"
+msgstr "Delivered Ex Ship (DES)"
+
+msgid "Design"
+msgstr "Design"
+
+msgid "Developer"
+msgstr "Developpeur"
+
+msgid "Developer for a Project"
+msgstr "Developpeur pour un projet"
+
+msgid "Distribution and Conditioning Systems and Equipment and Components"
+msgstr "Équipements, composants et systèmes de conditionnement et de distribution de fluides"
+
+msgid "Divorced"
+msgstr "Divorcé(e)"
+
+msgid "Documentation"
+msgstr "Documentation"
+
+msgid "Domestic Appliances and Supplies and Consumer Electronic Products"
+msgstr "Mobilier, équipements domestiques, appareils ménager et électronique grand public"
+
+msgid "Drugs and Pharmaceutical Products"
+msgstr "Médicaments et produits pharmaceutiques"
+
+msgid "Editorial and Design and Graphic and Fine Art Services"
+msgstr "Services éditorial, de conception, de dessin, graphique et beaux arts"
+
+msgid "Education"
+msgstr "Enseignement"
+
+msgid "Education and Training Services"
+msgstr "Services d'enseignement et de formation"
+
+msgid "Electrical Systems and Lighting and Components and Accessories"
+msgstr "Installations, éclairages, composants, accessoires électriques"
+
+msgid "Electrical machinery & apparatus"
+msgstr "Fabrication d'équipements électriques"
+
+msgid "Electricity, gas & water"
+msgstr "Production et distribution d'électricité, de gaz, de vapeur et d'air conditionné"
+
+msgid "Electricity, gas, steam & hot water supply"
+msgstr "Production et distribution d'électricité, de gaz, de vapeur et d'air conditionné"
+
+msgid "Electronic Components and Supplies"
+msgstr "Composants et fournitures électroniques"
+
+msgid "Employee Share"
+msgstr "Part Salariale"
+
+msgid "Employer Share"
+msgstr "Part Employeur"
+
+msgid "Engineering and Research and Technology Based Services"
+msgstr "Services d'ingénierie et de recherche et services technologiques"
+
+msgid "Environmental Services"
+msgstr "Services de l'environnement"
+
+msgid "Equity"
+msgstr "Capital"
+
+msgid "Ex Works"
+msgstr "Ex Works (EXW)"
+
+msgid "Executive"
+msgstr "Cadre"
+
+msgid "Expense"
+msgstr "Charges"
+
+msgid "Extraterritorial organizations & bodies"
+msgstr "Activités extra-territoriales"
+
+msgid "Fabricated metal products except machinery"
+msgstr "Fabrication de produits métalliques, à l'exception des machines et des équipements"
+
+msgid "Farming and Fishing and Forestry and Wildlife Contracting Services"
+msgstr "Services professionnels pour l'agriculture, la pêche, la sylviculture et la faune sauvage"
+
+msgid "Farming and Fishing and Forestry and Wildlife Machinery and Accessories"
+msgstr "Machines et accessoires pour l'agriculture, la pêche, et l'exploitation forestière"
+
+msgid "Female"
+msgstr "Femme"
+
+msgid "Financial Reports"
+msgstr "Rapports financiers"
+
+msgid "Financial and Insurance Services"
+msgstr "Services Financiers et d'Assurance"
+
+msgid "Financial intermediation"
+msgstr "Activités financières et d'assurance"
+
+msgid "Financial intermediation except insurance"
+msgstr "Activités des services financiers, hors assurance et caisses de retraite"
+
+msgid "Fishing & aquaculture"
+msgstr "Pêche et aquaculture"
+
+msgid "Food Beverage and Tobacco Products"
+msgstr "Aliments, boissons et tabacs"
+
+msgid "Food products & beverages"
+msgstr "Industries alimentaires"
+
+msgid "Foreign Languages"
+msgstr "Langues vivantes"
+
+msgid "Forestry"
+msgstr "Sylviculture et exploitation forestière"
+
+msgid "Free Alongside Ship"
+msgstr "Free Alongside Ship (FAS)"
+
+msgid "Free Carrier"
+msgstr "Free Carrier (FCA)"
+
+msgid "Free On Board"
+msgstr "Free On Board (FOB)"
+
+msgid "Fuels and Fuel Additives and Lubricants and Anti corrosive Materials"
+msgstr "Combustibles, additifs de combustibles, lubrifiant et matériel anti-corrosif"
+
+msgid "Furniture"
+msgstr "Fabrication de meubles"
+
+msgid "Furniture and Furnishings"
+msgstr "Meubles et ameublements"
+
+msgid "Goods-producing activities for own use"
+msgstr "Activités indifférenciées des ménages en tant que producteurs de biens pour usage proprepour usage propre"
+
+msgid "Gross Salary"
+msgstr "Salaire Brut"
+
+msgid "HQ"
+msgstr "Direction"
+
+msgid "Headquarters"
+msgstr "Direction"
+
+msgid "Headquarters Agent"
+msgstr "Employé de direction"
+
+msgid "Headquarters Executive"
+msgstr "Cadre de direction"
+
+msgid "Headquarters Manager"
+msgstr "Chef de direction"
+
+msgid "Health & social work"
+msgstr "Santé humaine et action sociale"
+
+msgid "Healthcare Services"
+msgstr "Services Médicaux"
+
+msgid "Hotels & restaurants"
+msgstr "Hébergement et restauration"
+
+msgid "Hour"
+msgstr "Heure"
+
+msgid "Human Resources"
+msgstr "Ressources humaines"
+
+msgid "Human Resources Agent"
+msgstr "Employé des ressources humaines"
+
+msgid "Human Resources Manager"
+msgstr "Directeur des ressources humaines"
+
+msgid "Human resources"
+msgstr "Ressources humaines"
+
+msgid "Income"
+msgstr "Produits"
+
+msgid "Industrial Cleaning Services"
+msgstr "Services de nettoyage industriel"
+
+msgid "Industrial Production and Manufacturing Services"
+msgstr "Services de production et fabrication industrielles"
+
+msgid "Information Systems"
+msgstr "Systèmes d'information"
+
+msgid "Information Systems Manager"
+msgstr "Directeur des systèmes d'information"
+
+msgid "Information Technology"
+msgstr "Technologie de l'information"
+
+msgid "Information Technology Broadcasting and Telecommunications"
+msgstr "Composants, fournitures et équipements informatiques et de communication"
+
+msgid "Insurance & pension funding"
+msgstr "Assurance"
+
+msgid "Internal"
+msgstr "Interne"
+
+msgid "Invoice"
+msgstr "Facture"
+
+msgid "Kilogram"
+msgstr "Kilogramme"
+
+msgid "Laboratory and Measuring and Observing and Testing Equipment"
+msgstr "Équipements de laboratoire, de mesure, d'observation et de test"
+
+msgid "Land Transport"
+msgstr "Transports terrestres et transport par conduites"
+
+msgid "Land transport"
+msgstr "Transports terrestres et transport par conduites"
+
+msgid "Legal"
+msgstr "Droit"
+
+msgid "Length"
+msgstr "Longueur"
+
+msgid "Liability"
+msgstr "Passif"
+
+msgid "Limited company (Ltd.)"
+msgstr "Société anonyme (SA)"
+
+msgid "Limited liability company (LLC)"
+msgstr "Société à responsabilité limitée (SARL)"
+
+msgid "Limited liability partnership (LLP)"
+msgstr "Société civile profesionnelle (SCP)"
+
+msgid "Limited partnership (LP)"
+msgstr "Fonds communs de placement à risques (FCPR)"
+
+msgid "Litre"
+msgstr "Litre"
+
+msgid "Live Plant and Animal Material, Accessories and Supplies"
+msgstr "Fournitures, accessoires et matériel pour plantes"
+
+msgid "Low Priority"
+msgstr "Priorité basse"
+
+msgid "Machinery & equipment"
+msgstr "Fabrication de machines et équipements n.c.a."
+
+msgid "Main site"
+msgstr "Site principal"
+
+msgid "Male"
+msgstr "Homme"
+
+msgid "Management"
+msgstr "Direction"
+
+msgid "Management and Business Professionals and Administrative Services"
+msgstr "Services administratifs, commerciaux et professionnels et services de gestion"
+
+msgid "Manufacturing"
+msgstr "Industrie manufacturière"
+
+msgid "Manufacturing Components and Supplies"
+msgstr "Composants et fournitures pour la fabrication"
+
+msgid "Market Survey"
+msgstr "Etude de marché"
+
+msgid "Marketing"
+msgstr "Marketing"
+
+msgid "Marketing Agent"
+msgstr "Employé au marketing"
+
+msgid "Marketing Campaign"
+msgstr "Campagne marketing"
+
+msgid "Marketing Manager"
+msgstr "Directeur marketing"
+
+msgid "Married"
+msgstr "Marrié(e)"
+
+msgid "Mass"
+msgstr "Poids"
+
+msgid "Material Handling and Conditioning and Storage Machinery"
+msgstr "Machines pour la manutention, l'emballage et le stockage"
+
+msgid "Media"
+msgstr "Media/presse"
+
+msgid "Medical Equipment and Accessories and Supplies"
+msgstr "Matériel, accessoires et fournitures à usage médical"
+
+msgid "Medical, precision & optical instruments"
+msgstr "Fabrication de produits optiques et médicaux"
+
+msgid "Meetings"
+msgstr "Réunions"
+
+msgid "Metal ores"
+msgstr "Extraction de minerais metalliques"
+
+msgid "Meter"
+msgstr "Mètre"
+
+msgid "Mineral and Textile and Inedible Plant and Animal Materials"
+msgstr "Minéraux, Textiles et Matières Animales et Végétales"
+
+msgid "Mining & quarrying"
+msgstr "Industries extractives"
+
+msgid "Mining and Well Drilling Machinery and Accessories"
+msgstr "Machines et accessoires pour forage de mines"
+
+msgid "Mining and oil and gas services"
+msgstr "Services d'exploitation minière et de forage pour le pétrole et le gaz"
+
+msgid "Minute"
+msgstr "Minute"
+
+msgid "Motor vehicles & trailers"
+msgstr "Industrie automobile"
+
+msgid "Musical Instruments and Games and Educational Equipment"
+msgstr "Instruments de musique, jeux, jouets, et équipements, matériel, accessoires et fournitures"
+
+msgid "National Defense and Public Order and Security and Safety Services"
+msgstr "Services de défense nationale, d'ordre public, de secours et de sécurité"
+
 msgid "Net Salary"
 msgstr "Salaire net"
+
+msgid "News Feed"
+msgstr "Flux RSS"
 
 msgid "Non Deductible Tax"
 msgstr "Cotisation non déductible"
@@ -71,8 +564,338 @@ msgstr "Retenues sur salaire"
 msgid "Non Taxable Bonus"
 msgstr "Indemnités non soumises à cotisation"
 
+msgid "Non-metallic mineral products"
+msgstr "Fabrication d'autres produits minéraux non métalliques"
+
+msgid "Non-profit organisation"
+msgstr "Association à but non lucratif"
+
+msgid "Normal"
+msgstr "Normal"
+
+msgid "Office Equipment and Accessories and Supplies"
+msgstr "Équipement de bureau, accessoires et fournitures"
+
+msgid "Office, accounting & computing machinery"
+msgstr "Autres industries manufacturières"
+
+msgid "Operation"
+msgstr "Operation"
+
+msgid "Order"
+msgstr "Commande"
+
+msgid "Organizations and Clubs"
+msgstr "Organizations and Clubs"
+
+msgid "Other"
+msgstr "Autres"
+
+msgid "Other Marketing Service"
+msgstr "Autre service"
+
+msgid "Other Meeting"
+msgstr "Autres types de réunion"
+
+msgid "Other business activities"
+msgstr "Autres activités spécialisées, scientifiques et techniques"
+
+msgid "Other community, social & personal services"
+msgstr "Activités de services administratifs et de soutien"
+
+msgid "Other service activities"
+msgstr "Autres services personnels"
+
+msgid "Other transport equipment"
+msgstr "Fabrication d'autres matériels de transport"
+
 msgid "Overtime"
 msgstr "Heures supplémentaires"
+
+msgid "Packing List"
+msgstr "Bon de livraison"
+
+msgid "Paper Materials and Products"
+msgstr "Matières et produits de papeterie"
+
+msgid "Paper products"
+msgstr "Industrie du papier et du carton"
+
+msgid "Partner"
+msgstr "Partenaire"
+
+msgid "Partnership Meeting"
+msgstr "Réunion de partenariat"
+
+msgid "PayPal"
+msgstr "PayPal"
+
+msgid "Payable"
+msgstr "Dettes"
+
+msgid "Personal"
+msgstr "Personel"
+
+msgid "Personal Management"
+msgstr "Développement personnel"
+
+msgid "Personal and Domestic Services"
+msgstr "Services personnels et domestiques"
+
+msgid "Petroleum & Gas"
+msgstr "Extraction d'hydrocarbures"
+
+msgid "Petroleum & gas"
+msgstr "Extraction d'hydrocarbures"
+
+msgid "Piece"
+msgstr "Unité"
+
+msgid "Politics and Civic Affairs Services"
+msgstr "Services politiques et administratifs"
+
+msgid "Post and telecommunications"
+msgstr "Activités de poste et de courrier"
+
+msgid "Power Generation and Distribution Machinery and Accessories"
+msgstr "Machines et accessoires pour la production et la distribution d'énergie"
+
+msgid "Press Book"
+msgstr "Dossier de presse"
+
+msgid "Printing and Photographic and Audio and Visual Equipment and Supplies"
+msgstr "Équipements et fournitures pour l'impression, la photographie et l'audiovisuel"
+
+msgid "Private"
+msgstr "Privé"
+
+msgid "Production"
+msgstr "Production"
+
+msgid "Production Agent"
+msgstr "Employé à la production"
+
+msgid "Production Management"
+msgstr "Gestion de production"
+
+msgid "Production Manager"
+msgstr "Directeur de la production"
+
+msgid "Production – Manufacturing"
+msgstr "Production"
+
+msgid "Project"
+msgstr "Projet"
+
+msgid "Project Management"
+msgstr "Gestion de projet"
+
+msgid "Project Management & Implementation"
+msgstr "Direction et réalisation de projets"
+
+msgid "Project Manager"
+msgstr "Chef de projet"
+
+msgid "Project Meeting"
+msgstr "Réunion de projet"
+
+msgid "Public"
+msgstr "Publique"
+
+msgid "Public Utilities and Public Sector Related Services"
+msgstr "Services Publics et Services en rapport avec le Secteur Public"
+
+msgid "Public administration & defence"
+msgstr "Administration publique"
+
+msgid "Published Products"
+msgstr "Produits publiés"
+
+msgid "Publishing, printing of recorded media"
+msgstr "Imprimerie et reproduction d'enregistrements"
+
+msgid "Purchase"
+msgstr "Achats"
+
+msgid "Purchase Agent"
+msgstr "Employé des achats"
+
+msgid "Purchase Manager"
+msgstr "Directeur des achats"
+
+msgid "Purchases Campaign"
+msgstr "Campagne d'achat"
+
+msgid "Purchases Meeting"
+msgstr "Réunion avec un fournisseur"
+
+msgid "Quality Assurance"
+msgstr "Contrôle de la qualité"
+
+msgid "R&D"
+msgstr "R&D"
+
+msgid "R&D Agent"
+msgstr "Employé de la recherche et développement"
+
+msgid "Radio,TV & communication equipment"
+msgstr "Fabrication de produits informatiques et électroniques"
+
+msgid "Real estate"
+msgstr "Activités immobilières"
+
+msgid "Real estate, renting & business activities"
+msgstr "Activités immobilières"
+
+msgid "Receivable"
+msgstr "Créances"
+
+msgid "Recreational, cultural & sporting activities"
+msgstr "Activités créatives, artistiques et de spectacle"
+
+msgid "Recycling"
+msgstr "Réparation et installation de machines et d'équipements"
+
+msgid "Refundable VAT"
+msgstr "TVA déductible"
+
+msgid "Renting of machinery"
+msgstr "Activités de location et location-bail"
+
+msgid "Research"
+msgstr "Recherche"
+
+msgid "Research and Development"
+msgstr "Recherche et développement"
+
+msgid "Research and Development Agent"
+msgstr "Employé pour la recherche et développement"
+
+msgid "Research and Development Manager"
+msgstr "Directeur de la recherche et développement"
+
+msgid "Research and development"
+msgstr "Recherche-développement scientifique"
+
+msgid "Resin and Rosin and Rubber and Foam and Film and Elastomeric Materials"
+msgstr "Résine, colophanes, caoutchouc, mousse, pellicule et matériaux élastomères"
+
+msgid "Restricted"
+msgstr "Restreint"
+
+msgid "Retail trade, except of motor vehicles"
+msgstr "Commerce de détail, à l'exception des automobiles et des motocycles"
+
+msgid "Rubber & plastics"
+msgstr "Fabrication de produits en caoutchouc et en plastique"
+
+msgid "Salary Range"
+msgstr "Tranches"
+
+msgid "Sale & maintenance of motor vehicles"
+msgstr "Commerce et réparation d'automobiles et de motocycles"
+
+msgid "Sales"
+msgstr "Ventes"
+
+msgid "Sales Agent"
+msgstr "Employé des ventes"
+
+msgid "Sales Campaign"
+msgstr "Campagne de vente"
+
+msgid "Sales Lead"
+msgstr "Prospect intéressé"
+
+msgid "Sales Manager"
+msgstr "Directeur des ventes"
+
+msgid "Sales Meeting"
+msgstr "Réunion au sujet des ventes"
+
+msgid "Sales Prospect"
+msgstr "Prospect à convaincre"
+
+msgid "Service Industry Machinery and Equipment and Supplies"
+msgstr "Machines, équipement et fournitures pour l'industrie des services"
+
+msgid "Service-producing activities for own use"
+msgstr "Activités indifférenciées des ménages en tant que producteurs de services pour usage proprepour usage propre"
+
+msgid "Sewage & refuse disposal, sanitation"
+msgstr "Activités pour la santé humaine"
+
+msgid "Shareholder"
+msgstr "Actionnaire"
+
+msgid "Single"
+msgstr "Célibataire"
+
+msgid "Software Developer"
+msgstr "Développeur informatique"
+
+msgid "Sole proprietorship"
+msgstr "Entreprise individuelle"
+
+msgid "Sports and Recreational Equipment and Supplies and Accessories"
+msgstr "Equipements, fournitures, accessoires de sport et de loisirs"
+
+msgid "Square Meter"
+msgstr "Mètre carré"
+
+msgid "Staff"
+msgstr "Employés"
+
+msgid "Structures and Building and Construction and Manufacturing Components"
+msgstr "Constituants et provisions de Structures et bâtiments"
+
+msgid "Subsidiary"
+msgstr "Filiale"
+
+msgid "Subsidiary Agent"
+msgstr "Employé de filiale"
+
+msgid "Subsidiary Manager"
+msgstr "Directeur de filiale"
+
+msgid "Supplier"
+msgstr "Fournisseur"
+
+msgid "Supporting & auxiliary activities"
+msgstr "Entreposage et services auxiliaires des transports"
+
+msgid "System Administrator"
+msgstr "Administrateur système"
+
+msgid "Tanning & dressing of leather"
+msgstr "Industrie du cuir et de la chaussure"
+
+msgid "Tax Category"
+msgstr "Catégorie de Taxe"
+
+msgid "Team"
+msgstr "Equipe"
+
+msgid "Technical Library"
+msgstr "Fiches techniques"
+
+msgid "Template"
+msgstr "Modèle"
+
+msgid "Textiles"
+msgstr "Fabrication de textiles"
+
+msgid "Time"
+msgstr "Durée"
+
+msgid "Timepieces and Jewelry and Gemstone Products"
+msgstr "Produits d'horlogerie, de bijouterie et gemmes"
+
+msgid "Tobacco products"
+msgstr "Fabrication de produits à base de tabac"
+
+msgid "Tools and General Machinery"
+msgstr "Outils et machineries"
 
 msgid "Total Deduction"
 msgstr "Total Retenues"
@@ -80,12 +903,59 @@ msgstr "Total Retenues"
 msgid "Total Income"
 msgstr "Total Gains"
 
-msgid "Employee Share"
-msgstr "Part Salariale"
+msgid "Trainee"
+msgstr "Stagiaire"
 
-msgid "Employer Share"
-msgstr "Part Employeur"
+msgid "Transport, storage & communications"
+msgstr "Transports et entreposage"
 
-msgid "Gross Salary"
-msgstr "Salaire Brut"
+msgid "Transportation and Storage and Mail Services"
+msgstr "Services de transport, stockage postal"
 
+msgid "Travel and Food and Lodging and Entertainment Services"
+msgstr "Services de divertissement, de loisirs, de restauration, d'hébergement et de tourisme"
+
+msgid "Unit"
+msgstr "Unité"
+
+msgid "Uranium"
+msgstr "Extraction d'uranium"
+
+msgid "Urgent"
+msgstr "Urgent"
+
+msgid "Volume"
+msgstr "Volume"
+
+msgid "Warehouse"
+msgstr "Entrepôt"
+
+msgid "Warehouse Agent"
+msgstr "Employé d'entrepôt"
+
+msgid "Warehouse Manager"
+msgstr "Directeur d'entrepôt"
+
+msgid "Water transport"
+msgstr "Transports par eau"
+
+msgid "Wearing apparel"
+msgstr "Industrie de l'habillement"
+
+msgid "Week"
+msgstr "Semaine"
+
+msgid "Wholesale & retail trade; motor vehicles"
+msgstr "Commerce et réparation d'automobiles et de motocycles"
+
+msgid "Wholesale trade except of motor vehicles"
+msgstr "Commerce de gros, à l'exception des automobiles et des motocycles"
+
+msgid "Widowed"
+msgstr "Veuf/veuve"
+
+msgid "Wire Transfer"
+msgstr "Virement bancaire"
+
+msgid "Wood products except furniture"
+msgstr "Travail du bois et fabrication d'articles en bois et en liège, à l'exception des meubles ; fabrication d'articles en vannerie et sparterie"
