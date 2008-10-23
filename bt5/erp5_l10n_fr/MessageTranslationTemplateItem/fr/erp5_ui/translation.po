@@ -6444,6 +6444,9 @@ msgstr "Retrait de circulation"
 msgid "Money Amounts Fields Width"
 msgstr "Largeur des champs de valeurs monétaires"
 
+msgid "Month"
+msgstr "Mois"
+
 msgid "Month / Day / Year"
 msgstr "Mois / Jour / Année"
 
@@ -9459,6 +9462,9 @@ msgstr "Étape de commande de vente"
 #: portal type [Glossary term 8254]
 msgid "Sale Order Module"
 msgstr "Module des commandes de vente"
+
+msgid "Sale Order Planning"
+msgstr "Planning de la commande"
 
 #: Sale Order
 msgid "Sale Order Planning Box"
@@ -13152,6 +13158,9 @@ msgstr "Webmaster"
 msgid "Wednesday"
 msgstr "Mercredi"
 
+msgid "Week"
+msgstr "Semaine"
+
 msgid "Weeks"
 msgstr "Semaines"
 
@@ -13281,6 +13290,9 @@ msgstr "Largeur des très petites images"
 #: portal_skins/erp5_xhtml_style/planning_content
 msgid "Y Axis"
 msgstr "Axe Y"
+
+msgid "Year"
+msgstr "Année"
 
 msgid "Year / Month / Day"
 msgstr "Année / Mois / Jour"
