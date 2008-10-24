@@ -525,7 +525,13 @@ class Image(File, OFSImage):
     """
     File._setFile(self, *args, **kw)
     self._update_image_info()
-  
+
+  def PUT(self, *args, **kw):
+    """set the file content by HTTP/FTP and reset image information.
+    """
+    File.PUT(self, *args, **kw)
+    self._update_image_info()
+
   #
   # FTP/WebDAV support
   #
