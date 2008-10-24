@@ -36,7 +36,7 @@ from Products.ERP5.Document.Image import Image
 from Products.ERP5.Document.Document import ConversionCacheMixin
 from Products.ERP5.Document.File import _unpackData
 
-from zLOG import LOG
+from zLOG import LOG, WARNING
 
 class PDFDocument(Image, ConversionCacheMixin):
   """
@@ -136,7 +136,54 @@ class PDFDocument(Image, ConversionCacheMixin):
     h = r.read()
     tmp.close()
     r.close()
-    return h
+    
+    if h != '':
+      return h
+    else:
+      # Try to use OCR
+      # As high dpi images are required, it may take some times to convert the
+      # pdf. 
+      # It may be required to use activities to fill the cache and at the end, 
+      # to calculate the final result
+      text = ''
+      content_information = self.getContentInformation()
+      page_count = int(content_information.get('Pages', 0))
+      for page_number in range(page_count):
+        src_mimetype, png_data = self.convert(
+            'png', quality=100, resolution=300,
+            frame=page_number, display='identical')
+        if not src_mimetype.endswith('png'):
+          continue
+        content = '%s' % png_data
+        mime_type = getToolByName(self, 'mimetypes_registry').\
+                                    lookupExtension('name.%s' % 'txt')
+        if content is not None:
+          portal_transforms = getToolByName(self, 'portal_transforms')
+          result = portal_transforms.convertToData(mime_type, content,
+                                                   context=self,
+                                                   filename=self.title_or_id(),
+                                                   mimetype=src_mimetype)
+          if result is None:
+              # portal_transforms fails to convert.
+              LOG('TextDocument.convert', WARNING,
+                  'portal_transforms failed to convert to %s: %r' % (mime_type, self))
+              result = ''
+          text += result
+      return text
+
+  security.declareProtected('View', 'getSizeFromImageDisplay')
+  def getSizeFromImageDisplay(self, image_display):
+    """
+    Return the size for this image display, or None if this image display name
+    is not known. If the preference is not set, (0, 0) is returned.
+    """
+    # identical parameter can be considered as a hack, in order not to
+    # resize the image to prevent text distorsion when using OCR.
+    # A cleaner API is required.
+    if image_display == 'identical':
+      return (self.getWidth(), self.getHeight())
+    else:
+      return Image.getSizeFromImageDisplay(self, image_display)
 
   security.declarePrivate('_convertToHTML')
   def _convertToHTML(self):
