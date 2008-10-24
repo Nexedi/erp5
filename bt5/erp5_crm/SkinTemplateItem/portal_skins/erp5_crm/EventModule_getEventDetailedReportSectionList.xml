@@ -62,7 +62,7 @@ selection_columns.append((\'ticket_type\', \'Module\'))\n
 selection_columns.append((\'resource\',\'Type\'))\n
 #Add dynamicaly event states columns to the form\n
 #The name of column must be without spaces\n
-for event_state in context.Base_getTranslatedWorkflowStateItemList(wf_id=\'event_workflow\'):\n
+for event_state in context.Base_getWorkflowStateItemList(\'event_workflow\'):\n
   if event_state[1]!=\'deleted\':\n
     selection_columns.append((event_state[1],event_state[0]))\n
 selection_columns.append((\'total\', \'Total\'))\n

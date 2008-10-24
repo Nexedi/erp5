@@ -1,3 +1,6 @@
+2008-10-24 yusei
+* Fixed EventModule_getEventDetailedReportSectionList. Since All messages will be translated in a template, no need to translate in this script.
+
 2008-10-14 yusei
 * Start to develop version 5.3.
 
