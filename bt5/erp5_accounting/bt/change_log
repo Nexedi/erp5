@@ -1,4 +1,7 @@
 2008-10-24 yusei
+* Use translation of payment_mode category in the journal dialog.
+
+2008-10-24 yusei
 * Use translated role name in entity_role field in third party report.
 
 2008-10-14 yusei

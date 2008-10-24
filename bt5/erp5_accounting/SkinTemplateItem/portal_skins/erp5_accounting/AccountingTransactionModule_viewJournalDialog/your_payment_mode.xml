@@ -267,18 +267,15 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.portal_categories.payment_mode.getCategoryChildLogicalPathItemList()</string> </value>
+            <value> <string>python: here.portal_categories.payment_mode.getCategoryChildTranslatedLogicalPathItemList()</string> </value>
         </item>
       </dictionary>
     </pickle>
