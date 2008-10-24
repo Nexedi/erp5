@@ -30,6 +30,7 @@
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from DateTime import DateTime
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.CMFCore.utils import getToolByName
@@ -390,11 +391,11 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     if not run: return
 
     self.wanted_quantity = 1.0
-    self.wanted_start_date = self.datetime.earliestTime() \
-      + self.order_builder_hardcoded_time_diff
+    self.wanted_start_date = DateTime(
+      str(self.datetime.earliestTime() \
+          + self.order_builder_hardcoded_time_diff))
 
-    self.wanted_stop_date = self.datetime.earliestTime() \
-      + self.order_builder_hardcoded_time_diff
+    self.wanted_stop_date = self.wanted_start_date
 
     sequence_list = SequenceList()
     sequence_list.addSequenceString(self.common_sequence_string)
@@ -424,11 +425,11 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
                       '
 
     self.wanted_quantity = 1.0
-    self.wanted_start_date = self.datetime.earliestTime() \
-      + self.order_builder_hardcoded_time_diff
+    self.wanted_start_date = DateTime(
+      str(self.datetime.earliestTime() + \
+          self.order_builder_hardcoded_time_diff))
 
-    self.wanted_stop_date = self.datetime.earliestTime() \
-      + self.order_builder_hardcoded_time_diff
+    self.wanted_stop_date = self.wanted_start_date
 
     self.decrease_quantity_matrix = {
       'size/Man' : 1.0,
@@ -450,12 +451,14 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     self.max_delay = 14.0
 
     self.wanted_quantity = 1.0
-    self.wanted_start_date = self.datetime.earliestTime() \
-      - self.max_delay \
-      + self.order_builder_hardcoded_time_diff
+    self.wanted_start_date = DateTime(
+      str(self.datetime.earliestTime() \
+          - self.max_delay \
+          + self.order_builder_hardcoded_time_diff))
 
-    self.wanted_stop_date = self.datetime.earliestTime() \
-      + self.order_builder_hardcoded_time_diff
+    self.wanted_stop_date = DateTime(
+      str(self.datetime.earliestTime() \
+          + self.order_builder_hardcoded_time_diff))
 
     sequence_list = SequenceList()
     sequence_list.addSequenceString(self.common_sequence_string)
@@ -468,11 +471,11 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     if not run: return
 
     self.wanted_quantity = 1.0
-    self.wanted_start_date = self.datetime.earliestTime() \
-      + self.order_builder_hardcoded_time_diff
+    self.wanted_start_date = DateTime(
+      str(self.datetime.earliestTime() \
+          + self.order_builder_hardcoded_time_diff))
 
-    self.wanted_stop_date = self.datetime.earliestTime() \
-      + self.order_builder_hardcoded_time_diff
+    self.wanted_stop_date = self.wanted_start_date
 
     sequence_list = SequenceList()
     sequence_list.addSequenceString(self.common_sequence_string)
