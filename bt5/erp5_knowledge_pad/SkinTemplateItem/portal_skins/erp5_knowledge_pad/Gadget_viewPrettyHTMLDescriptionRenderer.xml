@@ -39,19 +39,20 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:define="cell python: options[\'cell\'];"\n
+<tal:block i18n:domain="content"\n
+           tal:define="cell python: options[\'cell\'];"\n
            tal:condition="python: hasattr(cell, \'getObject\')">\n
 \n
   <tal:block \n
     tal:define="gadget cell/getObject;\n
                 image_id python: getattr(gadget, \'image_id\', None);">\n
   \n
-    <h4 tal:content="cell/getTitle"/>\n
+    <h4 i18n:translate="" tal:content="cell/getTitle"/>\n
   \n
     <img tal:condition="image_id"\n
         tal:attributes="src python:\'%s/%s\' \n
                                     %(gadget.absolute_url(), image_id)"/>\n
-    <p tal:content="cell/getDescription"/>\n
+    <p i18n:translate="" tal:content="cell/getDescription"/>\n
   </tal:block>\n
 \n
 </tal:block>
