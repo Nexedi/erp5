@@ -242,7 +242,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                           <tal:block tal:condition="python: field_type not in (\'ImageField\',\'OOoChart\' )">\n
                             <text:p tal:condition="python: not(same_type(value,[]) or same_type(value,()))"\n
                                     text:style-name=\'field-content\'\n
-                                    tal:content="structure python: field.render_pdf(value).replace(\'&amp;\', \'&amp;amp;\').replace(\'&gt;\', \'&amp;gt;\').replace(\'&lt;\', \'&amp;lt;\').replace(\'\\n\', \'&lt;text:line-break/&gt;\')"/>\n
+                                    tal:content="structure python:str(field.render_pdf(value)).replace(\'&amp;\', \'&amp;amp;\').replace(\'&gt;\', \'&amp;gt;\').replace(\'&lt;\', \'&amp;lt;\').replace(\'\\n\', \'&lt;text:line-break/&gt;\')"/>\n
                             <tal:block tal:condition="python:same_type(value,[]) or same_type(value,())"\n
                                         tal:repeat="item value">\n
                               <text:p text:style-name=\'field-content\'\n
@@ -385,11 +385,11 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                     </tal:block>\n
                     <tal:block tal:condition="python: field_type in (\'EditorField\',) and field.get_value(\'text_editor\')==\'text_area\'">\n
                       <text:p text:style-name=\'field-content-center\'\n
-                  tal:content="structure python: field.render_pdf(value).replace(\'&amp;\', \'&amp;amp;\').replace(\'&gt;\', \'&amp;gt;\').replace(\'&lt;\', \'&amp;lt;\').replace(\'\\n\', \'&lt;text:line-break/&gt;\')"/>\n
+                  tal:content="structure python: str(field.render_pdf(value)).replace(\'&amp;\', \'&amp;amp;\').replace(\'&gt;\', \'&amp;gt;\').replace(\'&lt;\', \'&amp;lt;\').replace(\'\\n\', \'&lt;text:line-break/&gt;\')"/>\n
                     </tal:block>\n
                     <tal:block tal:condition="python: field_type!=\'EditorField\'">\n
                       <text:p text:style-name=\'field-content-center\'\n
-                              tal:content="structure python: field.render_pdf(value).replace(\'&amp;\', \'&amp;amp;\').replace(\'&gt;\', \'&amp;gt;\').replace(\'&lt;\', \'&amp;lt;\').replace(\'\\n\', \'&lt;text:line-break/&gt;\')"/>\n
+                              tal:content="structure python: str(field.render_pdf(value)).replace(\'&amp;\', \'&amp;amp;\').replace(\'&gt;\', \'&amp;gt;\').replace(\'&lt;\', \'&amp;lt;\').replace(\'\\n\', \'&lt;text:line-break/&gt;\')"/>\n
                     </tal:block>\n
                   </tal:block>\n
                   <tal:block tal:condition="python: value is None">\n

@@ -1,3 +1,6 @@
+2008-10-24 yusei
+* Convert return value of render_pdf to string explicitly. It might return non-string value.
+
 2008-10-14 yusei
 * Start to develop version 5.3.
 
