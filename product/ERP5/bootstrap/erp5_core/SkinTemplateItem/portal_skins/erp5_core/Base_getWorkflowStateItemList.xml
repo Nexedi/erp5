@@ -53,22 +53,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># wf_id is a bad argument name. But I will keep this for backward compatibility.\n
-# wf_id : the id of workflow. It can be string, list or tuple.\n
+            <value> <string>from Products.CMFCore.utils import getToolByName\n
 \n
-Base_translateString = context.Base_translateString\n
+if not (same_type(workflow_id_list, []) or same_type(workflow_id_list, ())):\n
+  workflow_id_list = (workflow_id_list,)\n
 \n
-if same_type(wf_id, []) or same_type(wf_id, ()):\n
-  workflow_id_list = wf_id\n
-else:\n
-  workflow_id_list = [wf_id]\n
-\n
-result = []\n
-for state_title, state_id in context.Base_getWorkflowStateItemList(workflow_id_list=workflow_id_list):\n
-  translated_state_title = Base_translateString(state_title)\n
-  result.append((translated_state_title, state_id))\n
-\n
-return result\n
+state_dict = {}\n
+item_list = []\n
+for workflow_id in workflow_id_list:\n
+  workflow = getToolByName(context, \'portal_workflow\')[workflow_id]\n
+  for state in workflow.states.objectValues():\n
+    if state.title and state.id!=\'deleted\':\n
+      if not state_dict.has_key(state.id):\n
+        # we hide states without titles\n
+        item_list.append((state.title, state.id))\n
+        state_dict[state.id] = None\n
+return item_list\n
 </string> </value>
         </item>
         <item>
@@ -79,12 +79,16 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>wf_id</string> </value>
+            <value> <string>workflow_id_list</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Member</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -111,17 +115,21 @@ return result\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>wf_id</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>Base_translateString</string>
-                            <string>same_type</string>
                             <string>workflow_id_list</string>
-                            <string>result</string>
+                            <string>Products.CMFCore.utils</string>
+                            <string>getToolByName</string>
+                            <string>same_type</string>
+                            <string>state_dict</string>
+                            <string>item_list</string>
                             <string>_getiter_</string>
-                            <string>state_title</string>
-                            <string>state_id</string>
-                            <string>translated_state_title</string>
+                            <string>workflow_id</string>
+                            <string>_getitem_</string>
+                            <string>context</string>
+                            <string>workflow</string>
+                            <string>_getattr_</string>
+                            <string>state</string>
+                            <string>None</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>
@@ -138,7 +146,7 @@ return result\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getTranslatedWorkflowStateItemList</string> </value>
+            <value> <string>Base_getWorkflowStateItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

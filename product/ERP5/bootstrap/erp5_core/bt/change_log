@@ -1,4 +1,7 @@
 2008-10-24 yusei
+* Cleaned up Base_getTranslatedWorkflowStateItemList and separate generic function to Base_getWorkflowStateItemList.
+
+2008-10-24 yusei
 * Fixed Folder_generateWorkflowReport. This did not work if there is interaction workflow.
 
 2008-10-22 Romain
