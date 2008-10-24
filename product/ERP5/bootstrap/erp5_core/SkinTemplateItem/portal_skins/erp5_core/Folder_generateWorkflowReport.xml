@@ -90,7 +90,7 @@ def getStateTranslatedTitle(state, portal_type, saved_state_dict=dict()):\n
   # XXX requires manager proxy role\n
   workflow_for_ptype = portal_workflow.getWorkflowsFor(portal_type)\n
   for workflow in workflow_for_ptype:\n
-    if hasattr(workflow, \'states\') and state in workflow.states.objectIds():\n
+    if getattr(workflow, \'states\', None) is not None and state in workflow.states.objectIds():\n
       saved_state_dict[state] = translateString(getattr(workflow.states, state).title_or_id())\n
       return saved_state_dict[state]\n
 \n

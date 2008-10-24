@@ -1,3 +1,6 @@
+2008-10-24 yusei
+* Fixed Folder_generateWorkflowReport. This did not work if there is interaction workflow.
+
 2008-10-22 Romain
 * portal_transforms subobject should exported with the path parameter of the business template
 * Add png_to_text transformation
