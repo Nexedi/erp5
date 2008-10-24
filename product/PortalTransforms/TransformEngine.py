@@ -336,10 +336,18 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
         return winner
 
-    def _getPaths(self, orig, target, requirements, path=None, result=None):
+    def _getPaths(self, orig, target, requirements, path=None, result=None, searched_orig_list=None):
         """return a all path for transformation from orig mimetype to
         target mimetype
         """
+        # don't search the same orig again, otherwise infinite loop occurs.
+        if searched_orig_list is None:
+            searched_orig_list = []
+        if orig in searched_orig_list:
+            return result
+        else:
+            searched_orig_list.append(orig)
+
         if path is None:
             result = []
             path = []
@@ -363,7 +371,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                     if not requirements:
                         result.append(path[:])
                 else:
-                    self._getPaths(o_mt, target, requirements, path, result)
+                    self._getPaths(o_mt, target, requirements, path, result, searched_orig_list)
                 if required:
                     requirements.append(name)
         path.pop()
