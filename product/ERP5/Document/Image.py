@@ -526,10 +526,10 @@ class Image(File, OFSImage):
     File._setFile(self, *args, **kw)
     self._update_image_info()
 
-  def PUT(self, *args, **kw):
+  def PUT(self, REQUEST, RESPONSE):
     """set the file content by HTTP/FTP and reset image information.
     """
-    File.PUT(self, *args, **kw)
+    File.PUT(self, REQUEST, RESPONSE)
     self._update_image_info()
 
   #
