@@ -443,7 +443,7 @@ msgstr "Ligne comptable ajoutée"
 #: portal_skins/erp5_accounting/SaleInvoiceTransaction_viewDetails/listbox
 #: portal_skins/erp5_payroll/PaySheetTransaction_viewAccountingLineList/listbox
 msgid "Accounting Transaction Lines"
-msgstr "Lignes de Transaction Comptable"
+msgstr "Lignes comptables"
 
 #: portal type [Glossary term 8452]
 msgid "Accounting Transaction Module"
@@ -581,6 +581,9 @@ msgstr "Ajouter Coloris"
 msgid "Add Document with Requirements"
 msgstr "Ajouter un document avec des spécificités"
 
+msgid "Add Gadgets"
+msgstr "Ajouter des gadgets"
+
 #: portal_skins/erp5_project/Requirement_addRequirementsFastInput
 msgid "Add Requirements"
 msgstr "Ajouter des spécificités"
@@ -592,6 +595,15 @@ msgstr "Ajouter des tâches liées à ce projet"
 #: portal_skins/erp5_project/ProjectLine_addTaskFastInput
 msgid "Add Tasks"
 msgstr "Ajouter des tâches"
+
+msgid "Add gadgets"
+msgstr "Ajouter des gadgets"
+
+msgid "Add new tab"
+msgstr "Ajouter un onglet"
+
+msgid "Add tab"
+msgstr "Ajouter un onglet"
 
 #: portal_skins/erp5_trade/TradeCondition_viewPayment/listbox
 msgid "Additional Payments"
@@ -5073,6 +5085,9 @@ msgstr "Caché"
 msgid "Hide"
 msgstr "Cacher"
 
+msgid "Hide tabs"
+msgstr "Cacher les onglets"
+
 #: portal_skins/erp5_core/Base_viewHistoricalComparison
 msgid "Historical Comparision"
 msgstr "Comparaison de l'historique "
@@ -6891,16 +6906,25 @@ msgid "Old Value"
 msgstr "Ancienne valeur"
 
 msgid "Omit \"Grouped References\""
-msgstr "Sans les écritures lettrées"
+msgstr "Sans écritures lettrées"
+
+msgid "Omit \"grouped references\""
+msgstr "Sans écritures lettrées"
 
 msgid "Omit Balanced Account"
-msgstr "Sans compte soldés"
+msgstr "Sans comptes soldés"
 
 msgid "Omit Empty Accounts"
 msgstr "Sans comptes non mouvementés"
 
 msgid "Omit Grouped References"
-msgstr "Sans les références groupées"
+msgstr "Sans écritures lettrées"
+
+msgid "Omit balanced accounts"
+msgstr "Sans comptes soldés"
+
+msgid "Omit empty accounts"
+msgstr "Sans comptes non mouvementés"
 
 #: portal_workflow/assignment_workflow/states/open
 #: portal_workflow/bug_workflow/states/confirmed
@@ -7516,6 +7540,9 @@ msgstr "Pourcentage du total"
 msgid "Percentage of total"
 msgstr "% sur Total"
 
+msgid "Period Start Date"
+msgstr "Date de début de la période"
+
 #: Alarm portal_skins/erp5_core/Periodicity_view
 msgid "Periodicity"
 msgstr "Périodicité"
@@ -7527,9 +7554,6 @@ msgstr "Date de début de périodicité"
 #: erp5_core/Alarm_view/my_periodicity_stop_date [Glossary term 3655]
 msgid "Periodicity Stop Date"
 msgstr "Date de fin de périodicité"
-
-msgid "Permanent Delivered quantity"
-msgstr "Quantité livrée si constante"
 
 #: portal type portal_skins/erp5_access_tab/ERP5Site_renderQuickSearchDialog
 #: portal_skins/erp5_base/Person_view
@@ -8290,20 +8314,19 @@ msgstr "Module des livraisons d'achat"
 msgid "Purchase Packing List Movements"
 msgstr "Mouvements de livraisons d'achat"
 
-#: portal_workflow/packing_list_workflow/worklists/1_draft_purchase_packing_list_list
-msgid "Purchase Packing List to Confirm"
-msgstr "Livraisons d'achat à confirmer"
-
-#: portal_workflow/packing_list_workflow/worklists/2_confirmed_purchase_packing_list_list
-msgid "Purchase Packing List to receive"
-msgstr "Livraisons d'achat à recevoir"
-
 #: portal_workflow/packing_list_causality_workflow/worklists/1_diverged_purchase_packing_list_list
 msgid "Purchase Packing List to Solve"
 msgstr "Livraisons d'achat à résoudre"
 
 #: portal_workflow/packing_list_workflow/worklists/3_stopped_purchase_packing_list_list
 msgid "Purchase Packing List to Validate"
+msgstr "Livraisons d'achat à valider"
+
+#: portal_workflow/packing_list_workflow/worklists/2_confirmed_purchase_packing_list_list
+msgid "Purchase Packing List to receive"
+msgstr "Livraisons d'achat à recevoir"
+
+msgid "Purchase Packing List to validate"
 msgstr "Livraisons d'achat à valider"
 
 #: portal_skins/erp5_trade/PurchasePackingListModule_viewPurchasePackingListList
@@ -9531,6 +9554,12 @@ msgstr "Livraisons de vente à résoudre"
 msgid "Sale Packing List to Validate"
 msgstr "Livraisons de vente à valider"
 
+msgid "Sale Packing List to process"
+msgstr "Livraisons de vente à créer"
+
+msgid "Sale Packing List to ship"
+msgstr "Livraisons de vente à envoyer"
+
 #: portal_skins/erp5_trade/SalePackingListModule_viewSalePackingListList
 #: portal_skins/erp5_trade/SalePackingListModule_viewSalePackingListList/listbox
 msgid "Sale Packing Lists"
@@ -9655,6 +9684,9 @@ msgstr "Astuces pour la recherche"
 #: Accounting Transaction Module
 msgid "Search Transactions"
 msgstr "Écritures"
+
+msgid "Search Type:"
+msgstr "Sélectionner une Action:"
 
 #: portal_skins/erp5_dms/Base_viewAdvancedSearchResultList
 msgid "Search results"
@@ -10779,6 +10811,12 @@ msgstr "Symbole"
 #: portal type [Glossary term 8292]
 msgid "System Preference"
 msgstr "Préférence système"
+
+msgid "Tab 1"
+msgstr "Onglet 1"
+
+msgid "Tab name"
+msgstr "Nom de l'onglet"
 
 #: erp5_dms/OOoDocument_viewConvertDialog/my_format [Glossary term 3370]
 msgid "Target Format"
@@ -12408,13 +12446,13 @@ msgid "Transactions"
 msgstr "Transactions"
 
 msgid "Transactions Related To This Account"
-msgstr "Transaction liées à ce compte"
+msgstr "Ecritures liées à ce compte"
 
 msgid "Transactions Related To This Bank Account"
-msgstr "Transaction liées à ce compte en banque"
+msgstr "Ecritures liées à ce compte en banque"
 
 msgid "Transactions Related To This Entity"
-msgstr "Transaction liées à ce tiers"
+msgstr "Ecritures liées à ce tiers"
 
 #: portal_skins/erp5_accounting/Account_viewAccountingTransactionList/listbox
 #: portal_skins/erp5_accounting/Account_viewNotGroupedAccountingTransactionList/listbox
@@ -13608,3 +13646,4 @@ msgstr "La largeur en pixel des images nano."
 
 msgid "time"
 msgstr "Date"
+
