@@ -71,7 +71,7 @@
             <key> <string>text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-string:${object_url}/Invoice_jumpToOrder?packing_list_type=Sale%20Packing%20List&order_type=Sale%20Order
+string:${object_url}/Invoice_jumpToOrder?packing_list_type=Purchase%20Packing%20List&order_type=Purchase%20Order
 
 ]]></string> </value>
         </item>
