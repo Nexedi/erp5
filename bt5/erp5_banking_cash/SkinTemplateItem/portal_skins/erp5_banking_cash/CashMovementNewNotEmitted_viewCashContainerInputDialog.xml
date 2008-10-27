@@ -82,7 +82,7 @@ if listbox is None:\n
                                   )\n
     return request.RESPONSE.redirect( redirect_url )\n
 \n
-  if \'serre/encaisse_des_billets_neufs_non_emis\' in node:\n
+  if not \'transit\' in node:\n
     request = context.REQUEST\n
     redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
                                   , \'view\'\n
