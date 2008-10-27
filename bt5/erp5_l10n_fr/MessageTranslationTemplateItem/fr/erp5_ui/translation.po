@@ -105,7 +105,7 @@ msgstr "${transaction_title} (Référence de la transaction= ${transaction_refer
 
 #: portal_skins/erp5_accounting/AccountingTransactionModule_setGroupingReference
 msgid "${ungrouped_line_count} lines ungrouped."
-msgstr "${grouped_line_count} lignes délettrées."
+msgstr "${ungrouped_line_count} lignes délettrées."
 
 #: portal_skins/erp5_base/Person_getAge
 msgid "${year} years old"
@@ -8295,7 +8295,7 @@ msgid "Purchase Packing List to Confirm"
 msgstr "Livraisons d'achat à confirmer"
 
 #: portal_workflow/packing_list_workflow/worklists/2_confirmed_purchase_packing_list_list
-msgid "Purchase Packing List to Receive"
+msgid "Purchase Packing List to receive"
 msgstr "Livraisons d'achat à recevoir"
 
 #: portal_workflow/packing_list_causality_workflow/worklists/1_diverged_purchase_packing_list_list
@@ -12855,7 +12855,7 @@ msgstr "Valider l'inventaire"
 
 #: portal_workflow/accounting_workflow/transitions/stop_action
 msgid "Validate Transaction"
-msgstr "Passer l'écriture au brouillard"
+msgstr "Valider le brouillard"
 
 #: portal_skins/erp5_accounting/AccountingPeriod_viewDeliverWorkflowActionDialog
 #: portal_skins/erp5_core/BaseWorkflow_viewWorkflowActionDialog
