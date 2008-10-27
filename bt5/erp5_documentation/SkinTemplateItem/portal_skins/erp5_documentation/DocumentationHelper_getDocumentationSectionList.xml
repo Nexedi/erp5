@@ -188,6 +188,13 @@ for section in section_list:\n
             for sub_child_section in sub_child_object.getSectionList(): \n
               if sub_child_section.class_name in sub_displayed_class: \n
                 class_name = sub_child_section.class_name\n
+                if class_name != \'DCWorkflowScriptDocumentationHelper\':\n
+                  result.append(\n
+                    ReportSection(\n
+                      level=6,\n
+                      title=sub_child_section.title,\n
+                      form_id=\'\')\n
+                  )\n
                 results=context.DocumentationHelper_getDocumentationSectionListParams(class_name,\n
                                 sub_child_section.uri_list, "%s:" % sub_child_object.getId())\n
                 result+=results[0]\n

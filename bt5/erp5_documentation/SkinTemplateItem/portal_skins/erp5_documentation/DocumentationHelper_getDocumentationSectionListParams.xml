@@ -67,7 +67,7 @@ sub_displayed_class = [\'DCWorkflowScriptDocumentationHelper\',\n
                         \'ScriptPythonDocumentationHelper\',\n
                         \'ZSQLMethodDocumentationHelper\']\n
 if class_name in sub_displayed_class:\n
-  level=6\n
+  level=7\n
 else:\n
   level=5\n
 for uri in uri_list:\n
