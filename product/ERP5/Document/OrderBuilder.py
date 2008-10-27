@@ -243,7 +243,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     for movement_group in movement_group_list:
       tmp_result, tmp_property_dict = movement_group.test(
         instance, divergence_list)
-      if tmp_result == False:
+      if not tmp_result:
         result = tmp_result
       new_property_dict.update(tmp_property_dict)
     return result, new_property_dict
