@@ -93,7 +93,7 @@ if related_order_uid_list:\n
 return context.Base_redirect(form_id,\n
               keep_items=dict(portal_status_message=\n
                                 translateString(\'No ${portal_type} related.\',\n
-                                       mapping=dict(portal_type=order_type))))\n
+                                       mapping=dict(portal_type=translateString(order_type)))))\n
 </string> </value>
         </item>
         <item>
