@@ -86,7 +86,7 @@ class PasswordTool(BaseTool):
     user = user_list[0].getObject()
     # generate a ramdom string
     random_url = self._generateUUID()
-    url = "%s/portal_password/resetPassword?key=%s" %(self.getPortalObject().absolute_url() , random_url)
+    url = "%s/portal_password/resetPassword?reset_key=%s" %(self.getPortalObject().absolute_url() , random_url)
     # generate expiration date
     expiration_date = DateTime() + self._expiration_day
     # register request
@@ -128,13 +128,13 @@ class PasswordTool(BaseTool):
     return data
 
 
-  def resetPassword(self, key=None, REQUEST=None):
+  def resetPassword(self, reset_key=None, REQUEST=None):
     """
     """
     if REQUEST is None:
       REQUEST = get_request()
-    user_login, expiration_date = self.password_request_dict.get(key, (None, None))
-    if key is None or user_login is None:
+    user_login, expiration_date = self.password_request_dict.get(reset_key, (None, None))
+    if reset_key is None or user_login is None:
       ret_url = '%s/login_form' % self.getPortalObject().absolute_url()
       return REQUEST.RESPONSE.redirect( ret_url )
 
@@ -147,7 +147,7 @@ class PasswordTool(BaseTool):
       return REQUEST.RESPONSE.redirect( ret_url )
       
     # redirect to form as all is ok
-    REQUEST.set("password_key", key)
+    REQUEST.set("password_key", reset_key)
     return self.reset_password_form(REQUEST=REQUEST)
 
 
