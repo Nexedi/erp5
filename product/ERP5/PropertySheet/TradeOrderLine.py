@@ -31,13 +31,6 @@ class TradeOrderLine:
    Trade order Line Constraints
   """
   _constraints = (
-    { 'id'            : 'quantity_existence',
-      'description'   : 'Property quantity must be defined',
-      'type'          : 'PropertyExistence',
-      'quantity'    : None,
-      "message_property_not_set" : 'Quantity must be defined in lines',
-      "message_no_such_property" : 'Quantity must be defined in lines'
-    },
     { 'id'            : 'resource',
       'description'   : 'Resource must be defined',
       'type'          : 'CategoryMembershipArity',
