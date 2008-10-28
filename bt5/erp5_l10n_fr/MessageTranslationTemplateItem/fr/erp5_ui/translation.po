@@ -565,6 +565,9 @@ msgstr "Activité en suspens"
 msgid "Actor"
 msgstr "Acteur"
 
+msgid "Add"
+msgstr "Ajouter"
+
 #: portal_skins/erp5_xhtml_style/context_box_render
 msgid "Add ${document_template}"
 msgstr "Ajouter ${document_template}"
@@ -4329,6 +4332,9 @@ msgstr "Date de l'événement"
 msgid "Event Detailed Report"
 msgstr "Rapport détaillé"
 
+msgid "Event Direction"
+msgstr "Direction de l'événement"
+
 #: portal type [Glossary term 8439]
 msgid "Event Module"
 msgstr "Module des événements"
@@ -4350,6 +4356,9 @@ msgstr "Aperçu de l'événement"
 #: [Glossary term 3691]
 msgid "Event Sender Email"
 msgstr "Email de l'expediteur"
+
+msgid "Event Title"
+msgstr "Titre de l'événement"
 
 #: portal_skins/erp5_base/Person_viewPersonDetailedEventList/listbox
 #: portal_skins/erp5_crm/Entity_viewEventList/listbox
@@ -7688,6 +7697,9 @@ msgstr "Remplissez le message du ChangeLog."
 msgid "Please specify a URL before trying to start to crawl content."
 msgstr "Spécifiez une URL avant de naviguer dans le contenu"
 
+msgid "Please use link above ('Add gadget') to prepare it yourself."
+msgstr "Vous pouvez utiliser le lien \"Ajouter des gadgets\" ci-dessus afin d'ajouter de nouveaux gadgets"
+
 #: erp5_core/SystemPreference_view/my_preferred_ooodoc_server_port_number
 #: [Glossary term 3684]
 msgid "Port of the oood server."
@@ -9027,6 +9039,12 @@ msgstr "Mémoriser mon Nom"
 
 msgid "Remember my name."
 msgstr "Mémoriser mon Nom"
+
+msgid "Rename"
+msgstr "Renommer"
+
+msgid "Rename tab"
+msgstr "Renommer l'onglet"
 
 #: erp5_web/WebSite_view/my_custom_render_method_id [Glossary term 3386]
 msgid "Renderer ID"
@@ -12028,6 +12046,9 @@ msgstr "Le tiers qui est associé à la transaction."
 msgid "Third party must be defined for payable or receivable accounts"
 msgstr "Le tiers doit être spécifié pour les lignes mouvementant des compte de type Créances ou Dettes"
 
+msgid "Third party must be defined for payable or receivable accounts."
+msgstr "Le tiers doit être spécifié pour les lignes mouvementant des compte de type Créances ou Dettes"
+
 #: portal_skins/erp5_dms/Document_getPreviewAsHTML
 msgid "This document is not converted yet."
 msgstr "Ce document n'est pas encore converti"
@@ -13463,6 +13484,9 @@ msgstr "Votre réf."
 #: portal_skins/erp5_web/WebSite_createWebSiteAccount
 msgid "Your account was successfully created."
 msgstr "Votre compte a été crée avec succés."
+
+msgid "Your tab is empty."
+msgstr "Cet onglet ne contient aucun gadget"
 
 msgid "Zip Code"
 msgstr "Code Postal"
