@@ -272,6 +272,133 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEquals(717.60, round(stat_line.getColumnProperty('credit'),
                                     precision))
 
+  def testJournalTransactionsWithoutThirdParty(self):
+    # Journal report
+    
+    account_module = self.account_module
+
+    # during the period
+    first = self._makeOne(
+              portal_type='Accounting Transaction',
+              title='First One',
+              simulation_state='delivered',
+              start_date=DateTime(2006, 2, 2),
+              lines=(dict(source_value=account_module.receivable,
+                          source_debit=119.60),
+                     dict(source_value=account_module.collected_vat,
+                          source_credit=19.60),
+                     dict(source_value=account_module.goods_sales,
+                          source_credit=100.00)))
+    self.assertEquals(None, first.getDestinationSectionValue())
+
+    second = self._makeOne(
+              portal_type='Accounting Transaction',
+              title='Second One',
+              simulation_state='delivered',
+              destination_section_value=self.section,
+              source_section=None,
+              source_section_value=None,
+              start_date=DateTime(2006, 2, 2, 1, 1),
+              lines=(dict(destination_value=account_module.receivable,
+                          destination_debit=119.60),
+                     dict(destination_value=account_module.collected_vat,
+                          destination_credit=19.60),
+                     dict(destination_value=account_module.goods_sales,
+                          destination_credit=100.00)))
+    self.assertEquals(None, second.getSourceSectionValue())
+
+
+    # set request variables and render                 
+    request_form = self.portal.REQUEST.form
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['portal_type'] = ['Accounting Transaction']
+    request_form['simulation_state'] = ['delivered']
+    
+    report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
+                               'AccountingTransactionModule_viewJournalReport')
+    self.assertEquals(1, len(report_section_list))
+    
+    # precision is set in the REQUEST (so that fields know how to format)
+    precision = self.portal.REQUEST.get('precision')
+    self.assertEquals(2, precision)
+    
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    # we have 2 transactions, with 3 lines
+    self.assertEquals(6, len(data_line_list))
+    
+    # test columns values
+    line = data_line_list[0]
+    self.assertEquals(line.column_id_list,
+        ['specific_reference', 'date', 'title', 'node_title',
+         'mirror_section_title', 'debit', 'credit'])
+    
+    # First Transaction
+    self.checkLineProperties(data_line_list[0],
+                            specific_reference=first.getSourceReference(),
+                            date=DateTime(2006, 2, 2),
+                            title='First One',
+                            node_title='41',
+                            debit=119.60,
+                            credit=0)
+    # some values are only present when we display the first line of the
+    # transaction (this is a way to see different transactions)
+    self.checkLineProperties(data_line_list[1],
+                            specific_reference='',
+                            date=None,
+                            title='',
+                            node_title='4457',
+                            debit=0,
+                            credit=19.60)
+    self.checkLineProperties(data_line_list[2],
+                            specific_reference='',
+                            date=None,
+                            title='',
+                            node_title='7',
+                            debit=0,
+                            credit=100)
+    # second transaction
+    self.checkLineProperties(data_line_list[3],
+                            specific_reference=second.getDestinationReference(),
+                            date=DateTime(2006, 2, 2, 1, 1),
+                            title='Second One',
+                            node_title='41',
+                            debit=119.60,
+                            credit=0)
+    # some values are only present when we display the first line of the
+    # transaction (this is a way to see different transactions)
+    self.checkLineProperties(data_line_list[4],
+                            specific_reference='',
+                            date=None,
+                            title='',
+                            node_title='4457',
+                            debit=0,
+                            credit=19.60)
+    self.checkLineProperties(data_line_list[5],
+                            specific_reference='',
+                            date=None,
+                            title='',
+                            node_title='7',
+                            debit=0,
+                            credit=100)
+    
+     # Stat Line
+    stat_line = line_list[-1]
+    self.failUnless(stat_line.isStatLine())
+    self.failIf(stat_line.getColumnProperty('specific_reference'))
+    self.failIf(stat_line.getColumnProperty('date'))
+    self.failIf(stat_line.getColumnProperty('title'))
+    self.failIf(stat_line.getColumnProperty('node_title'))
+    self.failIf(stat_line.getColumnProperty('mirror_section_title'))
+    # when printing the report, the field does the rounding, so we can round in
+    # the test
+    self.assertEquals(239.20, round(stat_line.getColumnProperty('debit'),
+                                    precision))
+    self.assertEquals(239.20, round(stat_line.getColumnProperty('credit'),
+                                    precision))
+
 
   def testJournalWithBankAccount(self):
     # Journal report when selecting a bank account
