@@ -56,6 +56,7 @@ from Products.MailHost.MailHost import MailHostError
 
 from zLOG import LOG, INFO, WARNING, ERROR
 from warnings import warn
+from time import time
 
 try:
   from Products.TimerService import getTimerService
@@ -93,6 +94,7 @@ import logging
 activity_logger = logging.getLogger('CMFActivity')
 # Some logging subchannels
 activity_tracking_logger = logging.getLogger('CMFActivity.Tracking')
+activity_timing_logger = logging.getLogger('CMFActivity.TimingLog')
 
 # Direct logging to "[instancehome]/log/CMFActivity.log", if this directory exists.
 # Otherwise, it will end up in root logging facility (ie, event.log).
@@ -131,6 +133,24 @@ def enableActivityCreationTrace():
 def disableActivityCreationTrace():
   global activity_creation_trace
   activity_creation_trace = False
+
+activity_timing_log = False
+
+def enableActivityTimingLog():
+  global activity_timing_log
+  activity_timing_log = True
+
+def disableActivityTimingLog():
+  global activity_timing_log
+  activity_timing_log = False
+
+def activity_timing_method(method, args, kw):
+  begin = time()
+  try:
+    return method(*args, **kw)
+  finally:
+    end = time()
+    activity_timing_logger.info('%.02fs: %r(*%r, **%r)' % (end - begin, method, args, kw))
 
 # Here go ActivityBuffer instances
 # Structure:
@@ -282,7 +302,10 @@ class Message:
             method = None
             self.setExecutionState(MESSAGE_NOT_EXECUTABLE, context=activity_tool)
           else:
-            result = method(*self.args, **self.kw)
+            if activity_timing_log:
+              result = activity_timing_method(method, self.args, self.kw)
+            else:
+              result = method(*self.args, **self.kw)
         finally:
           setSecurityManager(old_security_manager)
 
