@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 Localized Interface\n"
 "POT-Creation-Date: 2008-02-18 11:02+CET\n"
-"PO-Revision-Date: 2008-02-18 11:02+CET\n"
+"PO-Revision-Date: 2008-10-28 13:22+0100\n"
 "Last-Translator:  <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
@@ -11,7 +11,7 @@ msgstr ""
 
 #: portal_skins/erp5_crm/Event_createDocumentFromAttachment
 msgid "${count} documents created successfully."
-msgstr "${count} documents crées avec succés."
+msgstr "${count} documents crées avec succès."
 
 #: portal_skins/erp5_project/Task_calculateDuplication
 msgid "${count} tasks created."
@@ -80,7 +80,7 @@ msgstr "${tax_category_title} (Montant ou Taux)"
 
 #: portal_skins/erp5_access_tab/ERP5Site_getCategorizedModuleActionInformationDict
 msgid "${template_title} (Template)"
-msgstr "${template_title} (Template)"
+msgstr "${template_title} (Modèle)"
 
 #: portal_skins/erp5_core/Base_jumpToRelatedObject
 #: portal_skins/erp5_invoicing/Invoice_jumpToOrder
@@ -318,7 +318,7 @@ msgstr "Module des comptes"
 #: portal_skins/erp5_accounting/AccountModule_viewAccountListForTrialBalance/listbox
 #: erp5_accounting/Account_viewFieldLibrary/my_title/ [Glossary term 3148]
 msgid "Account Name"
-msgstr "Nom du compte"
+msgstr "Intitulé du compte"
 
 #: erp5_accounting/Preference_viewAccounting/my_preferred_account_number_method
 #: [Glossary term 8135]
@@ -723,7 +723,7 @@ msgstr "également dans:"
 
 #: portal_skins/erp5_accounting/AccountModule_viewBalanceSheetReport
 msgid "Amortisation"
-msgstr "Amortissement"
+msgstr "Amort."
 
 #: erp5_trade/DeliveryCell_viewFieldLibrary/my_amortisation_method/ [Glossary
 #: term 3382]
@@ -1114,6 +1114,9 @@ msgstr "Affectations"
 msgid "At Date"
 msgstr "Date de fin (inclus)"
 
+msgid "At least one line is required"
+msgstr "Le document doit contenir au moins une ligne"
+
 #: portal_workflow/accounting_workflow/scripts/validateTransaction
 msgid "At least one section must be defined."
 msgstr "Au moins une section doit être définie."
@@ -1247,6 +1250,9 @@ msgstr "Code établ."
 #: 3602]
 msgid "Bank Country Code"
 msgstr "Code pays"
+
+msgid "Bank account must be defined for bank type accounts"
+msgstr "Le compte en banque doit être spécifié pour les lignes mouvementant des comptes de type Banque"
 
 #: Preference portal_skins/erp5_base/Preference_viewBasePreference
 #: portal_skins/erp5_payroll/AccountingTransactionModule_viewPaySheetLineReportSection/listbox
@@ -2883,7 +2889,7 @@ msgstr "Compte naturellement créditeur"
 
 #: portal_skins/erp5_accounting/AccountModule_viewAccountListForTrialBalance/listbox
 msgid "Credit Transactions"
-msgstr "Transactions au crédit"
+msgstr "Mouvements crédit"
 
 #: portal_skins/erp5_base/CurrencyModule_viewCurrencyList
 #: portal_skins/erp5_base/CurrencyModule_viewCurrencyList/listbox
@@ -3156,7 +3162,7 @@ msgstr "Solde Débiteur"
 
 #: portal_skins/erp5_accounting/AccountModule_viewAccountListForTrialBalance/listbox
 msgid "Debit Transactions"
-msgstr "Débits"
+msgstr "Mouvements débits"
 
 msgid "December"
 msgstr "Décembre"
@@ -4419,6 +4425,9 @@ msgstr "Taux de remise exclusif"
 msgid "Exit Preview"
 msgstr "Quitter l'aperçu"
 
+msgid "Expand Other Parties Accounts"
+msgstr "Détailler les comptes du plan auxiliaire"
+
 #: portal_skins/erp5_pdm/Transformation_viewExpanded/listbox
 msgid "Expanded Transformation"
 msgstr "Transformation élargie"
@@ -4642,19 +4651,19 @@ msgstr "Filtrer"
 
 #: portal_skins/erp5_accounting/AccountModule_viewAccountListForTrialBalance/listbox
 msgid "Final Balance (Credit)"
-msgstr "Solde (produits)"
+msgstr "Solde final (crédit)"
 
 #: portal_skins/erp5_accounting/AccountModule_viewAccountListForTrialBalance/listbox
 msgid "Final Balance (Debit)"
-msgstr "Soldes (Charges)"
+msgstr "Solde final (débit)"
 
 #: portal_skins/erp5_accounting/AccountModule_viewAccountListForTrialBalance/listbox
 msgid "Final Credit Balance"
-msgstr "Solde créditeur"
+msgstr "Solde créditeur final"
 
 #: portal_skins/erp5_accounting/AccountModule_viewAccountListForTrialBalance/listbox
 msgid "Final Debit Balance"
-msgstr "Solde débiteur"
+msgstr "Solde débiteur final"
 
 #: Organisation Person
 #: portal_skins/erp5_base/Organisation_viewFinancialInformationList
@@ -4870,7 +4879,7 @@ msgstr "Futur"
 
 #: portal_skins/erp5_accounting/AccountModule_viewAccountList/listbox
 msgid "GAP"
-msgstr "N° de Compte"
+msgstr "N° de compte"
 
 #: portal_skins/erp5_accounting/Account_hashGapItemList
 msgid "GAP - ${gap_title}"
@@ -4878,7 +4887,7 @@ msgstr "Plan comptable - ${gap_title}"
 
 #: portal_skins/erp5_accounting/AccountModule_viewAccountListForTrialBalance/listbox
 msgid "GAP Account ID"
-msgstr "ID du plan comptable"
+msgstr "N° du plan comptable"
 
 #: portal_skins/erp5_accounting/Entity_viewAccountingTransactionList/listbox
 msgid "GAP ID"
@@ -4886,7 +4895,7 @@ msgstr "N° de Compte"
 
 #: portal_skins/erp5_accounting/AccountModule_viewAccountList/listbox
 msgid "GAP No"
-msgstr "N° de Compte"
+msgstr "N° de compte"
 
 #: erp5_accounting/Preference_viewAccounting/my_preferred_accounting_transaction_gap
 #: [Glossary term 3712]
@@ -5030,11 +5039,14 @@ msgstr "Groupe:"
 msgid "Grouping"
 msgstr "Lettrage"
 
+msgid "Grouping Reference"
+msgstr "Lettrage"
+
 #: Account Accounting Transaction Module Organisation Person
 #: portal_skins/erp5_accounting/AccountingTransactionModule_viewGroupingFastInputDialog
 #: portal_skins/erp5_accounting/AccountingTransactionModule_viewGroupingFastInputDialog/listbox
 msgid "Grouping Reference Fast Input"
-msgstr "Saisie rapide du lettrage"
+msgstr "Lettrage manuel"
 
 msgid "Groups"
 msgstr "Groupes"
@@ -5980,6 +5992,9 @@ msgstr "Niveau"
 msgid "Liability"
 msgstr "Passif"
 
+msgid "Liability + Equity"
+msgstr "Passif"
+
 #: portal_skins/erp5_core/TemplateTool_viewDownloadRepositoryBusinessTemplateListDialog/listbox
 #: portal_skins/erp5_core/TemplateTool_viewInstallRepositoryBusinessTemplateListDialog/listbox
 #: portal_skins/erp5_core/TemplateTool_viewUpgradeRepositoryBusinessTemplateListDialog/listbox
@@ -6136,7 +6151,7 @@ msgstr "Proposer un devis"
 
 #: portal_actions
 msgid "Make a Template"
-msgstr "Créer un template"
+msgstr "Créer un modèle"
 
 #: portal_actions
 msgid "Manage Business Templates"
@@ -7482,7 +7497,7 @@ msgstr "Paiement de ${invoice_title}"
 
 #: portal_skins/erp5_accounting/AccountingTransactionModule_createRelatedPaymentTransactionList
 msgid "Payments creation for ${activated_invoice_count} on ${total_selection_count} invoices in progress."
-msgstr "Création des écritures de trésorerie pour ${activated_invoice_count} sur ${total_selection_count} en cours"
+msgstr "Création des écritures de trésorerie pour ${activated_invoice_count} sur ${total_selection_count} en cours."
 
 #: portal type portal_skins/erp5_payroll/PaySheetModel_view/listbox
 #: portal_skins/erp5_payroll/PayrollService_view [Glossary term 8406]
@@ -7583,7 +7598,7 @@ msgstr "Module des personnes"
 #: erp5_dms/DocumentIngestionMessage_viewFieldLibrary/my_source_title
 #: [Glossary term 3350]
 msgid "Person who is at the origin of the document"
-msgstr "La personne qui est à l'origine du document."
+msgstr "La personne qui est à l'origine du document"
 
 #: erp5_crm/Ticket_viewFieldLibrary/my_source_title [Glossary term 8091]
 msgid "Person who is creating the event."
@@ -7611,7 +7626,7 @@ msgstr "Appel téléphonique"
 
 #: erp5_project/ExpenseLine_view/my_destination_title [Glossary term 8212]
 msgid "Physical location where the task is being performed"
-msgstr "Le lieu physique où la tâche est en train d'être executée."
+msgstr "Le lieu physique où la tâche est en train d'être executée"
 
 #: portal_workflow/bug_event_workflow/transitions/plan_action
 #: portal_workflow/order_workflow/transitions/plan_action
@@ -7794,7 +7809,7 @@ msgstr "Présentation"
 #: portal_skins/erp5_accounting/AccountModule_viewBalanceSheetReport
 #: portal_skins/erp5_accounting/AccountModule_viewProfitAndLossReport
 msgid "Prev. Period"
-msgstr "Période précédente"
+msgstr "Exercice N-1"
 
 #: Drawing Fax Message Letter Mail Note PDF Phone Call Presentation
 #: Spreadsheet Text Visit Web portal_skins/erp5_dms/Drawing_viewAsWeb
@@ -8244,6 +8259,9 @@ msgstr "Ligne comptable d'achat"
 msgid "Purchase Invoice Transaction Lines"
 msgstr "Ligne comptable d'achat"
 
+msgid "Purchase Invoice Transaction related to Purchase Packing List."
+msgstr "Facture correspondant à la livraison."
+
 #: Organisation Person portal type portal_skins/erp5_trade/PurchaseOrder_view
 #: portal_skins/erp5_trade/PurchaseOrder_viewFieldLibrary/listbox [Glossary
 #: term 4071]
@@ -8265,6 +8283,12 @@ msgstr "Lignes de commande"
 #: portal type [Glossary term 8266]
 msgid "Purchase Order Module"
 msgstr "Module des commandes d'achat"
+
+msgid "Purchase Order related to Purchase Invoice Transaction."
+msgstr "Commande d'achat correspondant à la facture."
+
+msgid "Purchase Order related to Purchase Packing List."
+msgstr "Commande d'achat correspondant à la livraison."
 
 #: portal_skins/erp5_trade/PurchaseOrderModule_viewPurchaseOrderList
 #: portal_skins/erp5_trade/PurchaseOrderModule_viewPurchaseOrderList/listbox
@@ -8313,6 +8337,12 @@ msgstr "Module des livraisons d'achat"
 #: portal_skins/erp5_trade/PurchasePackingList_view/listbox
 msgid "Purchase Packing List Movements"
 msgstr "Mouvements de livraisons d'achat"
+
+msgid "Purchase Packing List related to Purchase Invoice Transaction."
+msgstr "Livraison d'achat correspondant à la facture."
+
+msgid "Purchase Packing List related to Purchase Order."
+msgstr "Livraison d'achat correspondant à la commande."
 
 #: portal_workflow/packing_list_causality_workflow/worklists/1_diverged_purchase_packing_list_list
 msgid "Purchase Packing List to Solve"
@@ -8762,7 +8792,7 @@ msgstr "Références générées pour toutes les lignes."
 
 #: portal_skins/erp5_project/Requirement_generateReference
 msgid "Reference generated for all requirements."
-msgstr "Une référence a été générée pour chaque besoin"
+msgstr "Une référence a été générée pour chaque besoin."
 
 #: erp5_dms/SystemPreference_viewDocument/my_preferred_document_reference_regular_expression
 #: [Glossary term 3393]
@@ -8771,11 +8801,11 @@ msgstr "Expression régulière de recherche des documents référencés"
 
 #: erp5_dms/WebPage_view/my_reference [Glossary term 3314]
 msgid "Reference of the web page used to retrieved it"
-msgstr "Référence de la page web utilisée pour le retrouver."
+msgstr "Référence de la page web utilisée pour le retrouver"
 
 #: portal_skins/erp5_dms/Document_suggestReference
 msgid "Reference updated."
-msgstr "La référence a été mise à jour"
+msgstr "La référence a été mise à jour."
 
 #: portal_skins/erp5_web_widget_library/Document_viewProfileWidget
 msgid "Reference:"
@@ -8915,7 +8945,7 @@ msgstr "Facture correspondante"
 
 #: Purchase Invoice Transaction Packing List
 msgid "Related Purchase Order"
-msgstr "Commande d'achat liée"
+msgstr "Commande d'achat correspondante"
 
 #: Purchase Invoice Transaction Order
 msgid "Related Purchase Packing List"
@@ -9502,7 +9532,7 @@ msgstr "Commandes de vente à passer"
 
 #: portal_workflow/order_workflow/worklists/5_draft_sale_order_list
 msgid "Sale Orders to Plan"
-msgstr "Commandes de ventes à planifier"
+msgstr "Commandes de vente à planifier"
 
 #: Organisation Person portal type
 #: portal_skins/erp5_trade/SalePackingList_view [Glossary term 4070]
@@ -10121,6 +10151,9 @@ msgstr "Vendu"
 #: Alarm portal_skins/erp5_core/Alarm_viewSolveDialog
 msgid "Solve Alarm"
 msgstr "Résoudre l'alarme"
+
+msgid "Solve Divergence"
+msgstr "Solutionner la divergence"
 
 #: portal_workflow/delivery_causality_workflow/transitions/solve_divergence_action
 #: portal_skins/erp5_base/Delivery_viewSolveDivergenceDialog
@@ -11057,7 +11090,7 @@ msgstr "Outil de template"
 #: portal_skins/erp5_core/Base_doAction
 #: portal_skins/erp5_xhtml_style/Base_doAction
 msgid "Template created."
-msgstr "Template crée avec succés"
+msgstr "Modèle crée avec succès"
 
 #: portal_skins/erp5_core/Base_doAction
 #: portal_skins/erp5_xhtml_style/Base_doAction
@@ -11995,6 +12028,9 @@ msgstr "Le tiers ${third_party_name} est invalidé."
 msgid "Third party associated with the transaction"
 msgstr "Le tiers qui est associé à la transaction."
 
+msgid "Third party must be defined for payable or receivable accounts"
+msgstr "Le tiers doit être spécifié pour les lignes mouvementant des compte de type Créances ou Dettes"
+
 #: portal_skins/erp5_dms/Document_getPreviewAsHTML
 msgid "This document is not converted yet."
 msgstr "Ce document n'est pas encore converti"
@@ -12310,7 +12346,7 @@ msgstr "Total"
 #: portal_skins/erp5_accounting/AccountModule_viewBalanceSheetReport
 #: portal_skins/erp5_accounting/AccountModule_viewProfitAndLossReport
 msgid "Total ${category_level_1_title} ${level1_counter}"
-msgstr "Total ${category_level_1_title} ${level1_counter}"
+msgstr "Total ${level1_counter}"
 
 #: portal_skins/erp5_accounting/AccountModule_viewBalanceSheetReport
 #: portal_skins/erp5_accounting/AccountModule_viewProfitAndLossReport
@@ -12382,6 +12418,9 @@ msgstr "Quantité Totale"
 msgid "Total Quantity must not be 0"
 msgstr "La quantité totale doit être différente de 0"
 
+msgid "Total Selected Amount"
+msgstr "Montant des lignes sélectionnées"
+
 #: portal_skins/erp5_accounting/AccountModule_getAccountListForTrialBalance
 msgid "Total for class ${account_class}"
 msgstr "Total pour la classe ${account_class}"
@@ -12432,6 +12471,9 @@ msgstr "État de la transaction"
 #: portal_skins/erp5_accounting/AccountingTransactionModule_viewGroupingFastInputDialog/listbox
 msgid "Transaction Type"
 msgstr "Type d'écriture"
+
+msgid "Transaction With Grouping Reference"
+msgstr "Écritures lettrées"
 
 #: /home/glossary/zope_glossary/Products/ERP5/Constraint/AccountingTransactionBalance.py
 msgid "Transaction is not balanced."
@@ -12666,6 +12708,9 @@ msgstr "Décocher Tous"
 #: portal_undo
 msgid "Undo"
 msgstr "Annuler"
+
+msgid "Ungrouping"
+msgstr "Délettrage"
 
 #: portal_workflow/business_template_installation_workflow/transitions/uninstall_action
 msgid "Uninstall Business Template"
@@ -13646,4 +13691,3 @@ msgstr "La largeur en pixel des images nano."
 
 msgid "time"
 msgstr "Date"
-
