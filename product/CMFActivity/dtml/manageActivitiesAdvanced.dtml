@@ -2,6 +2,71 @@
 <dtml-var manage_tabs>
 
 <br />
+<form action="<dtml-var URL1>">
+<table width="100%" cellspacing="0" cellpadding="2" border="0">
+<tr class="section-bar">
+  <td colspan="3" align="left">
+  <div class="form-label">
+  Logging options
+  </div>
+  </td>
+</tr>
+<tr>
+  <td align="left" valign="top">
+    Tracking
+  </td>
+  <td>
+    <dtml-if isActivityTrackingEnabled>
+    <input class="form-element" type="submit" name="manage_disableActivityTracking:method" value=" Disable ">
+    <dtml-else>
+    <input class="form-element" type="submit" name="manage_enableActivityTracking:method" value=" Enable ">
+    </dtml-if>
+  </td>
+  <td>
+    <p class="form-help">Logs at creation, invocation begin and end.</p>
+  </td>
+</tr>
+<tr>
+  <td align="left" valign="top">
+    Timing
+  </td>
+  <td>
+    <dtml-if isActivityTimingLoggingEnabled>
+    <input class="form-element" type="submit" name="manage_disableActivityTimingLogging:method" value=" Disable ">
+    <dtml-else>
+    <input class="form-element" type="submit" name="manage_enableActivityTimingLogging:method" value=" Enable ">
+    </dtml-if>
+  </td>
+  <td>
+    <p class="form-help">Logs after each single activity execution (ie, not after activities defining a group_method_id) its execution time.</p>
+  </td>
+</tr>
+<tr class="section-bar">
+  <td colspan="3" align="left">
+  <div class="form-label">
+  Tracing options
+  </div>
+  </td>
+</tr>
+<tr>
+  <td align="left" valign="top">
+    Creation tracing
+  </td>
+  <td>
+    <dtml-if isActivityCreationTraceEnabled>
+    <input class="form-element" type="submit" name="manage_disableActivityCreationTrace:method" value=" Disable ">
+    <dtml-else>
+    <input class="form-element" type="submit" name="manage_enableActivityCreationTrace:method" value=" Enable ">
+    </dtml-if>
+  </td>
+  <td>
+    <p class="form-help">Controls wether activities should contain a stack trace from their creation.
+    It helps finding out where an activity comes from.
+    Those traces are logged and mailed when an activity fails (as part of regular activity failure mails).</p>
+  </td>
+</tr>
+</table>
+</form>
 <table width="100%" cellspacing="0" cellpadding="2" border="0">
 <tr class="section-bar">
   <td colspan="2" align="left">

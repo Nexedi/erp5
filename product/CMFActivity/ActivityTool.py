@@ -114,36 +114,6 @@ if instancehome is not None:
     activity_logger.addHandler(log_file_handler)
     activity_logger.propagate = 0
 
-activity_tracking = False
-
-def enableLogging():
-  global activity_tracking
-  activity_tracking = True
-
-def disableLogging():
-  global activity_tracking
-  activity_tracking = False
-
-activity_creation_trace = False
-
-def enableActivityCreationTrace():
-  global activity_creation_trace
-  activity_creation_trace = True
-
-def disableActivityCreationTrace():
-  global activity_creation_trace
-  activity_creation_trace = False
-
-activity_timing_log = False
-
-def enableActivityTimingLog():
-  global activity_timing_log
-  activity_timing_log = True
-
-def disableActivityTimingLog():
-  global activity_timing_log
-  activity_timing_log = False
-
 def activity_timing_method(method, args, kw):
   begin = time()
   try:
@@ -178,8 +148,10 @@ class Message:
   def __init__(self, obj, active_process, activity_kw, method_id, args, kw):
     if isinstance(obj, str):
       self.object_path = tuple(obj.split('/'))
+      activity_creation_trace = False
     else:
       self.object_path = obj.getPhysicalPath()
+      activity_creation_trace = obj.getPortalObject().portal_activities.activity_creation_trace
     if type(active_process) is StringType:
       self.active_process = active_process.split('/')
     elif active_process is None:
@@ -302,7 +274,7 @@ class Message:
             method = None
             self.setExecutionState(MESSAGE_NOT_EXECUTABLE, context=activity_tool)
           else:
-            if activity_timing_log:
+            if activity_tool.activity_timing_log:
               result = activity_timing_method(method, self.args, self.kw)
             else:
               result = method(*self.args, **self.kw)
@@ -435,9 +407,10 @@ class Method:
 
   def __call__(self, *args, **kw):
     m = Message(self.__passive_self, self.__active_process, self.__kw, self.__method_id, args, kw)
-    if activity_tracking:
+    portal_activities = self.__passive_self.portal_activities
+    if portal_activities.activity_tracking:
       activity_tracking_logger.info('queuing message: activity=%s, object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % (self.__activity, '/'.join(m.object_path), m.method_id, m.args, m.kw, m.activity_kw, m.user_name))
-    activity_dict[self.__activity].queueMessage(self.__passive_self.portal_activities, m)
+    activity_dict[self.__activity].queueMessage(portal_activities, m)
 
 allow_class(Method)
 
@@ -504,6 +477,9 @@ class ActivityTool (Folder, UniqueObject):
     
     distributingNode = ''
     _nodes = ()
+    activity_creation_trace = False
+    activity_tracking = False
+    activity_timing_log = False
 
     def __init__(self):
         return Folder.__init__(self, ActivityTool.id)
@@ -569,6 +545,84 @@ class ActivityTool (Folder, UniqueObject):
             url += urllib.quote("Unsubscribed from Timer Service")
         if RESPONSE is not None:
             RESPONSE.redirect(url)
+
+    security.declareProtected(Permissions.manage_properties, 'isActivityTrackingEnabled')
+    def isActivityTrackingEnabled(self):
+      return self.activity_tracking
+
+    security.declareProtected(Permissions.manage_properties, 'manage_enableActivityTracking')
+    def manage_enableActivityTracking(self, REQUEST=None, RESPONSE=None):
+        """
+          Enable activity tracing.
+        """
+        self.activity_tracking = True
+        if RESPONSE is not None:
+          url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
+          url += urllib.quote('Tracking log enabled')
+          RESPONSE.redirect(url)
+
+    security.declareProtected(Permissions.manage_properties, 'manage_disableActivityTracking')
+    def manage_disableActivityTracking(self, REQUEST=None, RESPONSE=None):
+        """
+          Disable activity tracing.
+        """
+        self.activity_tracking = False
+        if RESPONSE is not None:
+          url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
+          url += urllib.quote('Tracking log disabled')
+          RESPONSE.redirect(url)
+
+    security.declareProtected(Permissions.manage_properties, 'isActivityTimingLoggingEnabled')
+    def isActivityTimingLoggingEnabled(self):
+      return self.activity_timing_log
+
+    security.declareProtected(Permissions.manage_properties, 'manage_enableActivityTimingLogging')
+    def manage_enableActivityTimingLogging(self, REQUEST=None, RESPONSE=None):
+        """
+          Enable activity timing logging.
+        """
+        self.activity_timing_log = True
+        if RESPONSE is not None:
+          url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
+          url += urllib.quote('Timing log enabled')
+          RESPONSE.redirect(url)
+
+    security.declareProtected(Permissions.manage_properties, 'manage_disableActivityTimingLogging')
+    def manage_disableActivityTimingLogging(self, REQUEST=None, RESPONSE=None):
+        """
+          Disable activity timing logging.
+        """
+        self.activity_timing_log = False
+        if RESPONSE is not None:
+          url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
+          url += urllib.quote('Timing log disabled')
+          RESPONSE.redirect(url)
+
+    security.declareProtected(Permissions.manage_properties, 'isActivityCreationTraceEnabled')
+    def isActivityCreationTraceEnabled(self):
+      return self.activity_creation_trace
+
+    security.declareProtected(Permissions.manage_properties, 'manage_enableActivityCreationTrace')
+    def manage_enableActivityCreationTrace(self, REQUEST=None, RESPONSE=None):
+        """
+          Enable activity creation trace.
+        """
+        self.activity_creation_trace = True
+        if RESPONSE is not None:
+          url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
+          url += urllib.quote('Activity creation trace enabled')
+          RESPONSE.redirect(url)
+
+    security.declareProtected(Permissions.manage_properties, 'manage_disableActivityCreationTrace')
+    def manage_disableActivityCreationTrace(self, REQUEST=None, RESPONSE=None):
+        """
+          Disable activity creation trace.
+        """
+        self.activity_creation_trace = False
+        if RESPONSE is not None:
+          url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
+          url += urllib.quote('Activity creation trace disabled')
+          RESPONSE.redirect(url)
 
     def manage_beforeDelete(self, item, container):
         self.unsubscribe()
@@ -963,7 +1017,7 @@ class ActivityTool (Folder, UniqueObject):
         activity.stop(aq_inner(self), **kw)
 
     def invoke(self, message):
-      if activity_tracking:
+      if self.activity_tracking:
         activity_tracking_logger.info('invoking message: object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % ('/'.join(message.object_path), message.method_id, message.args, message.kw, message.activity_kw, message.user_name))
       old_ihotfix_context = False
       if getattr(self, 'aq_chain', None) is not None:
@@ -1036,14 +1090,14 @@ class ActivityTool (Folder, UniqueObject):
               iHotfix.contexts[id] = old_ihotfix_context
           finally:
             iHotfix._the_lock.release()
-      if activity_tracking:
+      if self.activity_tracking:
         activity_tracking_logger.info('invoked message')
       if my_self is not self: # We rewrapped self
         for held in my_self.REQUEST._held:
           self.REQUEST._hold(held)
 
     def invokeGroup(self, method_id, message_list):
-      if activity_tracking:
+      if self.activity_tracking:
         activity_tracking_logger.info('invoking group messages: method_id=%s, paths=%s' % (method_id, ['/'.join(m.object_path) for m in message_list]))
       # Invoke a group method.
       object_list = []
@@ -1141,7 +1195,7 @@ class ActivityTool (Folder, UniqueObject):
               m.setExecutionState(MESSAGE_NOT_EXECUTED, context=self)
             else:
               m.setExecutionState(MESSAGE_EXECUTED, context=self)
-      if activity_tracking:
+      if self.activity_tracking:
         activity_tracking_logger.info('invoked group messages')
 
     def newMessage(self, activity, path, active_process,
