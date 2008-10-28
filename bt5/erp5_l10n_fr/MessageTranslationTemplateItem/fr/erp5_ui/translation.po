@@ -574,9 +574,6 @@ msgstr "Ajouter ${document_template}"
 msgid "Add ${portal_type}"
 msgstr "Ajouter ${portal_type}"
 
-msgid "Add Apparel Fabric Colour Variation"
-msgstr "Ajouter Coloris"
-
 #: portal_skins/erp5_project/Requirement_addDocumentFastInput
 msgid "Add Document with Requirements"
 msgstr "Ajouter un document avec des spécificités"
