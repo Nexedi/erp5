@@ -243,7 +243,9 @@ class ContributionTool(BaseTool):
         extension = '.%s' % file_name.split('.')[-1]
       file_name = '%s%s' % (self.generateNewId(), extension)
 
-    portal_type = self._guessPortalType(file_name, mime_type, data)
+    # Try to guess the portal if it is not passed as parameter
+    if portal_type is None:
+      portal_type = self._guessPortalType(file_name, mime_type, data)
 
     # Then put the file inside ourselves for a short while
     if container_path is not None:
