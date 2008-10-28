@@ -352,7 +352,7 @@ data_dict = {\n
       context.getDestinationSection() and context.getDestinationSectionValue().getDefaultAddressRegionTitle() or \'\'),\n
   \'destination_section_telfax\': getPhoneAndFax(\n
       context.getDestinationSection() and context.getDestinationSectionValue().getTelephoneText() or \'\',\n
-      context.getDestinationSection() and context.getDestinationSectionValue().getTelephoneText() or \'\'),\n
+      context.getDestinationSection() and context.getDestinationSectionValue().getFaxText() or \'\'),\n
   \'destination_section_email\': getEmail(context.getDestinationSection() and context.getDestinationSectionValue().getEmailText() or \'\'),\n
   \'destination_section_vatid\': getVatId(context.getDestinationSection() and\n
       context.getDestinationSectionValue().getProperty(\'vat_code\') or \'\'),\n
