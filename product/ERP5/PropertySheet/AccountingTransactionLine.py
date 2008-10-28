@@ -66,7 +66,7 @@ class AccountingTransactionLine:
       'destination_section' : 1,
       'portal_type': ('Person', 'Organisation'),
       'message_category_not_set': 'Third party must be defined for '\
-          'payable or receivable accounts.'
+          'payable or receivable accounts'
     },
     { 'id': 'source_section_existence',
       'condition' :
@@ -77,7 +77,7 @@ class AccountingTransactionLine:
       'source_section' : 1,
       'portal_type': ('Person', 'Organisation'),
       'message_category_not_set': 'Third party must be defined for '\
-          'payable or receivable accounts.'
+          'payable or receivable accounts'
     },
 
        # We need a payment for bank accounts
