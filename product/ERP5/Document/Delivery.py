@@ -312,12 +312,8 @@ class Delivery(XMLObject, ImmobilisationDelivery):
 
         emit targetUnreachable !
       """
-      # Delivery_zIsDivergent only works when object and simulation is
-      # reindexed, so if an user change the delivery, he must wait
-      # until everything is indexed, this is not acceptable for users
-      # so we should not use it by default (and may be we should remove)
-      if fast==1 and len(self.Delivery_zIsDivergent(uid=self.getUid())) > 0:
-        return 1
+      ## Note that fast option was removed. Now, fast=1 is ignored.
+      
       # Check if the total quantity equals the total of each simulation movement quantity
       for movement in self.getMovementList():
         if movement.isDivergent():
