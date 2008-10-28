@@ -46,6 +46,7 @@ class AccountingTransaction:
     { 'id': 'date_existence',
       'description': 'Date must be defined',
       'message_property_not_set': 'Date must be defined',
+      'message_no_such_property': 'Date must be defined',
       'condition' : 'python: object.getSimulationState() not'
                      ' in ("cancelled", "deleted")',
       'type': 'PropertyExistence',
