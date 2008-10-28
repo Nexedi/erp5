@@ -87,15 +87,40 @@ ROLE_PROCESSING = 1
 # Activity Registration
 activity_dict = {}
 
-logging = False
+# Logging channel definitions
+import logging
+# Main logging channel
+activity_logger = logging.getLogger('CMFActivity')
+# Some logging subchannels
+activity_tracking_logger = logging.getLogger('CMFActivity.Tracking')
+
+# Direct logging to "[instancehome]/log/CMFActivity.log", if this directory exists.
+# Otherwise, it will end up in root logging facility (ie, event.log).
+from App.config import getConfiguration
+import os
+instancehome = getConfiguration().instancehome
+if instancehome is not None:
+  log_directory = os.path.join(instancehome, 'log')
+  if os.path.isdir(log_directory):
+    from Signals import Signals
+    log_file_handler = logging.FileHandler(os.path.join(log_directory, 'CMFActivity.log'))
+    # Default zope log format string borrowed from
+    # ZConfig/components/logger/factory.xml, but without the extra "------"
+    # line separating entries.
+    log_file_handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(name)s %(message)s", "%Y-%m-%dT%H:%M:%S"))
+    Signals.registerZopeSignals([log_file_handler])
+    activity_logger.addHandler(log_file_handler)
+    activity_logger.propagate = 0
+
+activity_tracking = False
 
 def enableLogging():
-  global logging
-  logging = True
+  global activity_tracking
+  activity_tracking = True
 
 def disableLogging():
-  global logging
-  logging = False
+  global activity_tracking
+  activity_tracking = False
 
 activity_creation_trace = False
 
@@ -387,8 +412,8 @@ class Method:
 
   def __call__(self, *args, **kw):
     m = Message(self.__passive_self, self.__active_process, self.__kw, self.__method_id, args, kw)
-    if logging:
-      LOG('Activity Tracking', INFO, 'queuing message: activity=%s, object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % (self.__activity, '/'.join(m.object_path), m.method_id, m.args, m.kw, m.activity_kw, m.user_name))
+    if activity_tracking:
+      activity_tracking_logger.info('queuing message: activity=%s, object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % (self.__activity, '/'.join(m.object_path), m.method_id, m.args, m.kw, m.activity_kw, m.user_name))
     activity_dict[self.__activity].queueMessage(self.__passive_self.portal_activities, m)
 
 allow_class(Method)
@@ -915,8 +940,8 @@ class ActivityTool (Folder, UniqueObject):
         activity.stop(aq_inner(self), **kw)
 
     def invoke(self, message):
-      if logging:
-        LOG('Activity Tracking', INFO, 'invoking message: object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % ('/'.join(message.object_path), message.method_id, message.args, message.kw, message.activity_kw, message.user_name))
+      if activity_tracking:
+        activity_tracking_logger.info('invoking message: object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % ('/'.join(message.object_path), message.method_id, message.args, message.kw, message.activity_kw, message.user_name))
       old_ihotfix_context = False
       if getattr(self, 'aq_chain', None) is not None:
         # Grab existing acquisition chain and extrach base objects.
@@ -988,15 +1013,15 @@ class ActivityTool (Folder, UniqueObject):
               iHotfix.contexts[id] = old_ihotfix_context
           finally:
             iHotfix._the_lock.release()
-      if logging:
-        LOG('Activity Tracking', INFO, 'invoked message')
+      if activity_tracking:
+        activity_tracking_logger.info('invoked message')
       if my_self is not self: # We rewrapped self
         for held in my_self.REQUEST._held:
           self.REQUEST._hold(held)
 
     def invokeGroup(self, method_id, message_list):
-      if logging:
-        LOG('Activity Tracking', INFO, 'invoking group messages: method_id=%s, paths=%s' % (method_id, ['/'.join(m.object_path) for m in message_list]))
+      if activity_tracking:
+        activity_tracking_logger.info('invoking group messages: method_id=%s, paths=%s' % (method_id, ['/'.join(m.object_path) for m in message_list]))
       # Invoke a group method.
       object_list = []
       expanded_object_list = []
@@ -1093,8 +1118,8 @@ class ActivityTool (Folder, UniqueObject):
               m.setExecutionState(MESSAGE_NOT_EXECUTED, context=self)
             else:
               m.setExecutionState(MESSAGE_EXECUTED, context=self)
-      if logging:
-        LOG('Activity Tracking', INFO, 'invoked group messages')
+      if activity_tracking:
+        activity_tracking_logger.info('invoked group messages')
 
     def newMessage(self, activity, path, active_process,
                    activity_kw, method_id, *args, **kw):
