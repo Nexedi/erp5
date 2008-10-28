@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2006-03-04 05:03+EST\n"
-"PO-Revision-Date: 2006-03-04 05:03+EST\n"
+"PO-Revision-Date: 2008-10-28 13:10+CET\n"
 "Last-Translator:  <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
@@ -24,6 +24,9 @@ msgstr "Comptable"
 msgid "Accounting Manager"
 msgstr "Chef comptable"
 
+msgid "Accounts Payable"
+msgstr "Dettes à court terme"
+
 msgid "Activities of membership organizations"
 msgstr "Hébergement médico-social et social"
 
@@ -32,6 +35,15 @@ msgstr "Activités des ménages en tant qu'employeurs ; activités indifférenci
 
 msgid "Administration"
 msgstr "Administration"
+
+msgid "Administrative Support"
+msgstr "Assistance administrative"
+
+msgid "Advertisement"
+msgstr "Publicité"
+
+msgid "Advertisment"
+msgstr "Publicité"
 
 msgid "Afghan"
 msgstr "Afghan"
@@ -56,6 +68,9 @@ msgstr "Transports aériens"
 
 msgid "Albania"
 msgstr "Albanie"
+
+msgid "Announcement"
+msgstr "Annonce"
 
 msgid "Apparel and Luggage and Personal Care Products"
 msgstr "Habillement, bagages et produits d'hygiène personnelle"
@@ -114,6 +129,9 @@ msgstr "Carriage and Insurance Paid to (CIP)"
 msgid "Cash"
 msgstr "Trésorerie"
 
+msgid "Cash and Cash Equivalents"
+msgstr "Disponibilités"
+
 msgid "Chemical products"
 msgstr "Industrie chimique"
 
@@ -128,6 +146,9 @@ msgstr "Matériel et fournitures de nettoyage"
 
 msgid "Client"
 msgstr "Client"
+
+msgid "Clock"
+msgstr "Horloge"
 
 msgid "Coal & lignite"
 msgstr "Extraction de houille et de lignite"
@@ -162,6 +183,9 @@ msgstr "Cadre"
 msgid "Company Manager"
 msgstr "Directeur"
 
+msgid "Complaint"
+msgstr "Plainte"
+
 msgid "Computer & related activities"
 msgstr "Programmation, conseil et autres activités informatiques"
 
@@ -177,6 +201,9 @@ msgstr "Coopérative"
 msgid "Cost and Freight"
 msgstr "Cost and Freight (CFR)"
 
+msgid "Cost of Sales"
+msgstr "Coût des marchandises vendues"
+
 msgid "Cost, Insurance and Freight"
 msgstr "Cost, Insurance and Freight (CIF)"
 
@@ -185,6 +212,12 @@ msgstr "Carte de crédit"
 
 msgid "Cubic Meter"
 msgstr "Mètre cube"
+
+msgid "Current Assets"
+msgstr "Actif circulant"
+
+msgid "Current Liabilities"
+msgstr "Passif circulant"
 
 msgid "Custom"
 msgstr "Douane"
@@ -213,6 +246,18 @@ msgstr "Delivered Ex Quay (DEQ)"
 msgid "Delivered Ex Ship"
 msgstr "Delivered Ex Ship (DES)"
 
+msgid "Deprecation of Financials Assets"
+msgstr "Amortissement des immobilisations financières"
+
+msgid "Deprecation of Fixed Assets"
+msgstr "Amortissement des immobilisations"
+
+msgid "Deprecation of Intangible Assets"
+msgstr "Amortissement des immobilisations incorporelles"
+
+msgid "Deprecation of inventories"
+msgstr "Depreciation du stock"
+
 msgid "Design"
 msgstr "Design"
 
@@ -239,6 +284,9 @@ msgstr "Mobilier, équipements domestiques, appareils ménager et électronique 
 
 msgid "Drugs and Pharmaceutical Products"
 msgstr "Médicaments et produits pharmaceutiques"
+
+msgid "ERP5 Worklists"
+msgstr "Listes de travail ERP5"
 
 msgid "Editorial and Design and Graphic and Fine Art Services"
 msgstr "Services éditorial, de conception, de dessin, graphique et beaux arts"
@@ -276,8 +324,8 @@ msgstr "Services d'ingénierie et de recherche et services technologiques"
 msgid "Environmental Services"
 msgstr "Services de l'environnement"
 
-msgid "Equity"
-msgstr "Capital"
+msgid "Equipment Components & Supplies"
+msgstr "Equipement et composants"
 
 msgid "Ex Works"
 msgstr "Ex Works (EXW)"
@@ -300,11 +348,17 @@ msgstr "Services professionnels pour l'agriculture, la pêche, la sylviculture e
 msgid "Farming and Fishing and Forestry and Wildlife Machinery and Accessories"
 msgstr "Machines et accessoires pour l'agriculture, la pêche, et l'exploitation forestière"
 
+msgid "Feed Reader"
+msgstr "Lecteur de flux RSS"
+
 msgid "Female"
 msgstr "Femme"
 
 msgid "Financial Reports"
 msgstr "Rapports financiers"
+
+msgid "Financial Support"
+msgstr "Assistance en finance"
 
 msgid "Financial and Insurance Services"
 msgstr "Services Financiers et d'Assurance"
@@ -315,8 +369,14 @@ msgstr "Activités financières et d'assurance"
 msgid "Financial intermediation except insurance"
 msgstr "Activités des services financiers, hors assurance et caisses de retraite"
 
+msgid "Financials Assets"
+msgstr "Immobilisations financières"
+
 msgid "Fishing & aquaculture"
 msgstr "Pêche et aquaculture"
+
+msgid "Fixed Assets"
+msgstr "Immobilisations corporelles"
 
 msgid "Food Beverage and Tobacco Products"
 msgstr "Aliments, boissons et tabacs"
@@ -350,6 +410,12 @@ msgstr "Meubles et ameublements"
 
 msgid "Goods-producing activities for own use"
 msgstr "Activités indifférenciées des ménages en tant que producteurs de biens pour usage proprepour usage propre"
+
+msgid "Google Calendar"
+msgstr "Calendrier Google"
+
+msgid "Google clock"
+msgstr "Horloge Google"
 
 msgid "Gross Salary"
 msgstr "Salaire Brut"
@@ -393,14 +459,23 @@ msgstr "Directeur des ressources humaines"
 msgid "Human resources"
 msgstr "Ressources humaines"
 
+msgid "IT Support"
+msgstr "Assistance en technologie de l'information"
+
 msgid "Income"
 msgstr "Produits"
 
 msgid "Industrial Cleaning Services"
 msgstr "Services de nettoyage industriel"
 
+msgid "Industrial Equipment"
+msgstr "Equipement industriel"
+
 msgid "Industrial Production and Manufacturing Services"
 msgstr "Services de production et fabrication industrielles"
+
+msgid "Information"
+msgstr "Informations"
 
 msgid "Information Systems"
 msgstr "Systèmes d'information"
@@ -414,11 +489,26 @@ msgstr "Technologie de l'information"
 msgid "Information Technology Broadcasting and Telecommunications"
 msgstr "Composants, fournitures et équipements informatiques et de communication"
 
+msgid "Inquiry"
+msgstr "Enquête"
+
 msgid "Insurance & pension funding"
 msgstr "Assurance"
 
+msgid "Intangible Assets"
+msgstr "Immobilisations incorporelles"
+
+msgid "Interest Expense"
+msgstr "Frais financiers"
+
+msgid "Interest Income"
+msgstr "Revenus financiers"
+
 msgid "Internal"
 msgstr "Interne"
+
+msgid "Inventories"
+msgstr "Stock"
 
 msgid "Invoice"
 msgstr "Facture"
@@ -441,9 +531,6 @@ msgstr "Droit"
 msgid "Length"
 msgstr "Longueur"
 
-msgid "Liability"
-msgstr "Passif"
-
 msgid "Limited company (Ltd.)"
 msgstr "Société anonyme (SA)"
 
@@ -462,6 +549,15 @@ msgstr "Litre"
 msgid "Live Plant and Animal Material, Accessories and Supplies"
 msgstr "Fournitures, accessoires et matériel pour plantes"
 
+msgid "Loans"
+msgstr "Dettes à long terme"
+
+msgid "Long Term Assets"
+msgstr "Immobilisations"
+
+msgid "Long Term Liabilities"
+msgstr "Dettes à long et moyen terme"
+
 msgid "Low Priority"
 msgstr "Priorité basse"
 
@@ -479,6 +575,9 @@ msgstr "Direction"
 
 msgid "Management and Business Professionals and Administrative Services"
 msgstr "Services administratifs, commerciaux et professionnels et services de gestion"
+
+msgid "Manufactured Products"
+msgstr "Produits finis"
 
 msgid "Manufacturing"
 msgstr "Industrie manufacturière"
@@ -561,6 +660,12 @@ msgstr "Flux RSS"
 msgid "Non Deductible Tax"
 msgstr "Cotisation non déductible"
 
+msgid "Non Operating Expense"
+msgstr "Charges hors exploitation"
+
+msgid "Non Operating Income"
+msgstr "Revenu hors exploitation"
+
 msgid "Non Tax Withholding"
 msgstr "Retenues sur salaire"
 
@@ -582,6 +687,9 @@ msgstr "Équipement de bureau, accessoires et fournitures"
 msgid "Office, accounting & computing machinery"
 msgstr "Autres industries manufacturières"
 
+msgid "Operating Expenses"
+msgstr "Charges d'exploitation"
+
 msgid "Operation"
 msgstr "Operation"
 
@@ -594,11 +702,17 @@ msgstr "Organizations and Clubs"
 msgid "Other"
 msgstr "Autres"
 
+msgid "Other Current Liabilities"
+msgstr "Autres dettes à court terme"
+
 msgid "Other Marketing Service"
 msgstr "Autre service"
 
 msgid "Other Meeting"
 msgstr "Autres types de réunion"
+
+msgid "Other Support Service"
+msgstr "Autre Service d'assistance"
 
 msgid "Other business activities"
 msgstr "Autres activités spécialisées, scientifiques et techniques"
@@ -606,11 +720,17 @@ msgstr "Autres activités spécialisées, scientifiques et techniques"
 msgid "Other community, social & personal services"
 msgstr "Activités de services administratifs et de soutien"
 
+msgid "Other event"
+msgstr "Autre évènement"
+
 msgid "Other service activities"
 msgstr "Autres services personnels"
 
 msgid "Other transport equipment"
 msgstr "Fabrication d'autres matériels de transport"
+
+msgid "Others Liabilities"
+msgstr "Autres dettes"
 
 msgid "Overtime"
 msgstr "Heures supplémentaires"
@@ -644,6 +764,9 @@ msgstr "Développement personnel"
 
 msgid "Personal and Domestic Services"
 msgstr "Services personnels et domestiques"
+
+msgid "Persons"
+msgstr "Personnes"
 
 msgid "Petroleum & Gas"
 msgstr "Extraction d'hydrocarbures"
@@ -686,6 +809,9 @@ msgstr "Directeur de la production"
 
 msgid "Production – Manufacturing"
 msgstr "Production"
+
+msgid "Profit or Loss"
+msgstr "Résultat"
 
 msgid "Project"
 msgstr "Projet"
@@ -744,6 +870,12 @@ msgstr "Employé de la recherche et développement"
 msgid "Radio,TV & communication equipment"
 msgstr "Fabrication de produits informatiques et électroniques"
 
+msgid "Raw Materials"
+msgstr "Matières premières"
+
+msgid "Read RSS and ATOM feeds"
+msgstr "Lire des flux RSS et ATOM"
+
 msgid "Real estate"
 msgstr "Activités immobilières"
 
@@ -789,6 +921,9 @@ msgstr "Restreint"
 msgid "Retail trade, except of motor vehicles"
 msgstr "Commerce de détail, à l'exception des automobiles et des motocycles"
 
+msgid "Revenue"
+msgstr "Revenu d'exploitation"
+
 msgid "Rubber & plastics"
 msgstr "Fabrication de produits en caoutchouc et en plastique"
 
@@ -819,17 +954,32 @@ msgstr "Réunion au sujet des ventes"
 msgid "Sales Prospect"
 msgstr "Prospect à convaincre"
 
+msgid "Selling, General and Administrative Expenses"
+msgstr "Frais généraux et administratifs"
+
 msgid "Service Industry Machinery and Equipment and Supplies"
 msgstr "Machines, équipement et fournitures pour l'industrie des services"
 
 msgid "Service-producing activities for own use"
 msgstr "Activités indifférenciées des ménages en tant que producteurs de services pour usage proprepour usage propre"
 
+msgid "Services"
+msgstr "Services"
+
 msgid "Sewage & refuse disposal, sanitation"
 msgstr "Activités pour la santé humaine"
 
+msgid "Share Capital"
+msgstr "Capitaux propres"
+
 msgid "Shareholder"
 msgstr "Actionnaire"
+
+msgid "Show all or a set of persons."
+msgstr "Voir une sélection de personnes ou toutes les personnes"
+
+msgid "Simple Google Calendar"
+msgstr "Calendrier Google simplifié"
 
 msgid "Single"
 msgstr "Célibataire"
@@ -906,8 +1056,8 @@ msgstr "Outils et machineries"
 msgid "Total Deduction"
 msgstr "Total Retenues"
 
-msgid "Total Income"
-msgstr "Total Gains"
+msgid "Trade and Other Receivables"
+msgstr "Créances client"
 
 msgid "Trainee"
 msgstr "Stagiaire"
