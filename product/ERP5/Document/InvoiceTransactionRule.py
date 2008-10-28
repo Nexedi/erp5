@@ -118,7 +118,6 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
             # XXX this happen in many order, so this log is probably useless
             LOG("InvoiceTransactionRule", PROBLEM,
                 "expanding %s: without resource" % applied_rule.getPath())
-
         # XXX Harcoded list
         prevision_line = {
             'id': accounting_rule_cell_line.getId(),
@@ -159,7 +158,6 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
           prevision_line.update(getattr(context_movement,
                                         generate_prevision_script_id)(prevision_line))
         prevision_list.append(prevision_line)
-
     return prevision_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
@@ -175,7 +173,9 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
     """
     add_list, modify_dict, \
         delete_list = self._getCompensatedMovementList(applied_rule,
-        matching_property_list=['resource', 'source', 'destination'], **kw)
+        matching_property_list=['resource', 'source',
+               'destination','destination_total_asset_price',
+              'source_total_asset_price'],**kw)
 
     if len(add_list) or len(modify_dict):
       pass#import pdb; pdb.set_trace()
@@ -194,7 +194,53 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
       else:
         new_mvmt = applied_rule.newContent(portal_type=self.movement_type)
       new_mvmt.edit(**movement_dict)
-
+      #set asset_price on movement when resource is different from price
+      #currency of the source/destination section
+      currency = new_mvmt.getResourceValue()
+      if new_mvmt.AccountingTransaction_isDestinationCurrencyConvertible():
+        precision = \
+         new_mvmt.getDestinationSectionValue().getPriceCurrencyValue().\
+                      getQuantityPrecision()
+	dest_exchange_ratio = \
+          currency.getPrice(context=new_mvmt.asContext(
+                      categories=['price_currency/currency_module/%s' %
+               new_mvmt.getDestinationSectionValue().getPriceCurrencyId(),
+	      'resource/%s'% new_mvmt.getResourceRelativeUrl()],
+              start_date=new_mvmt.getStopDate()))
+	if dest_exchange_ratio is None:
+	  raise AssertionError
+        new_mvmt.edit(destination_total_asset_price=round(
+             (dest_exchange_ratio*
+           applied_rule.getParentValue().getTotalPrice()),precision))
+        relative_parent_movement = applied_rule.getParentValue()
+	relative_parent_movement.edit(destination_total_asset_price=\
+                 (new_mvmt.getDestinationTotalAssetPrice()))
+	relative_applied_rule = relative_parent_movement.getParentValue()
+	parent_movement = relative_applied_rule.getParentValue()
+	parent_movement.edit(destination_total_asset_price=\
+	               new_mvmt.getDestinationTotalAssetPrice())  
+      if new_mvmt.AccountingTransaction_isSourceCurrencyConvertible():
+	precision = \
+         new_mvmt.getSourceSectionValue().getPriceCurrencyValue().\
+                      getQuantityPrecision()
+	source_exchange_ratio = currency.getPrice(context=new_mvmt.asContext(
+        categories=['price_currency/currency_module/%s' %
+        new_mvmt.getSourceSectionValue().getPriceCurrencyId(),
+	    'resource/%s'%
+            new_mvmt.getResourceRelativeUrl()],
+            start_date=new_mvmt.getStartDate()))
+	if source_exchange_ratio is None:
+	  raise AssertionError
+        new_mvmt.setSourceTotalAssetPrice(round(
+    (source_exchange_ratio*applied_rule.getParentValue().getTotalPrice()),
+            precision))
+	relative_parent_movement = applied_rule.getParentValue()
+	relative_parent_movement.setSourceTotalAssetPrice\
+                     (new_mvmt.getSourceTotalAssetPrice())
+	relative_applied_rule = relative_parent_movement.getParentValue()
+	parent_movement = relative_applied_rule.getParentValue()
+	parent_movement.setSourceTotalAssetPrice\
+	               (new_mvmt.getSourceTotalAssetPrice())
     # Pass to base class
     Rule.expand(self, applied_rule, force=force, **kw)
   
