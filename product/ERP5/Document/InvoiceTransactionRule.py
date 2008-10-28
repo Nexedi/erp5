@@ -197,50 +197,38 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
       #set asset_price on movement when resource is different from price
       #currency of the source/destination section
       currency = new_mvmt.getResourceValue()
-      if new_mvmt.AccountingTransaction_isDestinationCurrencyConvertible():
-        precision = \
-         new_mvmt.getDestinationSectionValue().getPriceCurrencyValue().\
+      if currency is not None:
+        if new_mvmt.AccountingTransaction_isDestinationCurrencyConvertible():
+          precision = \
+           new_mvmt.getDestinationSectionValue().getPriceCurrencyValue().\
                       getQuantityPrecision()
-	dest_exchange_ratio = \
-          currency.getPrice(context=new_mvmt.asContext(
-                      categories=['price_currency/currency_module/%s' %
-               new_mvmt.getDestinationSectionValue().getPriceCurrencyId(),
+	  dest_exchange_ratio = \
+            currency.getPrice(context=new_mvmt.asContext(
+                      categories=['price_currency/%s'
+                 %new_mvmt.getDestinationSectionValue().getPriceCurrency(),
 	      'resource/%s'% new_mvmt.getResourceRelativeUrl()],
               start_date=new_mvmt.getStopDate()))
-	if dest_exchange_ratio is None:
-	  raise AssertionError
-        new_mvmt.edit(destination_total_asset_price=round(
+	  if dest_exchange_ratio is not None:
+            new_mvmt.edit(destination_total_asset_price=round(
              (dest_exchange_ratio*
-           applied_rule.getParentValue().getTotalPrice()),precision))
-        relative_parent_movement = applied_rule.getParentValue()
-	relative_parent_movement.edit(destination_total_asset_price=\
-                 (new_mvmt.getDestinationTotalAssetPrice()))
-	relative_applied_rule = relative_parent_movement.getParentValue()
-	parent_movement = relative_applied_rule.getParentValue()
-	parent_movement.edit(destination_total_asset_price=\
-	               new_mvmt.getDestinationTotalAssetPrice())  
-      if new_mvmt.AccountingTransaction_isSourceCurrencyConvertible():
-	precision = \
-         new_mvmt.getSourceSectionValue().getPriceCurrencyValue().\
+              applied_rule.getParentValue().getTotalPrice()),precision))
+	     
+        if new_mvmt.AccountingTransaction_isSourceCurrencyConvertible():
+	  precision = \
+           new_mvmt.getSourceSectionValue().getPriceCurrencyValue().\
                       getQuantityPrecision()
-	source_exchange_ratio = currency.getPrice(context=new_mvmt.asContext(
-        categories=['price_currency/currency_module/%s' %
-        new_mvmt.getSourceSectionValue().getPriceCurrencyId(),
+	  source_exchange_ratio = \
+             currency.getPrice(context=new_mvmt.asContext(
+               categories=['price_currency/%s'
+             %new_mvmt.getSourceSectionValue().getPriceCurrency(),
 	    'resource/%s'%
             new_mvmt.getResourceRelativeUrl()],
             start_date=new_mvmt.getStartDate()))
-	if source_exchange_ratio is None:
-	  raise AssertionError
-        new_mvmt.setSourceTotalAssetPrice(round(
-    (source_exchange_ratio*applied_rule.getParentValue().getTotalPrice()),
+          if source_exchange_ratio is not None:
+            new_mvmt.setSourceTotalAssetPrice(round(
+       (source_exchange_ratio*applied_rule.getParentValue().getTotalPrice()),
             precision))
-	relative_parent_movement = applied_rule.getParentValue()
-	relative_parent_movement.setSourceTotalAssetPrice\
-                     (new_mvmt.getSourceTotalAssetPrice())
-	relative_applied_rule = relative_parent_movement.getParentValue()
-	parent_movement = relative_applied_rule.getParentValue()
-	parent_movement.setSourceTotalAssetPrice\
-	               (new_mvmt.getSourceTotalAssetPrice())
+	
     # Pass to base class
     Rule.expand(self, applied_rule, force=force, **kw)
   
