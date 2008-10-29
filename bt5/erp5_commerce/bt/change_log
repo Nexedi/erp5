@@ -1,3 +1,6 @@
+2008-08-28 ivan
+* Decrease default session life time
+
 2008-08-28 yusei
 * Use Base_translateString or translateString instead of N_ for translation message.
 
