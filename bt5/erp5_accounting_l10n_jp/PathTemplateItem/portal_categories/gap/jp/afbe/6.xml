@@ -32,12 +32,6 @@
             </value>
         </item>
         <item>
-            <key> <string>codification</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>6</string> </value>
         </item>
@@ -46,20 +40,8 @@
             <value> <string>6</string> </value>
         </item>
         <item>
-            <key> <string>int_index</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Category</string> </value>
-        </item>
-        <item>
-            <key> <string>short_title</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
