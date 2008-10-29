@@ -54,7 +54,7 @@
         <select size="1" name="classification" id="classification"\n
                 tal:attributes="name string:${contribute_prefix}classification">\n
           <option value="" value="" i18n:translate="" i18n:domain="ui">-- Select Classification --</option>\n
-          <option tal:repeat="item python:[c for c in here.portal_categories.classification.getCategoryChildLogicalPathItemList()[1:] if len(c[1].split(\'/\'))>1]" tal:content="python:item[0]" tal:attributes="value python:item[1]">\n
+          <option tal:repeat="item python:[c for c in here.portal_categories.classification.getCategoryChildTranslatedLogicalPathItemList(local_sort_id=\'translated_title\')[1:] if len(c[1].split(\'/\'))>1]" tal:content="python:item[0]" tal:attributes="value python:item[1]">\n
             Agricultural Development\n
           </option>\n
         </select>\n
