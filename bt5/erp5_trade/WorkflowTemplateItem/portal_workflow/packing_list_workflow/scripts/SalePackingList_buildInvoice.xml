@@ -56,7 +56,6 @@
             <value> <string>from Products.ERP5Type.Log import log\n
 packing_list = sci[\'object\']\n
 delivery_tool = sci.getPortal().portal_deliveries\n
-\n
 if packing_list.getPortalType() == \'Sale Packing List\':\n
   tag = \'build_invoice_%s\' % packing_list.getRelativeUrl()\n
   invoice_line_builder = getattr(delivery_tool, \'sale_invoice_builder\', None)\n
