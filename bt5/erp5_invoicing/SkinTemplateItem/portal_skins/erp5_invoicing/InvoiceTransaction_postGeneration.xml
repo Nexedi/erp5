@@ -65,7 +65,6 @@ if related_simulation_movement_path_list is None:\n
 invoice = context\n
 packing_list = invoice.getCausalityValue()\n
 if packing_list is not None:\n
-  invoice.setDeliveryMode(packing_list.getDeliveryMode())\n
   order = packing_list.getCausalityValue()\n
   if order is not None:\n
     invoice.setSpecialise(order.getSpecialise())\n

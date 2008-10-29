@@ -80,6 +80,7 @@ related_packing_list = invoice.getDefaultCausalityValue()\n
 \n
 # XXX this use of currency is completly bogus, it should be set on simulation movements.\n
 # get a price_currency from the packing list, or the order\n
+context.log(related_packing_list)\n
 price_currency = related_packing_list.getPriceCurrency()\n
 if price_currency:\n
   invoice.edit(\n
