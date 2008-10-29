@@ -55,6 +55,13 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+def recursiveDocumentList(obj):\n
+  ret = []\n
+  ret.append(obj.getPath())\n
+  for i in obj.objectValues():\n
+    ret.extend(recursiveDocumentList(i))\n
+  return ret\n
+\n
 def splitCsvLine(str_line):\n
   unclean_list = []\n
   pieces_of_line = str_line.split(\',\')\n
@@ -88,13 +95,11 @@ def splitCsvLine(str_line):\n
 \n
   return clean_list\n
 \n
-\n
 def getSubCategory(parent, id):\n
   try:\n
     return parent[id]\n
   except KeyError:\n
     return parent.newContent(id=id)\n
-  \n
 \n
 request  = context.REQUEST\n
 csv_file_line_list = import_file.readlines()\n
@@ -103,12 +108,10 @@ csv_line_list = []\n
 for csv_line in csv_file_line_list:\n
   csv_line_list.append( string.replace(csv_line, \'\\n\', \'\').decode(encoding).encode(\'utf-8\') )\n
 \n
-\n
 object_list = []\n
 \n
 csv_property_list = splitCsvLine(csv_line_list[0])\n
 csv_title_list = splitCsvLine(csv_line_list[1])\n
-\n
 \n
 for csv_line in csv_line_list[2:]:\n
   object = {}\n
@@ -125,6 +128,9 @@ root = context.getPortalObject().portal_categories\n
 for path in gap_root_path.split(\'/\'):\n
   root = getSubCategory(root, path)\n
 \n
+existing_path_list = recursiveDocumentList(root)\n
+existing_path_list.remove(root.getPath())\n
+\n
 for object in object_list:\n
   description = object.get(\'Description\', None) or \'\'\n
   gap = object.get(\'Gap\', None) or \'\'\n
@@ -132,13 +138,26 @@ for object in object_list:\n
   gap = str(gap)\n
   if gap:\n
     gap = gap.replace(\'CLASSE \', \'\')\n
-    print \'%s - %s - %s\' % (gap or \'\', title or \'\', description or \'\')\n
+    print \'+ %s - %s - %s\' % (gap or \'\', title or \'\', description or \'\')\n
     path = root\n
     b = \'\'\n
     for a in gap:\n
       b = b + a\n
       path = getSubCategory(path, b)\n
     path.edit(reference=gap, title=title, description=description)\n
+    try:\n
+      existing_path_list.remove(path.getPath())\n
+    except ValueError:\n
+      pass\n
+\n
+existing_path_list.sort(key=len, reverse=True)\n
+for path in existing_path_list:\n
+  object = context.restrictedTraverse(path)\n
+  description = object.getDescription() or \'\'\n
+  gap = object.getId() or \'\'\n
+  title = object.getTitle() or \'\'\n
+  print \'- %s - %s - %s\' % (gap or \'\', title or \'\', description or \'\')\n
+  object.getParentValue().deleteContent(object.getId())\n
 \n
 return printed\n
 
@@ -185,6 +204,7 @@ return printed\n
                             <string>kw</string>
                             <string>_print_</string>
                             <string>_print</string>
+                            <string>recursiveDocumentList</string>
                             <string>splitCsvLine</string>
                             <string>getSubCategory</string>
                             <string>_getattr_</string>
@@ -207,6 +227,7 @@ return printed\n
                             <string>_inplacevar_</string>
                             <string>root</string>
                             <string>path</string>
+                            <string>existing_path_list</string>
                             <string>None</string>
                             <string>description</string>
                             <string>gap</string>
@@ -214,6 +235,9 @@ return printed\n
                             <string>str</string>
                             <string>b</string>
                             <string>a</string>
+                            <string>ValueError</string>
+                            <string>len</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>
