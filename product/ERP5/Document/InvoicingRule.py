@@ -107,6 +107,8 @@ class InvoicingRule(Rule):
         'resource': context_movement.getResource(),
         'variation_category_list': context_movement.getVariationCategoryList(),
         'variation_property_dict': context_movement.getVariationPropertyDict(),
+	'delivery_mode':context_movement.getDeliveryMode(),
+	'incoterm':context_movement.getIncoterm(),
         'base_contribution_list': context_movement.getBaseContributionList(),
         'aggregate_list': context_movement.getAggregateList(),
         'quantity': context_movement.getCorrectedQuantity(),
@@ -135,7 +137,10 @@ class InvoicingRule(Rule):
       if not parent_movement.isFrozen():
         add_list, modify_dict, \
           delete_list = self._getCompensatedMovementList(applied_rule, **kw)
-
+	LOG("KW",0,kw)
+        LOG("Add List",0,add_list)
+	LOG("Delete List",0,delete_list)
+	LOG("Modify Dict",0,modify_dict)
         for movement_id in delete_list:
           applied_rule._delObject(movement_id)
       
@@ -150,6 +155,8 @@ class InvoicingRule(Rule):
           else:
             new_mvmt = applied_rule.newContent(portal_type=self.movement_type)
           new_mvmt.edit(**movement_dict)
+	  LOG("Movement Dict",0,movement_dict)
+	 
 
     # Pass to base class
     Rule.expand(self, applied_rule, force=force, **kw)

@@ -74,5 +74,5 @@ class Simulation:
             'mode'        : 'w' },
   )
 
-  _categories = ('order', 'delivery')
+  _categories = ('order', 'delivery','delivery_mode','incoterm')
 
