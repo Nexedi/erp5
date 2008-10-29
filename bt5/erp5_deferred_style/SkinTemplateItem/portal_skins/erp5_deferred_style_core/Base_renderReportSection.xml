@@ -53,8 +53,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.log(\'report_section %s: %s/%s\' % (\n
-                report_section_idx, context.getPath(), report_section.getFormId(),))\n
+            <value> <string># context.log(\'report_section %s: %s/%s\' % (\n
+#                 report_section_idx, context.getPath(), report_section.getFormId(),))\n
 request = container.REQUEST\n
 request.other.update(request_other)\n
 \n
@@ -124,9 +124,9 @@ return report_section_idx, data\n
                             <string>report_section_idx</string>
                             <string>request_other</string>
                             <string>_getattr_</string>
-                            <string>context</string>
                             <string>container</string>
                             <string>request</string>
+                            <string>context</string>
                             <string>portal</string>
                             <string>_write_</string>
                             <string>getattr</string>
