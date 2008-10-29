@@ -99,7 +99,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>portal_type</string>
+                          <string>translated_portal_type</string>
                           <string>Type</string>
                         </tuple>
                         <tuple>
@@ -204,7 +204,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>portal_type</string>
+                          <string>translated_portal_type</string>
                           <string>Type</string>
                         </tuple>
                         <tuple>
@@ -321,7 +321,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>portal_type</string>
+                          <string>translated_portal_type</string>
                           <string>Type</string>
                         </tuple>
                         <tuple>
@@ -428,7 +428,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>portal_type</string>
+                          <string>translated_portal_type</string>
                           <string>Type</string>
                         </tuple>
                         <tuple>
