@@ -18,12 +18,6 @@
             </value>
         </item>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_arg</string> </key>
             <value>
               <object>
@@ -90,12 +84,6 @@
                   </dictionary>
                 </state>
               </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>

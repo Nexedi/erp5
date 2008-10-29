@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>__name__</string> </key>
             <value> <string>folder.png</string> </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>

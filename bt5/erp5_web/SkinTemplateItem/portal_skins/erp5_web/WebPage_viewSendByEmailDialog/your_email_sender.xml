@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>your_email_sender</string> </value>
         </item>
