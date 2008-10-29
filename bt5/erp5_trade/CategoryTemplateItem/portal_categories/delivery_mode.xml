@@ -34,7 +34,12 @@
         <item>
             <key> <string>acquisition_base_category</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>delivery</string>
+                <string>order</string>
+                <string>parent</string>
+                <string>resource</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -53,7 +58,7 @@
         </item>
         <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python: []</string> </value>
+            <value> <string>python: list( portal.getPortalAcquisitionMovementTypeList() + portal.getPortalItemTypeList() + portal.getPortalDeliveryTypeList() + portal.getPortalOrderTypeList() + portal.getPortalInvoiceTypeList() + portal.getPortalResourceTypeList())</string> </value>
         </item>
         <item>
             <key> <string>acquisition_sync_value</string> </key>
@@ -81,7 +86,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>fallback_base_category</string> </key>
@@ -107,7 +114,7 @@
         </item>
         <item>
             <key> <string>last_id</string> </key>
-            <value> <string>1</string> </value>
+            <value> <string>3</string> </value>
         </item>
         <item>
             <key> <string>membership_criterion_base_category</string> </key>

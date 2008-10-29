@@ -59,13 +59,7 @@ related_order = packing_list.getCausalityValue()\n
 if packing_list.getSimulationState() == \'draft\':\n
   packing_list.edit(\n
     comment = related_order.getComment(),\n
-    title = related_order.getTitle(),\n
-\n
-   # TODO: use movement group instead of copying those categories:\n
-    delivery_mode = related_order.getDeliveryMode(),\n
-    incoterm = related_order.getIncoterm(),\n
-    source_administration_value = related_order.getSourceAdministrationValue(),\n
-\n
+    title = related_order.getTitle()\n
   )\n
 </string> </value>
         </item>
