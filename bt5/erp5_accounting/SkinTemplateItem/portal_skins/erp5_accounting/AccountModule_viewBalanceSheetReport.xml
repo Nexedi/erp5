@@ -83,11 +83,12 @@ dQEAAAAA</string> </value>
               at_date_previous_period python:modules["DateTime"].DateTime(at_date.year() - 1, at_date.month(), at_date.day());\n
               date_formatter nocall:here/Base_viewFieldLibrary/my_date/render_pdf;\n
               from_date python:context.Base_getAccountingPeriodStartDateForSectionCategory(section_category=request["section_category"], date=at_date);\n
+              portal_type here/getPortalAccountingMovementTypeList;\n
               section_uid python: context.Base_getSectionUidListForSectionCategory(request["section_category"]);\n
               financial_section python:context.getPortalObject().portal_categories.financial_section;\n
-              getInventory python: lambda **kw: context.portal_simulation.getInventoryAssetPrice(section_uid=section_uid, simulation_state=request["simulation_state"], at_date=at_date, **kw);\n
-              getInventoryIncomeAccount python: lambda **kw:context.portal_simulation.getInventoryAssetPrice(section_uid=section_uid, simulation_state=request["simulation_state"], at_date=at_date, from_date=from_date, **kw);\n
-              getInventoryPreviousPeriod python: lambda **kw:context.portal_simulation.getInventoryAssetPrice(section_uid=section_uid, simulation_state=["simulation_state"], at_date=at_date_previous_period, **kw);\'\n
+              getInventory python: lambda **kw: context.portal_simulation.getInventoryAssetPrice(section_uid=section_uid, simulation_state=request["simulation_state"], at_date=at_date, portal_type=portal_type, **kw);\n
+              getInventoryIncomeAccount python: lambda **kw:context.portal_simulation.getInventoryAssetPrice(section_uid=section_uid, simulation_state=request["simulation_state"], at_date=at_date, from_date=from_date, portal_type=portal_type, **kw);\n
+              getInventoryPreviousPeriod python: lambda **kw:context.portal_simulation.getInventoryAssetPrice(section_uid=section_uid, simulation_state=["simulation_state"], at_date=at_date_previous_period, portal_type=portal_type, **kw);\'\n
   office:version=\'1.0\'>\n
   <office:scripts/>\n
   <office:font-face-decls>\n
