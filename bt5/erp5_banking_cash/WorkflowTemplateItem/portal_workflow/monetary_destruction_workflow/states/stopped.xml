@@ -44,7 +44,7 @@
             <value>
               <tuple>
                 <string>deliver</string>
-                <string>deliver_action</string>
+                <string>stop_to_deliver_action</string>
               </tuple>
             </value>
         </item>
