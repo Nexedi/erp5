@@ -40,6 +40,8 @@
             <key> <string>tested_property</string> </key>
             <value>
               <tuple>
+                <string>delivery_mode</string>
+                <string>incoterm</string>
                 <string>source</string>
                 <string>destination</string>
                 <string>source_section</string>
