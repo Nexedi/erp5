@@ -1,2 +1,5 @@
+2008-10-30 Vincent Pelletier
+* Add a ZSQLMethod to recreate roles_and_users from ZODB security cache. Requires ZSQLCatalog r24410 or later.
+
 2008-10-01 thibaut
 * Add an alarm. It checks which object in catalog table is into ZODB.
