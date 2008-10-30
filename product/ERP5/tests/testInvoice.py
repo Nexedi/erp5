@@ -58,6 +58,9 @@ class TestInvoiceMixin:
   customer_gap = 'fr/pcg/4/41/411'
   mail_delivery_mode = 'by_mail'
   cpt_incoterm = 'cpt'
+  unit_piece_quantity_unit = 'unit/piece'
+  mass_quantity_unit = 'mass/kg'
+
   # (account_id, account_gap, account_type)
   account_definition_list = (
       ('receivable_vat', vat_gap, 'liability/payable/collected_vat',),
@@ -108,6 +111,8 @@ class TestInvoiceMixin:
             'gap/%s' % self.customer_gap,
 	    'delivery_mode/%s' % self.mail_delivery_mode,
 	    'incoterm/%s' % self.cpt_incoterm,
+            'quantity_unit/%s' % self.unit_piece_quantity_unit,
+            'quantity_unit/%s' % self.mass_quantity_unit,
         )
 
 
@@ -941,7 +946,70 @@ class TestInvoice(TestInvoiceMixin):
                          order.getDeliveryMode())
     self.assertEquals(related_invoice.getIncoterm(),
                          order.getIncoterm())
-			 
+                         
+                         
+  def test_01_quantity_unit_copied_on_packing_list(self):
+    """
+    tests that when a resource uses different quantity unit that the
+    quantity units are copied on the packing list line using the delivery
+    builer
+    """           
+    resource = self.portal.product_module.newContent(
+                    portal_type='Product',
+                    title='Resource',
+                    product_line='apparel')
+    resource.setQuantityUnitList([self.unit_piece_quantity_unit,
+                                 self.mass_quantity_unit])
+    currency = self.portal.currency_module.newContent(
+                                portal_type='Currency',
+                                title='euro')
+    currency.setBaseUnitQuantity(0.01)
+    get_transaction().commit()
+    self.tic()#execute transaction
+    client = self.portal.organisation_module.newContent(
+                            portal_type='Organisation',
+                            title='Client',
+                            default_address_region=self.default_region)
+    vendor = self.portal.organisation_module.newContent(
+                            portal_type='Organisation',
+                            title='Vendor',
+                            default_address_region=self.default_region)
+    order = self.portal.getDefaultModule(self.order_portal_type).newContent(
+                              portal_type=self.order_portal_type,
+                              source_value=vendor,
+                              source_section_value=vendor,
+                              destination_value=client,
+                              destination_section_value=client,
+                              start_date=DateTime(2008,10, 21),
+                              price_currency_value=currency,
+                              delivery_mode=self.mail_delivery_mode,
+                              incoterm=self.cpt_incoterm,
+                              title='Order')
+    first_order_line = order.newContent(
+                          portal_type=self.order_line_portal_type,
+                                  resource_value=resource,
+                             quantity_unit = self.unit_piece_quantity_unit,
+                                  quantity=5,
+                                  price=3)
+    second_order_line = order.newContent( 
+                          portal_type=self.order_line_portal_type,
+                                  resource_value=resource,
+                             quantity_unit=self.mass_quantity_unit,
+                                  quantity=1.5,
+                                  price=2)
+    order.confirm()
+    get_transaction().commit()
+    self.tic()
+    related_packing_list = order.getCausalityRelatedValue(
+                                portal_type=self.packing_list_portal_type)
+    self.assertNotEquals(related_packing_list, None)
+    movement_list = related_packing_list.getMovementList()
+    self.assertEquals(len(movement_list),2)
+    self.assertEquals(movement_list[0].getQuantityUnit(),
+                         first_order_line.getQuantityUnit())
+    self.assertEquals(movement_list[1].getQuantityUnit(),
+                         second_order_line.getQuantityUnit())		
+ 
 			 
 class TestSaleInvoiceMixin(TestInvoiceMixin,
                            TestPackingListMixin,
