@@ -42,6 +42,7 @@
               <tuple>
                 <string>resource</string>
                 <string>aggregate</string>
+                <string>quantity_unit</string>
               </tuple>
             </value>
         </item>
