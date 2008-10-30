@@ -43,7 +43,9 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>cancel</string>
                 <string>deliver</string>
+                <string>revoke_action</string>
                 <string>stop_to_deliver_action</string>
               </tuple>
             </value>

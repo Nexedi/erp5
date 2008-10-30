@@ -79,8 +79,6 @@
               <tuple>
                 <string>Assignor</string>
                 <string>Assignee</string>
-                <string>DestinationAssignor</string>
-                <string>DestinationAssignee</string>
                 <string>Manager</string>
               </tuple>
             </value>

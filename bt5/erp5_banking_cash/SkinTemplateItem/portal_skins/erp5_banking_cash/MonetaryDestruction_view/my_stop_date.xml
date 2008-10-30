@@ -228,6 +228,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>timezone_style</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -482,7 +486,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getSimulationState() in (\'ordered\', \'confirmed\', \'delivered\')</string> </value>
+            <value> <string>python: here.getSimulationState() in (\'stopped\', \'delivered\')</string> </value>
         </item>
       </dictionary>
     </pickle>
