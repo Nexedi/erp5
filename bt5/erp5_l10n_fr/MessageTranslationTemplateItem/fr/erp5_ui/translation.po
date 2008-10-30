@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 Localized Interface\n"
 "POT-Creation-Date: 2008-02-18 11:02+CET\n"
-"PO-Revision-Date: 2008-10-28 16:20+0100\n"
+"PO-Revision-Date: 2008-10-30 11:40+0100\n"
 "Last-Translator: <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
@@ -717,6 +717,9 @@ msgstr "Tous les documents"
 msgid "All Related Documents"
 msgstr "Tous les documents liés"
 
+msgid "Alphabetical"
+msgstr "Alphanumérique"
+
 #: portal_skins/erp5_web_widget_library/Document_viewProfileWidget
 msgid "Also in:"
 msgstr "également dans:"
@@ -1026,6 +1029,9 @@ msgstr "Arguments"
 
 msgid "Articles"
 msgstr "Produits Finis"
+
+msgid "Ascending"
+msgstr "Croissant"
 
 #: portal_workflow/requirement_analysis_workflow/transitions/plan_action
 msgid "Ask for More Details"
@@ -1397,6 +1403,9 @@ msgstr "Bloquer le compte"
 #: erp5_crm/Event_viewFieldLibrary/my_text_content [Glossary term 3324]
 msgid "Body"
 msgstr "Contenu de la page"
+
+msgid "Both sections must be defined for invoices"
+msgstr "Le client et le fournisseur doivent être définis sur une facture"
 
 msgid "Brand"
 msgstr "Vignette"
@@ -3221,6 +3230,9 @@ msgstr "Impression par défaut de chaque document"
 msgid "Default Section Layout"
 msgstr "Mise en page par défaut "
 
+msgid "Default Sort"
+msgstr "Tri par défaut"
+
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_report_style [Glossary term
 #: 3642]
 msgid "Default Style used for reports."
@@ -3256,7 +3268,7 @@ msgstr "Valider l'écriture des à nouveaux"
 
 #: portal_skins/erp5_core/Folder_viewSortOnDialog
 msgid "Define Sort Order"
-msgstr "Définir l'ordre de tri."
+msgstr "Définir l'ordre de tri"
 
 #: erp5_trade/PaymentCondition_view/my_payment_additional_term [Glossary term
 #: 1421]
@@ -3456,6 +3468,9 @@ msgstr "Outil des livraisons"
 #: portal_skins/erp5_core/TemplateTool_viewUpgradeRepositoryBusinessTemplateListDialog/listbox
 msgid "Dependencies"
 msgstr "Dépendances"
+
+msgid "Descending"
+msgstr "Décroissant"
 
 #: portal_skins/erp5_base/Agent_view/listbox
 #: portal_skins/erp5_base/BankAccount_view/listbox
@@ -3716,6 +3731,12 @@ msgstr "Module des remises"
 #: 3402]
 msgid "Discount Ratio"
 msgstr "Taux de remise"
+
+msgid "Discount Ratio Quantity Step"
+msgstr "Echelle du taux de remise"
+
+msgid "Discount Ratio Variation Axes"
+msgstr "Axe de variation du taux de remise"
 
 msgid "Discount Type"
 msgstr "Type de remise"
@@ -5507,11 +5528,11 @@ msgstr "Budget initial"
 
 #: portal_skins/erp5_accounting/AccountModule_viewAccountListForTrialBalance/listbox
 msgid "Initial Credit Balance"
-msgstr "Solde Créditeur initial"
+msgstr "Solde créditeur initial"
 
 #: portal_skins/erp5_accounting/AccountModule_viewAccountListForTrialBalance/listbox
 msgid "Initial Debit Balance"
-msgstr "Solde Débiteur initial"
+msgstr "Solde débiteur initial"
 
 #: portal_skins/erp5_project/Project_viewSummaryList/listbox
 msgid "Initial End Date"
@@ -6865,6 +6886,9 @@ msgstr "Nombre d'objets en relation"
 msgid "Number of units involved in base prices"
 msgstr "Nombre d'unités dans les prix de base"
 
+msgid "Numerical"
+msgstr "Numérique"
+
 msgid "ODS Style"
 msgstr "Style ODS"
 
@@ -7744,7 +7768,7 @@ msgstr "Code postal"
 #: portal_workflow/query_workflow/states/posted packing_list_workflow
 #: [Glossary term 1455]
 msgid "Posted"
-msgstr "Brouillard Validé"
+msgstr "Brouillard validé"
 
 #: portal_workflow/event_workflow/worklists/5_posted_events
 msgid "Posted Events"
@@ -8530,6 +8554,9 @@ msgstr "L'unité doit être définie"
 
 msgid "Quantity axes"
 msgstr "Quantité variable selon"
+
+msgid "Quantity must be defined in lines"
+msgstr "Une quantité doit être définie dans la ligne de commande"
 
 msgid "Quantity ratio"
 msgstr "Coefficients"
@@ -9834,6 +9861,9 @@ msgstr "Vendeur"
 msgid "Send"
 msgstr "Envoyer"
 
+msgid "Send Mail"
+msgstr "Envoyer l'email"
+
 #: portal_workflow/sale_opportunity_workflow/transitions/offer_action
 msgid "Send Offer"
 msgstr "Envoyer l'offre"
@@ -9920,6 +9950,9 @@ msgstr "Services"
 #: portal_workflow/validation_workflow/worklists/5_draft_service_list
 msgid "Services to Validate"
 msgstr "Services à valider"
+
+msgid "Set List Setting"
+msgstr "Définir les colonnes"
 
 msgid "Set List Settting"
 msgstr "Appliquer"
@@ -10136,7 +10169,7 @@ msgstr "Numéro de sécurité sociale"
 
 #: portal_skins/erp5_base/OrganisationModule_viewOrganisationList/listbox
 msgid "Social Form"
-msgstr "Forme de la Société"
+msgstr "Forme juridique"
 
 msgid "Social Name"
 msgstr "Raison Sociale"
@@ -10840,6 +10873,12 @@ msgstr "Demandes d'assistance"
 #: 3422]
 msgid "Surcharge Ratio"
 msgstr "Ratio de surcharge"
+
+msgid "Surcharge Ratio Quantity Step"
+msgstr "Echelle du ratio de surchage"
+
+msgid "Surcharge Ratio Variation Axes"
+msgstr "Axes de variation du ratio de surcharge"
 
 msgid "Surname"
 msgstr "Prénom"
