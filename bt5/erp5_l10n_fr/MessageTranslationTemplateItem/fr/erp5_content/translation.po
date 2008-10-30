@@ -327,6 +327,9 @@ msgstr "Services de l'environnement"
 msgid "Equipment Components & Supplies"
 msgstr "Equipement et composants"
 
+msgid "Equity"
+msgstr "Capitaux propres"
+
 msgid "Ex Works"
 msgstr "Ex Works (EXW)"
 
@@ -422,6 +425,9 @@ msgstr "Salaire Brut"
 
 msgid "HQ"
 msgstr "Direction"
+
+msgid "HR"
+msgstr "Ressources humaines"
 
 msgid "Headquarters"
 msgstr "Direction"
@@ -530,6 +536,9 @@ msgstr "Droit"
 
 msgid "Length"
 msgstr "Longueur"
+
+msgid "Liability"
+msgstr "Dettes"
 
 msgid "Limited company (Ltd.)"
 msgstr "Société anonyme (SA)"
@@ -795,6 +804,9 @@ msgstr "Équipements et fournitures pour l'impression, la photographie et l'audi
 msgid "Private"
 msgstr "Privé"
 
+msgid "Product"
+msgstr "Produit"
+
 msgid "Production"
 msgstr "Production"
 
@@ -851,6 +863,9 @@ msgstr "Employé des achats"
 
 msgid "Purchase Manager"
 msgstr "Directeur des achats"
+
+msgid "Purchases"
+msgstr "Achats"
 
 msgid "Purchases Campaign"
 msgstr "Campagne d'achat"
@@ -957,6 +972,9 @@ msgstr "Prospect à convaincre"
 msgid "Selling, General and Administrative Expenses"
 msgstr "Frais généraux et administratifs"
 
+msgid "Service"
+msgstr "Service"
+
 msgid "Service Industry Machinery and Equipment and Supplies"
 msgstr "Machines, équipement et fournitures pour l'industrie des services"
 
@@ -1055,6 +1073,9 @@ msgstr "Outils et machineries"
 
 msgid "Total Deduction"
 msgstr "Total Retenues"
+
+msgid "Total Income"
+msgstr "Somme des produits"
 
 msgid "Trade and Other Receivables"
 msgstr "Créances client"
