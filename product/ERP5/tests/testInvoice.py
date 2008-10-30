@@ -56,7 +56,8 @@ class TestInvoiceMixin:
   vat_rate = 0.196
   sale_gap = 'fr/pcg/7/70/707/7071/70712'
   customer_gap = 'fr/pcg/4/41/411'
-
+  mail_delivery_mode = 'by_mail'
+  cpt_incoterm = 'cpt'
   # (account_id, account_gap, account_type)
   account_definition_list = (
       ('receivable_vat', vat_gap, 'liability/payable/collected_vat',),
@@ -75,7 +76,7 @@ class TestInvoiceMixin:
 
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-            'erp5_invoicing')
+            'erp5_invoicing','erp5_apparel')
 
   def createCategories(self):
     """Create the categories for our test. """
@@ -105,6 +106,8 @@ class TestInvoiceMixin:
             'gap/%s' % self.vat_gap,
             'gap/%s' % self.sale_gap,
             'gap/%s' % self.customer_gap,
+	    'delivery_mode/%s' % self.mail_delivery_mode,
+	    'incoterm/%s' % self.cpt_incoterm,
         )
 
 
@@ -214,16 +217,19 @@ class TestInvoice(TestInvoiceMixin):
                     product_line='apparel')
     currency = self.portal.currency_module.newContent(
                                 portal_type='Currency',
-                                title='Currency')
+                                title='Currency',
+				base_unit_quantity=0.01)
     self.createInvoiceTransactionRule(currency)
 
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
                             title='Client',
+			    price_currency= currency.getRelativeUrl(),
                             default_address_region=self.default_region)
     vendor = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
                             title='Vendor',
+			    price_currency= currency.getRelativeUrl(),
                             default_address_region=self.default_region)
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
@@ -256,7 +262,7 @@ class TestInvoice(TestInvoiceMixin):
     self.assertEquals(currency,
           delivery_movement.getPriceCurrencyValue())
 
-
+    
   def test_modify_planned_order_invoicing_rule(self):
     """
     tests that modifying a planned order affects movements from invoicing
@@ -265,17 +271,21 @@ class TestInvoice(TestInvoiceMixin):
     resource = self.portal.getDefaultModule(
         self.resource_portal_type).newContent(
                     portal_type=self.resource_portal_type,
-                    title='Resource',)
+                    title='Resource',
+		    product_line='apparel')
     currency = self.portal.currency_module.newContent(
                                 portal_type='Currency',
-                                title='Currency')
+                                title='Currency',
+				base_unit_quantity=0.01)
 
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
-                            title='Client')
+                            title='Client',
+			    price_currency= currency.getRelativeUrl())
     vendor = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
-                            title='Vendor')
+                            title='Vendor',
+			    price_currency= currency.getRelativeUrl())
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
                               source_value=vendor,
@@ -292,7 +302,8 @@ class TestInvoice(TestInvoiceMixin):
 
     other_entity = self.portal.organisation_module.newContent(
                                       portal_type='Organisation',
-                                      title='Other Entity')
+                                      title='Other Entity',
+		            price_currency=currency.getRelativeUrl())
     order.plan()
     get_transaction().commit()
     self.tic()
@@ -458,7 +469,8 @@ class TestInvoice(TestInvoiceMixin):
                     product_line='apparel')
     currency = self.portal.currency_module.newContent(
                                 portal_type='Currency',
-                                title='Currency')
+                                title='Currency',
+				base_unit_quantity=0.01)
     self.createInvoiceTransactionRule(currency)
 
     client = self.portal.organisation_module.newContent(
@@ -868,7 +880,69 @@ class TestInvoice(TestInvoiceMixin):
     self.assertNotEquals(invoice.getDestinationReference(),
                          new_invoice.getDestinationReference())
 
-
+  def test_delivery_mode_and_incoterm_on_invoice(self):
+    """
+    test that categories delivery_mode and incoterm are copied on 
+    the invoice by the delivery builder
+    """ 
+    		  
+    resource = self.portal.product_module.newContent(
+                    portal_type='Product',
+                    title='Resource',
+		    product_line='apparel')
+    currency = self.portal.currency_module.newContent(
+                                portal_type='Currency',
+                                title='euro')
+    currency.setBaseUnitQuantity(0.01)
+    self.createInvoiceTransactionRule(currency)
+    get_transaction().commit()
+    self.tic()#execute transaction
+    client = self.portal.organisation_module.newContent(
+                            portal_type='Organisation',
+                            title='Client',
+                            default_address_region=self.default_region)
+    vendor = self.portal.organisation_module.newContent(
+                            portal_type='Organisation',
+                            title='Vendor',
+                            default_address_region=self.default_region)
+    order = self.portal.getDefaultModule(self.order_portal_type).newContent(
+                              portal_type=self.order_portal_type,
+                              source_value=vendor,
+                              source_section_value=vendor,
+                              destination_value=client,
+                              destination_section_value=client,
+                              start_date=DateTime(2008,10, 21),
+                              price_currency_value=currency,
+			      delivery_mode=self.mail_delivery_mode,
+			      incoterm=self.cpt_incoterm,
+                              title='Order')
+    order_line = order.newContent(portal_type=self.order_line_portal_type,
+                                  resource_value=resource,
+                                  quantity=5,
+                                  price=2)
+    order.confirm()
+    get_transaction().commit()
+    self.tic()
+    related_packing_list = order.getCausalityRelatedValue(
+                                portal_type=self.packing_list_portal_type)
+    self.assertNotEquals(related_packing_list, None)
+    self.assertEquals(related_packing_list.getDeliveryMode(),
+                         order.getDeliveryMode())
+    self.assertEquals(related_packing_list.getIncoterm(),
+                         order.getIncoterm())
+    related_packing_list.start()
+    related_packing_list.stop()
+    get_transaction().commit()
+    self.tic()
+    related_invoice = related_packing_list.getCausalityRelatedValue(
+                                  portal_type=self.invoice_portal_type)
+    self.assertNotEquals(related_invoice, None)
+    self.assertEquals(related_invoice.getDeliveryMode(),
+                         order.getDeliveryMode())
+    self.assertEquals(related_invoice.getIncoterm(),
+                         order.getIncoterm())
+			 
+			 
 class TestSaleInvoiceMixin(TestInvoiceMixin,
                            TestPackingListMixin,
                            TestAccountingRulesMixin,
@@ -1906,6 +1980,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     TestInvoiceMixin._createCategories(self)
 
   getNeededCategoryList = TestInvoiceMixin.getNeededCategoryList
+  
+  
 
   def test_01_SimpleInvoice(self, quiet=quiet, run=RUN_ALL_TESTS):
     """
@@ -2725,7 +2801,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
       """)
     sequence_list.play(self, quiet=quiet)
 
-
+  
 
 class TestPurchaseInvoice(TestInvoice, ERP5TypeTestCase):
   """Tests for purchase invoice.
