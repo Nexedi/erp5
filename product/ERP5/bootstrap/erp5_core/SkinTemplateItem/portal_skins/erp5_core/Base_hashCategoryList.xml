@@ -79,11 +79,10 @@ for value in value_list:\n
 \n
 request = context.REQUEST\n
 \n
-if request.get(\'field_errors\', {}) == {}:\n
-  new_dict = default_sub_field_property_dict.copy()\n
-  new_dict[\'title\'] = \'&nbsp;\'\n
-  new_dict[\'key\'] = str(z)\n
-  sub_field_list.append(new_dict)\n
+new_dict = default_sub_field_property_dict.copy()\n
+new_dict[\'title\'] = \'&nbsp;\'\n
+new_dict[\'key\'] = str(z)\n
+sub_field_list.append(new_dict)\n
 \n
 if len(sub_field_list):\n
   sub_field_list[0][\'title\'] = default_sub_field_property_dict[\'title\']\n

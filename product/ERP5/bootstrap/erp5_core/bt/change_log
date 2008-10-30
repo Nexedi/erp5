@@ -1,3 +1,6 @@
+2008-10-30 ivan
+* make ParallelListField always show default empty ListField at bottom not depending on form's validation status
+
 2008-10-24 yusei
 * Cleaned up Base_getTranslatedWorkflowStateItemList and separate generic function to Base_getWorkflowStateItemList.
 
