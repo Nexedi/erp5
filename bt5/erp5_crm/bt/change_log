@@ -1,3 +1,6 @@
+2008-10-30 rafael
+* Added Marked Posted transition for new messages.
+
 2008-10-24 yusei
 * Fixed EventModule_getEventDetailedReportSectionList. Since All messages will be translated in a template, no need to translate in this script.
 

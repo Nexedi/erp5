@@ -40,8 +40,10 @@
                 <string>expire</string>
                 <string>expire_action</string>
                 <string>mark_responded_action</string>
+                <string>mark_started_action</string>
                 <string>respond</string>
                 <string>respond_action</string>
+                <string>start</string>
               </tuple>
             </value>
         </item>
