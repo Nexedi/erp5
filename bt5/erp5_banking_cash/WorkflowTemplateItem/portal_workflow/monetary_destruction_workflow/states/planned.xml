@@ -44,11 +44,11 @@
             <value>
               <tuple>
                 <string>deliver</string>
-                <string>order</string>
-                <string>order_action</string>
                 <string>plan_to_deliver_action</string>
                 <string>reject</string>
                 <string>reject_action</string>
+                <string>start</string>
+                <string>start_action</string>
               </tuple>
             </value>
         </item>

@@ -45,8 +45,6 @@
               <tuple>
                 <string>confirm</string>
                 <string>confirm_action</string>
-                <string>reject</string>
-                <string>reject_action</string>
               </tuple>
             </value>
         </item>

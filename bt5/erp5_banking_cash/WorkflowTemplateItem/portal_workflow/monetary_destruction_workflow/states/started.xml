@@ -16,12 +16,18 @@
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>confirmed</string> </value>
+            <value> <string>started</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -31,14 +37,14 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Assigned To Remote Site Vault Controller</string> </value>
+            <value> <string>Assigned To Vault Manager</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>deliver</string>
-                <string>deliver_action</string>
+                <string>stop</string>
+                <string>stop_action</string>
               </tuple>
             </value>
         </item>
@@ -70,11 +76,10 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>DestinationAssignee</string>
+                        <string>Assistant</string>
                         <string>DestinationAssignor</string>
                         <string>Manager</string>
                         <string>Reviewer</string>
-                        <string>Assistant</string>
                       </tuple>
                     </value>
                 </item>
@@ -108,11 +113,10 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>DestinationAssignee</string>
+                        <string>Assistant</string>
                         <string>DestinationAssignor</string>
                         <string>Manager</string>
                         <string>Reviewer</string>
-                        <string>Assistant</string>
                       </tuple>
                     </value>
                 </item>
