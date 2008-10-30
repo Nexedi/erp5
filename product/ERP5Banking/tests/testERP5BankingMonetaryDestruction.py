@@ -71,7 +71,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     - create an invalid Line (quantity > available at source)
     - check that the system behaves correctly
 
-    - pass "confirm_action" transition
+    - pass "plan_action" transition
     - check that the new state is confirmed
     - check that the source has been debited correctly (current < future)
     - check amount, lines, ...
@@ -624,7 +624,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     self.stepTic()
     # get state
     state = self.monetary_destruction.getSimulationState()
-    # check state is confirmed
+    # check state is planned
     self.assertEqual(state, 'planned')
     # get workflow history
 
@@ -635,10 +635,12 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     """
     # check we have 5 banknotes of 10000 currently
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.source.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getAvailableInventory(node=self.source.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     # check we will have 0 banknote of 10000 after deliver
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.source.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     # check we have 24 banknotes of 5000 currently
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.source.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
+    self.assertEqual(self.simulation_tool.getAvailableInventory(node=self.source.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
     # check we will have 0 banknote of 5000 after deliver
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.source.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
 
@@ -649,14 +651,29 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     """
     # check we have 5 banknotes of 10000 currently
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
+    self.assertEqual(self.simulation_tool.getAvailableInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 5.0)
     # check we will have 0 banknote of 10000 after deliver
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     # check we have 24 banknotes of 5000 currently
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
+    self.assertEqual(self.simulation_tool.getAvailableInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 24.0)
     # check we will have 0 banknote of 5000 after deliver
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
 
-
+  def stepCheckSourceDebitAvailableForExterne(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Check that compution of inventory at vault source is right after confirm and before deliver 
+    """
+    # check we have 5 banknotes of 10000 currently
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    # check we will have 0 banknote of 10000 after deliver
+    self.assertEqual(self.simulation_tool.getAvailableInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    # check we have 24 banknotes of 5000 currently
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
+    # check we will have 0 banknote of 5000 after deliver
+    self.assertEqual(self.simulation_tool.getAvailableInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
 
   def stepValidateMonetaryDestruction(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -681,9 +698,11 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     """
     # check we have 0 banknote of 10000
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.source.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getAvailableInventory(node=self.source.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.source.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     # check we have 0 banknote of 5000
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.source.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getAvailableInventory(node=self.source.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.source.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
 
 
@@ -693,9 +712,11 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
     """
     # check we have 0 banknote of 10000
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getAvailableInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_10000.getRelativeUrl()), 0.0)
     # check we have 0 banknote of 5000
     self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
+    self.assertEqual(self.simulation_tool.getAvailableInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
     self.assertEqual(self.simulation_tool.getFutureInventory(node=self.source_for_externe.getRelativeUrl(), resource = self.billet_5000.getRelativeUrl()), 0.0)
 
   def stepPlanMonetaryDestruction(self, sequence=None, sequence_list=None, **kwd):
@@ -721,41 +742,41 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
                      sequence=None, sequence_list=None, **kwd):
     self.monetary_destruction.setSourceTotalAssetPrice('2400.0')
 
-  def stepOrderMonetaryDestruction(self, sequence=None, sequence_list=None, **kwd):
+  def stepStartMonetaryDestruction(self, sequence=None, sequence_list=None, **kwd):
     """
     Confirm the monetary_destruction and check it
     """
     # do the Workflow action
-    self.workflow_tool.doActionFor(self.monetary_destruction, 'order_action', wf_id='monetary_destruction_workflow')
+    self.workflow_tool.doActionFor(self.monetary_destruction, 'start_action', wf_id='monetary_destruction_workflow')
     # execute tic
     self.stepTic()
     # get state
     state = self.monetary_destruction.getSimulationState()
-    # check state is ordered
-    self.assertEqual(state, 'ordered')
+    # check state is started
+    self.assertEqual(state, 'started')
     # get workflow history
     workflow_history = self.workflow_tool.getInfoFor(ob=self.monetary_destruction, name='history', wf_id='monetary_destruction_workflow')
     
-  def stepConfirmMonetaryDestruction(self, sequence=None, sequence_list=None, **kwd):
+  def stepStopMonetaryDestruction(self, sequence=None, sequence_list=None, **kwd):
     """
     Confirm the monetary_destruction and check it
     """
     # do the Workflow action
-    self.workflow_tool.doActionFor(self.monetary_destruction, 'confirm_action', wf_id='monetary_destruction_workflow', stop_date=DateTime().Date())
+    self.workflow_tool.doActionFor(self.monetary_destruction, 'stop_action', wf_id='monetary_destruction_workflow', stop_date=DateTime().Date())
     # execute tic
     self.stepTic()
     # get state
     state = self.monetary_destruction.getSimulationState()
-    # check state is confirmed
-    self.assertEqual(state, 'confirmed')
+    # check state is stopped
+    self.assertEqual(state, 'stopped')
 
-  def stepConfirmToDeliverMonetaryDestruction(self, sequence=None, sequence_list=None, **kwd):
+  def stepStoppedToDeliverMonetaryDestruction(self, sequence=None, sequence_list=None, **kwd):
     """
     Deliver the monetary_destruction with a good user
     and check that the deliver of a cash tranfer have achieved
     """
     # do the workflow transition "deliver_action"
-    self.workflow_tool.doActionFor(self.monetary_destruction, 'deliver_action', wf_id='monetary_destruction_workflow')
+    self.workflow_tool.doActionFor(self.monetary_destruction, 'stop_to_deliver_action', wf_id='monetary_destruction_workflow')
     # execute tic
     self.stepTic()
     # get state of monetary_destruction
@@ -811,20 +832,20 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
                     + 'CreateValidLine1 CheckSubTotal ' \
                     + 'CreateValidLine2 CheckTotal ' \
                     + 'CheckInitialInventory ' \
-                    + 'CreateInvalidLine ' \
+                    + 'CreateInvalidLine Tic ' \
                     + 'TryPlannedMonetaryDestructionWithBadInventory ' \
                     + 'DelInvalidLine Tic CheckTotal ' \
                     + 'SetMonetaryDestructionSourceTotalAssetPrice ' \
                     + 'Tic CheckWorklist ' \
-                    + 'PlannedMonetaryDestruction ' \
+                    + 'PlannedMonetaryDestruction Tic ' \
                     + 'CheckSourceDebitPlanned ' \
                     + 'ResetInventory Tic ' \
                     + 'ValidateFails ' \
-                    + 'DeleteResetInventory Tic ' \
+                    + 'DeleteResetInventory ' \
                     + 'Tic CheckWorklist ' \
-                    + 'ValidateMonetaryDestruction ' \
+                    + 'ValidateMonetaryDestruction Tic ' \
                     + 'CheckSourceDebit ' \
-                    + 'Tic DelMonetaryDestruction Tic'
+                    + 'DelMonetaryDestruction Tic'
     sequence_list.addSequenceString(sequence_string)
     
     # This is the case of a destruction for another agency
@@ -833,20 +854,19 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin, ERP5TypeTestCase)
                     + 'CreateValidLineForExterne1 CheckSubTotal ' \
                     + 'CreateValidLineForExterne2 CheckTotal ' \
                     + 'CheckInitialInventoryForExterne ' \
-                    + 'CreateInvalidLine ' \
+                    + 'CreateInvalidLine Tic ' \
                     + 'TryPlannedMonetaryDestructionWithBadInventory ' \
                     + 'DelInvalidLine Tic CheckTotal ' \
                     + 'SetMonetaryDestructionSourceTotalAssetPrice ' \
                     + 'PlanMonetaryDestruction ' \
                     + 'CheckSourceDebitPlannedForExterne ' \
-                    + 'OrderMonetaryDestruction ' \
-                    + 'ConfirmMonetaryDestruction ' \
-                    + 'ResetInventoryForExterne Tic ' \
-                    + 'DeliverFails ' \
-                    + 'DeleteResetInventory Tic ' \
-                    + 'ConfirmToDeliverMonetaryDestruction ' \
+                    + 'StartMonetaryDestruction Tic ' \
+                    + 'CheckSourceDebitAvailableForExterne ' \
+                    + 'StopMonetaryDestruction Tic ' \
+                    + 'CheckSourceDebitAvailableForExterne ' \
+                    + 'StoppedToDeliverMonetaryDestruction Tic ' \
                     + 'CheckSourceDebitForExterne '	\
-                    + 'Tic DelMonetaryDestruction Tic '
+                    + 'DelMonetaryDestruction Tic '
 		    
     sequence_list.addSequenceString(another_sequence_string)
 
