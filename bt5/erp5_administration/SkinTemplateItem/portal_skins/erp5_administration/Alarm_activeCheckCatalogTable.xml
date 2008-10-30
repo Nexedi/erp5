@@ -65,7 +65,7 @@ context.Alarm_checkCatalogTable(active_process=\'/\'.join(active_process.getPhys
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>fixit=0, tag=None</string> </value>
+            <value> <string>fixit=0, tag=\'\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -109,7 +109,7 @@ context.Alarm_checkCatalogTable(active_process=\'/\'.join(active_process.getPhys
             <value>
               <tuple>
                 <int>0</int>
-                <none/>
+                <string></string>
               </tuple>
             </value>
         </item>

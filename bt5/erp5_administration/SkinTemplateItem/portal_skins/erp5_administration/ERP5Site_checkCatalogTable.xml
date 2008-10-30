@@ -185,7 +185,7 @@ if len(current_catalog_uid_list)>0:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>bundle_object_count=100, catalog_uid_list=None, property_override_method_id=None, active_process=None, activity_count=1, get_from_catalog=1, initial_activity_count=None, uid_min=None, tag=None, **kw</string> </value>
+            <value> <string>bundle_object_count=100, catalog_uid_list=None, property_override_method_id=None, active_process=None, activity_count=1, get_from_catalog=1, initial_activity_count=None, uid_min=None, tag=\'\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -280,7 +280,7 @@ if len(current_catalog_uid_list)>0:\n
                 <int>1</int>
                 <none/>
                 <none/>
-                <none/>
+                <string></string>
               </tuple>
             </value>
         </item>

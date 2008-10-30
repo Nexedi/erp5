@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>bundle_object_count=100, bundle_offset=0, active_process=None, tag=None</string> </value>
+            <value> <string>bundle_object_count=100, bundle_offset=0, active_process=None, tag=\'\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -115,7 +115,7 @@
                 <int>100</int>
                 <int>0</int>
                 <none/>
-                <none/>
+                <string></string>
               </tuple>
             </value>
         </item>
