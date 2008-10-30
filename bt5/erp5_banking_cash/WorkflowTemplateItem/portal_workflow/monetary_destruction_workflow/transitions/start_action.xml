@@ -31,7 +31,7 @@
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=order_action</string> </value>
+            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=start_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
@@ -57,7 +57,7 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>validateVaultBalance</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

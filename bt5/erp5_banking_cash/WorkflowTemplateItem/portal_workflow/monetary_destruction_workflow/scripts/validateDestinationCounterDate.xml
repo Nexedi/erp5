@@ -65,9 +65,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+            <value> <string>from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
 transaction = state_change[\'object\']\n
@@ -76,12 +74,7 @@ source_section = transaction.getSourceSection()\n
 \n
 # check again that we are in the good accounting date in site destination\n
 transaction.Baobab_checkCounterDateOpen(site=source_section, date=transaction.getStopDate())\n
-\n
-# Check source counter stock & date again.\n
-context.validateVaultBalance(state_change=state_change, check_source_counter_date=0)\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -139,7 +132,6 @@ context.validateVaultBalance(state_change=state_change, check_source_counter_dat
                             <string>transaction</string>
                             <string>_getattr_</string>
                             <string>source_section</string>
-                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
