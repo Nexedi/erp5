@@ -721,6 +721,17 @@ class Catalog(Folder,
     self.security_uid_dict[allowed_roles_and_users] = security_uid
     return (security_uid, allowed_roles_and_users)
 
+  def getRoleAndSecurityUidList(self):
+    """
+      Return a list of 2-tuples, suitable for direct use in a zsqlmethod.
+      Goal: make it possible to regenerate a table containing this data.
+    """
+    result = []
+    extend = result.extend
+    for role_list, security_uid in getattr(aq_base(self), 'security_uid_dict', {}).iteritems():
+      extend([(role, security_uid) for role in role_list])
+    return result
+
   def clear(self):
     """
     Clears the catalog by calling a list of methods
