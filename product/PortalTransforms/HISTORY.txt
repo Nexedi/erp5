@@ -1,5 +1,7 @@
-1.4.0-nexedi - 2008-10-22
+1.4.0-nexedi - 2008-10-24
 ========================
+
+  * fixed an infinite loop bug.
 
   * remove PortalTransforms/configure.zcml that is not compatible with
     Zope-2.8's five.
