@@ -702,6 +702,23 @@ class TestCRMMailSend(ERP5TypeTestCase):
       # this means no message have been set
       self.assertEquals((), self.portal.MailHost._last_message)
 
+  def test_MailMarkPosted(self):
+    # mark_started_action transition on event workflow will not send an email
+    # even if the portal type is a Mail Message
+    for ptype in self.portal.getPortalEventTypeList():
+      event = self.portal.event_module.newContent(portal_type=ptype)
+      event.setSource('person_module/me')
+      event.setDestination('person_module/recipient')
+      event.setTextContent('Hello !')
+      self.portal.portal_workflow.doActionFor(event, 'receive_action')
+      self.portal.portal_workflow.doActionFor(event, 'mark_started_action')
+
+      get_transaction().commit()
+      self.tic()
+      # this means no message have been set
+      self.assertEquals((), self.portal.MailHost._last_message)
+
+
   def test_MailMessageHTML(self):
     # test sending a mail message edited as HTML (the default with FCKEditor),
     # then the mail should have HTML.
