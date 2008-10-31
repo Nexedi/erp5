@@ -113,8 +113,10 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       if prefix is None:
         prefix = ''
       gender = self.getPortal().portal_categories['gender']
-      gender.newContent(id='male', title='Male', portal_type='Category')
-      gender.newContent(id='female', title='Female', portal_type='Category')
+      if 'male' not in gender.objectIds():
+        gender.newContent(id='male', title='Male', portal_type='Category')
+      if 'female' not in gender.objectIds():
+        gender.newContent(id='female', title='Female', portal_type='Category')
 
       bar = self.bar_module.newContent(id='bar',
                                        portal_type='Bar',
