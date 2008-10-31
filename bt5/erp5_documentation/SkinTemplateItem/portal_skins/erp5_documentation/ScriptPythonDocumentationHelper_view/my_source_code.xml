@@ -270,7 +270,7 @@
                 </item>
                 <item>
                     <key> <string>text_editor</string> </key>
-                    <value> <string>fck_editor</string> </value>
+                    <value> <string>text_area</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
