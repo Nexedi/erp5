@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts15502580.59</string> </value>
+            <value> <string>ts25458221.44</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -51,6 +51,15 @@
   margin-left: 0.5em;\n
   /*list-style-type:none;*/\n
 }\n
+\n
+.block h3 span.gadget_left_side{\n
+  background: none;\n
+}\n
+.block h3 span.gadget_title{\n
+  background: none;\n
+  border-top: none;\n
+}\n
+\n
 \n
 .box_inner_content {\n
  border: 1px solid #c3c3ee;\n
@@ -160,7 +169,7 @@ div.block fieldset label{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>1868</long> </value>
+            <value> <long>1996</long> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

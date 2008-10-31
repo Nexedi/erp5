@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts17588316.0</string> </value>
+            <value> <string>ts25459544.09</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -70,7 +70,7 @@
   border-bottom: 1px solid #3D6474;\n
 }\n
 \n
-.block h3 span{\n
+.block h3 span.gadget_left_side{\n
   background: transparent url(images/tab_left_selected.png) no-repeat scroll left top;\n
   display: block;\n
   float: left;\n
@@ -79,6 +79,19 @@
   height: 20px;\n
   padding-top: 5px;\n
   padding-left: 5px;\n
+  width: 10px;\n
+}\n
+\n
+.block h3 span.gadget_title{\n
+  display: block;\n
+  float: left;\n
+  margin-top: -5px;\n
+  margin-left: -5px;\n
+  padding-top: 5px;\n
+  height: 19px;\n
+  min-width: 100px;\n
+  border-top: 1px solid #3d7474;\n
+  background-color: #e3eafa;\n
 }\n
 \n
 \n
@@ -572,7 +585,7 @@ div.block div.worklist_list ul li a:hover{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>9266</long> </value>
+            <value> <long>9522</long> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
