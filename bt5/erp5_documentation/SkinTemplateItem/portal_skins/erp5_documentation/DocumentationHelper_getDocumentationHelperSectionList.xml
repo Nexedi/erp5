@@ -53,16 +53,31 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-portal_url = context.getPortalObject().portal_classes.absolute_url()\n
-o = context.getPortalObject().restrictedTraverse(brain.base_uri)\n
-uri = \'%s/portal_templates/%s\' % (brain.base_uri, brain.id)\n
-return "%s/DocumentationHelper_viewDocumentationHelper?uri=%s&class_name=BusinessTemplateDocumentationHelper" % \\\n
-       (portal_url, uri)\n
-
-
-]]></string> </value>
+            <value> <string>from Products.ERP5Form.Report import ReportSection\n
+result = []\n
+request = context.REQUEST\n
+uri = request.get(\'uri\', None)\n
+if uri is None:\n
+  uri = request.get(\'field_your_uri\')\n
+class_name = request.get(\'class_name\', None)\n
+if class_name is None:\n
+  class_name = request.get(\'field_your_class_name\')\n
+context.log(\'uri\', uri)\n
+context.log(\'class_name\', class_name)\n
+\n
+\n
+result.append(\n
+  ReportSection(\n
+    path=context.getPortalObject().portal_classes.getRelativeUrl(),\n
+    method_id=\'getDocumentationHelper\',\n
+    form_id=\'%s_view\' % class_name,\n
+    param_list=[class_name,\n
+                uri],\n
+    #listbox_display_mode=\'FlatListMode\'\n
+    )\n
+)\n
+return result\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -72,7 +87,7 @@ return "%s/DocumentationHelper_viewDocumentationHelper?uri=%s&class_name=Busines
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain=None, selection=None, **kwd</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -92,20 +107,21 @@ return "%s/DocumentationHelper_viewDocumentationHelper?uri=%s&class_name=Busines
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>brain</string>
-                            <string>selection</string>
-                            <string>kwd</string>
+                            <string>Products.ERP5Form.Report</string>
+                            <string>ReportSection</string>
+                            <string>result</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal_url</string>
-                            <string>o</string>
+                            <string>request</string>
+                            <string>None</string>
                             <string>uri</string>
+                            <string>class_name</string>
                           </tuple>
                         </value>
                     </item>
@@ -117,15 +133,12 @@ return "%s/DocumentationHelper_viewDocumentationHelper?uri=%s&class_name=Busines
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5SiteDocumentationHelper_getBusinessTemplateUrl</string> </value>
+            <value> <string>DocumentationHelper_getDocumentationHelperSectionList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

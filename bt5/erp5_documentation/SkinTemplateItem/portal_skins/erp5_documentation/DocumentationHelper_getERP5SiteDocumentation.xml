@@ -61,7 +61,9 @@ url = tab_url[2].split(\'/\')\n
 new_url = \'/\'.join(url[:-1])\n
 portal_url = \'%s:%s\' % (host,new_url)\n
 uri = context.getPortalObject().getUrl()\n
-return  context.REQUEST.RESPONSE.redirect(\'%s/portal_classes/getDocumentationHelper?uri=%s&class_name=ERP5SiteDocumentationHelper\' % (portal_url, uri))\n
+class_name = \'ERP5SiteDocumentationHelper\'\n
+return  context.REQUEST.RESPONSE.redirect(\'%s/portal_classes/DocumentationHelper_viewDocumentationHelper?class_name=%s&uri=%s\' % (portal_url,\n
+           class_name,uri))\n
 
 
 ]]></string> </value>
@@ -109,6 +111,7 @@ return  context.REQUEST.RESPONSE.redirect(\'%s/portal_classes/getDocumentationHe
                             <string>new_url</string>
                             <string>portal_url</string>
                             <string>uri</string>
+                            <string>class_name</string>
                           </tuple>
                         </value>
                     </item>
