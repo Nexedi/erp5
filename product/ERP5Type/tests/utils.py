@@ -195,16 +195,24 @@ def _recreateMemcachedTool(portal):
 def getMySQLArguments():
   """Returns arguments to pass to mysql by heuristically converting the
   connection string.
-  Only simple cases are coverred for now.
   """
   connection_string = os.environ.get('erp5_sql_connection_string')
   if not connection_string:
     return '-u test test'
-  db, user = connection_string.split()
-  if "@" in db:
+
+  password = ''
+  host = ''
+  db, user = connection_string.split(' ', 1)
+
+  if ' ' in user: # look for user password
+    user, password = user.split()
+    password = '-p%s' % password
+
+  if "@" in db: # look for hostname
     db, host = db.split('@')
-    return "-u %s -h %s %s" % (user, host, db)
-  return '-u %s %s' % (user, db)
+    host = '-h %s' % host
+
+  return '-u %s %s %s %s' % (user, password, host, db)
 
 # decorators
 class reindex(object):
