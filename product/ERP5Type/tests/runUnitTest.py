@@ -225,10 +225,10 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   if not test_list:
     print "No test to run, exiting immediately."
     return
-  os.environ['INSTANCE_HOME'] = instance_home
-  os.environ['SOFTWARE_HOME'] = software_home
-  os.environ['COPY_OF_INSTANCE_HOME'] = instance_home
-  os.environ['COPY_OF_SOFTWARE_HOME'] = software_home
+  os.environ.setdefault('INSTANCE_HOME', instance_home)
+  os.environ.setdefault('SOFTWARE_HOME', software_home)
+  os.environ.setdefault('COPY_OF_INSTANCE_HOME', instance_home)
+  os.environ.setdefault('COPY_OF_SOFTWARE_HOME', software_home)
   os.environ.setdefault('EVENT_LOG_FILE', os.path.join(tests_home, 'zLOG.log'))
   os.environ.setdefault('EVENT_LOG_SEVERITY', '-300')
 
