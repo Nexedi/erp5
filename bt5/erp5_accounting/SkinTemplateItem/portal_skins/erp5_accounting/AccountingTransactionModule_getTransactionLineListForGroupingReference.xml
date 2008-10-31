@@ -81,7 +81,7 @@ section_uid = portal.Base_getSectionUidListForSectionCategory(\n
 \n
 grouping = dialog_selection_params.get(\'grouping\', \'grouping\')\n
 \n
-search_kw = dict(portal_type=portal.getPortalAccountingTransactionLineList())\n
+search_kw = dict(portal_type=portal.getPortalAccountingMovementTypeList())\n
 node = node or request.get(\'node\') or dialog_selection_params.get(\'node\')\n
 if node:\n
   search_kw[\'node_uid\'] = portal.restrictedTraverse(node).getUid()\n
