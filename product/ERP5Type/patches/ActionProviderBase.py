@@ -29,6 +29,8 @@ def ActionProviderBase_manage_editActionsForm( self, REQUEST, manage_tabs_messag
         a1 = {}
         a1['id'] = a.getId()
         a1['title'] = a1['name'] = a.Title()
+        if hasattr(a, 'getDescription'):
+          a1['description'] = a.getDescription()
         p = a.getPermissions()
         a1['permissions'] = p
         if p:
@@ -59,6 +61,7 @@ def ActionProviderBase_manage_editActionsForm( self, REQUEST, manage_tabs_messag
 def ActionProviderBase_addAction( self
               , id
               , name
+              , description
               , action
               , condition
               , permission
@@ -84,6 +87,7 @@ def ActionProviderBase_addAction( self
 
     new_action = ActionInformation( id=str(id)
                                   , title=str(name)
+                                  , description=str(description)
                                   , action=a_expr
                                   , icon=i_expr
                                   , condition=c_expr
@@ -107,6 +111,7 @@ def ActionProviderBase_extractAction( self, properties, index ):
     """
     id          = str( properties.get( 'id_%d'          % index, '' ) )
     name        = str( properties.get( 'name_%d'        % index, '' ) )
+    description = str( properties.get( 'description_%d'        % index, '' ) )
     action      = str( properties.get( 'action_%d'      % index, '' ) )
     icon        = str( properties.get( 'icon_%d'        % index, '' ) )
     condition   = str( properties.get( 'condition_%d'   % index, '' ) )
@@ -144,6 +149,7 @@ def ActionProviderBase_extractAction( self, properties, index ):
 
     return ActionInformation( id=id
                             , title=name
+                            , description=description
                             , action=action
                             , icon=icon
                             , condition=condition

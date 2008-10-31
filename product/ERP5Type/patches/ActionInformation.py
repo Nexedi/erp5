@@ -63,6 +63,7 @@ if 1:
         info = {}
         info['id'] = self.id
         info['name'] = self.Title()
+        info['description'] = self.getDescription()
         expr = self.getActionExpression()
         __traceback_info__ = (info['id'], info['name'], expr)
         action_obj = self._getActionObject()
@@ -113,6 +114,12 @@ if 1:
         """
         return getattr(self, 'priority', 1.0)
 
+    def getDescription( self ):
+        """
+        Return the priority of the action
+        """
+        return getattr(self, 'description', '')
+
     def clone( self ):
 
         """ Return a newly-created AI just like us.
@@ -150,6 +157,7 @@ ActionInformation.getAction = getAction
 ActionInformation._getIconObject = _getIconObject
 ActionInformation.getIconExpression = getIconExpression
 ActionInformation.setIconExpression = setIconExpression
+ActionInformation.getDescription = getDescription
 ActionInformation.getPriority = getPriority
 ActionInformation.clone = clone
 ActionInformation.getMapping = getMapping

@@ -42,10 +42,6 @@ class PortalTypeActionDocumentationHelper(DocumentationHelper):
   def __init__(self, uri):
     self.uri = uri
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDescription')
-  def getDescription(self):
-    return getattr(self.getDocumentedObject(), "description", '')
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
   def getType(self):
     """
@@ -73,6 +69,13 @@ class PortalTypeActionDocumentationHelper(DocumentationHelper):
     Returns the title of the documentation helper
     """
     return getattr(self.getDocumentedObject(), "title", '')
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
+  def getDescription(self):
+    """
+    Returns the title of the documentation helper
+    """
+    return getattr(self.getDocumentedObject(), "description", '')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPermissions' )
   def getPermissions(self):
