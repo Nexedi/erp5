@@ -71,7 +71,7 @@
 </tal:bloc>\n
 <div class="explanation">\n
   <tal:bloc i18n:translate="" i18n:domain="ui">\n
-    You may now logout or go home and proceed to other applications:\n
+    You may now logout or go home and proceed to other applications\n
   </tal:bloc>\n
 </div>\n
 
