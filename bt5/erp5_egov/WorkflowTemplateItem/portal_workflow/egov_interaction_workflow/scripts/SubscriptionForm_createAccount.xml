@@ -73,7 +73,8 @@ if not len(result):\n
       address_region=changed_object.getAddressRegion(),\n
       corporate_registration_code=changed_object.getRccm(),\n
       vat_code=changed_object.getNinea(),\n
-      default_email_text=changed_object.getEmail()\n
+      default_email_text=changed_object.getEmail(),\n
+      activity_kw={\'tag\':\'organisation_creation_%s\' % changed_object.getRelativeUrl()}\n
       )\n
 else:\n
   organisation = result[0].getObject()\n
@@ -83,6 +84,9 @@ else:\n
 login = context.generateNewLogin(text=changed_object.getCompanyName())\n
 password = changed_object.Person_generatePassword()\n
 context.EGov_setLoginAndPasswordAsManager(organisation, login, password)\n
+organisation.immediateReindexObject()\n
+\n
+organisation.Organisation_sendCrendentialsByEMail()\n
 </string> </value>
         </item>
         <item>

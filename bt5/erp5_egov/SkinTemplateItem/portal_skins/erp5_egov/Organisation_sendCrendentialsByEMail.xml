@@ -61,24 +61,23 @@ organisation. It uses portal_notifications and the getObject API of ERP5Catalog.
 """\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
-object = state_change[\'object\']\n
 \n
-translateString = object.Base_translateString\n
-portal_catalog = object.portal_catalog\n
-ninea = object.getNinea()\n
+translateString = context.Base_translateString\n
+portal_catalog = context.portal_catalog\n
+vat_code = context.getVatCode()\n
 \n
 # get the new organisation :\n
 result = portal_catalog(portal_type=\'Organisation\',\n
-    vat_code=ninea)\n
+    vat_code=vat_code)\n
 \n
 if len(result) > 1:\n
   msg = "Error : There is more than one company with the NINEA code ${code}"\n
-  msg = translateString(msg, mapping=dict(code=ninea))\n
+  msg = translateString(msg, mapping=dict(code=vat_code))\n
   raise ValidationFailed, msg \n
 \n
-if len(result) == 0 and result[0].getObject().getReference():\n
+if len(result) == 0:\n
   msg = "No organisation with the NINEA code ${code}"\n
-  msg = translateString(msg, mapping=dict(code=ninea))\n
+  msg = translateString(msg, mapping=dict(code=vat_code))\n
   raise ValidationFailed, msg \n
 \n
 organisation = result[0]\n
@@ -99,8 +98,9 @@ msg = translateString(msg,\n
             )\n
 \n
 # We can now notify the owner through the notification tool\n
-object.portal_notifications.sendMessage(recipient=organisation.getReference(), \n
-    subject=subject, message=msg, portal_type_list=(\'Person\', \'Organisation\'))\n
+context.portal_notifications.sendMessage(recipient=organisation.getReference(), \n
+    subject=subject, message=msg, portal_type_list=(\'Person\', \'Organisation\'),\n
+    store_as_event=True)\n
 
 
 ]]></string> </value>
@@ -113,7 +113,7 @@ object.portal_notifications.sendMessage(recipient=organisation.getReference(), \
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -142,27 +142,27 @@ object.portal_notifications.sendMessage(recipient=organisation.getReference(), \
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
-                            <string>_getitem_</string>
-                            <string>object</string>
                             <string>_getattr_</string>
+                            <string>context</string>
                             <string>translateString</string>
                             <string>portal_catalog</string>
-                            <string>ninea</string>
+                            <string>vat_code</string>
                             <string>result</string>
                             <string>len</string>
                             <string>msg</string>
                             <string>dict</string>
+                            <string>_getitem_</string>
                             <string>organisation</string>
                             <string>subject</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>
@@ -179,7 +179,7 @@ object.portal_notifications.sendMessage(recipient=organisation.getReference(), \
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>sendCrendentialsByEMail</string> </value>
+            <value> <string>Organisation_sendCrendentialsByEMail</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

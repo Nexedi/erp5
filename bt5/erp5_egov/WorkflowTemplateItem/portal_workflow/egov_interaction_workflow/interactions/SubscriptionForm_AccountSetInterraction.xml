@@ -25,16 +25,20 @@
             <key> <string>activate_script_name</string> </key>
             <value>
               <list>
-                <string>sendCrendentialsByEMail</string>
+                <string>SubscriptionForm_createAccount</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
             <value>
-              <list>
-                <string>SubscriptionForm_createAccount</string>
-              </list>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>before_commit_script_name</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
