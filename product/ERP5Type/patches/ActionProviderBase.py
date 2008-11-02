@@ -61,7 +61,6 @@ def ActionProviderBase_manage_editActionsForm( self, REQUEST, manage_tabs_messag
 def ActionProviderBase_addAction( self
               , id
               , name
-              , description
               , action
               , condition
               , permission
@@ -70,6 +69,7 @@ def ActionProviderBase_addAction( self
               , visible=1
               , priority=1.0
               , REQUEST=None
+              , description=''
               ):
     """ Add an action to our list.
     """
