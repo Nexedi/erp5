@@ -203,7 +203,12 @@ for method_id in method_list:\n
     if property_type:\n
       result_dict.setdefault(key, {})[\'type\'] = property_type\n
 \n
-base_uri = context.getURI()\n
+request = context.REQUEST\n
+base_uri = request.get(\'uri\', None)\n
+if base_uri is None:\n
+  base_uri = request.get(\'field_your_uri\')\n
+\n
+\n
 result = map(\n
   lambda key: context.asContext(base_uri=base_uri, id=key[0], prefix_type=key[1], postfix_type=key[2], **result_dict[key]),\n
   result_dict.keys()\n
@@ -272,6 +277,8 @@ return result\n
                             <string>prefix_type</string>
                             <string>postfix_type</string>
                             <string>key</string>
+                            <string>request</string>
+                            <string>None</string>
                             <string>base_uri</string>
                             <string>map</string>
                             <string>result</string>

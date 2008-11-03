@@ -59,7 +59,7 @@ portal_url = context.getPortalObject().portal_classes.absolute_url()\n
 uri = \'\'\n
 if hasattr(brain, \'set_getter\'):\n
   uri = brain.base_uri+"%23"+brain.set_getter\n
-return "%s/getDocumentationHelper?uri=%s&class_name=AccessorMethodDocumentationHelper" % \\\n
+return "%s/DocumentationHelper_viewDocumentationHelper?uri=%s&class_name=AccessorMethodDocumentationHelper" % \\\n
        (portal_url, uri)\n
 
 

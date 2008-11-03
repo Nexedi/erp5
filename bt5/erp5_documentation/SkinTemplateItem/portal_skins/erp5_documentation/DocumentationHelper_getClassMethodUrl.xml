@@ -56,7 +56,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 portal_url = context.getPortalObject().portal_classes.absolute_url()\n
-return "%s/getDocumentationHelper?uri=%s&class_name=ClassMethodDocumentationHelper" % \\\n
+return "%s/DocumentationHelper_viewDocumentationHelper?uri=%s&class_name=ClassMethodDocumentationHelper" % \\\n
        (portal_url, brain.uri)\n
 
 

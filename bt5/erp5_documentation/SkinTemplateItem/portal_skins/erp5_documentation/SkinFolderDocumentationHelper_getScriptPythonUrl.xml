@@ -63,7 +63,7 @@ id = brain.id\n
 if callable(id): id = id()\n
 uri = brain.base_uri + \'/\' + id\n
 \n
-return "%s/getDocumentationHelper?uri=%s&class_name=ScriptPythonDocumentationHelper" % \\\n
+return "%s/DocumentationHelper_viewDocumentationHelper?uri=%s&class_name=ScriptPythonDocumentationHelper" % \\\n
        (portal_url, uri)\n
 
 

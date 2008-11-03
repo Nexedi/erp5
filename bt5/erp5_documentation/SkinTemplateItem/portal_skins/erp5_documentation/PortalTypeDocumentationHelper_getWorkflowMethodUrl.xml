@@ -64,7 +64,7 @@ if len(uri_list)>=3:\n
 uri = \'\'\n
 if hasattr(brain, \'id\'):\n
   uri = \'portal_classes/temp_instance/\'+portal_type+\'%23\'+brain.id\n
-return "%s/getDocumentationHelper?uri=%s&class_name=WorkflowMethodDocumentationHelper" % \\\n
+return "%s/DocumentationHelper_viewDocumentationHelper?uri=%s&class_name=WorkflowMethodDocumentationHelper" % \\\n
        (portal_url, uri)\n
 
 

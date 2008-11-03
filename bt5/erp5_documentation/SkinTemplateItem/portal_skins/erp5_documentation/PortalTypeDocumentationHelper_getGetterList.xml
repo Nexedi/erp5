@@ -91,10 +91,6 @@ if hasattr(line, \'private_base_default_getter\'):\n
   if private_base_default_getter != \'\':\n
      getters.append((private_base_default_getter, line.DocumentationHelper_getPrivateBaseDefaultGetterAccessorMethodUrl(line)))\n
 \n
-\n
-\n
-\n
-\n
 return getters\n
 </string> </value>
         </item>

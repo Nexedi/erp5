@@ -58,7 +58,7 @@
 portal_url = context.getPortalObject().portal_classes.absolute_url()\n
 o = context.getPortalObject().restrictedTraverse(brain.base_uri)\n
 uri = brain.base_uri+\'%23\'+brain.id\n
-return "%s/getDocumentationHelper?uri=%s&class_name=DCWorkflowPermissionDocumentationHelper" % \\\n
+return "%s/DocumentationHelper_viewDocumentationHelper?uri=%s&class_name=DCWorkflowPermissionDocumentationHelper" % \\\n
        (portal_url, uri)\n
 
 

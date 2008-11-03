@@ -62,7 +62,7 @@ if len(uri_list)>=3:\n
   portal_type = uri_list[3]\n
 if hasattr(brain, \'list_setter\'):\n
   uri = \'portal_classes/temp_instance/\'+portal_type+\'%23\'+brain.list_setter\n
-return "%s/getDocumentationHelper?uri=%s&class_name=AccessorMethodDocumentationHelper" % \\\n
+return "%s/DocumentationHelper_viewDocumentationHelper?uri=%s&class_name=AccessorMethodDocumentationHelper" % \\\n
        (portal_url, uri)\n
 
 

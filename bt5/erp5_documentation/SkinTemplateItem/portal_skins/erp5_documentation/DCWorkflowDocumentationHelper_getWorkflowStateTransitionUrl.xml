@@ -59,7 +59,7 @@ portal_url = context.getPortalObject().portal_classes.absolute_url()\n
 base_uri_tab = brain.base_uri.split("/")\n
 base_uri = "/".join(base_uri_tab[:-1])\n
 uri = base_uri+\'/transitions%23\'+brain.id\n
-return "%s/getDocumentationHelper?uri=%s&class_name=DCWorkflowTransitionDocumentationHelper" % \\\n
+return "%s/DocumentationHelper_viewDocumentationHelper?uri=%s&class_name=DCWorkflowTransitionDocumentationHelper" % \\\n
        (portal_url, uri)\n
 
 

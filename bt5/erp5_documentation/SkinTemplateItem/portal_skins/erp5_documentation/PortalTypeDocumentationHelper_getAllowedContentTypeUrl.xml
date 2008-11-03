@@ -60,7 +60,7 @@ o = context.getPortalObject().restrictedTraverse(brain.base_uri)\n
 uri = \'\'\n
 if hasattr(brain, \'id\'):\n
   uri = brain.base_uri+\'/\'+brain.id\n
-return "%s/getDocumentationHelper?uri=%s&class_name=PortalTypeDocumentationHelper" % \\\n
+return "%s/DocumentationHelper_viewDocumentationHelper?uri=%s&class_name=PortalTypeDocumentationHelper" % \\\n
        (portal_url, uri)\n
 
 
