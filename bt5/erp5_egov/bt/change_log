@@ -1,5 +1,6 @@
 2008-11-03 fabien
 * add an interaction to raise an error on subscription submission if an account already exists
+* add a default parameter to NOT be in editable mode
 
 2008-11-01 fabien
 * fix some problem in the send of credentials. Now it works, even with yahoo ! (not considered as spam)
