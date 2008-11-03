@@ -2807,14 +2807,14 @@ class Base( CopyContainer,
     return []
 
   security.declareProtected(Permissions.ModifyPortalContent, 'reindexObjectSecurity')
-  def reindexObjectSecurity(self):
+  def reindexObjectSecurity(self, *args, **kw):
     """
         Reindex security-related indexes on the object
         (and its descendants).
     """
     # In ERP5, simply reindex all objects.
     #LOG('reindexObjectSecurity', 0, 'self = %r, self.getPath() = %r' % (self, self.getPath()))
-    self.reindexObject()
+    self.reindexObject(*args, **kw)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'asXML' )
   def asXML(self, ident=0):

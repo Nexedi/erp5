@@ -1075,13 +1075,13 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'reindexObjectSecurity')
-  def reindexObjectSecurity(self):
+  def reindexObjectSecurity(self, *args, **kw):
     """
         Reindex security-related indexes on the object
         (and its descendants).
     """
     # In ERP5, simply reindex all objects.
-    self.recursiveReindexObject()
+    self.recursiveReindexObject(*args, **kw)
 
   security.declarePublic( 'recursiveReindexObject' )
   def recursiveReindexObject(self, activate_kw=None, **kw):
