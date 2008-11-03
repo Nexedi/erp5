@@ -122,6 +122,14 @@ def getPaymentConditionText(order):\n
     return \'%s %s\' % (days, translateString(\'Days\'))\n
   return \'\'\n
 \n
+def getTaxLineList(order):\n
+  tax_line_list = [line for line in\n
+       order.contentValues(portal_type=order.getPortalTaxMovementTypeList())\n
+       if line.getTotalPrice()]\n
+  tax_line_list.sort(key=lambda line:line.getTitle())\n
+  return tax_line_list\n
+\n
+\n
 line_list = []\n
 total_price = 0.0\n
 total_vat = 0.0\n
@@ -388,8 +396,7 @@ data_dict = {\n
   \'incoterm\': context.getIncoterm() and context.getIncotermValue().getCodification() or \'\',\n
 \n
   \'total_price_novat\': total_price,\n
-#    FIXME: use contentValues\n
-  \'vat_list\': context.searchFolder(portal_type=context.getPortalTaxMovementTypeList(), order_by=\'title\'),\n
+  \'vat_list\': getTaxLineList(context),\n
   \'description\': getFieldAsLineList(context.getDescription()),\n
   \'specialise_title\': context.getProperty(\'specialise_title\',\'\'),\n
 \n
@@ -451,6 +458,7 @@ return unicodeDict(data_dict)\n
                             <string>separator</string>
                             <string>getOrderedDate</string>
                             <string>getPaymentConditionText</string>
+                            <string>getTaxLineList</string>
                             <string>line_list</string>
                             <string>total_price</string>
                             <string>total_vat</string>
