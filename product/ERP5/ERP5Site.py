@@ -1499,6 +1499,10 @@ class ERP5Generator(PortalGenerator):
     if p.erp5_sql_connection_type is not None:
       setattr(p, 'isIndexable', 1)
       portal_catalog = p.portal_catalog
+      # Clear portal ids sql table, like this we do not take
+      # ids for a previously created web site
+      portal_catalog.getSQLCatalog().z0_drop_portal_ids()
+      # Then clear the catalog and reindex it
       portal_catalog.manage_catalogClear()
       skins_tool["erp5_core"].ERP5Site_reindexAll()
 
