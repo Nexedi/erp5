@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.Tool.BaseTool import BaseTool
@@ -58,7 +59,7 @@ class IdTool(BaseTool):
     """
     Get the last id generated
     """
-    if getattr(self, 'dict_ids', None) is None:
+    if getattr(aq_base(self), 'dict_ids', None) is None:
       self.dict_ids = PersistentMapping()
     last_id = None
     if id_group is not None and id_group!='None':
@@ -72,7 +73,7 @@ class IdTool(BaseTool):
     Set a new last id. This is usefull in order to reset
     a sequence of ids.
     """
-    if getattr(self, 'dict_ids', None) is None:
+    if getattr(aq_base(self), 'dict_ids', None) is None:
       self.dict_ids = PersistentMapping()
     if id_group is not None and id_group!='None':
       l = threading.Lock()
@@ -89,7 +90,7 @@ class IdTool(BaseTool):
       Generate a new Id
     """
     
-    if getattr(self, 'dict_ids', None) is None:
+    if getattr(aq_base(self), 'dict_ids', None) is None:
       self.dict_ids = PersistentMapping()
 
     new_id = None
@@ -155,7 +156,7 @@ class IdTool(BaseTool):
     """
     portal_catalog = getToolByName(self, 'portal_catalog').getSQLCatalog()
     query = getattr(portal_catalog, 'z_portal_ids_dump')
-    dict_length_ids = getattr(self, 'dict_length_ids', None)
+    dict_length_ids = getattr(aq_base(self), 'dict_length_ids', None)
     if dict_length_ids is None:
       dict_length_ids = self.dict_length_ids = PersistentMapping()
     for line in query().dictionaries():
@@ -181,7 +182,7 @@ class IdTool(BaseTool):
     Get the last length id generated
     """
     # check in persistent mapping if exists
-    if getattr(self, 'dict_length_ids', None) is not None:
+    if getattr(aq_base(self), 'dict_length_ids', None) is not None:
       last_id = self.dict_length_ids.get(id_group)
       if last_id is not None:
         return last_id.value - 1
@@ -237,7 +238,7 @@ class IdTool(BaseTool):
       commit()
     new_id = result[0]['LAST_INSERT_ID()']
     if store:
-      if getattr(self, 'dict_length_ids', None) is None:
+      if getattr(aq_base(self), 'dict_length_ids', None) is None:
         # Length objects are stored in a persistent mapping: there is one
         # Length object per id_group.
         self.dict_length_ids = PersistentMapping()
