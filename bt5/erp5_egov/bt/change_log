@@ -1,6 +1,7 @@
 2008-11-03 fabien
 * add an interaction to raise an error on subscription submission if an account already exists
 * add a default parameter to NOT be in editable mode
+* hide "save draft and continue later" button and "Next step" buttons if user don't have Modify content permission.
 
 2008-11-01 fabien
 * fix some problem in the send of credentials. Now it works, even with yahoo ! (not considered as spam)

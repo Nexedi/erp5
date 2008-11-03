@@ -46,7 +46,8 @@
               portal               here/getPortalObject;\n
               form_action          python: form and form.action not in (\'\', None) and portal.portal_membership.checkPermission(\'Modify portal content\', here) and form.action or nothing;\n
               local_parameter_list local_parameter_list | python: {};\n
-              ">\n
+              "\n
+      tal:condition="python: portal.portal_membership.checkPermission(\'Modify portal content\', here)">\n
 \n
   <input type="hidden" name="form_action" value=""\n
          tal:attributes="value request/form_action" />\n
