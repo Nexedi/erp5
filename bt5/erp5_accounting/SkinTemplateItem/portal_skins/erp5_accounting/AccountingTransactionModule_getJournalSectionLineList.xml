@@ -101,8 +101,10 @@ for brain in portal.portal_simulation.getMovementHistoryList(\n
   total_credit += credit\n
   \n
   transaction = mvt.getParentValue()\n
-  is_source = brain.section_relative_url.startswith(\n
-                  transaction.getSourceSection() or \'\')\n
+  is_source = 0\n
+  if transaction.getSourceSection():\n
+    is_source = brain.section_relative_url.startswith(\n
+                  transaction.getSourceSection())\n
   \n
   if is_source:\n
     mirror_section_title = mvt.getDestinationSectionTitle()\n
