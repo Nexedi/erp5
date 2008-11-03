@@ -828,6 +828,7 @@ class ObjectTemplateItem(BaseTemplateItem):
                             , visible = action.visible
                             , icon = getattr(action, 'icon', None) and action.icon.text or ''
                             , priority = action.priority
+                            , description = action.description
                             )
             # set workflow chain
             wf_chain = subobjects_dict['workflow_chain']
@@ -2219,6 +2220,7 @@ class ActionTemplateItem(ObjectTemplateItem):
                       , icon = getattr(action, 'icon', None)\
                                 and action.icon.text or ''
                       , priority = action.priority
+                      , description = action.description
                     )
           # sort action based on the priority define on it
           # XXX suppose that priority are properly on actions
