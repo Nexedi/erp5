@@ -127,15 +127,6 @@ class IdTool(BaseTool):
     return new_id
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'generateNewLongId')
-  def generateNewLongId(self, **kw):
-    """
-      Returns a random 64bits long.
-      It's a 64bits number, so it can look ugly and/or huge to users.
-    """
-    return random.getrandbits(64)
-
-  security.declareProtected(Permissions.AccessContentsInformation,
                             'getDictLengthIdsItems')
   def getDictLengthIdsItems(self):
     """
