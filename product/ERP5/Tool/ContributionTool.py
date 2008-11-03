@@ -266,6 +266,7 @@ class ContributionTool(BaseTool):
     if 'set_filename__' in inspect.getargspec(document._edit)[0]:
       # Only a few classes supports set_filename__.
       document._edit(set_filename__=0, **kw)
+      document.guessMimeType(fname=file_name)
     else:
       document._edit(**kw)
     if url:
