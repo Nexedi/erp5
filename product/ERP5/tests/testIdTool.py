@@ -1,5 +1,5 @@
 ##############################################################################
-#
+# -*- coding: latin1 -*-
 # Copyright (c) 2008 Nexedi SARL and Contributors. All Rights Reserved.
 #          Aurélien Calonne <aurel@nexedi.com>
 #
@@ -119,6 +119,11 @@ class TestIdTool(ERP5TypeTestCase):
                                                 default='A',
                                                 method=generateTestNumber))
 
+  def test_generateNewLongId(self):
+    idtool = self.portal.portal_ids
+    # test with value stored into zodb
+    new_id = idtool.generateNewLongId()
+    self.assertTrue(isinstance(new_id, long))
 
 def test_suite():
   suite = unittest.TestSuite()

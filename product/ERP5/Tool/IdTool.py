@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import random
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile, PersistentMapping
@@ -129,13 +130,10 @@ class IdTool(BaseTool):
                             'generateNewLongId')
   def generateNewLongId(self, **kw):
     """
-      Returns the ZODB transation id to be used as an identifier.
+      Returns a random 64bits long.
       It's a 64bits number, so it can look ugly and/or huge to users.
     """
-    tid = get_transaction()._id;
-    # It's a 64 bits number, but sometimes it returns as a negative int... so
-    # make it positive again and add 2**63.
-    return (tid < 0) and (2**63 - tid) or tid;
+    return random.getrandbits(64)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getDictLengthIdsItems')
