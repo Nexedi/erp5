@@ -144,8 +144,8 @@ msgstr "Devenez utilisateur privilégié"
 msgid "Become a VIP Member"
 msgstr "Devenez membre privilégié"
 
-msgid "Bills referred to exemption"
-msgstr "Factures visées en exonération"
+msgid "Exoneration detailed report"
+msgstr "États détaillés des exonérations"
 
 msgid "Bills sent to customers exempt from VAT"
 msgstr "Factures adressées aux clients exonérés de TVA"
@@ -200,9 +200,6 @@ msgstr "Créé dans le dernier"
 
 msgid "Credits and legal notices"
 msgstr "Crédits et mentions légales"
-
-msgid "Custommer Invoices"
-msgstr "Factures client"
 
 msgid "Declarations to validate"
 msgstr "Declarations à valider"
@@ -269,9 +266,6 @@ msgstr "Au"
 
 msgid "Expiration date"
 msgstr "Au"
-
-msgid "Factures client"
-msgstr "Custommer Invoices"
 
 msgid "Fill Form"
 msgstr "Remplir Formulaire"
