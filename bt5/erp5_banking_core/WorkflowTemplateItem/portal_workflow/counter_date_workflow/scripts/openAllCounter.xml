@@ -81,6 +81,7 @@ if site_uid is None:\n
 counter_date_list = [x.getObject() for x in counter_date.portal_catalog(portal_type=\'Counter Date\',site_uid=site_uid,simulation_state=\'open\')]\n
 for other_counter in counter_date_list:\n
   if other_counter.getUid()!=counter_date.getUid():\n
+    counter_date.log("opened counter date is", other_counter.getPath())\n
     msg = Message(domain=\'ui\',message="Sorry, there is already a counter date opened")\n
     raise ValidationFailed (msg,)\n
     \n
@@ -92,10 +93,24 @@ start_date = counter_date.getStartDate()\n
 from DateTime import DateTime\n
 now = DateTime()\n
 \n
+# Check it is a working day\n
+if len(getattr(context.getPortalObject(), \'not_working_days\', "")) == 0:\n
+  pass\n
+else:\n
+  not_working_day_list = getattr(context.getPortalObject(), \'not_working_days\').split(" ")\n
+  if start_date.Day().lower() in not_working_day_list:\n
+    msg = Message(domain=\'ui\',message="Sorry, you cannot open the date on not working days")\n
+    raise ValidationFailed (msg,)\n
+\n
+\n
+# Check it is today\n
 check_date_is_today = state_change.kwargs.get(\'check_date_is_today\', 1)\n
 if check_date_is_today and now.Date() != start_date.Date():\n
   msg = Message(domain=\'ui\',message="Sorry, the date is not today")\n
   raise ValidationFailed (msg,)\n
+\n
+\n
+\n
 \n
 if listbox is not None:\n
   for line in listbox:\n
@@ -185,12 +200,14 @@ counter_date.setReference(reference)\n
                             <string>start_date</string>
                             <string>DateTime</string>
                             <string>now</string>
+                            <string>len</string>
+                            <string>getattr</string>
+                            <string>context</string>
+                            <string>not_working_day_list</string>
                             <string>check_date_is_today</string>
                             <string>line</string>
-                            <string>context</string>
                             <string>counter</string>
                             <string>previous_reference</string>
-                            <string>len</string>
                             <string>previous_counter_date</string>
                             <string>int</string>
                             <string>reference</string>
