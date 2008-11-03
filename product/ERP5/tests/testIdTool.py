@@ -121,7 +121,6 @@ class TestIdTool(ERP5TypeTestCase):
 
   def test_generateNewLongId(self):
     idtool = self.portal.portal_ids
-    # test with value stored into zodb
     new_id = idtool.generateNewLongId()
     self.assertTrue(isinstance(new_id, long))
 
