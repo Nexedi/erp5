@@ -70,7 +70,7 @@ class PortalTypeActionDocumentationHelper(DocumentationHelper):
     """
     return getattr(self.getDocumentedObject(), "title", '')
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDescription' )
   def getDescription(self):
     """
     Returns the title of the documentation helper
