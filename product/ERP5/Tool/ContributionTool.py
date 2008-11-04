@@ -202,35 +202,27 @@ class ContributionTool(BaseTool):
     if file is None:
       raise ValueError, "could not determine portal type"
 
-    # So we will simulate WebDAV to get an empty object
-    # with PUT_factory - we provide the mime_type as
-    # parameter
-    # LOG('new content', 0, "%s -- %s" % (file_name, mime_type))
-
-
     #
     # Check if same file is already exists. if it exists, then update it.
     #
     if portal_type is None:
-      registry = getToolByName(self, 'portal_contribution_registry', None)
-      if registry is not None:
-        portal_type = registry.findPortalTypeName(file_name, None, data)
-        property_dict = self.getMatchedFileNamePatternDict(file_name)
-        reference = property_dict.get('reference', None)
-        version  = property_dict.get('version', None)
-        language  = property_dict.get('language', None)
-        if portal_type and reference and version and language:
-          portal_catalog = getToolByName(self, 'portal_catalog')
-          document = portal_catalog.getResultValue(portal_type=portal_type,
-                                                   reference=reference,
-                                                   version=version,
-                                                   language=language)
-          if document is not None:
-            # document is already uploaded. So overrides file.
-            if not _checkPermission(Permissions.ModifyPortalContent, document):
-              raise Unauthorized, "[DMS] You are not allowed to update the existing document which has the same coordinates (id %s)" % document.getId()
-            document.edit(file=kw['file'])
-            return document
+      portal_type = self._guessPortalType(file_name, mime_type, data)
+      property_dict = self.getMatchedFileNamePatternDict(file_name)
+      reference = property_dict.get('reference', None)
+      version  = property_dict.get('version', None)
+      language  = property_dict.get('language', None)
+      if portal_type and reference and version and language:
+        portal_catalog = getToolByName(self, 'portal_catalog')
+        document = portal_catalog.getResultValue(portal_type=portal_type,
+                                                  reference=reference,
+                                                  version=version,
+                                                  language=language)
+        if document is not None:
+          # document is already uploaded. So overrides file.
+          if not _checkPermission(Permissions.ModifyPortalContent, document):
+            raise Unauthorized, "[DMS] You are not allowed to update the existing document which has the same coordinates (id %s)" % document.getId()
+          document.edit(file=kw['file'])
+          return document
 
     #
     # Strong possibility of a new file.
@@ -242,10 +234,6 @@ class ContributionTool(BaseTool):
       if '.' in file_name:
         extension = '.%s' % file_name.split('.')[-1]
       file_name = '%s%s' % (self.generateNewId(), extension)
-
-    # Try to guess the portal if it is not passed as parameter
-    if portal_type is None:
-      portal_type = self._guessPortalType(file_name, mime_type, data)
 
     # Then put the file inside ourselves for a short while
     if container_path is not None:
