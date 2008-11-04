@@ -142,6 +142,18 @@
                           <string>destination_section_title</string>
                           <string>Client</string>
                         </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -313,6 +325,18 @@
                         <tuple>
                           <string>destination_section_title</string>
                           <string>Client</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
