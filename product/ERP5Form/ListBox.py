@@ -580,10 +580,18 @@ class ListBoxRenderer:
 
   def getId(self):
     """Return the id of the field. Usually, "listbox".
+       The prefix will automatically be added
     """
     return self.getPrefixedString(self.field.id)
 
   getId = lazyMethod(getId)
+
+  def getUnprefixedId(self):
+    """Return the id of the field. Usually, "listbox".
+    """
+    return self.field.id
+
+  getUnprefixedId = lazyMethod(getUnprefixedId)
 
   def getTitle(self):
     """Return the title. Make sure that it is in unicode.
@@ -1033,7 +1041,7 @@ class ListBoxRenderer:
     Return None if a field for this column does not exist.
     """
     form = self.getForm()
-    editable_field_id = '%s_%s' % (self.getId(), alias)
+    editable_field_id = '%s_%s' % (self.getUnprefixedId(), alias)
     if form.has_field(editable_field_id, include_disabled=1):
       return form.get_field(editable_field_id, include_disabled=1)
     
