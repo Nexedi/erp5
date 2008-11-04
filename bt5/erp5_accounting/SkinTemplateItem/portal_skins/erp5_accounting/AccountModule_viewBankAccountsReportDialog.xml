@@ -52,9 +52,11 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>Default</string>
                 <string>left</string>
                 <string>bottom</string>
+                <string>right</string>
+                <string>center</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -63,18 +65,19 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Default</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>my_transaction_section_category</string>
-                        <string>my_from_date</string>
-                        <string>my_to_date</string>
-                        <string>my_portal_skin</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>bottom</string> </key>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -83,8 +86,18 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_transaction_section_category</string>
+                        <string>my_from_date</string>
+                        <string>my_to_date</string>
+                        <string>my_portal_skin</string>
                         <string>my_transaction_simulation_state</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
