@@ -372,7 +372,6 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
     if data is None:
       data=self._readTestData(filename)
     return self.portal.portal_contributions.newContent(
-                    portal_type='Mail Message',
                     container_path='event_module',
                     file_name='postfix_mail.eml',
                     data=data)
