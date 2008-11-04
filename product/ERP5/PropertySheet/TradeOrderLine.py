@@ -38,6 +38,7 @@ class TradeOrderLine:
       'max_arity'     : '1',
       'portal_type'   : ( ),
       'base_category' : ('resource',),
+      'condition'     : 'not: object/hasLineContent | nothing',
       'message_arity_not_in_range' : 'Product or service must be defined in lines',
     },
   )
