@@ -40,7 +40,7 @@ security.declarePublic('addToDate', 'getClosestDate',
     'getMonthFraction', 'getYearFraction', 'getAccountableYearFraction',
     'getBissextilCompliantYearFraction', 'getIntervalListBetweenDates',
     'getDecimalNumberOfYearsBetween','roundMonthToGreaterEntireYear',
-    'roundDate', 'convertDateToHour', 'getNumberOfDayInMonth')
+    'roundDate', 'convertDateToHour', 'getNumberOfDayInMonth', 'atTheEndOfPeriod')
 
 millis = DateTime('2000/01/01 12:00:00.001') - DateTime('2000/01/01 12:00:00')
 centis = millis * 10
@@ -495,3 +495,32 @@ def getNumberOfDayInMonth(date):
     if date.isLeapYear():
       return 29
     return 28
+
+def atTheEndOfPeriod(date, period):
+  """
+  return the last time value for a given date
+  and a given period
+  year, month, week, day
+  note that a week is ended at Sunday
+  exemple:
+  2000/01/01, year => 2001/01/01
+  2000/01/15, month => 2000/02/01
+  2000/01/18, week => 2000/01/24
+  2000/01/20, day => 2000/01/21
+  """
+  if period == 'year':
+    end = addToDate(DateTime(date.strftime('%Y/01/01 00:00:00')), **{period:1})
+  elif period == 'month':
+    end = addToDate(DateTime(date.strftime('%Y/%m/01 00:00:00')), **{period:1})
+  elif period == 'day':
+    end = addToDate(DateTime(date.strftime('%Y/%m/%d 00:00:00')), **{period:1})
+  elif period == 'week':
+    day_of_week = date.strftime('%A')
+    end = DateTime(date.strftime('%Y/%m/%d 00:00:00'))
+    while day_of_week != 'Sunday':
+      end = addToDate(end, day=1)
+      day_of_week = end.strftime('%A')
+    end = addToDate(end, day=1)
+  else:
+    raise NotImplementedError, 'Period "%s" not Handled yet' % period
+  return end
