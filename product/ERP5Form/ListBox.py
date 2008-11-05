@@ -2128,7 +2128,11 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         else:
           try:
             url = '%s/view?selection_index=%s&amp;selection_name=%s&amp;ignore_layout:int=%s&amp;reset:int=1' % (
-                      brain.absolute_url(),
+                      # brain.absolute_url() is slow because it invokes
+                      # _aq_dynamic() every time to get brain.REQUEST,
+                      # so we call request.physicalPathToURL() directly
+                      # instead of brain.absolute_url().
+                      request.physicalPathToURL(brain.getPath()),
                       self.index, selection_name, ignore_layout)
           except AttributeError:
             pass
