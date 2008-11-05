@@ -499,7 +499,7 @@ def getNumberOfDayInMonth(date):
 def atTheEndOfPeriod(date, period):
   """
   return the last time value for a given date
-  and a given period
+  inside a given period
   year, month, week, day
   note that a week is ended at Sunday
   exemple:
