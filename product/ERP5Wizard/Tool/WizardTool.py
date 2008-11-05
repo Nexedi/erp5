@@ -383,13 +383,21 @@ class WizardTool(BaseTool):
     witch_tool = server.portal_witch
     return witch_tool
 
-  def callRemoteProxyMethod(self, distant_method, server_url=None):
+  def callRemoteProxyMethod(self, distant_method, server_url=None, use_cache=1):
     """ Call proxy method on server. """
     # set real method_id
     form = self.REQUEST.form
-    form['method_id'] = distant_method
-    rc = self._callRemoteMethod('proxyMethodHandler')
-    return rc['data']    
+    configurator_user_preferred_language = self.getConfiguratorUserPreferredLanguage()
+    def wrapper(distant_method):
+      form['method_id'] = distant_method
+      return self._callRemoteMethod('proxyMethodHandler')['data']
+    if use_cache:
+      wrapper = CachingMethod(wrapper,
+                              id = 'callRemoteProxyMethod_%s_%s' 
+                                     %(distant_method, configurator_user_preferred_language),
+                              cache_factory = 'erp5_ui_medium')
+    rc = wrapper(distant_method)
+    return rc
 
   def _callRemoteMethod(self, distant_method, server_url=None, wrap_result=1):
     """ Call remote method on server and get result. """
@@ -445,6 +453,23 @@ class WizardTool(BaseTool):
         self.setExpressConfigurationPreference(_server_to_preference_ids_map[item],
                                                value)
 
+  def getConfiguratorUserPreferredLanguage(self):
+    """ Get configuration language as selected by user """
+    REQUEST = getattr(self, 'REQUEST', None)
+    configurator_user_preferred_language = None
+    if REQUEST is not None:
+      # language value will be in cookie or REQUEST itself.
+      configurator_user_preferred_language = REQUEST.get(LANGUAGE_COOKIE_NAME, None)
+      if configurator_user_preferred_language is None:
+        # Find a preferred language from HTTP_ACCEPT_LANGUAGE
+        available_language_list = [i[1] for i in self.WizardTool_getConfigurationLanguageList()]
+        configurator_user_preferred_language = getAvailableLanguageFromHttpAcceptLanguage(
+          REQUEST.get('HTTP_ACCEPT_LANGUAGE', 'en'),
+          available_language_list)
+    if configurator_user_preferred_language is None:
+      configurator_user_preferred_language = 'en'
+    return configurator_user_preferred_language
+
   def _updateParameterDictWithServerInfo(self, parameter_dict):
     """Updates parameter_dict to include local saved server info settings. """
     global _server_to_preference_ids_map
@@ -453,24 +478,7 @@ class WizardTool(BaseTool):
     ## add local ERP5 instance url
     parameter_dict['erp5_url'] = self.getPortalObject().absolute_url()
     # add user preffered language
-    REQUEST = getattr(self, 'REQUEST', None)
-
-    configurator_user_preferred_language = None
-    if REQUEST is not None:
-      # language value will be in cookie or REQUEST itself.
-      configurator_user_preferred_language = REQUEST.get(LANGUAGE_COOKIE_NAME, None)
-
-      if configurator_user_preferred_language is None:
-        # Find a preferred language from HTTP_ACCEPT_LANGUAGE
-        available_language_list = [i[1] for i in self.WizardTool_getConfigurationLanguageList()]
-        configurator_user_preferred_language = getAvailableLanguageFromHttpAcceptLanguage(
-          REQUEST.get('HTTP_ACCEPT_LANGUAGE', 'en'),
-          available_language_list)
-
-    if configurator_user_preferred_language is None:
-      configurator_user_preferred_language = 'en'
-
-    parameter_dict['user_preferred_language'] = configurator_user_preferred_language
+    parameter_dict['user_preferred_language'] = self.getConfiguratorUserPreferredLanguage()
 
   def _updateParameterDictWithFileUpload(self, parameter_dict):
     """Updates parameter_dict to replace file upload with their file content,
