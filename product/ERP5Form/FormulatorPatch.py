@@ -690,7 +690,7 @@ def SingleItemsWidget_render_view(self, field, value, REQUEST=None, render_prefi
 
 def RadioWidget_render(self, field, key, value, REQUEST, render_prefix=None):
   input_hidden = render_element('input', type='hidden',
-                                name="default_%s:int" % (key, ), value="")
+                                name="default_%s" % (key, ), value="")
   rendered_items = self.render_items(field, key, value, REQUEST)
   rendered_items.append(input_hidden)
   orientation = field.get_value('orientation')
