@@ -185,10 +185,12 @@ class AlarmTool(BaseTool):
     service.unsubscribe(self)
     return "Usubscribed from Timer Service"
 
+  security.declareProtected(Permissions.ManageProperties, 'manage_beforeDelete')
   def manage_beforeDelete(self, item, container):
     self.unsubscribe()
     BaseTool.inheritedAttribute('manage_beforeDelete')(self, item, container)
 
+  security.declareProtected(Permissions.ManageProperties, 'manage_afterAdd')
   def manage_afterAdd(self, item, container):
     self.subscribe()
     BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
@@ -219,6 +221,7 @@ class AlarmTool(BaseTool):
     finally:
       last_tic_lock.release()
 
+  security.declarePublic('getCurrentNode')
   def getCurrentNode(self):
       """ Return current node in form ip:port """
       global current_node
@@ -241,6 +244,7 @@ class AlarmTool(BaseTool):
       """ Return the alarmNode """
       return self.alarmNode
 
+  security.declareProtected(Permissions.ManageProperties, 'setAlarmNode')
   def setAlarmNode(self, alarm_node):
     """
       When alarm_node evaluates to false, set a None value:
@@ -256,7 +260,7 @@ class AlarmTool(BaseTool):
     """Check we have been provided a good node name"""
     return isinstance(node_name, str) and NODE_RE.match(node_name)
       
-  security.declarePublic('manage_setAlarmNode')
+  security.declareProtected(Permissions.ManageProperties, 'manage_setAlarmNode')
   def manage_setAlarmNode(self, alarmNode, REQUEST=None):
       """ set the alarm node """   
       if not alarmNode or self._isValidNodeName(alarmNode):
