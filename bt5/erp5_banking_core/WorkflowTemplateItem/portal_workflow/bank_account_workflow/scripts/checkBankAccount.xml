@@ -81,7 +81,7 @@ if bank_account.getParentValue().getPortalType()== \'Person\':\n
   for obj in bank_account.getParentValue().objectValues():\n
     if obj.getPortalType() == "Bank Account" and obj.getValidationState() not in (\'draft\', \'closed\') \\\n
            and obj.getSource() == bank_account.getSource():\n
-      raise ValidationFailed, "You cannot open two bank account for the same person in the same site"\n
+      raise ValidationFailed, "You cannot open two bank accounts for the same person on the same site"\n
 \n
 valid_state = ["valid", "being_closed", "validating_closing",\n
                "being_modified", "validating_modification", "closed"]\n
