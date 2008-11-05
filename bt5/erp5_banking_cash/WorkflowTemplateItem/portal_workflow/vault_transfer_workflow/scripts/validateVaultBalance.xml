@@ -75,6 +75,10 @@ date = transaction.getStartDate()\n
 vault = transaction.getSource()\n
 vaultDestination = transaction.getDestination()\n
 \n
+if vault is None or vaultDestination is None:\n
+  msg = Message(domain="ui", message="You must define vaults.")\n
+  raise ValidationFailed, (msg,)\n
+\n
 # use of the constraint : Test source and destination\n
 vliste = transaction.checkConsistency()\n
 transaction.log(\'vliste\', vliste)\n
@@ -161,9 +165,10 @@ elif resource <> 0 :\n
                             <string>date</string>
                             <string>vault</string>
                             <string>vaultDestination</string>
+                            <string>None</string>
+                            <string>msg</string>
                             <string>vliste</string>
                             <string>len</string>
-                            <string>msg</string>
                             <string>resource</string>
                             <string>amount</string>
                             <string>total_price</string>

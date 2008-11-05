@@ -71,19 +71,15 @@ source = context.getSource()\n
 currency = context.Baobab_getPortalReferenceCurrencyID()\n
 source_section = context.getSourceSection()\n
 \n
-\n
-# We must not force another site, it is optionnal\n
-# So I (Seb) remove this\n
-#if source_section is None :\n
-#  redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
-#                              , \'view\'\n
-#                              , \'portal_status_message=Please+select+a+site.\'\n
-#                              )\n
-#  return request.RESPONSE.redirect( redirect_url )\n
+if source is None:\n
+  redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
+                                , \'view\'\n
+                                , \'portal_status_message=Please+select+a+source.\'\n
+                                )\n
+  return request.RESPONSE.redirect( redirect_url )\n
 \n
 \n
-\n
-if \'serre\' in context.getSource():\n
+if \'serre\' in source:\n
   cash_status = [\'retired\',\'error\']\n
 else:\n
   cash_status = [\'cancelled\',\'mutilated\', \'maculated\',\'error\']\n
@@ -166,8 +162,9 @@ return context.CashDelivery_generateCashDetailInputDialog(listbox = None\n
                             <string>source</string>
                             <string>currency</string>
                             <string>source_section</string>
-                            <string>cash_status</string>
                             <string>None</string>
+                            <string>redirect_url</string>
+                            <string>cash_status</string>
                             <string>emission_letter</string>
                             <string>list</string>
                             <string>_getitem_</string>

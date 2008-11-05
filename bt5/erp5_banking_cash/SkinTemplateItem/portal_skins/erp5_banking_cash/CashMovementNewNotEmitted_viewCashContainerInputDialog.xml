@@ -69,6 +69,7 @@
 \n
 \n
 container_portal_type_list = ["Monetary Reception",]\n
+resource_translated_title_dict = {}\n
 base_price_dict = {}\n
 \n
 if listbox is None:\n
@@ -101,7 +102,6 @@ if listbox is None:\n
       container_dict = {}\n
       container_lines = cash_container.searchFolder(portal_type=\'Container Line\')\n
       if len(container_lines) == 0:\n
-        context.log("CashMovementNewNotEmitted_generateCashContainerInputDialog", "No container line finf for cash container %s" %(cash_container.getRelativeUrl(),))\n
         continue\n
       container_line = container_lines[0].getObject()\n
       container_dict[\'reference\'] = cash_container.getReference()\n
@@ -202,6 +202,7 @@ if listbox is None:\n
                             <string>kw</string>
                             <string>DateTime</string>
                             <string>container_portal_type_list</string>
+                            <string>resource_translated_title_dict</string>
                             <string>base_price_dict</string>
                             <string>None</string>
                             <string>_getattr_</string>
@@ -222,7 +223,6 @@ if listbox is None:\n
                             <string>_write_</string>
                             <string>resource</string>
                             <string>base_price</string>
-                            <string>resource_translated_title_dict</string>
                             <string>resource_translated_title</string>
                             <string>quantity</string>
                             <string>total_price_dict</string>
