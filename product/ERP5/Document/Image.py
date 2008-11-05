@@ -304,6 +304,31 @@ class Image(File, OFSImage):
       return displays
 
 
+  security.declarePrivate('_convertToText')
+  def _convertToText(self, format):
+    """
+    Convert the image to text with portaltransforms
+    """
+    mime_type = getToolByName(self, 'mimetypes_registry').\
+                                lookupExtension('name.%s' % format)
+    src_mimetype = self.getContentType()
+    content = '%s' % self.getData()
+    if content is not None:
+      portal_transforms = getToolByName(self, 'portal_transforms')
+      result = portal_transforms.convertToData(mime_type, content,
+                                               object=self, context=self,
+                                               filename=self.title_or_id(),
+                                               mimetype=src_mimetype)
+      if result is None:
+          # portal_transforms fails to convert.
+          LOG('TextDocument.convert', WARNING,
+              'portal_transforms failed to convert to %s: %r' % (mime_type, self))
+          result = ''
+      return mime_type, result
+    else:
+      # text_content is not set, return empty string instead of None
+      return mime_type, ''
+
   # Conversion API
   security.declareProtected(Permissions.ModifyPortalContent, 'convert')
   def convert(self, format, display=None, quality=75, resolution=None, frame=None, **kw):
@@ -311,25 +336,10 @@ class Image(File, OFSImage):
     Implementation of conversion for PDF files
     """
     if format in ('text', 'txt', 'html', 'base_html', 'stripped-html'):
-      mime_type = getToolByName(self, 'mimetypes_registry').\
-                                  lookupExtension('name.%s' % format)
-      src_mimetype = self.getContentType()
-      content = '%s' % self.getData()
-      if content is not None:
-        portal_transforms = getToolByName(self, 'portal_transforms')
-        result = portal_transforms.convertToData(mime_type, content,
-                                                 object=self, context=self,
-                                                 filename=self.title_or_id(),
-                                                 mimetype=src_mimetype)
-        if result is None:
-            # portal_transforms fails to convert.
-            LOG('TextDocument.convert', WARNING,
-                'portal_transforms failed to convert to %s: %r' % (mime_type, self))
-            result = ''
-        return mime_type, result
-      else:
-        # text_content is not set, return empty string instead of None
-        return mime_type, ''
+      if not self.hasConversion(format=format):
+        mime_type, data = self._convertToText(format)
+        self.setConversion(data, mime=mime_type, format=format)
+      return self.getConversion(format=format)
     image_size = self.getSizeFromImageDisplay(display)
     if (display is not None or resolution is not None or quality != 75 or format != ''\
                             or frame is not None) and image_size:
