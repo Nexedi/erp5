@@ -71,6 +71,7 @@
 container_portal_type_list = ["Monetary Reception",]\n
 resource_translated_title_dict = {}\n
 base_price_dict = {}\n
+total_price_dict = {}\n
 \n
 if listbox is None:\n
 \n
@@ -204,6 +205,7 @@ if listbox is None:\n
                             <string>container_portal_type_list</string>
                             <string>resource_translated_title_dict</string>
                             <string>base_price_dict</string>
+                            <string>total_price_dict</string>
                             <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -225,7 +227,6 @@ if listbox is None:\n
                             <string>base_price</string>
                             <string>resource_translated_title</string>
                             <string>quantity</string>
-                            <string>total_price_dict</string>
                             <string>total_price</string>
                             <string>sortListbox</string>
                             <string>_apply_</string>
