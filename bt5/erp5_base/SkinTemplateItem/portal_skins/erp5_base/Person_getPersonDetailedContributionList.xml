@@ -55,6 +55,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.PythonScripts.standard import Object\n
 from Products.ZSQLCatalog.SQLCatalog import Query\n
+from Products.ERP5Type.DateUtils import atTheEndOfPeriod\n
 request = container.REQUEST\n
 from_date = request.get(\'from_date\', None)\n
 to_date = request.get(\'at_date\', None)\n
@@ -76,17 +77,19 @@ elif aggregation_level == "week":\n
   sql_format = "%Y-%u"\n
 elif aggregation_level == "day":\n
   sql_format = "%Y-%m-%d"\n
+if to_date is not None:\n
+  to_date = atTheEndOfPeriod(to_date, period=aggregation_level)\n
 params = {"creation_date":(from_date, to_date)}\n
 query=None\n
-if from_date is not None and to_date is not None:  \n
+if from_date is not None and to_date is not None:\n
   params = {"creation_date":(from_date, to_date)}\n
-  query = Query(range="minngt", **params)\n
+  query = Query(range="minmax", **params)\n
 elif from_date is not None:\n
   params = {"creation_date":from_date}\n
   query = Query(range="min", **params)\n
 elif to_date is not None:\n
   params = {"creation_date":to_date}\n
-  query = Query(range="ngt", **params)\n
+  query = Query(range="max", **params)\n
 select_expression = \'DATE_FORMAT(creation_date, "%s") as date, portal_type\' %sql_format\n
 group_by = \'DATE_FORMAT(creation_date, "%s"), portal_type\' %sql_format\n
 \n
@@ -191,6 +194,8 @@ return line_list\n
                             <string>Object</string>
                             <string>Products.ZSQLCatalog.SQLCatalog</string>
                             <string>Query</string>
+                            <string>Products.ERP5Type.DateUtils</string>
+                            <string>atTheEndOfPeriod</string>
                             <string>_getattr_</string>
                             <string>container</string>
                             <string>request</string>
