@@ -33,7 +33,7 @@ class png_to_text(popentransform):
             os.close(tmpfile)       # close it so the other process can read it
             command = command % { 'infile' : tmpname } # apply tmp name to command
 
-        cin, couterr = os.popen4('quiet=1 hocr=0 %s' % command, 'b')
+        cin, couterr = os.popen4('quiet=1 hocr=0 blockwise=0 %s' % command, 'b')
 
         if self.useStdin:
             cin.write(str(data))
