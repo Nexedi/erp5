@@ -441,7 +441,7 @@ IntegerValidator.validate = IntegerValidator_validate
 
 def StringBaseValidator_validate(self, field, key, REQUEST):
   # We had to add this patch for hidden fields of type "list"
-  value = REQUEST.get(key)
+  value = REQUEST.get(key, REQUEST.get('default_%s' % (key, )))
   if value is None:
     if field.get_value('required'):
       raise Exception, 'Required field %s has not been transmitted. Check that all required fields are in visible groups.' % (repr(field.id), )
@@ -689,7 +689,10 @@ def SingleItemsWidget_render_view(self, field, value, REQUEST=None, render_prefi
   return value
 
 def RadioWidget_render(self, field, key, value, REQUEST, render_prefix=None):
+  input_hidden = render_element('input', type='hidden',
+                                name="default_%s:int" % (key, ), value="")
   rendered_items = self.render_items(field, key, value, REQUEST)
+  rendered_items.append(input_hidden)
   orientation = field.get_value('orientation')
   if orientation == 'horizontal':
       return string.join(rendered_items, "&nbsp;&nbsp;")
@@ -797,7 +800,7 @@ def MultiCheckBoxWidget_render(self, field, key, value, REQUEST, render_prefix=N
     return string.join(rendered_items, "&nbsp;&nbsp;")
   else:
     return string.join(rendered_items, "<br />")
-                                                                    
+
 MultiCheckBoxWidget.render = MultiCheckBoxWidget_render
 
 def ListWidget_render(self, field, key, value, REQUEST, render_prefix=None):
