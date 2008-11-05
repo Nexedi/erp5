@@ -1,7 +1,8 @@
 ##############################################################################
+# -*- coding: utf8 -*-
 #
 # Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
-#                Aurélien Calonne <aurel@nexedi.com>
+#                AurÃ©lien Calonne <aurel@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential

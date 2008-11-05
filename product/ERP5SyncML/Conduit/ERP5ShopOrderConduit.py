@@ -1,4 +1,5 @@
 ##############################################################################
+# -*- coding: utf8 -*-
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Kevin Deldycke <kevin@nexedi.com>
@@ -52,7 +53,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
   """
 
 
-#   TODO: tester ce script sur le serveur de backup (qui semble être different)
+#   TODO: tester ce script sur le serveur de backup (qui semble Ãªtre different)
 
 
   # Declarative security

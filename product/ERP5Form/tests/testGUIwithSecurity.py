@@ -1,7 +1,8 @@
 ##############################################################################
+# -*- coding: utf8 -*-
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
-#          Bartek Górny <bartek@erp5.pl>
+#          Bartek GÃ³rny <bartek@erp5.pl>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
