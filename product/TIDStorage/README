@@ -1,0 +1,54 @@
+1) Protocole:
+ Tous caractères autorisés dans les données, à l'exception de \n et \r.
+ Tout champ se termine par un \n (\r ignoré).
+ Pas d'échappement.
+ Lors de transfert de listes, la liste est précédée par le nombre de champs qu'elle contient.
+  Ex:
+  3\n
+  foo\n
+  bar\n
+  baz\n
+
+2) Commande de début de commit:
+
+BEGIN\n
+<identifiant du commit>\n
+<liste des storages concernés>
+
+ <identifiant du commit>: doit être identique à celui fourni à la fin de l'opération (que ça soit un ABORT ou un COMMIT)
+ <liste des storages concernés>: liste des identifiants des storages concernés par le commit
+  NB: la liste se termine par un \n, il n'est donc pas répété ici.
+
+Réponse: (rien)
+
+3) Commande d'annulation de la transaction:
+
+ABORT\n
+<identifiant du commit>\n
+
+  <identifiant du commit>: (cf. BEGIN)
+
+Réponse: (rien)
+
+4) Commande de finalisation de la transaction:
+
+COMMIT\n
+<identifiant du commit>\n
+<liste des storages concernés>
+<liste des TIDs commités>
+
+ <identifiant du commit>: (cf. BEGIN)
+ <liste des storages concernés>: (cf. BEGIN)
+ <liste des TIDs commités>: De même longueur que la liste des storages concernés. L'ordre doit corresponde à cette dernière.
+  NB: la liste se termine par un \n, il n'est donc pas répété ici.
+
+Réponse: (rien)
+
+5) Commande de lecture des données:
+
+DUMP\n
+
+Réponse:
+<liste des storages>
+<liste des TIDs>
+
