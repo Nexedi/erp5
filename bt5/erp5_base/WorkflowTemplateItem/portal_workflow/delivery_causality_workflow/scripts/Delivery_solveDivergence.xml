@@ -54,9 +54,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>delivery = state_change[\'object\']\n
-delivery_solve_property_dict = state_change[\'kwargs\'][\'delivery_solve_property_dict\']\n
-divergence_to_accept_list = state_change[\'kwargs\'][\'divergence_to_accept_list\']\n
-divergence_to_adopt_list = state_change[\'kwargs\'][\'divergence_to_adopt_list\']\n
+delivery_solve_property_dict = state_change[\'kwargs\'][\'delivery_solve_property_dict\'] or {}\n
+divergence_to_accept_list = state_change[\'kwargs\'][\'divergence_to_accept_list\'] or []\n
+divergence_to_adopt_list = state_change[\'kwargs\'][\'divergence_to_adopt_list\'] or []\n
 \n
 if len(delivery_solve_property_dict) or len(divergence_to_accept_list) \\\n
     or len(divergence_to_adopt_list):\n

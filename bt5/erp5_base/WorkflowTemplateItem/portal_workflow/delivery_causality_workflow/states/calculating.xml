@@ -33,6 +33,7 @@
               <tuple>
                 <string>converge</string>
                 <string>diverge</string>
+                <string>solve_divergence</string>
                 <string>start_building</string>
               </tuple>
             </value>
