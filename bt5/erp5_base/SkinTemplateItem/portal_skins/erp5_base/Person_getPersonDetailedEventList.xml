@@ -54,22 +54,25 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query\n
+from Products.ERP5Type.DateUtils import atTheEndOfPeriod\n
 request = container.REQUEST\n
 portal = context.getPortalObject()\n
 from_date = request.get(\'from_date\', None)\n
 to_date = request.get(\'at_date\', None)\n
-\n
+aggregation_level = request.get(\'aggregation_level\', None)\n
+if to_date is not None:\n
+  to_date = atTheEndOfPeriod(to_date, period=aggregation_level)\n
 # build query based on dates\n
 query=None\n
 if from_date is not None and to_date is not None:  \n
   params = {"delivery.start_date":(from_date, to_date)}\n
-  query = Query(range="minngt", **params)\n
+  query = Query(range="minmax", **params)\n
 elif from_date is not None:\n
   params = {"delivery.start_date":from_date}\n
   query = Query(range="min", **params)\n
 elif to_date is not None:\n
   params = {"delivery.start_date":to_date}\n
-  query = Query(range="ngt", **params)\n
+  query = Query(range="max", **params)\n
 \n
 event_type_list = portal.getPortalEventTypeList()\n
 # get events where user is either source or destination\n
@@ -123,6 +126,8 @@ return event_list\n
                             <string>kw</string>
                             <string>Products.ZSQLCatalog.SQLCatalog</string>
                             <string>Query</string>
+                            <string>Products.ERP5Type.DateUtils</string>
+                            <string>atTheEndOfPeriod</string>
                             <string>_getattr_</string>
                             <string>container</string>
                             <string>request</string>
@@ -131,6 +136,7 @@ return event_list\n
                             <string>None</string>
                             <string>from_date</string>
                             <string>to_date</string>
+                            <string>aggregation_level</string>
                             <string>query</string>
                             <string>params</string>
                             <string>_apply_</string>
