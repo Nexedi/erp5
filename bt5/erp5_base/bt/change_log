@@ -1,5 +1,5 @@
 2008-11-06 fabien
-* fix some problems in Base_viewLocalPermissionList view (remove id in the listbox and make reference and title not editable).
+* fix some problems in Base_viewLocalPermissionList view (replace id with title in the listbox, make title not editable and remove reference because it's not used everywhere)
 
 2008-10-28 yusei
 * Product Interest field is now translatable.

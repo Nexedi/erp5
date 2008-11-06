@@ -92,6 +92,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
                           <string>role_name</string>
                           <string>Role</string>
                         </tuple>

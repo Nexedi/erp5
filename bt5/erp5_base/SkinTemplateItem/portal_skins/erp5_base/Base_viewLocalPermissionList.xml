@@ -88,9 +88,7 @@
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_reference</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
