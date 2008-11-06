@@ -73,8 +73,7 @@ module_list.sort(key=lambda x: x.getTitle())\n
 portal_type_list = []\n
 extend = portal_type_list.extend\n
 for module in module_list:\n
-  document_type_list = [r.getPortalType() for r in module.searchFolder(group_by=\'portal_type\', limit=None)]\n
-  extend(document_type_list)\n
+  extend(module.ERP5Folder_getUnrestrictedContentTypeList())\n
 \n
 # compute sql params, we group and order by date and portal type\n
 if aggregation_level == "year":\n
@@ -220,10 +219,6 @@ return line_list\n
                             <string>module</string>
                             <string>portal_type_list</string>
                             <string>extend</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>r</string>
-                            <string>document_type_list</string>
                             <string>sql_format</string>
                             <string>params</string>
                             <string>query</string>
@@ -237,6 +232,7 @@ return line_list\n
                             <string>_getitem_</string>
                             <string>_write_</string>
                             <string>line_list</string>
+                            <string>append</string>
                             <string>period_count_dict</string>
                             <string>portal_type</string>
                             <string>period_count</string>
