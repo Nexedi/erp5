@@ -101,9 +101,9 @@ if site_uid is not None:\n
          continue\n
       if portal_type in (\'Cash Movement\', \'Cash Movement New Not Emitted\'):\n
          if not (\n
-                ((simulation_state in (\'confirmed\') and site_url in document.getSource()) \n
+                ((simulation_state in (\'confirmed\') and site_url in document.getSource("")) \n
                   or \n
-                (simulation_state in (\'stopped\') and site_url in document.getDestination()))\n
+                (simulation_state in (\'stopped\') and site_url in document.getDestination("")))\n
              ):\n
           continue\n
       if portal_type in (\'Money Deposit\',) and simulation_state not in (\'confirmed\',):\n
