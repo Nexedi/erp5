@@ -424,6 +424,14 @@ class BootstrapContent(threading.Thread):
     global has_bootstraped
     base_url = options.base_url
     if base_url is not None:
+      log('Bootstrap started')
+      storage_id_to_object_path_dict = {}
+      for key, value in options.known_tid_storage_identifier_dict.iteritems():
+        mountpoint = value[2]
+        if mountpoint is None:
+          log('Skipping bootstrap of storage %s because its mountpoint is unknown.' % (key, ))
+        else:
+          storage_id_to_object_path_dict[key] = mountpoint
       storage_id_to_object_path_dict = dict([(key, value[2]) for key, value
         in options.known_tid_storage_identifier_dict.iteritems()
         if value[2] is not None])
@@ -455,6 +463,7 @@ class BootstrapContent(threading.Thread):
         log('Bootstrap done (%i storages).' % (len(target_storage_id_set), ))
         has_bootstraped = True
     else:
+      log('Bootstrap did not happen because base_url was not given.')
       has_bootstraped = True
 
 bootstrap_content = BootstrapContent()
