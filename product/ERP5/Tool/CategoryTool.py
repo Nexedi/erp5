@@ -141,28 +141,42 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
 
     def updateRelatedContent(self, context,
                              previous_category_url, new_category_url):
-      """See CMFCategory.CategoryTool.updateRelatedContent
+      """Updates categories of related objects and predicate membership.
+          o context: the moved object
+          o previous_category_url: the related url of this object before
+            the move
+          o new_category_url: the related url of the object after the move
 
-      This method also update all predicates membership
+      TODO: make this method resist to very large updates (ie. long transaction)
       """
-      CMFCategoryTool.updateRelatedContent(self,
-                                           context,previous_category_url,
-                                           new_category_url)
-
-      # We also need to udpate all predicates membership
-      domain_tool = getToolByName(context, 'portal_domains')
       portal_catalog = getToolByName(context, 'portal_catalog')
-      kw = {}
-      kw['predicate_category.category_uid'] = context.getUid()
-      object_list = portal_catalog(**kw)
-      for predicate in [x.getObject() for x in object_list]:
+      activate_kw = {'tag':'%s_updateRelatedContent' % context.getPath()}
+
+      # udpate category related objects
+      kw = {'category.category_uid':context.getUid()}
+      for related_object in portal_catalog(**kw):
+        related_object = related_object.getObject()
+        category_list = []
+        for category in related_object.getCategoryList():
+          new_category = self.updateRelatedCategory(category,
+                                                    previous_category_url,
+                                                    new_category_url)
+          category_list.append(new_category)
+        related_object.edit(categories=category_list,
+                            activate_kw=activate_kw)
+
+      # udpate all predicates membership
+      kw = {'predicate_category.category_uid':context.getUid()}
+      for predicate in portal_catalog(**kw):
+        predicate = predicate.getObject()
         membership_list = []
         for category in predicate.getMembershipCriterionCategoryList():
           new_category = self.updateRelatedCategory(category,
                                                     previous_category_url,
                                                     new_category_url)
           membership_list.append(new_category)
-        predicate.setMembershipCriterionCategoryList(membership_list)
+        predicate.edit(membership_criterion_category_list=membership_list,
+                       activate_kw=activate_kw)
       # We do not need to to things recursively since
       # updateRelatedContent is already recursive.
 
