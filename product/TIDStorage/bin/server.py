@@ -571,7 +571,7 @@ def usage():
   print """
 Usage: %(arg0)s [-h] [-n|--nofork|--fg] [-l|--log] [-p|--port] [-a|--address]
        [--pidfile] [--user] [--group] [-s|--status-file] [-b|--burst-period]
-       [-F|--full-dump-period]
+       [-F|--full-dump-period] [-c|--config]
 
   -h
     Display this help.
