@@ -53,6 +53,7 @@ ZopeTestCase.installProduct('ERP5Type')
 
 from DateTime import DateTime
 from Products.ERP5Type.DateUtils import addToDate
+from Products.ERP5Type.DateUtils import getIntervalListBetweenDates
 
 class TestDateUtils(unittest.TestCase):
   """
@@ -123,6 +124,41 @@ class TestDateUtils(unittest.TestCase):
                    addToDate(complex_date, month=0.5).toZone('UTC').ISO())
     self.assertEqual(DateTime('2004/09/16 01:23:54 %s' % self.timezone).toZone('UTC').ISO(),
                    addToDate(complex_date, year=0.5).toZone('UTC').ISO())
+
+  def test_interval_list_between_dates(self):
+    from_date = DateTime('2008/10/23')
+    to_date = DateTime('2008/11/03')
+    aggregation_level = 'day'
+    interval_list_dict = getIntervalListBetweenDates(from_date=from_date,
+                                        to_date=to_date,
+                                        keys={'day':True})
+    date_list = interval_list_dict.get('day')
+    self.assertEqual(len(date_list), 12)
+    for index, date in enumerate(date_list):
+      if index == 0:
+        self.assertEqual(date, '2008-10-23')
+      elif index == 1:
+        self.assertEqual(date, '2008-10-24')
+      elif index == 2:
+        self.assertEqual(date, '2008-10-25')
+      elif index == 3:
+        self.assertEqual(date, '2008-10-26')
+      elif index == 4:
+        self.assertEqual(date, '2008-10-27')
+      elif index == 5:
+        self.assertEqual(date, '2008-10-28')
+      elif index == 6:
+        self.assertEqual(date, '2008-10-29')
+      elif index == 7:
+        self.assertEqual(date, '2008-10-30')
+      elif index == 8:
+        self.assertEqual(date, '2008-10-31')
+      elif index == 9:
+        self.assertEqual(date, '2008-11-01')
+      elif index == 10:
+        self.assertEqual(date, '2008-11-02')
+      elif index == 11:
+        self.assertEqual(date, '2008-11-03')
 
 def test_suite():
   suite = unittest.TestSuite()

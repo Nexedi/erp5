@@ -242,31 +242,36 @@ def getIntervalListBetweenDates(from_date=None, to_date=None,
   else:
     to_inverse = 0
 
-  diff_value = {}
-  for key in keys.keys():
-    if key:
-      diff_value[key] = []
+  diff_value_dict = {}
 
   for current_key in ('year', 'month', 'week', 'day'):
     if keys.get(current_key, None):
       new_date = from_date
       while new_date <= to_date:
-        diff_value[current_key].append(new_date.strftime(format_dict[current_key]))
+        if current_key == 'day':
+          new_strftime = new_date.ISO()
+          new_strftime = new_strftime[:new_strftime.index(' ')]
+          diff_value_dict.setdefault(current_key, []).append(new_strftime)
+        else:
+          diff_value_dict.setdefault(current_key,
+                             []).append(new_date.strftime(format_dict[current_key]))
         if current_key == "week":
           new_date = addToDate(new_date, to_add={'day':7})
         else:
           new_date = addToDate(new_date, to_add={current_key:1})
-      if to_date.strftime(format_dict[current_key]) not in diff_value[current_key]:
-        diff_value[current_key].append(to_date.strftime(format_dict[current_key]))
+      if to_date.strftime(format_dict[current_key]) not in\
+                                                    diff_value_dict[current_key]:
+        diff_value_dict.setdefault(current_key,
+                              []).append(to_date.strftime(format_dict[current_key]))
 
-  returned_value = {}
-  for key, value in diff_value.items():
+  returned_value_dict = {}
+  for key, value in diff_value_dict.iteritems():
     if to_inverse:
       value.reverse()
-      returned_value[key] = value
+      returned_value_dict[key] = value
     else:
-      returned_value[key] = value
-  return returned_value
+      returned_value_dict[key] = value
+  return returned_value_dict
 
 def getMonthAndDaysBetween(from_date=None, to_date=None):
   """
