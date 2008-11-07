@@ -432,9 +432,6 @@ class BootstrapContent(threading.Thread):
           log('Skipping bootstrap of storage %s because its mountpoint is unknown.' % (key, ))
         else:
           storage_id_to_object_path_dict[key] = mountpoint
-      storage_id_to_object_path_dict = dict([(key, value[2]) for key, value
-        in options.known_tid_storage_identifier_dict.iteritems()
-        if value[2] is not None])
       target_storage_id_set = sets.ImmutableSet(storage_id_to_object_path_dict.keys())
       known_storage_id_set = sets.ImmutableSet(tid_storage.dump().keys())
       to_check_storage_id_set = target_storage_id_set - known_storage_id_set
