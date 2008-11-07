@@ -131,8 +131,8 @@ class TestDateUtils(unittest.TestCase):
     aggregation_level = 'day'
     interval_list_dict = getIntervalListBetweenDates(from_date=from_date,
                                         to_date=to_date,
-                                        keys={'day':True})
-    date_list = interval_list_dict.get('day')
+                                        keys={aggregation_level:True})
+    date_list = interval_list_dict.get(aggregation_level)
     self.assertEqual(len(date_list), 12)
     for index, date in enumerate(date_list):
       if index == 0:
