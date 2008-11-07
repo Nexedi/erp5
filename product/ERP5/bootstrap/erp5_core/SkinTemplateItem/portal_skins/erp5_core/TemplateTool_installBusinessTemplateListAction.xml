@@ -61,6 +61,10 @@ bt_id_list = getattr(context.REQUEST, \'bt_list\', ())\n
 bt_dict = {}\n
 object_to_update = {}\n
 for item in listbox:\n
+  # backward compatibility\n
+  if not same_type(item[\'choice\'], []):\n
+    item[\'choice\'] = [item[\'choice\']]\n
+\n
   if item[\'choice\']:\n
     choice = item[\'choice\'][0]\n
   else:\n
@@ -132,11 +136,12 @@ return RESPONSE.redirect("%s/view?portal_status_message=Business+Template+%s+ins
                             <string>object_to_update</string>
                             <string>_getiter_</string>
                             <string>item</string>
+                            <string>same_type</string>
                             <string>_getitem_</string>
+                            <string>_write_</string>
                             <string>choice</string>
                             <string>bt_id</string>
                             <string>object_id</string>
-                            <string>_write_</string>
                             <string>dict</string>
                             <string>bt_title_list</string>
                             <string>object_list</string>
