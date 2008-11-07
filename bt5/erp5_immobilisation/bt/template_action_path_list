@@ -1,19 +1,10 @@
 Accounting Transaction Module | build_amortisation
 Accounting Transaction Module | select_items_to_build_amortisation_transactions
-Amortisation Rule | history
-Amortisation Rule | metadata
-Amortisation Rule | print
 Amortisation Rule | view
-Amortisation Transaction Line | history
-Amortisation Transaction Line | metadata
-Amortisation Transaction Line | print
 Amortisation Transaction Line | view
 Amortisation Transaction | causality_report
 Amortisation Transaction | details
-Amortisation Transaction | history
 Amortisation Transaction | jump_causality_items
-Amortisation Transaction | metadata
-Amortisation Transaction | print
 Amortisation Transaction | view
 Delivery Cell | eu_linear_amortisation_method_view_details
 Delivery Cell | eu_no_amortisation_amortisation_method_view_details
@@ -25,18 +16,9 @@ Immobilisation Line | eu_no_amortisation_amortisation_method_view_details
 Immobilisation Line | fr_actual_use_amortisation_method_view_details
 Immobilisation Line | fr_degressive_amortisation_method_view_details
 Immobilisation Line | fr_uncontinuous_degressive_amortisation_method_view_details
-Immobilisation Line | history
-Immobilisation Line | metadata
-Immobilisation Line | print
 Immobilisation Line | view
-Immobilisation Module | list_ui
-Immobilisation Module | print
-Immobilisation Module | sort_on
 Immobilisation Module | view
-Immobilisation | history
 Immobilisation | immobilisation_validity_errors
-Immobilisation | metadata
-Immobilisation | print
 Immobilisation | view
 Internal Packing List Line | eu_linear_amortisation_method_view_details
 Internal Packing List Line | eu_no_amortisation_amortisation_method_view_details
