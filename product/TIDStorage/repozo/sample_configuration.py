@@ -14,7 +14,7 @@ known_tid_storage_identifier_dict = {
      '/home/vincent/tmp/repozo/z11',
      'baz_test'),
 }
-base_url = 'http://localhost:5080/erp5/%s/modifyContext'
+base_url = 'http://login:password@localhost:5080/erp5/%s/modifyContext'
 port = 9001
 host = '127.0.0.1'
 
