@@ -88,6 +88,7 @@
                     <value>
                       <list>
                         <string>my_vault</string>
+                        <string>your_resource</string>
                       </list>
                     </value>
                 </item>

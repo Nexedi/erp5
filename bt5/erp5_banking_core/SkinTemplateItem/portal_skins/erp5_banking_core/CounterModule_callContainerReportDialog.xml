@@ -67,6 +67,9 @@
             <key> <string>_body</string> </key>
             <value> <string>from DateTime import DateTime\n
 node = context.REQUEST.form[\'vault\']\n
+default_resource = context.REQUEST.form[\'resource\']\n
+context.log("kw %s" %(kw,))\n
+context.log("req %s" %(context.REQUEST.form,))\n
 container_portal_type_list = ["Monetary Reception",]\n
 \n
 base_price_dict = {}\n
@@ -92,6 +95,9 @@ if listbox is None:\n
         context.log("MonetaryIssue_generateCashContainerInputDialog", "No container line find for cash container %s" %(cash_container.getRelativeUrl(),))\n
         continue\n
       container_line = container_lines[0]\n
+      if default_resource is not None and container_line.getResourceId() != default_resource:\n
+        context.log("skipping doc")\n
+        continue\n
       container_dict[\'reference\'] = cash_container.getReference()\n
       container_dict[\'cash_number_range_start\'] = cash_container.getCashNumberRangeStart()\n
       container_dict[\'cash_number_range_stop\'] = cash_container.getCashNumberRangeStop()\n
@@ -193,6 +199,7 @@ if listbox is None:\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>node</string>
+                            <string>default_resource</string>
                             <string>container_portal_type_list</string>
                             <string>base_price_dict</string>
                             <string>None</string>
