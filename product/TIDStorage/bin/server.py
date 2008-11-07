@@ -484,11 +484,8 @@ def log(message):
   print >> sys.stdout, '%s: %s' % (time.asctime(), message)
 
 class PoliteThreadingTCPServer(SocketServer.ThreadingTCPServer):
-  def server_close(self):
-    # Make the port reusable for listening as soon as the socket closes.
-    self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, True)
-    self.socket.shutdown(socket.SHUT_RDWR)
-    self.socket.close()
+  daemon_threads = True
+  allow_reuse_address = True
 
 def main(address, port):
   server = PoliteThreadingTCPServer((address, port), TIDServer)
@@ -501,7 +498,6 @@ def main(address, port):
   finally:
     global can_bootstrap
     can_bootstrap = False
-    log('Waiting for clients to disconnect...')
     server.server_close()
 
 log_file_set = sets.Set()
