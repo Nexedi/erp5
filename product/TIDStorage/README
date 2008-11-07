@@ -1,54 +1,54 @@
-1) Protocole:
- Tous caractères autorisés dans les données, à l'exception de \n et \r.
- Tout champ se termine par un \n (\r ignoré).
- Pas d'échappement.
- Lors de transfert de listes, la liste est précédée par le nombre de champs qu'elle contient.
-  Ex:
-  3\n
-  foo\n
-  bar\n
-  baz\n
+1) Protocol:
+ All characters allowed in data, except \n and \r (0x0A & 0x0D).
+ Each field ends with \n, \r is ignored.
+ No escaping.
+ When transfering a list, is is preceeded by the number of inclued fields.
+   Example:
+     3\n
+     foo\n
+     bar\n
+     baz\n
 
-2) Commande de début de commit:
+2) Start of commit command:
 
 BEGIN\n
-<identifiant du commit>\n
-<liste des storages concernés>
+<commit id>\n
+<list of involved storages>
 
- <identifiant du commit>: doit être identique à celui fourni à la fin de l'opération (que ça soit un ABORT ou un COMMIT)
- <liste des storages concernés>: liste des identifiants des storages concernés par le commit
-  NB: la liste se termine par un \n, il n'est donc pas répété ici.
+ <commit id>: must be identical to the one given when commit finishes (be it ABORT or COMMIT)
+ <list of involved storages>: list of storage ids involved in the transaction
+ NB: final \n is part of list representation, so it's not displayed above.
 
-Réponse: (rien)
+Response: (nothing)
 
-3) Commande d'annulation de la transaction:
+3) Transaction abort command:
 
 ABORT\n
-<identifiant du commit>\n
+<commit id>\n
 
-  <identifiant du commit>: (cf. BEGIN)
+  <commit id>: (cf. BEGIN)
 
-Réponse: (rien)
+Response: (nothing)
 
-4) Commande de finalisation de la transaction:
+4) Transaction finalisation command:
 
 COMMIT\n
-<identifiant du commit>\n
-<liste des storages concernés>
-<liste des TIDs commités>
+<commit id>\n
+<list of involved storages>
+<list of commited TIDs>
 
- <identifiant du commit>: (cf. BEGIN)
- <liste des storages concernés>: (cf. BEGIN)
- <liste des TIDs commités>: De même longueur que la liste des storages concernés. L'ordre doit corresponde à cette dernière.
-  NB: la liste se termine par un \n, il n'est donc pas répété ici.
+ <commit id>: (cf. BEGIN)
+ <list of involved storages>: (cf. BEGIN)
+ <list of commited TIDs>: Length of this mist must be the same as involved storage list, and it must be in consistent order.
+ NB: final \n is part of list representation, so it's not displayed above.
 
-Réponse: (rien)
+Response: (nothing)
 
-5) Commande de lecture des données:
+5) Data read command:
 
 DUMP\n
 
-Réponse:
-<liste des storages>
-<liste des TIDs>
+Response:
+<list of storages>
+<list of TIDs>
 
