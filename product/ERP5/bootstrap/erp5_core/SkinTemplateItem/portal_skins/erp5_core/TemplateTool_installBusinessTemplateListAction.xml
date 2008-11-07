@@ -61,11 +61,12 @@ bt_id_list = getattr(context.REQUEST, \'bt_list\', ())\n
 bt_dict = {}\n
 object_to_update = {}\n
 for item in listbox:\n
+  if item[\'choice\']:\n
+    choice = item[\'choice\'][0]\n
+  else:\n
+    choice = "nothing"\n
   bt_id, object_id = item[\'listbox_key\'].split(\'|\')\n
-  try:\n
-    bt_dict.setdefault(bt_id, dict())[object_id] = item[\'choice\'][0]\n
-  except IndexError:\n
-    bt_dict.setdefault(bt_id, dict())[object_id] = item[\'choice\']\n
+  bt_dict.setdefault(bt_id, dict())[object_id] = choice\n
 \n
 bt_title_list = []\n
 for bt_id in bt_id_list:\n
@@ -132,6 +133,7 @@ return RESPONSE.redirect("%s/view?portal_status_message=Business+Template+%s+ins
                             <string>_getiter_</string>
                             <string>item</string>
                             <string>_getitem_</string>
+                            <string>choice</string>
                             <string>bt_id</string>
                             <string>object_id</string>
                             <string>_write_</string>
