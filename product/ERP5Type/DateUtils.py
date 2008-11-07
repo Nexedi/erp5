@@ -147,39 +147,37 @@ def getClosestDate(date=None, target_date=None,
   Precision can be year, month or day
   If before is set to 1, return the closest date before target_date,
   unless the closest date after target_date
-  
-  
+
   Example :
-  
+
   date=None, target_date=DateTime('2004/03/12'), precision='month', before=1
     -> return DateTime('2004/03/01')
-    
+
   date=DateTime('2002/12/14'), target_date=DateTime('2004/03/12'), precision='month', before=1
     -> return DateTime('2004/02/14')
-  
+
   """
   if date is None:
     date = DateTime('2000/01/01')
   if target_date is None:
     target_date = DateTime()
-    
+
   earlier_target_date = target_date - millis
-        
+
   to_check = { 'day':{'year':1, 'month':1, 'day':1}, 'month':{'year':1, 'month':1}, 'year':{'year':1} }
   diff_value = {}
   diff_value = getIntervalBetweenDates(from_date = date, to_date = target_date, keys=to_check[precision])
   return_date = addToDate(date = date, to_add = diff_value)
-  
+
   while (strict and return_date - target_date < 0) or \
                       (not strict and \
                       getIntervalBetweenDates(from_date=return_date, to_date=target_date, keys={'day':1})['day'] > 0):
     return_date = addToDate(date = return_date, to_add = { precision:1 })
   if before and DateTime(return_date.Date()) != DateTime(target_date.Date()) :
     return_date = addToDate(date = return_date, to_add = { precision:-1 })
- 
+
   return return_date
 
-        
 def getIntervalBetweenDates(from_date=None, to_date=None, 
                             keys={'year':1, 'month':1, 'day':1}):
   """
@@ -195,13 +193,13 @@ def getIntervalBetweenDates(from_date=None, to_date=None,
     from_date, to_date = to_date, from_date
     to_inverse = 1
   else:
-    to_inverse = 0  
-    
+    to_inverse = 0
+
   diff_value = {}
   for key in keys.keys():
     if key:
       diff_value[key] = 0
-  
+
   for current_key in ('year', 'month'):
     if keys.get(current_key, None):
       new_date = addToDate(from_date, to_add={current_key:1})
@@ -211,7 +209,7 @@ def getIntervalBetweenDates(from_date=None, to_date=None,
         new_date = addToDate(from_date, to_add={current_key:1})
   if keys.get('day', None):
     diff_value['day'] = round(to_date - from_date)
-    
+
   returned_value = {}
   for key, value in diff_value.items():
     if to_inverse:
@@ -219,7 +217,6 @@ def getIntervalBetweenDates(from_date=None, to_date=None,
     else:
       returned_value[key] = value
   return returned_value
-
 
 def getIntervalListBetweenDates(from_date=None, to_date=None,
                             keys={'year':1, 'month':1, 'week' : 1, 'day':1}):
@@ -234,7 +231,7 @@ def getIntervalListBetweenDates(from_date=None, to_date=None,
                  'week':'%Y-%V',
                  'day':'%Y-%m-%d',
                  }
-    
+
   if from_date is None:
     from_date = DateTime()
   if to_date is None:
@@ -243,13 +240,13 @@ def getIntervalListBetweenDates(from_date=None, to_date=None,
     from_date, to_date = to_date, from_date
     to_inverse = 1
   else:
-    to_inverse = 0  
-    
+    to_inverse = 0
+
   diff_value = {}
   for key in keys.keys():
     if key:
       diff_value[key] = []
-  
+
   for current_key in ('year', 'month', 'week', 'day'):
     if keys.get(current_key, None):
       new_date = from_date
@@ -261,7 +258,7 @@ def getIntervalListBetweenDates(from_date=None, to_date=None,
           new_date = addToDate(new_date, to_add={current_key:1})
       if to_date.strftime(format_dict[current_key]) not in diff_value[current_key]:
         diff_value[current_key].append(to_date.strftime(format_dict[current_key]))
-    
+
   returned_value = {}
   for key, value in diff_value.items():
     if to_inverse:
@@ -285,13 +282,12 @@ def getCompletedMonthBetween(from_date=None, to_date=None,
   An incomplete month (at the beginning or the end of the given period)
   is considered as a complete one.
   reference_date is used to know when a month begins.
-  
-  
+
   Example :
-  
+
   from_date = 2003/01/02, to_date = 2003/06/30
   Month are Jan, Feb, Mar, Apr, May and Jun -> return 6
-  
+
   from_date = 2003/01/14, to_date = 2003/06/16, reference_date = 2000/01/15
   Month are Dec (2003/01/14), Jan (from 2003/01/15 to 2003/02/14), Feb, Mar, Apr, May and Jun -> return 7
   """
@@ -299,7 +295,6 @@ def getCompletedMonthBetween(from_date=None, to_date=None,
   to_date = getClosestDate(target_date = to_date, date = reference_date, before = 0)
   return getIntervalBetweenDates(from_date = from_date, to_date = to_date, keys = {'month':1} )
 
-  
 def getRoundedMonthBetween(from_date=None, to_date=None, rounded_day=False):
   """
   Return a rounded number of months between the both given dates.
@@ -320,7 +315,6 @@ def getRoundedMonthBetween(from_date=None, to_date=None, rounded_day=False):
     return_value += 1
   return return_value
 
-  
 def getMonthFraction(date, days):
   """
   Return a ratio corresponding to the fraction of the month
@@ -330,10 +324,10 @@ def getMonthFraction(date, days):
     reference_month_date = date
   else:
     reference_month_date = addToDate(date, {'month':-1} )
-    
+
   number_of_days_in_month = addToDate(reference_month_date, {'month':1}) - reference_month_date + 0.
   return days / number_of_days_in_month
-  
+
 
 def getYearFraction(days=None, months=None, days_in_year=number_of_days_in_year):
   """
@@ -344,8 +338,7 @@ def getYearFraction(days=None, months=None, days_in_year=number_of_days_in_year)
     return months / number_of_months_in_year
   else:
     return days / days_in_year
-  
-  
+
 def getAccountableYearFraction(from_date=None, to_date=None):
   """
   Returns a year fraction according to accounting rules,
@@ -353,7 +346,7 @@ def getAccountableYearFraction(from_date=None, to_date=None):
   """
   from_date = from_date.earliestTime()
   to_date = to_date.earliestTime()
-  
+
   months = getMonthAndDaysBetween(from_date, to_date)['month']
   days = getMonthAndDaysBetween(from_date, to_date)['day']
   new_from_date = addToDate(from_date, month=months)
@@ -373,8 +366,7 @@ def getAccountableYearFraction(from_date=None, to_date=None):
   year_fraction = months / accountable_months_in_year
   year_fraction += (1 / accountable_months_in_year) * ( days / accountable_days_in_month)
   return year_fraction
-  
-  
+
 def getBissextilCompliantYearFraction(from_date=None, to_date=None, reference_date=DateTime('2000/01/01')):
   """
   Returns a ratio corresponding to the fraction of the year
@@ -391,8 +383,7 @@ def getBissextilCompliantYearFraction(from_date=None, to_date=None, reference_da
                                          keys={'day':1})['day']
   return_value = interval['year'] + getYearFraction(days=interval['day'], days_in_year=days_in_year)
   return return_value
- 
-  
+
 def getDecimalNumberOfYearsBetween(from_date, to_date, reference_date=DateTime('2000/01/01')):
   """
   Return a float representing the number of years between
@@ -400,19 +391,18 @@ def getDecimalNumberOfYearsBetween(from_date, to_date, reference_date=DateTime('
   """
   first_date = getClosestDate(target_date = from_date, date = reference_date, before = 0, precision='year')
   last_date = getClosestDate(target_date = to_date, date = reference_date, before = 1, precision='year')
-  
+
   interval_year = getIntervalBetweenDates(first_date, last_date, {'year':1} )['year']
   while interval_year < 0:
     last_date = addToDate(last_date, {'year':1})
     interval_year = getIntervalBetweenDates(first_date, last_date, {'year':1} )['year']
-  
+
   fraction = getYearFraction(days=getIntervalBetweenDates(from_date, first_date, {'day':1})['day'])
   fraction += getYearFraction(days=getIntervalBetweenDates(last_date, to_date, {'day':1})['day'])
-  
+
   fraction += interval_year
-  
+
   return fraction
-    
 
 def roundMonthToGreaterEntireYear(months_number):
   """
@@ -423,7 +413,6 @@ def roundMonthToGreaterEntireYear(months_number):
   if int(years_number) != years_number:
     years_number += 1
   return int(years_number) * 12
-  
 
 def roundDate(date):
   """
