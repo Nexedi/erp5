@@ -712,6 +712,8 @@ if config_file_name is not None:
     if option_id not in options.__dict__ and hasattr(module, option_id):
       setattr(options, option_id, getattr(module, option_id))
 
+if options.pidfile_name is not None:
+  options.pidfile_name = os.path.abspath(options.pidfile_name)
 if options.logfile_name is not None:
   options.logfile_name = os.path.abspath(options.logfile_name)
 if options.status_file is not None:
