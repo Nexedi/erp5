@@ -734,17 +734,20 @@ signal.signal(signal.SIGUSR1, USR1Handler)
 signal.signal(signal.SIGTERM, TERMHandler)
 
 if options.fork:
+  os.chdir('/')
+  os.umask(027)
+  logfile = LogFile(options.logfile_name)
+  pidfile = open(options.pidfile_name, 'w')
   pid = os.fork()
   if pid == 0:
-    os.umask(027)
     os.setsid()
     pid = os.fork()
     if pid == 0:
+      pidfile.close()
       os.close(0)
       os.close(1)
       os.close(2)
-      sys.stdout = sys.stderr = LogFile(options.logfile_name)
-      os.chdir('/')
+      sys.stdout = sys.stderr = logfile
       try:
         main(options.address, options.port)
       except:
@@ -755,12 +758,10 @@ if options.fork:
       else:
         log('Exited normaly.')
     else:
-      pidfile = open(options.pidfile_name, 'w')
       pidfile.write(str(pid))
       pidfile.close()
       os._exit(0)
   else:
-    # TODO: monitor child startup to make it easier to use.
     os._exit(0)
 else:
   main(options.address, options.port)
