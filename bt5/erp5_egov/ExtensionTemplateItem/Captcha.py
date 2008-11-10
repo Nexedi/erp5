@@ -70,7 +70,7 @@ def getRandomText():
   text_seed = md5()
   text_seed.update(str(uniform(1, 10000000000000000)))
   text = text_seed.hexdigest()
-  return text[-7:]                             
+  return text[-7:]
 
 def generateCaptcha():
   """
@@ -133,7 +133,7 @@ def makeCaptcha(text, bg_file, captcha_file_path):
   image_data = open(captcha_file_path).read()
 
   # delete temp files
-  os.remove(captcha_file_path)  
+  os.remove(captcha_file_path)
   os.remove(bg_file)
 
   return image_data
