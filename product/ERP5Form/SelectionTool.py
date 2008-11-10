@@ -632,7 +632,6 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         lastPage.
       """
       if uids is None: uids = []
-      selection = self.getSelectionFor(list_selection_name, REQUEST)
       REQUEST.form['list_start'] = 0
       self.uncheckAll(list_selection_name, listbox_uid)
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST)
@@ -647,17 +646,18 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       """
       if uids is None: uids = []
       selection = self.getSelectionFor(list_selection_name, REQUEST)
-      params = selection.getParams()
-      # XXX This will not work if the number of lines shown in the listbox is greater
-      #       than the BIG_INT constan. Such a case has low probability but is not
-      #       impossible. If you are in this case, send me a mail ! -- Kev
-      BIG_INT = 10000000
-      last_page_start = BIG_INT
-      total_lines = REQUEST.form.get('total_size', BIG_INT)
-      if total_lines != BIG_INT:
-        lines_per_page  = params.get('list_lines', 1)
-        last_page_start = int(total_lines) - (int(total_lines) % int(lines_per_page))
-      REQUEST.form['list_start'] = last_page_start
+      if selection is not None:
+        params = selection.getParams()
+        # XXX This will not work if the number of lines shown in the listbox is greater
+        #       than the BIG_INT constan. Such a case has low probability but is not
+        #       impossible. If you are in this case, send me a mail ! -- Kev
+        BIG_INT = 10000000
+        last_page_start = BIG_INT
+        total_lines = REQUEST.form.get('total_size', BIG_INT)
+        if total_lines != BIG_INT:
+          lines_per_page  = params.get('list_lines', 1)
+          last_page_start = int(total_lines) - (int(total_lines) % int(lines_per_page))
+        REQUEST.form['list_start'] = last_page_start
       self.uncheckAll(list_selection_name, listbox_uid)
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST)
 
@@ -668,11 +668,12 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       """
       if uids is None: uids = []
       selection = self.getSelectionFor(list_selection_name, REQUEST)
-      params = selection.getParams()
-      lines = params.get('list_lines', 0)
-      start = REQUEST.form.pop('list_start', 0)
-      params['list_start'] = int(start) + int(lines)
-      selection.edit(params=params)
+      if selection is not None:
+        params = selection.getParams()
+        lines = params.get('list_lines', 0)
+        start = REQUEST.form.pop('list_start', 0)
+        params['list_start'] = int(start) + int(lines)
+        selection.edit(params=params)
       self.uncheckAll(list_selection_name, listbox_uid)
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST)
 
@@ -683,11 +684,12 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       """
       if uids is None: uids = []
       selection = self.getSelectionFor(list_selection_name, REQUEST)
-      params = selection.getParams()
-      lines = params.get('list_lines', 0)
-      start = REQUEST.form.pop('list_start', 0)
-      params['list_start'] = max(int(start) - int(lines), 0)
-      selection.edit(params=params)
+      if selection is not None:
+        params = selection.getParams()
+        lines = params.get('list_lines', 0)
+        start = REQUEST.form.pop('list_start', 0)
+        params['list_start'] = max(int(start) - int(lines), 0)
+        selection.edit(params=params)
       self.uncheckAll(list_selection_name, listbox_uid)
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST)
 
@@ -698,10 +700,11 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       """
       if uids is None: uids = []
       selection = self.getSelectionFor(list_selection_name, REQUEST)
-      params = selection.getParams()
-      params['list_start'] = int(REQUEST.form.pop('list_start', 0))
-      selection.edit(params=params)
-      self.uncheckAll(list_selection_name, listbox_uid)
+      if selection is not None:
+        params = selection.getParams()
+        params['list_start'] = int(REQUEST.form.pop('list_start', 0))
+        selection.edit(params=params)
+        self.uncheckAll(list_selection_name, listbox_uid)
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST, query_string=query_string)
 
     # PlanningBox related methods
