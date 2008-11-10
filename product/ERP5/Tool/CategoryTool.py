@@ -34,6 +34,7 @@ from Products.CMFCategory.CategoryTool import CategoryTool as CMFCategoryTool
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base
 from Globals import InitializeClass, DTMLFile, PersistentMapping
 from OFS.Folder import Folder as OFS_Folder
 from Products.ERP5Type import Permissions
@@ -177,8 +178,21 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
           membership_list.append(new_category)
         predicate.edit(membership_criterion_category_list=membership_list,
                        activate_kw=activate_kw)
-      # We do not need to to things recursively since
-      # updateRelatedContent is already recursive.
+
+      # update related recursively if required
+      aq_context = aq_base(context)
+      if getattr(aq_context, 'listFolderContents', None) is not None:
+        for o in context.listFolderContents():
+          new_o_category_url = o.getRelativeUrl()
+          # Relative Url is based on parent new_category_url so we must
+          # replace new_category_url with previous_category_url to find
+          # the new category_url for the subobject
+          previous_o_category_url = self.updateRelatedCategory(
+              new_o_category_url,
+              new_category_url,
+              previous_category_url)
+          self.updateRelatedContent(o, previous_o_category_url,
+                                    new_o_category_url)
 
 InitializeClass( CategoryTool )
 
