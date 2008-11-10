@@ -55,26 +55,56 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-changed_object = state_change[\'object\']\n
-translateString = changed_object.Base_translateString\n
-login = changed_object.getCompanyName().lower()\n
-portal_catalog = changed_object.portal_catalog\n
-ninea = changed_object.getNineaNumber()\n
-\n
-# check that no existing organisation have the same NINEA number or login\n
+"""\n
+This script tries to send a message containing the credentials to the\n
+person. It uses portal_notifications and the getObject API of ERP5Catalog.\n
+"""\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 \n
-result = portal_catalog(portal_type=\'Organisation\', vat_code=ninea)\n
+\n
+translateString = context.Base_translateString\n
+portal_catalog = context.portal_catalog\n
+\n
+# get the new person :\n
+result = portal_catalog(portal_type=\'Person\',\n
+    title=context.getTitle(),\n
+    default_email_text=context.getDefaultEmailText())\n
 \n
 if len(result) > 1:\n
-  msg = "Error : There is more than one company with the NINEA code ${code}"\n
-  msg = translateString(msg, mapping=dict(code=ninea))\n
-  raise ValidationFailed, msg \n
-\n
-if len(result) == 1 and result[0].getObject().getReference():\n
-  msg = "Error : A company with the NINEA code ${code} already exists and have already an account"\n
-  msg = translateString(msg, mapping=dict(code=ninea))\n
+  msg = "Error : There is more than one person with the title ${title} and the email ${email}"\n
+  msg = translateString(msg,\n
+      mapping=dict(title=context.getTitle(),\n
+        email=context.getDefaultEmailText()))\n
   raise ValidationFailed, msg\n
+\n
+if len(result) == 0:\n
+  msg = "Error : No person with the title ${title} and the email ${email}"\n
+  msg = translateString(msg,\n
+      mapping=dict(title=context.getTitle(),\n
+        email=context.getDefaultEmailText()))\n
+  raise ValidationFailed, msg\n
+\n
+person = result[0]\n
+\n
+# Build the message and translate it\n
+subject = translateString("Your credential for ${site_address}", mapping=dict(site_address=\'www.safi.sn\'))\n
+msg = """Thanks for registrering to SAFI. Now you can connect in on ${site_address} with this credentials : \n
+\n
+Login : ${login}\n
+Password : ${password}\n
+\n
+This credentials are usefull to track your application and more. Please visit ${site_address} for more information.\n
+"""\n
+msg = translateString(msg,\n
+             mapping=dict(site_address=\'www.safi.sn\',\n
+                          login=person.getReference(),\n
+                          password=person.getPassword())\n
+            )\n
+\n
+# We can now notify the owner through the notification tool\n
+context.portal_notifications.sendMessage(recipient=person.getReference(), \n
+    subject=subject, message=msg, portal_type_list=(\'Person\', \'Organisation\'),\n
+    store_as_event=True)\n
 
 
 ]]></string> </value>
@@ -87,12 +117,13 @@ if len(result) == 1 and result[0].getObject().getReference():\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -115,26 +146,26 @@ if len(result) == 1 and result[0].getObject().getReference():\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>changed_object</string>
-                            <string>_getattr_</string>
-                            <string>translateString</string>
-                            <string>login</string>
-                            <string>portal_catalog</string>
-                            <string>ninea</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>translateString</string>
+                            <string>portal_catalog</string>
                             <string>result</string>
                             <string>len</string>
                             <string>msg</string>
                             <string>dict</string>
+                            <string>_getitem_</string>
+                            <string>person</string>
+                            <string>subject</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>
@@ -151,7 +182,7 @@ if len(result) == 1 and result[0].getObject().getReference():\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>checkAccountInexistance</string> </value>
+            <value> <string>Person_sendCrendentialsByEMail</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

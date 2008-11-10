@@ -58,8 +58,25 @@
 portal = changed_object.getPortalObject()\n
 organisation_module = portal.getDefaultModule(portal_type=\'Organisation\')\n
 \n
+# create the person wich represent the company\n
+person_module = portal.getDefaultModule(portal_type=\'Person\')\n
+accountant = person_module.newContent(portal_type=\'Person\',\n
+                         title=changed_object.getAccountantName(),\n
+                         default_telephone_text=changed_object.getAccountantTelNumber(),\n
+                         default_fax_text=changed_object.getAccountantFax(),\n
+                         default_email_text=changed_object.getAccountantEmail(),\n
+                         address_street_address=changed_object.getAccountantAddress(),\n
+                         address_city=changed_object.getAccountantCity(),\n
+                         default_address_region=changed_object.getAccountantCountry())\n
+if changed_object.getOptionAdministrator():\n
+  accountant.setFunction(\'entreprise/directeur/pdg/administrateur\')\n
+elif changed_object.getOptionManager():\n
+  accountant.setFunction(\'entreprise/directeur/pdg/gerant\')\n
+elif changed_object.getOptionDirector():\n
+  accountant.setFunction(\'entreprise/directeur/pdg/pdg\')\n
+\n
 result = changed_object.portal_catalog(portal_type=\'Organisation\',\n
-           corporate_registration_code=changed_object.getRccm())\n
+           vat_code=changed_object.getNineaNumber())\n
 \n
 # if the organisation don\'t exists, create it\n
 if not len(result):\n
@@ -67,26 +84,24 @@ if not len(result):\n
       portal_type=\'Organisation\',\n
       title=changed_object.getCompanyName(),\n
       corporate_name=changed_object.getCompanyName(),\n
-      address_street_address=changed_object.getAddressStreetAddress(),\n
-      address_zip_code=changed_object.getAddressZipCode(),\n
-      address_city=changed_object.getAddressCity(),\n
-      address_region=changed_object.getAddressRegion(),\n
-      corporate_registration_code=changed_object.getRccm(),\n
-      vat_code=changed_object.getNinea(),\n
-      default_email_text=changed_object.getEmail(),\n
-      activity_kw={\'tag\':\'organisation_creation_%s\' % changed_object.getRelativeUrl()}\n
+      address_street_address=changed_object.getCompanyAddress(),\n
+      address_city=changed_object.getCityName(),\n
+      address_region=changed_object.getCountryName(),\n
+      corporate_registration_code=changed_object.getRccmNumber(),\n
+      vat_code=changed_object.getNineaNumber(),\n
+      default_email_text=changed_object.getCompanyEmail(),\n
       )\n
 else:\n
   organisation = result[0].getObject()\n
 \n
 # set the login and password required a manager role, so a script with a \n
 # proxy role is used\n
-login = context.generateNewLogin(text=changed_object.getCompanyName())\n
+login = context.generateNewLogin(text=changed_object.getAccountantName())\n
 password = changed_object.Person_generatePassword()\n
-context.EGov_setLoginAndPasswordAsManager(organisation, login, password)\n
-organisation.immediateReindexObject()\n
+context.EGov_setLoginAndPasswordAsManager(accountant, login, password)\n
+accountant.immediateReindexObject()\n
 \n
-organisation.Organisation_sendCrendentialsByEMail()\n
+accountant.Person_sendCrendentialsByEMail()\n
 </string> </value>
         </item>
         <item>
@@ -135,6 +150,8 @@ organisation.Organisation_sendCrendentialsByEMail()\n
                             <string>_getattr_</string>
                             <string>portal</string>
                             <string>organisation_module</string>
+                            <string>person_module</string>
+                            <string>accountant</string>
                             <string>result</string>
                             <string>len</string>
                             <string>organisation</string>
