@@ -12,7 +12,9 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>portal_types</string>
+              </list>
             </value>
         </item>
         <item>
@@ -79,6 +81,17 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Resource_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Service</string>
+                          <string>Service</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
