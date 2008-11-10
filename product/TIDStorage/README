@@ -1,15 +1,15 @@
 TIDStorage
 
-This product provides a way to have consistent backups when runing a
+This product provides a way to have consistent backups when running a
 multi-storage instance (only ZEO is supported at the moment).
 
 Doing backups of individual Data.fs who are part of the same instance
 (one mounted in another) is a problem when there are transactions involving
 multiple storages: if there is a crash during transaction commit, there is no
 way to tell which storage was commited and which was not (there is no TID
-consistance between databases).
+consistency between databases).
 There is an even more tricky case. Consider the following:
- 2 transactions runing in parallel:
+ 2 transactions running in parallel:
   T1: modifies storage A and B
   T2: modifies storage A
  Commit order scenario:
@@ -27,7 +27,7 @@ inconsistent (T1 commit on B never happened).
 
 TIDStorage fixes those issues by keeping track of transaction-to-tid relations
 for all (ZODB, via ZEO) storages involved in any transaction, and by tracking
-inter-transaction dependancies.
+inter-transaction dependencies.
 
 TIDStorage is composed of 3 parts:
  - A Zope product, which monkey-patches "ZEO" and "transaction" products.
@@ -47,7 +47,6 @@ TIDStorage is composed of 3 parts:
    coherency points from TIDStorage daemon and invoking repozo.
    This requires a patch to be applied to regular repozo, so that it can
    backup ZODBs only up to a given TID.
-   
 
 Constraints under which TIDStorage was designed:
  - Zope performance
@@ -56,28 +55,28 @@ Constraints under which TIDStorage was designed:
    limit Zope performance.
  - No added single-point-of-failure
    Even if Zope cannot connect to TIDStorage, it will still work. It will only
-   emit one log line when connection is lost or at first attemp if it did not
+   emit one log line when connection is lost or at first attempt if it did not
    succeed. When connection is established, another log line is emitted.
  - Bootstrap
    As TIDStorage can be started and stopped while things still happen on
    ZODBs, it must be able to bootstrap its content before any backup can
-   happen. This is done by creating artificial Zope transaction whose only
+   happen. This is done by creating artificial Zope transactions whose only
    purpose is to cause a commit to happen on each ZODB, filling TIDStorage and
    making sure there is no pending commit on any storage (since all locks
    could be taken by those transactions, it means that all transaction started
-   before TIDStorage can receive their notification have ended).
- - Restauration from Data.fs
-   In addition from the ability to restore from repozo-style backups, and in
+   before that TIDStorage can receive their notification have ended).
+ - Restoration from Data.fs
+   In addition to the ability to restore from repozo-style backups, and in
    order to provide greater backup frequency than repozo can offer on big
    databases, TIDStorage offers the possibility to restore coherent Data.fs
    from crashed ones - as long as they are not corrupted.
 
 Limits:
  - Backup "lag"
-   As TIDStorage can only offer a coherence point when interdependant
-   transactions are all finished (commited or aborted), a backup started at
-   time T might actualy contain data from moments before. There are pathologic
-   cases where no coherence point can be found, so no backup can happen.
+   As TIDStorage can only offer a coherency point when interdependent
+   transactions are all finished (committed or aborted), a backup started at
+   time T might actually contain data from moments before. There are pathologic
+   cases where no coherency point can be found, so no backup can happen.
    Also, bootstrap can prevent backups from happening if daemon if
    misconfigured.
 
@@ -85,13 +84,13 @@ Protocol:
  All characters allowed in data, except \n and \r (0x0A & 0x0D).
  Each field ends with \n, \r is ignored.
  No escaping.
- When transfering a list, is is prepended by the number of inclued fields.
+ When transferring a list, it is prepended by the number of included fields.
    Example:
      3\n
      foo\n
      bar\n
      baz\n
- When transfering a dict, it is prepended by the number of items, followed by
+ When transferring a dict, it is prepended by the number of items, followed by
  keys and then values. Values must be ints represented as strings.
    Example:
      2\n
@@ -130,7 +129,7 @@ COMMIT\n
 
  <commit id>: (cf. BEGIN)
  involved storages: (cf. BEGIN)
- commited TIDs: TIDs for each storage, as int.
+ committed TIDs: TIDs for each storage, as int.
  NB: final \n is part of list representation, so it's not displayed above.
 
 Response: (nothing)
