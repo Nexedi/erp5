@@ -1,15 +1,107 @@
-1) Protocol:
+TIDStorage
+
+This product provides a way to have consistent backups when runing a
+multi-storage instance (only ZEO is supported at the moment).
+
+Doing backups of individual Data.fs who are part of the same instance
+(one mounted in another) is a problem when there are transactions involving
+multiple storages: if there is a crash during transaction commit, there is no
+way to tell which storage was commited and which was not (there is no TID
+consistance between databases).
+There is an even more tricky case. Consider the following:
+ 2 transactions runing in parallel:
+  T1: modifies storage A and B
+  T2: modifies storage A
+ Commit order scenario:
+  T1 starts commiting (takes commit lock on A and B)
+  T2 starts commiting (waits for commit lock on A)
+  T1 commits A (commit lock released on A)
+  T2 commits A (takes & releases commit lock on A)
+  [crash]
+  T1 commits B (commit lock released on B) <- never happens because of crash
+
+Here, T2 was able to commit entierely, but it must not be saved. This is
+because transactions are stored in ZODB in the order they are commited.
+So is T2 is in the backup, a part of T1 will also be, and backup will be
+inconsistent (T1 commit on B never happened).  
+
+TIDStorage fixes those issues by keeping track of transaction-to-tid relations
+for all (ZODB, via ZEO) storages involved in any transaction, and by tracking
+inter-transaction dependancies.
+
+TIDStorage is composed of 3 parts:
+ - A Zope product, which monkey-patches "ZEO" and "transaction" products.
+   transaction patch:
+     TIDStorage works at transaction boundaries, so we hook around
+     _commitResource method to know when it happens.
+     It must be configured to fit your network setup (TID_STORAGE_ADDRESS)
+   ZEO patch:
+     With regular ZEO, there is no way to know last commited TID at
+     transaction-code level. This patch stores last commited TID on ZEO
+     connection object, to be read by transaction patch.
+ - A daemon
+   This is TIDStorage itself, receiving TIDs from Zopes and delivering
+   coherency points to backup scripts.
+ - Backup scripts
+   Those scripts are (mostly) wrappers for repozo backup script, fetching
+   coherency points from TIDStorage daemon and invoking repozo.
+   This requires a patch to be applied to regular repozo, so that it can
+   backup ZODBs only up to a given TID.
+   
+
+Constraints under which TIDStorage was designed:
+ - Zope performance
+   Protocol (see below) was designed as one-way only (Zope pushes data to
+   TIDStorage, and does not expect an answer), so that TIDStorage speed do not
+   limit Zope performance.
+ - No added single-point-of-failure
+   Even if Zope cannot connect to TIDStorage, it will still work. It will only
+   emit one log line when connection is lost or at first attemp if it did not
+   succeed. When connection is established, another log line is emitted.
+ - Bootstrap
+   As TIDStorage can be started and stopped while things still happen on
+   ZODBs, it must be able to bootstrap its content before any backup can
+   happen. This is done by creating artificial Zope transaction whose only
+   purpose is to cause a commit to happen on each ZODB, filling TIDStorage and
+   making sure there is no pending commit on any storage (since all locks
+   could be taken by those transactions, it means that all transaction started
+   before TIDStorage can receive their notification have ended).
+ - Restauration from Data.fs
+   In addition from the ability to restore from repozo-style backups, and in
+   order to provide greater backup frequency than repozo can offer on big
+   databases, TIDStorage offers the possibility to restore coherent Data.fs
+   from crashed ones - as long as they are not corrupted.
+
+Limits:
+ - Backup "lag"
+   As TIDStorage can only offer a coherence point when interdependant
+   transactions are all finished (commited or aborted), a backup started at
+   time T might actualy contain data from moments before. There are pathologic
+   cases where no coherence point can be found, so no backup can happen.
+   Also, bootstrap can prevent backups from happening if daemon if
+   misconfigured.
+
+Protocol:
  All characters allowed in data, except \n and \r (0x0A & 0x0D).
  Each field ends with \n, \r is ignored.
  No escaping.
- When transfering a list, is is preceeded by the number of inclued fields.
+ When transfering a list, is is prepended by the number of inclued fields.
    Example:
      3\n
      foo\n
      bar\n
      baz\n
+ When transfering a dict, it is prepended by the number of items, followed by
+ keys and then values. Values must be ints represented as strings.
+   Example:
+     2\n
+     key1\n
+     key2\n
+     1\n
+     2\n
+ Commands are case-insensitive.
 
-2) Start of commit command:
+1) Start of commit command:
 
 BEGIN\n
 <commit id>\n
@@ -21,7 +113,7 @@ BEGIN\n
 
 Response: (nothing)
 
-3) Transaction abort command:
+2) Transaction abort command:
 
 ABORT\n
 <commit id>\n
@@ -30,25 +122,35 @@ ABORT\n
 
 Response: (nothing)
 
-4) Transaction finalisation command:
+3) Transaction finalisation command:
 
 COMMIT\n
 <commit id>\n
-<list of involved storages>
-<list of commited TIDs>
+<dict of involved storages and commited TIDs>
 
  <commit id>: (cf. BEGIN)
- <list of involved storages>: (cf. BEGIN)
- <list of commited TIDs>: Length of this mist must be the same as involved storage list, and it must be in consistent order.
+ involved storages: (cf. BEGIN)
+ commited TIDs: TIDs for each storage, as int.
  NB: final \n is part of list representation, so it's not displayed above.
 
 Response: (nothing)
 
-5) Data read command:
+4) Data read command:
 
 DUMP\n
 
 Response:
-<list of storages>
-<list of TIDs>
+<dict of storages and TIDs>
+
+5) Connection termination command:
+
+QUIT\n
+
+Response: (nothing, server closes connection)
+
+6) Bootstrap status command:
+
+BOOTSTRAPED\n
+
+Response: 1 if bootstrap was completely done, 0 otherwise.
 
