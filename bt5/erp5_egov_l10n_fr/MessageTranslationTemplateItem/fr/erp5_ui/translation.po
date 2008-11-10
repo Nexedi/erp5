@@ -926,3 +926,6 @@ msgstr "Vos identifiants pour ${site_address}"
 
 msgid "Thanks for registrering to SAFI. Now you can connect in on ${site_address} with this credentials : \n\nLogin : ${login}\nPassword : ${password}\n\nThis credentials are usefull to track your application and more. Please visit ${site_address} for more information."
 msgstr "Merci pour votre inscription à SAFI. Maintenant, vous pouvez vous connecter sur ${site_address} avec ces identifiants : \n\nLogin : ${login}\nMot de passe : ${password}\n\nCes identifiants sont utiles pour suivre votre dossier et plus. Merci de visiter ${site_address} pour plus d'information."
+
+msgid "One function (and only one) must be checked for the accountant of the company"
+msgstr "Une fonction (et une seulement) doit être cochée pour le représentant de l'entreprise"
