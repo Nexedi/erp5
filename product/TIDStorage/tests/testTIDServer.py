@@ -3,6 +3,7 @@
 from ExchangeProtocol import ExchangeProtocol
 import traceback
 import socket
+import time
 import sys
 
 assert len(sys.argv) == 3, 'Requires exactly 2 arguments: <address> <port>'
@@ -53,6 +54,14 @@ class TIDClient:
       internal_storage_tid_dict['%s_%s' % (test_id, key)] = value
     self._exchange_protocol.send_dict(internal_storage_tid_dict)
 
+  def bootstraped(self):
+    self._exchange_protocol.send_field('bootstraped')
+    return self._exchange_protocol.recv_int()
+
+  def waitForBootstrap(self):
+    while not self.bootstraped():
+      time.sleep(0.1)
+
 class TestTIDServerV2:
   def __init__(self, address, port):
     self._client = TIDClient((address, port))
@@ -60,13 +69,35 @@ class TestTIDServerV2:
   def assertEqual(self, value, target):
     assert value == target, 'value %r does not match target %r' % (value, target)
  
-  def testInitialValue(self, test_id):
+  def test_01_InitialValue(self, test_id):
     """
       Check that the storage is empty
     """
     self.assertEqual(self._client.dump_all(), {})
+  
+  def test_02_Bootstrap(self, test_id):
+    """
+      Trigger bootstrap and check that no value is visible until bootstrap is
+      done.
+    """
+    t1_storage_tid_dict = {'s0': 1}
+    t2_storage_tid_dict = {'s1': 1}
+    self.assertEqual(self._client.dump(test_id), {})
+    self._client.begin(test_id, 't1', t1_storage_tid_dict.keys())
+    self.assertEqual(self._client.dump(test_id), {})
+    self._client.commit(test_id, 't1', t1_storage_tid_dict)
+    # Bootstrap is runing on the server, nothing is visible yet.
+    self.assertEqual(self._client.dump(test_id), {})
+    self._client.waitForBootstrap()
+    # Nothing is available yet, we need one more transaction to happen.
+    self.assertEqual(self._client.dump(test_id), {})
+    self._client.begin(test_id, 't2', t2_storage_tid_dict.keys())
+    self.assertEqual(self._client.dump(test_id), {})
+    self._client.commit(test_id, 't2', t2_storage_tid_dict)
+    # Now everything must be available.
+    self.assertEqual(self._client.dump(test_id), {'s0': 1, 's1': 1})
 
-  def testScenario1(self, test_id):
+  def test_03_Scenario1(self, test_id):
     """
       Simple begin - commit case.
     """
@@ -77,7 +108,7 @@ class TestTIDServerV2:
     self._client.commit(test_id, 't1', storage_tid_dict)
     self.assertEqual(self._client.dump(test_id), storage_tid_dict)
 
-  def testScenario2(self, test_id):
+  def test_04_Scenario2(self, test_id):
     """
       Simple begin - abort case.
     """
@@ -88,7 +119,7 @@ class TestTIDServerV2:
     self._client.abort(test_id, 't1')
     self.assertEqual(self._client.dump(test_id), {})
 
-  def testScenario3(self, test_id):
+  def test_05_Scenario3(self, test_id):
     """
       2 concurent transactions impacting a common storage.
       Second transaction begins after first does, and commits before
@@ -106,7 +137,7 @@ class TestTIDServerV2:
     self._client.commit(test_id, 't1', t1_storage_tid_dict)
     self.assertEqual(self._client.dump(test_id), {'s1': 2, 's2': 1, 's3': 1})
 
-  def testScenario4(self, test_id):
+  def test_06_Scenario4(self, test_id):
     """
       3 concurent transactions.
       Transactions 1 and 2 impact same storage s1.
@@ -132,7 +163,7 @@ class TestTIDServerV2:
     self._client.commit(test_id, 't1', t1_storage_tid_dict)
     self.assertEqual(self._client.dump(test_id), {'s1': 2, 's2': 2, 's3': 1})
 
-  def testScenario4bis(self, test_id):
+  def test_07_Scenario4bis(self, test_id):
     """
       3 concurent transactions.
       Transactions 1 and 2 impact same storage s1.
@@ -162,7 +193,7 @@ class TestTIDServerV2:
     self._client.abort(test_id, 't1')
     self.assertEqual(self._client.dump(test_id), {'s1': 2, 's3': 1})
 
-  def testScenario5(self, test_id):
+  def test_08_Scenario5(self, test_id):
     """
       2 concurent transactions impacting a common storage.
       Second transaction begins after first does, and commits after
@@ -180,7 +211,7 @@ class TestTIDServerV2:
     self._client.commit(test_id, 't2', t2_storage_tid_dict)
     self.assertEqual(self._client.dump(test_id), {'s1': 2, 's2': 1})
 
-  def testScenario6(self, test_id):
+  def test_09_Scenario6(self, test_id):
     """
       2 concurent transactions impacting separate sets of storages.
       Check that the first commit impacts dump data immediately.
@@ -197,7 +228,7 @@ class TestTIDServerV2:
     self._client.commit(test_id, 't2', t2_storage_tid_dict)
     self.assertEqual(self._client.dump(test_id), {'s1': 1, 's2': 1})
 
-  def testScenario7(self, test_id):
+  def test_10_Scenario7(self, test_id):
     """
       3 concurent transactions.
       t1 and t2 impact a set of different storages.
@@ -222,7 +253,7 @@ class TestTIDServerV2:
     self._client.commit(test_id, 't3', t3_storage_tid_dict)
     self.assertEqual(self._client.dump(test_id), {'s1': 2, 's2': 2})
 
-  def testScenario8(self, test_id):
+  def test_11_Scenario8(self, test_id):
     """
       Simple increase case.
     """

@@ -179,6 +179,9 @@ class TIDServer(SocketServer.BaseRequestHandler):
     tid_dict = self._field_exchange.recv_dict()
     self._tid_storage.commit(identifier, tid_dict)
 
+  def bootstraped(self):
+    self._field_exchange.send_int(has_bootstraped and 1 or 0)
+
   def handle(self):
     global tid_storage
     self._tid_storage = tid_storage
@@ -187,7 +190,8 @@ class TIDServer(SocketServer.BaseRequestHandler):
       'begin': self.begin,
       'abort': self.abort,
       'commit': self.commit,
-      'dump': self.dump
+      'dump': self.dump,
+      'bootstraped': self.bootstraped,
     }
     self.log('Connected')
     try:
@@ -327,38 +331,36 @@ class TIDStorage:
           storage_id_set = self._storage_id_to_storage_id_set_dict[storage_id]
           # Raises if not found
           storage_id_set.remove(storage_id)
-      if self._tid_file is not None:
-        now = time.time()
-        can_full_dump = has_bootstraped and (self._next_full_dump is not None) and (self._next_full_dump < now)
-        can_dump = (not can_full_dump) and (self._next_dump is not None) and (self._next_dump < now)
-        record_for_dump = can_dump or (self._next_dump is not None)
-        append_to_file = has_bootstraped and (can_dump or can_full_dump)
-      else:
-        append_to_file = record_for_dump = can_dump = can_full_dump = False
-      for key, value in self._storage_id_to_storage_id_set_dict.iteritems():
-        if len(value) == 0 and key in self._transcient:
-          self._storage[key] = self._transcient.pop(key)
-          if record_for_dump:
-            self._since_last_burst.add(key)
-      if append_to_file:
-        if can_full_dump:
-          to_dump_dict = self._storage
-          dump_code = 'f'
+      if has_bootstraped:
+        if self._tid_file is not None:
+          now = time.time()
+          can_full_dump = (self._next_full_dump is not None) and (self._next_full_dump < now)
+          can_dump = (not can_full_dump) and (self._next_dump is not None) and (self._next_dump < now)
+          record_for_dump = can_dump or (self._next_dump is not None)
+          append_to_file = (can_dump or can_full_dump)
         else:
-          to_dump_dict = dict([(key, self._storage[key]) for key in self._since_last_burst])
-          dump_code = 'd'
-        if len(to_dump_dict):
-          self._tid_file.write('%.02f %s %r\n' % (now, dump_code, to_dump_dict))
+          append_to_file = record_for_dump = can_dump = can_full_dump = False
+        for key, value in self._storage_id_to_storage_id_set_dict.iteritems():
+          if len(value) == 0 and key in self._transcient:
+            self._storage[key] = self._transcient.pop(key)
+            if record_for_dump:
+              self._since_last_burst.add(key)
+        if append_to_file:
           if can_full_dump:
-            self._next_full_dump = now + self._full_dump_period
-          if self._next_dump is not None:
-            self._next_dump = now + self._burst_period
-            self._since_last_burst.clear()
-      if not has_bootstraped:
+            to_dump_dict = self._storage
+            dump_code = 'f'
+          else:
+            to_dump_dict = dict([(key, self._storage[key]) for key in self._since_last_burst])
+            dump_code = 'd'
+          if len(to_dump_dict):
+            self._tid_file.write('%.02f %s %r\n' % (now, dump_code, to_dump_dict))
+            if can_full_dump:
+              self._next_full_dump = now + self._full_dump_period
+            if self._next_dump is not None:
+              self._next_dump = now + self._burst_period
+              self._since_last_burst.clear()
+      else:
         doBootstrap()
-      #if len(self._storage_id_to_transaction_id_list_dict) == 0:
-      #  self._storage.update(self._transcient)
-      #  self._transcient.clear()
     finally:
       self._storage_id_lock.release()
 
@@ -366,6 +368,13 @@ class TIDStorage:
     self._storage_id_lock.acquire()
     try:
       return self._storage.copy()
+    finally:
+      self._storage_id_lock.release()
+
+  def dump_transcient(self):
+    self._storage_id_lock.acquire()
+    try:
+      return self._transcient.copy()
     finally:
       self._storage_id_lock.release()
 
@@ -433,12 +442,12 @@ class BootstrapContent(threading.Thread):
         else:
           storage_id_to_object_path_dict[key] = mountpoint
       target_storage_id_set = sets.ImmutableSet(storage_id_to_object_path_dict.keys())
-      known_storage_id_set = sets.ImmutableSet(tid_storage.dump().keys())
+      known_storage_id_set = sets.ImmutableSet(tid_storage.dump_transcient().keys())
       to_check_storage_id_set = target_storage_id_set - known_storage_id_set
       while len(to_check_storage_id_set) and can_bootstrap:
         serialize_url = None
         for storage_id in to_check_storage_id_set:
-          if can_bootstrap and storage_id not in tid_storage.dump().keys():
+          if can_bootstrap and storage_id not in tid_storage.dump_transcient().keys():
             serialize_url = base_url % (storage_id_to_object_path_dict[storage_id], )
             try:
               # Query a Zope, which will contact this process in return to store
@@ -450,7 +459,7 @@ class BootstrapContent(threading.Thread):
               log('Opened %r: %r' % (serialize_url, page.read()))
         # Let some time for zope to contact TIDStorage back and fill the gaps.
         time.sleep(5)
-        known_storage_id_set = sets.ImmutableSet(tid_storage.dump().keys())
+        known_storage_id_set = sets.ImmutableSet(tid_storage.dump_transcient().keys())
         to_check_storage_id_set = target_storage_id_set - known_storage_id_set
         if len(to_check_storage_id_set):
           log('Bootstrap in progress... Mising storages: %r' % (to_check_storage_id_set, ))
