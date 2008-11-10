@@ -4,10 +4,10 @@
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -32,15 +32,12 @@ ERP5 portal_categories tool.
 
 from Products.CMFCategory.CategoryTool import CategoryTool as CMFCategoryTool
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
-from Globals import InitializeClass, DTMLFile, PersistentMapping
-from OFS.Folder import Folder as OFS_Folder
+from Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.CopySupport import CopyContainer
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.Document import newTempBase
 from Products.ERP5Type.Cache import CachingMethod
 
 from zLOG import LOG
@@ -195,4 +192,3 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
                                     new_o_category_url)
 
 InitializeClass( CategoryTool )
-
