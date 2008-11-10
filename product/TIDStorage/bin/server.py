@@ -741,9 +741,6 @@ if options.fork:
       os.close(0)
       os.close(1)
       os.close(2)
-      os.open('/dev/null', os.O_RDWR)
-      os.dup2(0, 1)
-      os.dup2(0, 2)
       sys.stdout = sys.stderr = LogFile(options.logfile_name)
       os.chdir('/')
       try:
