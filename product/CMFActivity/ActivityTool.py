@@ -105,7 +105,8 @@ if instancehome is not None:
   log_directory = os.path.join(instancehome, 'log')
   if os.path.isdir(log_directory):
     from Signals import Signals
-    log_file_handler = logging.FileHandler(os.path.join(log_directory, 'CMFActivity.log'))
+    from ZConfig.components.logger.loghandler import FileHandler
+    log_file_handler = FileHandler(os.path.join(log_directory, 'CMFActivity.log'))
     # Default zope log format string borrowed from
     # ZConfig/components/logger/factory.xml, but without the extra "------"
     # line separating entries.
