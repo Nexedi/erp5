@@ -462,7 +462,7 @@ class BootstrapContent(threading.Thread):
         known_storage_id_set = sets.ImmutableSet(tid_storage.dump_transcient().keys())
         to_check_storage_id_set = target_storage_id_set - known_storage_id_set
         if len(to_check_storage_id_set):
-          log('Bootstrap in progress... Mising storages: %r' % (to_check_storage_id_set, ))
+          log('Bootstrap in progress... Missing storages: %r' % (to_check_storage_id_set, ))
           # Retry a bit later
           time.sleep(60)
       if len(to_check_storage_id_set) == 0:
