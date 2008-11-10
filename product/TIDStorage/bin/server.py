@@ -497,70 +497,13 @@ def main(address, port):
     can_bootstrap = False
     server.server_close()
 
-log_file_set = sets.Set()
-
-class LogFile:
-  """
-    Loggin-to-file class.
-    Allows rotating file.
-    Can be used as stdout/stderr file: no write from any thread is lost during
-    rotation. There is an unavoidable (?) race condition if anything gets
-    raised by the rotating thread between "self._to_buffer = False" completion
-    and following log flush.
-  """
-  _file = None
-
-  def __init__(self, file_name):
-    self._lock = threading.RLock()
-    self._file_name = file_name
-    self._to_buffer = False
-    self._buffer = []
-    self._open()
-    log_file_set.add(self)
-
-  def _open(self):
-    self._file = open(self._file_name, 'a', 0)
-
-  def write(self, value):
-    self._lock.acquire()
-    try:
-      if self._to_buffer:
-        self._buffer.append(value)
-      else:
-        self._file.write(value)
-    finally:
-      self._lock.release()
-
-  def close():
-    self._lock.acquire()
-    try:
-      log_file_set.remove(self)
-      self._file.close()
-      self._file = None
-    finally:
-      self._lock.release()
-
-  def rotate(self):
-    self._lock.acquire()
-    try:
-      self._to_buffer = True
-      self._file.close()
-      self._open()
-      # XXX: race condition below if rotating stderr: Any exception thrown
-      # here will be out-of-order in resulting log.
-      self._to_buffer = False
-      self.write(''.join(self._buffer))
-      # End of race condition.
-    finally:
-      self._lock.release()
+def openLog():
+  return open(options.logfile_name, 'a', 0)
 
 def HUPHandler(signal_number, stack):
-  rotate_count = 0
-  log('Rotating logfiles...')
-  for log_file in log_file_set:
-    rotate_count += 1
-    log_file.rotate()
-  log('Logfiles rotated (%i).' % (rotate_count, ))
+  log('Rotating logfile...')
+  sys.stdout = sys.stderr = openLog()
+  log('Logfile rotated')
 
 def USR1Handler(signal_number, stack):
   log(repr(tid_storage))
@@ -736,7 +679,7 @@ signal.signal(signal.SIGTERM, TERMHandler)
 if options.fork:
   os.chdir('/')
   os.umask(027)
-  logfile = LogFile(options.logfile_name)
+  logfile = openLog()
   pidfile = open(options.pidfile_name, 'w')
   pid = os.fork()
   if pid == 0:
@@ -748,15 +691,8 @@ if options.fork:
       os.close(1)
       os.close(2)
       sys.stdout = sys.stderr = logfile
-      try:
-        main(options.address, options.port)
-      except:
-        # Log exception before returning.
-        log('Exception caught outside of "main". Previous log entries might ' \
-            'be out of order because of this exception.\n%s' % (
-            ''.join(traceback.format_exception(*sys.exc_info())), ))
-      else:
-        log('Exited normaly.')
+      main(options.address, options.port)
+      log('Exiting.')
     else:
       pidfile.write(str(pid))
       pidfile.close()
