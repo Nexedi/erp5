@@ -104,7 +104,7 @@ class AssertNoPermissionMethod(object):
           'User %s has %s permission on %s %s (roles: [%s])' %
           (username, self._permission_name, document.getPortalTypeName(),
             document, ', '.join(user.getRolesInContext(document))))
-    except:
+    finally:
       setSecurityManager(sm)
 
 
