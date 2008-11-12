@@ -161,6 +161,9 @@ def initialiseTaxLineList(order, trade_condition):\n
   # recurse on other trade conditions\n
   for specialised_trade_condition in trade_condition.getSpecialiseValueList():\n
     initialiseTaxLineList(order, specialised_trade_condition)\n
+if force:\n
+  context.manage_delObjects([x.getId() for x in context.contentValues(\n
+                 portal_type=(\'Discount Line\', \'Tax Line\'))])\n
 \n
 if not len(context.contentValues(portal_type=(\'Discount Line\', \'Tax Line\'))):\n
   initialiseTaxLineList(context, trade_condition)\n
@@ -229,6 +232,9 @@ order.edit(**new_category_dict)\n
                             <string>len</string>
                             <string>initialiseDiscountLineList</string>
                             <string>initialiseTaxLineList</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
