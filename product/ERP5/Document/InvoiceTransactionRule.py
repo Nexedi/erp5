@@ -198,31 +198,33 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
       #currency of the source/destination section
       currency = new_mvmt.getResourceValue()
       if currency is not None:
-        if new_mvmt.AccountingTransaction_isDestinationCurrencyConvertible():
-          precision = \
-           new_mvmt.getDestinationSectionValue().getPriceCurrencyValue().\
-                      getQuantityPrecision()
-	  dest_exchange_ratio = \
-            currency.getPrice(context=new_mvmt.asContext(
-                      categories=['price_currency/%s'
-                 %new_mvmt.getDestinationSectionValue().getPriceCurrency(),
-	      'resource/%s'% new_mvmt.getResourceRelativeUrl()],
-              start_date=new_mvmt.getStopDate()))
+        currency_url = currency.getRelativeUrl()
+        dest_section = new_mvmt.getDestinationSectionValue()
+        if dest_section is not None:
+          dest_currency = dest_section.getPriceCurrencyValue()
+        else:
+          dest_currency = None
+        if dest_currency is not None and currency != dest_currency:
+          precision = dest_currency.getQuantityPrecision()
+	  dest_exchange_ratio = currency.getPrice(context=new_mvmt.asContext(
+            categories=['price_currency/%s' % dest_currency.getRelativeUrl(),
+                        'resource/%s' % currency_url],
+            start_date=new_mvmt.getStartDate()))
 	  if dest_exchange_ratio is not None:
             new_mvmt.edit(destination_total_asset_price=round(
              (dest_exchange_ratio*
               applied_rule.getParentValue().getTotalPrice()),precision))
-	     
-        if new_mvmt.AccountingTransaction_isSourceCurrencyConvertible():
-	  precision = \
-           new_mvmt.getSourceSectionValue().getPriceCurrencyValue().\
-                      getQuantityPrecision()
-	  source_exchange_ratio = \
-             currency.getPrice(context=new_mvmt.asContext(
-               categories=['price_currency/%s'
-             %new_mvmt.getSourceSectionValue().getPriceCurrency(),
-	    'resource/%s'%
-            new_mvmt.getResourceRelativeUrl()],
+
+        source_section = new_mvmt.getSourceSectionValue()
+        if source_section is not None:
+          source_currency = source_section.getPriceCurrencyValue()
+        else:
+          source_currency = None
+        if source_currency is not None and currency != source_currency:
+	  precision = source_currency.getQuantityPrecision()
+	  source_exchange_ratio = currency.getPrice(context=new_mvmt.asContext(
+            categories=['price_currency/%s' % source_currency.getRelativeUrl(),
+                        'resource/%s' % currency_url],
             start_date=new_mvmt.getStartDate()))
           if source_exchange_ratio is not None:
             new_mvmt.setSourceTotalAssetPrice(round(
