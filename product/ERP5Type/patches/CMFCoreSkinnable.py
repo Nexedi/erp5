@@ -13,7 +13,7 @@
 ##############################################################################
 
 from Products.CMFCore import Skinnable
-from Products.CMFCore.Skinnable import SKINDATA, superGetAttr, SkinDataCleanup, SkinnableObjectManager
+from Products.CMFCore.Skinnable import SKINDATA, superGetAttr, SkinnableObjectManager
 from thread import get_ident
 from zLOG import LOG, WARNING, DEBUG
 from Acquisition import aq_base
@@ -134,7 +134,7 @@ def CMFCoreSkinnableSkinnableObjectManager_changeSkin(self, skinname):
   SKINDATA[tid] = (skinname, {'portal_skins': None}, {})
   REQUEST = getattr(self, 'REQUEST', None)
   if REQUEST is not None:
-    REQUEST._hold(SkinDataCleanup(tid))
+    REQUEST._hold(SkinDataCleanup(tid, SKINDATA[tid]))
 
 def CMFCoreSkinnableSkinnableObjectManager_getSkin(self, name=None):
   """
@@ -153,4 +153,36 @@ Skinnable.SkinnableObjectManager.getSkin = CMFCoreSkinnableSkinnableObjectManage
 # patching is incompletely available at ERP5Site class level.
 from Products.CMFCore.PortalObject import PortalObjectBase
 PortalObjectBase.__getattr__ = CMFCoreSkinnableSkinnableObjectManager___getattr__
+
+# Redefine SkinDataCleanup completely.
+# This class is designed to remove entries from SKINDATA dictionnary, to avoid
+# keeping references to persistent objects besides transaction boundaries.
+# This cleanup is triggered by deletion of SkinDataCleanup instance, which
+# happens after corresponding REQUEST instance is deleted (because of '_hold'
+# mechanism).
+# But because of the lag which exists between REQUEST deletion and
+# SkinDataCleanup deletion (due to garbage collection), it sometimes deletes a
+# new SKINDATA entry, unrelated to the intended one. This leaves a system with
+# no SKINDATA entry for current thread, leading to errors.
+# A case where it's easy to trigger such error is CMFActivity's REQUEST
+# separation mechanism, where one request is created for each single activity.
+
+class SkinDataCleanup:
+  def __init__(self, tid, skindata):
+    self.tid = tid
+    self.skindata_id = self.hashSkinData(skindata)
+
+  def __del__(self):
+    tid = self.tid
+    skindata = SKINDATA.get(tid)
+    if skindata is not None:
+      if self.hashSkinData(skindata) == self.skindata_id:
+        try:
+          # Entry might have already disapeared. Ignore.
+          del SKINDATA[tid]
+        except KeyError:
+          pass
+
+  def hashSkinData(self, skindata):
+    return id(skindata)
 
