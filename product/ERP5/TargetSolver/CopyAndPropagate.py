@@ -59,6 +59,9 @@ class CopyAndPropagate(TargetSolver):
     elif scope == 'category':
       property_id = divergence.getProperty('tested_property')
       new_value_list = delivery.getPropertyList(property_id)
+      # variation_category should be edited as variation_category_list
+      if property_id == 'variation_category':
+        property_id = 'variation_category_list'
       value_dict[property_id] = new_value_list
     else: # otherwise we assume that scope is 'property'
       property_id = divergence.getProperty('tested_property')
