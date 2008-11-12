@@ -434,6 +434,12 @@ class TestERP5BankingMixin:
     self.variation_not_defined = self.variation_base_category.newContent(id='not_defined',
                                       portal_type='Category')
 
+    # Now create required category for region and coin
+    self.region_base_category = getattr(self.category_tool, 'region')
+    # add the category valid in cash_status which define status of banknotes and coin
+    self.region_france = self.region_base_category.newContent(id='france', title="France", portal_type='Category')
+    self.region_spain = self.region_base_category.newContent(id='spain', title="Spain", portal_type='Category')
+
     # Create Resources Document (Banknotes & Coins)
     # get the currency cash module
     self.currency_cash_module = self.getCurrencyCashModule()
