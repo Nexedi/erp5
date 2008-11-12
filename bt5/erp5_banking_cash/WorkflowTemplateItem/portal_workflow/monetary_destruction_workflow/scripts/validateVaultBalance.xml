@@ -71,16 +71,16 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
 from Products.ERP5Type.Message import Message\n
 \n
 transaction = state_change[\'object\']\n
-transaction.log("transaction", "validateVaultBalance")\n
-vault = transaction.getSource()\n
 \n
-source_object = context.portal_categories.getCategoryValue(vault)\n
+source_object = transaction.getSourceValue()\n
+vault = source_object.getPhysicalPath()\n
 \n
 # check again that we are in the good accounting date\n
 if check_source_counter_date:\n
   transaction.Baobab_checkCounterDateOpen(site=source_object, date=transaction.getStartDate())\n
 \n
-if (\'encaisse_des_externes\' not in vault and \'encaisse_des_billets_retires_de_la_circulation\'  not in vault):\n
+if \'encaisse_des_externes\' not in vault and \\\n
+      \'encaisse_des_billets_retires_de_la_circulation\'  not in vault:\n
    msg = Message(domain="ui", message="Invalid source.")\n
    raise ValidationFailed, (msg,)\n
 \n
@@ -90,25 +90,28 @@ if \'encaisse_des_externes\' in vault:\n
      msg = Message(domain="ui", message="Invalid Foreign Agency.")\n
      raise ValidationFailed, (msg,)\n
 \n
-\n
+if "auxiliaire" in vault and transaction.getSourceSection() in (None, ""):\n
+   msg = Message(domain="ui", message="You must select a foreign agency.")\n
+   raise ValidationFailed, (msg,)\n
 \n
 \n
 # In case of dematerialization, we must have only coins\n
-transaction.log("isDematerialization", transaction.isDematerialization())\n
 if transaction.isDematerialization():\n
   for line in transaction.objectValues(portal_type=\'Monetary Destruction Line\'):\n
-    transaction.log("line", line.getResourceValue().getPortalType())\n
     if line.getResourceValue().getPortalType() != \'Coin\':\n
       msg = Message(domain="ui", message="Sorry, dematerialization is possible only with coins.")\n
       raise ValidationFailed, (msg,)\n
+\n
   # Also we must make sure that the source_section is defined\n
   source_section = transaction.getSourceSection()\n
   if source_section is None:\n
     msg = Message(domain="ui", message="Sorry, dematerialization is possible only if the external agency is defined.")\n
     raise ValidationFailed, (msg,)\n
-  if not \'encaisse_des_billets_retires_de_la_circulation\' in vault:\n
+\n
+  if \'encaisse_des_billets_retires_de_la_circulation\' not in vault:\n
     msg = Message(domain="ui", message="Invalid source.")\n
     raise ValidationFailed, (msg,)\n
+\n
   if source_section in source_object.getPath():\n
     msg = Message(domain="ui", message="You can\'t used this site.")\n
     raise ValidationFailed, (msg,)\n
@@ -117,7 +120,7 @@ if transaction.isDematerialization():\n
 # Get price and total_price.\n
 amount = transaction.getSourceTotalAssetPrice()\n
 total_price = transaction.getTotalPrice(portal_type=[\'Monetary Destruction Line\',\'Monetary Destruction Cell\'],fast=0)\n
-resource = transaction.CashDelivery_checkCounterInventory(source=vault, portal_type=\'Monetary Destruction Line\')\n
+resource = transaction.CashDelivery_checkCounterInventory(source=source_object.getPath(), portal_type=\'Monetary Destruction Line\')\n
 \n
 if resource == 2:\n
   msg = Message(domain="ui", message="No Resource.")\n
@@ -182,9 +185,8 @@ elif resource <> 0 :\n
                             <string>_getitem_</string>
                             <string>transaction</string>
                             <string>_getattr_</string>
-                            <string>vault</string>
-                            <string>context</string>
                             <string>source_object</string>
+                            <string>vault</string>
                             <string>msg</string>
                             <string>source_section</string>
                             <string>None</string>
