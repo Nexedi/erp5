@@ -1325,7 +1325,7 @@ class FloatWidget(TextWidget):
               return value
           try :
             float_value = float(value)
-            if precision:
+            if precision not in (None, ''):
               float_value = round(float_value, precision)
             value = str(float_value)
           except ValueError:

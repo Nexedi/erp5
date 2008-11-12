@@ -105,6 +105,8 @@ class TestFloatField(unittest.TestCase):
   def test_format_precision(self):
     self.field.values['precision'] = 0
     self.assertEquals('12', self.widget.format_value(self.field, 12.34))
+    # value is rounded
+    self.assertEquals('13', self.widget.format_value(self.field, 12.9))
 
     purgeFieldValueCache() # call this before changing internal field values.
     self.field.values['precision'] = 2
