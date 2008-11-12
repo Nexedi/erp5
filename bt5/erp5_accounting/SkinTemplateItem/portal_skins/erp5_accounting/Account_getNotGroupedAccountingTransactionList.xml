@@ -118,6 +118,10 @@ for brain in portal.Base_zGetNotGroupedMovementList(\n
     credit = max(-brain.total_price, 0)\n
     total_credit += credit\n
 \n
+    brain_date = brain.date\n
+    if mvt.getStartDate():\n
+      brain_date = brain_date.toZone(mvt.getStartDate())\n
+    \n
     line_list.append(\n
           Object(uid=\'new_000\',\n
                  total_price=brain.total_price,\n
@@ -208,6 +212,7 @@ return line_list\n
                             <string>debit</string>
                             <string>_inplacevar_</string>
                             <string>credit</string>
+                            <string>brain_date</string>
                           </tuple>
                         </value>
                     </item>
