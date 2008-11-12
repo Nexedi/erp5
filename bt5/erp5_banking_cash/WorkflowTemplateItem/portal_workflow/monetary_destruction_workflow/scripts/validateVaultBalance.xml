@@ -90,11 +90,21 @@ if \'encaisse_des_externes\' in vault:\n
      msg = Message(domain="ui", message="Invalid Foreign Agency.")\n
      raise ValidationFailed, (msg,)\n
 \n
-if "auxiliaire" in vault and transaction.getSourceSection() in (None, ""):\n
-   msg = Message(domain="ui", message="You must select a foreign agency.")\n
-   raise ValidationFailed, (msg,)\n
-\n
-\n
+if "auxiliaire" in vault:\n
+  site = transaction.getSourceSection()\n
+  if site  in (None, ""):\n
+    msg = Message(domain="ui", message="You must select a foreign agency.")\n
+    raise ValidationFailed, (msg,)\n
+  source_country  = transaction.Baobab_getCountryForSite(transaction.getSource())\n
+  site_country = transaction.Baobab_getCountryForSite(site)\n
+  if \'encaisse_des_externes\' in vault and \\\n
+         site_country == source_country:\n
+    msg = Message(domain="ui", message="You must select an agency from a foreign country.")    \n
+    raise ValidationFailed, (msg,)\n
+  elif site_country == source_country:    \n
+    msg = Message(domain="ui", message="You must select an agency from the same country.")    \n
+    raise ValidationFailed, (msg,)\n
+ \n
 # In case of dematerialization, we must have only coins\n
 if transaction.isDematerialization():\n
   for line in transaction.objectValues(portal_type=\'Monetary Destruction Line\'):\n
@@ -120,7 +130,7 @@ if transaction.isDematerialization():\n
 # Get price and total_price.\n
 amount = transaction.getSourceTotalAssetPrice()\n
 total_price = transaction.getTotalPrice(portal_type=[\'Monetary Destruction Line\',\'Monetary Destruction Cell\'],fast=0)\n
-resource = transaction.CashDelivery_checkCounterInventory(source=source_object.getPath(), portal_type=\'Monetary Destruction Line\')\n
+resource = transaction.CashDelivery_checkCounterInventory(source=source_object.getRelativeUrl(), portal_type=\'Monetary Destruction Line\')\n
 \n
 if resource == 2:\n
   msg = Message(domain="ui", message="No Resource.")\n
@@ -190,6 +200,9 @@ elif resource <> 0 :\n
                             <string>msg</string>
                             <string>source_section</string>
                             <string>None</string>
+                            <string>site</string>
+                            <string>source_country</string>
+                            <string>site_country</string>
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>amount</string>
