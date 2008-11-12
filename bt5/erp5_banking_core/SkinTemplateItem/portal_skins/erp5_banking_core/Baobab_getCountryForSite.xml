@@ -73,11 +73,11 @@ if not isinstance(site, str):\n
 \n
 def getCountry(site):\n
   site = context.portal_categories.restrictedTraverse(site)\n
-  orga_id = "site_%3s" %(site.getCodification())\n
+  orga_id = "site_%3s" %(site.getCodification()[:3])\n
   organisation = context.organisation_module[orga_id]\n
   country = organisation.getDefaultRegionTitle()\n
   if country is None:\n
-    raise ValueError, "No Region defined on site agency %s" %(site.getPath(),)\n
+    raise ValueError, "No Region found for site %s / %s defined by organisation %s" %(site.getPath(), site.getCodification(), organisation.getPath())\n
   return country\n
 \n
 \n
