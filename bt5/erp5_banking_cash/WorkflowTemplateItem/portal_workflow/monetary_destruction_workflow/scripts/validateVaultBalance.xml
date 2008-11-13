@@ -101,7 +101,8 @@ if "principale" not in vault:\n
          site_country == source_country:\n
     msg = Message(domain="ui", message="You must select an agency from a foreign country.")    \n
     raise ValidationFailed, (msg,)\n
-  elif site_country != source_country:    \n
+  elif \'encaisse_des_billets_retires_de_la_circulation\' in vault and \\\n
+         site_country != source_country:    \n
     msg = Message(domain="ui", message="You must select an agency from the same country.")    \n
     raise ValidationFailed, (msg,)\n
  \n
