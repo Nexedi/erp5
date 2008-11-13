@@ -120,7 +120,7 @@ for brain in portal.Base_zGetNotGroupedMovementList(\n
 \n
     brain_date = brain.date\n
     if mvt.getStartDate():\n
-      brain_date = brain_date.toZone(mvt.getStartDate())\n
+      brain_date = brain_date.toZone(mvt.getStartDate().timezone())\n
     \n
     line_list.append(\n
           Object(uid=\'new_000\',\n
