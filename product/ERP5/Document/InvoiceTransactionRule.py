@@ -201,11 +201,11 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
         currency_url = currency.getRelativeUrl()
         dest_section = new_mvmt.getDestinationSectionValue()
         if dest_section is not None:
-          dest_currency = dest_section.getPriceCurrencyValue()
+          dest_currency_url = dest_section.getProperty('price_currency', None)
         else:
-          dest_currency = None
-        if dest_currency is not None and currency != dest_currency:
-          precision = dest_currency.getQuantityPrecision()
+          dest_currency_url = None
+        if dest_currency_url is not None and currency_url != dest_currency_url:
+          precision = dest_section.getPriceCurrency().getQuantityPrecision()
 	  dest_exchange_ratio = currency.getPrice(context=new_mvmt.asContext(
             categories=['price_currency/%s' % dest_currency.getRelativeUrl(),
                         'resource/%s' % currency_url],
@@ -217,11 +217,11 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
 
         source_section = new_mvmt.getSourceSectionValue()
         if source_section is not None:
-          source_currency = source_section.getPriceCurrencyValue()
+          source_currency_url = source_section.getProperty('price_currency', None)
         else:
-          source_currency = None
-        if source_currency is not None and currency != source_currency:
-	  precision = source_currency.getQuantityPrecision()
+          source_currency_url = None
+        if source_currency_url is not None and currency_url != source_currency_url:
+          precision = source_section.getPriceCurrency().getQuantityPrecision()
 	  source_exchange_ratio = currency.getPrice(context=new_mvmt.asContext(
             categories=['price_currency/%s' % source_currency.getRelativeUrl(),
                         'resource/%s' % currency_url],
