@@ -33,7 +33,7 @@ from Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.CMFCore.utils import getToolByName
-
+from zLOG import LOG, WARNING
 from Products.ERP5 import _dtmldir
 
 import threading
