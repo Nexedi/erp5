@@ -470,6 +470,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
             parent._duplicate(parent.manage_copyObjects(ids=ids))[0],
             (delivery, old_delivery_line.getId()), {}, CopyError)
           delivery_line = delivery[cp['new_id']]
+          # reset variation category list
+          delivery_line.setVariationCategoryList([])
           # delete non-split movements
           keep_id_list = [y.getDeliveryValue().getId() for y in \
                           movement_group.getMovementList()]
@@ -482,6 +484,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         delivery_line.edit(**property_dict)
 
       # Update variation category list on line
+      # XXX updating variation category list should be also handled by
+      # MovementGroup
       line_variation_category_list = delivery_line.getVariationCategoryList()
       for movement in movement_group.getMovementList():
         line_variation_category_list.extend(
