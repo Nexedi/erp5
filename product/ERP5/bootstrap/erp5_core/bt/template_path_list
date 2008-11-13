@@ -7,6 +7,8 @@ portal_caches/erp5_content_medium
 portal_caches/erp5_content_medium/default_ram_cache
 portal_caches/erp5_content_short
 portal_caches/erp5_content_short/default_ram_cache
+portal_caches/erp5_session_cache
+portal_caches/erp5_session_cache/**
 portal_caches/erp5_ui_long
 portal_caches/erp5_ui_long/default_ram_cache
 portal_caches/erp5_ui_medium
