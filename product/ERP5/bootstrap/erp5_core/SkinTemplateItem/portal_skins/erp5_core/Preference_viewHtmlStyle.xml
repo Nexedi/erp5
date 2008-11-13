@@ -92,6 +92,7 @@
                         <string>my_preferred_textarea_height</string>
                         <string>my_preferred_money_quantity_field_width</string>
                         <string>my_preferred_quantity_field_width</string>
+                        <string>my_preferred_max_user_inactivity_duration</string>
                       </list>
                     </value>
                 </item>
