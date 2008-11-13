@@ -56,8 +56,9 @@
             <value> <string>cell = sci[\'object\']\n
 \n
 for membership_criterion_category in cell.getMembershipCriterionCategoryList():\n
-  base_category, category = membership_criterion_category.split(\'/\', 1)\n
-  cell.setProperty(base_category, category)\n
+  if membership_criterion_category.find(\'/\') != -1:\n
+    base_category, category = membership_criterion_category.split(\'/\', 1)\n
+    cell.setProperty(base_category, category)\n
 </string> </value>
         </item>
         <item>
