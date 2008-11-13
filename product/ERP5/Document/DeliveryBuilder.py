@@ -235,6 +235,7 @@ class DeliveryBuilder(OrderBuilder):
     if not len(divergence_to_accept_list) and \
            not len(divergence_to_adopt_list):
       return
+    divergence_list = delivery.getDivergenceList()
 
     # First, we update simulation movements according to
     # divergence_to_accept_list.
@@ -277,7 +278,7 @@ class DeliveryBuilder(OrderBuilder):
     # nothing' quanity divergence list because all quantity are already
     # calculated in adopt prevision phase.
     quantity_dict = {}
-    for divergence in delivery.getDivergenceList():
+    for divergence in divergence_list:
       if divergence.getProperty('divergence_scope') != 'quantity' or \
              divergence in divergence_to_accept_list or \
              divergence in divergence_to_adopt_list:
