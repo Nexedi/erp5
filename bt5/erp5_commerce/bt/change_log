@@ -1,3 +1,6 @@
+2008-11-13 ivan
+* Move portal_sessions to erp5_core
+
 2008-08-28 ivan
 * Decrease default session life time
 
