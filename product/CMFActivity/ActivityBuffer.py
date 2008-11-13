@@ -69,8 +69,9 @@ class ActivityBuffer(TM):
     return buffer.uid_set_dict.setdefault(activity, set())
 
   def _register(self, activity_tool):
-    self._beginAndHook(activity_tool)
-    TM._register(self)
+    if not self._registered:
+      self._beginAndHook(activity_tool)
+      TM._register(self)
 
   # Keeps a list of messages to add and remove
   # at end of transaction
