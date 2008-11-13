@@ -90,7 +90,7 @@ if \'encaisse_des_externes\' in vault:\n
      msg = Message(domain="ui", message="Invalid Foreign Agency.")\n
      raise ValidationFailed, (msg,)\n
 \n
-if "auxiliaire" in vault:\n
+if "principale" not in vault:\n
   site = transaction.getSourceSection()\n
   if site  in (None, ""):\n
     msg = Message(domain="ui", message="You must select a foreign agency.")\n
