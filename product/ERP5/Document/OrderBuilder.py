@@ -574,9 +574,11 @@ class OrderBuilder(XMLObject, Amount, Predicate):
               object_to_update_list = []
             else:
               object_to_update_list = [delivery_line]
-            object_to_update, property_dict = self._findUpdatableObject(
-              object_to_update_list, movement_group_list,
-              divergence_list)
+          else:
+            object_to_update_list = []
+          object_to_update, property_dict = self._findUpdatableObject(
+            object_to_update_list, movement_group_list,
+            divergence_list)
           if object_to_update is not None:
             update_existing_movement = 1
           else:
