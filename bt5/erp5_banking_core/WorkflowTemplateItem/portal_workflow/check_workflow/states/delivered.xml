@@ -37,6 +37,7 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>cancel</string>
                 <string>undeliver</string>
                 <string>undeliver_action</string>
               </tuple>

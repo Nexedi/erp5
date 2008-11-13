@@ -36,7 +36,9 @@
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>confirm</string>
+              </tuple>
             </value>
         </item>
         <item>
