@@ -692,7 +692,7 @@ class SQLDict(RAMDict, SQLBase):
     return self._validate(activity_tool, message_uid=value)
 
   def _validate_after_path_and_method_id(self, activity_tool, message, value):
-    if not isinstance(value, (tuple, list)) or len(value) < 2:
+    if not (isinstance(value, (tuple, list)) or len(value) == 2):
       LOG('CMFActivity', WARNING,
           'unable to recognize value for after_path_and_method_id: %r' % (value,))
       return []
