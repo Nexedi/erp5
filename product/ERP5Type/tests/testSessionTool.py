@@ -66,21 +66,7 @@ class TestSessionTool(ERP5TypeTestCase):
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     portal = self.getPortal()
-    portal_caches = portal.portal_caches
-    portal.manage_addProduct['ERP5Type'].manage_addTool('ERP5 Session Tool')
-    self.assertNotEqual(None,getattr(portal, 'portal_sessions', None))
-    
-    ## create needed cache fatory for Session Tool
-    session_cache_factory = portal_caches.newContent(portal_type="Cache Factory", \
-                                                     id = 'erp5_session_cache')
-    session_cache_factory.setCacheDuration(36000)
-    ram_cache_plugin = session_cache_factory.newContent(portal_type="Ram Cache")
-    ram_cache_plugin.setCacheDuration(36000)
-    ram_cache_plugin.setIntIndex(0)
-
-    ## update Ram Cache structure
-    portal_caches.updateCache()
-    get_transaction().commit()
+    self.assertNotEqual(None, getattr(portal, 'portal_sessions', None))
       
   def test_02_CreateSessionObject(self, quiet=0, run=run_all_test):
     """ Create a session object and check if API (newContent) is properly working. 
