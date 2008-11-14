@@ -207,7 +207,7 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
         if dest_currency_url is not None and currency_url != dest_currency_url:
           precision = dest_section.getPriceCurrencyValue().getQuantityPrecision()
 	  dest_exchange_ratio = currency.getPrice(context=new_mvmt.asContext(
-            categories=['price_currency/%s' % dest_currency.getRelativeUrl(),
+            categories=['price_currency/%s' % dest_currency_url,
                         'resource/%s' % currency_url],
             start_date=new_mvmt.getStartDate()))
 	  if dest_exchange_ratio is not None:
@@ -223,7 +223,7 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
         if source_currency_url is not None and currency_url != source_currency_url:
           precision = source_section.getPriceCurrencyValue().getQuantityPrecision()
 	  source_exchange_ratio = currency.getPrice(context=new_mvmt.asContext(
-            categories=['price_currency/%s' % source_currency.getRelativeUrl(),
+            categories=['price_currency/%s' % source_currency_url,
                         'resource/%s' % currency_url],
             start_date=new_mvmt.getStartDate()))
           if source_exchange_ratio is not None:
