@@ -347,7 +347,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                               delivery_to_update_list=delivery_to_update_list,
                               divergence_list=divergence_list,
                               activate_kw=activate_kw,
-                              force_update=force_update, **kw)
+                              force_update=force_update)
         delivery_list.extend(new_delivery_list)
         force_update = 0
     else:
@@ -369,7 +369,9 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       if delivery is None:
         # Create delivery
         try:
-          old_delivery = movement_group.getMovementList()[0].getDeliveryValue()
+          old_delivery = self._searchUpByPortalType(
+            movement_group.getMovementList()[0].getDeliveryValue(),
+            self.getDeliveryPortalType())
         except AttributeError:
           old_delivery = None
         if old_delivery is None:
@@ -379,10 +381,9 @@ class OrderBuilder(XMLObject, Amount, Predicate):
             portal_type=self.getDeliveryPortalType(),
             id=new_delivery_id,
             created_by_builder=1,
-            activate_kw=activate_kw,**kw)
+            activate_kw=activate_kw)
         else:
           # from duplicated original delivery
-          old_delivery = old_delivery.getExplanationValue()
           cp = tryMethodCallWithTemporaryPermission(
             delivery_module, 'Copy or Move',
             lambda parent, *ids:
