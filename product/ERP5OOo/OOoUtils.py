@@ -444,14 +444,24 @@ class OOoParser(Implicit):
           # Ungroup repeated cells
           for j in range(cells_to_repeat):
             # Get the cell content
-            cell_text = None
-            text_tags = cell.xpath('.//*[name() = "text:p"]')
-            if len(text_tags):
-              cell_text = ''.join([text.xpath('string(.)')
-                                   for text in text_tags])
+            cell_data = None
+
+            value_type = cell.getAttributeNS(self.ns['office'], 'value-type')
+            if value_type == 'date':
+              cell_data = cell.getAttributeNS(self.ns['office'], 'date-value')
+            elif value_type == 'time':
+              cell_data = cell.getAttributeNS(self.ns['office'], 'time-value')
+            elif value_type in ('float', 'percentage', 'currency'):
+              cell_data = float(cell.getAttributeNS(
+                                  self.ns['office'], 'value'))
+            else:
+              text_tags = cell.xpath('.//*[name() = "text:p"]')
+              if len(text_tags):
+                cell_data = ''.join([text.xpath('string(.)')
+                                     for text in text_tags])
 
             # Add the cell to the line
-            table_line.append(cell_text)
+            table_line.append(cell_data)
 
         # Delete empty lines if needed
         if no_empty_lines:

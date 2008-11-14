@@ -339,6 +339,24 @@ class TestOOoImport(ERP5TypeTestCase):
     self.assertEquals(mapping['Feuille1'][4],
                       ['john.doe@example.com'])
 
+  def test_getSpreadSheetMappingDataTypes(self):
+    parser = OOoParser()
+    parser.openFile(open(makeFilePath('import_data_list_data_type.ods'), 'rb'))
+    mapping = parser.getSpreadsheetsMapping()
+    self.assertEquals(['Feuille1'], mapping.keys())
+    self.assertEquals(mapping['Feuille1'][0],
+                      [1234.5678])
+    self.assertEquals(mapping['Feuille1'][1],
+                      [1234.5678])
+    self.assertEquals(mapping['Feuille1'][2],
+                      [0.1])
+    self.assertEquals(mapping['Feuille1'][3],
+                      ['2008-11-14'])
+    self.assertEquals(mapping['Feuille1'][4],
+                      ['2008-11-14T10:20:30']) # supported by DateTime
+    self.assertEquals(mapping['Feuille1'][5],
+                      ['PT12H34M56S']) # maybe not good, this is raw format
+
 
 def test_suite():
   suite = unittest.TestSuite()
