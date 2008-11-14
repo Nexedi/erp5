@@ -187,6 +187,8 @@ if not keep_existing_category:\n
       category_id = category.getId()\n
       parent.deleteContent(category_id)\n
 \n
+context.portal_caches.clearAllCache()\n
+\n
 if detailed_report:\n
   # Return a detailed report if requested\n
   return \'\\n\'.join(detailed_report_result)\n
