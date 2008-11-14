@@ -58,7 +58,7 @@ class RoleInformation( SimpleItem ):
         self.description = description
         self.category = category
         self.condition = condition
-        self.priority = priority
+        self.priority = float(priority)
         self.base_category = base_category
         self.base_category_script = base_category_script
 
