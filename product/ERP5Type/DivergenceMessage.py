@@ -61,4 +61,10 @@ class DivergenceMessage(ObjectMessage):
         return 'cell'
     return None
 
+  def __eq__(self, other):
+    return self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return self.__dict__ != other.__dict__
+
 allow_class(DivergenceMessage)
