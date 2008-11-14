@@ -446,13 +446,9 @@ class OOoParser(Implicit):
             # Get the cell content
             cell_text = None
             text_tags = cell.xpath('.//*[name() = "text:p"]')
-            for text in text_tags:
-              for k in range(len(text.childNodes)):
-                child = text.childNodes[k]
-                if child.nodeType == Node.TEXT_NODE:
-                  if cell_text == None:
-                    cell_text = ''
-                  cell_text += child.nodeValue
+            if len(text_tags):
+              cell_text = ''.join([text.xpath('string(.)')
+                                   for text in text_tags])
 
             # Add the cell to the line
             table_line.append(cell_text)

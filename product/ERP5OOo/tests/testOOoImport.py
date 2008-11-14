@@ -325,6 +325,20 @@ class TestOOoImport(ERP5TypeTestCase):
     mapping = parser.getSpreadsheetsMapping()
     self.assertEquals(['Person'], mapping.keys())
 
+  def test_getSpreadSheetMappingStyle(self):
+    parser = OOoParser()
+    parser.openFile(open(makeFilePath('import_data_list_with_style.ods'), 'rb'))
+    mapping = parser.getSpreadsheetsMapping()
+    self.assertEquals(['Feuille1'], mapping.keys())
+    self.assertEquals(mapping['Feuille1'][1],
+                      ['a line with style'])
+    self.assertEquals(mapping['Feuille1'][2],
+                      ['a line with multiple styles'])
+    self.assertEquals(mapping['Feuille1'][3],
+                      ['http://www.erp5.org'])
+    self.assertEquals(mapping['Feuille1'][4],
+                      ['john.doe@example.com'])
+
 
 def test_suite():
   suite = unittest.TestSuite()
