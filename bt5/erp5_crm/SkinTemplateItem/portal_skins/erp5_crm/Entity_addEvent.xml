@@ -75,10 +75,16 @@ if direction == \'out\':\n
   source_url = source\n
   source_section_url = person_subordination\n
   destination_url = destination\n
-  destination_section_url = context.getSubordination()\n
+  if context.getPortalType() == \'Person\':\n
+    destination_section_url = context.getSubordination()\n
+  else:\n
+    destination_section_url = destination\n
 elif direction == \'in\':\n
   source_url = destination\n
-  source_section_url = context.getSubordination()\n
+  if context.getPortalType() == \'Person\':\n
+    source_section_url = context.getRelativeUrl()\n
+  else:\n
+    source_section_url = destination\n
   destination_url = source\n
   destination_section_url = person_subordination\n
 else:\n
