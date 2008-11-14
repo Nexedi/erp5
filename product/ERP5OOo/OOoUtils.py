@@ -452,8 +452,7 @@ class OOoParser(Implicit):
             elif value_type == 'time':
               cell_data = cell.getAttributeNS(self.ns['office'], 'time-value')
             elif value_type in ('float', 'percentage', 'currency'):
-              cell_data = float(cell.getAttributeNS(
-                                  self.ns['office'], 'value'))
+              cell_data = cell.getAttributeNS(self.ns['office'], 'value')
             else:
               text_tags = cell.xpath('.//*[name() = "text:p"]')
               if len(text_tags):

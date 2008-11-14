@@ -345,11 +345,11 @@ class TestOOoImport(ERP5TypeTestCase):
     mapping = parser.getSpreadsheetsMapping()
     self.assertEquals(['Feuille1'], mapping.keys())
     self.assertEquals(mapping['Feuille1'][0],
-                      [1234.5678])
+                      ['1234.5678'])
     self.assertEquals(mapping['Feuille1'][1],
-                      [1234.5678])
+                      ['1234.5678'])
     self.assertEquals(mapping['Feuille1'][2],
-                      [0.1])
+                      ['0.1'])
     self.assertEquals(mapping['Feuille1'][3],
                       ['2008-11-14'])
     self.assertEquals(mapping['Feuille1'][4],
