@@ -14,6 +14,7 @@
             <value>
               <tuple>
                 <string>collect_order_group/cell</string>
+                <string>divergence_scope/category</string>
               </tuple>
             </value>
         </item>
