@@ -24,15 +24,15 @@
         <item>
             <key> <string>activate_script_name</string> </key>
             <value>
-              <tuple/>
+              <list>
+                <string>sendNotificationByMail</string>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
             <value>
-              <list>
-                <string>sendNotificationByMail</string>
-              </list>
+              <tuple/>
             </value>
         </item>
         <item>

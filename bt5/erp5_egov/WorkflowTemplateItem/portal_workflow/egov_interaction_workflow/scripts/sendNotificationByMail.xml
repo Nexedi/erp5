@@ -70,7 +70,7 @@ subject = translateString("Your application has been submitted successfully unde
 msg.append(subject)\n
 msg.append(translateString("An Agent will review your application shortly. You will be notified by email whenever your application will start being processed. To further track your application, connect and login any time to the following site"))\n
 msg.append(context.getWebSiteValue().getAbsoluteUrl())\n
-msg.append(translateString("And use the login") + " : " + form.getReference()\n
+msg.append(translateString("And use the login") + " : " + form.getReference())\n
 msg.append(translateString("and the password") + " : " + form.getPassword())\n
 \n
 msg = "\\n".join(msg)\n
@@ -104,9 +104,7 @@ context.portal_notifications.sendMessage(recipient=form.getReference(), \n
         <item>
             <key> <string>errors</string> </key>
             <value>
-              <tuple>
-                <string>invalid syntax (Script (Python), line 19)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -121,12 +119,25 @@ context.portal_notifications.sendMessage(recipient=form.getReference(), \n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple/>
+                          <tuple>
+                            <string>state_change</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>translateString</string>
+                            <string>portal_catalog</string>
+                            <string>_getitem_</string>
+                            <string>form</string>
+                            <string>msg</string>
+                            <string>subject</string>
+                            <string>True</string>
+                          </tuple>
                         </value>
                     </item>
                   </dictionary>
@@ -137,7 +148,7 @@ context.portal_notifications.sendMessage(recipient=form.getReference(), \n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple/>
+              <none/>
             </value>
         </item>
         <item>
