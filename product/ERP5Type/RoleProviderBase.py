@@ -69,8 +69,8 @@ class RoleProviderBase:
 
             a1 = {}
             a1['id'] = a.getId()    # The Role Id (ex. Assignor)
-            a1['description'] = a.Description()    # The Role Description (ex. a person in charge of assigning orders)
-            a1['name'] = a.Title()  # The name of this role definition (ex. Assignor at company X)
+            a1['description'] = unicode(a.Description(), 'utf8', 'repr')    # The Role Description (ex. a person in charge of assigning orders)
+            a1['name'] = unicode(a.Title(), 'utf8', 'repr')  # The name of this role definition (ex. Assignor at company X)
             a1['category'] = a.getCategory() or [] # Category definition
             a1['base_category'] = a.getBaseCategory() # Base Category Definition
             a1['base_category_script'] = a.getBaseCategoryScript() # Base Category Script Id
