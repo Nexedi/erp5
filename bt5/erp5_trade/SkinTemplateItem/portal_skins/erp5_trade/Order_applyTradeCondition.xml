@@ -99,6 +99,8 @@ def copyPaymentCondition(order, trade_condition):\n
     copyPaymentCondition(order, other_trade_condition)\n
   \n
 filter_dict = {\'portal_type\': \'Payment Condition\'}\n
+if force:\n
+  order.manage_delObjects(list(order.contentIds(filter=filter_dict)))\n
 if len(order.contentIds(filter=filter_dict)) == 0:\n
   copyPaymentCondition(order, trade_condition)\n
 \n
@@ -229,6 +231,7 @@ order.edit(**new_category_dict)\n
                             <string>_write_</string>
                             <string>copyPaymentCondition</string>
                             <string>filter_dict</string>
+                            <string>list</string>
                             <string>len</string>
                             <string>initialiseDiscountLineList</string>
                             <string>initialiseTaxLineList</string>
