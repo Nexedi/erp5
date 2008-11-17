@@ -296,6 +296,47 @@ class TestApplyTradeCondition(TradeConditionTestCase):
     self.assertEquals(DateTime(2001, 01, 01),
                       self.order.getPaymentConditionPaymentDate())
 
+  def test_apply_trade_condition_twice_update_order(self):
+    self.trade_condition.setSourceSectionValue(self.vendor)
+    self.trade_condition.setDestinationSectionValue(self.client)
+    self.trade_condition.setSourceValue(self.vendor)
+    self.trade_condition.setDestinationValue(self.client)
+    self.trade_condition.setPriceCurrencyValue(self.currency)
+    self.trade_condition.setPaymentConditionTradeDate('custom')
+    self.trade_condition.setPaymentConditionPaymentDate(DateTime(2001, 01, 01))
+    self.order.setSpecialiseValue(self.trade_condition)
+
+    self.order.Order_applyTradeCondition(self.trade_condition, force=1)
+    
+    self.assertEquals(self.vendor, self.order.getSourceSectionValue())
+    self.assertEquals(self.vendor, self.order.getSourceValue())
+    self.assertEquals(self.client, self.order.getDestinationSectionValue())
+    self.assertEquals(self.client, self.order.getDestinationValue())
+    self.assertEquals(self.currency, self.order.getPriceCurrencyValue())
+    self.assertEquals('custom', self.order.getPaymentConditionTradeDate())
+    self.assertEquals(DateTime(2001, 01, 01),
+                      self.order.getPaymentConditionPaymentDate())
+
+    new_vendor = self.portal.organisation_module.newContent(
+                    portal_type='Organisation',
+                    title='New vendor')
+    new_trade_condition = self.trade_condition_module.newContent(
+                    portal_type=self.trade_condition_type,
+                    source_section_value=new_vendor,
+                    payment_condition_trade_date='custom',
+                    payment_condition_payment_date=DateTime(2002, 2, 2))
+
+    self.order.Order_applyTradeCondition(new_trade_condition, force=1)
+    self.assertEquals(new_vendor, self.order.getSourceSectionValue())
+    self.assertEquals(self.vendor, self.order.getSourceValue())
+    self.assertEquals(self.client, self.order.getDestinationSectionValue())
+    self.assertEquals(self.client, self.order.getDestinationValue())
+    self.assertEquals(self.currency, self.order.getPriceCurrencyValue())
+    self.assertEquals('custom', self.order.getPaymentConditionTradeDate())
+    self.assertEquals(DateTime(2002, 02, 02),
+                      self.order.getPaymentConditionPaymentDate())
+
+
   def test_tax_model_line_consistency(self):
     base_1 = self.base_amount.newContent(
                           portal_type='Category',
