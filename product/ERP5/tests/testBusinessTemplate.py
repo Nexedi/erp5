@@ -1,5 +1,5 @@
 ##############################################################################
-#
+# -*- coding: utf8 -*-
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #          Aurelien Calonne <aurel@nexedi.com>
 #
@@ -4930,9 +4930,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
-    role = RoleInformation('geek_role_definition', 
-                           title='Geek Role Definition')
-    setattr(pt, '_roles', [role])
+    object_pt.addRole(id='geek_role_definition',
+                       description='A definition with non ascii chars éàè',
+                       name='Geek Role Definition',
+                       condition='',
+                       category='group/g1\nfunction/f1\n',
+                       base_category_script='',
+                       base_category='',)
+
     sequence.edit(portal_type_role='geek_role_definition')
 
   def stepAddPortalTypeRolesToBusinessTemplate(self, sequence=None, 
@@ -4956,9 +4961,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
     object_pt = pt._getOb(object_id)
-    role_list = pt._roles
-    self.assertTrue('geek_role_definition' in \
-                        [x.id for x in role_list])
+    role_list = object_pt._roles
+    role_list = [x for x in role_list if x.id == 'geek_role_definition']
+    self.assertEquals(1, len(role_list))
+    role = role_list[0]
+    self.assertEquals('Geek Role Definition', role.title)
+    self.assertEquals('A definition with non ascii chars éàè', role.description)
+    self.assertEquals(('group/g1','function/f1'), role.getCategory())
 
   def test_36_CheckPortalTypeRoles(self, quiet=quiet, run=run_all_test):
     if not run: return
