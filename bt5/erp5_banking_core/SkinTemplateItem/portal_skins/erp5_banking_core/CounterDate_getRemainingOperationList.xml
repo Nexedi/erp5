@@ -94,8 +94,7 @@ if site_uid is not None:\n
               or (portal_type == \'Check Payment\' and \n
                    simulation_state in (\'planned\', \'ordered\') \\\n
                  ) \\\n
-              or (portal_type == \'Monetary Destruction\' and simulation_state == \'confirmed\') \\\n
-              or (portal_type == \'Monetary Destruction\' and simulation_state == \'ordered\' and document.getSourceSection() is not None) \\\n
+              or (portal_type == \'Monetary Destruction\' and simulation_state in (\'stopped\', \'started\')) \\\n
               or (portal_type == \'Paper Money Payment\' and simulation_state != \'ready\') \\\n
               or (portal_type == \'Paper Money Deposit\' and simulation_state == \'stopped\'):\n
          continue\n
