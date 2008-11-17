@@ -4992,6 +4992,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_portal_type_roles')
 
+    def getTemplateLocalRolesList(self):
+      """
+      We have to set this method because we want an
+      ordered list
+      """
+      return self._getOrderedList('template_local_roles')
+
     def getTemplateSkinIdList(self):
       """
       We have to set this method because we want an
