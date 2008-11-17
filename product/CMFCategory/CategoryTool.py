@@ -1702,7 +1702,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
               if default is not _marker:
                 return default
               else:
-                raise Unauthorized('unauthorized access to element %s' % key)
+                raise
           return obj
 
         # XXX Currently, resolveCategory accepts that a category might
