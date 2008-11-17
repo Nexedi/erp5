@@ -4935,8 +4935,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        name='Geek Role Definition',
                        condition='',
                        category='group/g1\nfunction/f1\n',
-                       base_category_script='',
-                       base_category='',)
+                       base_category_script='Base Category Script',
+                       base_category='group site',)
 
     sequence.edit(portal_type_role='geek_role_definition')
 
@@ -4968,6 +4968,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals('Geek Role Definition', role.title)
     self.assertEquals('A definition with non ascii chars éàè', role.description)
     self.assertEquals(('group/g1','function/f1'), role.getCategory())
+    self.assertEquals(('group','site'), role.getBaseCategory())
+    self.assertEquals('Base Category Script', role.getBaseCategoryScript())
 
   def test_36_CheckPortalTypeRoles(self, quiet=quiet, run=run_all_test):
     if not run: return

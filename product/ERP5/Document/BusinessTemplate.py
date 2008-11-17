@@ -2323,11 +2323,8 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
         if prop_value:
           type_role_dict['condition'] = prop_value.text
         # multi
-        for property in ('category', 'base_category'):
-          prop_value_list = []
-          for prop_value in getattr(role, property):
-            prop_value_list.append(prop_value)
-          type_role_dict[property] = prop_value_list
+        type_role_dict['category'] = role.getCategory()
+        type_role_dict['base_category'] = role.getBaseCategory()
         type_role_list.append(type_role_dict)
       self._objects[relative_url] = type_role_list
 
