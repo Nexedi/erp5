@@ -739,7 +739,7 @@ msgid "You have to join a copy of the identy card of the boss of the company"
 msgstr "Vous devez joindre une copie de la pièce d'identité du dirigeant de l'entreprise"
 
 msgid "You have to provide a NINEA copy"
-msgstr "Vous devez fournir une copie du NINEA"
+msgstr "Vous devez fournir une copie de l'attestation du NINEA"
 
 msgid "Submit"
 msgstr "Soumettre"
@@ -929,3 +929,24 @@ msgstr "Merci pour votre inscription à SAFI. Maintenant, vous pouvez vous conne
 
 msgid "One function (and only one) must be checked for the accountant of the company"
 msgstr "Une fonction (et une seulement) doit être cochée pour le représentant de l'entreprise"
+
+msgid "NINEA Attestation"
+msgstr "Avis d'immatriculation au NINEA"
+
+msgid "Tree last VAT declarations"
+msgstr "Trois (3) dernières déclarations de TVA"
+
+msgid "You have to provide your tree last VAT declarations here"
+msgstr "Veuillez charger des copies scannées de vos 3 dernières déclarations de TVA"
+
+msgid "Deduction Details"
+msgstr "Tableau des détails de déduction"
+
+msgid "Details deduction report"
+msgstr "Joindre le tableau des détails de déduction"
+
+msgid "Others reports"
+msgstr "Autres Etats"
+
+msgid "Others reports that can be provided"
+msgstr "Autres états à joindre"
