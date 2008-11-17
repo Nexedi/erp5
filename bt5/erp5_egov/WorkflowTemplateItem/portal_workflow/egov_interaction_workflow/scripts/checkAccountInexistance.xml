@@ -59,7 +59,7 @@ changed_object = state_change[\'object\']\n
 translateString = changed_object.Base_translateString\n
 login = changed_object.getCompanyName().lower()\n
 portal_catalog = changed_object.portal_catalog\n
-ninea = changed_object.getNineaNumber()\n
+ninea = changed_object.getCompanyNineaNumber()\n
 \n
 # check that no existing organisation have the same NINEA number or login\n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n

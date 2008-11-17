@@ -60,7 +60,7 @@ organisation_module = portal.getDefaultModule(portal_type=\'Organisation\')\n
 \n
 \n
 result = changed_object.portal_catalog(portal_type=\'Organisation\',\n
-           vat_code=changed_object.getNineaNumber())\n
+           vat_code=changed_object.getCompanyNineaNumber())\n
 \n
 # if the organisation don\'t exists, create it\n
 if not len(result):\n
@@ -70,10 +70,13 @@ if not len(result):\n
       corporate_name=changed_object.getCompanyName(),\n
       address_street_address=changed_object.getCompanyAddress(),\n
       address_city=changed_object.getCityName(),\n
-      address_region=changed_object.getCountryName(),\n
-      corporate_registration_code=changed_object.getRccmNumber(),\n
-      vat_code=changed_object.getNineaNumber(),\n
+      corporate_registration_code=changed_object.getCompanyRccmNumber(),\n
+      vat_code=changed_object.getCompanyNineaNumber(),\n
+      activity_code=changed_object.getCompanyCofiNumber(),\n
       default_email_text=changed_object.getCompanyEmail(),\n
+      acronym=changed_object.getCompanySigle(),\n
+      default_telephone_text=changed_object.getCompanyPhoneNumber(),\n
+      default_fax_text=changed_object.getCompanyFaxNumber(),\n
       )\n
 else:\n
   organisation = result[0].getObject()\n
@@ -87,20 +90,15 @@ accountant = person_module.newContent(portal_type=\'Person\',\n
                          default_email_text=changed_object.getAccountantEmail(),\n
                          address_street_address=changed_object.getAccountantAddress(),\n
                          address_city=changed_object.getAccountantCity(),\n
-                         default_address_region=changed_object.getAccountantCountry(),\n
                          career_subordination_value=organisation)\n
-if changed_object.getOptionAdministrator():\n
-  accountant.setFunction(\'entreprise/directeur/pdg/administrateur\')\n
-elif changed_object.getOptionManager():\n
-  accountant.setFunction(\'entreprise/directeur/pdg/gerant\')\n
-elif changed_object.getOptionDirector():\n
-  accountant.setFunction(\'entreprise/directeur/pdg/pdg\')\n
+\n
  \n
 # create an assignment to be able to login :\n
 from DateTime import DateTime\n
 assignment = accountant.newContent(portal_type=\'Assignment\')\n
 assignment.setStartDate(DateTime())\n
 assignment.setStopDate(DateTime()+365)\n
+assignment.setCareerFunction(changed_object.getAccountantFunction())\n
 assignment.open()\n
 \n
 # set the login and password required a manager role, so a script with a \n
