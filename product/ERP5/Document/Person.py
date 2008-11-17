@@ -192,8 +192,14 @@ class Person(XMLObject):
       if value is not None:
         if not _checkPermission(Permissions.SetOwnPassword, self):
           raise AccessControl_Unauthorized('setPassword')
-        self._setPassword(pw_encrypt(value))
+        self._setPassword(value)
         self.reindexObject()
+
+    def _setPassword(self, value):
+      """
+        Encrypt value
+      """
+      self._baseSetPassword(pw_encrypt(value))
 
     # Time management
     security.declareProtected(Permissions.AccessContentsInformation, 
