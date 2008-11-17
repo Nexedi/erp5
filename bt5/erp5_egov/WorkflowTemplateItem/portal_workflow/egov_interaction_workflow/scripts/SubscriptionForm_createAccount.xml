@@ -95,6 +95,13 @@ elif changed_object.getOptionManager():\n
   accountant.setFunction(\'entreprise/directeur/pdg/gerant\')\n
 elif changed_object.getOptionDirector():\n
   accountant.setFunction(\'entreprise/directeur/pdg/pdg\')\n
+ \n
+# create an assignment to be able to login :\n
+from DateTime import DateTime\n
+assignment = accountant.newContent(portal_type=\'Assignment\')\n
+assignment.setStartDate(DateTime())\n
+assignment.setStopDate(DateTime()+365)\n
+assignment.open()\n
 \n
 # set the login and password required a manager role, so a script with a \n
 # proxy role is used\n
@@ -157,6 +164,8 @@ accountant.Person_sendCrendentialsByEMail()\n
                             <string>organisation</string>
                             <string>person_module</string>
                             <string>accountant</string>
+                            <string>DateTime</string>
+                            <string>assignment</string>
                             <string>context</string>
                             <string>login</string>
                             <string>password</string>
