@@ -64,7 +64,7 @@ file_type_list = (\'Image\', \'File\')\n
 sub_form_type_list = filter(lambda x: x not in file_type_list, type_list)\n
 \n
 # A simple solution: use title to group\n
-viewable_content_list = context.contentValues(portal_type=type_list, checked_permission=\'View\')\n
+viewable_content_list = context.contentValues(portal_type=file_type_list, checked_permission=\'View\')\n
 content_group_dict = {}\n
 for content in viewable_content_list:\n
   title = content.getTitle()\n
