@@ -33,6 +33,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Document import newTempOrder
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
+from Products.ERP5Type.tests.Sequence import SequenceList
 
 try:
   from transaction import get as get_transaction
@@ -57,35 +58,16 @@ class TestSessionTool(ERP5TypeTestCase):
     user = uf.getUserById('ivan').__of__(uf)
     newSecurityManager(None, user)
 
-  def test_01_CheckSessionTool(self, quiet=0, run=run_all_test):
-    """ Create portal_sessions tool and needed cache factory. """
-    if not run:
-      return
-    if not quiet:
-      message = '\nCheck SessionTool '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    portal = self.getPortal()
-    self.assertNotEqual(None, getattr(portal, 'portal_sessions', None))
-      
-  def test_02_CreateSessionObject(self, quiet=0, run=run_all_test):
-    """ Create a session object and check if API (newContent) is properly working. 
-        Check if storing objects is working as expected. """
-    if not run:
-      return
-    if not quiet:
-      message = '\nCreate of session object and assign attributes.'
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    portal = self.getPortal()
-    portal_sessions = portal.portal_sessions
+  def stepTestAcquisitionRamSessionStorage(self, sequence=None,
+                                        sequence_list=None, **kw):
+    portal_sessions =  self.getPortal().portal_sessions
     session = portal_sessions.newContent(
                       self.session_id, \
                       attr_1 = newTempOrder(portal_sessions, '1'), \
                       attr_2 = newTempOrder(portal_sessions, '2'), \
-                      attr_3 = 1,
-                      attr_4 = 0.1,
-                      attr_5 = {},
+                      attr_3 = 1, \
+                      attr_4 = 0.1, \
+                      attr_5 = {}, \
                       attr_6 = 'string',)
     ## check temp (RAM based) attributes stored in session
     for i in range (1, 3):
@@ -98,26 +80,19 @@ class TestSessionTool(ERP5TypeTestCase):
     self.assert_(1 == session['attr_3'])
     self.assert_(0.1 == session['attr_4'])
     self.assert_({} == session['attr_5'])
-    self.assert_('string' == session['attr_6'])
-        
+    self.assert_('string' == session['attr_6'])                                          
 
-  def test_03_DeleteSessionObjectAttributes(self, quiet=0, run=run_all_test):
+  def stepDeleteSessionObjectAttributes(self, sequence=None,
+                                        sequence_list=None, **kw):
     """ Delete session keys."""
-    if not run:
-      return
-    if not quiet:
-      message = '\nDelete some session keys.'
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    portal = self.getPortal()
-    portal_sessions = portal.portal_sessions
+    portal_sessions = self.getPortal().portal_sessions
     session = portal_sessions.newContent(
                       self.session_id, \
                       attr_1 = newTempOrder(portal_sessions, '1'), \
                       attr_2 = newTempOrder(portal_sessions, '2'), \
-                      attr_3 = 1,
-                      attr_4 = 0.1,
-                      attr_5 = {},
+                      attr_3 = 1, \
+                      attr_4 = 0.1, \
+                      attr_5 = {}, \
                       attr_6 = 'string',)
     session = portal_sessions[self.session_id]
     session.pop('attr_1')
@@ -125,16 +100,10 @@ class TestSessionTool(ERP5TypeTestCase):
     self.assert_(not 'attr_1' in session.keys())
     self.assert_(not 'attr_2' in session.keys())
       
-  def test_04_DeleteSessionObject(self, quiet=0, run=run_all_test):
+  def stepDeleteSessionObject(self, sequence=None,
+                                        sequence_list=None, **kw):
     """ Get session object and check keys stored in previous test. """
-    if not run:
-      return
-    if not quiet:
-      message = '\nDelete session object.'
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    portal = self.getPortal()
-    portal_sessions = portal.portal_sessions
+    portal_sessions =  self.getPortal().portal_sessions
     session = portal_sessions.newContent(
                       self.session_id, \
                       attr_1 = newTempOrder(portal_sessions, '1'), \
@@ -148,7 +117,8 @@ class TestSessionTool(ERP5TypeTestCase):
     session = portal_sessions[self.session_id]
     self.assert_(0 == len(session.keys()))
 
-  def test_session_dict_interface(self):
+  def stepTestSessionDictInterface(self, sequence=None,
+                                        sequence_list=None, **kw):
     session = self.portal.portal_sessions[self.session_id]
     session['foo'] = 'Bar'
     self.assertTrue('foo' in session)
@@ -158,12 +128,53 @@ class TestSessionTool(ERP5TypeTestCase):
     self.assertEquals('Default', session.get('bar', 'Default'))
     self.assertRaises(KeyError, session.__getitem__, 'bar')
 
-  def test_session_getattr(self):
+  def stepTestSessionGetattr(self, sequence=None,
+                                        sequence_list=None, **kw):
     session = self.portal.portal_sessions[self.session_id]
     session['foo'] = 'Bar'
     self.assertEquals('Bar', session.foo)
     self.assertEquals('Default', getattr(session, 'bar', 'Default'))
     self.assertRaises(AttributeError, getattr, session, 'bar')
+
+  def test_01_CheckSessionTool(self, quiet=0, run=run_all_test):
+    """ Create portal_sessions tool and needed cache factory. """
+    if not run:
+      return
+    if not quiet:
+      message = '\nCheck SessionTool '
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    portal = self.getPortal()
+    self.assertNotEqual(None, getattr(portal, 'portal_sessions', None))
+      
+  def test_02_RamSession(self, quiet=0, run=run_all_test):
+    """ Test RamSession which uses local RAM based cache plugin. """
+    if not run:
+      return
+    if not quiet:
+      message = '\nTest Ram Session.'
+      ZopeTestCase._print(message)
+      LOG('Testing... ', 0, message)
+    
+    sequence_list = SequenceList()
+    sequence_string =  'stepTestAcquisitionRamSessionStorage \
+                    stepDeleteSessionObjectAttributes  \
+                    stepDeleteSessionObject \
+                    stepTestSessionDictInterface \
+                    stepTestSessionGetattr  \
+                   '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+    
+  def test_03_MemcachedDistributedSession(self, quiet=0, run=run_all_test):
+    """ Test DistributedSession which uses memcached based cache plugin. """
+    if not run:
+      return
+    if not quiet:
+      message = '\nTest Distributed Session.'
+      ZopeTestCase._print(message)
+      LOG('Testing... ', 0, message)
+    # XXX: create memcached plugin and test
 
 def test_suite():
   suite = unittest.TestSuite()
