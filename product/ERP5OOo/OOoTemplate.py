@@ -241,7 +241,7 @@ class OOoTemplate(ZopePageTemplate):
   def _resolvePath(self, path):
     return self.getPortalObject().unrestrictedTraverse(path)
 
-  def renderIncludes(self, here, text, sub_document=None):
+  def renderIncludes(self, here, text, extra_context, sub_document=None):
     attached_files_dict = {}
     arguments_re = re.compile('''(\S+?)\s*=\s*('|")(.*?)\\2\s*''',re.DOTALL)
     def getLengthInfos( opts_dict, opts_names ):
@@ -262,7 +262,8 @@ class OOoTemplate(ZopePageTemplate):
       options_dict = dict((x[0], x[2]) for x in arguments_re.findall(match.group(1)))
       # Find the page template based on the path and remove path from dict
       document = self._resolvePath(options_dict['path'].encode())
-      document_text = ZopePageTemplate.pt_render(document) # extra_context is missing
+      document_text = ZopePageTemplate.pt_render(document,
+                                                 extra_context=extra_context)
       del options_dict['path']
 
       # Find the type of the embedded document
@@ -292,7 +293,7 @@ class OOoTemplate(ZopePageTemplate):
       # Start recursion if necessary
       sub_attached_files_dict = {}
       if 'office:include' in document_text: # small optimisation to avoid recursion if possible
-        (document_text, sub_attached_files_dict ) = self.renderIncludes(document_text, dir_name)
+        (document_text, sub_attached_files_dict ) = self.renderIncludes(document_text, dir_name, extra_context)
 
       # Build settings document if necessary
       settings_text = None
@@ -458,14 +459,15 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
     ooo_builder = OOoBuilder(ooo_document)
     # Pass builder instance as extra_context
     extra_context['ooo_builder'] = ooo_builder
-    
+
     # And render page template
-    doc_xml = ZopePageTemplate.pt_render(self, source=source, extra_context=extra_context)
+    doc_xml = ZopePageTemplate.pt_render(self, source=source,
+                                         extra_context=extra_context)
     if isinstance(doc_xml, unicode):
       doc_xml = doc_xml.encode('utf-8')
 
     # Replace the includes
-    (doc_xml,attachments_dict) = self.renderIncludes(here, doc_xml)
+    (doc_xml,attachments_dict) = self.renderIncludes(here, doc_xml, extra_context)
 
     try:
       default_styles_text = ooo_builder.extract('styles.xml')
