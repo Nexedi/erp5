@@ -395,7 +395,8 @@ class ListBoxWidget(Widget.Widget):
         if REQUEST is None:
           REQUEST = get_request()
         if render_format == 'list':
-          renderer = ListBoxListRenderer(self, field, REQUEST)
+          renderer = ListBoxListRenderer(self, field, REQUEST,
+                                         render_prefix=render_prefix)
         else:
           renderer = ListBoxHTMLRenderer(self, field, REQUEST, render_prefix=render_prefix)
 
@@ -1813,7 +1814,7 @@ class ListBoxRendererLine:
   """This class describes a line in a ListBox to assist ListBoxRenderer.
   """
   def __init__(self, renderer = None, obj = None, index = 0, is_summary = False, context = None,
-               is_open = False, selection_domain = None, depth = 0, domain_title=None):
+               is_open = False, selection_domain = None, depth = 0, domain_title=None, render_prefix=None):
     """In reality, the object is a brain or a brain-like object.
     """
     self.renderer = renderer
@@ -1825,6 +1826,7 @@ class ListBoxRendererLine:
     self.selection_domain = selection_domain
     self.depth = depth
     self.domain_title = domain_title
+    self.render_prefix = render_prefix
 
   def getBrain(self):
     """Return the brain. This can be identical to a real object.
@@ -2625,7 +2627,8 @@ class ListBox(ZMIField):
           self)
         return self.widget.render(field, self.generate_field_key(), None,
                                   request,
-                                  render_format=kw.get('render_format'))
+                                  render_format=kw.get('render_format'),
+                                  render_prefix=kw.get('render_prefix'))
       else:
         return None
     else:

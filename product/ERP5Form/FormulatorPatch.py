@@ -71,7 +71,7 @@ def Field_render(self, value=None, REQUEST=None, key=None, render_prefix=None):
     if value and REQUEST are both None, the 'default' property of
     the field will be used for the value.
     """
-    return self._render_helper(self.generate_field_key(key=key), value, REQUEST)
+    return self._render_helper(self.generate_field_key(key=key), value, REQUEST, render_prefix)
 
 def Field_render_view(self, value=None, REQUEST=None, render_prefix=None):
     """Render value to be viewed.
@@ -84,7 +84,7 @@ def Field_render_sub_field(self, id, value=None, REQUEST=None, key=None, render_
         Added key parameter for ERP5 in order to be compatible with listbox/matrixbox
     """
     return self.sub_form.get_field(id)._render_helper(
-        self.generate_subfield_key(id, key=key), value, REQUEST)
+        self.generate_subfield_key(id, key=key), value, REQUEST, render_prefix)
 
 def Field_generate_subfield_key(self, id, validation=0, key=None):
     """Generate the key Silva uses to render a sub field.

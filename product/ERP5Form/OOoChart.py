@@ -343,7 +343,9 @@ class OOoChartWidget(Widget.Widget):
     listbox_id = field.get_value('listbox_id')
     if listbox_id in ('', None):
       listbox_id = 'listbox'
+    render_prefix = REQUEST.get('render_prefix')
     extra_argument_dict = dict(
+      render_prefix = render_prefix,
       chart_form_id = listbox_form_id,
       chart_field_id = listbox_id,
       chart_title = field.get_value('title'),
@@ -383,7 +385,8 @@ class OOoChartWidget(Widget.Widget):
       Render a Chart in read-only.
     """
     if REQUEST is None: REQUEST=get_request()
-    return self.render(field, key, value, REQUEST, render_format=render_format)
+    return self.render(field, key, value, REQUEST, render_format=render_format,
+                       render_prefix=render_prefix)
 
 
   def render_odf(self, field, key, value, REQUEST, render_format='ooo', render_prefix=None):
@@ -392,7 +395,6 @@ class OOoChartWidget(Widget.Widget):
     """
     form = field.aq_parent
     here = getattr(form, 'aq_parent', REQUEST)
-    extra_context = self.getArgumentDict(field, here.REQUEST)
     content = '''
                   <office:include path="%s/ERP5Site_buildChart" xlink:type="simple" xlink:actuate="onLoad" xlink:show="embed"/>
                   ''' % here.getPath()
@@ -413,7 +415,6 @@ class OOoChartWidget(Widget.Widget):
                          If the format is set to an image type (ex. png)
                          render the chart using that format.
     """
-
     title = field.get_value('title')
     alt = field.get_value('description') or title
     form = field.aq_parent
@@ -431,20 +432,22 @@ class OOoChartWidget(Widget.Widget):
       display = field.get_value('image_display')
       if format in STANDARD_IMAGE_FORMAT_LIST:
         main_content = '''<div class="OOoChartContent">
-          <img class="%s" src="%s?render_format=%s&display=%s" title="%s" alt="%s"/">
+          <img class="%s" src="%s?render_format=%s&display=%s&render_prefix=%s" title="%s" alt="%s"/">
           </div>''' % (css_class,
                        field_absolute_url,
                        format,
                        display,
+                       render_prefix,
                        title,
                        alt)
         return main_content
       elif format == 'raw':
         UrlIconOOo = '%s/misc_/ERP5OOo/OOo.png' % REQUEST['BASEPATH1']
         main_content = '''<div class="OOoChartContent">
-          <a href="%s?render_format=&display=%s"><img src="%s" alt="OOo"/></a></div>
+          <a href="%s?render_format=&display=%s&render_prefix=%s"><img src="%s" alt="OOo"/></a></div>
           ''' % (field_absolute_url,
                  display,
+                 render_prefix,
                  UrlIconOOo)
         return main_content
       elif format == 'pdf':
@@ -453,6 +456,7 @@ class OOoChartWidget(Widget.Widget):
           <a href="%s?render_format=pdf&display=%s"><img src="%s" alt="PDF" /></a>
           </div>''' % (field_absolute_url,
                        display,
+                       render_prefix,
                        UrlIconPdf)
         return main_content
       else:
@@ -466,7 +470,7 @@ class OOoChartWidget(Widget.Widget):
     ooo_template = getattr(here, method_id)
 
     # Render the chart
-    return ooo_template(format=render_format)
+    return ooo_template(format=render_format, **extra_context)
 
 class OOoChartValidator(Validator.Validator):
   """
