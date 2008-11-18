@@ -114,7 +114,7 @@ dQEAAAAA</string> </value>
                               </text:p>\n
                             <tal:block tal:condition="python: value != \'\'">\n
                               <text:p tal:condition="item_list"\n
-                                    tal:content="python: [i[0].replace(\'&amp;\', \'\') for i in item_list if i[1] == value][0]">\n
+                                    tal:content="python: [str(i[0]).replace(\'&amp;\', \'\') for i in item_list if i[1] == value][0]">\n
                               </text:p>\n
                             </tal:block>\n
                             <tal:block tal:condition="python: value is None">\n
