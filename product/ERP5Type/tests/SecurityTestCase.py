@@ -143,6 +143,8 @@ class SecurityTestCase(ERP5TypeTestCase):
                                      Permissions.ModifyPortalContent)
   failIfUserCanAddDocument = AssertNoPermissionMethod(
                                      Permissions.AddPortalContent)
+  failIfUserCanChangeLocalRoles = AssertNoPermissionMethod(
+                                     Permissions.ChangeLocalRoles)
 
   def failIfUserHavePermissionOnDocument(self, permission_name, username, document):
     """Fail If the user have a permission on document.
@@ -160,6 +162,8 @@ class SecurityTestCase(ERP5TypeTestCase):
                 AssertPermissionMethod(Permissions.ModifyPortalContent)
   failUnlessUserCanAddDocument = assertUserCanAddDocument =\
                 AssertPermissionMethod(Permissions.AddPortalContent)
+  failUnlessUserCanChangeLocalRoles = assertUserCanChangeLocalRoles =\
+                AssertPermissionMethod(Permissions.ChangeLocalRoles)
 
   def failUnlessUserHavePermissionOnDocument(self, permission_name, username, document):
     """Fail Unless the user have a permission on document."""
