@@ -39,53 +39,161 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<office:document-content xmlns:office=\'urn:oasis:names:tc:opendocument:xmlns:office:1.0\'\n
-                         xmlns:text=\'urn:oasis:names:tc:opendocument:xmlns:text:1.0\'\n
-                         xmlns:number=\'urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0\'\n
-                         xmlns:meta=\'urn:oasis:names:tc:opendocument:xmlns:meta:1.0\'\n
-                         xmlns:table=\'urn:oasis:names:tc:opendocument:xmlns:table:1.0\'\n
-                         xmlns:style=\'urn:oasis:names:tc:opendocument:xmlns:style:1.0\'\n
-                         xmlns:script=\'urn:oasis:names:tc:opendocument:xmlns:script:1.0\'\n
-                         xmlns:xlink=\'http://www.w3.org/1999/xlink\'\n
-                         xmlns:smil=\'urn:oasis:names:tc:opendocument:xmlns:smil-compatible:1.0\'\n
-                         xmlns:presentation=\'urn:oasis:names:tc:opendocument:xmlns:presentation:1.0\'\n
-                         xmlns:math=\'http://www.w3.org/1998/Math/MathML\'\n
-                         xmlns:draw=\'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\'\n
-                         xmlns:anim=\'urn:oasis:names:tc:opendocument:xmlns:animation:1.0\'\n
-                         xmlns:form=\'urn:oasis:names:tc:opendocument:xmlns:form:1.0\'\n
-                         xmlns:ooo=\'http://openoffice.org/2004/office\'\n
-                         xmlns:dc=\'http://purl.org/dc/elements/1.1/\'\n
-                         xmlns:chart=\'urn:oasis:names:tc:opendocument:xmlns:chart:1.0\'\n
-                         xmlns:dr3d=\'urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0\'\n
-                         xmlns:fo=\'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\'\n
-                         xmlns:xforms=\'http://www.w3.org/2002/xforms\'\n
-                         xmlns:dom=\'http://www.w3.org/2001/xml-events\'\n
-                         xmlns:ooow=\'http://openoffice.org/2004/writer\'\n
-                         xmlns:svg=\'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\'\n
-                         xmlns:xsd=\'http://www.w3.org/2001/XMLSchema\'\n
-                         xmlns:xsi=\'http://www.w3.org/2001/XMLSchema-instance\'\n
-                         xmlns:oooc=\'http://openoffice.org/2004/calc\' \n
-                         xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
-                         xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
-                         xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
-                         tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
-                         office:version=\'1.0\'>\n
- \n
-<tal:block metal:define-macro="style_text_properties">\n
-  <style:text-properties fo:font-family="\'DejaVu Sans\'"\n
-                         style:font-family-generic="swiss"\n
-                         style:font-pitch="variable"\n
-                         fo:font-size="18pt"\n
-                         style:font-family-asian="\'DejaVu Sans\'"\n
-                         style:font-family-generic-asian="system"\n
-                         style:font-pitch-asian="variable"\n
-                         style:font-size-asian="18pt"\n
-                         style:font-family-complex="Tahoma"\n
-                         style:font-family-generic-complex="system"\n
-                         style:font-pitch-complex="variable"\n
-                         style:font-size-complex="18pt"/>\n
+<office:document-content\n
+    xmlns:office=\'urn:oasis:names:tc:opendocument:xmlns:office:1.0\'\n
+    xmlns:text=\'urn:oasis:names:tc:opendocument:xmlns:text:1.0\'\n
+    xmlns:number=\'urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0\'\n
+    xmlns:meta=\'urn:oasis:names:tc:opendocument:xmlns:meta:1.0\'\n
+    xmlns:table=\'urn:oasis:names:tc:opendocument:xmlns:table:1.0\'\n
+    xmlns:style=\'urn:oasis:names:tc:opendocument:xmlns:style:1.0\'\n
+    xmlns:script=\'urn:oasis:names:tc:opendocument:xmlns:script:1.0\'\n
+    xmlns:xlink=\'http://www.w3.org/1999/xlink\'\n
+    xmlns:smil=\'urn:oasis:names:tc:opendocument:xmlns:smil-compatible:1.0\'\n
+    xmlns:presentation=\'urn:oasis:names:tc:opendocument:xmlns:presentation:1.0\'\n
+    xmlns:math=\'http://www.w3.org/1998/Math/MathML\'\n
+    xmlns:draw=\'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\'\n
+    xmlns:anim=\'urn:oasis:names:tc:opendocument:xmlns:animation:1.0\'\n
+    xmlns:form=\'urn:oasis:names:tc:opendocument:xmlns:form:1.0\'\n
+    xmlns:ooo=\'http://openoffice.org/2004/office\'\n
+    xmlns:dc=\'http://purl.org/dc/elements/1.1/\'\n
+    xmlns:chart=\'urn:oasis:names:tc:opendocument:xmlns:chart:1.0\'\n
+    xmlns:dr3d=\'urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0\'\n
+    xmlns:fo=\'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\'\n
+    xmlns:xforms=\'http://www.w3.org/2002/xforms\'\n
+    xmlns:dom=\'http://www.w3.org/2001/xml-events\'\n
+    xmlns:ooow=\'http://openoffice.org/2004/writer\'\n
+    xmlns:svg=\'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\'\n
+    xmlns:xsd=\'http://www.w3.org/2001/XMLSchema\'\n
+    xmlns:xsi=\'http://www.w3.org/2001/XMLSchema-instance\'\n
+    xmlns:oooc=\'http://openoffice.org/2004/calc\' \n
+    xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
+    xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
+    xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
+    office:version=\'1.0\'>\n
 \n
-</tal:block> \n
+  <tal:block metal:define-macro="text_style_properties">\n
+    <style:text-properties fo:font-family="\'DejaVu Sans\'"\n
+                          style:font-family-generic="swiss"\n
+                          style:font-pitch="variable"\n
+                          fo:font-size="18pt"\n
+                          style:font-family-asian="\'DejaVu Sans\'"\n
+                          style:font-family-generic-asian="system"\n
+                          style:font-pitch-asian="variable"\n
+                          style:font-size-asian="18pt"\n
+                          style:font-family-complex="Tahoma"\n
+                          style:font-family-generic-complex="system"\n
+                          style:font-pitch-complex="variable"\n
+                          style:font-size-complex="18pt"/>\n
+  </tal:block>\n
+\n
+  <tal:block metal:define-macro="line_style_properties">\n
+    <style:style tal:attributes="style:name string:${style_prefix}${column_id}"\n
+                 style:family="chart">\n
+      <style:chart-properties chart:symbol-type="named-symbol"\n
+                              chart:symbol-name="square"\n
+                              chart:symbol-width="0.25cm"\n
+                              chart:symbol-height="0.25cm"\n
+                              tal:attributes="chart:three-dimensional request/chart_three_dimensional | string:false;\n
+                              chart:deep request/deep ;\n
+                              chart:stacked request/chart_stacked | string:false;\n
+                              chart:vertical request/chart_position | string:false;\n
+                              chart:percentage request/chart_percentage | string:false;\n
+                              chart:symbol-type request/symbol_type ;\n
+                              chart:series-source request/series_source;\n
+                              chart:data-label-number request/data_label_number ;\n
+                              chart:data-label-symbol request/data_label_symbol | string:false;\n
+                              chart:data-label-text data_label_text | string:false ;\n
+                              chart:regression-type request/regression_type ;\n
+                              chart:interpolation request/interpolation ;"/>\n
+      <style:graphic-properties draw:stroke="solid" svg:stroke-width="0.088cm"\n
+                                tal:define="step python:2000000;\n
+                                hex_colour_code python:\'#%s\' % colour_column_dict.get(column_id, hex(int(\'ccccff\', 16) + (index*step))[2:8].zfill(6))"\n
+                                tal:attributes="svg:stroke-color hex_colour_code;\n
+                                draw:fill-color hex_colour_code"\n
+                                dr3d:edge-rounding="0%"/>\n
+      <tal:block metal:use-macro="here/OOoChart_macroLibrary/macros/text_style_properties"/>\n
+    </style:style>\n
+  </tal:block>\n
+\n
+  <tal:block metal:define-macro="generate-plot-area">\n
+    <chart:plot-area chart:style-name="chart_picture">\n
+      <tal:block metal:define-slot="chart-axis"/>\n
+      <tal:block tal:repeat="column_item column_item_list">\n
+        <tal:block tal:define="col_id python:Utils.int2letters(repeat[\'column_item\'].index+1);\n
+                   chart_values_cell_range_address string:local-table.$$${col_id}$$2:.$$${col_id}$$${chart_repeated};\n
+                   chart_label_cell_address string:local-table.$$${col_id}$$1">\n
+          <chart:series tal:condition="python:chart_type != \'chart:circle\'"\n
+                        tal:attributes="chart:values-cell-range-address chart_values_cell_range_address;\n
+                        chart:label-cell-address chart_label_cell_address;\n
+                        chart:style-name python:\'%s%s\' % (style_prefix, column_item[0]);\n
+                        chart:class chart_type">\n
+            <chart:data-point tal:attributes="chart:repeated chart_repeated"/>\n
+          </chart:series>\n
+          <chart:series tal:condition="python:chart_type == \'chart:circle\'"\n
+                        tal:attributes="chart:values-cell-range-address chart_values_cell_range_address;\n
+                        chart:label-cell-address chart_label_cell_address;\n
+                        chart:style-name python:\'data_circle_%s\' % column_item[0];\n
+                        chart:class chart_type">\n
+            <chart:data-point tal:attributes="chart:repeated chart_repeated"/>\n
+          </chart:series>\n
+        </tal:block>\n
+      </tal:block>\n
+      <tal:block metal:define-slot="chart-wall"/>\n
+      <tal:block metal:define-slot="chart-floor"/>\n
+    </chart:plot-area>\n
+  </tal:block>\n
+\n
+  <tal:block metal:define-macro="generate_spreadsheet">\n
+    <!-- Storage all ListBox Data in Spreadsheet-->\n
+    <table:table table:name="local-table">\n
+      <table:table-header-columns>\n
+        <table:table-column/>\n
+      </table:table-header-columns>\n
+      <table:table-columns>\n
+        <table:table-column tal:attributes="table:number-columns-repeated chart_repeated"/>\n
+      </table:table-columns>\n
+      <table:table-header-rows>\n
+        <table:table-row>\n
+          <table:table-cell>\n
+            <text:p/>\n
+          </table:table-cell>\n
+          <table:table-cell tal:repeat="column_item python:column_list[1:] "\n
+                            office:value-type="string">\n
+            <text:p tal:content="python: column_item[1]"\n
+                    i18n:domain="ui"\n
+                    i18n:translate="">Documents</text:p>\n
+          </table:table-cell>\n
+        </table:table-row>\n
+      </table:table-header-rows>\n
+      <table:table-rows>\n
+        <tal:block tal:repeat="line line_list">\n
+          <tal:block tal:condition="line/isDataLine">\n
+            <table:table-row>\n
+              <tal:block tal:repeat="column_item column_list">\n
+                <tal:block tal:define="column_id python:column_item[0];\n
+                          column_type python:line.getColumnPropertyTypeName(column_id);\n
+                          column_value python:line.getColumnProperty(column_id);\n
+                          value_type python:((column_type in (\'float\', \'int\', \'long\',)) and \'float\') or \'string\'">\n
+                  <table:table-cell tal:condition="python: value_type == \'string\'"\n
+                                    tal:attributes="office:value-type value_type">\n
+                    <text:p tal:content="column_value"\n
+                            i18n:domain="ui"\n
+                            i18n:translate=""></text:p>\n
+                  </table:table-cell>\n
+                  <table:table-cell tal:condition="python:value_type != \'string\'"\n
+                                    tal:attributes="office:value column_value;\n
+                                    office:value-type value_type">\n
+                    <text:p tal:content="column_value"></text:p>\n
+                  </table:table-cell>\n
+                </tal:block>\n
+              </tal:block>\n
+            </table:table-row>\n
+          </tal:block>\n
+        </tal:block>\n
+      </table:table-rows>\n
+    </table:table>\n
+  </tal:block>\n
+\n
 </office:document-content>
 
 ]]></string> </value>
