@@ -85,7 +85,7 @@ for key in sorted(request.form.keys()):\n
     value = None\n
 \n
   # remove Formulator markers\n
-  if key.startswith(\'default_\') or key.startswith(\'field_\'):\n
+  if key.startswith(\'default_field_\') or key.startswith(\'field_\'):\n
     request.form.pop(key)\n
     continue\n
 \n
