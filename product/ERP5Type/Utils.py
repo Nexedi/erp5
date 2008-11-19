@@ -259,6 +259,15 @@ def getPath(object_or_path, **kw):
     return path.split('/')
   return path
 
+def int2letters(i):
+  """
+  Convert an integer to letters, to generate spreadsheet column id
+  A, B, C ..., Z, AA, AB, ..., AZ, BA, ..., ZZ, AAA ...
+  """
+  if i < 26:
+    return (chr(i + ord('A')))
+  d, m = divmod(i, 26)
+  return int2letter(d - 1) + int2letter(m)
 
 #####################################################
 # Globals initialization
