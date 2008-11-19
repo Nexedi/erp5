@@ -28,4 +28,4 @@ CREATE TABLE `message_queue` (
   KEY `serialization_tag_processing_node` (`serialization_tag`, `processing_node`),
   KEY (`priority`),
   KEY (`tag`)
-) TYPE = InnoDB;
+) TYPE = InnoDB
