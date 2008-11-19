@@ -39,10 +39,7 @@ from DateTime import DateTime
 from Products.ERP5Type.Message import translateString
 from Acquisition import aq_base
 from BTrees.OOBTree import OOBTree
-try:
-  from AccessControl.AuthEncoding import pw_encrypt
-except ImportError:
-  pw_encrypt = lambda pw:pw
+from Products.ERP5.Document.Person import pw_encrypt
 
 class PasswordTool(BaseTool):
   """
