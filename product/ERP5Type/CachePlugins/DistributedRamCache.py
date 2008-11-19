@@ -91,10 +91,10 @@ class DistributedRamCache(BaseCache):
   def set(self, cache_id, scope, value, cache_duration= None, calculation_time=0):
     cache_storage = self.getCacheStorage()
     cache_id = self.checkAndFixCacheId(cache_id, scope)
-    if not cache_duration:
+    if cache_duration is None:
       ## what should be default cache_duration when None is specified?
-      ## currently when 'None' it means forever so give it  big value of 100 hours
-      cache_duration = 360000
+      ## currently when 'None' it means forever so give it  big value of 24 hours
+      cache_duration = 86400
     cache_entry = CacheEntry(value, cache_duration, calculation_time)
     cache_storage.set(cache_id, cache_entry, cache_duration)
     #self.markCacheMiss()
