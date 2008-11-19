@@ -39,7 +39,10 @@ from DateTime import DateTime
 from Products.ERP5Type.Message import translateString
 from Acquisition import aq_base
 from BTrees.OOBTree import OOBTree
-
+try:
+  from AccessControl.AuthEncoding import pw_encrypt
+except ImportError:
+  pw_encrypt = lambda pw:pw
 
 class PasswordTool(BaseTool):
   """
@@ -190,7 +193,7 @@ class PasswordTool(BaseTool):
     self.password_request_dict.pop(password_key)
     persons = self.acl_users.erp5_users.getUserByLogin(user_login)              
     person = persons[0]
-    person._setPassword(password)
+    person._setPassword(pw_encrypt(password))
     person.reindexObject()
     if REQUEST is not None:
       msg = translateString("Password changed.")
