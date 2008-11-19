@@ -33,12 +33,8 @@ SQL (MySQL) based cache plugin.
 from thread import get_ident
 import time
 import base64
-
 from zLOG import LOG
-
-from BaseCache import BaseCache
-from BaseCache import CacheEntry
-from BaseCache import CachedMethodError
+from BaseCache import BaseCache, CacheEntry, CachedMethodError
 
 try:
   import cPickle as pickle

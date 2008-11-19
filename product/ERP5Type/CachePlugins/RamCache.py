@@ -31,9 +31,7 @@ Local RAM based cache plugin.
 """
 
 import time
-
-from BaseCache import BaseCache
-from BaseCache import CacheEntry
+from BaseCache import BaseCache, CacheEntry
 
 def calcPythonObjectMemorySize(i):
   """ Recursive function that will 'walk' over complex python types and caclulate

@@ -29,12 +29,8 @@
 """
 Memcached based cache plugin.
 """
-
-from time import time
 from thread import get_ident
-
 from zLOG import LOG
-
 from BaseCache import BaseCache
 from BaseCache import CacheEntry
 
@@ -52,8 +48,7 @@ class DistributedRamCache(BaseCache):
 
   def __init__(self, params):
     self._servers = params.get('server', '')
-    self._debugLevel = params.get('debugLevel', 7)
-    self._last_cache_conn_creation_time = time()
+    self._debugLevel = params.get('debugLevel', 0)
     BaseCache.__init__(self)
     
   def initCacheStorage(self):
@@ -78,7 +73,6 @@ class DistributedRamCache(BaseCache):
     else:
       ## we have memcache_conn for this thread
       return memcache_conn
-
        
   def checkAndFixCacheId(self, cache_id, scope):
     ## memcached doesn't support namespaces (cache scopes) so to "emmulate"
