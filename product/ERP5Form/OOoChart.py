@@ -55,18 +55,16 @@ class OOoChartWidget(Widget.Widget):
   property_names = list(Widget.Widget.property_names)
 
   default = fields.StringField(
-                                'default',
-                                title='Default',
-                                description=(
-    "A default value (not used)."),
-                                default="",
-                                required=0)
+                              'default',
+                              title='Default',
+                              description=("A default value (not used)."),
+                              default="",
+                              required=0)
 
   listbox_form_id = fields.StringField(
                               'listbox_form_id',
                               title='ListBox Form ID',
-                              description= \
-                                "ID of the master form.",
+                              description=("ID of the master form."),
                               default="",
                               required=0)
   property_names.append('listbox_form_id')
@@ -74,54 +72,52 @@ class OOoChartWidget(Widget.Widget):
   listbox_id = fields.StringField(
                               'listbox_id',
                               title='ListBox ID',
-                              description= \
-                                "ID of the listbox in the master form.",
+                              description=("ID of the listbox in the master form."),
                               default="",
                               required=0)
   property_names.append('listbox_id')
 
   image_display = fields.ListField('image_display',
-                            title='Image Display',
-                            description=(
-          "Render size of this chart in HTML mode."),
-                            default='medium',
-                                  items=[('thumbnail','thumbnail'),
-                                        ('xsmall', 'xsmall'),
-                                        ('small', 'small'),
-                                        ('medium', 'medium'),
-                                        ('large', 'large'),
-                                        ('xlarge', 'xlarge'),
-                                        ],
-                                  size=1)
+                              title='Image Display',
+                              description=("Render size of this chart in HTML mode."),
+                              default='medium',
+                              items=[('thumbnail','thumbnail'),
+                                    ('xsmall', 'xsmall'),
+                                    ('small', 'small'),
+                                    ('medium', 'medium'),
+                                    ('large', 'large'),
+                                    ('xlarge', 'xlarge'),
+                                    ],
+                              size=1)
   property_names.append('image_display')
 
   image_format = fields.StringField('image_format',
-                            title='Image Format',
-                            description=(
-    "The format in which the chart should be converted to."),
-                            default='png',
-                            required=0)
+                              title='Image Format',
+                              description=(
+      "The format in which the chart should be converted to."),
+                              default='png',
+                              required=0)
   property_names.append('image_format')
 
   ooo_template = fields.StringField('ooo_template',
                               title='OOo Template',
                               description=('The ID of a OOo Page Template'
-                                          ' to render the ListBox'),
+                                            'to render the ListBox'),
                               default='ERP5Site_viewChart',
                               required=0)
   property_names.append('ooo_template')
 
 
   chart_type = fields.ListField('chart_type',
-                                  title='Chart Type',
-                                  description=('Type of the Chart'),
-                                  default='chart:bar',
-                                  items=[('bar', 'chart:bar'),
-                                        ('circle', 'chart:circle'),
-                                        ('line', 'chart:line'),
-                                        ('scatter', 'chart:scatter'),
-                                        ],
-                                  size=0)
+                              title='Chart Type',
+                              description=('Type of the Chart'),
+                              default='chart:bar',
+                              items=[('bar', 'chart:bar'),
+                                    ('circle', 'chart:circle'),
+                                    ('line', 'chart:line'),
+                                    ('scatter', 'chart:scatter'),
+                                    ],
+                              size=0)
   property_names.append('chart_type')
 
 
@@ -135,76 +131,79 @@ class OOoChartWidget(Widget.Widget):
 
   # vertical ="true"
   chart_position = fields.ListField('chart_position',
-                                   title='Bar Position',
-                                   description=('Render the bar in horizontal position or vertical position'),
-                                   default='false',
-                                   items=[('horizontal', 'true'),
-                                          ('vertical', 'false'),
-                                          ],
-                                   size=0)
+                              title='Bar Position',
+                              description=(
+                    'Render the bar in horizontal position or vertical position'),
+                              default='false',
+                              items=[('horizontal', 'true'),
+                                    ('vertical', 'false'),
+                                    ],
+                              size=0)
   property_names.append('chart_position')
 
   #legend of the chart or not
   chart_legend = fields.CheckBoxField('chart_legend',
-                                         title='Chart Legend',
-                                         description=('Show Chart Legend or no'),
-                                         default=1,
-                                         required=0)
+                              title='Chart Legend',
+                              description=('Show Chart Legend or no'),
+                              default=1,
+                              required=0)
   property_names.append('chart_legend')
 
 
   position_legend = fields.ListField('position_legend',
-                                       title='Legend Position',
-                                       description=('Legend Position according to the graph'),
-                                       default='end',
-                                       items=[('bottom', 'bottom'),
-                                              ('end', 'end'),
-                                              ('start', 'start'),
-                                              ('top', 'top'),
-                                              ],
-                                       size=1)
+                              title='Legend Position',
+                              description=(
+                              'Legend Position according to the graph'),
+                              default='end',
+                              items=[('bottom', 'bottom'),
+                                    ('end', 'end'),
+                                    ('start', 'start'),
+                                    ('top', 'top'),
+                                    ],
+                              size=1)
   property_names.append('position_legend')
 
   #legend of the chart or not
   chart_title_or_no = fields.CheckBoxField('chart_title_or_no',
-                                         title='Chart Title ',
-                                         description=('Show Title on Graph or no '),
-                                         default=1,
-                                         required=0)
+                              title='Chart Title ',
+                              description=('Show Title on Graph or no '),
+                              default=1,
+                              required=0)
   property_names.append('chart_title_or_no')
 
   #grid or not
   grid_graph = fields.CheckBoxField('grid_graph',
-                                         title='Chart Grid ',
-                                         description=('Show Grid or no'),
-                                         default=1,
-                                         required=0)
+                              title='Chart Grid ',
+                              description=('Show Grid or no'),
+                              default=1,
+                              required=0)
   property_names.append('grid_graph')
 
 
   grid_size = fields.ListField('grid_size',
-                                   title='Grid Size',
-                                   description=('Render a big grid size or a small grid size'),
-                                   default='major',
-                                   items=[('major', 'major'),
-                                          ('minor', 'minor'),
-                                          ],
-                                   size=0)
+                              title='Grid Size',
+                              description=(
+                              'Render a big grid size or a small grid size'),
+                              default='major',
+                              items=[('major', 'major'),
+                                    ('minor', 'minor'),
+                                    ],
+                              size=0)
   property_names.append('grid_size')
 
   user_data_title = fields.StringField('user_data_title',
-                                title="Overide Labelled Column ID",
-                                description=(
-      "Column Id choose by user to define the label."),
-                                required=0)
+                              title="Overide Labelled Column ID",
+                              description=(
+    "Column Id choose by user to define the label."),
+                              required=0)
   property_names.append('user_data_title')
 
   user_column_id_list = fields.ListTextAreaField('user_column_id_list',
-                                title="Overide Column Ids",
-                                description=(
-      "A list of column Ids choose by user to draw the graph."),
-                                default=[],
-                                required=0)
+                              title="Overide Column Ids",
+                              description=(
+    "A list of column Ids choose by user to draw the graph."),
+                              default=[],
+                              required=0)
   property_names.append('user_column_id_list')
 
 
@@ -217,16 +216,17 @@ class OOoChartWidget(Widget.Widget):
 
   #connect-bars="false"
   connect_bars = fields.CheckBoxField('connect_bars',
-                                      title='Connect Bars',
-                                      description=(''),
-                                      default=0,
-                                      required=0)
+                              title='Connect Bars',
+                              description=(''),
+                              default=0,
+                              required=0)
   property_names.append('connect_bars')
 
 
   chart_three_dimensional = fields.CheckBoxField('chart_three_dimensional',
                               title='3D',
-                              description=('Render the chart in three dimensions rather in flat mode'),
+                              description=(
+                      'Render the chart in three dimensions rather in flat mode'),
                               default=0,
                               required=0)
   property_names.append('chart_three_dimensional')
@@ -241,94 +241,94 @@ class OOoChartWidget(Widget.Widget):
 
   # sector_pie_offset Default:0
   sector_pie_offset = fields.IntegerField('sector_pie_offset',
-                                        title='Sector Pie Offset',
-                                        description=(''),
-                                        default=0,
-                                        required=0)
+                              title='Sector Pie Offset',
+                              description=(''),
+                              default=0,
+                              required=0)
   property_names.append('sector_pie_offset')
   
 
 
   #interpolation="none", cubic-spline, b-spline
   interpolation = fields.ListField('interpolation',
-                                   title='Interpolation',
-                                   description=(''),
-                                   default='none',
-                                   items=[('none', 'none'),
-                                          ('cubic-spline', 'cubic-spline'),
-                                          ('b-spline', 'b-spline')],
-                                   size=1)
+                              title='Interpolation',
+                              description=(''),
+                              default='none',
+                              items=[('none', 'none'),
+                                    ('cubic-spline', 'cubic-spline'),
+                                    ('b-spline', 'b-spline')],
+                              size=1)
   property_names.append('interpolation')
 
   #symbol-type="none", automatic
   symbol_type = fields.ListField('symbol_type',
-                                 title='Symbol Type',
-                                 description=(''),
-                                 default='none',
-                                 items=[('none', 'none'),
-                                        ('automatic', 'automatic'),],
-                                 size=1)
+                              title='Symbol Type',
+                              description=(''),
+                              default='none',
+                              items=[('none', 'none'),
+                                    ('automatic', 'automatic'),],
+                              size=1)
   property_names.append('symbol_type')
 
   #lines-used="0" 
   lines_used = fields.ListField('lines_used',
-                                title='Lines Used',
-                                description=(''),
-                                default='0',
-                                items=[('0', '0'),
-                                       ('1', '1')],
-                                size=1)
+                              title='Lines Used',
+                              description=(''),
+                              default='0',
+                              items=[('0', '0'),
+                                      ('1', '1')],
+                              size=1)
   property_names.append('lines_used')
 
 
   #series-source=columns or rows
   series_source = fields.ListField('series_source',
-                                   title='Series Source',
-                                   description=(''),
-                                   default='columns',
-                                   items=[('columns', 'columns'),
-                                          ('rows', 'rows'),],
-                                   size=1)
+                              title='Series Source',
+                              description=(''),
+                              default='columns',
+                              items=[('columns', 'columns'),
+                                    ('rows', 'rows'),],
+                              size=1)
   property_names.append('series_source')
 
   #regression-type="none" linear logarithmic exponential power
   regression_type = fields.ListField('regression_type',
-                                     title='Regression Type',
-                                     description=(''),
-                                     default='none',
-                                     items=[('none', 'none'),
-                                            ('linear', 'linear'),
-                                            ('logarithmic', 'logarithmic'),
-                                            ('exponential', 'exponential'),
-                                            ('power', 'power')],
-                                     size=1)
+                              title='Regression Type',
+                              description=(''),
+                              default='none',
+                              items=[('none', 'none'),
+                                    ('linear', 'linear'),
+                                    ('logarithmic', 'logarithmic'),
+                                    ('exponential', 'exponential'),
+                                    ('power', 'power')],
+                              size=1)
   property_names.append('regression_type')
 
   #data-label-number="none" value percentage
   data_label_number = fields.ListField('data_label_number',
-                                       title='Data Label Number',
-                                       description=(''),
-                                       default='none',
-                                       items=[('none', 'none'),
-                                              ('value', 'value'),
-                                              ('percentage', 'percentage')],
-                                       size=1)
+                              title='Data Label Number',
+                              description=(''),
+                              default='none',
+                              items=[('none', 'none'),
+                                    ('value', 'value'),
+                                    ('percentage', 'percentage')],
+                              size=1)
   property_names.append('data_label_number')
 
   #data-label-text="false"
   data_label_text = fields.CheckBoxField('data_label_text',
-                                         title='Data Label Text',
-                                         description=(''),
-                                         default=0,
-                                         required=0)
+                              title='Data Label Text',
+                              description=(''),
+                              default=0,
+                              required=0)
   property_names.append('data_label_text')
 
   #data-label-symbol="false"
   data_label_symbol = fields.CheckBoxField('data_label_symbol',
-                                           title='Data Label Symbol',
-                                           description=(''),
-                                           default=0,
-                                           required=0)
+                              title='Data Label Symbol',
+                              description=(''),
+                              default=0,
+                              required=0)
   property_names.append('data_label_symbol')
 
 
@@ -475,7 +475,7 @@ class OOoChartWidget(Widget.Widget):
 class OOoChartValidator(Validator.Validator):
   """
   """
-  property_names =Validator.Validator.property_names
+  property_names = Validator.Validator.property_names
 
   def validate(self, key,field,  REQUEST):
 
