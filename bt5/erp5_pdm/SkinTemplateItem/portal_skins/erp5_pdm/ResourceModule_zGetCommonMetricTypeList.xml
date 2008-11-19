@@ -104,7 +104,7 @@ FROM (SELECT metric_type_uid,\n
 WHERE catalog.uid = measure.metric_type_uid\n
   AND <dtml-sqltest column="measure.resource_count"\n
                     expr="_.len(resource_uid)"\n
-                    type="int">;\n
+                    type="int">\n
 
 
 ]]></string> </value>
@@ -156,7 +156,7 @@ FROM (SELECT metric_type_uid,\n
 WHERE catalog.uid = measure.metric_type_uid\n
   AND <dtml-sqltest column="measure.resource_count"\n
                     expr="_.len(resource_uid)"\n
-                    type="int">;\n
+                    type="int">\n
 
 
 ]]></string> </value>
