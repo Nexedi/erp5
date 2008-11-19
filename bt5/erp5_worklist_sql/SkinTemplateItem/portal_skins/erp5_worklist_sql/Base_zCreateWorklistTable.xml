@@ -96,7 +96,7 @@ CREATE TABLE `worklist_cache` (\n
   KEY `portal_simulation_owner` (`portal_type`, `simulation_state`, `viewable_owner`),\n
   KEY `portal_validation_security` (`portal_type`, `validation_state`, `security_uid`),\n
   KEY `portal_validation_owner` (`portal_type`, `validation_state`, `viewable_owner`)\n
-) TYPE=InnoDB;
+) TYPE=InnoDB
 
 ]]></string> </value>
         </item>
@@ -168,7 +168,7 @@ CREATE TABLE `worklist_cache` (\n
   KEY `portal_simulation_owner` (`portal_type`, `simulation_state`, `viewable_owner`),\n
   KEY `portal_validation_security` (`portal_type`, `validation_state`, `security_uid`),\n
   KEY `portal_validation_owner` (`portal_type`, `validation_state`, `viewable_owner`)\n
-) TYPE=InnoDB;
+) TYPE=InnoDB
 
 ]]></string> </value>
                     </item>
