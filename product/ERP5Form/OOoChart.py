@@ -116,6 +116,7 @@ class OOoChartWidget(Widget.Widget):
                                     ('circle', 'chart:circle'),
                                     ('line', 'chart:line'),
                                     ('scatter', 'chart:scatter'),
+                                    ('area', 'chart:area'),
                                     ],
                               size=0)
   property_names.append('chart_type')
