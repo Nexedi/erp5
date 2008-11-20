@@ -282,7 +282,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                                       text:anchor-type="paragraph"\n
                                       tal:attributes="svg:height python:str(height_graph)+\'cm\';\n
                                       svg:width python:str(width_graph)+\'cm\'"\n
-                                      tal:content="structure python: field.render_odf()">\n
+                                      tal:content="structure python: field.render_odf(render_prefix=render_prefix)">\n
                                 </draw:frame>\n
                               </text:p>\n
                             </tal:block>\n
@@ -343,7 +343,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                               text:anchor-type="paragraph"\n
                               tal:attributes="svg:height python:height;\n
                               svg:width python:width">\n
-                    <tal:block tal:replace="structure python: field.render_odf()"/>\n
+                    <tal:block tal:replace="structure python: field.render_odf(render_prefix=render_prefix)"/>\n
                   </draw:frame>\n
                 </text:p>\n
 \n
@@ -422,7 +422,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                               text:anchor-type="paragraph"\n
                               tal:attributes="svg:height python:height;\n
                                               svg:width python:width">\n
-                    <tal:block tal:replace="structure python: field.render_odf()"/>\n
+                    <tal:block tal:replace="structure python: field.render_odf(render_prefix=render_prefix)"/>\n
                   </draw:frame>\n
                 </text:p>\n
               </tal:block>\n
