@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -65,7 +53,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Uninstall test business templates before the test\n
+            <value> <string>"""Uninstall business template"""\n
+# Uninstall test business templates before the test\n
 bt_list = context.portal_templates.getInstalledBusinessTemplatesList()\n
 for bt in bt_list:\n
   if bt.getTitle().startswith(\'test_\'):\n
@@ -87,18 +76,6 @@ return \'Reset Successfully.\'\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -157,6 +134,10 @@ return \'Reset Successfully.\'\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>BTZuite_reset</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Reset conditions of BTZuite</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

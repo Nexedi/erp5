@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -43,18 +37,12 @@
             </value>
         </item>
         <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>action</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Form used for Selenium tests</string> </value>
         </item>
         <item>
             <key> <string>edit_order</string> </key>

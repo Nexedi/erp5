@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -65,23 +53,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.getId()\n
+            <value> <string>"""Only returns context id"""\n
+return context.getId()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -134,6 +111,10 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>FooModule_statId</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get stat Id</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

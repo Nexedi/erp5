@@ -156,6 +156,10 @@ return """<html>\n
             <value> <string>ListBoxZuite_getSelectionCheckedUidsAsHtml</string> </value>
         </item>
         <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get Checked Uids as html</string> </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

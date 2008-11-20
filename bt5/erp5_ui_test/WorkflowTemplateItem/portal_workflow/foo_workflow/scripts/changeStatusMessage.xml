@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -65,7 +53,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>document = state_change[\'object\']\n
+            <value> <string>"""\n
+This will be used for Selenium test, set a particular message\n
+to portal_status_message variable\n
+"""\n
+\n
+\n
+document = state_change[\'object\']\n
 request = document.REQUEST\n
 \n
 from Products.ERP5Type.Message import translateString\n
@@ -80,14 +74,8 @@ request.set(\'portal_status_message\', translateString(\'Status Message Changed.
             </value>
         </item>
         <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>state_change, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -114,6 +102,7 @@ request.set(\'portal_status_message\', translateString(\'Status Message Changed.
                         <value>
                           <tuple>
                             <string>state_change</string>
+                            <string>kw</string>
                             <string>_getitem_</string>
                             <string>document</string>
                             <string>_getattr_</string>
@@ -137,6 +126,10 @@ request.set(\'portal_status_message\', translateString(\'Status Message Changed.
         <item>
             <key> <string>id</string> </key>
             <value> <string>changeStatusMessage</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Change the status message</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

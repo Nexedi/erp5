@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -87,18 +75,6 @@ return \'Set Preference Successfully.\'\n
             </value>
         </item>
         <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>working_copy_list</string> </value>
         </item>
@@ -150,6 +126,10 @@ return \'Set Preference Successfully.\'\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>BTZuite_setPreference</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Set Preference</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

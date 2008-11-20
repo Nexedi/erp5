@@ -10,21 +10,9 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -33,7 +21,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Skin Folder for User Interface tests</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -25,7 +25,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Used to select some Bar objects from Foo</string> </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
