@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
 from Products.ERP5Type import Permissions
+from AccessorMethodDocumentationHelper import getDefinitionString
 
 class ScriptPythonDocumentationHelper(DocumentationHelper):
   """
@@ -88,5 +89,12 @@ class ScriptPythonDocumentationHelper(DocumentationHelper):
     mime_type = 'text/html'
     source_html = portal_transforms.convertTo(mime_type, source_code, mimetype = src_mimetype)
     return source_html.getData()
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getDefinition' )
+  def getDefinition(self):
+    """
+    Returns the definition of the script with the name of the script and arguments
+    """
+    return getDefinitionString(self.getDocumentedObject())
 
 InitializeClass(ScriptPythonDocumentationHelper)

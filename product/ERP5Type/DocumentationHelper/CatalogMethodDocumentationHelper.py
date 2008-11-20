@@ -29,10 +29,10 @@
 from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
-from DocumentationHelper import DocumentationHelper
+from ZSQLMethodDocumentationHelper import ZSQLMethodDocumentationHelper
 from Products.ERP5Type import Permissions
 
-class CatalogMethodDocumentationHelper(DocumentationHelper):
+class CatalogMethodDocumentationHelper(ZSQLMethodDocumentationHelper):
   """
     Provides documentation about a catalog method
   """
@@ -62,28 +62,6 @@ class CatalogMethodDocumentationHelper(DocumentationHelper):
     Returns the title of the documentation helper
     """
     return getattr(self.getDocumentedObject(), 'title', '')
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSource' )
-  def getSource(self):
-    """
-    Returns the source code the catalog method
-    """
-    from zLOG import LOG, INFO
-    source_code = getattr(self.getDocumentedObject(), 'src', '')
-    portal_transforms = getattr(self, 'portal_transforms', None)
-    if portal_transforms is not None:
-      REQUEST = getattr(self, 'REQUEST', None)
-      if REQUEST is not None:
-        if REQUEST.get('portal_skin', 'View' ) != 'View':
-          return source_code
-    else:
-      LOG('DCWorkflowScriptDocumentationHelper', INFO,
-          'Transformation Tool is not installed. No convertion of python script to html')
-      return source_code
-    src_mimetype='text/plain'
-    mime_type = 'text/html'
-    source_html = portal_transforms.convertTo(mime_type, source_code, mimetype = src_mimetype)
-    return source_html.getData()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getConnectionId' )
   def getConnectionId(self):

@@ -46,6 +46,11 @@ def getDefinitionString(obj=None):
       fc.append('*args')
     elif fc_var_names[i] == 'kw':
       fc.append('**kw')
+    elif fc_var_names[i].startswith('_') or \
+        fc_var_names[i].startswith('Products'):
+      # In case of python scripts, we have many things
+      # that we do not want to display
+      break
     else:
       fc.append(fc_var_names[i])
   fd = obj.func_defaults
