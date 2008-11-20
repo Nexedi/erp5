@@ -367,9 +367,11 @@ class ListBoxWidget(Widget.Widget):
           Render a ListBox in read-only.
         """
         if REQUEST is None: REQUEST=get_request()
-        return self.render(field, key, value, REQUEST, render_format=render_format)
+        return self.render(field, key, value, REQUEST, render_format=render_format,
+                           render_prefix=render_prefix)
 
-    def render(self, field, key, value, REQUEST, render_format='html', render_prefix=None):
+    def render(self, field, key, value, REQUEST, render_format='html',
+               render_prefix=None):
         """
           This is where most things happen. This method renders a list
           of items
