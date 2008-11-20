@@ -390,12 +390,17 @@ class OOoChartWidget(Widget.Widget):
                        render_prefix=render_prefix)
 
 
-  def render_odf(self, field, key, value, REQUEST, render_format='ooo', render_prefix=None):
+  def render_odf(self, field, key, value, REQUEST, render_format='ooo',
+                 render_prefix=None):
     """
       Render a Chart for ODT Style.
     """
+    if REQUEST is None: REQUEST=get_request()
     form = field.aq_parent
     here = getattr(form, 'aq_parent', REQUEST)
+    REQUEST.set('render_prefix', render_prefix)
+    #needed to update REQUEST
+    self.getArgumentDict(field, REQUEST)
     content = '''
                   <office:include path="%s/ERP5Site_buildChart" xlink:type="simple" xlink:actuate="onLoad" xlink:show="embed"/>
                   ''' % here.getPath()
@@ -419,7 +424,8 @@ class OOoChartWidget(Widget.Widget):
     title = field.get_value('title')
     alt = field.get_value('description') or title
     form = field.aq_parent
-
+    if not render_prefix:
+      render_prefix = REQUEST.get('render_prefix')
     # Find the applicable context
     here = getattr(form, 'aq_parent', REQUEST)
     # Update the render format based on REQUEST parameters
