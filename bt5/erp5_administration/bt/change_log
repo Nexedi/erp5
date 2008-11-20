@@ -1,3 +1,7 @@
+2008-11-20 Kazuhiko
+* Add ERP5Site_dumpSkinProperty
+* Add ERP5Site_dumpWorkflowChain
+
 2008-10-30 Vincent Pelletier
 * Add a ZSQLMethod to recreate roles_and_users from ZODB security cache. Requires ZSQLCatalog r24410 or later.
 
