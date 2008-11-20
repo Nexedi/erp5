@@ -93,7 +93,7 @@ string:${portal_url}/accounting_module/AccountingTransactionModule_viewGroupingF
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:portal.restrictedTraverse(\'accounting_module\', None) is not None</string> </value>
+            <value> <string>python:portal.Base_checkPermission(\'accounting_module\', \'View\')</string> </value>
         </item>
       </dictionary>
     </pickle>
