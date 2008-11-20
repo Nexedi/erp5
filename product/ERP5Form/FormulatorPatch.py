@@ -128,8 +128,10 @@ def Field_get_user_input_value(self, key, REQUEST):
   """
   return REQUEST.form[key]
 
-def Field_render_odf(self, field=None, key=None, value=None, REQUEST=None, render_format='ooo'):
-  return self.widget.render_odf(self, key, value, REQUEST, render_format)
+def Field_render_odf(self, field=None, key=None, value=None, REQUEST=None,
+                     render_format='ooo', render_prefix=None):
+  return self.widget.render_odf(self, key, value, REQUEST, render_format,
+                                render_prefix)
 
 Field.generate_field_key = Field_generate_field_key
 Field.render = Field_render
