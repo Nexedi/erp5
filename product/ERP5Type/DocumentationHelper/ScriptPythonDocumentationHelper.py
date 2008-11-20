@@ -64,6 +64,13 @@ class ScriptPythonDocumentationHelper(DocumentationHelper):
     """
     return getattr(self.getDocumentedObject(), "title", '')
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getParams' )
+  def getParams(self):
+    """
+    Returns the title of the documentation helper
+    """
+    return getattr(self.getDocumentedObject(), "_params", '')
+
   security.declareProtected( Permissions.AccessContentsInformation, 'getSourceCode' )
   def getSourceCode(self):
     """
@@ -95,6 +102,6 @@ class ScriptPythonDocumentationHelper(DocumentationHelper):
     """
     Returns the definition of the script with the name of the script and arguments
     """
-    return getDefinitionString(self.getDocumentedObject())
+    return "%s(%s)" % (self.getId(), self.getParams())
 
 InitializeClass(ScriptPythonDocumentationHelper)
