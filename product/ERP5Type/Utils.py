@@ -51,7 +51,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type import Constraint
 
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
-from zLOG import LOG, BLATHER, PROBLEM
+from zLOG import LOG, BLATHER, PROBLEM, WARNING
 
 
 #####################################################
@@ -457,6 +457,9 @@ def writeLocalPropertySheet(class_id, text, create=1, instance_home=None):
   if instance_home is None:
     instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "PropertySheet")
+  if not os.path.exists(path):
+    os.mkdir(path)
+    LOG('ERP5Type', WARNING, 'Created missing but required directory: %s' %path)  
   path = os.path.join(path, "%s.py" % class_id)
   if create:
     if os.path.exists(path):
@@ -638,6 +641,9 @@ def writeLocalConstraint(class_id, text, create=1, instance_home=None):
   if instance_home is None:
     instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Constraint")
+  if not os.path.exists(path):
+    os.mkdir(path)
+    LOG('ERP5Type', WARNING, 'Created missing but required directory: %s' %path)
   path = os.path.join(path, "%s.py" % class_id)
   if create:
     if os.path.exists(path):
