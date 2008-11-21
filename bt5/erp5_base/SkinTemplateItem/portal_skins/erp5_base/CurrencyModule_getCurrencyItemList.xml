@@ -60,15 +60,17 @@ def getCurrencyItemList(include_empty=1, portal_path=""):\n
   result = []\n
   if include_empty :\n
     result = [[\'\', \'\'],]\n
-  currency_module = getattr(portal, \'currency_module\',\n
-                        getattr(portal, \'currency\', None))\n
+  currency_module = portal.restrictedTraverse(\n
+                             \'currency_module\', \n
+                             portal.restrictedTraverse(\'currency\', None))\n
 \n
-  for currency in LazyFilter(currency_module.contentValues(), skip=\'View\'):\n
-    if not skip_invalidated or \\\n
-          currency.getProperty(\'validation_state\', \'default\') != \'invalidated\':\n
-      # for currency, we intentionaly use reference (EUR) not title (Euros).\n
-      result.append((currency.getReference() or currency.getTitleOrId(),\n
-                     currency.getRelativeUrl()))\n
+  if currency_module is not None:\n
+    for currency in LazyFilter(currency_module.contentValues(), skip=\'View\'):\n
+      if not skip_invalidated or \\\n
+            currency.getProperty(\'validation_state\', \'default\') != \'invalidated\':\n
+        # for currency, we intentionaly use reference (EUR) not title (Euros).\n
+        result.append((currency.getReference() or currency.getTitleOrId(),\n
+                       currency.getRelativeUrl()))\n
   \n
   result.sort(key=lambda x: x[0])\n
   return result\n
