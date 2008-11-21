@@ -42,6 +42,7 @@ class CategoryMembershipState(Constraint):
       'portal_type'   : ('Organisation', ),
       'base_category' : ('source',),
       'validation_state': ('validated', ),
+      'message_different_state': 'Organisation must be validated',
     },
   """
   _message_id_list = ['message_different_state']
