@@ -2462,6 +2462,48 @@ class TestPropertySheet:
         obj._edit(foo_bar="v3")
         self.assertEqual(obj.getFooBar(), "v3")
 
+    def test_AddPermission(self):
+      # test "Add permission" on ERP5 Type Information
+      self.portal.portal_types.manage_addTypeInformation(
+            add_meta_type='ERP5 Type Information',
+            id='Test Add Permission Document',
+            typeinfo_name='ERP5Type: Document (ERP5 Document)')
+
+      type_info = self.portal.portal_types.getTypeInfo(
+                        'Test Add Permission Document')
+      
+      # allow this type info in Person Module
+      container_type_info = self.portal.portal_types.getTypeInfo('Person Module')
+      container_type_info.allowed_content_types = tuple(
+              container_type_info.allowed_content_types) + (
+              'Test Add Permission Document', )
+
+      # by default this is empty, which implictly means "Add portal content",
+      # the default permission
+      self.assertEqual(type_info.permission, '')
+
+      container = self.portal.person_module
+
+      self.assertTrue(getSecurityManager().getUser().has_permission(
+                      'Add portal content', container))
+      self.assertTrue(type_info in container.allowedContentTypes())
+      container.newContent(portal_type='Test Add Permission Document')
+
+      container.manage_permission('Add portal content', [], 0)
+      self.assertFalse(type_info in container.allowedContentTypes())
+      self.assertRaises(Unauthorized, container.newContent,
+                        portal_type='Test Add Permission Document')
+      
+      type_info.permission = 'Manage portal'
+      container.manage_permission('Manage portal', [], 0)
+      self.assertFalse(type_info in container.allowedContentTypes())
+      self.assertRaises(Unauthorized, container.newContent,
+                        portal_type='Test Add Permission Document')
+
+      container.manage_permission('Manage portal', ['Anonymous'], 0)
+      self.assertTrue(type_info in container.allowedContentTypes())
+      container.newContent(portal_type='Test Add Permission Document')
+
 
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests
