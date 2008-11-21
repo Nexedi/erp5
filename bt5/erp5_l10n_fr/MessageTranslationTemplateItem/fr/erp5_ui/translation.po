@@ -5566,7 +5566,7 @@ msgstr "Installer le business template"
 #: Template Tool
 #: portal_skins/erp5_core/TemplateTool_viewInstallRepositoryBusinessTemplateListDialog
 msgid "Install Business Templates from Repositories"
-msgstr "Installer le business template depuis les répertoires"
+msgstr "Installer le business template depuis les dépôts"
 
 #: portal_skins/erp5_core/BusinessTemplate_viewInstallationDialog/listbox
 #: portal_skins/erp5_core/TemplateTool_viewMultiInstallationDialog/listbox
@@ -12850,7 +12850,7 @@ msgstr "Établir le lien"
 #: Template Tool
 #: portal_skins/erp5_core/TemplateTool_viewUpdateRepositoryBusinessTemplateListDialog
 msgid "Update Repository Information"
-msgstr "Mettre à jour les informations sur le répertoire"
+msgstr "Mettre à jour les informations des dépôts"
 
 #: erp5_core/BusinessTemplate_viewDetail/my_template_update_tool [Glossary
 #: term 3622]
@@ -12879,7 +12879,7 @@ msgstr "Mis à jour"
 
 #: portal_skins/erp5_core/TemplateTool_viewUpgradeRepositoryBusinessTemplateListDialog/listbox
 msgid "Updated Business Templates"
-msgstr "Modèles mis à jour"
+msgstr "Business Templates mis à jour"
 
 #: Template Tool
 #: portal_skins/erp5_core/TemplateTool_viewUpgradeRepositoryBusinessTemplateListDialog
@@ -13368,9 +13368,6 @@ msgstr "Historique des états"
 msgid "Workflow Item Path"
 msgstr "Chemin d'un objet de workflow"
 
-msgid "Workflow Modification in Progress"
-msgstr "Changement d'état en cours"
-
 #: Event Module Internal Packing List Returned Sale Order Task Report
 #: portal_skins/erp5_core/Folder_viewWorkflowReport
 msgid "Workflow Report"
@@ -13382,7 +13379,7 @@ msgstr "Dialogue de rapport du workflow"
 
 #: portal_skins/erp5_core/Folder_modifyWorkflowStatus
 msgid "Workflow modification in progress."
-msgstr "Modification du workflow en cours"
+msgstr "Changement d'état en cours"
 
 #: portal_skins/erp5_xhtml_style/context_box_render
 msgid "Workflows"
