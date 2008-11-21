@@ -62,7 +62,7 @@ from Products.ERP5.Document.Document import ConversionError
 import Products.ERP5Type.Document
 
 try:
-  from libxml2 import parseDoc, createOutputBuffer
+  from libxml2 import parseDoc
 except ImportError:
   LOG('OOoUtils', INFO, "Can't import libxml2.parseDoc")
   class parseDoc:
