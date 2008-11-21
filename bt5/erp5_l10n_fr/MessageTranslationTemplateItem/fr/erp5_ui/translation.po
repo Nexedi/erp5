@@ -8556,7 +8556,7 @@ msgid "Quantity axes"
 msgstr "Quantité variable selon"
 
 msgid "Quantity must be defined in lines"
-msgstr "Une quantité doit être définie dans la ligne de commande"
+msgstr "La quantité doit être définie sur les lignes"
 
 msgid "Quantity ratio"
 msgstr "Coefficients"
