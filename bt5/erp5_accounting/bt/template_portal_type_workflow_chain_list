@@ -9,6 +9,7 @@ Accounting Transaction | accounting_workflow
 Accounting Transaction | edit_workflow
 Balance Transaction | accounting_workflow
 Balance Transaction | edit_workflow
+Cash Register | validation_workflow
 Invoice Rule | edit_workflow
 Invoice Rule | rule_validation_workflow
 Payment Rule | edit_workflow
