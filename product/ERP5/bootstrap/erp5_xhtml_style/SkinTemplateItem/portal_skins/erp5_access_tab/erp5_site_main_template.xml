@@ -65,7 +65,7 @@
               </div>\n
                 <p class="clear" />\n
               </div>\n
-              <tal:block tal:condition="python: getattr(here,\'portal_gadgets\', None) is not None">\n
+              <tal:block tal:condition="python: here.getPortalObject().restrictedTraverse(\'portal_gadgets\', None) is not None">\n
                   <link href="erp5_knowledge_box_top_newpage.css" rel="stylesheet" type="text/css" />\n
                   <tal:block tal:condition="exists:here/ERP5Site_viewHomeAreaRenderer"\n
                             tal:replace="structure here/ERP5Site_viewHomeAreaRenderer" />\n
