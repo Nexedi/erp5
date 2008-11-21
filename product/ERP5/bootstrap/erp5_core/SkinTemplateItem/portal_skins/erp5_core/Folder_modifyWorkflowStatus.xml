@@ -55,6 +55,9 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Message import translateString\n
 \n
+if listbox is None:\n
+  listbox = []\n
+\n
 request = context.REQUEST\n
 portal = context.getPortalObject()\n
 \n
@@ -91,7 +94,7 @@ return request.RESPONSE.redirect( \'%s/%s?portal_status_message=%s\' % (\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox, comment=\'\', form_id=\'view\', **kw</string> </value>
+            <value> <string>listbox=None, comment=\'\', form_id=\'view\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -123,6 +126,7 @@ return request.RESPONSE.redirect( \'%s/%s?portal_status_message=%s\' % (\n
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
+                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
@@ -149,6 +153,7 @@ return request.RESPONSE.redirect( \'%s/%s?portal_status_message=%s\' % (\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <string></string>
                 <string>view</string>
               </tuple>
