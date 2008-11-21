@@ -144,7 +144,11 @@ def getWorkflowActionDocumentList(self, **kw):
   """This returns the list of all documents on which we will pass a workflow
   transition.
   """
-  listbox = kw['listbox']
+  listbox = kw.get('listbox', None)
+  if listbox is None:
+    # if the listbox is empty
+    return []
+
   selection_name = kw['module_selection_name']
   document_list = []
   portal = self.getPortalObject()
