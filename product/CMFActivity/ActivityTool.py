@@ -428,6 +428,10 @@ class ActiveWrapper:
                   self.__dict__['__active_process'],
                   self.__dict__['__kw'], id)
 
+  def __repr__(self):
+    return '<%s at 0x%x to %r>' % (self.__class__.__name__, id(self),
+                                   self.__dict__['__passive_self'])
+
 # Set to False when shutting down. Access outside of process_shutdown must
 # be done under the protection of is_running_lock lock.
 is_running = True
