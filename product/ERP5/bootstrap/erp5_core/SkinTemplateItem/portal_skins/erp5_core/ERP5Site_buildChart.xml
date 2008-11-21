@@ -75,24 +75,28 @@
             office:version="1.0"\n
             >\n
 \n
-  <tal:block tal:define="global form python: getattr(here, request.chart_form_id) ;\n
-              global listbox python: getattr(form, request.chart_field_id);\n
+  <tal:block tal:define="chart_form_id chart_form_id | request/chart_form_id;\n
+             chart_field_id chart_field_id | request/chart_field_id;\n
+              global form python: getattr(here, chart_form_id);\n
+              global listbox python: getattr(form, chart_field_id);\n
+              render_prefix render_prefix | request/render_prefix;\n
               global line_list python: listbox.get_value(\'default\', context=here,\n
                                         render_format=\'list\', REQUEST=request,\n
-                                        render_prefix=request.get(\'render_prefix\'));\n
+                                        render_prefix=render_prefix);\n
               global line_count python:len(line_list);\n
-              user_column_id_list request/user_column_id_list;\n
+              user_column_id_list user_column_id_list | request/user_column_id_list;\n
               global column_list python:user_column_id_list or line_list[0].getColumnItemList();\n
               global column_count python:len(column_list);\n
-              global chart_type request/chart_type;\n
-              global series_source request/series_source;\n
-              global user_column_id_list request/user_column_id_list;\n
+              global chart_type chart_type | request/chart_type;\n
+              global series_source series_source | request/series_source;\n
+              global user_column_id_list user_column_id_list | request/user_column_id_list;\n
               global user_column_id_list_len python: len(user_column_id_list);\n
-              global colour_column_dict python: dict(request.colour_column_list);\n
-              global user_data_title request/user_data_title;\n
-              global grid_graph request/grid_graph;\n
-              global data_label_text request/data_label_text;\n
-              global position_legend request/position_legend;\n
+              colour_column_list colour_column_list | request/colour_column_list;\n
+              global colour_column_dict python: dict(colour_column_list);\n
+              global user_data_title user_data_title | request/user_data_title;\n
+              global grid_graph grid_graph | request/grid_graph;\n
+              global data_label_text data_label_text | request/data_label_text;\n
+              global position_legend position_legend | request/position_legend;\n
               global chart_repeated python:series_source == \'columns\'\n
               and line_count or column_count;\n
               global style_prefix string:ooo-chart-style-;\n
@@ -134,27 +138,27 @@
 \n
     <style:style style:name="chart_picture" style:family="chart">\n
       <style:chart-properties chart:mean-value="false"\n
-                              chart:error-margin="0"\n
-                              chart:error-lower-limit="0"\n
-                              chart:error-upper-limit="0"\n
-                              chart:error-percentage="0"\n
-                              chart:error-category="none"\n
-                              chart:stock-with-volume="false"\n
-                              chart:japanese-candle-stick="false"\n
-                    tal:attributes="chart:three-dimensional request/chart_three_dimensional | string:false;\n
-                    chart:deep request/deep ;\n
-                    chart:stacked request/chart_stacked | string:false;\n
-                    chart:vertical request/chart_position | string:false;\n
-                    chart:percentage request/chart_percentage | string:false;\n
-                    chart:symbol-type request/symbol_type ;\n
+                    chart:error-margin="0"\n
+                    chart:error-lower-limit="0"\n
+                    chart:error-upper-limit="0"\n
+                    chart:error-percentage="0"\n
+                    chart:error-category="none"\n
+                    chart:stock-with-volume="false"\n
+                    chart:japanese-candle-stick="false"\n
+                    tal:attributes="chart:three-dimensional chart_three_dimensional |  request/chart_three_dimensional | string:false;\n
+                    chart:deep deep | request/deep;\n
+                    chart:stacked chart_stacked | request/chart_stacked | string:false;\n
+                    chart:vertical chart_position | request/chart_position | string:false;\n
+                    chart:percentage chart_percentage | request/chart_percentage | string:false;\n
+                    chart:symbol-type symbol_type | request/symbol_type;\n
                     chart:series-source series_source;\n
-                    chart:connect-bars request/connect_bars;\n
-                    chart:data-label-number request/data_label_number ;\n
-                    chart:data-label-symbol request/data_label_symbol | string:false;\n
-                    chart:data-label-text data_label_text | string:false ;\n
-                    chart:lines-used request/lines_used | string:0;\n
-                    chart:regression-type request/regression_type ;\n
-                    chart:interpolation request/interpolation"/>\n
+                    chart:connect-bars connect_bars | request/connect_bars;\n
+                    chart:data-label-number data_label_number | request/data_label_number;\n
+                    chart:data-label-symbol data_label_symbol | request/data_label_symbol | string:false;\n
+                    chart:data-label-text data_label_text | string:false;\n
+                    chart:lines-used lines_used | request/lines_used | string:0;\n
+                    chart:regression-type regression_type | request/regression_type;\n
+                    chart:interpolation interpolation | request/interpolation"/>\n
     </style:style>\n
     <tal:block tal:repeat="column_item column_list">\n
       <tal:block tal:define="column_id python:column_item[0];\n
@@ -200,7 +204,7 @@
       <tal:block metal:use-macro="here/OOoChart_macroLibrary/macros/text_style_properties" />\n
     </style:style>\n
     <style:style style:family="chart" style:name="sector_pie">\n
-      <style:chart-properties tal:attributes="chart:pie-offset python:request.sector_pie_offset;"/>\n
+      <style:chart-properties tal:attributes="chart:pie-offset sector_pie_offset | request/sector_pie_offset"/>\n
     </style:style>\n
 \n
     <style:style style:family="chart" style:name="other_style">\n
@@ -228,14 +232,14 @@
                    svg:height="30cm"\n
                    chart:style-name="chart_frame"\n
                    tal:attributes="chart:class chart_type">\n
-        <tal:block tal:define="bool request/chart_title_or_no"\n
+        <tal:block tal:define="bool chart_title_or_no | request/chart_title_or_no"\n
                    tal:condition="python:bool==\'true\'">\n
           <chart:title chart:style-name="chart_title">\n
-            <text:p tal:content="request/chart_title" />\n
+            <text:p tal:content="chart_title | request/chart_title" />\n
           </chart:title>\n
         </tal:block>\n
         <!-- Legend Of The Graph-->\n
-        <chart:legend tal:condition="request/chart_legend | nothing"\n
+        <chart:legend tal:condition="chart_legend | request/chart_legend | nothing"\n
                       tal:attributes="chart:legend-position position_legend"\n
                       chart:style-name="chart_legend" />\n
         <tal:block tal:define="column_item_list python:column_list[1:]">\n
@@ -254,7 +258,7 @@
                             chart:name="primary-y"\n
                             chart:style-name="chart_y_axis">\n
                   <chart:grid tal:condition="python:grid_graph == \'true\'"\n
-                              tal:attributes="chart:class request/grid_size | string:major"/>\n
+                              tal:attributes="chart:class grid_size | request/grid_size | string:major"/>\n
                 </chart:axis>\n
               </tal:block>\n
               <tal:block metal:fill-slot="chart-wall">\n
