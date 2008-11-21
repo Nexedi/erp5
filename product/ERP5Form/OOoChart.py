@@ -400,10 +400,15 @@ class OOoChartWidget(Widget.Widget):
     here = getattr(form, 'aq_parent', REQUEST)
     REQUEST.set('render_prefix', render_prefix)
     #needed to update REQUEST
-    self.getArgumentDict(field, REQUEST)
-    content = '''
-                  <office:include path="%s/ERP5Site_buildChart" xlink:type="simple" xlink:actuate="onLoad" xlink:show="embed"/>
-                  ''' % here.getPath()
+    argument_dict = self.getArgumentDict(field, REQUEST)
+    from xml.marshal.generic import dumps
+    dump_args = dumps(argument_dict)
+    #remove xml declaration (first processing node)
+    dump_args = dump_args[dump_args.index('?>')+2:]
+    content = '''<office:include path="%s/ERP5Site_buildChart"
+                                 xlink:type="simple" xlink:actuate="onLoad"
+                                 xlink:show="embed">%s</office:include>
+                                 ''' % (here.getPath(), dump_args)
     return content
 
 
