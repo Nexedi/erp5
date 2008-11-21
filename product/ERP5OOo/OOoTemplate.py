@@ -61,6 +61,14 @@ except ImportError:
 from Products.ERP5.Document.Document import ConversionError
 import Products.ERP5Type.Document
 
+try:
+  from libxml2 import parseDoc, createOutputBuffer
+except ImportError:
+  LOG('OOoUtils', INFO, "Can't import libxml2.parseDoc")
+  class parseDoc:
+    def __init__(self, *args, **kw):
+      raise ImportError, "Sorry, it was not possible to import libxml2 library, python2.4-libxml2 is not installed"
+
 # Constructors
 manage_addOOoTemplate = DTMLFile("dtml/OOoTemplate_add", globals())
 
@@ -241,7 +249,7 @@ class OOoTemplate(ZopePageTemplate):
   def _resolvePath(self, path):
     return self.getPortalObject().unrestrictedTraverse(path)
 
-  def renderIncludes(self, here, text, extra_context, sub_document=None):
+  def renderIncludes(self, here, text, extra_context, request, sub_document=None):
     attached_files_dict = {}
     arguments_re = re.compile('''(\S+?)\s*=\s*('|")(.*?)\\2\s*''',re.DOTALL)
     def getLengthInfos( opts_dict, opts_names ):
@@ -257,21 +265,18 @@ class OOoTemplate(ZopePageTemplate):
         ret.append(val)
       return ret
 
-    def replaceIncludes(match):
-      # Build a dictionary with tag parameters
-      options_dict = dict((x[0], x[2]) for x in arguments_re.findall(match.group(1)))
+    def replaceIncludes(path):
       # Find the page template based on the path and remove path from dict
-      document = self._resolvePath(options_dict['path'].encode())
+      document = self._resolvePath(path)
       document_text = ZopePageTemplate.pt_render(document,
                                                  extra_context=extra_context)
-      del options_dict['path']
 
       # Find the type of the embedded document
       document_type = document.content_type
 
       # Prepare a subdirectory to store embedded objects
       actual_idx = self.document_counter.next()
-      dir_name = '%s%d'%(self._OLE_directory_prefix,actual_idx)
+      dir_name = '%s%d'%(self._OLE_directory_prefix, actual_idx)
 
       if sub_document: # sub-document means sub-directory
         dir_name = sub_document + '/' + dir_name
@@ -293,50 +298,18 @@ class OOoTemplate(ZopePageTemplate):
       # Start recursion if necessary
       sub_attached_files_dict = {}
       if 'office:include' in document_text: # small optimisation to avoid recursion if possible
-        (document_text, sub_attached_files_dict ) = self.renderIncludes(document_text, dir_name, extra_context)
-
-      # Build settings document if necessary
-      settings_text = None
-      if 0:
-        w = 10
-        h = 10
-        # View*    = writer
-        # Visible* = calc
-        settings_text = """<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE office:document-settings PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "office.dtd">
-<office:document-settings xmlns:office="http://openoffice.org/2000/office"
-xmlns:xlink="http://www.w3.org/1999/xlink"
-xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
-<office:settings>
-<config:config-item-set config:name="view-settings">
-<config:config-item config:name="ViewAreaTop" config:type="int">0</config:config-item>
-<config:config-item config:name="ViewAreaLeft" config:type="int">0</config:config-item>
-<config:config-item config:name="ViewAreaWidth" config:type="int">%(w)d</config:config-item>
-<config:config-item config:name="ViewAreaHeight" config:type="int">%(h)d</config:config-item>
-<config:config-item config:name="VisibleAreaTop" config:type="int">0</config:config-item>
-<config:config-item config:name="VisibleAreaLeft" config:type="int">0</config:config-item>
-<config:config-item config:name="VisibleAreaWidth" config:type="int">%(w)d</config:config-item>
-<config:config-item config:name="VisibleAreaHeight" config:type="int">%(h)d</config:config-item>
-</config:config-item-set>
-</office:settings>
-</office:document-settings>""" % dict( w=int(w*1000) , h=int(h*1000) ) # convert from 10^-2 (centimeters) to 10^-5
+        (document_text, sub_attached_files_dict ) = self.renderIncludes(document_text, dir_name, extra_context, request)
 
       # Attach content, style and settings if any
       attached_files_dict[dir_name] = dict(document=document_text,
                                            doc_type=document_type,
                                            stylesheet=stylesheet)
-      if settings_text:
-        attached_files_dict[dir_name + '/settings.xml'] = dict(document=settings_text,
-                                                               doc_type='text/xml')
+
       attached_files_dict.update(sub_attached_files_dict)
 
       # Build the new tag
-      parameter_list = []
-      for k, v in options_dict.items():
-        parameter_list.append('%s="%s"' % (k, v))
-      new_tag = '<draw:object xlink:href="./%s" %s/>' %\
-                 (dir_name.split('/')[-1], ' '.join(parameter_list))
-      return new_tag
+      new_path = './%s' % dir_name.split('/')[-1]
+      return new_path
 
     def replaceIncludesImg(match):
       options_dict = { 'text:anchor-type': 'paragraph' }
@@ -428,18 +401,32 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
         replacement = '<text:p text:style-name="Standard">'+replacement+'</text:p>'
       return replacement
 
-    # NOTE: (?s) at the end is for including '\n' when matching '.'
-    # It's an equivalent to DOTALL option passing (but sub can't get options parameter)
+    xml_doc = parseDoc(text)
+    draw_ns = xml_doc.getRootElement().searchNs(xml_doc, 'draw')
+    xlink_ns = xml_doc.getRootElement().searchNs(xml_doc, 'xlink')
+    for office_include in xml_doc.xpathEval('//*[name() = "office:include"]'):
+      marshal_list = office_include.xpathEval('./marshal')
+      if marshal_list:
+        from xml.marshal.generic import loads
+        arg_dict = loads(marshal_list[0].serialize('utf-8', 0))
+        extra_context.update(arg_dict)
+        request.other.update(arg_dict)
+      attr_path_list = office_include.xpathEval('./@path')
+      path = attr_path_list[0].content
+      new_path = replaceIncludes(path)
+      draw_object = xml_doc.newChild(draw_ns, 'object', None)
+      draw_object.setNsProp(xlink_ns, 'href', new_path)
+      draw_object.copyPropList(office_include)
+      office_include.replaceNode(draw_object)
+    text = xml_doc.serialize('utf-8', 0)
+    xml_doc.freeDoc()
     text = re.sub('<\s*office:include_img\s+(.*?)\s*/\s*>(?s)', replaceIncludesImg, text)
-    text = re.sub('<\s*office:include\s+(.*?)\s*/\s*>(?s)', replaceIncludes, text)
 
     return (text, attached_files_dict)
   # Proxy method to PageTemplate
   def pt_render(self, source=0, extra_context={}):
     # Get request
-    request = extra_context.get('REQUEST', None)
-    if request is None:
-      request = self.REQUEST
+    request = extra_context.get('REQUEST', self.REQUEST)
     # Get parent object (the one to render this template on)
     here = getattr(self, 'aq_parent', None)
     if here is None:
@@ -467,7 +454,8 @@ xmlns:config="http://openoffice.org/2001/config" office:version="1.0">
       doc_xml = doc_xml.encode('utf-8')
 
     # Replace the includes
-    (doc_xml,attachments_dict) = self.renderIncludes(here, doc_xml, extra_context)
+    (doc_xml,attachments_dict) = self.renderIncludes(here, doc_xml,
+                                                     extra_context, request)
 
     try:
       default_styles_text = ooo_builder.extract('styles.xml')
