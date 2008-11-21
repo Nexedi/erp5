@@ -90,7 +90,8 @@
       </text:sequence-decls>\n
                ***** ########### listbox: must define the field listbox before calling this macro ! ########### *****\n
       <tal:block metal:define-macro="listbox">\n
-        <tal:block tal:define="listboxline_list python:listbox.get_value(\'default\', render_format=\'list\', REQUEST=request, render_prefix=render_prefix);\n
+        <tal:block tal:define="render_prefix render_prefix | nothing;\n
+                 listboxline_list python:listbox.get_value(\'default\', render_format=\'list\', REQUEST=request, render_prefix=render_prefix);\n
                  selection_name python:listbox.get_value(\'selection_name\', REQUEST=request);\n
                  editable_columns python:listbox.get_value(\'editable_columns\', REQUEST=request);\n
                  untranslatable_columns_dict python:dict([(column[0],1) for column in listbox.get_value(\'untranslatable_columns\', REQUEST=request)]);\n
