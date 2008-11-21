@@ -69,17 +69,21 @@ portal.portal_skins.changeSkin(skin_name)\n
 \n
 # for unicode encoding\n
 request.RESPONSE.setHeader("Content-Type", "application/xml; charset=utf-8")\n
-\n
-report_section.pushReport(portal)\n
+render_prefix = \'x%s\' % report_section_idx\n
+report_section.pushReport(portal, render_prefix=render_prefix)\n
 \n
 if report_section.getFormId():\n
   form = getattr(context, report_section.getFormId())\n
 else:\n
   form = None\n
+#context.log(request.text())\n
+selection_name = request.get(\'prefixed_selection_name\')\n
 data = context.render_report_section.pt_render(\n
-              extra_context=dict(form=form, report_section=report_section))\n
+              extra_context=dict(form=form,\n
+                                 report_section=report_section,\n
+                                 render_prefix=render_prefix))\n
 \n
-report_section.popReport(portal)\n
+report_section.popReport(portal, render_prefix=render_prefix)\n
 \n
 return report_section_idx, data\n
 </string> </value>
@@ -129,9 +133,11 @@ return report_section_idx, data\n
                             <string>context</string>
                             <string>portal</string>
                             <string>_write_</string>
+                            <string>render_prefix</string>
                             <string>getattr</string>
                             <string>form</string>
                             <string>None</string>
+                            <string>selection_name</string>
                             <string>dict</string>
                             <string>data</string>
                           </tuple>
