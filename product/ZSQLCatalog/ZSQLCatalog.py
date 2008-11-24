@@ -805,12 +805,12 @@ class ZCatalog(Folder, Persistent, Implicit):
         for obj in d['obj']:
           try:
             wrap_obj = self.wrapObject(obj, sql_catalog_id=catalog_id)
+            wrapped_object_list_2.append(wrap_obj)
           except ConflictError:
             raise
           except:
             LOG('WARNING ZSQLCatalog', 0, 'wrapObject failed on the object %r' % (obj,), error=sys.exc_info())
             failed_object_list.append(obj)
-          wrapped_object_list_2.append(wrap_obj)
 
         # hot_reindexing is True when creating an object during a hot reindex, in this case, we don't want
         # to reindex it in destination catalog, it will be recorded an play only once
