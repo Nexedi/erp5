@@ -2371,7 +2371,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
     xml = parse(file)
     xml_type_roles_list = xml.getElementsByTagName('role')
     for role in xml_type_roles_list:
-      id = role.getAttribute('id')
+      id = role.getAttribute('id').encode('utf_8', 'backslashreplace')
       type_role_property_dict = {'id':id}
       # uniq
       property_list = role.getElementsByTagName('property')

@@ -4970,6 +4970,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(('group/g1','function/f1'), role.getCategory())
     self.assertEquals(('group','site'), role.getBaseCategory())
     self.assertEquals('Base Category Script', role.getBaseCategoryScript())
+    # role name is a string, not unicode
+    self.assertTrue(isinstance(role.id, str))
 
   def test_36_CheckPortalTypeRoles(self, quiet=quiet, run=run_all_test):
     if not run: return
