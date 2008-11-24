@@ -53,7 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request=context.REQUEST\n
+            <value> <string encoding="cdata"><![CDATA[
+
+request=context.REQUEST\n
 portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
 \n
@@ -65,11 +67,20 @@ if id_list == None:\n
 if not same_type(id_list, []):\n
   id_list=[id_list,]\n
 \n
-context.manage_delObjects(id_list)\n
+if len(id_list) >1:\n
+  message = N_("Please+select+only+one+item+to+delete.")\n
+  qs = \'?portal_status_message=%s\' % message\n
+  return request.RESPONSE.redirect( context.absolute_url() + \'/\' + form_id + qs )\n
+\n
+object = getattr(context, id_list[0], None)\n
+portal.portal_workflow.doActionFor(object, \'delete_action\')\n
+#context.manage_delObjects(id_list)\n
 message = N_(\'Attachment ${file_name} has been deleted\', mapping = { \'file_name\': \'"%s"\' % file_name})\n
 qs = \'?portal_status_message=%s\' % message\n
 return request.RESPONSE.redirect( context.absolute_url() + \'/\' + form_id + qs )\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -123,6 +134,10 @@ return request.RESPONSE.redirect( context.absolute_url() + \'/\' + form_id + qs 
                             <string>message</string>
                             <string>qs</string>
                             <string>same_type</string>
+                            <string>len</string>
+                            <string>getattr</string>
+                            <string>_getitem_</string>
+                            <string>object</string>
                           </tuple>
                         </value>
                     </item>

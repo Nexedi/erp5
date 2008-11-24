@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>File</type>
+  <workflow>validation_workflow</workflow>
+ </chain>
+</workflow_chain>
