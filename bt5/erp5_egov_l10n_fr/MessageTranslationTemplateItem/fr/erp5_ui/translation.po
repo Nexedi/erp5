@@ -625,10 +625,7 @@ msgid "Track"
 msgstr "Suivre"
 
 msgid "Track Application"
-msgstr "Suivre une demande"
-
-msgid "Track Request"
-msgstr "Suivre un dossier"
+msgstr "Suivi de Dossier"
 
 msgid "Transactions Related To This Account"
 msgstr "Transaction liées à ce compte"
@@ -950,3 +947,9 @@ msgstr "Autres Etats"
 
 msgid "Others reports that can be provided"
 msgstr "Autres états à joindre"
+
+msgid "Login"
+msgstr "Login"
+
+msgid "Declaration TVA Empty"
+msgstr "Déclaration TVA (Vierge)"
