@@ -55,7 +55,7 @@
             <key> <string>_body</string> </key>
             <value> <string>if context.portal_membership.isAnonymousUser():\n
   return (\'Subscription Form\',)\n
-return (\'Declaration TVA\', \'Subscription Form\') #\'Mandate Form\' is not implemented yet\n
+return (\'Declaration TVA\', \'Declaration TVA Empty\' \'Subscription Form\') #\'Mandate Form\' is not implemented yet\n
 </string> </value>
         </item>
         <item>
