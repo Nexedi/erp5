@@ -28,7 +28,7 @@
 
 from types import StringType
 from mimetypes import guess_extension
-from zLOG import LOG
+from zLOG import LOG , INFO
 from zLOG import PROBLEM
 from OFS.Image import File
 from Products.CMFCore.FSPageTemplate import FSPageTemplate
