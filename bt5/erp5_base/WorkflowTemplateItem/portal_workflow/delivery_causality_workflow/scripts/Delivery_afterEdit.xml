@@ -65,7 +65,15 @@ delivery.activate().updateCausalityState()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change,**kw</string> </value>
+            <value> <string>state_change, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
