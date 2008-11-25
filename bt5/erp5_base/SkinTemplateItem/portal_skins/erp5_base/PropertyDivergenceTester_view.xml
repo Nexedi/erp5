@@ -56,7 +56,6 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
-                <string>not_assigned</string>
               </list>
             </value>
         </item>
@@ -83,12 +82,6 @@
                         <string>my_title</string>
                         <string>my_tested_property_list</string>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>not_assigned</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
                 <item>
