@@ -89,6 +89,8 @@
                       <list>
                         <string>listbox_start_date</string>
                         <string>listbox_stop_date</string>
+                        <string>listbox_period_list_start_date</string>
+                        <string>listbox_period_list_stop_date</string>
                       </list>
                     </value>
                 </item>
