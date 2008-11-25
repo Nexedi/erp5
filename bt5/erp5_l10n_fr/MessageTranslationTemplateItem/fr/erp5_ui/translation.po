@@ -5568,6 +5568,9 @@ msgstr "Installer le business template"
 msgid "Install Business Templates from Repositories"
 msgstr "Installer le business template depuis les dépôts"
 
+msgid "Repositories"
+msgstr "Dépôts"
+
 #: portal_skins/erp5_core/BusinessTemplate_viewInstallationDialog/listbox
 #: portal_skins/erp5_core/TemplateTool_viewMultiInstallationDialog/listbox
 msgid "Installation Choice"
@@ -6079,7 +6082,7 @@ msgstr "Liste des documents"
 
 #: Notification Message portal_skins/erp5_base/Base_viewLocalPermissionList
 msgid "Local Permissions"
-msgstr "Permissions (local)"
+msgstr "Permissions locales"
 
 #: Drawing File Image PDF Presentation Spreadsheet Text Web Page Section Site
 #: portal_skins/erp5_base/Base_viewLocalPermissionList/listbox
@@ -6984,7 +6987,7 @@ msgstr "Ouvert"
 
 #: portal_workflow/account_workflow/transitions/validate_action
 msgid "Open Account"
-msgstr "Compte ouvert"
+msgstr "Ouvrir le compte"
 
 #: portal_workflow/accounting_period_workflow/transitions/start_action
 msgid "Open Accounting Period"
