@@ -12482,12 +12482,6 @@ msgstr "Montant des lignes sélectionnées"
 msgid "Total for class ${account_class}"
 msgstr "Total pour la classe ${account_class}"
 
-msgid "Total price"
-msgstr "Coût Total"
-
-msgid "Total quantity"
-msgstr "Quantité totale"
-
 msgid "Trade"
 msgstr "Négoce"
 
