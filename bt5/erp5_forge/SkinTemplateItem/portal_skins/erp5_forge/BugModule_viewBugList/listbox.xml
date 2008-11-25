@@ -343,6 +343,14 @@
                           <string>Date</string>
                         </tuple>
                         <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                        <tuple>
                           <string>resource_title</string>
                           <string>Type</string>
                         </tuple>
@@ -361,6 +369,34 @@
                         <tuple>
                           <string>translated_simulation_state_title</string>
                           <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_project_title</string>
+                          <string>Handled Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_project_title</string>
+                          <string>Requested Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_decision_title</string>
+                          <string>Supervisor</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_section_title</string>
+                          <string>Client</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_section_title</string>
+                          <string>Supplier</string>
+                        </tuple>
+                        <tuple>
+                          <string>follow_up_title</string>
+                          <string>Follow Up</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Requester</string>
                         </tuple>
                       </list>
                     </value>
@@ -656,6 +692,12 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Bugs</string> </value>
+                </item>
+                <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
