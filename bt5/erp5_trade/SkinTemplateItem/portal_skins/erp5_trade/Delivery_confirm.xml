@@ -55,6 +55,10 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Message import translateString\n
 \n
+if REQUEST is not None:\n
+  from zExceptions import Unauthorized\n
+  raise Unauthorized(script.id)\n
+\n
 packing_list = context\n
  \n
 # Modify state\n
@@ -71,7 +75,7 @@ if packing_list_state == "draft":\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>REQUEST=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -91,18 +95,23 @@ if packing_list_state == "draft":\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>REQUEST</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
+                            <string>None</string>
+                            <string>zExceptions</string>
+                            <string>Unauthorized</string>
+                            <string>_getattr_</string>
+                            <string>script</string>
                             <string>context</string>
                             <string>packing_list</string>
-                            <string>_getattr_</string>
                             <string>packing_list_state</string>
                           </tuple>
                         </value>
@@ -115,7 +124,9 @@ if packing_list_state == "draft":\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
