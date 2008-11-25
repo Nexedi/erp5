@@ -41,6 +41,16 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -120,7 +130,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Local Permissions</string> </value>
+            <value> <string>Local Roles</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

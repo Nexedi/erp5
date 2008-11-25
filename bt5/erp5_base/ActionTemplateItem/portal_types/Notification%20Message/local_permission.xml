@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Local Permissions</string> </value>
+            <value> <string>Local Roles</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
