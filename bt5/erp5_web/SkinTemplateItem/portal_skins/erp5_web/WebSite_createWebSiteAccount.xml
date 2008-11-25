@@ -82,6 +82,8 @@ person_function = kw.get(\'function\', \'\')\n
 person_site = kw.get(\'site\', \'\')\n
 person_role = kw.get(\'role\', \'\')\n
 kw.setdefault(\'reference\', kw[\'default_email_text\'])\n
+if \'password_confirm\' in kw:\n
+  del kw[\'password_confirm\']\n
 \n
 # create Person account\n
 person_module = context.getPortalObject().person_module\n
@@ -175,6 +177,7 @@ return website.Base_redirect(\'view\', \n
                             <string>person_site</string>
                             <string>person_role</string>
                             <string>_getitem_</string>
+                            <string>_write_</string>
                             <string>person_module</string>
                             <string>_apply_</string>
                             <string>person</string>
