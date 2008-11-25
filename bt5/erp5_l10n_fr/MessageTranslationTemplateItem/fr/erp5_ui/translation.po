@@ -374,7 +374,7 @@ msgstr "Lignes de Comptabilité"
 
 #: portal_skins/erp5_accounting/AccountingTransactionModule_viewAccountingTransactionList/listbox
 msgid "Accounting Operation Date"
-msgstr "Date de l'opération"
+msgstr "Date comptable"
 
 #: portal type portal_skins/erp5_accounting/AccountingPeriod_view [Glossary
 #: term 8457]
@@ -4414,7 +4414,7 @@ msgstr "Type de l'événement"
 #: portal_skins/erp5_crm/Ticket_view/listbox
 #: portal_skins/erp5_crm/Ticket_viewFieldLibrary/listbox
 msgid "Events"
-msgstr "Évènements"
+msgstr "Evènements"
 
 #: portal_skins/erp5_access_tab/ERP5Site_renderQuickSearchDialog
 #: portal_skins/erp5_web_widget_library/WebSite_viewSearchRenderer
