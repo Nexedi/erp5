@@ -12473,7 +12473,7 @@ msgstr "Montant"
 #: portal_skins/erp5_trade/SaleOrder_view/listbox
 #: portal_skins/erp5_trade/SalePackingList_viewDetails/listbox
 msgid "Total Quantity"
-msgstr "Quantité Totale"
+msgstr "Quantité totale"
 
 msgid "Total Quantity must not be 0"
 msgstr "La quantité totale doit être différente de 0"
@@ -12757,7 +12757,7 @@ msgid "Unassigned"
 msgstr "Non assigné"
 
 msgid "Uncheck All"
-msgstr "Décocher Tous"
+msgstr "Décocher tous"
 
 #: portal_undo
 msgid "Undo"
