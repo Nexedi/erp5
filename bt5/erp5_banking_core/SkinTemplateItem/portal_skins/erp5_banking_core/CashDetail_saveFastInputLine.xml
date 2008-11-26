@@ -67,14 +67,15 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+request  = context.REQUEST\n
+N_ = context.Base_translateString\n
+\n
 from AccessControl import getSecurityManager\n
 u=getSecurityManager().getUser()\n
 ADD_PERMISSION =  \'Add portal content\'\n
 if not u.has_permission(ADD_PERMISSION,context):\n
-  raise ValueError, "How did you manage to be there ???"\n
-\n
-request  = context.REQUEST\n
-N_ = context.Base_translateString\n
+  request[ \'RESPONSE\' ].redirect(\'%s/view?portal_status_message=%s\' % (context.absolute_url(), N_("You can\'t modify that document any longer.")))\n
+  return\n
 \n
 def recurse(document):\n
   result = document.hasActivity()\n
@@ -410,20 +411,19 @@ else:\n
                             <string>listbox</string>
                             <string>form_id</string>
                             <string>kw</string>
-                            <string>AccessControl</string>
-                            <string>getSecurityManager</string>
                             <string>_getattr_</string>
-                            <string>u</string>
-                            <string>ADD_PERMISSION</string>
                             <string>context</string>
-                            <string>ValueError</string>
                             <string>request</string>
                             <string>N_</string>
+                            <string>AccessControl</string>
+                            <string>getSecurityManager</string>
+                            <string>u</string>
+                            <string>ADD_PERMISSION</string>
+                            <string>_getitem_</string>
                             <string>recurse</string>
                             <string>deleteContent</string>
                             <string>cell_base_id</string>
                             <string>line_kwd</string>
-                            <string>_getitem_</string>
                             <string>variation_list</string>
                             <string>emission_letter_list</string>
                             <string>cash_status_list</string>
