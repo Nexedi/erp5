@@ -220,7 +220,7 @@ source = context.getSourceValue()\n
 if source is None:\n
   source = EmptyOrganisation()\n
 \n
-destination = context.getDestinationSectionValue()\n
+destination = context.getDestinationValue()\n
 if destination is None:\n
   destination = EmptyOrganisation()\n
 \n
