@@ -515,7 +515,32 @@
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>selection</string>
+<string></string>
+                        </tuple>
+                        <tuple>
+                          <string>resource_title</string>
+<string></string>
+                        </tuple>
+                        <tuple>
+                          <string>check_amount_title</string>
+<string></string>
+                        </tuple>
+                        <tuple>
+                          <string>reference_range_min</string>
+<string></string>
+                        </tuple>
+                        <tuple>
+                          <string>reference_range_max</string>
+<string></string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_trade</string>
+<string></string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>
