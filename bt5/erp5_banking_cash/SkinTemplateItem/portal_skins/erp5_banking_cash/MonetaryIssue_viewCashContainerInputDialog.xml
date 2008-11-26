@@ -69,11 +69,18 @@
 \n
 container_portal_type_list = ["Monetary Reception",]\n
 base_price_dict = {}\n
+request = context.REQUEST\n
+if context.getStartDate() is None:\n
+  redirect_url = \'%s/%s?%s\' % ( context.absolute_url()\n
+                              , \'view\'\n
+                              , \'portal_status_message=Please register a date.\'\n
+                              )\n
+  return request.RESPONSE.redirect( redirect_url )\n
+\n
 \n
 if listbox is None:\n
-\n
   node = context.getSource()\n
-  reference_date = DateTime()\n
+  reference_date = context.getStartDate()\n
   container_list = []\n
   listbox = []\n
   #context.log("tracking list", context.portal_simulation.getCurrentTrackingList(at_date= reference_date, node = node))\n
@@ -190,9 +197,11 @@ if listbox is None:\n
                             <string>DateTime</string>
                             <string>container_portal_type_list</string>
                             <string>base_price_dict</string>
-                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>request</string>
+                            <string>None</string>
+                            <string>redirect_url</string>
                             <string>node</string>
                             <string>reference_date</string>
                             <string>container_list</string>
