@@ -3,7 +3,7 @@
   <body bgcolor="#FFFFFF" link="#000099" vlink="#555555" alink="#77003B">
     <!--#var manage_tabs-->
     <!--#tree header=info-->
-      <IMG SRC="<!--#var SCRIPT_NAME-->/misc_/ZMySQLDA/<!--#var icon-->"
+      <IMG SRC="<!--#var BASEPATH1-->/misc_/ZMySQLDA/<!--#var icon-->"
        ALT="<!--#var Type-->" BORDER="0">
       <!--#var Name--><!--#var Description-->
     <!--#/tree-->
