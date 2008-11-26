@@ -68,8 +68,7 @@
             <value> <string>context = state_change[\'object\']\n
 \n
 base_id = \'path\'\n
-kwd = {\'base_id\': base_id, \'portal_type\':\'Currency Exchange Cell\'}\n
-\n
+kwd = {\'base_id\': base_id}\n
 \n
 context.updateCellRange(script_id=\'CurrencyExchangeLine_asCellRange\', base_id=base_id)\n
 cell_range_key_list = context.getCellRangeKeyList(base_id = base_id)\n
