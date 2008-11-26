@@ -151,9 +151,10 @@
             sort_actions actions/object_sort | nothing;\n
             ui_actions actions/object_ui | nothing;\n
             print_actions actions/object_print | nothing;\n
-            list_mode list_mode | nothing">\n
+            list_mode list_mode | nothing;\n
+            can_modify_portal_content python: portal.portal_membership.checkPermission(\'Modify portal content\', here)">\n
         <span class="separator"><!--separator--></span>\n
-        <tal:block tal:condition="list_mode">\n
+        <tal:block tal:condition="python: list_mode and can_modify_portal_content">\n
           <button class="cut" type="submit" name="Folder_cut:method" title="Cut"\n
                   i18n:attributes="title" i18n:domain="ui">\n
             <span class="image"></span>\n
