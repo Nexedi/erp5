@@ -5237,7 +5237,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     Check that a skin selection has been removed.
     """
-    self.failUnless('Foo' not in self.portal.portal_skins._getSelections().keys())
     self.assertTrue('Foo' in ps.getSkinSelections())
  
 
