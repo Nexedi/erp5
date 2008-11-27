@@ -972,7 +972,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           registered_skin_selections = getattr(skin_folder, 'business_template_registered_skin_selections', None)
           if registered_skin_selections is not None:
             container.manage_skinLayers(chosen=registered_skin_selections, del_skin=1)
-          container.manage_delObjects([object_id])
+        container.manage_delObjects([object_id])
         if container.aq_parent.meta_type == 'ERP5 Catalog' and len(container.objectIds()) == 0:
           # We are removing a ZSQLMethod, remove the SQLCatalog if empty
           container.getParentValue().manage_delObjects([container.id])
