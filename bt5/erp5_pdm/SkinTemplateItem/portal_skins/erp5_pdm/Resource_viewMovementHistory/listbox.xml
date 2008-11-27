@@ -472,7 +472,12 @@
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>date</string>
+                          <string>Date</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -496,6 +501,12 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Movements</string> </value>
+                </item>
+                <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
