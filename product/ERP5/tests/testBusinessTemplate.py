@@ -5205,6 +5205,40 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
+    
+  def test_158_BusinessTemplateSkinSelectionRemoveWhenUninstalled(self, quiet=quiet,
+                                                        run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template Uninstall With Skin Selection'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = 'CreateSkinFolder \
+                       SetSkinFolderRegistredSelections \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemoveSkinFolder \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckSkinSelectionAdded \
+                       stepUninstallBusinessTemplate \
+                       stepCheckSkinSelectionRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+ 
+  def stepCheckSkinSelectionRemoved(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check that a skin selection has been removed.
+    """
+    self.failUnless('Foo' not in self.portal.portal_skins._getSelections().keys())
+ 
 
 def test_suite():
   suite = unittest.TestSuite()
