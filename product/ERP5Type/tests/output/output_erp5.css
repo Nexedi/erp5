@@ -1,0 +1,156 @@
+input, textarea, select, button, body, div, span, fieldset{font-family:Arial, Helvetica, sans-serif;font-size:12px;margin:0;padding:0;}
+div.input > select, div.input > input{max-width:320px;}
+div.page > div.input{width:100%;}
+option{white-space:pre;}
+div.pre div{background:#FFF;}
+span.pre{font-family:monospace;color:black;white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word;}
+button, select, input{vertical-align:middle;}
+button span{background-color:inherit;color:#000;}
+button.sort_button{background-color:inherit;color:inherit;border-width:0;cursor:pointer;}
+button.sort_button span{color:inherit;text-decoration:underline;}
+img{border:0;}
+body, div, span, fieldset{color:#001730;}
+div, span, fieldset{background-color:inherit;}
+body{background-color:#DAE6F6;}
+#main_form{background-color:inherit;color:inherit;}
+input#hidden_button{width:0;height:0;display:inline;border-width:0;float:left;}
+a, a:visited, a:focus{background-color:inherit;color:#002e3f;text-decoration:none;}
+a:hover{background-color:inherit;color:#3D6474;text-decoration:underline;}
+p.clear{height:0;margin:0;padding:0;clear:both;}
+div.index_html{text-align:center;}
+div.index_html table{margin:0 auto;text-align:left;}
+.ModuleShortcut div{margin-left:0.5em;text-indent:-0.5em;line-height:1.1em;margin-bottom:0.5em;}
+#main_bar button .description,#context_bar button .description,.content .field .description,.document .actions button.save .description,#context_bar .tool_buttons a .description{display:none;}
+#hidden_fieldset{display:none;}
+#main_bar{color:inherit;background-color:#97B0D1;padding-top:2px;padding-bottom:2px;vertical-align:middle;}
+#main_bar .first,#context_bar .first{float:left;vertical-align:middle;}
+#context_bar #jump,#main_bar .first{margin-left:10px;}
+.listbox_title_line select,#context_bar select,#main_bar select{color:#596dab;}
+#main_bar .second,#context_bar .second{float:right;vertical-align:middle;}
+#main_bar button,#context_bar button,.dialog_selector button,.document .actions button.save{border:0;margin-top:1px;margin-left:0;margin-right:2px;padding:0;position:relative;cursor:pointer;background-color:inherit;color:inherit;}
+#context_bar .tool_buttons{vertical-align:middle;}
+#context_bar .tool_buttons a{margin-top:2px;margin-left:2px;margin-right:2px;padding:0;position:relative;}
+#context_bar .tool_buttons button{float:left;}
+#main_bar button .image,#context_bar button .image,.dialog_selector button .image,.document .actions button.save .image{display:block;width:22px;height:22px;background-repeat:no-repeat;}
+.document .actions{min-height:2.5em;}
+table.fake{width:100%;}
+table.fake tr td{vertical-align:top;width:50%;}
+.content .field{position:relative;clear:left;font-style:italic;width:100%;}
+.content .field .input{font-style:normal;}
+.content .input .figure{text-align:right;}
+.group_title{display:none;}
+table.fake,fieldset.left,fieldset.center,fieldset.bottom{clear:both;}
+table.fake,fieldset.left,fieldset.right,fieldset.center,fieldset.bottom{margin-bottom:5px;}
+table.fake,fieldset.left,fieldset.right,fieldset.center{border-style:solid;border-width:1px;border-color:#97B0D1;padding-top:5px;padding-left:5px;padding-right:5px;}
+fieldset.center{padding-bottom:5px;}
+.login fieldset{width:50%;float:left;}
+fieldset.left{width:50%;float:left;margin-right:-12px;}
+fieldset.right{width:50%;float:left;margin-left:-12px;}
+table.fake fieldset{border-width:0;padding:0;margin:0;width:100%;float:none;}
+fieldset.center,fieldset.bottom{clear:both;}
+fieldset.bottom{border-width:0;}
+fieldset.bottom .field label{display:none;}
+.login fieldset,.dialog_box table.fake,.dialog_box .left,.dialog_box .right,.dialog_box .center{border-width:0;}
+.content .field{padding-bottom:3px;}
+.content .field label{width:30%;}
+.content .field label,.content .field .input{float:left;}
+fieldset.bottom .field .input{float:inherit;}
+.content .field .input a img{vertical-align:middle;}
+.content .required label{font-weight:bold;}
+.content .field .error{background-color:inherit;color:#f40;}
+.content .error .input{border:1px solid #f40;}
+.content .invisible > label{display:None;}
+.content .invisible > .input{float:None;}
+.listbox_domain_tree_table a.tree_open{background:url('http://localhost:9004/erp5/images/tree_open.png') left no-repeat;padding-left:15px;}
+.listbox_domain_tree_table a.tree_closed{background:url('http://localhost:9004/erp5/images/tree_closed.png') left no-repeat;padding-left:15px;}
+.login .submit{margin-left:15%;}
+#jump,#action,#favourites,#modules,#language,#search{float:left;}
+#favourites button .image{background-image:url('http://localhost:9004/erp5/images/favourite.png');}
+#modules button .image{background-image:url('http://localhost:9004/erp5/images/appearance.png');}
+#language button .image{background-image:url('http://localhost:9004/erp5/images/language.png');}
+#search button .image{background-image:url('http://localhost:9004/erp5/images/search.png');}
+#status,#master{padding-left:.5em;padding-right:.5em;}
+#status{padding-top:.3em;padding-bottom:.4em;}
+#context_bar{padding-top:2px;padding-bottom:2px;border-bottom-width:1px;border-bottom-style:solid;border-bottom-color:#97B0D1;background-color:#BDD0F0;color:inherit;vertical-align:middle;}
+#context_bar .tool_buttons a{float:left;margin-left:2px;margin-right:2px;}
+.separator{height:24px;width:2px;margin-left:6px;margin-right:6px;display:block;float:left;}
+#main_bar .separator{background-image:url('http://localhost:9004/erp5/images/sepafon.png');}
+#context_bar .separator{background-image:url('http://localhost:9004/erp5/images/sepacla.png');}
+#context_bar .tool_buttons a .image,#context_bar .tool_buttons button .image,#context_bar .tool_buttons a img{width:22px;height:22px;margin:0;padding:0;display:block;background-repeat:no-repeat;}
+#context_bar #jump button .image{background-image:url('http://localhost:9004/erp5/images/jump22.png');}
+#context_bar #action button .image{background-image:url('http://localhost:9004/erp5/images/exec.png');}
+#context_bar .tool_buttons .list_mode .image{background-image:url('http://localhost:9004/erp5/images/text_block.png');}
+#context_bar .tool_buttons .new .image{background-image:url('http://localhost:9004/erp5/images/filenew.png');}
+#context_bar .tool_buttons .clone .image{background-image:url('http://localhost:9004/erp5/images/fileclone.png');}
+#context_bar .tool_buttons .jump_first .image{background-image:url('http://localhost:9004/erp5/images/2leftarrowb.png');}
+#context_bar .tool_buttons .jump_previous .image{background-image:url('http://localhost:9004/erp5/images/1leftarrowb.png');}
+#context_bar .tool_buttons .jump_next .image{background-image:url('http://localhost:9004/erp5/images/1rightarrowb.png');}
+#context_bar .tool_buttons .jump_last .image{background-image:url('http://localhost:9004/erp5/images/2rightarrowb.png');}
+#context_bar .tool_buttons .import_export .image{background-image:url('http://localhost:9004/erp5/images/imp-exp.png');}
+#context_bar .tool_buttons .jump_help .image{background-image:url('http://localhost:9004/erp5/images/userhelp.png');}
+#context_bar .tool_buttons .find .image{background-image:url('http://localhost:9004/erp5/images/find.png');}
+#context_bar .tool_buttons .print .image{background-image:url('http://localhost:9004/erp5/images/print.png');}
+#context_bar .tool_buttons .report .image{background-image:url('http://localhost:9004/erp5/images/report.png');}
+#context_bar .tool_buttons .fast_input .image{background-image:url('http://localhost:9004/erp5/images/fast_input.png');}
+#context_bar .tool_buttons .cut .image{background-image:url('http://localhost:9004/erp5/images/editcut.png');}
+#context_bar .tool_buttons .copy .image{background-image:url('http://localhost:9004/erp5/images/editcopy.png');}
+#context_bar .tool_buttons .paste .image{background-image:url('http://localhost:9004/erp5/images/editpaste.png');}
+#context_bar .tool_buttons .delete .image{background-image:url('http://localhost:9004/erp5/images/editdelete.png');}
+#context_bar .tool_buttons .show_all .image{background-image:url('http://localhost:9004/erp5/images/showall.png');}
+#context_bar .tool_buttons .filter .image{background-image:url('http://localhost:9004/erp5/images/filter.png');}
+#context_bar .tool_buttons .filter_on .image{background-image:url('http://localhost:9004/erp5/images/filter_on.png');}
+#context_bar .tool_buttons .sort .image{background-image:url('http://localhost:9004/erp5/images/sort.png');}
+#context_bar .tool_buttons .configure .image{background-image:url('http://localhost:9004/erp5/images/configure.png');}
+#context_bar .tool_buttons .activity_pending .image{width:26px;background-image:url('http://localhost:9004/erp5/images/activity_busy.png');}
+#context_bar .tool_buttons .inspect_object .image{background-image:url('http://localhost:9004/erp5/images/inspect.png');}
+#breadcrumb{float:left;margin-bottom:5px;}
+#breadcrumb a{color:#002e3f;}
+#logged_in_as{float:right;}
+#logged_in_as .logged_txt{color:#002e3f;}
+#transition_message{margin-left:1em;color:#f40;background-color:inherit;font-weight:bold;}
+#information_area{margin-top:1em;padding:0.5em 1em 0.5em 1em;border-width:1px;border-style:solid;border-color:#3D5474;color:orange;background-color:#E3EAFA;font-weight:bold;}
+.dialog_box{color:inherit;background-color:#BDD0F0;border-width:1px;border-style:solid;border-color:#3D5474;padding:.5em;margin-bottom:1em;}
+.list_dialog{margin-bottom:.5em;}
+.dialog_selector button .description{display:none;}
+.dialog_selector button .image{background-image:url('http://localhost:9004/erp5/images/exec16.png');}
+.document .actions{position:relative;float:left;width:100%;margin:0;padding:0;border-bottom-width:1px;border-bottom-style:solid;border-bottom-color:#3D6474;color:#002e3f;}
+.document .actions button.save{float:right;}
+.document .actions button.save span.image{width:48px;height:50px;background-image:url('http://localhost:9004/erp5/images/save2.png');}
+.document .actions ul{float:left;list-style:none;padding:0;margin:0;position:absolute;bottom:-1px;}
+.document .actions li{float:left;}
+.document .actions li a{display:block;color:inherit;background:url('http://localhost:9004/erp5/images/tab_left.png') top left no-repeat;margin:0;padding:0 0 0 10px;}
+.document .actions li.selected a{background:url('http://localhost:9004/erp5/images/tab_left_selected.png') top left no-repeat;}
+.document .actions li a span{display:block;padding:5px 15px 4px 5px;color:inherit;background-color:inherit;background:url('http://localhost:9004/erp5/images/tab_right.png') top right no-repeat;}
+.document .actions li.selected a span{font-weight:bold;padding-bottom:5px;background:url('http://localhost:9004/erp5/images/tab_right_selected.png') top right no-repeat;}
+.document .actions li a:hover{text-decoration:none;}
+.document .content{clear:both;border-width:1px;border-style:solid;border-color:#3D6474;border-top:0 none;color:inherit;background-color:#E3EAFA;padding:5px;}
+.ListSummary{background:url('http://localhost:9004/erp5/images/tab_left_selected.png') top left no-repeat;color:#000;background-color:#E3EAFA;padding-left:10px;}
+.ListSummary .listbox_title,.ListSummary .listbox_record_number,.ListSummary .listbox_item_number{}
+.ListSummary table{width:100%;border-color:#3D6474;border-style:solid;border-top-width:1px;border-right-width:1px;border-bottom-width:0;border-left-width:0;padding-right:5px;padding-bottom:2px;}
+.ListSummary img{display:none;}
+.ListSummary .listbox_next_page,.ListSummary .listbox_previous_page{display:block;font-size:0;width:22px;height:22px;background-repeat:no-repeat;}
+.ListContent{color:#000;background-color:#E3EAFA;padding-left:1px;}
+.ListContent table{width:100%;border-collapse:collapse;border-color:#3D6474;border-style:solid;border-top-width:0px;border-bottom-width:1px;border-left-width:1px;border-right-width:1px;}
+.ListContent .listbox_label_line td.Data{border-top-width:1px;}
+.ListContent .listbox_label_line{color:#001730;background-color:#C1DAEB;}
+.ListContent .listbox_stat_line{color:inherit;background-color:#C1DAEB;}
+.ListContent .listbox_stat_line td.Data{border-top-width:1px;border-top-style:solid;border-color:#3D6474;}
+.ListContent tr.DataA{color:inherit;background-color:#FFF;}
+.ListContent tr.DataB{color:inherit;background-color:#DAE6F6;}
+.ListSummary .listbox_title_line .listbox_title,.ListSummary .listbox_title_line .listbox_item_number,.ListSummary .listbox_title_line .listbox_record_number{vertical-align:middle;}
+.ListContent tr.DataA:hover,.ListContent tr.DataB:hover{color:inherit;background-color:#BDD0F0;}
+.ListContent td{border-color:#3D6474;border-style:solid;border-top-width:0;border-bottom-width:0;border-left-width:1px;border-right-width:1px;padding-left:1px;padding-right:1px;}
+.ListContent .error{color:#F00;}
+td.AnchorColumn{important  border-style:none;border-color:#3D6474;background-color:#E3EAFA;border-width:0;}
+.MatrixContent{color:#000;background-color:#E3EAFA;padding-left:1px;}
+.MatrixContent table{width:100%;border-collapse:collapse;border-color:#3D6474;border-style:solid;border-top-width:1px;border-bottom-width:1px;border-left-width:1px;border-right-width:1px;}
+.MatrixContent tr.matrixbox_label_line{vertical-align:middle;border-color:#3D6474;border-style:solid;border-bottom-width:1px;border-top-width:0;border-left-width:0;border-right-width:0;}
+.MatrixContent td.matrixbox_label_column{white-space:nowrap;}
+.MatrixContent tr.DataA{color:inherit;background-color:#FFF;}
+.MatrixContent tr.DataB{color:inherit;background-color:#DAE6F6;}
+.MatrixContent tr.DataA:hover,.MatrixContent tr.DataB:hover{color:inherit;background-color:#BDD0F0;}
+.MatrixContent td{border-color:#3D6474;border-style:solid;border-top-width:0;border-bottom-width:0;border-left-width:1px;border-right-width:1px;padding-left:1px;padding-right:1px;}
+.MatrixContent .error{color:#F00;}
+.MatrixContent td.footer{width:100pt;}
+.document div.page{background-color:white;border-color:black;border-width:1px;padding:1em;}
+.document div.page div{color:black;}
