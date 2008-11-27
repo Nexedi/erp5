@@ -86,7 +86,7 @@ for requirement_line in listbox:\n
     requirements_items.append(requirement)\n
 \n
 # sort the requirements list by id to have the same order of the user\n
-requirements_items.sort(x=lambda x: x[\'id\'])\n
+requirements_items.sort(key=lambda x: x[\'id\'])\n
 \n
 clean_requirements = {}\n
 clean_requirements_key_list = [] # use a list for keys, to keep ordering\n
