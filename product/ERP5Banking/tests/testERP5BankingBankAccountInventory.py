@@ -79,7 +79,8 @@ class TestERP5BankingInventory(TestERP5BankingMixin, ERP5TypeTestCase):
     self.inventory_module = self.getBankAccountInventoryModule()
     self.createManagerAndLogin()
     self.createFunctionGroupSiteCategory(no_site=1)
-    self.currency_1 = self.createCurrency()
+    self.createCurrency()
+    self.currency_1 = self.currency_module['EUR']
     # Create a person and a bank account to test 
     self.person_1 = self.createPerson(id='person_1',
                                       first_name='toto',

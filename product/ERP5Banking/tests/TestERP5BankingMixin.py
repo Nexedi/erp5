@@ -311,45 +311,34 @@ class TestERP5BankingMixin:
     self.tic()
 
 
-  def createCurrency(self, id='EUR', title='Euro'):
+  def createCurrency(self, currency_list=(('EUR', 'Euro', 1/650., 'USD'), ('USD', 'Dollar', 650., 'EUR'))):
     # create the currency document for euro inside the currency module
-    currency = self.getCurrencyModule().newContent(id=id, title=title, reference=id)
-    exchange_line = None
-    if id=='USD':
-      # Create an exchange line
-      exchange_line = currency.newContent(portal_type='Currency Exchange Line',
-                                          start_date='01/01/1900',stop_date='01/01/2900',
-                                          price_currency='currency_module/EUR',
-                                          base_price=652,
-                                          currency_exchange_type_list=['currency_exchange_type/sale',
-                                                                       'currency_exchange_type/purchase',
-                                                                       'currency_exchange_type/transfer'],
-                                          )
-      cell_list = exchange_line.objectValues()
-      self.assertEquals(len(cell_list),3)
-      for cell in cell_list:
-        cell.setBasePrice(650.0)
-    elif id == "EUR":
-      # Create an exchange line
-      exchange_line = currency.newContent(portal_type='Currency Exchange Line',
-                                          start_date='01/01/1900',stop_date='01/01/2900',
-                                          price_currency='currency_module/USD',
-                                          base_price=1./652,
-                                          currency_exchange_type_list=['currency_exchange_type/sale',
-                                                                       'currency_exchange_type/purchase',
-                                                                       'currency_exchange_type/transfer'],
-                                          )
-      cell_list = exchange_line.objectValues()
-      self.assertEquals(len(cell_list),3)
-      for cell in cell_list:
-        cell.setBasePrice(1./650.0)
+    #currency_list = (('EUR', 'Euro', 1/650., 'USD'), ('USD', 'Dollar', 650., 'EUR'))
+    # first create currency
+    for currency_id, title, base_price, price_currency in currency_list:
+      currency = self.getCurrencyModule().newContent(id=currency_id, title=title, reference=currency_id)
 
-    if exchange_line is not None:
+    # second, create exchange lines
+    for currency_id, title, base_price, price_currency in currency_list:
+      currency = self.getCurrencyModule()[currency_id]
+      exchange_line = None
+      exchange_line = currency.newContent(portal_type='Currency Exchange Line',
+                                          start_date='01/01/1900',stop_date='01/01/2900',
+                                          base_price=base_price,
+                                          currency_exchange_type_list=['currency_exchange_type/sale',
+                                                                       'currency_exchange_type/purchase',
+                                                                       'currency_exchange_type/transfer'],
+                                          )
+      exchange_line.setPriceCurrencyValue(self.getCurrencyModule()[currency_id])
+      cell_list = exchange_line.objectValues()
+      self.assertEquals(len(cell_list),3)
+      for cell in cell_list:
+        cell.setBasePrice(base_price)
+
       exchange_line.confirm()
       exchange_line.validate()
 
-    return currency
-
+      
 
   def createBanknotesAndCoins(self):
     """
@@ -444,7 +433,8 @@ class TestERP5BankingMixin:
     # get the currency cash module
     self.currency_cash_module = self.getCurrencyCashModule()
     # Create Resources Document (Banknotes & Coins)
-    self.currency_1 = self.createCurrency()
+    self.createCurrency()
+    self.currency_1 = self.currency_module['EUR']
     # create document for banknote of 10000 euros from years 1992 and 2003
     self.billet_10000 = self.currency_cash_module.newContent(id='billet_10000',
          portal_type='Banknote', base_price=10000,
@@ -476,7 +466,7 @@ class TestERP5BankingMixin:
          price_currency_value=self.currency_1, variation_list=('1992', '2003'),
          quantity_unit_value=self.unit)
     # Create Resources Document (Banknotes & Coins) in USD
-    self.currency_2 = self.createCurrency(id='USD',title='USD')
+    self.currency_2 = self.currency_module['USD']
     # create document for banknote of 100 USD
     self.usd_billet_100 = self.currency_cash_module.newContent(id='usd_billet_100',
          portal_type='Banknote', base_price=100,
