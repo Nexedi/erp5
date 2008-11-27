@@ -8389,10 +8389,10 @@ msgid "Purchase Packing List to Validate"
 msgstr "Livraisons d'achat à valider"
 
 #: portal_workflow/packing_list_workflow/worklists/2_confirmed_purchase_packing_list_list
-msgid "Purchase Packing List to receive"
+msgid "Purchase Packing List to Receive"
 msgstr "Livraisons d'achat à recevoir"
 
-msgid "Purchase Packing List to validate"
+msgid "Purchase Packing List to Validate"
 msgstr "Livraisons d'achat à valider"
 
 #: portal_skins/erp5_trade/PurchasePackingListModule_viewPurchasePackingListList
