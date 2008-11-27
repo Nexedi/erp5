@@ -311,7 +311,7 @@ class TestERP5BankingMixin:
     self.tic()
 
 
-  def createCurrency(self, currency_list=(('EUR', 'Euro', 1/650., 'USD'), ('USD', 'Dollar', 650., 'EUR')), only_currency=False):
+  def createCurrency(self, currency_list=(('EUR', 'Euro', 1/650., 'USD'), ('USD', 'USD', 650., 'EUR')), only_currency=False):
     # create the currency document for euro inside the currency module
     #currency_list = (('EUR', 'Euro', 1/650., 'USD'), ('USD', 'Dollar', 650., 'EUR'))
     # first create currency
