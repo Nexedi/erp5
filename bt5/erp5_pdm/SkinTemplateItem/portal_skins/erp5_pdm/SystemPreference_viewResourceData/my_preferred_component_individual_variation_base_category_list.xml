@@ -124,7 +124,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getPreferredComponentIndividualVariationBaseCategoryList() or preference.getPreferredComponentIndividualVariationBaseCategoryList()</string> </value>
+            <value> <string>python: here.getPreferredComponentIndividualVariationBaseCategoryList() or preferences.getPreferredComponentIndividualVariationBaseCategoryList()</string> </value>
         </item>
       </dictionary>
     </pickle>
