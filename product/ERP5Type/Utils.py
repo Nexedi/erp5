@@ -2598,7 +2598,10 @@ def sleep(t=5):
 
 def getCommonTimeZoneList():
   """ Get common (country/capital(major cities) format) timezones list """
-  from pytz import common_timezones
+  try:
+    from pytz import common_timezones
+  except ImportError:
+    return []
   return common_timezones
 
 
