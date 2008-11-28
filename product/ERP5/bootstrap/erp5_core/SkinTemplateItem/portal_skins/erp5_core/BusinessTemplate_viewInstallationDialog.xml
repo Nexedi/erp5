@@ -79,6 +79,9 @@
                       <list>
                         <string>your_update_catalog</string>
                         <string>your_update_translation</string>
+                        <string>your_register_skin_selection</string>
+                        <string>your_reorder_skin_selection</string>
+                        <string>your_skin_layer_list</string>
                       </list>
                     </value>
                 </item>

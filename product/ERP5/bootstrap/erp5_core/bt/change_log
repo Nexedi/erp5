@@ -1,3 +1,6 @@
+2008-11-28 ivan
+* Extend Business Template user interface to handle skin with greater control
+
 2008-11-13 ivan
 * Extend preferences to save max user inactivity duration before user is logged out
 * Move portal_sessions from erp5_commerce
