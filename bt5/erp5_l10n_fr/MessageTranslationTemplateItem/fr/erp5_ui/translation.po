@@ -11,7 +11,7 @@ msgstr ""
 
 #: portal_skins/erp5_crm/Event_createDocumentFromAttachment
 msgid "${count} documents created successfully."
-msgstr "${count} documents crées avec succès."
+msgstr "${count} documents créés avec succès."
 
 #: portal_skins/erp5_project/Task_calculateDuplication
 msgid "${count} tasks created."
@@ -72,7 +72,7 @@ msgstr "${page} sur ${total_pages}"
 #: portal_skins/erp5_crm/Event_createDocumentFromAttachment
 #: portal_skins/erp5_ingestion/ContributionTool_newContent
 msgid "${portal_type} created successfully."
-msgstr "${portal_type} crée avec succés."
+msgstr "${portal_type} créé avec succès."
 
 #: portal_skins/erp5_payroll/PaySheetModelLine_asCellRange
 msgid "${tax_category_title} (Amount or Percent)"
@@ -1582,15 +1582,15 @@ msgstr "Modèles"
 
 #: /home/glossary/zope_glossary/Products/ERP5/Tool/TemplateTool.py
 msgid "Business template downloaded successfully."
-msgstr "Le business template a été téléchargé avec succés"
+msgstr "Le business template a été téléchargé avec succès"
 
 #: /home/glossary/zope_glossary/Products/ERP5/Tool/TemplateTool.py
 msgid "Business templates imported successfully."
-msgstr "Le business template a été importé avec succés"
+msgstr "Le business template a été importé avec succès"
 
 #: /home/glossary/zope_glossary/Products/ERP5/Tool/TemplateTool.py
 msgid "Business templates updated successfully."
-msgstr "Le business template a été mis à jour avec succés"
+msgstr "Le business template a été mis à jour avec succès"
 
 #: erp5_trade/InternalPackingList_viewFieldLibrary/my_destination_decision_title
 #: [Glossary term 1409]
@@ -2788,11 +2788,11 @@ msgstr "${portal_type} cloné."
 
 #: portal_skins/erp5_crm/PersonModule_newEvent
 msgid "Created and associated ${count} new events to the selected ticket."
-msgstr "${count} nouveaux événements ont été crées et associés au ticket"
+msgstr "${count} nouveaux événements ont été créés et associés au ticket"
 
 #: portal_skins/erp5_crm/Ticket_newBug portal_skins/erp5_crm/Ticket_newEvent
 msgid "Created and associated a new ${portal_type} to the ticket."
-msgstr "${portal_type} crée et associé au ticket"
+msgstr "${portal_type} créé et associé au ticket"
 
 msgid "Created by"
 msgstr "Créé par"
@@ -3878,17 +3878,17 @@ msgstr "Le document n'est pas converti ou le contenu manque"
 #: portal_skins/erp5_web_widget_library/WebSite_contributeContent
 #: portal_skins/erp5_web_widget_library/WebSite_linkContent
 msgid "Document successfully created."
-msgstr "Le document a été crée avec succés"
+msgstr "Le document a été créé avec succès"
 
 #: portal_skins/erp5_access_tab/ERP5Site_contributeContent
 #: portal_skins/erp5_dms/Entity_contributeContent
 #: portal_skins/erp5_web_widget_library/WebSite_contributeContent
 msgid "Document successfully updated."
-msgstr "Le document a été mis à jour avec succés"
+msgstr "Le document a été mis à jour avec succès"
 
 #: portal_skins/erp5_dms/Entity_contributeContent
 msgid "Document successfully uploaded."
-msgstr "Le document a été chargé avec succés"
+msgstr "Le document a été chargé avec succès"
 
 #: portal_skins/erp5_core/Documentation_view
 msgid "Documentation"
@@ -6913,7 +6913,7 @@ msgstr "Création effectuée"
 #: portal_skins/erp5_core/Base_doAction
 #: portal_skins/erp5_xhtml_style/Base_doAction
 msgid "Object created."
-msgstr "Objet crée"
+msgstr "Objet créé"
 
 msgid "Object+Created."
 msgstr "Création+effectuée"
@@ -8966,7 +8966,7 @@ msgid "Related Objects Qtty"
 msgstr "Nombre d'objets liés"
 
 msgid "Related Payment Created"
-msgstr "Écriture de payement correspondante crée"
+msgstr "Écriture de payement correspondante créée"
 
 #: Purchase Invoice Transaction Sale -glossary ? jerome
 msgid "Related Payment Transaction"
@@ -9027,7 +9027,7 @@ msgstr "Corbeille correspondante"
 
 #: portal_skins/erp5_accounting/Invoice_createRelatedPaymentTransaction
 msgid "Related payment created."
-msgstr "Écriture de trésorerie liée crée."
+msgstr "Écriture de trésorerie liée créée."
 
 #: portal_skins/erp5_core/Base_jumpToRelatedObjectList/listbox
 msgid "Relation Results"
@@ -11144,7 +11144,7 @@ msgstr "Outil de template"
 #: portal_skins/erp5_core/Base_doAction
 #: portal_skins/erp5_xhtml_style/Base_doAction
 msgid "Template created."
-msgstr "Modèle crée avec succès"
+msgstr "Modèle créé avec succès"
 
 #: portal_skins/erp5_core/Base_doAction
 #: portal_skins/erp5_xhtml_style/Base_doAction
@@ -11444,7 +11444,7 @@ msgstr "Le code pays à utiliser par défaut pour le téléphone."
 #: erp5_accounting/Preference_viewAccounting/my_preferred_accounting_transaction_currency
 #: [Glossary term 3264]
 msgid "The default currency when creating new transactions"
-msgstr "The devise à utiliser par défaut quand on crée de nouvelles transactions."
+msgstr "La devise à utiliser par défaut quand on créé de nouvelles transactions."
 
 #: erp5_core/Preference_viewHtmlStyle/my_preferred_textarea_height [Glossary
 #: term 3715]
@@ -13499,11 +13499,11 @@ msgstr "Vous n'avez pas la permission d'éditer l'objet"
 
 #: portal_skins/erp5_xhtml_style/logged_out
 msgid "You have been logged out."
-msgstr "Vous avez été déconnecté avec succés."
+msgstr "Vous avez été déconnecté avec succès."
 
 #: portal_skins/erp5_web/WebSite_logout
 msgid "You have been logged out. Thank you for using this website."
-msgstr "Vous avez été déconnecté avec succés. Merci d'avoir utilisé ce site internet."
+msgstr "Vous avez été déconnecté avec succès. Merci d'avoir utilisé ce site internet."
 
 msgid "You selected an item that was not in the list."
 msgstr "Cet élément n'est pas dans la liste"
@@ -13513,7 +13513,7 @@ msgstr "Votre réf."
 
 #: portal_skins/erp5_web/WebSite_createWebSiteAccount
 msgid "Your account was successfully created."
-msgstr "Votre compte a été crée avec succés."
+msgstr "Votre compte a été créé avec succès."
 
 msgid "Your tab is empty."
 msgstr "Cet onglet ne contient aucun gadget"
