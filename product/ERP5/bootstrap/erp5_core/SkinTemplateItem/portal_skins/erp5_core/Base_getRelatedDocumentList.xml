@@ -53,20 +53,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-portal_catalog = portal.portal_catalog\n
-path = "%" + "%s" % (context.getRelativeUrl()) + "%"\n
-\n
+            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery\n
 \n
 # Get The documents in all storage structure. ie.: This scripts get all Files and Images\n
 # distributed in many Project Lines in one Project.\n
+query = ComplexQuery(\n
+  Query(relative_url=\'%s/%%\' % context.getRelativeUrl()),\n
+  Query(follow_up_uid=context.getUid()),\n
+  operator=\'OR\')\n
 \n
-document_in_entity_list = portal_catalog(path=path , portal_type=portal_type)\n
-\n
-follow_up_document_list = portal_catalog(portal_type=portal_type,\n
-                                                                             follow_up_uid=context.getUid())\n
-\n
-return list(document_in_entity_list)+list(follow_up_document_list)\n
+return context.portal_catalog(\n
+           portal_type=portal_type,\n
+           query=query)\n
 </string> </value>
         </item>
         <item>
@@ -105,14 +103,12 @@ return list(document_in_entity_list)+list(follow_up_document_list)\n
                           <tuple>
                             <string>portal_type</string>
                             <string>kw</string>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>Query</string>
+                            <string>ComplexQuery</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal</string>
-                            <string>portal_catalog</string>
-                            <string>path</string>
-                            <string>document_in_entity_list</string>
-                            <string>follow_up_document_list</string>
-                            <string>list</string>
+                            <string>query</string>
                           </tuple>
                         </value>
                     </item>
