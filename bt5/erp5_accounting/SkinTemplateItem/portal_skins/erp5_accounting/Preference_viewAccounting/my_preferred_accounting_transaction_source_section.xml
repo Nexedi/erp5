@@ -267,18 +267,15 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'\', \'\')] + [(x.getTitle(), x.getRelativeUrl()) for x in here.portal_categories.resolveCategory(here.getPreferredAccountingTransactionSectionCategory()).getGroupRelatedValueList(portal_type=\'Organisation\')]</string> </value>
+            <value> <string>python: [(\'\', \'\')] + [(x.getTitle(), x.getRelativeUrl()) for x in here.portal_categories.resolveCategory(here.getPreferredAccountingTransactionSectionCategory(\'portal_categories\')).getGroupRelatedValueList(portal_type=\'Organisation\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
