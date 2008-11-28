@@ -87,11 +87,13 @@ class Preference:
       'description'     : 'Preferred timezone',
       'type'            : 'string',
       'default'         : '',
+      'preference'      : 1,
       'mode'            : 'w'},
-      { 'id'            : 'preferred_max_user_inactivity_duration',
+    { 'id'              : 'preferred_max_user_inactivity_duration',
       'description'     : 'Maximum user\'s inactivity duration in seconds before user is automatically logged out',
       'type'            : 'float',
       'default'         : '',
+      'preference'      : 1,
       'mode'            : 'w'},
   )
 
