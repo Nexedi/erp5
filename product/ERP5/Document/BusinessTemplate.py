@@ -1209,6 +1209,10 @@ class SkinTemplateItem(ObjectTemplateItem):
         fixZSQLMethod(p, obj)
 
     ps = p.portal_skins
+    request = context.REQUEST
+    register_skin_selection = request.get('your_register_skin_selection', 1)
+    reorder_skin_selection = request.get('your_reorder_skin_selection', 1)
+    skin_layer_list = request.get('your_skin_layer_list', ps.getSkinSelections()) 
     # Add new skin selection if not already existing
     for relative_url in self._archive.keys():
       if context.getTemplateFormatVersion() == 1:
@@ -1224,7 +1228,8 @@ class SkinTemplateItem(ObjectTemplateItem):
       if isinstance(selection_list, basestring):
         selection_list = selection_list.split()
       for skin_selection in selection_list:
-        if skin_selection not in ps.getSkinSelections():
+        # user may explicitly choose not to register skin
+        if skin_selection not in ps.getSkinSelections() and register_skin_selection:
           # This skin selection does not exist, so we create a new one.
           # We'll initialize it with all skin folders, unless:
           #  - they explictly define a list of
@@ -1241,32 +1246,37 @@ class SkinTemplateItem(ObjectTemplateItem):
                   skin_path = '%s,%s' % (skin_path, skin_folder.getId())
                 else:
                   skin_path= skin_folder.getId()
+          # add newly created skins to list of skins we care for 
+          skin_layer_list.append(skin_selection)
           ps.addSkinSelection(skin_selection, skin_path)
 
     # Add new folders into skin paths.
     for skin_name, selection in ps.getSkinPaths():
-      new_selection = []
-      selection = selection.split(',')
-      for relative_url in self._archive.keys():
-        if context.getTemplateFormatVersion() == 1:
-          if update_dict.has_key(relative_url) or force:
-            if not force:
-              if update_dict[relative_url] == 'nothing':
-                continue
-          obj = self._objects[relative_url]
-        else:
-          obj = self._archive[relative_url]
-        skin_id = relative_url.split('/')[-1]
-        selection_list = obj.getProperty('business_template_registered_skin_selections', None)
-        if selection_list is None or skin_name in selection_list:
-          if skin_id not in selection:
-            new_selection.append(skin_id)
-      new_selection.extend(selection)
-      # sort the layer according to skin priorities
-      new_selection.sort(
-        key=lambda x: x in ps.objectIds() and -ps[x].getProperty(
-        'business_template_skin_layer_priority', 0) or 0)
-      ps.manage_skinLayers(skinpath = tuple(new_selection), skinname = skin_name, add_skin = 1)
+      # install only if user selected this skin to be reordered according to priority
+      if skin_name in skin_layer_list:      
+        new_selection = []
+        selection = selection.split(',')
+        for relative_url in self._archive.keys():
+          if context.getTemplateFormatVersion() == 1:
+            if update_dict.has_key(relative_url) or force:
+              if not force:
+                if update_dict[relative_url] == 'nothing':
+                  continue
+            obj = self._objects[relative_url]
+          else:
+            obj = self._archive[relative_url]
+          skin_id = relative_url.split('/')[-1]
+          selection_list = obj.getProperty('business_template_registered_skin_selections', None)
+          if selection_list is None or skin_name in selection_list:
+            if skin_id not in selection:
+              new_selection.append(skin_id)
+        new_selection.extend(selection)
+        # sort the layer according to skin priorities
+        if reorder_skin_selection:
+          new_selection.sort(
+            key=lambda x: x in ps.objectIds() and -ps[x].getProperty(
+            'business_template_skin_layer_priority', 0) or 0)
+        ps.manage_skinLayers(skinpath = tuple(new_selection), skinname = skin_name, add_skin = 1)
     # Make sure that skin data is up-to-date (see CMFCore/Skinnable.py).
     p.changeSkin(None)
 

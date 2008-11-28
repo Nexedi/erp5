@@ -5162,6 +5162,81 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(bt is not None)
     bt.edit(template_site_property_id_list=('a_property',))
 
+  def stepCheckSkinSelectionRemoved(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check that a skin selection has been removed.
+    """
+    self.assertTrue('Foo' not in self.portal.portal_skins.getSkinSelections())
+
+  def stepUserDisableSkinSelectionRegistration(self, sequence=None, sequence_list=None, **kw):
+    """
+    Simulate User disabling skin registration from UI.
+    """
+    self.app.REQUEST.set('your_register_skin_selection', 0)
+
+  def stepUserSelectSkinToBeChanged(self, sequence=None, sequence_list=None, **kw):
+    """
+    User selects skin to be changed from UI.
+    """
+    select_skin_to_be_changed_list = self.portal.portal_skins.getSkinSelections()[:1]
+    select_skin_not_to_be_changed_list = self.portal.portal_skins.getSkinSelections()[1:] 
+    sequence.edit(select_skin_to_be_changed_list = select_skin_to_be_changed_list, \
+                  select_skin_not_to_be_changed_list = select_skin_not_to_be_changed_list)
+    self.app.REQUEST.set('your_skin_layer_list', select_skin_to_be_changed_list)
+
+  def stepCheckUserSelectedSkinToBeChanged(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check that only selected to be changed skins are affected.
+    """
+    skin_folder_id = sequence.get('skin_folder_id')
+    select_skin_to_be_changed_list = sequence.get('select_skin_to_be_changed_list')
+    select_skin_not_to_be_changed_list = sequence.get('select_skin_not_to_be_changed_list')
+    for skin_name in select_skin_to_be_changed_list:
+      self.assertTrue(skin_folder_id in self.portal.portal_skins.getSkinPath(skin_name))
+    for skin_name in select_skin_not_to_be_changed_list:
+      self.assertTrue(skin_folder_id not in self.portal.portal_skins.getSkinPath(skin_name))
+
+  def stepCheckSkinFolderPriorityOn(self, sequence=None, sequence_list=None, **kw):
+    """ 
+    Check skin folder priority 
+    """
+    ps = self.portal.portal_skins
+    for skin in ps.getSkinSelections():
+      self.assertEquals('erp5_core', ps.getSkinPath(skin).split(',')[0])
+      self.assertEquals('erp5_geek', ps.getSkinPath(skin).split(',')[1])
+
+  def stepCheckSkinFolderPriorityOff(self, sequence=None, sequence_list=None, **kw):
+    """ 
+    Check skin folder priority off
+    """
+    ps = self.portal.portal_skins
+    for skin in ps.getSkinSelections():
+      self.assertEquals('erp5_geek', ps.getSkinPath(skin).split(',')[0])
+      self.assertEquals('erp5_core', ps.getSkinPath(skin).split(',')[1])
+
+  def stepUserDisableSkinFolderPriority(self, sequence=None, sequence_list=None, **kw):
+    """ 
+    User chooses skin folder priority off from UI
+    """
+    self.app.REQUEST.set('your_reorder_skin_selection', 0)
+
+  def stepSetExistingSkinFolderPriority(self, sequence=None, sequence_list=None, **kw):
+    """ 
+    Set exisitng skin priority for test
+    """
+    skin_folder = self.portal.portal_skins['erp5_core']
+    if not skin_folder.hasProperty('business_template_skin_layer_priority'):
+      skin_folder.manage_addProperty('business_template_skin_layer_priority', \
+                                     10000.0, 'float')
+
+  def stepSetBusinessTemplateSkinFolderPriority(self, sequence=None, sequence_list=None, **kw):
+    """
+    Set skin folder priority.
+    """
+    skin_folder_id = sequence.get('skin_folder_id')
+    skin_folder = self.portal.portal_skins[skin_folder_id]
+    skin_folder.manage_addProperty('business_template_skin_layer_priority', 9999.0, 'float')
+
   def test_39_CheckSiteProperties(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
@@ -5205,8 +5280,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
-    
-  def test_158_BusinessTemplateSkinSelectionRemoveWhenUninstalled(self, quiet=quiet,
+
+  def test_158_BusinessTemplateSkinSelectionRemove(self, quiet=quiet,
                                                         run=run_all_test):
     if not run: return
     if not quiet:
@@ -5227,18 +5302,115 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        InstallBusinessTemplate \
                        Tic \
                        CheckSkinSelectionAdded \
-                       stepUninstallBusinessTemplate \
-                       stepCheckSkinSelectionRemoved \
+                       UninstallBusinessTemplate \
+                       CheckSkinSelectionRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
- 
-  def stepCheckSkinSelectionRemoved(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check that a skin selection has been removed.
-    """
-    self.assertTrue('Foo' not in self.portal.portal_skins.getSkinSelections())
- 
+
+  def test_159_BusinessTemplateNotRegisterSkin(self, quiet=quiet,
+                                                        run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template will not register existing Skin'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = 'CreateSkinFolder \
+                       SetSkinFolderRegistredSelections \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemoveSkinFolder \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       UserDisableSkinSelectionRegistration \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckSkinSelectionRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_160_BusinessTemplateChangeOnlySelectedSkin(self, quiet=quiet,
+                                                        run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template will change only selected skins'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = 'CreateSkinFolder \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemoveSkinFolder \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       UserSelectSkinToBeChanged \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckUserSelectedSkinToBeChanged \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_161_BusinessTemplateCheckSkinPriorityOrderingEnabled(self, quiet=quiet,
+                                                        run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template will reorder skins path in Skin'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = 'CreateSkinFolder \
+                       SetBusinessTemplateSkinFolderPriority \
+                       SetExistingSkinFolderPriority \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemoveSkinFolder \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckSkinFolderPriorityOn \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_162_BusinessTemplateCheckSkinPriorityOrderingDisabled(self, quiet=quiet,
+                                                        run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template will not reorder skins path in Skin'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = 'CreateSkinFolder \
+                       SetBusinessTemplateSkinFolderPriority \
+                       SetExistingSkinFolderPriority \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemoveSkinFolder \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       UserDisableSkinFolderPriority \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckSkinFolderPriorityOff \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
 
 def test_suite():
   suite = unittest.TestSuite()
