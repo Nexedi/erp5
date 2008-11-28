@@ -101,7 +101,8 @@ class TaxRule(DeliveryRule):
         else:
           for existing_simulation_movement in \
                 existing_simulation_movement_list:
-            existing_simulation_movement.edit(**property_dict)
+            if existing_simulation_movement.getDelivery() is None:
+              existing_simulation_movement.edit(**property_dict)
 
     # Pass to base class
     Rule.expand(self, applied_rule, force=force, **kw)
