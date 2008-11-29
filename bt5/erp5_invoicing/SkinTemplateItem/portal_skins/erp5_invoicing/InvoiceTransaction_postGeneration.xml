@@ -62,15 +62,23 @@
 if related_simulation_movement_path_list is None:\n
   raise RuntimeError, \'related_simulation_movement_path_list is missing. Update ERP5 Product.\'\n
 \n
+activate_kw = dict(\n
+      after_path_and_method_id=(related_simulation_movement_path_list,\n
+                                  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\')),)\n
+\n
 invoice = context\n
 packing_list = invoice.getCausalityValue()\n
 if packing_list is not None:\n
   order = packing_list.getCausalityValue()\n
   if order is not None:\n
     invoice.setSpecialise(order.getSpecialise())\n
-  \n
-invoice.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
-  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))).InvoiceTransaction_postGenerationActivity(related_simulation_movement_path_list=related_simulation_movement_path_list, **kw)\n
+  # this is tax tag from packing_list_workflow scripts\n
+  activate_kw[\'after_tag\'] = \'build_invoice_tax_%s\' % packing_list.getRelativeUrl()\n
+\n
+invoice.activate(\n
+        **activate_kw\n
+        ).InvoiceTransaction_postGenerationActivity(\n
+                          related_simulation_movement_path_list=related_simulation_movement_path_list, **kw)\n
 </string> </value>
         </item>
         <item>
@@ -111,11 +119,14 @@ invoice.activate(after_path_and_method_id=(related_simulation_movement_path_list
                             <string>kw</string>
                             <string>None</string>
                             <string>RuntimeError</string>
+                            <string>dict</string>
+                            <string>activate_kw</string>
                             <string>context</string>
                             <string>invoice</string>
                             <string>_getattr_</string>
                             <string>packing_list</string>
                             <string>order</string>
+                            <string>_write_</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
