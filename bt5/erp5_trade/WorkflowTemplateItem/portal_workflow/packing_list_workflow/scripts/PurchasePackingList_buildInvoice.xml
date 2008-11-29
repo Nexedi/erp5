@@ -59,6 +59,9 @@ delivery_tool = sci.getPortal().portal_deliveries\n
 \n
 if packing_list.getPortalType() == \'Purchase Packing List\':\n
   tag = \'build_invoice_%s\' % packing_list.getRelativeUrl()\n
+  # WARNING: this tag is also used in InvoiceTransaction_postGeneration script\n
+  tax_tag = \'build_invoice_tax_%s\' % packing_list.getRelativeUrl()\n
+\n
   invoice_line_builder = getattr(delivery_tool, \'purchase_invoice_builder\', None)\n
   if invoice_line_builder is not None:\n
     invoice_line_builder.activate(\n
@@ -75,7 +78,8 @@ if packing_list.getPortalType() == \'Purchase Packing List\':\n
   invoice_tax_builder = getattr(delivery_tool, \'purchase_invoice_tax_builder\', None)\n
   if invoice_tax_builder is not None:\n
     invoice_tax_builder.activate(\n
-          tag=tag,\n
+          tag=tax_tag,\n
+          after_tag=tag,\n
           after_method_id = [ \'expand\', \n
                               \'recursiveImmediateReindexObject\',\n
                               \'updateAppliedRule\',\n
@@ -127,6 +131,7 @@ if packing_list.getPortalType() == \'Purchase Packing List\':\n
                             <string>_getattr_</string>
                             <string>delivery_tool</string>
                             <string>tag</string>
+                            <string>tax_tag</string>
                             <string>getattr</string>
                             <string>None</string>
                             <string>invoice_line_builder</string>
