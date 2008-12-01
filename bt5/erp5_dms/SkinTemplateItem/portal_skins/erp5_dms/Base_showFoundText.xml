@@ -105,7 +105,12 @@ if search_words in (\'\', None,):\n
     if not isinstance(document_text, str): \n
       document_text = str(document_text)\n
     # try to get somewhat arbitrary choice of searchable attrs\n
-    result = document_text[min(len(document_text) - 300, 200) : 1500]\n
+    max_text_length = 500\n
+    start = min(len(document_text) - 300, 200)\n
+    if context.REQUEST.get(\'is_gadget_mode\', 0):\n
+      # in gadget mode less space is available thus show less text\n
+      max_text_length = 150\n
+    result = \'%s ...\' %document_text[start:start + max_text_length]\n
   return result\n
 \n
 # get fragments of text containing searched words\n
@@ -182,8 +187,10 @@ return result\n
                             <string>result</string>
                             <string>isinstance</string>
                             <string>str</string>
+                            <string>max_text_length</string>
                             <string>min</string>
                             <string>len</string>
+                            <string>start</string>
                             <string>found_text_fragments</string>
                             <string>map</string>
                             <string>unicode_result</string>
