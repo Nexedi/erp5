@@ -311,18 +311,18 @@ class TestERP5BankingMixin:
     self.tic()
 
 
-  def createCurrency(self, currency_list=(('EUR', 'Euro', 1/650., 'USD'), ('USD', 'USD', 650., 'EUR')), only_currency=False):
+  def createCurrency(self, currency_list=(('EUR', 'Euro', 1/652., 1/650., 'USD'), ('USD', 'USD', 652, 650., 'EUR')), only_currency=False):
     # create the currency document for euro inside the currency module
     #currency_list = (('EUR', 'Euro', 1/650., 'USD'), ('USD', 'Dollar', 650., 'EUR'))
     # first create currency
-    for currency_id, title, base_price, price_currency in currency_list:
+    for currency_id, title, base_price, cell_price, price_currency in currency_list:
       currency = self.getCurrencyModule().newContent(id=currency_id, title=title, reference=currency_id)
 
     if only_currency:
       return
     
     # second, create exchange lines
-    for currency_id, title, base_price, price_currency in currency_list:
+    for currency_id, title, base_price, cell_price, price_currency in currency_list:
       currency = self.getCurrencyModule()[currency_id]
       exchange_line = None
       exchange_line = currency.newContent(portal_type='Currency Exchange Line',
@@ -336,7 +336,7 @@ class TestERP5BankingMixin:
       cell_list = exchange_line.objectValues()
       self.assertEquals(len(cell_list),3)
       for cell in cell_list:
-        cell.setBasePrice(base_price)
+        cell.setBasePrice(cell_price)
 
       exchange_line.confirm()
       exchange_line.validate()
