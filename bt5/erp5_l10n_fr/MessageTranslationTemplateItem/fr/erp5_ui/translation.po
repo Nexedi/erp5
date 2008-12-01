@@ -9404,7 +9404,7 @@ msgstr "Rôle"
 
 #: portal type [Glossary term 8328]
 msgid "Role Definition"
-msgstr "Définition des rôles"
+msgstr "Définition de rôle"
 
 #: portal_skins/erp5_core/Rule_view
 msgid "Rule"
