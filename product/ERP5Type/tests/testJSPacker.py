@@ -41,5 +41,27 @@ class TestJSPacker(unittest.TestCase):
     output = open(join(PREFIX, 'output/output_erp5.js')).read()
     self.assertEquals(result, output)
 
+  def test_JavaScriptHandleMultLineComment(self):
+    script = '/*** ' \
+             'MochiKit.MochiKit 1.4 : PACKED VERSION ' \
+             'All rights Reserved. ***/' \
+             'if(typeof (dojo)!=\"undefined\"){' \
+             '  dojo.provide(\"MochiKit.Base\");' \
+             '}'
+    result = compressJavaScript(script)
+    expected_result = 'eval(function(p,a,c,k,e,d){e=function(c){'\
+                      'return(c<a?"":e(parseInt(c/a)))+((c=c%a)>35?'\
+                      'String.fromCharCode(c+29):c.toString(36))};'\
+                      'if(!\'\'.replace(/^/,String)){while(c--)d'\
+                      '[c.toString(a)]=k[c]||c.toString(a);k='\
+                      '[function(e){return d[e]}];e=function(){'\
+                      'return\'\\\\w+\'};c=1};while(c--)if(k[c])p='\
+                      'p.replace(new RegExp("\\\\b"+e(c)+"\\\\b","g"),k[c]);'\
+                      'return p}(\'/*** 0.0 1.4 : d c b a 9. ***/8(7 '\
+                      '(2)!="6"){  2.5("0.3");}\\n\',14,14,\'MochiKit||dojo|'\
+                      'Base||provide|undefined|typeof|if|Reserved|rights|'\
+                      'All|VERSION|PACKED\'.split(\'|\'),0,{}))\n'
+    self.assertEquals(result, expected_result)
+
 if __name__ == '__main__':
   unittest.main()
