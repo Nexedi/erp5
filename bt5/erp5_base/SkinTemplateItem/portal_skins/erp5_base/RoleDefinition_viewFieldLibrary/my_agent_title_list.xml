@@ -19,6 +19,7 @@
                 <string>portal_type</string>
                 <string>allow_creation</string>
                 <string>catalog_index</string>
+                <string>proxy_listbox_ids</string>
               </list>
             </value>
         </item>
@@ -120,10 +121,6 @@
                     <value> <string>The agents.</string> </value>
                 </item>
                 <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_multi_relation_field</string> </value>
                 </item>
@@ -138,6 +135,17 @@
                         <tuple>
                           <string>Person</string>
                           <string>Person</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>PersonModule_viewPersonList/listbox</string>
+                          <string>Persons</string>
                         </tuple>
                       </list>
                     </value>
