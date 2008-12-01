@@ -54,51 +54,49 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>translateString = context.Base_translateString\n
-\n
-# XXX Current there is no Group or Portal Type specific to define\n
-# Embedded portal types. It will leave it hardcoded until a \n
-# good API be defined.\n
-\n
-embedded_portal_type_list = ["File", "Image"]  \n
-\n
-module_id = context.getDefaultModuleId(portal_type, \'\')\n
-module = getattr(context, module_id, None)\n
-\n
-if module is not None:\n
-  allowed_type_list = module.getVisibleAllowedContentTypeList()\n
-  if portal_type not in allowed_type_list:\n
-    return context.Base_redirect(\n
-      keep_items={\'portal_status_message\':\n
-                  translateString("You are not allowed to create this object.")})\n
-else:\n
-  module = context\n
-  if ((portal_type not in embedded_portal_type_list) and\n
-      (context.Base_checkPermission(context.getRelativeUrl(),\n
-                                    \'Add portal content\'))):\n
-    return context.Base_redirect(\n
-      keep_items={\'portal_status_message\':\n
-                  translateString("You are not allowed to create this object.")})\n
-\n
-\n
-document = module.newContent( portal_type=portal_type,\n
-                              description=description,\n
-                              title=title)\n
-\n
-# XXX If DMS exist?\n
-document.edit(follow_up=context.getRelativeUrl(),\n
-              version=version,\n
-              short_title=short_title,\n
-              language=language,\n
-              reference=reference)\n
+from Products.CMFCore.utils import getToolByName\n
 \n
 if file.filename not in [\'\', None]:\n
-  document.setFile(file)\n
 \n
-message = translateString(\'${portal_type} created successfully.\',\n
-                          mapping={\'portal_type\':document.getTranslatedPortalType()})\n
-return context.REQUEST.RESPONSE.redirect(\n
-  \'%s/view?portal_status_message=%s\' % (document.absolute_url(), message)\n
-  )\n
+  document_new_content_kw = {\n
+    \'file\': file,\n
+  }\n
+  document_edit_kw = {\n
+    \'follow_up\': context.getRelativeUrl(),\n
+    \'version\': version,\n
+    \'title\': title,\n
+    \'short_title\': short_title,\n
+    \'language\': language,\n
+    \'reference\': reference,\n
+    \'description\': description,\n
+  }\n
+\n
+  container = getToolByName(context.getPortalObject(), \'portal_contributions\', None)\n
+\n
+  is_authorized = 1\n
+  if container is None:\n
+    container = context\n
+    document_new_content_kw[\'portal_type\'] = portal_type\n
+    if portal_type not in [\'%s\' % x.id for x in container.allowedContentTypes()]:\n
+      is_authorized = 0\n
+\n
+  if not context.Base_checkPermission(container.getRelativeUrl(),\n
+                                  \'Add portal content\'):\n
+    is_authorized = 0\n
+\n
+  if not is_authorized:\n
+    return context.Base_redirect(\n
+      keep_items={\'portal_status_message\':\n
+                  translateString(\n
+                     "You are not allowed to create this object.")})\n
+\n
+  document = container.newContent(**document_new_content_kw)\n
+  document.edit(**document_edit_kw)\n
+\n
+  message = translateString(\'${portal_type} created successfully.\',\n
+               mapping={\'portal_type\': document.getTranslatedPortalType()})\n
+  return document.Base_redirect(\'view\', \n
+                                keep_items=dict(portal_status_message=message))\n
 </string> </value>
         </item>
         <item>
@@ -148,14 +146,22 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>translateString</string>
-                            <string>embedded_portal_type_list</string>
-                            <string>module_id</string>
-                            <string>getattr</string>
+                            <string>Products.CMFCore.utils</string>
+                            <string>getToolByName</string>
                             <string>None</string>
-                            <string>module</string>
-                            <string>allowed_type_list</string>
+                            <string>document_new_content_kw</string>
+                            <string>document_edit_kw</string>
+                            <string>container</string>
+                            <string>is_authorized</string>
+                            <string>_write_</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>_apply_</string>
                             <string>document</string>
                             <string>message</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>

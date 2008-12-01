@@ -240,7 +240,7 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>size</string> </key>
@@ -275,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:map(lambda x: (here.Localizer.erp5_ui.gettext(x), x), here.getPortalDocumentTypeList())</string> </value>
+            <value> <string>python: [(\'\', \'\')]+[(here.Base_translateString(x), x) for x in  here.getPortalDocumentTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -83,7 +83,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -96,12 +98,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_portal_type</string>
-                        <string>your_title</string>
-                        <string>your_short_title</string>
-                        <string>your_reference</string>
-                        <string>your_language</string>
-                        <string>your_version</string>
+                        <string>your_file</string>
                       </list>
                     </value>
                 </item>
@@ -109,8 +106,12 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>your_file</string>
-                        <string>your_description</string>
+                        <string>your_portal_type</string>
+                        <string>your_title</string>
+                        <string>your_short_title</string>
+                        <string>your_reference</string>
+                        <string>your_language</string>
+                        <string>your_version</string>
                       </list>
                     </value>
                 </item>
