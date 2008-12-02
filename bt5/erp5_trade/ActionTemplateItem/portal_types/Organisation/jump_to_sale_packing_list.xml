@@ -73,7 +73,7 @@
             <key> <string>text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-string:${portal_url}/sale_packing_list_module/view?reset:int=1&default_destination_title=${object/getTitle}
+string:${object_url}/Base_jumpToRelatedObject?base_category=destination&portal_type=Sale+Packing+List
 
 ]]></string> </value>
         </item>
@@ -91,7 +91,7 @@ string:${portal_url}/sale_packing_list_module/view?reset:int=1&default_destinati
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:portal.restrictedTraverse(\'sale_packing_list_module\', None) is not None</string> </value>
+            <value> <string>python: portal.Base_checkPermission(\'sale_packing_list_module\', \'View\')</string> </value>
         </item>
       </dictionary>
     </pickle>
