@@ -493,8 +493,12 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
               for i, table_id in enumerate(mapped_key[0].split(',')))
             table_id, column_id = table_alias_list[-1][1], mapped_key[1]
           else: # normal column
-            assert len(mapped_key) == 1
-            table_id, column_id = mapped_key[0], criterion_id
+            if len(mapped_key) == 1:
+              table_id = mapped_key[0]
+            else:
+              table_id = 'catalog'
+              assert table_id in mapped_key
+            column_id = criterion_id
           select_expression.append('%s.%s as %s'
                                    % (table_id, column_id, criterion_id))
         query.getRelatedTableMapDict = lambda: related_table_map_dict
