@@ -29,6 +29,8 @@
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.PsycoWrapper import psyco
 from Base import Getter as BaseGetter, Setter as BaseSetter
+from warnings import warn
+
 # Creation of default constructor
 class func_code: pass
 
@@ -84,9 +86,7 @@ class TitleGetter(BaseGetter):
     psyco.bind(__call__)
 
 class TranslatedGetter(Getter):
-    """
-      Gets a translated attribute value. A default value can be
-      provided if needed
+    """ returns the workflow state ID transated. DEPRECATED
     """
 
     def __call__(self, instance):
@@ -94,6 +94,8 @@ class TranslatedGetter(Getter):
       localizer = getToolByName(instance, 'Localizer')
       wf = portal_workflow.getWorkflowById(self._key)
       state_id = wf._getWorkflowStateOf(instance, id_only=1)
+      warn('Translated workflow state getters, such as %s are deprecated' %
+            self._id, DeprecationWarning)
       return localizer.erp5_ui.gettext(state_id).encode('utf8')
 
     psyco.bind(__call__)
