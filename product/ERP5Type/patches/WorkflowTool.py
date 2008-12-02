@@ -414,6 +414,9 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
 
     This patch attemps to make listGlobalActions aware of worklists,
     which allows factorizing them into one single SQL query.
+
+    Related keys are supported.
+    Warning: the worklist cache does not support them.
   """
   if object is not None or info is None:
     info = self._getOAI(object)
@@ -448,15 +451,19 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
     search_result = getattr(self, "Base_getCountFromWorklistTable", None)
     if search_result is None:
       search_result = portal_catalog.unrestrictedSearchResults
-      select_expression_prefix = 'count(*) as %s, ' % (COUNT_COLUMN_TITLE, )
+      select_expression_prefix = 'count(*) as %s' % (COUNT_COLUMN_TITLE, )
     else:
-      select_expression_prefix = 'sum(`%s`) as %s, ' % (COUNT_COLUMN_TITLE, COUNT_COLUMN_TITLE)
+      select_expression_prefix = 'sum(`%s`) as %s' % (COUNT_COLUMN_TITLE, COUNT_COLUMN_TITLE)
     getSecurityUidListAndRoleColumnDict = \
       portal_catalog.getSecurityUidListAndRoleColumnDict
     security_query_cache_dict = {}
     def _getWorklistActionList():
       worklist_result_dict = {}
-      acceptable_key_dict = portal_catalog.getSQLCatalog().getColumnMap()
+      sql_catalog = portal_catalog.getSQLCatalog()
+      acceptable_key_dict = sql_catalog.getColumnMap()
+      for related_key in sql_catalog.getSQLCatalogRelatedKeyList():
+        related_key = related_key.split('|')
+        acceptable_key_dict[related_key[0].strip()] = related_key[1].strip()
       # Get a list of dict of WorklistVariableMatchDict grouped by compatible
       # conditions
       (worklist_list_grouped_by_condition, worklist_metadata) = \
@@ -471,9 +478,29 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
         # Generate the query for this worklist_list
         (total_criterion_id_list, query) = \
           getWorklistListQuery(grouped_worklist_dict=grouped_worklist_dict)
+        # We must compute alias names ourselves because we need to know them
+        # in order to compute 'select_expression'.
+        related_table_map_dict = query.getRelatedTableMapDict()
+        # In order to support related keys, the select expression must be
+        # completely explicited, to avoid conflicts.
+        select_expression = [select_expression_prefix]
+        for criterion_id in total_criterion_id_list:
+          mapped_key = acceptable_key_dict[criterion_id]
+          if isinstance(mapped_key, str): # related key
+            mapped_key = mapped_key.split('/')
+            related_table_map_dict[criterion_id] = table_alias_list = tuple(
+              (table_id, '%s_%s' % (criterion_id, i))
+              for i, table_id in enumerate(mapped_key[0].split(',')))
+            table_id, column_id = table_alias_list[-1][1], mapped_key[1]
+          else: # normal column
+            assert len(mapped_key) == 1
+            table_id, column_id = mapped_key[0], criterion_id
+          select_expression.append('%s.%s as %s'
+                                   % (table_id, column_id, criterion_id))
+        query.getRelatedTableMapDict = lambda: related_table_map_dict
         group_by_expression = ', '.join(total_criterion_id_list)
         assert COUNT_COLUMN_TITLE not in total_criterion_id_list
-        select_expression = select_expression_prefix + group_by_expression
+        select_expression = ', '.join(select_expression)
         catalog_brain_result = search_result(select_expression=select_expression,
                                              group_by_expression=group_by_expression,
                                              query=query,
@@ -510,6 +537,7 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
 WorkflowTool.listActions = WorkflowTool_listActions
 
 def WorkflowTool_refreshWorklistCache(self):
+  # Contrary to WorkflowTool_listActions, related keys are NOT supported.
   Base_zInsertIntoWorklistTable = getattr(self, 'Base_zInsertIntoWorklistTable', None)
   if Base_zInsertIntoWorklistTable is not None:
     # XXX: Code below is duplicated from WorkflowTool_listActions
