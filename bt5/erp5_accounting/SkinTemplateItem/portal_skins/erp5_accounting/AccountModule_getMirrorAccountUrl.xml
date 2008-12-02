@@ -61,7 +61,7 @@ object = object.getDestinationValue()\n
 if object is None:\n
   url = None\n
 else:\n
-  url = object.absolute_url() + \'/view?selection_index=%s&selection_name=%s&reset=1\' % (index, selection_name)\n
+  url = object.absolute_url() + \'/view?selection_index=%s&amp;selection_name=%s&amp;reset=1\' % (index, selection_name)\n
 \n
 return url\n
 

@@ -54,6 +54,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from ZTUtils import make_query\n
+from Products.PythonScripts.standard import html_quote\n
 \n
 index = context.portal_selections.getSelectionIndexFor(selection_name)\n
 object = brain.getObject()\n
@@ -68,7 +69,7 @@ kw = { \'selection_index\': str(index),\n
        \'reset\' : \'1\', \n
      }\n
 \n
-return \'%s/%s?%s\' % (object.absolute_url(), method, make_query(kw))\n
+return html_quote(\'%s/%s?%s\' % (object.absolute_url(), method, make_query(kw)))\n
 </string> </value>
         </item>
         <item>
@@ -111,6 +112,8 @@ return \'%s/%s?%s\' % (object.absolute_url(), method, make_query(kw))\n
                             <string>kwd</string>
                             <string>ZTUtils</string>
                             <string>make_query</string>
+                            <string>Products.PythonScripts.standard</string>
+                            <string>html_quote</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>index</string>
