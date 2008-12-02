@@ -1,18 +1,11 @@
 <module>
  <id>social_contract_module</id>
  <permission_list>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Access Transient Objects</name>
-   <role>Assignee</role>
-   <role>Assignor</role>
-   <role>Associate</role>
-   <role>Auditor</role>
-   <role>Author</role>
-   <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Access arbitrary user session data</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Access contents information</name>
@@ -31,30 +24,21 @@
    <name>Access inactive portal content</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Access session data</name>
-   <role>Assignee</role>
-   <role>Assignor</role>
-   <role>Associate</role>
-   <role>Auditor</role>
-   <role>Author</role>
-   <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Accelerated HTTP Cache Managers</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add BTreeFolder2s</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Browser Id Manager</name>
-   <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add CMF Action Icons Tools</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add CMF Active Processs</name>
@@ -80,17 +64,15 @@
    <name>Add CMF Report Tools</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add CMF Setup Tools</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add CMF Sites</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add CMF Unique Id Tools</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add CMFActivity Tools</name>
@@ -104,9 +86,11 @@
    <name>Add CMFMailIn Tools</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
+   <name>Add Clouseaus</name>
+  </permission>
+  <permission type='list'>
    <name>Add Configured CMF Sites</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add Content Type Registrys</name>
@@ -208,9 +192,8 @@
    <name>Add Formulator Forms</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
-   <name>Add Local File Systems</name>
-   <role>Manager</role>
+  <permission type='list'>
+   <name>Add HBTreeFolder2s</name>
   </permission>
   <permission type='tuple'>
    <name>Add LocalContents</name>
@@ -244,9 +227,8 @@
    <name>Add Pluggable Index</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Plugin Registrys</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add PortalTransforms Tools</name>
@@ -256,45 +238,37 @@
    <name>Add Python Scripts</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add RAM Cache Managers</name>
-   <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add ReStructuredText Documents</name>
-   <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Session Data Manager</name>
-   <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Site Roots</name>
-   <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Temporary Folder</name>
-   <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Transient Object Container</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add User Folders</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Virtual Host Monsters</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add Vocabularies</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Z Gadfly Database Connections</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add Z MySQL Database Connections</name>
@@ -316,13 +290,11 @@
    <name>Add ZMailMessages</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add ZODB Mount Points</name>
-   <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Add Zope Tutorials</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Add portal content</name>
@@ -348,9 +320,11 @@
    <name>Add portal topics</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
+   <name>Approve draft changes</name>
+  </permission>
+  <permission type='list'>
    <name>Change Browser Id Manager</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Change DTML Documents</name>
@@ -389,10 +363,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Change Local File System properties</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Change Lock Information</name>
    <role>Manager</role>
   </permission>
@@ -404,9 +374,8 @@
    <name>Change Python Scripts</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Change Session Data Manager</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Change Versions</name>
@@ -457,6 +426,9 @@
    <name>Change proxy roles</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Clouseau: Debug</name>
+  </permission>
   <permission type='tuple'>
    <name>Copy or Move</name>
    <role>Assignee</role>
@@ -466,9 +438,8 @@
    <role>Author</role>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Create Transient Objects</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Create class instances</name>
@@ -476,10 +447,6 @@
   </permission>
   <permission type='tuple'>
    <name>Define permissions</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Delete local files</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -495,9 +462,8 @@
    <name>Edit Factories</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Edit ReStructuredText</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Edit target</name>
@@ -548,6 +514,9 @@
    <name>Manage Access Rules</name>
    <role>Manager</role>
   </permission>
+  <permission type='list'>
+   <name>Manage Five local sites</name>
+  </permission>
   <permission type='tuple'>
    <name>Manage Groups</name>
    <role>Manager</role>
@@ -556,9 +525,8 @@
    <name>Manage Selenium test cases</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Manage Transient Object Container</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Manage Vocabulary</name>
@@ -582,10 +550,6 @@
   </permission>
   <permission type='tuple'>
    <name>Manage languages</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Manage local files</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -619,10 +583,6 @@
   </permission>
   <permission type='tuple'>
    <name>Open/Close Database Connections</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
-   <name>Overwrite local files</name>
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
@@ -682,10 +642,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>Upload local files</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>Use Database Methods</name>
    <role>Manager</role>
   </permission>
@@ -693,9 +649,8 @@
    <name>Use Factories</name>
    <role>Manager</role>
   </permission>
-  <permission type='tuple'>
+  <permission type='list'>
    <name>Use external editor</name>
-   <role>Manager</role>
   </permission>
   <permission type='tuple'>
    <name>Use mailhost services</name>
@@ -710,10 +665,6 @@
    <role>Manager</role>
   </permission>
   <permission type='tuple'>
-   <name>View Directory Index</name>
-   <role>Manager</role>
-  </permission>
-  <permission type='tuple'>
    <name>View History</name>
    <role>Assignee</role>
    <role>Assignor</role>
@@ -725,6 +676,9 @@
   <permission type='tuple'>
    <name>View ZMailMessage</name>
    <role>Manager</role>
+  </permission>
+  <permission type='list'>
+   <name>View documentation</name>
   </permission>
   <permission type='tuple'>
    <name>View management screens</name>
