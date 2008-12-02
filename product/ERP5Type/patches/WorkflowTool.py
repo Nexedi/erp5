@@ -449,11 +449,12 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
     portal_url = getToolByName(self, 'portal_url')()
     portal_catalog = getToolByName(self, 'portal_catalog')
     search_result = getattr(self, "Base_getCountFromWorklistTable", None)
-    if search_result is None:
+    use_cache = search_result is not None
+    if use_cache:
+      select_expression_prefix = 'sum(`%s`) as %s' % (COUNT_COLUMN_TITLE, COUNT_COLUMN_TITLE)
+    else:
       search_result = portal_catalog.unrestrictedSearchResults
       select_expression_prefix = 'count(*) as %s' % (COUNT_COLUMN_TITLE, )
-    else:
-      select_expression_prefix = 'sum(`%s`) as %s' % (COUNT_COLUMN_TITLE, COUNT_COLUMN_TITLE)
     getSecurityUidListAndRoleColumnDict = \
       portal_catalog.getSecurityUidListAndRoleColumnDict
     security_query_cache_dict = {}
@@ -486,7 +487,10 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
         select_expression = [select_expression_prefix]
         for criterion_id in total_criterion_id_list:
           mapped_key = acceptable_key_dict[criterion_id]
-          if isinstance(mapped_key, str): # related key
+          if use_cache: # no support for related keys
+            select_expression.append(criterion_id)
+            continue
+          elif isinstance(mapped_key, str): # related key
             mapped_key = mapped_key.split('/')
             related_table_map_dict[criterion_id] = table_alias_list = tuple(
               (table_id, '%s_%s' % (criterion_id, i))
