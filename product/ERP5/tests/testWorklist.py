@@ -195,7 +195,7 @@ class TestWorklist(ERP5TypeTestCase):
       self.assertEquals(count,
         self.getWorklistDocumentCountFromActionName(entry_list[0]['name']))
 
-  def test_01_worklist(self, quiet=0, run=run_all_test):
+  def test_01_permission(self, quiet=0, run=run_all_test):
     """
     Test the permission of the building module.
     """
@@ -331,13 +331,17 @@ class TestWorklist(ERP5TypeTestCase):
           current_sql_catalog_local_role_keys
       get_transaction().commit()
 
-    #
-    # Test related keys
-    #
-    self.logMessage("Test related keys")
-    self.addWorkflowCataloguedVariable(self.checked_workflow,
-                                       'base_category_id')
+  def test_02_related_key(self, quiet=0, run=run_all_test):
+    """
+    Test related keys
+    """
+    if not run:
+      return
 
+    workflow_tool = self.getWorkflowTool()
+    self.createManagerAndLogin()
+
+    self.logMessage("Create categories")
     for base_category, category_list in (
         ('region', ('somewhere', 'elsewhere')),
         ('role',   ('client',    'supplier'))):
@@ -345,6 +349,9 @@ class TestWorklist(ERP5TypeTestCase):
       for category in category_list:
         newContent(portal_type='Category', id=category)
 
+    self.logMessage("Create worklists using 'base_category_id' related key")
+    self.addWorkflowCataloguedVariable(self.checked_workflow,
+                                       'base_category_id')
     self.createWorklist(self.checked_workflow, 'region_worklist', 'has_region',
                         portal_type=self.checked_portal_type,
                         base_category_id='region')
@@ -352,6 +359,7 @@ class TestWorklist(ERP5TypeTestCase):
                         portal_type=self.checked_portal_type,
                         base_category_id='role')
 
+    document = self.createDocument()
     get_transaction().commit()
     self.tic()
     self.clearCache()
