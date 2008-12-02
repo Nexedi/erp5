@@ -16,7 +16,6 @@
                 <string>title</string>
                 <string>base_category</string>
                 <string>portal_type</string>
-                <string>allow_creation</string>
                 <string>catalog_index</string>
               </list>
             </value>
@@ -78,10 +77,6 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>allow_creation</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
                 <item>
                     <key> <string>base_category</string> </key>
                     <value> <string>legal_parent</string> </value>
