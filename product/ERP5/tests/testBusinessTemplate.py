@@ -1865,7 +1865,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     Create local roles
     """
-    new_local_roles = {'ac':['Owner', 'Manager']}
+    new_local_roles = {'ac':['Owner', 'Manager'],
+                       'group_function': ['Auditor']}
     new_local_group_roles = {'role:Authenticated':['Owner', 'Manager']}
     p = self.getPortal()
     module_id = sequence.get('module_id')
@@ -1885,7 +1886,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     module_id = sequence.get('module_id')
     module = p._getOb(module_id, None)
     self.failUnless(module is not None)
-    module.__ac_local_roles__ = {}
+    module.__ac_local_roles__ = {'someone_else': ['Associate']}
     module.__ac_local_group_roles__ = {}
     new_local_roles = sequence.get('local_roles')
     new_local_group_roles = sequence.get('local_group_roles')
