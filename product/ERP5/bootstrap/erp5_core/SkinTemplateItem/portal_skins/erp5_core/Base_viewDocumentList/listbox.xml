@@ -20,6 +20,7 @@
                 <string>selection_name</string>
                 <string>portal_types</string>
                 <string>editable_columns</string>
+                <string>url_columns</string>
               </list>
             </value>
         </item>
@@ -115,6 +116,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>download</string>
+                          <string>Download</string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
@@ -176,6 +181,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>download</string>
+                          <string>Download</string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
@@ -201,6 +210,10 @@
                         <tuple>
                           <string>thumbnail</string>
                           <string>Thumbnail</string>
+                        </tuple>
+                        <tuple>
+                          <string>download</string>
+                          <string>Download</string>
                         </tuple>
                       </list>
                     </value>
@@ -236,6 +249,17 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Documents</string> </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>download</string>
+                          <string>File_getDownloadUrl</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
               </dictionary>
             </value>

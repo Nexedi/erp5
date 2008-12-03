@@ -95,6 +95,7 @@
                     <value>
                       <list>
                         <string>listbox_thumbnail</string>
+                        <string>listbox_download</string>
                       </list>
                     </value>
                 </item>
