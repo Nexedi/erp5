@@ -308,7 +308,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                       i18n:translate=""\n
                       tal:content="python: field.get_value(\'title\')"/>\n
               <text:p text:style-name=\'field-content-center\'\n
-            tal:content="structure python: field.get_value(\'default\').replace(\'&amp;\', \'&amp;amp;\').replace(\'&gt;\', \'&amp;gt;\').replace(\'&lt;\', \'&amp;lt;\').replace(\'\\n\', \'&lt;text:line-break/&gt;\')"/>\n
+            tal:content="structure python: str(field.get_value(\'default\')).replace(\'&amp;\', \'&amp;amp;\').replace(\'&gt;\', \'&amp;gt;\').replace(\'&lt;\', \'&amp;lt;\').replace(\'\\n\', \'&lt;text:line-break/&gt;\')"/>\n
             </tal:block>\n
             <tal:block tal:condition="python: field_type == \'ImageField\'">\n
               <text:p text:style-name=\'field-label-center\' i18n:domain="ui"\n
