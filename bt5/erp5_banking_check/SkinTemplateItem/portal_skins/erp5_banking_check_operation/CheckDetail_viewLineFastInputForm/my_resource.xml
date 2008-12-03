@@ -287,7 +287,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: getattr(here,\'resource\')</string> </value>
+            <value> <string>python: getattr(here,\'resource\', \'\')</string> </value>
         </item>
       </dictionary>
     </pickle>
