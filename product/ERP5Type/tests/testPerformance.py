@@ -211,9 +211,9 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
 
       if PROFILE:
           self.profile(self.bar_module.BarModule_viewBarList)
-      # check result
       keys = view_result.keys()
       keys.sort()
+      # first display results
       i = 0
       for key in keys:
         module_value = view_result[key]
@@ -225,19 +225,28 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
             print "nb objects = %s\n\tadd = %.4f < %.4f < %.4f" %(key, MIN_OBJECT_CREATION, add_value, MAX_OBJECT_CREATION)
             print "\ttic = %.4f < %.4f < %.4f" %(MIN_TIC, tic_value, MAX_TIC)
             print "\tview = %.4f < %.4f < %.4f" %(min_view, module_value, max_view)
-            print
-        if DO_TEST:
+            print            
+        i += 1
+      # then check results
+      if DO_TEST:
+          i = 0
+          for key in keys:
+            module_value = view_result[key]
+            tic_value = tic_result[key]
+            add_value = add_result[key]
+            min_view = MIN_MODULE_VIEW + LISTBOX_COEF * i
+            max_view = MAX_MODULE_VIEW + LISTBOX_COEF * i
             self.failUnless(min_view < module_value < max_view,
                             'View: %.4f < %.4f < %.4f' % (
-                            min_view, module_value, max_view))
+                min_view, module_value, max_view))
             self.failUnless(
-                 MIN_OBJECT_CREATION < add_value < MAX_OBJECT_CREATION,
+                MIN_OBJECT_CREATION < add_value < MAX_OBJECT_CREATION,
                 'Create: %.4f < %.4f < %.4f' % (
-                 MIN_OBJECT_CREATION, add_value, MAX_OBJECT_CREATION))
+                MIN_OBJECT_CREATION, add_value, MAX_OBJECT_CREATION))
             self.failUnless(MIN_TIC < tic_value < MAX_TIC,
                             'Tic: %.4f < %.4f < %.4f' % (
-                            MIN_TIC, tic_value, MAX_TIC))
-        i += 1
+                MIN_TIC, tic_value, MAX_TIC))
+            i += 1
 
 
     def test_viewProxyField(self, quiet=quiet):
