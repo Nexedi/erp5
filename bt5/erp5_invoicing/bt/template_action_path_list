@@ -7,6 +7,7 @@ Invoicing Rule | view
 Purchase Invoice Transaction | apply_trade_condition
 Purchase Invoice Transaction | jump_related_order
 Purchase Invoice Transaction | jump_to_related_purchase_packing_list
+Purchase Invoice Transaction | payment_condition
 Purchase Invoice Transaction | view_discount
 Purchase Invoice Transaction | view_invoice
 Purchase Invoice Transaction | view_tax
