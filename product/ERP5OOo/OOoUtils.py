@@ -445,14 +445,19 @@ class OOoParser(Implicit):
           for j in range(cells_to_repeat):
             # Get the cell content
             cell_data = None
-
-            value_type = cell.getAttributeNS(self.ns['office'], 'value-type')
+            
+            value_type = None
+            # value-type and value attributes can be in table or office
+            # namespaces, so we use local-name
+            value_type_attribute_list = cell.xpath('./@*[local-name()="value-type"]')
+            if value_type_attribute_list:
+              value_type = value_type_attribute_list[0].value
             if value_type == 'date':
-              cell_data = cell.getAttributeNS(self.ns['office'], 'date-value')
+              cell_data = cell.xpath('./@*[local-name()="date-value"]')[0].value
             elif value_type == 'time':
-              cell_data = cell.getAttributeNS(self.ns['office'], 'time-value')
+              cell_data = cell.xpath('./@*[local-name()="time-value"]')[0].value
             elif value_type in ('float', 'percentage', 'currency'):
-              cell_data = cell.getAttributeNS(self.ns['office'], 'value')
+              cell_data = cell.xpath('./@*[local-name()="value"]')[0].value
             else:
               text_tags = cell.xpath('.//*[name() = "text:p"]')
               if len(text_tags):
