@@ -238,8 +238,9 @@ try:
     
     def checkin(self, path, log_message, recurse):
       try:
-        return self.client.checkin(path, log_message=log_message \
-        or 'none', recurse=recurse)
+        return Revision(self.client.checkin(path,
+                                            log_message=log_message or 'none',
+                                            recurse=recurse))
       except pysvn.ClientError, error:
         excep = self.getException()
         if excep:
@@ -249,7 +250,7 @@ try:
         
     def update(self, path):
       try:
-        return self.client.update(path)
+        return [Revision(x) for x in self.client.update(path)]
       except pysvn.ClientError, error:
         excep = self.getException()
         if excep:
