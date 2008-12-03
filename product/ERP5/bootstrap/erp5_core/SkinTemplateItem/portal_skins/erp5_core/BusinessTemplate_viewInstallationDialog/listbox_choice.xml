@@ -259,7 +259,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.choice_item_list[0][1]</string> </value>
+            <value> <string>python: cell.choice_item_list and cell.choice_item_list[0][1] or []</string> </value>
         </item>
       </dictionary>
     </pickle>
