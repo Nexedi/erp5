@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-import sys
+import fnmatch, os, re, shutil, sys
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
 from Globals import Persistent, PersistentMapping
 from Acquisition import Implicit, aq_base
@@ -54,8 +54,6 @@ from Products.ERP5Type.Utils import readLocalTest, \
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.RoleInformation import RoleInformation
-import fnmatch
-import re, os
 from OFS.Traversable import NotFound
 from OFS import XMLExportImport
 from cStringIO import StringIO
@@ -77,7 +75,7 @@ from Products.ERP5Type import tarfile
 from urllib import quote, unquote
 from difflib import unified_diff
 import posixpath
-import shutil
+import transaction
 
 # those attributes from CatalogMethodTemplateItem are kept for
 # backward compatibility
@@ -609,34 +607,34 @@ class ObjectTemplateItem(BaseTemplateItem):
     self._objects[file_name[:-4]] = obj
 
   def preinstall(self, context, installed_bt, **kw):
-    #XXX -12 used here is -len('TemplateItem')
     modified_object_list = {}
     if context.getTemplateFormatVersion() == 1:
-      portal = context.getPortalObject()
-      new_keys = self._objects.keys()
-      for path in new_keys:
+      upgrade_list = []
+      type_name = self.__class__.__name__.split('TemplateItem')[-2]
+      for path in self._objects:
         if installed_bt._objects.has_key(path):
-          # compare object to see it there is changes
-          new_object = self._objects[path]
-          old_object = installed_bt._objects[path]
-          old_object = self.removeProperties(old_object)
-          new_io = StringIO()
-          old_io = StringIO()
-          OFS.XMLExportImport.exportXML(new_object._p_jar, new_object._p_oid, new_io)
-          OFS.XMLExportImport.exportXML(old_object._p_jar, old_object._p_oid, old_io)
-          new_obj_xml = new_io.getvalue()
-          old_obj_xml = old_io.getvalue()
-          new_io.close()
-          old_io.close()
-          if new_obj_xml != old_obj_xml:
-            modified_object_list.update({path : ['Modified', self.__class__.__name__[:-12]]})
+          upgrade_list.append((path,
+            self.removeProperties(installed_bt._objects[path])))
         else: # new object
-          modified_object_list.update({path : ['New', self.__class__.__name__[:-12]]})
+          modified_object_list[path] = 'New', type_name
+      # update _p_jar property of objects cleaned by removeProperties
+      transaction.savepoint(optimistic=True)
+      for path, old_object in upgrade_list:
+        # compare object to see it there is changes
+        new_object = self._objects[path]
+        new_io = StringIO()
+        old_io = StringIO()
+        OFS.XMLExportImport.exportXML(new_object._p_jar, new_object._p_oid, new_io)
+        OFS.XMLExportImport.exportXML(old_object._p_jar, old_object._p_oid, old_io)
+        new_obj_xml = new_io.getvalue()
+        old_obj_xml = old_io.getvalue()
+        new_io.close()
+        old_io.close()
+        if new_obj_xml != old_obj_xml:
+          modified_object_list[path] = 'Modified', type_name
       # get removed object
-      old_keys = installed_bt._objects.keys()
-      for path in old_keys:
-        if path not in new_keys:
-          modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
+      for path in set(installed_bt._objects) - set(self._objects):
+        modified_object_list[path] = 'Removed', type_name
     return modified_object_list
 
   def _backupObject(self, action, trashbin, container_path, object_id, **kw):
@@ -1306,53 +1304,19 @@ class WorkflowTemplateItem(ObjectTemplateItem):
   def __init__(self, id_list, tool_id='portal_workflow', **kw):
     return ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
 
-  def preinstall(self, context, installed_bt, **kw):
-    modified_object_list = {}
-    if context.getTemplateFormatVersion() == 1:
-      portal = context.getPortalObject()
-      new_keys = self._objects.keys()
-      for path in new_keys:
-        if installed_bt._objects.has_key(path):
-          # compare object to see it there is changes
-          new_object = self._objects[path]
-          old_object = installed_bt._objects[path]
-          new_io = StringIO()
-          old_io = StringIO()
-          OFS.XMLExportImport.exportXML(new_object._p_jar, new_object._p_oid, new_io)
-          OFS.XMLExportImport.exportXML(old_object._p_jar, old_object._p_oid, old_io)
-          new_obj_xml = new_io.getvalue()
-          old_obj_xml = old_io.getvalue()
-          new_io.close()
-          old_io.close()
-          if new_obj_xml != old_obj_xml:
-            wf_id = path.split('/')[:2]
-            modified_object_list.update({'/'.join(wf_id) : ['Modified', 'Workflow']})
-        else: # new object
-          modified_object_list.update({path : ['New', 'Workflow']})
-      # get removed object
-      old_keys = installed_bt._objects.keys()
-      for path in old_keys:
-        if path not in new_keys:
-          modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
-    return modified_object_list
-
   def install(self, context, trashbin, **kw):
     if context.getTemplateFormatVersion() == 1:
       portal = context.getPortalObject()
-      # sort to add objects before their subobjects
-      keys = self._objects.keys()
-      keys.sort()
       update_dict = kw.get('object_to_update')
       force = kw.get('force')
-      for path in keys:
-        wf_path = '/'.join(path.split('/')[:2])
-        if wf_path in update_dict or force:
-          if not force:
-            action = update_dict[wf_path]
-            if action == 'nothing':
-              continue
-          else:
+      # sort to add objects before their subobjects
+      for path in sorted(self._objects):
+          if force:
             action = 'backup'
+          else:
+            action = update_dict.get(path)
+            if action in (None, 'nothing'):
+              continue
           container_path = path.split('/')[:-1]
           object_id = path.split('/')[-1]
           try:
