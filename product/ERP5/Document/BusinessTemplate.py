@@ -4243,11 +4243,11 @@ class LocalRolesTemplateItem(BaseTemplateItem):
           action = update_dict[roles_path]
           if action == 'nothing':
             continue
-      path = roles_path.split('/')[1:]
-      obj = p.unrestrictedTraverse(path)
-      local_roles_dict, group_local_roles_dict = self._objects[roles_path]
-      setattr(obj, '__ac_local_roles__', local_roles_dict)
-      setattr(obj, '__ac_local_group_roles__', group_local_roles_dict)
+        path = roles_path.split('/')[1:]
+        obj = p.unrestrictedTraverse(path)
+        local_roles_dict, group_local_roles_dict = self._objects[roles_path]
+        setattr(obj, '__ac_local_roles__', local_roles_dict)
+        setattr(obj, '__ac_local_group_roles__', group_local_roles_dict)
 
   def uninstall(self, context, **kw):
     p = context.getPortalObject()
