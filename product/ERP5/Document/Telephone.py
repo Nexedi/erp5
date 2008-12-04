@@ -236,7 +236,7 @@ class Telephone(Coordinate, Base):
       coordinate_text = ''
 
     # Removing the spaces of the begin and end.
-    coordinate_text = coordinate_text.strip()
+    coordinate_text = str(coordinate_text).strip()
     
     # This regexp get the coordinate text 
     # and extract number and letters
