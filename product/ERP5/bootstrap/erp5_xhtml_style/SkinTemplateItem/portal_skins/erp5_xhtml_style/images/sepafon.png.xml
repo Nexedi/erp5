@@ -10,6 +10,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts28410697.72</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>sepafon.png</string> </value>
         </item>
@@ -19,10 +23,8 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAAIAAAAWCAIAAABlk9r+AAAABGdBTUEAALGOfPtRkwAAACBjSFJN
-AAB6JQAAgIMAAPn/AACA6AAAdTAAAOpgAAA6lwAAF2+XqZnUAAAAaklEQVR4nGLeefaWvIUfQAAx
-MYABQABBKYAAglIAAQSlAAIISgEEEJQCCCAoBRBAUAoggKAUQABBKYAAglIAAQSlAAIISgEEEJQC
-CCAoBRBAUAoggKAUQABBKYAAglIAAQSlAAIISgEEGADX0gMzzUfECgAAAABJRU5ErkJggg==</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAAIAAAAWCAIAAABlk9r+AAAAE0lEQVQIHWPYefZW9bzdDIOPAgDb
+/Vx5iYE+RgAAAABJRU5ErkJggg==</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -34,7 +36,7 @@ CCAoBRBAUAoggKAUQABBKYAAglIAAQSlAAIISgEEGADX0gMzzUfECgAAAABJRU5ErkJggg==</string
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>223</int> </value>
+            <value> <int>76</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

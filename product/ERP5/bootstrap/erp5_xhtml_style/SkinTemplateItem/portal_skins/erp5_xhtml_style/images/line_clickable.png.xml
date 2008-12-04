@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts01537524.75</string> </value>
+            <value> <string>ts28410697.33</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -23,13 +23,12 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAPCAYAAADtc08vAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A
-/wD/oL2nkwAAAAlwSFlzAAALEgAACxIB0t1+/AAAAAd0SU1FB9gBHBAZDnWI0hoAAAD1SURBVCjP
-pZMhUsRAEEV/KI6SM+C5AAKHW4UDF4VGYFBUYSgMYguPiuQKexVg+v8/YRATQ1VCNuzYrvf690xP
-07YtDjlHc4XuqS9Xj2/lX4LuuS9hwSI2d9uyWkAZFhEUsgMXNw9llcAiSCMrMKRPkMTZ9W3ZWxAU
-rISBCZKQFSCJ001X9k4wMEEREAMKwQqYxMn55S/J8ZTgOz5gCjYhCXaCSYgBi8sJNMImYX5VWIHs
-Os5iAqt2ExNM1xRBWAm7/rVZFpCQCblephmT8KyAEXAm8jizyUl4PkEmHGl8gcCu3zarFun95b6R
-6ir/BQNAc+hv/AH2PNy7iEOjfQAAAABJRU5ErkJggg==</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAPCAYAAADtc08vAAAA9UlEQVQoz6WTIVLEQBBFfyiOkjPg
+uQACh1uFAxeFRmBQVGEoDGILj4rkCnsVYPr/P2EQE0NVQjbs2K73+vdMT9O2LQ45R3OF7qkvV49v
+5V+C7rkvYcEiNnfbslpAGRYRFLIDFzcPZZXAIkgjKzCkT5DE2fVt2VsQFKyEgQmSkBUgidNNV/ZO
+MDBBERADCsEKmMTJ+eUvyfGU4Ds+YAo2IQl2gkmIAYvLCTTCJmF+VViB7DrOYgKrdhMTTNcUQVgJ
+u/61WRaQkAm5XqYZk/CsgBFwJvI4s8lJeD5BJhxpfIHArt82qxbp/eW+keoq/wUDQHPob/wB9jzc
+u4hDo30AAAAASUVORK5CYII=</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -41,7 +40,7 @@ Os5iAqt2ExNM1xRBWAm7/rVZFpCQCblephmT8KyAEXAm8jizyUl4PkEmHGl8gcCu3zarFun95b6R
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>373</int> </value>
+            <value> <int>302</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

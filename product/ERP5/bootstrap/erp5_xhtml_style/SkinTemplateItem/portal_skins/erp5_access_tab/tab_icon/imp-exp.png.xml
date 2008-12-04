@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts89545060.01</string> </value>
+            <value> <string>ts28410742.71</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -23,20 +23,15 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABmJLR0QA/wD/AP+gvaeTAAAACXBI
-WXMAAAsSAAALEgHS3X78AAAAB3RJTUUH1wkLFQo40f5SyAAAAnNJREFUOMutlc1LVFEYh59z7viB
-CBG5qd3sKiQsiMQ2fhEmKIQM+ZVkpjkMuhEX+gcYEUMUCQZFiwYSclWLIty4M6EcdESomKHICEvC
-wtT5OG+L68w4zDUd8weXc8+95zz3fX+877lKRHg3F0ZrhTEiWiucFI3FiUVjJBKG1V9rADTUnXNe
-DCAizM6Hk6M4KWGMrK1HZfX3hqz8/COz82GJfP4uz19Oi4jgdGn2KEsrtFZY2t5SkJ/H2TMnePHq
-jTit3xNYK4VlaVyWxnLZ2RcVFVJypJiTx92O8D1HDKC2OVpYYOGyNMeOHnaM3JUbWPExvATA/bHx
-rPf+9x9koL9d5QTWWiFiB9U67KalfApvr4cvS8tEY3FEhImJiXTE/nsBaqrPSzAUASA57qan01cp
-Kg5QVVmBZWmMZNrsGuhvJxiK0DrsJlc9mmwHAtRdqExl4+hxfl7ObJ5M2fD6i1WZ4JK5Q0zq4FZ3
-5Q7uqg3QdKmORMJkgn+cWiUYitBVG8jRAhvqaap3XJO0Qt0qvMLrirCUlaa9NiLMzLylvLMPf6+P
-650eHj5+loK2NTdijGDEZLVEyuPlHsmoiPXNGAsLC5R39qWeRT59TUFrqs/zbXkl44BqaGhMNYoS
-sYFlpW6CoYiUlbrZ2IyzuLjI6dYe9iN/r8+5pUcfjO8b+s+zwnejGX+v77/AO7a0t+cyfmBgbDSV
-3oGAtVJZ8O5rHgDicbtmjTHE44mte+HO3VFu3xze+RDa3vfebhue/uWQgsrWRCRZcrtEnJ9npT9i
-hD5vCwljELHnLqUR0RgjKBIIgoqrbLBlaQaHRujoaGNwaISD0F8iGEWfBagtXwAAAABJRU5ErkJg
-gg==</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABsUlEQVQ4jaWUvVLCQBSF9wlsHB/C
+ytaXsPFZLKydobOxtLLwDWysndExyk8EFEdEUUAQmWACAksCXHMWN/KzSQjszOEyYfnuTXL2MCJi
+yfQL07OvqORWpW5SebrUHujiKktn55oQ/usn8QHoXyXVGo5G1OnZZLU5Gd9d0ahYagTCFwbzvkPt
+Tp9Miwtw9dOkWt3yhS8ExnIGQ+rxMRz7zBYX1wrFuhIeCSynxj58x+pyWzl5JHDfHngv8/DoVKnI
+YDxn2xmDN3eIDmIn1DB+SM+4jknmSUs80d5+7B/sdmF+FvMTwBAmhEUTdwW61Z+nwXJSuTmqAL9/
+LFM2V/IHb+0uJ8Bz+co0eD29tvLEOCywnXJiv7es0iT0vWIIAa4Cs41jNucKOOFai7uUbQHBoZBg
+VPj3o2ZSudoUcCV41m4wfjypC6gET95ZWEApwTi6KT3jQaMKjZVgcYKWhAaCMfEq8EAw8ncSHsU1
+geBZOCqCXoY9hKyAM6Q7Ql0BoKeu7U0hwC3uQb+MtoAi9GG5UDAiUgpRCcF+aIQ8RgN4umn2phrM
+gTO5N+ZeRBU/riIJ/gVS3tsSEGKGtAAAAABJRU5ErkJggg==</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -48,7 +43,7 @@ gg==</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>742</int> </value>
+            <value> <int>490</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

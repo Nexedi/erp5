@@ -10,6 +10,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts28410695.77</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>1rightarrowv.png</string> </value>
         </item>
@@ -19,18 +23,13 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGOfPtRkwAAACBjSFJN
-AAB6JQAAgIMAAPn/AACA6AAAdTAAAOpgAAA6lwAAF2+XqZnUAAACB0lEQVR4nGL8//8/Ay0AQAAx
-0cRUIAAIIJwGM/ox/mf0BWJGRgY4NkRiQzEuABBAuF0MCiFDOIuBQQyIVYl3MUAA4Q2KFeEtDAw1
-UMNfAUleqEQSYYMBAgivi0FevVFwlIGhFioyDyo3D6cuOAAIINwG/2ZgePX1GYMAhwTDmcwtCJcT
-CQACCLfBPxgYvv7+CjT8AcPJp7sYzmRtQbicCAAQQCz4XAwCt9+dY7j48jzD3vt7wS43YfBhYGgG
-G86IL6wBAgiviz/8eAc04T/D73+/Gb78+s7QdqQcEizoYY4FAAQQboN/MTC8+/6e4frrCwwPPjxj
-+PHnF8PHH18Zeo/XMiwJayAYLAABhDsofoJc/JHh3/9/DH///QML8bFzMWiLaTHU7u9iYLiF27Ug
-ABBAuF38h4Hh9bcPDH///wVzhTn5GIylDBnmX9jAcP/oNwaGlUBBJQacWQ8ggHC7GBgUb799ZuBg
-eYNi6N3DXxkYVoFVMDLcw+1igADCbfB3CCXNK86gIKCAaSgBABBAuIMCaPDnXz8ZmBiZcBsqgdtg
-gADCm9x+/vkLTL/nEIYKQg2Nh6p5gdtggABiABX02DAQ/BfvZfvPEAZOUtiTFTCD4NIPEEB4S7eX
-539BXOoIdakBmoKvuPUCBBAjrqoJWLLBJPBGFC79AAGE02BKAUAA0azOAwgwAGRF0N19O4alAAAA
-AElFTkSuQmCC</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABVElEQVQ4y2P4//8/Ay0wA90NZvBl
++M/gA8TIwIABA5BuMMjQWrDBEMPFgDiUSgavuNLyn6EGyfAkqGlJlBjszfB/5dXW/zfeHEV1OcUu
+dmP4P/lU9v8XX+7+P/NsC6rLKTLYjuF/x9GE/5de7v0/9XQexHAsLifdYEuIwWuvd/9P22L7P2iV
+NqbhSeQYbMjwv2Kv3/8117v+J26y+O+2RAmr4aQbrM0Admnzoaj/jovk/tstkPnvvEjhf+Raw/9L
+LjfADSfdYBWG/2Fr9P6nbLYGGwrCgSu1/rccjv6vOInrP0M4uQYrMIBdCgoGZEOVJ3PDDWVQIico
+pBj+680Q/O+5TAXV0DDUlEG6wYIQg0FBgctQ8gzmYACHJSgCcRnKIEGOwUApqT52VEMFoQbGU+Ji
+oJR4Lxt2lzIgCiOyDGaIgRrqiKM8DifXYFwupSTyBm2dBwAOW1Q2zBhQdQAAAABJRU5ErkJggg==</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -42,7 +41,7 @@ AElFTkSuQmCC</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>636</int> </value>
+            <value> <int>397</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

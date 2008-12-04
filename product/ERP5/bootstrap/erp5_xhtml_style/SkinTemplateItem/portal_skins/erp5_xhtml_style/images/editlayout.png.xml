@@ -10,6 +10,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts28410696.48</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>editlayout.png</string> </value>
         </item>
@@ -19,9 +23,8 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAARUlEQVQoz7WRUQoAIAhDN+jgu7n9
-FIhEkdZAFMU9RKAgC4FNzokJF+JyyQCg+Y4kG5mzdjMuHUqkSJBk/0jxrqek2sdP6m3qKQITuk/z
-AAAAAElFTkSuQmCC</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAAN0lEQVQoz2NgoAD8R8MMeGjKwH8S
+MIomYg1H5TQ0NPwHYWQ2shj1bUK3gbY2YeNTzSaS44kkAAB9FVfEqq+WUwAAAABJRU5ErkJggg==</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -33,7 +36,7 @@ AAAAAElFTkSuQmCC</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>126</int> </value>
+            <value> <int>112</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -10,6 +10,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts28410697.59</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>save-preview.png</string> </value>
         </item>
@@ -19,28 +23,27 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABmJLR0QA/wD/AP+gvaeTAAAACXBI
-WXMAAAsSAAALEgHS3X78AAAAB3RJTUUH0wgcEjo6jsYXEgAABD9JREFUeNqFlF+IVFUcxz935s44
-s9uubbqotemmZGEPmy710GKkBIJREFLiw9JDiYFg0oMI6YMGRvRQoORT4Usv+hKYhYhhQmL2UMsa
-xLqbu6tuu7M6u/Pnzrnnfw93dmanTA/8OL9z7uVzv/f7O+cXXLt+23e0ZQkCWoYHnANrHdZ6ytUo
-LhTufmqU+HjXm1ssDxnB8OiMf2ZNN2G6FTpdusvpa2c48csXjIkbkIdclKPTPzZWmJ46iOUi3zD3
-YHBvN95q7ty5A4Cymo9+OMQ5d5Z4TQwdQAowwBxkbmWVv+FOm6rZ93/wcCHJZDL09vbinOPkpZOc
-y50l7osT4Cx03lxK170uUqSJwihbXHZvJxLHuxzgK2buD/agdaJ4qjzF1yOniAdiaIPUaJrnfu9j
-W+cONjz1PPlsnqnKLX71P2cuLf1+cENn/87XPx8UWhu0Nty8NctsYf5sAg5geHqYYqnIaHGUiRUT
-0A1UYc3kap7lVQp3s7RpxZH92xMtfpArN68ERy8cXbJ/z44lC0q/+3GI4aHRwYYVu8/tZig7RNAT
-QD+kl6UhgMm1k4xnPmPZ2Fp21g42ixMEDKwd4Pye8y0WzJdruMUeH99+nL2/7aW4qUhHd0eyuRIq
-6QrROLzR9R59Tzz9sFOGUoZSqdoE96/s51jvMQ5fO8z6F9fTs7yHmdIM40PjbG7bxeb1Ayzv6nwg
-1DlPqVyhNF9ugtOpNBtXbGQfH3Di6pes61vH9MgsB3oP8dILA3jv8R5mi5V6nqwXZmMMc3MVCjNF
-aiJugoMgIJ/Ps+3JbVy5fp0Lf3zLy8HbhH+v4OrtMYyxGOvQxmKMwxiLthalDLGQlEsVokhQnKsQ
-x6oJ9t4jhMA42CRf4a3Od6hEknJFJRBt0cai6scqlpo4llQqEaIWI6VCSo1SijiOW8E1ERNrj1YG
-pS3OOdrzWYxNFCplCLzDGUh5S9o7cpk0qXyWTCogk05REAIp1WIrUuTy7QShR2mD0obckgyvbenD
-OYcQCiEkUmq0Nihl6rNGKdOIU2cuMitkq8dhJosPPEonvw5gjEUIiRAKrc19wK0fkEqhlG6CrXOU
-ylWsAxlrlLYYbZiYuMf0dBmtTd1rnfitdcMeYxJ4LhciY4VUstVjoy3Wg6orM1oTBJ729hClQGsI
-Q08YQjrtMQZSKY/WniDwgEP9W3E6zLB6dQ/Oe4yxVKMa1hiq1Zj5+VpDVaLQopTGmAUrLFobMpmg
-boVqdjfnkwYPEAtJFAm8c2htcM5i7X/DGIe1FucM1tr6ldZorQijmuTPv6aSQlkPeCIRI4QE5zHG
-4L3DuSSS3NbXyWztQu7RSqGVJhwZuTH40+XLqxbf+VIxdWRp1yN5aw3VaqlR+eYpaC2i1rbxTlQp
-I2sRwf2aydatH74vhPwklpLHVz2Ktb6h2FqP927RXvOZc56xsUlqIuYfIv5OEWwnTTQAAAAASUVO
-RK5CYII=</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAEP0lEQVQ4y4WUX4hUVRzHP3fmzjiz
+265tuqi16aZkYQ+bLvXQYqQEglEQUuLD0kOJgWDSgwjpgwZG9FCg5FPhSy/6EpiFiGFCYvZQyxrE
+upu7q267szq78+fOued/D3d2ZqdMD/w4v3Pu5XO/9/s75xdcu37bd7RlCQJahgecA2sd1nrK1Sgu
+FO5+apT4eNebWywPGcHw6Ix/Zk03YboVOl26y+lrZzjxyxeMiRuQh1yUo9M/NlaYnjqI5SLfMPdg
+cG833mru3LkDgLKaj344xDl3lnhNDB1ACjDAHGRuZZW/4U6bqtn3f/BwIclkMvT29uKc4+Slk5zL
+nSXuixPgLHTeXErXvS5SpInCKFtcdm8nEse7HOArZu4P9qB1oniqPMXXI6eIB2Jog9Romud+72Nb
+5w42PPU8+WyeqcotfvU/Zy4t/X5wQ2f/ztc/HxRaG7Q23Lw1y2xh/mwCDmB4ephiqchocZSJFRPQ
+DVRhzeRqnuVVCneztGnFkf3bEy1+kCs3rwRHLxxdsn/PjiULSr/7cYjhodHBhhW7z+1mKDtE0BNA
+P6SXpSGAybWTjGc+Y9nYWnbWDjaLEwQMrB3g/J7zLRbMl2u4xR4f336cvb/tpbipSEd3R7K5Eirp
+CtE4vNH1Hn1PPP2wU4ZShlKp2gT3r+znWO8xDl87zPoX19OzvIeZ0gzjQ+NsbtvF5vUDLO/qfCDU
+OU+pXKE0X26C06k0G1dsZB8fcOLql6zrW8f0yCwHeg/x0gsDeO/xHmaLlXqerBdmYwxzcxUKM0Vq
+Im6CgyAgn8+z7cltXLl+nQt/fMvLwduEf6/g6u0xjLEY69DGYozDGIu2FqUMsZCUSxWiSFCcqxDH
+qgn23iOEwDjYJF/hrc53qESSckUlEG3RxqLqxyqWmjiWVCoRohYjpUJKjVKKOI5bwTURE2uPVgal
+Lc452vNZjE0UKmUIvMMZSHlL2jtymTSpfJZMKiCTTlEQAinVYitS5PLtBKFHaYPShtySDK9t6cM5
+hxAKISRSarQ2KGXqs0Yp04hTZy4yK2Srx2Emiw88Sie/DmCMRQiJEAqtzX3ArR+QSqGUboKtc5TK
+VawDGWuUthhtmJi4x/R0Ga1N3Wud+K11wx5jEnguFyJjhVSy1WOjLdaDqiszWhMEnvb2EKVAawhD
+TxhCOu0xBlIpj9aeIPCAQ/1bcTrMsHp1D857jLFUoxrWGKrVmPn5WkNVotCilMaYBSssWhsymaBu
+hWp2N+eTBg8QC0kUCbxzaG1wzmLtf8MYh7UW5wzW2vqV1mitCKOa5M+/ppJCWQ94IhEjhATnMcbg
+vcO5JJLc1tfJbO1C7tFKoZUmHBm5MfjT5curFt/5UjF1ZGnXI3lrDdVqqVH55iloLaLWtvFOVCkj
+axHB/ZrJ1q0fvi+E/CSWksdXPYq1vqHYWo/3btFe85lznrGxSWoi5h8i/k4R+ux0HAAAAABJRU5E
+rkJggg==</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -52,7 +55,7 @@ RK5CYII=</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>1202</long> </value>
+            <value> <int>1144</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

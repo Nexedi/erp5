@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts89194859.38</string> </value>
+            <value> <string>ts28410696.16</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -23,15 +23,13 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABmJLR0QA/wD/AP+gvaeTAAAACXBI
-WXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH1AcZDRMXMK5nmgAAAYhJREFUeNqllcFKw0AQhv+ZbPFB
-PJYKBc8ePfsAvl17tw8iBGx7EPQNRKSaxrCb+T3ExMZu0kQHlhyG/fef2W8nQhLb7TPRE2m6xu3t
-jWBMkMRm88TD8L5knnu+vLzx9XXHzeaJi8UdSWLo0thhSSJIEoHqT/ry8gLL5YpDDWtXQkSQJEnT
-ivv7BwAYLO56T1VFWZa4vr7CbveB9/cM2+0j/ixcua2+qoosy5HnRas1/3IsQpgZ9vtPqCpUFfP5
-7IiiGDVR4RAMIRiyLEdReADAdHoeyWffVcywXK54KK4x/MwMRVGAJCaT5E/UHAmXJRuXzrmGjLHU
-uN9uvfcQkWb1XVgfNS1hs0r8VAyhpmXH+7K1+RReNTXel3BO4ZyLU2EWQApIay5xCDVnZxOQDiHY
-sXDdAhFCRDpb0kUNWe1rCafpGmm67ix5Pp91UlNXFYIdC5+atfVL66LGzBpCTk63WHRRUx2AluNR
-wmOoGem4poYtamJV6Jhf2CE1v1sxamwejsU+amLxBcwsVQMFoSFoAAAAAElFTkSuQmCC</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABNUlEQVQ4y63Ua26CQBSGYfa/DRfQ
+nRhjDNbaegMJIFBALirI155ppmG4TRlqMv/g4eTMGzUA2mr1jqEzm72AnhtzNA7Xf0XxRJ4X8LwQ
+QRAr4Z1wVVV4PEqGcni9/hiF98I0dRSlDCawfibD12vOYMfxsd0eMZ/r02COJ8kNYZhgtzOxXL5h
+sXj9HzhN898dj61msArXDWAYDlSqacE06f1esBXQbm3bg0o1LZimieOMwb4f4XL5hEo1AkwvZNmN
+1cBfIlylGgEuy58Lk8F/qUaA6UI4XF+HrJrN5ghdFwsRYHqQpiB0aOJmNYeDhf3+/L0Oow3zCWSr
+6KqG8NPJZh8Q4OatNo+sGsJN02UfEGDZkVVDk1uWpw73VUO75lMrwX3VTIb7quGXqAQPVaM8saya
+rv+KL/BMivw4FHufAAAAAElFTkSuQmCC</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -43,7 +41,7 @@ wmOoGem4poYtamJV6Jhf2CE1v1sxamwejsU+amLxBcwsVQMFoSFoAAAAAElFTkSuQmCC</string> </
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>507</int> </value>
+            <value> <int>366</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

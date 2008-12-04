@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts89640139.15</string> </value>
+            <value> <string>ts28410697.19</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -23,15 +23,14 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGOfPtRkwAAAAlwSFlz
-AAALEwAACxMBAJqcGAAAAYpJREFUOMtj+P//PwM2nJnTUIBLDhnjlNi3/8T/9KymArINWL1m5//p
-M1a9J9uAnr4F5xcs2PjfzTM3gaABSalVDoUl7QbIEiWlPfv7+5f+T0iqW0/QgLaOmQ0rVm6/r2vo
-KwCTyMpu3t/cPOt/ekbT/7jEXgG8Bnj6pAZMmrT8f3hkUQNMIiSsoKG8fML/zKzm/xY20f1Awx2Q
-sACKAUABg8bm6cBAW/1/5erd/5cu2/5/waLN/2fPXfd/7bp9//ftP/t/x87j/zdtPvR/1Zrd/4vL
-ut/DXAU2wM4xJqCktBfogor/QaG1YOwXWPA/PrHqf0pq3X/fgML/gaHl/wOCy/77BZX+DwmvB3nL
-AG5AcmptA9gLUS33YSZHx5avr6ub9j+voBOkeD0QOyBhBRQvhISXJSSmgBUGwFMiMBBBsZCW0YEi
-jjUQQbbCnATDxcBonDZ91f+I6Ob3ZCWkjs65/1taZ4Ns7yfLgOkzVv7Pyun5j+4yog0oKe8/HxXb
-sZ/svACymZDtIAwASeiqZPPJnHUAAAAASUVORK5CYII=</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABiklEQVQ4y2P4//8/AzacmdNQgEsO
+GeOU2Lf/xP/0rKYCsg1YvWbn/+kzVr0n24CevgXnFyzY+N/NMzeBoAFJqVUOhSXtBsgSJaU9+/v7
+l/5PSKpbT9CAto6ZDStWbr+va+grAJPIym7e39w86396RtP/uMReAbwGePqkBkyatPx/eGRRA0wi
+JKygobx8wv/MrOb/FjbR/UDDHZCwAIoBQAGDxubpwEBb/X/l6t3/ly7b/n/Bos3/Z89d93/tun3/
+9+0/+3/HzuP/N20+9H/Vmt3/i8u638NcBTbAzjEmoKS0F+iCiv9BobVg7BdY8D8+sep/Smrdf9+A
+wv+BoeX/A4LL/vsFlf4PCa8HecsAbkByam0D2AtRLfdhJkfHlq+vq5v2P6+gE6R4PRA7IGEFFC+E
+hJclJKaAFQbAUyIwEEGxkJbRgSKONRBBtsKcBMPFwGicNn3V/4jo5vdkJaSOzrn/W1png2zvJ8uA
+6TNW/s/K6fmP7jKiDSgp7z8fFduxn+y8ALKZkO0gDABJ6Kpk88mcdQAAAABJRU5ErkJggg==</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -43,7 +42,7 @@ sZ/svACymZDtIAwASeiqZPPJnHUAAAAASUVORK5CYII=</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>488</int> </value>
+            <value> <int>451</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts13016803.87</string> </value>
+            <value> <string>ts28410698.25</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -23,11 +23,9 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAABGdBTUEAALGPC/xhBQAAAAFzUkdC
-AK7OHOkAAAAHdElNRQfYBgkMNxqkji7iAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAAL
-EwEAmpwYAAAAXElEQVQY032QMQrAMAhFvXt7nqYXKdTd1c1FyJJBLGYQiiTCW/57k3A3hPN4fEX4
-GewufEZjjEKJVLXwi8zMAaAQe0a9dyeiQuwZiYgjYiH2jJh5yYza9W7/FP4DhZwDXKi/gaoAAAAA
-SUVORK5CYII=</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAXElEQVQYV32QMQrAMAhFvXt7nqYX
+KdTd1c1FyJJBLGYQiiTCW/57k3A3hPN4fEX4GewufEZjjEKJVLXwi8zMAaAQe0a9dyeiQuwZiYgj
+YiH2jJh5yYza9W7/FP4DhZwDXIMDO98AAAAASUVORK5CYII=</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -39,7 +37,7 @@ SUVORK5CYII=</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>236</int> </value>
+            <value> <int>149</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
