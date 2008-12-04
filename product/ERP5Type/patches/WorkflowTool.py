@@ -523,7 +523,7 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
             raise
           LOG('WorkflowTool.listActions', WARNING,
               'Exception while computing worklists: %s'
-              % grouped_worklist_dict,
+              % grouped_worklist_dict.keys(),
               error=sys.exc_info())
         if src__:
           action_list.append(catalog_brain_result)
