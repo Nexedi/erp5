@@ -95,11 +95,24 @@ if changelog.strip() == \'\' :\n
   request.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
   return context.asContext(added=added, modified=modified, removed=removed).BusinessTemplate_viewSvnChangelog()\n
 \n
+def getRevisionNumber(revision):\n
+  """get the revision number from a revision, with backward compatibility support.\n
+  """\n
+  if hasattr(revision, \'getNumber\'):\n
+    return revision.getNumber()\n
+  return str(revision)\n
+\n
 try:\n
+  revision_string = \'\'\n
   if commit_non_recurs != \'none\' and commit_non_recurs != \'\':\n
-    context.getPortalObject()["portal_subversion"].checkin(path=commit_non_recurs, business_template=context, recurse=False, log_message=changelog)\n
+    revision = context.getPortalObject()["portal_subversion"].checkin(path=commit_non_recurs, business_template=context, recurse=False, log_message=changelog)\n
+    revision_string = \'%s\' % getRevisionNumber(revision)\n
   if commit_recurs != \'none\' and commit_recurs != \'\':\n
-    context.getPortalObject()["portal_subversion"].checkin(path=commit_recurs, business_template=context, recurse=True, log_message=changelog)\n
+    revision = context.getPortalObject()["portal_subversion"].checkin(path=commit_recurs, business_template=context, recurse=True, log_message=changelog)\n
+    if revision_string:\n
+      revision_string = \'%s, %s\' % (revision_string, getRevisionNumber(revision))\n
+    else:\n
+      revision_string = \'%s\' % getRevisionNumber(revision)\n
 except SubversionSSLTrustError, error:\n
   request.set(\'portal_status_message\', \'SSL Certificate was not recognized\')\n
   request.set(\'cancel_url\', context.absolute_url() + \'/BusinessTemplate_viewSvnStatus?do_extract=False&portal_status_message=Commit%20cancelled.\')\n
@@ -111,7 +124,8 @@ except SubversionLoginError, error1 :\n
 \n
 return request.RESPONSE.redirect(\'%s/view?%s\' % (\n
        context.absolute_url(),\n
-       make_query(portal_status_message=translateString(\'Files commited successfully.\'))))\n
+       make_query(portal_status_message=translateString(\'Files commited successfully in revision ${revision}.\',\n
+                                                        mapping=dict(revision=revision_string)))))\n
 
 
 ]]></string> </value>
@@ -171,10 +185,14 @@ return request.RESPONSE.redirect(\'%s/view?%s\' % (\n
                             <string>context</string>
                             <string>commit_recurs</string>
                             <string>None</string>
+                            <string>getRevisionNumber</string>
+                            <string>revision_string</string>
                             <string>False</string>
+                            <string>revision</string>
                             <string>True</string>
                             <string>error</string>
                             <string>error1</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
