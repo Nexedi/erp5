@@ -450,7 +450,12 @@ def StringBaseValidator_validate(self, field, key, REQUEST):
     else:
       raise KeyError, 'Field %s is not present in request object.' % (repr(field.id), )
   if isinstance(value, str):
-    value = string.strip(value)
+    if field.has_value('whitespace_preserve'):
+      if not field.get_value('whitespace_preserve'):
+        value = string.strip(value)
+    else:
+      # XXX Compatibility: use to prevent KeyError exception from get_value
+      value = string.strip(value)
   if field.get_value('required') and value == "":
       self.raise_error('required_not_found', field)
   #if field.get_value('uppercase'):
