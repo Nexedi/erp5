@@ -148,7 +148,7 @@
         </item>
         <item>
             <key> <string>simulation_select_method_id</string> </key>
-            <value> <string>Invoice_selectTaxMovementList</string> </value>
+            <value> <string>PurchaseInvoice_selectTaxMovementList</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

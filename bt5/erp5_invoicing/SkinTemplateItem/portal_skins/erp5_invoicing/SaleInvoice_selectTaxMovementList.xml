@@ -53,26 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kw[\'parent_specialise_portal_type\'] = \'Tax Rule\'\n
-kw[\'portal_type\']                   = \'Simulation Movement\'\n
-kw[\'simulation_state\'] = [\'confirmed\' ]\n
+            <value> <string>kw[\'explanation_portal_type\'] = [\'Sale Order\', \'Sale Invoice Transaction\', \'Sale Packing List\']\n
 \n
-kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
-\n
-movement_dict = dict()\n
-for movement in context.InvoiceTransaction_zSelectMovement(**kw) :\n
-  movement = movement.getObject()\n
-  assert movement.getDeliveryValue() is None, \\\n
-      "simulation movement %s should not have been selected !" % movement.getPath()\n
-  movement_dict.setdefault(movement.getRootAppliedRule(), []).append(movement)\n
-\n
-movement_list = []\n
-# Only return the first one, because the builder\'s group are very permissive (maybe arrow categories are not set on tax movements ? ).\n
-movement_list_list = movement_dict.values()\n
-if movement_list_list:\n
-  movement_list = movement_list_list[0]\n
-\n
-return movement_list\n
+return context.Invoice_selectTaxMovementList(**kw)\n
 </string> </value>
         </item>
         <item>
@@ -111,18 +94,9 @@ return movement_list\n
                           <tuple>
                             <string>kw</string>
                             <string>_write_</string>
-                            <string>_getattr_</string>
                             <string>_apply_</string>
+                            <string>_getattr_</string>
                             <string>context</string>
-                            <string>dict</string>
-                            <string>movement_dict</string>
-                            <string>_getiter_</string>
-                            <string>movement</string>
-                            <string>None</string>
-                            <string>AssertionError</string>
-                            <string>movement_list</string>
-                            <string>movement_list_list</string>
-                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -139,7 +113,7 @@ return movement_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Invoice_selectTaxMovementList</string> </value>
+            <value> <string>SaleInvoice_selectTaxMovementList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
