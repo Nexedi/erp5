@@ -85,9 +85,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>your_site_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -102,6 +100,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>your_site_title</string>
                         <string>your_at_date</string>
                       </list>
                     </value>
