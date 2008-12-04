@@ -12,6 +12,7 @@
 #
 ##############################################################################
 
+import sys
 from zLOG import LOG, WARNING
 from types import StringTypes
 
@@ -446,6 +447,7 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
           worklist_dict[wf_id] = a
 
   if len(worklist_dict):
+    is_anonymous = getToolByName(self, 'portal_membership').isAnonymousUser()
     portal_url = getToolByName(self, 'portal_url')()
     portal_catalog = getToolByName(self, 'portal_catalog')
     search_result = getattr(self, "Base_getCountFromWorklistTable", None)
@@ -509,11 +511,20 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
         group_by_expression = ', '.join(total_criterion_id_list)
         assert COUNT_COLUMN_TITLE not in total_criterion_id_list
         select_expression = ', '.join(select_expression)
-        catalog_brain_result = search_result(select_expression=select_expression,
-                                             group_by_expression=group_by_expression,
-                                             query=query,
-                                             limit=None,
-                                             src__=src__)
+        try:
+          catalog_brain_result = search_result(
+                                      select_expression=select_expression,
+                                      group_by_expression=group_by_expression,
+                                      query=query,
+                                      limit=None,
+                                      src__=src__)
+        except Unauthorized:
+          if not is_anonymous:
+            raise
+          LOG('WorkflowTool.listActions', WARNING,
+              'Exception while computing worklists: %s'
+              % grouped_worklist_dict,
+              error=sys.exc_info())
         if src__:
           action_list.append(catalog_brain_result)
         else:
