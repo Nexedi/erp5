@@ -174,20 +174,28 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
 class RelatedBaseCategory(Method):
     """A Dynamic Method to act as a related key.
     """
-    def __init__(self, id,strict_membership=0):
+    def __init__(self, id, strict_membership=0, related=0):
       self._id = id
       self.strict_membership=strict_membership
+      self.related = related
 
     def __call__(self, instance, table_0, table_1, query_table='catalog', **kw):
       """Create the sql code for this related key."""
       base_category_uid = instance.portal_categories._getOb(self._id).getUid()
       expression_list = []
       append = expression_list.append
-      append('%s.uid = %s.category_uid' % (table_1,table_0))
-      if self.strict_membership:
-        append('AND %s.category_strict_membership = 1' % table_0)
-      append('AND %s.base_category_uid = %s' % (table_0,base_category_uid))
-      append('AND %s.uid = %s.uid' % (table_0,query_table))
+      if self.related:
+        append('%s.uid = %s.uid' % (table_1,table_0))
+        if self.strict_membership:
+          append('AND %s.category_strict_membership = 1' % table_0)
+        append('AND %s.base_category_uid = %s' % (table_0,base_category_uid))
+        append('AND %s.category_uid = %s.uid' % (table_0,query_table))
+      else:
+        append('%s.uid = %s.category_uid' % (table_1,table_0))
+        if self.strict_membership:
+          append('AND %s.category_strict_membership = 1' % table_0)
+        append('AND %s.base_category_uid = %s' % (table_0,base_category_uid))
+        append('AND %s.uid = %s.uid' % (table_0,query_table))
       return ' '.join(expression_list)
 
 class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
@@ -864,17 +872,34 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
              expected_base_cat_id in base_cat_id_list:
             # We have found a base_category
             end_key = '_'.join(splitted_key[i:])
-            # accept only some catalog columns
-            if end_key in ('title', 'uid', 'description', 'reference',
-                           'relative_url', 'id', 'portal_type'):
-              if strict:
-                related_key_list.append(
-                      '%s%s | category,catalog/%s/z_related_strict_%s' %
-                      (prefix, key, end_key, expected_base_cat_id))
-              else:
-                related_key_list.append(
-                      '%s%s | category,catalog/%s/z_related_%s' %
-                      (prefix, key, end_key, expected_base_cat_id))
+
+            if end_key.startswith('related_'):
+              end_key = end_key[len('related_'):]
+              # accept only some catalog columns
+              if end_key in ('title', 'uid', 'description', 'reference',
+                             'relative_url', 'id', 'portal_type',
+                             'simulation_state'):
+                if strict:
+                  related_key_list.append(
+                        '%s%s | category,catalog/%s/z_related_strict_%s_related' %
+                        (prefix, key, end_key, expected_base_cat_id))
+                else:
+                  related_key_list.append(
+                        '%s%s | category,catalog/%s/z_related_%s_related' %
+                        (prefix, key, end_key, expected_base_cat_id))
+            else:
+              # accept only some catalog columns
+              if end_key in ('title', 'uid', 'description', 'reference',
+                             'relative_url', 'id', 'portal_type',
+                             'simulation_state'):
+                if strict:
+                  related_key_list.append(
+                        '%s%s | category,catalog/%s/z_related_strict_%s' %
+                        (prefix, key, end_key, expected_base_cat_id))
+                else:
+                  related_key_list.append(
+                        '%s%s | category,catalog/%s/z_related_%s' %
+                        (prefix, key, end_key, expected_base_cat_id))
 
       return related_key_list
 
@@ -891,12 +916,23 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         zope_security = '__roles__'
         if (name.startswith(DYNAMIC_METHOD_NAME) and \
           (not name.endswith(zope_security))):
-          if name.startswith(STRICT_DYNAMIC_METHOD_NAME):
-            base_category_id = name[len(STRICT_DYNAMIC_METHOD_NAME):]
-            method = RelatedBaseCategory(base_category_id, strict_membership=1)
+
+          if name.endswith('_related'):
+            if name.startswith(STRICT_DYNAMIC_METHOD_NAME):
+              base_category_id = name[len(STRICT_DYNAMIC_METHOD_NAME):-len('_related')]
+              method = RelatedBaseCategory(base_category_id,
+                                           strict_membership=1, related=1)
+            else:
+              base_category_id = name[len(DYNAMIC_METHOD_NAME):-len('_related')]
+              method = RelatedBaseCategory(base_category_id, related=1)
           else:
-            base_category_id = name[len(DYNAMIC_METHOD_NAME):]
-            method = RelatedBaseCategory(base_category_id)
+            if name.startswith(STRICT_DYNAMIC_METHOD_NAME):
+              base_category_id = name[len(STRICT_DYNAMIC_METHOD_NAME):]
+              method = RelatedBaseCategory(base_category_id, strict_membership=1)
+            else:
+              base_category_id = name[len(DYNAMIC_METHOD_NAME):]
+              method = RelatedBaseCategory(base_category_id)
+
           setattr(self.__class__, name, method)
           klass = aq_base(self).__class__
           if hasattr(klass, 'security'):

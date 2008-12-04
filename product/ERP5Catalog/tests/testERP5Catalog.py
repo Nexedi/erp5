@@ -2823,6 +2823,144 @@ VALUES
                        Query(site_title='=foo2'),
                        operator='AND'))
 
+  def test_SearchFolderWithRelatedDynamicRelatedKey(self,
+                                  quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Search Folder With Related Dynamic Related Key'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    # Create some objects
+    portal = self.getPortal()
+    portal_category = self.getCategoryTool()
+    portal_category.group.manage_delObjects([x for x in
+        portal_category.group.objectIds()])
+    group_nexedi_category = portal_category.group\
+                                .newContent( id = 'nexedi', title='Nexedi',
+                                             description='a')
+    group_nexedi_category2 = portal_category.group\
+                                .newContent( id = 'storever', title='Storever',
+                                             description='b')
+    module = portal.getDefaultModule('Organisation')
+    organisation = module.newContent(portal_type='Organisation',
+                                     title='Nexedi Orga',
+                                     description='c')
+    organisation.setGroup('nexedi')
+    self.assertEquals(organisation.getGroupValue(), group_nexedi_category)
+    organisation2 = module.newContent(portal_type='Organisation',
+                                      title='Storever Orga',
+                                      description='d')
+    organisation2.setGroup('storever')
+    organisation2.setTitle('Organisation 2')
+    self.assertEquals(organisation2.getGroupValue(), group_nexedi_category2)
+    # Flush message queue
+    get_transaction().commit()
+    self.tic()
+
+    base_category = portal_category.group
+    # Try to get the category with the group related organisation title Nexedi
+    # Orga
+    category_list = [x.getObject() for x in 
+                         base_category.searchFolder(
+                           group_related_title='Nexedi Orga')]
+    self.assertEquals(category_list, [group_nexedi_category])
+    category_list = [x.getObject() for x in 
+                         base_category.searchFolder(
+                           default_group_related_title='Nexedi Orga')]
+    self.assertEquals(category_list, [group_nexedi_category])
+    # Try to get the category with the group related organisation id
+    category_list = [x.getObject() for x in 
+                         base_category.searchFolder(group_related_id='storever')]
+    self.assertEquals(category_list,[group_nexedi_category2])
+    # Try to get the category with the group related organisation description 'd'
+    category_list = [x.getObject() for x in 
+                         base_category.searchFolder(group_related_description='d')]
+    self.assertEquals(category_list,[group_nexedi_category2])
+    # Try to get the category with the group related organisation description
+    # 'e'
+    category_list = [x.getObject() for x in 
+                         base_category.searchFolder(group_related_description='e')]
+    self.assertEquals(category_list,[])
+    # Try to get the category with the default group related organisation description
+    # 'e'
+    category_list = [x.getObject() for x in 
+                         base_category.searchFolder(default_group_related_description='e')]
+    self.assertEquals(category_list,[])
+    # Try to get the category with the group related organisation relative_url
+    organisation_relative_url = organisation.getRelativeUrl()
+    category_list = [x.getObject() for x in 
+                 base_category.searchFolder(group_related_relative_url=organisation_relative_url)]
+    self.assertEquals(category_list, [group_nexedi_category])
+    # Try to get the category with the group related organisation uid
+    category_list = [x.getObject() for x in 
+                 base_category.searchFolder(group_related_uid=organisation.getUid())]
+    self.assertEquals(category_list, [group_nexedi_category])
+    # Try to get the category with the group related organisation id and title
+    # of the category
+    category_list = [x.getObject() for x in 
+                         base_category.searchFolder(group_related_id=organisation2.getId(),
+                                             title='Storever')]
+    self.assertEquals(category_list,[group_nexedi_category2])
+
+  def test_SearchFolderWithRelatedDynamicStrictRelatedKey(self,
+                                  quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Search Folder With Related Strict Dynamic Related Key'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    # Create some objects
+    portal = self.getPortal()
+    portal_category = self.getCategoryTool()
+    portal_category.group.manage_delObjects([x for x in
+        portal_category.group.objectIds()])
+    group_nexedi_category = portal_category.group\
+                                .newContent( id = 'nexedi', title='Nexedi',
+                                             description='a')
+    sub_group_nexedi = group_nexedi_category\
+                                .newContent( id = 'erp5', title='ERP5',
+                                             description='b')
+    module = portal.getDefaultModule('Organisation')
+    organisation = module.newContent(portal_type='Organisation',
+                                     title='ERP5 Orga',
+                                     description='c')
+    organisation.setGroup('nexedi/erp5')
+    self.assertEquals(organisation.getGroupValue(), sub_group_nexedi)
+    organisation2 = module.newContent(portal_type='Organisation',
+                                     title='Nexedi Orga',
+                                     description='d')
+    organisation2.setGroup('nexedi')
+    # Flush message queue
+    get_transaction().commit()
+    self.tic()
+
+    base_category = portal_category.group
+
+    # Try to get the category with the group related organisation title Nexedi
+    # Orga
+    category_list = [x.getObject() for x in 
+                         base_category.portal_catalog(
+                             strict_group_related_title='Nexedi Orga')]
+    self.assertEquals(category_list,[group_nexedi_category])
+    # Try to get the category with the group related organisation title ERP5
+    # Orga
+    category_list = [x.getObject() for x in 
+                         base_category.portal_catalog(
+                           strict_group_related_title='ERP5 Orga')]
+    self.assertEquals(category_list,[sub_group_nexedi])
+    # Try to get the category with the group related organisation description d
+    category_list = [x.getObject() for x in 
+                         base_category.portal_catalog(
+                           strict_group_related_description='d')]
+    self.assertEquals(category_list,[group_nexedi_category])
+    # Try to get the category with the group related organisation description c
+    category_list = [x.getObject() for x in 
+                         base_category.portal_catalog(
+                           strict_group_related_description='c')]
+    self.assertEquals(category_list,[sub_group_nexedi])
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Catalog))
