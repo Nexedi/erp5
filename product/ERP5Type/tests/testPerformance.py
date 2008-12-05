@@ -198,7 +198,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
           before_tic = time()
           self.tic()
           after_tic = time()
-	  gc.collect()
+          gc.collect()
           before_form = time()
           for x in xrange(100):
             self.bar_module.BarModule_viewBarList()
