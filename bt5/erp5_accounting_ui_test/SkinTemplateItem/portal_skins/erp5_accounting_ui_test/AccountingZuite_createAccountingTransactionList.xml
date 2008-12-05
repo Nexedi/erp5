@@ -127,6 +127,16 @@ else:\n
   product = portal.product_module.newContent(portal_type=\'Product\',\n
                               immediate_reindex=immediate_reindex,\n
                               title=\'Dummy Product for testing\')\n
+\n
+tax_list = [o.getObject() for o in portal.tax_module.searchFolder(\n
+                                     portal_type=\'Tax\',\n
+                                     title=\'VAT\')]\n
+if tax_list:\n
+  tax = tax_list[0]\n
+else:\n
+  tax = portal.tax_module.newContent(portal_type=\'Tax\',\n
+                                     title=\'VAT\')\n
+\n
                                \n
 for i in range(random.randint(5, 10)):\n
   pl = portal.sale_packing_list_module.newContent(\n
@@ -191,6 +201,8 @@ for month in range(1, month_count + 1):\n
           title=\'%s Sale Invoice\' % client_title,\n
           source_section=section,\n
           destination_section=getOrganisationByTitle(client_title),\n
+          source=section,\n
+          destination=getOrganisationByTitle(client_title),\n
           created_by_builder=1,\n
           start_date=default_date,\n
           stop_date=default_date,\n
@@ -216,6 +228,13 @@ for month in range(1, month_count + 1):\n
                   resource_value=product,\n
                   quantity=random.randint(300, 400),\n
                   price=random.randint(300, 400), )\n
+    # add a random tax line, which should not impact our tests\n
+    tr.newContent(portal_type=\'Tax Line\',\n
+                  immediate_reindex=immediate_reindex,\n
+                  resource_value=tax,\n
+                  quantity=random.randint(300, 400),\n
+                  price=random.randint(300, 400) / 100., )\n
+        \n
     if transaction_state == \'validated\':\n
       tr.stop()\n
       assert tr.getSimulationState() == \'stopped\'\n
@@ -395,6 +414,8 @@ return "Accounting Transactions Created."\n
                             <string>o</string>
                             <string>product_list</string>
                             <string>product</string>
+                            <string>tax_list</string>
+                            <string>tax</string>
                             <string>range</string>
                             <string>random</string>
                             <string>i</string>
