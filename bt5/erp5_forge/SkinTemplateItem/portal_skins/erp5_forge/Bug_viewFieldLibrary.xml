@@ -106,6 +106,7 @@
                         <string>my_destination_project_title</string>
                         <string>my_source_project_title</string>
                         <string>my_source_trade_title</string>
+                        <string>my_text_content</string>
                       </list>
                     </value>
                 </item>
