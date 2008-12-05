@@ -121,7 +121,7 @@ class TestTradeReports(ERP5ReportTestCase):
                                   reference=unit_id,
                                   id=unit_id)
       
-    # Create products
+    # Create resources
     module = self.portal.product_module
     if not module.has_key('product_B'): 
       product = module.newContent(
@@ -148,7 +148,14 @@ class TestTradeReports(ERP5ReportTestCase):
           variation_base_category_list=['colour'],
           colour_list=['colour1', 'colour2'],
           )
-    
+    if not self.portal.service_module.has_key('service_a'):
+      self.portal.service_module.newContent(
+          portal_type='Service',
+          id='service_a',
+          title='Service A',
+          reference='ref sA',
+          )
+
     # and all this available to catalog
     get_transaction().commit()
     self.tic()
@@ -535,6 +542,16 @@ class TestTradeReports(ERP5ReportTestCase):
                 predicate_category_list=cell_key,
                 variation_category_list=cell_key)
     fifth.deliver()
+
+    # services are ignored
+    self._makeOneInventory(
+              title='Inventory 6',
+              simulation_state='delivered',
+              destination_value=self.organisation_module.Organisation_1,
+              start_date=DateTime(2007, 2, 2),
+              resource='service_module/service_a',
+              quantity=11,
+              )
 
     get_transaction().commit()
     self.tic()
