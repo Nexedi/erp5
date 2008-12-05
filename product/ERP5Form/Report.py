@@ -348,7 +348,8 @@ class ReportSection:
     REQUEST = get_request()
     for k,v in self.param_dict.items():
       if self.saved_request[k] is self._no_parameter_:
-        del REQUEST.form[k]
+        if REQUEST.form.has_key(k):
+          del REQUEST.form[k]
       else:
         REQUEST.form[k] = self.saved_request[k]
 
