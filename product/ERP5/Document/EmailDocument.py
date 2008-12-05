@@ -128,12 +128,17 @@ class EmailDocument(File, TextDocument):
     result = {}
     for (name, value) in self._getMessage().items():
       for text, encoding in decode_header(value):
-        if encoding is not None:
-          try:
+        try:
+          if encoding is not None:
             text = text.decode(encoding).encode('utf-8')
-          except UnicodeDecodeError:
-            encoding = self._guessEncoding(text)
+          else:
+            text = text.decode().encode('utf-8')
+        except UnicodeDecodeError:
+          encoding = self._guessEncoding(text)
+          if encoding is not None:
             text = text.decode(encoding).encode('utf-8')
+          else:
+            text = repr(text)
         if name in result:
           result[name] = '%s %s' % (result[name], text)
         else:
@@ -145,7 +150,6 @@ class EmailDocument(File, TextDocument):
     """
     Returns a list of dictionnaries for every attachment. Each dictionnary
     represents the metadata of the attachment.
-    
     **kw - support for listbox (TODO: improve it)
     """
     result = []
@@ -233,6 +237,7 @@ class EmailDocument(File, TextDocument):
         return self._baseGetTitle()
       else:
         return self._baseGetTitle(default)
+    message = self._getMessage()
     subject = self.getContentInformation().get('Subject', '')
     # Remove all newlines
     if '\r' in subject:
@@ -288,23 +293,38 @@ class EmailDocument(File, TextDocument):
     for part in self._getMessage().walk():
       if part.get_content_type() == 'text/plain' and not text_result and not part.is_multipart():
         part_encoding = part.get_content_charset()
-        if part_encoding not in (None, 'utf-8',):
+        message_text = part.get_payload(decode=1)
+        if part_encoding != 'utf-8':
           try:
-            text_result = part.get_payload(decode=1).decode(part_encoding).encode('utf-8')
+            if part_encoding is not None:
+              text_result = message_text.decode(part_encoding).encode('utf-8')
+            else:
+              text_result = message_text.decode().encode('utf-8')
           except (UnicodeDecodeError, LookupError):
-            text_result = part.get_payload(decode=1)
+            codec = self._guessEncoding(message_text)
+            if codec is not None:
+              text_result = message_text.decode(codec).encode('utf-8')
+            else:
+              text_result = repr(message_text)
         else:
-          text_result = part.get_payload(decode=1)
+          text_result = message_text
       elif part.get_content_type() == 'text/html' and not html_result and not part.is_multipart():
         part_encoding = part.get_content_charset()
-        if part_encoding not in (None, 'utf-8',):
+        message_text = part.get_payload(decode=1)
+        if part_encoding != 'utf-8':
           try:
-            text_result = part.get_payload(decode=1).\
-                          decode(part_encoding).encode('utf-8')
+            if part_encoding is not None:
+              text_result = message_text.decode(part_encoding).encode('utf-8')
+            else:
+              text_result = message_text.decode().encode('utf-8')
           except (UnicodeDecodeError, LookupError):
-            text_result = part.get_payload(decode=1)
+            codec = self._guessEncoding(message_text)
+            if codec is not None:
+              text_result = message_text.decode(codec).encode('utf-8')
+            else:
+              text_result = repr(message_text)
         else:
-          text_result = part.get_payload(decode=1)
+          text_result = message_text
     if default is _MARKER:
       return text_result
     return text_result or default
@@ -605,14 +625,11 @@ class EmailDocument(File, TextDocument):
     Some Email Clients indicate wrong encoding
     This method try to guess which encoding is used.
     """
-    from encodings.aliases import aliases
-    codec_list = set(aliases.values())
-    for codec in codec_list:
-      try:
-        string.decode(codec)
-      except (UnicodeDecodeError, IOError):
-        continue
-      return codec
+    try:
+      import chardet
+    except ImportError:
+      return None
+    return chardet.detect(string).get('encoding', None)
 
 ## Compatibility layer
 #from Products.ERP5Type import Document
