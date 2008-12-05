@@ -73,7 +73,9 @@ result_list = context.portal_simulation.getCurrentInventoryList(\n
   group_by_variation=1,\n
   group_by_node=0,\n
   at_date=at_date,\n
-  resource_portal_type=context.getPortalProductTypeList(), **kw)\n
+  # XXX resourceType= uses movement table.\n
+  # resource_portal_type= does not work with cells (because resource is acquired from line)\n
+  resourceType=context.getPortalProductTypeList(), **kw)\n
 \n
 result_list = list(result_list)\n
 result_list.sort(cmp=mycmp)\n
