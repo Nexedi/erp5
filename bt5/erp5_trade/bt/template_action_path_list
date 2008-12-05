@@ -40,6 +40,7 @@ Purchase Order Cell | view
 Purchase Order Line | price_view
 Purchase Order Line | quantity_view
 Purchase Order Line | view
+Purchase Order Module | order_export
 Purchase Order Module | order_report
 Purchase Order Module | view
 Purchase Order | apply_trade_condition
@@ -83,6 +84,7 @@ Sale Order Cell | view
 Sale Order Line | price_view
 Sale Order Line | quantity_view
 Sale Order Line | view
+Sale Order Module | order_export
 Sale Order Module | order_report
 Sale Order Module | view
 Sale Order Module | workflow_report
