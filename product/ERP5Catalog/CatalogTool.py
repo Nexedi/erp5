@@ -50,6 +50,7 @@ from Products.PageTemplates.Expressions import getEngine
 from MethodObject import Method
 
 from Products.ERP5Security.ERP5UserManager import SUPER_USER
+from DocumentTemplate.DT_Var import sql_quote
 
 import os, time, urllib, warnings
 import sys
@@ -564,7 +565,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           else:
             # XXX: What with this string transformation ?! Souldn't it be done in
             # dtml instead ?
-            allowedRolesAndUsers = ["'%s'" % (role, ) for role in allowedRolesAndUsers]
+            allowedRolesAndUsers = ["'%s'" % (sql_quote(role), ) for role in allowedRolesAndUsers]
             security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
           security_uid_cache[cache_key] = security_uid_list
       else:

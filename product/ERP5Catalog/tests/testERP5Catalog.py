@@ -2961,6 +2961,23 @@ VALUES
                            strict_group_related_description='c')]
     self.assertEquals(category_list,[sub_group_nexedi])
 
+  def test_EscapingLoginInSescurityQuery(self,
+                                  quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test that login are escaped when call security_query'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    # Create some objects
+    reference = "aaa.o'connor@fake.ie"
+    portal = self.getPortal()
+    uf = self.portal.acl_users
+    uf._doAddUser(reference, 'secret', ['Member'], [])
+    user = uf.getUserById(reference).__of__(uf)
+    newSecurityManager(None, user)
+    portal.view()
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Catalog))
