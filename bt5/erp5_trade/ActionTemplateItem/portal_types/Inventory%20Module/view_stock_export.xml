@@ -71,7 +71,11 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Base_viewStockReportBySiteDialog?your_portal_skin=ODS</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+string:${object_url}/Base_viewStockReportBySiteDialog?your_portal_skin=ODS&your_format=
+
+]]></string> </value>
         </item>
       </dictionary>
     </pickle>
