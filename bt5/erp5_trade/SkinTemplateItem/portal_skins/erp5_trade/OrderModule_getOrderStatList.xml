@@ -96,7 +96,7 @@ if aggregation_level == "year":\n
 elif aggregation_level == "month":\n
   date_format = "%Y-%m"\n
 elif aggregation_level == "week":\n
-  date_format = "%Y-%u"\n
+  date_format = "%Y-%U"\n
 elif aggregation_level == "day":\n
   date_format = "%Y-%m-%d"\n
 \n
