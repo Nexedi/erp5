@@ -254,7 +254,7 @@ class TestTradeReports(ERP5ReportTestCase):
               source_value=self.organisation_module.Organisation_1,
               source_section_value=self.organisation_module.Organisation_1,
               source_decision_value=self.organisation_module.Organisation_1,
-              start_date=DateTime(2006, 2, 2),
+              start_date=DateTime(2006, 2, 22),
               resource_dict = {'product_module/product_A':{"quantity":5, "price":3},
                                'product_module/product_B':{"quantity":1, "price":6},}
               )
@@ -478,6 +478,48 @@ class TestTradeReports(ERP5ReportTestCase):
                  'total amount': 84.0,
                  'total quantity': None}
     self.checkLineProperties(stat_line_list[0],**d)
+  
+    # weekly aggregation level
+    request['from_date'] = DateTime(2006, 2, 1)
+    request['at_date'] = DateTime(2006, 2, 28)
+    request['aggregation_level'] = "week"
+    request['group'] = None
+    request['group_by'] = "client"
+    request['simulation_state'] = ['cancelled', 'draft']
+    report_section_list = self.getReportSectionList(self.sale_order_module,
+                                                    'OrderModule_viewOrderReport')
+    self.assertEquals(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(2, len(data_line_list))
+
+    self.checkLineProperties(data_line_list[0],
+                   **{'Amount 2006-05': 11*3 + 7*6,
+                      'Amount 2006-06': 0,
+                      'Amount 2006-07': 0,
+                      'Amount 2006-08': 0,
+                      'Amount 2006-09': 0,
+                      'client': 'Organisation_1',
+                      'total amount': 3*11 + 7*6})
+    self.checkLineProperties(data_line_list[1],
+                   **{'Amount 2006-05': 0,
+                      'Amount 2006-06': 0,
+                      'Amount 2006-07': 0,
+                      'Amount 2006-08': 5*3 + 6,
+                      'Amount 2006-09': 0,
+                      'client': 'Organisation_2',
+                      'total amount': 5*3 + 6})
+
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1],
+                   **{'Amount 2006-05': 11*3 + 7*6,
+                      'Amount 2006-06': None,
+                      'Amount 2006-07': None,
+                      'Amount 2006-08': 5*3 + 6,
+                      'Amount 2006-09': None,
+                      'client': 'Total',
+                      'total amount': 3*11 + 7*6 + 5*3 + 6})
+
 
   def testStockReport(self):
     """
