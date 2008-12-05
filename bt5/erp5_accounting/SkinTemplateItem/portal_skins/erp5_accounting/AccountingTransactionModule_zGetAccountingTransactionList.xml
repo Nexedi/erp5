@@ -583,6 +583,7 @@ destination_section_where_expression</string> </value>
         AND category.uid = stock.section_uid\n
         AND child.uid = stock.uid\n
         AND child.parent_uid = catalog.uid\n
+        AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>\n
         <dtml-if omit_input> AND stock.total_price < 0\n
                              AND stock.uid = movement.uid\n
         </dtml-if>\n
@@ -799,6 +800,7 @@ destination_section_where_expression</string> </value>
             AND category.uid = stock.section_uid\n
             AND child.uid = stock.uid\n
             AND child.parent_uid = catalog.uid\n
+            AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>\n
             <dtml-if omit_input> AND stock.total_price < 0\n
                                  AND stock.uid = movement.uid\n
             </dtml-if>\n
@@ -983,6 +985,7 @@ UNION\n
             AND category.uid = stock.section_uid\n
             AND child.uid = stock.uid\n
             AND child.parent_uid = catalog.uid\n
+            AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>\n
             <dtml-if omit_input> AND stock.total_price < 0\n
                                  AND stock.uid = movement.uid\n
             </dtml-if>\n
@@ -1232,6 +1235,7 @@ UNION\n
         AND category.uid = stock.section_uid\n
         AND child.uid = stock.uid\n
         AND child.parent_uid = catalog.uid\n
+        AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>\n
         <dtml-if omit_input> AND stock.total_price < 0\n
                              AND stock.uid = movement.uid\n
         </dtml-if>\n
@@ -1448,6 +1452,7 @@ UNION\n
             AND category.uid = stock.section_uid\n
             AND child.uid = stock.uid\n
             AND child.parent_uid = catalog.uid\n
+            AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>\n
             <dtml-if omit_input> AND stock.total_price < 0\n
                                  AND stock.uid = movement.uid\n
             </dtml-if>\n
@@ -1632,6 +1637,7 @@ UNION\n
             AND category.uid = stock.section_uid\n
             AND child.uid = stock.uid\n
             AND child.parent_uid = catalog.uid\n
+            AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>\n
             <dtml-if omit_input> AND stock.total_price < 0\n
                                  AND stock.uid = movement.uid\n
             </dtml-if>\n
