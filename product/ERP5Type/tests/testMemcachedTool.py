@@ -27,6 +27,7 @@
 ##############################################################################
 
 import unittest
+import os
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -61,6 +62,26 @@ class TestMemcachedTool(ERP5TypeTestCase):
 
   def getMemcachedDict(self):
     return self.getPortal().portal_memcached.getMemcachedDict(key_prefix='unit_test')
+
+  def test_00_MemcachedToolIsEnabled(self):
+    """
+      Check if MemcachedTool is enabled without USE_MEMCACHED_TOOL file.
+    """
+    from Products.ERP5Type import product_path
+    memcached_tool_enable_path = '%s%s%s' % (product_path, os.sep,
+                                             'USE_MEMCACHED_TOOL')
+    self.assertFalse(os.access(memcached_tool_enable_path, os.F_OK),
+                     'A static file %s is obsolete. Please remove it and retry this unit test.' % memcached_tool_enable_path)
+    memcached_tool = self.getPortal().portal_memcached
+    try:
+      import memcache
+    except ImportError:
+      # MemcachedTool should be disabled
+      self.assertRaises(RuntimeError, memcached_tool.getServerAddressList)
+    else:
+      # MemcachedTool should be enabled
+      self.assertTrue(isinstance(portal_memcached.getServerAddressList(),
+                                 list))
 
   def test_01_dictionnaryIsUsable(self):
     """
