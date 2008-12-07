@@ -80,7 +80,7 @@ class TestMemcachedTool(ERP5TypeTestCase):
       self.assertRaises(RuntimeError, memcached_tool.getServerAddressList)
     else:
       # MemcachedTool should be enabled
-      self.assertTrue(isinstance(portal_memcached.getServerAddressList(),
+      self.assertTrue(isinstance(memcached_tool.getServerAddressList(),
                                  list))
 
   def test_01_dictionnaryIsUsable(self):
