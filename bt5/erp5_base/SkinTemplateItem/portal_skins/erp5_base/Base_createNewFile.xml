@@ -57,6 +57,7 @@
 from Products.CMFCore.utils import getToolByName\n
 \n
 if file.filename not in [\'\', None]:\n
+  portal = context.getPortalObject()\n
 \n
   document_new_content_kw = {\n
     \'file\': file,\n
@@ -71,7 +72,7 @@ if file.filename not in [\'\', None]:\n
     \'description\': description,\n
   }\n
 \n
-  container = getToolByName(context.getPortalObject(), \'portal_contributions\', None)\n
+  container = getToolByName(portal, \'portal_contributions\', None)\n
   # Do not redirect when using portal_contributions, in order to prevent\n
   # conflict with automatic metadata detection\n
   redirect = 0\n
@@ -84,8 +85,7 @@ if file.filename not in [\'\', None]:\n
     if portal_type not in [\'%s\' % x.id for x in container.allowedContentTypes()]:\n
       is_authorized = 0\n
 \n
-  if not context.Base_checkPermission(container.getRelativeUrl(),\n
-                                      \'Add portal content\'):\n
+  if not portal.portal_membership.checkPermission(\'Add portal content\', container):\n
     is_authorized = 0\n
 \n
   if not is_authorized:\n
@@ -157,6 +157,7 @@ if file.filename not in [\'\', None]:\n
                             <string>Products.CMFCore.utils</string>
                             <string>getToolByName</string>
                             <string>None</string>
+                            <string>portal</string>
                             <string>document_new_content_kw</string>
                             <string>document_edit_kw</string>
                             <string>container</string>
