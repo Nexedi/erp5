@@ -17,6 +17,53 @@
 from Shared.DC.xml.ppml import *
 from Shared.DC.xml import ppml
 
+# For converting to a more readable expression.
+reprs = {}
+### patch begin: create a conversion table for [\x00-\x1f]. this table is
+###              used for a valid utf-8 string.
+for c in map(chr, range(32)): reprs[c] = repr(c)[1:-1]
+### patch end
+reprs['\n'] = "\\n\n"
+reprs['\t'] = "\\t"
+reprs['\\'] = "\\\\"
+reprs['\r'] = "\\r"
+reprs["'"] = "\\'"
+reprs2={}
+reprs2['<'] = "\\074"
+reprs2['>'] = "\\076"
+reprs2['&'] = "\\046"
+### patch begin: create a conversion table for [\x00-\xff]. this table is
+###              used for a binary string.
+reprs3 = reprs.copy()
+for c in map(chr,range(32, 256)): reprs3[c] = reprs.get(c, repr(c)[1:-1])
+### patch end
+
+def convert(S, find=None):
+    new = ''
+    encoding = 'repr'
+    ### patch begin: if the input string is a valid utf8 string, only
+    ###              [\x00-\x1f] characters will be escaped to make a more
+    ###              readable output.
+    try:
+        S.decode('utf8')
+    except UnicodeDecodeError:
+        new = ''.join([reprs3.get(x) for x in S])
+    else:
+        new = ''.join([reprs.get(x, x) for x in S])
+    ### patch end
+    if len(new) > (1.4*len(S)):
+        encoding = 'base64'
+        new = base64.encodestring(S)[:-1]
+    elif new.find('>') >= 0 or new.find('<') >= 0 or new.find('&') >= 0:
+        if new.find(']]>') <0 :
+            new = '<![CDATA[\n\n%s\n\n]]>' % new
+            encoding = 'cdata'
+        else:
+            new = ''.join([reprs2.get(x, x) for x in new])
+    return encoding, new
+
+ppml.convert = convert
+
 # For optimization.
 def unconvert(encoding,S):
     if encoding == 'base64':
