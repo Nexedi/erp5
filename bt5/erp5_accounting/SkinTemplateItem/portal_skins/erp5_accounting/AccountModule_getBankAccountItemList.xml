@@ -63,14 +63,28 @@ if not organisation:\n
 if not organisation:\n
   return [(\'\', \'\')]\n
 \n
-\n
 organisation_value = portal.restrictedTraverse(organisation)\n
-item_list = [(\'\', \'\')]\n
-for bank in LazyFilter(organisation_value.contentValues(\n
-                portal_type=portal.getPortalPaymentNodeTypeList()), skip=\'\'):\n
+group_value = organisation_value.getGroupValue(None)\n
 \n
-  if skip_invalidated_bank_accounts and bank.getValidationState() == \'invalidated\':\n
-    continue\n
+search_kw = {\n
+  \'portal_type\': portal.getPortalPaymentNodeTypeList(),\n
+}\n
+\n
+if not skip_invalidated_bank_accounts:\n
+  search_kw[\'validation_state\'] = \'!=validated\'\n
+\n
+if group_value is None:\n
+  search_kw[\'parent_uid\'] = organisation_value.getUid()\n
+else:\n
+  uid_list = []\n
+  while group_value.getPortalType() != \'Base Category\':\n
+    uid_list.append(group_value.getUid())\n
+    group_value = group_value.getParentValue()\n
+  search_kw[\'parent_strict_group_uid\'] = uid_list\n
+\n
+item_list = [(\'\', \'\')]\n
+for bank in portal.portal_catalog(**search_kw):\n
+  bank = bank.getObject()\n
      \n
   if bank.getReference() and bank.getTitle() \\\n
                   and bank.getReference() != bank.getTitle():\n
@@ -131,8 +145,14 @@ return item_list\n
                             <string>context</string>
                             <string>portal</string>
                             <string>organisation_value</string>
+                            <string>None</string>
+                            <string>group_value</string>
+                            <string>search_kw</string>
+                            <string>_write_</string>
+                            <string>uid_list</string>
                             <string>item_list</string>
                             <string>_getiter_</string>
+                            <string>_apply_</string>
                             <string>bank</string>
                           </tuple>
                         </value>
