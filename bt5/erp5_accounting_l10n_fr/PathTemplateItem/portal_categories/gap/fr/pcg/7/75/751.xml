@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -43,13 +37,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Redevances pour concessions, brevets, licences, marques, proc\xc3\xa9d\xc3\xa9s, logiciels, droits et valeurs similaires</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Redevances pour concessions, brevets, licences, marques, procédés, logiciels, droits et valeurs similaires</string> </value>
         </item>
       </dictionary>
     </pickle>

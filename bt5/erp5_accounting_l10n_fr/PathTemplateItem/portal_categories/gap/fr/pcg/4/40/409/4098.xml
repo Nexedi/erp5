@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -43,13 +37,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Rabais, remises, ristournes \xc3\xa0 obtenir et autres avoirs non encore re\xc3\xa7us</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Rabais, remises, ristournes à obtenir et autres avoirs non encore reçus</string> </value>
         </item>
       </dictionary>
     </pickle>

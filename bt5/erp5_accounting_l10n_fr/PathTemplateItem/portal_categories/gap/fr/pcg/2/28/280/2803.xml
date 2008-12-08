@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -63,13 +57,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Frais de recherche et de d\xc3\xa9veloppement</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Frais de recherche et de développement</string> </value>
         </item>
       </dictionary>
     </pickle>

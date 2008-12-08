@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -43,13 +37,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Cr\xc3\xa9ances sur l\'\xc3\xa9tat r\xc3\xa9sultant de la suppression de la r\xc3\xa8gle du d\xc3\xa9calage d\'un mois en mati\xc3\xa8re de t.v.a.</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Créances sur l\'état résultant de la suppression de la règle du décalage d\'un mois en matière de t.v.a.</string> </value>
         </item>
       </dictionary>
     </pickle>

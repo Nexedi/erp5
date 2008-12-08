@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -35,7 +29,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>(lorsque l\'entit\xc3\xa9 tient un inventaire permanent en comptabilit\xc3\xa9 g\xc3\xa9n\xc3\xa9rale, le compte 38 peut \xc3\xaatre utilis\xc3\xa9 pour comptabiliser les stocks en voie d\'acheminement, mis en d\xc3\xa9p\xc3\xb4t ou donn\xc3\xa9s en consignation)</string> </value>
+            <value> <string>(lorsque l\'entité tient un inventaire permanent en comptabilité générale, le compte 38 peut être utilisé pour comptabiliser les stocks en voie d\'acheminement, mis en dépôt ou donnés en consignation)</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -47,13 +41,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Stocks en voie d\'acheminement, mis en d\xc3\xa9p\xc3\xb4t ou en consignation</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Stocks en voie d\'acheminement, mis en dépôt ou en consignation</string> </value>
         </item>
       </dictionary>
     </pickle>

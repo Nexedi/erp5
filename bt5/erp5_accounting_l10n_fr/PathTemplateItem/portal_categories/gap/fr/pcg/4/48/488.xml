@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -43,13 +37,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Comptes de r\xc3\xa9partition p\xc3\xa9riodique des charges et des produits</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Comptes de répartition périodique des charges et des produits</string> </value>
         </item>
       </dictionary>
     </pickle>

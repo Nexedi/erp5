@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -35,7 +29,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>M\xc3\xaame ventilation que celle du compte 271</string> </value>
+            <value> <string>Même ventilation que celle du compte 271</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -47,13 +41,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Titres immobilis\xc3\xa9s autres que les titres immobilis\xc3\xa9s de l\'activit\xc3\xa9 de portefeuille, droit de propri\xc3\xa9t\xc3\xa9</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Titres immobilisés autres que les titres immobilisés de l\'activité de portefeuille, droit de propriété</string> </value>
         </item>
       </dictionary>
     </pickle>

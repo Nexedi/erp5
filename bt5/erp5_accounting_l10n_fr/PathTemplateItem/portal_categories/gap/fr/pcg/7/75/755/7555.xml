@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -43,14 +37,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string encoding="base64">UXVvdGUtcGFydCBkZSBiw6luw6lmaWNlIGF0dHJpYnXDqWUgKGNvbXB0YWJpbGl0w6kgZGVzIGFz
-c29jacOpcyBub24tZ8OpcmFudHMp</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Quote-part de bénéfice attribuée (comptabilité des associés non-gérants)</string> </value>
         </item>
       </dictionary>
     </pickle>
