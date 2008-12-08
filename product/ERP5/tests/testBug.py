@@ -304,9 +304,10 @@ class TestBug(ERP5TypeTestCase):
       Create a dummy bug
     """
     bug_to_clone = sequence.get('bug')
+    self.assertNotEquals(len(bug_to_clone.contentValues()), 0)
     bug = bug_to_clone.Base_createCloneDocument(batch_mode=1)
     self.assertEquals("#%s" % bug.getId(), bug.getReference())
-    #self.assertEquals(bug_message.getSourceTradeValue().getTitle(), 'dummy')
+    self.assertEquals(len(bug.contentValues()), 0)
 
   def stepOpenBug(self, sequence=None, sequence_list=None, **kw):
     """
@@ -501,6 +502,7 @@ class TestBug(ERP5TypeTestCase):
     sequence_list = SequenceList()
     step_list = [ 'stepCreateBug',
                   'stepCheckBugInit',
+                  'stepOpenBug',
                   'stepCloneAndCheckBug'
                 ]
     sequence_string = ' '.join(step_list)
