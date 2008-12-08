@@ -72,16 +72,20 @@ if file.filename not in [\'\', None]:\n
   }\n
 \n
   container = getToolByName(context.getPortalObject(), \'portal_contributions\', None)\n
+  # Do not redirect when using portal_contributions, in order to prevent\n
+  # conflict with automatic metadata detection\n
+  redirect = 0\n
 \n
   is_authorized = 1\n
   if container is None:\n
     container = context\n
     document_new_content_kw[\'portal_type\'] = portal_type\n
+    redirect = 1\n
     if portal_type not in [\'%s\' % x.id for x in container.allowedContentTypes()]:\n
       is_authorized = 0\n
 \n
   if not context.Base_checkPermission(container.getRelativeUrl(),\n
-                                  \'Add portal content\'):\n
+                                      \'Add portal content\'):\n
     is_authorized = 0\n
 \n
   if not is_authorized:\n
@@ -95,8 +99,12 @@ if file.filename not in [\'\', None]:\n
 \n
   message = translateString(\'${portal_type} created successfully.\',\n
                mapping={\'portal_type\': document.getTranslatedPortalType()})\n
-  return document.Base_redirect(\'view\', \n
-                                keep_items=dict(portal_status_message=message))\n
+  if redirect:\n
+    return document.Base_redirect(\'view\', \n
+                                  keep_items=dict(portal_status_message=message))\n
+  else:\n
+    return context.Base_redirect(\'view\', \n
+                                 keep_items=dict(portal_status_message=message))\n
 </string> </value>
         </item>
         <item>
@@ -152,6 +160,7 @@ if file.filename not in [\'\', None]:\n
                             <string>document_new_content_kw</string>
                             <string>document_edit_kw</string>
                             <string>container</string>
+                            <string>redirect</string>
                             <string>is_authorized</string>
                             <string>_write_</string>
                             <string>append</string>
