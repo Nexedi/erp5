@@ -17,6 +17,7 @@
  <key>parent_portal_type | catalog/portal_type/z_related_parent</key>
  <key>parent_reference | catalog/reference/z_related_parent</key>
  <key>parent_specialise_portal_type | category,catalog/portal_type/z_related_parent_specialise</key>
+ <key>parent_strict_group_uid | category,catalog/uid/z_related_parent_strict_group</key>
  <key>parent_string_index | catalog/string_index/z_related_parent</key>
  <key>parent_title | catalog/title/z_related_parent</key>
  <key>predicate_uid | predicate/uid/z_related_predicate</key>
