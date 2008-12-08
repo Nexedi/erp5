@@ -1304,6 +1304,23 @@ class WorkflowTemplateItem(ObjectTemplateItem):
   def __init__(self, id_list, tool_id='portal_workflow', **kw):
     return ObjectTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
 
+  # When the root object of a workflow is modified, the entire workflow is
+  # recreated: all subobjects are discarded and must be reinstalled.
+  # So we hide modified subobjects to the user and we always reinstall
+  # (or remove) everything.
+
+  def preinstall(self, context, installed_bt, **kw):
+    modified_object_dict = ObjectTemplateItem.preinstall(self, context,
+                                                         installed_bt, **kw)
+    modified_workflow_dict = {}
+    for modified_object, state in modified_object_dict.iteritems():
+      path = modified_object.split('/')
+      if len(path) > 2:
+        modified_workflow_dict.setdefault(''.join(path[:2]), ('Modified', state[1]))
+      else:
+        modified_workflow_dict[modified_object] = state
+    return modified_workflow_dict
+
   def install(self, context, trashbin, **kw):
     if context.getTemplateFormatVersion() == 1:
       portal = context.getPortalObject()
@@ -1314,7 +1331,7 @@ class WorkflowTemplateItem(ObjectTemplateItem):
           if force:
             action = 'backup'
           else:
-            action = update_dict.get(path)
+            action = update_dict.get('/'.join(path.split('/')[:2]))
             if action in (None, 'nothing'):
               continue
           container_path = path.split('/')[:-1]
