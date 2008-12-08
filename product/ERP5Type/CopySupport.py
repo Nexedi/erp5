@@ -297,12 +297,13 @@ class CopyContainer:
         except WorkflowException:
           pass
 
+    self.__recurse('manage_afterClone', item)
+
     # Call a type based method to reset so properties if necessary
     script = self._getTypeBasedMethod('afterClone')
     if script is not None and callable(script):
       script()
 
-    self.__recurse('manage_afterClone', item)
 
   def manage_afterAdd(self, item, container):
       """
