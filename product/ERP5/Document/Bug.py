@@ -32,11 +32,7 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Ticket import Ticket
 
 class Bug(Ticket):
-    """
-    LEGACY
-
-    This class is superceded by the Ticket class. Legacy
-    Bug data should still be usable.
+    """Bug means a bug report, a feature request or an issue.
     """
 
     meta_type = 'ERP5 Bug'
