@@ -1396,6 +1396,7 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
                           resource_value=resource2,
                           quantity=7,
                           price=10,)
+    transaction.commit()
     # check existing tax line
     tax_line_list = order.contentValues(portal_type='Tax Line')
     self.assertEquals(1, len(tax_line_list))
