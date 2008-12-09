@@ -89,7 +89,7 @@ return Base_translateString("${year} years old", mapping=interval_dict)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>at_date=None, year=0</string> </value>
+            <value> <string>at_date=None, year=False</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
