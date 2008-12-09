@@ -30,6 +30,7 @@
 """
 
 import unittest
+import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
                                                      get_request
@@ -95,6 +96,11 @@ class TestUserManagement(ERP5TypeTestCase):
     """Tests user folder has correct meta type."""
     self.failUnless(isinstance(self.getUserFolder(),
         PluggableAuthService.PluggableAuthService))
+
+  def loginAsUser(self, username):
+    uf = self.portal.acl_users
+    user = uf.getUserById(username).__of__(uf)
+    newSecurityManager(None, user)
 
   def _makePerson(self, open_assignment=1, assignment_start_date=None,
                   assignment_stop_date=None, **kw):
@@ -251,6 +257,23 @@ class TestUserManagement(ERP5TypeTestCase):
     self.assertNotEquals(person_module[changed['new_id']].getReference(),
                          person_module[changed['id']].getReference())
   
+  def test_PreferenceTool_setNewPassword(self):
+    # Preference Tool has an action to change password
+    pers = self._makePerson(reference='the_user', password='secret',)
+    transaction.commit()
+    self.tic()
+    self._assertUserExists('the_user', 'secret')
+    self.loginAsUser('the_user')
+    self.portal.REQUEST.set('current_password', 'secret')
+    self.portal.REQUEST.set('new_password', 'new_secret')
+    self.portal.portal_preferences.PreferenceTool_setNewPassword()
+    self._assertUserExists('the_user', 'new_secret')
+    self._assertUserDoesNotExists('the_user', 'secret')
+
+    # password is not stored in plain text
+    self.assertNotEquals('new_secret', pers.getPassword())
+
+
   def test_OpenningAssignmentClearCache(self):
     """Openning an assignment for a person clear the cache automatically."""
     pers = self._makePerson(reference='the_user', password='secret',
