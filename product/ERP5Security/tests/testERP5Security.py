@@ -203,7 +203,7 @@ class TestUserManagement(ERP5TypeTestCase):
     self._assertUserDoesNotExists('another_user', '')
   
   def test_PersonWithEmptyLoginAreNotUsers(self):
-    """Tests a person with a login & password is a valid user."""
+    """Tests a person with empty login & password is a valid user."""
     self._makePerson(reference='', password='secret')
     self._assertUserDoesNotExists('', 'secret')
   
