@@ -28,6 +28,7 @@
 
 import unittest
 
+import transaction
 from DateTime import DateTime
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -495,6 +496,7 @@ class TestTaxLineCalculation(TradeConditionTestCase):
 
     self.order.Order_applyTradeCondition(self.trade_condition, force=1)
 
+    transaction.commit()
     tax_line_list = self.order.contentValues(portal_type='Tax Line')
     self.assertEquals(1, len(tax_line_list))
     tax_line = tax_line_list[0]
@@ -531,7 +533,8 @@ class TestTaxLineCalculation(TradeConditionTestCase):
                           quantity=10,
                           price=10,)
 
-    # now tax lines are updated
+    transaction.commit()
+    # at the end of transaction, tax lines are updated
     tax_line_list = self.order.contentValues(portal_type='Tax Line')
     self.assertEquals(1, len(tax_line_list))
     tax_line = tax_line_list[0]
@@ -573,7 +576,8 @@ class TestTaxLineCalculation(TradeConditionTestCase):
                           quantity=7,
                           price=10,)
     
-    # now tax lines are updated
+    transaction.commit()
+    # at the end of transaction, tax lines are updated
     tax_line_list = self.order.contentValues(portal_type='Tax Line')
     self.assertEquals(1, len(tax_line_list))
     tax_line = tax_line_list[0]
@@ -624,6 +628,7 @@ class TestTaxLineCalculation(TradeConditionTestCase):
     
     self.order.Order_applyTradeCondition(self.trade_condition, force=1)
 
+    transaction.commit()
     tax_line_list = self.order.contentValues(portal_type='Tax Line')
     self.assertEquals(2, len(tax_line_list))
     tax_line1 = [tl for tl in tax_line_list if
@@ -646,11 +651,12 @@ class TestTaxLineCalculation(TradeConditionTestCase):
                           resource_value=self.resource,
                           quantity=3,
                           price=10,)
-    
+    transaction.commit()
     self.assertEquals(30, tax_line1.getQuantity())
     self.assertEquals((30*0.2), tax_line2.getQuantity())
     
     order_line.setQuantity(5)
+    transaction.commit()
     self.assertEquals(50, tax_line1.getQuantity())
     self.assertEquals((50*0.2), tax_line2.getQuantity())
     
@@ -691,6 +697,7 @@ class TestTaxLineCalculation(TradeConditionTestCase):
                           quantity=10,
                           price=10,)
 
+    transaction.commit()
     # tax lines are updated
     tax_line_list = self.order.contentValues(portal_type='Tax Line')
     self.assertEquals(1, len(tax_line_list))
@@ -701,7 +708,9 @@ class TestTaxLineCalculation(TradeConditionTestCase):
     
     # change the quantity on order_line,
     order_line.setQuantity(20)
-    # the tax line is updated
+    transaction.commit()
+    # the tax line is updated (by an interraction workflow at the end of
+    # transaction)
     self.assertEquals(200, tax_line.getQuantity())
     self.assertEquals(40, tax_line.getTotalPrice())
 
@@ -734,6 +743,7 @@ class TestTaxLineCalculation(TradeConditionTestCase):
                           quantity=10,
                           price=10,)
 
+    transaction.commit()
     # tax lines are updated
     tax_line_list = self.order.contentValues(portal_type='Tax Line')
     self.assertEquals(1, len(tax_line_list))
@@ -796,6 +806,7 @@ class TestTaxLineCalculation(TradeConditionTestCase):
     cell_blue.setQuantity(25)
     self.assertEquals(100, order_line.getTotalPrice(fast=0))
     
+    transaction.commit()
     tax_line_list = self.order.contentValues(portal_type='Tax Line')
     self.assertEquals(1, len(tax_line_list))
     tax_line = tax_line_list[0]
@@ -843,6 +854,7 @@ class TestTaxLineCalculation(TradeConditionTestCase):
                           quantity=2,
                           price=40)
 
+    transaction.commit()
     tax_line_list = self.order.contentValues(portal_type='Tax Line')
     self.assertEquals(1, len(tax_line_list))
     tax_line = tax_line_list[0]
@@ -909,6 +921,7 @@ class TestTaxLineCalculation(TradeConditionTestCase):
     # -> tax_model_line_1, tax_model_line_2 and tax_model_line_1_2 are applicable
     #  (but they are not applied twice)
 
+    transaction.commit()
     tax_line_list = self.order.contentValues(portal_type='Tax Line')
     self.assertEquals(3, len(tax_line_list))
     tax_line_1 = [x for x in tax_line_list if x.getPrice() == 0.1][0]
@@ -976,6 +989,7 @@ class TestTaxLineCalculation(TradeConditionTestCase):
                           resource_value=self.resource,
                           quantity=10,
                           price=40)
+    transaction.commit()
 
     tax_line_list = order.contentValues(portal_type='Tax Line')
     self.assertEquals(1, len(tax_line_list))
@@ -1021,6 +1035,7 @@ class TestTaxLineCalculation(TradeConditionTestCase):
                           quantity=2,
                           price=40)
 
+    transaction.commit()
     tax_line_list = order.contentValues(portal_type='Tax Line')
     self.assertEquals(1, len(tax_line_list))
     tax_line = tax_line_list[0]
