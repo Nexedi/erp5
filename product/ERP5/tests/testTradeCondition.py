@@ -46,9 +46,7 @@ class TradeConditionTestCase(ERP5TypeTestCase):
 
   def setUp(self):
     ERP5TypeTestCase.setUp(self)
-    for rule in self.portal.portal_rules.contentValues():
-      if rule.getPortalType() != 'Payment Rule':
-        rule.validate() # XXX this should be enabled !
+    self.validateRules()
     self.base_amount = self.portal.portal_categories.base_amount
     self.tax = self.portal.tax_module.newContent(
                                     portal_type='Tax',
