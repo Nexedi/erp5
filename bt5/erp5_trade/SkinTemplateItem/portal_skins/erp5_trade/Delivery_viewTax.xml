@@ -96,6 +96,7 @@
                       <list>
                         <string>listbox_price</string>
                         <string>listbox_total_price</string>
+                        <string>listbox_base_application_title_list</string>
                       </list>
                     </value>
                 </item>

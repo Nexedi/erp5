@@ -99,7 +99,7 @@
                           <string>Calculation Order</string>
                         </tuple>
                         <tuple>
-                          <string>base_application_title</string>
+                          <string>base_application_title_list</string>
                           <string>Base Application</string>
                         </tuple>
                       </list>

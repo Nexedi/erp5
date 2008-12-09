@@ -14,16 +14,15 @@
             <value>
               <list>
                 <string>title</string>
-                <string>columns</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
-                <string>editable_columns</string>
+                <string>editable</string>
+                <string>display_width</string>
+                <string>default</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>listbox_base_application_title_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -60,6 +59,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>default</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -79,65 +84,20 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Tax</string>
-                        </tuple>
-                        <tuple>
-                          <string>efficiency</string>
-                          <string>Ratio</string>
-                        </tuple>
-                        <tuple>
-                          <string>float_index</string>
-                          <string>Calculation Order</string>
-                        </tuple>
-                        <tuple>
-                          <string>base_application_title_list</string>
-                          <string>Base Application</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
-                    <key> <string>editable_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>efficiency</string>
-                          <string>Ratio</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_types</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Tax Model Line</string>
-                          <string>Tax Model Line</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>discount_tax_model_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -145,10 +105,26 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Tax Model Lines</string> </value>
+                    <value> <string>Base Applications</string> </value>
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:\', \'.join(cell.getBaseApplicationTitleList())</string> </value>
         </item>
       </dictionary>
     </pickle>

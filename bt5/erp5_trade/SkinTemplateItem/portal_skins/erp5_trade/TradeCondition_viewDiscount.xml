@@ -89,6 +89,7 @@
                     <value>
                       <list>
                         <string>listbox_efficiency</string>
+                        <string>listbox_base_application_title_list</string>
                       </list>
                     </value>
                 </item>
