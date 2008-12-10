@@ -525,6 +525,7 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
               'Exception while computing worklists: %s'
               % grouped_worklist_dict.keys(),
               error=sys.exc_info())
+          continue
         if src__:
           action_list.append(catalog_brain_result)
         else:
