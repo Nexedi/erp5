@@ -1316,7 +1316,7 @@ class WorkflowTemplateItem(ObjectTemplateItem):
     for modified_object, state in modified_object_dict.iteritems():
       path = modified_object.split('/')
       if len(path) > 2:
-        modified_workflow_dict.setdefault(''.join(path[:2]), ('Modified', state[1]))
+        modified_workflow_dict.setdefault('/'.join(path[:2]), ('Modified', state[1]))
       else:
         modified_workflow_dict[modified_object] = state
     return modified_workflow_dict
