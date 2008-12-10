@@ -61,14 +61,16 @@ history_name_list = [\'building_history\', \' installation_history\', \'history\
 \n
 history = {}\n
 \n
+portal_workflow = context.getPortalObject().portal_workflow\n
+workflow_id_list = [x.getId() for x in portal_workflow.getWorkflowsFor(context)]\n
 \n
 for history_name in history_name_list:\n
   \n
-  for wf_id in context.getWorkflowIds():\n
+  for wf_id in workflow_id_list:\n
     \n
     list_history_item = None\n
     try:\n
-      list_history_item = context.portal_workflow.getInfoFor(ob=context, name=history_name, wf_id=wf_id)\n
+      list_history_item = portal_workflow.getInfoFor(ob=context, name=history_name, wf_id=wf_id)\n
     except ConflictError:\n
       raise\n
     except:\n
@@ -140,10 +142,15 @@ return history\n
                             <string>ConflictError</string>
                             <string>history_name_list</string>
                             <string>history</string>
-                            <string>_getiter_</string>
-                            <string>history_name</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal_workflow</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>workflow_id_list</string>
+                            <string>history_name</string>
                             <string>wf_id</string>
                             <string>None</string>
                             <string>list_history_item</string>

@@ -61,6 +61,10 @@ marker = []\n
 result = []\n
 i = 1\n
 portal_object = context.getPortalObject()\n
+portal_workflow = portal_object.portal_workflow\n
+workflow_id_list = [x.getId() for x in portal_workflow.getWorkflowsFor(context)]\n
+if not workflow_id in workflow_id_list:\n
+  return []\n
 # Get history\n
 # XXX Compatibility\n
 for history_name in [\'history\', \'building_history\', \'installation_history\']:\n
@@ -186,7 +190,12 @@ return result\n
                             <string>result</string>
                             <string>i</string>
                             <string>portal_object</string>
+                            <string>portal_workflow</string>
+                            <string>append</string>
+                            <string>$append0</string>
                             <string>_getiter_</string>
+                            <string>x</string>
+                            <string>workflow_id_list</string>
                             <string>history_name</string>
                             <string>workflow_item_list</string>
                             <string>_getitem_</string>
@@ -204,9 +213,6 @@ return result\n
                             <string>compatibility_name</string>
                             <string>len</string>
                             <string>same_type</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
                             <string>getattr</string>
                           </tuple>
                         </value>
