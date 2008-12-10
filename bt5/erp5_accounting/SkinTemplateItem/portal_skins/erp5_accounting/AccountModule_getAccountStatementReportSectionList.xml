@@ -97,18 +97,21 @@ params = dict(at_date=at_date,\n
               section_uid=section_uid,\n
               node_uid=traverse(node).getUid(),\n
               simulation_state=simulation_state,\n
-              detailed_from_date_summary=detailed_from_date_summary)\n
+              detailed_from_date_summary=detailed_from_date_summary,\n
+              hide_grouping=omit_grouping_reference,\n
+              from_date=None,\n
+              payment_uid=None,\n
+              mirror_section_uid=None,)\n
 \n
 if from_date:\n
   params[\'from_date\'] = from_date\n
 if payment:\n
   params[\'payment_uid\'] = traverse(payment).getUid()\n
 if mirror_section:\n
-  params[\'mirror_section_uid\'] = traverse(mirror_section).getUid()\n
+  params[\'mirror_section_uid\'] = traverse(mirror_section).getUid()  \n
 if parent_portal_type:\n
   params[\'parent_portal_type\'] = parent_portal_type\n
-if omit_grouping_reference:\n
-  params[\'hide_grouping\'] = 1\n
+\n
 \n
 selection_columns = [\n
     (\'Movement_getSpecificReference\', \'Transaction Reference\'),\n

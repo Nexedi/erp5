@@ -90,10 +90,8 @@ params = dict(at_date=at_date,\n
               simulation_state=simulation_state,\n
               period_start_date=period_start_date,\n
               movement_portal_type=portal.getPortalAccountingMovementTypeList(),\n
-              no_mirror_section_uid_cache=1)\n
-\n
-if request.get(\'omit_grouping_reference\', False):\n
-  params[\'hide_grouping\'] = True\n
+              no_mirror_section_uid_cache=1,\n
+              hide_grouping=request.get(\'omit_grouping_reference\', False))\n
 \n
 if from_date:\n
   params[\'from_date\'] = from_date\n
