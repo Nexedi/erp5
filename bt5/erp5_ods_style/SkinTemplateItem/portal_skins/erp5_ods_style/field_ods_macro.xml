@@ -118,11 +118,11 @@
                         <text:p tal:content="python: field.render_pdf(value)" />\n
                       </table:table-cell>\n
                     </tal:block>\n
-                    <tal:block tal:condition="python: field.get_value(\'precision\') is None">\n
+                    <tal:block tal:condition="not: python: field.get_value(\'precision\')>0">\n
                       <table:table-cell tal:attributes="office:value value;\n
-                                        table:style-name string:${style_prefix}decimal"\n
+                                        table:style-name string:${style_prefix}figure"\n
                                         office:value-type="float"\n
-                                        table:style-name="decimal">\n
+                                        table:style-name="figure">\n
                         <text:p tal:content="python: field.render_pdf(value)" />\n
                       </table:table-cell>\n
                     </tal:block> \n
