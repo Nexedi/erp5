@@ -317,7 +317,19 @@ class ERP5TypeTestCase(PortalTestCase):
       update_business_templates = os.environ.get('update_business_templates') is not None
       erp5_load_data_fs = os.environ.get('erp5_load_data_fs') is not None
       if update_business_templates and erp5_load_data_fs:
+        update_only = os.environ.get('update_only', None)
         template_list = (erp5_catalog_storage, 'erp5_core', 'erp5_xhtml_style') + tuple(template_list)
+        # Update only specified business templates, regular expression
+        # can be used.
+        if update_only is not None:
+          update_only_list = update_only.split(',')
+          matching_template_list = []
+          # First parse the template list in order to keep same order
+          for business_template in template_list:
+            for expression in update_only_list:
+              if re.search(expression, business_template):
+                matching_template_list.append(business_template)
+          template_list = matching_template_list
       new_template_list = []
       for template in template_list:
         id = template.split('/')[-1]
@@ -686,6 +698,7 @@ class ERP5TypeTestCase(PortalTestCase):
                 ZopeTestCase._print('(imported in %.3fs) ' % (time.time() - start))
               install_kw = None
               if get_install_kw:
+                install_kw = {}
                 listbox_object_list = BusinessTemplate_getModifiedObject.__of__(bt)()
                 for listbox_line in listbox_object_list:
                   install_kw[listbox_line.object_id] = listbox_line.choice_item_list[0][1]

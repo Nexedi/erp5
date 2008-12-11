@@ -64,6 +64,13 @@ Options:
                              Update all business templates prior to runing
                              tests. This only has a meaning when doing
                              upgratability checks, in conjunction with --load.
+                             --update_only can be use to restrict the list of
+                             templates to update.
+  --update_only=STRING
+                             Specify the list of business template to update if
+                             you don't want to update them all. You can give a list
+                             delimited with commans (e.g. erp5_core,erp5_xhtml_style).
+                             This can be regular expressions. 
 """
 
 def getUnitTestFile():
@@ -359,6 +366,7 @@ def main():
         "load",
         "email_from_address=",
         "run_only=",
+        "update_only=",
         "update_business_templates"] )
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
@@ -417,6 +425,8 @@ def main():
       os.environ["erp5_catalog_storage"] = arg
     elif opt == "--run_only":
       os.environ["run_only"] = arg
+    elif opt == "--update_only":
+      os.environ["update_only"] = arg
     elif opt == "--update_business_templates":
       os.environ["update_business_templates"] = "1"
 
