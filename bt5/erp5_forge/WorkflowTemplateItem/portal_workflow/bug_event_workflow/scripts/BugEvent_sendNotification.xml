@@ -100,7 +100,7 @@ if attachment_list:\n
 \n
   %s\n
 \n
-""" % (\'\\n  \'.join([\'%s %s\' % (a.getTitle(), a.absolute_url()) for a in attachment_list]))\n
+""" % (\'\\n  \'.join([\'%s %s/view\' % (a.getTitle(), a.absolute_url()) for a in attachment_list]))\n
 body += """ Messages :\n
 """\n
 # Messages Information\n
