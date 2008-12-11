@@ -103,20 +103,22 @@ if builder_by_ptype.has_key(delivery_portal_type) :\n
   ### End of kev patch\n
 \n
 \n
-  # FIXME after_method_id is not enough here.\n
-\n
   # build accounting lines\n
   method_id_list = (\'expand\', \'edit\', \'updateAppliedRule\', \'Delivery_updateAppliedRule\',\n
-      \'immediateReindexObject\', \'recursiveImmediateReindexObject\')\n
+                    \'immediateReindexObject\', \'recursiveImmediateReindexObject\')\n
+\n
+  tag = \'invoice_transaction_build_%s\' % delivery.getRelativeUrl()\n
   builder.activate(\n
-      after_method_id=method_id_list).build()\n
+      after_method_id=method_id_list,\n
+      tag=tag,\n
+      activate_kw=dict(tag=tag)).build(activate_kw=dict(tag=tag))\n
 \n
   # build related payment transactions\n
   portal_deliveries.payment_transaction_builder.activate(after_method_id=method_id_list).build()\n
 \n
   # set the object in building state.\n
   delivery.startBuilding()\n
-  delivery.activate( after_path_and_method_id = (builder.getPath(), [\'build\']) ).updateCausalityState()\n
+  delivery.activate(after_tag=tag).updateCausalityState()\n
 </string> </value>
         </item>
         <item>
@@ -171,6 +173,8 @@ if builder_by_ptype.has_key(delivery_portal_type) :\n
                             <string>expand_tag</string>
                             <string>activate_kw</string>
                             <string>method_id_list</string>
+                            <string>tag</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
