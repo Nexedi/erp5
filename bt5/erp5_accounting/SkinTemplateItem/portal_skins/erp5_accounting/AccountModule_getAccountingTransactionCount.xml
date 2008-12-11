@@ -55,10 +55,6 @@
             <key> <string>_body</string> </key>
             <value> <string>kwd = context.ERP5Accounting_getParams(selection_name)\n
 \n
-# XXX missing :(\n
-# this may fail if we have movements on something else than accounts\n
-#kwd[\'where_expression\'] = \'node.parent_uid = %s\' context.account_module.getUid()\n
-\n
 if kw.get(\'stat\'):\n
   selection_params = context.portal_selections.getSelectionParamsFor(selection_name)\n
   selection_domain = context.portal_selections.getSelectionDomainDictFor(selection_name)\n
@@ -79,6 +75,8 @@ if kw.get(\'stat\'):\n
     # if yes, apply the same filter here\n
     kwd[\'stock.node_uid\'] = [x.uid for x in\n
                          context.portal_catalog(**selection_params)]\n
+  else:\n
+    kwd[\'portal_type\'] = context.getPortalAccountingMovementTypeList()\n
   return context.portal_simulation.getInventoryStat( **kwd )[0][\'stock_uid\']\n
 \n
 kwd[\'stock.node_uid\'] = brain.uid\n
