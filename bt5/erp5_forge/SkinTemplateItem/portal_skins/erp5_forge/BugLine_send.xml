@@ -131,8 +131,8 @@ for to_url in to_url_list:\n
   # Bug Message not send email it self.\n
   #context.activate(activity=\'SQLQueue\').sendMailHostMessage(mail_message)\n
   \n
-context.activate(activity=\'SQLQueue\').deliver()\n
 context.setData(mail_message)\n
+context.deliver()\n
 \n
 if download:\n
   return mail_message\n
