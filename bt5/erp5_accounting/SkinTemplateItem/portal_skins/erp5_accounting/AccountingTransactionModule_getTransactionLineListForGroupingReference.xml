@@ -65,7 +65,7 @@ dialog_selection_params = portal.portal_selections.getSelectionParamsFor(\n
 \n
 # support pseudo sorting; sorting is done by uid.\n
 orig_sort_on = portal.portal_selections.getSelectionSortOrder(\n
-                 \'accounting_transaction_module_grouping_reference_fast_input\')\n
+                 \'accounting_transaction_module_grouping_reference_fast_input\') or ((\'date\', \'descending\'),)\n
 sort_on = []\n
 for sort_column, sort_order in orig_sort_on:\n
   if sort_column in (\'grouping_reference\', \'date\', \'parent_title\'):\n
