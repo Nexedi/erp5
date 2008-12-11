@@ -123,13 +123,13 @@ class Sequence:
     self._dict[keyword] = value
 
   def edit(self, *args, **kw):
-    if self._dict.update(*args, **kw)
+    return self._dict.update(*args, **kw)
 
   def get(self, *args, **kw):
-    if self._dict.get(*args, **kw)
+    return self._dict.get(*args, **kw)
 
   def setdefault(self, *args, **kw):
-    if self._dict.setdefault(*args, **kw)
+    return self._dict.setdefault(*args, **kw)
 
 class SequenceList:
 
