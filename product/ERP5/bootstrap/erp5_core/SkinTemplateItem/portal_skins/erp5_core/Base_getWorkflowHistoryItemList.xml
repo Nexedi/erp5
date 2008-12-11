@@ -62,7 +62,7 @@ result = []\n
 i = 1\n
 portal_object = context.getPortalObject()\n
 portal_workflow = portal_object.portal_workflow\n
-workflow_id_list = [x.getId() for x in portal_workflow.getWorkflowsFor(context)]\n
+workflow_id_list = [workflow_id for workflow_id, workflow_state in context.getWorkflowStateItemList()]\n
 if not workflow_id in workflow_id_list:\n
   return []\n
 # Get history\n
@@ -194,7 +194,7 @@ return result\n
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>x</string>
+                            <string>workflow_state</string>
                             <string>workflow_id_list</string>
                             <string>history_name</string>
                             <string>workflow_item_list</string>
@@ -213,6 +213,7 @@ return result\n
                             <string>compatibility_name</string>
                             <string>len</string>
                             <string>same_type</string>
+                            <string>x</string>
                             <string>getattr</string>
                           </tuple>
                         </value>

@@ -62,7 +62,7 @@ history_name_list = [\'building_history\', \' installation_history\', \'history\
 history = {}\n
 \n
 portal_workflow = context.getPortalObject().portal_workflow\n
-workflow_id_list = [x.getId() for x in portal_workflow.getWorkflowsFor(context)]\n
+workflow_id_list = [workflow_id for workflow_id, workflow_state in context.getWorkflowStateItemList()]\n
 \n
 for history_name in history_name_list:\n
   \n
@@ -148,7 +148,8 @@ return history\n
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>x</string>
+                            <string>workflow_id</string>
+                            <string>workflow_state</string>
                             <string>workflow_id_list</string>
                             <string>history_name</string>
                             <string>wf_id</string>
