@@ -120,16 +120,16 @@ class Sequence:
     self._step_list.append(new_step)
 
   def set(self, keyword, value):
-    self._dict[keyword]=value
+    self._dict[keyword] = value
 
-  def edit(self, **kw):
-    for k, v in kw.items():
-      self._dict[k]=v
+  def edit(self, *args, **kw):
+    if self._dict.update(*args, **kw)
 
-  def get(self, keyword,default=None):
-    if self._dict.has_key(keyword):
-      return self._dict[keyword]
-    return default
+  def get(self, *args, **kw):
+    if self._dict.get(*args, **kw)
+
+  def setdefault(self, *args, **kw):
+    if self._dict.setdefault(*args, **kw)
 
 class SequenceList:
 
