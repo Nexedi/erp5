@@ -62,7 +62,9 @@ preference_tool = context.getPortalObject().portal_preferences\n
 number_method = preference_tool.getPreferredAccountNumberMethod()\n
 \n
 if number_method == \'account_reference\':\n
-  return context.getReference(\'\')\n
+  reference = context.getReference()\n
+  if reference:\n
+    return reference\n
 \n
 # elif number_method == \'gap_id\':\n
 else:\n
@@ -72,7 +74,7 @@ else:\n
 \n
   for gap in context.getGapValueList() : \n
     if current_gap in gap.getPath() : \n
-       return gap.getId()\n
+       return gap.getReference() or gap.getId()\n
   return \'\'\n
 </string> </value>
         </item>
@@ -114,6 +116,7 @@ else:\n
                             <string>context</string>
                             <string>preference_tool</string>
                             <string>number_method</string>
+                            <string>reference</string>
                             <string>current_gap</string>
                             <string>_getiter_</string>
                             <string>gap</string>
