@@ -6798,7 +6798,7 @@ msgstr "Pas plus grand que"
 
 #: portal_skins/erp5_accounting/AccountModule_getAccountStatementReportSectionList
 msgid "Not Grouped Lines in Beginning Balance"
-msgstr "Ligne non lettrées du solde initial."
+msgstr "Lignes non lettrées du solde initial"
 
 #: portal_workflow/business_template_installation_workflow/states/not_installed
 msgid "Not Installed"
@@ -7864,7 +7864,7 @@ msgstr "Précédent"
 #: portal_skins/erp5_accounting/BankAccount_getAccountingTransactionList
 #: portal_skins/erp5_accounting/Node_getAccountingTransactionList
 msgid "Previous Balance"
-msgstr "Bilan précédent"
+msgstr "Solde précédent"
 
 msgid "Previous Page"
 msgstr "Page précédente"
@@ -13740,5 +13740,9 @@ msgstr "la largeur en pixel des micro-images."
 msgid "the width in pixel of nano image"
 msgstr "La largeur en pixel des images nano."
 
-msgid "time"
-msgstr "Date"
+msgid "With"
+msgstr "Avec"
+
+msgid "Without"
+msgstr "Sans"
+
