@@ -71,7 +71,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:"%s/%s" % (object_url, object.getFollowUpValue().getAssessmentFormId())</string> </value>
+            <value> <string>python:"%s/%s" % (object_url, object.Event_getFollowUpAssessmentFormId())</string> </value>
         </item>
       </dictionary>
     </pickle>
