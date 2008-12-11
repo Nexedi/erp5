@@ -65,9 +65,9 @@ if preference is None or preference.getPreferenceState()!=\'enabled\':\n
 parent = context.getParentValue()\n
 document_id = context.getId()\n
 cp = parent.manage_copyObjects(ids=[document_id])\n
-preference.manage_pasteObjects(cb_copy_data=cp)\n
+paste_info, = preference.manage_pasteObjects(cb_copy_data=cp)\n
 \n
-template = getattr(preference, document_id)\n
+template = getattr(preference, paste_info[\'new_id\'])\n
 template.makeTemplate()\n
 \n
 context.portal_caches.clearCacheFactory(\'erp5_ui_medium\')\n
@@ -122,7 +122,10 @@ return context.Base_redirect(form_id,\n
                             <string>parent</string>
                             <string>document_id</string>
                             <string>cp</string>
+                            <string>_getiter_</string>
+                            <string>paste_info</string>
                             <string>getattr</string>
+                            <string>_getitem_</string>
                             <string>template</string>
                             <string>_apply_</string>
                             <string>dict</string>
