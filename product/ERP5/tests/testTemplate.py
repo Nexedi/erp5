@@ -138,6 +138,43 @@ class TestTemplate(ERP5TypeTestCase):
     self.assertEqual(len(preference.objectIds()), 1)
 
 
+  def test_TemplateNotIndexable(self):
+    # template documents are not indexable
+    self.login('yusei')
+    preference = self.portal.portal_preferences.newContent(portal_type='Preference')
+    preference.priority = Priority.USER
+    preference.enable()
+
+    get_transaction().commit()
+    self.tic()
+
+    document = self.portal.foo_module.newContent(portal_type='Foo')
+    document.edit(title='My Foo 1')
+    document.newContent(portal_type='Foo Line')
+
+    get_transaction().commit()
+    self.tic()
+
+    document.Base_makeTemplateFromDocument(form_id=None)
+    get_transaction().commit()
+    self.tic()
+    self.assertTrue(document.isIndexable)
+    self.assertEqual(len(preference.objectIds()), 1)
+    for template in preference.objectValues():
+      self.assertFalse(template.isIndexable)
+
+    # and this is still true if you create two templates from the same document
+    # #929
+    document.Base_makeTemplateFromDocument(form_id=None)
+    get_transaction().commit()
+    self.tic()
+
+    self.assertTrue(document.isIndexable)
+    self.assertEqual(len(preference.objectIds()), 2)
+    for template in preference.objectValues():
+      self.assertFalse(template.isIndexable)
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestTemplate))
