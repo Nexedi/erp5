@@ -125,11 +125,11 @@ class Sequence:
   def edit(self, *args, **kw):
     return self._dict.update(*args, **kw)
 
-  def get(self, *args, **kw):
-    return self._dict.get(*args, **kw)
+  def get(self, key, default=None):
+    return self._dict.get(key, default)
 
-  def setdefault(self, *args, **kw):
-    return self._dict.setdefault(*args, **kw)
+  def setdefault(self, key, default=None):
+    return self._dict.setdefault(key, default)
 
 class SequenceList:
 
