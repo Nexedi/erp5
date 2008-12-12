@@ -272,7 +272,10 @@ class ERP5TypeInformationMixIn( FactoryTypeInformation,
         # Portal type has to be set before setting other attributes
         # in order to initialize aq_dynamic
         if hasattr(ob, '_setPortalTypeName'):
-          ob._setPortalTypeName(self.getId())
+          #ob._setPortalTypeName(self.getId())
+          # XXX rafael: if we use _set because it is trigger by interaction
+          # workflow and it is annoyning without security setted
+          ob.portal_type = self.getId()
 
         # Only try to assign roles to security groups if some roles are defined
         # This is an optimisation to prevent defining local roles on subobjects
