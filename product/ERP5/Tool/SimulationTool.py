@@ -932,6 +932,7 @@ class SimulationTool(BaseTool):
       # Generate first query parameter dict
       if optimisation_success:
         def getFirstQueryParameterDict(query_generator_kw):
+          optimisation_success = True
           AVAILABLE_CRITERIONS_IN_INVENTORY_TABLE = ['node_uid',
                                                      'section_uid',
                                                      'payment_uid']
