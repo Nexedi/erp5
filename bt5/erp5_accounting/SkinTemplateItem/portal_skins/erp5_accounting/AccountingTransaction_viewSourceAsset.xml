@@ -86,6 +86,8 @@
                         <string>listbox_source</string>
                         <string>listbox_source_asset_credit</string>
                         <string>listbox_source_asset_debit</string>
+                        <string>listbox_source_credit</string>
+                        <string>listbox_source_debit</string>
                       </list>
                     </value>
                 </item>
