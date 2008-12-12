@@ -112,6 +112,22 @@
                           <string>Product Line</string>
                         </tuple>
                         <tuple>
+                          <string>base_contribution_title</string>
+                          <string>Base Contribution</string>
+                        </tuple>
+                        <tuple>
+                          <string>comment</string>
+                          <string>Comment</string>
+                        </tuple>
+                        <tuple>
+                          <string>purchase_supply_line_base_price</string>
+                          <string>Default Purchase Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>sale_supply_line_base_price</string>
+                          <string>Default Sale Price</string>
+                        </tuple>
+                        <tuple>
                           <string>modification_date</string>
                           <string>Modification Date</string>
                         </tuple>
@@ -220,6 +236,22 @@
                           <string>Product Line</string>
                         </tuple>
                         <tuple>
+                          <string>base_contribution_title</string>
+                          <string>Base Contribution</string>
+                        </tuple>
+                        <tuple>
+                          <string>comment</string>
+                          <string>Comment</string>
+                        </tuple>
+                        <tuple>
+                          <string>purchase_supply_line_base_price</string>
+                          <string>Default Purchase Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>sale_supply_line_base_price</string>
+                          <string>Default Sale Price</string>
+                        </tuple>
+                        <tuple>
                           <string>modification_date</string>
                           <string>Modification Date</string>
                         </tuple>
@@ -261,6 +293,22 @@
                         <tuple>
                           <string>product_line_title</string>
                           <string>Product Line</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_contribution_title</string>
+                          <string>Base Contribution</string>
+                        </tuple>
+                        <tuple>
+                          <string>comment</string>
+                          <string>Comment</string>
+                        </tuple>
+                        <tuple>
+                          <string>purchase_supply_line_base_price</string>
+                          <string>Default Purchase Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>sale_supply_line_base_price</string>
+                          <string>Default Sale Price</string>
                         </tuple>
                         <tuple>
                           <string>modification_date</string>
