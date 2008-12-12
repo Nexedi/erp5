@@ -975,8 +975,8 @@ class SimulationTool(BaseTool):
           return {'group_by_expression': group_by_expression,
                   'column_id_list': column_id_list,
                   'column_value_list_list': column_value_list_list,
-                  'where_expression' : where_expression,}
-        first_query_param_dict = getFirstQueryParameterDict(new_kw)
+                  'where_expression' : where_expression,}, optimisation_success
+        first_query_param_dict, optimisation_success = getFirstQueryParameterDict(new_kw)
         if optimisation_success:
           if len(first_query_param_dict['column_id_list']):
             inventory_date_line_list = self.Resource_zGetFullInventoryDate(
