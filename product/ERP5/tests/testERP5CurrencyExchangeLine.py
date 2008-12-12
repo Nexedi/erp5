@@ -78,7 +78,8 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
  
   def login(self,name=username, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
-    uf._doAddUser(self.username, '', ['Assignee', 'Assignor', 'Author'], [])
+    uf._doAddUser(self.username, '', ['Assignee', 'Assignor',
+       'Author','Manager'], [])
     user = uf.getUserById(self.username).__of__(uf)
     newSecurityManager(None, user)
    
@@ -126,58 +127,140 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
   def test_01_UseCurrencyExchangeLineForDestination(self, quiet=0,
                                                   run=run_all_test):
     """
-      Create a currency exchange line for a currency and then convert
-      destination price using that currency exchange line
+      Create a currency exchange line for a currency and then
+      convert destination price using that currency exchange line
     """
     if not run: return
-    if not quiet:printAndLog('test_01_UseCurrencyExchangeLineForDestination')
+    if not quiet:
+      printAndLog('test_01_UseCurrencyExchangeLineForDestination')
     portal = self.getPortal()
     self.organisation_module = self.portal.organisation_module
     self.organisation1 = self.organisation_module.my_organisation
-    new_currency = portal.currency_module.newContent(portal_type='Currency')
+    new_currency = portal.currency_module.newContent(
+                          portal_type='Currency')
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
     get_transaction().commit()
     self.tic()#execute transaction
-    self.organisation1.edit(price_currency=new_currency.getRelativeUrl())
+    self.organisation1.edit(
+                    price_currency=new_currency.getRelativeUrl())
     euro = self.portal.currency_module.euro
     x_curr_ex_line = euro.newContent(
-	                          portal_type='Currency Exchange Line',
-				  price_currency=new_currency.getRelativeUrl())
+	                  portal_type='Currency Exchange Line',
+                  price_currency=new_currency.getRelativeUrl())
     x_curr_ex_line.setTitle('Euro to Francs CFA')
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,9,8))
-    self.assertEquals(x_curr_ex_line.getTitle(), 'Euro to Francs CFA')
-    self.assertEquals(x_curr_ex_line.getPriceCurrencyTitle(),'Francs CFA')
+    x_curr_ex_line.setStopDate(DateTime(2008,9,10))
+    self.assertEquals(x_curr_ex_line.getTitle(),
+                'Euro to Francs CFA')
+    self.assertEquals(x_curr_ex_line.getPriceCurrencyTitle(),
+                          'Francs CFA')
     self.assertEquals(x_curr_ex_line.getBasePrice(),655.957)
     x_curr_ex_line.validate()
-    self.assertEquals(x_curr_ex_line.getValidationState(),'validated')
+    self.assertEquals(x_curr_ex_line.getValidationState(),
+                           'validated')
     accounting_module = self.portal.accounting_module
     transaction = self._makeOne(
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/08'),
-               source_section_value=self.organisation_module.supplier,
+            source_section_value=self.organisation_module.supplier,
 	       lines=(dict(
-	           destination_value=self.account_module.goods_purchase,
+	       destination_value=self.account_module.goods_purchase,
                            destination_debit=500),
-                      dict(destination_value=self.account_module.receivable,
+              dict(destination_value=self.account_module.receivable,
                            destination_credit=500)))
     transaction.AccountingTransaction_convertDestinationPrice(form_id='view')
     line_list = transaction.contentValues(
-               portal_type=portal.getPortalAccountingMovementTypeList())
+           portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
-	self.assertEquals(line.getDestinationTotalAssetPrice(),round(655.957*
-                                          line.getQuantity()))
-					  
+	self.assertEquals(line.getDestinationTotalAssetPrice(),
+             round(655.957*line.getQuantity()))
+                                        
+ 		
+  def test_01_CreateEmptyCurrencyExchangeLineForDestination(
+                self, quiet=0,run=run_all_test):
+    """
+      Create empty currency exchange lines for currencies,
+      and verify that only the one that matches the criteria will
+      be selected for the conversion
+    """
+    if not run: return
+    if not quiet:
+      printAndLog(
+            'test_01_CreateEmptyCurrencyExchangeLineForDestination')
+    portal = self.getPortal()
+    self.organisation_module = self.portal.organisation_module
+    self.organisation1 = self.organisation_module.my_organisation
+    new_currency = portal.currency_module.newContent(
+                   portal_type='Currency')
+    new_currency.setReference('XOF')
+    new_currency.setTitle('Francs CFA')
+    new_currency.setBaseUnitQuantity(1.00)
+    get_transaction().commit()
+    self.tic()#execute transaction
+    self.organisation1.edit(
+                   price_currency=new_currency.getRelativeUrl())
+    euro = self.portal.currency_module.euro
+    x_curr_ex_line = euro.newContent(
+                      portal_type='Currency Exchange Line',
+                     price_currency=new_currency.getRelativeUrl())
+    x_curr_ex_line.setTitle('Euro to Francs CFA')
+    x_curr_ex_line.setBasePrice(655.957)
+    x_curr_ex_line.setStartDate(DateTime(2008,9,8))
+    x_curr_ex_line.setStopDate(DateTime(2008,9,10))
+    self.assertEquals(x_curr_ex_line.getTitle(), 
+                      'Euro to Francs CFA')
+    self.assertEquals(x_curr_ex_line.getPriceCurrencyTitle(),
+                                         'Francs CFA')
+    self.assertEquals(x_curr_ex_line.getBasePrice(),655.957)
+    x_curr_ex_line.validate()
+    self.assertEquals(x_curr_ex_line.getValidationState(),
+                            'validated')
+    yen = self.portal.currency_module.yen
+    yen_line1 = yen.newContent(
+                          portal_type='Currency Exchange Line')
+    yen_line2 = yen.newContent(
+                          portal_type='Currency Exchange Line')
+                          
+    usd = self.portal.currency_module.usd
+    usd_line1 = usd.newContent(
+                          portal_type='Currency Exchange Line')
+    usd_line2 = usd.newContent(
+                          portal_type='Currency Exchange Line')
+    
+    euro_line = euro.newContent(
+                           portal_type='Currency Exchange Line')
+    euro_line.validate()
+    accounting_module = self.portal.accounting_module
+    transaction = self._makeOne(
+               portal_type='Purchase Invoice Transaction',
+               stop_date=DateTime('2008/09/08'),
+           source_section_value=self.organisation_module.supplier,
+               lines=(dict(
+              destination_value=self.account_module.goods_purchase,
+                           destination_debit=500),
+              dict(destination_value=self.account_module.receivable,
+                           destination_credit=500)))
+    transaction.AccountingTransaction_convertDestinationPrice(
+                         form_id='view')
+    line_list = transaction.contentValues(
+           portal_type=portal.getPortalAccountingMovementTypeList())
+    for line in line_list:
+        self.assertEquals(line.getDestinationTotalAssetPrice(),
+                   round(655.957*line.getQuantity()))	
+                   	  
   def test_01_UseCurrencyExchangeLineForSource(self, quiet=0,
                                                   run=run_all_test):
     """
-      Create a currency exchange line for a currency and then convert
+      Create a currency exchange line for a currency and then
+      convert
       source price using that currency exchange line
     """
     if not run: return
-    if not quiet:printAndLog('test_01_UseCurrencyExchangeLineForSource')
+    if not quiet:
+      printAndLog('test_01_UseCurrencyExchangeLineForSource')
     portal = self.getPortal()
     self.organisation_module = self.portal.organisation_module
     self.organisation1 = self.organisation_module.my_organisation
@@ -187,34 +270,40 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     new_currency.setBaseUnitQuantity(1.00)
     get_transaction().commit()
     self.tic()#execute transaction
-    self.organisation1.edit(price_currency=new_currency.getRelativeUrl())
+    self.organisation1.edit(
+              price_currency=new_currency.getRelativeUrl())
     euro = self.portal.currency_module.euro
     x_curr_ex_line = euro.newContent(
-	                          portal_type='Currency Exchange Line',
-				  price_currency=new_currency.getRelativeUrl())
+	                    portal_type='Currency Exchange Line',
+		price_currency=new_currency.getRelativeUrl())
     x_curr_ex_line.setTitle('Euro to Francs CFA')
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,9,8))
-    self.assertEquals(x_curr_ex_line.getTitle(), 'Euro to Francs CFA')
-    self.assertEquals(x_curr_ex_line.getPriceCurrencyTitle(),'Francs CFA')
+    x_curr_ex_line.setStopDate(DateTime(2008,9,10))
+    self.assertEquals(x_curr_ex_line.getTitle(),
+                   'Euro to Francs CFA')
+    self.assertEquals(x_curr_ex_line.getPriceCurrencyTitle(),
+                            'Francs CFA')
     self.assertEquals(x_curr_ex_line.getBasePrice(),655.957)
     x_curr_ex_line.validate()
-    self.assertEquals(x_curr_ex_line.getValidationState(),'validated')
+    self.assertEquals(x_curr_ex_line.getValidationState(),
+                         'validated')
     accounting_module = self.portal.accounting_module
     transaction = self._makeOne(
                portal_type='Sale Invoice Transaction',
                start_date=DateTime('2008/09/08'),
-               destination_section_value=self.organisation_module.supplier,
-               lines=(dict(source_value=self.account_module.goods_purchase,
+        destination_section_value=self.organisation_module.supplier,
+        lines=(dict(source_value=self.account_module.goods_purchase,
                            source_debit=500),
-                      dict(source_value=self.account_module.receivable,
+                   dict(source_value=self.account_module.receivable,
                            source_credit=500)))
-    transaction.AccountingTransaction_convertSourcePrice(form_id='view')
+    transaction.AccountingTransaction_convertSourcePrice(
+                   form_id='view')
     line_list = transaction.contentValues(
-               portal_type=portal.getPortalAccountingMovementTypeList())
+           portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
-	self.assertEquals(line.getSourceTotalAssetPrice(),round(655.957*
-                                          line.getQuantity()))
+	self.assertEquals(line.getSourceTotalAssetPrice(),
+                         round(655.957*line.getQuantity()))
 					  
   def test_01_NoCurrencyExchangeLineForResourceCurrency(self, quiet=0,
                                                   run=run_all_test):
@@ -223,31 +312,35 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
       exchange line defined for the date of the transaction
     """
     if not run: return
-    if not quiet:printAndLog('test_01_NoCurrencyExchangeLineForResource')
+    if not quiet:
+      printAndLog('test_01_NoCurrencyExchangeLineForResource')
     portal = self.getPortal()
     self.organisation_module = self.portal.organisation_module
     self.organisation1 = self.organisation_module.my_organisation
-    new_currency = portal.currency_module.newContent(portal_type='Currency')
+    new_currency = portal.currency_module.newContent(
+                portal_type='Currency')
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
     get_transaction().commit()
     self.tic()#execute transaction
-    self.organisation1.edit(price_currency=new_currency.getRelativeUrl())
+    self.organisation1.edit(
+                price_currency=new_currency.getRelativeUrl())
     euro = self.portal.currency_module.euro
     accounting_module = self.portal.accounting_module
     transaction = self._makeOne(
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/08'),
-               source_section_value=self.organisation_module.supplier,
+            source_section_value=self.organisation_module.supplier,
 	       lines=(dict(
-	           destination_value=self.account_module.goods_purchase,
+	       destination_value=self.account_module.goods_purchase,
                            destination_debit=500),
-                      dict(destination_value=self.account_module.receivable,
+              dict(destination_value=self.account_module.receivable,
                            destination_credit=500)))
-    transaction.AccountingTransaction_convertDestinationPrice(form_id='view')
+    transaction.AccountingTransaction_convertDestinationPrice(
+                        form_id='view')
     line_list = transaction.contentValues(
-               portal_type=portal.getPortalAccountingMovementTypeList())
+           portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
 	self.assertEquals(line.getDestinationTotalAssetPrice(),None)
 	
@@ -262,60 +355,194 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     """
     if not run: return
     if not quiet:
-       printAndLog('test_01_DateOfCurrencyExchangeLineNotDateofTransaction')
+       printAndLog(
+           'test_01_DateOfCurrencyExchangeLineNotDateofTransaction')
     portal = self.getPortal()
     self.organisation_module = self.portal.organisation_module
     self.organisation1 = self.organisation_module.my_organisation
-    new_currency = portal.currency_module.newContent(portal_type='Currency')
+    new_currency = portal.currency_module.newContent(
+    portal_type='Currency')
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
     get_transaction().commit()
     self.tic()#execute transaction
-    self.organisation1.edit(price_currency=new_currency.getRelativeUrl())
+    self.organisation1.edit(
+               price_currency=new_currency.getRelativeUrl())
     euro = self.portal.currency_module.euro
     x_curr_ex_line = euro.newContent(
-	                          portal_type='Currency Exchange Line',
-				  price_currency=new_currency.getRelativeUrl())
+	                    portal_type='Currency Exchange Line',
+	              price_currency=new_currency.getRelativeUrl())
     x_curr_ex_line.setTitle('Euro to Francs CFA')
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,9,6))
     x_curr_ex_line.setStopDate(DateTime(2008,9,7))
-    self.assertEquals(x_curr_ex_line.getTitle(), 'Euro to Francs CFA')
-    self.assertEquals(x_curr_ex_line.getPriceCurrencyTitle(),'Francs CFA')
+    self.assertEquals(x_curr_ex_line.getTitle(), 
+              'Euro to Francs CFA')
+    self.assertEquals(x_curr_ex_line.getPriceCurrencyTitle(),
+               'Francs CFA')
     self.assertEquals(x_curr_ex_line.getBasePrice(),655.957)
     x_curr_ex_line.validate()
-    self.assertEquals(x_curr_ex_line.getValidationState(),'validated')
+    self.assertEquals(x_curr_ex_line.getValidationState(),
+                               'validated')
     accounting_module = self.portal.accounting_module
     transaction1 = self._makeOne(
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/08'),
-               source_section_value=self.organisation_module.supplier,
-	       lines=(dict(
-	           destination_value=self.account_module.goods_purchase,
+            source_section_value=self.organisation_module.supplier,
+	        lines=(dict(
+	       destination_value=self.account_module.goods_purchase,
                            destination_debit=500),
-                      dict(destination_value=self.account_module.receivable,
+              dict(destination_value=self.account_module.receivable,
                            destination_credit=500)))
-    transaction1.AccountingTransaction_convertDestinationPrice(form_id='view')
+    transaction1.AccountingTransaction_convertDestinationPrice(
+                              form_id='view')
     line_list = transaction1.contentValues(
-               portal_type=portal.getPortalAccountingMovementTypeList())
+           portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
 	self.assertEquals(line.getDestinationTotalAssetPrice(),None)
     transaction2 = self._makeOne(
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/06'),
-               source_section_value=self.organisation_module.supplier,
+             source_section_value=self.organisation_module.supplier,
 	       lines=(dict(
-	           destination_value=self.account_module.goods_purchase,
+	       destination_value=self.account_module.goods_purchase,
                            destination_debit=500),
-                      dict(destination_value=self.account_module.receivable,
+              dict(destination_value=self.account_module.receivable,
                            destination_credit=500)))
-    transaction2.AccountingTransaction_convertDestinationPrice(form_id='view')
+    transaction2.AccountingTransaction_convertDestinationPrice(
+                  form_id='view')
     line_list = transaction2.contentValues(
-               portal_type=portal.getPortalAccountingMovementTypeList())
+           portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
-	self.assertEquals(line.getDestinationTotalAssetPrice(),round(655.957*
-                                          line.getQuantity()))
+	self.assertEquals(line.getDestinationTotalAssetPrice(),
+                    round(655.957*line.getQuantity()))
+                                          
+  def test_01_CreateCELWithNoReferenceCurrency(
+              self, quiet=0,run=run_all_test):
+    """
+      Create a currency exchange line with no reference currency
+      and verify that the CEL won't apply for the currency
+    """
+    if not run: return
+    if not quiet:
+      printAndLog('test_01_CreateCELWithNoReferenceCurrency')
+    portal = self.getPortal()
+    self.organisation_module = self.portal.organisation_module
+    self.organisation1 = self.organisation_module.my_organisation
+    new_currency = portal.currency_module.newContent(
+               portal_type='Currency')
+    new_currency.setReference('XOF')
+    new_currency.setTitle('Francs CFA')
+    new_currency.setBaseUnitQuantity(1.00)
+    get_transaction().commit()
+    self.tic()#execute transaction
+    self.organisation1.edit(
+            price_currency=new_currency.getRelativeUrl())
+    euro = self.portal.currency_module.euro
+    x_curr_ex_line = euro.newContent(
+                              portal_type='Currency Exchange Line')
+    x_curr_ex_line.setTitle('Euro to Francs CFA')
+    x_curr_ex_line.setBasePrice(655.957)
+    x_curr_ex_line.setStartDate(DateTime(2008,9,8))
+    x_curr_ex_line.setStopDate(DateTime(2008,9,10))
+    self.assertEquals(x_curr_ex_line.getTitle(), 
+                     'Euro to Francs CFA')
+    self.assertEquals(x_curr_ex_line.getPriceCurrency(),None)
+    self.assertEquals(x_curr_ex_line.getBasePrice(),655.957)
+    x_curr_ex_line.validate()
+    self.assertEquals(x_curr_ex_line.getValidationState(),
+                          'validated')
+    
+    accounting_module = self.portal.accounting_module
+    transaction = self._makeOne(
+               portal_type='Purchase Invoice Transaction',
+               stop_date=DateTime('2008/09/08'),
+             source_section_value=self.organisation_module.supplier,
+               lines=(dict(
+               destination_value=self.account_module.goods_purchase,
+                           destination_debit=500),
+              dict(destination_value=self.account_module.receivable,
+                           destination_credit=500)))
+    
+    transaction.AccountingTransaction_convertDestinationPrice(
+                           form_id='view')
+    line_list = transaction.contentValues(
+           portal_type=portal.getPortalAccountingMovementTypeList())
+    for line in line_list:
+        self.assertEquals(line.getDestinationTotalAssetPrice(),
+                 None)
+  
+   
+  def test_01_CreateCELWithNoBasePrice(
+              self, quiet=0,run=run_all_test):
+    """
+      Create two currency exchange lines with no base and 
+      verify that only one of the CEL will apply for the currency
+    """
+    if not run: return
+    if not quiet:
+      printAndLog('test_01_CreateCELWithNoBasePrice')
+    portal = self.getPortal()
+    self.organisation_module = self.portal.organisation_module
+    self.organisation1 = self.organisation_module.my_organisation
+    new_currency = portal.currency_module.newContent(
+                portal_type='Currency')
+    new_currency.setReference('XOF')
+    new_currency.setTitle('Francs CFA')
+    new_currency.setBaseUnitQuantity(1.00)
+    get_transaction().commit()
+    self.tic()#execute transaction
+    self.organisation1.edit(
+               price_currency=new_currency.getRelativeUrl())
+    euro = self.portal.currency_module.euro
+    
+    euro_line1 = euro.newContent(
+                              portal_type='Currency Exchange Line',
+                       price_currency=new_currency.getRelativeUrl())
+    euro_line1.setTitle('Euro to Francs CFA')
+    euro_line1.setBasePrice(655.957)
+    euro_line1.setStartDate(DateTime(2008,9,8))
+    euro_line1.setStopDate(DateTime(2008,9,10))
+    self.assertEquals(euro_line1.getTitle(), 'Euro to Francs CFA')
+    self.assertEquals(euro_line1.getPriceCurrencyTitle(),
+                            'Francs CFA')
+    self.assertEquals(euro_line1.getBasePrice(),655.957)
+    euro_line1.validate()
+    self.assertEquals(euro_line1.getValidationState(),
+                                 'validated')
+    euro_line2 = euro.newContent(
+                              portal_type='Currency Exchange Line',
+                       price_currency=new_currency.getRelativeUrl())
+    euro_line2.setTitle('Euro to Francs CFA')
+    euro_line2.setStartDate(DateTime(2008,9,8))
+    euro_line2.setStopDate(DateTime(2008,9,10))
+    self.assertEquals(euro_line2.getTitle(), 'Euro to Francs CFA')
+    self.assertEquals(euro_line2.getPriceCurrencyTitle(),
+                            'Francs CFA')
+    self.assertEquals(euro_line2.getBasePrice(),None)
+    euro_line2.validate()
+    
+    self.assertEquals(euro_line2.getValidationState(),
+                                 'validated')
+    accounting_module = self.portal.accounting_module
+    transaction = self._makeOne(
+               portal_type='Purchase Invoice Transaction',
+               stop_date=DateTime('2008/09/08'),
+            source_section_value=self.organisation_module.supplier,
+               lines=(dict(
+               destination_value=self.account_module.goods_purchase,
+                           destination_debit=500),
+              dict(destination_value=self.account_module.receivable,
+                           destination_credit=500)))
+    transaction.AccountingTransaction_convertDestinationPrice(
+                           form_id='view')
+    line_list = transaction.contentValues(
+           portal_type=portal.getPortalAccountingMovementTypeList())
+    for line in line_list:
+        self.assertEquals(line.getDestinationTotalAssetPrice(),
+                 round(655.957*line.getQuantity()))
+    
    
 
 def test_suite():
