@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_arg</string> </key>
             <value>
               <object>
@@ -186,31 +180,31 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>count</string>
-<string>security_uid</string>
-<string>portal_type</string>
-<string>simulation_state</string>
-<string>validation_state</string>
-<string>owner</string>
-<string>viewable_owner</string>
-<string>parent_uid</string>
-<string>title</string>
-<string>opportunity_state</string>
-<string>causality_state</string>
-<string>invoice_state</string>
-<string>payment_state</string>
-<string>event_state</string>
-<string>immobilisation_state</string>
-<string>reference</string>
-<string>grouping_reference</string>
-<string>source_reference</string>
-<string>destination_reference</string>
-<string>string_index</string>
-<string>int_index</string>
-<string>float_index</string>
-<string>has_cell_content</string>
-<string>creation_date</string>
-<string>modification_date</string>
+                            <string>count</string>
+                            <string>security_uid</string>
+                            <string>portal_type</string>
+                            <string>simulation_state</string>
+                            <string>validation_state</string>
+                            <string>owner</string>
+                            <string>viewable_owner</string>
+                            <string>parent_uid</string>
+                            <string>title</string>
+                            <string>opportunity_state</string>
+                            <string>causality_state</string>
+                            <string>invoice_state</string>
+                            <string>payment_state</string>
+                            <string>event_state</string>
+                            <string>immobilisation_state</string>
+                            <string>reference</string>
+                            <string>grouping_reference</string>
+                            <string>source_reference</string>
+                            <string>destination_reference</string>
+                            <string>string_index</string>
+                            <string>int_index</string>
+                            <string>float_index</string>
+                            <string>has_cell_content</string>
+                            <string>creation_date</string>
+                            <string>modification_date</string>
                           </list>
                         </value>
                     </item>
