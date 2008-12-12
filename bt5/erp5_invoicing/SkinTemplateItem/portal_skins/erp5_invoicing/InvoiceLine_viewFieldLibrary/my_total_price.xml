@@ -15,6 +15,7 @@
               <list>
                 <string>title</string>
                 <string>default</string>
+                <string>precision</string>
                 <string>editable</string>
               </list>
             </value>
@@ -76,6 +77,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>precision</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -107,6 +114,10 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key> <string>precision</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
@@ -132,6 +143,22 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: here.getTotalPrice(fast=0)</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.getQuantityPrecisionFromResource(here.getPriceCurrency())</string> </value>
         </item>
       </dictionary>
     </pickle>
