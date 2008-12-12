@@ -124,6 +124,14 @@
                           <string>Credit</string>
                         </tuple>
                         <tuple>
+                          <string>source_debit</string>
+                          <string>Debit</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_credit</string>
+                          <string>Credit</string>
+                        </tuple>
+                        <tuple>
                           <string>destination</string>
                           <string>Destination</string>
                         </tuple>

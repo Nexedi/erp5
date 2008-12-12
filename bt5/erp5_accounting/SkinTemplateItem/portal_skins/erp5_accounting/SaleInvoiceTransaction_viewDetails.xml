@@ -88,6 +88,8 @@
                         <string>listbox_destination</string>
                         <string>listbox_source_debit</string>
                         <string>listbox_source_credit</string>
+                        <string>listbox_destination_credit</string>
+                        <string>listbox_destination_debit</string>
                       </list>
                     </value>
                 </item>
