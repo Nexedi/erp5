@@ -926,7 +926,7 @@ class SimulationTool(BaseTool):
         getattr(self, 'Resource_zGetFullInventoryDate', None)
       EQUAL_DATE_TABLE_ID = 'inventory_stock'
       GREATER_THAN_DATE_TABLE_ID = 'stock'
-      optimisation_success = optimisation__ and \
+      optimisation_success = optimisation__ and ('from_date' not in kw) and \
                              Resource_zGetFullInventoryDate is not None and \
                              (GREATER_THAN_DATE_TABLE_ID == default_stock_table)
       # Generate first query parameter dict
@@ -958,8 +958,8 @@ class SimulationTool(BaseTool):
           column_value_list_list = new_column_value_dict.values()
           date_value_list = column_value_dict.get('date', {}).get('query', [])
           where_expression = None
-          if len(date_value_list) > 0:
-            date = min(date_value_list)
+          if len(date_value_list) == 1:
+            date = date_value_list[0]
             if isinstance(date, DateTime):
               date = date.toZone('UTC').ISO()
               
@@ -972,6 +972,19 @@ class SimulationTool(BaseTool):
             date_query_result = date_query()
             if date_query_result['where_expression'] not in ('',None):
               where_expression = date_query_result['where_expression']
+          elif len(date_value_list) > 1:
+            # When more than one date is provided, we must not optimise.
+            # Also, as we should never end up here (the only currently known
+            # case where there are 2 dates is when a from_date is provided
+            # along with either an at_date or a to_date, and we disable
+            # optimisation when from_date is given), emit a log.
+            # This can happen if there are more date parameters than mentioned
+            # above.
+            LOG('SimulationTool', 100, 'There is more than one date condition'
+              ' so optimisation got disabled. The result of this call will be'
+              ' correct but it requires investigation as some cases might'
+              ' have gone unnoticed and produced wrong results.')
+            optimisation_success = False
           return {'group_by_expression': group_by_expression,
                   'column_id_list': column_id_list,
                   'column_value_list_list': column_value_list_list,
