@@ -62,19 +62,19 @@ result = []\n
 i = 1\n
 portal_object = context.getPortalObject()\n
 portal_workflow = portal_object.portal_workflow\n
-workflow_id_list = [workflow_id for workflow_id, workflow_state in context.getWorkflowStateItemList()]\n
+workflow_id_list = [x for x, y in context.getWorkflowStateItemList()]\n
 if not workflow_id in workflow_id_list:\n
   return []\n
 # Get history\n
 # XXX Compatibility\n
 for history_name in [\'history\', \'building_history\', \'installation_history\']:\n
-  workflow_item_list = context.portal_workflow.getInfoFor(ob=context, \n
+  workflow_item_list = portal_workflow.getInfoFor(ob=context, \n
                                           name=\'history\', wf_id=workflow_id)\n
   if workflow_item_list != []:\n
     break\n
 \n
-wf_states = context.portal_workflow[workflow_id].states\n
-wf_transitions = context.portal_workflow[workflow_id].transitions\n
+wf_states = portal_workflow[workflow_id].states\n
+wf_transitions = portal_workflow[workflow_id].transitions\n
 \n
 next_serial = None\n
 previous_obj = None\n
@@ -194,7 +194,8 @@ return result\n
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>workflow_state</string>
+                            <string>x</string>
+                            <string>y</string>
                             <string>workflow_id_list</string>
                             <string>history_name</string>
                             <string>workflow_item_list</string>
@@ -213,7 +214,6 @@ return result\n
                             <string>compatibility_name</string>
                             <string>len</string>
                             <string>same_type</string>
-                            <string>x</string>
                             <string>getattr</string>
                           </tuple>
                         </value>
