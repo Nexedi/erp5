@@ -3029,6 +3029,46 @@ class TestCMFActivity(ERP5TypeTestCase):
     #  3: activity commit raises
     #  4: activity raises
 
+  def test_114_checkSQLQueueActivitySucceedsAfterActivityChangingSkin(self,
+    quiet=0, run=run_all_test):
+    portal = self.getPortalObject()
+    activity_tool = self.getActivityTool()
+    # Check that a reference script can be reached
+    script_id = 'ERP5Site_reindexAll'
+    self.assertTrue(getattr(portal, script_id, None) is not None)
+    # Create a new skin selection
+    skin_selection_name = 'test_114'
+    portal.portal_skins.manage_skinLayers(add_skin=1, skinpath=[''], skinname=skin_selection_name)
+    # Create a dummy document
+    organisation = portal.organisation_module.newContent(portal_type='Organisation')
+    get_transaction().commit()
+    self.tic()
+    # Set custom methods to call as activities.
+    def first(context):
+      context.changeSkin(skin_selection_name)
+      if getattr(context, script_id, None) is not None:
+        raise Exception, '%s is not supposed to be found here.' % (script_id, )
+    def second(context):
+      # If the wrong skin is selected this will raise.
+      getattr(context, script_id)
+    Organisation.firstTest = first
+    Organisation.secondTest = second
+    try:
+      organisation.activate(tag='foo', activity='SQLQueue').firstTest()
+      organisation.activate(after_tag='foo', activity='SQLQueue').secondTest()
+      get_transaction().commit()
+      import gc
+      gc.disable()
+      self.tic()
+      gc.enable()
+      # Forcibly restore skin selection, otherwise getMessageList would only
+      # emit a log when retrieving the ZSQLMethod.
+      portal.changeSkin(None)
+      self.assertEquals(len(activity_tool.getMessageList()), 0)
+    finally:
+      delattr(Organisation, 'firstTest')
+      delattr(Organisation, 'secondTest')
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))
