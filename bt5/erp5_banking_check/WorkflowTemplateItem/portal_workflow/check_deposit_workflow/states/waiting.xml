@@ -39,6 +39,7 @@
               <tuple>
                 <string>accept</string>
                 <string>accept_action</string>
+                <string>cancel</string>
                 <string>refuse_action</string>
                 <string>reject</string>
               </tuple>
