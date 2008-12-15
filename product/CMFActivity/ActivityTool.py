@@ -1084,6 +1084,10 @@ class ActivityTool (Folder, UniqueObject):
       try:
         message(my_self)
       finally:
+        if my_self is not self: # We rewrapped self
+          # Restore default skin selection
+          skinnable = self.getPortalObject()
+          skinnable.changeSkin(skinnable.getSkinNameFromRequest(request))
         if old_ihotfix_context is not False:
           # Restore iHotfix context
           id = get_ident()
