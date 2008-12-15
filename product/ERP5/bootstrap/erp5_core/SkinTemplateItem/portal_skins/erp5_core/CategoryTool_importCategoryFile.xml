@@ -99,6 +99,7 @@ categories_spreadsheet_mapping = context.Base_getCategoriesSpreadSheetMapping(im
 \n
 for base_category, categories in \\\n
             categories_spreadsheet_mapping.items():\n
+  base_category_id_list.append(base_category)\n
   # Create categories\n
   total_category_counter += len(categories)\n
   for category in categories:\n
