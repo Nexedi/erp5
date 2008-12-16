@@ -62,6 +62,14 @@
 def compareFileName(a, b):\n
   return cmp(a.split(\'/\')[-1], b.split(\'/\')[-1])\n
 \n
+def remove_duplicates(sequence):\n
+  """remove duplicates from a list\n
+  """\n
+  existing_elements = dict()\n
+  for element in sequence:\n
+    existing_elements[element] = 1\n
+  return existing_elements.keys()\n
+\n
 \n
 from Products.ERP5Form.Report import ReportSection\n
 REQUEST = context.REQUEST\n
@@ -219,8 +227,8 @@ if portal_skin is not None and portal_skin=="ODT":\n
         form_id=\'DocumentationHelper_viewReportSubSectionTitleDescription\',\n
         listbox_display_mode=\'FlatListMode\')\n
     )\n
-  classmethods = dict().fromkeys([x for x in class_methods_list]).keys()\n
-  class_list = dict().fromkeys([\'.\'.join(x.split(\'.\')[:-2]) for x in classmethods]).keys()\n
+  classmethods = remove_duplicates(class_methods_list)\n
+  class_list = remove_duplicates([\'.\'.join(x.split(\'.\')[:-2]) for x in classmethods])\n
   class_list.sort()\n
   propertysheet = dict(zip([x.split(\'/\')[-1] for x in property_sheets_list],property_sheets_list))\n
   if classmethods !=[]:\n
@@ -241,7 +249,7 @@ if portal_skin is not None and portal_skin=="ODT":\n
         listbox_display_mode=\'FlatListMode\')\n
     )\n
     for class_name in class_list:\n
-      classmethod = dict().fromkeys([x.split(\'.\')[-1] for x in classmethods if x.startswith(class_name)]).keys()\n
+      classmethod = remove_duplicates([x.split(\'.\')[-1] for x in classmethods if x.startswith(class_name)])\n
       classmethod.sort()\n
       result.append(\n
         ReportSection(\n
@@ -338,6 +346,7 @@ return result\n
                           <tuple>
                             <string>getTitle</string>
                             <string>compareFileName</string>
+                            <string>remove_duplicates</string>
                             <string>Products.ERP5Form.Report</string>
                             <string>ReportSection</string>
                             <string>_getattr_</string>
@@ -371,10 +380,10 @@ return result\n
                             <string>sub_child_object</string>
                             <string>sub_child_section</string>
                             <string>appendix_description</string>
+                            <string>classmethods</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>x</string>
-                            <string>classmethods</string>
                             <string>class_list</string>
                             <string>zip</string>
                             <string>propertysheet</string>
