@@ -90,6 +90,13 @@ def default_invalid_spreadsheet_error_handler(error_message):\n
 if invalid_spreadsheet_error_handler is None:\n
   invalid_spreadsheet_error_handler = default_invalid_spreadsheet_error_handler\n
 \n
+try:\n
+  property_id_list = context.portal_classes.getPropertySheetPropertyIdList()\n
+except AttributeError:\n
+  # Class tool is too old\n
+  property_id_list = []\n
+\n
+\n
 def getIDFromString(string=None):\n
   """\n
     This function transform a string to a safe and beautiful ID.\n
@@ -122,6 +129,12 @@ def getIDFromString(string=None):\n
     clean_id = clean_id[1:]\n
   while len(clean_id) > 0 and not clean_id[-1].isalnum():\n
     clean_id = clean_id[:-1]\n
+\n
+  if clean_id in property_id_list:\n
+    invalid_spreadsheet_error_handler(translateString(\n
+         "The ID ${id} is invalid, it\'s a reserved property name",\n
+         mapping=dict(id=clean_id)))\n
+\n
   return clean_id\n
 \n
 # if the file is not an open office format, try to convert it using oood\n
@@ -331,13 +344,15 @@ return categories_spreadsheet_mapping\n
                             <string>categories_spreadsheet_mapping</string>
                             <string>default_invalid_spreadsheet_error_handler</string>
                             <string>None</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>property_id_list</string>
+                            <string>AttributeError</string>
                             <string>getIDFromString</string>
                             <string>content_type</string>
                             <string>hasattr</string>
-                            <string>_getattr_</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempOOoDocument</string>
-                            <string>context</string>
                             <string>tmp_ooo</string>
                             <string>_getiter_</string>
                             <string>ignored</string>

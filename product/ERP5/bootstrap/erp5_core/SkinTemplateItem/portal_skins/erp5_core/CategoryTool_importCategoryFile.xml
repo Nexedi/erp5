@@ -99,6 +99,7 @@ filename = getattr(import_file, \'filename\', \'?\')\n
 def invalid_category_spreadsheet_handler(message):\n
   # action taken when an invalid spreadsheet is provided.\n
   # we *raise* a Redirect, because we don\'t want the transaction to succeed\n
+  # note, we could make a dialog parameter to allow import invalid spreadsheet:\n
   raise \'Redirect\', \'%s/view?portal_status_message=%s\' % (\n
                          context.portal_categories.absolute_url(),\n
                          message)\n
