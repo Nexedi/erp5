@@ -2740,6 +2740,9 @@ VALUES
       Check that sorting on a related key does not filter out objects for
       which the relation is not set.
     """
+    if not run:
+      return
+  
     portal = self.getPortalObject()
     organisation = portal.organisation_module.\
                    newContent(portal_type="Organisation")
