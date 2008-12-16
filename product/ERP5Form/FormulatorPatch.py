@@ -34,6 +34,7 @@ from ProxyField import ProxyField
 from MultiLinkField import MultiLinkFieldWidget
 from AccessControl import ClassSecurityInfo
 from DocumentTemplate.ustr import ustr
+from DocumentTemplate.DT_Util import html_quote
 from cgi import escape
 import types
 from zLOG import LOG
@@ -376,7 +377,17 @@ TextAreaWidget.render_view = TextWidget_patched_render_view
 
 original_TextAreaWidget_render = TextAreaWidget.render
 def TextAreaWidget_render(self, field, key, value, REQUEST, render_prefix=None):
-  return original_TextAreaWidget_render(self, field, key, value, REQUEST)
+  width = field.get_value('width', REQUEST=REQUEST)
+  height = field.get_value('height', REQUEST=REQUEST)
+
+  return render_element("textarea",
+                        name=key,
+                        css_class=field.get_value('css_class'),
+                        cols=width,
+                        rows=height,
+                        contents=html_quote(value),
+                        extra=field.get_value('extra'))
+
 TextAreaWidget.render = TextAreaWidget_render
 
 class IntegerWidget(TextWidget) :
