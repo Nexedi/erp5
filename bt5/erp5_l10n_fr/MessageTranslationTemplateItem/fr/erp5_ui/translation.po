@@ -1524,7 +1524,7 @@ msgstr "Bogues à valider"
 
 #: portal_workflow/business_template_building_workflow/transitions/build_action
 msgid "Build Business Template"
-msgstr "Construire le business template"
+msgstr "Construire le Business Template"
 
 #: portal_workflow/invoice_causality_workflow/states/building
 #: portal_workflow/packing_list_causality_workflow/states/building
@@ -1548,37 +1548,37 @@ msgstr "Type de business"
 
 #: portal type
 msgid "Business Template"
-msgstr "Business template"
+msgstr "Business Template"
 
 #: portal_workflow/business_template_building_workflow
 msgid "Business Template Building Workflow"
-msgstr "Workflow de construction d'un business template"
+msgstr "Workflow de construction d'un Business Template"
 
 #: portal_skins/erp5_core/BusinessTemplate_view
 #: portal_skins/erp5_core/BusinessTemplate_viewCatalog
 #: portal_skins/erp5_core/BusinessTemplate_viewDetail
 #: portal_skins/erp5_core/BusinessTemplate_viewPortalTypes
 msgid "Business Template Definition"
-msgstr "Définition du business template"
+msgstr "Définition du Business Template"
 
 #: portal_skins/erp5_core/TrashTool_viewTrashBinList/listbox
 msgid "Business Template ID"
-msgstr "ID du modèle"
+msgstr "ID du Business Template"
 
 #: portal_workflow/business_template_installation_workflow
 msgid "Business Template Installation Workflow"
-msgstr "Workflow d'installation du business template"
+msgstr "Workflow d'installation du Business Template"
 
 #: portal_skins/erp5_core/TrashTool_viewTrashBinList/listbox
 msgid "Business Template Title"
-msgstr "Titre du modèle"
+msgstr "Titre du Business Template"
 
 #: portal_skins/erp5_core/TemplateTool_viewBusinessTemplateList
 #: portal_skins/erp5_core/TemplateTool_viewBusinessTemplateList/listbox
 #: portal_skins/erp5_core/TemplateTool_viewDownloadRepositoryBusinessTemplateListDialog/listbox
 #: portal_skins/erp5_core/TemplateTool_viewInstallRepositoryBusinessTemplateListDialog/listbox
 msgid "Business Templates"
-msgstr "Modèles"
+msgstr "Business Templates"
 
 #: /home/glossary/zope_glossary/Products/ERP5/Tool/TemplateTool.py
 msgid "Business template downloaded successfully."
@@ -2077,7 +2077,7 @@ msgstr "Chemin de classification"
 
 #: portal_workflow/business_template_building_workflow/transitions/clean_action
 msgid "Clean Business Template"
-msgstr "Nettoyer le business template"
+msgstr "Nettoyer le Business Template"
 
 #: Business Template
 msgid "Clean SVN Unversioned Files"
@@ -3659,7 +3659,7 @@ msgstr "Mode développeur"
 
 #: Template Tool portal_skins/erp5_core/TemplateTool_viewDiff
 msgid "Diff Business Template"
-msgstr "Différencier le Business Template"
+msgstr "Voir les différences pour ce Business Template"
 
 #: portal_skins/erp5_core/BusinessTemplate_viewObjectsDiff
 msgid "Diff Two Objects"
@@ -3947,12 +3947,12 @@ msgstr "Télécharger le Business Template"
 
 #: Template Tool
 msgid "Download Business Template from URL"
-msgstr "Télécharger le business template depuis une URL"
+msgstr "Télécharger le Business Template depuis une URL"
 
 #: Template Tool
 #: portal_skins/erp5_core/TemplateTool_viewDownloadRepositoryBusinessTemplateListDialog
 msgid "Download Business Templates from Repositories"
-msgstr "Télécharger des business templates depuis les dépôts"
+msgstr "Télécharger des Business Templates depuis les dépôts"
 
 #: portal_skins/erp5_dms/Image_viewConvertDialog
 msgid "Download Converted File"
@@ -4506,7 +4506,7 @@ msgstr "Exporter"
 #: Business Template
 #: portal_skins/erp5_core/BusinessTemplate_viewExportBusinessTemplateDialog
 msgid "Export Business Template"
-msgstr "Exporter le modèle"
+msgstr "Exporter le Business Template"
 
 #: erp5_invoicing/Invoice_viewODTPrintDialog/your_format [Glossary term 3447]
 msgid "Export Format"
@@ -5084,7 +5084,7 @@ msgstr "Trouver les portal types depuis les modules"
 
 #: Business Template
 msgid "Guess Properties of Portal Types"
-msgstr "Trouver les propriétés des protal types"
+msgstr "Trouver les propriétés des portal types"
 
 #: portal_skins/erp5_dms/Document_viewHTMLPreview
 msgid "HTML Representation"
@@ -5561,12 +5561,12 @@ msgstr "Inspecter l'objet"
 
 #: portal_workflow/business_template_installation_workflow/transitions/install_action
 msgid "Install Business Template"
-msgstr "Installer le business template"
+msgstr "Installer le Business Remplate"
 
 #: Template Tool
 #: portal_skins/erp5_core/TemplateTool_viewInstallRepositoryBusinessTemplateListDialog
 msgid "Install Business Templates from Repositories"
-msgstr "Installer le business template depuis les dépôts"
+msgstr "Installer le Business Template depuis les dépôts"
 
 msgid "Repositories"
 msgstr "Dépôts"
@@ -9721,7 +9721,7 @@ msgstr "Sauvegarder et voir"
 #: Business Template
 #: portal_skins/erp5_core/BusinessTemplate_viewSaveBusinessTemplateDialog
 msgid "Save Business Template"
-msgstr "Sauvegarder le modèle"
+msgstr "Sauvegarder le Business Template"
 
 #: /home/glossary/zope_glossary/Products/ERP5/Tool/TemplateTool.py
 msgid "Saved in ${path} ."
