@@ -304,19 +304,35 @@ class TestOOoImport(ERP5TypeTestCase):
     self.assertEquals(['france'], list(region.europe.france.europe.objectIds()))
     self.assertEquals([], list(region.europe.france.europe.france.objectIds()))
 
-  def test_CategoryTool_importCategoryFile_DuplicateIdsAtSameLevel(self):
-    # tests CategoryTool_importCategoryFile when a document contain same
+  def test_Base_getCategoriesSpreadSheetMapping_DuplicateIdsAtSameLevel(self):
+    # tests Base_getCategoriesSpreadSheetMapping when a document contain same
     # categories ID at the same level, in that case, a ValueError is raised
     import_file = makeFileUpload(
         'import_region_category_duplicate_ids_same_level.sxc')
     try:
-      self.portal.portal_categories.CategoryTool_importCategoryFile(
+      self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
              import_file=import_file)
     except ValueError, error:
       # 'france' is the duplicate ID in this spreadsheet
       self.assertTrue('france' in str(error), str(error))
     else:
       self.fail('ValueError not raised')
+    
+    # Base_getCategoriesSpreadSheetMapping performs checks on the spreadsheet,
+    # an "invalid spreadsheet" error handler can be provided, to report errors
+    # nicely.
+    message_list = []
+    def on_invalid_spreadsheet(message):
+      message_list.append(message)
+
+    import_file = makeFileUpload(
+        'import_region_category_duplicate_ids_same_level.sxc')
+    self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(import_file,
+         invalid_spreadsheet_error_handler=on_invalid_spreadsheet)
+    
+    self.assertEquals(1, len(message_list))
+    self.assertTrue('france' in str(message_list[0]))
+
 
   # simple OOoParser tests
   def test_getSpreadSheetMapping(self):
