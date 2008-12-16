@@ -248,6 +248,14 @@ for table_name in spreadsheets.keys():\n
             if clean_title != cell_id:\n
               category_properties[\'title\'] = clean_title\n
 \n
+          # Detect duplicate IDs\n
+          #if path_elements and path_elements[-1][\'depth\'] == element_depth:\n
+          for element in path_elements[::-1]:\n
+            if element[\'depth\'] != element_depth:\n
+              break\n
+            if element[\'value\'] == path_element_id:\n
+              raise ValueError("Duplicate id %s" % element[\'value\'])\n
+\n
           # Save the path element\n
           path_elements.append({ \'depth\': element_depth\n
                                , \'value\': path_element_id\n
@@ -355,6 +363,7 @@ return categories_spreadsheet_mapping\n
                             <string>element</string>
                             <string>path</string>
                             <string>clean_title</string>
+                            <string>ValueError</string>
                           </tuple>
                         </value>
                     </item>
