@@ -95,7 +95,17 @@ deleted_category_counter = 0\n
 kept_category_counter = 0\n
 \n
 filename = getattr(import_file, \'filename\', \'?\')\n
-categories_spreadsheet_mapping = context.Base_getCategoriesSpreadSheetMapping(import_file)\n
+\n
+def invalid_category_spreadsheet_handler(message):\n
+  # action taken when an invalid spreadsheet is provided.\n
+  # we *raise* a Redirect, because we don\'t want the transaction to succeed\n
+  raise \'Redirect\', \'%s/view?portal_status_message=%s\' % (\n
+                         context.portal_categories.absolute_url(),\n
+                         message)\n
+\n
+categories_spreadsheet_mapping = context.Base_getCategoriesSpreadSheetMapping(import_file,\n
+                                    invalid_spreadsheet_error_handler=invalid_category_spreadsheet_handler)\n
+\n
 \n
 for base_category, categories in \\\n
             categories_spreadsheet_mapping.items():\n
@@ -269,6 +279,7 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>kept_category_counter</string>
                             <string>getattr</string>
                             <string>filename</string>
+                            <string>invalid_category_spreadsheet_handler</string>
                             <string>categories_spreadsheet_mapping</string>
                             <string>_getiter_</string>
                             <string>base_category</string>

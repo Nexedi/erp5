@@ -57,7 +57,12 @@
 
 """Parses a spreadsheet containing categories and returns a mapping.\n
 \n
-import_file must be a spreadsheet in a format supported by openoffice\n
+`import_file` must be a spreadsheet in a format supported by openoffice\n
+\n
+`invalid_spreadsheet_error_handler` is the callback method that will be called if\n
+the spreadsheet is invalid. The method must recieve as only parameter a string\n
+explaining the error.\n
+If no error_callback is given, the default action is to raise a ValueError.\n
 \n
 The returned mapping has the following structure:\n
   \n
@@ -73,9 +78,17 @@ The returned mapping has the following structure:\n
 This scripts guarantees that the list of category info is sorted in such a\n
 way that parent always precedes their children.\n
 """\n
+from Products.ERP5Type.Message import translateString\n
 from Products.ERP5OOo.OOoUtils import OOoParser\n
 parser = OOoParser()\n
 categories_spreadsheet_mapping = dict()\n
+\n
+\n
+def default_invalid_spreadsheet_error_handler(error_message):\n
+  raise ValueError(error_message)\n
+\n
+if invalid_spreadsheet_error_handler is None:\n
+  invalid_spreadsheet_error_handler = default_invalid_spreadsheet_error_handler\n
 \n
 def getIDFromString(string=None):\n
   """\n
@@ -249,12 +262,13 @@ for table_name in spreadsheets.keys():\n
               category_properties[\'title\'] = clean_title\n
 \n
           # Detect duplicate IDs\n
-          #if path_elements and path_elements[-1][\'depth\'] == element_depth:\n
           for element in path_elements[::-1]:\n
             if element[\'depth\'] != element_depth:\n
               break\n
             if element[\'value\'] == path_element_id:\n
-              raise ValueError("Duplicate id %s" % element[\'value\'])\n
+              invalid_spreadsheet_error_handler(\n
+                  translateString("Duplicate id found: ${id}",\n
+                      mapping=dict(id=element[\'value\'])))\n
 \n
           # Save the path element\n
           path_elements.append({ \'depth\': element_depth\n
@@ -280,7 +294,7 @@ return categories_spreadsheet_mapping\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>import_file</string> </value>
+            <value> <string>import_file, invalid_spreadsheet_error_handler=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -300,18 +314,22 @@ return categories_spreadsheet_mapping\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>import_file</string>
+                            <string>invalid_spreadsheet_error_handler</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>translateString</string>
                             <string>Products.ERP5OOo.OOoUtils</string>
                             <string>OOoParser</string>
                             <string>parser</string>
                             <string>dict</string>
                             <string>categories_spreadsheet_mapping</string>
+                            <string>default_invalid_spreadsheet_error_handler</string>
                             <string>None</string>
                             <string>getIDFromString</string>
                             <string>content_type</string>
@@ -363,7 +381,6 @@ return categories_spreadsheet_mapping\n
                             <string>element</string>
                             <string>path</string>
                             <string>clean_title</string>
-                            <string>ValueError</string>
                           </tuple>
                         </value>
                     </item>
@@ -375,7 +392,9 @@ return categories_spreadsheet_mapping\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
