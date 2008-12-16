@@ -94,10 +94,10 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>language\r\n
-all_languages\r\n
-all_versions\r\n
-validation_state:list\r\n
+            <value> <string>language\n
+all_languages\n
+all_versions\n
+validation_state:list\n
 kw</string> </value>
         </item>
         <item>
@@ -138,7 +138,10 @@ kw</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<dtml-let query="buildSQLQuery(query=portal_catalog.getSecurityQuery(**kw), validation_state=validation_state, **kw)">\n
+<dtml-let query="buildSQLQuery(query=portal_catalog.getSecurityQuery(**kw),\n
+                               validation_state=validation_state, **kw)"\n
+          is_translation_order_by="query[\'order_by_expression\'] is not None and\n
+            query[\'order_by_expression\'].startswith(\'related_translation_0.\')">\n
 \n
 <dtml-comment>\n
   Currently, there is no other choice to implement this method as an SQL catalog until SQLCatalog \n
@@ -152,8 +155,12 @@ SELECT\n
   catalog.path AS path, catalog.uid AS uid, catalog.modification_date,\n
   catalog.reference, catalog.int_index,  catalog.creation_date , catalog.title, \n
   catalog.priority\n
+  <dtml-if is_translation_order_by>  \n
+    ,catalog.translated_message\n
+  </dtml-if>\n
+\n
 FROM\n
-  (\n
+   (\n
     SELECT\n
       catalog.uid, catalog.path, catalog.int_index, catalog.modification_date,\n
       catalog.reference, my_versioning.language, my_versioning.version,\n
@@ -163,11 +170,17 @@ FROM\n
                                        WHEN \'en\' THEN \'2\'\n
                                        ELSE \'1\' END,\n
                             my_versioning.version)) AS priority\n
+      <dtml-if is_translation_order_by>\n
+        ,related_translation_intermediate.translated_message\n
+      </dtml-if>\n
     FROM\n
       <dtml-in prefix="table" expr="query[\'from_table_list\']">\n
           <dtml-var table_item> AS <dtml-var table_key>,\n
       </dtml-in>\n
       versioning AS my_versioning\n
+      <dtml-if is_translation_order_by>\n
+        ,translation AS related_translation_intermediate\n
+      </dtml-if>\n
     WHERE\n
       my_versioning.uid = catalog.uid\n
       <dtml-if "query[\'where_expression\']">\n
@@ -198,13 +211,17 @@ FROM\n
                                        ELSE \'1\' END,\n
                             my_versioning.version)) = catalog.priority\n
 </dtml-if>\n
-  ORDER BY\n
-<dtml-if "query[\'order_by_expression\']">\n
-   <dtml-var "query[\'order_by_expression\']">\n
-<dtml-else>\n
-   catalog.int_index, catalog.reference\n
-</dtml-if>\n
 \n
+  ORDER BY\n
+  <dtml-if "query[\'order_by_expression\']">\n
+    <dtml-if is_translation_order_by>\n
+      <dtml-var "query[\'order_by_expression\'].split(\'.\')[-1]">\n
+    <dtml-else>\n
+      <dtml-var "query[\'order_by_expression\']">\n
+    </dtml-if>\n
+  <dtml-else>\n
+    catalog.int_index, catalog.reference\n
+  </dtml-if>\n
 <dtml-if "query[\'limit_expression\']">\n
   LIMIT <dtml-var "query[\'limit_expression\']">\n
 <dtml-else>\n
@@ -251,7 +268,10 @@ FROM\n
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
-<dtml-let query="buildSQLQuery(query=portal_catalog.getSecurityQuery(**kw), validation_state=validation_state, **kw)">\n
+<dtml-let query="buildSQLQuery(query=portal_catalog.getSecurityQuery(**kw),\n
+                               validation_state=validation_state, **kw)"\n
+          is_translation_order_by="query[\'order_by_expression\'] is not None and\n
+            query[\'order_by_expression\'].startswith(\'related_translation_0.\')">\n
 \n
 <dtml-comment>\n
   Currently, there is no other choice to implement this method as an SQL catalog until SQLCatalog \n
@@ -265,8 +285,12 @@ SELECT\n
   catalog.path AS path, catalog.uid AS uid, catalog.modification_date,\n
   catalog.reference, catalog.int_index,  catalog.creation_date , catalog.title, \n
   catalog.priority\n
+  <dtml-if is_translation_order_by>  \n
+    ,catalog.translated_message\n
+  </dtml-if>\n
+\n
 FROM\n
-  (\n
+   (\n
     SELECT\n
       catalog.uid, catalog.path, catalog.int_index, catalog.modification_date,\n
       catalog.reference, my_versioning.language, my_versioning.version,\n
@@ -276,11 +300,17 @@ FROM\n
                                        WHEN \'en\' THEN \'2\'\n
                                        ELSE \'1\' END,\n
                             my_versioning.version)) AS priority\n
+      <dtml-if is_translation_order_by>\n
+        ,related_translation_intermediate.translated_message\n
+      </dtml-if>\n
     FROM\n
       <dtml-in prefix="table" expr="query[\'from_table_list\']">\n
           <dtml-var table_item> AS <dtml-var table_key>,\n
       </dtml-in>\n
       versioning AS my_versioning\n
+      <dtml-if is_translation_order_by>\n
+        ,translation AS related_translation_intermediate\n
+      </dtml-if>\n
     WHERE\n
       my_versioning.uid = catalog.uid\n
       <dtml-if "query[\'where_expression\']">\n
@@ -311,13 +341,17 @@ FROM\n
                                        ELSE \'1\' END,\n
                             my_versioning.version)) = catalog.priority\n
 </dtml-if>\n
-  ORDER BY\n
-<dtml-if "query[\'order_by_expression\']">\n
-   <dtml-var "query[\'order_by_expression\']">\n
-<dtml-else>\n
-   catalog.int_index, catalog.reference\n
-</dtml-if>\n
 \n
+  ORDER BY\n
+  <dtml-if "query[\'order_by_expression\']">\n
+    <dtml-if is_translation_order_by>\n
+      <dtml-var "query[\'order_by_expression\'].split(\'.\')[-1]">\n
+    <dtml-else>\n
+      <dtml-var "query[\'order_by_expression\']">\n
+    </dtml-if>\n
+  <dtml-else>\n
+    catalog.int_index, catalog.reference\n
+  </dtml-if>\n
 <dtml-if "query[\'limit_expression\']">\n
   LIMIT <dtml-var "query[\'limit_expression\']">\n
 <dtml-else>\n
