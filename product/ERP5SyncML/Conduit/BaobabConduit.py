@@ -37,7 +37,7 @@ from ZODB.POSException import ConflictError
 import datetime
 
 from zLOG import LOG
-
+import sys
 
 
 class BaobabConduit(ERP5Conduit):
@@ -313,8 +313,8 @@ class BaobabConduit(ERP5Conduit):
              , "expected %s parent object (%s) not found in %s" % ( source_portal_type
                                                                   , construction_location
                                                                   , search_folder
-                                                                  )
-             )
+                                                                  ),
+             error=sys.exc_info())
       if parent_object == None:
         LOG( 'BaobabConduit:'
            , 100
