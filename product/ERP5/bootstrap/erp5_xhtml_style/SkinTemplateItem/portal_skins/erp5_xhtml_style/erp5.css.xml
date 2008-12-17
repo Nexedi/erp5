@@ -463,6 +463,11 @@ input#hidden_button {\n
   float: left;\n
 }\n
 \n
+textarea[readonly] {\n
+  background-color:inherit;\n
+  border:inherit;\n
+}\n
+\n
 a, a:visited, a:focus {\n
   background-color: inherit;\n
   color: <dtml-var link_color>;\n
