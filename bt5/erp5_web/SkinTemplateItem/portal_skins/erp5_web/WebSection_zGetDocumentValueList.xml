@@ -141,7 +141,7 @@ kw</string> </value>
 <dtml-let query="buildSQLQuery(query=portal_catalog.getSecurityQuery(**kw),\n
                                validation_state=validation_state, **kw)"\n
           is_translation_order_by="query[\'order_by_expression\'] is not None and\n
-            query[\'order_by_expression\'].startswith(\'related_translation_0.\')">\n
+            \'translated_message\' in query[\'order_by_expression\']">\n
 \n
 <dtml-comment>\n
   Currently, there is no other choice to implement this method as an SQL catalog until SQLCatalog \n
@@ -271,7 +271,7 @@ FROM\n
 <dtml-let query="buildSQLQuery(query=portal_catalog.getSecurityQuery(**kw),\n
                                validation_state=validation_state, **kw)"\n
           is_translation_order_by="query[\'order_by_expression\'] is not None and\n
-            query[\'order_by_expression\'].startswith(\'related_translation_0.\')">\n
+            \'translated_message\' in query[\'order_by_expression\']">\n
 \n
 <dtml-comment>\n
   Currently, there is no other choice to implement this method as an SQL catalog until SQLCatalog \n
