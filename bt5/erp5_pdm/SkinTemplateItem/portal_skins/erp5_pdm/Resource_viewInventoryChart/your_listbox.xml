@@ -83,19 +83,19 @@
                       <list>
                         <tuple>
                           <string>date</string>
-                          <string>date</string>
+                          <string>Date</string>
                         </tuple>
                         <tuple>
                           <string>current</string>
-                          <string>current</string>
+                          <string>Current</string>
                         </tuple>
                         <tuple>
                           <string>available</string>
-                          <string>available</string>
+                          <string>Available</string>
                         </tuple>
                         <tuple>
                           <string>future</string>
-                          <string>future</string>
+                          <string>Future</string>
                         </tuple>
                       </list>
                     </value>

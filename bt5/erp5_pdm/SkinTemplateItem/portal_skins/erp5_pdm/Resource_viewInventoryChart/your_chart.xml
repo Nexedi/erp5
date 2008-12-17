@@ -18,7 +18,6 @@
                 <string>chart_type</string>
                 <string>colour_column_list</string>
                 <string>grid_graph</string>
-                <string>user_column_id_list</string>
               </list>
             </value>
         </item>
@@ -88,10 +87,6 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>user_column_id_list</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -145,25 +140,6 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Stock Graph</string> </value>
-                </item>
-                <item>
-                    <key> <string>user_column_id_list</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>current</string>
-                          <string>Current</string>
-                        </tuple>
-                        <tuple>
-                          <string>available</string>
-                          <string>Available</string>
-                        </tuple>
-                        <tuple>
-                          <string>future</string>
-                          <string>Future</string>
-                        </tuple>
-                      </list>
-                    </value>
                 </item>
               </dictionary>
             </value>
