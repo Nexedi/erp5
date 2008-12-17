@@ -133,7 +133,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'\',\'\')] + [(x.getTitle(),x.getRelativeUrl()) for x in context.portal_catalog(portal_type=\'Organisation\',sort_on=((\'title\',\'ascending\'),))]</string> </value>
+            <value> <string>here/Resource_getMovementedSectionItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
