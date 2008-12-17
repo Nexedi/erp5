@@ -130,6 +130,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
           xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
           xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
           tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
+          tal:define="render_prefix nothing"\n
          office:version=\'1.0\'>\n
 \n
   <office:scripts/>\n
