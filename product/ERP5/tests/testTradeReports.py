@@ -611,7 +611,6 @@ class TestTradeReports(ERP5ReportTestCase):
 
     data_line_list = [l for l in line_list if l.isDataLine()]
     self.assertEquals(0, len(data_line_list))
-
     ################################
     # Middle date
     ################################
@@ -680,6 +679,191 @@ class TestTradeReports(ERP5ReportTestCase):
                    variation_text='colour/colour2',
                    inventory=66,
                    quantity_unit='')
+                    
+  def testStockReportWithPositiveOrNegativeOrZeroStock(self):
+    """
+    Stock report.
+    """
+    # Create inventories
+    first = self._makeOneInventory(
+              title='Inventory 1',
+              simulation_state='delivered',
+              destination_value=self.organisation_module.Organisation_1,
+              start_date=DateTime(2007, 2, 2),
+              resource='product_module/product_A',
+              quantity=22,
+              )
+
+    second = self._makeOneInventory(
+              title='Inventory 2',
+              simulation_state='delivered',
+              destination_value=self.organisation_module.Organisation_1,
+              start_date=DateTime(2007, 2, 2),
+              resource='product_module/product_A',
+              quantity=-22,
+              )
+
+    third = self._makeOneInventory(
+              title='Inventory 3',
+              simulation_state='delivered',
+              destination_value=self.organisation_module.Organisation_1,
+              start_date=DateTime(2007, 2, 2),
+              resource='product_module/product_B',
+              quantity=-33,
+              )
+
+    fourth = self._makeOneInventory(
+              title='Inventory 4',
+              simulation_state='delivered',
+              destination_value=self.organisation_module.Organisation_2,
+              start_date=DateTime(2007, 2, 2),
+              resource='product_module/product_B',
+              quantity=-44,
+              )
+
+    fifth = self._makeOneInventory(
+              title='Inventory 5',
+              destination_value=self.organisation_module.Organisation_1,
+              start_date=DateTime(2007, 2, 2),
+              resource='product_module/product_C',
+              quantity=55,
+              )
+    fifth_line = fifth.contentValues(portal_type='Inventory Line')[0]
+    fifth_line.edit(
+        variation_category_list=['colour/colour1', 'colour/colour2'],
+        )
+    base_id = 'movement'
+    cell_key_list = list(fifth_line.getCellKeyList(base_id=base_id))
+    for cell_key in cell_key_list:
+      cell = fifth_line.newCell(base_id=base_id,
+                                portal_type='Inventory Cell', 
+                                *cell_key)
+      cell.edit(mapped_value_property_list=['inventory'],
+                inventory=66,
+                predicate_category_list=cell_key,
+                variation_category_list=cell_key)
+    fifth.deliver()
+
+    # services are ignored
+    self._makeOneInventory(
+              title='Inventory 6',
+              simulation_state='delivered',
+              destination_value=self.organisation_module.Organisation_1,
+              start_date=DateTime(2007, 2, 2),
+              resource='service_module/service_a',
+              quantity=11,
+              )
+
+    get_transaction().commit()
+    self.tic()
+
+    request = self.portal.REQUEST
+    ################################
+    # Don't Display Positive Stock
+    ################################
+    request.form['at_date'] = DateTime(2008, 4, 4)
+    request.form['site'] = 'demo_site_A'
+    request.form['positive_stock'] = 1
+    line_list = \
+      self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
+        get_value('default',
+                  render_format='list', REQUEST=self.portal.REQUEST)
+
+    data_line_list = [l for l in line_list if l.isDataLine()]
+  
+    self.assertEquals(2, len(data_line_list))
+    
+    self.checkLineProperties(
+                   data_line_list[0],
+                   resource_title='product_B',
+                   resource_reference='ref 1',
+                   variation_text='',
+                   inventory=-33,
+                   quantity_unit='Kg')
+    self.checkLineProperties(
+                   data_line_list[1],
+                   resource_title='product_A',
+                   resource_reference='ref 2',
+                   variation_text='',
+                   inventory=0,
+                   quantity_unit='G')
+    ################################
+    # Don't Display Negative Stock
+    ################################
+    request.form['at_date'] = DateTime(2008, 4, 4)
+    request.form['site'] = 'demo_site_A'
+    request.form['positive_stock'] = 0
+    request.form['negative_stock'] = 1
+    
+    line_list = \
+      self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
+        get_value('default',
+                  render_format='list', REQUEST=self.portal.REQUEST)
+
+    data_line_list = [l for l in line_list if l.isDataLine()]
+  
+    self.assertEquals(3, len(data_line_list))
+    self.checkLineProperties(
+                   data_line_list[0],
+                   resource_title='product_A',
+                   resource_reference='ref 2',
+                   variation_text='',
+                   inventory=0,
+                   quantity_unit='G')
+    self.checkLineProperties(
+                   data_line_list[1],
+                   resource_title='variated product',
+                   resource_reference='ref 3',
+                   variation_text='colour/colour1',
+                   inventory=66,
+                   quantity_unit='')
+    self.checkLineProperties(
+                   data_line_list[2],
+                   resource_title='variated product',
+                   resource_reference='ref 3',
+                   variation_text='colour/colour2',
+                   inventory=66,
+                   quantity_unit='')
+    ################################
+    # Don't Display Zero Stock
+    ################################
+    request.form['at_date'] = DateTime(2008, 4, 4)
+    request.form['site'] = 'demo_site_A'
+    request.form['positive_stock'] = 0
+    request.form['negative_stock'] = 0
+    request.form['zero_stock'] = 1
+    line_list = \
+      self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
+        get_value('default',
+                  render_format='list', REQUEST=self.portal.REQUEST)
+
+    data_line_list = [l for l in line_list if l.isDataLine()]
+  
+    self.assertEquals(3, len(data_line_list))
+    self.checkLineProperties(
+                   data_line_list[0],
+                   resource_title='product_B',
+                   resource_reference='ref 1',
+                   variation_text='',
+                   inventory=-33,
+                   quantity_unit='Kg')
+    self.checkLineProperties(
+                   data_line_list[1],
+                   resource_title='variated product',
+                   resource_reference='ref 3',
+                   variation_text='colour/colour1',
+                   inventory=66,
+                   quantity_unit='')
+    self.checkLineProperties(
+                   data_line_list[2],
+                   resource_title='variated product',
+                   resource_reference='ref 3',
+                   variation_text='colour/colour2',
+                   inventory=66,
+                   quantity_unit='')
+    
+                   
+    
 
   def test_Folder_generateWorkflowReport(self):
     # Create sales orders
