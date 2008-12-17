@@ -51,7 +51,7 @@ class DayMovementGroup(MovementGroup):
     else:
       return False, property_dict
 
-  def _getStartDate(self,movement):
+  def _getStartDate(self, movement):
     start_date = DateTime(movement.getStartDate() is not None and\
                           movement.getStartDate().strftime('%Y/%m/%d') or None)
     return start_date
