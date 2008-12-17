@@ -283,6 +283,24 @@ for table_name in spreadsheets.keys():\n
                   translateString("Duplicate id found: ${id}",\n
                       mapping=dict(id=element[\'value\'])))\n
 \n
+          # Detect wrong hierarchy\n
+          if path_elements:\n
+            current_depth = element_depth\n
+            for element in path_elements[::-1]:\n
+              if element[\'depth\'] > current_depth:\n
+                break # we are now on another branch\n
+              if element[\'depth\'] == current_depth:\n
+                continue # we are on the same level\n
+              elif element[\'depth\'] == (current_depth - 1):\n
+                current_depth = element[\'depth\']\n
+                continue # we are on the direct parent (current level - 1)\n
+              else:\n
+                invalid_spreadsheet_error_handler(\n
+                   translateString(\n
+                    "Wrong hierarchy found for ID ${id} and depth ${depth}",\n
+                        mapping=dict(id=path_element_id,\n
+                                     depth=element_depth)))\n
+            \n
           # Save the path element\n
           path_elements.append({ \'depth\': element_depth\n
                                , \'value\': path_element_id\n
@@ -396,6 +414,7 @@ return categories_spreadsheet_mapping\n
                             <string>element</string>
                             <string>path</string>
                             <string>clean_title</string>
+                            <string>current_depth</string>
                           </tuple>
                         </value>
                     </item>
