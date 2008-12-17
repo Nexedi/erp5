@@ -62,13 +62,13 @@ def mycmp(line_a, line_b):\n
     Compare 2 lines and sort them according to\n
     sort_on parameter.\n
   """\n
+  \n
   result = cmp(line_a.getResourceReference(), line_b.getResourceReference())\n
   if result == 0:\n
     result = cmp(line_a.variation_text, line_b.variation_text)\n
     if result == 0:\n
       result = cmp(line_a.resource_title, line_b.resource_title)\n
   return result\n
-\n
 result_list = []\n
 for x in context.portal_simulation.getCurrentInventoryList(\n
   stock_node_category_uid=site.getUid(),\n
@@ -79,12 +79,14 @@ for x in context.portal_simulation.getCurrentInventoryList(\n
   # XXX resourceType= uses movement table.\n
   # resource_portal_type= does not work with cells (because resource is acquired from line)\n
   resourceType=context.getPortalProductTypeList(), **kw):\n
-  if positive_stock and x.getInventory() > 0:\n
-    result_list.append(x)\n
-  if negative_stock and x.getInventory() < 0:\n
-    result_list.append(x)\n
-  if zero_stock and x.getInventory()==0:\n
-    result_list.append(x)\n
+  if x.inventory <=0 and positive_stock:\n
+     result_list.append(x)\n
+  if x.inventory>=0 and negative_stock:\n
+     result_list.append(x)\n
+  if x.inventory!=0 and zero_stock:\n
+     result_list.append(x) \n
+  if not positive_stock and not negative_stock and not zero_stock:\n
+     result_list.append(x)\n
 \n
 result_list = list(result_list)\n
 result_list.sort(cmp=mycmp)\n

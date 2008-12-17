@@ -14,6 +14,7 @@
             <value>
               <list>
                 <string>title</string>
+                <string>description</string>
               </list>
             </value>
         </item>
@@ -75,6 +76,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>Don\'t display zero stock of the resource if stock is equal to zero</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_checkbox</string> </value>
                 </item>
@@ -88,7 +93,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Zero Stock</string> </value>
+                    <value> <string>Don\'t Display Zero Stock</string> </value>
                 </item>
               </dictionary>
             </value>
