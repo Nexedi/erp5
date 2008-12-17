@@ -97,7 +97,7 @@ except AttributeError:\n
   property_id_list = []\n
 \n
 \n
-def getIDFromString(string=None):\n
+def getIDFromString(string=None, force=0):\n
   """\n
     This function transform a string to a safe and beautiful ID.\n
     It is used here to create a safe category ID from a string.\n
@@ -130,7 +130,7 @@ def getIDFromString(string=None):\n
   while len(clean_id) > 0 and not clean_id[-1].isalnum():\n
     clean_id = clean_id[:-1]\n
 \n
-  if clean_id in property_id_list:\n
+  if clean_id in property_id_list and not force:\n
     invalid_spreadsheet_error_handler(translateString(\n
          "The ID ${id} is invalid, it\'s a reserved property name",\n
          mapping=dict(id=clean_id)))\n
@@ -167,7 +167,7 @@ for table_name in spreadsheets.keys():\n
   column_index = 0\n
   path_index = 0\n
   for column in columns_header:\n
-    column_id = getIDFromString(column)\n
+    column_id = getIDFromString(column, force=1)\n
     # This give us the information that the path definition has started\n
     path_def_started = \'path_0\' in property_map.values()\n
     # The path of the category has started to be expressed\n
