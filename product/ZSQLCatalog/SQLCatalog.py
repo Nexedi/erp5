@@ -887,7 +887,7 @@ class Catalog(Folder,
       keys = keys.keys()
       keys.sort()
       return keys
-    return CachingMethod(_getColumnIds, id='SQLCatalog.getColumnIds', cache_factory='erp5_content_long')().copy()
+    return CachingMethod(_getColumnIds, id='SQLCatalog.getColumnIds', cache_factory='erp5_content_long')()[:]
 
   def getColumnMap(self):
     """
