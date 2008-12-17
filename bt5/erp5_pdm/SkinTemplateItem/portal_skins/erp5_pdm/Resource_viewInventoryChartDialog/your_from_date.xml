@@ -85,7 +85,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Ticket_viewDialogFieldLibrary</string> </value>
+                    <value> <string>Base_viewDialogFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
