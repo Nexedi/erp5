@@ -215,7 +215,7 @@ FROM\n
   ORDER BY\n
   <dtml-if "query[\'order_by_expression\']">\n
     <dtml-if is_translation_order_by>\n
-      <dtml-var "query[\'order_by_expression\'].split(\'.\')[-1]">\n
+      translated_message\n
     <dtml-else>\n
       <dtml-var "query[\'order_by_expression\']">\n
     </dtml-if>\n
@@ -345,7 +345,7 @@ FROM\n
   ORDER BY\n
   <dtml-if "query[\'order_by_expression\']">\n
     <dtml-if is_translation_order_by>\n
-      <dtml-var "query[\'order_by_expression\'].split(\'.\')[-1]">\n
+      translated_message\n
     <dtml-else>\n
       <dtml-var "query[\'order_by_expression\']">\n
     </dtml-if>\n
