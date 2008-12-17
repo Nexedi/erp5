@@ -47,13 +47,12 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
     ooo_chart_id = 'my_ooochart'
     nb_persons = 10
     content_type = 'application/vnd.oasis.opendocument.graphics'
-    skin = 'ODG'
 
     def getTitle(self):
       return 'Test OOoChart'
 
     def getBusinessTemplateList(self):
-      return ('erp5_base', 'erp5_ui_test',)
+      return ('erp5_base', 'erp5_ui_test', 'erp5_odt_style', 'erp5_ods_style',)
 
     def afterSetUp(self):
       self.auth = 'ERP5TypeTestCase:'
@@ -309,6 +308,28 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       # Test ODG (zip) with other params
       body = response.getBody()
       # Test Validation Relax NG
+      self._validate(body)
+
+    def test_ods_style(self):
+      # simple rendering of a chart in ods style
+      self.portal.changeSkin('ODS')
+      response = self.publish(
+          '/%s/%s' % (self.portal.getId(), self.form_id),
+          self.auth,
+          handle_errors=False )
+      self.assertEquals(HTTP_OK, response.getStatus())
+      body = response.getBody()
+      self._validate(body)
+
+    def test_odt_style(self):
+      # simple rendering of a chart in odt style
+      self.portal.changeSkin('ODT')
+      response = self.publish(
+          '/%s/%s' % (self.portal.getId(), self.form_id),
+          self.auth,
+          handle_errors=False )
+      self.assertEquals(HTTP_OK, response.getStatus())
+      body = response.getBody()
       self._validate(body)
 
 
