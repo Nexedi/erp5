@@ -133,7 +133,7 @@
 \n
     <style:style style:name="chart_legend" style:family="chart">\n
       <style:graphic-properties draw:fill="none"/>\n
-      <tal:block metal:use-macro="here/OOoChart_macroLibrary/macros/text_style_properties" />\n
+      <tal:block metal:use-macro="here/OOoChart_macroLibrary/macros/legend_text_style_properties" />\n
     </style:style>\n
 \n
     <style:style style:name="chart_picture" style:family="chart">\n

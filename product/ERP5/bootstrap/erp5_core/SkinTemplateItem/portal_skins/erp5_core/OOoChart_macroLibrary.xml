@@ -71,7 +71,7 @@
     xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
     office:version=\'1.0\'>\n
 \n
-  <tal:block metal:define-macro="text_style_properties">\n
+  <tal:block metal:define-macro="legend_text_style_properties">\n
     <style:text-properties fo:font-family="\'DejaVu Sans\'"\n
                           style:font-family-generic="swiss"\n
                           style:font-pitch="variable"\n
@@ -84,6 +84,21 @@
                           style:font-family-generic-complex="system"\n
                           style:font-pitch-complex="variable"\n
                           style:font-size-complex="18pt"/>\n
+  </tal:block>\n
+\n
+  <tal:block metal:define-macro="text_style_properties">\n
+    <style:text-properties fo:font-family="\'DejaVu Sans\'"\n
+                          style:font-family-generic="swiss"\n
+                          style:font-pitch="variable"\n
+                          fo:font-size="10pt"\n
+                          style:font-family-asian="\'DejaVu Sans\'"\n
+                          style:font-family-generic-asian="system"\n
+                          style:font-pitch-asian="variable"\n
+                          style:font-size-asian="10pt"\n
+                          style:font-family-complex="Tahoma"\n
+                          style:font-family-generic-complex="system"\n
+                          style:font-pitch-complex="variable"\n
+                          style:font-size-complex="10pt"/>\n
   </tal:block>\n
 \n
   <tal:block metal:define-macro="line_style_properties">\n
