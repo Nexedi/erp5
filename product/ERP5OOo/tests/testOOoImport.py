@@ -333,6 +333,19 @@ class TestOOoImport(ERP5TypeTestCase):
     self.assertEquals(1, len(message_list))
     self.assertTrue('france' in str(message_list[0]))
 
+  def test_Base_getCategoriesSpreadSheetMapping_WrongHierarchy(self):
+    # tests Base_getCategoriesSpreadSheetMapping when the spreadsheet has an
+    # invalid hierarchy (#788)
+    import_file = makeFileUpload(
+        'import_region_category_wrong_hierarchy.sxc')
+    try:
+      self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
+             import_file=import_file)
+    except ValueError, error:
+      # 'wrong_hierarchy' is the ID of the category where the problem happens
+      self.assertTrue('wrong_hierarchy' in str(error), str(error))
+    else:
+      self.fail('ValueError not raised')
 
   # simple OOoParser tests
   def test_getSpreadSheetMapping(self):
