@@ -107,7 +107,8 @@
                               chart:interpolation request/interpolation ;"/>\n
       <style:graphic-properties draw:stroke="solid" svg:stroke-width="0.088cm"\n
                                 tal:define="step python:2000000;\n
-                                hex_colour_code python:\'#%s\' % colour_column_dict.get(column_id, hex(int(\'ccccff\', 16) + (index*step))[2:8].zfill(6))"\n
+                                            hex_colour_code python:colour_column_dict.get(column_id, hex(int(\'ccccff\', 16) + (index*step))[2:8].zfill(6));\n
+                                            hex_colour_code python:test(hex_colour_code.startswith(\'#\'), hex_colour_code, \'#%s\' % hex_colour_code)"\n
                                 tal:attributes="svg:stroke-color hex_colour_code;\n
                                 draw:fill-color hex_colour_code"\n
                                 dr3d:edge-rounding="0%"/>\n
@@ -194,7 +195,8 @@
     </table:table>\n
   </tal:block>\n
 \n
-</office:document-content>
+</office:document-content>\n
+
 
 ]]></string> </value>
         </item>
