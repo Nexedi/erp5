@@ -192,9 +192,7 @@
                           value_type python:((column_type in (\'float\', \'int\', \'long\',)) and \'float\') or \'string\'">\n
                   <table:table-cell tal:condition="python: value_type == \'string\'"\n
                                     tal:attributes="office:value-type value_type">\n
-                    <text:p tal:content="column_value"\n
-                            i18n:domain="ui"\n
-                            i18n:translate=""></text:p>\n
+                    <text:p tal:content="column_value"/>\n
                   </table:table-cell>\n
                   <table:table-cell tal:condition="python:value_type != \'string\'"\n
                                     tal:attributes="office:value column_value;\n
