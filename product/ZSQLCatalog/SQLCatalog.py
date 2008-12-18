@@ -1708,7 +1708,7 @@ class Catalog(Folder,
           %(table_index, table))
       return table_index
     return CachingMethod(_getTableIndex, id='SQLCatalog.getTableIndex', \
-                         cache_factory='erp5_content_long')(table=table)[:]
+                         cache_factory='erp5_content_long')(table=table).copy()
 
 
   def getIndex(self, table, column_list, all_column_list):
