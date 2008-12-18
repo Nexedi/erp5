@@ -1132,8 +1132,8 @@ def getExistingBaseCategoryList(portal, base_cat_list):
       value = cache[key]
     except KeyError:
       value = category_tool._getOb(base_cat, None)
-      if value is None:
-        LOG('ERP5Type.Utils.getExistingBaseCategoryList', PROBLEM, 'base_category "%s" is missing, can not generate Accessors' % (base_cat))
+      #if value is None:
+      #  LOG('ERP5Type.Utils.getExistingBaseCategoryList', PROBLEM, 'base_category "%s" is missing, can not generate Accessors' % (base_cat))
       cache[key] = value
     if value is not None:
       new_base_cat_list.append(base_cat)
@@ -2702,3 +2702,26 @@ def mergeZRDBResults(results, key_column, edit_result):
       [ get_value(row, column) for column, get_value in column_list ]
       for row in data
     ]))
+
+#####################################################
+# SQL text escaping
+#####################################################
+def sqlquote(x):
+  """
+  Escape data suitable for inclusion in generated ANSI SQL92 code for
+  cases where bound variables are not suitable.
+
+  Inspired from zope/app/rdb/__init__.py:sqlquote, modified to:
+   - use isinstance instead of type equality
+   - use string member methods instead of string module
+  """
+  if isinstance(x, basestring):
+    x = "'" + x.replace('\\', '\\\\').replace("'", "''") + "'"
+  elif isinstance(x, (int, long, float)):
+    pass
+  elif x is None:
+    x = 'NULL'
+  else:
+    raise TypeError, 'do not know how to handle type %s' % type(x)
+  return x
+
