@@ -522,7 +522,7 @@ class OOoTemplate(ZopePageTemplate):
 
     if not format and not batch_mode:
       request.RESPONSE.setHeader('Content-Type','%s; charset=utf-8' % self.content_type)
-      request.RESPONSE.setHeader('Content-disposition', 'inline;filename=%s' % self.title_or_id())
+      request.RESPONSE.setHeader('Content-disposition', 'inline;filename="%s"' % self.title_or_id())
     
     if DevelopmentMode:
       # Validate XML in development mode
@@ -568,22 +568,26 @@ class OOoTemplate(ZopePageTemplate):
               if x[1].endswith('pdf')]
       if len(tgts) > 1:
         REQUEST.RESPONSE.setHeader('Content-type', 'text/html')
-        REQUEST.RESPONSE.setHeader('Content-disposition', 'inline;filename=%s.pdf' % self.title_or_id())
+        REQUEST.RESPONSE.setHeader('Content-disposition',
+            'inline;filename="%s.pdf"' % self.title_or_id())
         raise ValueError, 'multiple pdf formats found - this shouldnt happen'
       if len(tgts) == 0:
         REQUEST.RESPONSE.setHeader('Content-type', 'text/html')
-        REQUEST.RESPONSE.setHeader('Content-disposition', 'inline;filename=%s.pdf' % self.title_or_id())    
+        REQUEST.RESPONSE.setHeader('Content-disposition',
+            'inline;filename="%s.pdf"' % self.title_or_id())
         raise ValueError, 'no pdf format found'
       fmt = tgts[0]
       mime, data = tmp_ooo.convert(fmt)
       if REQUEST is not None:
           REQUEST.RESPONSE.setHeader('Content-type', 'application/pdf')
-          REQUEST.RESPONSE.setHeader('Content-disposition', 'attachment;filename=%s.pdf' % self.title_or_id())
+          REQUEST.RESPONSE.setHeader('Content-disposition',
+              'attachment;filename="%s.pdf"' % self.title_or_id())
       return data
     mime, data = tmp_ooo.convert(format)
     if REQUEST is not None and not batch_mode:
       REQUEST.RESPONSE.setHeader('Content-type', mime)
-      REQUEST.RESPONSE.setHeader('Content-disposition', 'attachment;filename=%s.%s' % (self.title_or_id(),format))
+      REQUEST.RESPONSE.setHeader('Content-disposition',
+          'attachment;filename="%s.%s"' % (self.title_or_id(),format))
         # FIXME the above lines should return zip format when html was requested
     return data
 
