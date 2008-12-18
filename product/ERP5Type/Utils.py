@@ -1132,8 +1132,8 @@ def getExistingBaseCategoryList(portal, base_cat_list):
       value = cache[key]
     except KeyError:
       value = category_tool._getOb(base_cat, None)
-      #if value is None:
-      #  LOG('ERP5Type.Utils.getExistingBaseCategoryList', PROBLEM, 'base_category "%s" is missing, can not generate Accessors' % (base_cat))
+      if value is None:
+        LOG('ERP5Type.Utils.getExistingBaseCategoryList', PROBLEM, 'base_category "%s" is missing, can not generate Accessors' % (base_cat))
       cache[key] = value
     if value is not None:
       new_base_cat_list.append(base_cat)
