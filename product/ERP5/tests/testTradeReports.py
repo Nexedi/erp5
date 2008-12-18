@@ -863,8 +863,101 @@ class TestTradeReports(ERP5ReportTestCase):
                    quantity_unit='')
     
                    
-    
+    ################################
+    # Don't Display Positive Stock
+    # And Negative Stock
+    ################################
+    request.form['at_date'] = DateTime(2008, 4, 4)
+    request.form['site'] = 'demo_site_A'
+    request.form['positive_stock'] = 1
+    request.form['negative_stock'] = 1
+    request.form['zero_stock'] = 0
+    line_list = \
+      self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
+        get_value('default',
+                  render_format='list', REQUEST=self.portal.REQUEST)
 
+    data_line_list = [l for l in line_list if l.isDataLine()]
+  
+    self.assertEquals(1, len(data_line_list))
+    self.checkLineProperties(
+                   data_line_list[0],
+                   resource_title='product_A',
+                   resource_reference='ref 2',
+                   variation_text='',
+                   inventory=0,
+                   quantity_unit='G')
+    ########################################
+    # Don't Display Positive And Zero Stock
+    ########################################
+    request.form['at_date'] = DateTime(2008, 4, 4)
+    request.form['site'] = 'demo_site_A'
+    request.form['positive_stock'] = 1
+    request.form['negative_stock'] = 0
+    request.form['zero_stock'] = 1
+    line_list = \
+      self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
+        get_value('default',
+                  render_format='list', REQUEST=self.portal.REQUEST)
+
+    data_line_list = [l for l in line_list if l.isDataLine()]
+  
+    self.assertEquals(1, len(data_line_list))
+    self.checkLineProperties(
+                   data_line_list[0],
+                   resource_title='product_B',
+                   resource_reference='ref 1',
+                   variation_text='',
+                   inventory=-33,
+                   quantity_unit='Kg')
+    ########################################
+    # Don't Display Negative And Zero Stock
+    ########################################
+    request.form['at_date'] = DateTime(2008, 4, 4)
+    request.form['site'] = 'demo_site_A'
+    request.form['positive_stock'] = 0
+    request.form['negative_stock'] = 1
+    request.form['zero_stock'] = 1
+    line_list = \
+      self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
+        get_value('default',
+                  render_format='list', REQUEST=self.portal.REQUEST)
+
+    data_line_list = [l for l in line_list if l.isDataLine()]
+  
+    self.assertEquals(2, len(data_line_list))
+    self.checkLineProperties(
+                   data_line_list[0],
+                   resource_title='variated product',
+                   resource_reference='ref 3',
+                   variation_text='colour/colour1',
+                   inventory=66,
+                   quantity_unit='')
+    self.checkLineProperties(
+                   data_line_list[1],
+                   resource_title='variated product',
+                   resource_reference='ref 3',
+                   variation_text='colour/colour2',
+                   inventory=66,
+                   quantity_unit='')
+    ################################################
+    # Don't Display Positive,Negative And Zero Stock
+    ################################################
+    request.form['at_date'] = DateTime(2008, 4, 4)
+    request.form['site'] = 'demo_site_A'
+    request.form['positive_stock'] = 1
+    request.form['negative_stock'] = 1
+    request.form['zero_stock'] = 1
+    line_list = \
+      self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
+        get_value('default',
+                  render_format='list', REQUEST=self.portal.REQUEST)
+
+    data_line_list = [l for l in line_list if l.isDataLine()]
+  
+    self.assertEquals(0, len(data_line_list))
+
+    
   def test_Folder_generateWorkflowReport(self):
     # Create sales orders
     first = self._makeOneSaleOrder(
