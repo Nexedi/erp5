@@ -79,12 +79,18 @@ for x in context.portal_simulation.getCurrentInventoryList(\n
   # XXX resourceType= uses movement table.\n
   # resource_portal_type= does not work with cells (because resource is acquired from line)\n
   resourceType=context.getPortalProductTypeList(), **kw):\n
-  if x.inventory <=0 and positive_stock:\n
+  if positive_stock and negative_stock and not zero_stock and x.inventory == 0:\n
      result_list.append(x)\n
-  if x.inventory>=0 and negative_stock:\n
+  if positive_stock and not negative_stock and zero_stock and x.inventory <0:\n
      result_list.append(x)\n
-  if x.inventory!=0 and zero_stock:\n
-     result_list.append(x) \n
+  if negative_stock and zero_stock and not positive_stock and x.inventory >0:\n
+     result_list.append(x)\n
+  if positive_stock and not negative_stock and not zero_stock and x.inventory <=0:\n
+     result_list.append(x)\n
+  if negative_stock and not positive_stock and not zero_stock and x.inventory >=0:\n
+     result_list.append(x)\n
+  if zero_stock and not positive_stock and not negative_stock and x.inventory!=0:\n
+     result_list.append(x)\n
   if not positive_stock and not negative_stock and not zero_stock:\n
      result_list.append(x)\n
 \n
