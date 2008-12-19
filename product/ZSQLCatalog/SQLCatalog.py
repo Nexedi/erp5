@@ -2060,9 +2060,10 @@ class Catalog(Folder,
         select_expression_list.extend(query_result['select_expression_list'])
 
     # Calculate extra where_expression based on required joins
-    for k, tid in from_table_dict.items():
-      if k != query_table:
-        where_expression_list.append('%s.uid = %s.uid' % (query_table, tid))
+    if query_table:
+      for k, tid in from_table_dict.items():
+        if k != query_table:
+          where_expression_list.append('%s.uid = %s.uid' % (query_table, tid))
     # Calculate extra where_expressions based on related definition
     for (table_list, method_id) in related_methods.keys():
       related_method = getattr(self, method_id, None)
