@@ -59,8 +59,6 @@
 # Because DTML cannot do <dtml-if node or resource or...>\n
 # If Python is used, it does not check the existence of a variable automatically\n
 \n
-from Products.ZSQLCatalog.SQLCatalog import Query\n
-\n
 if \'node\' not in params:\n
   params[\'node\'] = []\n
 if \'resource\' not in params:\n
@@ -79,17 +77,16 @@ if params.get(\'count\', 0):\n
 params[\'omit_input\'] = 0\n
 params[\'omit_output\'] = 0\n
 \n
+\n
+\n
 if params.get(\'operation_date\', {}).get(\'query\'):\n
-  operation_date_dict = params[\'operation_date\']\n
-  ss_q = Query(format=operation_date_dict[\'format\'],\n
-               type=operation_date_dict[\'type\'],\n
-               **{\'delivery.start_date\':operation_date_dict[\'query\']})\n
-  params[\'source_section_where_expression\'] = ss_q(datetime_search_keys=[\'delivery.start_date\'])[\'where_expression\']\n
-  ds_q = Query(format=operation_date_dict[\'format\'],\n
-               type=operation_date_dict[\'type\'],\n
-               **{\'delivery.stop_date\':operation_date_dict[\'query\']})\n
-  params[\'destination_section_where_expression\'] = ds_q(datetime_search_keys=[\'delivery.stop_date\'])[\'where_expression\']\n
+  buildSQLQuery = context.portal_catalog.buildSQLQuery\n
+  params[\'source_section_where_expression\'] = buildSQLQuery(\n
+            **{\'delivery.start_date\': params[\'operation_date\']})[\'where_expression\']\n
+  params[\'destination_section_where_expression\'] = buildSQLQuery(\n
+            **{\'delivery.stop_date\': params[\'operation_date\']})[\'where_expression\']\n
   del params[\'operation_date\']\n
+\n
 \n
 # this method can be used to build another complex query, for example\n
 # as a catalog.parent_uid filter with SimulationTool.getMovementList.\n
@@ -143,16 +140,12 @@ return context.AccountingTransactionModule_zGetAccountingTransactionList( \n
                         <value>
                           <tuple>
                             <string>params</string>
-                            <string>Products.ZSQLCatalog.SQLCatalog</string>
-                            <string>Query</string>
                             <string>_write_</string>
                             <string>_getattr_</string>
-                            <string>_getitem_</string>
-                            <string>operation_date_dict</string>
-                            <string>_apply_</string>
-                            <string>ss_q</string>
-                            <string>ds_q</string>
                             <string>context</string>
+                            <string>buildSQLQuery</string>
+                            <string>_getitem_</string>
+                            <string>_apply_</string>
                             <string>src__</string>
                             <string>no_limit</string>
                             <string>None</string>

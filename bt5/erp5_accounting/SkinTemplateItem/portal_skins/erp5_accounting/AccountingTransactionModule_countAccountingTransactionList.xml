@@ -59,17 +59,12 @@
 kw[\'omit_input\'] = 0\n
 kw[\'omit_output\'] = 0\n
 \n
-from Products.ZSQLCatalog.SQLCatalog import Query\n
 if kw.get(\'operation_date\', {}).get(\'query\'):\n
-  operation_date_dict = kw[\'operation_date\']\n
-  ss_q = Query(format=operation_date_dict[\'format\'],\n
-               type=operation_date_dict[\'type\'],\n
-               **{\'delivery.start_date\':operation_date_dict[\'query\']})\n
-  kw[\'source_section_where_expression\'] = ss_q(datetime_search_keys=[\'delivery.start_date\'])[\'where_expression\']\n
-  ds_q = Query(format=operation_date_dict[\'format\'],\n
-               type=operation_date_dict[\'type\'],\n
-               **{\'delivery.stop_date\':operation_date_dict[\'query\']})\n
-  kw[\'destination_section_where_expression\'] = ds_q(datetime_search_keys=[\'delivery.stop_date\'])[\'where_expression\']\n
+  buildSQLQuery = context.portal_catalog.buildSQLQuery\n
+  kw[\'source_section_where_expression\'] = buildSQLQuery(\n
+               **{\'delivery.start_date\': kw[\'operation_date\']})[\'where_expression\']\n
+  kw[\'destination_section_where_expression\'] = buildSQLQuery(\n
+               **{\'delivery.stop_date\': kw[\'operation_date\']})[\'where_expression\']\n
   del kw[\'operation_date\']\n
 \n
 return context.AccountingTransactionModule_zGetAccountingTransactionList( selection=None,\n
@@ -118,14 +113,10 @@ return context.AccountingTransactionModule_zGetAccountingTransactionList( select
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>_write_</string>
-                            <string>Products.ZSQLCatalog.SQLCatalog</string>
-                            <string>Query</string>
-                            <string>_getitem_</string>
-                            <string>operation_date_dict</string>
-                            <string>_apply_</string>
-                            <string>ss_q</string>
-                            <string>ds_q</string>
                             <string>context</string>
+                            <string>buildSQLQuery</string>
+                            <string>_getitem_</string>
+                            <string>_apply_</string>
                             <string>None</string>
                           </tuple>
                         </value>

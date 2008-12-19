@@ -59,18 +59,12 @@ params[\'stat\'] = 1\n
 params[\'omit_output\'] = 1\n
 params[\'omit_input\'] = 0\n
 \n
-from Products.ZSQLCatalog.SQLCatalog import Query\n
-\n
 if params.get(\'operation_date\', {}).get(\'query\'):\n
-  operation_date_dict = params[\'operation_date\']\n
-  ss_q = Query(format=operation_date_dict[\'format\'],\n
-               type=operation_date_dict[\'type\'],\n
-               **{\'delivery.start_date\':operation_date_dict[\'query\']})\n
-  params[\'source_section_where_expression\'] = ss_q(datetime_search_keys=[\'delivery.start_date\'])[\'where_expression\']\n
-  ds_q = Query(format=operation_date_dict[\'format\'],\n
-               type=operation_date_dict[\'type\'],\n
-               **{\'delivery.stop_date\':operation_date_dict[\'query\']})\n
-  params[\'destination_section_where_expression\'] = ds_q(datetime_search_keys=[\'delivery.stop_date\'])[\'where_expression\']\n
+  buildSQLQuery = context.portal_catalog.buildSQLQuery\n
+  params[\'source_section_where_expression\'] = buildSQLQuery(\n
+            **{\'delivery.start_date\': params[\'operation_date\']})[\'where_expression\']\n
+  params[\'destination_section_where_expression\'] = buildSQLQuery(\n
+            **{\'delivery.stop_date\': params[\'operation_date\']})[\'where_expression\']\n
   del params[\'operation_date\']\n
 \n
 result = context.AccountingTransactionModule_zGetAccountingTransactionList(\n
@@ -121,13 +115,9 @@ return float(\'%.02f\' % (row.total_price or 0.0))\n
                             <string>context</string>
                             <string>params</string>
                             <string>_write_</string>
-                            <string>Products.ZSQLCatalog.SQLCatalog</string>
-                            <string>Query</string>
+                            <string>buildSQLQuery</string>
                             <string>_getitem_</string>
-                            <string>operation_date_dict</string>
                             <string>_apply_</string>
-                            <string>ss_q</string>
-                            <string>ds_q</string>
                             <string>result</string>
                             <string>row</string>
                             <string>float</string>
