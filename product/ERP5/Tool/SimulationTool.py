@@ -1048,7 +1048,7 @@ class SimulationTool(BaseTool):
                     # 'Use explicitly Universal' otherwise DateTime 
                     # search key will convert it to UTC one more time
                     Query(**{'%s.date' % (GREATER_THAN_DATE_TABLE_ID, ): \
-                             {'query': '%s Universal' % (date.ISO(), ), 'range': 'nlt'}}), 
+                             '>%s Universal' % (date.ISO(), )}), 
                     operator='AND'))
               assert len(equal_date_query_list) == \
                      len(greater_than_date_query_list)
