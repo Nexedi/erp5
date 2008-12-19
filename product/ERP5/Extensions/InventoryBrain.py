@@ -137,12 +137,11 @@ class InventoryListBrain(ZSQLBrain):
     Return the quantity of the current delivery for a resource
     """
     total_kw = {
-      'explanation_uid': self.getExplanationUid(),
-      'resource_uid': self.resource_uid,
-      'variation_text': self.variation_text,
+      'movement.explanation_uid': self.getExplanationUid(),
+      'movement.resource_uid': self.resource_uid,
+      'movement.variation_text': self.variation_text,
     }
-    total_kw.update(self.portal_catalog.buildSQLQuery(query_table='movement',
-                                                      **total_kw))
+    total_kw.update(self.portal_catalog.buildSQLQuery(**total_kw))
     result = self.Delivery_zGetTotal(**total_kw)
     inventory = None
     if len(result) > 0:
