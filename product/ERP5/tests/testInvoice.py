@@ -1804,7 +1804,8 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
     Test if invoice is solved
     """
     invoice = sequence.get('invoice')
-    self.assertEquals('solved',invoice.getCausalityState())
+    self.assertEquals('solved', invoice.getCausalityState(),
+                      invoice.getDivergenceList())
 
   def stepCheckInvoiceIsDivergent(self, sequence=None, sequence_list=None,
       **kw):
@@ -1820,7 +1821,8 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
     Test if invoice is not divergent
     """
     invoice = sequence.get('invoice')
-    self.assertFalse(invoice.isDivergent())
+    if invoice.isDivergent():
+      self.fail(invoice.getDivergenceList())
 
   def stepSplitAndDeferInvoice(self, sequence=None, sequence_list=None,
       **kw):
