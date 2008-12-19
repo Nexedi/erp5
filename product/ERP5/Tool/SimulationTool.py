@@ -926,6 +926,7 @@ class SimulationTool(BaseTool):
         getattr(self, 'Resource_zGetFullInventoryDate', None)
       EQUAL_DATE_TABLE_ID = 'inventory_stock'
       GREATER_THAN_DATE_TABLE_ID = 'stock'
+      buildSQLQuery = self.getPortalObject().portal_catalog.buildSQLQuery
       optimisation_success = optimisation__ and ('from_date' not in kw) and \
                              Resource_zGetFullInventoryDate is not None and \
                              (GREATER_THAN_DATE_TABLE_ID == default_stock_table)
@@ -962,7 +963,7 @@ class SimulationTool(BaseTool):
           if len(date_value_list) == 1:
             date = date_value_list[0]
             # build a query for date to take range into account
-            date_query_result = self.getPortalObject().portal_catalog.buildSQLQuery(**{
+            date_query_result = buildSQLQuery(**{
               'inventory.date': {
                 'query': date,
                 'range': column_value_dict.get('date', {}).get('range', [])
@@ -1053,12 +1054,8 @@ class SimulationTool(BaseTool):
               assert len(equal_date_query_list) == \
                      len(greater_than_date_query_list)
               assert len(equal_date_query_list) > 0
-              equal_date_query = ComplexQuery(operator='OR',
-                *equal_date_query_list).asSQLExpression(**search_key_mapping)\
-                ['where_expression']
-              greater_than_date_query = ComplexQuery(operator='OR',
-                *greater_than_date_query_list).asSQLExpression(**search_key_mapping)\
-                ['where_expression']
+              equal_date_query = buildSQLQuery(query=ComplexQuery(operator='OR', *equal_date_query_list), query_table=None)['where_expression']
+              greater_than_date_query = buildSQLQuery(query=ComplexQuery(operator='OR', *greater_than_date_query_list), query_table=None)['where_expression']
               inventory_stock_sql_kw = \
                 self._generateSQLKeywordDictFromKeywordDict(
                   table=EQUAL_DATE_TABLE_ID, sql_kw=sql_kw, new_kw=new_kw)
