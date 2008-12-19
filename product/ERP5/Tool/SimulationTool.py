@@ -1048,8 +1048,8 @@ class SimulationTool(BaseTool):
                         for k, v in non_date_value_dict.iteritems()]),
                     # 'Use explicitly Universal' otherwise DateTime 
                     # search key will convert it to UTC one more time
-                    Query(**{'%s.date' % (GREATER_THAN_DATE_TABLE_ID, ): \
-                             '>%s Universal' % (date.ISO(), )}), 
+                    Query(**{'%s.date' % (GREATER_THAN_DATE_TABLE_ID, ): date,
+                             'range': 'nlt'}),
                     operator='AND'))
               assert len(equal_date_query_list) == \
                      len(greater_than_date_query_list)
