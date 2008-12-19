@@ -534,19 +534,14 @@ destination_section_where_expression</string> </value>
         <dtml-var "portal_categories.restrictedTraverse(section_category).getUid()">\n
       </dtml-if>\n
       \n
-      <dtml-comment>\n
-      -- FIXME: we want stop date when we are destination_section and start_date when\n
-      --   we are source_section (one solution is to read in stock.date, but we try\n
-      --   to avoid the use of stock table here)\n
-      </dtml-comment>\n
       <dtml-if from_date>\n
-        AND movement.start_date >= <dtml-sqlvar from_date type="datetime">\n
+        AND delivery.start_date >= <dtml-sqlvar from_date type="datetime">\n
       </dtml-if>\n
       <dtml-if to_date>\n
-        AND movement.start_date <= <dtml-sqlvar expr="to_date+1" type="datetime">\n
+        AND delivery.start_date <= <dtml-sqlvar expr="to_date+1" type="datetime">\n
       </dtml-if>\n
       <dtml-if at_date>\n
-        AND movement.start_date < <dtml-sqlvar at_date type="datetime">\n
+        AND delivery.start_date < <dtml-sqlvar at_date type="datetime">\n
       </dtml-if>\n
     \n
       <dtml-if node>\n
@@ -757,13 +752,13 @@ destination_section_where_expression</string> </value>
           </dtml-if>\n
           \n
           <dtml-if from_date>\n
-            AND movement.start_date >= <dtml-sqlvar from_date type="datetime">\n
+            AND delivery.start_date >= <dtml-sqlvar from_date type="datetime">\n
           </dtml-if>\n
           <dtml-if to_date>\n
-            AND movement.start_date <= <dtml-sqlvar expr="to_date.latestTime()" type="datetime">\n
+            AND delivery.start_date <= <dtml-sqlvar expr="to_date.latestTime()" type="datetime">\n
           </dtml-if>\n
           <dtml-if at_date>\n
-            AND movement.start_date < <dtml-sqlvar at_date type="datetime">\n
+            AND delivery.start_date < <dtml-sqlvar at_date type="datetime">\n
           </dtml-if>\n
         \n
           <dtml-if node>\n
@@ -942,13 +937,13 @@ UNION\n
           </dtml-if>\n
 \n
           <dtml-if from_date>\n
-            AND movement.stop_date >= <dtml-sqlvar from_date type="datetime">\n
+            AND delivery.stop_date >= <dtml-sqlvar from_date type="datetime">\n
           </dtml-if>\n
           <dtml-if to_date>\n
-            AND movement.stop_date <= <dtml-sqlvar expr="to_date.latestTime()" type="datetime">\n
+            AND delivery.stop_date <= <dtml-sqlvar expr="to_date.latestTime()" type="datetime">\n
           </dtml-if>\n
           <dtml-if at_date>\n
-            AND movement.stop_date < <dtml-sqlvar at_date type="datetime">\n
+            AND delivery.stop_date < <dtml-sqlvar at_date type="datetime">\n
           </dtml-if>\n
         \n
           <dtml-if node>\n
@@ -1186,19 +1181,14 @@ UNION\n
         <dtml-var "portal_categories.restrictedTraverse(section_category).getUid()">\n
       </dtml-if>\n
       \n
-      <dtml-comment>\n
-      -- FIXME: we want stop date when we are destination_section and start_date when\n
-      --   we are source_section (one solution is to read in stock.date, but we try\n
-      --   to avoid the use of stock table here)\n
-      </dtml-comment>\n
       <dtml-if from_date>\n
-        AND movement.start_date >= <dtml-sqlvar from_date type="datetime">\n
+        AND delivery.start_date >= <dtml-sqlvar from_date type="datetime">\n
       </dtml-if>\n
       <dtml-if to_date>\n
-        AND movement.start_date <= <dtml-sqlvar expr="to_date+1" type="datetime">\n
+        AND delivery.start_date <= <dtml-sqlvar expr="to_date+1" type="datetime">\n
       </dtml-if>\n
       <dtml-if at_date>\n
-        AND movement.start_date < <dtml-sqlvar at_date type="datetime">\n
+        AND delivery.start_date < <dtml-sqlvar at_date type="datetime">\n
       </dtml-if>\n
     \n
       <dtml-if node>\n
@@ -1409,13 +1399,13 @@ UNION\n
           </dtml-if>\n
           \n
           <dtml-if from_date>\n
-            AND movement.start_date >= <dtml-sqlvar from_date type="datetime">\n
+            AND delivery.start_date >= <dtml-sqlvar from_date type="datetime">\n
           </dtml-if>\n
           <dtml-if to_date>\n
-            AND movement.start_date <= <dtml-sqlvar expr="to_date.latestTime()" type="datetime">\n
+            AND delivery.start_date <= <dtml-sqlvar expr="to_date.latestTime()" type="datetime">\n
           </dtml-if>\n
           <dtml-if at_date>\n
-            AND movement.start_date < <dtml-sqlvar at_date type="datetime">\n
+            AND delivery.start_date < <dtml-sqlvar at_date type="datetime">\n
           </dtml-if>\n
         \n
           <dtml-if node>\n
@@ -1594,13 +1584,13 @@ UNION\n
           </dtml-if>\n
 \n
           <dtml-if from_date>\n
-            AND movement.stop_date >= <dtml-sqlvar from_date type="datetime">\n
+            AND delivery.stop_date >= <dtml-sqlvar from_date type="datetime">\n
           </dtml-if>\n
           <dtml-if to_date>\n
-            AND movement.stop_date <= <dtml-sqlvar expr="to_date.latestTime()" type="datetime">\n
+            AND delivery.stop_date <= <dtml-sqlvar expr="to_date.latestTime()" type="datetime">\n
           </dtml-if>\n
           <dtml-if at_date>\n
-            AND movement.stop_date < <dtml-sqlvar at_date type="datetime">\n
+            AND delivery.stop_date < <dtml-sqlvar at_date type="datetime">\n
           </dtml-if>\n
         \n
           <dtml-if node>\n
