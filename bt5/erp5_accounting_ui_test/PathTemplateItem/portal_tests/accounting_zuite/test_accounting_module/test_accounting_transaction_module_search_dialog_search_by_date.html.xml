@@ -1,0 +1,298 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html>\n
+  <head><title>Accounting Transaction Module Search Dialog: seach by date</title></head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="4">\n
+Accounting Transaction Module Search Dialog: seach by date\n
+</td></tr>\n
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">\n
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>\n
+\n
+\n
+<!-- setup {{{ -->\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_module</td>\n
+  <td>Accounting</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- search by from date {{{ -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//a[@title=\'Find\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_your_from_date_year</td>\n
+  <td>2005</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_your_from_date_month</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_your_from_date_day</td>\n
+  <td>04</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>dialog_submit_button</td>\n
+  <td></td>\n
+</tr>\n
+<!-- list filtered with 1 item-->\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>1 record(s)</td>\n
+</tr>\n
+\n
+<!-- check amounts for lines -->\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[9]/a\n
+</td>\n
+  <td>7700.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[10]/a\n
+</td>\n
+  <td>7700.0</td>\n
+</tr>\n
+<!-- check amounts for stats -->\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_stat_line\']/td[9]\n
+</td>\n
+  <td>7700.00</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_stat_line\']/td[10]\n
+</td>\n
+  <td>7700.00</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//a[@title=\'Find\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloatValue</td>\n
+  <td>subfield_field_your_from_date_year</td>\n
+  <td>2005</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloatValue</td>\n
+  <td>subfield_field_your_from_date_month</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloatValue</td>\n
+  <td>subfield_field_your_from_date_day</td>\n
+  <td>04</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- search by from date and at_date {{{ -->\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_your_from_date_year</td>\n
+  <td>2005</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_your_from_date_month</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_your_from_date_day</td>\n
+  <td>02</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_your_to_date_year</td>\n
+  <td>2005</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_your_to_date_month</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_your_to_date_day</td>\n
+  <td>03</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>dialog_submit_button</td>\n
+  <td></td>\n
+</tr>\n
+<!-- list filtered with 2 item-->\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>2 record(s)</td>\n
+</tr>\n
+\n
+<!-- check amounts for lines -->\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[9]/a\n
+</td>\n
+  <td>2200.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[10]/a\n
+</td>\n
+  <td>2200.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_1\']/td[9]/a\n
+</td>\n
+  <td>3300.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_1\']/td[10]/a\n
+</td>\n
+  <td>3300.0</td>\n
+</tr>\n
+<!-- check amounts for stats -->\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_stat_line\']/td[9]\n
+</td>\n
+  <td>5500.00</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_stat_line\']/td[10]\n
+</td>\n
+  <td>5500.00</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//a[@title=\'Find\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloatValue</td>\n
+  <td>subfield_field_your_from_date_year</td>\n
+  <td>2005</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloatValue</td>\n
+  <td>subfield_field_your_from_date_month</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloatValue</td>\n
+  <td>subfield_field_your_from_date_day</td>\n
+  <td>02</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloatValue</td>\n
+  <td>subfield_field_your_to_date_year</td>\n
+  <td>2005</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloatValue</td>\n
+  <td>subfield_field_your_to_date_month</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloatValue</td>\n
+  <td>subfield_field_your_to_date_day</td>\n
+  <td>03</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+</tbody></table>\n
+</body>\n
+</html> <!-- vim: syntax=html foldmethod=marker\n
+-->\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test_accounting_transaction_module_search_dialog_search_by_date.html</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
