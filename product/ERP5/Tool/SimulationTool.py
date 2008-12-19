@@ -961,16 +961,14 @@ class SimulationTool(BaseTool):
           where_expression = None
           if len(date_value_list) == 1:
             date = date_value_list[0]
-            if isinstance(date, DateTime):
-              date = date.toZone('UTC').ISO()
-              
             # build a query for date to take range into account
-            date_query_kw = {"inventory.date" : date,
-                             "operator" : column_value_dict.get('date', {}).get('operator', []),
-                             "range"  : column_value_dict.get('date', {}).get('range', []),
-                             }
-            date_query = Query(**date_query_kw)
-            date_query_result = date_query()
+            date_query_result = self.getPortalObject().portal_catalog.buildSQLQuery(**{
+              'inventory.date': {
+                'query': date,
+                'range': column_value_dict.get('date', {}).get('range', [])
+              },
+              'query_table': None,
+            })
             if date_query_result['where_expression'] not in ('',None):
               where_expression = date_query_result['where_expression']
           elif len(date_value_list) > 1:
