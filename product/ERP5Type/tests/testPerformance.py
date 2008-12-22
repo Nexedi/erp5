@@ -140,8 +140,8 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
           self.failUnless(min < req_time < max,
                           '%.4f < %.4f < %.4f' % (min, req_time, max))
 
-    def profile(self, func):
-        prof_file = func.__name__
+    def profile(self, func, suffix=''):
+        prof_file = '%s%s' % (func.__name__, suffix)
         try:
             os.unlink(prof_file)
         except OSError:
@@ -209,8 +209,8 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
           tic_result[key] = (after_tic - before_tic)/100.
           add_result[key] = (after_add - before_add)/100.
 
-      if PROFILE:
-          self.profile(self.bar_module.BarModule_viewBarList)
+          if PROFILE:
+              self.profile(self.bar_module.BarModule_viewBarList, i)
       keys = view_result.keys()
       keys.sort()
       # first display results
