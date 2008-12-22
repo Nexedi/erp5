@@ -104,7 +104,12 @@
                 <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>Sale Packing List Line</string>
+                          <string>Sale Packing List Line</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
