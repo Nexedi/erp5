@@ -963,12 +963,18 @@ class TestCMFCategory(ERP5TypeTestCase):
   def test_getSingleCategoryAcquiredMembershipListOnParent(self):
     pc = self.getCategoriesTool()
     obj = self.portal.person_module.newContent(portal_type='Person')
-    parent_url = self.portal.person_module.getRelativeUrl()
+    parent = self.portal.person_module
+    # due to using getAcquiredPropertyList() for temp object, the change
+    # in r.22671 is required, and getSingleCategoryMembershipList()
+    # returns parent object itself instead of its relative url.
+    #parent_url = self.portal.person_module.getRelativeUrl()
+    parent_url = parent.getRelativeUrl()
 
     self.assertEquals([],
           pc.getSingleCategoryMembershipList(obj, 'parent'))
 
-    self.assertEquals([parent_url],
+    #self.assertEquals([parent_url],
+    self.assertEquals([parent],
           pc.getSingleCategoryMembershipList(obj, 'parent',
                         portal_type='Person Module'))
 
@@ -979,7 +985,8 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEquals([],
           pc.getSingleCategoryMembershipList(obj, 'parent', base=1))
 
-    self.assertEquals(['parent/%s' % parent_url],
+    #self.assertEquals(['parent/%s' % parent_url],
+    self.assertEquals([parent],
           pc.getSingleCategoryMembershipList(obj, 'parent', base=1,
                         portal_type='Person Module'))
 
@@ -987,7 +994,8 @@ class TestCMFCategory(ERP5TypeTestCase):
           pc.getSingleCategoryMembershipList(obj, 'parent',
                                 checked_permission='View'))
 
-    self.assertEquals([parent_url],
+    #self.assertEquals([parent_url],
+    self.assertEquals([parent],
           pc.getSingleCategoryMembershipList(obj, 'parent',
                                 checked_permission='View',
                                 portal_type='Person Module'))
