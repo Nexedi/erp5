@@ -109,8 +109,8 @@ class TestInvoiceMixin:
             'gap/%s' % self.vat_gap,
             'gap/%s' % self.sale_gap,
             'gap/%s' % self.customer_gap,
-	    'delivery_mode/%s' % self.mail_delivery_mode,
-	    'incoterm/%s' % self.cpt_incoterm,
+            'delivery_mode/%s' % self.mail_delivery_mode,
+            'incoterm/%s' % self.cpt_incoterm,
             'quantity_unit/%s' % self.unit_piece_quantity_unit,
             'quantity_unit/%s' % self.mass_quantity_unit,
         )
@@ -223,18 +223,18 @@ class TestInvoice(TestInvoiceMixin):
     currency = self.portal.currency_module.newContent(
                                 portal_type='Currency',
                                 title='Currency',
-				base_unit_quantity=0.01)
+                                base_unit_quantity=0.01)
     self.createInvoiceTransactionRule(currency)
 
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
                             title='Client',
-			    price_currency= currency.getRelativeUrl(),
+                            price_currency= currency.getRelativeUrl(),
                             default_address_region=self.default_region)
     vendor = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
                             title='Vendor',
-			    price_currency= currency.getRelativeUrl(),
+                            price_currency= currency.getRelativeUrl(),
                             default_address_region=self.default_region)
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
@@ -277,20 +277,20 @@ class TestInvoice(TestInvoiceMixin):
         self.resource_portal_type).newContent(
                     portal_type=self.resource_portal_type,
                     title='Resource',
-		    product_line='apparel')
+                    product_line='apparel')
     currency = self.portal.currency_module.newContent(
                                 portal_type='Currency',
                                 title='Currency',
-				base_unit_quantity=0.01)
+                                base_unit_quantity=0.01)
 
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
                             title='Client',
-			    price_currency= currency.getRelativeUrl())
+                            price_currency= currency.getRelativeUrl())
     vendor = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
                             title='Vendor',
-			    price_currency= currency.getRelativeUrl())
+                            price_currency= currency.getRelativeUrl())
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
                               source_value=vendor,
@@ -306,9 +306,9 @@ class TestInvoice(TestInvoiceMixin):
                                   price=2)
 
     other_entity = self.portal.organisation_module.newContent(
-                                      portal_type='Organisation',
-                                      title='Other Entity',
-		            price_currency=currency.getRelativeUrl())
+                                    portal_type='Organisation',
+                                    title='Other Entity',
+                                    price_currency=currency.getRelativeUrl())
     order.plan()
     get_transaction().commit()
     self.tic()
@@ -475,7 +475,7 @@ class TestInvoice(TestInvoiceMixin):
     currency = self.portal.currency_module.newContent(
                                 portal_type='Currency',
                                 title='Currency',
-				base_unit_quantity=0.01)
+                                base_unit_quantity=0.01)
     self.createInvoiceTransactionRule(currency)
 
     client = self.portal.organisation_module.newContent(
@@ -890,11 +890,10 @@ class TestInvoice(TestInvoiceMixin):
     test that categories delivery_mode and incoterm are copied on 
     the invoice by the delivery builder
     """ 
-    		  
     resource = self.portal.product_module.newContent(
                     portal_type='Product',
                     title='Resource',
-		    product_line='apparel')
+                    product_line='apparel')
     currency = self.portal.currency_module.newContent(
                                 portal_type='Currency',
                                 title='euro')
@@ -918,8 +917,8 @@ class TestInvoice(TestInvoiceMixin):
                               destination_section_value=client,
                               start_date=DateTime(2008,10, 21),
                               price_currency_value=currency,
-			      delivery_mode=self.mail_delivery_mode,
-			      incoterm=self.cpt_incoterm,
+                              delivery_mode=self.mail_delivery_mode,
+                              incoterm=self.cpt_incoterm,
                               title='Order')
     order_line = order.newContent(portal_type=self.order_line_portal_type,
                                   resource_value=resource,
@@ -1008,9 +1007,9 @@ class TestInvoice(TestInvoiceMixin):
     self.assertEquals(movement_list[0].getQuantityUnit(),
                          first_order_line.getQuantityUnit())
     self.assertEquals(movement_list[1].getQuantityUnit(),
-                         second_order_line.getQuantityUnit())		
+                         second_order_line.getQuantityUnit())
  
-			 
+
 class TestSaleInvoiceMixin(TestInvoiceMixin,
                            TestPackingListMixin,
                            TestAccountingRulesMixin,
