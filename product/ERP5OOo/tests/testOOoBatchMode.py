@@ -77,7 +77,7 @@ class TestOoodResponse(ERP5TypeTestCase):
     ERP5Site_viewNothingAsOdt(batch_mode=0)
     self.assertEqual('application/vnd.oasis.opendocument.text',
         request.RESPONSE.getHeader('content-type').split(';')[0])
-    self.assertEqual('inline;filename=ERP5Site_viewNothingAsOdt',
+    self.assertEqual('inline;filename="ERP5Site_viewNothingAsOdt"',
         request.RESPONSE.getHeader('content-disposition'))
 
   def test_01b_noExcEmptyFormatNoBatchMode(self):
@@ -87,7 +87,7 @@ class TestOoodResponse(ERP5TypeTestCase):
     ERP5Site_viewNothingAsOdt(format='', batch_mode=0)
     self.assertEqual('application/vnd.oasis.opendocument.text',
         request.RESPONSE.getHeader('content-type').split(';')[0])
-    self.assertEqual('inline;filename=ERP5Site_viewNothingAsOdt',
+    self.assertEqual('inline;filename="ERP5Site_viewNothingAsOdt"',
         request.RESPONSE.getHeader('content-disposition'))
     
   def test_02_noExcNoFormatBatchMode(self):
