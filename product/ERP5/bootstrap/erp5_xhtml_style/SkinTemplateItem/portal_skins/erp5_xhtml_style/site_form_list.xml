@@ -42,27 +42,10 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
-  <tal:block metal:define-macro="master">\n
-    <tal:block tal:define="form_action string:Base_doSelect;\n
-               form_id form/id;\n
-               list_mode python: True;\n
-               listmode_default_listbox python:getattr(form, \'listbox\', None);\n
-               selection_name listmode_default_listbox/selection_name | nothing;\n
-               selection_index request/selection_index | python:0;\n
-               dummy python: selection_name and request.set(\'selection_name\', selection_name);\n
-               local_parameter_list local_parameter_list | python: {};\n
-               dummy python: local_parameter_list.update({\'selection_name\': selection_name, \'selection_index\': selection_index, \'form_id\': form_id});\n
-               title here/getTranslatedTitle | here/Title">\n
-      <tal:block metal:use-macro="here/main_template/macros/master">\n
-        <tal:block metal:fill-slot="context_bar">\n
-          <tal:block metal:define-slot="context_bar">\n
-            <tal:block metal:use-macro="here/context_box_render/macros/master" />\n
-          </tal:block>\n
-        </tal:block>\n
-        <tal:block metal:fill-slot="main">\n
-          <tal:block metal:define-slot="main" />\n
-        </tal:block>\n
-      </tal:block>\n
+  <tal:block metal:use-macro="here/list_main/macros/master">\n
+    <tal:block metal:fill-slot="context_bar"/>\n
+    <tal:block metal:fill-slot="main">\n
+      <tal:block metal:use-macro="here/form_render/macros/master" />\n
     </tal:block>\n
   </tal:block>\n
 </tal:block>\n
@@ -80,7 +63,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>list_main</string> </value>
+            <value> <string>site_form_list</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
