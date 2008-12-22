@@ -24,6 +24,7 @@ from Products.CMFCore.Expression import Expression
 from Products.ERP5Type import _dtmldir
 from Acquisition import aq_base
 from zExceptions import BadRequest
+from DateTime import DateTime
 
 class ERP5PropertyManager(PropertyManager):
   """
@@ -98,6 +99,8 @@ def PropertyManager_setProperty(self, id, value, type=None):
           type = 'text'
         else:
           type = 'string'
+      elif isinstance(value, DateTime):
+        type = 'date'
       else:
         type = 'string'
 
