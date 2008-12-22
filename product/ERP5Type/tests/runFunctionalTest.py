@@ -27,7 +27,9 @@ Options:
   --portal_name              the ID of the ERP5 site
                              URLs will start with:
                                  http://${host}:${port}/${portal_name}/
-                             
+Notes:
+  * You need to prepepare first test environment by using following command:
+  ./runUnitTest.py --save prepareFunctionalTes                             
 """
 
 
