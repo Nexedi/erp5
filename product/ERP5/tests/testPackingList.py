@@ -591,7 +591,8 @@ class TestPackingListMixin(TestOrderMixin):
 
   def _solveDivergence(self, obj, property, decision, group='line'):
     """
-      Check if simulation movement are disconnected
+      Solve divergences for a given property by taking decision.
+      FIXME: Only "line" level divergence are supported
     """
     kw = {'%s_group_listbox' % group:{}}
     for divergence in obj.getDivergenceList():
