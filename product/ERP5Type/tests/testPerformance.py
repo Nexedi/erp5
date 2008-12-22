@@ -39,8 +39,8 @@ import os, hotshot
 # Define variable to chek if performance are good or not
 # XXX These variable are specific to the testing environment
 # (which has 31645.6 pystones/second)
-MIN_OBJECT_VIEW=0.134
-MAX_OBJECT_VIEW=0.140
+MIN_OBJECT_VIEW=0.132
+MAX_OBJECT_VIEW=0.138
 MIN_OBJECT_MANY_LINES_VIEW=0.300
 MAX_OBJECT_MANY_LINES_VIEW=0.320
 MIN_OBJECT_PROXYFIELD_VIEW=0.215
