@@ -729,7 +729,7 @@ class TestPackingListMixin(TestOrderMixin):
 
   def stepAddPackingListContainerLine(self,sequence=None, sequence_list=None, **kw):
     """
-      Check if simulation movement are disconnected
+      Add a container line in the packing list
     """
     container = sequence.get('container')
     container_line = container.newContent(portal_type=self.container_line_portal_type)
@@ -739,7 +739,8 @@ class TestPackingListMixin(TestOrderMixin):
 
   def stepSetContainerLineSmallQuantity(self,sequence=None, sequence_list=None, **kw):
     """
-      Check if simulation movement are disconnected
+      Set a small quantity on the container line, it should not be enough for
+      the packing list to be packed.
     """
     container_line = sequence.get('container_line')
     container_line.edit(quantity=self.default_quantity-1)
@@ -747,7 +748,7 @@ class TestPackingListMixin(TestOrderMixin):
   def stepSetContainerLineFullQuantity(self,sequence=None, sequence_list=None,
                                        quantity=None,**kw):
     """
-      Check if simulation movement are disconnected
+      Set the full quantity
     """
     container_line = sequence.get('container_line')
     if quantity is None:
