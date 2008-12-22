@@ -745,6 +745,16 @@ class TestPackingListMixin(TestOrderMixin):
     container_line = sequence.get('container_line')
     container_line.edit(quantity=self.default_quantity-1)
 
+  def stepCheckContainerLineSmallQuantity(self, sequence=None,
+      sequence_list=None, **kw):
+    """
+      Checks that quantity is set correctly on the container_line.
+    """
+    container_line = sequence.get('container_line')
+    self.assertEquals(self.default_quantity - 1, container_line.getQuantity())
+    self.assertEquals(self.default_quantity - 1,
+                      container_line.getTotalQuantity())
+
   def stepSetContainerLineFullQuantity(self,sequence=None, sequence_list=None,
                                        quantity=None,**kw):
     """
@@ -777,6 +787,8 @@ class TestPackingListMixin(TestOrderMixin):
         quantity = line.getQuantity()
         container_line.edit(quantity=quantity)
         container_line.immediateReindexObject()
+        self.assertEquals(quantity, container_line.getQuantity())
+        self.assertEquals(quantity, container_line.getTotalQuantity())
       # with variation
       elif line.hasCellContent():
         vcl = line.getVariationCategoryList()
@@ -796,6 +808,15 @@ class TestPackingListMixin(TestOrderMixin):
                 predicate_category_list=cell_key,
                 variation_category_list=cell_key)
             cell.immediateReindexObject()
+          self.assertEquals(old_cell.getQuantity(), cell.getQuantity())
+          self.assertEquals(old_cell.getTotalQuantity(), cell.getTotalQuantity())
+
+        self.assertEquals(line.getQuantity(), container_line.getQuantity())
+        self.assertEquals(line.getTotalQuantity(), container_line.getTotalQuantity())
+
+    # quantity is 1 on the container itself
+    self.assertEquals(1, container.getQuantity())
+    self.assertEquals(1, container.getTotalQuantity())
 
   def stepCheckPackingListIsNotPacked(self,sequence=None, sequence_list=None, **kw):
     """
@@ -1151,6 +1172,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       stepAddPackingListContainer \
                       stepAddPackingListContainerLine \
                       stepSetContainerLineSmallQuantity \
+                      stepCheckContainerLineSmallQuantity \
                       stepCheckPackingListIsNotPacked \
                       stepSetContainerFullQuantity \
                       stepTic \
@@ -1170,6 +1192,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       stepAddPackingListContainer \
                       stepAddPackingListContainerLine \
                       stepSetContainerLineSmallQuantity \
+                      stepCheckContainerLineSmallQuantity \
                       stepCheckPackingListIsNotPacked \
                       stepSetContainerFullQuantity \
                       stepTic \
@@ -1336,6 +1359,7 @@ class TestPurchasePackingListMixin(TestPackingListMixin):
   stepDefineNewPackingListContainer = ignored_step
   stepAddPackingListContainerLine = ignored_step
   stepSetContainerLineSmallQuantity = ignored_step
+  stepCheckContainerLineSmallQuantity = ignored_step
   stepSetContainerLineFullQuantity = ignored_step
   stepSetContainerFullQuantity = ignored_step
   stepCheckPackingListIsNotPacked = ignored_step

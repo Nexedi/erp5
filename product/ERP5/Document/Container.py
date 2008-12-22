@@ -83,7 +83,7 @@ class Container(Movement, XMLObject):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getQuantity')
-    def getQuantity(self):
+    def getQuantity(self, default=1.0):
       """
         Returns 1 because only one container is shipped
       """
