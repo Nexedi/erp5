@@ -1059,6 +1059,22 @@ class TestERP5PropertyManager(unittest.TestCase):
     ob._setProperty('a_dummy_property', dummy_property_value, type='tales')
     self.assertEquals(ob.getProperty('a_dummy_property'), 1+2)
 
+  def test_setPropertyTypeDate(self):
+    """You can specify the type of the property in _setProperty"""
+    ob = self._makeOne('ob')
+    from DateTime import DateTime
+    dummy_property_value = DateTime()
+    ob._setProperty('a_dummy_property', dummy_property_value, type='date')
+    self.assertEquals(['date'], [x['type'] for x in ob.propertyMap()
+                                        if x['id'] == 'a_dummy_property'])
+    self.assertEquals(type(ob.getProperty('a_dummy_property')), type(DateTime()))
+    #Set Property without type argument
+    ob._setProperty('a_second_dummy_property', dummy_property_value)
+    self.assertEquals(['date'], [x['type'] for x in ob.propertyMap()
+                                        if x['id'] == 'a_second_dummy_property'])
+    self.assertEquals(type(ob.getProperty('a_second_dummy_property')),
+                      type(DateTime()))
+
   def test_getPropertyNonExistantProps(self):
     """getProperty return None if the value is not found.
     """
