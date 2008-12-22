@@ -29,13 +29,15 @@ Options:
                                  http://${host}:${port}/${portal_name}/
 Notes:
   * You need to prepepare first test environment by using following command:
-  ./runUnitTest.py --save prepareFunctionalTes                             
+  ./runUnitTest.py --save prepareFunctionalTest.py                           
 """
 
 
 host = 'localhost'
 port = 8080
 portal_name = 'erp5_portal'
+user = 'ERP5TypeTestCase'
+password = ''
 send_mail = 0
 stdout = 0
 email_to_address = 'erp5-report@erp5.org'
@@ -182,8 +184,8 @@ def runFirefox():
   os.environ['HOME'] = profile_dir
   prepareFirefox()
   pid = os.spawnlp(os.P_NOWAIT, "firefox", "firefox", "-profile", profile_dir,
-      "http://%s:%d/%s/portal_tests/?auto=true&__ac_name=ERP5TypeTestCase"
-          "&__ac_password=" % (host, port, portal_name))
+      "http://%s:%d/%s/portal_tests/?auto=true&__ac_name=%s"
+          "&__ac_password=%s" % (host, port, portal_name, user, password))
   os.environ['MOZ_NO_REMOTE'] = '0'
   print 'firefox : %d' % pid
   return pid
@@ -201,18 +203,18 @@ def getStatus():
 
 def setPreference():
   urllib2.urlopen('http://%s:%d/%s/BTZuite_setPreference?__ac_name='
-              'ERP5TypeTestCase&__ac_password=&working_copy_list=%s' %
-                                  (host, port, portal_name, bt5_dir_list))
+              '%s&__ac_password=%s&working_copy_list=%s' %
+                                  (host, port, portal_name, user, password, bt5_dir_list))
 
 def setBaseUrl():
   urllib2.urlopen('http://%s:%d/%s/Zuite_setBaseUrl?__ac_name='
-              'ERP5TypeTestCase&__ac_password=&base_url=%s' %
-                                  (host, port, portal_name, portal_name))
+              '%s&__ac_password=%s&base_url=%s' %
+                                  (host, port, portal_name, user, password, portal_name))
 
 def unsubscribeFromTimerService():
   urllib2.urlopen('http://%s:%d/%s/portal_activities/?unsubscribe:method='
-                  '&__ac_name=ERP5TypeTestCase&__ac_password=' %
-                                  (host, port, portal_name))
+                  '&__ac_name=%s&__ac_password=%s' %
+                                  (host, port, portal_name, user, password))
 
 def sendResult():
   result_uri = urllib2.urlopen('http://%s:%d/%s/TestTool_getResults' %
