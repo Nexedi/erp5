@@ -97,6 +97,12 @@ for movement in movement_list:\n
       raise ValidationFailed, (msg,)\n
 debit_required = transaction.isDebitRequired()\n
 if debit_required:\n
+  stop_date = state_change.kwargs.get(\'stop_date\')\n
+  if \'stop_date\' is None:\n
+    msg = Message(domain = "ui", message="No stop date provided")\n
+    raise ValidationFailed, (msg,)\n
+  transaction.setStopDate(stop_date)\n
+\n
   # Source and destination will be updated automaticaly based on the category of bank account\n
   # The default account chosen should act as some kind of *temp* account or *parent* account\n
   movement = transaction.get(\'lift_movement\',None)\n
@@ -179,6 +185,7 @@ if debit_required:\n
                             <string>aggregate_value_list</string>
                             <string>item</string>
                             <string>debit_required</string>
+                            <string>stop_date</string>
                             <string>bank_account</string>
                           </tuple>
                         </value>

@@ -25,7 +25,7 @@
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=debit_stop_action</string> </value>
+            <value> <string>%(content_url)s/StopPayment_viewStopWorkflowActionDialog?workflow_action=debit_stop_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
@@ -67,11 +67,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -97,11 +94,8 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
-        </tuple>
-        <none/>
+        <global name="Expression" module="Products.CMFCore.Expression"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
