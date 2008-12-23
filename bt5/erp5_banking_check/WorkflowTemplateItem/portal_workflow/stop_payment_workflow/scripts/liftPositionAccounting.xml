@@ -97,11 +97,12 @@ for movement in movement_list:\n
       raise ValidationFailed, (msg,)\n
 debit_required = transaction.isDebitRequired()\n
 if debit_required:\n
-  stop_date = state_change.kwargs.get(\'stop_date\')\n
-  if \'stop_date\' is None:\n
-    msg = Message(domain = "ui", message="No stop date provided")\n
-    raise ValidationFailed, (msg,)\n
-  transaction.setStopDate(stop_date)\n
+  if transaction.getSimulationState() == \'started\':\n
+    stop_date = state_change.kwargs.get(\'stop_date\')\n
+    if stop_date is None:\n
+      msg = Message(domain = "ui", message="No stop date provided")\n
+      raise ValidationFailed, (msg,)\n
+    transaction.setStopDate(stop_date)\n
 \n
   # Source and destination will be updated automaticaly based on the category of bank account\n
   # The default account chosen should act as some kind of *temp* account or *parent* account\n
