@@ -13,36 +13,16 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <list>
-                <string>Assignor</string>
+                <string>Anonymous</string>
               </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Copy_or_Move_Permission</string> </key>
-            <value>
-              <list>
-                <string>Owner</string>
-              </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Modify_portal_content_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Assignor</string>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
             </value>
         </item>
         <item>
             <key> <string>_View_Permission</string> </key>
             <value>
-              <tuple>
-                <string>Assignor</string>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
+              <list>
+                <string>Anonymous</string>
+              </list>
             </value>
         </item>
         <item>
@@ -115,7 +95,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Advertisment</string> </value>
+            <value> <string>Advertisement</string> </value>
         </item>
         <item>
             <key> <string>view_form_id</string> </key>
