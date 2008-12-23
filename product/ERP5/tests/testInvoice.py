@@ -1160,11 +1160,11 @@ class TestInvoice(TestInvoiceMixin):
     self.assertEquals('quantity', divergence.tested_property)
 
     # accept decision
-    builder_list = packing_list.getBuilderList()
-    self.assertEquals(1, len(builder_list))
-    builder = builder_list[0]
-    builder.solveDivergence(invoice.getRelativeUrl(),
-                            divergence_to_accept_list=divergence_list)
+    builder_list = invoice.getBuilderList()
+    self.assertEquals(2, len(builder_list))
+    for builder in builder_list:
+      builder.solveDivergence(invoice.getRelativeUrl(),
+                              divergence_to_accept_list=divergence_list)
 
     get_transaction().commit()
     self.tic()
@@ -1220,11 +1220,11 @@ class TestInvoice(TestInvoiceMixin):
     self.assertEquals('quantity', divergence.tested_property)
 
     # adopt prevision
-    builder_list = packing_list.getBuilderList()
-    self.assertEquals(1, len(builder_list))
-    builder = builder_list[0]
-    builder.solveDivergence(invoice.getRelativeUrl(),
-                            divergence_to_adopt_list=divergence_list)
+    builder_list = invoice.getBuilderList()
+    self.assertEquals(2, len(builder_list))
+    for builder in builder_list:
+      builder.solveDivergence(invoice.getRelativeUrl(),
+                              divergence_to_adopt_list=divergence_list)
 
     get_transaction().commit()
     self.tic()
@@ -2198,11 +2198,11 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
     self.assertEquals('quantity', divergence.tested_property)
 
     # accept decision
-    builder_list = packing_list.getBuilderList()
-    self.assertEquals(1, len(builder_list))
-    builder = builder_list[0]
-    builder.solveDivergence(invoice.getRelativeUrl(),
-                            divergence_to_accept_list=divergence_list)
+    builder_list = invoice.getBuilderList()
+    self.assertEquals(2, len(builder_list))
+    for builder in builder_list:
+      builder.solveDivergence(invoice.getRelativeUrl(),
+                              divergence_to_accept_list=divergence_list)
 
     get_transaction().commit()
     self.tic()
