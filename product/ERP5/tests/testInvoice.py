@@ -1179,6 +1179,73 @@ class TestInvoice(TestInvoiceMixin):
     self.assertEquals([], packing_list.getDivergenceList())
     self.assertEquals('solved', packing_list.getCausalityState())
  
+  def test_adopt_quantity_divergence_on_invoice_line_with_stopped_packing_list(
+                self, quiet=quiet):
+    # #1053
+    sequence_list = SequenceList()
+    sequence = sequence_list.addSequenceString(self.PACKING_LIST_DEFAULT_SEQUENCE)
+    sequence_list.play(self, quiet=quiet)
+
+    packing_list = sequence.get('packing_list')
+    packing_list_line = packing_list.getMovementList()[0]
+    previous_quantity = packing_list_line.getQuantity()
+    previous_resource = packing_list_line.getResource()
+    previous_price = packing_list_line.getPrice()
+    
+    packing_list.setReady()
+    packing_list.start()
+    packing_list.stop()
+    self.assertEquals('stopped', packing_list.getSimulationState())
+    get_transaction().commit()
+    self.tic()
+
+    invoice = packing_list.getCausalityRelatedValue(
+                                  portal_type=self.invoice_portal_type)
+    self.assertNotEquals(invoice, None)
+    invoice_line_list = invoice.getMovementList()
+    self.assertEquals(1, len(invoice_line_list))
+    invoice_line = invoice_line_list[0]
+
+    new_quantity = invoice_line.getQuantity() * 2
+    invoice_line.setQuantity(new_quantity)
+    
+    get_transaction().commit()
+    self.tic()
+
+    self.assertTrue(invoice.isDivergent())
+    divergence_list = invoice.getDivergenceList()
+    self.assertEquals(1, len(divergence_list))
+
+    divergence = divergence_list[0]
+    self.assertEquals('quantity', divergence.tested_property)
+
+    # adopt prevision
+    builder_list = packing_list.getBuilderList()
+    self.assertEquals(1, len(builder_list))
+    builder = builder_list[0]
+    builder.solveDivergence(invoice.getRelativeUrl(),
+                            divergence_to_adopt_list=divergence_list)
+
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals([], invoice.getDivergenceList())
+    self.assertEquals('solved', invoice.getCausalityState())
+
+    self.assertEquals(1,
+        len(invoice.getMovementList(portal_type=self.invoice_line_portal_type)))
+    self.assertEquals(0,
+        len(invoice.getMovementList(portal_type=self.invoice_transaction_line_portal_type)))
+
+    self.assertEquals(previous_resource, invoice_line.getResource())
+    self.assertEquals(previous_quantity, invoice_line.getQuantity())
+    self.assertEquals(previous_price, invoice_line.getPrice())
+    self.assertEquals(previous_quantity,
+          invoice_line.getDeliveryRelatedValue(portal_type='Simulation Movement'
+              ).getQuantity())
+
+    self.assertEquals([], packing_list.getDivergenceList())
+    self.assertEquals('solved', packing_list.getCausalityState())
+ 
 
 
 class TestSaleInvoiceMixin(TestInvoiceMixin,
