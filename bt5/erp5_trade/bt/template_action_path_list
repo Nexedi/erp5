@@ -95,6 +95,7 @@ Sale Order | order_summary
 Sale Order | payment_condition
 Sale Order | profile_view
 Sale Order | reference_generate
+Sale Order | sale_order_fast_input
 Sale Order | sale_order_planning
 Sale Order | view
 Sale Order | view_discount
