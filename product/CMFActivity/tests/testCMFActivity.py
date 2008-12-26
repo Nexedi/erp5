@@ -3030,6 +3030,11 @@ class TestCMFActivity(ERP5TypeTestCase):
     #  4: activity raises
 
   def test_114_checkSQLQueueActivitySucceedsAfterActivityChangingSkin(self,
+    if not run: return
+    if not quiet:
+      message = '\nCheck SQLQueue activity succeeds after an activity changing skin selection'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
     quiet=0, run=run_all_test):
     portal = self.getPortalObject()
     activity_tool = self.getActivityTool()
