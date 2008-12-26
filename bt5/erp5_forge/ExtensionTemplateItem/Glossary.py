@@ -8,7 +8,7 @@ def getPropertySheetList(self, portal_type):
     portal).getPropertySheetList()
 
 
-def getPropertySheetAttributeList(name):
+def getPropertySheetAttributeList(self, name):
   from Products.ERP5Type import PropertySheet
   class_ = PropertySheet.__dict__.get(name, None)
   result = []
@@ -17,6 +17,14 @@ def getPropertySheetAttributeList(name):
       continue
     # we want to get only normal property.
     result.append((i['id'], i.get('description', '')))
+  for i in getattr(class_, '_categories', ()):
+    try:
+      result.append((i, self.getPortalObject().portal_categories[i].getDescription()))
+    except KeyError:
+      result.append((i, ''))
+    except TypeError:
+      # if category is Expression(...), TypeError raises
+      pass
   return result
 
 

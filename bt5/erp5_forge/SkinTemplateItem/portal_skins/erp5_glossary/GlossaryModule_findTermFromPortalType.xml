@@ -66,6 +66,7 @@ if export_tsv:\n
   return printed\n
 else:\n
   portal_catalog = context.portal_catalog\n
+  num = 0\n
   for i in result:\n
     item_list = portal_catalog(portal_type=\'Glossary Term\',\n
                                reference=i[\'reference\'], language_id=i[\'language\'],\n
@@ -81,9 +82,10 @@ else:\n
                        business_field=i[\'business_field\'],\n
                        title=i[\'title\'], description=i[\'description\'],\n
                        comment=i[\'field_path\'])\n
+    num += 1\n
 \n
 \n
-portal_status_message = context.Base_translateString(\'Terms created.\')\n
+portal_status_message = context.Base_translateString(\'%d terms created.\' % num)\n
 context.Base_redirect(keep_items={\'portal_status_message\':portal_status_message})\n
 
 
@@ -137,9 +139,11 @@ context.Base_redirect(keep_items={\'portal_status_message\':portal_status_messag
                             <string>map</string>
                             <string>_getitem_</string>
                             <string>portal_catalog</string>
+                            <string>num</string>
                             <string>item_list</string>
                             <string>len</string>
                             <string>new_id</string>
+                            <string>_inplacevar_</string>
                             <string>portal_status_message</string>
                           </tuple>
                         </value>
