@@ -255,13 +255,12 @@ MultiSelectionValidator.validate = MultiSelectionValidator_validate
 from Products.Formulator.Validator import BooleanValidator
 
 def BooleanValidator_validate(self, field, key, REQUEST):
-    result = REQUEST.get(key, REQUEST.get('default_%s' % (key, )))
-    if result is None:
-       raise KeyError, 'Field %s is not present in request object.' % (repr(field.id), )
-    if (not not result)==True:
-       return 1
-    else:
-       return 0
+  result = REQUEST.get(key, REQUEST.get('default_%s' % key))
+  if result is None:
+    raise KeyError('Field %r is not present in request object.' % field.id)
+  # XXX If the checkbox is hidden, Widget_render_hidden is used instead of
+  #     CheckBoxWidget_render, and ':int' suffix is missing.
+  return result and result != '0' and 1 or 0
 
 BooleanValidator.validate = BooleanValidator_validate
 
