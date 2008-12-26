@@ -160,6 +160,7 @@ if movement is not None: # case of history\n
   explanation_portal_type = catalog_explanation.portal_type\n
   if display_simulation_state:\n
     simulation_state = catalog_explanation.simulation_state\n
+    resource_dict[\'simulation_state\'] = simulation_state\n
     simulation_state_title = cache_translated_simulation_state.get((explanation_portal_type,simulation_state), None)\n
     if simulation_state_title is None:\n
       portal = context.getPortalObject()\n
