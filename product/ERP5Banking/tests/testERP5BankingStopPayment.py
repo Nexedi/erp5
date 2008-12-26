@@ -234,7 +234,8 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     self.assertEqual(state, 'started')
     self.workflow_tool.doActionFor(self.stop_payment, 
                                    'debit_stop_action', 
-                                   wf_id='stop_payment_workflow')
+                                   wf_id='stop_payment_workflow',
+                                   stop_date=self.stop_payment.getStartDate())
     # get state of cash sorting
     state = self.stop_payment.getSimulationState()
     # check that state is delivered
