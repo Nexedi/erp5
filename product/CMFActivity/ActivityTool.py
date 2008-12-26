@@ -432,12 +432,17 @@ class ActiveWrapper:
     return '<%s at 0x%x to %r>' % (self.__class__.__name__, id(self),
                                    self.__dict__['__passive_self'])
 
-# Set to False when shutting down. Access outside of process_shutdown must
-# be done under the protection of is_running_lock lock.
-is_running = True
 # True when activities cannot be executing any more.
 has_processed_shutdown = False
 
+def cancelProcessShutdown():
+  """
+    This method reverts the effect of calling "process_shutdown" on activity
+    tool.
+  """
+  global has_processed_shutdown
+  is_running_lock.release()
+  has_processed_shutdown = False
 
 class ActivityTool (Folder, UniqueObject):
     """
@@ -785,13 +790,12 @@ class ActivityTool (Folder, UniqueObject):
           Prevent shutdown from happening while an activity queue is
           processing a batch.
         """
-        is_running = False
+        global has_processed_shutdown
         if phase == 3 and not has_processed_shutdown:
           has_processed_shutdown = True
           LOG('CMFActivity', INFO, "Shutdown: Waiting for activities to finish.")
           is_running_lock.acquire()
           LOG('CMFActivity', INFO, "Shutdown: Activities finished.")
-          is_running_lock.release()
 
     def process_timer(self, tick, interval, prev="", next=""):
         """
@@ -907,13 +911,13 @@ class ActivityTool (Folder, UniqueObject):
         while has_awake_activity:
           has_awake_activity = 0
           for activity in activity_list:
-            is_running_lock.acquire()
-            try:
-              if is_running:
+            acquired = is_running_lock.acquire(0)
+            if acquired:
+              try:
                 activity.tic(inner_self, processing_node) # Transaction processing is the responsability of the activity
                 has_awake_activity = has_awake_activity or activity.isAwake(inner_self, processing_node)
-            finally:
-              is_running_lock.release()
+              finally:
+                is_running_lock.release()
       finally:
         # decrease the number of active_threads
         tic_lock.acquire()
