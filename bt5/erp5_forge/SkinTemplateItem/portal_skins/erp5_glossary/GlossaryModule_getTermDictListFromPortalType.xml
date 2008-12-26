@@ -53,60 +53,62 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>ignore = (\'custom\',)\n
-all_field_list = []\n
-def iterate(obj):\n
-  for i in obj.objectValues():\n
-    if i.getId() in ignore:\n
-      continue\n
-    if i.meta_type==\'ERP5 Form\':\n
-      all_field_list.extend(i.objectValues())\n
-    elif i.isPrincipiaFolderish:\n
-      iterate(i)\n
+            <value> <string encoding="cdata"><![CDATA[
+
+skip_id_list = [\n
+  \'uid\', \'rid\', \'sid\', \'categories\',\n
+]\n
+remove_suffix_list = [\n
+  \'_id\', \'_relative_url\', \'_title\',\n
+]\n
 \n
-iterate(context.portal_skins)\n
+# First, create portal_type => business_field dict based on\n
+# Business Template definitions.\n
+bt_list = [x for x in \\\n
+           context.getPortalObject().portal_templates.contentValues() \\\n
+           if x.getInstallationState() in (\'installed\', \'not_installed\')]\n
+bt_list.sort(key=lambda x:int(x.getRevision() or 0))\n
+bt_dict = dict([(x.getTitle(), [y for y in x.getTemplatePortalTypeIdList()] + \\\n
+                               [y.split(\'|\')[1].strip() for y in x.getTemplatePortalTypePropertySheetList()] \\\n
+                 ) for x in bt_list])\n
+business_field_dict = {}\n
+prefix = \'erp5_\'\n
+for bt_title, bt_portal_type_list in bt_dict.items():\n
+  if bt_title.startswith(prefix):\n
+    bt_title = bt_title[len(prefix):]\n
+  for portal_type in bt_portal_type_list:\n
+    business_field_dict[portal_type] = bt_title\n
 \n
-properties = []\n
-for i in property_sheet_list:\n
-  properties.extend([x[0] for x in context.GlossaryModule_getPropertySheetAttributeList(i)])\n
-\n
-dic = {}\n
-for i in all_field_list:\n
-  id = i.getId()\n
-  title = i.get_value(\'title\') or \'\'\n
-  skin_id = i.aq_parent.aq_parent.getId()\n
-  prefix = \'erp5_\'\n
-  if skin_id.startswith(prefix):\n
-    skin_id = skin_id[len(prefix):]\n
-  if id.startswith(\'my_\'):\n
-    for p in properties:\n
-      if id==\'my_%s\' % p:\n
-        key = (p, skin_id, title)\n
-        dic[key] = i\n
-  if id.startswith(\'your_\'):\n
-    for p in properties:\n
-      if id==\'your_%s\' % p:\n
-        key = (p, skin_id, title)\n
-        dic[key] = i\n
-\n
+# Then, create a glossary for each property.\n
 result = []\n
-for (reference, business_field, title) in dic.keys():\n
-  language = \'en\'\n
-  field = dic[(reference, business_field, title)]\n
-  description = field.get_value(\'description\')\n
-  field_path = \'%s/%s/%s\' % (field.aq_parent.aq_parent.getId(),\n
-                            field.aq_parent.getId(),\n
-                            field.getId())\n
-  result.append({\'reference\':reference,\n
-                 \'language\':language,\n
-                 \'business_field\':business_field,\n
-                 \'title\':title,\n
-                 \'description\':description,\n
-                 \'field_path\':field_path\n
-                 })\n
+language = \'en\'\n
+for portal_type in portal_type_list:\n
+  business_field = business_field_dict.get(portal_type, portal_type)\n
+  id_dict = {}\n
+  property_sheet_list = \\\n
+      context.GlossaryModule_getPropertySheetList(portal_type)\n
+  for property_sheet in property_sheet_list:\n
+    for property_id, property_desc in \\\n
+        context.GlossaryModule_getPropertySheetAttributeList(property_sheet):\n
+      for x in remove_suffix_list:\n
+        if property_id.endswith(x):\n
+          property_id = property_id[:-len(x)]\n
+      if id_dict.has_key(property_id) or property_id in skip_id_list:\n
+        continue\n
+      result.append({\'reference\':property_id,\n
+                     \'language\':language,\n
+                     \'business_field\':business_field,\n
+                     \'title\':\' \',\n
+                     \'description\':property_desc,\n
+                     \'field_path\':\'%s/%s\' % (portal_type, property_sheet)\n
+                     })\n
+      id_dict[property_id] = True\n
 \n
+#result.sort(key=lambda x:(x[\'business_field\'], x[\'reference\']))\n
 return result\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -116,7 +118,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>property_sheet_list</string> </value>
+            <value> <string>portal_type_list</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -152,35 +154,37 @@ return result\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>property_sheet_list</string>
-                            <string>ignore</string>
-                            <string>all_field_list</string>
-                            <string>iterate</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>properties</string>
-                            <string>_getiter_</string>
-                            <string>i</string>
+                            <string>portal_type_list</string>
+                            <string>skip_id_list</string>
+                            <string>remove_suffix_list</string>
                             <string>append</string>
                             <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
                             <string>x</string>
+                            <string>bt_list</string>
+                            <string>dict</string>
+                            <string>$append1</string>
+                            <string>y</string>
                             <string>_getitem_</string>
-                            <string>dic</string>
-                            <string>id</string>
-                            <string>title</string>
-                            <string>skin_id</string>
+                            <string>bt_dict</string>
+                            <string>business_field_dict</string>
                             <string>prefix</string>
+                            <string>bt_title</string>
+                            <string>bt_portal_type_list</string>
                             <string>len</string>
-                            <string>p</string>
-                            <string>key</string>
+                            <string>portal_type</string>
                             <string>_write_</string>
                             <string>result</string>
-                            <string>reference</string>
-                            <string>business_field</string>
                             <string>language</string>
-                            <string>field</string>
-                            <string>description</string>
-                            <string>field_path</string>
+                            <string>business_field</string>
+                            <string>id_dict</string>
+                            <string>property_sheet_list</string>
+                            <string>property_sheet</string>
+                            <string>property_id</string>
+                            <string>property_desc</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>
@@ -197,7 +201,7 @@ return result\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>GlossaryModule_getTermDictListFromPropertySheet</string> </value>
+            <value> <string>GlossaryModule_getTermDictListFromPortalType</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

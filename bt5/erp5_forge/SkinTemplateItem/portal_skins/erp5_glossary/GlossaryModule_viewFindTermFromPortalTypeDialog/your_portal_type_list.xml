@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_property_sheet_list</string> </value>
+            <value> <string>your_portal_type_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -238,7 +238,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Property Sheet</string> </value>
+                    <value> <string>Portal Type</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -269,7 +269,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/GlossaryModule_getAvailablePropertySheetList</string> </value>
+            <value> <string>here/GlossaryModule_getAvailablePortalTypeList</string> </value>
         </item>
       </dictionary>
     </pickle>

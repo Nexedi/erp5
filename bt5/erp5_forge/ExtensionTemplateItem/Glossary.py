@@ -1,3 +1,13 @@
+def getPropertySheetList(self, portal_type):
+  from Products.ERP5Type.DocumentationHelper.PortalTypeDocumentationHelper \
+       import PortalTypeDocumentationHelper
+  portal = self.getPortalObject()
+  portal_type_uri = '%s/portal_types/%s' % (portal.getUrl(),
+                                            portal_type)
+  return PortalTypeDocumentationHelper(portal_type_uri).__of__(
+    portal).getPropertySheetList()
+
+
 def getPropertySheetAttributeList(name):
   from Products.ERP5Type import PropertySheet
   class_ = PropertySheet.__dict__.get(name, None)
@@ -6,7 +16,7 @@ def getPropertySheetAttributeList(name):
     if 'acquired_property_id' in i:
       continue
     # we want to get only normal property.
-    result.append(i['id'])
+    result.append((i['id'], i.get('description', '')))
   return result
 
 

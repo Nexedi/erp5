@@ -162,6 +162,10 @@
                           <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
+                        <tuple>
+                          <string>GlossaryTerm_getDuplicateGlossaryTermCount</string>
+                          <string>Num of duplicates</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

@@ -1,3 +1,7 @@
+2008-12-26 kazuhiko
+* add a listbox to see duplicate entries in Glossary view.
+* add Portal Type -> Glossary importer.
+
 2008-11-25 fabien
 * add more columns in bug_module view to be able to sort by project, ...
 

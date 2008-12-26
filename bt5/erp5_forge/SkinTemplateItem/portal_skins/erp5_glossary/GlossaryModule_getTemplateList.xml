@@ -53,7 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return [x.getTitle() for x in context.portal_templates.getInstalledBusinessTemplateList()]\n
+            <value> <string>template_list = [x.getTitle() for x in context.portal_templates.getInstalledBusinessTemplateList()]\n
+template_list.sort()\n
+return template_list\n
 </string> </value>
         </item>
         <item>
@@ -96,6 +98,7 @@
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>x</string>
+                            <string>template_list</string>
                           </tuple>
                         </value>
                     </item>

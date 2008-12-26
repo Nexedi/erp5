@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>Base_doSelect</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -87,23 +87,13 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_reference</string>
-                        <string>my_business_field</string>
-                        <string>my_causality_title</string>
-                        <string>my_language</string>
-                        <string>my_title</string>
-                        <string>my_translated_validation_state_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                        <string>my_comment</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -111,7 +101,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>GlossaryTerm_view</string> </value>
+            <value> <string>GlossaryModule_viewDuplicateGlossaryTermList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -119,11 +109,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>GlossaryTerm_view</string> </value>
+            <value> <string>GlossaryModule_viewGlossaryTermList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_list</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -135,7 +125,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Glossary Term</string> </value>
+            <value> <string>Glossary</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
