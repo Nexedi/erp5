@@ -5561,7 +5561,7 @@ msgstr "Inspecter l'objet"
 
 #: portal_workflow/business_template_installation_workflow/transitions/install_action
 msgid "Install Business Template"
-msgstr "Installer le Business Remplate"
+msgstr "Installer le Business Template"
 
 #: Template Tool
 #: portal_skins/erp5_core/TemplateTool_viewInstallRepositoryBusinessTemplateListDialog
