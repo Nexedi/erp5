@@ -3125,7 +3125,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     Queue.tic = Queue_tic
     Organisation.waitingActivity = waitingActivity
     try:
-      # Use SQLDict with no gorup method so that both activities won't be
+      # Use SQLDict with no group method so that both activities won't be
       # executed in the same batch, letting activity tool a chance to check
       # if execution should stop processing activities.
       organisation.activate(activity='SQLDict', priority=1).waitingActivity()
