@@ -3095,7 +3095,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     # - activity tool can exit between 2 processable activity batches
     # - activity tool won't process activities after process_shutdown was called
     # - process_shutdown returns before Activity.tic()
-    #   This is not perect though, since it would require to have access to
+    #   This is not perfect though, since it would require to have access to
     #   the waiting queue of CMFActivity's internal lock (is_running_lock) to
     #   make sure that it's what is preventing process_shutdown from returning.
     portal = self.getPortalObject()
