@@ -211,6 +211,12 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     self.assertNotEqual(self.check_deposit.getSourceReference(), '')
     self.assertNotEqual(self.check_deposit.getSourceReference(), None)
 
+  def stepSetCheckLess(self, sequence=None, sequence_list=None, **kwd):
+    """
+      Make CheckDeposit check-less.
+    """
+    self.check_deposit.setCheckLess(True)
+
   def stepAddCheckOperationLine(self, sequence=None, sequence_list=None, **kwd):
     """
     Add a check to the check deposit
@@ -220,6 +226,21 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
         portal_type="Check Operation Line",
         aggregate_free_text="CHKNB1",
         aggregate_resource=self.check_model.getRelativeUrl(),
+        source_payment_value = self.bank_account_2,
+        price=2000,
+        quantity=1,
+        description='aa',
+        quantity_unit_value=self.unit)
+    self.assertNotEqual(self.check_operation_line_1, None)
+    self.assertEqual(len(self.check_deposit.objectIds()), 1)
+
+  def stepAddCheckOperationLineWithNoAggregate(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Add a check to the check deposit
+    """
+    self.check_operation_line_1 = self.check_deposit.newContent(
+        id='check_operation_line_1',
+        portal_type="Check Operation Line",
         source_payment_value = self.bank_account_2,
         price=2000,
         quantity=1,
@@ -308,6 +329,14 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
     #self.workflow_tool.doActionFor(self.check_deposit, 'plan_action', wf_id='check_deposit_workflow')
     self.assertEqual(self.check_deposit.getSimulationState(), 'draft')
 
+  def stepTrySecondPlanCheckDepositOperationWithAggregate(self, sequence=None, sequence_list=None, **kwd):
+    """
+    Send the check deposit document to first validation level
+    """
+    self.assertEqual(self.check_deposit.getTotalPrice(fast=0, portal_type="Check Operation Line"), 2000.0)
+    self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.check_deposit, 'plan_action', wf_id='check_deposit_workflow')
+    #self.workflow_tool.doActionFor(self.check_deposit, 'plan_action', wf_id='check_deposit_workflow')
+    self.assertEqual(self.check_deposit.getSimulationState(), 'draft')
 
   def stepSecondPlanCheckDepositOperation(self, sequence=None, sequence_list=None, **kwd):
     """
@@ -496,13 +525,32 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin, ERP5TypeTestCase):
                        + 'Tic DeliverCheckDepositOperation Tic ' \
                        + 'CheckThirdBankAccountInventoryAfterCheckDepositDelivered'
 
+    # test transfer with no check refuses lines with aggregate
+    sequence_string6 = 'Tic ClearCheck ClearCheckDepositModule Tic '\
+                       + 'Tic CheckInitialInventory ' \
+                       + 'CreateCheckDepositOperation SetCheckLess Tic ' \
+                       + 'CheckWorklist Tic ' \
+                       + 'AddCheckOperationLine Tic ' \
+                       + 'TrySecondPlanCheckDepositOperationWithAggregate'
 
+    # test transfer with no check
+    sequence_string7 = 'Tic ClearCheck ClearCheckDepositModule Tic '\
+                       + 'Tic CheckInitialInventory ' \
+                       + 'CreateCheckDepositOperation SetCheckLess Tic ' \
+                       + 'CheckWorklist Tic ' \
+                       + 'AddCheckOperationLineWithNoAggregate Tic ' \
+                       + 'PlanCheckDepositOperation Tic ' \
+                       + 'OrderCheckDepositOperation Tic ' \
+                       + 'DeliverCheckDepositOperation Tic ' \
+                       + 'CheckBankAccountInventoryAfterCheckDepositDelivered'
 
     sequence_list.addSequenceString(sequence_string1)
     sequence_list.addSequenceString(sequence_string2)
     sequence_list.addSequenceString(sequence_string3)
     sequence_list.addSequenceString(sequence_string4)
     sequence_list.addSequenceString(sequence_string5)
+    sequence_list.addSequenceString(sequence_string6)
+    sequence_list.addSequenceString(sequence_string7)
     # play the sequence
     sequence_list.play(self)
 
