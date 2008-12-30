@@ -118,6 +118,8 @@ if state_change[\'transition\'].getId() == "wait_action":\n
 bank_account_dict = {}\n
 seen_check_dict = {}\n
 \n
+is_check_less = transaction.isCheckLess()\n
+\n
 # Check each check operation line.\n
 for check_operation_line in transaction.contentValues(filter = {\'portal_type\' : \'Check Operation Line\'}):\n
 \n
@@ -126,39 +128,52 @@ for check_operation_line in transaction.contentValues(filter = {\'portal_type\' 
                   , mapping={"line" : check_operation_line.getId()})\n
     raise ValidationFailed, (msg,)\n
 \n
-  check_number = check_operation_line.getAggregateFreeText()\n
-  if not check_number:\n
-    msg = Message(domain=\'ui\', message=\'Check is not defined on line $line.\'\n
-                  , mapping={"line" : check_operation_line.getId()})\n
-    raise ValidationFailed, (msg,)\n
-\n
-  check_type = check_operation_line.getAggregateResource()\n
-  if check_type is None:\n
-    msg = Message(domain=\'ui\', message=\'Check type is not defined on line $line.\'\n
-                  , mapping={"line" : check_operation_line.getId()})\n
-    raise ValidationFailed, (msg,)\n
-\n
-  \n
   source_bank_account = check_operation_line.getSourcePaymentValue()\n
   if source_bank_account is None:\n
     msg = Message(domain=\'ui\', message=\'Bank account not defined on line $line.\'\n
                   , mapping={"line" : check_operation_line.getId()})\n
     raise ValidationFailed, (msg,)\n
 \n
-  seen_check_dict_key = (source_bank_account, check_type, check_number)\n
-  seen_check = seen_check_dict.get(seen_check_dict_key)\n
-  if seen_check is not None:\n
-    msg = Message(domain=\'ui\', message=\'Check on line $line is already used on line $oldline.\'\n
-                  , mapping={"line" : check_operation_line.getId(), "oldline": seen_check})\n
-    raise ValidationFailed, (msg,)\n
-  seen_check_dict[seen_check_dict_key] = check_operation_line.getId()\n
+  check_number = check_operation_line.getAggregateFreeText()\n
+  check_type = check_operation_line.getAggregateResource()\n
+  if is_check_less:\n
+    if check_number:\n
+      msg = Message(domain=\'ui\', message=\'Check is defined on line $line.\'\n
+                    , mapping={"line" : check_operation_line.getId()})\n
+      raise ValidationFailed, (msg,)\n
 \n
-  # Test check is valid based on date\n
-  transaction.Check_checkIntervalBetweenDate(resource=check_operation_line.getAggregateResourceValue(),\n
-                                             start_date=check_operation_line.getIssueDate(),\n
-                                             stop_date=check_operation_line.getStopDate(),\n
-                                             check_nb=check_operation_line.getAggregateFreeText())\n
-    \n
+    if check_type is not None:\n
+      msg = Message(domain=\'ui\', message=\'Check type is defined on line $line.\'\n
+                    , mapping={"line" : check_operation_line.getId()})\n
+      raise ValidationFailed, (msg,)\n
+  else:\n
+    if not check_number:\n
+      msg = Message(domain=\'ui\', message=\'Check is not defined on line $line.\'\n
+                    , mapping={"line" : check_operation_line.getId()})\n
+      raise ValidationFailed, (msg,)\n
+\n
+    if check_type is None:\n
+      msg = Message(domain=\'ui\', message=\'Check type is not defined on line $line.\'\n
+                    , mapping={"line" : check_operation_line.getId()})\n
+      raise ValidationFailed, (msg,)\n
+\n
+    seen_check_dict_key = (source_bank_account, check_type, check_number)\n
+    seen_check = seen_check_dict.get(seen_check_dict_key)\n
+    if seen_check is not None:\n
+      msg = Message(domain=\'ui\', message=\'Check on line $line is already used on line $oldline.\'\n
+                    , mapping={"line" : check_operation_line.getId(), "oldline": seen_check})\n
+      raise ValidationFailed, (msg,)\n
+    seen_check_dict[seen_check_dict_key] = check_operation_line.getId()\n
+\n
+    # Test check is valid based on date\n
+    transaction.Check_checkIntervalBetweenDate(resource=check_operation_line.getAggregateResourceValue(),\n
+                                               start_date=check_operation_line.getIssueDate(),\n
+                                               stop_date=check_operation_line.getStopDate(),\n
+                                               check_nb=check_operation_line.getAggregateFreeText())\n
+    check = transaction.Base_checkCheck(bank_account=source_bank_account, reference=check_number,\n
+                                resource=check_type)\n
+    if check_operation_line.getAggregate() != check.getRelativeUrl():\n
+      check_operation_line.edit(aggregate=check.getRelativeUrl())    \n
   \n
   # Test if the account balance is sufficient.\n
   if state_change[\'transition\'].getId() == "plan_action":\n
@@ -180,11 +195,6 @@ for check_operation_line in transaction.contentValues(filter = {\'portal_type\' 
     elif error[\'error_code\'] != 0:\n
       msg = Message(domain=\'ui\', message="Unknown error code.")\n
       raise ValidationFailed, (msg,)\n
-\n
-  check = transaction.Base_checkCheck(bank_account=source_bank_account, reference=check_number,\n
-                              resource=check_type)\n
-  if check_operation_line.getAggregate() != check.getRelativeUrl():\n
-    check_operation_line.edit(aggregate=check.getRelativeUrl())\n
 \n
 if transaction.getSimulationState() == "draft" and state_change[\'transition\'].getId() == "plan_action":\n
   context.createCheckDepositLine(state_change)\n
@@ -259,18 +269,19 @@ if transaction.getSimulationState() == "draft" and state_change[\'transition\'].
                             <string>context</string>
                             <string>bank_account_dict</string>
                             <string>seen_check_dict</string>
+                            <string>is_check_less</string>
                             <string>_getiter_</string>
                             <string>check_operation_line</string>
+                            <string>source_bank_account</string>
                             <string>check_number</string>
                             <string>check_type</string>
-                            <string>source_bank_account</string>
                             <string>seen_check_dict_key</string>
                             <string>seen_check</string>
                             <string>_write_</string>
+                            <string>check</string>
                             <string>account_path</string>
                             <string>check_price</string>
                             <string>error</string>
-                            <string>check</string>
                           </tuple>
                         </value>
                     </item>

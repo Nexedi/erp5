@@ -65,12 +65,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>transaction = state_change[\'object\']\n
-\n
-if not transaction.isCheckLess():\n
-  for check_operation_line in transaction.contentValues(filter = {\'portal_type\' : \'Check Operation Line\'}):\n
-    check = check_operation_line.getAggregateValue()\n
-    check.deliver()\n
+            <value> <string>from AccessControl import getSecurityManager\n
+return getSecurityManager().getUser().has_permission(\'Manage portal\', context)\n
 </string> </value>
         </item>
         <item>
@@ -86,8 +82,14 @@ if not transaction.isCheckLess():\n
             </value>
         </item>
         <item>
+            <key> <string>_owner</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -107,19 +109,16 @@ if not transaction.isCheckLess():\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>transaction</string>
+                            <string>AccessControl</string>
+                            <string>getSecurityManager</string>
                             <string>_getattr_</string>
-                            <string>_getiter_</string>
-                            <string>check_operation_line</string>
-                            <string>check</string>
+<string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -136,7 +135,7 @@ if not transaction.isCheckLess():\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>updateChecks</string> </value>
+            <value> <string>Base_isUserManager</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
