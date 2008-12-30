@@ -1,6 +1,7 @@
 <property_sheet_list>
  <portal_type id="Check Deposit">
   <item>Amount</item>
+  <item>CheckDeposit</item>
   <item>Price</item>
  </portal_type>
  <portal_type id="Check Payment">
