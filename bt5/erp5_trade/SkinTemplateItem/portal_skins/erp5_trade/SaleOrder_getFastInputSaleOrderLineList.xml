@@ -53,15 +53,35 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempBase\n
+            <value> <string>"""\n
+  This script creates a list of empty lines when called for\n
+  the first time.When called the next time, it displays on \n
+  the fast input all sale order lines already added and \n
+  updates them based on fast input entries.\n
+"""\n
+from Products.ERP5Type.Document import newTempBase\n
 portal = context.getPortalObject()\n
+request = context.REQUEST\n
+listbox = getattr(request, \'listbox\', None) \n
 \n
 result = []\n
+line_list = context.contentValues(portal_type=\'Sale Order Line\')\n
 \n
-for i in range(lines_num):\n
-  obj = newTempBase(portal, id="tmp_item_%s" % i, uid="tmp_item_%s" % i)\n
-  result.append(obj)\n
-\n
+len_line_list = len(line_list)\n
+if len(line_list)!=0:\n
+  for line in line_list:\n
+    obj = newTempBase(portal, id="tmp_item_%s" % line.getId(), uid="tmp_item_%s" % line.getId())    \n
+    obj.edit(title=line.getResourceTitle(),\n
+           quantity=line.getQuantity(),\n
+           quantity_unit=line.getQuantityUnit(),\n
+           total_price=line.getTotalPrice(),\n
+           getAvailableInventory=line.getResourceValue().getAvailableInventory(),\n
+           getCurrentInventory=line.getResourceValue().getCurrentInventory(),\n
+           inventory=line.getResourceValue().getInventory())\n
+    result.append(obj)\n
+for i in range(len_line_list+1,lines_num+1):\n
+   obj = newTempBase(portal, id="tmp_item_%s" % i, uid="tmp_item_%s" % i)\n
+   result.append(obj)\n
 return result\n
 </string> </value>
         </item>
@@ -106,11 +126,19 @@ return result\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
+                            <string>request</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>listbox</string>
                             <string>result</string>
+                            <string>line_list</string>
+                            <string>len</string>
+                            <string>len_line_list</string>
                             <string>_getiter_</string>
+                            <string>line</string>
+                            <string>obj</string>
                             <string>range</string>
                             <string>i</string>
-                            <string>obj</string>
                           </tuple>
                         </value>
                     </item>

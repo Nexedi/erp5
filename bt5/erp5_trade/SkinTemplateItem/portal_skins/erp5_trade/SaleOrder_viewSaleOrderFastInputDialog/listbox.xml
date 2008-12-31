@@ -327,12 +327,24 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
                           <string>reference</string>
                           <string>Reference</string>
                         </tuple>
                         <tuple>
+                          <string>variation_category_item_list</string>
+                          <string>Variation</string>
+                        </tuple>
+                        <tuple>
                           <string>quantity</string>
                           <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit</string>
+                          <string>Quantity Unit</string>
                         </tuple>
                         <tuple>
                           <string>total_price</string>
@@ -366,12 +378,24 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
                           <string>reference</string>
                           <string>Reference</string>
                         </tuple>
                         <tuple>
+                          <string>variation_category_item_list</string>
+                          <string>Variation</string>
+                        </tuple>
+                        <tuple>
                           <string>quantity</string>
                           <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit</string>
+                          <string>Quantity Unit</string>
                         </tuple>
                         <tuple>
                           <string>total_price</string>
@@ -429,12 +453,24 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
                           <string>reference</string>
                           <string>Reference</string>
                         </tuple>
                         <tuple>
+                          <string>variation_category_item_list</string>
+                          <string>Variation</string>
+                        </tuple>
+                        <tuple>
                           <string>quantity</string>
                           <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit</string>
+                          <string>Quantity Unit</string>
                         </tuple>
                         <tuple>
                           <string>total_price</string>
@@ -521,6 +557,10 @@
                     <key> <string>search_columns</string> </key>
                     <value>
                       <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
                         <tuple>
                           <string>reference</string>
                           <string>Reference</string>

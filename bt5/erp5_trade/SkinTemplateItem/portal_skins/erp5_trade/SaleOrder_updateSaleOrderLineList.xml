@@ -53,30 +53,49 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
   This script just returns what the user entered in\n
-  the fast input form.\n
+  the fast input form, searches for the product whose\n
+  reference or title has been just entered and updates\n
+  the total price and the stock corresponding to the \n
+  product\n
 """\n
 request = context.REQUEST\n
-\n
+portal = context.getPortalObject()\n
+Base_translateString = portal.Base_translateString\n
+total_price = 0.0\n
 portal = context.getPortalObject()\n
 for line in listbox:\n
-  if line.has_key(\'listbox_key\') and line[\'reference\'] not in (\'\', None):\n
+  if line.has_key(\'listbox_key\') and (line[\'title\'] or line[\'reference\'] not in (\'\', None)):\n
      product_list = context.portal_catalog(portal_type=\'Product\',\n
+                                    title=line[\'title\'],\n
                                     reference=line[\'reference\'])\n
      product = product_list[0]\n
-     line[\'getAvailableInventory\'] = product.getAvailableInventory()\n
-     line["inventory"] = product.getInventory()\n
-     inventory = line["inventory"]\n
-     line_id = line[\'listbox_key\'].split(\'/erp5/\')[1]\n
-     line["total_price"] = line[\'quantity\'] * product.getPrice()\n
-     request.form["field_listbox_total_price_%s"%line_id] = line[\'quantity\'] * product.getPrice()\n
-     request.form["field_listbox_getAvailableInventory_%s"%line_id] = product.getAvailableInventory()\n
-     request.form[\'field_listbox_inventory_%s\'%line_id] = product.getInventory()\n
-     request.form["field_listbox_getCurrentInventory_%s"%line_id] = product.getCurrentInventory()\n
+     if line[\'quantity\'] <= product.getAvailableInventory():\n
+       line_id = line[\'listbox_key\'].split(\'/erp5/\')[1]\n
+       line["total_price"] = line[\'quantity\'] * product.getPrice()\n
+       line["quantity_unit"] = product.getQuantityUnit()\n
+       request.form["field_listbox_reference_%s"%line_id] = product.getReference()\n
+       request.form["field_listbox_title_%s"%line_id] = product.getTitle()\n
+       request.form["field_listbox_total_price_%s"%line_id] = line[\'quantity\'] * product.getPrice()\n
+       request.form["field_listbox_quantity_unit_%s"%line_id] = product.getQuantityUnit()\n
+       request.form["field_listbox_getAvailableInventory_%s"%line_id] = product.getAvailableInventory()\n
+       request.form[\'field_listbox_inventory_%s\'%line_id] = product.getInventory()\n
+       request.form["field_listbox_getCurrentInventory_%s"%line_id] = product.getCurrentInventory()\n
+       request.form["field_listbox_variation_category_item_list_%s"%line_id] =\\\n
+                         [x[0] for x in product.getVariationCategoryItemList()]\n
+       total_price +=line[\'total_price\']\n
+       request.form["field_my_total_price"] = total_price\n
+     else:\n
+       request.set(\'portal_status_message\', Base_translateString(\'Quantity Asked Not Available In Inventory\')) \n
+     \n
 context.Base_updateDialogForm(listbox=listbox,update=1,kw=kw)\n
 return context.SaleOrder_viewSaleOrderFastInputDialog(listbox=listbox,**kw)\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -118,15 +137,20 @@ return context.SaleOrder_viewSaleOrderFastInputDialog(listbox=listbox,**kw)\n
                             <string>context</string>
                             <string>request</string>
                             <string>portal</string>
+                            <string>Base_translateString</string>
+                            <string>total_price</string>
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>_getitem_</string>
                             <string>None</string>
                             <string>product_list</string>
                             <string>product</string>
-                            <string>_write_</string>
-                            <string>inventory</string>
                             <string>line_id</string>
+                            <string>_write_</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>_inplacevar_</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>

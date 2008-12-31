@@ -99,13 +99,18 @@
                         <string>listbox_getAvailableInventory</string>
                         <string>listbox_getCurrentInventory</string>
                         <string>listbox_inventory</string>
+                        <string>listbox_variation_category_item_list</string>
+                        <string>listbox_title</string>
+                        <string>listbox_quantity_unit</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_total_price</string>
+                      </list>
                     </value>
                 </item>
                 <item>

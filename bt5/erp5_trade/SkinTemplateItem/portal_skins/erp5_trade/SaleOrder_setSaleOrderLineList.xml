@@ -53,25 +53,53 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>result_list = []\n
+            <value> <string>"""\n
+  This script creates or updates sale order lines based on the fast \n
+  input information.It should take into account any sale order line \n
+  which were already created so that they are not duplicated.\n
+"""\n
+result_list = []\n
+sale_order_line_list = context.contentValues(portal_type=\'Sale Order Line\')\n
+if sale_order_line_list!=[]:\n
+  sale_order_line_id_list = [x.getId() for x in sale_order_line_list]\n
 for line in listbox:\n
-  if line.has_key(\'listbox_key\') and line[\'reference\'] not in (\'\', None):\n
-    product_list = [x.getObject() for x in context.portal_catalog(portal_type=\'Product\',\n
+ #for each line in listbox if line has a reference defined, search \n
+ #for the product whose reference has been entered\n
+ if line.has_key(\'listbox_key\') and line[\'reference\'] not in (\'\', None):\n
+   line_id = line[\'listbox_key\'].split(\'/erp5/tmp_item_\')[1]\n
+   product_list = [x.getObject() for x in context.portal_catalog(\n
+                                    portal_type=\'Product\',\n
                                     reference=line[\'reference\'])]\n
-    product = product_list[0]\n
-    sale_order_line= context.newContent(\n
-                 portal_type=\'Sale Order Line\',)\n
-    sale_order_line.edit(\n
-               start_date=context.getStartDate(),\n
-               stop_dat=context.getStopDate(),\n
+   product = product_list[0]\n
+   #for each sale order line already added,\n
+   #if the line\'s id is the same as the sale order line, update it\n
+   for sale_order_line in sale_order_line_list:\n
+     if sale_order_line.getId()==line_id:\n
+       sale_order_line.edit(start_date=context.getStartDate(),\n
+               stop_date=context.getStopDate(),\n
                resource_title=product.getTitle(),\n
-               total_price = line[\'total_price\'],\n
                price_currency = context.getPriceCurrency(),\n
                quantity = line["quantity"],\n
                quantity_unit = product.getQuantityUnit(),)\n
-    sale_order_line.setResourceValue(product)\n
-    result_list.append(sale_order_line)\n
-\n
+       sale_order_line.setResourceValue(product)\n
+       result_list.append(sale_order_line)\n
+   else:\n
+     # if there was no sale order line already defined\n
+     # for the sale order, add a new sale order line\n
+     if len(sale_order_line_list)==0 or line_id not in sale_order_line_id_list:\n
+      sale_order_line= context.newContent(\n
+                 portal_type=\'Sale Order Line\',)\n
+      sale_order_line.edit(\n
+               start_date=context.getStartDate(),\n
+               stop_date=context.getStopDate(),\n
+               resource_title=product.getTitle(),\n
+               price_currency = context.getPriceCurrency(),\n
+               quantity = line["quantity"],\n
+               quantity_unit = product.getQuantityUnit(),)\n
+     sale_order_line.setResourceValue(product)\n
+     result_list.append(sale_order_line)\n
+  \n
+#return to the feature module\n
 context.REQUEST.response.redirect(\n
      \'%s/view?portal_status_message=%s\' % (context.absolute_url(), \'Sale Order Lines created.\'.replace(\' \', \'%20\')))\n
 </string> </value>
@@ -113,18 +141,22 @@ context.REQUEST.response.redirect(\n
                             <string>listbox</string>
                             <string>kw</string>
                             <string>result_list</string>
-                            <string>_getiter_</string>
-                            <string>line</string>
                             <string>_getattr_</string>
-                            <string>_getitem_</string>
-                            <string>None</string>
+                            <string>context</string>
+                            <string>sale_order_line_list</string>
                             <string>append</string>
                             <string>$append0</string>
-                            <string>context</string>
+                            <string>_getiter_</string>
                             <string>x</string>
+                            <string>sale_order_line_id_list</string>
+                            <string>line</string>
+                            <string>_getitem_</string>
+                            <string>None</string>
+                            <string>line_id</string>
                             <string>product_list</string>
                             <string>product</string>
                             <string>sale_order_line</string>
+                            <string>len</string>
                           </tuple>
                         </value>
                     </item>
