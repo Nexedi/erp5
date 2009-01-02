@@ -187,6 +187,7 @@ class TestERP5BankingCounterDate(TestERP5BankingMixin,
     # Site-scoped
     openAndTest(self.madrid, DateTime('2008/01/01'), '1')
     # Year-scoped
+    openAndTest(self.paris, DateTime('2008/12/31'), '5')
     openAndTest(self.paris, DateTime('2009/01/01'), '1')
 
 # define how we launch the unit test
