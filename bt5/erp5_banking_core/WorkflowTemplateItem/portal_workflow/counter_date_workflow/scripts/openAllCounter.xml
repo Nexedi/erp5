@@ -120,8 +120,10 @@ if listbox is not None:\n
 \n
 \n
 # Set a reference\n
+first_day_of_year = DateTime(now.year(), 1, 1)\n
 counter_date_list = [x.getObject() for x  in context.portal_catalog(\n
                                            portal_type=\'Counter Date\',site_uid=site_uid,\n
+                                           start_date={\'type\': \'date\', \'query\': first_day_of_year, \'range\': \'nlt\'},\n
                                            sort_on=[(\'start_date\',\'descending\')],limit=1,\n
                                            simulation_state=(\'open\',\'closed\'))]\n
 previous_reference = None\n
@@ -207,6 +209,7 @@ counter_date.setReference(reference)\n
                             <string>check_date_is_today</string>
                             <string>line</string>
                             <string>counter</string>
+                            <string>first_day_of_year</string>
                             <string>previous_reference</string>
                             <string>previous_counter_date</string>
                             <string>int</string>
