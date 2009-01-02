@@ -260,12 +260,6 @@ class CopyContainer:
           l=local_role_dict.setdefault(userid, [])
           l.append('Owner')
 
-    # Clear the transaction references
-    if getattr(self_base, 'default_source_reference', None):
-      delattr(self_base, 'default_source_reference')
-    if getattr(self_base, 'default_destination_reference', None):
-      delattr(self_base, 'default_destination_reference')
-    
     # Clear the workflow history
     # XXX This need to be tested again
     if getattr(self_base, 'workflow_history', _marker) is not _marker:
