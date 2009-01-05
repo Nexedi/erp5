@@ -54,9 +54,6 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>context.Bug_init()\n
-#Remove Bug Lines\n
-context.manage_delObjects(list(context.contentIds(\n
-                              filter=dict(portal_type=\'Bug Line\'))))\n
 </string> </value>
         </item>
         <item>
@@ -95,8 +92,6 @@ context.manage_delObjects(list(context.contentIds(\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>list</string>
-                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
