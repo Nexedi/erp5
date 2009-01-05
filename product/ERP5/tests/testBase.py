@@ -996,6 +996,48 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals('attachment; filename="%s"' % os.path.basename(__file__),
                       response.headers['content-disposition'])
 
+  def test_getTypeBasedMethod(self):
+    """
+    Test that getTypeBasedMethod look up at ancestor classes
+    and stop after Base and Folder Classes
+    """
+    from Products.ERP5Type.tests.utils import createZODBPythonScript
+    portal = self.getPortal()
+
+    base_script = createZODBPythonScript(portal.portal_skins.custom,
+                        'Base_fooMethod',
+                        'scripts_params=None',
+                        '# Script body\n'
+                        'return "something"' )
+    xml_object_script = createZODBPythonScript(portal.portal_skins.custom,
+                        'XMLObject_dummyMethod',
+                        'scripts_params=None',
+                        '# Script body\n'
+                        'return "something"' )
+    person_script = createZODBPythonScript(portal.portal_skins.custom,
+                        'Person_dummyMethod',
+                        'scripts_params=None',
+                        '# Script body\n'
+                        'return "something"' )
+    copy_container_script = createZODBPythonScript(portal.portal_skins.custom,
+                        'CopyContainer_dummyFooMethod',
+                        'scripts_params=None',
+                        '# Script body\n'
+                        'return "something"' )
+    cmfbtree_folder_script = createZODBPythonScript(portal.portal_skins.custom,
+                        'CMFBTreeFolder_dummyFooMethod',
+                        'scripts_params=None',
+                        '# Script body\n'
+                        'return "something"' )
+    org = portal.organisation_module.newContent(portal_type='Organisation')
+    pers = portal.person_module.newContent(portal_type='Person')
+
+    self.assertEqual(org._getTypeBasedMethod('dummyMethod'), xml_object_script)
+    self.assertEqual(pers._getTypeBasedMethod('dummyMethod'), person_script)
+    self.assertEqual(org._getTypeBasedMethod('fooMethod'), base_script)
+    self.assertEqual(pers._getTypeBasedMethod('fooMethod'), base_script)
+    self.assertEqual(org._getTypeBasedMethod('dummyFooMethod'), None)
+    self.assertEqual(org._getTypeBasedMethod('dummyFooMethod'), None)
 
 class TestERP5PropertyManager(unittest.TestCase):
   """Tests for ERP5PropertyManager.
