@@ -114,14 +114,6 @@ class AccountingTransaction(Delivery):
           text_list.append(str(prop))
       return ' '.join(text_list)
 
-    def manage_afterClone(self, transaction):
-        Delivery.manage_afterClone(self, transaction)
-        #Clean some properties
-        if getattr(aq_base(self), 'source_reference', None) is not None:
-          delattr(self, 'source_reference')
-        if getattr(aq_base(self), 'destination_reference', None) is not None:
-          delattr(self, 'destination_reference')
-
 # Compatibility
 # It may be necessary to create an alias after removing the Transaction class
 # Products.ERP5Type.Document.Transaction = AccountingTransaction
