@@ -2915,9 +2915,10 @@ class Base( CopyContainer,
       fallback_script_id : the script to use if nothing is found
     """
     def getScriptName(portal_type, method_id):
+      from Products.ERP5Type.Base import Base
+      class_name_list = [base_class.__name__ for base_class in self.__class__.mro() if issubclass(base_class, Base)]
       script_name_end = '_%s' % method_id
-      for script_name_begin in [portal_type, self.getMetaType(),
-          self.__class__.__name__]:
+      for script_name_begin in [portal_type, self.getMetaType()] + class_name_list:
         name = ''.join([script_name_begin.replace(' ',''), script_name_end])
         script = getattr(self, name, None)
         if script is not None:
