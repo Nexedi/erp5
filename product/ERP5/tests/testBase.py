@@ -1025,7 +1025,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
                         '# Script body\n'
                         'return "something"' )
     cmfbtree_folder_script = createZODBPythonScript(portal.portal_skins.custom,
-                        'CMFBTreeFolder_dummyFooMethod',
+                        'CMFBTreeFolder_dummyFoo2Method',
                         'scripts_params=None',
                         '# Script body\n'
                         'return "something"' )
@@ -1037,7 +1037,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(org._getTypeBasedMethod('fooMethod'), base_script)
     self.assertEqual(pers._getTypeBasedMethod('fooMethod'), base_script)
     self.assertEqual(org._getTypeBasedMethod('dummyFooMethod'), None)
-    self.assertEqual(org._getTypeBasedMethod('dummyFooMethod'), None)
+    self.assertEqual(org._getTypeBasedMethod('dummyFoo2Method'), None)
 
 class TestERP5PropertyManager(unittest.TestCase):
   """Tests for ERP5PropertyManager.
