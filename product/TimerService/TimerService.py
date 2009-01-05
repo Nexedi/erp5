@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 # -*- Mode: Python; py-indent-offset: 4 -*-
 # Authors: Nik Kim <fafhrd@legco.biz>
 __version__ = '$Revision: 1.3 $'[11:-2]
@@ -9,7 +9,7 @@ from Globals import InitializeClass
 from OFS.SimpleItem import SimpleItem
 from OFS.PropertyManager import PropertyManager
 
-from zLOG import LOG, INFO, ERROR
+from zLOG import LOG, ERROR
 
 from AccessControl import ClassSecurityInfo, Permissions
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -54,11 +54,12 @@ class TimerService(SimpleItem):
     def process_shutdown(self, phase, time_in_phase):
         """ """
         subscriptions = []
-        try:
-          subscriptions = [self.unrestrictedTraverse(path)
-                           for path in self._subscribers]
-        except KeyError:
-          pass
+        for path in self._subscribers:
+            try:
+                subscriptions.append(self.unrestrictedTraverse(path))
+            except KeyError:
+                pass
+
         for subscriber in subscriptions:
             process_shutdown = getattr(subscriber, 'process_shutdown', None)
             if process_shutdown is not None:
@@ -84,11 +85,11 @@ class TimerService(SimpleItem):
           # Service start to 'ping' the portal before the zope transaction in
           # which the portal is created is commited.
           subscriptions = []
-          try:
-            subscriptions = [self.unrestrictedTraverse(path)
-                             for path in self._subscribers]
-          except KeyError:
-            pass
+          for path in self._subscribers:
+              try:
+                  subscriptions.append(self.unrestrictedTraverse(path))
+              except KeyError:
+                  pass
 
           tick = time.time()
           prev_tick = tick - interval
