@@ -73,6 +73,14 @@
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
+        <item>
+            <key> <string>permissions</string> </key>
+            <value>
+              <tuple>
+                <string>Access contents information</string>
+              </tuple>
+            </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
