@@ -1,3 +1,6 @@
+2009-01-05 nicolas
+add TypeBasedMethod for all Deliveries which remove source_reference and destination_reference after cloning
+
 2008-11-28 ivan
 * Extend Business Template user interface to handle skin with greater control
 
