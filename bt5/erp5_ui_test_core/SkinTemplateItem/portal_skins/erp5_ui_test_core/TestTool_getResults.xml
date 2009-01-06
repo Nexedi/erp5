@@ -54,6 +54,10 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal_tests = container.portal_tests\n
+if test_zuite_relative_url is not None:\n
+  # we care for a specific test zuite\n
+  portal_tests = portal_tests.restrictedTraverse(test_zuite_relative_url,\\\n
+                                                 portal_tests)\n
 results = [portal_tests.absolute_url() + \'/\' + e for e in portal_tests.objectIds(\'Zuite Results\')]\n
 results.reverse()\n
 return \'\\n\'.join(results) + \'\\n\'\n
@@ -67,7 +71,7 @@ return \'\\n\'.join(results) + \'\\n\'\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>test_zuite_relative_url=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -87,15 +91,17 @@ return \'\\n\'.join(results) + \'\\n\'\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>test_zuite_relative_url</string>
                             <string>_getattr_</string>
                             <string>container</string>
                             <string>portal_tests</string>
+                            <string>None</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
@@ -112,7 +118,9 @@ return \'\\n\'.join(results) + \'\\n\'\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
