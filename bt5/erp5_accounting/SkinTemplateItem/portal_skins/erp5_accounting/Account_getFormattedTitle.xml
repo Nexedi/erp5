@@ -59,8 +59,8 @@
 gap_id = account.Account_getGapId()\n
 title  = account.getTitle()\n
 \n
-if gap_id.isdigit():\n
-  title = "%s - %s"%(gap_id, title)\n
+if gap_id:\n
+  title = "%s - %s" % (gap_id, title)\n
 \n
 return title\n
 </string> </value>
