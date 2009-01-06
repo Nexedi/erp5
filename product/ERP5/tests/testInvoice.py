@@ -29,10 +29,6 @@
 """
   Tests invoice creation from simulation.
 
-TODO:
-  * check empty related Delivery Rule
-  * check divergence
-
 """
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
