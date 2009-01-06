@@ -2155,65 +2155,6 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
       checkTree(applied_rule)
 
 
-  def test_accept_quantity_divergence_on_invoice_with_started_packing_list(
-                        self, quiet=quiet):
-    # only applies to sale invoice, because purchase invoices are not built yet
-    # when the packing list is in started state
-    sequence_list = SequenceList()
-    sequence = sequence_list.addSequenceString(self.PACKING_LIST_DEFAULT_SEQUENCE)
-    sequence_list.play(self, quiet=quiet)
-
-    packing_list = sequence.get('packing_list')
-    packing_list_line = packing_list.getMovementList()[0]
-    previous_quantity = packing_list_line.getQuantity()
-    
-    packing_list.setReady()
-    packing_list.start()
-    self.assertEquals('started', packing_list.getSimulationState())
-    get_transaction().commit()
-    self.tic()
-
-    invoice = packing_list.getCausalityRelatedValue(
-                                  portal_type=self.invoice_portal_type)
-    self.assertNotEquals(invoice, None)
-    invoice_line_list = invoice.getMovementList()
-    self.assertEquals(1, len(invoice_line_list))
-    invoice_line = invoice_line_list[0]
-
-    new_quantity = invoice_line.getQuantity() * 2
-    invoice_line.setQuantity(new_quantity)
-    
-    get_transaction().commit()
-    self.tic()
-
-    self.assertTrue(invoice.isDivergent())
-    divergence_list = invoice.getDivergenceList()
-    self.assertEquals(1, len(divergence_list))
-
-    divergence = divergence_list[0]
-    self.assertEquals('quantity', divergence.tested_property)
-
-    # accept decision
-    builder_list = invoice.getBuilderList()
-    self.assertEquals(2, len(builder_list))
-    for builder in builder_list:
-      builder.solveDivergence(invoice.getRelativeUrl(),
-                              divergence_to_accept_list=divergence_list)
-
-    get_transaction().commit()
-    self.tic()
-    self.assertEquals('solved', invoice.getCausalityState())
-
-    self.assertEquals([], invoice.getDivergenceList())
-    self.assertEquals(new_quantity, invoice_line.getQuantity())
-    self.assertEquals(new_quantity,
-          invoice_line.getDeliveryRelatedValue(portal_type='Simulation Movement'
-              ).getQuantity())
-
-    self.assertEquals([], packing_list.getDivergenceList())
-    self.assertEquals('solved', packing_list.getCausalityState())
-    
-
 class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
   """Tests for sale invoice.
   """
@@ -3051,6 +2992,64 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
       """)
     sequence_list.play(self, quiet=quiet)
 
+  def test_accept_quantity_divergence_on_invoice_with_started_packing_list(
+                        self, quiet=quiet):
+    # only applies to sale invoice, because purchase invoices are not built yet
+    # when the packing list is in started state
+    sequence_list = SequenceList()
+    sequence = sequence_list.addSequenceString(self.PACKING_LIST_DEFAULT_SEQUENCE)
+    sequence_list.play(self, quiet=quiet)
+
+    packing_list = sequence.get('packing_list')
+    packing_list_line = packing_list.getMovementList()[0]
+    previous_quantity = packing_list_line.getQuantity()
+    
+    packing_list.setReady()
+    packing_list.start()
+    self.assertEquals('started', packing_list.getSimulationState())
+    get_transaction().commit()
+    self.tic()
+
+    invoice = packing_list.getCausalityRelatedValue(
+                                  portal_type=self.invoice_portal_type)
+    self.assertNotEquals(invoice, None)
+    invoice_line_list = invoice.getMovementList()
+    self.assertEquals(1, len(invoice_line_list))
+    invoice_line = invoice_line_list[0]
+
+    new_quantity = invoice_line.getQuantity() * 2
+    invoice_line.setQuantity(new_quantity)
+    
+    get_transaction().commit()
+    self.tic()
+
+    self.assertTrue(invoice.isDivergent())
+    divergence_list = invoice.getDivergenceList()
+    self.assertEquals(1, len(divergence_list))
+
+    divergence = divergence_list[0]
+    self.assertEquals('quantity', divergence.tested_property)
+
+    # accept decision
+    builder_list = invoice.getBuilderList()
+    self.assertEquals(2, len(builder_list))
+    for builder in builder_list:
+      builder.solveDivergence(invoice.getRelativeUrl(),
+                              divergence_to_accept_list=divergence_list)
+
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals('solved', invoice.getCausalityState())
+
+    self.assertEquals([], invoice.getDivergenceList())
+    self.assertEquals(new_quantity, invoice_line.getQuantity())
+    self.assertEquals(new_quantity,
+          invoice_line.getDeliveryRelatedValue(portal_type='Simulation Movement'
+              ).getQuantity())
+
+    self.assertEquals([], packing_list.getDivergenceList())
+    self.assertEquals('solved', packing_list.getCausalityState())
+    
   
 
 class TestPurchaseInvoice(TestInvoice, ERP5TypeTestCase):
