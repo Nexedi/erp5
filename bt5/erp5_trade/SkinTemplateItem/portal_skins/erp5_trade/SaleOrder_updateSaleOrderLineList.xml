@@ -73,17 +73,21 @@ for line in listbox:\n
                                     title=line[\'title\'],\n
                                     reference=line[\'reference\'])\n
      product = product_list[0]\n
-     if line[\'quantity\'] <= product.getAvailableInventory():\n
+     if line[\'quantity\'] <= product.getAvailableInventory(\n
+                    node_uid=context.getSourceSectionValue().getUid()):\n
        line_id = line[\'listbox_key\'].split(\'/erp5/\')[1]\n
-       line["total_price"] = line[\'quantity\'] * product.getPrice()\n
+       line["total_price"] = line[\'quantity\'] * product.getSaleSupplyLineBasePrice()\n
        line["quantity_unit"] = product.getQuantityUnit()\n
        request.form["field_listbox_reference_%s"%line_id] = product.getReference()\n
        request.form["field_listbox_title_%s"%line_id] = product.getTitle()\n
        request.form["field_listbox_total_price_%s"%line_id] = line[\'quantity\'] * product.getPrice()\n
        request.form["field_listbox_quantity_unit_%s"%line_id] = product.getQuantityUnit()\n
-       request.form["field_listbox_getAvailableInventory_%s"%line_id] = product.getAvailableInventory()\n
-       request.form[\'field_listbox_inventory_%s\'%line_id] = product.getInventory()\n
-       request.form["field_listbox_getCurrentInventory_%s"%line_id] = product.getCurrentInventory()\n
+       request.form["field_listbox_getAvailableInventory_%s"%line_id] = product.getAvailableInventory(\n
+                                         node_uid=context.getSourceSectionValue().getUid())\n
+       request.form[\'field_listbox_inventory_%s\'%line_id] = product.getInventory(\n
+                                                              node_uid=context.getSourceSectionValue().getUid())\n
+       request.form["field_listbox_getCurrentInventory_%s"%line_id] = product.getCurrentInventory(\n
+                                                                        node_uid=context.getSourceSectionValue().getUid())\n
        request.form["field_listbox_variation_category_item_list_%s"%line_id] =\\\n
                          [x[0] for x in product.getVariationCategoryItemList()]\n
        total_price +=line[\'total_price\']\n

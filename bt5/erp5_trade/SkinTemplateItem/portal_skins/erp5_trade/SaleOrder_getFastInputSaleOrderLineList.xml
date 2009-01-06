@@ -66,6 +66,7 @@ listbox = getattr(request, \'listbox\', None) \n
 \n
 result = []\n
 line_list = context.contentValues(portal_type=\'Sale Order Line\')\n
+source_section = context.getSourceSectionValue()\n
 \n
 len_line_list = len(line_list)\n
 if len(line_list)!=0:\n
@@ -75,9 +76,12 @@ if len(line_list)!=0:\n
            quantity=line.getQuantity(),\n
            quantity_unit=line.getQuantityUnit(),\n
            total_price=line.getTotalPrice(),\n
-           getAvailableInventory=line.getResourceValue().getAvailableInventory(),\n
-           getCurrentInventory=line.getResourceValue().getCurrentInventory(),\n
-           inventory=line.getResourceValue().getInventory())\n
+           getAvailableInventory=line.getResourceValue().getAvailableInventory(\n
+                                       node_uid=source_section.getUid()),\n
+           getCurrentInventory=line.getResourceValue().getCurrentInventory(\n
+                                                 node_uid=source_section.getUid()),\n
+           inventory=line.getResourceValue().getInventory(\n
+                                                 node_uid=source_section.getUid()))\n
     result.append(obj)\n
 for i in range(len_line_list+1,lines_num+1):\n
    obj = newTempBase(portal, id="tmp_item_%s" % i, uid="tmp_item_%s" % i)\n
@@ -132,6 +136,7 @@ return result\n
                             <string>listbox</string>
                             <string>result</string>
                             <string>line_list</string>
+                            <string>source_section</string>
                             <string>len</string>
                             <string>len_line_list</string>
                             <string>_getiter_</string>

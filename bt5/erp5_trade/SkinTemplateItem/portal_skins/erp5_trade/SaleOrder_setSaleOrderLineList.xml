@@ -58,6 +58,7 @@
   input information.It should take into account any sale order line \n
   which were already created so that they are not duplicated.\n
 """\n
+\n
 result_list = []\n
 sale_order_line_list = context.contentValues(portal_type=\'Sale Order Line\')\n
 if sale_order_line_list!=[]:\n
