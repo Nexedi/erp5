@@ -5,6 +5,7 @@
  <key>career_skill_title | category,catalog,catalog/title/z_related_career_skill</key>
  <key>deliveryLineType | movement,catalog/portal_type/z_related_uid_or_parent_uid</key>
  <key>explanation_portal_type | movement,catalog/portal_type/z_related_explanation</key>
+ <key>explanation_simulation_state | movement,catalog/simulation_state/z_related_explanation</key>
  <key>grand_parent_portal_type | catalog,catalog/portal_type/z_related_grand_parent</key>
  <key>grand_parent_simulation_state | catalog,catalog/simulation_state/z_related_grand_parent</key>
  <key>item_node_category_uid | category/category_uid/z_related_node_uid_from_item</key>
