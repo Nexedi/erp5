@@ -53,8 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.setReference(\'\')\n
-\n
+            <value> <string>context.setSourceReference(None)\n
+context.setReference(\'\')\n
+context.setDestinationReference(None)\n
 context.Delivery_generateReference()\n
 </string> </value>
         </item>
@@ -94,6 +95,7 @@ context.Delivery_generateReference()\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
