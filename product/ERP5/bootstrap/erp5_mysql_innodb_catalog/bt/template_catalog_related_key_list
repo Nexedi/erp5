@@ -29,6 +29,7 @@ stock_node_category_strict_membership_uid | category/category_uid/z_related_stri
 deliveryLineType | movement,catalog/portal_type/z_related_uid_or_parent_uid
 item_section_category_uid | category/category_uid/z_related_section_uid_from_item
 parent_specialise_portal_type | category,catalog/portal_type/z_related_parent_specialise
+parent_relative_url | catalog/relative_url/z_related_parent
 resourceType | movement,catalog/portal_type/z_related_resource_from_movement
 grand_parent_portal_type | catalog,catalog/portal_type/z_related_grand_parent
 variationCategory | category/category_uid/z_related_uid
