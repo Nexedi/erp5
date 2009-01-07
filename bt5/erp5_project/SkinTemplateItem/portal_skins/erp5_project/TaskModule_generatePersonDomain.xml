@@ -53,26 +53,37 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
-domain_list = []\n
+            <value> <string>domain_list = []\n
 \n
 if depth == 0:\n
-  category_list = [ ]\n
-  for i in context.portal_selections.getSelectionValueList(context=context,\n
-                                                                   selection_name= \'task_module_selection\'):\n
-    category_list.extend([j for j in i.getSourceValueList() if j not in category_list])\n
-\n
-\n
+  task_uid_list  = context.portal_selections.getSelectionUidList(context=context, selection_name=\'task_module_selection\')\n
+  person_result = context.portal_catalog(portal_type=["Person",],\n
+                                         source_related_uid=task_uid_list,\n
+                                         select_expression=\'catalog.portal_type, catalog.relative_url, catalog.id, catalog.title\',\n
+                                         sort_on = ((\'title\',\'ascending\'),))\n
+  person_dict = {}\n
+  person_list = []\n
+  append = person_list.append\n
+  for person in person_result:\n
+    key = person.uid\n
+    if key not in person_dict:\n
+      person_dict[key] = None\n
+      category_dict = {\'relative_url\':person.relative_url, \n
+                       \'portal_type\':person.portal_type,\n
+                       \'id\':person.id,\n
+                       \'title\':person.title,\n
+                       \'uid\':person.uid}\n
+      append(category_dict)\n
 else:\n
   return domain_list\n
 \n
-for category in category_list:\n
-  domain = parent.generateTempDomain(id = \'sub\' + category.getId() )\n
-  domain.edit(title = category.getTitle(),\n
+for person in person_list:\n
+  domain = parent.generateTempDomain(id = \'sub\' + person[\'id\'] )\n
+  domain.edit(title = person[\'title\'],\n
               membership_criterion_base_category = (\'source\', ), \n
-              membership_criterion_category = (category.getRelativeUrl(),),\n
+              membership_criterion_category = (person[\'relative_url\'],),\n
               domain_generator_method_id = script.id,\n
-              uid = category.getUid())\n
+              uid = person[\'uid\'])\n
                 \n
   domain_list.append(domain)\n
 \n
@@ -116,17 +127,21 @@ return domain_list\n
                             <string>depth</string>
                             <string>parent</string>
                             <string>kw</string>
+                            <string>domain_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>request</string>
-                            <string>domain_list</string>
-                            <string>category_list</string>
-                            <string>_getiter_</string>
-                            <string>i</string>
+                            <string>task_uid_list</string>
+                            <string>person_result</string>
+                            <string>person_dict</string>
+                            <string>person_list</string>
                             <string>append</string>
-                            <string>$append0</string>
-                            <string>j</string>
-                            <string>category</string>
+                            <string>_getiter_</string>
+                            <string>person</string>
+                            <string>key</string>
+                            <string>None</string>
+                            <string>_write_</string>
+                            <string>category_dict</string>
+                            <string>_getitem_</string>
                             <string>domain</string>
                             <string>script</string>
                           </tuple>

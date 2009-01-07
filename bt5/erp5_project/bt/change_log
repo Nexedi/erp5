@@ -1,3 +1,6 @@
+2009-01-07 fabien
+* update some scripts used to generate domain to display planningbox. This permit to increase the speed of the page displaying (about 3 time faster in my tests)
+
 2008-10-07 yusei
 * Update field titles for translation.
 
