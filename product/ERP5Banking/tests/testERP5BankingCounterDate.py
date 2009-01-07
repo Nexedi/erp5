@@ -89,7 +89,28 @@ class TestERP5BankingCounterDate(TestERP5BankingMixin,
     counter_date_module.manage_delObjects(ids=[x for x in counter_date_module.objectIds()])
     get_transaction().commit()
     self.tic()
-#    self.openCounter(site=self.money_deposit_counter.guichet_1,id='counter_2')
+
+  def openCounterDate(self, date=None, site=None, id='counter_date_1', open=True, force_check=0):
+    """
+      Redefine openCounterDate here, taking code from TestERP5Banking.
+      This is because "force_check", when false, skips entierly workflow
+      scripts. As a workflow is responsible for setting the reference, it
+      would make this test unable to open counter dates on a day other than
+      current one.
+    """
+    if date is None:
+      date = DateTime().Date()
+    if not isinstance(date, str):
+      date = date.Date()
+    if site is None:
+      site = self.testsite
+    date_object = self.getCounterDateModule().newContent(id=id,
+      portal_type='Counter Date', site_value=site, start_date=date)
+    if open:
+      self.workflow_tool.doActionFor(date_object, 'open_action',
+        wf_id='counter_date_workflow', check_date_is_today=force_check)
+    setattr(self, id, date_object)
+    date_object.assignRoleToSecurityGroup()
 
   def test_01_CheckOpenCounterDateTwiceFail(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
