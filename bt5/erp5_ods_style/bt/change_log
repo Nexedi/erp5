@@ -1,3 +1,6 @@
+2009-01-07 Romain
+* Add macros for deferred rendering in report_view
+
 2008-11-18 yusei
 * Convert cell data to string explicitly.
 
