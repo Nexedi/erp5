@@ -39,6 +39,9 @@ class Project(Order):
     Each task has a person to perform it, a certain amount of time, a date,
     a place, a description. For each person and each task, there is dedicated
     time rate.
+
+    XXX Project should not inherit from Order since Task exists.
+    This is not a Delivery
     """
 
     meta_type = 'ERP5 Project'
