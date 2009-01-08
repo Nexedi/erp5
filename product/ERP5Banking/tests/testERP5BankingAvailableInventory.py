@@ -249,34 +249,6 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
     self.assertEqual(self.currency_1.getAvailableInventory(payment=self.bank_account_1.getRelativeUrl()), 30000)
     self.assertEqual(self.currency_1.getFutureInventory(payment=self.bank_account_1.getRelativeUrl()), 30000)
 
-  def stepCheckReferenceIsIncreasedEveryDay(self, sequence=None, sequence_list=None, **kwd):
-    """
-    make sure the reference is increasing
-    """
-    counter_date = self.counter_date_1
-    counter_date.setStartDate(self.date-10)
-    self.assertEquals(counter_date.getReference(),'1')
-    counter_date.close()
-    get_transaction().commit()
-    self.tic()
-    self.openCounterDate(site=self.paris, id='counter_date_3', force_check=1)
-    counter_date = self.counter_date_3
-    self.assertEquals(counter_date.getReference(),'2')
-    counter_date.close()
-    counter_date.setStartDate(self.date-9)
-    get_transaction().commit()
-    self.tic()
-    self.openCounterDate(site=self.paris, id='counter_date_4', force_check=1)
-    counter_date = self.counter_date_4
-    self.assertEquals(counter_date.getReference(),'3')
-    counter_date.close()
-    counter_date.setStartDate(self.date-8)
-    get_transaction().commit()
-    self.tic()
-    self.openCounterDate(site=self.paris, id='counter_date_5', force_check=1)
-    counter_date = self.counter_date_5
-    self.assertEquals(counter_date.getReference(),'4')
-
   def stepSetInventoryInSortVault(self, sequence=None, sequence_list=None, **kwd):
     """
     put some banknotes into the vault used for sorting
@@ -357,7 +329,6 @@ class TestERP5BankingAvailableInventory(TestERP5BankingCheckPaymentMixin,
                       'CheckBadStockBeforeClosingDate ' \
                       'ResetInventoryInVaultForeignCurrency Tic ' \
                       'CheckRightStockBeforeClosingDate ' \
-                      'CheckReferenceIsIncreasedEveryDay ' \
                       'Tic ' \
                       'CheckOpenCounterDateTwiceWithOtherDateFail Tic ' 
     sequence_list.addSequenceString(sequence_string)
