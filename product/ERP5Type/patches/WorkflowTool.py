@@ -581,14 +581,21 @@ def WorkflowTool_refreshWorklistCache(self):
           worklist_dict[wf_id] = a
     # End of duplicated code
     if len(worklist_dict):
-      try:
-        self.Base_zClearWorklistTable()
-      except ProgrammingError, error_value:
-        import pdb; pdb.set_trace()
-        # 1146 = table does not exist
-        if error_value[0] != 1146:
-          raise
+      Base_zClearWorklistTable = getattr(self, 'Base_zClearWorklistTable', None)
+      if Base_zClearWorklistTable is None:
+        LOG('WorkflowTool', 100, 'Base_zClearWorklistTable cannot be found. ' \
+            'Falling back to former refresh method. Please update ' \
+            'erp5_worklist_sql business template.')
         self.Base_zCreateWorklistTable()
+      else:
+        try:
+          self.Base_zClearWorklistTable()
+        except ProgrammingError, error_value:
+          import pdb; pdb.set_trace()
+          # 1146 = table does not exist
+          if error_value[0] != 1146:
+            raise
+          self.Base_zCreateWorklistTable()
       portal_catalog = getToolByName(self, 'portal_catalog')
       search_result = portal_catalog.unrestrictedSearchResults
       acceptable_key_dict = portal_catalog.getSQLCatalog().getColumnMap()
