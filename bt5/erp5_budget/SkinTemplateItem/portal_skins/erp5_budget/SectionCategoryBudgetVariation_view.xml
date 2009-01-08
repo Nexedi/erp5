@@ -41,12 +41,22 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -67,28 +77,19 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>matrixbox</string>
-                        <string>membership_criterion_base_category_list</string>
-                        <string>mapped_value_property_list</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>matrixbox_membership_criterion_category_list</string>
-                        <string>matrixbox_quantity</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -96,17 +97,17 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>your_total_initial_budget</string>
+                        <string>my_int_index</string>
+                        <string>my_translated_portal_type</string>
+                        <string>my_budget_variation</string>
+                        <string>my_variation_base_category_list</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_variation_category_list</string>
-                        <string>my_budget_line_type</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -114,7 +115,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BudgetLine_view</string> </value>
+            <value> <string>SectionCategoryBudgetVariation_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -122,7 +123,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>BudgetLine_view</string> </value>
+            <value> <string>SectionCategoryBudgetVariation_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -138,7 +139,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Budget Line</string> </value>
+            <value> <string>Section Category Budget Variation</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

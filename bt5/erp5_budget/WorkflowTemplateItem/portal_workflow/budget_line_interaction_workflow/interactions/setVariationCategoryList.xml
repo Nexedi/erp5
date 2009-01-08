@@ -47,13 +47,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>setGroup</string> </value>
+            <value> <string>setVariationCategoryList</string> </value>
         </item>
         <item>
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>_set.*</string>
+                <string>_setVariationCategoryList</string>
               </list>
             </value>
         </item>

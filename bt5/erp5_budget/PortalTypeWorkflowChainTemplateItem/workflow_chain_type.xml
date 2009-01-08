@@ -12,8 +12,12 @@
   <workflow>budget_line_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Budget Model</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Budget Transaction</type>
-  <workflow>pricing_interaction_workflow, edit_workflow, budget_transaction_workflow</workflow>
+  <workflow>pricing_interaction_workflow, budget_transaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Budget Transfer</type>
@@ -21,6 +25,14 @@
  </chain>
  <chain>
   <type>Budget Transfer Line</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Node Budget Variation</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Section Category Budget Variation</type>
   <workflow>edit_workflow</workflow>
  </chain>
 </workflow_chain>

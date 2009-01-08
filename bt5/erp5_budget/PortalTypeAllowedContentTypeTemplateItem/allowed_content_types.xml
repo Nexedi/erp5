@@ -6,6 +6,13 @@
  <portal_type id="Budget Line">
   <item>Budget Cell</item>
  </portal_type>
+ <portal_type id="Budget Model">
+  <item>Node Budget Variation</item>
+  <item>Section Category Budget Variation</item>
+ </portal_type>
+ <portal_type id="Budget Model Module">
+  <item>Budget Model</item>
+ </portal_type>
  <portal_type id="Budget Module">
   <item>Budget</item>
  </portal_type>

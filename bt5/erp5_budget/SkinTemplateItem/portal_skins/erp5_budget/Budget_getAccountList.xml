@@ -53,11 +53,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>budget = context.getParentValue()\n
-budget_model = budget.getSpecialiseValue(portal_type=\'Budget Model\')\n
-if budget_model is not None:\n
-  return budget_model.getCellRangeForBudgetLine(context, matrixbox=matrixbox)\n
-return []\n
+            <value> <string>def sort_method(a, b):\n
+  return cmp(a.Account_getFormattedTitle(),\n
+             b.Account_getFormattedTitle())\n
+\n
+account_list = [a.getObject() for a in context.getPortalObject().account_module.searchFolder(\n
+               validation_state=\'validated\')]\n
+\n
+account_list.sort(sort_method)\n
+return account_list\n
 </string> </value>
         </item>
         <item>
@@ -68,17 +72,7 @@ return []\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>matrixbox=0, **kw</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Author</string>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -98,19 +92,20 @@ return []\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>matrixbox</string>
-                            <string>kw</string>
+                            <string>sort_method</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>budget</string>
-                            <string>budget_model</string>
-                            <string>None</string>
+                            <string>a</string>
+                            <string>account_list</string>
                           </tuple>
                         </value>
                     </item>
@@ -122,14 +117,12 @@ return []\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>0</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BudgetLine_asCellRange</string> </value>
+            <value> <string>Budget_getAccountList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -53,80 +53,20 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""FIXME: this script uses standard categories, but not membership criterion\n
-category list. This assumes that an interaction workflow is copying membership\n
-categories into standard categories. Afterall, this might not be needed and we_\n
-can probably get them from membership criterion category list.\n
-"""\n
+            <value> <string>kw = dict()\n
+budget = context.getParentValue().getParentValue()\n
+budget_model = budget.getSpecialiseValue(portal_type=\'Budget Model\')\n
+if budget_model is not None:\n
+  kw = budget_model.getInventoryQueryDict(context)\n
 \n
-mcbcl = context.getMembershipCriterionBaseCategoryList() \n
+kw.setdefault(\'from_date\', budget.getStartDateRangeMin())\n
+at_date = budget.getStartDateRangeMax()\n
+if at_date:\n
+  at_date = at_date.latestTime()\n
+kw.setdefault(\'at_date\', at_date)\n
 \n
-kw = dict(\n
-  src__= src__,\n
-  from_date=context.getStartDateRangeMin(),\n
-  at_date=context.getStartDateRangeMax(),\n
-  simulation_state = [\'delivered\', \'stopped\']\n
-)\n
-\n
-parent = context.getParentValue()\n
-\n
-# node\n
-if \'destination\' in mcbcl:\n
-  kw[\'node_uid\'] = context.getDestinationUid()\n
-\n
-\n
-# node category\n
-if parent.isMemberOf(\n
-    \'budget_line_variation/budget_variation/node_category_financial_section\'):\n
-  kw[\'node_category\'] = parent.getFinancialSection(base=1)\n
-if parent.isMemberOf(\n
-    \'budget_line_variation/budget_variation/node_category_budget_section\'):\n
-  kw[\'stock.function_uid\'] = parent.getBudgetSectionUid()\n
-  kw[\'node_category\'] = parent.getBudgetSection(base=1)\n
-\n
-# mirror node\n
-if context.getSourceUid():\n
-  kw[\'mirror_node_uid\'] = context.getSourceUid()\n
-\n
-# mirror node category\n
-\n
-# section category\n
-if (context.isMemberOf(\n
-    \'budget_cell_variation/budget_variation/section_category_group\') or\n
-    context.isMemberOf(\n
-      \'budget_line_variation/budget_variation/section_category_group\')):\n
-  kw[\'section_category\'] = context.getGroup(base=1)\n
-elif (context.isMemberOf(\n
-    \'budget_cell_variation/budget_variation/section_category_region\') or\n
-    context.isMemberOf(\n
-      \'budget_line_variation/budget_variation/section_category_region\')):\n
-  kw[\'section_category\'] = context.getRegion(base=1)\n
-\n
-# mirror section category\n
-if (context.isMemberOf(\n
-    \'budget_cell_variation/budget_variation/mirror_section_category_group\') or \n
-    context.isMemberOf(\n
-      \'budget_line_variation/budget_variation/mirror_section_category_group\')):\n
-  kw[\'mirror_section_category\'] = context.getGroup(base=1)\n
-elif (context.isMemberOf(\n
-    \'budget_cell_variation/budget_variation/mirror_section_category_region\') or \n
-    context.isMemberOf(\n
-      \'budget_line_variation/budget_variation/mirror_section_category_region\')):\n
-  kw[\'mirror_section_category\'] = context.getRegion(base=1)\n
-\n
-\n
-# FIXME: this should be configured on the budget domain\n
-#kw[\'node_category\'] = (\'account_type/asset\', \'account_type/expense\')\n
-\n
-\n
-if (parent.isMemberOf(\'budget_cell_variation/budget_variation/budget_line_type\')):\n
-  if parent.getBudgetLineType() == \'expense\':\n
-    kw[\'portal_type\'] = [\'Purchase Invoice Transaction Line\', \'Invoice Line\']\n
-  elif parent.getBudgetLineType() == \'income\':\n
-    kw[\'portal_type\'] = [\'Sale Invoice Transaction Line\', \'Invoice Line\']\n
-    return -context.portal_simulation.getInventoryAssetPrice(**kw)\n
-\n
-return context.portal_simulation.getInventoryAssetPrice(**kw)\n
+# XXX use getBudgetConsumptionMethod ?\n
+return context.portal_simulation.getCurrentInventoryAssetPrice(src__=src__, **kw)\n
 </string> </value>
         </item>
         <item>
@@ -164,13 +104,14 @@ return context.portal_simulation.getInventoryAssetPrice(**kw)\n
                         <value>
                           <tuple>
                             <string>src__</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>mcbcl</string>
                             <string>dict</string>
                             <string>kw</string>
-                            <string>parent</string>
-                            <string>_write_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>budget</string>
+                            <string>budget_model</string>
+                            <string>None</string>
+                            <string>at_date</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>
