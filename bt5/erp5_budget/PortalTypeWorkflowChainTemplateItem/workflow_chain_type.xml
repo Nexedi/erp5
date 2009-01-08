@@ -5,7 +5,7 @@
  </chain>
  <chain>
   <type>Budget Cell</type>
-  <workflow>budget_cell_interaction_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow</workflow>
  </chain>
  <chain>
   <type>Budget Line</type>
