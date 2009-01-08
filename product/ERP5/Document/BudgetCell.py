@@ -70,7 +70,7 @@ class BudgetCell(Predicate, MetaNode):
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    security.declareProtected(Permissions.View, 'getTitle')
+    security.declareProtected(Permissions.AccessContentsInformation, 'getTitle')
     def getTitle(self):
       """
       Return a calculated title.
@@ -84,7 +84,7 @@ class BudgetCell(Predicate, MetaNode):
               self.getPortalType()
       return title
 
-    security.declareProtected(Permissions.View, 'getCurrentInventory')
+    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventory')
     def getCurrentInventory(self, **kw):
       """
       Returns current inventory
@@ -95,14 +95,14 @@ class BudgetCell(Predicate, MetaNode):
         kw['resource'] = resource.getRelativeUrl()
       return self.portal_simulation.getCurrentInventory(**kw)
 
-    security.declareProtected(Permissions.View, 'getCurrentBalance')
+    security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentBalance')
     def getCurrentBalance(self):
       """
       Returns current balance
       """
       return self.getQuantity(0.0) + self.getCurrentInventory()
 
-    security.declareProtected(Permissions.View, 'getConsumedBudget')
+    security.declareProtected(Permissions.AccessContentsInformation, 'getConsumedBudget')
     def getConsumedBudget(self, src__=0):
       """
       Return consumed budget.
@@ -116,14 +116,14 @@ class BudgetCell(Predicate, MetaNode):
               self.getPortalType()
       return result
 
-    security.declareProtected(Permissions.View, 'getAvailableBudget')
+    security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableBudget')
     def getAvailableBudget(self):
       """
       Return available budget.
       """
       return self.getCurrentBalance() - self.getConsumedBudget()
 
-    security.declareProtected(Permissions.View, 'getEngagedBudget')
+    security.declareProtected(Permissions.AccessContentsInformation, 'getEngagedBudget')
     def getEngagedBudget(self, src__=0):
       """
       Return Engaged budget.
