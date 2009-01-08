@@ -152,7 +152,7 @@ class OOoBuilder(Implicit):
     output = StringIO()
     try:
       from lxml import etree
-      from lxml.etree import Element, SubElement
+      from lxml.etree import Element
       from copy import deepcopy
       if xsl_content is None:
         raise ImportError
