@@ -191,6 +191,8 @@ class ERP5TypeInformationMixIn( FactoryTypeInformation,
       'divergence_tester', 'calendar_period',
       # Project
       'project',
+      # budget
+      'budget_variation',
       # Module
       'module',
       # Movement Group
