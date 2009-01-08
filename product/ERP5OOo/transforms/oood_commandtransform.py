@@ -79,7 +79,7 @@ class OOOdCommandTransform(commandtransform):
     XLINK_NAMESPACE = 'http://www.w3.org/1999/xlink'
     ratio_px_cm = 2.54 / 100.
     for image_tag in image_tag_list:
-      frame = image_tag.xpath('parent::node()')[0]
+      frame = image_tag.getparent()
       #Try to get image file from ZODB
       href_attribute_list = image_tag.xpath('.//@*[name() = "xlink:href"]')
       url = href_attribute_list[0]
@@ -150,7 +150,7 @@ class OOOdCommandTransform(commandtransform):
           else:
             #Other cases like files
             css_as_text = str(css_object)
-          parent_node = css_link_tag.xpath('parent::node()')[0]
+          parent_node = css_link_tag.getparent()
           style_node = Element('style')
           style_node.text = css_as_text
           parent_node.append(style_node)
