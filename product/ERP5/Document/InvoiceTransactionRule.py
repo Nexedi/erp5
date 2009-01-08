@@ -206,11 +206,11 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
           dest_currency_url = None
         if dest_currency_url is not None and currency_url != dest_currency_url:
           precision = dest_section.getPriceCurrencyValue().getQuantityPrecision()
-	  dest_exchange_ratio = currency.getPrice(context=new_mvmt.asContext(
+          dest_exchange_ratio = currency.getPrice(context=new_mvmt.asContext(
             categories=['price_currency/%s' % dest_currency_url,
                         'resource/%s' % currency_url],
             start_date=new_mvmt.getStartDate()))
-	  if dest_exchange_ratio is not None:
+          if dest_exchange_ratio is not None:
             new_mvmt.edit(destination_total_asset_price=round(
              (dest_exchange_ratio*
               applied_rule.getParentValue().getTotalPrice()),precision))
@@ -222,7 +222,7 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
           source_currency_url = None
         if source_currency_url is not None and currency_url != source_currency_url:
           precision = source_section.getPriceCurrencyValue().getQuantityPrecision()
-	  source_exchange_ratio = currency.getPrice(context=new_mvmt.asContext(
+          source_exchange_ratio = currency.getPrice(context=new_mvmt.asContext(
             categories=['price_currency/%s' % source_currency_url,
                         'resource/%s' % currency_url],
             start_date=new_mvmt.getStartDate()))
@@ -230,7 +230,7 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
             new_mvmt.setSourceTotalAssetPrice(round(
        (source_exchange_ratio*applied_rule.getParentValue().getTotalPrice()),
             precision))
-	
+      
     # Pass to base class
     Rule.expand(self, applied_rule, force=force, **kw)
   
