@@ -1924,38 +1924,40 @@ class Catalog(Folder,
             kw[key] = REQUEST[key]
 
     def getNewKeyAndUpdateVariables(key):
-      key_is_acceptable = key in acceptable_key_map # Only calculate once
-      key_is_related = key in related_keys
       new_key = None
-      if key_is_acceptable or key_is_related:
-        if key_is_related: # relation system has priority (ex. security_uid)
-          # We must rename the key
-          method_id = related_method[key]
-          table_list = related_table_list[key]
-          if not related_methods.has_key((table_list,method_id)):
-            related_methods[(table_list,method_id)] = 1
-          # Prepend renamed table name
-          new_key = "%s.%s" % (related_table_map[(table_list,method_id)][-1][-1],
-                               related_column[key])
-        elif key_is_acceptable:
-          if key.find('.') < 0:
-            # if the key is only used by one table, just append its name
-            if len(acceptable_key_map[key]) == 1 :
-              new_key = '%s.%s' % (acceptable_key_map[key][0], key)
-            # query_table specifies what table name should be used by default
-            elif query_table and \
-                '%s.%s' % (query_table, key) in acceptable_key_map:
-              new_key = '%s.%s' % (query_table, key)
-            elif key == 'uid':
-              # uid is always ambiguous so we can only change it here
-              new_key = 'catalog.uid'
+      if query_table:
+        key_is_acceptable = key in acceptable_key_map # Only calculate once
+        key_is_related = key in related_keys
+        if key_is_acceptable or key_is_related:
+          if key_is_related: # relation system has priority (ex. security_uid)
+            # We must rename the key
+            method_id = related_method[key]
+            table_list = related_table_list[key]
+            if not related_methods.has_key((table_list,method_id)):
+              related_methods[(table_list,method_id)] = 1
+            # Prepend renamed table name
+            new_key = "%s.%s" % (related_table_map[(table_list,method_id)][-1][-1],
+                                 related_column[key])
+          elif key_is_acceptable:
+            if key.find('.') < 0:
+              # if the key is only used by one table, just append its name
+              if len(acceptable_key_map[key]) == 1 :
+                new_key = '%s.%s' % (acceptable_key_map[key][0], key)
+              # query_table specifies what table name should be used by default
+              elif '%s.%s' % (query_table, key) in acceptable_key_map:
+                new_key = '%s.%s' % (query_table, key)
+              elif key == 'uid':
+                # uid is always ambiguous so we can only change it here
+                new_key = 'catalog.uid'
+              else:
+                LOG('SQLCatalog', WARNING, 'buildSQLQuery this key is too ambiguous : %s' % key)
             else:
-              LOG('SQLCatalog', WARNING, 'buildSQLQuery this key is too ambiguous : %s' % key)
-          else:
-            new_key = key
-          if new_key is not None:
-            # Add table to table dict, we use catalog by default
-            from_table_dict[acceptable_key_map[new_key][0]] = acceptable_key_map[new_key][0]
+              new_key = key
+            if new_key is not None:
+              # Add table to table dict, we use catalog by default
+              from_table_dict[acceptable_key_map[new_key][0]] = acceptable_key_map[new_key][0]
+      else:
+        new_key = key
       key_alias_dict[key] = new_key
       return new_key
 
