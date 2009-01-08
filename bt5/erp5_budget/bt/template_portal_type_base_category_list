@@ -1,8 +1,4 @@
 Budget Line | budget_line_type
-Budget Line | budget_section
-Budget Line | financial_section
-Budget Line | group
-Budget Line | region
 Budget Transaction | group
 Budget Transfer Line | group
 Budget | budget_type

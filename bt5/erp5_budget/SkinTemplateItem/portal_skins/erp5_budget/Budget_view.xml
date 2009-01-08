@@ -92,10 +92,8 @@
                       <list>
                         <string>my_title</string>
                         <string>my_resource_title</string>
-                        <string>my_budget_line_variation</string>
-                        <string>my_budget_cell_variation_list</string>
-                        <string>my_budget_type</string>
                         <string>my_specialise_title</string>
+                        <string>my_budget_type</string>
                       </list>
                     </value>
                 </item>
