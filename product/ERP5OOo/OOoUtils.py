@@ -151,24 +151,28 @@ class OOoBuilder(Implicit):
     content_xml = self.extract(ooo_xml_file_id)
     output = StringIO()
     try:
-      import libxml2
-      import libxslt
+      from lxml import etree
+      from lxml.etree import Element, SubElement
+      from copy import deepcopy
       if xsl_content is None:
         raise ImportError
-      stylesheet_doc = libxml2.parseDoc(xsl_content)
-      stylesheet = libxslt.parseStylesheetDoc(stylesheet_doc)
-      content_doc = libxml2.parseDoc(content_xml)
-      result_doc = stylesheet.applyStylesheet(content_doc, None)
+      stylesheet_doc = etree.XML(xsl_content)
+      stylesheet = etree.XSLT(stylesheet_doc)
+      content_doc = etree.XML(content_xml)
+      result_doc = stylesheet(content_doc)
+      root = result_doc.getroot()
       #Declare zope namespaces
-      root = result_doc.getRootElement()
-      tal = root.newNs('http://xml.zope.org/namespaces/tal', 'tal')
-      i18n = root.newNs('http://xml.zope.org/namespaces/i18n', 'i18n')
-      metal = root.newNs('http://xml.zope.org/namespaces/metal', 'metal')
-      root.setNsProp(tal, 'attributes', 'dummy python:request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')')
-      buff = libxml2.createOutputBuffer(output, 'utf-8')
-      result_doc.saveFormatFileTo(buff, 'utf-8', 1)
-      stylesheet_doc.freeDoc(); content_doc.freeDoc(); result_doc.freeDoc()
-      return output.getvalue()
+      NSMAP = {'tal': 'http://xml.zope.org/namespaces/tal',
+               'i18n': 'http://xml.zope.org/namespaces/i18n',
+               'metal': 'http://xml.zope.org/namespaces/metal'}
+      NSMAP.update(root.nsmap)
+      new_root = Element(root.tag, nsmap=NSMAP)
+      new_root.attrib.update(dict(root.attrib))
+      new_root.attrib.update({'{%s}attributes' % NSMAP.get('tal'): 'dummy python:request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')'})
+      for child in root.getchildren():
+        new_root.append(deepcopy(child))
+      return etree.tostring(new_root, encoding='utf-8', xml_declaration=True,
+                            pretty_print=True)
     except ImportError:
       document = Parse(content_xml)
       document_element = document.documentElement
