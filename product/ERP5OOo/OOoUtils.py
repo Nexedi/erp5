@@ -154,13 +154,12 @@ class OOoBuilder(Implicit):
       from lxml import etree
       from lxml.etree import Element
       from copy import deepcopy
-      if xsl_content is None:
-        raise ImportError
-      stylesheet_doc = etree.XML(xsl_content)
-      stylesheet = etree.XSLT(stylesheet_doc)
       content_doc = etree.XML(content_xml)
-      result_doc = stylesheet(content_doc)
-      root = result_doc.getroot()
+      if xsl_content is not None:
+        stylesheet_doc = etree.XML(xsl_content)
+        stylesheet = etree.XSLT(stylesheet_doc)
+        content_doc = stylesheet(content_doc)
+      root = content_doc.getroot()
       #Declare zope namespaces
       NSMAP = {'tal': 'http://xml.zope.org/namespaces/tal',
                'i18n': 'http://xml.zope.org/namespaces/i18n',
