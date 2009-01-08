@@ -591,7 +591,6 @@ def WorkflowTool_refreshWorklistCache(self):
         try:
           self.Base_zClearWorklistTable()
         except ProgrammingError, error_value:
-          import pdb; pdb.set_trace()
           # 1146 = table does not exist
           if error_value[0] != 1146:
             raise
