@@ -143,12 +143,12 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
 #               'variation_property_dict': \
 #                   accounting_rule_cell_line.getVariationPropertyDict(),
 #               'aggregate_list': accounting_rule_cell_line.getAggregateList(),
-#               'price': accounting_rule_cell_line.getPrice(),
 #               'price_currency': accounting_rule_cell_line.getPriceCurrency(),
             # calculate (quantity * price) * cell_quantity
             'quantity': (context_movement.getCorrectedQuantity() *
               context_movement.getPrice(0.0)) * accounting_rule_cell_line.getQuantity(),
 #               'quantity_unit': accounting_rule_cell_line.getQuantityUnit(),
+            'price': 1,
             'force_update': 1,
             }
 
