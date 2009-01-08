@@ -55,7 +55,7 @@
             <key> <string>_body</string> </key>
             <value> <string># Wrapper for Base_zGetCountFromWorklistTable\n
 \n
-where_expression = query.asSQLExpression()[\'where_expression\']\n
+where_expression = context.getPortalObject().portal_catalog.buildSQLQuery(query=query, query_table=None)[\'where_expression\']\n
 \n
 return context.Base_zGetCountFromWorklistTable(\n
   where_expression=where_expression,\n
@@ -104,9 +104,10 @@ return context.Base_zGetCountFromWorklistTable(\n
                             <string>kw</string>
                             <string>_getitem_</string>
                             <string>_getattr_</string>
+                            <string>context</string>
+                            <string>None</string>
                             <string>where_expression</string>
                             <string>_apply_</string>
-                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
