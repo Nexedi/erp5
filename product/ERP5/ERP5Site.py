@@ -720,6 +720,14 @@ class ERP5Site(FolderMixIn, CMFSite):
     return self._getPortalGroupedTypeList('crawler_index')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalBudgetVariationTypeList')
+  def getPortalBudgetVariationTypeList(self):
+    """
+      Return budget variation types.
+    """
+    return self._getPortalGroupedTypeList('budget_variation')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalSupplyPathTypeList')
   def getPortalSupplyPathTypeList(self):
     """
