@@ -6,7 +6,8 @@ from Acquisition import aq_base
 try:
   from Products.ERP5OOo.OOoUtils import OOoBuilder
   import re
-  from libxml2 import parseDoc, parserError
+  from lxml import etree
+  from lxml.etree import ParseError, Element
   import_succeed = 1
 except ImportError:
   import_succeed = 0
@@ -72,16 +73,16 @@ class OOOdCommandTransform(commandtransform):
     """
     builder = OOoBuilder(data)
     content = builder.extract('content.xml')
-    xml_doc = parseDoc(content)
-    image_tag_list = xml_doc.xpathEval('//*[name() = "draw:image"]')
-    svg_ns = xml_doc.getRootElement().searchNs(xml_doc, 'svg')
+    xml_doc = etree.XML(content)
+    image_tag_list = xml_doc.xpath('//*[name() = "draw:image"]')
+    SVG_NAMESPACE = 'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0'
+    XLINK_NAMESPACE = 'http://www.w3.org/1999/xlink'
     ratio_px_cm = 2.54 / 100.
     for image_tag in image_tag_list:
-      frame = image_tag.parent
+      frame = image_tag.xpath('parent::node()')[0]
       #Try to get image file from ZODB
-      href_attribute_list = image_tag.xpathEval('.//@*[name() = "xlink:href"]')
-      href_attribute = href_attribute_list[0]
-      url = href_attribute.get_content()
+      href_attribute_list = image_tag.xpath('.//@*[name() = "xlink:href"]')
+      url = href_attribute_list[0]
       matching = re.match(REMOTE_URL_PATTERN, url)
       if matching is not None:
         path = matching.groupdict().get('path')
@@ -109,13 +110,14 @@ class OOOdCommandTransform(commandtransform):
             height = image.height
             width = image.width
           if height:
-            frame.setNsProp(svg_ns, 'height', '%.3fcm' % (height * ratio_px_cm))
+            frame.attrib.update({'{%s}height' % SVG_NAMESPACE: '%.3fcm' % (height * ratio_px_cm)})
           if width:
-            frame.setNsProp(svg_ns, 'width', '%.3fcm' % (width * ratio_px_cm))
+            frame.attrib.update({'{%s}width' % SVG_NAMESPACE: '%.3fcm' % (width * ratio_px_cm)})
           new_path = builder.addImage(data, format=format)
-          href_attribute.setContent(new_path)
-    builder.replace('content.xml', xml_doc.serialize('utf-8', 0))
-    xml_doc.freeDoc()
+          image_tag.attrib.update({'{%s}href' % XLINK_NAMESPACE: new_path})
+    builder.replace('content.xml', etree.tostring(xml_doc, encoding='utf-8',
+                                                  xml_declaration=True,
+                                                  pretty_print=False))
     return builder.render()
 
   def includeExternalCssList(self, data):
@@ -123,17 +125,16 @@ class OOOdCommandTransform(commandtransform):
       Replace external Css link by style Element
     """
     try:
-      xml_doc = parseDoc(data)
-    except parserError:
+      xml_doc = etree.XML(data)
+    except ParseError:
       #If not valid xhtml do nothing
       return data
     xpath = '//*[local-name() = "link"][@type = "text/css"]'
-    css_link_tag_list = xml_doc.xpathEval(xpath)
+    css_link_tag_list = xml_doc.xpath(xpath)
     for css_link_tag in css_link_tag_list:
       #Try to get css from ZODB
-      href_attribute_list = css_link_tag.xpathEval('.//@href')
-      href_attribute = href_attribute_list[0]
-      url = href_attribute.get_content()
+      href_attribute_list = css_link_tag.xpath('.//@href')
+      url = href_attribute_list[0]
       matching = re.match(REMOTE_URL_PATTERN, url)
       if matching is not None:
         path = matching.groupdict().get('path')
@@ -149,14 +150,14 @@ class OOOdCommandTransform(commandtransform):
           else:
             #Other cases like files
             css_as_text = str(css_object)
-          style_node = xml_doc.newChild(None, 'style', css_as_text)
-          style_node.setProp('type', 'text/css')
-          css_link_tag.replaceNode(style_node)
-    #omit xml-declaration
-    data = xml_doc.serialize('utf-8', 0)\
-                     .replace('<?xml version="1.0" encoding="utf-8"?>\n', '')
-    xml_doc.freeDoc()
-    return data
+          parent_node = css_link_tag.xpath('parent::node()')[0]
+          style_node = Element('style')
+          style_node.text = css_as_text
+          parent_node.append(style_node)
+          style_node.attrib.update({'type': 'text/css'})
+          parent_node.remove(css_link_tag)
+    return etree.tostring(xml_doc, encoding='utf-8',
+                          xml_declaration=False, pretty_print=False, )
 
   def convert(self):
     tmp_ooo = newTempOOoDocument(self.context, self.name)
