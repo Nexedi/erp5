@@ -53,27 +53,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from ZODB.POSException import ConflictError\n
-# Wrapper for Base_zGetCountFromWorklistTable\n
+            <value> <string># Wrapper for Base_zGetCountFromWorklistTable\n
+\n
 where_expression = query.asSQLExpression()[\'where_expression\']\n
-try:\n
-  result = context.Base_zGetCountFromWorklistTable(\n
+\n
+return context.Base_zGetCountFromWorklistTable(\n
   where_expression=where_expression,\n
   select_expression=select_expression,\n
   group_by_expression=group_by_expression,\n
   **kw)\n
-except ConflictError:\n
-  raise\n
-except:\n
-  # Possibly a SQL error caused by a non-existing table.\n
-  # Attemp a refresh and retry without error handling.\n
-  context.Base_refreshWorklistTableContent()\n
-  result = context.Base_zGetCountFromWorklistTable(\n
-  where_expression=where_expression,\n
-  select_expression=select_expression,\n
-  group_by_expression=group_by_expression,\n
-  **kw)\n
-return result\n
 </string> </value>
         </item>
         <item>
@@ -114,14 +102,11 @@ return result\n
                             <string>select_expression</string>
                             <string>group_by_expression</string>
                             <string>kw</string>
-                            <string>ZODB.POSException</string>
-                            <string>ConflictError</string>
                             <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>where_expression</string>
                             <string>_apply_</string>
                             <string>context</string>
-                            <string>result</string>
                           </tuple>
                         </value>
                     </item>

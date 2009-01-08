@@ -34,6 +34,7 @@ from Acquisition import aq_base
 from Persistence import Persistent
 from Globals import PersistentMapping
 from itertools import izip
+from MySQLdb import ProgrammingError
 
 def DCWorkflowDefinition_notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
     '''
@@ -557,6 +558,14 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
 WorkflowTool.listActions = WorkflowTool_listActions
 
 def WorkflowTool_refreshWorklistCache(self):
+  """
+    Refresh worklist cache table.
+
+    - delete everything from that table
+      - if it fails, create the table
+    - insert new lines
+      - if it fails, recrete the table and retry
+  """
   # Contrary to WorkflowTool_listActions, related keys are NOT supported.
   Base_zInsertIntoWorklistTable = getattr(self, 'Base_zInsertIntoWorklistTable', None)
   if Base_zInsertIntoWorklistTable is not None:
@@ -572,7 +581,14 @@ def WorkflowTool_refreshWorklistCache(self):
           worklist_dict[wf_id] = a
     # End of duplicated code
     if len(worklist_dict):
-      self.Base_zCreateWorklistTable() # Create (or flush existing) table
+      try:
+        self.Base_zClearWorklistTable()
+      except ProgrammingError, error_value:
+        import pdb; pdb.set_trace()
+        # 1146 = table does not exist
+        if error_value[0] != 1146:
+          raise
+        self.Base_zCreateWorklistTable()
       portal_catalog = getToolByName(self, 'portal_catalog')
       search_result = portal_catalog.unrestrictedSearchResults
       acceptable_key_dict = portal_catalog.getSQLCatalog().getColumnMap()
@@ -613,7 +629,14 @@ def WorkflowTool_refreshWorklistCache(self):
             if column_id in value_column_dict:
               value_column_dict[column_id].append(value)
         if len(value_column_dict[COUNT_COLUMN_TITLE]):
-          Base_zInsertIntoWorklistTable(**value_column_dict)
+          try:
+            Base_zInsertIntoWorklistTable(**value_column_dict)
+          except ProgrammingError:
+            LOG('WorkflowTool', 100, 'Insertion in worklist cache table ' \
+                'failed. Recreating table and retrying.',
+                error=sys.exc_info())
+            self.Base_zCreateWorklistTable()
+            Base_zInsertIntoWorklistTable(**value_column_dict)
 
 WorkflowTool.refreshWorklistCache = WorkflowTool_refreshWorklistCache
 
