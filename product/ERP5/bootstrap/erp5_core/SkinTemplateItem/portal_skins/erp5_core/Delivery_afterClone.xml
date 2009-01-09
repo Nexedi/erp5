@@ -54,12 +54,8 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>#Clean some properties\n
-from Acquisition import aq_base\n
-context_base = aq_base(context)\n
-if getattr(context_base, \'source_reference\', None) is not None:\n
-  delattr(context, \'source_reference\')\n
-if getattr(context_base, \'destination_reference\', None) is not None:\n
-  delattr(context, \'destination_reference\')\n
+context.setSourceReference(None)\n
+context.setDestinationReference(None)\n
 </string> </value>
         </item>
         <item>
@@ -96,13 +92,9 @@ if getattr(context_base, \'destination_reference\', None) is not None:\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>Acquisition</string>
-                            <string>aq_base</string>
+                            <string>_getattr_</string>
                             <string>context</string>
-                            <string>context_base</string>
-                            <string>getattr</string>
                             <string>None</string>
-                            <string>delattr</string>
                           </tuple>
                         </value>
                     </item>
