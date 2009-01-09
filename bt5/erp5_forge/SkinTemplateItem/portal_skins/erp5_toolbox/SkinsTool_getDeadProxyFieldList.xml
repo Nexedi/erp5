@@ -177,12 +177,13 @@
 
 """List all dead proxy fields\n
 """\n
-print "<html>"\n
+portal_skin = context.REQUEST.get(\'portal_skin\', \'View\')\n
 \n
+print "<html>"\n
 for field_path, field in context.ZopeFind(\n
             context.portal_skins, obj_metatypes=[\'ProxyField\'], search_sub=1):\n
   if field.getTemplateField() is None:\n
-    print \'<a href="%s/%s/manage_main">%s</a><br />\' % (context.absolute_url(), field_path, field_path) \n
+    print \'<a href="%s/%s/manage_main?portal_skin=%s">%s</a><br />\' % (context.absolute_url(), field_path, portal_skin, field_path)\n
 \n
 print "</html>"\n
 return printed\n
@@ -232,9 +233,10 @@ return printed\n
                           <tuple>
                             <string>_print_</string>
                             <string>_print</string>
-                            <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal_skin</string>
+                            <string>_getiter_</string>
                             <string>field_path</string>
                             <string>field</string>
                             <string>None</string>
