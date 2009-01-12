@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Purchase Invoice Transaction combines in the same document a supplier invoice and the accounting transaction deriving from it. Purchase Invoice Transactions are normally generated automatically by ERP5 simulation from delivered Purchase Packing Lists or groups thereof and are set in planned state. Upon reception of a paper invoice, it is the task of the accountant to match it to an expected invoice in planned state or to enter it manualy. Accounting transaction lines are generated automatically out of invoice lines through business rules yet can be modified by accountants to fit specific accounting cases. </string> </value>
+            <value> <string>A Purchase Invoice Transaction combines in the same document a supplier invoice and the accounting transaction deriving from it. Purchase Invoice Transactions are normally generated automatically by ERP5 simulation from delivered Purchase Packing Lists or groups thereof and are set in planned state. Upon reception of a paper invoice, it is the task of the accountant to match it to an expected invoice in planned state or to enter it manually. Accounting transaction lines are generated automatically out of invoice lines through business rules yet can be modified by accountants to fit specific accounting cases. </string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

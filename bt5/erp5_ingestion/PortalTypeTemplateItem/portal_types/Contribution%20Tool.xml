@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Contribution Tool provides a single place to contribue content to an ERP5 Site.</string> </value>
+            <value> <string>Contribution Tool provides a single place to contribute content to an ERP5 Site.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

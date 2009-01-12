@@ -53,8 +53,8 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Mark the begining and the end of an Accounting Period.\n
-Once the period is closed (ie. the Accounting Period Delimiter is in delivered state), it is no longer possible to validate Transaction in this period</string> </value>
+            <value> <string>Mark the beginning and the end of an Accounting Period.\n
+Once the period is closed (i.e. the Accounting Period Delimiter is in delivered state), it is no longer possible to validate Transaction in this period</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
