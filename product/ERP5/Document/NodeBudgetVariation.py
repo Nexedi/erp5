@@ -61,12 +61,12 @@ class NodeBudgetVariation(BudgetVariation):
     """This budget variation in a predicate
     """
 
-  def _getNodeList(self):
+  def _getNodeList(self, context):
     """Returns the list of possible nodes
     """
     node_select_method_id = self.getProperty('node_select_method_id')
     if node_select_method_id:
-      return guarded_getattr(self, node_select_method_id)()
+      return guarded_getattr(context, node_select_method_id)()
     return ()
 
   def _getNodeTitle(self, node):
@@ -85,7 +85,7 @@ class NodeBudgetVariation(BudgetVariation):
 
     node_item_list = [('%s%s' % (prefix, node.getRelativeUrl()),
                        self._getNodeTitle(node))
-                           for node in self._getNodeList()]
+                           for node in self._getNodeList(budget_line)]
     variation_category_list = budget_line.getVariationCategoryList()
     if matrixbox:
       return [[i for i in node_item_list if i[0] in variation_category_list]]
@@ -115,7 +115,7 @@ class NodeBudgetVariation(BudgetVariation):
     if base_category:
       prefix = '%s/' % base_category
     return [(self._getNodeTitle(node), '%s%s' % (prefix, node.getRelativeUrl()))
-                for node in self._getNodeList()]
+                for node in self._getNodeList(budget_line)]
 
   def initializeBudgetLine(self, budget_line):
     """Initialize a budget line
