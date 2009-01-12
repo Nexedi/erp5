@@ -59,6 +59,7 @@
     uid=\'!=%d\' % context.getUid(),\n
     language_uid=context.getLanguageUid(),\n
     business_field_uid=context.getBusinessFieldUid(),\n
+    validation_state=(\'draft\', \'validated\'),\n
     **kw)\n
 </string> </value>
         </item>
