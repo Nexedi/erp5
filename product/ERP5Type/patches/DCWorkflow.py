@@ -559,6 +559,27 @@ def getPortalTypeListForWorkflow(self):
 
 DCWorkflowDefinition.getPortalTypeListForWorkflow = getPortalTypeListForWorkflow
 
+def DCWorkflowDefinition_getFutureStateSet(self, state, ignore=(),
+                                           _future_state_set=None):
+  """Return the states that can be reached from a given state, directly or not.
+
+  This method returns a set of ids of all states that can be reached in any
+  number of transitions, starting from the state specified by the 'state'
+  parameter. 'ignore' parameter is a list of states to ignore, as if there was
+  no transition to them.
+  """
+  if _future_state_set is None:
+    _future_state_set = set()
+  _future_state_set.add(state)
+  for transition in self.states[state].transitions:
+    state = self.transitions[transition].new_state_id
+    if state and state not in _future_state_set and state not in ignore:
+      self.getFutureStateSet(state, ignore, _future_state_set)
+  return _future_state_set
+
+DCWorkflowDefinition.getFutureStateSet = DCWorkflowDefinition_getFutureStateSet
+
+
 # This patch allows to use workflowmethod as an after_script
 # However, the right way of doing would be to have a combined state of TRIGGER_USER_ACTION and TRIGGER_WORKFLOW_METHOD
 # as well as workflow inheritance. This way, different user actions and dialogs can be specified easliy

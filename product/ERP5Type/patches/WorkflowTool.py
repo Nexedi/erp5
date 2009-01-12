@@ -753,3 +753,6 @@ def WorkflowTool_setStatusOf(self, wf_id, ob, status):
     wfh.append(status)
 
 WorkflowTool.setStatusOf = WorkflowTool_setStatusOf
+
+WorkflowTool.getFutureStateSetFor = lambda self, wf_id, *args, **kw: \
+  self[wf_id].getFutureStateSet(*args, **kw)
