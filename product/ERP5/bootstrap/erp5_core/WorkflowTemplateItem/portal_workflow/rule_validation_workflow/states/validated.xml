@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>state of a document wich has been validated</string> </value>
+            <value> <string>state of a document which has been validated</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

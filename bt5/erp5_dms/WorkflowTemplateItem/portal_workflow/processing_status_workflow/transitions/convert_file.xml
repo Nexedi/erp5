@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This workflow method is called whenever conversion has been successfull</string> </value>
+            <value> <string>This workflow method is called whenever conversion has been successful</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
