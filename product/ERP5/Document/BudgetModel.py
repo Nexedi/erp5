@@ -69,7 +69,6 @@ class BudgetModel(Predicate):
         continue
       variation_cell_range = budget_variation.getCellRangeForBudgetLine(
                                budget_line, matrixbox=matrixbox)
-      print budget_variation, variation_cell_range
       if variation_cell_range and variation_cell_range not in cell_range:
         cell_range.extend(variation_cell_range)
     return cell_range
