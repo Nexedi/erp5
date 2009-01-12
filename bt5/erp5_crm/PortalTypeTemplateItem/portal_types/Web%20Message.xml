@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>An Web Message is an event which keeps the information about incoming or ougoing various online-communication except email.</string> </value>
+            <value> <string>An Web Message is an event which keeps the information about incoming or outgoing various online-communication except email.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

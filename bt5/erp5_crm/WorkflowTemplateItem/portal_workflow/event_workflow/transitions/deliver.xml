@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The deliver logical transition set the event to delivered, which is the last state for ougoing events.</string> </value>
+            <value> <string>The deliver logical transition set the event to delivered, which is the last state for outgoing events.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

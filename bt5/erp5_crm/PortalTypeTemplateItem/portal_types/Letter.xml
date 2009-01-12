@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Letter event can be used to track incoming and ougoing letters or paper document in a customer relation or in a project process.</string> </value>
+            <value> <string>A Letter event can be used to track incoming and outgoing letters or paper document in a customer relation or in a project process.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

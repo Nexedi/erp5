@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>An Fax Message is an event which keeps the information about incoming or ougoing fax transmissions.</string> </value>
+            <value> <string>An Fax Message is an event which keeps the information about incoming or outgoing fax transmissions.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
