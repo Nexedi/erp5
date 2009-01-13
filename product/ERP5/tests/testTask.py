@@ -293,6 +293,14 @@ class TestTaskMixin:
               task_line_requirement_value = requirement,
     )
 
+  def stepCloneTask(self, sequence=None, sequence_list=None, **kw):
+    """
+      Clone task from sequence
+    """
+    task = sequence.get('task')
+    new_task = task.Base_createCloneDocument(batch_mode=1)
+    sequence.set('task', new_task)
+
   def stepCreateSimpleTaskReport(self,sequence=None, sequence_list=None, **kw):
     """
       Create a task report.
@@ -382,6 +390,37 @@ class TestTaskMixin:
     self.assertEquals(task.getTaskLineRequirement(), 
                       task_report_line.getRequirement())
 
+
+  def stepVerifyClonedGeneratedByBuilderTaskReport(self, sequence=None,
+                                                    sequence_list=None, **kw):
+    """
+    Verify that simulation generated report is correct.
+    """
+    task = sequence.get('task')
+    task_report = sequence.get('task_report')
+    self.assertEquals('confirmed', task_report.getSimulationState())
+    self.assertEquals(task.getSource(), task_report.getSource())
+    self.assertEquals(task.getSourceSection(), task_report.getSourceSection())
+    self.assertEquals(task.getSourceProject(), task_report.getSourceProject())
+    self.assertEquals(task.getDestination(), task_report.getDestination())
+    self.assertEquals(task.getDestinationSection(),
+                      task_report.getDestinationSection())
+    self.assertEquals(task.getDestinationDecision(),
+                      task_report.getDestinationDecision())
+    self.assertEquals(task.getTitle(),
+                      task_report.getTitle())
+    self.assertEquals(task.getDescription(),
+                      task_report.getDescription())
+    self.assertEquals(task.getPredecessor(), task_report.getPredecessor())
+    self.assertEquals(task.getDescription(), task_report.getDescription())
+    self.assertEquals(task.getPriceCurrency(), task_report.getPriceCurrency())
+    self.assertEquals(len(task_report.contentValues()), 1)
+    task_report_line = task_report.contentValues()[0]
+    self.assertEquals(task.getTaskLineResource(), task_report_line.getResource())
+    self.assertEquals(task.getTaskLineQuantity(), task_report_line.getQuantity()*2)
+    self.assertEquals(task.getTaskLinePrice(), task_report_line.getPrice())
+    self.assertEquals(task.getTaskLineRequirement(), 
+                      task_report_line.getRequirement())
 
   def stepCreateTaskLine(self, sequence=None, sequence_list=None, **kw):
     """
@@ -613,10 +652,7 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     sequence_string = self.default_task_sequence + '\
-                       stepVerifyGeneratedByBuilderTaskReport \
-                       stepStartTaskReport \
-                       stepFinishTaskReport \
-                       stepCloseTaskReport \
+                       stepVerifyClonedGeneratedByBuilderTaskReport \
                        '
     sequence_list.addSequenceString(sequence_string)
 
@@ -634,6 +670,23 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
       for permission in simulation_tool.possible_permissions():
         simulation_tool.manage_permission(permission, roles=(), acquire=1)
       self.logout()
+
+  def test_06_testCloneTaskUseCase(self, quiet=0, run=run_all_test):
+    """
+      Test creation of cloned task and (automatic) task_report
+      Check if quantity is doubled
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    sequence_string = self.default_task_sequence + '\
+                       CloneTask \
+                       ConfirmTask \
+                       Tic \
+                       SetTaskReport \
+                       VerifyClonedGeneratedByBuilderTaskReport \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
 def test_suite():
   suite = unittest.TestSuite()
