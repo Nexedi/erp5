@@ -482,36 +482,44 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
         # Generate the query for this worklist_list
         (total_criterion_id_list, query) = \
           getWorklistListQuery(grouped_worklist_dict=grouped_worklist_dict)
-        # We must compute alias names ourselves because we need to know them
-        # in order to compute 'select_expression'.
-        related_table_map_dict = query.getRelatedTableMapDict()
-        # In order to support related keys, the select expression must be
-        # completely explicited, to avoid conflicts.
-        select_expression = [select_expression_prefix]
-        for criterion_id in total_criterion_id_list:
-          mapped_key = acceptable_key_dict[criterion_id]
-          if use_cache: # no support for related keys
-            select_expression.append(criterion_id)
-            continue
-          elif isinstance(mapped_key, str): # related key
-            mapped_key = mapped_key.split('/')
-            related_table_map_dict[criterion_id] = table_alias_list = tuple(
-              (table_id, '%s_%s' % (criterion_id, i))
-              for i, table_id in enumerate(mapped_key[0].split(',')))
-            table_id, column_id = table_alias_list[-1][1], mapped_key[1]
-          else: # normal column
-            if len(mapped_key) == 1:
-              table_id = mapped_key[0]
-            else:
-              table_id = 'catalog'
-              assert table_id in mapped_key
-            column_id = criterion_id
-          select_expression.append('%s.%s as %s'
-                                   % (table_id, column_id, criterion_id))
-        query.getRelatedTableMapDict = lambda: related_table_map_dict
         group_by_expression = ', '.join(total_criterion_id_list)
         assert COUNT_COLUMN_TITLE not in total_criterion_id_list
-        select_expression = ', '.join(select_expression)
+        getRelatedTableMapDict = getattr(query, 'getRelatedTableMapDict', None)
+        if getRelatedTableMapDict is None:
+          # If required mapping method is not present on the query, assume it
+          # handles column mapping properly, and build a bare select
+          # expression.
+          select_expression = select_expression_prefix + ', ' \
+                              + group_by_expression
+        else:
+          # We must compute alias names ourselves because we need to know them
+          # in order to compute 'select_expression'.
+          related_table_map_dict = query.getRelatedTableMapDict()
+          # In order to support related keys, the select expression must be
+          # completely explicited, to avoid conflicts.
+          select_expression = [select_expression_prefix]
+          for criterion_id in total_criterion_id_list:
+            mapped_key = acceptable_key_dict[criterion_id]
+            if use_cache: # no support for related keys
+              select_expression.append(criterion_id)
+              continue
+            elif isinstance(mapped_key, str): # related key
+              mapped_key = mapped_key.split('/')
+              related_table_map_dict[criterion_id] = table_alias_list = tuple(
+                (table_id, '%s_%s' % (criterion_id, i))
+                for i, table_id in enumerate(mapped_key[0].split(',')))
+              table_id, column_id = table_alias_list[-1][1], mapped_key[1]
+            else: # normal column
+              if len(mapped_key) == 1:
+                table_id = mapped_key[0]
+              else:
+                table_id = 'catalog'
+                assert table_id in mapped_key
+              column_id = criterion_id
+            select_expression.append('%s.%s as %s'
+                                     % (table_id, column_id, criterion_id))
+          query.getRelatedTableMapDict = lambda: related_table_map_dict
+          select_expression = ', '.join(select_expression)
         try:
           catalog_brain_result = search_result(
                                       select_expression=select_expression,
