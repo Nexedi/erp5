@@ -34,7 +34,7 @@ from Acquisition import aq_base
 from Persistence import Persistent
 from Globals import PersistentMapping
 from itertools import izip
-from MySQLdb import ProgrammingError
+from MySQLdb import ProgrammingError, OperationalError
 
 def DCWorkflowDefinition_notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
     '''
@@ -637,7 +637,10 @@ def WorkflowTool_refreshWorklistCache(self):
         if len(value_column_dict[COUNT_COLUMN_TITLE]):
           try:
             Base_zInsertIntoWorklistTable(**value_column_dict)
-          except ProgrammingError:
+          except (ProgrammingError, OperationalError), error_value:
+            # OperationalError 1054 = unknown column
+            if isinstance(error_value, OperationalError) and error_value[0] != 1054:
+              raise
             LOG('WorkflowTool', 100, 'Insertion in worklist cache table ' \
                 'failed. Recreating table and retrying.',
                 error=sys.exc_info())
