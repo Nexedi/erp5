@@ -652,7 +652,10 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     sequence_string = self.default_task_sequence + '\
-                       stepVerifyClonedGeneratedByBuilderTaskReport \
+                       stepVerifyGeneratedByBuilderTaskReport \
+                       stepStartTaskReport \
+                       stepFinishTaskReport \
+                       stepCloseTaskReport \
                        '
     sequence_list.addSequenceString(sequence_string)
 
