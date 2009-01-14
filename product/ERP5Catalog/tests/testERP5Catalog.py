@@ -1426,6 +1426,18 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ',0,message)
 
     portal = self.getPortal()
+    self.original_connection_id = 'erp5_sql_connection'
+    self.new_connection_id = 'erp5_sql_connection2'
+    new_connection_string = 'test2 test2'
+
+    # Skip this test if default connection string is not "test test".
+    original_connection = getattr(portal, self.original_connection_id)
+    connection_string = original_connection.connection_string
+    if (connection_string == new_connection_string):
+      message = 'SKIPPED: default connection string is the same as the one for hot-reindex catalog'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+
     portal_category = self.getCategoryTool()
     portal_activities = self.getActivityTool()
     self.base_category = portal_category.newContent(portal_type='Base Category',
@@ -1437,10 +1449,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     get_transaction().commit()
     self.tic()
     # Create new connectors
-    self.original_connection_id = 'erp5_sql_connection'
-    self.new_connection_id = 'erp5_sql_connection2'
     portal.manage_addZMySQLConnection(self.new_connection_id,'',
-                                      'test2 test2')
+                                      new_connection_string)
     new_connection = portal[self.new_connection_id]
     new_connection.manage_open_connection()
     # Create new catalog
