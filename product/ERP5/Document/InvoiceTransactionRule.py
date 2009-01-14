@@ -120,7 +120,6 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
                 "expanding %s: without resource" % applied_rule.getPath())
         # XXX Harcoded list
         prevision_line = {
-            'id': accounting_rule_cell_line.getId(),
             'source': accounting_rule_cell_line.getSource(),
             'source_section': context_movement.getSourceSection(),
             'source_decision': context_movement.getSourceDecision(),
