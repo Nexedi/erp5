@@ -236,6 +236,12 @@ for k, v in kw.items() :\n
   if v not in (None, [], ()) :\n
     clean_kw[k] = kw[k]\n
 \n
+# Handle deferred style\n
+if clean_kw.get(\'deferred_style\', 0):\n
+  clean_kw[\'deferred_portal_skin\'] = clean_kw.get(\'portal_skin\', None)\n
+  # XXX Hardcoded Deferred style name\n
+  clean_kw[\'portal_skin\'] = \'Deferred\'\n
+\n
 url_params_string = make_query(clean_kw)\n
 \n
 # XXX: We always redirect in report mode to make sure portal_skin\n
