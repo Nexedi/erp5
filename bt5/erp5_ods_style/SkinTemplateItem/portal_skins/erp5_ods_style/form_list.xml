@@ -57,7 +57,8 @@
       <table:table table:style-name=\'ta1\' table:print=\'false\' tal:attributes="table:name here/getTitle" >\n
         <tal:block metal:define-macro="form_layout"\n
                     tal:define="dummy python: request.set(\'here\', here);\n
-                                listbox form/listbox">\n
+                                listbox form/listbox | nothing;">\n
+         <tal:block tal:condition="listbox">\n
             <tal:block metal:use-macro="here/listbox_ods_macro/macros/listbox">\n
               <tal:block metal:fill-slot="list_header">\n
                 <tal:block tal:repeat="column_item listboxline/getColumnItemList"> \n
@@ -99,6 +100,7 @@
                 <tal:block tal:replace="nothing"> don\'t write bottom line in case of this form_list, \'Page Format\' of OOo works instead of it.</tal:block>\n
               </tal:block>\n
             </tal:block>\n
+        </tal:block>\n
         </tal:block>\n
       </table:table>\n
     </office:spreadsheet>\n

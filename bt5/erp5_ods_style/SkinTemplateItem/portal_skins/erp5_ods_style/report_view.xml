@@ -57,59 +57,61 @@
                              global column_len python: 5">\n
                              <!-- TODO: calculate column_len based on the first listbox (or selection_column if exists)-->\n
 \n
-      <tal:block tal:define="portal_object here/portal_url/getPortalObject">\n
-        <tal:block tal:condition="not: sheet_per_reportsection">\n
-          <table:table tal:attributes="table:name python:unicode(here.getProperty(\'title\'), \'utf8\')">\n
-          <!-- at least one table-column element is required for ODF to validate -->\n
-          <table:table-column\n
-                table:style-name=\'co2\'\n
-                table:default-cell-style-name=\'report-column-title\'/>\n
+        <tal:block tal:define="portal_object here/portal_url/getPortalObject">\n
+          <tal:block tal:condition="not: sheet_per_reportsection">\n
+            <table:table tal:attributes="table:name python:unicode(here.getProperty(\'title\'), \'utf8\')">\n
+              <!-- at least one table-column element is required for ODF to validate -->\n
+              <table:table-column\n
+                    table:style-name=\'co2\'\n
+                    table:default-cell-style-name=\'report-column-title\'/>\n
 \n
-          <tal:block metal:use-macro="here/form_view/macros/form_layout"/>\n
+              <tal:block metal:use-macro="here/form_view/macros/form_layout"/>\n
 \n
-                <!-- if we are called with a rendered_report_item_list, just insert the rendered text here. -->\n
-                <tal:block tal:condition="rendered_report_item_list">\n
-                  <tal:block tal:repeat="report_item report_item_list">\n
-                    <tal:block tal:replace="structure report_item"/>\n
-                  </tal:block>\n
-                </tal:block>\n
-\n
-                 <tal:block tal:condition="not: rendered_report_item_list">\n
-\n
-            <tal:block tal:repeat="report_item report_item_list">\n
-              <tal:block metal:define-macro="make_report_item_table"\n
-                         tal:define="here python:report_item.getObject(portal_object);\n
-                                     dummy python:report_item.pushReport(portal_object)">\n
-                <tal:block metal:define-macro="render_report_section">\n
-                <tal:block tal:condition="report_item/getTitle">\n
-                  <table:table-row table:style-name=\'ro2\'>\n
-                    <tal:block tal:condition="report_item/getTitle" tal:define="level report_item/getLevel;\n
-                                                                                column_len column_len | python: 5">\n
-                        <table:table-cell table:style-name="report-title"\n
-                                          tal:attributes="table:number-columns-spanned python: column_len;\n
-                                                          table:style-name python:test(level&gt;1, \'report-title%s\' % level, \'report-title\');" \n
-                                          office:value-type=\'string\'\n
-                                          table:number-rows-spanned=\'1\'>\n
-                          <text:p tal:content="report_item/getTitle" ></text:p>\n
-                        </table:table-cell>\n
-                    </tal:block>\n
-                  </table:table-row>\n
-                </tal:block>\n
-                  <tal:block tal:condition="report_item/getFormId">\n
-                    <tal:block tal:define="form python:getattr(here,report_item.getFormId())">\n
-                      <tal:block tal:condition="python: form.pt == \'form_view\'">\n
-                        <tal:block metal:use-macro="form/form_view/macros/form_layout"/>\n
-                      </tal:block>\n
-                      <tal:block tal:condition="python:form.pt == \'form_list\'">\n
-                        <tal:block metal:use-macro="form/form_list/macros/form_layout"/>\n
-                      </tal:block>\n
-                    </tal:block>\n
-                  </tal:block>\n
-                  <tal:block tal:define="portal_object here/portal_url/getPortalObject;\n
-                                         dummy python:report_item.popReport(portal_object)"/>\n
-                </tal:block>\n
+              <!-- if we are called with a rendered_report_item_list, just insert the rendered text here. -->\n
+              <tal:block tal:condition="rendered_report_item_list">\n
+                <tal:block tal:repeat="report_item report_item_list">\n
+                  <tal:block tal:replace="structure report_item"/>\n
                 </tal:block>\n
               </tal:block>\n
+\n
+              <tal:block tal:condition="not: rendered_report_item_list">\n
+\n
+                <tal:block tal:repeat="report_item report_item_list">\n
+                  <tal:block metal:define-macro="make_report_item_table"\n
+                             tal:define="here python:report_item.getObject(portal_object);\n
+                                         render_prefix python: \'x%s\' % (repeat[\'report_item\'].index, );\n
+                                         dummy python:report_item.pushReport(portal_object,\n
+                                                                             render_prefix=render_prefix)">\n
+                    <tal:block metal:define-macro="render_report_section">\n
+                      <tal:block tal:condition="report_item/getTitle">\n
+                        <table:table-row table:style-name=\'ro2\'>\n
+                          <tal:block tal:condition="report_item/getTitle" tal:define="level report_item/getLevel;\n
+                                                                                      column_len column_len | python: 5">\n
+                              <table:table-cell table:style-name="report-title"\n
+                                                tal:attributes="table:number-columns-spanned python: column_len;\n
+                                                                table:style-name python:test(level&gt;1, \'report-title%s\' % level, \'report-title\');" \n
+                                                office:value-type=\'string\'\n
+                                                table:number-rows-spanned=\'1\'>\n
+                                <text:p tal:content="report_item/getTitle" ></text:p>\n
+                              </table:table-cell>\n
+                          </tal:block>\n
+                        </table:table-row>\n
+                      </tal:block>\n
+                      <tal:block tal:condition="report_item/getFormId">\n
+                        <tal:block tal:define="form python:getattr(here,report_item.getFormId())">\n
+                          <tal:block tal:condition="python: form.pt == \'form_view\'">\n
+                            <tal:block metal:use-macro="form/form_view/macros/form_layout"/>\n
+                          </tal:block>\n
+                          <tal:block tal:condition="python:form.pt == \'form_list\'">\n
+                            <tal:block metal:use-macro="form/form_list/macros/form_layout"/>\n
+                          </tal:block>\n
+                        </tal:block>\n
+                      </tal:block>\n
+                    </tal:block>\n
+                    <tal:block tal:define="portal_object here/portal_url/getPortalObject;\n
+                                           dummy python:report_item.popReport(portal_object, render_prefix=render_prefix)"/>\n
+                  </tal:block>\n
+                </tal:block>\n
               </tal:block>\n
             </table:table>\n
           </tal:block>\n

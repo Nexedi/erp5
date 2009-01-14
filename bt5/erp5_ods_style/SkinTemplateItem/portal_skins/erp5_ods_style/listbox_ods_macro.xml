@@ -51,7 +51,8 @@
   <office:spreadsheet>\n
 \n
     <tal:block metal:define-macro="listbox">\n
-      <tal:block tal:define="listboxline_list python: listbox.get_value(\'default\', render_format=\'list\', REQUEST=request);\n
+      <tal:block tal:define="render_prefix render_prefix | nothing;\n
+               listboxline_list python: listbox.get_value(\'default\', render_format=\'list\', REQUEST=request, render_prefix=render_prefix);\n
                DateTime nocall: modules/DateTime/DateTime;\n
                selection_name python: listbox.get_value(\'selection_name\', REQUEST=request);\n
                editable_columns python: listbox.get_value(\'editable_columns\', REQUEST=request);\n

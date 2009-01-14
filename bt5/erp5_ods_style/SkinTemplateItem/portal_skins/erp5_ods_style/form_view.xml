@@ -172,7 +172,7 @@ dQEAAAAA</string> </value>
                   <draw:frame draw:z-index="0" draw:style-name="gr1" svg:x="0.2cm" svg:y="0.2cm" svg:width="7.996cm" svg:height="6.999cm"\n
                               tal:attributes="svg:height python:height;\n
                               svg:width python:width">\n
-                    <tal:block tal:replace="structure python: field.render_odf()"/>\n
+                    <tal:block tal:replace="structure python: field.render_odf(render_prefix=render_prefix)"/>\n
                   </draw:frame>\n
                 </table:table-cell>\n
               </table:table-row>\n
