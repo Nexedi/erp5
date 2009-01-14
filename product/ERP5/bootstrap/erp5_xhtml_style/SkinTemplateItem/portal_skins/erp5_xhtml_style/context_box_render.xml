@@ -315,7 +315,7 @@
         </a>\n
         <a tal:condition="here/hasActivity | nothing" class="activity_pending"\n
            title="Activity Pending"\n
-           tal:attributes="href python: portal.portal_membership.checkPermission(\'View management screens\', portal.portal_activities) and \'%s%s/manageActivities\' % (here.REQUEST[\'SERVER_URL\'],portal.portal_activities.getUrl(), ) or \'#\'"\n
+           tal:attributes="href python: portal.portal_membership.checkPermission(\'View management screens\', portal.portal_activities) and \'%s/portal_activities/manageActivities\' % (portal.portal_url()) or \'#\'"\n
            i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
           <span class="description" i18n:translate="" i18n:domain="ui">Activity Pending</span>\n
