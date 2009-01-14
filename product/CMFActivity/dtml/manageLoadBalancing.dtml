@@ -151,7 +151,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
         <tr>
           <td rowspan="2">
             <div class="form-label">Idle&nbsp;nodes</div>
-            <select name="unused_node_list:list" size="10" multiple="multiple" style="width:100%">
+            <select name="unused_node_list:list" size="10" multiple="multiple" style="min-width:100%">
               <dtml-in getIdleNodeList>
                 <option value="<dtml-var sequence-item>"><dtml-var sequence-item></option>
               </dtml-in>
@@ -162,7 +162,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
           </td>
           <td rowspan="2">
             <div class="form-label">Processing&nbsp;nodes</div>
-            <select name="processing_node_list:list" size="10" multiple="multiple" style="width:100%">
+            <select name="processing_node_list:list" size="10" multiple="multiple" style="min-width:100%">
               <dtml-in getProcessingNodeList prefix="node">
                 <option value="<dtml-var node_item>"><dtml-var node_item> (#<dtml-var expr="node_index + 1">)</option>
               </dtml-in>
