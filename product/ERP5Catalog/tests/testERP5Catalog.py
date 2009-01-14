@@ -889,9 +889,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       message = 'Test Sort On'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
-    self.assertEquals('catalog.title',
+    self.assertTrue(
             self.getCatalogTool().buildSQLQuery(
-            sort_on=(('catalog.title', 'ascending'),))['order_by_expression'])
+            sort_on=(('catalog.title', 'ascending'),))['order_by_expression'] in \
+            ('catalog.title', '`catalog`.`title` ASC'))
 
   def test_25_SortOnDescending(self, quiet=quiet, run=run_all_test):
     if not run: return
@@ -899,9 +900,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       message = 'Test Sort On Descending'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
-    self.assertEquals('catalog.title DESC',
+    self.assertTrue(
             self.getCatalogTool().buildSQLQuery(
-            sort_on=(('catalog.title', 'descending'),))['order_by_expression'])
+            sort_on=(('catalog.title', 'descending'),))['order_by_expression'] in \
+            ('catalog.title DESC', '`catalog`.`title` DESC'))
     
   def test_26_SortOnUnknownKeys(self, quiet=quiet, run=run_all_test):
     if not run: return
@@ -925,9 +927,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ',0,message)
     # if the sort key is found on the catalog table, it will use that catalog
     # table.
-    self.assertEquals('catalog.title',
+    self.assertTrue(
           self.getCatalogTool().buildSQLQuery(
-          sort_on=(('title', 'ascending'),))['order_by_expression'])
+          sort_on=(('title', 'ascending'),))['order_by_expression'] in \
+          ('catalog.title', '`catalog`.`title` ASC'))
     
     # if not found on catalog, it won't do any filtering
     # in the above, start_date exists both in delivery and movement table.
@@ -945,10 +948,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.failUnless( 'could not build sort index' in logged_errors[1][2])
     
     # of course, in that case, it's possible to prefix with table name
-    self.assertEquals('delivery.start_date',
+    self.assertTrue(
           self.getCatalogTool().buildSQLQuery(
           sort_on=(('delivery.start_date', 'ascending'),
-                    ))['order_by_expression'])
+                    ))['order_by_expression'] in \
+          ('delivery.start_date', 'delivery.start_date ASC'))
     
   def test_28_SortOnMultipleKeys(self, quiet=quiet, run=run_all_test):
     if not run: return
@@ -956,11 +960,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       message = 'Test Sort On Multiple Keys'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
-    self.assertEquals('catalog.title,catalog.id',
+    self.assertTrue(
               self.getCatalogTool().buildSQLQuery(
               sort_on=(('catalog.title', 'ascending'),
                        ('catalog.id', 'asc')))
-                       ['order_by_expression'].replace(' ', ''))
+                       ['order_by_expression'].replace(' ', '') in \
+              ('catalog.title,catalog.id', '`catalog`.`title`ASC,`catalog`.`id`ASC'))
 
   def test_29_SortOnRelatedKey(self, quiet=quiet, run=run_all_test):
     """Sort-on parameter and related key. (Assumes that region_title is a \
@@ -1880,8 +1885,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     catalog_kw = {'uid': {'query': '2 567.54',
                           'format': '1 234.12',
                           'type': 'float'}}
-    sql_src = self.getCatalogTool()(src__=1, **catalog_kw)
-    self.failUnless("TRUNCATE(catalog.uid,2) = '2567.54'" in sql_src)
+    sql_src = self.getCatalogTool().buildSQLQuery(**catalog_kw)['where_expression']
+    self.assertTrue("TRUNCATE(catalog.uid,2) = '2567.54'" in sql_src or \
+                    'TRUNCATE(`catalog`.`uid`, 2) = 2567.54' in sql_src, sql_src)
 
   def test_SearchOnOwner(self, quiet=quiet, run=run_all_test):
     if not run: return  
