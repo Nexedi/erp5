@@ -42,6 +42,7 @@
                 <string>order_action</string>
                 <string>reject</string>
                 <string>reject_action</string>
+                <string>trash</string>
               </tuple>
             </value>
         </item>

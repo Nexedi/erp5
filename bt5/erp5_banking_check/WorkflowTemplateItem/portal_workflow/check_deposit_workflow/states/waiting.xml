@@ -42,6 +42,7 @@
                 <string>cancel</string>
                 <string>refuse_action</string>
                 <string>reject</string>
+                <string>trash</string>
               </tuple>
             </value>
         </item>
