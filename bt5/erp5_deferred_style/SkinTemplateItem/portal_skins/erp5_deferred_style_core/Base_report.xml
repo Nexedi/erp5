@@ -74,7 +74,7 @@ def dummyReportMethod():\n
 \n
 # XXX Hardcoded format\n
 report_data = context.report_view.pt_render(\n
-      extra_context=dict(options={\'format\': \'pdf\'},\n
+      extra_context=dict(options={\'format\': format},\n
                          rendered_report_item_list=[r[1] for r in report_section_list],\n
                          report_method=dummyReportMethod,\n
                          form=portal.restrictedTraverse(form_path)))\n
@@ -106,7 +106,7 @@ portal.portal_notifications.sendMessage(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>active_process_url, skin_name, localizer_language, title, request_other, form_path, user_name</string> </value>
+            <value> <string>active_process_url, skin_name, localizer_language, title, request_other, form_path, user_name, format</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -134,7 +134,7 @@ portal.portal_notifications.sendMessage(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>7</int> </value>
+                        <value> <int>8</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -147,6 +147,7 @@ portal.portal_notifications.sendMessage(\n
                             <string>request_other</string>
                             <string>form_path</string>
                             <string>user_name</string>
+                            <string>format</string>
                             <string>_getattr_</string>
                             <string>container</string>
                             <string>request</string>

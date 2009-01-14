@@ -56,6 +56,9 @@
             <value> <string>request = container.REQUEST\n
 RESPONSE =  request.RESPONSE\n
 \n
+format = request.get(\'format\', \'pdf\')\n
+skin_name = request.get(\'skin_name\', \'ODT\')\n
+\n
 portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
 \n
@@ -74,7 +77,6 @@ if person_value.getDefaultEmailText(\'\') == \'\':\n
 active_process = portal.portal_activities.newActiveProcess()\n
 user_name = context.portal_membership.getAuthenticatedMember().getUserName()\n
 \n
-skin_name = \'ODT\' # XXX hardcoded for now\n
 tag = \'active-report-%s\' % random.randint(0, 1000)\n
 priority = 3\n
 \n
@@ -116,6 +118,7 @@ portal.portal_simulation.activate(activity=\'SQLQueue\', after_tag=tag, priority
            request_other=request_other,\n
            form_path=form.getPhysicalPath(),\n
            user_name=user_name,\n
+           format=format,\n
           )\n
 \n
 context.activate(activity=\'SQLQueue\', after_tag=tag).getTitle()\n
@@ -174,6 +177,8 @@ return context.Base_redirect(\'view\', keep_items=dict(\n
                             <string>container</string>
                             <string>request</string>
                             <string>RESPONSE</string>
+                            <string>format</string>
+                            <string>skin_name</string>
                             <string>context</string>
                             <string>portal</string>
                             <string>N_</string>
@@ -183,7 +188,6 @@ return context.Base_redirect(\'view\', keep_items=dict(\n
                             <string>dict</string>
                             <string>active_process</string>
                             <string>user_name</string>
-                            <string>skin_name</string>
                             <string>random</string>
                             <string>tag</string>
                             <string>priority</string>
