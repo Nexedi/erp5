@@ -99,8 +99,9 @@
                         <string>your_from_date</string>
                         <string>your_at_date</string>
                         <string>your_aggregation_level</string>
-                        <string>your_format</string>
                         <string>your_portal_skin</string>
+                        <string>your_format</string>
+                        <string>your_deferred_style</string>
                       </list>
                     </value>
                 </item>
