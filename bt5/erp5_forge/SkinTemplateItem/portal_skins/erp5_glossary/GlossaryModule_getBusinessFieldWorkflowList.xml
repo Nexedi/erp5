@@ -66,11 +66,12 @@ def get_term_list(business_field, reference):\n
   term_list = portal_catalog(portal_type=\'Glossary Term\',\n
                              validation_state=\'validated\',\n
                              language_id=\'en\',\n
-                             business_field_title=business_field,\n
+                             business_field_title=(\'core\', business_field),\n
                              reference=reference)\n
   return [i.getObject() for i in term_list]\n
 \n
 def get_obj_and_reference_list(business_field):\n
+  business_field = business_field.split(\'/\')[0]\n
   result = []\n
   # XXX this might be too simple: some business template include more than one skin folder\n
   bt = portal_templates.getInstalledBusinessTemplate("erp5_%s" % business_field)\n
@@ -97,7 +98,6 @@ for business_field in business_field_list:\n
     if not term_list:\n
       continue\n
 \n
-    line = newTempBase(context, \'tmp_glossary_wf_item_%s\' %  c)\n
     c += 1\n
     if type == \'workflow\':\n
       wf_item_path = wf_item.id\n
@@ -113,6 +113,12 @@ for business_field in business_field_list:\n
       wf_item_title = wf_item.actbox_name\n
     wf_item_description = wf_item.description\n
 \n
+    if len(term_list) == 1 and \\\n
+        term_list[0].getTitle() == wf_item_title and \\\n
+        term_list[0].getDescription() == wf_item_description:\n
+      continue\n
+\n
+    line = newTempBase(context, \'tmp_glossary_wf_item_%s\' %  c)\n
     line.edit(wf_item_path=wf_item_path,\n
               wf_item_type=type,\n
               wf_item_title=wf_item_title,\n
@@ -185,11 +191,13 @@ return line_list\n
                             <string>reference</string>
                             <string>type</string>
                             <string>term_list</string>
-                            <string>line</string>
                             <string>_inplacevar_</string>
                             <string>wf_item_path</string>
                             <string>wf_item_title</string>
                             <string>wf_item_description</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>line</string>
                           </tuple>
                         </value>
                     </item>

@@ -341,16 +341,8 @@
                           <string>Type</string>
                         </tuple>
                         <tuple>
-                          <string>wf_item_title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>wf_item_description</string>
-                          <string>Current Description</string>
-                        </tuple>
-                        <tuple>
                           <string>term</string>
-                          <string>Term</string>
+                          <string>Title / Description</string>
                         </tuple>
                       </list>
                     </value>
@@ -393,7 +385,7 @@
                       <list>
                         <tuple>
                           <string>term</string>
-                          <string>Term</string>
+                          <string>Title / Description</string>
                         </tuple>
                       </list>
                     </value>
@@ -501,24 +493,18 @@
                     <value> <string>Field List</string> </value>
                 </item>
                 <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>url_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
                           <string>wf_item_path</string>
                           <string>GlossaryModule_getWorkflowItemEditUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>wf_item_type</string>
-                          <string></string>
-                        </tuple>
-                        <tuple>
-                          <string>wf_item_title</string>
-                          <string></string>
-                        </tuple>
-                        <tuple>
-                          <string>term</string>
-                          <string></string>
                         </tuple>
                       </list>
                     </value>

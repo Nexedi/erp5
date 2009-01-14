@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ListField" module="Products.Formulator.StandardFields"/>
+        <global name="RadioField" module="Products.Formulator.StandardFields"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -65,10 +65,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>extra_item</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -85,11 +81,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>required</string> </key>
+                    <key> <string>orientation</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>size</string> </key>
+                    <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -142,10 +138,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>extra_item</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -164,11 +156,11 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>required</string> </key>
+                    <key> <string>orientation</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>size</string> </key>
+                    <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -219,12 +211,8 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>extra_item</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>style="text-align:left"</string> </value>
                 </item>
                 <item>
                     <key> <string>first_item</string> </key>
@@ -241,16 +229,16 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>orientation</string> </key>
+                    <value> <string>vertical</string> </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>size</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Term</string> </value>
+                    <value> <string>Description</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -293,7 +281,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(\'\', \'\')] + [("%s, %s" %(i.getTitle(), i.getDescription()[:30]), i.getUid()) for i in CONTEXTS[\'cell\'].term_list]</string> </value>
+            <value> <string>python:[(\'(current) %s / %s\' % (cell.wf_item_title, cell.wf_item_description), \'\')] + [("[%s] %s / %s" %(i.getBusinessFieldTitle(), i.getTitle(), i.getDescription()), i.getUid()) for i in CONTEXTS[\'cell\'].term_list]</string> </value>
         </item>
       </dictionary>
     </pickle>

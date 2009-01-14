@@ -345,16 +345,8 @@
                           <string>Note</string>
                         </tuple>
                         <tuple>
-                          <string>field_title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>field_description</string>
-                          <string>Current Description</string>
-                        </tuple>
-                        <tuple>
                           <string>term</string>
-                          <string>Term</string>
+                          <string>Title / Description</string>
                         </tuple>
                       </list>
                     </value>
@@ -505,6 +497,12 @@
                     <value> <string>Field List</string> </value>
                 </item>
                 <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>url_columns</string> </key>
                     <value>
                       <list>
@@ -518,14 +516,6 @@
                         </tuple>
                         <tuple>
                           <string>field_note</string>
-                          <string></string>
-                        </tuple>
-                        <tuple>
-                          <string>field_title</string>
-                          <string></string>
-                        </tuple>
-                        <tuple>
-                          <string>term</string>
                           <string></string>
                         </tuple>
                       </list>

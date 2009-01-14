@@ -64,11 +64,12 @@ def get_term_list(business_field, reference):\n
   term_list = portal_catalog(portal_type=\'Glossary Term\',\n
                              validation_state=\'validated\',\n
                              language_id=\'en\',\n
-                             business_field_title=business_field,\n
+                             business_field_title=(\'core\', business_field),\n
                              reference=reference)\n
   return [i.getObject() for i in term_list]\n
 \n
 def get_field_and_reference_list(business_field):\n
+  business_field = business_field.split(\'/\')[0]\n
   result = []\n
   skin_folder = getattr(portal_skins, \'erp5_%s\' % business_field, None)\n
   if skin_folder is None:\n
@@ -99,7 +100,6 @@ for business_field in business_field_list:\n
                                field.aq_parent.getId(),\n
                                field.getId())\n
 \n
-    line = newTempBase(context, \'tmp_glossary_field_%s\' %  c)\n
     c += 1\n
     field_title = field.get_value(\'title\')\n
     field_description = field.get_value(\'description\')\n
@@ -110,6 +110,12 @@ for business_field in business_field_list:\n
       elif field.get_tales_expression(\'title\') is not None:\n
         field_note_list.append(\'Tales is used.\')\n
 \n
+    if len(term_list) == 1 and \\\n
+        term_list[0].getTitle() == field_title and \\\n
+        term_list[0].getDescription() == field_description:\n
+      continue\n
+\n
+    line = newTempBase(context, \'tmp_glossary_field_%s\' %  c)\n
     line.edit(field_title=field_title,\n
               field_path=field_path,\n
               field_edit_url = \'%s/manage_main\' % field.absolute_url(),\n
@@ -181,13 +187,15 @@ return line_list\n
                             <string>reference</string>
                             <string>term_list</string>
                             <string>field_path</string>
-                            <string>line</string>
                             <string>_inplacevar_</string>
                             <string>field_title</string>
                             <string>field_description</string>
                             <string>field_note_list</string>
                             <string>True</string>
                             <string>None</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>line</string>
                           </tuple>
                         </value>
                     </item>
