@@ -12,7 +12,6 @@
  <key>item_resource_category_uid | category/category_uid/z_related_resource_uid_from_item</key>
  <key>item_section_category_uid | category/category_uid/z_related_section_uid_from_item</key>
  <key>metric_type_uid | measure/metric_type_uid/z_related_metric_type</key>
- <key>parent_base_contribution_uid | category,catalog/uid/z_related_parent_base_contribution</key>
  <key>parent_description | catalog/description/z_related_parent</key>
  <key>parent_float_index | catalog/float_index/z_related_parent</key>
  <key>parent_int_index | catalog/int_index/z_related_parent</key>
