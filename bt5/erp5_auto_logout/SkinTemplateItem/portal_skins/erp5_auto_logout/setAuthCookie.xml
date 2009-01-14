@@ -1,0 +1,289 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_bindings_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_cache_settings_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_permissions_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Copy_or_Move_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Delete_objects_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Manage_WebDAV_Locks_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Manage_properties_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Take_ownership_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Undo_changes_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_management_screens_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_WebDAV_Lock_items_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_WebDAV_Unlock_items_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_WebDAV_access_Permission</string> </key>
+            <value>
+              <list>
+                <string>Manager</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from DateTime import DateTime\n
+kw = {\'name\': cookie_name,\n
+      \'value\': cookie_value,\n
+      \'path\': \'/\'}\n
+ac_session_key_pattern = \'ac_cookie_%s\'\n
+user_name = context.REQUEST.get(\'__ac_name\', None)\n
+expire_interval = context.ERP5Site_getMaxUserInactivityDuration(user_name)\n
+\n
+# set cookie expire argument only if it\'s defined for current user\n
+if expire_interval not in (\'\', None):\n
+  expire_time_offset = 0.00069444444444444436 * (expire_interval / 60.0)\n
+  ac_expires = DateTime() + expire_time_offset\n
+  ac_renew = DateTime() + expire_time_offset / 2\n
+  kw[\'expires\'] = ac_expires.rfc822()\n
+  # save next \'__ac\' renew time\n
+  context.portal_sessions[ac_session_key_pattern %user_name][\'ac_renew\'] = ac_renew.millis()\n
+else:\n
+  # cookie will expire at client browser end of session, \n
+  # mark it at server side with zero (0)\n
+  context.portal_sessions[ac_session_key_pattern %user_name][\'ac_renew\'] = 0\n
+\n
+# set cookie\n
+resp.setCookie(**kw)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>resp, cookie_name, cookie_value</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>resp</string>
+                            <string>cookie_name</string>
+                            <string>cookie_value</string>
+                            <string>DateTime</string>
+                            <string>kw</string>
+                            <string>ac_session_key_pattern</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>None</string>
+                            <string>user_name</string>
+                            <string>expire_interval</string>
+                            <string>expire_time_offset</string>
+                            <string>ac_expires</string>
+                            <string>ac_renew</string>
+                            <string>_write_</string>
+                            <string>_getitem_</string>
+                            <string>_apply_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>setAuthCookie</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Set Authentication Cookie</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

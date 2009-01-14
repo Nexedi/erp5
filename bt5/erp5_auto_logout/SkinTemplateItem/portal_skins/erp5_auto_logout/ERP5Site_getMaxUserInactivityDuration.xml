@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>""" Get (in seconds) authentication expire interval for an user. """\n
+from zExceptions import Unauthorized\n
+from Products.ERP5Type.Cache import CachingMethod\n
+\n
+def getMaxUserInactivityDuration(user_name=None):\n
+  expire_interval = None\n
+  portal_preferences = context.portal_preferences\n
+  try:\n
+    active_preference = portal_preferences.getActivePreference()\n
+  except Unauthorized:\n
+    # when logging for first time through login_form user is still anonymous \n
+    # and so getActivePreference is not accessible. Try to get default preference\n
+    # for an ERP5 site \n
+    active_preference = getattr(portal_preferences, \'default_site_preference\', None)\n
+  if active_preference  is not None:\n
+    expire_interval = active_preference.getPreferredMaxUserInactivityDuration()\n
+  return expire_interval\n
+\n
+getMaxUserInactivityDuration = CachingMethod( \\\n
+                                 getMaxUserInactivityDuration, \\\n
+                                 "ERP5Site_getMaxUserInactivityDuration", \\\n
+                                 cache_factory=\'erp5_ui_medium\')\n
+return getMaxUserInactivityDuration(user_name)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>user_name=None</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>user_name</string>
+                            <string>zExceptions</string>
+                            <string>Unauthorized</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
+                            <string>None</string>
+                            <string>getMaxUserInactivityDuration</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_getMaxUserInactivityDuration</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
