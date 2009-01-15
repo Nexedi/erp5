@@ -77,7 +77,10 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
                  divergence_scope='quantity',
                  simulation_movement = simulation_movement,
                  decision_value = d_quantity ,
+                 # use repr to have more precise float display
+                 decision_title = repr(d_quantity),
                  prevision_value = quantity,
+                 prevision_title = repr(quantity),
                  tested_property='quantity',
                  message='Quantity',
                  )
@@ -97,6 +100,7 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
     if delivery_ratio is not None:
       d_quantity *= delivery_ratio
       message.decision_value = d_quantity
+      message.decision_title = repr(d_quantity)
       if delivery_ratio == 0 and quantity > 0:
         return [message]
     if d_quantity != quantity + d_error:
