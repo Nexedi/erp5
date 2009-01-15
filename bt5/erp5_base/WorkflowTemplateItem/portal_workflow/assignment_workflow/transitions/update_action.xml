@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>With this action, the Manager of the Assignor can update the assignment data before reopening it.</string> </value>
+            <value> <string>Action called in order to change the state of the assignment to update it</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Update Assignment</string> </value>
+            <value> <string>Update Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

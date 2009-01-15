@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>building the packing list by gathering orders</string> </value>
+            <value> <string>Building is used when a packing list is confirmed, during the calculation process of ERP5. A building causality state indicates that the system is calculating whether the Packing list is convergent or divergent.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

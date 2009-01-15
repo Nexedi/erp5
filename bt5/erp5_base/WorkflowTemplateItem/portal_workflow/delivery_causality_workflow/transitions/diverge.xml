@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>transition called when current is different from prevision</string> </value>
+            <value> <string>This Causality state appears when the goods shipped are different from the initial previsions. This means that the user must make a decision such as Adopt Prevision or Split and Defer the Sales Packing List. Before a divergent Document can be processed, it must be taken care of by a user in order to be set as convergent, using one of the actions explained above.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Divergent</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

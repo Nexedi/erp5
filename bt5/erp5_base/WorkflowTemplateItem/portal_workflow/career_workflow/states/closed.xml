@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>State of a career which has been closed</string> </value>
+            <value> <string>The Closed State notifies that either the accounting period, the account or the transaction has been closed, and cannot be modified anymore.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>calculating if packing list is divergent or not</string> </value>
+            <value> <string>This will be the state displayed whenever ERP5 is doing calculation. After the calculation is over, this state will be turned to another state, such as delivered for example, or solved.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

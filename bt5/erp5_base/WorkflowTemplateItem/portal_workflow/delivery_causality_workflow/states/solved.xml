@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Means that current is the same as the prevision</string> </value>
+            <value> <string>The solved state is displayed whenever a divergent state has been corrected by a user of ERP5. A divergent state can strike a sales packing list for example, or an invoice, whenever the ordered and delivered quantities are different. Unless a user would take an action to solve this situation, the document could not be processed. When an action has been taken and the divergent stat has been corrected, the document will display the Solved state, and users will be able to process it again.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
