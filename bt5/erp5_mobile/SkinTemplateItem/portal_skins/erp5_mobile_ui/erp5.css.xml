@@ -316,7 +316,7 @@
         </item>
         <item>
             <key> <string>listbox_even_background_color</string> </key>
-            <value> <string>#DAE6E6</string> </value>
+            <value> <string>#DAE6F6</string> </value>
         </item>
         <item>
             <key> <string>listbox_hover_background_color</string> </key>
@@ -910,7 +910,7 @@ fieldset {\n
 }\n
 \n
 #search button .image {\n
-  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/info.png\');\n
+  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/search.png\');\n
 }\n
 \n
 #actions button .image {\n
@@ -1021,7 +1021,7 @@ p.clear {\n
 }\n
 \n
 body {\n
-  background-color: #DAE6E6;\n
+  background-color: <dtml-var background_color>;\n
 }\n
 \n
 #transition_message {\n
