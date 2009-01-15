@@ -63,7 +63,6 @@ import Products.ERP5Type.Document
 
 from lxml import etree
 from lxml.etree import Element
-from copy import deepcopy
 
 # Constructors
 manage_addOOoTemplate = DTMLFile("dtml/OOoTemplate_add", globals())
