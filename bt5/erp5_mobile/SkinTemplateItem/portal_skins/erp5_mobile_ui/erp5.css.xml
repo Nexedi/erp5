@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>__name__</string> </key>
             <value> <string>erp5.css</string> </value>
         </item>
@@ -264,11 +258,11 @@
         </item>
         <item>
             <key> <string>alternate_font_color</string> </key>
-            <value> <string>#597d9b</string> </value>
+            <value> <string>#596dab</string> </value>
         </item>
         <item>
             <key> <string>background_color</string> </key>
-            <value> <string>#DAE6E6</string> </value>
+            <value> <string>#DAE6F6</string> </value>
         </item>
         <item>
             <key> <string>button_description_color</string> </key>
@@ -276,27 +270,27 @@
         </item>
         <item>
             <key> <string>context_bar_background_color</string> </key>
-            <value> <string>#BDD0E0</string> </value>
+            <value> <string>#BDD0F0</string> </value>
         </item>
         <item>
             <key> <string>dialog_background_color</string> </key>
-            <value> <string>#BDD0E0</string> </value>
+            <value> <string>#BDD0F0</string> </value>
         </item>
         <item>
             <key> <string>dialog_border_color</string> </key>
-            <value> <string>#3D7474</string> </value>
+            <value> <string>#3D5474</string> </value>
         </item>
         <item>
             <key> <string>document_background_color</string> </key>
-            <value> <string>#D3E6DE</string> </value>
+            <value> <string>#E3EAFA</string> </value>
         </item>
         <item>
             <key> <string>document_border_color</string> </key>
-            <value> <string>#3D7474</string> </value>
+            <value> <string>#3D6474</string> </value>
         </item>
         <item>
             <key> <string>font_color</string> </key>
-            <value> <string>#3D7474</string> </value>
+            <value> <string>#001730</string> </value>
         </item>
         <item>
             <key> <string>font_family</string> </key>
@@ -318,7 +312,7 @@
         </item>
         <item>
             <key> <string>link_hover_color</string> </key>
-            <value> <string>#3D7474</string> </value>
+            <value> <string>#3D6474</string> </value>
         </item>
         <item>
             <key> <string>listbox_even_background_color</string> </key>
@@ -326,11 +320,11 @@
         </item>
         <item>
             <key> <string>listbox_hover_background_color</string> </key>
-            <value> <string>#BDD0E0</string> </value>
+            <value> <string>#BDD0F0</string> </value>
         </item>
         <item>
             <key> <string>listbox_label_background_color</string> </key>
-            <value> <string>#C1DAD2</string> </value>
+            <value> <string>#C1DAEB</string> </value>
         </item>
         <item>
             <key> <string>listbox_odd_background_color</string> </key>
@@ -338,15 +332,15 @@
         </item>
         <item>
             <key> <string>listbox_stat_background_color</string> </key>
-            <value> <string>#C1DAD2</string> </value>
+            <value> <string>#C1DAEB</string> </value>
         </item>
         <item>
             <key> <string>main_border_color</string> </key>
-            <value> <string>#7EC1C1</string> </value>
+            <value> <string>#97B0D1</string> </value>
         </item>
         <item>
             <key> <string>navigation_bar_background_color</string> </key>
-            <value> <string>#97B0C1</string> </value>
+            <value> <string>#97B0D1</string> </value>
         </item>
         <item>
             <key> <string>raw</string> </key>

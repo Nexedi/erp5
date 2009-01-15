@@ -3,20 +3,15 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>OFS.Image</string>
-          <string>Image</string>
-        </tuple>
-        <none/>
+        <global name="Image" module="OFS.Image"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts32023537.4</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -28,8 +23,8 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAAMklEQVQoz2NkYGD4z0AGIFXTfxY8
-mhmxiDPSxCaYybS1iZGAP6lrEy4/DvbQYyQn7QEAnOkYCTG5xcYAAAAASUVORK5CYII=</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAAL0lEQVQokWNgYGD4TwaGECQAFE0Y
+pmERx9BEFZuwiVPfJgYsYrSzCZ8fh0LokYQBAPVVq8BxHx8AAAAASUVORK5CYII=</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -41,7 +36,7 @@ mhmxiDPSxCaYybS1iZGAP6lrEy4/DvbQYyQn7QEAnOkYCTG5xcYAAAAASUVORK5CYII=</string> </
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>107</int> </value>
+            <value> <int>104</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

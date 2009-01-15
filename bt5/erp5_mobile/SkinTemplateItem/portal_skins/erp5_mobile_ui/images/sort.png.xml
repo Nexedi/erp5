@@ -3,20 +3,15 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>OFS.Image</string>
-          <string>Image</string>
-        </tuple>
-        <none/>
+        <global name="Image" module="OFS.Image"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts32023538.79</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -28,12 +23,10 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGOfPtRkwAAACBjSFJN
-AAB6JQAAgIMAAPn/AACA6AAAdTAAAOpgAAA6lwAAF2+XqZnUAAAA4UlEQVR4nGL8//8/Ay0AQAAx
-0cRUIAAIIBZqGNLI2Iji7fr/9YwAAUQ1FzcwNDCCMIwPEEA0CwqAAKJKUIAA0LUowQEQQIzUSBWM
-jIwofJCZAAFEkotBBqC7DBq26K5jBAggssIYPaKwiQEEEM0iDyCAyIo8LF7HEAMIIJyRhx4hpACQ
-mQABhNfFxEQUrsgDCCCCYUxMRGETAwggmkUeQAARjDxiIgqbGEAAgQOa2mUyyDyAAIK7mNyIwhV5
-AAHEhEURyRGFTQwggGgWeQABhBJ5ZEcUFjGAAKJKsYkNAAQYAD8nXy80wncmAAAAAElFTkSuQmCC</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAo0lEQVQ4y2P4//8/Ay0ww8gzmIGh
+4QYIYzUYCP7DMBkGXwNhWrh4AAxGDgpSg2WEBAWuYAEaxAPEElB8HYrFGBjahBkYJrGT7WKgIZ1A
+/AaInwLxZyh+BsRvGRgaSykKCqAhy4H4OxD/h+IvQDyd5KBADxYgxQg0aA0Q/wTir0A8h2qRBzSM
+CYjXAb0/j76FEKlBQUwmGqLlMSVBgTMTDbmgAACq7doyXcaG7AAAAABJRU5ErkJggg==</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -45,7 +38,7 @@ AAHEhEURyRGFTQwggGgWeQABhBJ5ZEcUFjGAAKJKsYkNAAQYAD8nXy80wncmAAAAAElFTkSuQmCC</st
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>342</int> </value>
+            <value> <int>220</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

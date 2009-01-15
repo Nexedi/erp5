@@ -3,20 +3,15 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>OFS.Image</string>
-          <string>Image</string>
-        </tuple>
-        <none/>
+        <global name="Image" module="OFS.Image"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts32023537.94</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -28,26 +23,22 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGPC/xhBQAAAAZiS0dE
-AAAAAAAA+UO7fwAAAAlwSFlzAAALEAAACxABrSO9dQAAAAd0SU1FB9EGDwsuJY7DslYAAAPVSURB
-VHicrZRNTFxVFMd/782MAQYcvmfA0pbYAMWWps0IiSGm1lTroqaxYSHIh25JTTHQ7oiumlQTTFyQ
-1MQ2NJaFG3YFIwyJWAoGmUBVOkEaGb4mTN+bGWDm8T7muiAgLYzWxv/u3HvyO/97Tu6R2Ef19Q1i
-fn4em81GMpnEbrfj8Xjo7b0j7Ze/n+y7g6amZhEOhzlWdYy6hvfJyslDAIlYhPs//kRJSYmorKxk
-YGDgXwvsJJw9+5ao8Xq5+NGHFBZ60Ow2kB0YIsmGJci22yCm8tW1a0xPTzE4OPiPcBvA+fPviler
-vbRc+ph8TxGejDRMJBY0A1XT+XMtQUCJQEY6b9e+hhJaweFwfDo3N/dZKrDs8/nKLMvi3Ht1ZOXk
-UODY6k6Bw87LGQ7WDJOEaRLREtxbWGHKtHGh4QMWl5bp6+srS+nYsqzwhbo6jh4/jm63o5mCLIeN
-VcMksBYnZlrErSQbusVKJIa6uUlGXiEnDxTww8D3lyYnJ/d1LSuKiruoGGdmFkrCYjGu70BXNRNl
-0yCsGyxtWiw+VlCjKrIEBWWvEAwGU/bYDiA7toakJ3USksxoOIYmBErCRDUNFM1EVVaJranYHaAJ
-QTowOjqaEizrus7q0gIbhkV4Q+ORuk5I03kc11FNHUUzebgeZSW0hK4quDKcyEIQfTSL2+1ODa6o
-KOf36WkS4RDJF9KIaAlWohGCikJwVeFhVGFjNkB8ZRlnoZtTh0o5kojwzc1blJeXh1KCm5uby8fH
-xvnu1k2OZqVR7MpGi8dZjsYIhRZIzAYwVAV36RHePOnlTH4mv9y/h2+gn87OztfZ9Rd2SxJCFHV1
-dS1N+icpLS2l/nI7QT3JnBpFTcSJ6hYvpqdT48mn2CFx58svGBn7maH+u1QH5xkvOZgSbJckyWxo
-aBC5ebm4XC6SB0s5ceIUBw4fBEAJLvDr3B8sjI3y24MHDPXfBSG43PYJfr+f4WHfHvjOgRAiu7Gx
-UY1GY2RmOikufglZljFNEyEEUzMzCCHwDfRTHZwno7EZn2+I9vYOJiYm9sB3lpAkSZHtQm1tbSIQ
-CCDLEoZhIISg7PAhuru7HVnf9hpcrEPOzaWj4wpXr17h+vXPAcRu+DOvQSGETZIkazusrq4hMzcX
-b1UVLS3N3Ljx9RNteWJt1tbWSiMjI2LfYfwN3TYk1hWFkbExdF2nqalxx8PwsE96ZsepHrLtvKqi
-gqamRnp6buP3+5Gfzmxtbf0vxSSAdUVhamaGnp7buFyurRuv1ys/nficzsWZc+8Ip9MpTp9+Y992
-Pq8E8L9D9+gv2nfa+T8QLnEAAAAASUVORK5CYII=</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAADUUlEQVQ4y63U3U9SYRwHcP+Byru0
+rc27rirnWq83rjZvqs2LLnLNPGlOS4ryhSwt16TMleHKIlcBvdjBNFBb4DLfX1BQUN5EIzFCBUGP
+L0U5176d51m11gW44tl+Y5xxPs/vfJ8fJyrqj8WyzXH19Ro5W6/llCoNalVv8KpRg3qVxlRX9+Zc
+1L8shULFPH6u5li1Fo0t3Xjbo8e7vkFazV39aNC8Q41SZZLJVPFrRquqaphqGYtX2nYKduiN6B4a
+odUxYESvyYJ+sx2tfQY8q6nl+N/HhUXLyuRxlfefcgRt1Q1Bb7HD/N4J64cJDI87KdqpN1GYfG/r
+0+OeVN4eFhaLqyQKZQN9XHKz46MbH30+eGZnMWQfw/gnDwzWURgd4xS2uybB1qlRWno3dCSXr952
+NbR00W7JjQSdX1rC8pcvFJyc8cI24cKY+xMtp8cDndGEK1euS0LCJaUV0Hbq0Gkw0Qjcvlks8ujU
+rB9m5wRm5uYwMT2NSa+Xbko+XTMzEImKQ8chLq+kB9Y1OEwPq2/YCpPjPd2EIIGFBRrLdCBANyE1
+5fdDKMwLDV8ouoaWXgOFB20OGoeZLxKBn+Mo6p2fpxuQiOYWF+Hjr2dm5oSGmZO5LnJwPUYz3YDk
+SjL9MDVFH510SDASz+dgkGY/YrUhJSUzdMaHDqVLqhUshUnXuhEbzZbAJG/SHbe8jOC3b1hdXcXX
+lRXcqqgEf1/oqUhMzIg+libgyFSQbukch4Dtow6kpmYhK0sc/k9y4ACTfF5UQrsmh0ZgMr9/R2Gx
+jSI7+yw/w1IUFEiSw8K/8LQMIf/yafoNk7H6dXg1bC3S0wUoL3+EJ09eQ3FHgjZRHDRnNsnD4iSW
+pKTjkmPHc1xnhAU4lyviqxAHD6a089eZoqJ78fn5txPFokLXS8EWTD7aAVNRNF6kx4bH17IepMRy
+fkMxgqM3EVDuwYAoGtKjEcArkmOZpktb8d37EEH7DYp3525A2eEI4JeTYhhlHo/7ZDxehgC7C62C
+9SjcH/P/uHBfDCMXbONxOYK2awi82Alt9jqc3h0B/ETCRuZB1nZ89ysQtIjhliXg1N7N+G+YrLT4
+jYyUx5ec91FyJAH5py9GBv6Jy7P3xEKQkcePZ476Bx9E8BTb4peEAAAAAElFTkSuQmCC</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -59,7 +50,7 @@ Pq8E8L9D9+gv2nfa+T8QLnEAAAAASUVORK5CYII=</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1112</int> </value>
+            <value> <int>906</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

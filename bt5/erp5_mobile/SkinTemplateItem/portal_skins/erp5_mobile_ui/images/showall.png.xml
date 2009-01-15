@@ -3,20 +3,15 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>OFS.Image</string>
-          <string>Image</string>
-        </tuple>
-        <none/>
+        <global name="Image" module="OFS.Image"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts32023538.74</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -28,13 +23,12 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGOfPtRkwAAACBjSFJN
-AAB6JQAAgIMAAPn/AACA6AAAdTAAAOpgAAA6lwAAF2+XqZnUAAABE0lEQVR4nGL4//8/Azpex5BV
-DsTG2OSIxQABhFUQaOgqIJ5JicEAAYTN0DSQa4H4HRALoihmYPhPCMPUAgQQ1mCA0jNhbHIwQACh
-G+oCMxCIO4D4LrkGAwQQVtci8XeDgoacoAAIIPSwnQkLVxAN5Z8BYiVSXQwQQGTHOiEMEEAkxTgp
-QQEQQDRzMUAA0cxggACiWVAABBDNXAwQQCRrgCZDFxwYniwBAojooEAyGGRAKJqB5dCyBV4iAgQQ
-OS42xuIDUCYKRRYHCCCKwxJaxGIUVgABRHJQoBnagavcBgggSlyaBg0CQWzyAAFErqGgiuAuvsIJ
-IIDISRWC6CkAOcXA2AABRI5rz0BxORruQDYYIMAAyNim+GLVHL8AAAAASUVORK5CYII=</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAA/klEQVQ4jWP4//8/Ay0wpgBDYyoD
+Q8MBIF5LZYMbbgHxfyi2oorBDAxNllADpwPxPyCeiZBj+E8MxmFwwwyIgS3yQPooEL8HYg6KXMzA
+MIkdatADIA4A4iUQ1zeGU2hwQxg0GH4B8Q8oBvG3UhQUQAO2APFfIJZAEtsFxH+QxchxsQ0w8sxR
+wxwc1g5ALEKBwcR5laxUQU1Me4OHf1AAU8oTpDIFhh9TFBQQ9Y2hQIMSoHgH1OBeqgUFJP2Dcysw
+M61iporBwAwkCzTwJRDfYWBoF6Q4VUDU93ECDTwLxJ+AOVabmpG3HBquK5DCGoj/M1Jq8B8sqeI/
+LJxplo4BHXt1WHHJ37AAAAAASUVORK5CYII=</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -46,7 +40,7 @@ IIDISRWC6CkAOcXA2AABRI5rz0BxORruQDYYIMAAyNim+GLVHL8AAAAASUVORK5CYII=</string> </
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>392</int> </value>
+            <value> <int>311</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

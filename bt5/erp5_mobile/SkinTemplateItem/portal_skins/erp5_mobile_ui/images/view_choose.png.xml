@@ -3,20 +3,15 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>OFS.Image</string>
-          <string>Image</string>
-        </tuple>
-        <none/>
+        <global name="Image" module="OFS.Image"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts32023538.92</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -28,14 +23,11 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAABGdBTUEAALGPC/xhBQAAAAZiS0dE
-AP8A/wD/oL2nkwAAAAlwSFlzAAALDwAACw8BkvkDpQAAAAd0SU1FB9AKAgE3NfklaIUAAAEiSURB
-VHic3ZOxTsMwFEWvq4xhpWuHDh3fTBfWrv4Jhu79q8yV+gEwZHmfEAakKChqIyo3lAozoIBN7MRm
-gyNFiq3n+67l+4B/CRGBiABAh55Juh8p5dchpRTqukae56LbY+ZgUQsppdZa67dXpV+qQpvuDLdO
-8e39Ebd3T27HHW1ToT0UfgfzDSjdWTdY3aRmhbCElVI4Pj+iPRQ47weEmwcgBYhI+EqY+Vu4LEtc
-Xc/8goEwMwBgYmwILNYC06XA53XcjibvUY30wNd7vB9r55kgxlLhopeKiEZerMcbG5BYLMdZluFy
-PqFtKn9C5hsAO+ckmhGMH5CRHPfiFjwgsRCRNzajqVisgenyV01dwoMZTowiH75kDCYmCSkKFfvb
-fACVQJ/aPyixfQAAAABJRU5ErkJggg==</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAuklEQVQ4y2NgGJbAwMAAjIHgP8ma
+g4KC/sOwh4fHf1NT0//IBkMNJc9gEPj989v/z68eoBhCyODtx74wOKQ/xW8wyNDXtw7gNlilDN0i
+dIwKQN6HGfr05ALcBovawsMcF0aPIJy2k2IwdqCRzcAgbo01VcANBsqTYvB/fGGGHnkEwpj4lENR
+ciPFYJIij5QMQrLBRGUQPOkYr8EEMwipyY1aGQRbBBGXQUhI/+QmN6LSMEkZhBbpeBgDAJHO7Rxe
+4lvrAAAAAElFTkSuQmCC</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -47,7 +39,7 @@ fACVQJ/aPyixfQAAAABJRU5ErkJggg==</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>421</int> </value>
+            <value> <int>243</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
