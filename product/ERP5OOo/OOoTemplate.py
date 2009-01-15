@@ -61,13 +61,9 @@ except ImportError:
 from Products.ERP5.Document.Document import ConversionError
 import Products.ERP5Type.Document
 
-try:
-  from libxml2 import parseDoc
-except ImportError:
-  LOG('OOoUtils', INFO, "Can't import libxml2.parseDoc")
-  class parseDoc:
-    def __init__(self, *args, **kw):
-      raise ImportError, "Sorry, it was not possible to import libxml2 library, python2.4-libxml2 is not installed"
+from lxml import etree
+from lxml.etree import Element
+from copy import deepcopy
 
 # Constructors
 manage_addOOoTemplate = DTMLFile("dtml/OOoTemplate_add", globals())
@@ -401,25 +397,23 @@ class OOoTemplate(ZopePageTemplate):
         replacement = '<text:p text:style-name="Standard">'+replacement+'</text:p>'
       return replacement
 
-    xml_doc = parseDoc(text)
-    draw_ns = xml_doc.getRootElement().searchNs(xml_doc, 'draw')
-    xlink_ns = xml_doc.getRootElement().searchNs(xml_doc, 'xlink')
-    for office_include in xml_doc.xpathEval('//*[name() = "office:include"]'):
-      marshal_list = office_include.xpathEval('./marshal')
+    xml_doc = etree.XML(text)
+    for office_include in xml_doc.xpath('//*[name() = "office:include"]'):
+      marshal_list = office_include.xpath('./marshal')
       if marshal_list:
         from xml.marshal.generic import loads
-        arg_dict = loads(marshal_list[0].serialize('utf-8', 0))
+        arg_dict = loads(etree.tostring(marshal_list[0], encoding='utf-8',
+                                        xml_declaration=True, pretty_print=False))
         extra_context.update(arg_dict)
         request.other.update(arg_dict)
-      attr_path_list = office_include.xpathEval('./@path')
-      path = attr_path_list[0].content
+      path = office_include.attrib['path']
       new_path = replaceIncludes(path)
-      draw_object = xml_doc.newChild(draw_ns, 'object', None)
-      draw_object.setNsProp(xlink_ns, 'href', new_path)
-      draw_object.copyPropList(office_include)
-      office_include.replaceNode(draw_object)
-    text = xml_doc.serialize('utf-8', 0)
-    xml_doc.freeDoc()
+      draw_object = Element('{%s}object' % xml_doc.nsmap.get('draw'))
+      draw_object.attrib.update({'{%s}href' % xml_doc.nsmap.get('xlink'): new_path})
+      draw_object.attrib.update(dict(office_include.attrib))
+      office_include.getparent().replace(office_include, draw_object)
+    text = etree.tostring(xml_doc, encoding='utf-8', xml_declaration=True,
+                          pretty_print=False)
     text = re.sub('<\s*office:include_img\s+(.*?)\s*/\s*>(?s)', replaceIncludesImg, text)
 
     return (text, attached_files_dict)
