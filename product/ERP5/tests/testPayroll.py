@@ -691,6 +691,11 @@ class TestPayroll(TestPayrollMixin):
             [self.payroll_service_organisation.getRelativeUrl()],
             pay_sheet_line._getCategoryMembershipList('source_section'))
 
+        # check the base_contribution has been copied from the pay sheet model
+        # to the pay sheet line
+        self.assertEquals(model_line1.getBaseContributionList(),
+                          pay_sheet_line.getBaseContributionList())
+
       elif service == self.labour_id:
         cell = pay_sheet_line.getCell(\
             'tax_category/'+ self.tax_category_employee_share,
@@ -699,6 +704,11 @@ class TestPayroll(TestPayrollMixin):
         self.assertEqual(10000, value)
         self.assertEquals([],
             pay_sheet_line._getCategoryMembershipList('source_section'))
+
+        # check the base_contribution has been copied from the pay sheet model
+        # to the pay sheet line
+        self.assertEquals(model_line2.getBaseContributionList(),
+                          pay_sheet_line.getBaseContributionList())
 
       else:
         self.fail("Unknown service for line %s" % pay_sheet_line)
@@ -2488,8 +2498,6 @@ class TestPayroll(TestPayrollMixin):
     self.assertEquals(410 + 205, line.getDestinationCredit())
     self.assertEquals(employer, line.getDestinationSectionValue())
     self.assertEquals(provider, line.getSourceSectionValue())
-
-
 
 import unittest
 def test_suite():
