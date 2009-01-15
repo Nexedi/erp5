@@ -300,7 +300,7 @@ class PaySheetTransaction(Invoice):
 
     '''
 
-    paysheet = self 
+    paysheet = self
     
     if not batch_mode and listbox is not None:
       model_line_dict = paysheet.getEditableModelLineAsDict(listbox=listbox,
@@ -318,12 +318,6 @@ class PaySheetTransaction(Invoice):
 
     def sortByIntIndex(a, b):
       return cmp(a.getIntIndex(), b.getIntIndex())
-
-
-    # XXX should this be recursive ? then should membership be strict
-    base_amount_list = paysheet.portal_categories['base_amount'].contentValues()
-    base_amount_list.sort(sortByIntIndex)
-
 
     # get model lines
     portal_type_list = ['Pay Sheet Model Line']
@@ -350,9 +344,8 @@ class PaySheetTransaction(Invoice):
                                         model_line.getRelativeUrl())
       title = model_line.getTitleOrId()
       int_index = model_line.getFloatIndex()
-      base_amount_list = model_line.getBaseAmountList()
       resource = service.getRelativeUrl()
-      base_participation_list = service.getBaseAmountList()
+      base_contribution_list = model_line.getBaseContributionList()
       
       # get the service provider, either on the model line, or using the
       # annotation line reference.
@@ -484,22 +477,21 @@ class PaySheetTransaction(Invoice):
         if quantity and price:
           cell_list.append(cell_dict)
 
-          # update the base_participation
-          for base_participation in base_participation_list:
-            base_participation = 'base_amount/%s' % base_participation
+          # update the base_contribution
+          for base_contribution in base_contribution_list:
             if quantity:
-              if base_amount_dict.has_key(base_participation) and \
-                  base_amount_dict[base_participation].has_key(share):
-                old_val = base_amount_dict[base_participation][share]
+              if base_amount_dict.has_key(base_contribution) and \
+                  base_amount_dict[base_contribution].has_key(share):
+                old_val = base_amount_dict[base_contribution][share]
               else:
                 old_val = 0
               new_val = old_val + quantity
-              if not base_amount_dict.has_key(base_participation):
-                base_amount_dict[base_participation]={}
+              if not base_amount_dict.has_key(base_contribution):
+                base_amount_dict[base_contribution]={}
 
               if price:
                 new_val = round((old_val + quantity*price), precision)
-              base_amount_dict[base_participation][share] = new_val
+              base_amount_dict[base_contribution][share] = new_val
 
       if cell_list:
         # create the PaySheetLine
@@ -511,7 +503,7 @@ class PaySheetTransaction(Invoice):
                                             desc=desc,
                                             # TODO: this is base_contribution,
                                             # not base_amount
-                                            base_amount_list=base_participation_list,
+                                            base_amount_list=base_contribution_list,
                                             cell_list=cell_list,
                                             categories=categories)
         pay_sheet_line_list.append(pay_sheet_line)
