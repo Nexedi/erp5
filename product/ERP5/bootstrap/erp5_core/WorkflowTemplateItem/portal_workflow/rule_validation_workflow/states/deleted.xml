@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Documents in this state were deleted by the user as a result of clicking on the trash button.</string> </value>
+            <value> <string>Documents in this state were deleted by the user as a result of clicking on the trash button or calling the delete action</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

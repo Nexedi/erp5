@@ -23,7 +23,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Workflow that defined the edition of a document</string> </value>
+            <value> <string>Worflow that defines the edition of a document</string> </value>
         </item>
         <item>
             <key> <string>groups</string> </key>

@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Enable a preference</string> </value>
+            <value> <string>Enables a preference</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>enable</string> </value>
+            <value> <string>Enable</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

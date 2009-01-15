@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>action called when editiing a documen</string> </value>
+            <value> <string>action called when editing a document</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>edit</string> </value>
+            <value> <string>Edit</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

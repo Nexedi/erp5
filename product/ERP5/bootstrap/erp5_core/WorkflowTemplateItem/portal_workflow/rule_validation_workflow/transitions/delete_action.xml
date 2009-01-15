@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The action call by the user to set the document to the deleted state</string> </value>
+            <value> <string>Delete a document in ERP5</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

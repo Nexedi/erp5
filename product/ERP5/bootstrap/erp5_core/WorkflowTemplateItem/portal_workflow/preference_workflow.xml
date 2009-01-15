@@ -59,7 +59,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>User Profiles Workflow</string> </value>
+            <value> <string>User Preference Workflow</string> </value>
         </item>
       </dictionary>
     </pickle>
