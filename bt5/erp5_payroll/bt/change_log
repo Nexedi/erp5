@@ -1,3 +1,6 @@
+2009-01-15 fabien
+* update bt format
+
 2008-09-16 Kazuhiko
 * revise pay_sheet_transaction_builder using new API.
 * use  delivery_causality_workflow instead of invoice_causality_workflow in Pay Sheet Transaction.
