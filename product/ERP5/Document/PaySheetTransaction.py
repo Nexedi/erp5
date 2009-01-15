@@ -143,7 +143,7 @@ class PaySheetTransaction(Invoice):
   security.declareProtected(Permissions.AddPortalContent,
                             'createPaySheetLine')
   def createPaySheetLine(self, cell_list, title='', resource='',
-                         description='', base_amount_list=None, int_index=None,
+                         description='', base_contribution_list=None, int_index=None,
                          categories=None, **kw):
     '''
     This function register all paysheet informations in paysheet lines and 
@@ -178,7 +178,7 @@ class PaySheetTransaction(Invoice):
                        variation_base_category_list=('tax_category',
                                                      'salary_range'),
                        variation_category_list=var_cat_list,
-                       base_amount_list=base_amount_list,
+                       base_contribution_list=base_contribution_list,
                        int_index=int_index,
                        **kw)
 
@@ -501,9 +501,7 @@ class PaySheetTransaction(Invoice):
                                             source_section=source_section,
                                             int_index=int_index,
                                             desc=desc,
-                                            # TODO: this is base_contribution,
-                                            # not base_amount
-                                            base_amount_list=base_contribution_list,
+                                            base_contribution_list=base_contribution_list,
                                             cell_list=cell_list,
                                             categories=categories)
         pay_sheet_line_list.append(pay_sheet_line)
