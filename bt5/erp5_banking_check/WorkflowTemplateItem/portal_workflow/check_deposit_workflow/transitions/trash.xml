@@ -59,7 +59,7 @@
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>2</int> </value>
         </item>
       </dictionary>
     </pickle>
