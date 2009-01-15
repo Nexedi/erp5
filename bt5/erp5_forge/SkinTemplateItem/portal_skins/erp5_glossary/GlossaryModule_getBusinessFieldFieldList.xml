@@ -61,6 +61,7 @@ portal_catalog = context.portal_catalog\n
 portal_skins = context.portal_skins\n
 \n
 def get_term_list(business_field, reference):\n
+  reference = reference.rsplit(\'_title\', 1)[0]\n
   term_list = portal_catalog(portal_type=\'Glossary Term\',\n
                              validation_state=\'validated\',\n
                              language_id=\'en\',\n
@@ -90,11 +91,15 @@ business_field_list = [i for i in business_field_list if i]\n
 \n
 line_list = []\n
 c = 0\n
+item_dict = {}\n
 for business_field in business_field_list:\n
   for field, reference in get_field_and_reference_list(business_field):\n
     term_list = get_term_list(business_field, reference)\n
-    if not term_list:\n
+    #if not term_list:\n
+    #  continue\n
+    if item_dict.has_key(field):\n
       continue\n
+    item_dict[field] = True\n
 \n
     field_path = \'%s/%s/%s\' % (field.aq_parent.aq_parent.getId(),\n
                                field.aq_parent.getId(),\n
@@ -128,6 +133,7 @@ for business_field in business_field_list:\n
     line.setUid(field_path)\n
     line_list.append(line)\n
 \n
+line_list.sort(key=lambda x:x.field_path)\n
 return line_list\n
 </string> </value>
         </item>
@@ -182,16 +188,18 @@ return line_list\n
                             <string>i</string>
                             <string>line_list</string>
                             <string>c</string>
+                            <string>item_dict</string>
                             <string>business_field</string>
                             <string>field</string>
                             <string>reference</string>
                             <string>term_list</string>
+                            <string>True</string>
+                            <string>_write_</string>
                             <string>field_path</string>
                             <string>_inplacevar_</string>
                             <string>field_title</string>
                             <string>field_description</string>
                             <string>field_note_list</string>
-                            <string>True</string>
                             <string>None</string>
                             <string>len</string>
                             <string>_getitem_</string>

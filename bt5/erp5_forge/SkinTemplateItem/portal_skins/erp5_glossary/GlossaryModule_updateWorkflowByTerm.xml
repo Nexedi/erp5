@@ -82,8 +82,11 @@ for i in kw.keys():\n
   else: # wf_item.meta_type == "Workflow Transition"\n
     guard = getattr(wf_item, \'guard\', None)\n
     if not is_action:\n
+      title = term.getTitle()\n
+      if wf_item_path.endswith(\'_action\'):\n
+        title += \' Action\'\n
       wf_item.setProperties(\n
-          term.getTitle(),\n
+          title,\n
           wf_item.new_state_id,\n
           description=term.getDescription(),\n
 \n
@@ -175,6 +178,8 @@ context.Base_redirect(keep_items={\'portal_status_message\':portal_status_messag
                             <string>getattr</string>
                             <string>None</string>
                             <string>guard</string>
+                            <string>title</string>
+                            <string>_inplacevar_</string>
                             <string>portal_status_message</string>
                           </tuple>
                         </value>

@@ -63,6 +63,7 @@ portal_workflow = context.portal_workflow\n
 portal_templates = context.portal_templates\n
 \n
 def get_term_list(business_field, reference):\n
+  reference = reference.rsplit(\'_action\', 1)[0]\n
   term_list = portal_catalog(portal_type=\'Glossary Term\',\n
                              validation_state=\'validated\',\n
                              language_id=\'en\',\n
@@ -92,11 +93,15 @@ business_field_list = [i for i in business_field_list if i]\n
 \n
 line_list = []\n
 c = 0\n
+item_dict = {}\n
 for business_field in business_field_list:\n
   for wf_item, reference, type in get_obj_and_reference_list(business_field):\n
     term_list = get_term_list(business_field, reference)\n
-    if not term_list:\n
+    #if not term_list:\n
+    #  continue\n
+    if item_dict.has_key(wf_item):\n
       continue\n
+    item_dict[wf_item] = True\n
 \n
     c += 1\n
     if type == \'workflow\':\n
@@ -113,10 +118,16 @@ for business_field in business_field_list:\n
       wf_item_title = wf_item.actbox_name\n
     wf_item_description = wf_item.description\n
 \n
-    if len(term_list) == 1 and \\\n
-        term_list[0].getTitle() == wf_item_title and \\\n
-        term_list[0].getDescription() == wf_item_description:\n
-      continue\n
+    if type == \'transition\' and wf_item_path.endswith(\'_action\'):\n
+      if len(term_list) == 1 and \\\n
+          term_list[0].getTitle() + \' Action\' == wf_item_title and \\\n
+          term_list[0].getDescription() == wf_item_description:\n
+        continue\n
+    else:\n
+      if len(term_list) == 1 and \\\n
+          term_list[0].getTitle() == wf_item_title and \\\n
+          term_list[0].getDescription() == wf_item_description:\n
+        continue\n
 \n
     line = newTempBase(context, \'tmp_glossary_wf_item_%s\' %  c)\n
     line.edit(wf_item_path=wf_item_path,\n
@@ -130,6 +141,7 @@ for business_field in business_field_list:\n
     line.setUid(wf_item_path)\n
     line_list.append(line)\n
 \n
+line_list.sort(key=lambda x:x.wf_item_path)\n
 return line_list\n
 </string> </value>
         </item>
@@ -186,11 +198,14 @@ return line_list\n
                             <string>i</string>
                             <string>line_list</string>
                             <string>c</string>
+                            <string>item_dict</string>
                             <string>business_field</string>
                             <string>wf_item</string>
                             <string>reference</string>
                             <string>type</string>
                             <string>term_list</string>
+                            <string>True</string>
+                            <string>_write_</string>
                             <string>_inplacevar_</string>
                             <string>wf_item_path</string>
                             <string>wf_item_title</string>
