@@ -82,9 +82,9 @@ report_data = context.report_view.pt_render(\n
 attachment_list = (\n
   {\'mime_type\': request.RESPONSE.getHeader(\'content-type\').split(\';\')[0],\n
    \'content\': \'%s\' % report_data,\n
-   \'name\': [x[len(\'filename="\'):-len(\'"\')] for x in request.RESPONSE.getHeader(\n
+   \'name\': [x[len(\'filename=\'):] for x in request.RESPONSE.getHeader(\n
                \'content-disposition\').split(\';\') \\\n
-               if x.startswith(\'filename="\')][0]},)\n
+               if x.startswith(\'filename=\')][0]},)\n
 \n
 # XXX Use notification message to improve message content\n
 portal.portal_notifications.sendMessage(\n
