@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -73,11 +67,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
   <tal:block tal:condition="python: field.meta_type != \'HiddenStringField\'"\n
              tal:define="field_id     field/id;\n
                          value        python: request.get(field_id, None);\n
+                         render_prefix render_prefix | nothing;\n
                          field_errors python: request.get(\'field_errors\', {});\n
                          field_has_error  python: field_errors.has_key(field_id);\n
                          global form_id form_id | python: form.id;\n
                          field_description field/Field_getDescription;">\n
-    <div tal:define="html_render  python: field.render_htmlgrid(value, request)"\n
+    <div tal:define="html_render  python: field.render_htmlgrid(value, request, render_prefix=render_prefix)"\n
          tal:attributes="title field_description;\n
                          class python: \' \'.join([x for x in [\'field\', field.is_required() and \'required\' or None, field_has_error and \'error\' or None, field.get_value(\'css_class\') or None] if x is not None])"\n
          i18n:attributes="title" i18n:domain="ui">\n
