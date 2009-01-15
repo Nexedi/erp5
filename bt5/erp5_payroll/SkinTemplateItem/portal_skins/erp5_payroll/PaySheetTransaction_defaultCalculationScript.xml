@@ -79,7 +79,7 @@ else:\n
 if base_amount_dict:\n
   # get the application amount for this cell\n
   model_line = cell.getParentValue()\n
-  for base in model_line.getBaseAmountList(base=1):\n
+  for base in model_line.getBaseApplicationList():\n
     if base_amount_dict.has_key(base):\n
       base_application += base_amount_dict[base][tax_category]\n
 \n

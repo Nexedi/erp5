@@ -55,7 +55,7 @@
             <key> <string>_body</string> </key>
             <value> <string>\'\'\'\n
   This script return a Pay Sheet Line list with some new parameters on\n
-  each Pay Sheet Line (like base, base_name, base_participation_list,\n
+  each Pay Sheet Line (like base, base_name, base_contribution_list,\n
   payroll_service,...)\n
   It\'s used in the PaySheetTransaction_view to display PaySheetLines\n
 \'\'\'\n
@@ -77,18 +77,18 @@ line_list = []\n
 \n
 for paysheet_line in paysheet_line_list:\n
   base_category_list = paysheet_line.getVariationBaseCategoryList()\n
-  base_application_list = paysheet_line.getBaseAmountTitleList()\n
+  base_application_list = paysheet_line.getBaseApplicationTitleList()\n
   translated_base_application_list = [str(translateString(x)) for x in base_application_list]\n
   base_application_list = \', \'.join(translated_base_application_list)\n
   payroll_service = paysheet_line.getResourceValue(portal_type=\'Payroll Service\')\n
   if payroll_service is not None:\n
-    base_participation_list = payroll_service.getBaseAmountList()\n
+    base_contribution_list = paysheet_line.getBaseContributionList()\n
   else:\n
-    base_participation_list = []\n
+    base_contribution_list = []\n
   causality = paysheet_line.getCausality()\n
 \n
   base_list = [str(translateString(base_application)) for base_application in \\\n
-      paysheet_line.getBaseAmountTitleList()]\n
+      paysheet_line.getBaseApplicationTitleList()]\n
   base_name = \'+\'.join(base_list)\n
 \n
   list_of_list = []\n
@@ -141,7 +141,7 @@ for paysheet_line in paysheet_line_list:\n
                     \'slice\':slice_title,\n
                     \'base_name\':base_name,\n
                     \'base\':base,\n
-                    \'base_participation_list\':base_participation_list,\n
+                    \'base_contribution_list\':base_contribution_list,\n
                     \'base_application_list\': base_application_list,\n
                     \'payroll_service\':payroll_service.getId(),\n
                     \'causality\': causality,}\n
@@ -250,7 +250,7 @@ return line_list\n
                             <string>translated_base_application_list</string>
                             <string>payroll_service</string>
                             <string>None</string>
-                            <string>base_participation_list</string>
+                            <string>base_contribution_list</string>
                             <string>causality</string>
                             <string>base_application</string>
                             <string>base_list</string>

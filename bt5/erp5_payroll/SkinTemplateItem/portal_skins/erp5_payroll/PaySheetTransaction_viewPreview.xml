@@ -97,7 +97,7 @@
                         <string>listbox_model_line</string>
                         <string>listbox_slice_path</string>
                         <string>listbox_base_application_string</string>
-                        <string>listbox_base_participation_string</string>
+                        <string>listbox_base_contribution_string</string>
                         <string>listbox_service_id</string>
                         <string>listbox_quantity</string>
                         <string>listbox_price</string>

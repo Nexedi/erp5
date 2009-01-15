@@ -85,7 +85,7 @@ id = 0\n
 context.log(model_line_list)\n
 for model_line in model_line_list:\n
   base_category_list = model_line.getVariationBaseCategoryList()\n
-  base_application_list = model_line.getBaseAmountTitleList()\n
+  base_application_list = model_line.getBaseApplicationTitleList()\n
   translated_base_application_list = [str(translateString(x)) for x in base_application_list]\n
   base_application_list = \', \'.join(translated_base_application_list)\n
   list_of_list = []\n
@@ -119,11 +119,11 @@ for model_line in model_line_list:\n
     base = quantity\n
 \n
     base_list = [str(translateString(base_application)) for base_application in \\\n
-        model_line.getBaseAmountTitleList()]\n
+        model_line.getBaseApplicationTitleList()]\n
     base_name = \'+\'.join(base_list)\n
 \n
     payroll_service = model_line.getResourceValue()\n
-    base_participation_list = payroll_service.getBaseAmountList()\n
+    base_contribution_list = model_line.getBaseContributionList()\n
 \n
     price = cell.getPrice()\n
     if price is None:\n
@@ -162,7 +162,7 @@ for model_line in model_line_list:\n
                     \'base_name\':base_name,\n
                     \'base\':base,\n
                     \'model_line\': model_line.getRelativeUrl(),\n
-                    \'base_participation_list\':base_participation_list,\n
+                    \'base_contribution_list\':base_contribution_list,\n
                     \'base_application_list\': base_application_list,\n
                     \'service_id\':payroll_service.getId()}\n
       object_dict[salary_range].update(share_dict)\n
@@ -297,7 +297,7 @@ return line_list\n
                             <string>base_list</string>
                             <string>base_name</string>
                             <string>payroll_service</string>
-                            <string>base_participation_list</string>
+                            <string>base_contribution_list</string>
                             <string>price</string>
                             <string>_write_</string>
                             <string>tuple_dict</string>

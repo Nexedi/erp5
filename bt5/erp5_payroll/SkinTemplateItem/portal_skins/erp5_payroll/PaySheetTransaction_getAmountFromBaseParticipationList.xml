@@ -53,25 +53,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-\'\'\'\n
+            <value> <string>\'\'\'\n
   return the amount composed by all amount of paysheet line wich category of\n
   category_list parameter is in variation_category_list of the PaySheet line \n
-  and wich payroll service has a base_participation in the \n
-  base_participation_list\n
-\n
-XXX this script needs refactoring, no need to get the base amount on the resource.\n
-It is now stored on the movement: see http://svn.erp5.org/?view=rev&revision=21660\n
-\n
+  and wich has a base_contribution in the base_contribution_list\n
 \'\'\'\n
 \n
 # test the list parameters\n
-if base_participation_list is None:\n
-  base_participation_list = []\n
-elif not (same_type(base_participation_list, []) or\n
-          same_type(base_participation_list, ())):\n
-  base_participation_list = [base_participation_list]\n
+if base_contribution_list is None:\n
+  base_contribution_list = []\n
+elif not (same_type(base_contribution_list, []) or\n
+          same_type(base_contribution_list, ())):\n
+  base_contribution_list = [base_contribution_list]\n
 \n
 if category_list is None:\n
   category_list = []\n
@@ -86,9 +79,8 @@ paysheet = context\n
 amount = 0\n
 \n
 for pay_sheet_line in paysheet.contentValues(portal_type=\'Pay Sheet Line\'):\n
-  for base_participation in base_participation_list:\n
-    base_amount_list = pay_sheet_line.getResourceValue().getBaseAmountList()\n
-    if base_participation in base_amount_list:\n
+  for base_contribution in base_contribution_list:\n
+    if base_contribution in pay_sheet_line.getBaseContributionList():\n
       if pay_sheet_line.getSalaryRangeList(base=1) != []:\n
         for slice in pay_sheet_line.getSalaryRangeList(base=1):\n
           for category in category_list:\n
@@ -108,13 +100,11 @@ for pay_sheet_line in paysheet.contentValues(portal_type=\'Pay Sheet Line\'):\n
             amount += total_price\n
         \n
       break # this permit to add only one time the amount even \n
-            # if many base_amount are in base_participation_list\n
+            # if many base_amount are in base_contribution_list\n
 \n
 amount = round(amount, precision)\n
 return amount\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -124,7 +114,7 @@ return amount\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>base_participation_list=None, category_list=None</string> </value>
+            <value> <string>base_contribution_list=None, category_list=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -150,7 +140,7 @@ return amount\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>base_participation_list</string>
+                            <string>base_contribution_list</string>
                             <string>category_list</string>
                             <string>None</string>
                             <string>same_type</string>
@@ -161,8 +151,7 @@ return amount\n
                             <string>amount</string>
                             <string>_getiter_</string>
                             <string>pay_sheet_line</string>
-                            <string>base_participation</string>
-                            <string>base_amount_list</string>
+                            <string>base_contribution</string>
                             <string>slice</string>
                             <string>category</string>
                             <string>cell</string>

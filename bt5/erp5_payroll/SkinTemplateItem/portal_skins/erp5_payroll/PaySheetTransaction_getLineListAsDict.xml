@@ -69,7 +69,7 @@ def addProperties(line, line_dict, property_list):\n
 \n
 line_dict_list = []\n
 property_list = [ \'slice\',\n
-                  \'base_participation_list\',\n
+                  \'base_contribution_list\',\n
                   \'base_application_list\',\n
                   \'base_name\',\n
                   \'base\',\n

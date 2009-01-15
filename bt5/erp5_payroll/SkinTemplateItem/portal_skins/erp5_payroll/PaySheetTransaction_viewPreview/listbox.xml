@@ -152,8 +152,8 @@
                           <string>Tax Category</string>
                         </tuple>
                         <tuple>
-                          <string>base_participation_string</string>
-                          <string>Base Participation</string>
+                          <string>base_contribution_string</string>
+                          <string>Base Contribution</string>
                         </tuple>
                         <tuple>
                           <string>base_application_string</string>

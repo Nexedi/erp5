@@ -83,9 +83,8 @@ object_list = []\n
 total_price = 0\n
 \n
 # FIXME: this report does not support multiple Payment Condition\n
-# FIXME: parent_base_amount will be updated to use base_contribution someday\n
 for inventory in portal.portal_simulation.getInventoryList(\n
-                    parent_base_amount_uid=net_salary_base_amount_uid,\n
+                    parent_base_contribution_uid=net_salary_base_amount_uid,\n
                     tax_category_uid=employee_share_uid,\n
                     portal_type=(\'Pay Sheet Line\', \'Pay Sheet Cell\'),\n
                     section_uid=section_uid,\n
