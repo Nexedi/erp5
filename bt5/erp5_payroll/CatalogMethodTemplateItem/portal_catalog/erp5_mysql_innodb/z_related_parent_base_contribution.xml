@@ -87,7 +87,7 @@ table_1</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_related_parent_base_amount</string> </value>
+            <value> <string>z_related_parent_base_contribution</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
@@ -102,7 +102,7 @@ table_1</string> </value>
             <value> <string encoding="cdata"><![CDATA[
 
 <dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
-AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.base_amount.getUid()">\n
+AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.base_contribution.getUid()">\n
 AND <dtml-var table_0>.uid = catalog.parent_uid\n
 \n
 
@@ -146,7 +146,7 @@ AND <dtml-var table_0>.uid = catalog.parent_uid\n
                         <value> <string encoding="cdata"><![CDATA[
 
 <dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
-AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.base_amount.getUid()">\n
+AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.base_contribution.getUid()">\n
 AND <dtml-var table_0>.uid = catalog.parent_uid\n
 \n
 
