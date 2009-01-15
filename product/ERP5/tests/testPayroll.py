@@ -128,7 +128,6 @@ class TestPayrollMixin(ERP5ReportTestCase):
                                           id='urssaf', title='URSSAF')
     self.urssaf = self.createPayrollService(id=self.urssaf_id,
         title='State Insurance',
-        base_amount_list=['deductible_tax',],
         product_line='state_insurance',
         variation_base_category_list=['tax_category', 'salary_range'],
         variation_category_list=self.urssaf_slice_list + \
@@ -137,7 +136,6 @@ class TestPayrollMixin(ERP5ReportTestCase):
     self.labour = self.createPayrollService(id=self.labour_id,
         title='Labour',
         product_line='labour',
-        base_amount_list=['base_salary', 'gross_salary'],
         variation_base_category_list=['tax_category', 'salary_range'],
         variation_category_list=self.salary_slice_list +\
                                 self.salary_share_list)
@@ -291,15 +289,13 @@ class TestPayrollMixin(ERP5ReportTestCase):
     return organisation
 
   def createPayrollService(self, id='', title='',
-      base_amount_list=None, variation_base_category_list=None,
+      variation_base_category_list=None,
       variation_category_list=None, product_line=None, **kw):
 
     payroll_service_portal_type = 'Payroll Service'
     payroll_service_module = self.portal.getDefaultModule(\
                                     portal_type=payroll_service_portal_type)
 
-    if base_amount_list == None:
-      base_amount_list=[]
     if variation_category_list == None:
       variation_category_list=[]
     if variation_base_category_list == None:
@@ -312,8 +308,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
                             portal_type=self.payroll_service_portal_type,
                             id=id,
                             quantity_unit='time/month',
-                            product_line=product_line,
-                            base_amount_list=base_amount_list)
+                            product_line=product_line)
     payroll_service.setVariationBaseCategoryList(variation_base_category_list)
     payroll_service.setVariationCategoryList(variation_category_list)
     get_transaction().commit()
@@ -389,7 +384,8 @@ class TestPayrollMixin(ERP5ReportTestCase):
                       values,
                       editable=False,
                       source_value=None,
-                      base_amount_list=['base_salary']):
+                      base_application_list=[],
+                      base_contribution_list=[]):
     '''
       test the function addModelLine and test if the model line has been
       well created.
@@ -426,7 +422,8 @@ class TestPayrollMixin(ERP5ReportTestCase):
                         resource_value=resource,
                         source_value=source_value,
                         editable=editable,
-                        base_amount_list=base_amount_list,
+                        base_application_list=base_application_list,
+                        base_contribution_list=base_contribution_list,
                         variation_category_list=variation_category_list,)
     get_transaction().commit()
     self.tic()
@@ -473,7 +470,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
 
   def calculatePaySheet(self, paysheet):
     '''
-      Calcul the given paysheet like if you hace click on the 'Calculation of
+      Calcul the given paysheet like if you have click on the 'Calculation of
       the Pay Sheet Transaction' action button.
       XXX Editable line are not yet take into account
       XXX this method should not exist ! use the standard method
@@ -568,12 +565,17 @@ class TestPayroll(TestPayrollMixin):
     model_line_count_before_add = len(self.model.contentValues(portal_type=\
         self.paysheet_model_line_portal_type))
 
-    returned_model_line = self.createModelLine(model=self.model,
-        id=model_line_id, variation_category_list=variation_category_list,
-        resource=self.urssaf, share_list=self.urssaf_share_list,
+    returned_model_line = self.createModelLine(
+        model=self.model,
+        id=model_line_id,
+        variation_category_list=variation_category_list,
+        resource=self.urssaf,
+        share_list=self.urssaf_share_list,
         slice_list=self.urssaf_slice_list,
         values=[[[None, 0.01], [None, 0.02],[None, 0.03]], [[None, 0.04],
-                 [None, 0.05], [None, 0.06]]])
+                 [None, 0.05], [None, 0.06]]],
+        base_application_list=['base_amount/base_salary',],
+        base_contribution_list=['base_amount/deductible_tax',])
 
     model_line_count_after_add = len(self.model.contentValues(portal_type=\
         self.paysheet_model_line_portal_type))
@@ -619,7 +621,6 @@ class TestPayroll(TestPayrollMixin):
 
     model_line_id1 = 'urssaf'
     model_line_id2 = 'salary'
-    base_salary = 10000
 
     urssaf_slice_list = [ 'salary_range/'+self.france_settings_slice_a,
                           'salary_range/'+self.france_settings_slice_b,
@@ -642,14 +643,19 @@ class TestPayroll(TestPayrollMixin):
         slice_list=self.urssaf_slice_list,
         values=[[[None, 0.01], [None, 0.02], [None, 0.03]], [[None, 0.04],
                [None, 0.05], [None, 0.06]]],
-        source_value=self.payroll_service_organisation)
+        source_value=self.payroll_service_organisation,
+        base_application_list=[ 'base_amount/base_salary'],
+        base_contribution_list=['base_amount/deductible_tax',])
 
     model_line2 = self.createModelLine(model=self.model,
         id=model_line_id2,
         variation_category_list=variation_category_list_salary,
-        resource=self.labour, share_list=self.salary_share_list,
-        slice_list=salary_slice_list, base_amount_list=[],
-        values=[[[base_salary, None]],])
+        resource=self.labour,
+        share_list=self.salary_share_list,
+        slice_list=self.salary_slice_list,
+        values=[[[10000, None],],],
+        base_application_list=[],
+        base_contribution_list=['base_amount/base_salary', 'base_amount/gross_salary'])
 
     pay_sheet_line_count = len(self.model.contentValues(portal_type=\
         self.paysheet_line_portal_type)) + 2 # because in this test, 2 lines
@@ -680,7 +686,7 @@ class TestPayroll(TestPayrollMixin):
                                     self.plafond*8]
 
         self.assertEqualAmounts(pay_sheet_line, correct_value_slice_list,
-            base_salary, i)
+            10000, i)
         self.assertEquals(
             [self.payroll_service_organisation.getRelativeUrl()],
             pay_sheet_line._getCategoryMembershipList('source_section'))
@@ -690,7 +696,7 @@ class TestPayroll(TestPayrollMixin):
             'tax_category/'+ self.tax_category_employee_share,
             'salary_range/'+ self.france_settings_forfait)
         value = cell.getTotalPrice()
-        self.assertEqual(base_salary, value)
+        self.assertEqual(10000, value)
         self.assertEquals([],
             pay_sheet_line._getCategoryMembershipList('source_section'))
 
@@ -718,14 +724,18 @@ class TestPayroll(TestPayrollMixin):
         variation_category_list=variation_category_list_urssaf,
         resource=self.urssaf, share_list=self.urssaf_share_list,
         slice_list=urssaf_slice_list,
-        values=[[[None, 0.03]], [[None, 0.04]],])
+        values=[[[None, 0.03]], [[None, 0.04]],],
+        base_application_list=[ 'base_amount/base_salary'],
+        base_contribution_list=['base_amount/deductible_tax',])
 
     model_line2 = self.createModelLine(model=self.model,
         id=model_line_id2,
         variation_category_list=variation_category_list_salary,
         resource=self.labour, share_list=self.salary_share_list,
-        slice_list=self.salary_slice_list, base_amount_list=[],
-        values=[[[base_salary, None]],])
+        slice_list=self.salary_slice_list,
+        values=[[[base_salary, None]],],
+        base_application_list=[],
+        base_contribution_list=['base_amount/base_salary', 'base_amount/gross_salary',])
 
     pay_sheet_line_count = len(self.model.contentValues(portal_type=\
         self.paysheet_line_portal_type)) + 2 # because in this test, 2 lines
@@ -1297,7 +1307,9 @@ class TestPayroll(TestPayrollMixin):
           portal_type='Pay Sheet Model Line',
           resource_value=self.labour,
           variation_category_list=['tax_category/employee_share'],
-          base_amount_list=['base_salary'],
+          base_application_list= [],
+          base_contribution_list=['base_amount/base_salary',
+                                  'base_amount/gross_salary'],
           float_index=1,
           int_index=1)
     line1.updateCellRange(base_id='movement')
@@ -1314,7 +1326,10 @@ class TestPayroll(TestPayrollMixin):
           portal_type='Pay Sheet Model Line',
           resource_value=self.labour,
           variation_category_list=['tax_category/employee_share'],
-          base_amount_list=['base_salary'],
+          base_application_list= [],
+          base_contribution_list=['base_amount/base_salary',
+                                  'base_amount/gross_salary'],
+          #base_amount_list=['base_salary'],
           editable=1,
           float_index=2,
           int_index=2)
@@ -1420,7 +1435,8 @@ class TestPayroll(TestPayrollMixin):
           id='line',
           portal_type='Pay Sheet Model Line',
           resource_value=self.labour,
-          variation_category_list=['tax_category/employee_share'],)
+          variation_category_list=['tax_category/employee_share'],
+          base_contribution_list=['base_amount/base_salary', 'base_amount/gross_salary'])
     line.updateCellRange(base_id='movement')
     cell = line.newCell('tax_category/employee_share',
                         portal_type='Pay Sheet Cell',
@@ -1449,7 +1465,8 @@ class TestPayroll(TestPayrollMixin):
           id='line',
           portal_type='Pay Sheet Model Line',
           resource_value=self.labour,
-          variation_category_list=['tax_category/employee_share'],)
+          variation_category_list=['tax_category/employee_share'],
+          base_contribution_list=['base_amount/base_salary', 'base_amount/gross_salary'])
     line.updateCellRange(base_id='movement')
     cell = line.newCell('tax_category/employee_share',
                         portal_type='Pay Sheet Cell',
@@ -1492,7 +1509,6 @@ class TestPayroll(TestPayrollMixin):
     # minimal test for checkConsistency on a Payroll Service
     service = self.portal.payroll_service_module.newContent(
                            portal_type='Payroll Service')
-    service.setBaseAmountList(('bonus', 'gross_salary'))
     service.setVariationBaseCategoryList(['tax_category'])
     service.setVariationCategoryList(['tax_category/employee_share'])
     self.assertEquals([], service.checkConsistency())
@@ -1623,7 +1639,9 @@ class TestPayroll(TestPayrollMixin):
                     portal_type='Pay Sheet Model Line',
                     resource_value=self.urssaf,
                     variation_category_list=['tax_category/employee_share'],
-                    source_annotation_line_reference='tax1')
+                    source_annotation_line_reference='tax1',
+                    base_application_list =  ['base_amount/base_salary',],
+                    base_contribution_list = ['base_amount/deductible_tax',],)
     model_line.updateCellRange(base_id='movement')
     cell = model_line.newCell('tax_category/employee_share',
                               portal_type='Pay Sheet Cell',
@@ -2081,7 +2099,7 @@ class TestPayroll(TestPayrollMixin):
     line = ps1.newContent(portal_type='Pay Sheet Line',
                    resource_value=salary_service,
                    destination_value=employee1,
-                   base_amount='net_salary',
+                   base_contribution_list=['base_amount/net_salary',],
                    variation_category_list=('tax_category/employee_share',
                                             'tax_category/employer_share'))
     line.updateCellRange(base_id='movement')
@@ -2095,7 +2113,7 @@ class TestPayroll(TestPayrollMixin):
                    resource_value=payroll_service,
                    source_section_value=provider,
                    destination_value=employee1,
-                   base_amount='net_salary',
+                   base_contribution_list=['base_amount/net_salary',],
                    variation_category_list=('tax_category/employee_share',
                                             'tax_category/employer_share'))
     line.updateCellRange(base_id='movement')
@@ -2123,7 +2141,7 @@ class TestPayroll(TestPayrollMixin):
     line = ps2.newContent(portal_type='Pay Sheet Line',
                    resource_value=salary_service,
                    destination_value=employee2,
-                   base_amount='net_salary',
+                   base_contribution_list=['base_amount/net_salary',],
                    variation_category_list=('tax_category/employee_share',
                                             'tax_category/employer_share'))
     line.updateCellRange(base_id='movement')
@@ -2137,7 +2155,7 @@ class TestPayroll(TestPayrollMixin):
                    resource_value=payroll_service,
                    source_section_value=provider,
                    destination_value=employee2,
-                   base_amount='net_salary',
+                   base_contribution_list=['base_amount/net_salary',],
                    variation_category_list=('tax_category/employee_share',
                                             'tax_category/employer_share'))
     line.updateCellRange(base_id='movement')
