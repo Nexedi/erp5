@@ -220,6 +220,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
             'base_amount/%s' % self.base_amount_non_deductible_tax,
             'base_amount/%s' % self.base_amount_bonus,
             'base_amount/%s' % self.base_amount_base_salary,
+            'base_amount/net_salary',
             'grade/%s' % self.grade_worker,
             'grade/%s' % self.grade_engineer,
             'quantity_unit/time/month',
@@ -351,13 +352,13 @@ class TestPayrollMixin(ERP5ReportTestCase):
     '''
       add a new slice in the model
     '''
-    slice = model.newCell(slice, portal_type='Pay Sheet Model Slice',
+    slice_value = model.newCell(slice, portal_type='Pay Sheet Model Slice',
         base_id=base_id)
-    slice.setQuantityRangeMax(max_value)
-    slice.setQuantityRangeMin(min_value)
+    slice_value.setQuantityRangeMax(max_value)
+    slice_value.setQuantityRangeMin(min_value)
     get_transaction().commit()
     self.tic()
-    return slice
+    return slice_value
 
   def addAllSlices(self, model):
     '''
@@ -2507,14 +2508,22 @@ class TestPayroll(TestPayrollMixin):
     '''
     eur = self.portal.currency_module.EUR
     model = self.paysheet_model_module.newContent( \
-                              portal_type='Pay Sheet Model')
+                              portal_type='Pay Sheet Model',
+                              variation_settings_category_list=self.variation_settings_category_list)
     model.setPriceCurrencyValue(eur)
 
-    urssaf_slice_list = [ 'salary_range/'+self.france_settings_slice_a,
-                          'salary_range/'+self.france_settings_slice_b,
-                          'salary_range/'+self.france_settings_slice_c]
-    urssaf_share_list = [ 'tax_category/'+self.tax_category_employee_share,
-                          'tax_category/'+self.tax_category_employer_share]
+    
+    self.addSlice(model, 'salary_range/%s' % \
+        self.france_settings_slice_a, 0, 1000)
+    self.addSlice(model, 'salary_range/%s' % \
+        self.france_settings_slice_b, 1000, 2000)
+    self.addSlice(model, 'salary_range/%s' % \
+        self.france_settings_slice_c, 2000, 10000000)
+    self.addSlice(model, 'salary_range/%s' % \
+        self.france_settings_forfait, 0, 10000000)
+
+    urssaf_slice_list = [ 'salary_range/'+self.france_settings_slice_a,]
+    urssaf_share_list = [ 'tax_category/'+self.tax_category_employee_share,]
     salary_slice_list = ['salary_range/'+self.france_settings_forfait,]
     salary_share_list = ['tax_category/'+self.tax_category_employee_share,]
     variation_category_list_urssaf = urssaf_share_list + urssaf_slice_list
@@ -2524,23 +2533,36 @@ class TestPayroll(TestPayrollMixin):
         id='model_line_1',
         variation_category_list=variation_category_list_salary,
         resource=self.labour,
-        share_list=self.salary_share_list,
-        slice_list=self.salary_slice_list,
+        share_list=salary_share_list,
+        slice_list=salary_slice_list,
         values=[[[10000, None],],],
         base_application_list=[],
         base_contribution_list=['base_amount/base_salary', 'base_amount/gross_salary'])
-    
+    model_line_1.setIntIndex(1)
+
     model_line_2 = self.createModelLine(model=model,
         id='model_line_2',
         variation_category_list=variation_category_list_urssaf,
         resource=self.urssaf,
-        share_list=self.urssaf_share_list,
-        slice_list=self.urssaf_slice_list,
-        values=[[[None, 0.01], [None, 0.02], [None, 0.03]], [[None, 0.04],
-               [None, 0.05], [None, 0.06]]],
+        share_list=urssaf_share_list,
+        slice_list=urssaf_slice_list,
+        values=[[[None, 0.8]],],
         source_value=self.payroll_service_organisation,
-        base_application_list=[ 'base_amount/base_salary'],
+        base_application_list=[ 'base_amount/base_salary',],
+        base_contribution_list=['base_amount/net_salary',])
+    model_line_2.setIntIndex(2)
+    
+    model_line_3 = self.createModelLine(model=model,
+        id='model_line_3',
+        variation_category_list=variation_category_list_urssaf,
+        resource=self.urssaf,
+        share_list=urssaf_share_list,
+        slice_list=urssaf_slice_list,
+        values=[[[None, -0.1]],],
+        source_value=self.payroll_service_organisation,
+        base_application_list=[ 'base_amount/net_salary',],
         base_contribution_list=['base_amount/deductible_tax',])
+    model_line_3.setIntIndex(3)
 
     # create a paysheet with two lines
     paysheet = self.portal.accounting_module.newContent(
@@ -2550,7 +2572,11 @@ class TestPayroll(TestPayrollMixin):
     self.assertEquals(len(paysheet.contentValues(portal_type='Pay Sheet Line')), 0)
     # calculate the pay sheet
     pay_sheet_line_list = self.calculatePaySheet(paysheet=paysheet)
-    self.assertEquals(len(paysheet.contentValues(portal_type='Pay Sheet Line')), 2)
+    self.assertEquals(len(paysheet.contentValues(portal_type='Pay Sheet Line')), 3)
+    # check values on the paysheet
+    self.assertEquals(paysheet.contentValues()[0].contentValues()[0].getTotalPrice(), 10000)
+    self.assertEquals(paysheet.contentValues()[1].contentValues()[0].getTotalPrice(), 8000)
+    self.assertEquals(paysheet.contentValues()[2].contentValues()[0].getTotalPrice(), -800)
 
     # create a paysheet with one normal line and an intermediate line
     model_line_2.setDoNotCreatePaysheetLine(True)
@@ -2562,7 +2588,11 @@ class TestPayroll(TestPayrollMixin):
     # calculate the pay sheet
     pay_sheet_line_list = self.calculatePaySheet(paysheet=paysheet)
     # now only one line should be created 
-    self.assertEquals(len(paysheet.contentValues(portal_type='Pay Sheet Line')), 1)
+    self.assertEquals(len(paysheet.contentValues(portal_type='Pay Sheet Line')), 2)
+
+    # check values on the paysheet
+    self.assertEquals(paysheet.contentValues()[0].contentValues()[0].getTotalPrice(), 10000)
+    self.assertEquals(paysheet.contentValues()[1].contentValues()[0].getTotalPrice(), -800)
 
 import unittest
 def test_suite():
