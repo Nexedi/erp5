@@ -119,6 +119,7 @@
                         <string>my_variation_category_list</string>
                         <string>my_base_contribution_list</string>
                         <string>my_base_application_list</string>
+                        <string>my_do_not_create_paysheet_line</string>
                         <string>my_editable</string>
                       </list>
                     </value>

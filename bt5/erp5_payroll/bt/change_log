@@ -1,3 +1,6 @@
+2009-01-16 fabien
+* add a checkbox on Pay Sheet Model Line to create or not the related Pay Sheet Line
+
 2009-01-15 fabien
 * update bt format
 * change the related key because of the changes of uses of base_amount
