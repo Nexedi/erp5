@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Sale Opportunity which has to be processed.</string> </value>
+            <value> <string>In a Sale Opportunity, contacted means that the third party, the prospect, has been contacted. The next step will be to make an offer.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -25,7 +25,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Contacted</string> </value>
+            <value> <string>Prospect Contacted</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>

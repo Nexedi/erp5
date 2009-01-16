@@ -72,7 +72,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>An Inventory</string> </value>
+            <value> <string>The inventory module helps the user make a full inventory of the available products in the different warehouses of the company. There will be an inventory line for each product reference that is part of the inventory.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

@@ -72,7 +72,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Purchase Order allows for entering procurement orders and for keeping an archive of confirmed orders. Some Purchase Orders may be generated automatically as a result of Material Resource Planning (MRP). Such orders are put in a specific state (auto_planned) and shall be confirmed by human intervention.</string> </value>
+            <value> <string>When a user of ERP5 wants to materialize a purchase that has been done by his company, he or she should use a purchase order. Purchase orders contain some general information about the buyer and the seller, and contain purchase order lines.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

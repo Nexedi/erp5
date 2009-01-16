@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>A tax document helps the user define the name and abbreviation of the different taxes that will be used in ERP5. Although, this document do not bear any ratio or % notion.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

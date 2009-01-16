@@ -11,9 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The Accounting Period is open.\r\n
-\r\n
-It is therefore possible to post accounting accounting transactions with dates during this period.</string> </value>
+            <value> <string>The Accounting Period is open. It is therefore possible to post accounting.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

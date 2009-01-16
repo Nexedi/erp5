@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string> Holds Invoice objects</string> </value>
+            <value> <string>Those lines belong to Purchase Invoice Transactions and can be generated either when the related Sales Packing List is delivered, or by the accountant manually. Those lines will generate the accounting transaction lines of the accounting transaction.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Go back to started state, and remove existing grouping references on this transaction and other related.</string> </value>
+            <value> <string>Reopens a document that would have been closed previously, in order to modify it, such as an accounting period</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Restart Transaction</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

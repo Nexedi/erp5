@@ -72,7 +72,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Purchase Trade Condition is a Purchase Order template. It defines actors involved in a trade contract, payment conditions, service level agreement. It can also hold marketing segmentation information.</string> </value>
+            <value> <string>Purchase trade conditions are documents that gather all the details of a standard purchase order, such as the shipment or payment mode, the tax or discount behaviour. A purchase trade condition can be applied to a purchase order, and in this case, the information borne by the purchase trade condition will be imported to the purchase order. This is practical for the user, because it allows not to loose time typing the same information again and again.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

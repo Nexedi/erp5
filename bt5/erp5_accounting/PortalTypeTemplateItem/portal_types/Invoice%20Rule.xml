@@ -53,11 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>      Invoice Rule object make sure an Invoice in the similation\n
-      is consistent with the real invoice\n
-\n
-      WARNING: what to do with movement split ?\n
-</string> </value>
+            <value> <string>Invoice Rule object makes sure an Invoice in the simulation is consistent with the real invoice.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

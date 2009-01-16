@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Send an offer to the prospect and wait for the decision</string> </value>
+            <value> <string>Sends an offer to the prospect and waits for the decision</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>offer</string> </value>
+            <value> <string>Send Offer</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

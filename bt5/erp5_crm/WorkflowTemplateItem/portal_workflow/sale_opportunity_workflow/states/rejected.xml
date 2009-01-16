@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Lost Sale Opportunity</string> </value>
+            <value> <string>Lost Sale Opportunity, as it has been rejected by the customer</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Declare a packing list as shipped</string> </value>
+            <value> <string>Ship the packing list and declares a packing list as shipped</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Ship</string> </value>
+            <value> <string>Ship Packing List</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

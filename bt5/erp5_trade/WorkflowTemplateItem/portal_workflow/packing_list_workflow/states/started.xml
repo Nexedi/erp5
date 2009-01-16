@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Pacjing list has been sent</string> </value>
+            <value> <string>Packing list has been shipped</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Declare a Sale Opportunity as Won</string> </value>
+            <value> <string>Will set the sale opportunity state as sold. This means that the sale opportunity is successful and that the customer has accepted the offer that has been made to him/her</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Sell</string> </value>
+            <value> <string>Sell Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>default state</string> </value>
+            <value> <string>Default state of the document</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

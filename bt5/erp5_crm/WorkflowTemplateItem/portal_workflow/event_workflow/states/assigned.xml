@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Events in this state are incoming or carbon copies of outgoing events which have been assigned to a ticket, a project or a person and which still need to be acknowledged.</string> </value>
+            <value> <string>Events in this state are incoming or carbon copies of outgoing events which have been assigned (linked) to a ticket, a project or a person and which still need to be acknowledged.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

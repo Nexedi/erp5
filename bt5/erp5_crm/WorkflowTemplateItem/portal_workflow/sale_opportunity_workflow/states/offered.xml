@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Sale opportunity waiting for the customer decision </string> </value>
+            <value> <string>Sale opportunity that has been offered and is now waiting for the customer decision</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

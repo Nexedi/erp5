@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>cancel the document</string> </value>
+            <value> <string>Cancel a document in ERP5</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>cancel</string> </value>
+            <value> <string>Cancel Packing List</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

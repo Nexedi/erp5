@@ -72,7 +72,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Sale Order allows for entering customer order information, actors involved in an order, payment conditions, ordered products or services, quantity, price, etc. It also allows for for keeping an archive of confirmed orders. It follows a standard sales order workflow which represents the maturity of an order from prospect to confirmation. Once an order is confirmed, it can not be modified.</string> </value>
+            <value> <string>When a user of ERP5 wants to materialize a sale that has been done by his company, he or she should use a sale order. Sale orders contain some general information about the buyer and the seller, and contain sale order lines.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

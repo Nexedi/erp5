@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Acknowledge</string> </value>
+            <value> <string>Acknowledge Event</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Use the Acknowledge action to acknowledge incoming events and remove them from the Assigned event worklist.</string> </value>
+            <value> <string>The acknowledge workflow method is the last logical transition for incoming events. It sets the state to acknowledged.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Acknowledge</string> </value>
+            <value> <string>Acknowledge Event Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

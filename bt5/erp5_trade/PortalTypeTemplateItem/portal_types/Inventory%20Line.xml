@@ -78,7 +78,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>An inventory line can be found in inventory documents, and bears the available stock of a certain product reference. There will be one inventory line for each product reference of the inventory.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

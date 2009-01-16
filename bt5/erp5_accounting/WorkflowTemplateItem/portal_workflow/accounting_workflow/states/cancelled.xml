@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Cancelled state is used for accounting transactions that have been created mistakenly or which should no longer be taken into account.</string> </value>
+            <value> <string>Cancelled state is used for accounting transactions that have been created mistakenly or which should no longer be taken into account</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

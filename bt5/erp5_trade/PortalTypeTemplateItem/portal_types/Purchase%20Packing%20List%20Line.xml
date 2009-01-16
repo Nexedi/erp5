@@ -53,8 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Product object holds the information about\n
-a manufactured product, like a pen, a bicycle...</string> </value>
+            <value> <string>Purchase packing list lines are part of purchase packing lists, and bear the different references that have been ordered. For each product/service reference there will be a purchase packing list line.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Sale Opportunity is designed to hold information about a prospect client. It also acts as a project node to tack all expenses and time spent on the sales process.</string> </value>
+            <value> <string>A Sale Opportunity is designed to hold information about a prospect client. It also acts as a project node to track all expenses and time spent on the sales process.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

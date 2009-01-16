@@ -72,7 +72,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A DeliveryLine object allows to implement lines in Deliveries (packing list, order, invoice, etc.)</string> </value>
+            <value> <string>Purchase order lines are part of purchase orders and bear the different product or service references that have been purchased by the company.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

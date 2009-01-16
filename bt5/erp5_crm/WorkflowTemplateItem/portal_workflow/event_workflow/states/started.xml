@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Events in this state are outgoing events which were posted. Some events may be later delivered whenever the recipient acknowledges their receival.</string> </value>
+            <value> <string>Events in this state are outgoing events which were posted. Some events may be delivered later, whenever the recipient confirms he received them.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

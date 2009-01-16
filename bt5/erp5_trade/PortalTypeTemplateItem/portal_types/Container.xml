@@ -53,14 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>      Container is equivalent to a movement with qty 1.0 and resource = to the kind of packaging\n
-      Container may point to item (ex. Container serial No or Parcel Serial No if tracing required)\n
-      Container may eventually usa optional property sheet to store parcel No information (we use\n
-      Item property sheet for that). Some acquisition may be required...\n
-\n
-      Container Line / Container Cell is used to store quantities (never accounted)\n
-      Container Line / Countainer Cell may point to Item\n
-</string> </value>
+            <value> <string>Container is the term used in sales packing lists to nominate the container in which the goods will be shipped. The quantity of goods in the container that will be shipped can be different from the quantity of goods that was ordered, and in this case, it will possible for the user to take the action "Update quantity from container".</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

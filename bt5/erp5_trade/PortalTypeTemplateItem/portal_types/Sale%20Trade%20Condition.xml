@@ -72,7 +72,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Sale Trade Condition is a Sale Order template. It defines actors involved in a trade contract, payment conditions, service level agreement. It can also hold marketing segmentation information.</string> </value>
+            <value> <string>Sale trade conditions are documents that gather all the details of a standard sale order, such as the shipment or payment mode, the tax or discount behaviour. A sale trade condition can be applied to a sale order, and in this case, the information borne by the sale trade condition will be imported to the sale order. This is practical for the user, because it allows not to loose time typing the same information again and again.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

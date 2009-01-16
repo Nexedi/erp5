@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>An Account defines a legislation independent general ledger account which can hold multiple amounts of currencies. It can be mapped to any number of national accounting nomenclatures and to financial analysis plan. By using indirection, it is possible to generate multiple fiscal reports based on different legislation from a single set of accounting transactions.</string> </value>
+            <value> <string>An Account defines a legislation independent general ledger account which can hold multiple amounts of currencies. It can be mapped to any number of national accounting nomenclatures and to financial analysis plan.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string> A line of accounting</string> </value>
+            <value> <string>Accounting transaction lines are generated either from invoice lines, or created manually by the accountant. Each line correspond to a credit or debit of a specific account for a given transaction, for instance, a sale invoice transaction will most of the time have 3 accounting lines: 1 for the client account, one for the sold goods account, and one for the VAT account.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

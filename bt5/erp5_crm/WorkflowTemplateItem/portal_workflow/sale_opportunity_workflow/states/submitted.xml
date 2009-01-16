@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The Sale Opportunity is waiting for approval from the manager.</string> </value>
+            <value> <string>Tickets in this state are waiting for approval from the Ticket manager before being further processed.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -25,7 +25,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Sumitted</string> </value>
+            <value> <string>Submitted</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>

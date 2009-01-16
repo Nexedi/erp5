@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>will update the quantity</string> </value>
+            <value> <string>Will update the quantity of invoiced products depending upon the quantity of products that have been packed in the container.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>update_quantity</string> </value>
+            <value> <string>Update quantity</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

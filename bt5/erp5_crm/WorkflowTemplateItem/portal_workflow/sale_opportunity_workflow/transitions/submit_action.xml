@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Request Approval to the Manager</string> </value>
+            <value> <string>The submit logical transition sets the Ticket state to submitted.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Request Approval Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

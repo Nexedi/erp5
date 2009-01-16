@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Packing list has been reveived</string> </value>
+            <value> <string>Declares the packing list status as received</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

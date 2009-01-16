@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Won Sale Opportunity.</string> </value>
+            <value> <string>Sale Opportunity converted into Sale</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

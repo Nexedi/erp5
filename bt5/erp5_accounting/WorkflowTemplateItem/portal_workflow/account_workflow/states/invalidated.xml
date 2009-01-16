@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>In this state, no transaction can be input anylong on the account</string> </value>
+            <value> <string>In this state, no transaction can be input anymore on the account as it has been closed</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -25,7 +25,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Closed Account</string> </value>
+            <value> <string>Closed</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>

@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Tax lines can be included in sale or purchase orders in order to define the tax rate that will be applied to taxable products and services of the order.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

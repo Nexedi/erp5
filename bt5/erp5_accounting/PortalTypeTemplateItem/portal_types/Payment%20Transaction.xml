@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Incoming payment and outgoing payment.</string> </value>
+            <value> <string>Incoming payment and outgoing payment transactions that can be done from the accounting module.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

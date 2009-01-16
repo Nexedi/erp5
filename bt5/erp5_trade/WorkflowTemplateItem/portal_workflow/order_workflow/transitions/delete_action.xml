@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>mark the document as deleted</string> </value>
+            <value> <string>Delete the order</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

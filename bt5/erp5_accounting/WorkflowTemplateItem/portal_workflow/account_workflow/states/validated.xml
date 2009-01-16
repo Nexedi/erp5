@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The account is open and can be used to input transactions</string> </value>
+            <value> <string>The account is open and can be used to input transactions.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

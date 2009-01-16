@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Tickets in this state require processing.</string> </value>
+            <value> <string>Tickets in this state require processing. They can be filled with events, and will remain open until their treatment is not entirely over.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

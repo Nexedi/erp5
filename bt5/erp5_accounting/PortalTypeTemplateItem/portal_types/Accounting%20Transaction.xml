@@ -72,7 +72,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>An Accounting Transaction</string> </value>
+            <value> <string>An accounting transaction, created from scratch by the accountant or whoever entitled to create transactions in ERP5</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

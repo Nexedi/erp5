@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Payment Conditions are used to define all the parameters of a payment.</string> </value>
+            <value> <string>Payment conditions can be either on a sale/purchase order or on a sale/purchase trade condition document. Payment condition describes the payment conditions that will be applied to an order, such as the payment mode, the term, etc..</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

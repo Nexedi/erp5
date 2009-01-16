@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Discount resources.</string> </value>
+            <value> <string>A discount consists in cutting the price of a product in a sale order.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

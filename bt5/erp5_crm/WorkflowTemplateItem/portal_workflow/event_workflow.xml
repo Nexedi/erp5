@@ -23,7 +23,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Defined the steps of events</string> </value>
+            <value> <string>Defines the steps of the event workflow</string> </value>
         </item>
         <item>
             <key> <string>groups</string> </key>

@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Visit is an event which can be used to register visit with people.</string> </value>
+            <value> <string>A Visit is an event which can be used to register visits with third parties, be them customers, suppliers or prospects</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

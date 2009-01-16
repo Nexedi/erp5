@@ -53,12 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>      A DeliveryLine object allows to implement lines in\n
-      Deliveries (packing list, order, invoice, etc.)\n
-\n
-      It may include a price (for insurance, for customs, for invoices,\n
-      for orders)\n
-</string> </value>
+            <value> <string>Container lines bear the different good references included in the container. If three different goods (e-g product references) are in the same container, there will be three container lines: one for each product reference.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

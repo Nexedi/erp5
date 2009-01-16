@@ -50,7 +50,7 @@ If this event is a mail message, and the user checked the option to send the mes
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Post Event</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

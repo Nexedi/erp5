@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>mark the transaction that has been properly posted to the ledger accounts and validated by an accountant</string> </value>
+            <value> <string>This action will post the transaction to the General Ledger. It can be journalized again thanks to the restart action</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>stop</string> </value>
+            <value> <string>Post Transaction</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

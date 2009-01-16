@@ -53,8 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Discounts are used in orders, trade condition,...\n
-</string> </value>
+            <value> <string>A discount line bears a specific discount that will be applied to either an order or a product.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

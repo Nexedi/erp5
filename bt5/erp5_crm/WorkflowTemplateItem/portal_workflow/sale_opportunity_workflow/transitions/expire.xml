@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The expire logical transition sets the event state to expired.</string> </value>
+            <value> <string>Define a Sale Opportunity as not processed in time, and therefore lost.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>expire</string> </value>
+            <value> <string>Expire Sale Opportunity</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

@@ -23,7 +23,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The ticket workflow keeps track of ticket processing. A ticket is created in draft state. It is then submitted by its author (Owner) or operator (Assignee) and waits for futher approval. The ticket manager (Assignor) eventually approves the ticket. The ticket is then open. The ticket can be closed by the ticket mananger or by the ticket operator.</string> </value>
+            <value> <string>The ticket workflow keeps track of ticket processing. A ticket is created in draft state. It is then submitted by its author (Owner) or operator (Assignee) and waits for further approval. The ticket manager (Assignor) eventually approves the ticket. The ticket is then open. The ticket can be closed by the ticket manager or by the ticket operator.</string> </value>
         </item>
         <item>
             <key> <string>groups</string> </key>

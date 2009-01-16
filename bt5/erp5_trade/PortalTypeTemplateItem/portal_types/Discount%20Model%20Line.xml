@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>In a purchase/sale trade condition document, a discount model line defines the discount behaviour of an order towards certain products.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

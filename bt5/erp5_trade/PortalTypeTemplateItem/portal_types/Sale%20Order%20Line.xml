@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A DeliveryLine object allows to implement lines in Deliveries (packing list, order, invoice, etc.)</string> </value>
+            <value> <string>Sale order lines are part of sale orders and bear the different product or service references that have been sold by the company.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

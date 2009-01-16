@@ -23,7 +23,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This workflow defined the validation steps of an account</string> </value>
+            <value> <string>This workflow defines validation steps of an account.</string> </value>
         </item>
         <item>
             <key> <string>groups</string> </key>
