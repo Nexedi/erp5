@@ -104,7 +104,7 @@
                         </tuple>
                         <tuple>
                           <string>int_index</string>
-                          <string>Order</string>
+                          <string>Index</string>
                         </tuple>
                         <tuple>
                           <string>membership_criterion_category_list</string>
