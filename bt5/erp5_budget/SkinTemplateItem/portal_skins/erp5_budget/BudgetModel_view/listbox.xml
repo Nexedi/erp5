@@ -15,6 +15,7 @@
               <list>
                 <string>title</string>
                 <string>columns</string>
+                <string>sort</string>
                 <string>selection_name</string>
               </list>
             </value>
@@ -106,6 +107,17 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>budget_model_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>ASC</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
