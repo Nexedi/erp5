@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Telephone object can contain a telephone number.</string> </value>
+            <value> <string>A fax number that can be stored on a person or organisation document</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

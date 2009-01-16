@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Preference objects stores user profiles</string> </value>
+            <value> <string>Preference objects store user preferences, and are editable through the Preference Tool.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

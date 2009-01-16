@@ -72,7 +72,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Image type documents in ERP5. Many formats are supported</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

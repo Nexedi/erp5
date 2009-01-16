@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>An Assignment allow a person to be assigned to an organisation during a period without changing his career organisation.</string> </value>
+            <value> <string>An Assignment allows a person to be assigned to an organisation during a period without changing his career organisation.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

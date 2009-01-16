@@ -53,12 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>      A DeliveryLine object allows to implement lines in\n
-      Deliveries (packing list, order, invoice, etc.)\n
-\n
-      It may include a price (for insurance, for customs, for invoices,\n
-      for orders)\n
-</string> </value>
+            <value> <string>This line can define the value of a currency towards another currency</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>ERP5 default document. Supports synchronisation and XML.</string> </value>
+            <value> <string>Messages that can be seen by the user and that appear depending upon the actions of the user. They can be warning, information or error messages</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

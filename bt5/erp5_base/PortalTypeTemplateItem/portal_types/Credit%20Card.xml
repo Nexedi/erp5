@@ -53,15 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>      A bank account number holds a collection of numbers and codes\n
-        (ex. SWIFT, RIB, etc.) which may be used to identify a bank account.\n
-\n
-      A Bank Account is owned by a Person or an Organisation. A Bank Account\n
-        contain Agents with Agent Privileges used by the owner to delegate the\n
-        management of the bank account to trusted third-party Persons.\n
-\n
-      BankAccount inherits from Base and from the mix-in Coordinate.\n
-</string> </value>
+            <value> <string>A credit registered in a bank and that can be used for a payment</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

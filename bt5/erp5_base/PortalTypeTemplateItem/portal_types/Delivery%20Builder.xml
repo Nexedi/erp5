@@ -72,41 +72,37 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>    Delivery Builder objects allow to gather multiple Simulation Movements\n
-    into a single Delivery. \n
+            <value> <string>Delivery Builder objects allow to gather multiple Simulation Movements into\n
+a single Delivery. The initial quantity property of the Delivery Line is\n
+calculated by summing quantities of related Simulation Movements.\n
 \n
-    The initial quantity property of the Delivery Line is calculated by\n
-    summing quantities of related Simulation Movements.\n
+Delivery Builders are called for example whenever an order is confirmed.\n
+They are also called globally in order to gather any confirmed or above\n
+Simulation Movement which was not associated to any Delivery Line.  Such\n
+movements are called orphaned Simulation Movements.\n
 \n
-    Delivery Builders are called for example whenever an order is confirmed.\n
-    They are also called globaly in order to gather any confirmed or above \n
-    Simulation Movement which was not associated to any Delivery Line. \n
-    Such movements are called orphaned Simulation Movements.\n
+Delivery Builder objects are provided with a set a parameters to achieve\n
+their goal:\n
 \n
-    Delivery Builder objects are provided with a set a parameters to achieve \n
-    their goal:\n
+A path definition: source, destination, etc. which defines the general\n
+kind of movements it applies.\n
 \n
-    A path definition: source, destination, etc. which defines the general \n
-    kind of movements it applies.\n
+simulation_select_method which defines how to query all Simulation\n
+Movements which meet certain criteria (including the above path path\n
+definition).\n
 \n
-    simulation_select_method which defines how to query all Simulation \n
-    Movements which meet certain criteria (including the above path path \n
-    definition).\n
+collect_order_list which defines how to group selected movements according\n
+to gathering rules.\n
 \n
-    collect_order_list which defines how to group selected movements \n
-    according to gathering rules.\n
+delivery_select_method which defines how to select existing Delivery  which\n
+may eventually be updated with selected simulation movements.\n
 \n
-    delivery_select_method which defines how to select existing Delivery \n
-    which may eventually be updated with selected simulation movements.\n
+delivery_module, delivery_type and delivery_line_type which define the\n
+module and portal types for newly built Deliveries and Delivery Lines.\n
 \n
-    delivery_module, delivery_type and delivery_line_type which define the \n
-    module and portal types for newly built Deliveries and Delivery Lines.\n
-\n
-    Delivery Builders can also be provided with optional parameters to \n
-    restrict selection to a given root Applied Rule caused by a single Order\n
-    or to Simulation Movements related to a limited set of existing \n
-    Deliveries.\n
-</string> </value>
+Delivery Builders can also be provided with optional parameters to\n
+restrict selection to a given root Applied Rule caused by a single Order or\n
+to Simulation Movements related to a limited set of existing Deliveries.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

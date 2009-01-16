@@ -72,7 +72,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Preference Tool</string> </value>
+            <value> <string>Preference Tool contains user preferences and system preferences.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

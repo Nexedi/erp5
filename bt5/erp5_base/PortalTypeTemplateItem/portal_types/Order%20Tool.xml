@@ -68,8 +68,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Folders allow to store a large number of documents (1,000,000 should not\n
-be a problem).</string> </value>
+            <value> <string>Order Tool contains order builders.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

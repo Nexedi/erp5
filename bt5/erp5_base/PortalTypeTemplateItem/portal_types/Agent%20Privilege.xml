@@ -49,9 +49,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>\n
-    An Agent Privilege allow the Bank Account owner to give permissions to an Agent for a given period of time, for a maximum amount of money.\n
-</string> </value>
+            <value> <string>An Agent Privilege allows the Bank Account owner to give permissions to an Agent for a given period of time, for a maximum amount of money.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

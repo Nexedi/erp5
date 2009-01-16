@@ -53,9 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>        A Url is allows to represent in a standard way coordinates\n
-        such as web sites, emails, ftp sites, etc.\n
-</string> </value>
+            <value> <string>A Url allows to represent in a standard way coordinates such as web sites, emails, ftp sites, etc.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

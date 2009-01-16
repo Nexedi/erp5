@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Persons capture the contact information (ex. name, phone number) and the relation between entities (ex. who is assigned to which function and which organisation). In particular, user classification is reflected through Person instances. Persons are supported by a standard validation workflow.</string> </value>
+            <value> <string>Persons capture the contact information (ex. name, phone number) and the relation between entities (ex. who is assigned to which function and which organisation). Persons are supported by a standard validation workflow.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

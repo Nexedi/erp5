@@ -53,8 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>    An Agent is a Person who is permitted to perform some actions on the bank account according to Privileges.\n
-</string> </value>
+            <value> <string>An Agent is a Person who is permitted to perform some actions on the bank account according to Privileges.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

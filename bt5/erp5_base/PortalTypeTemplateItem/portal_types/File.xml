@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Document can contain text that can be formatted using \'Structured Text\'.or \'HTML\'. Text can be automatically translated through the use of\'message catalogs\' and provided to the user in multilple languages.</string> </value>
+            <value> <string>A file, in its widest sense</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
