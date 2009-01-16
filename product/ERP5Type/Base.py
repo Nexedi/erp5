@@ -2817,11 +2817,11 @@ class Base( CopyContainer,
     self.reindexObject(*args, **kw)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'asXML' )
-  def asXML(self, ident=0):
+  def asXML(self):
     """
         Generate an xml text corresponding to the content of this object
     """
-    return Base_asXML(self, ident=ident)
+    return Base_asXML(self)
 
   # Optimized Menu System
   security.declarePublic('allowedContentTypes')
