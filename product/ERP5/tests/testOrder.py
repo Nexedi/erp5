@@ -42,6 +42,7 @@ class TestOrderMixin:
 
   default_quantity = 99
   default_price = 555
+  default_negative_price = -5550
   resource_portal_type = 'Apparel Model'
   order_portal_type = 'Sale Order'
   order_line_portal_type = 'Sale Order Line'
@@ -103,7 +104,7 @@ class TestOrderMixin:
                                                  portal_type='Category',
                                                  id=category_id)
 
-    product_line_category_list = ['apparel', ]
+    product_line_category_list = ['apparel', 'cancel']
     if len(category_tool.product_line.contentValues()) == 0:
       for category_id in product_line_category_list:
         o = category_tool.product_line.newContent(
@@ -125,6 +126,23 @@ class TestOrderMixin:
       title = "NotVariatedResource%s" % resource.getId(),
       industrial_phase_list=["phase1", "phase2"],
       product_line = 'apparel'
+    )
+
+    sequence.edit( resource = resource )
+    resource_list = sequence.get('resource_list',default=[])
+    resource_list.append(resource)
+    sequence.edit( resource_list = resource_list )
+
+  def stepCreateNotVariatedResourceForNegativePriceOrderLine(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create a resource with no variation for negative price order line.
+    """
+    portal = self.getPortal()
+    resource_module = portal.getDefaultModule(self.resource_portal_type)
+    resource = resource_module.newContent(portal_type=self.resource_portal_type)
+    resource.edit(
+      title = "NotVariatedResourceForNegativePriceOrderLine%s" % resource.getId(),
+      product_line = 'cancel'
     )
 
     sequence.edit( resource = resource )
@@ -434,6 +452,15 @@ class TestOrderMixin:
     order_line = sequence.get('order_line')
     order_line.edit(quantity=self.default_quantity,
                     price=self.default_price)
+
+  def stepSetOrderLineDefaultNegativePriceValue(self, sequence=None, \
+                                           sequence_list=None, **kw):
+    """
+      Set the default negative price and 1 to quantity on the order line.
+    """
+    order_line = sequence.get('order_line')
+    order_line.edit(quantity=1,
+                    price=self.default_negative_price)
 
   def stepCheckOrderLineDefaultValues(self, sequence=None, \
                                     sequence_list=None, **kw):
@@ -1384,6 +1411,33 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                       stepTic \
                       stepSetOrderLineResource \
                       stepSetOrderLineDefaultValues \
+                      stepTic \
+                      stepCheckOrderTotalPrice \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_09b_Order_testTotalPriceWithNegativePriceOrderLine(self, quiet=0, run=run_all_test):
+    """
+      Test method getTotalPrice on a order
+    """
+    if not run: return
+    sequence_list = SequenceList()
+    # Test with positive price order line and negative price order line.
+    sequence_string = '\
+                      stepCreateOrder \
+                      stepCheckOrderTotalQuantity \
+                      stepCreateNotVariatedResource \
+                      stepCreateOrderLine \
+                      stepTic \
+                      stepSetOrderLineResource \
+                      stepSetOrderLineDefaultValues \
+                      stepTic \
+                      stepCreateNotVariatedResourceForNegativePriceOrderLine \
+                      stepCreateOrderLine \
+                      stepTic \
+                      stepSetOrderLineResource \
+                      stepSetOrderLineDefaultNegativePriceValue \
                       stepTic \
                       stepCheckOrderTotalPrice \
                       '
