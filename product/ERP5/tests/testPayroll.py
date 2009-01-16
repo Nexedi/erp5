@@ -2499,6 +2499,71 @@ class TestPayroll(TestPayrollMixin):
     self.assertEquals(employer, line.getDestinationSectionValue())
     self.assertEquals(provider, line.getSourceSectionValue())
 
+  def test_intermediateLinesAreNotCreatedOnPaysheet(self):
+    '''
+      Intermediate lines are paysheet model lines usefull to calcul, but we
+      don't want to have on paysheet. So a checkbox on paysheet model lines
+      permit to create it or not (created by default)
+    '''
+    eur = self.portal.currency_module.EUR
+    model = self.paysheet_model_module.newContent( \
+                              portal_type='Pay Sheet Model')
+    model.setPriceCurrencyValue(eur)
+
+    urssaf_slice_list = [ 'salary_range/'+self.france_settings_slice_a,
+                          'salary_range/'+self.france_settings_slice_b,
+                          'salary_range/'+self.france_settings_slice_c]
+    urssaf_share_list = [ 'tax_category/'+self.tax_category_employee_share,
+                          'tax_category/'+self.tax_category_employer_share]
+    salary_slice_list = ['salary_range/'+self.france_settings_forfait,]
+    salary_share_list = ['tax_category/'+self.tax_category_employee_share,]
+    variation_category_list_urssaf = urssaf_share_list + urssaf_slice_list
+    variation_category_list_salary = salary_share_list + salary_slice_list
+
+    model_line_1 = self.createModelLine(model=model,
+        id='model_line_1',
+        variation_category_list=variation_category_list_salary,
+        resource=self.labour,
+        share_list=self.salary_share_list,
+        slice_list=self.salary_slice_list,
+        values=[[[10000, None],],],
+        base_application_list=[],
+        base_contribution_list=['base_amount/base_salary', 'base_amount/gross_salary'])
+    
+    model_line_2 = self.createModelLine(model=model,
+        id='model_line_2',
+        variation_category_list=variation_category_list_urssaf,
+        resource=self.urssaf,
+        share_list=self.urssaf_share_list,
+        slice_list=self.urssaf_slice_list,
+        values=[[[None, 0.01], [None, 0.02], [None, 0.03]], [[None, 0.04],
+               [None, 0.05], [None, 0.06]]],
+        source_value=self.payroll_service_organisation,
+        base_application_list=[ 'base_amount/base_salary'],
+        base_contribution_list=['base_amount/deductible_tax',])
+
+    # create a paysheet with two lines
+    paysheet = self.portal.accounting_module.newContent(
+                              portal_type='Pay Sheet Transaction',
+                              specialise_value=model)
+    paysheet.PaySheetTransaction_applyModel()
+    self.assertEquals(len(paysheet.contentValues(portal_type='Pay Sheet Line')), 0)
+    # calculate the pay sheet
+    pay_sheet_line_list = self.calculatePaySheet(paysheet=paysheet)
+    self.assertEquals(len(paysheet.contentValues(portal_type='Pay Sheet Line')), 2)
+
+    # create a paysheet with one normal line and an intermediate line
+    model_line_2.setDoNotCreatePaysheetLine(True)
+    paysheet = self.portal.accounting_module.newContent(
+                              portal_type='Pay Sheet Transaction',
+                              specialise_value=model)
+    paysheet.PaySheetTransaction_applyModel()
+    self.assertEquals(len(paysheet.contentValues(portal_type='Pay Sheet Line')), 0)
+    # calculate the pay sheet
+    pay_sheet_line_list = self.calculatePaySheet(paysheet=paysheet)
+    # now only one line should be created 
+    self.assertEquals(len(paysheet.contentValues(portal_type='Pay Sheet Line')), 1)
+
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
