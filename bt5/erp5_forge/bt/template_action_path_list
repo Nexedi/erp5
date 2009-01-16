@@ -19,6 +19,7 @@ Glossary Module | find_terms_from_portal_type
 Glossary Module | find_terms_from_property_sheet
 Glossary Module | find_terms_from_workflow
 Glossary Module | update_fields_by_english_glossary
+Glossary Module | update_portal_types_by_english_glossary
 Glossary Module | update_workflows_by_english_glossary
 Glossary Module | view
 Glossary Term | view

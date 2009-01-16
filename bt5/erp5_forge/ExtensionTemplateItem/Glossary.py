@@ -1,3 +1,7 @@
+def setPortalTypeDescription(self, portal_type, description):
+  self.getPortalObject().portal_types[portal_type]._updateProperty(
+    'description', description)
+
 def getPropertySheetList(self, portal_type):
   from Products.ERP5Type.DocumentationHelper.PortalTypeDocumentationHelper \
        import PortalTypeDocumentationHelper
