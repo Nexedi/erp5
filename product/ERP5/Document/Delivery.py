@@ -37,6 +37,7 @@ from Products.ERP5.Document.ImmobilisationDelivery import ImmobilisationDelivery
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 from zLOG import LOG, PROBLEM
+from zExceptions import NotFound
 
 class Delivery(XMLObject, ImmobilisationDelivery):
     """
@@ -665,9 +666,6 @@ class Delivery(XMLObject, ImmobilisationDelivery):
 
       The chosen applied rule will be the validated rule with reference ==
       rule_reference, and the higher version number.
-
-      If no rule is found, simply pass rule_reference to _createAppliedRule,
-      to keep compatibility vith the previous behaviour
       """
       updateAppliedRule = UnrestrictedMethod(self._updateAppliedRule)
       return updateAppliedRule(*args, **kw)
@@ -690,7 +688,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       if len(res) > 0:
         rule_id = res[0].getId()
       else:
-        rule_id = rule_reference
+        raise NotFound('No such rule as %r is found' % (rule_reference,))
 
       # only expand if we are not in a "too early" or "too late" state
       if (self.getSimulationState() not in
