@@ -39,6 +39,12 @@ class PaySheetModelLine:
       'type'        : 'boolean',
       'mode'        : 'w' 
     },
+    { 'id'          : 'do_not_create_paysheet_line',
+      'description' : 'If set to 1, the corresponding paysheet line will not'
+                      ' be created',
+      'type'        : 'boolean',
+      'mode'        : 'w' 
+    },
     { 'id'          : 'calculation_script_id',
       'description' : 'If no script found on Pay Sheet Model Lines, this'
                       ' script is used to do localised calculs',
