@@ -152,10 +152,11 @@ def Base_asXML(object, root=None):
   return etree.tostring(root, encoding='utf-8',
                         xml_declaration=True, pretty_print=True)
 
-def Folder_asXML(object):
+def Folder_asXML(object, omit_xml_declaration=True):
   """
       Generate an xml text corresponding to the content of this object
   """
+  xml_declaration = not omit_xml_declaration
   from Products.ERP5Type.Base import Base
   self = object
   root = Element('erp5')
@@ -170,4 +171,4 @@ def Folder_asXML(object):
       Base_asXML(o, root=root_node)
 
   return etree.tostring(root, encoding='utf-8',
-                        xml_declaration=True, pretty_print=True)
+                        xml_declaration=xml_declaration, pretty_print=True)
