@@ -68,7 +68,6 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>matrixbox</string>
                         <string>listbox</string>
                       </list>
                     </value>
@@ -76,7 +75,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>matrixbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>

@@ -216,7 +216,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Defines how simulation accounting movements will be created if the invoice movement matches the corresponding predicate</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -269,7 +269,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>matrixbox</string> </value>
+                    <value> <string>Accounting Rule Cells</string> </value>
                 </item>
                 <item>
                     <key> <string>update_cell_range</string> </key>
