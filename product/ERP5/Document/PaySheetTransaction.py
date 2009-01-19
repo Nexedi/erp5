@@ -493,7 +493,7 @@ class PaySheetTransaction(Invoice):
                 new_val = round((old_val + quantity*price), precision)
               base_amount_dict[base_contribution][share] = new_val
 
-      if cell_list:
+      if cell_list and model_line.isCreatePaysheetLine():
         # create the PaySheetLine
         pay_sheet_line = paysheet.createPaySheetLine(
                                             title=title,
