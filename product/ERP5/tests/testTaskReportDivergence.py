@@ -110,6 +110,9 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
   run_all_test = 1
   quiet = 0
 
+  def afterSetUp(self):
+    self.validateRules()
+
   def enableLightInstall(self):
     """
     You can override this. 

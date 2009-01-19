@@ -188,6 +188,8 @@ class AccountingTestCase(ERP5TypeTestCase):
       pref._aq_dynamic('hack')
       pref.enable()
     
+    self.validateRules()
+
     # and all this available to catalog
     get_transaction().commit()
     self.tic()

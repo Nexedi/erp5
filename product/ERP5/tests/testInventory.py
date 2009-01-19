@@ -78,6 +78,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     self.login()
     self.category_tool = self.getCategoryTool()
     self.createCategories()
+    self.validateRules()
     # Patch PackingList.asPacked so that we do not need
     # to manage containers here, this not the job of this test
     def isPacked(self):

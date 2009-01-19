@@ -99,6 +99,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
     self.person_module = self.portal.person_module
     self.payroll_service_module = self.portal.payroll_service_module
     self.paysheet_model_module = self.portal.paysheet_model_module
+    self.validateRules()
     self.createCategories()
     self.createCurrencies()
 

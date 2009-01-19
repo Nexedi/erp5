@@ -89,6 +89,7 @@ class TestCMFCategory(ERP5TypeTestCase):
   def afterSetUp(self):
     self.login()
     portal = self.getPortal()
+    self.validateRules()
 
     # This test creates Person inside Person and Organisation inside
     # Organisation, so we modifiy type informations to allow anything inside

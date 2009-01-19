@@ -66,6 +66,7 @@ class TestICal(ERP5TypeTestCase):
   def afterSetUp(self):
     self.portal = self.getPortal()
     self.request=self.app.REQUEST
+    self.validateRules()
     self.makeDataObjects()
 
   def login(self, quiet=0, run=run_all_test):

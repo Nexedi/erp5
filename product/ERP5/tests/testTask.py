@@ -511,6 +511,9 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
   """
   run_all_test = 1
 
+  def afterSetUp(self):
+    self.validateRules()
+
   def getTitle(self):
     return "Task"
 

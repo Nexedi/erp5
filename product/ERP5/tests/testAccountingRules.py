@@ -126,6 +126,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
   def afterSetUp(self) :
     self.login()
     self.createCategories()
+    self.validateRules()
     
   def login(self):
     uf = self.getPortal().acl_users
