@@ -2738,6 +2738,9 @@ msgstr "Créer un nouveau module"
 msgid "Create New Web Page"
 msgstr "Créer une nouvelle page web"
 
+msgid "Create Pay Sheet Line"
+msgstr "Créer la ligne de feuille de paye"
+
 #: portal_workflow/event_workflow/transitions/create_related_event_action
 msgid "Create Related Event"
 msgstr "Créer un événement lié"
@@ -5568,9 +5571,6 @@ msgstr "Installer le Business Template"
 msgid "Install Business Templates from Repositories"
 msgstr "Installer le Business Template depuis les dépôts"
 
-msgid "Repositories"
-msgstr "Dépôts"
-
 #: portal_skins/erp5_core/BusinessTemplate_viewInstallationDialog/listbox
 #: portal_skins/erp5_core/TemplateTool_viewMultiInstallationDialog/listbox
 msgid "Installation Choice"
@@ -8380,6 +8380,10 @@ msgstr "Livraison d'achat correspondant à la facture."
 msgid "Purchase Packing List related to Purchase Order."
 msgstr "Livraison d'achat correspondant à la commande."
 
+#: portal_workflow/packing_list_workflow/worklists/2_confirmed_purchase_packing_list_list
+msgid "Purchase Packing List to Receive"
+msgstr "Livraisons d'achat à recevoir"
+
 #: portal_workflow/packing_list_causality_workflow/worklists/1_diverged_purchase_packing_list_list
 msgid "Purchase Packing List to Solve"
 msgstr "Livraisons d'achat à résoudre"
@@ -8387,10 +8391,6 @@ msgstr "Livraisons d'achat à résoudre"
 #: portal_workflow/packing_list_workflow/worklists/3_stopped_purchase_packing_list_list
 msgid "Purchase Packing List to Validate"
 msgstr "Livraisons d'achat à valider"
-
-#: portal_workflow/packing_list_workflow/worklists/2_confirmed_purchase_packing_list_list
-msgid "Purchase Packing List to Receive"
-msgstr "Livraisons d'achat à recevoir"
 
 #: portal_skins/erp5_trade/PurchasePackingListModule_viewPurchasePackingListList
 #: portal_skins/erp5_trade/PurchasePackingListModule_viewPurchasePackingListList/listbox
@@ -9119,6 +9119,9 @@ msgstr "Reporter"
 
 msgid "Reports"
 msgstr "Rapports"
+
+msgid "Repositories"
+msgstr "Dépôts"
 
 #: portal_workflow/event_workflow/transitions/order_action
 msgid "Request"
@@ -12914,6 +12917,9 @@ msgstr "Url du document"
 msgid "Usage"
 msgstr "Usage"
 
+msgid "Usefull for intermediated lines. By default, Pay Sheet Lines are created (checked)."
+msgstr "Utile pour les lignes intermédiaires. Par défault, les ligne de feuille de paye sont créées (case cochée)."
+
 #: portal_skins/erp5_xhtml_style/navigation_box_render
 msgid "User"
 msgstr "Utilisateur"
@@ -13319,6 +13325,12 @@ msgstr "Largeur (cm)"
 #: erp5_pdm/Resource_viewFieldLibrary/my_base_width [Glossary term 3354]
 msgid "Width (m)"
 msgstr "Largeur (m)"
+
+msgid "With"
+msgstr "Avec"
+
+msgid "Without"
+msgstr "Sans"
 
 #: portal_skins/erp5_web_widget_library/Document_viewProfileWidget
 msgid "Word count:"
@@ -13739,10 +13751,3 @@ msgstr "la largeur en pixel des micro-images."
 #: term 3654]
 msgid "the width in pixel of nano image"
 msgstr "La largeur en pixel des images nano."
-
-msgid "With"
-msgstr "Avec"
-
-msgid "Without"
-msgstr "Sans"
-
