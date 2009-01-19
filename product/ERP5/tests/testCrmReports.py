@@ -1332,7 +1332,7 @@ class TestCrmReports(CrmTestCase):
                    destination_decision = self.person_module.Person_1.getTitle(),
                    source_decision = first.getSourceDecisionTitle(),
                    source = self.person_module.Person_2.getTitle(),
-                   validation_state = 'Contacted',
+                   validation_state = 'Prospect Contacted',
                    outgoing = 3,
                    incoming = 1)
     # Second Sale Opportunity
