@@ -1,3 +1,7 @@
+2009-01-19 Seb
+* moved script to check catalog from erp5_core to here
+* merge code of checking stock and checking catalog
+
 2008-11-20 Kazuhiko
 * Add ERP5Site_dumpSkinProperty
 * Add ERP5Site_dumpWorkflowChain

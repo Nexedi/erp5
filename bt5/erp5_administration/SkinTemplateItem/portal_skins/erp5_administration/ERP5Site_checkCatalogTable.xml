@@ -53,9 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
+            <value> <string>"""\n
   Check that catalog tables contain data which is coherent with actual objects.\n
   Due to the number of objects to check, this function creates activites working\n
   on, at maximum, bundle_object_count objects.\n
@@ -75,107 +73,185 @@
     None means that the column is not checked at all.\n
     Otherwise, the function will be called on the object with no parameter\n
     and must return the reference value for the column.\n
+  catalog_kw\n
+    Extra parameters passed to catalog\n
+  retry\n
+    \n
 """\n
-context.log(\'ERP5Site_checkCatalogTable\', \'starting\')\n
+context.log(\'starting with uid_min\', uid_min)\n
+context.log(\'starting with catalog_uid_list\', catalog_uid_list)\n
 from DateTime import DateTime\n
-REFERENCE_DATETIME = DateTime()\n
-MARKER = tuple()\n
-bundle_object_count = 100\n
-bundle_object_count=int(bundle_object_count)\n
-null_value_list = (\'\', None, 0.0, 0) # Values which are all considered equal.\n
-portal_catalog = context.getPortalObject().portal_catalog\n
+from Products.CMFActivity.ActiveResult import ActiveResult\n
+active_result = ActiveResult()\n
+active_context = context.getPortalObject().person_module\n
+result_list = []\n
+if catalog_kw is None:\n
+  catalog_kw = {}\n
 \n
 if property_override_method_id is None:\n
   property_override_dict = {}\n
 else:\n
   property_override_dict = getattr(context, property_override_method_id)()\n
 \n
-if active_process is not None:\n
-  from Products.CMFActivity.ActiveResult import ActiveResult\n
-  result_list = []\n
-\n
-date_min = DateTime()-1\n
-# First get the list of all uids\n
 if catalog_uid_list is None:\n
-  catalog_uid_list = []\n
-\n
-current_catalog_uid_list = []\n
-\n
-if len(catalog_uid_list) > 0:\n
-  if len(catalog_uid_list) >= bundle_object_count:\n
-    current_catalog_uid_list = catalog_uid_list[0:bundle_object_count]\n
-    catalog_uid_list = catalog_uid_list[bundle_object_count:]\n
-  else:\n
-    current_catalog_uid_list = catalog_uid_list\n
-    catalog_uid_list = []\n
-  for brain in portal_catalog(uid=current_catalog_uid_list):\n
-    if brain.getObject() is None:\n
-      message = \'The object with uid %r (path %r) is not into the ZODB.\' % (brain[\'uid\'], brain[\'path\'])\n
-      result_list.append(message)\n
-\n
-active_context = context.getPortalObject().person_module\n
-# XXX to be removed\n
-if uid_min is None:\n
-  uid_min=0\n
-fresh_data = 0\n
-if len(catalog_uid_list) == 0 and get_from_catalog:\n
-  from DateTime import DateTime\n
-  date_min = DateTime() - 1\n
-  catalog_uid_list = [x.uid for x in context.portal_catalog(uid = {\'query\':uid_min, \'range\':\'nlt\'},\n
-    limit=10000, indexation_date = {\'query\':date_min, \'range\':\'min\'}, sort_on=((\'uid\',\'ascending\'),))]\n
-  fresh_data = 1\n
-  if initial_activity_count is None:\n
-    initial_activity_count = activity_count\n
-  if len(catalog_uid_list) > 0 :\n
+  # No uid list was given: fetch work to do from catalog and spawn activities\n
+  first_run = uid_min is None\n
+  bundle_object_count = 200\n
+  sql_kw = {}\n
+  if uid_min is not None:\n
+    # Check what is after last check\n
+    catalog_kw[\'uid\'] = {\'query\': uid_min, \'range\': \'nlt\'}\n
+  catalog_uid_list = [x.uid for x in context.portal_catalog(limit=bundle_object_count * activity_count, **catalog_kw)]\n
+  context.log(\'sql src\', context.portal_catalog(limit=bundle_object_count * activity_count, src__=1, **catalog_kw))\n
+  if len(catalog_uid_list):\n
+    # Get the last uid this pass will check, so that next pass will check a batch starting after this uid.\n
     uid_min = max(catalog_uid_list)\n
-if len(catalog_uid_list) > 0:\n
-  if fresh_data == 1:\n
-    activity_count = initial_activity_count\n
-  activity_uid_count = len(catalog_uid_list) / activity_count\n
-  for activity in xrange(activity_count):\n
-    if activity == (activity_count - 1):\n
-      activity_catalog_uid_list = catalog_uid_list[activity_uid_count * activity: ]\n
+    # Spawn activities\n
+    worker_tag = tag + \'_worker\'\n
+    activity_kw = {\n
+      \'activity\': \'SQLQueue\',\n
+      \'priority\': 4,\n
+      \'lonely\': 1,\n
+    }\n
+    check_kw = {\n
+      \'property_override_method_id\': property_override_method_id,\n
+      \'active_process\': active_process,\n
+      \'activity_count\': activity_count,\n
+      \'tag\': tag\n
+    }\n
+    for activity in xrange(activity_count):\n
+      if len(catalog_uid_list) == 0:\n
+        result_list.append(\'No more uids to check, stop spawning activities.\')\n
+        break\n
+      activity_catalog_uid_list, catalog_uid_list = catalog_uid_list[:bundle_object_count], catalog_uid_list[bundle_object_count:]\n
+      result_list.append(\'Spawning activity for range %i..%i (len=%i)\' % (activity_catalog_uid_list[0], activity_catalog_uid_list[-1], len(activity_catalog_uid_list)))\n
+      active_context.activate(tag=worker_tag, **activity_kw).ERP5Site_checkCatalogTable(catalog_uid_list=activity_catalog_uid_list,\n
+        catalog_kw=catalog_kw, **check_kw)\n
     else:\n
-      activity_catalog_uid_list = catalog_uid_list[activity_uid_count * activity: activity_uid_count * (activity+1)]\n
-    active_context.activate(activity=\'SQLQueue\', priority=4,\n
-        lonely=1,\n
-        round_robin_scheduling=1,\n
-        tag=tag).ERP5Site_checkCatalogTable(\n
-      bundle_object_count=bundle_object_count,\n
-      catalog_uid_list = activity_catalog_uid_list,\n
-      property_override_method_id=property_override_method_id,\n
-      uid_min=uid_min,\n
-      get_from_catalog=get_from_catalog,\n
-      initial_activity_count=initial_activity_count,\n
-      active_process=active_process,\n
-      tag=tag)\n
-    # Make sure only one node will get new data\n
-    get_from_catalog = 0\n
-\n
-if len(current_catalog_uid_list)>0:\n
-  now = DateTime()\n
-  active_result = ActiveResult()\n
+      result_list.append(\'Spawning an activity to fetch a new batch starting above uid %i\' % (uid_min, ))\n
+      # For loop was not interrupted by a break, which means that all activities got uids to process. Maybe there is another batch of uids to check besides current one. Spawn an activity to process such batch.\n
+      active_context.activate(after_tag=worker_tag, tag=tag, **activity_kw).ERP5Site_checkCatalogTable(uid_min=uid_min, \n
+        catalog_kw=catalog_kw, **check_kw)\n
+  else:\n
+    result_list.append(\'Base_zGetAllFromcatalog found no more line to check.\')\n
+  active_result.edit(summary=\'Spawning activities\', severity=0, detail=\'\\n\'.join(result_list))\n
+  # Spawn an activity to save generated active result only if it\'s not the initial run\n
+  if not first_run:\n
+    active_context.activate(active_process=active_process, activity=\'SQLQueue\', priority=2, tag=tag).ERP5Site_saveCheckCatalogTableResult(active_result)\n
+else:\n
+  # Process given uid list\n
+  REFERENCE_DATETIME = DateTime()\n
+  MARKER = []\n
+  retry_uid_list = []\n
+  restrictedTraverse = context.getPortalObject().restrictedTraverse\n
+  null_value_list = (\'\', None, 0.0, 0) # Values which are all considered equal.\n
+  catalog_line_list = context.portal_catalog(uid_list=catalog_uid_list, **catalog_kw)\n
+  attribute_id_list = catalog_line_list.names()\n
+  context.log(\'attribute_id_list\', attribute_id_list)\n
+  #attribute_id_list.remove(\'catalog_path\')\n
+  for catalog_line in catalog_line_list:\n
+    object_path = catalog_line[\'path\']\n
+    if object_path is None:\n
+      if retry:\n
+        retry_uid_list.append(catalog_line[\'uid\'])\n
+      else:\n
+        message = \'Object with uid %r has no path in catalog.\' % (catalog_line[\'uid\'], )\n
+        result_list.append(message)\n
+      continue\n
+    elif object_path == "deleted":\n
+      continue\n
+    try:\n
+      actual_object = restrictedTraverse(catalog_line[\'path\'])\n
+    except KeyError:\n
+      if retry:\n
+        retry_uid_list.append(catalog_line[\'uid\'])\n
+      else:\n
+        message = \'Object with path %r cannot be found in the ZODB.\' % (object_path, )\n
+        result_list.append(message)\n
+      continue\n
+    if exception_portal_type_list is not None and \\\n
+        actual_object.getPortalType() in exception_portal_type_list:\n
+      continue\n
+    # There is already activity changing the state\n
+    if actual_object.hasActivity() \\\n
+        or (getattr(actual_object, \'getExplanationValue\', None) is not None \\\n
+        and actual_object.getExplanationValue().hasActivity()):\n
+      continue\n
+    for attribute_id in attribute_id_list:\n
+      override_method_id = property_override_dict.get(attribute_id, MARKER)\n
+      if override_method_id is None:\n
+        continue\n
+      elif override_method_id is MARKER:\n
+        reference_value = actual_object.getProperty(key=attribute_id)\n
+      elif same_type(override_method_id, \'\'):\n
+        reference_value = getattr(actual_object, override_method_id)()\n
+      else:\n
+        reference_value = override_method_id(instance=actual_object)\n
+      catalog_value = catalog_line[attribute_id]\n
+      if same_type(catalog_value, REFERENCE_DATETIME):\n
+        catalog_value = DateTime(catalog_value.Date())\n
+      reference_can_be_null_value = False\n
+      if same_type(reference_value, tuple()) or same_type(reference_value, list()):\n
+        for reference_value_item in reference_value:\n
+          if reference_value_item in null_value_list:\n
+            reference_can_be_null_value = True\n
+            break\n
+      else:\n
+        if reference_value in null_value_list:\n
+          reference_can_be_null_value = True\n
+      if reference_can_be_null_value and catalog_value in null_value_list:\n
+        continue\n
+      elif same_type(reference_value, ()):\n
+        if catalog_value not in reference_value:\n
+          if retry:\n
+            retry_uid_list.append(catalog_line[\'uid\'])\n
+          else:\n
+            message = \'%s.%s has candidate list %s, but catalog contains %s\' % (actual_object.getRelativeUrl(), attribute_id,\n
+                                                                                repr(reference_value), repr(catalog_value))\n
+            result_list.append(message)\n
+      elif reference_value != catalog_value:\n
+        if retry:\n
+          retry_uid_list.append(catalog_line[\'uid\'])\n
+        else:\n
+          message = \'%s.%s = %s, but catalog contains %s\' % (actual_object.getRelativeUrl(), attribute_id,\n
+                                                             repr(reference_value), repr(catalog_value))\n
+          result_list.append(message)\n
   summary_list = []\n
-  begin = current_catalog_uid_list[0]\n
-  end = current_catalog_uid_list[-1]\n
+  begin = catalog_uid_list[0]\n
+  end = catalog_uid_list[-1]\n
   entry_summary = \'Entries %s..%s\' % (begin, end)\n
   summary_list.append(entry_summary)\n
-  context.log(\'summary\', entry_summary)\n
   severity = len(result_list)\n
   if severity == 0:\n
     summary_list.append(\'Success\')\n
   else:\n
     summary_list.append(\'Failed\')\n
   active_result.edit(summary=\', \'.join(summary_list), severity=severity, detail=\'\\n\'.join(result_list))\n
-  context.log(\'active result summary =>\', active_result.getProperty(\'summary\'))\n
-  context.log(\'active result severity =>\', active_result.getProperty(\'severity\'))\n
   active_context.activate(active_process=active_process,\n
             activity=\'SQLQueue\', \n
             priority=2,\n
-            tag=tag).ERP5Site_saveCheckStockTableResult(active_result)\n
-
-
-]]></string> </value>
+            tag=tag).ERP5Site_saveCheckCatalogTableResult(active_result)\n
+\n
+\n
+  if len(retry_uid_list):\n
+    # Check again document in case of another sql connection commit changes related to it\n
+    worker_tag = tag + \'_worker\'\n
+    activity_kw = {\n
+      \'activity\': \'SQLQueue\',\n
+      \'priority\': 4,\n
+      \'lonely\': 1,\n
+    }\n
+    check_kw = {\n
+      \'property_override_method_id\': property_override_method_id,\n
+      \'active_process\': active_process,\n
+      \'activity_count\': activity_count,\n
+      \'tag\': tag\n
+    }\n
+    active_context.activate(tag=worker_tag, **activity_kw).ERP5Site_checkCatalogTable(catalog_uid_list=retry_uid_list, \n
+      catalog_kw=catalog_kw, retry=False, **check_kw)\n
+  \n
+return active_result\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -185,7 +261,7 @@ if len(current_catalog_uid_list)>0:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>bundle_object_count=100, catalog_uid_list=None, property_override_method_id=None, active_process=None, activity_count=1, get_from_catalog=1, initial_activity_count=None, uid_min=None, tag=\'\', **kw</string> </value>
+            <value> <string>bundle_object_count=100, catalog_uid_list=None, property_override_method_id=None, active_process=None, activity_count=1, get_from_catalog=1, initial_activity_count=None, uid_min=None, tag=\'\', catalog_kw=None, retry=True, exception_portal_type_list=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -205,7 +281,7 @@ if len(current_catalog_uid_list)>0:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>9</int> </value>
+                        <value> <int>12</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -220,41 +296,62 @@ if len(current_catalog_uid_list)>0:\n
                             <string>initial_activity_count</string>
                             <string>uid_min</string>
                             <string>tag</string>
+                            <string>catalog_kw</string>
+                            <string>retry</string>
+                            <string>exception_portal_type_list</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>DateTime</string>
-                            <string>REFERENCE_DATETIME</string>
-                            <string>tuple</string>
-                            <string>MARKER</string>
-                            <string>int</string>
-                            <string>None</string>
-                            <string>null_value_list</string>
-                            <string>portal_catalog</string>
-                            <string>property_override_dict</string>
-                            <string>getattr</string>
                             <string>Products.CMFActivity.ActiveResult</string>
                             <string>ActiveResult</string>
-                            <string>result_list</string>
-                            <string>date_min</string>
-                            <string>current_catalog_uid_list</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
-                            <string>_getiter_</string>
-                            <string>brain</string>
-                            <string>message</string>
+                            <string>active_result</string>
                             <string>active_context</string>
-                            <string>fresh_data</string>
+                            <string>result_list</string>
+                            <string>None</string>
+                            <string>property_override_dict</string>
+                            <string>getattr</string>
+                            <string>first_run</string>
+                            <string>sql_kw</string>
+                            <string>_write_</string>
                             <string>append</string>
                             <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>_apply_</string>
                             <string>x</string>
+                            <string>len</string>
                             <string>max</string>
-                            <string>activity_uid_count</string>
+                            <string>worker_tag</string>
+                            <string>activity_kw</string>
+                            <string>check_kw</string>
                             <string>xrange</string>
                             <string>activity</string>
+                            <string>_getitem_</string>
                             <string>activity_catalog_uid_list</string>
-                            <string>now</string>
-                            <string>active_result</string>
+                            <string>REFERENCE_DATETIME</string>
+                            <string>MARKER</string>
+                            <string>retry_uid_list</string>
+                            <string>restrictedTraverse</string>
+                            <string>null_value_list</string>
+                            <string>catalog_line_list</string>
+                            <string>attribute_id_list</string>
+                            <string>catalog_line</string>
+                            <string>object_path</string>
+                            <string>message</string>
+                            <string>actual_object</string>
+                            <string>KeyError</string>
+                            <string>attribute_id</string>
+                            <string>override_method_id</string>
+                            <string>reference_value</string>
+                            <string>same_type</string>
+                            <string>catalog_value</string>
+                            <string>False</string>
+                            <string>reference_can_be_null_value</string>
+                            <string>tuple</string>
+                            <string>list</string>
+                            <string>reference_value_item</string>
+                            <string>True</string>
+                            <string>repr</string>
                             <string>summary_list</string>
                             <string>begin</string>
                             <string>end</string>
@@ -281,6 +378,9 @@ if len(current_catalog_uid_list)>0:\n
                 <none/>
                 <none/>
                 <string></string>
+                <none/>
+                <int>1</int>
+                <none/>
               </tuple>
             </value>
         </item>

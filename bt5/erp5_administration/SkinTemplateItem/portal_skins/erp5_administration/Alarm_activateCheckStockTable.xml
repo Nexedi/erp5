@@ -53,7 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return result\n
+            <value> <string>active_process = context.newActiveProcess()\n
+result = context.Alarm_checkStockTable(active_process=\'/\'.join(active_process.getPhysicalPath()))\n
+active_process.postResult(result)\n
 </string> </value>
         </item>
         <item>
@@ -64,7 +66,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>result</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -84,12 +86,15 @@
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>active_process</string>
                             <string>result</string>
                           </tuple>
                         </value>
@@ -107,7 +112,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_saveCheckStockTableResult</string> </value>
+            <value> <string>Alarm_activateCheckStockTable</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
