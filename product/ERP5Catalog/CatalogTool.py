@@ -596,10 +596,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         if security_uid_list:
           query = ComplexQuery(Query(security_uid=security_uid_list, operator='IN'),
                                query, operator='OR')
-      elif security_uid_list:
-        # If security_uid_list is empty, adding it to criterions will only
-        # result in "false or [...]", so avoid useless overhead by not
-        # adding it at all.
+      else:
         query = Query(security_uid=security_uid_list, operator='IN')
 
       if local_role_column_dict:
