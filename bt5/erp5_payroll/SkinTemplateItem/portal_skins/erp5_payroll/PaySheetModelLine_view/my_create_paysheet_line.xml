@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_do_not_create_paysheet_line</string> </value>
+            <value> <string>my_create_paysheet_line</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -136,7 +136,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Usefull for intermediated lines. By default, Pay Sheet Lines are created (checked).</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -160,7 +160,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Don\'t create Pay Sheet Line</string> </value>
+                    <value> <string>Create Pay Sheet Line</string> </value>
                 </item>
               </dictionary>
             </value>
