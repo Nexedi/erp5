@@ -212,6 +212,23 @@ class DefaultValue(StaticValue):
       value = None
     return self.returnValue(field, id, value)
 
+class DefaultCheckBoxValue(DefaultValue):
+  def __call__(self, field, id, **kw):
+    try:
+      form = field.aq_parent
+      ob = getattr(form, 'aq_parent', None)
+      value = self.value
+      try:
+        value = ob.getProperty(self.key)
+      except Unauthorized:
+        value = ob.getProperty(self.key, d=value, checked_permission='View')
+        REQUEST = get_request()
+        if REQUEST is not None:
+          REQUEST.set('read_only_%s' % self.key, 1)
+    except (KeyError, AttributeError):
+      value = None
+    return self.returnValue(field, id, value)
+
 class EditableValue(StaticValue):
 
   def __call__(self, field, id, **kw):
@@ -252,6 +269,10 @@ def getFieldValue(self, field, id, **kw):
   field_id = field.id
 
   if id == 'default' and field_id.startswith('my_'):
+    if field.meta_type == 'ProxyField' and \
+        field.getRecursiveTemplateField().meta_type == 'CheckBoxField' or \
+        self.meta_type == 'CheckBoxField':
+      return DefaultCheckBoxValue(field_id, value), cacheable
     return DefaultValue(field_id, value), cacheable
 
   # For the 'editable' value, we try to get a default value
