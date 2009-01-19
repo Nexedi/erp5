@@ -425,19 +425,6 @@ class PaySheetTransaction(Invoice):
 
           cell = getModifiedCell(cell, line_dict[slice], tax_category)
 
-        # get the slice :
-        model_slice = model_line.getParentValue().getCell(slice)
-        quantity = 0.0
-        price = 0.0
-        model_slice_min = 0
-        model_slice_max = 0
-        if model_slice is None:
-          pass # that's not a problem :)
-
-        else:
-          model_slice_min = model_slice.getQuantityRangeMin()
-          model_slice_max = model_slice.getQuantityRangeMax()
-
         ######################
         # calculation part : #
         ######################
