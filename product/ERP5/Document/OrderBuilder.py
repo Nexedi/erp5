@@ -111,7 +111,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     # Call a script before building
     self.callBeforeBuildingScript()
     # Select
-    if movement_relative_url_list == []:
+    if len(movement_relative_url_list) == 0:
       movement_list = self.searchMovementList(
                                       applied_rule_uid=applied_rule_uid,**kw)
     else:
@@ -485,24 +485,20 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         delivery_line.edit(**property_dict)
 
       # Update variation category list on line
-      # XXX updating variation category list should be also handled by
-      # MovementGroup
-      line_variation_category_list = delivery_line.getVariationCategoryList()
+      variation_category_dict = dict([(variation_category, True) for
+                                      variation_category in
+                                      delivery_line.getVariationCategoryList()])
       for movement in movement_group.getMovementList():
-        line_variation_category_list.extend(
-                                      movement.getVariationCategoryList())
-      # erase double
-      line_variation_category_list = dict([(variation_category, 1) \
-                                          for variation_category in \
-                                          line_variation_category_list]).keys()
-      line_variation_category_list.sort()
-      delivery_line.edit(variation_category_list=line_variation_category_list)
+        for category in movement.getVariationCategoryList():
+          variation_category_dict[category] = True
+      variation_category_list = sorted(variation_category_dict.keys())
+      delivery_line.setVariationCategoryList(variation_category_list)
       # Then, create delivery movement (delivery cell or complete delivery
       # line)
       group_list = movement_group.getGroupList()
       # If no group is defined for cell, we need to continue, in order to
       # save the quantity value
-      if list(group_list) != []:
+      if len(group_list):
         for group in group_list:
           self._deliveryCellGroupProcessing(
                                     delivery_line,
@@ -568,7 +564,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         # because matrix range can be empty even if line variation category
         # list is not empty
         property_dict = {}
-        if list(delivery_line.getCellKeyList(base_id=base_id)) == []:
+        if len(delivery_line.getCellKeyList(base_id=base_id)) == 0:
           # update line
           if update_existing_line == 1:
             if self._isUpdated(delivery_line, 'cell'):
