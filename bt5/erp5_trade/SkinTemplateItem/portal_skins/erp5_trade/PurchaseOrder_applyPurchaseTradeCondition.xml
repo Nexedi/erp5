@@ -71,7 +71,7 @@ for base_category in (\'destination_section\', \'destination\',\n
   if context.getProperty(base_category):\n
     tested_base_category_list.append(base_category)\n
 \n
-count = len(tested_base_category_list)\n
+count = len(tested_base_category_list) + 1\n
 \n
 # if no date is defined, use today\'s date to retrieve predicate that define start_date_range_min/max\n
 if order.getStartDate() is None:\n
@@ -81,10 +81,18 @@ else:\n
 \n
 def rank_method(trade_condition):\n
   rank = 0\n
-  if trade_condition.getSourceSection():\n
-    rank += 10\n
-  if trade_condition.getSource():\n
-    rank += 10\n
+  source_section = trade_condition.getSourceSection()\n
+  if source_section:\n
+    if source_section == context.getSourceSection():\n
+      rank += 10\n
+    else:\n
+      rank -= 2\n
+  source = trade_condition.getSource()\n
+  if source:\n
+    if source == context.getSource():\n
+      rank += 10\n
+    else:\n
+      rank -= 2\n
   if trade_condition.getDestinationSection():\n
     rank += 1\n
   if trade_condition.getDestination():\n
@@ -96,11 +104,11 @@ def sort_method(a, b):\n
   return -cmp(rank_method(a), rank_method(b))\n
 \n
 while count > 0 and len(trade_condition_list) == 0:\n
+  count -= 1\n
   trade_condition_list = context.portal_domains.searchPredicateList(\n
       predicate_context, portal_type=trade_condition_portal_type,\n
       tested_base_category_list=tested_base_category_list[:count],\n
       sort_method=sort_method)\n
-  count -= 1\n
 \n
 if len(trade_condition_list ) == 0 :\n
   message = Base_translateString(\'No trade condition.\')\n
@@ -172,8 +180,8 @@ if not batch_mode:\n
                             <string>predicate_context</string>
                             <string>rank_method</string>
                             <string>sort_method</string>
-                            <string>_getitem_</string>
                             <string>_inplacevar_</string>
+                            <string>_getitem_</string>
                             <string>message</string>
                             <string>trade_condition</string>
                             <string>dict</string>
