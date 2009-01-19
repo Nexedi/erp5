@@ -30,15 +30,15 @@
         <item>
             <key> <string>after_script_name</string> </key>
             <value>
-              <tuple/>
+              <list>
+                <string>Movement_copyBaseContributionFromResource</string>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>before_commit_script_name</string> </key>
             <value>
-              <list>
-                <string>Movement_copyBaseContributionFromResource</string>
-              </list>
+              <tuple/>
             </value>
         </item>
         <item>
