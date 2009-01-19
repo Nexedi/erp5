@@ -92,6 +92,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
       return
     else:
       self.portal.set_up_once_called = 1
+      self.validateRules()
       self.bootstrapSite()
 
   def stepGetPackingList(self, sequence=None, sequence_list=None, **kw):
