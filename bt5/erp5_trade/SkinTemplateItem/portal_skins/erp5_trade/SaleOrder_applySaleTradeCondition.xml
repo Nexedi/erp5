@@ -65,10 +65,12 @@ trade_condition_portal_type = \'Sale Trade Condition\'\n
 trade_condition_list = order.getSpecialiseValueList(\n
     portal_type=trade_condition_portal_type)\n
 \n
-tested_base_category_list = [\n
-  \'destination_section\', \'source_section\',\n
-  \'destination\', \'source\',\n
-]\n
+tested_base_category_list = [ ]\n
+for base_category in (\'source_section\', \'source\',\n
+                      \'destination_section\', \'destination\', ):\n
+  if context.getProperty(base_category):\n
+    tested_base_category_list.append(base_category)\n
+\n
 count = len(tested_base_category_list)\n
 \n
 # if no date is defined, use today\'s date to retrieve predicate that define start_date_range_min/max\n
@@ -77,15 +79,31 @@ if order.getStartDate() is None:\n
 else:\n
   predicate_context = order\n
 \n
+def rank_method(trade_condition):\n
+  rank = 0\n
+  if trade_condition.getDestinationSection():\n
+    rank += 10\n
+  if trade_condition.getDestination():\n
+    rank += 10\n
+  if trade_condition.getSourceSection():\n
+    rank += 1\n
+  if trade_condition.getSource():\n
+    rank += 1\n
+  rank += len(trade_condition.getSpecialiseList())\n
+  return rank\n
+\n
+def sort_method(a, b):\n
+  return -cmp(rank_method(a), rank_method(b))\n
+\n
 while count > 0 and len(trade_condition_list) == 0:\n
   trade_condition_list = context.portal_domains.searchPredicateList(\n
       predicate_context, portal_type=trade_condition_portal_type,\n
-      tested_base_category_list=tested_base_category_list[:count])\n
+      tested_base_category_list=tested_base_category_list[:count],\n
+      sort_method=sort_method)\n
   count -= 1\n
 \n
-if len(trade_condition_list ) == 0 :\n
-  redirect_url = \'%s/%s?%s\' % ( context.absolute_url(), form_id,\n
-      \'portal_status_message=\' + Base_translateString(\'No trade condition.\'))\n
+if len(trade_condition_list ) == 0:\n
+  message = Base_translateString(\'No trade condition.\')\n
 else :\n
   # if more than one trade condition is found, simply apply the first one\n
   trade_condition=trade_condition_list[0].getObject()\n
@@ -95,12 +113,11 @@ else :\n
   if hasattr(order, \'getReceivedDate\') and order.getReceivedDate() is None:\n
     context.setReceivedDate(DateTime())\n
 \n
-  redirect_url = \'%s/%s?%s\' % (context.absolute_url(), form_id,\n
-      \'portal_status_message=\' + Base_translateString(\'Order updated.\'))\n
+  message = Base_translateString(\'Order updated.\')\n
 \n
-if batch_mode:\n
-  return\n
-context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url.replace(\' \', \'+\') )\n
+if not batch_mode:\n
+  return context.Base_redirect(form_id,\n
+          keep_items=dict(portal_status_message=message))\n
 
 
 ]]></string> </value>
@@ -113,7 +130,7 @@ context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url.replace(\' \', \'+\') )\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, batch_mode=0, force=1</string> </value>
+            <value> <string>form_id=\'view\', batch_mode=0, force=1</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -149,16 +166,21 @@ context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url.replace(\' \', \'+\') )\n
                             <string>trade_condition_portal_type</string>
                             <string>trade_condition_list</string>
                             <string>tested_base_category_list</string>
+                            <string>_getiter_</string>
+                            <string>base_category</string>
                             <string>len</string>
                             <string>count</string>
                             <string>None</string>
                             <string>DateTime</string>
                             <string>predicate_context</string>
+                            <string>rank_method</string>
+                            <string>sort_method</string>
                             <string>_getitem_</string>
                             <string>_inplacevar_</string>
-                            <string>redirect_url</string>
+                            <string>message</string>
                             <string>trade_condition</string>
                             <string>hasattr</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -171,6 +193,7 @@ context.REQUEST[ \'RESPONSE\' ].redirect( redirect_url.replace(\' \', \'+\') )\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <string>view</string>
                 <int>0</int>
                 <int>1</int>
               </tuple>
