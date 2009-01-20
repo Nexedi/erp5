@@ -109,7 +109,7 @@ class PaySheetTransaction(Invoice):
         for reference in ratio_reference_list]
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                          'getRatioQuantityFromReference')
+                          'getAnnotationLineFromReference')
   def getAnnotationLineFromReference(self, reference=None):
     """Return the annotation line corresponding to the reference.
     Returns None if reference not found
@@ -129,7 +129,7 @@ class PaySheetTransaction(Invoice):
     return None 
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                          'getRatioQuantityList')
+                          'getAnnotationLineListList')
   def getAnnotationLineListList(self, reference_list):
     """Return a list of annotation lines corresponding to the reference_list
     reference_list is a list of references to the Annotation Line we want 
