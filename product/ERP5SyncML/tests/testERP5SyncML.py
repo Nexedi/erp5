@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
-# 
+#
 # Copyright (c) 2004 Nexedi SARL and Contributors. All Rights Reserved.
 #          Sebastien Robin <seb@nexedi.com>
 #
@@ -486,23 +487,23 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
       ZopeTestCase._print('\nTest First Synchronization ')
       LOG('Testing... ',0,'test_08_FirstSynchronization')
     self.login()
-    self.setupPublicationAndSubscription(quiet=1,run=1)
-    nb_person = self.populatePersonServer(quiet=1,run=1)
+    self.setupPublicationAndSubscription(quiet=1, run=1)
+    nb_person = self.populatePersonServer(quiet=1, run=1)
     portal_sync = self.getSynchronizationTool()
     for sub in portal_sync.getSubscriptionList():
-      self.assertEquals(sub.getSynchronizationType(),SyncCode.SLOW_SYNC)
+      self.assertEquals(sub.getSynchronizationType(), SyncCode.SLOW_SYNC)
     # Synchronize the first client
     nb_message1 = self.synchronize(self.sub_id1)
     for sub in portal_sync.getSubscriptionList():
       if sub.getTitle() == self.sub_id1:
-        self.assertEquals(sub.getSynchronizationType(),SyncCode.TWO_WAY)
+        self.assertEquals(sub.getSynchronizationType(), SyncCode.TWO_WAY)
       else:
-        self.assertEquals(sub.getSynchronizationType(),SyncCode.SLOW_SYNC)
+        self.assertEquals(sub.getSynchronizationType(), SyncCode.SLOW_SYNC)
     self.assertEqual(nb_message1, self.nb_message_first_synchronization)
     # Synchronize the second client
     nb_message2 = self.synchronize(self.sub_id2)
     for sub in portal_sync.getSubscriptionList():
-      self.assertEquals(sub.getSynchronizationType(),SyncCode.TWO_WAY)
+      self.assertEquals(sub.getSynchronizationType(), SyncCode.TWO_WAY)
     self.assertEqual(nb_message2, self.nb_message_first_synchronization)
     self.checkFirstSynchronization(id=self.id1, nb_person=nb_person)
 

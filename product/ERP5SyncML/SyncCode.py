@@ -28,6 +28,7 @@
 
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Globals import Persistent
+import re
 
 class SyncCode(Persistent):
   """
@@ -87,6 +88,7 @@ class SyncCode(Persistent):
                 tuple(XUPDATE_UPDATE) + tuple(XUPDATE_DEL)
   text_type_list = ('text','string')
   list_type_list = list_types
+  none_type = 'None'
   force_conflict_list = ('layout_and_schema','ModificationDate')
   binary_type_list = ('image','file','document','pickle')
   date_type_list = ('date',)
@@ -105,18 +107,12 @@ class SyncCode(Persistent):
   ADDABLE_PROPERTY = local_role_list + (history_tag,) + local_permission_list
   NOT_EDITABLE_PROPERTY = ('id','object','uid','xupdate:attribute') \
                           + XUPDATE_EL + ADDABLE_PROPERTY
-  sub_object_exp = "/object\[@id='.*'\]/"
-  object_exp = "/object\[@id='.*'\]"
-  sub_sub_object_exp = "/object\[@id='.*'\]/object\[@id='.*'\]/"
-  history_exp = "/%s\[@id='.*'\]" % history_tag
-  local_role_exp = "/%s\[@id='.*'\]" % local_role_tag
-  local_group_exp = "/%s\[@id='.*'\]" % local_group_tag
-  bad_local_role_exp = "/%s\[@id='.*'\]/" % local_role_tag
-  bad_local_group_exp = "/%s\[@id='.*'\]/" % local_group_tag
-  bad_history_exp = "/%s\[@id='.*'\]/" % history_tag
-  local_role_and_group_list = (local_group_exp,local_role_exp)
-  bad_local_role_and_group_list = (bad_local_group_exp,bad_local_role_exp)
-
+  sub_object_exp = re.compile("/object\[@id='.*'\]/")
+  object_exp = re.compile("/object\[@id='.*'\]")
+  attribute_type_exp = re.compile("^.*attribute::type$")
+  sub_sub_object_exp = re.compile("/object\[@id='.*'\]/object\[@id='.*'\]/")
+  history_exp = re.compile("/%s\[@id='.*'\]" % history_tag)
+  bad_history_exp = re.compile("/%s\[@id='.*'\]/" % history_tag)
 
   #media types :
 

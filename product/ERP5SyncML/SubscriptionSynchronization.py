@@ -28,7 +28,7 @@
 
 import smtplib # to send emails
 from Subscription import Subscription,Signature
-from XMLSyncUtils import XMLSyncUtils, Parse
+from XMLSyncUtils import XMLSyncUtils
 import commands
 from Conduit.ERP5Conduit import ERP5Conduit
 from AccessControl import getSecurityManager

@@ -40,7 +40,6 @@ from Products.ERP5SyncML import Conduit
 from Publication import Publication, Subscriber
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Subscription import Subscription
-from XMLSyncUtils import Parse
 from Products.ERP5Type import Permissions
 from PublicationSynchronization import PublicationSynchronization
 from SubscriptionSynchronization import SubscriptionSynchronization
@@ -490,7 +489,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     for conflict in conflict_list:
       if conflict.getObjectPath() == path:
         #LOG('getSynchronizationState', DEBUG, 'found a conflict: %s' % str(conflict))
-        state_list += [[conflict.getSubscriber(),self.CONFLICT]]
+        state_list.append([conflict.getSubscriber(), self.CONFLICT])
     for domain in self.getSynchronizationList():
       destination = domain.getDestinationPath()
       #LOG('getSynchronizationState', TRACE, 'destination: %s' % str(destination))
@@ -499,7 +498,6 @@ class SynchronizationTool( SubscriptionSynchronization,
       if j_path.find(destination)==0:
         o_id = j_path[len(destination)+1:].split('/')[0]
         #LOG('getSynchronizationState', TRACE, 'o_id: %s' % o_id)
-        subscriber_list = []
         if domain.domain_type==self.PUB:
           subscriber_list = domain.getSubscriberList()
         else:
@@ -512,13 +510,13 @@ class SynchronizationTool( SubscriptionSynchronization,
             state = signature.getStatus()
             #LOG('getSynchronizationState:', TRACE, 'sub.dest :%s, state: %s' % \
                                    #(subscriber.getSubscriptionUrl(),str(state)))
-            found = None
+            found = False
             # Make sure there is not already a conflict giving the state
             for state_item in state_list:
-              if state_item[0]==subscriber:
-                found = 1
-            if found is None:
-              state_list += [[subscriber,state]]
+              if state_item[0] == subscriber:
+                found = True
+            if not found:
+              state_list.append([subscriber, state])
     return state_list
 
   security.declareProtected(Permissions.AccessContentsInformation,

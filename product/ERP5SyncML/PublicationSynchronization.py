@@ -29,7 +29,6 @@
 import smtplib # to send emails
 from Publication import Publication,Subscriber
 from Subscription import Signature
-from XMLSyncUtils import Parse
 from XMLSyncUtils import XMLSyncUtils
 from Conduit.ERP5Conduit import ERP5Conduit
 from Products.CMFCore.utils import getToolByName
@@ -54,9 +53,9 @@ class PublicationSynchronization(XMLSyncUtils):
     """
     LOG('PubSyncInit', INFO, 'Starting... publication: %s' % (publication.getPath()))
     #the session id is set at the same value of those of the client
-    subscriber.setSessionId(self.getSessionId(xml_client))
+    subscriber.setSessionId(self.getSessionIdFromXml(xml_client))
     #same for the message id
-    subscriber.setMessageId(self.getMessageId(xml_client))     
+    subscriber.setMessageId(self.getMessageIdFromXml(xml_client))     
     #at the begining of the synchronization the subscriber is not authenticated
     subscriber.setAuthenticated(False)
     #the last_message_id is 1 because the message that 
@@ -137,7 +136,7 @@ class PublicationSynchronization(XMLSyncUtils):
         if authentication_type == publication.getAuthenticationType():
           authentication_format = publication.getAuthenticationFormat()
           decoded = subscriber.decode(authentication_format, data)
-          if decoded not in ('', None) and ':' in decoded:
+          if decoded and ':' in decoded:
             (login, password) = decoded.split(':')
             uf = self.getPortalObject().acl_users
             for plugin_name, plugin in uf._getOb('plugins').listPlugins(

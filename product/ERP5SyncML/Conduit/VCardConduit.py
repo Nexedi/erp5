@@ -69,8 +69,7 @@ class VCardConduit(ERP5Conduit, SyncCode):
     portal_type = 'Person' #the VCard can just use Person
     if sub_object is None:
 
-      new_object, reset_local_roles, reset_workflow = ERP5Conduit.constructContent(self, object, object_id,
-      portal_type)
+      new_object, reset_local_roles, reset_workflow = ERP5Conduit.constructContent(self, object, object_id, portal_type)
     else: #if the object exist, it juste must be update
       new_object = sub_object
     #LOG('addNode', 0, 'new_object:%s, sub_object:%s' % (new_object, sub_object)) 
@@ -80,7 +79,7 @@ class VCardConduit(ERP5Conduit, SyncCode):
                     simulate=simulate,
                     **kw)
     #in a first time, conflict are not used
-    return {'conflict_list':None, 'object': new_object}
+    return {'conflict_list':[], 'object': new_object}
 
   security.declareProtected(Permissions.ModifyPortalContent, 'deleteNode')
   def deleteNode(self, xml=None, object=None, object_id=None, force=None,
@@ -89,12 +88,11 @@ class VCardConduit(ERP5Conduit, SyncCode):
     A node is deleted
     """
     #LOG('deleteNode :', 0, 'object:%s, object_id:%s' % (str(object), str(object_id)))
-    conflict_list = []
     try:
       object._delObject(object_id)
     except (AttributeError, KeyError):
       LOG('VCardConduit',0,'deleteNode, Unable to delete: %s' % str(object_id))
-    return conflict_list
+    return []
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateNode')
   def updateNode(self, xml=None, object=None, previous_xml=None, force=0, 
@@ -156,7 +154,7 @@ class VCardConduit(ERP5Conduit, SyncCode):
         property_value_list_well_incoded.append(property_value)
     #elif ... put here the other encodings
     else:
-      property_value_list_well_incoded=property_value_list
+      property_value_list_well_incoded = property_value_list
 
     return property_value_list_well_incoded
 
@@ -175,7 +173,7 @@ class VCardConduit(ERP5Conduit, SyncCode):
     for vcard_line in vcard_list:
       if ':' in vcard_line:
         property, property_value = vcard_line.split(':')
-        property_value_list=property_value.split(';')
+        property_value_list = property_value.split(';')
         property_parameters_list = []
         property_name = ''
         if ';' in property:
@@ -195,28 +193,28 @@ class VCardConduit(ERP5Conduit, SyncCode):
             property_parameters_list = tmp
             #now property_parameters_list looks like :
             # [{'ENCODING':'QUOTED-PRINTABLE'}, {'CHARSET':'UTF-8'}]
-            
+
             property_value_list = \
-                self.changePropertyEncoding(property_parameters_list, 
-                    property_value_list)
+                self.changePropertyEncoding(property_parameters_list,
+                                            property_value_list)
 
         else:
           property_name=property
-        if type(property_name) is type(u'a'):
+        if isinstance(property_name, unicode):
           property_name = property_name.encode('utf-8')
 
-        tmp=[]
+        tmp = []
         for property_value in property_value_list:
-          if type(property_value) is type(u'a'):
+          if isinstance(property_value, unicode):
             property_value = property_value.encode('utf-8')
           tmp.append(property_value)
-        property_value_list=tmp
+        property_value_list = tmp
         if property_name in convert_dict.keys():
           if property_name == 'N' and len(property_value_list) > 1:
-            edit_dict[convert_dict['N']]=property_value_list[0]
-            edit_dict[convert_dict['FN']]=property_value_list[1]
+            edit_dict[convert_dict['N']] = property_value_list[0]
+            edit_dict[convert_dict['FN']] = property_value_list[1]
           else:
-            edit_dict[convert_dict[property_name]]=property_value_list[0]
+            edit_dict[convert_dict[property_name]] = property_value_list[0]
     #LOG('edit_dict =',0,edit_dict)
     return edit_dict
 

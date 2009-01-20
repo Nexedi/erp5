@@ -492,10 +492,6 @@ class Signature(Folder, SyncCode):
     Set the partial string we will have to
     deliver in the future
     """
-    if type(xml) is type(u'a'):
-      xml = xml.encode('utf-8')
-    if xml is not None:
-      xml = xml.replace('@-@@-@','--') # need to put back '--'
     self.partial_xml = xml
 
   def getPartialXML(self):
