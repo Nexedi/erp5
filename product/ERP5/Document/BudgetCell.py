@@ -121,7 +121,7 @@ class BudgetCell(Predicate, MetaNode):
       """
       Return available budget.
       """
-      return self.getCurrentBalance() - self.getConsumedBudget()
+      return self.getCurrentBalance() - self.getEngagedBudget()
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getEngagedBudget')
     def getEngagedBudget(self, src__=0):
