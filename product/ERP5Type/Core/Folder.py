@@ -1224,11 +1224,11 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     return error_list
 
   security.declareProtected(Permissions.AccessContentsInformation, 'asXML')
-  def asXML(self, omit_xml_declaration=True):
+  def asXML(self, omit_xml_declaration=True, root=None):
     """
         Generate an xml text corresponding to the content of this object
     """
-    return Folder_asXML(self, omit_xml_declaration=omit_xml_declaration)
+    return Folder_asXML(self, omit_xml_declaration=omit_xml_declaration, root=root)
 
   # Optimized Menu System
   security.declarePublic('getVisibleAllowedContentTypeList')

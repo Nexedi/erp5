@@ -98,8 +98,7 @@ def Base_asXML(object, root=None):
         ascii_data = msg.get_payload()
         sub_object.text = ascii_data
       elif prop_type in ('lines', 'tokens',):
-        value_as_node = etree.XML(marshaler(value))
-        sub_object.append(value_as_node)
+        sub_object.text = etree.CDATA(marshaler(value))
       elif prop_type in ('text', 'string',):
         sub_object.text = unicode(escape(value), 'utf-8')
       elif prop_type != 'None':
@@ -132,43 +131,41 @@ def Base_asXML(object, root=None):
   for user_role in self.get_local_roles():
     local_role_node = SubElement(object, 'local_role',
                                  attrib=dict(id=user_role[0], type='tokens'))
-    role_list_node = etree.XML(marshaler(user_role[1]))
-    local_role_node.append(role_list_node)
+    local_role_node.text = etree.CDATA(marshaler(user_role[1]))
   if getattr(self, 'get_local_permissions', None) is not None:
     for user_permission in self.get_local_permissions():
       local_permission_node = SubElement(object, 'local_permission',
                               attrib=dict(id=user_permission[0], type='tokens'))
-      permission_list_node = etree.XML(marshaler(user_permission[1]))
-      local_permission_node.append(permission_list_node)
+      local_permission_node.text = etree.CDATA(marshaler(user_permission[1]))
   # Sometimes theres is roles specified for groups, like with CPS
   if getattr(self, 'get_local_group_roles', None) is not None:
     for group_role in self.get_local_group_roles():
       local_group_node = SubElement(object, 'local_group',
                                     attrib=dict(id=group_role[0], type='tokens'))
-      group_role_node = etree.XML(marshaler(group_role[1]))
-      local_group_node.append(group_role_node)
+      local_group_node.text = etree.CDATA(marshaler(group_role[1]))
   if return_as_object:
     return root
   return etree.tostring(root, encoding='utf-8',
                         xml_declaration=True, pretty_print=True)
 
-def Folder_asXML(object, omit_xml_declaration=True):
+def Folder_asXML(object, omit_xml_declaration=True, root=None):
   """
       Generate an xml text corresponding to the content of this object
   """
   xml_declaration = not omit_xml_declaration
   from Products.ERP5Type.Base import Base
   self = object
-  root = Element('erp5')
+  if root is None:
+    root = Element('erp5')
   Base_asXML(self, root=root)
-  root_node = root.xpath('/erp5/object')[0]
+  root_node = root.find('object')
   # Make sure the list of sub objects is ordered
   id_list = sorted(self.objectIds())
   # Append to the xml the xml of subobjects
   for id in id_list:
     o = self._getOb(id)
     if issubclass(o.__class__, Base):
-      Base_asXML(o, root=root_node)
+      o.asXML(root=root_node)
 
   return etree.tostring(root, encoding='utf-8',
                         xml_declaration=xml_declaration, pretty_print=True)
