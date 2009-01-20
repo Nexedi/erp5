@@ -1443,6 +1443,12 @@ msgstr "Ligne Budgétaire"
 msgid "Budget Lines"
 msgstr "Lignes Budgétaires"
 
+msgid "Budget Model"
+msgstr "Modèle de budget"
+
+msgid "Budget Models"
+msgstr "Modèles de budget"
+
 msgid "Budget Module"
 msgstr "Budget"
 
@@ -1467,8 +1473,20 @@ msgstr "Transfert Budgétaire"
 msgid "Budget Transfert Line"
 msgstr "Ligne de Transfert Budgétaire"
 
+msgid "Budget Type"
+msgstr "Type de budget"
+
+msgid "Budget Variation"
+msgstr "Variation du budget"
+
+msgid "Budget Variations"
+msgstr "Variations du budget"
+
 msgid "Budget title"
 msgstr "Intitule du budget"
+
+msgid "Budget to Submit"
+msgstr "Budgets à soumettre"
 
 msgid "Budget transactions"
 msgstr "Transactions Budgétaires"
@@ -1730,6 +1748,12 @@ msgstr "Annuler l'action"
 #: portal_workflow/assignment_workflow/transitions/cancel_action
 msgid "Cancel Assignment"
 msgstr "Annuler l'affectation"
+
+msgid "Cancel Budget"
+msgstr "Annuler le budget"
+
+msgid "Cancel Budget Action"
+msgstr "Annuler le budget (action)"
 
 #: portal_workflow/career_workflow/transitions/cancel_action
 msgid "Cancel Career Step"
@@ -3752,6 +3776,9 @@ msgstr "Remises"
 #: erp5_web/WebSite_view/my_default_page_displayed [Glossary term 8123]
 msgid "Display Default Page"
 msgstr "Page affichée par défaut"
+
+msgid "Display Method ID"
+msgstr "Méthode d'affichage"
 
 #: portal type [Glossary term 8312]
 msgid "Distributed Ram Cache"
@@ -6583,6 +6610,12 @@ msgstr "Langue"
 msgid "Name"
 msgstr "Nom"
 
+msgid "Name of a script or a method that displays a title for the node"
+msgstr "Le nom d'un script ou d'une méthode qui affiche le titre d'un noeud"
+
+msgid "Name of a script or a method that should return the list of nodes"
+msgstr "Le nom d'un script ou d'une methode qui retourne les noeuds utilisés"
+
 #: erp5_core/BaseDomain_view/my_domain_generator_method_id [Glossary term
 #: 3609]
 msgid "Name of the script called to generate temporary domains"
@@ -6768,6 +6801,9 @@ msgstr "Aucun document correspondant n'a été trouvé."
 #: portal_skins/erp5_trade/SaleOrder_applySaleTradeCondition
 msgid "No trade condition."
 msgstr "Pas de conditions de vente."
+
+msgid "Node Budget Variation"
+msgstr "Variation de budget sur le noeud"
 
 msgid "Non Deductible Tax"
 msgstr "Cotisation non déductible"
@@ -9792,6 +9828,9 @@ msgstr "Compte en banque"
 msgid "Section Category"
 msgstr "Groupe"
 
+msgid "Section Category Budget Variation"
+msgstr "Variation de budget sur la catégorie de la section"
+
 #: portal_skins/erp5_web/WebSection_viewContent/listbox
 #: portal_skins/erp5_web/WebSection_viewContentList/listbox
 msgid "Section Content"
@@ -9833,6 +9872,9 @@ msgstr "Sélectionner un favori"
 #: portal_skins/erp5_xhtml_style/navigation_box_render
 msgid "Select Language"
 msgstr "Langue"
+
+msgid "Select Method ID"
+msgstr "Méthode de séléction"
 
 #: portal_skins/erp5_xhtml_style/navigation_box_render
 msgid "Select Module"
@@ -10678,6 +10720,12 @@ msgstr "Sous-catégories"
 #: portal_workflow/ticket_workflow/transitions/submit_action
 msgid "Submit"
 msgstr "Soumettre"
+
+msgid "Submit Budget"
+msgstr "Soumettre le budget"
+
+msgid "Submit Budget Action"
+msgstr "Soumettre le budget (action)"
 
 #: portal_workflow/document_publication_workflow/transitions/submit_action
 msgid "Submit for Review"
@@ -13003,6 +13051,12 @@ msgstr "Valider"
 
 msgid "Validate Accounting Transaction"
 msgstr "Valider le brouillard"
+
+msgid "Validate Budget"
+msgstr "Valider le budget"
+
+msgid "Validate Budget Action"
+msgstr "Valider le budget (action)"
 
 #: portal_skins/erp5_core/BusinessTemplate_viewInstallationDialog
 #: portal_skins/erp5_core/TemplateTool_viewMultiInstallationDialog
