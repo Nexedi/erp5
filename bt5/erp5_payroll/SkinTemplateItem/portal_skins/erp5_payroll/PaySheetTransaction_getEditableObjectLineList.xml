@@ -82,7 +82,6 @@ line_list = []\n
 object_dict_list = []\n
 id = 0\n
 \n
-context.log(model_line_list)\n
 for model_line in model_line_list:\n
   base_category_list = model_line.getVariationBaseCategoryList()\n
   base_application_list = model_line.getBaseApplicationTitleList()\n
@@ -98,9 +97,7 @@ for model_line in model_line_list:\n
   previous_share = None\n
   object_dict = {}\n
 \n
-  if cartesian_product == [[]]:\n
-    context.log(\'rien\')\n
-    \n
+  if cartesian_product == [[]]: \n
     share_dict = {}\n
     if 0:\n
       share_dict[cell.getTaxCategory()+\'_price\'] = 0\n
@@ -108,8 +105,6 @@ for model_line in model_line_list:\n
     continue\n
 \n
   for tuple in cartesian_product:\n
-    context.log(tuple)\n
-\n
     share_dict = {}\n
     cell = model_line.getCell(*tuple)\n
     if cell is None:\n

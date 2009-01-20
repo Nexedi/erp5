@@ -125,7 +125,8 @@ for paysheet_line in paysheet_line_list:\n
     for item in tuple:\n
       # the dict key is the base category and value is the category path\n
       tuple_dict[item.split(\'/\')[0]] = \\\n
-          portal.portal_categories.restrictedTraverse(item).getTitle()\n
+        portal.portal_categories.restrictedTraverse(item).getShortTitle() or \\\n
+        portal.portal_categories.restrictedTraverse(item).getTitle()\n
       tuple_dict[item.split(\'/\')[0]+\'_relative_url\']=item\n
 \n
     # we want to display as lines as a paysheet line as slices\n
