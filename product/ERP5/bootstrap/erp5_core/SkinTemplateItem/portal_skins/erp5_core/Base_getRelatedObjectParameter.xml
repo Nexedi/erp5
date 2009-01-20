@@ -79,7 +79,7 @@ if parameter is not None:\n
       return portal_type\n
     \n
     proxied_listbox_portal_type = proxied_listbox.get_value(\'portal_types\')\n
-    return [x for x in proxied_listbox_portal_type if x in portal_type]\n
+    return [x for x in proxied_listbox_portal_type if x in portal_type] or portal_type\n
 \n
 return result\n
 </string> </value>
