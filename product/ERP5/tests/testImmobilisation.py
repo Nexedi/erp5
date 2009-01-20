@@ -230,7 +230,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     self.createOrganisationList()
     self.createAccountList()
     self.createItemList()
-    self.validateRuleList()
+    self.validateRules()
     get_transaction().commit()
     self.tic()
 
@@ -421,11 +421,6 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
       for i in range(30):
         item_id = 'item%i' % i
         item_module.newContent(id=item_id, reference='%i' % i)
-
-  def validateRuleList(self):
-    portal_rules = self.getRuleTool()
-    for rule in portal_rules.objectValues():
-      rule.validate()
 
   def stepTic(self, sequence=None, sequence_list=None, **kw):
     self.tic()
