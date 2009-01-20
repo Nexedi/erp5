@@ -596,8 +596,16 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         if security_uid_list:
           query = ComplexQuery(Query(security_uid=security_uid_list, operator='IN'),
                                query, operator='OR')
-      else:
+      elif security_uid_list:
         query = Query(security_uid=security_uid_list, operator='IN')
+      else:
+        # XXX A false query has to be generated. 
+        # As it is not possible to use SQLKey for now, pass impossible value
+        # on uid (which will be detected as False by MySQL, as it is not in the
+        # column range)
+        # Do not pass security_uid_list as empty in order to prevent useless
+        # overhead
+        query = Query(uid=-1)
 
       if local_role_column_dict:
         query_list = []

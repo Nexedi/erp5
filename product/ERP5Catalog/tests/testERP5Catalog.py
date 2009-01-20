@@ -1669,6 +1669,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     
     # if we specify local_roles= it will only returns documents on with bob has
     # a local roles
+    self.assertEquals(0,
+                len(ctool.searchResults(title='Object Title',
+                                        local_roles='UnexistingRole')))
+    self.assertEquals(0,
+                len(ctool.searchResults(title='Object Title',
+                                        local_roles='Assignor')))
     self.assertEquals(1,
                 len(ctool.searchResults(title='Object Title',
                                         local_roles='Assignee')))
