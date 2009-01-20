@@ -200,7 +200,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Name of a script or a method that should return the list of lines</string> </value>
+                    <value> <string>Name of a script or a method that should return the list of nodes</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
