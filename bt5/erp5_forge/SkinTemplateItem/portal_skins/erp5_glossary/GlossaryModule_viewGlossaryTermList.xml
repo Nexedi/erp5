@@ -81,7 +81,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_causality_translated_validation_state_title</string>
+                      </list>
                     </value>
                 </item>
                 <item>
