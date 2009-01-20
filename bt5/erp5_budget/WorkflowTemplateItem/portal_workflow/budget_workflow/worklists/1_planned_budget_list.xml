@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Budget to Plan (%(count)s)</string> </value>
+            <value> <string>Budget to Submit (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -27,7 +27,7 @@ budget_module/view?validation_state=planned&local_roles:list=Assignor&reset=1
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Budget to plan</string> </value>
+            <value> <string>Budget to Submit</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
