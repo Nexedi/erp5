@@ -4284,6 +4284,12 @@ msgstr "Fin de carrière"
 msgid "End of this current career step"
 msgstr "Fin de carrière"
 
+msgid "Engaged"
+msgstr "Engagé"
+
+msgid "Engaged Budget"
+msgstr "Budget engagé"
+
 msgid "English"
 msgstr "Anglais"
 
@@ -12417,6 +12423,15 @@ msgstr "Total ${class}"
 msgid "Total ${salary_range_title}"
 msgstr "Total ${salary_range_title}"
 
+msgid "Total Available Budget"
+msgstr "Budget disponible total"
+
+msgid "Total Consumed Budget"
+msgstr "Budget consommé total"
+
+msgid "Total Current Budget"
+msgstr "Budget courant total"
+
 msgid "Total Deduction"
 msgstr "Total Retenues"
 
@@ -12424,6 +12439,9 @@ msgstr "Total Retenues"
 #: portal_skins/erp5_project_trade/SaleOrder_viewDetailedReportMacro
 msgid "Total Duration"
 msgstr "Durée totale"
+
+msgid "Total Engaged Budget"
+msgstr "Budget engagé total"
 
 msgid "Total Excluding VAT"
 msgstr "Total Hors Taxes"
@@ -12433,6 +12451,9 @@ msgstr "Total TTC"
 
 msgid "Total Income"
 msgstr "Total Gains"
+
+msgid "Total Initial Budget"
+msgstr "Budget initial total"
 
 #: portal_skins/erp5_trade/PurchaseOrderModule_viewPurchaseOrderList/listbox
 #: portal_skins/erp5_trade/SaleOrderModule_viewSaleOrderList/listbox
