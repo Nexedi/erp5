@@ -76,6 +76,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>Comments which can be read by internal users but unlike description, are not printed out on official documents.</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_text_area_field</string> </value>
                 </item>

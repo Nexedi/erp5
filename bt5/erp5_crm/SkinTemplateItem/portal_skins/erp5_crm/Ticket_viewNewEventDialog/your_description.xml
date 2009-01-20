@@ -216,7 +216,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>A description of the event</string> </value>
+                    <value> <string>General description of a document in ERP5. Descriptions are not supposed to be internal, and in a case of certain documents such as invoices for example, will be seen by your customers.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

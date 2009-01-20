@@ -382,7 +382,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>A resource in ERP5 can be a product or a service. This term will be found in orders for instance, or accounting and inventories.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -475,7 +475,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Resource</string> </value>
+                    <value> <string>Product or Service</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

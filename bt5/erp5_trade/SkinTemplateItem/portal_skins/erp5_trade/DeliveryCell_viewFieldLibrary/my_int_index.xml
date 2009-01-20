@@ -196,7 +196,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>index used to sort document</string> </value>
+                    <value> <string>Sort Index will either give a calculation order or a sorting order of a document in a list that contains many documents.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -240,7 +240,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>listbox_int_index</string> </value>
+                    <value> <string>Sort Index</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>

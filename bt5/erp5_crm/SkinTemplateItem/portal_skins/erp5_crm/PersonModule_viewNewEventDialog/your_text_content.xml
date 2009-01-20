@@ -110,7 +110,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>content of the event</string> </value>
+                    <value> <string>The content of the document considered as a text string</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -134,7 +134,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Body</string> </value>
+                    <value> <string>Text</string> </value>
                 </item>
               </dictionary>
             </value>

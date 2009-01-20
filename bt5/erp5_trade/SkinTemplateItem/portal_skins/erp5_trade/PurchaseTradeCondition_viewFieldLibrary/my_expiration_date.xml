@@ -76,7 +76,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The date until which the offer is valid.</string> </value>
+                    <value> <string>The date when the document expires.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

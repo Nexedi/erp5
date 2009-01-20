@@ -200,7 +200,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>A one line title which describes a product, an order, a supply, a trade condition. It may be used  in official documents.</string> </value>
+                    <value> <string>The name of a document in ERP5</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

@@ -87,7 +87,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Defines an additional term for making payment after the end of the month.</string> </value>
+                    <value> <string>Defines the additional term (in days) allowed to the customer to pay his order</string> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>

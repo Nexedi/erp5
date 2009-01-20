@@ -87,7 +87,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>defined to whi the invoice will be sent</string> </value>
+                    <value> <string>Defines to who the invoice will be sent</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -118,7 +118,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Billable Client</string> </value>
+                    <value> <string>Client</string> </value>
                 </item>
               </dictionary>
             </value>

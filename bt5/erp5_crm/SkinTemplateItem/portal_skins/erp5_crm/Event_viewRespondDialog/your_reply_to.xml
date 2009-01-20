@@ -242,7 +242,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>To</string> </value>
+                    <value> <string>Reply to</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

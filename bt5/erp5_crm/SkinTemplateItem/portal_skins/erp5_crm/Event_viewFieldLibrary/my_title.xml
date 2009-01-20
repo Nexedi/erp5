@@ -86,6 +86,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The name of a document in ERP5</string> </value>
+                </item>
+                <item>
                     <key> <string>editable</string> </key>
                     <value> <int>1</int> </value>
                 </item>

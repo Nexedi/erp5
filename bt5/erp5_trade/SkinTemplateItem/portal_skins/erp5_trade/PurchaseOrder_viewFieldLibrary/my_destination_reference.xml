@@ -76,7 +76,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The reference for the client.</string> </value>
+                    <value> <string>The reference of the client.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

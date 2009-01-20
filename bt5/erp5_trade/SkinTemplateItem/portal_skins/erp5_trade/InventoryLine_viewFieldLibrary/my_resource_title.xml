@@ -93,6 +93,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>A resource in ERP5 can be a product or a service. This term will be found in orders for instance, or accounting and inventories.</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_relation_field</string> </value>
                 </item>

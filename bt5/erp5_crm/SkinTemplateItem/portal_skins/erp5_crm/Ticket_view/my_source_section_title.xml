@@ -146,7 +146,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>defined who will provide the bill</string> </value>
+                    <value> <string>Defines who will provide the bill</string> </value>
                 </item>
                 <item>
                     <key> <string>extra_context</string> </key>

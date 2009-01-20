@@ -87,7 +87,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The term (number of days) for making payment</string> </value>
+                    <value> <string>The term (days) allowed to the customer for the payment of the order</string> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>

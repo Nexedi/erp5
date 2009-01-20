@@ -89,7 +89,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Tell who requested the ticket</string> </value>
+                    <value> <string>Tells who requested the ticket</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

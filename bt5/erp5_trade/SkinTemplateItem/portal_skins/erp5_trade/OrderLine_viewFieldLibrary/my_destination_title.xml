@@ -77,7 +77,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The organisation or person to whom merchandise or service is delivered over or provided to.</string> </value>
+                    <value> <string>The organisation or person who is delivered goods or services in this operation</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

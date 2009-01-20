@@ -74,7 +74,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Price for one unit.</string> </value>
+                    <value> <string>The unit price at which a product or service is traded. This price is a net price which has been applied all pricing conditions defined in supply documents.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Unit Price</string> </value>
+                    <value> <string>Price</string> </value>
                 </item>
               </dictionary>
             </value>
