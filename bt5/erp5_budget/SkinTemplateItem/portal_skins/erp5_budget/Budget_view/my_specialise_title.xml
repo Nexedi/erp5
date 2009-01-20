@@ -115,7 +115,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>BudgetModel_viewBudgetModelList/listbox</string>
+                          <string>BudgetModelModule_viewBudgetModelList/listbox</string>
                           <string>Budget Models</string>
                         </tuple>
                       </list>
