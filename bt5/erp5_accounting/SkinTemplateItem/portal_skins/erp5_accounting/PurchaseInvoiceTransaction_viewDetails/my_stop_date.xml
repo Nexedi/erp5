@@ -81,7 +81,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>date at which the transaction is effective</string> </value>
+                    <value> <string>The End date of an operation</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

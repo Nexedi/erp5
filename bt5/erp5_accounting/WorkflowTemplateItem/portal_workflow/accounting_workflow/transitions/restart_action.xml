@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Modify Transaction (journalize)</string> </value>
+            <value> <string>Modify Transaction (journalise)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>

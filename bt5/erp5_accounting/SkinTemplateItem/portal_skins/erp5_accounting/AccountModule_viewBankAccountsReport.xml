@@ -53,6 +53,7 @@
             <value>
               <list>
                 <string>Default</string>
+                <string>not_assigned</string>
               </list>
             </value>
         </item>
@@ -68,6 +69,18 @@
                         <string>to_date</string>
                         <string>transaction_section_category</string>
                         <string>transaction_simulation_state</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>not_assigned</string> </key>
+                    <value>
+                      <list>
+                        <string>my_from_date</string>
+                        <string>my_portal_skin</string>
+                        <string>my_to_date</string>
+                        <string>my_transaction_section_category</string>
+                        <string>my_transaction_simulation_state</string>
                       </list>
                     </value>
                 </item>
