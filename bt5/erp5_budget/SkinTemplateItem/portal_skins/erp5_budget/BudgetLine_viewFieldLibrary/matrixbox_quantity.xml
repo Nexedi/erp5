@@ -15,6 +15,7 @@
               <list>
                 <string>title</string>
                 <string>default</string>
+                <string>extra</string>
                 <string>precision</string>
               </list>
             </value>
@@ -95,6 +96,10 @@
                 <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra</string> </key>
+                    <value> <string>align="right"</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
