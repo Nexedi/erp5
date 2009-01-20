@@ -256,7 +256,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Date at wich the agent will no longer be validated</string> </value>
+                    <value> <string>The date at which the agent has no right anymore on the bank account</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

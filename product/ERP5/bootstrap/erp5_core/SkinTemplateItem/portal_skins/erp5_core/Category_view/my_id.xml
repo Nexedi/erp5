@@ -78,7 +78,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Identifiant number</string> </value>
+                    <value> <string>Identification</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

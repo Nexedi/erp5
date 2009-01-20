@@ -200,7 +200,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The format of the text content of this document</string> </value>
+                    <value> <string>The text format used by default</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -240,7 +240,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Format</string> </value>
+                    <value> <string>Text Format</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

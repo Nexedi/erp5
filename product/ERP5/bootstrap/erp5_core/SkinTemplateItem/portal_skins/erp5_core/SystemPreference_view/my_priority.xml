@@ -204,7 +204,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The priority of the preference : in ascendinf order : user, site, global</string> </value>
+                    <value> <string>The priority of the preference : in ascending order : user, site, global</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -250,7 +250,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Priority</string> </value>
+                    <value> <string>Preference priority</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>

@@ -77,7 +77,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The title of this career.</string> </value>
+                    <value> <string>The name of a document in ERP5</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -93,7 +93,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Career Title</string> </value>
+                    <value> <string>Title</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -78,7 +78,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The extension</string> </value>
+                    <value> <string>The telephone extension</string> </value>
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>

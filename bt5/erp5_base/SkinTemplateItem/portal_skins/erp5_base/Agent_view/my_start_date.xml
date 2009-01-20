@@ -256,7 +256,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Date at which was created the agent</string> </value>
+                    <value> <string>The date at which the agent can start taking actions on the bank account</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -304,7 +304,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Creation Date</string> </value>
+                    <value> <string>Validity Start Date</string> </value>
                 </item>
               </dictionary>
             </value>

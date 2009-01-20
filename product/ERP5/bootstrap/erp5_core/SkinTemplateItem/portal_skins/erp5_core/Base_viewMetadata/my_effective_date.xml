@@ -256,7 +256,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>The date when the document starts being valid.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

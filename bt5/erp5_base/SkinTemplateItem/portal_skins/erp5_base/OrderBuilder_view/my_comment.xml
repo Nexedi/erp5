@@ -216,7 +216,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Comments which can be read by internal users but unlike description, are not printed out on official documents.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

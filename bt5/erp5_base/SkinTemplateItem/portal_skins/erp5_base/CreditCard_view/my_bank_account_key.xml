@@ -77,7 +77,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The security key for the credit card.</string> </value>
+                    <value> <string>The security key for this bank account. IBAN stands for International Bank Account Number</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -93,7 +93,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Security Key</string> </value>
+                    <value> <string>IBAN</string> </value>
                 </item>
               </dictionary>
             </value>

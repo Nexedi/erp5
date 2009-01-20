@@ -200,7 +200,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>the number of revision used by the business template. This number increase each time we commit a modification</string> </value>
+                    <value> <string>the number of revision used by the business template. This number increases each time we commit a modification</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

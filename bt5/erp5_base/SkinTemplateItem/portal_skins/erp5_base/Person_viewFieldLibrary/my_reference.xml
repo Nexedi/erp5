@@ -91,9 +91,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The username this person will use to log in the system.\n
-\n
-The system will check that there isn\'t another user with the same username.</string> </value>
+                    <value> <string>The username this person will use to log in the system. The system will check that there isn\'t another user with the same username.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

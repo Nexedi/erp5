@@ -202,7 +202,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Indicate how often in minutes the event will happen (every x minutest)</string> </value>
+                    <value> <string>Indicate how often (in minutes) the event will happen (every x minutest)</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

@@ -216,7 +216,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Description of the query</string> </value>
+                    <value> <string>General description of a document in ERP5. Descriptions are not supposed to be internal, and in a case of certain documents such as invoices for example, will be seen by your customers.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -260,7 +260,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Question</string> </value>
+                    <value> <string>Description</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>

@@ -256,7 +256,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The beginning date for validity of the agent.</string> </value>
+                    <value> <string>The date at which the agent can start taking actions on the bank account</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

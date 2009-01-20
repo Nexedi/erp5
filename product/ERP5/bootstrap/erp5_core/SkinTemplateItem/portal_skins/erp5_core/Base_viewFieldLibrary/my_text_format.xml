@@ -192,7 +192,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Format of the event content</string> </value>
+                    <value> <string>The text format used by default</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

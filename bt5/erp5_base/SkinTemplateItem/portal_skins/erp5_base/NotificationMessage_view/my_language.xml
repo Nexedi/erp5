@@ -75,6 +75,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>Language of the web page, it uses code like en, fr, ja...</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_string_field</string> </value>
                 </item>

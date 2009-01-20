@@ -200,7 +200,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Integer which define the category position when the category is in a sorted list.</string> </value>
+                    <value> <string>Sort Index will either give a calculation order or a sorting order of a document in a list that contains many documents.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

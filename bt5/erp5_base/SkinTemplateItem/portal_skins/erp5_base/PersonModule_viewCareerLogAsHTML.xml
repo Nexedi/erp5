@@ -54,12 +54,12 @@
      <tr>\n
           <th>Nom</th>\n
           <th>Date Naissance</th>\n
-          <th>Nationalit\xc3\xa9</th>\n
+          <th>Nationalité</th>\n
           <th>Sexe</th>\n
-          <th>Comp\xc3\xa9tences</th>\n
+          <th>Compétences</th>\n
           <th>Affectation</th>\n
-          <th>Arriv\xc3\xa9e</th>\n
-          <th>D\xc3\xa9part</th>\n
+          <th>Arrivée</th>\n
+          <th>Départ</th>\n
           <th>Description</th>\n
      </tr>\n
       <tr tal:repeat="item python:here.Base_sortObjectListLikeSQL(here.Person_zGetPersonCareerLog(),((\'start_date\',\'ASC\'),))">\n

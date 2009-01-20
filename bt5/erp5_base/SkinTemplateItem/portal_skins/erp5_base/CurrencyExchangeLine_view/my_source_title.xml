@@ -82,7 +82,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>The organisation for which the currency exchange line is applied for.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

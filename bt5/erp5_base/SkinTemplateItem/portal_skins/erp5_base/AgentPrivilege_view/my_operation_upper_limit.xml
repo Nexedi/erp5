@@ -212,7 +212,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Amount Limit</string> </value>
+                    <value> <string>Debit Limit</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>

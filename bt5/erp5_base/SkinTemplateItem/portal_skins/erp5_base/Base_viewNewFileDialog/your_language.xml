@@ -76,6 +76,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>Language of the web page, it uses code like en, fr, ja...</string> </value>
+                </item>
+                <item>
                     <key> <string>display_width</string> </key>
                     <value> <int>10</int> </value>
                 </item>

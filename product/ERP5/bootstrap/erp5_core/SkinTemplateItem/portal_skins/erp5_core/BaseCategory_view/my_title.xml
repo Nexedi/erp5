@@ -83,7 +83,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The title of the document</string> </value>
+                    <value> <string>The name of a document in ERP5</string> </value>
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>

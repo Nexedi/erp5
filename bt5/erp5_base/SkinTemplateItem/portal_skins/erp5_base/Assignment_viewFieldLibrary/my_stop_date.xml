@@ -77,7 +77,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The date the assignment ends.</string> </value>
+                    <value> <string>The End date of an operation</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -93,7 +93,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Assignment Stop Date</string> </value>
+                    <value> <string>Stop Date</string> </value>
                 </item>
               </dictionary>
             </value>

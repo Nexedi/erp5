@@ -202,7 +202,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Indicate how often in week the event will happen (every x weeks)</string> </value>
+                    <value> <string>Indicate how often (in week) the event will happen (every x weeks)</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -248,7 +248,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Frequency In Weeks</string> </value>
+                    <value> <string>Frequency (weeks)</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
