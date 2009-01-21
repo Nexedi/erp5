@@ -80,9 +80,10 @@ if packing_list_list:\n
                               keep_items=dict(portal_status_message=message))\n
   else:\n
     for packing_list in packing_list_list:\n
-      related_order_uid_list.extend(packing_list.getCausalityValueList(\n
+      related_order_uid_list.extend(\n
+        [x.getUid() for x in packing_list.getCausalityValueList(\n
                                           portal_type=order_type,\n
-                                          checked_permission=\'View\'))\n
+                                          checked_permission=\'View\')])\n
 \n
 if related_order_uid_list:\n
   order_module = portal.getDefaultModule(order_type)\n
@@ -151,6 +152,7 @@ return context.Base_redirect(form_id,\n
                             <string>message</string>
                             <string>dict</string>
                             <string>packing_list</string>
+                            <string>x</string>
                             <string>order_module</string>
                           </tuple>
                         </value>
