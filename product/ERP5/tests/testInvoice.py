@@ -629,8 +629,19 @@ class TestInvoice(TestInvoiceMixin):
     invoice_applied_rule = delivery_movement.contentValues()[0]
     invoice_movement = invoice_applied_rule.contentValues()[0]
     invoice_transaction_applied_rule = invoice_movement.contentValues()[0]
-    invoice_transaction_movement =\
-         invoice_transaction_applied_rule._getOb('income')
+
+    # utility function to return the simulation movement that should be used
+    # for "income" line
+    def getIncomeSimulationMovement(applied_rule):
+      for movement in applied_rule.contentValues():
+        if movement.getDestination() == 'account_module/purchase'\
+            and movement.getSource() == 'account_module/sale':
+          return movement
+      self.fail('Income movement not found')
+
+    self.assertEquals(3, len(invoice_transaction_applied_rule))
+    invoice_transaction_movement = getIncomeSimulationMovement(
+                                        invoice_transaction_applied_rule)
 
     order_line.setSourceSectionValue(other_entity)
     get_transaction().commit()
@@ -645,88 +656,99 @@ class TestInvoice(TestInvoiceMixin):
     order_line.setDestinationSectionValue(other_entity)
     get_transaction().commit()
     self.tic()
-    invoice_transaction_movement =\
-         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(3, len(invoice_transaction_applied_rule))
+    invoice_transaction_movement = getIncomeSimulationMovement(
+                                        invoice_transaction_applied_rule)
     self.assertEquals(other_entity,
                  invoice_transaction_movement.getDestinationSectionValue())
 
     order_line.setSourceAdministrationValue(other_entity)
     get_transaction().commit()
     self.tic()
-    invoice_transaction_movement =\
-         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(3, len(invoice_transaction_applied_rule))
+    invoice_transaction_movement = getIncomeSimulationMovement(
+                                        invoice_transaction_applied_rule)
     self.assertEquals(other_entity,
                  invoice_transaction_movement.getSourceAdministrationValue())
 
     order_line.setDestinationAdministrationValue(other_entity)
     get_transaction().commit()
     self.tic()
-    invoice_transaction_movement =\
-         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(3, len(invoice_transaction_applied_rule))
+    invoice_transaction_movement = getIncomeSimulationMovement(
+                                        invoice_transaction_applied_rule)
     self.assertEquals(other_entity,
             invoice_transaction_movement.getDestinationAdministrationValue())
 
     order_line.setSourceDecisionValue(other_entity)
     get_transaction().commit()
     self.tic()
-    invoice_transaction_movement =\
-         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(3, len(invoice_transaction_applied_rule))
+    invoice_transaction_movement = getIncomeSimulationMovement(
+                                        invoice_transaction_applied_rule)
     self.assertEquals(other_entity,
                  invoice_transaction_movement.getSourceDecisionValue())
 
     order_line.setDestinationDecisionValue(other_entity)
     get_transaction().commit()
     self.tic()
-    invoice_transaction_movement =\
-         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(3, len(invoice_transaction_applied_rule))
+    invoice_transaction_movement = getIncomeSimulationMovement(
+                                        invoice_transaction_applied_rule)
     self.assertEquals(other_entity,
             invoice_transaction_movement.getDestinationDecisionValue())
 
     order_line.setSourceProjectValue(other_entity)
     get_transaction().commit()
     self.tic()
-    invoice_transaction_movement =\
-         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(3, len(invoice_transaction_applied_rule))
+    invoice_transaction_movement = getIncomeSimulationMovement(
+                                        invoice_transaction_applied_rule)
     self.assertEquals(other_entity,
                  invoice_transaction_movement.getSourceProjectValue())
 
     order_line.setDestinationProjectValue(other_entity)
     get_transaction().commit()
     self.tic()
-    invoice_transaction_movement =\
-         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(3, len(invoice_transaction_applied_rule))
+    invoice_transaction_movement = getIncomeSimulationMovement(
+                                        invoice_transaction_applied_rule)
     self.assertEquals(other_entity,
             invoice_transaction_movement.getDestinationProjectValue())
 
     order_line.setSourceFunctionValue(other_entity)
     get_transaction().commit()
     self.tic()
-    invoice_transaction_movement =\
-         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(3, len(invoice_transaction_applied_rule))
+    invoice_transaction_movement = getIncomeSimulationMovement(
+                                        invoice_transaction_applied_rule)
     self.assertEquals(other_entity,
                  invoice_transaction_movement.getSourceFunctionValue())
 
     order_line.setDestinationFunctionValue(other_entity)
     get_transaction().commit()
     self.tic()
-    invoice_transaction_movement =\
-         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(3, len(invoice_transaction_applied_rule))
+    invoice_transaction_movement = getIncomeSimulationMovement(
+                                        invoice_transaction_applied_rule)
     self.assertEquals(other_entity,
             invoice_transaction_movement.getDestinationFunctionValue())
 
     order_line.setSourcePaymentValue(other_entity)
     get_transaction().commit()
     self.tic()
-    invoice_transaction_movement =\
-         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(3, len(invoice_transaction_applied_rule))
+    invoice_transaction_movement = getIncomeSimulationMovement(
+                                        invoice_transaction_applied_rule)
     self.assertEquals(other_entity,
                  invoice_transaction_movement.getSourcePaymentValue())
 
     order_line.setDestinationPaymentValue(other_entity)
     get_transaction().commit()
     self.tic()
-    invoice_transaction_movement =\
-         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(3, len(invoice_transaction_applied_rule))
+    invoice_transaction_movement = getIncomeSimulationMovement(
+                                        invoice_transaction_applied_rule)
     self.assertEquals(other_entity,
             invoice_transaction_movement.getDestinationPaymentValue())
 
@@ -734,8 +756,9 @@ class TestInvoice(TestInvoiceMixin):
     order_line.setPrice(123)
     get_transaction().commit()
     self.tic()
-    invoice_transaction_movement =\
-         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(3, len(invoice_transaction_applied_rule))
+    invoice_transaction_movement = getIncomeSimulationMovement(
+                                        invoice_transaction_applied_rule)
     self.assertEquals(123,
             invoice_transaction_movement.getQuantity())
 
@@ -743,24 +766,27 @@ class TestInvoice(TestInvoiceMixin):
     order_line.setPrice(1)
     get_transaction().commit()
     self.tic()
-    invoice_transaction_movement =\
-         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(3, len(invoice_transaction_applied_rule))
+    invoice_transaction_movement = getIncomeSimulationMovement(
+                                        invoice_transaction_applied_rule)
     self.assertEquals(456,
             invoice_transaction_movement.getQuantity())
 
     order_line.setStartDate(DateTime(2001, 02, 03))
     get_transaction().commit()
     self.tic()
-    invoice_transaction_movement =\
-         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(3, len(invoice_transaction_applied_rule))
+    invoice_transaction_movement = getIncomeSimulationMovement(
+                                        invoice_transaction_applied_rule)
     self.assertEquals(DateTime(2001, 02, 03),
                  invoice_transaction_movement.getStartDate())
 
     order_line.setStopDate(DateTime(2002, 03, 04))
     get_transaction().commit()
     self.tic()
-    invoice_transaction_movement =\
-         invoice_transaction_applied_rule._getOb('income')
+    self.assertEquals(3, len(invoice_transaction_applied_rule))
+    invoice_transaction_movement = getIncomeSimulationMovement(
+                                        invoice_transaction_applied_rule)
     self.assertEquals(DateTime(2002, 03, 04),
                  invoice_transaction_movement.getStopDate())
 
