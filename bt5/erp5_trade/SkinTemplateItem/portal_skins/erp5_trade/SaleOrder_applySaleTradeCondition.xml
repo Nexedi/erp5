@@ -98,6 +98,8 @@ def rank_method(trade_condition):\n
   if trade_condition.getSource():\n
     rank += 1\n
   rank += len(trade_condition.getSpecialiseList())\n
+  if trade_condition.getValidationState() == \'validated\':\n
+    rank += 2\n
   return rank\n
 \n
 def sort_method(a, b):\n

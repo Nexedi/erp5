@@ -53,7 +53,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>category_list = [\n
+            <value> <string>if context.getValidationState() == \'invalidated\':\n
+  # return a predicate that will never apply\n
+  return context.generatePredicate(criterion_property_list=(\'uid\',))\n
+\n
+category_list = [\n
   \'source\', \'source_section\',\n
   \'destination\', \'destination_section\',\n
 ]\n
@@ -108,12 +112,12 @@ return date_context.generatePredicate(multimembership_criterion_base_category_li
                           <tuple>
                             <string>args</string>
                             <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
                             <string>category_list</string>
                             <string>criterion_list</string>
                             <string>_getiter_</string>
                             <string>category</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>date_context</string>
                           </tuple>
                         </value>
