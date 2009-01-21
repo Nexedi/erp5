@@ -290,22 +290,29 @@ class TestInvoiceMixin(TestPackingListMixin,
   def stepCheckInvoiceTransactionRule(self, sequence=None, sequence_list=None,
       **kw):
     """
-    Checks that the invoice_transaction_rule is expanded and its movements are
+    Checks that the applied invoice_transaction_rule is expanded and its movements are
     consistent with its parent movement
     """
     invoice_transaction_rule_list = \
         sequence.get('invoice_transaction_rule_list')
-    for invoice_transaction_rule in invoice_transaction_rule_list:
-      parent_movement = aq_parent(invoice_transaction_rule)
-      self.assertEquals(3, len(invoice_transaction_rule.objectValues()))
+    for applied_invoice_transaction_rule in invoice_transaction_rule_list:
+      parent_movement = aq_parent(applied_invoice_transaction_rule)
+      invoice_transaction_rule = \
+        applied_invoice_transaction_rule.getSpecialiseValue()
+      self.assertEquals(3, len(applied_invoice_transaction_rule.objectValues()))
       for line_id, line_source_id, line_destination_id, line_ratio in \
-          self.transaction_line_definition_list:
-        movement = getattr(invoice_transaction_rule, line_id, None)
+                                            self.transaction_line_definition_list:
+        movement = None
+        for simulation_movement in \
+                applied_invoice_transaction_rule.objectValues():
+          if simulation_movement.getSourceId() == line_source_id and\
+              simulation_movement.getDestinationId() == line_destination_id:
+            movement = simulation_movement
+            break
+
         self.assertTrue(movement is not None)
         self.assertEquals(movement.getCorrectedQuantity(), parent_movement.getPrice() *
             parent_movement.getCorrectedQuantity() * line_ratio)
-        self.assertEquals(movement.getSourceId(), line_source_id)
-        self.assertEquals(movement.getDestinationId(), line_destination_id)
         self.assertEquals(movement.getStartDate(),
             parent_movement.getStartDate())
         self.assertEquals(movement.getStopDate(),
@@ -927,7 +934,6 @@ class TestInvoice(TestInvoiceMixin):
                        price=5,
                        variation_category_list=['size/Child/32'],
                        mapped_value_property_list=['quantity', 'price'],)
-
     order.confirm()
     get_transaction().commit()
     self.tic()
