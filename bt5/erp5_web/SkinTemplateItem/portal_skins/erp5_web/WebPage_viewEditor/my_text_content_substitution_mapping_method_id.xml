@@ -200,7 +200,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Substitution mapping method id for the web page</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

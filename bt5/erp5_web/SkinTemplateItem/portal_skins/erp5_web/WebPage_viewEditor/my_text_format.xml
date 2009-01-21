@@ -75,6 +75,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The text format used by default</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_text_format</string> </value>
                 </item>
@@ -88,7 +92,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Content format</string> </value>
+                    <value> <string>Text Format</string> </value>
                 </item>
               </dictionary>
             </value>

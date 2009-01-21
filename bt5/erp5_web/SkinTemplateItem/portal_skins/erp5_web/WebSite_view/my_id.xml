@@ -200,7 +200,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Identifiant of the web page</string> </value>
+                    <value> <string>Identification</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

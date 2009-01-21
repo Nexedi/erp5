@@ -200,7 +200,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The login used by the user, should be unique</string> </value>
+                    <value> <string>The username this person will use to log in the system. The system will check that there isn\'t another user with the same username.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -242,7 +242,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Login ID</string> </value>
+                    <value> <string>User Login</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
