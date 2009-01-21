@@ -115,7 +115,6 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_base_amount_list</string>
                         <string>my_variation_category_list</string>
                         <string>my_base_contribution_list</string>
                         <string>my_base_application_list</string>

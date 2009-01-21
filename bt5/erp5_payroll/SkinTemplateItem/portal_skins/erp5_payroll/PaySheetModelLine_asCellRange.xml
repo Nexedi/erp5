@@ -58,6 +58,7 @@
 \'\'\'\n
   return a list of slice items\n
 \'\'\'\n
+translateString = context.Base_translateString\n
 \n
 def framing(cell, name):\n
   \'\'\'\n
@@ -68,14 +69,12 @@ def framing(cell, name):\n
   if cell is None:\n
     # This error happens when the cell is not found in the parent model or any\n
     # inherited model.\n
-    return "%s (slice not defined)" % name\n
+    return "%s (%s)" % (name, translateString(\'slice not defined\'))\n
 \n
   return \'%s <= %s < %s\' % (cell.getQuantityRangeMin(),\n
                             name,\n
                             cell.getQuantityRangeMax())\n
 \n
-\n
-translateString = context.Base_translateString\n
 resource = context.getResourceValue()\n
 cell_range = []\n
 \n
@@ -110,6 +109,8 @@ else:\n
     list_of_category_list.append(\\\n
         context.getVariationCategoryList(base_category_list=base_category))\n
   return list_of_category_list\n
+\n
+return []\n
 
 
 ]]></string> </value>
@@ -151,10 +152,10 @@ else:\n
                             <string>matrixbox</string>
                             <string>base_id</string>
                             <string>kw</string>
-                            <string>framing</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>translateString</string>
+                            <string>framing</string>
                             <string>resource</string>
                             <string>cell_range</string>
                             <string>None</string>

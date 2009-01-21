@@ -1,3 +1,8 @@
+2009-01-21 fabien
+* remove unused field base_amount_list
+* change error messages in PaySheetTransaction_checkParameters to be consistant with other translations
+* translate a message in PaySheetModelLine_asCellRange
+
 2009-01-16 fabien
 * add a checkbox on Pay Sheet Model Line to create or not the related Pay Sheet Line
 

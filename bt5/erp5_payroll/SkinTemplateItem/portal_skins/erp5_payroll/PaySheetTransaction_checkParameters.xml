@@ -61,6 +61,7 @@ paysheet      = context.getObject()\n
 paysheet_type = paysheet.getPortalType()\n
 employer      = paysheet.getDestinationSection()\n
 employee      = paysheet.getSourceSection()\n
+quantity_unit = paysheet.getWorkTimeAnnotationLineQuantityUnit()\n
 \n
 Base_translateString = context.Base_translateString\n
 \n
@@ -69,16 +70,22 @@ def redirect(msg):\n
       keep_items=dict(portal_status_message=Base_translateString(msg)))\n
 \n
 if not paysheet.getPriceCurrency():\n
-  return redirect(\'Currency is required\')\n
+  return redirect(\'Currency must be defined\')\n
 \n
 if not paysheet.getStartDate():\n
-  return redirect(\'Date is required\')\n
+  return redirect(\'Work Period Start must be defined\')\n
+\n
+if not paysheet.getStopDate():\n
+  return redirect(\'Work Period End must be defined\')\n
 \n
 if not employee:\n
-  return redirect(\'The employee is required\')\n
+  return redirect(\'The employee must be defined\')\n
 \n
 if not employer:\n
-  return redirect(\'The employer is required\')\n
+  return redirect(\'The employer must be defined\')\n
+\n
+if not quantity_unit:\n
+  return redirect(\'The work duration unit must be defined\')\n
 \n
 employer_obj = paysheet.getDestinationSectionValue()\n
 employee_obj = paysheet.getSourceSectionValue()\n
@@ -136,6 +143,7 @@ return context.PaySheetTransaction_viewPreview(container.REQUEST)\n
                             <string>paysheet_type</string>
                             <string>employer</string>
                             <string>employee</string>
+                            <string>quantity_unit</string>
                             <string>Base_translateString</string>
                             <string>redirect</string>
                             <string>employer_obj</string>
