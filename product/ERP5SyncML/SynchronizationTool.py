@@ -60,6 +60,8 @@ import random
 from DateTime import DateTime
 from zLOG import LOG, TRACE, DEBUG, INFO
 
+from lxml import etree
+
 class TimeoutHTTPConnection(httplib.HTTPConnection):
   """
   Custom Classes to set timeOut on handle sockets
@@ -878,7 +880,7 @@ class SynchronizationTool( SubscriptionSynchronization,
 
   security.declarePrivate('sendHttpResponse')
   def sendHttpResponse(self, to_url=None, sync_id=None, xml=None,
-      domain_path=None, content_type='application/vnd.syncml+xml'):
+                       domain_path=None, content_type='application/vnd.syncml+xml'):
     domain = self.unrestrictedTraverse(domain_path)
     #LOG('sendHttpResponse, starting with domain:', DEBUG, domain)
     if domain is not None:
@@ -928,8 +930,8 @@ class SynchronizationTool( SubscriptionSynchronization,
       data = encoded
       request = urllib2.Request(url=to_url, data=data)
     else:
-    #XXX only to synchronize with other server than erp5 (must be improved):
-      data=head+xml
+      #XXX only to synchronize with other server than erp5 (must be improved):
+      data = head+xml
       request = urllib2.Request(to_url, data, headers)
 
     try:
@@ -957,7 +959,7 @@ class SynchronizationTool( SubscriptionSynchronization,
       if domain.domain_type == self.SUB and not domain.getActivityEnabled():
         #if we don't use activity :
         gpg_key = domain.getGPGKey()
-        if result not in (None, ''):
+        if result:
           self.readResponse(sync_id=sync_id, text=result)
     return result
 
@@ -989,7 +991,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     #LOG('readResponse, text :', DEBUG, text)
     #LOG('readResponse, hexdump(text) :', DEBUG, self.hexdump(text))
     status_code = None
-    if text not in ('', None):
+    if text:
       # XXX We will look everywhere for a publication/subsription with
       # the id sync_id, this is not so good, but there is no way yet
       # to know if we will call a publication or subscription XXX
@@ -999,7 +1001,8 @@ class SynchronizationTool( SubscriptionSynchronization,
         if publication.getTitle() == sync_id:
           gpg_key = publication.getGPGKey()
           domain = publication
-      if gpg_key == '':
+          break
+      if not gpg_key:
         for subscription in self.getSubscriptionList():
           if subscription.getTitle() == sync_id:
             gpg_key = subscription.getGPGKey()
@@ -1007,13 +1010,14 @@ class SynchronizationTool( SubscriptionSynchronization,
             user = domain.getZopeUser()
             #LOG('readResponse, user :', DEBUG, user)
             newSecurityManager(None, user)
+            break
       # decrypt the message if needed
-      if gpg_key not in (None,''):
+      else:
         filename = str(random.randrange(1, 2147483600)) + '.txt'
         encrypted = file('/tmp/%s.gz.gpg' % filename,'w')
         encrypted.write(text)
         encrypted.close()
-        (status,output)=commands.getstatusoutput('gpg --homedir \
+        (status, output) = commands.getstatusoutput('gpg --homedir \
             /var/lib/zope/Products/ERP5SyncML/gnupg_keys -r "%s"  --decrypt \
             /tmp/%s.gz.gpg > /tmp/%s.gz' % (gpg_key, filename, filename))
         LOG('readResponse, gpg output:', TRACE, output)
@@ -1033,7 +1037,7 @@ class SynchronizationTool( SubscriptionSynchronization,
       xml = etree.XML(text)
       url = self.getTarget(xml)
       for publication in self.getPublicationList():
-        if publication.getPublicationUrl()==url and \
+        if publication.getPublicationUrl() == url and \
         publication.getTitle() == sync_id:
           if publication.getActivityEnabled():
             #use activities to send SyncML data.
