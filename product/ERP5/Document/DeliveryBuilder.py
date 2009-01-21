@@ -250,7 +250,9 @@ class DeliveryBuilder(OrderBuilder):
       return
 
     # Select
-    movement_list = delivery.getMovementList()
+    movement_type_list = (self.getDeliveryLinePortalType(),
+            self.getDeliveryCellPortalType())
+    movement_list = delivery.getMovementList(portal_type=movement_type_list)
     simulation_movement_list = []
     for movement in movement_list:
       movement.edit(quantity=0)
