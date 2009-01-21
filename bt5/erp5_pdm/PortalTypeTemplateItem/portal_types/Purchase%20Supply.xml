@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Supply defines precise pricing and shipping conditions between two trade parties for a limited selection of traded products, components, services, etc. It can be used to represent price catalogs, product referencing, pricing policy, etc.</string> </value>
+            <value> <string>A Supply defines precise pricing and shipping conditions between two trade parties for a limited selection of traded products, components, services, etc. It can be used to represent price catalogues, product referencing, pricing policy, etc.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

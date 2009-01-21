@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Service is a immaterial Resource that can be traded (eg. shipping, support ...)</string> </value>
+            <value> <string>A Service is an immaterial Resource that can be traded (eg. shipping, support ...)</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

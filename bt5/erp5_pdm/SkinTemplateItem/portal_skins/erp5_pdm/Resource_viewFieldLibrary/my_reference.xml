@@ -76,7 +76,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The default reference of the service</string> </value>
+                    <value> <string>Reference of a document in ERP5, whatever the module considered. Exceptions to this rule can exist, and if so, terms will be described in the appropriate business field of this glossary. For example, the reference of a Payment Transaction has a specific name, as well as the Reference of Purchase and Sale Invoice Transactions. See the appropriate Glossary for further information.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

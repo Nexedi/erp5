@@ -196,7 +196,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Number of units involved in base prices</string> </value>
+                    <value> <string>Number of units involved in base prices. If Priced Quantity is 1, it means that this is a unit price. If 2, the price is given for two units, etc...</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

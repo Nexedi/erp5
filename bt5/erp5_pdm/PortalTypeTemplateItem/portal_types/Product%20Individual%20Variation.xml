@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Variation</string> </value>
+            <value> <string>Subdivision of a product that helps define variations of this product based on different axis such as colour or size for instance. Each variation can have its own price.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

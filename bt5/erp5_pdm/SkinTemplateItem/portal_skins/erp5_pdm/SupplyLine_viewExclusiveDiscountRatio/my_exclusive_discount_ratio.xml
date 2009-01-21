@@ -168,7 +168,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>An exclusive global discount ratio. This discount ratio is exclusive of any other discount.</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>

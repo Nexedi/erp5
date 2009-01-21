@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Variation</string> </value>
+            <value> <string>Individual variation of a service document, that can have an influence on the price of the service for example, even if this is not compulsory.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

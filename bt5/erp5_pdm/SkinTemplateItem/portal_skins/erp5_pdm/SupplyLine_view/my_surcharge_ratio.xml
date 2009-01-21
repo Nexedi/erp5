@@ -168,7 +168,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The ration used to surcharge the supply line price</string> </value>
+                    <value> <string>The ratio used to surcharge the supply line price</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
