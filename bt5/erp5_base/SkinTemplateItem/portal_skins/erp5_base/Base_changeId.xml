@@ -66,7 +66,6 @@ if id and id != context.getId():\n
   return context.Base_redirect(form_id,\n
           keep_items=dict(selection_name=selection_name,\n
                           selection_index=selection_index,\n
-                          cancel_url=cancel_url,\n
                           portal_status_message=translateString("Function changed.")),)\n
 \n
 return context.Base_redirect(form_id,\n
