@@ -87,7 +87,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The title is display as main content title and page title.</string> </value>
+                    <value> <string>The name of a document in ERP5</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

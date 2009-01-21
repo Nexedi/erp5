@@ -200,7 +200,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The originale filename of the document</string> </value>
+                    <value> <string>The original filename of the document</string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -240,7 +240,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Original filename</string> </value>
+                    <value> <string>Original Filename</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

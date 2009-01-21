@@ -23,7 +23,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Bears the different states of the document ingestion workflow</string> </value>
         </item>
         <item>
             <key> <string>groups</string> </key>
@@ -61,7 +61,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Document Ingestion</string> </value>
+            <value> <string>Document Ingestion Workflow</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Assign</string> </value>
+            <value> <string>Assign Document</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Assign</string> </value>
+            <value> <string>Assign Document Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -67,11 +67,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

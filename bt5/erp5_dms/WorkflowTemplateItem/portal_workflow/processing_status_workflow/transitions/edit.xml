@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The document is  being edited</string> </value>
+            <value> <string>action called when editing a document</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

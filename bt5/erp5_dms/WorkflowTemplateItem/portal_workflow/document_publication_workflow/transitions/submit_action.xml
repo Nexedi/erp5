@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Submit for Review</string> </value>
+            <value> <string>Submit Document for Review</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The Submit action is used for a knowledge contributor to submit a document to the knowledge manager before publication.</string> </value>
+            <value> <string>Submits a document for review by setting validation_state to submitted.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Submit</string> </value>
+            <value> <string>Submit Document for Review Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

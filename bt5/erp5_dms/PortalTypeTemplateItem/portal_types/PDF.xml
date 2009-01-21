@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>PDF documents stored PDF files and can convert them to HTML, Text as well as to the same formats as Image.</string> </value>
+            <value> <string>PDF documents store PDF files and can convert them to HTML, Text or different image formats.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

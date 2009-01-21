@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A previous version of a document.</string> </value>
+            <value> <string>A previous version of a document, that has been archived by a user. </string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

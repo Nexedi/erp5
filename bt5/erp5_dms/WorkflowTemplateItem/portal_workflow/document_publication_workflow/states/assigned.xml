@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A document which has been assigned to a translator.</string> </value>
+            <value> <string>A document which has been assigned to a user, in order to be processed.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

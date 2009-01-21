@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>The document is private and can be seen only by its owner.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

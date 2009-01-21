@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Request Translation</string> </value>
+            <value> <string>Request Translation Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -61,11 +61,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -92,11 +89,8 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.CMFCore.Expression</string>
-          <string>Expression</string>
-        </tuple>
-        <none/>
+        <global name="Expression" module="Products.CMFCore.Expression"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

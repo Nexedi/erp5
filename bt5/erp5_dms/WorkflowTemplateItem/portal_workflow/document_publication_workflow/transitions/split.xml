@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Split a document in multiple subdocument to accelerate translation. Set validation_state to split.</string> </value>
+            <value> <string>Splits a document in multiple subdocuments to accelerate translation. Sets validation_state to split.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Split</string> </value>
+            <value> <string>Split Translation</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
