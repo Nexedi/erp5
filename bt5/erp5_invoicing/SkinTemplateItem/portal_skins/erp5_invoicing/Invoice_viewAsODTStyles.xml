@@ -369,7 +369,7 @@ AAA=</string> </value>
         </table:table>\n
       </style:header>\n
       <style:footer>\n
-        <text:p text:style-name="Footer">Generated with ERP5 \xe2\x80\x93 Open Source ERP suite (www.erp5.org)</text:p>\n
+        <text:p text:style-name="Footer">Generated with ERP5 – Open Source ERP suite (www.erp5.org)</text:p>\n
       </style:footer>\n
     </style:master-page>\n
     <style:master-page style:name="Endnote" style:page-layout-name="pm2"/>\n

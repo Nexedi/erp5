@@ -132,7 +132,7 @@
         <tr bgcolor=000000>\n
           <th align=left nowrap><font color=ffffff size=-2>Nbr / No</font></th>\n
           <th align=left nowrap><font color=ffffff size=-2>Description</font></th>\n
-          <th nowrap><font color=ffffff size=-2>Qty / Qt\xc3\xa9</th>\n
+          <th nowrap><font color=ffffff size=-2>Qty / Qté</th>\n
           <th nowrap><font color=ffffff size=-2>Unit</font></th>\n
           <th nowrap><font color=ffffff size=-2>Price / Prix Unit.</font></th>\n
           <th nowrap><font color=ffffff size=-2>Price / Prix Total</font></th>\n
@@ -193,10 +193,10 @@
           <td colspan=3><hr noshade></td>\n
         </tr>\n
         <tr>\n
-          <td colspan=3>A r\xc3\xa9gler dans <b tal:content="python: here.getPaymentConditionPaymentTerm(30)">0</b> jours au plus tard.\n
-    <br><font size="-3">Conditions de r\xc3\xa9glement: par ch\xc3\xa9que ou virement, \xc3\xa0 <b tal:replace="python: here.getPaymentTerm(30)">0</b> jours date de la facture. Paiement accept\xc3\xa9 en euros.\n
-    Tout retard de r\xc3\xa9glement donnera lieu \xc3\xa0 une p\xc3\xa9nalit\xc3\xa9 de 1,5% du montant d\xc3\xa9 par mois.\n
-    R\xc3\xa9serve de propri\xc3\xa9t\xc3\xa9 nous conservons la pleine propri\xc3\xa9t\xc3\xa9 des marchandises jusqu\'au paiement int\xc3\xa9gral du prix, des taxes et accessoires.</font></td>\n
+          <td colspan=3>A régler dans <b tal:content="python: here.getPaymentConditionPaymentTerm(30)">0</b> jours au plus tard.\n
+    <br><font size="-3">Conditions de réglement: par chéque ou virement, à <b tal:replace="python: here.getPaymentTerm(30)">0</b> jours date de la facture. Paiement accepté en euros.\n
+    Tout retard de réglement donnera lieu à une pénalité de 1,5% du montant dé par mois.\n
+    Réserve de propriété nous conservons la pleine propriété des marchandises jusqu\'au paiement intégral du prix, des taxes et accessoires.</font></td>\n
 \n
           <th colspan=2 align=right nowrap>Montant Total<br>Total Amount\n
             (<span tal:replace="python:here.getPriceCurrencyId() or here.getResourceId() or \'\'"/>)</th>\n
