@@ -54,59 +54,21 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  This script creates a list of empty lines when called for\n
-  the first time.When called the next time, it displays on \n
-  the fast input all sale order lines already added and \n
-  updates them based on fast input entries.\n
+This script returns only the quantity unit of the resource \n
+entered on the fast input\n
 """\n
-from Products.ERP5Type.Document import newTempBase\n
-portal = context.getPortalObject()\n
-getobject = portal.portal_catalog.getobject\n
 request = context.REQUEST\n
-sale_order = context\n
-result = []\n
-line_list = context.contentValues(portal_type=\'Sale Order Line\')\n
-source_section = context.getSourceSectionValue()\n
-len_line_list = len(line_list)\n
-if len_line_list!=0:\n
-  for line in line_list:\n
-    obj=sale_order.newContent(portal_type=\'Sale Order Line\',\n
-                          id=line.getId(),\n
-                          uid="new_%s" % line.getId(),\n
-                          temp_object=1,\n
-                          is_indexable=0,)\n
-    #obj = newTempBase(portal, id="new_%s" % line.getId(), uid="new_%s" % line.getId()) \n
-    obj.edit(title=line.getResourceTitle(),\n
-           reference=line.getResourceReference(),\n
-           quantity=line.getQuantity(),\n
-           quantity_unit=line.getQuantityUnitList(),\n
-           total_price=line.getTotalPrice(),\n
-           getAvailableInventory=line.getResourceValue().getAvailableInventory(\n
-                                       section_uid=source_section.getUid(),\n
-                                       variation_text=line.getVariationText()),\n
-           getCurrentInventory=line.getResourceValue().getCurrentInventory(\n
-                                                 section_uid=source_section.getUid(),\n
-                                                 variation_text=line.getVariationText()),\n
-           inventory=line.getResourceValue().getInventory(\n
-                                                 section_uid=source_section.getUid(),\n
-                                               variation_text=line.getVariationText()))\n
-    result.append(obj)\n
+result = getattr(context.portal_categories[\'quantity_unit\'], \n
+               context.portal_preferences.getPreference(\n
+               \'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))(\n
+                base=0, local_sort_id=(\'int_index\', \'translated_title\'), checked_permission=\'View\')\n
 \n
-for i in range(len_line_list+1,lines_num+1):\n
-   resource_relative_url = getattr(request,"field_listbox_resource_relative_url_new_%s"%i,None)\n
-   obj=sale_order.newContent(portal_type=\'Sale Order Line\',\n
-                          id=i,\n
-                          uid="new_%s" % i,\n
-                          temp_object=1,\n
-                          getAvailableInventory=0,\n
-                          getCurrentInventory=0,\n
-                          is_indexable=0,)\n
-   #obj = newTempBase(portal,id="new_%s" % i, uid="new_%s" % i)\n
-   if resource_relative_url not in (\'\',None):\n
-    resource = context.restrictedTraverse(resource_relative_url)   \n
-    obj.setResourceValue(resource)\n
-   result.append(obj)\n
-   \n
+pr_title= request.form.get("field_listbox_title_%s"%context.getUid())\n
+if pr_title not in (\'\',None):\n
+ q_list =  [(x.getLogicalPath(), x.getCategoryRelativeUrl(base=0)) \n
+                 for x in context.getResourceValue().getQuantityUnitValueList()]\n
+ result=[]\n
+ result = [q_list[0]]\n
 return result\n
 </string> </value>
         </item>
@@ -118,7 +80,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>lines_num=10, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -138,36 +100,25 @@ return result\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>lines_num</string>
-                            <string>kw</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempBase</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal</string>
-                            <string>getobject</string>
                             <string>request</string>
-                            <string>sale_order</string>
-                            <string>result</string>
-                            <string>line_list</string>
-                            <string>source_section</string>
-                            <string>len</string>
-                            <string>len_line_list</string>
-                            <string>_getiter_</string>
-                            <string>line</string>
-                            <string>obj</string>
-                            <string>range</string>
-                            <string>i</string>
                             <string>getattr</string>
+                            <string>_getitem_</string>
+                            <string>result</string>
+                            <string>pr_title</string>
                             <string>None</string>
-                            <string>resource_relative_url</string>
-                            <string>resource</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>q_list</string>
                           </tuple>
                         </value>
                     </item>
@@ -179,14 +130,12 @@ return result\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>10</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_getFastInputSaleOrderLineList</string> </value>
+            <value> <string>SaleOrderLine_getQuantityUnitItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -96,12 +96,13 @@
                         <string>listbox_reference</string>
                         <string>listbox_total_price</string>
                         <string>listbox_total_quantity</string>
-                        <string>listbox_getAvailableInventory</string>
-                        <string>listbox_getCurrentInventory</string>
                         <string>listbox_inventory</string>
-                        <string>listbox_variation_category_item_list</string>
                         <string>listbox_title</string>
+                        <string>listbox_variation_category_list</string>
+                        <string>listbox_getCurrentInventory</string>
+                        <string>listbox_getAvailableInventory</string>
                         <string>listbox_quantity_unit</string>
+                        <string>listbox_resource_relative_url</string>
                       </list>
                     </value>
                 </item>

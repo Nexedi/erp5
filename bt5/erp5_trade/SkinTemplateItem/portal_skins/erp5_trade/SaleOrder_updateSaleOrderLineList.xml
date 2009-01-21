@@ -62,39 +62,72 @@
   the total price and the stock corresponding to the \n
   product\n
 """\n
-request = context.REQUEST\n
+result = [x.getObject() for x in context.SaleOrder_getFastInputSaleOrderLineList(lines_num=12, **kw)]\n
+\n
+request= context.REQUEST\n
+\n
 portal = context.getPortalObject()\n
 Base_translateString = portal.Base_translateString\n
 total_price = 0.0\n
-portal = context.getPortalObject()\n
 for line in listbox:\n
   if line.has_key(\'listbox_key\') and (line[\'title\'] or line[\'reference\'] not in (\'\', None)):\n
-     product_list = context.portal_catalog(portal_type=\'Product\',\n
+     product = context.portal_catalog.getResultValue(\n
+                                    portal_type=[\'Product\',\'Service\'],\n
                                     title=line[\'title\'],\n
                                     reference=line[\'reference\'])\n
-     product = product_list[0]\n
-     if line[\'quantity\'] <= product.getAvailableInventory(\n
-                    node_uid=context.getSourceSectionValue().getUid()):\n
-       line_id = line[\'listbox_key\'].split(\'/erp5/\')[1]\n
-       line["total_price"] = line[\'quantity\'] * product.getSaleSupplyLineBasePrice()\n
-       line["quantity_unit"] = product.getQuantityUnit()\n
-       request.form["field_listbox_reference_%s"%line_id] = product.getReference()\n
-       request.form["field_listbox_title_%s"%line_id] = product.getTitle()\n
-       request.form["field_listbox_total_price_%s"%line_id] = line[\'quantity\'] * product.getPrice()\n
-       request.form["field_listbox_quantity_unit_%s"%line_id] = product.getQuantityUnit()\n
-       request.form["field_listbox_getAvailableInventory_%s"%line_id] = product.getAvailableInventory(\n
-                                         node_uid=context.getSourceSectionValue().getUid())\n
-       request.form[\'field_listbox_inventory_%s\'%line_id] = product.getInventory(\n
-                                                              node_uid=context.getSourceSectionValue().getUid())\n
-       request.form["field_listbox_getCurrentInventory_%s"%line_id] = product.getCurrentInventory(\n
-                                                                        node_uid=context.getSourceSectionValue().getUid())\n
-       request.form["field_listbox_variation_category_item_list_%s"%line_id] =\\\n
-                         [x[0] for x in product.getVariationCategoryItemList()]\n
+     line_id = line[\'listbox_key\']\n
+     cell = result[int(line_id)-1]\n
+     cell.setResourceValue(product)    \n
+     line["quantity_unit"] = cell.getQuantityUnit()\n
+     line["resource_relative_url"] = cell.getResourceRelativeUrl()\n
+     request.form["field_listbox_resource_relative_url_new_%s"%line_id]=cell.getResourceRelativeUrl()\n
+     kw["field_listbox_resource_relative_url_new_%s"%line_id]=cell.getResourceRelativeUrl()\n
+     request.set("field_listbox_resource_relative_url_new_%s"%line_id,cell.getResourceRelativeUrl())\n
+     request.form["field_listbox_reference_new_%s"%line_id] = product.getReference() or \'\'\n
+     request.form["field_listbox_title_new_%s"%line_id] = product.getTitle()\n
+     request.form["field_listbox_quantity_unit_new_%s"%line_id] = cell.getQuantityUnit()\n
+     \n
+     if line["variation_category_list"]!=\'\' and product.getPortalType()==\'Product\' and line[\'quantity\'] <= product.getAvailableInventory(\n
+                    section_uid=context.getSourceSectionValue().getUid(),\n
+                    variation_text=\'variation/%s\'%line["variation_category_list"]):\n
+       supply_cell_list = product.default_ssl.contentValues(portal_type=\'Sale Supply Cell\')\n
+       for supply_cell in supply_cell_list:\n
+         if supply_cell.getVariationCategoryList()[0]==\'variation/%s\'%line["variation_category_list"]:\n
+           line["total_price"] = line[\'quantity\'] * supply_cell.getBasePrice()\n
+       request.form["field_listbox_total_price_new_%s"%line_id] = line[\'total_price\']    \n
+       request.form["field_listbox_getAvailableInventory_new_%s"%line_id] = product.getAvailableInventory(\n
+                                         section_uid=context.getSourceSectionValue().getUid(),\n
+                              variation_text=\'variation/%s\'%line["variation_category_list"])\n
+       request.form[\'field_listbox_inventory_new_%s\'%line_id] = product.getInventory(\n
+                                                              section_uid=context.getSourceSectionValue().getUid(),\n
+                                                       variation_text=\'variation/%s\'%line["variation_category_list"])\n
+       request.form["field_listbox_getCurrentInventory_new_%s"%line_id] = product.getCurrentInventory(\n
+                                                                        section_uid=context.getSourceSectionValue().getUid(),\n
+                                                          variation_text=\'variation/%s\'%line["variation_category_list"])\n
+       total_price +=line[\'total_price\']\n
+       request.form["field_my_total_price"] = total_price\n
+       \n
+     elif line["variation_category_list"]==\'\' and product.getPortalType()==\'Product\' and line[\'quantity\'] <= product.getAvailableInventory(\n
+                    section_uid=context.getSourceSectionValue().getUid()):\n
+       line["total_price"] = line[\'quantity\'] * cell.getPrice()\n
+       request.form["field_listbox_total_price_new_%s"%line_id] = line[\'total_price\']\n
+       request.form["field_listbox_getAvailableInventory_new_%s"%line_id] = product.getAvailableInventory(\n
+                                         section_uid=context.getSourceSectionValue().getUid())\n
+       request.form[\'field_listbox_inventory_new_%s\'%line_id] = product.getInventory(\n
+                                                              section_uid=context.getSourceSectionValue().getUid())\n
+       request.form["field_listbox_getCurrentInventory_new_%s"%line_id] = product.getCurrentInventory(\n
+                                                                        section_uid=context.getSourceSectionValue().getUid(),)\n
+       total_price +=line[\'total_price\']\n
+       request.form["field_my_total_price"] = total_price\n
+     elif product.getPortalType()==\'Service\':\n
+       line["total_price"] = line[\'quantity\'] * cell.getPrice()\n
+       request.form["field_listbox_total_price_new_%s"%line_id] = line[\'total_price\']\n
        total_price +=line[\'total_price\']\n
        request.form["field_my_total_price"] = total_price\n
      else:\n
-       request.set(\'portal_status_message\', Base_translateString(\'Quantity Asked Not Available In Inventory\')) \n
-     \n
+       request.set(\'portal_status_message\', \n
+                 Base_translateString(\'Quantity Asked For Line %s Not Available In Inventory\'%line[\'listbox_key\'])) \n
+ \n
 context.Base_updateDialogForm(listbox=listbox,update=1,kw=kw)\n
 return context.SaleOrder_viewSaleOrderFastInputDialog(listbox=listbox,**kw)\n
 
@@ -109,7 +142,7 @@ return context.SaleOrder_viewSaleOrderFastInputDialog(listbox=listbox,**kw)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox=None,**kw</string> </value>
+            <value> <string>listbox=[],**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -137,25 +170,29 @@ return context.SaleOrder_viewSaleOrderFastInputDialog(listbox=listbox,**kw)\n
                           <tuple>
                             <string>listbox</string>
                             <string>kw</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>x</string>
+                            <string>result</string>
                             <string>request</string>
                             <string>portal</string>
                             <string>Base_translateString</string>
                             <string>total_price</string>
-                            <string>_getiter_</string>
                             <string>line</string>
                             <string>_getitem_</string>
                             <string>None</string>
-                            <string>product_list</string>
                             <string>product</string>
                             <string>line_id</string>
+                            <string>int</string>
+                            <string>cell</string>
                             <string>_write_</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
+                            <string>supply_cell_list</string>
+                            <string>supply_cell</string>
                             <string>_inplacevar_</string>
-                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -168,7 +205,7 @@ return context.SaleOrder_viewSaleOrderFastInputDialog(listbox=listbox,**kw)\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <none/>
+                <list/>
               </tuple>
             </value>
         </item>
