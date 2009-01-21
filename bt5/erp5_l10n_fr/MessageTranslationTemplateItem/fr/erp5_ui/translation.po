@@ -11532,6 +11532,18 @@ msgstr "La largeur par défaut des champs de type TextArea"
 msgid "The discount ratio applied to the supply line price"
 msgstr "Le taux de remise appliquée à la ligne tarifaire."
 
+msgid "The employee must be defined"
+msgstr "Le salarié doit être defini"
+
+msgid "The employee must have a career grade"
+msgstr "Le salarié doit avoir un grade"
+
+msgid "The employee must have a marital status"
+msgstr "Le salarié doit une situation maritale"
+
+msgid "The employer must be defined"
+msgstr "L'employeur doit être défini"
+
 #: erp5_payroll/PaySheetLine_view/my_destination_section_title [Glossary term
 #: 8155]
 msgid "The employer(i.e. the invoiced person or organisation)"
@@ -12091,6 +12103,9 @@ msgstr "la largeur du champ qui affiche une valeur monétaire."
 #: [Glossary term 3441]
 msgid "The width of field which displays strings"
 msgstr "La largeur des champs représentant une chaîne de caractères"
+
+msgid "The work duration unit must be defined"
+msgstr "L'unité de la durée de travail doit être définie"
 
 msgid "There is no such document in the database. You may create an new document of type ${portal_type} in relation with ${title} according to relation ${base_category}. Use the form bellow to enter the ${catalog_index} values of new documents."
 msgstr "Il n'y a pas d'enregistrement à ce nom. Vous pouvez le créer maintenant."
@@ -13429,6 +13444,12 @@ msgstr "Fin de période"
 msgid "Work Period Start"
 msgstr "Début de période"
 
+msgid "Work period end must be defined"
+msgstr "La fin de période doit être "
+
+msgid "Work period start must be defined"
+msgstr "Le début de période doit être défini"
+
 #: portal_skins/erp5_project/ProjectLine_viewReport/listbox
 msgid "Worker"
 msgstr "Travailleur"
@@ -13768,6 +13789,9 @@ msgstr "numéro de série du contenant"
 
 msgid "simulation_state"
 msgstr "État de Simulation"
+
+msgid "slice not defined"
+msgstr "tranche non définie"
 
 msgid "state"
 msgstr "État"
