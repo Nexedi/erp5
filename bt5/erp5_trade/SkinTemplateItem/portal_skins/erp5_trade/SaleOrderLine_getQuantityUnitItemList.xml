@@ -63,8 +63,9 @@ result = getattr(context.portal_categories[\'quantity_unit\'], \n
                \'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))(\n
                 base=0, local_sort_id=(\'int_index\', \'translated_title\'), checked_permission=\'View\')\n
 \n
+\n
 pr_title= request.form.get("field_listbox_title_%s"%context.getUid())\n
-if pr_title not in (\'\',None):\n
+if pr_title not in (\'\',None) and context.getResourceValue() is not None:\n
  q_list =  [(x.getLogicalPath(), x.getCategoryRelativeUrl(base=0)) \n
                  for x in context.getResourceValue().getQuantityUnitValueList()]\n
  result=[]\n

@@ -62,7 +62,7 @@
   the total price and the stock corresponding to the \n
   product\n
 """\n
-result = [x.getObject() for x in context.SaleOrder_getFastInputSaleOrderLineList(lines_num=12, **kw)]\n
+result = [x.getObject() for x in context.SaleOrder_getFastInputSaleOrderLineList(lines_num=10, **kw)]\n
 \n
 request= context.REQUEST\n
 \n
