@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""Jump to the invoice(s) related to this order\n
+"""\n
+portal = context.getPortalObject()\n
+translateString = portal.Base_translateString\n
+packing_list_list = context.getCausalityRelatedValueList(\n
+                                          portal_type=packing_list_type,\n
+                                          checked_permission=\'View\')\n
+related_invoice_uid_list = []\n
+if packing_list_list:\n
+  if len(packing_list_list) == 1:\n
+    related_invoice_list = packing_list_list[0].getCausalityRelatedValueList(\n
+                                portal_type=invoice_type,\n
+                                checked_permission=\'View\')\n
+    related_invoice_uid_list = [o.getUid() for o in related_invoice_list]\n
+    if len(related_invoice_list) == 1:\n
+      related_object = related_invoice_list[0]\n
+      message = translateString(\n
+      # first, try to get a full translated message with portal types\n
+      "%s related to %s." % (related_object.getPortalType(), context.getPortalType()),\n
+       # if not found, fallback to generic translation\n
+      default = unicode(translateString(\'${this_portal_type} related to ${that_portal_type} : ${that_title}.\',\n
+        mapping={"this_portal_type" : related_object.getTranslatedPortalType(),\n
+                 "that_portal_type" : context.getTranslatedPortalType(),\n
+                 "that_title" : context.getTitleOrId() }), \'utf8\'))\n
+      return related_object.Base_redirect(\'view\',\n
+                              keep_items=dict(portal_status_message=message))\n
+  else:\n
+    for packing_list in packing_list_list:\n
+      related_invoice_uid_list.extend(\n
+          [invoice.getUid() for invoice in packing_list.getCausalityRelatedValueList(\n
+                                          portal_type=invoice_type,\n
+                                          checked_permission=\'View\')])\n
+\n
+if related_invoice_uid_list:\n
+  invoice_module = portal.getDefaultModule(invoice_type)\n
+  return invoice_module.Base_redirect(\'view\',\n
+              keep_items=dict(reset=1,\n
+                              uid=related_invoice_uid_list))\n
+\n
+return context.Base_redirect(form_id,\n
+              keep_items=dict(portal_status_message=\n
+                                translateString(\'No ${portal_type} related.\',\n
+                                       mapping=dict(portal_type=translateString(invoice_type)))))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>packing_list_type, invoice_type, form_id=\'view\'</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>packing_list_type</string>
+                            <string>invoice_type</string>
+                            <string>form_id</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>translateString</string>
+                            <string>packing_list_list</string>
+                            <string>related_invoice_uid_list</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>related_invoice_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>o</string>
+                            <string>related_object</string>
+                            <string>unicode</string>
+                            <string>message</string>
+                            <string>dict</string>
+                            <string>packing_list</string>
+                            <string>invoice</string>
+                            <string>invoice_module</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <string>view</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Order_jumpToInvoice</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
