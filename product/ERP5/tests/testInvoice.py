@@ -1005,6 +1005,77 @@ class TestInvoice(TestInvoiceMixin):
                     cell_child_32.getVariationCategoryList())
     self.assertTrue(cell_child_32.isMemberOf('size/Child/32'))
 
+  def test_description_copied_on_lines(self):
+    # if the order lines have different descriptions, description must be
+    # copied in the simulation and on created movements
+    resource = self.portal.getDefaultModule(
+        self.resource_portal_type).newContent(
+                    portal_type=self.resource_portal_type,
+                    title='Resource',)
+    currency = self.portal.currency_module.newContent(
+                                portal_type='Currency',
+                                title='Currency')
+
+    client = self.portal.organisation_module.newContent(
+                            portal_type='Organisation',
+                            title='Client')
+    vendor = self.portal.organisation_module.newContent(
+                            portal_type='Organisation',
+                            title='Vendor')
+    order = self.portal.getDefaultModule(self.order_portal_type).newContent(
+                              portal_type=self.order_portal_type,
+                              source_value=vendor,
+                              source_section_value=vendor,
+                              destination_value=client,
+                              destination_section_value=client,
+                              start_date=DateTime(2008, 1, 1),
+                              price_currency_value=currency,
+                              title='Order')
+
+    order.newContent(portal_type=self.order_line_portal_type,
+                                  quantity=3,
+                                  price=10,
+                                  description='The first line',
+                                  resource_value=resource,)
+    order.newContent(portal_type=self.order_line_portal_type,
+                                  quantity=5,
+                                  price=10,
+                                  description='The second line',
+                                  resource_value=resource,)
+
+    order.confirm()
+    get_transaction().commit()
+    self.tic()
+
+    related_packing_list = order.getCausalityRelatedValue(
+                                  portal_type=self.packing_list_portal_type)
+    self.assertNotEquals(related_packing_list, None)
+    
+    movement_list = related_packing_list.getMovementList()
+    self.assertEquals(2, len(movement_list))
+    self.assertEquals(['The first line'],
+        [m.getDescription() for m in movement_list if m.getQuantity() == 3])
+    self.assertEquals(['The second line'],
+        [m.getDescription() for m in movement_list if m.getQuantity() == 5])
+
+    related_packing_list.start()
+    related_packing_list.stop()
+    get_transaction().commit()
+    self.tic()
+
+    related_invoice = related_packing_list.getCausalityRelatedValue(
+                                  portal_type=self.invoice_portal_type)
+    self.assertNotEquals(related_invoice, None)
+
+    movement_list = related_invoice.getMovementList(
+                              portal_type=self.invoice_line_portal_type)
+    self.assertEquals(2, len(movement_list))
+    self.assertEquals(['The first line'],
+        [m.getDescription() for m in movement_list if m.getQuantity() == 3])
+    self.assertEquals(['The second line'],
+        [m.getDescription() for m in movement_list if m.getQuantity() == 5])
+
+
   def test_CopyAndPaste(self):
     """Test copy on paste on Invoice.
     When an invoice is copy/pasted, references should be resetted.
