@@ -181,6 +181,7 @@ class OrderRule(DeliveryRule):
         'destination_function',
         'start_date',
         'stop_date',
+        'description',
         'resource',
         'variation_category_list',
         'variation_property_dict',

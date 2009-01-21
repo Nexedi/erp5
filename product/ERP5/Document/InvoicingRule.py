@@ -104,6 +104,7 @@ class InvoicingRule(Rule):
         'destination_payment': context_movement.getDestinationPayment(),
         'start_date': context_movement.getStartDate(),
         'stop_date': context_movement.getStopDate(),
+        'description': context_movement.getDescription(''),
         'resource': context_movement.getResource(),
         'variation_category_list': context_movement.getVariationCategoryList(),
         'variation_property_dict':
