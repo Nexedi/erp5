@@ -2459,6 +2459,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     self.createCurrencies()
     self.createEntities()
     self.createAccounts()
+    self.validateRules()
 
     # setup preference for the vendor group
     self.pref = self.portal.portal_preferences.newContent(
