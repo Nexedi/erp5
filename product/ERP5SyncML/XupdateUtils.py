@@ -42,20 +42,20 @@ class XupdateUtils(XMLSyncUtilsMixin):
     Parse the xupdate and then it will call the conduit
     """
     conflict_list = []
-    if type(xupdate) in (type('a'),type(u'a')):
+    if isinstance(xupdate, (str, unicode)):
       xupdate = FromXml(xupdate)
 
-    for subnode in self.getElementNodeList(xupdate):
+    for subnode in xupdate:
       selection_name = ''
-      if subnode.nodeName in self.XUPDATE_INSERT_OR_ADD:
-        conflict_list += conduit.addNode(xml=subnode, object=object, \
-                                         force=force, **kw)
-      elif subnode.nodeName in self.XUPDATE_DEL:
-        conflict_list += conduit.deleteNode(xml=subnode, object=object, \
-                                         force=force, **kw)
-      elif subnode.nodeName in self.XUPDATE_UPDATE:
-        conflict_list += conduit.updateNode(xml=subnode, object=object, \
-                                         force=force, **kw)
+      if subnode.xpath('name()') in self.XUPDATE_INSERT_OR_ADD:
+        conflict_list.extend(conduit.addNode(xml=subnode, object=object, \
+                                         force=force, **kw))
+      elif subnode.xpath('name()') in self.XUPDATE_DEL:
+        conflict_list.extend(conduit.deleteNode(xml=subnode, object=object, \
+                                         force=force, **kw))
+      elif subnode.xpath('name()') in self.XUPDATE_UPDATE:
+        conflict_list.extend(conduit.updateNode(xml=subnode, object=object, \
+                                         force=force, **kw))
     return conflict_list
 
 

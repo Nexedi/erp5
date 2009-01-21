@@ -2,23 +2,12 @@
 # coding=UTF-8
 import httplib
 import urllib,urllib2, os
-from Ft.Xml import Parse
 import cStringIO
 import string
 import socket
 import time
 from optparse import OptionParser
-try:
-  from Ft.Xml.Domlette import Print, PrettyPrint
-except ImportError:
-  class Print:
-    def __init__(self, *args, **kw):
-      raise ImportError, '4Suite-XML is not installed'
-
-  class PrettyPrint:
-    def __init__(self, *args, **kw):
-      raise ImportError, '4Suite-XML is not installed'
-
+from lxml import etree
 
 class OptionParser(OptionParser):
 
@@ -46,7 +35,7 @@ parser.check_required("--host")
 
 #address of this small server :
 #Host = '192.168.242.247'
-Host=options.host
+Host = options.host
 
 #address of the publication :
 #publication_url = 'http://localhost:9080/erp5Serv'
@@ -57,10 +46,10 @@ to_url = publication_url+"/portal_synchronizations/readResponse"
 
 #port of this server :
 #Port = 1234
-Port=options.port
+Port = options.port
 
 #address of the this server :
-syncml_server_url = 'http://'+Host+':'+str(Port)
+syncml_server_url = 'http://%s:%s' % (Host, Port)
 
 #socket :
 sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -78,11 +67,7 @@ def nodeToString(node):
   """
   return an xml string corresponding to the node
   """
-  buf = cStringIO.StringIO()
-  Print(node, stream=buf, encoding='utf-8')
-  xml_string = buf.getvalue()
-  buf.close()
-  return xml_string
+  return etree.tostring(node, encoding='utf-8')
 
 def xml2wbxml(xml):
   """
@@ -151,8 +136,8 @@ def getClientUrl(text):
   """
   find the client url in the text and return it
   """
-  document = Parse(text)
-  client_url = document.xpath('string(//SyncHdr/Source/LocURI)').encode('utf-8')
+  document = etree.XML(text)
+  client_url = '%s' % document.xpath('string(//SyncHdr/Source/LocURI)')
   return client_url 
 
 def sendResponse(text, to_url, client_url):
@@ -166,7 +151,7 @@ def sendResponse(text, to_url, client_url):
 
   print '\nsendResponse...'
 
-  text=wbxml2xml(text)
+  text = wbxml2xml(text)
   text = text.replace(syncml_server_url, publication_url)
   text = text.replace(client_url, syncml_server_url)
 
@@ -209,7 +194,7 @@ def main():
       if text.endswith('\x01\x01'):
         client_url = getClientUrl(wbxml2xml(text))
         response = sendResponse(text=text, to_url=to_url, client_url=client_url)
-        if response not in ('', None):
+        if response:
           response = response.replace(syncml_server_url, client_url)
           response = response.replace(publication_url, syncml_server_url)
           print "\nresponse = \n",response

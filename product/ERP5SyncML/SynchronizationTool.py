@@ -1030,11 +1030,11 @@ class SynchronizationTool( SubscriptionSynchronization,
       if domain.getSyncContentType() == self.CONTENT_TYPE['SYNCML_WBXML']:
         text = self.wbxml2xml(text)
       #LOG('readResponse, text after wbxml :\n', TRACE, text)
-      xml = Parse(text)
+      xml = etree.XML(text)
       url = self.getTarget(xml)
       for publication in self.getPublicationList():
         if publication.getPublicationUrl()==url and \
-        publication.getTitle()==sync_id:
+        publication.getTitle() == sync_id:
           if publication.getActivityEnabled():
             #use activities to send SyncML data.
             activity = self.getActivityType(domain=publication)
