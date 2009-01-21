@@ -52,22 +52,20 @@ class XMLSyncUtilsMixin(SyncCode):
       Since the Header is always almost the same, this is the
       way to set one quickly.
     """
-    if source:
-      if source_name:
-        source_name = source_name.decode('utf-8')
-      node_to_append = E.Source(E.LocURI(source), E.LocName(source_name or ''))
-    else:
-      if target_name:
-        target_name = target_name.decode('utf-8')
-      node_to_append = E.Target(E.LocURI(target), E.LocName(target_name or ''))
-
     xml = (E.SyncHdr(
             E.VerDTD('1.1'),
             E.VerProto('SyncML/1.1'),
             E.SessionID('%s' % session_id),
             E.MsgID('%s' % msg_id),
-            node_to_append
           ))
+    target_node = E.Target(E.LocURI(target))
+    if target_name:
+      target_node.append(E.LocName(target_name.decode('utf-8')))
+    xml.append(target_node)
+    source_node = E.Source(E.LocURI(source))
+    if source_name:
+      source_node.append(E.LocName(source_name.decode('utf-8')))
+    xml.append(source_node)
     if dataCred:
       xml.append(E.Cred(
                   E.Meta(E.Format(authentication_format, xmlns='syncml:metinf'),
