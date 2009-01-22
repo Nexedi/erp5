@@ -2580,7 +2580,7 @@ class TestPayroll(TestPayrollMixin):
     self.assertEquals(paysheet.contentValues()[2].contentValues()[0].getTotalPrice(), -800)
 
     # create a paysheet with one normal line and an intermediate line
-    model_line_2.setDoNotCreatePaysheetLine(True)
+    model_line_2.setCreatePaysheetLine(False)
     paysheet = self.portal.accounting_module.newContent(
                               portal_type='Pay Sheet Transaction',
                               specialise_value=model)
