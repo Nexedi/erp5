@@ -43,23 +43,23 @@
 <!--\n
 Description:\n
   This macro renders an aggregate of groups (like the ones returned\n
-  by WebSite_getGroupList() method).\n
+  by Form_getGroupList() method).\n
 \n
 Note:\n
-  A \'aggregate\' variable must be defined just before the macro call.\n
+  The \'aggregate\' variable must be defined just before the macro call.\n
 \n
 Example of macro use (similar to \'erp5_web_default_template\' use):\n
   <tal:block\n
-   tal:define="TOP       python: \'top\';\n
-               SIDEBAR   python: \'sidebar\';\n
-               agg_list  python: dict(layout_form.WebSite_getGroupList([TOP, SIDEBAR]))">\n
+   tal:define="TOP             python: \'top\';\n
+               SIDEBAR         python: \'sidebar\';\n
+               aggregate_list  python: dict(layout_form.WebSite_getGroupList([TOP, SIDEBAR]))">\n
 \n
-    <tal:block tal:define="aggregate python: (TOP, agg_list[TOP])">\n
+    <tal:block tal:define="aggregate python: (TOP, aggregate_list[TOP])">\n
       <tal:block metal:use-macro="here/erp5_web_macros/macros/render_aggregate"/>\n
     </tal:block>\n
 \n
     <div>\n
-      <tal:block tal:define="aggregate python: (SIDEBAR, agg_list[SIDEBAR])">\n
+      <tal:block tal:define="aggregate python: (SIDEBAR, aggregate_list[SIDEBAR])">\n
         <tal:block metal:use-macro="here/erp5_web_macros/macros/render_aggregate"/>\n
       </tal:block>\n
     </div>\n
@@ -67,12 +67,31 @@ Example of macro use (similar to \'erp5_web_default_template\' use):\n
   </tal:block>\n
 -->\n
 \n
+<tal:block metal:define-macro="aggregate_populate_request">\n
+  <tal:block tal:define="dialog_mode dialog_mode | nothing;\n
+                         list_mode list_mode | nothing;\n
+                         dummy python: request.set(\'dialog_mode\', dialog_mode);\n
+                         dummy python: request.set(\'list_mode\', list_mode);\n
+                         dummy python: request.set(\'http_parameters\', http_parameters);\n
+                         dummy python: request.set(\'actions\', actions);\n
+                         dummy python: request.set(\'current_web_section\',\n
+                                                   request.get(\'current_web_section\', section));\n
+                         dummy python: request.set(\'current_web_section_url\', section_url);\n
+                         dummy python: request.set(\'current_web_document\',\n
+                                                   request.get(\'current_web_document\', here));\n
+                         dummy python: request.set(\'is_web_section_default_document\',\n
+                                                   request.get(\'is_web_section_default_document\', 0));\n
+                         dummy python: request.set(\'current_web_site\', website);\n
+                         dummy python: request.set(\'current_web_site_url\', portal_path);"/>\n
+</tal:block>\n
+\n
 <tal:block metal:define-macro="aggregate_render">\n
   <!-- Each aggregate of groups is a div wrapper -->\n
   <div tal:define="aggregate_name   python: aggregate[0];\n
-                   group_list       python: aggregate[1];"\n
+                   group_list       python: aggregate[1];\n
+                   widget_renderer  widget_renderer|nothing"\n
         tal:condition="python: len(group_list)"\n
-        tal:attributes="class python: \'wrapper %s\' % aggregate_name;\n
+        tal:attributes="class python: \'wrapper\';\n
                         id    python: \'wrapper_%s\' % aggregate_name;">\n
 \n
     <tal:block tal:repeat="group group_list">\n
@@ -80,22 +99,25 @@ Example of macro use (similar to \'erp5_web_default_template\' use):\n
                              gtitle  group/gtitle;\n
                              goid    group/goid;\n
                              field_list python: layout_form.get_fields_in_group(goid);">\n
-        <div tal:attributes="class python: gid;"\n
-             tal:condition="python:len(field_list)">\n
-          <fieldset class="widget">\n
-            <legend i18n:translate="" i18n:domain="ui" tal:content="python: gtitle" class="group_title"/>\n
-            <tal:block tal:repeat="field field_list">\n
-              <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
-            </tal:block>\n
-          </fieldset>\n
-        </div>\n
+        <tal:block tal:condition="not:widget_renderer">\n
+          <div tal:attributes="class python: gid.lstrip(aggregate_name);" tal:condition="python:len(field_list)">                 \n
+            <fieldset class="widget">\n
+              <legend i18n:translate="" i18n:domain="ui"\n
+                      tal:content="python: gtitle" class="group_title"/>\n
+              <tal:block tal:repeat="field field_list">\n
+                <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
+              </tal:block>\n
+            </fieldset>\n
+          </div>\n
+        </tal:block>\n
+        <tal:block tal:condition="widget_renderer">\n
+          <div metal:use-macro="widget_renderer"/>\n
+        </tal:block>\n
       </tal:block>\n
     </tal:block>\n
 \n
   </div>\n
 </tal:block>\n
-\n
-\n
 \n
 <!-- ============================================================== -->
 
