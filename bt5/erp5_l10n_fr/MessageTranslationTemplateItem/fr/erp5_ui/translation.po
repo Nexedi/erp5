@@ -11539,7 +11539,7 @@ msgid "The employee must have a career grade"
 msgstr "Le salarié doit avoir un grade"
 
 msgid "The employee must have a marital status"
-msgstr "Le salarié doit une situation maritale"
+msgstr "Le salarié doit avoir une situation maritale"
 
 msgid "The employer must be defined"
 msgstr "L'employeur doit être défini"
@@ -13445,7 +13445,7 @@ msgid "Work Period Start"
 msgstr "Début de période"
 
 msgid "Work period end must be defined"
-msgstr "La fin de période doit être "
+msgstr "La fin de période doit être définie"
 
 msgid "Work period start must be defined"
 msgstr "Le début de période doit être défini"
