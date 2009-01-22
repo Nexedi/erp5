@@ -680,6 +680,12 @@ class Delivery(XMLObject, ImmobilisationDelivery):
 
       if rule_reference is None:
         return
+
+      # only expand if we are not in a "too early" or "too late" state
+      if (self.getSimulationState() in
+          self.getPortalDraftOrderStateList()):
+        return
+
       portal_rules = getToolByName(self, 'portal_rules')
       res = portal_rules.searchFolder(reference=rule_reference,
           validation_state="validated", sort_on='version',
@@ -690,10 +696,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       else:
         raise NotFound('No such rule as %r is found' % (rule_reference,))
 
-      # only expand if we are not in a "too early" or "too late" state
-      if (self.getSimulationState() not in
-          self.getPortalDraftOrderStateList()):
-        self._createAppliedRule(rule_id, force=force, **kw)
+      self._createAppliedRule(rule_id, force=force, **kw)
 
     def _createAppliedRule(self, rule_id, force=0, activate_kw=None, **kw):
       """
