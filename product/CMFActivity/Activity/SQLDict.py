@@ -368,7 +368,7 @@ class SQLDict(RAMDict, SQLBase):
             activity_tool.SQLDict_setPriority(
               uid=[uid],
               delay=None,
-              rety=None,
+              retry=None,
               priority=priority + 1)
           except:
             LOG('SQLDict', WARNING, 'Failed to increase priority of %r' % (uid, ), error=sys.exc_info())
