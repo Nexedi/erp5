@@ -70,6 +70,7 @@ class SQLQueue(RAMQueue, SQLBase):
         id_group='portal_activity_queue', id_count=len(registered_message_list),
         store=0)
       path_list = ['/'.join(m.object_path) for m in registered_message_list]
+      active_process_uid_list = [m.active_process_uid for m in registered_message_list]
       method_id_list = [m.method_id for m in registered_message_list]
       priority_list = [m.activity_kw.get('priority', 1) for m in registered_message_list]
       date_list = [m.activity_kw.get('at_date', None) for m in registered_message_list]
@@ -78,6 +79,7 @@ class SQLQueue(RAMQueue, SQLBase):
       message_list = [self.dumpMessage(m) for m in registered_message_list]
       activity_tool.SQLQueue_writeMessageList(uid_list=uid_list,
                                               path_list=path_list,
+                                              active_process_uid_list=active_process_uid_list,
                                               method_id_list=method_id_list,
                                               priority_list=priority_list,
                                               message_list=message_list,
@@ -346,16 +348,13 @@ class SQLQueue(RAMQueue, SQLBase):
     return not len(message_uid_priority_list)
 
 
-  def hasActivity(self, activity_tool, object, method_id=None, only_valid=None):
+  def hasActivity(self, activity_tool, object, method_id=None, only_valid=None, active_process_uid=None):
     hasMessage = getattr(activity_tool, 'SQLQueue_hasMessage', None)
     if hasMessage is not None:
-      if object is not None:
-        my_object_path = '/'.join(object.getPhysicalPath())
-        result = hasMessage(path=my_object_path, method_id=method_id, only_valid=only_valid)
-        if len(result) > 0:
-          return result[0].message_count > 0
-      else:
-        return 1 # Default behaviour if no object specified is to return 1 until active_process implemented
+      my_object_path = '/'.join(object.getPhysicalPath())
+      result = hasMessage(path=my_object_path, method_id=method_id, only_valid=only_valid, active_process_uid=active_process_uid)
+      if len(result) > 0:
+        return result[0].message_count > 0
     return 0
 
   def flush(self, activity_tool, object_path, invoke=0, method_id=None, commit=0, **kw):

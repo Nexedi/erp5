@@ -138,7 +138,7 @@ class ActiveProcess(Base):
       """
       activity_tool = getattr(self, 'portal_activities', None)
       if activity_tool is None: return 0 # Do nothing if no portal_activities
-      return activity_tool.hasActivity(None, active_process = self, **kw)
+      return activity_tool.hasActivity(None, active_process_uid = self.getUid(), **kw)
 
     security.declareProtected( CMFCorePermissions.View, 'hasErrorActivity' )
     def hasErrorActivity(self, **kw):

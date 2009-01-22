@@ -19,7 +19,7 @@ SELECT * FROM
     message_queue
 WHERE
 1 = 1
-<dtml-if expr="not(include_processing)"> AND processing = 0 </dtml-if>
+AND processing = 0
 <dtml-if expr="processing_node is not None"> AND processing_node = <dtml-sqlvar processing_node type="int"> </dtml-if>
 <dtml-if expr="path is not None">AND path = <dtml-sqlvar path type="string"></dtml-if>
 <dtml-if expr="method_id is not None">AND method_id = <dtml-sqlvar method_id type="string"></dtml-if>

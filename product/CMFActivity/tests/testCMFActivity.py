@@ -1949,6 +1949,7 @@ class TestCMFActivity(ERP5TypeTestCase):
           uid_list=[0], # This uid is never automaticaly assigned (starts at 1)
           date_list=[DateTime().Date()],
           path_list=[path],
+          active_process_uid=[None],
           method_id_list=[method_id],
           message_list=[pickled_message],
           priority_list=[1],

@@ -146,6 +146,9 @@ class Message:
 
   Message instances are stored in an activity queue, inside the Activity Tool.
   """
+
+  active_process_uid = None
+
   def __init__(self, obj, active_process, activity_kw, method_id, args, kw):
     if isinstance(obj, str):
       self.object_path = tuple(obj.split('/'))
@@ -490,6 +493,11 @@ class ActivityTool (Folder, UniqueObject):
     activity_creation_trace = False
     activity_tracking = False
     activity_timing_log = False
+
+    def SQLDict_setPriority(self, **kw):
+      real_SQLDict_setPriority = getattr(self.aq_parent, 'SQLDict_setPriority')
+      LOG('ActivityTool', 0, real_SQLDict_setPriority(src__=1, **kw))
+      return real_SQLDict_setPriority(**kw)
 
     def __init__(self):
         return Folder.__init__(self, ActivityTool.id)
