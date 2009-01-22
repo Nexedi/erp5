@@ -7,8 +7,9 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>
+<params>path
 processing_node
+method_id
 uid
 </params>
 UPDATE message
@@ -16,8 +17,14 @@ SET
   processing_node=<dtml-sqlvar processing_node type="int">,
   processing=0
 WHERE
+<dtml-if uid>
   uid IN (
 <dtml-in uid><dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>
 )
+<dtml-else>
+  processing_node = -1
+  AND path = <dtml-sqlvar path type="string">
+<dtml-if method_id>AND method_id = <dtml-sqlvar method_id type="string"></dtml-if>
+</dtml-if>
 <dtml-var sql_delimiter>
 COMMIT

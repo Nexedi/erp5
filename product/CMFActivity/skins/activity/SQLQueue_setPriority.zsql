@@ -10,7 +10,7 @@ class_file:
 <params>uid
 priority
 delay
-</params>
+date</params>
 UPDATE
     message_queue
 SET
@@ -20,6 +20,8 @@ SET
     </dtml-if>
     <dtml-if delay>
     , date = DATE_ADD(UTC_TIMESTAMP(), INTERVAL <dtml-sqlvar delay type="int"> SECOND)
+    <dtml-elif date>
+    , date = <dtml-sqlvar date type="datetime">
     </dtml-if>
 WHERE
   uid IN (

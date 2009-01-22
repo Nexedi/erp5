@@ -16,6 +16,6 @@ FROM
 WHERE
   processing_node = <dtml-sqlvar processing_node type="int">
   AND processing = 0
-<dtml-if expr="count is not None">
+<dtml-if count>
   LIMIT <dtml-sqlvar count type="int">
 </dtml-if>

@@ -7,16 +7,21 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>
+<params>path
 processing_node
+method_id
 uid</params>
 UPDATE message_queue
 SET
   processing_node=<dtml-sqlvar processing_node type="int">,
   processing=0
 WHERE
+<dtml-if path> path = <dtml-sqlvar path type="string"> 
+<dtml-else>
   uid IN (
 <dtml-in uid><dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>
 )
+</dtml-if>
+<dtml-if method_id> AND method_id = <dtml-sqlvar method_id type="string"></dtml-if>
 <dtml-var sql_delimiter>
 COMMIT

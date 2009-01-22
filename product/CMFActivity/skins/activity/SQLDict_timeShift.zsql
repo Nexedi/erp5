@@ -15,7 +15,7 @@ UPDATE
 SET
   date = DATE_SUB(date, INTERVAL <dtml-sqlvar delay type="int"> SECOND),
   processing_date = DATE_SUB(processing_date, INTERVAL <dtml-sqlvar delay type="int"> SECOND)
-<dtml-if expr="retry is not None">
+<dtml-if retry>
   ,retry = GREATEST(retry,<dtml-sqlvar retry type="int">) - <dtml-sqlvar retry type="int">
 </dtml-if> 
 WHERE

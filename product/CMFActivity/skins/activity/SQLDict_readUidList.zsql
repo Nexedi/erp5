@@ -7,15 +7,19 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>
+<params>processing_node
 method_id
 path
+to_date
 order_validation_text
-</params>
+group_method_id</params>
 SELECT uid FROM
     message
 WHERE
     processing = 0
+<dtml-if expr="processing_node is not None"> AND processing_node = <dtml-sqlvar processing_node type="int"> </dtml-if>
 <dtml-if method_id> AND method_id = <dtml-sqlvar method_id type="string"> </dtml-if>
 <dtml-if path> AND path = <dtml-sqlvar path type="string"> </dtml-if>
+<dtml-if to_date> AND date <= <dtml-sqlvar to_date type="datetime"> </dtml-if>
 <dtml-if order_validation_text> AND order_validation_text = <dtml-sqlvar order_validation_text type="string"> </dtml-if>
+<dtml-if group_method_id> AND group_method_id = <dtml-sqlvar group_method_id type="string"> </dtml-if>
