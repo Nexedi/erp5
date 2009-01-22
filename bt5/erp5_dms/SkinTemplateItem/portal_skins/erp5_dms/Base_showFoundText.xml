@@ -61,8 +61,6 @@
   containing searched words as well highlighting the searched \n
   words in the text itself.\n
 """\n
-max_lines = 5\n
-max_text_length = 500\n
 is_gadget_mode = context.REQUEST.get(\'is_gadget_mode\', 0)\n
 \n
 if is_gadget_mode:\n
@@ -145,7 +143,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>document_text=None, selection=None</string> </value>
+            <value> <string>document_text=None, selection=None, max_lines = 5, max_text_length = 500</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -165,7 +163,7 @@ return result\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -211,6 +209,8 @@ return result\n
               <tuple>
                 <none/>
                 <none/>
+                <int>5</int>
+                <int>500</int>
               </tuple>
             </value>
         </item>
