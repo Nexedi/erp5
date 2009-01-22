@@ -161,10 +161,10 @@ class SQLDict(RAMDict, SQLBase):
         This number is guaranted not to be exceeded.
         If None (or not given) no limit apply.
     """
-    result = activity_tool.SQLDict_selectReservedMessageList(processing_node=processing_node, limit=limit)
+    result = activity_tool.SQLDict_selectReservedMessageList(processing_node=processing_node, count=limit)
     if len(result) == 0:
-      activity_tool.SQLDict_reserveMessageList(limit=limit, processing_node=processing_node, to_date=date, **kw)
-      result = activity_tool.SQLDict_selectReservedMessageList(processing_node=processing_node, limit=limit)
+      activity_tool.SQLDict_reserveMessageList(count=limit, processing_node=processing_node, to_date=date, **kw)
+      result = activity_tool.SQLDict_selectReservedMessageList(processing_node=processing_node, count=limit)
     return result
 
   def makeMessageListAvailable(self, activity_tool, uid_list):

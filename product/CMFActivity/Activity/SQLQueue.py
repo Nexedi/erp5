@@ -110,10 +110,10 @@ class SQLQueue(RAMQueue, SQLBase):
         This number is guaranted not to be exceeded.
         If None (or not given) no limit apply.
     """
-    result = activity_tool.SQLQueue_selectReservedMessageList(processing_node=processing_node, limit=limit)
+    result = activity_tool.SQLQueue_selectReservedMessageList(processing_node=processing_node, count=limit)
     if len(result) == 0:
-      activity_tool.SQLQueue_reserveMessageList(limit=limit, processing_node=processing_node, to_date=date)
-      result = activity_tool.SQLQueue_selectReservedMessageList(processing_node=processing_node, limit=limit)
+      activity_tool.SQLQueue_reserveMessageList(count=limit, processing_node=processing_node, to_date=date)
+      result = activity_tool.SQLQueue_selectReservedMessageList(processing_node=processing_node, count=limit)
     return result
 
   def makeMessageListAvailable(self, activity_tool, uid_list):
@@ -482,7 +482,7 @@ class SQLQueue(RAMQueue, SQLBase):
       now_date = self.getNow(activity_tool)
       result = readMessageList(path=None, method_id=None, processing_node=-1,
                                to_date=now_date, include_processing=0, 
-                               offset=offset, limit=READ_MESSAGE_LIMIT)
+                               offset=offset, count=READ_MESSAGE_LIMIT)
       validated_count = 0
       #TIME_begin = time()
       while len(result) and validated_count < MAX_VALIDATED_LIMIT:
@@ -503,7 +503,7 @@ class SQLQueue(RAMQueue, SQLBase):
           offset += READ_MESSAGE_LIMIT
           result = readMessageList(path=None, method_id=None, processing_node=-1,
                                    to_date=now_date, include_processing=0, 
-                                   offset=offset, limit=READ_MESSAGE_LIMIT)
+                                   offset=offset, count=READ_MESSAGE_LIMIT)
       #TIME_end = time()
       #LOG('SQLQueue.distribute', INFO, '%0.4fs : %i messages => %i distributables' % (TIME_end - TIME_begin, offset + len(result), validated_count))
 

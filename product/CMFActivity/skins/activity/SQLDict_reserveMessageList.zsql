@@ -9,7 +9,7 @@ class_file:
 </dtml-comment>
 <params>processing_node
 to_date
-limit
+count
 group_method_id
 order_validation_text</params>
 UPDATE
@@ -23,8 +23,8 @@ WHERE
   <dtml-if order_validation_text> AND order_validation_text = <dtml-sqlvar order_validation_text type="string"> </dtml-if>
 ORDER BY
   priority, date, uid
-<dtml-if limit>
-  LIMIT <dtml-sqlvar limit type="int">
+<dtml-if count>
+  LIMIT <dtml-sqlvar count type="int">
 </dtml-if>
 <dtml-var sql_delimiter>
 COMMIT

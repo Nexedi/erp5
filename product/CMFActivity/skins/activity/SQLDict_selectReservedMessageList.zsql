@@ -8,7 +8,7 @@ class_name:
 class_file:
 </dtml-comment>
 <params>processing_node
-limit</params>
+count</params>
 SELECT
   *
 FROM
@@ -16,6 +16,6 @@ FROM
 WHERE
   processing_node = <dtml-sqlvar processing_node type="int">
   AND processing = 0
-<dtml-if limit>
-  LIMIT <dtml-sqlvar limit type="int">
+<dtml-if count>
+  LIMIT <dtml-sqlvar count type="int">
 </dtml-if>
