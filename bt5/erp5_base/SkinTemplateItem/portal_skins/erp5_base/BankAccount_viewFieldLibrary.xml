@@ -99,6 +99,7 @@
                         <string>my_branch</string>
                         <string>my_overdraft_facility</string>
                         <string>my_comment</string>
+                        <string>my_bank_account_type</string>
                       </list>
                     </value>
                 </item>

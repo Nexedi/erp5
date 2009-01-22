@@ -1,5 +1,6 @@
 agent
 agent_privilege
+bank_account_type
 collect_order_group
 currency_exchange_type
 destination_region

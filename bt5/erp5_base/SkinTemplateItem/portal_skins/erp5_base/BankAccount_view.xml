@@ -116,6 +116,7 @@
                         <string>my_bank_country_code</string>
                         <string>my_bank_code</string>
                         <string>my_branch</string>
+                        <string>my_bank_account_type</string>
                         <string>my_bank_account_number</string>
                         <string>my_bank_account_key</string>
                         <string>my_comment</string>
