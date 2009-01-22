@@ -30,7 +30,10 @@
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>invalidate</string>
+                <string>invalidate_action</string>
+              </tuple>
             </value>
         </item>
         <item>
