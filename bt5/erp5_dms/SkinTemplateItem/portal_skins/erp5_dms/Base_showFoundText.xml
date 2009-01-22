@@ -61,17 +61,20 @@
   containing searched words as well highlighting the searched \n
   words in the text itself.\n
 """\n
+max_lines = 5\n
 max_text_length = 500\n
 is_gadget_mode = context.REQUEST.get(\'is_gadget_mode\', 0)\n
+\n
+if is_gadget_mode:\n
+  # in gadget mode less space is available thus show less text\n
+  max_text_length = 100\n
+  max_lines = 1\n
 \n
 def getRandomDocumentTextExcerpt():\n
   # try to get somewhat arbitrary choice of searchable attrs\n
   if isinstance(document_text, str) and document_text!=\'\':\n
     start = min(len(document_text) - 300, 200)\n
-    if is_gadget_mode:\n
-      # in gadget mode less space is available thus show less text\n
-      max_text_length = 100\n
-    return \'%s ...\' %document_text[start:start + max_text_length]\n
+    return \'... %s ...\' %document_text[start:start + max_text_length]\n
 \n
 # get search words from listbox selection\n
 argument_names = (\'advanced_search_text\', \n
@@ -122,7 +125,7 @@ found_text_fragments = context.Base_getExcerptText(\n
                          search_words, \\\n
                          tags = (\'<div style="font-weight:bold;display:inline;">\', \'</div>\'), \\\n
                          trail = 5, \\\n
-                         maxlines = 5)\n
+                         maxlines = max_lines)\n
 result = \' \'.join(map(str, found_text_fragments))\n
 \n
 # Document may contains charactors which utf8 codec cannot decode.\n
@@ -170,6 +173,7 @@ return result\n
                           <tuple>
                             <string>document_text</string>
                             <string>selection</string>
+                            <string>max_lines</string>
                             <string>max_text_length</string>
                             <string>_getattr_</string>
                             <string>context</string>
