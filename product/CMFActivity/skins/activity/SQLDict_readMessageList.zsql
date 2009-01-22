@@ -19,9 +19,7 @@ SELECT * FROM
     message
 WHERE
 1 = 1
-<dtml-if expr="not(include_processing)">
-    AND processing = 0
-</dtml-if>
+<dtml-if expr="not(include_processing)"> AND processing = 0 </dtml-if>
 <dtml-if expr="processing_node is not None"> AND processing_node = <dtml-sqlvar processing_node type="int"> </dtml-if>
 <dtml-if path>AND path = <dtml-sqlvar path type="string"> </dtml-if>
 <dtml-if method_id> AND method_id = <dtml-sqlvar method_id type="string"> </dtml-if>
