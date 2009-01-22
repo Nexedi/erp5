@@ -7,10 +7,7 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>path
-method_id
-processing_node
-priority</params>
+<params></params>
 SELECT * FROM
   message_queue
 ORDER BY
