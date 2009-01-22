@@ -91,6 +91,7 @@ class SQLDict(RAMDict, SQLBase):
                                               group_method_id_list = group_method_id_list,
                                               tag_list = tag_list,
                                               serialization_tag_list = serialization_tag_list,
+                                              processing_node_list=None,
                                               order_validation_text_list = order_validation_text_list)
 
   def prepareDeleteMessage(self, activity_tool, m):
@@ -98,8 +99,7 @@ class SQLDict(RAMDict, SQLBase):
     path = '/'.join(m.object_path)
     order_validation_text = self.getOrderValidationText(m)
     uid_list = activity_tool.SQLDict_readUidList(path = path, method_id = m.method_id,
-                                                 order_validation_text = order_validation_text,
-                                                 processing_node = None)
+                                                 order_validation_text = order_validation_text)
     uid_list = [x.uid for x in uid_list]
     if len(uid_list)>0:
       activity_tool.SQLDict_delMessage(uid = uid_list)
@@ -149,7 +149,7 @@ class SQLDict(RAMDict, SQLBase):
       return 0
     return 1
 
-  def getReservedMessageList(self, activity_tool, date, processing_node, limit=None, **kw):
+  def getReservedMessageList(self, activity_tool, date, processing_node, limit=None, group_method_id=None):
     """
       Get and reserve a list of messages.
       limit
@@ -163,7 +163,7 @@ class SQLDict(RAMDict, SQLBase):
     """
     result = activity_tool.SQLDict_selectReservedMessageList(processing_node=processing_node, count=limit)
     if len(result) == 0:
-      activity_tool.SQLDict_reserveMessageList(count=limit, processing_node=processing_node, to_date=date, **kw)
+      activity_tool.SQLDict_reserveMessageList(count=limit, processing_node=processing_node, to_date=date, group_method_id=group_method_id)
       result = activity_tool.SQLDict_selectReservedMessageList(processing_node=processing_node, count=limit)
     return result
 
@@ -237,11 +237,12 @@ class SQLDict(RAMDict, SQLBase):
           - group_method_id
           - uid_to_duplicate_uid_list_dict
     """
-    def getReservedMessageList(**kw):
+    def getReservedMessageList(limit, group_method_id=None):
       line_list = self.getReservedMessageList(activity_tool=activity_tool,
                                               date=now_date,
                                               processing_node=processing_node,
-                                              **kw)
+                                              limit=limit,
+                                              group_method_id=group_method_id)
       if len(line_list):
         LOG('SQLDict', TRACE, 'Reserved messages: %r' % ([x.uid for x in line_list]))
       return line_list
@@ -366,6 +367,8 @@ class SQLDict(RAMDict, SQLBase):
             # Immediately update, because values different for every message
             activity_tool.SQLDict_setPriority(
               uid=[uid],
+              delay=None,
+              rety=None,
               priority=priority + 1)
           except:
             LOG('SQLDict', WARNING, 'Failed to increase priority of %r' % (uid, ), error=sys.exc_info())
@@ -385,7 +388,7 @@ class SQLDict(RAMDict, SQLBase):
     if len(delay_uid_list):
       try:
         # If this is a conflict error, do not lower the priority but only delay.
-        activity_tool.SQLDict_setPriority(uid=delay_uid_list, delay=VALIDATION_ERROR_DELAY)
+        activity_tool.SQLDict_setPriority(uid=delay_uid_list, delay=VALIDATION_ERROR_DELAY, priority=None, retry=None)
       except:
         LOG('SQLDict', ERROR, 'Failed to delay %r' % (delay_uid_list, ), error=sys.exc_info())
       make_available_uid_list += delay_uid_list
@@ -506,12 +509,12 @@ class SQLDict(RAMDict, SQLBase):
     get_transaction().commit()
     return not len(message_uid_priority_list)
 
-  def hasActivity(self, activity_tool, object, **kw):
+  def hasActivity(self, activity_tool, object, method_id=None, only_valid=None):
     hasMessage = getattr(activity_tool, 'SQLDict_hasMessage', None)
     if hasMessage is not None:
       if object is not None:
         my_object_path = '/'.join(object.getPhysicalPath())
-        result = hasMessage(path=my_object_path, **kw)
+        result = hasMessage(path=my_object_path, method_id=method_id, only_valid=only_valid)
         if len(result) > 0:
           return result[0].message_count > 0
       else:
@@ -560,7 +563,7 @@ class SQLDict(RAMDict, SQLBase):
           activity_tool.unregisterMessage(self, m)
       # Parse each message in SQL dict
       result = readMessageList(path=path, method_id=method_id,
-                               processing_node=None,include_processing=0)
+                               processing_node=None,include_processing=0, to_date=None)
       for line in result:
         path = line.path
         line_method_id = line.method_id
@@ -593,7 +596,7 @@ class SQLDict(RAMDict, SQLBase):
 
       if len(result):
         uid_list = activity_tool.SQLDict_readUidList(path = path, method_id = method_id,
-                                                     processing_node = None,)
+                                                     order_validation_text=None)
         if len(uid_list)>0:
           activity_tool.SQLDict_delMessage(uid = [x.uid for x in uid_list])
 
@@ -669,6 +672,7 @@ class SQLDict(RAMDict, SQLBase):
                                    message_uid=message_uid,
                                    path=path,
                                    tag=tag,
+                                   count=False,
                                    serialization_tag=serialization_tag)
       message_list = []
       for line in result:
@@ -726,6 +730,7 @@ class SQLDict(RAMDict, SQLBase):
                                                        path=path,
                                                        message_uid=message_uid, 
                                                        tag=tag,
+                                                       serialization_tag=None,
                                                        count=1)
     return result[0].uid_count
 

@@ -19,11 +19,9 @@ SET
 WHERE
   processing_node=0
   AND date <= <dtml-sqlvar to_date type="datetime">
-  <dtml-if group_method_id> AND group_method_id = <dtml-sqlvar group_method_id type="string"> </dtml-if>
+  <dtml-if expr="group_method_id is not None"> AND group_method_id = <dtml-sqlvar group_method_id type="string"> </dtml-if>
 ORDER BY
   priority, date, uid
-<dtml-if count>
-  LIMIT <dtml-sqlvar count type="int">
-</dtml-if>
+LIMIT <dtml-sqlvar count type="int">
 <dtml-var sql_delimiter>
 COMMIT

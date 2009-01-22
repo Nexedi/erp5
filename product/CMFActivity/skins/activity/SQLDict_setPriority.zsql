@@ -16,13 +16,13 @@ UPDATE
   message
 SET
   processing = 0
-<dtml-if priority>
+<dtml-if expr="priority is not None">
   , priority = <dtml-sqlvar priority type="int">
 </dtml-if>
-<dtml-if delay>
+<dtml-if expr="delay is not None">
   , date = DATE_ADD(UTC_TIMESTAMP(), INTERVAL <dtml-sqlvar delay type="int"> * (retry + 1) SECOND)
 </dtml-if>
-<dtml-if retry>
+<dtml-if expr="retry is not None">
   , retry = retry + <dtml-sqlvar retry type="int">
 </dtml-if>
 WHERE

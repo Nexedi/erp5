@@ -20,8 +20,6 @@ WHERE
   AND date <= <dtml-sqlvar to_date type="datetime">
 ORDER BY
   priority, date, uid
-<dtml-if count>
-  LIMIT <dtml-sqlvar count type="int">
-</dtml-if>
+LIMIT <dtml-sqlvar count type="int">
 <dtml-var sql_delimiter>
 COMMIT

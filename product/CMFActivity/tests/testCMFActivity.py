@@ -1955,7 +1955,8 @@ class TestCMFActivity(ERP5TypeTestCase):
           processing_node_list=[-2],
           group_method_id_list=[''],
           tag_list=[''],
-          order_validation_text_list=['']
+          order_validation_text_list=[''],
+          serialization_tag_list=[''],
           )
       if len(object_list) == 2:
         # Remove one entry from object list: this is understood by caller as a
@@ -2011,7 +2012,8 @@ class TestCMFActivity(ERP5TypeTestCase):
           processing_node_list=[-2],
           group_method_id_list=[''],
           tag_list=[''],
-          order_validation_text_list=['']
+          order_validation_text_list=[''],
+          serialization_tag_list=['']
           )
       # Fail
       raise ValueError, 'This method always fail'
@@ -2077,7 +2079,8 @@ class TestCMFActivity(ERP5TypeTestCase):
           processing_node_list=[-2],
           group_method_id_list=[''],
           tag_list=[''],
-          order_validation_text_list=['']
+          order_validation_text_list=[''],
+          serialization_tag_list=[''],
           )
       # Fail
       raise ValueError, 'This method always fail'
@@ -2134,7 +2137,8 @@ class TestCMFActivity(ERP5TypeTestCase):
           processing_node_list=[-2],
           group_method_id_list=[''],
           tag_list=[''],
-          order_validation_text_list=['']
+          order_validation_text_list=[''],
+          serialization_tag_list=[''],
           )
       # Fail
       raise ValueError, 'This method always fail'
@@ -2300,10 +2304,14 @@ class TestCMFActivity(ERP5TypeTestCase):
       obj.activate(activity=activity, priority=6).failingMethod()
       get_transaction().commit()
       self.flushAllActivities(silent=1, loop_size=100)
-      with_processing_len = len(readMessageList(method_id='failingMethod',
+      with_processing_len = len(readMessageList(path=None,
+                                                to_date=None,
+                                                method_id='failingMethod',
                                                 include_processing=1,
                                                 processing_node=None))
-      without_processing_len = len(readMessageList(method_id='failingMethod',
+      without_processing_len = len(readMessageList(path=None,
+                                                   to_date=None,
+                                                   method_id='failingMethod',
                                                    include_processing=0,
                                                    processing_node=None))
       self.assertEqual(with_processing_len, 1)
@@ -2366,7 +2374,7 @@ class TestCMFActivity(ERP5TypeTestCase):
           processing_node_list=[-2],
           group_method_id_list=[''],
           tag_list=[''],
-          order_validation_text_list=['']
+          order_validation_text_list=[''],
           )
       get_transaction().__class__.commit = fake_commit
       object_list[:] = []
@@ -2424,7 +2432,7 @@ class TestCMFActivity(ERP5TypeTestCase):
           processing_node_list=[-2],
           group_method_id_list=[''],
           tag_list=[''],
-          order_validation_text_list=['']
+          order_validation_text_list=[''],
          )
       get_transaction().__class__.commit = fake_commit
     commit = get_transaction().__class__.commit
@@ -2852,10 +2860,12 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.assertEqual(len(activity_tool.getMessageList()), 1)
     activity_tool.distribute()
     self.assertEquals(len(readMessageList(processing_node=-3,
-                            include_processing=1)), 0)
+                            include_processing=1, path=None, method_id=None,
+                            to_date=None)), 0)
     activity_tool.tic()
     self.assertEquals(len(readMessageList(processing_node=-3,
-                            include_processing=1)), 1)
+                            include_processing=1, path=None, method_id=None,
+                            to_date=None)), 1)
 
   def test_109_checkMissingActivityContextObjectSQLDict(self, quiet=0,
       run=run_all_test):
@@ -2908,10 +2918,12 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.assertEqual(len(activity_tool.getMessageList()), 2)
     activity_tool.distribute()
     self.assertEquals(len(readMessageList(processing_node=-3,
-                            include_processing=1)), 0)
+                            include_processing=1, path=None, method_id=None,
+                            to_date=None)), 0)
     activity_tool.tic()
     self.assertEquals(len(readMessageList(processing_node=-3,
-                            include_processing=1)), 1)
+                            include_processing=1, path=None, method_id=None,
+                            to_date=None)), 1)
     # The message excuted on "organisation_2" must have succeeded.
     self.assertEqual(len(activity_tool.getMessageList()), 1)
 
@@ -3128,8 +3140,8 @@ class TestCMFActivity(ERP5TypeTestCase):
       # Use SQLDict with no group method so that both activities won't be
       # executed in the same batch, letting activity tool a chance to check
       # if execution should stop processing activities.
-      organisation.activate(activity='SQLDict', priority=1).waitingActivity()
-      organisation.activate(activity='SQLDict', priority=2).getTitle()
+      organisation.activate(activity='SQLDict', tag='foo').waitingActivity()
+      organisation.activate(activity='SQLDict', after_tag='foo').getTitle()
       get_transaction().commit()
       self.assertEqual(len(activity_tool.getMessageList()), 2)
       activity_tool.distribute()

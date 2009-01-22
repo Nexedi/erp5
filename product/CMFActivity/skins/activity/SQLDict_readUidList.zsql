@@ -16,6 +16,6 @@ SELECT uid FROM
     message
 WHERE
     processing = 0
-<dtml-if method_id> AND method_id = <dtml-sqlvar method_id type="string"> </dtml-if>
-<dtml-if path> AND path = <dtml-sqlvar path type="string"> </dtml-if>
-<dtml-if order_validation_text> AND order_validation_text = <dtml-sqlvar order_validation_text type="string"> </dtml-if>
+<dtml-if expr="method_id is not None"> AND method_id = <dtml-sqlvar method_id type="string"> </dtml-if>
+<dtml-if expr="path is not None"> AND path = <dtml-sqlvar path type="string"> </dtml-if>
+<dtml-if expr="order_validation_text is not None"> AND order_validation_text = <dtml-sqlvar order_validation_text type="string"> </dtml-if>

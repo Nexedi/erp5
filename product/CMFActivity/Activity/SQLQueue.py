@@ -83,6 +83,7 @@ class SQLQueue(RAMQueue, SQLBase):
                                               message_list=message_list,
                                               date_list=date_list,
                                               tag_list=tag_list,
+                                              processing_node_list=None,
                                               serialization_tag_list=serialization_tag_list)
 
   def prepareDeleteMessage(self, activity_tool, m):
@@ -241,7 +242,7 @@ class SQLQueue(RAMQueue, SQLBase):
     if len(delay_uid_list):
       try:
         # If this is a conflict error, do not lower the priority but only delay.
-        activity_tool.SQLQueue_setPriority(uid=delay_uid_list, delay=VALIDATION_ERROR_DELAY)
+        activity_tool.SQLQueue_setPriority(uid=delay_uid_list, delay=VALIDATION_ERROR_DELAY, priority=None)
       except:
         LOG('SQLQueue', ERROR, 'Failed to delay %r' % (delay_uid_list, ), error=sys.exc_info())
       try:
@@ -345,12 +346,12 @@ class SQLQueue(RAMQueue, SQLBase):
     return not len(message_uid_priority_list)
 
 
-  def hasActivity(self, activity_tool, object, **kw):
+  def hasActivity(self, activity_tool, object, method_id=None, only_valid=None):
     hasMessage = getattr(activity_tool, 'SQLQueue_hasMessage', None)
     if hasMessage is not None:
       if object is not None:
         my_object_path = '/'.join(object.getPhysicalPath())
-        result = hasMessage(path=my_object_path, **kw)
+        result = hasMessage(path=my_object_path, method_id=method_id, only_valid=only_valid)
         if len(result) > 0:
           return result[0].message_count > 0
       else:
@@ -394,7 +395,7 @@ class SQLQueue(RAMQueue, SQLBase):
                   'Could not validate %s on %s' % (m.method_id , path))
           activity_tool.unregisterMessage(self, m)
       # Parse each message in SQL queue
-      result = readMessageList(path=path, method_id=method_id, processing_node=None)
+      result = readMessageList(path=path, method_id=method_id, processing_node=None, to_date=None, include_processing=0)
       for line in result:
         path = line.path
         method_id = line.method_id
@@ -426,7 +427,7 @@ class SQLQueue(RAMQueue, SQLBase):
     message_list = []
     readMessageList = getattr(activity_tool, 'SQLQueue_readMessageList', None)
     if readMessageList is not None:
-      result = readMessageList(path=None, method_id=None, processing_node=None)
+      result = readMessageList(path=None, method_id=None, processing_node=None, to_date=None, include_processing=0)
       for line in result:
         m = self.loadMessage(line.message)
         m.processing_node = line.processing_node
@@ -448,6 +449,7 @@ class SQLQueue(RAMQueue, SQLBase):
                                                         path=path,
                                                         message_uid=message_uid, 
                                                         tag=tag,
+                                                        serialization_tag=None,
                                                         count=1)
     return result[0].uid_count
 
@@ -515,6 +517,7 @@ class SQLQueue(RAMQueue, SQLBase):
                                    message_uid=message_uid,
                                    path=path,
                                    tag=tag,
+                                   count=False,
                                    serialization_tag=serialization_tag)
       message_list = []
       for line in result:

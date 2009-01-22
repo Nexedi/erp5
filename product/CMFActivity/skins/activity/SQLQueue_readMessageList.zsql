@@ -21,9 +21,9 @@ WHERE
 1 = 1
 <dtml-if expr="not(include_processing)"> AND processing = 0 </dtml-if>
 <dtml-if expr="processing_node is not None"> AND processing_node = <dtml-sqlvar processing_node type="int"> </dtml-if>
-<dtml-if path>AND path = <dtml-sqlvar path type="string"></dtml-if>
-<dtml-if method_id>AND method_id = <dtml-sqlvar method_id type="string"></dtml-if>
-<dtml-if to_date> AND date <= <dtml-sqlvar to_date type="datetime"> </dtml-if>
+<dtml-if expr="path is not None">AND path = <dtml-sqlvar path type="string"></dtml-if>
+<dtml-if expr="method_id is not None">AND method_id = <dtml-sqlvar method_id type="string"></dtml-if>
+<dtml-if expr="to_date is not None"> AND date <= <dtml-sqlvar to_date type="datetime"> </dtml-if>
 ORDER BY
     priority, date, uid
 LIMIT <dtml-sqlvar offset type="int">, <dtml-sqlvar count type="int">

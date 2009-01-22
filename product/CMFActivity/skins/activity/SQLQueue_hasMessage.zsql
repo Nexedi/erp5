@@ -13,8 +13,7 @@ only_valid</params>
 SELECT count(path) as message_count FROM
   message_queue
 WHERE
-1 = 1
-<dtml-if path>AND path = <dtml-sqlvar path type="string"></dtml-if>
-<dtml-if method_id>AND method_id = <dtml-sqlvar method_id type="string"></dtml-if>
-<dtml-if only_valid>AND processing_node > -2</dtml-if>
+path = <dtml-sqlvar path type="string">
+<dtml-if expr="method_id is not None">AND method_id = <dtml-sqlvar method_id type="string"></dtml-if>
+<dtml-if expr="only_valid">AND processing_node > -2</dtml-if>
 

@@ -15,7 +15,7 @@ count
 serialization_tag
 </params>
 SELECT
-<dtml-if count>
+<dtml-if expr="count">
     COUNT(*) AS uid_count
 <dtml-else>
     *
@@ -24,23 +24,23 @@ FROM
     message_queue
 WHERE
     processing_node >= -2
-<dtml-if method_id>
+<dtml-if expr="method_id is not None">
     AND method_id IN (
 <dtml-in method_id><dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>
     )
 </dtml-if>
-<dtml-if message_uid>AND uid = <dtml-sqlvar message_uid type="int"> </dtml-if>
-<dtml-if path>
+<dtml-if expr="message_uid is not None">AND uid = <dtml-sqlvar message_uid type="int"> </dtml-if>
+<dtml-if expr="path is not None">
     AND path IN ( 
 <dtml-in path><dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>
     )
 </dtml-if>
-<dtml-if tag>
+<dtml-if expr="tag is not None">
     AND tag IN (
 <dtml-in tag><dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>
     )
 </dtml-if>
-<dtml-if serialization_tag>
+<dtml-if expr="serialization_tag is not None">
     AND processing_node > -1
     AND serialization_tag = <dtml-sqlvar serialization_tag type="string">
 </dtml-if>
