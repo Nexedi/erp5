@@ -603,7 +603,7 @@ class SQLDict(RAMDict, SQLBase):
     readMessageList = getattr(activity_tool, 'SQLDict_readMessageList', None)
     if readMessageList is not None:
       result = readMessageList(path=None, method_id=None, processing_node=None,
-                               to_processing_date=None, include_processing=include_processing)
+                               to_date=None, include_processing=include_processing)
       for line in result:
         m = self.loadMessage(line.message, uid = line.uid)
         m.processing_node = line.processing_node
