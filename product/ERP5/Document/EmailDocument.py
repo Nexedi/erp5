@@ -303,7 +303,10 @@ class EmailDocument(File, TextDocument):
           except (UnicodeDecodeError, LookupError):
             codec = self._guessEncoding(message_text)
             if codec is not None:
-              text_result = message_text.decode(codec).encode('utf-8')
+              try:
+                text_result = message_text.decode(codec).encode('utf-8')
+              except (UnicodeDecodeError, LookupError):
+                text_result = repr(message_text)
             else:
               text_result = repr(message_text)
         else:
@@ -320,7 +323,10 @@ class EmailDocument(File, TextDocument):
           except (UnicodeDecodeError, LookupError):
             codec = self._guessEncoding(message_text)
             if codec is not None:
-              text_result = message_text.decode(codec).encode('utf-8')
+              try:
+                text_result = message_text.decode(codec).encode('utf-8')
+              except (UnicodeDecodeError, LookupError):
+                text_result = repr(message_text)
             else:
               text_result = repr(message_text)
         else:
