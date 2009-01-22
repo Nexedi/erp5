@@ -61,16 +61,16 @@
   containing searched words as well highlighting the searched \n
   words in the text itself.\n
 """\n
-# convert object to text (if possible)\n
-document_text = \'\'\n
-if getattr(context, \'asText\', None) is not None and \\\n
-     getattr(context, \'hasBaseData\', None) is not None:\n
-  if context.hasBaseData():\n
-    # document is successfully converted\n
-    document_text = context.asText()\n
-  else:\n
-    # document not converted (due to a conversion error), return message to user\n
-    return context.Base_translateString(\'Document is not converted or missing content.\')\n
+max_text_length = 500\n
+is_gadget_mode = context.REQUEST.get(\'is_gadget_mode\', 0)\n
+\n
+def getRandomDocumentTextExcerpt():\n
+  # try to get somewhat arbitrary choice of searchable attrs\n
+  start = min(len(document_text) - 300, 200)\n
+  if is_gadget_mode:\n
+    # in gadget mode less space is available thus show less text\n
+    max_text_length = 100\n
+  return \'%s ...\' %document_text[start:start + max_text_length]\n
 \n
 # get search words from listbox selection\n
 argument_names = (\'advanced_search_text\', \n
@@ -80,6 +80,20 @@ argument_names = (\'advanced_search_text\', \n
                   \'searchabletext_any\',\n
                   \'searchabletext_all\', \n
                   \'searchabletext_phrase\',)\n
+\n
+if document_text is None:\n
+  # convert object to text (if possible)\n
+  document_text = \'\'\n
+  if getattr(context, \'asText\', None) is not None and \\\n
+      getattr(context, \'hasBaseData\', None) is not None:\n
+    if context.hasBaseData():\n
+      # document is successfully converted\n
+      document_text = context.asText()\n
+    else:\n
+      # document not converted (due to a conversion error), return message to user\n
+      return context.Base_translateString(\'Document is not converted or missing content.\')\n
+\n
+\n
 if selection is not None:\n
   params = selection.getParams()\n
 else:\n
@@ -89,10 +103,9 @@ params = [params.get(name, \'\') for name in argument_names]\n
 params = [(hasattr(par, \'sort\') and \'\'.join(par) or par) for par in params]\n
 search_string = \' \'.join(params)\n
 \n
-if not search_string:\n
-  # if the searched text is empty \n
-  # (e.g. because the listbox uses its own method)\n
-  return document_text[:300]\n
+if search_string.strip() == \'\':\n
+  # listbox uses its own method, not searching\n
+  return getRandomDocumentTextExcerpt()\n
 \n
 search_argument_list = context.Base_parseSearchString(search_string)\n
 search_words = search_argument_list.get(\'searchabletext\')\n
@@ -100,31 +113,22 @@ search_words = search_argument_list.get(\'searchabletext\')\n
 if search_words in (\'\', None,):\n
   # the searched words are empty (e.g. because we used only parameters \n
   # without pure searchable text)\n
-  result = \'\'\n
-  if document_text not in (\'\', None):\n
-    if not isinstance(document_text, str): \n
-      document_text = str(document_text)\n
-    # try to get somewhat arbitrary choice of searchable attrs\n
-    max_text_length = 500\n
-    start = min(len(document_text) - 300, 200)\n
-    if context.REQUEST.get(\'is_gadget_mode\', 0):\n
-      # in gadget mode less space is available thus show less text\n
-      max_text_length = 150\n
-    result = \'%s ...\' %document_text[start:start + max_text_length]\n
-  return result\n
+  return getRandomDocumentTextExcerpt()\n
 \n
 # get fragments of text containing searched words\n
-found_text_fragments = context.Base_getExcerptText(context,\n
-                                                   document_text,\n
-                                                   search_words,\n
-                                                   tags = (\'<div style="font-weight:bold;display:inline;">\', \'</div>\'),\n
-                                                   trail = 5,\n
-                                                   maxlines = 5)\n
+found_text_fragments = context.Base_getExcerptText(\n
+                         context, \\\n
+                         document_text, \\\n
+                         search_words, \\\n
+                         tags = (\'<div style="font-weight:bold;display:inline;">\', \'</div>\'), \\\n
+                         trail = 5, \\\n
+                         maxlines = 5)\n
 result = \' \'.join(map(str, found_text_fragments))\n
 \n
 # Document may contains charactors which utf8 codec cannot decode.\n
 unicode_result = result.decode(\'utf-8\', \'ignore\')\n
 result = unicode_result.encode(\'utf-8\')\n
+\n
 return result\n
 
 
@@ -138,7 +142,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain, selection=None, selection_name=None</string> </value>
+            <value> <string>document_text=None, selection=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -158,21 +162,22 @@ return result\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>brain</string>
-                            <string>selection</string>
-                            <string>selection_name</string>
                             <string>document_text</string>
-                            <string>getattr</string>
-                            <string>context</string>
-                            <string>None</string>
+                            <string>selection</string>
+                            <string>max_text_length</string>
                             <string>_getattr_</string>
+                            <string>context</string>
+                            <string>is_gadget_mode</string>
+                            <string>getRandomDocumentTextExcerpt</string>
                             <string>argument_names</string>
+                            <string>None</string>
+                            <string>getattr</string>
                             <string>params</string>
                             <string>append</string>
                             <string>$append0</string>
@@ -181,18 +186,12 @@ return result\n
                             <string>par</string>
                             <string>hasattr</string>
                             <string>search_string</string>
-                            <string>_getitem_</string>
                             <string>search_argument_list</string>
                             <string>search_words</string>
-                            <string>result</string>
-                            <string>isinstance</string>
-                            <string>str</string>
-                            <string>max_text_length</string>
-                            <string>min</string>
-                            <string>len</string>
-                            <string>start</string>
                             <string>found_text_fragments</string>
                             <string>map</string>
+                            <string>str</string>
+                            <string>result</string>
                             <string>unicode_result</string>
                           </tuple>
                         </value>
