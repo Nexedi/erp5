@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2009 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Łukasz Nowak <luke@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -61,4 +62,11 @@ class Supply(Path, XMLObject):
                       , PropertySheet.FlowCapacity
                       )
 
-
+    #######################################################
+    # Defer indexing process
+    def reindexObject(self, *k, **kw):
+      """
+        Reindex children, as editing properties on Supply need
+        to be propagated into predicate table for Supply Line
+      """
+      self.recursiveReindexObject(*k, **kw)
