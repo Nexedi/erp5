@@ -88,9 +88,12 @@ for item in item_list:\n
     sub_field_dict[item_key][\'value\'] =\\\n
       sub_field_dict[item_key][\'value\'] + [item_value]\n
 \n
+  base_category_value = resolveCategory(base_category)\n
+  if base_category_value is not None:\n
+    sub_field_dict[item_key][\'title\'] = base_category_value.getTranslatedTitle()\n
+  else:\n
+    sub_field_dict[item_key][\'title\'] = base_category\n
   \n
-  sub_field_dict[item_key][\'title\'] = resolveCategory(base_category).getTranslatedTitle()\n
-\n
 return sub_field_dict.values()\n
 </string> </value>
         </item>
@@ -149,6 +152,8 @@ return sub_field_dict.values()\n
                             <string>base_category</string>
                             <string>sub_field_property_dict</string>
                             <string>_write_</string>
+                            <string>base_category_value</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
