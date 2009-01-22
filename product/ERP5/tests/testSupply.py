@@ -30,6 +30,7 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
+from DateTime import DateTime
 
 class TestSupplyMixin:
 
@@ -48,6 +49,7 @@ class TestSupplyMixin:
     portal = self.getPortal()
     self.category_tool = self.getCategoryTool()
     self.domain_tool = self.getDomainTool()
+    self.catalog_tool = self.getCatalogTool()
 
     if not hasattr(self.portal, 'testing_folder'):
       self.portal.newContent(portal_type='Folder',
@@ -137,6 +139,43 @@ class TestSaleSupply(TestSupplyMixin, ERP5TypeTestCase):
     # ...and predicate shall be found
     self.assertSameSet(res, [supply_line])
 
+  def test_02_checkLineIsReindexedOnSupplyChange(self, quiet=0, run=run_all_test):
+    """
+      Check that Supply Line is properly reindexed (in predicate table)
+      when date is change on Supply.
+    """
+    if not run: return
+    
+    original_date = DateTime().earliestTime() # lower precision of date
+    new_date = DateTime(original_date + 10)
+
+    self.assertNotEquals(original_date, new_date)
+
+    supply = self._makeSupply(start_date_range_min=original_date)
+    supply_line = self._makeSupplyLine(supply)
+
+    kw = {}
+    kw['predicate.uid'] = supply_line.getUid()
+    kw['select_expression'] = 'predicate.start_date_range_min'
+
+    # check supply line in predicate table
+    result = self.catalog_tool(**kw)
+    self.assertEquals(1, len(result) )
+    result = result[0]
+    self.assertEquals(result.start_date_range_min, original_date.toZone('UTC'))
+
+    # set new date on supply...
+    supply.edit(start_date_range_min=new_date)
+    get_transaction().commit()
+    self.tic()
+    
+    # ...and check supply line
+    kw['predicate.uid'] = supply_line.getUid()
+    result = self.catalog_tool(**kw)
+    self.assertEquals(1, len(result) )
+    result = result[0]
+    self.assertEquals(result.start_date_range_min, new_date.toZone('UTC'))
+    
 class TestPurchaseSupply(TestSaleSupply):
   """
     Test Purchase Supplies usage
