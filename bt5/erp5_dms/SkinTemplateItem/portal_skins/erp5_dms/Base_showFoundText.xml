@@ -66,11 +66,12 @@ is_gadget_mode = context.REQUEST.get(\'is_gadget_mode\', 0)\n
 \n
 def getRandomDocumentTextExcerpt():\n
   # try to get somewhat arbitrary choice of searchable attrs\n
-  start = min(len(document_text) - 300, 200)\n
-  if is_gadget_mode:\n
-    # in gadget mode less space is available thus show less text\n
-    max_text_length = 100\n
-  return \'%s ...\' %document_text[start:start + max_text_length]\n
+  if isinstance(document_text, str) and document_text!=\'\':\n
+    start = min(len(document_text) - 300, 200)\n
+    if is_gadget_mode:\n
+      # in gadget mode less space is available thus show less text\n
+      max_text_length = 100\n
+    return \'%s ...\' %document_text[start:start + max_text_length]\n
 \n
 # get search words from listbox selection\n
 argument_names = (\'advanced_search_text\', \n
@@ -83,7 +84,6 @@ argument_names = (\'advanced_search_text\', \n
 \n
 if document_text is None:\n
   # convert object to text (if possible)\n
-  document_text = \'\'\n
   if getattr(context, \'asText\', None) is not None and \\\n
       getattr(context, \'hasBaseData\', None) is not None:\n
     if context.hasBaseData():\n
@@ -108,7 +108,7 @@ if search_string.strip() == \'\':\n
   return getRandomDocumentTextExcerpt()\n
 \n
 search_argument_list = context.Base_parseSearchString(search_string)\n
-search_words = search_argument_list.get(\'searchabletext\')\n
+search_words = search_argument_list.get(\'searchabletext\', None)\n
 \n
 if search_words in (\'\', None,):\n
   # the searched words are empty (e.g. because we used only parameters \n
