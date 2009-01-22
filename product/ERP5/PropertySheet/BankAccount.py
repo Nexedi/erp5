@@ -76,4 +76,4 @@ class BankAccount:
 
   )
 
-  _categories = ( 'source', )
+  _categories = ( 'source', 'bank_account_type', )
