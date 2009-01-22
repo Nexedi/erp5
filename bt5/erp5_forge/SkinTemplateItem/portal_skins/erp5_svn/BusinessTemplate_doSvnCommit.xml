@@ -124,7 +124,7 @@ except SubversionLoginError, error1 :\n
 \n
 return request.RESPONSE.redirect(\'%s/view?%s\' % (\n
        context.absolute_url(),\n
-       make_query(portal_status_message=translateString(\'Files commited successfully in revision ${revision}.\',\n
+       make_query(portal_status_message=translateString(\'Files committed successfully in revision ${revision}.\',\n
                                                         mapping=dict(revision=revision_string)))))\n
 
 

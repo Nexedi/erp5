@@ -72,10 +72,10 @@ msgstr %s\n
 \n
 \n
 def format(string):\n
-  line_list = string.split(\'\\n\')\n
+  line_list = string.splitlines(True)\n
   length = len(line_list)\n
   if length==1:\n
-    return \'"%s"\' % string\n
+    return \'"%s"\' % string.replace(\'"\', \'\\\\"\').replace(\'\\n\', \'\\\\n\')\n
   else:\n
     return \'\\n\'.join([\'""\']+[format(i) for i in line_list])\n
 \n
@@ -108,6 +108,7 @@ for i in catalog(portal_type=\'Glossary Term\',\n
                                         reference=reference,\n
                                         business_field_uid=term.getBusinessFieldUid())\n
   if english_term is None:\n
+    continue\n
     raise ValueError, \'Corresponding English term to "%s" does not exist in glossary.\' % term.Title()\n
 \n
   translated_title = term.getTitle()\n
