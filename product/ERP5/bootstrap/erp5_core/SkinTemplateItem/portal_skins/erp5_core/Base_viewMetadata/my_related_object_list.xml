@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.MultiLinkField</string>
-          <string>MultiLinkField</string>
-        </tuple>
-        <none/>
+        <global name="MultiLinkField" module="Products.ERP5Form.MultiLinkField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
