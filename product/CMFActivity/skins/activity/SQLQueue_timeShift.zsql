@@ -12,8 +12,8 @@ processing_node</params>
 UPDATE
   message_queue
 SET
-  date = date - <dtml-sqlvar delay type="int">,
-  processing_date = processing_date - <dtml-sqlvar delay type="int">
+  date = DATE_SUB(date, INTERVAL <dtml-sqlvar delay type="int"> SECOND),
+  processing_date = DATE_SUB(processing_date, INTERVAL <dtml-sqlvar delay type="int"> SECOND)
 WHERE
   1 = 1
 <dtml-if expr="processing_node is not None">
