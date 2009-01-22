@@ -131,7 +131,13 @@ def Base_asXML(object, root=None):
   for user_role in self.get_local_roles():
     local_role_node = SubElement(object, 'local_role',
                                  attrib=dict(id=user_role[0], type='tokens'))
-    local_role_node.text = etree.CDATA(marshaler(user_role[1]))
+    #convert local_roles in string because marshaler can't do it
+    role_list = []
+    for role in user_role[1]:
+      if isinstance(role, unicode):
+        role = role.encode('utf-8')
+      role_list.append(role)
+    local_role_node.text = etree.CDATA(marshaler(tuple(role_list)))
   if getattr(self, 'get_local_permissions', None) is not None:
     for user_permission in self.get_local_permissions():
       local_permission_node = SubElement(object, 'local_permission',
