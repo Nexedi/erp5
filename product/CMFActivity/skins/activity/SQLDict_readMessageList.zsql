@@ -10,7 +10,6 @@ class_file:
 <params>path
 method_id
 processing_node
-priority
 include_processing
 to_date
 offset:int=0
@@ -24,7 +23,6 @@ WHERE
     AND processing = 0
 </dtml-if>
 <dtml-if expr="processing_node is not None"> AND processing_node = <dtml-sqlvar processing_node type="int"> </dtml-if>
-<dtml-if priority> AND priority = <dtml-sqlvar priority type="int"> </dtml-if>
 <dtml-if path>AND path = <dtml-sqlvar path type="string"> </dtml-if>
 <dtml-if method_id> AND method_id = <dtml-sqlvar method_id type="string"> </dtml-if>
 <dtml-if to_date> AND date <= <dtml-sqlvar to_date type="datetime"> </dtml-if>

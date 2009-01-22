@@ -11,7 +11,7 @@ class_file:
 to_date
 count
 group_method_id
-order_validation_text</params>
+</params>
 UPDATE
   message
 SET
@@ -20,7 +20,6 @@ WHERE
   processing_node=0
   AND date <= <dtml-sqlvar to_date type="datetime">
   <dtml-if group_method_id> AND group_method_id = <dtml-sqlvar group_method_id type="string"> </dtml-if>
-  <dtml-if order_validation_text> AND order_validation_text = <dtml-sqlvar order_validation_text type="string"> </dtml-if>
 ORDER BY
   priority, date, uid
 <dtml-if count>
