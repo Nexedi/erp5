@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="AcceleratedHTTPCacheManager" module="Products.StandardCacheManagers.AcceleratedHTTPCacheManager"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_AcceleratedHTTPCacheManager__cacheid</string> </key>
+            <value> <string>140293585282304_1232739770.351467</string> </value>
+        </item>
+        <item>
+            <key> <string>_settings</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>anonymous_only</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>interval</string> </key>
+                    <value> <int>3600</int> </value>
+                </item>
+                <item>
+                    <key> <string>notify_urls</string> </key>
+                    <value>
+                      <tuple/>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
