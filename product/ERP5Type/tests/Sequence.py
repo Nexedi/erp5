@@ -166,3 +166,6 @@ class SequenceList:
       sequence.play(context, sequence_number=i, quiet=quiet)
       i+=1
 
+  def getSequenceList(self):
+    return self._sequence_list
+
