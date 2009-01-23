@@ -450,6 +450,22 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     Also this uses total_price (and quantity), and ignores variations and
     subvariations as it does not exist in accounting.
     """
+    sql_catalog_id = kw.pop("sql_catalog_id", None)
+    disable_archive = kw.pop("disable_archive", 0)
+
+    if self.getSimulationState() in self.getPortalDraftOrderStateList():
+      # this prevent from trying to calculate stock
+      # with not all properties defined and thus making
+      # request with no condition in mysql
+      object_list = [self]
+      immediate_reindex_archive = sql_catalog_id is not None
+      self.portal_catalog.catalogObjectList(
+                    object_list,
+                    sql_catalog_id = sql_catalog_id,
+                    disable_archive=disable_archive,
+                    immediate_reindex_archive=immediate_reindex_archive)      
+      return
+
     current_stock_dict = self._getCurrentStockDict()
     new_stock_dict = self._getNewStockDict()
     diff_list = self._computeStockDifferenceList(
