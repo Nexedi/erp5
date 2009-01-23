@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="RAMCacheManager" module="Products.StandardCacheManagers.RAMCacheManager"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_RAMCacheManager__cacheid</string> </key>
+            <value> <string>140571995811424_1232605080.630355</string> </value>
+        </item>
+        <item>
+            <key> <string>_settings</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>cleanup_interval</string> </key>
+                    <value> <int>300</int> </value>
+                </item>
+                <item>
+                    <key> <string>max_age</string> </key>
+                    <value> <int>3600</int> </value>
+                </item>
+                <item>
+                    <key> <string>request_vars</string> </key>
+                    <value>
+                      <tuple>
+                        <string>AUTHENTICATED_USER</string>
+                        <string>current_web_section_url</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>threshold</string> </key>
+                    <value> <int>1000</int> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>web_section_user_ram_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
