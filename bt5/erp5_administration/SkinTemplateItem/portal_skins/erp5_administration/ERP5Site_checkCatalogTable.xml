@@ -66,13 +66,8 @@
     Offset the bundle, to allow walking along the catalog with\n
     bundle_object_count increment.\n
   property_override_method_id\n
-    Id of a method generating a property_override_dict as described below and\n
-    returning it.\n
-  property_override_dict (key: catalog column id, value: method id)\n
-    Defines custom methods to calculate reference column value.\n
-    None means that the column is not checked at all.\n
-    Otherwise, the function will be called on the object with no parameter\n
-    and must return the reference value for the column.\n
+    Id of a method that generates a dictionary of reference values\n
+    for a particular item in the catalog.\n
   catalog_kw\n
     Extra parameters passed to catalog\n
   retry\n
@@ -88,10 +83,8 @@ result_list = []\n
 if catalog_kw is None:\n
   catalog_kw = {}\n
 \n
-if property_override_method_id is None:\n
-  property_override_dict = {}\n
-else:\n
-  property_override_dict = getattr(context, property_override_method_id)()\n
+if not catalog_kw.has_key(\'sort_on\'):\n
+  catalog_kw[\'sort_on\'] = ((\'uid\',\'ascending\'),)\n
 \n
 if catalog_uid_list is None:\n
   # No uid list was given: fetch work to do from catalog and spawn activities\n
@@ -101,7 +94,9 @@ if catalog_uid_list is None:\n
   if uid_min is not None:\n
     # Check what is after last check\n
     catalog_kw[\'uid\'] = {\'query\': uid_min, \'range\': \'nlt\'}\n
-  catalog_uid_list = [x.uid for x in context.portal_catalog(limit=bundle_object_count * activity_count, **catalog_kw)]\n
+  catalog_uid_list = [x.uid for x in context.portal_catalog(\n
+          limit=bundle_object_count * activity_count, \n
+          **catalog_kw)]\n
   context.log(\'sql src\', context.portal_catalog(limit=bundle_object_count * activity_count, src__=1, **catalog_kw))\n
   if len(catalog_uid_list):\n
     # Get the last uid this pass will check, so that next pass will check a batch starting after this uid.\n
@@ -174,29 +169,30 @@ else:\n
       continue\n
     # There is already activity changing the state\n
     if actual_object.hasActivity() \\\n
-        or (getattr(actual_object, \'getExplanationValue\', None) is not None \\\n
-        and actual_object.getExplanationValue().hasActivity()):\n
-      continue\n
-    for attribute_id in attribute_id_list:\n
-      override_method_id = property_override_dict.get(attribute_id, MARKER)\n
-      if override_method_id is None:\n
+          or (getattr(actual_object, \'getExplanationValue\', None) is not None \\\n
+          and actual_object.getExplanationValue().hasActivity()):\n
         continue\n
-      elif override_method_id is MARKER:\n
-        reference_value = actual_object.getProperty(key=attribute_id)\n
-      elif same_type(override_method_id, \'\'):\n
-        reference_value = getattr(actual_object, override_method_id)()\n
+    if property_override_method_id is None:\n
+      reference_dict = {}\n
+    else:\n
+      reference_dict = getattr(context, property_override_method_id)(instance=actual_object)\n
+    for attribute_id in attribute_id_list:\n
+      if not reference_dict.has_key(attribute_id):\n
+        reference_value = actual_object.getProperty(attribute_id)\n
       else:\n
-        reference_value = override_method_id(instance=actual_object)\n
+        reference_value = reference_dict[attribute_id]\n
       catalog_value = catalog_line[attribute_id]\n
-      if same_type(catalog_value, REFERENCE_DATETIME):\n
-        catalog_value = DateTime(catalog_value.Date())\n
       reference_can_be_null_value = False\n
       if same_type(reference_value, tuple()) or same_type(reference_value, list()):\n
         for reference_value_item in reference_value:\n
+          # We probably do not need this\n
+          if same_type(reference_value, REFERENCE_DATETIME):\n
+            reference_value = DateTime("%s Universal" % reference_value.toZone("Universal").ISO())\n
           if reference_value_item in null_value_list:\n
             reference_can_be_null_value = True\n
-            break\n
       else:\n
+        if same_type(reference_value, REFERENCE_DATETIME):\n
+          reference_value = DateTime("%s Universal" % reference_value.toZone("Universal").ISO())\n
         if reference_value in null_value_list:\n
           reference_can_be_null_value = True\n
       if reference_can_be_null_value and catalog_value in null_value_list:\n
@@ -216,6 +212,7 @@ else:\n
           message = \'%s.%s = %s, but catalog contains %s\' % (actual_object.getRelativeUrl(), attribute_id,\n
                                                              repr(reference_value), repr(catalog_value))\n
           result_list.append(message)\n
+\n
   summary_list = []\n
   begin = catalog_uid_list[0]\n
   end = catalog_uid_list[-1]\n
@@ -309,11 +306,9 @@ return active_result\n
                             <string>active_context</string>
                             <string>result_list</string>
                             <string>None</string>
-                            <string>property_override_dict</string>
-                            <string>getattr</string>
+                            <string>_write_</string>
                             <string>first_run</string>
                             <string>sql_kw</string>
-                            <string>_write_</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
@@ -340,13 +335,14 @@ return active_result\n
                             <string>message</string>
                             <string>actual_object</string>
                             <string>KeyError</string>
+                            <string>getattr</string>
+                            <string>reference_dict</string>
                             <string>attribute_id</string>
-                            <string>override_method_id</string>
                             <string>reference_value</string>
-                            <string>same_type</string>
                             <string>catalog_value</string>
                             <string>False</string>
                             <string>reference_can_be_null_value</string>
+                            <string>same_type</string>
                             <string>tuple</string>
                             <string>list</string>
                             <string>reference_value_item</string>

@@ -94,16 +94,16 @@ def getQuantity(instance):\n
   return (quantity, -quantity)\n
 \n
 return {\n
-  \'node_uid\':         getSourceAndDestinationList,\n
-  \'payment_uid\':      getSourcePaymentAndDestinationPaymentList,\n
-  \'section_uid\':      getSourceSectionAndDestinationSectionList,\n
-  \'mirror_section_uid\': getSourceSectionAndDestinationSectionList,\n
-  \'date\':             getStartDateAndStopDate,\n
-  \'mirror_date\':      getStartDateAndStopDate,\n
-  \'total_price\':      getTotalPrice,\n
-  \'quantity\':         getQuantity,\n
-  \'mirror_node_uid\':  getSourceAndDestinationList,\n
-  \'simulation_state\': getSimulationState,\n
+  \'node_uid\':         getSourceAndDestinationList(instance),\n
+  \'payment_uid\':      getSourcePaymentAndDestinationPaymentList(instance),\n
+  \'section_uid\':      getSourceSectionAndDestinationSectionList(instance),\n
+  \'mirror_section_uid\': getSourceSectionAndDestinationSectionList(instance),\n
+  \'date\':             getStartDateAndStopDate(instance),\n
+  \'mirror_date\':      getStartDateAndStopDate(instance),\n
+  \'total_price\':      getTotalPrice(instance),\n
+  \'quantity\':         getQuantity(instance),\n
+  \'mirror_node_uid\':  getSourceAndDestinationList(instance),\n
+  \'simulation_state\': getSimulationState(instance),\n
 }\n
 </string> </value>
         </item>
@@ -115,7 +115,7 @@ return {\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>instance = None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -135,12 +135,13 @@ return {\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>instance</string>
                             <string>DateTime</string>
                             <string>getSourceAndDestinationList</string>
                             <string>getSourcePaymentAndDestinationPaymentList</string>
@@ -161,7 +162,9 @@ return {\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
