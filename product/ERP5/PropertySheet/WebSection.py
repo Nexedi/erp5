@@ -62,6 +62,18 @@ class WebSection:
             'type'        : 'boolean',
             'default'     : 1,
             'mode'        : 'rw' },
+        {   'id'          : 'site_map_document_parent',
+            'description' : 'Defines whether the documents of this section should '
+                            'be part of the site map.',
+            'type'        : 'boolean',
+            'default'     : 0,
+            'mode'        : 'rw' },
+        {   'id'          : 'site_map_section_parent',
+            'description' : 'Defines whether the subsections of this section should '
+                            'be part of the site map.',
+            'type'        : 'boolean',
+            'default'     : 0,
+            'mode'        : 'rw' },
         {   'id'          : 'custom_render_method_id',
             'description' : 'ID of a page template, script, form or any callable object'
                             'which overrides the default rendering of the section',
