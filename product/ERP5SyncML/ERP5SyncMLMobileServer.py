@@ -8,6 +8,7 @@ import socket
 import time
 from optparse import OptionParser
 from lxml import etree
+parser = etree.XMLParser(remove_blank_text=True)
 
 class OptionParser(OptionParser):
 
@@ -136,7 +137,7 @@ def getClientUrl(text):
   """
   find the client url in the text and return it
   """
-  document = etree.XML(text)
+  document = etree.XML(text, parser=parser)
   client_url = '%s' % document.xpath('string(//SyncHdr/Source/LocURI)')
   return client_url 
 

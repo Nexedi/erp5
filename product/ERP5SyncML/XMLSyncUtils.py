@@ -36,6 +36,8 @@ from zLOG import LOG, INFO
 from lxml import etree
 from lxml.etree import Element
 from lxml.builder import E
+parser = etree.XMLParser(remove_blank_text=True)
+
 from xml.dom import minidom
 
 try:
@@ -340,7 +342,7 @@ class XMLSyncUtilsMixin(SyncCode):
     """
     data_node = Element('Data')
     if media_type == self.MEDIA_TYPE['TEXT_XML'] and isinstance(xml_string, str):
-      data_node.append(etree.XML(xml_string))
+      data_node.append(etree.XML(xml_string, parser=parser))
     elif media_type == self.MEDIA_TYPE['TEXT_XML'] and \
          not isinstance(xml_string, str):
       #xml_string could be Partial element if partial XML
@@ -396,7 +398,7 @@ class XMLSyncUtilsMixin(SyncCode):
     if not isinstance(xml_string, (str, unicode)):
       data_node.append(xml_string)
     else:
-      data_node.append(etree.XML(xml_string))
+      data_node.append(etree.XML(xml_string, parser=parser))
     xml = (E.Replace(
              E.CmdID('%s' % cmd_id),
              E.Meta(
@@ -672,7 +674,7 @@ class XMLSyncUtilsMixin(SyncCode):
     syncml_data = kw.get('syncml_data','')
     result = {'finished':1}
     if isinstance(remote_xml, (str, unicode)):
-      remote_xml = etree.XML(remote_xml)
+      remote_xml = etree.XML(remote_xml, parser=parser)
     if domain.isOneWayFromServer():
       #Do not set object_path_list, subscriber send nothing
       subscriber.setRemainingObjectPathList([])
@@ -968,7 +970,7 @@ class XMLSyncUtilsMixin(SyncCode):
             data_subnode = partial_data
           #LOG('applyActionList', DEBUG, 'data_subnode: %s' % data_subnode)
           if subscriber.getMediaType() == self.MEDIA_TYPE['TEXT_XML']:
-            data_subnode = etree.XML(data_subnode)
+            data_subnode = etree.XML(data_subnode, parser=parser)
         else:
           if subscriber.getMediaType() != self.MEDIA_TYPE['TEXT_XML']:
             data_subnode = self.getDataText(action)
@@ -1306,7 +1308,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
       domain.activate(activity='SQLQueue',
                       tag=domain.getId(),
                       priority=self.PRIORITY).activateSyncModif(
-                      domain_relative_url = domain.getRelativeUrl(),
+                      domain_relative_url=domain.getRelativeUrl(),
                       remote_xml=remote_xml,
                       subscriber_relative_url=subscriber.getRelativeUrl(),
                       cmd_id=cmd_id,
@@ -1384,7 +1386,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
       xml_confirmation = result['xml_confirmation']
       cmd_id = result['cmd_id']
       cmd_id_before_getsyncmldata = kw['cmd_id_before_getsyncmldata']
-      remote_xml = etree.XML(kw['remote_xml'])
+      remote_xml = etree.XML(kw['remote_xml'], parser=parser)
       xml_list = kw['xml_list']
       has_status_list = kw['has_status_list']
       has_response = kw['has_response']
@@ -1501,7 +1503,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
 
     if xml_client is not None:
       if isinstance(xml_client, (str, unicode)):
-        xml_client = etree.XML(xml_client)
+        xml_client = etree.XML(xml_client, parser=parser)
       if xml_client.tag != "SyncML":
         LOG('PubSync', INFO, 'This is not a SyncML Message')
         raise ValueError, "Sorry, This is not a SyncML Message"
@@ -1571,7 +1573,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     else:
       xml_client = msg
       if isinstance(xml_client, (str, unicode)):
-        xml_client = etree.XML(xml_client)
+        xml_client = etree.XML(xml_client, parser=parser)
         status_list = self.getSyncBodyStatusList(xml_client)
         if status_list:
           status_code_syncHdr = status_list[0]['code']
@@ -1598,7 +1600,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
           else:
             response = self.SubSyncModif(subscription, xml_client)
         else:
-            response = self.SubSyncModif(subscription, xml_client)
+          response = self.SubSyncModif(subscription, xml_client)
 
     if RESPONSE is not None:
       RESPONSE.redirect('manageSubscriptions')

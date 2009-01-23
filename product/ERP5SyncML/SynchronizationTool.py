@@ -61,6 +61,7 @@ from DateTime import DateTime
 from zLOG import LOG, TRACE, DEBUG, INFO
 
 from lxml import etree
+parser = etree.XMLParser(remove_blank_text=True)
 
 class TimeoutHTTPConnection(httplib.HTTPConnection):
   """
@@ -1034,7 +1035,7 @@ class SynchronizationTool( SubscriptionSynchronization,
       if domain.getSyncContentType() == self.CONTENT_TYPE['SYNCML_WBXML']:
         text = self.wbxml2xml(text)
       #LOG('readResponse, text after wbxml :\n', TRACE, text)
-      xml = etree.XML(text)
+      xml = etree.XML(text, parser=parser)
       url = self.getTarget(xml)
       for publication in self.getPublicationList():
         if publication.getPublicationUrl() == url and \

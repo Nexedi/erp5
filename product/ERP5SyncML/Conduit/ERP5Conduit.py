@@ -41,6 +41,7 @@ from xml.sax.saxutils import escape, unescape
 import re
 import cStringIO
 from lxml import etree
+parser = etree.XMLParser(remove_blank_text=True)
 from xml.marshal.generic import loads as unmarshaler
 from zLOG import LOG, INFO, DEBUG
 
@@ -644,7 +645,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     if isinstance(xml, (str, unicode)):
       if isinstance(xml, unicode):
         xml = xml.encode('utf-8')
-      xml = etree.XML(xml)
+      xml = etree.XML(xml, parser=parser)
     # If we have the xml from the node erp5, we just take the subnode
     if xml.tag == 'erp5':
       xml = xml[0]
@@ -850,7 +851,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     conflict_list = []
     if isinstance(xupdate, (str, unicode)):
-      xupdate = etree.XML(xupdate)
+      xupdate = etree.XML(xupdate, parser=parser)
     #When xupdate mix different object, (like object and his subobject) we need to treat them separatly
     if self.isMixedXupdate(xupdate):
       #return to updateNode with only one line
