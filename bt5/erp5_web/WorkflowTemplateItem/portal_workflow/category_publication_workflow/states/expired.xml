@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="StateDefinition" module="Products.DCWorkflow.States"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Expired categories are categories which were previously published and should not be viewed any longer in the current user interface yet be accessible for legacy content.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>expired</string> </value>
+        </item>
+        <item>
+            <key> <string>permission_roles</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Expired</string> </value>
+        </item>
+        <item>
+            <key> <string>transitions</string> </key>
+            <value>
+              <tuple>
+                <string>embed</string>
+                <string>embed_action</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>Access contents information</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Add portal content</string> </key>
+                    <value>
+                      <tuple/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Delete objects</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Modify portal content</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>View</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
