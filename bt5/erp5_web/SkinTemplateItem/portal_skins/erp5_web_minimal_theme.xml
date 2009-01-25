@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>erp5_web_default_theme</string> </value>
+            <value> <string>erp5_web_minimal_theme</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
