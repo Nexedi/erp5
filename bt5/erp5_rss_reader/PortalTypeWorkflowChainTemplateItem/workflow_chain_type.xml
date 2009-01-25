@@ -1,0 +1,10 @@
+<workflow_chain>
+ <chain>
+  <type>RSS Feed</type>
+  <workflow>edit_workflow, local_permission_interaction_workflow, document_publication_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>RSS Item</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+</workflow_chain>

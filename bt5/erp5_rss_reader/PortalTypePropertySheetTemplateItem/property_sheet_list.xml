@@ -1,0 +1,9 @@
+<property_sheet_list>
+ <portal_type id="RSS Feed">
+  <item>TextDocument</item>
+ </portal_type>
+ <portal_type id="RSS Item">
+  <item>TextDocument</item>
+  <item>RSSItem</item>
+ </portal_type>
+</property_sheet_list>

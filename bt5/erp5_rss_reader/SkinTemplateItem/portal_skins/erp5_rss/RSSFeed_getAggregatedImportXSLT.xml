@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>RSSFeed_getAggregatedImportXSLT</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="utf-8"?>\n
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" \n
+xmlns:md5="http://exslt.org/crypto" exclude-result-prefixes="md5"\n
+xmlns:dc="http://purl.org/dc/elements/1.1/">\n
+\n
+<xsl:output method="xml" indent="yes" omit-xml-declaration="no"/>\n
+\n
+<!--Parameters list-->\n
+<xsl:param name="rid" select="None"/>\n
+<xsl:param name="sid" select="None"/>\n
+<xsl:param name="categories_list" select="None"/>\n
+<xsl:param name="subject_list" select="None"/>\n
+\n
+\n
+<!--Template matching the erp5 Tag-->\n
+<xsl:template match="/">\n
+  <erp5>\n
+      <xsl:apply-templates select="//item|//entry"/> \n
+  </erp5>\n
+</xsl:template>\n
+\n
+<!--Template maching the item Tag-->\n
+<xsl:template match="item|entry">\n
+       <xsl:variable name="md5_id">\n
+        <xsl:choose>\n
+          <xsl:when test="link"><xsl:value-of select="link|link/@href"/></xsl:when>\n
+          <xsl:when test="title|dc:title"><xsl:value-of select="title|dc:title"/></xsl:when>\n
+          <xsl:otherwise><xsl:value-of select="description|dc:description"/></xsl:otherwise>\n
+        </xsl:choose>\n
+      </xsl:variable>\n
+      <xsl:variable name="converted_id" select="md5:md5($md5_id)"/>\n
+        <object id="{$converted_id}" portal_type="RSS Item">\n
+          <id type="string"><xsl:value-of select="$converted_id"/></id>\n
+          <rid type="string"><xsl:value-of select=\'$rid\'/></rid>\n
+          <sid type="int"><xsl:value-of select="$sid"/></sid>\n
+          <categories_list type="tokens"><xsl:value-of select="$categories_list"/></categories_list>\n
+          <title type="string"><xsl:value-of select="title|dc:title"/></title>\n
+          <subject_list type="lines"><xsl:value-of select="$subject_list"/></subject_list>\n
+          <description type="text"><xsl:value-of select="description|dc:description|content"/><xsl:apply-templates select=\'summary\'/></description>\n
+          <url_text>\n
+            <xsl:choose>\n
+              <xsl:when test="link"><xsl:value-of select="link"/></xsl:when>\n
+              <xsl:otherwise>None</xsl:otherwise>\n
+            </xsl:choose>\n
+          </url_text>\n
+          <pub_date><xsl:value-of select="pubDate|dc:date"/></pub_date>\n
+        </object>\n
+    </xsl:template>\n
+    \n
+    <xsl:template match="summary">\n
+      <xsl:apply-templates/>\n
+    </xsl:template>\n
+\n
+</xsl:stylesheet>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

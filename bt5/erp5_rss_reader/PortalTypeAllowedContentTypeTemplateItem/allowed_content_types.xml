@@ -1,0 +1,5 @@
+<allowed_content_type_list>
+ <portal_type id="RSS Feed">
+  <item>RSS Item</item>
+ </portal_type>
+</allowed_content_type_list>
