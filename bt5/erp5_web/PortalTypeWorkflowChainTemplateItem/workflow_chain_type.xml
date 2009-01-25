@@ -1,14 +1,22 @@
 <workflow_chain>
  <chain>
+  <type>Base Category</type>
+  <workflow>category_publication_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Category</type>
+  <workflow>category_publication_workflow</workflow>
+ </chain>
+ <chain>
   <type>Web Page</type>
   <workflow>edit_workflow, publication_workflow</workflow>
  </chain>
  <chain>
   <type>Web Section</type>
-  <workflow>local_permission_interaction_workflow, edit_workflow</workflow>
+  <workflow>category_publication_workflow, local_permission_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Web Site</type>
-  <workflow>local_permission_interaction_workflow, edit_workflow</workflow>
+  <workflow>local_permission_interaction_workflow, edit_workflow, category_publication_workflow</workflow>
  </chain>
 </workflow_chain>
