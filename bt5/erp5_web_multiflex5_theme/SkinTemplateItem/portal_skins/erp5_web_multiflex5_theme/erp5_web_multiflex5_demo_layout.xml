@@ -1,0 +1,334 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>This layout can be used to display the different classes and styles provided by the Multiflex5 theme.</string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>encoding</string> </key>
+            <value> <string>UTF-8</string> </value>
+        </item>
+        <item>
+            <key> <string>enctype</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <list>
+                <string>header header-top</string>
+                <string>header header-bottom</string>
+                <string>navbar navbar-left</string>
+                <string>headline</string>
+                <string>footer</string>
+                <string>subcontent subcontent-box sidemenu1 (4-01a. Side menu 1)</string>
+                <string>subcontent subcontent-box sidemenu2 (4-01b. Side menu 2)</string>
+                <string>subcontent subcontent-box sidemenu1 (Subsections)</string>
+                <string>subcontent subcontent-box sidemenu3 (4-01c. Side menu 3)</string>
+                <string>subcontent subcontent-box headbox1 (4-02. Box head h1 (with icon))</string>
+                <string>subcontent subcontent-box headbox1noicon (4-03. Box head h1 (no icon))</string>
+                <string>subcontent subcontent-box headbox2 (4-04. Text)</string>
+                <string>subcontent subcontent-box imagebox (4-05. Image)</string>
+                <string>subcontent subcontent-box linkbox (4-06. Link)</string>
+                <string>subcontent subcontent-box tablebox (4-07. Table)</string>
+                <string>subcontent subcontent-box contactbox (4-08. Contact)</string>
+                <string>subcontent subcontent-box loginbox(4-09. Login)</string>
+                <string>subcontent subcontent-box searchbox (4-10. Search)</string>
+                <string>subcontent subcontent-box videobox (4-11. Video)</string>
+                <string>subcontent subcontent-box audiobox (4-12. Audio)</string>
+                <string>subcontent subcontent-box webtemplatebox (4-13a. Webtemplate)</string>
+                <string>subcontent subcontent-box documentbox (4-13b. Document)</string>
+                <string>subcontent subcontent-box blogbox (4-13c. Blog)</string>
+                <string>subcontent subcontent-box forumbox (4.13d Forum)</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>groups</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>footer</string> </key>
+                    <value>
+                      <list>
+                        <string>footer_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>header header-bottom</string> </key>
+                    <value>
+                      <list>
+                        <string>breadcrumb_box</string>
+                        <string>search_bar</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>header header-top</string> </key>
+                    <value>
+                      <list>
+                        <string>site_title_box</string>
+                        <string>rss_box</string>
+                        <string>language_box</string>
+                        <string>global_navigation_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>headline</string> </key>
+                    <value>
+                      <list>
+                        <string>page_title_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>navbar navbar-left</string> </key>
+                    <value>
+                      <list>
+                        <string>navigation_bar</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box audiobox (4-12. Audio)</string> </key>
+                    <value>
+                      <list>
+                        <string>audio_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box blogbox (4-13c. Blog)</string> </key>
+                    <value>
+                      <list>
+                        <string>blog_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box contactbox (4-08. Contact)</string> </key>
+                    <value>
+                      <list>
+                        <string>contact_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box documentbox (4-13b. Document)</string> </key>
+                    <value>
+                      <list>
+                        <string>documentbox</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box forumbox (4.13d Forum)</string> </key>
+                    <value>
+                      <list>
+                        <string>forum_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box headbox1 (4-02. Box head h1 (with icon))</string> </key>
+                    <value>
+                      <list>
+                        <string>head_box_1</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box headbox1noicon (4-03. Box head h1 (no icon))</string> </key>
+                    <value>
+                      <list>
+                        <string>head_box_1_noicon</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box headbox2 (4-04. Text)</string> </key>
+                    <value>
+                      <list>
+                        <string>text_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box imagebox (4-05. Image)</string> </key>
+                    <value>
+                      <list>
+                        <string>image_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box linkbox (4-06. Link)</string> </key>
+                    <value>
+                      <list>
+                        <string>link_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box loginbox(4-09. Login)</string> </key>
+                    <value>
+                      <list>
+                        <string>login_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box searchbox (4-10. Search)</string> </key>
+                    <value>
+                      <list>
+                        <string>search_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box sidemenu1 (4-01a. Side menu 1)</string> </key>
+                    <value>
+                      <list>
+                        <string>side_menu_1</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box sidemenu1 (Subsections)</string> </key>
+                    <value>
+                      <list>
+                        <string>subsection_list</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box sidemenu2 (4-01b. Side menu 2)</string> </key>
+                    <value>
+                      <list>
+                        <string>side_menu_2</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box sidemenu3 (4-01c. Side menu 3)</string> </key>
+                    <value>
+                      <list>
+                        <string>side_menu_3</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box tablebox (4-07. Table)</string> </key>
+                    <value>
+                      <list>
+                        <string>table_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box videobox (4-11. Video)</string> </key>
+                    <value>
+                      <list>
+                        <string>video_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box webtemplatebox (4-13a. Webtemplate)</string> </key>
+                    <value>
+                      <list>
+                        <string>web_template_box</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_web_multiflex5_demo_layout</string> </value>
+        </item>
+        <item>
+            <key> <string>method</string> </key>
+            <value> <string>POST</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>pt</string> </key>
+            <value> <string>template_erp5_multiflex5</string> </value>
+        </item>
+        <item>
+            <key> <string>row_length</string> </key>
+            <value> <int>4</int> </value>
+        </item>
+        <item>
+            <key> <string>stored_encoding</string> </key>
+            <value> <string>UTF-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Multiflex5 Demo Layout</string> </value>
+        </item>
+        <item>
+            <key> <string>unicode_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

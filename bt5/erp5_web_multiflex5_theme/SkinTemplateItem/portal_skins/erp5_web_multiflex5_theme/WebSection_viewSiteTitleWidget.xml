@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>web_section_ram_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block replace="nothing">\n
+  <!--\n
+  This widget displays the title of curent Web Site.\n
+\n
+  Although the title represents the web site title,\n
+  it is actually taken from the \'layout_header_title\' \n
+  property of the current section so that it is \n
+  possible to override certain sections of the site\n
+  with special titles (ex. Some Site - BETA SECTION)\n
+\n
+  The moto is taken from the \'layout_header_moto\'\n
+  property of the section for similar reasons.\n
+\n
+  The URL points to the site root.\n
+\n
+  TODO:\n
+    - make sure translation is possible or working\n
+  -->\n
+</tal:block>\n
+\n
+<tal:block tal:define="current_web_section python:request.get(\'current_web_section\', here);\n
+                       current_web_section_header_title python:current_web_section.getLayoutProperty(\'layout_header_title\');\n
+                       current_web_site python:request.get(\'current_web_site\', here);">\n
+  <a class="sitelogo"\n
+     href="#"\n
+     title="Home"\n
+     tal:attributes="href current_web_site/absolute_url;\n
+                     title python:current_web_site.getLayoutProperty(\'layout_header_title\')"></a> <!-- Make a script for search an image who have the site in follow_up / install DMS-->\n
+  <div class="sitename">\n
+  <h1><a href="#"\n
+         title="Home"\n
+         tal:content="current_web_section_header_title"\n
+         tal:attributes="href current_web_site/absolute_url;\n
+                         title current_web_section_header_title">Site Name</a></h1>\n
+  <h2 tal:content="python:current_web_section.getLayoutProperty(\'layout_header_moto\')">Open Source Designs</h2>\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_viewSiteTitleWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

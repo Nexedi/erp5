@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>web_section_user_ram_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block replace="nothing">\n
+  <!--\n
+  This widget displays the list of Sections contained in the current context.\n
+  It uses the properties defined on sections to decide whether \n
+\n
+  TODO:\n
+    - make sure translation is possible or working\n
+    - make sure URLs are correct\n
+    - use generic method (erp5_web) to retrieve the list of subsections\n
+    - make it hierarchic\n
+  -->\n
+</tal:block>\n
+\n
+<tal:block tal:define="current_web_site python:request.get(\'current_web_site\', here);\n
+                       menu_item_list python:current_web_site.WebSection_getSiteMapTree(depth=2)">\n
+\n
+<ul tal:repeat="menu_item menu_item_list">\n
+  <li tal:condition="menu_item/subsection"><a href="#" tal:attributes="href menu_item/url"\n
+          tal:content="menu_item/translated_title">Drop-down Menu<!--[if IE 7]><!--></a><!--<![endif]-->\n
+    <!--[if lte IE 6]><table><tr><td><![endif]-->\n
+    <ul>\n
+      <li tal:repeat="sub_item menu_item/subsection">\n
+        <a href="#" tal:attributes="href sub_item/url" tal:content="sub_item/translated_title">Menu subitem 1</a>\n
+      </li>\n
+    </ul>\n
+    <!--[if lte IE 6]></td></tr></table></a><![endif]-->\n
+  </li>\n
+  <li tal:condition="not:menu_item/subsection"><a href="#" tal:attributes="href menu_item/url" \n
+          tal:content="menu_item/translated_title">Overview</a></li>\n
+</ul>\n
+\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_viewNavigationWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

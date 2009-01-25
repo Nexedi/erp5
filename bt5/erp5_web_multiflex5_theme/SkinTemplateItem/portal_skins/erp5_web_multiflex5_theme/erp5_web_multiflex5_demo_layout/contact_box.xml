@@ -1,0 +1,347 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="EditorField" module="Products.ERP5Form.EditorField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>contact_box</string> </value>
+        </item>
+        <item>
+            <key> <string>message_values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>external_validator_failed</string> </key>
+                    <value> <string>The input failed the external validator.</string> </value>
+                </item>
+                <item>
+                    <key> <string>line_too_long</string> </key>
+                    <value> <string>A line was too long.</string> </value>
+                </item>
+                <item>
+                    <key> <string>required_not_found</string> </key>
+                    <value> <string>Input is required but no input given.</string> </value>
+                </item>
+                <item>
+                    <key> <string>too_long</string> </key>
+                    <value> <string>You entered too many characters.</string> </value>
+                </item>
+                <item>
+                    <key> <string>too_many_lines</string> </key>
+                    <value> <string>You entered too many lines.</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>overrides</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>height</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>text_editor</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>tales</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>height</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>text_editor</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<div class="contactform">\n
+<form method="post" action="index.html">\n
+<fieldset><legend>&nbsp;CONTACT DETAILS&nbsp;</legend>\n
+<p><label for="contact_title_4" class="left">Title:</label>\n
+<select name="contact_title" id="contact_title_4" class="combo">\n
+<option value="choose"> Select... </option>\n
+<option value="mrs"> Mrs. </option>\n
+<option value="mr"> Mr. </option>\n
+<option value="dr"> Dr. </option></select></p>\n
+<p><label for="contact_firstname_4" class="left">First name:</label>\n
+<input type="text" name="contact_firstname" id="contact_firstname_4" class="field" value="" tabindex="1" /></p>\n
+<p><label for="contact_familyname_4" class="left">Family name:</label>\n
+<input type="text" name="contact_familyname" id="contact_familyname_4" class="field" value="" tabindex="1" /></p>\n
+<p><label for="contact_street_4" class="left">Street:</label>\n
+<input type="text" name="contact_street" id="contact_street_4" class="field" value="" tabindex="1" /></p>\n
+<p><label for="contact_postalcode_4" class="left">Postal code:</label>\n
+<input type="text" name="contact_postalcode" id="contact_postalcode_4" class="field" value="" tabindex="1" /></p>\n
+<p><label for="contact_city_4" class="left">City:</label>\n
+<input type="text" name="contact_city" id="contact_city_4" class="field" value="" tabindex="1" /></p>\n
+<p><label for="contact_country_4" class="left">Country:</label>\n
+<select name="contact_country" id="contact_country_4" class="combo">\n
+<option value="choose"> Select... </option>\n
+<option value="Sweden"> Sweden </option>\n
+<option value="United States"> United States </option>\n
+<option value="China"> China </option></select></p>\n
+<p><label for="contact_phone_4" class="left">Phone:</label>\n
+<input type="text" name="contact_phone" id="contact_phone_4" class="field" value="" tabindex="2" /></p>\n
+<p><label for="contact_email_4" class="left">Email:</label>\n
+<input type="text" name="contact_email" id="contact_email_4" class="field" value="" tabindex="2" /></p>\n
+<p><label for="contact_url_4" class="left">Website:</label>\n
+<input type="text" name="contact_url" id="contact_url_4" class="field" value="" tabindex="3" /></p>\n
+</fieldset>\n
+<fieldset><legend>&nbsp;MESSAGE DETAILS&nbsp;</legend>\n
+<p><label for="contact_subject_4" class="left">Subject:</label>\n
+<input type="text" name="contact_subject" id="contact_subject_4" class="field" value="" tabindex="4" /></p>\n
+<p><label for="contact_urgency_4" class="left">Please reply:</label>\n
+<select name="contact_urgency" id="contact_urgency_4" class="combo">\n
+<option value="choose"> Select... </option>\n
+<option value="today"> Latest today </option>\n
+<option value="tomorrow"> Latest tomorrow </option>\n
+<option value="threedays"> Latest in 3 days </option>\n
+<option value="week"> Latest in a week </option>\n
+<option value="month"> Latest in a month </option></select></p>\n
+<p><label for="contact_message_4" class="left">Message:</label>\n
+<textarea name="contact_message" id="contact_message_4" cols="45" rows="10" tabindex="5"></textarea></p>\n
+<p><input type="submit" name="submit" id="submit_4" class="button" value="Send message" tabindex="6" /></p>\n
+</fieldset>\n
+</form>\n
+</div>
+
+]]></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>height</string> </key>
+                    <value> <int>5</int> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>text_editor</string> </key>
+                    <value> <string>text_area</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>subsection_box</string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
+                    <value> <int>40</int> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>This layout can be used to display sections or pages.</string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>encoding</string> </key>
+            <value> <string>UTF-8</string> </value>
+        </item>
+        <item>
+            <key> <string>enctype</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <list>
+                <string>header header-top</string>
+                <string>header header-bottom</string>
+                <string>navbar navbar-left</string>
+                <string>headline</string>
+                <string>footer</string>
+                <string>subcontent subcontent-box sidemenu1 (Subsections)</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>groups</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>footer</string> </key>
+                    <value>
+                      <list>
+                        <string>footer_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>header header-bottom</string> </key>
+                    <value>
+                      <list>
+                        <string>breadcrumb_box</string>
+                        <string>search_bar</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>header header-top</string> </key>
+                    <value>
+                      <list>
+                        <string>site_title_box</string>
+                        <string>rss_box</string>
+                        <string>language_box</string>
+                        <string>global_navigation_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>headline</string> </key>
+                    <value>
+                      <list>
+                        <string>page_title_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>navbar navbar-left</string> </key>
+                    <value>
+                      <list>
+                        <string>navigation_bar</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box sidemenu1 (Subsections)</string> </key>
+                    <value>
+                      <list>
+                        <string>subsection_list</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_web_multiflex5_layout</string> </value>
+        </item>
+        <item>
+            <key> <string>method</string> </key>
+            <value> <string>POST</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>pt</string> </key>
+            <value> <string>template_erp5_multiflex5</string> </value>
+        </item>
+        <item>
+            <key> <string>row_length</string> </key>
+            <value> <int>4</int> </value>
+        </item>
+        <item>
+            <key> <string>stored_encoding</string> </key>
+            <value> <string>UTF-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Multiflex5 Layout</string> </value>
+        </item>
+        <item>
+            <key> <string>unicode_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

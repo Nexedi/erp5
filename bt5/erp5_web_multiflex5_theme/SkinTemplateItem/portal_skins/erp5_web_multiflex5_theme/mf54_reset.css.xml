@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
+\n
+/****************************************************************/\n
+/*   Design:   Multiflex-5.3                                    */\n
+/*   File:     Reset all grid and content styles                */\n
+/*--------------------------------------------------------------*/\n
+/*   Design:   www.1234.info                                    */\n
+/*   Date:     January 22, 2008                                 */\n
+/*--------------------------------------------------------------*/\n
+/*   License:  Fully open source without restrictions.          */\n
+/*             Please keep footer credits with the words        */\n
+/*             "Design by 1234.info". Thank you!                */\n
+/****************************************************************/\n
+\n
+/***********/\n
+/*  RESET  */\n
+/***********/\n
+\n
+html{color:rgb(0,0,0); background:rgb(255,255,255);}\n
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0; padding:0;}\n
+table{border-collapse:collapse; border-spacing:0;}\n
+fieldset,img{border:0;}\n
+address,caption,cite,code,dfn,em,strong,th,var{font-style:normal; font-weight:normal;}\n
+li{list-style:none;}\n
+caption,th{text-align:left;}\n
+h1,h2,h3,h4,h5,h6{font-size:100%; font-weight:normal;}\n
+q:before,q:after{content:\'\';}\n
+abbr,acronym {border:0; font-variant:normal;}\n
+sup {vertical-align:text-top;} /* to preserve line-height and selector appearance */\n
+sub {vertical-align:text-bottom;} /* to preserve line-height and selector appearance */\n
+input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;} /* to preserve line-height and selector appearance */\n
+legend{color:rgb(0,0,0);} /*because legend doesn\'t inherit in IE */
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>mf54_reset.css</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
