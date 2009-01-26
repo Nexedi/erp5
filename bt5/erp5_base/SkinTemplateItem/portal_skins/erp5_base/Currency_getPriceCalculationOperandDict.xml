@@ -76,12 +76,14 @@ def sort_by_date(a, b):\n
 if movement is None:\n
   return context.Resource_getPriceCalculationOperandDict(**kw)\n
 else:\n
+  # sort_method can already exist in kw.
+  kw[\'sort_method\'] = sort_by_date\n
   predicate_list = context.portal_domains.searchPredicateList(\n
                  context=movement,\n
             portal_type=\'Currency Exchange Line\',\n
                 validation_state=\'validated\',\n
                 test =1,\n
-                 sort_method=sort_by_date,**kw )\n
+                 **kw )\n
   \n
  \n
 \n
