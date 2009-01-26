@@ -76,22 +76,21 @@ def sort_by_date(a, b):\n
 if movement is None:\n
   return context.Resource_getPriceCalculationOperandDict(**kw)\n
 else:\n
-  # sort_method can already exist in kw.
+  # sort_method can already exist in kw.\n
   kw[\'sort_method\'] = sort_by_date\n
   predicate_list = context.portal_domains.searchPredicateList(\n
-                 context=movement,\n
-            portal_type=\'Currency Exchange Line\',\n
-                validation_state=\'validated\',\n
-                test =1,\n
-                 **kw )\n
-  \n
- \n
+      context=movement,\n
+      portal_type=\'Currency Exchange Line\',\n
+      validation_state=\'validated\',\n
+      test=1,\n
+      **kw)\n
 \n
-# For each predicate(i.e: Currency Exchange Line) found, get the exchange rate\n
-# with the reference currency\n
+  # For each predicate(i.e: Currency Exchange Line) found, get the exchange rate\n
+  # with the reference currency\n
   for predicate in predicate_list:\n
-     if predicate.Resource_getPriceCalculationOperandDict(movement=predicate,**kw) is not None:\n
-       return predicate.Resource_getPriceCalculationOperandDict(movement=predicate,**kw)\n
+    operand_dict = predicate.Resource_getPriceCalculationOperandDict(movement=predicate, **kw)\n
+    if operand_dict is not None:\n
+      return operand_dict\n
 
 
 ]]></string> </value>
@@ -104,7 +103,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>default=None,movement=None, REQUEST=None, **kw</string> </value>
+            <value> <string>default=None, movement=None, REQUEST=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -139,9 +138,11 @@ else:\n
                             <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>_write_</string>
                             <string>predicate_list</string>
                             <string>_getiter_</string>
                             <string>predicate</string>
+                            <string>operand_dict</string>
                           </tuple>
                         </value>
                     </item>
