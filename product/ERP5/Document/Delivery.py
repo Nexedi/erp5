@@ -119,17 +119,23 @@ class Delivery(XMLObject, ImmobilisationDelivery):
         So if the order is not in the catalog, getTotalPrice(fast=1)
         will return 0, this is not a bug.
       """
-      if not fast :
+      result = None
+      if not fast:
         kw.setdefault( 'portal_type',
                        self.getPortalDeliveryMovementTypeList())
-        return sum([ line.getTotalPrice(fast=0) for line in
-                        self.objectValues(**kw) ])
-      kw['explanation_uid'] = self.getUid()
-      kw.update(self.portal_catalog.buildSQLQuery(**kw))
-      if src__:
-        return self.Delivery_zGetTotal(src__=1, **kw)
-      aggregate = self.Delivery_zGetTotal(**kw)[0]
-      return aggregate.total_price or 0
+        result = sum([ line.getTotalPrice(fast=0) for line in
+                       self.objectValues(**kw) ])
+      else:
+        kw['explanation_uid'] = self.getUid()
+        kw.update(self.portal_catalog.buildSQLQuery(**kw))
+        if src__:
+          return self.Delivery_zGetTotal(src__=1, **kw)
+        aggregate = self.Delivery_zGetTotal(**kw)[0]
+        result = aggregate.total_price or 0
+      method = self._getTypeBasedMethod('getTotalPrice')
+      if method is None:
+        return method(result)
+      return result
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getTotalNetPrice')

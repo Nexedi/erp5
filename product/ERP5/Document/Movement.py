@@ -306,7 +306,11 @@ class Movement(XMLObject, Amount):
       default = None
     
     tmp_context = self.asContext(context=context, REQUEST=REQUEST, **kw)
-    return self._getTotalPrice(default=default, context=tmp_context, fast=fast, **kw)
+    result = self._getTotalPrice(default=default, context=tmp_context, fast=fast, **kw)
+    method = self._getTypeBasedMethod('getTotalPrice')
+    if method is None:
+      return result
+    return method(result)
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getTotalQuantity')
