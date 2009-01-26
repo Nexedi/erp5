@@ -19,6 +19,7 @@ Credit Card | view
 Currency Exchange Line | view
 Currency Module | view
 Currency | view
+Day Movement Group | view
 Delivery Builder | view
 Delivery Builder | view_predicate_group
 Delivery Builder | view_profile
@@ -35,6 +36,7 @@ Image | download
 Image | fullsize_view
 Image | view
 Link | view
+Monthly Range Movement Group | view
 Notification Message Module | view
 Notification Message | list
 Notification Message | local_permission

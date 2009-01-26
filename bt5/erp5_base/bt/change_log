@@ -1,3 +1,7 @@
+2009-01-26 yusei
+* Added Monthly Range Movement Group.
+* Added a default view action to Day Movement Group.
+
 2009-01-22 yusei
 * Added bank_account_type category and use it in BankAccount_view.
 
