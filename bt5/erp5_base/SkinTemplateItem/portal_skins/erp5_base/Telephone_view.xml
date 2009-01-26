@@ -86,6 +86,7 @@
                       <list>
                         <string>my_telephone_country</string>
                         <string>my_telephone_area</string>
+                        <string>my_telephone_city</string>
                         <string>my_telephone_number</string>
                         <string>my_telephone_extension</string>
                       </list>

@@ -84,6 +84,7 @@
                       <list>
                         <string>my_preferred_telephone_default_country_number</string>
                         <string>my_preferred_telephone_default_area_number</string>
+                        <string>my_preferred_telephone_default_city_number</string>
                       </list>
                     </value>
                 </item>
