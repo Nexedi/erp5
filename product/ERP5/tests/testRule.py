@@ -47,9 +47,12 @@ class TestRuleMixin(TestOrderMixin):
     self.getRuleTool().newContent(portal_type="Order Rule",
         id='default_order_rule',
         reference='default_order_rule', version='1')
-    self.getRuleTool().newContent(portal_type="Delivery Rule",
+    delivery_rule = self.getRuleTool().newContent(portal_type="Delivery Rule",
         id='default_delivery_rule',
         reference='default_delivery_rule', version='1')
+    # at least one default_delivery_rule should be validated here to
+    # confirm Sale Packing List in afterSetUp()
+    delivery_rule.validate()
     # create packing list if necessary
     pl_module = self.getPortal().getDefaultModule(
         self.packing_list_portal_type)
