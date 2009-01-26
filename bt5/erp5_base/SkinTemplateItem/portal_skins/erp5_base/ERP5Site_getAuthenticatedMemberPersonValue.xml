@@ -64,8 +64,7 @@ found_user_list = context.portal_catalog(portal_type=\'Person\', \n
                                          reference=user_name)\n
 found_users = len(found_user_list)\n
 if found_users != 1:\n
-  # in an ERP5 system there can exists only one unique username\n
-  raise ValueError, "Found %s users for username \'%s\'" %(found_users, user_name)\n
+  return None\n
 \n
 return found_user_list[0].getObject()\n
 </string> </value>
@@ -111,7 +110,6 @@ return found_user_list[0].getObject()\n
                             <string>found_user_list</string>
                             <string>len</string>
                             <string>found_users</string>
-                            <string>ValueError</string>
                             <string>_getitem_</string>
                           </tuple>
                         </value>
