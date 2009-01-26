@@ -132,7 +132,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
           return self.Delivery_zGetTotal(src__=1, **kw)
         aggregate = self.Delivery_zGetTotal(**kw)[0]
         result = aggregate.total_price or 0
-      method = self._getTypeBasedMethod('getTotalPrice')
+      method = self._getTypeBasedMethod('convertTotalPrice')
       if method is not None:
         return method(result)
       return result

@@ -307,7 +307,7 @@ class Movement(XMLObject, Amount):
     
     tmp_context = self.asContext(context=context, REQUEST=REQUEST, **kw)
     result = self._getTotalPrice(default=default, context=tmp_context, fast=fast, **kw)
-    method = self._getTypeBasedMethod('getTotalPrice')
+    method = self._getTypeBasedMethod('convertTotalPrice')
     if method is None:
       return result
     return method(result)
