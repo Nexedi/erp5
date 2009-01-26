@@ -32,7 +32,7 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Base import Base
 
 from Products.ERP5.Document.Coordinate import Coordinate
-
+from zLOG import LOG
 import re
 
 class Telephone(Coordinate, Base):
@@ -71,12 +71,19 @@ class Telephone(Coordinate, Base):
   # The list is a priority list,
   # be carefull to add a new regex.
   regex_list = [
+    # Country, Area, City, Number, Extension*
+    "\+(?P<country>[\d ]+)(?P<toto>\(0\)|\ |\-)(?P<area>\d+)(\-|\ )(?P<city>\d+)(\-|\ )(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+
+    # Area, City, Number, Extension*
+    "^(\(0\)|0)?(?P<area>\d+)(\-|\ |\/)(?P<city>\d+)(\-|\ )(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+
     # Country, Area, Number, Extension*
     # +11(0)1-11111111/111      or +11(0)1-11111111/      or +11(0)1-11111111
     # +11(0)1-1111-1111/111      or +11(0)1-1111-1111/      or +11(0)1-1111-1111
     # + 11 (0)1-11 11 01 01/111 or + 11 (0)1-11 11 01 01/ or + 11 (0)1-11 11 01 01
     # +11 (0)11 1011 1100/111   or +11 (0)11 1011 1100/   or +11 (0)11 1011 1100
     "\+(?P<country>[\d\ ]*)\(0\)(?P<area>\d+)(\-|\ )(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+
 
     # Country, Area, Number, Extension*
     # +11-1-11111111/111 or +11-1-11111111/ or +11-1-11111111
@@ -215,7 +222,7 @@ class Telephone(Coordinate, Base):
     # (11-1) 1.111.111/111  or (11-1) 1.111.111/  or (11-1) 1.111.111
     "\((\+|)(?P<country>\d+)\-(?P<area>\d+)\)(\ |\-|)(?P<number>[\d\ \-\.]*)(?:\/)?(?P<ext>\d+|)",
 
-    # Country, area, number and extersion*
+    # Country, area, number and extension*
     # + 111-11-1110111/111 or + 111-11-1110111/ or + 111-11-1110111
     # +111-11-1110111/111  or +111-11-1110111/  or +111-11-1110111
     # +111/1/1111 1100/111 or +111/1/1111 1100/ or +111/1/1111 1100
@@ -263,14 +270,15 @@ class Telephone(Coordinate, Base):
 
     country = number_dict.get('country','')
     area = number_dict.get('area','')
+    city = number_dict.get('city','')
     number = number_dict.get('number','')
     extension = number_dict.get('ext','')
-
     if ((country in ['', None]) and \
         (area in ['', None]) and \
+        (city in ['', None]) and \
         (number in ['', None]) and \
         (extension in ['', None])):
-      country = area = number = extension = ''
+      country = area = city = number = extension = ''
     else:
       # Trying to get the country and area from dict, 
       # but if it fails must be get from preference
@@ -279,9 +287,12 @@ class Telephone(Coordinate, Base):
         country = preference_tool.getPreferredTelephoneDefaultCountryNumber('')
       if area in ['', None]:
         area = preference_tool.getPreferredTelephoneDefaultAreaNumber('')
+      if city in ['', None]:
+        city = preference_tool.getPreferredTelephoneDefaultCityNumber('')
 
       country =  country.strip()
       area = area.strip()
+      city = city.strip()
       number = number.strip()
       extension = extension.strip()
 
@@ -293,6 +304,7 @@ class Telephone(Coordinate, Base):
 
     self.edit(telephone_country = country,
               telephone_area = area,
+              telephone_city = city,
               telephone_number = number, 
               telephone_extension = extension)
    
@@ -310,6 +322,7 @@ class Telephone(Coordinate, Base):
     
     country = self.getTelephoneCountry('')
     area = self.getTelephoneArea('')
+    city = self.getTelephoneCity('')
     number = self.getTelephoneNumber('')
     extension = self.getTelephoneExtension('')
    
@@ -317,6 +330,7 @@ class Telephone(Coordinate, Base):
     # the method should to return blank.
     if ((country == '') and \
         (area == '') and \
+        (city == '') and \
         (number == '') and \
         (extension == '')): 
       return ''
@@ -326,6 +340,10 @@ class Telephone(Coordinate, Base):
     if notation not in [None, '']:
       notation = notation.replace('<country>',country)
       notation = notation.replace('<area>',area)
+      if city == "":
+        notation = notation.replace('<city>-', '')
+      else:        
+        notation = notation.replace('<city>',city)
       notation = notation.replace('<number>',number)
       notation = notation.replace('<ext>',extension)
 
@@ -349,6 +367,10 @@ class Telephone(Coordinate, Base):
     telephone_area = self.getTelephoneArea()
     if telephone_area is not None:
       url_string += telephone_area
+      
+    telephone_city = self.getTelephoneCity()
+    if telephone_city is not None:
+      url_string += telephone_city
 
     telephone_number = self.getTelephoneNumber()
     if telephone_number is not None:
@@ -373,8 +395,8 @@ class Telephone(Coordinate, Base):
       Returns the notation that will be used by asText method.
     """
     # The notation can be changed.
-    # But needs to have <country>, <area>, <number> and <ext>
-    return "+<country>(0)<area>-<number>/<ext>"
+    # But needs to have <country>, <area>, <city>, <number> and <ext>
+    return "+<country>(0)<area>-<city>-<number>/<ext>"
 
   def _getRegexList(self):
     """
