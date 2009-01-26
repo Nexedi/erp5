@@ -196,8 +196,8 @@ class DomainTool(BaseTool):
 #       LOG('searchPredicateList, result_list before test', 0,
 #           [x.getObject() for x in sql_result_list])
       for predicate in [x.getObject() for x in sql_result_list]:
-        if test==0 or predicate.test(
-                       context, 
+        if (not test) or predicate.test(
+                       context,
                        tested_base_category_list=tested_base_category_list):
           result_list.append(predicate)
 #       LOG('searchPredicateList, result_list before sort', 0, result_list)
