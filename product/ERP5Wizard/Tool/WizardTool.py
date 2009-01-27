@@ -383,23 +383,23 @@ class WizardTool(BaseTool):
     witch_tool = server.portal_witch
     return witch_tool
 
-  def callRemoteProxyMethod(self, distant_method, server_url=None, use_cache=1):
+  def callRemoteProxyMethod(self, distant_method, server_url=None, use_cache=1, **kw):
     """ Call proxy method on server. """
     # set real method_id
     form = self.REQUEST.form
     configurator_user_preferred_language = self.getConfiguratorUserPreferredLanguage()
-    def wrapper(distant_method):
+    def wrapper(distant_method, **kw):
       form['method_id'] = distant_method
-      return self._callRemoteMethod('proxyMethodHandler')['data']
+      return self._callRemoteMethod('proxyMethodHandler', **kw)['data']
     if use_cache:
       wrapper = CachingMethod(wrapper,
                               id = 'callRemoteProxyMethod_%s_%s' 
                                      %(distant_method, configurator_user_preferred_language),
                               cache_factory = 'erp5_ui_medium')
-    rc = wrapper(distant_method)
+    rc = wrapper(distant_method, **kw)
     return rc
 
-  def _callRemoteMethod(self, distant_method, server_url=None, wrap_result=1):
+  def _callRemoteMethod(self, distant_method, server_url=None, wrap_result=1, **kw):
     """ Call remote method on server and get result. """
     result_call = GeneratorCall()
     if server_url is None:
@@ -407,6 +407,8 @@ class WizardTool(BaseTool):
       server_url = self.getServerUrl() + self.getServerRoot()
     witch_tool = self._getRemoteWitchTool(server_url)
     parameter_dict = self.REQUEST.form
+    # add remote method arguments
+    parameter_dict['method_kw'] = kw
     ## add client arguments
     self._updateParameterDictWithServerInfo(parameter_dict)
     ## handle file upload
