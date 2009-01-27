@@ -57,6 +57,10 @@
 
 from Products.PythonScripts.standard import Object\n
 from Products.ZSQLCatalog.SQLCatalog import Query\n
+\n
+portal = context.getPortalObject()\n
+category_tool = portal.portal_catalog\n
+\n
 request = container.REQUEST\n
 from_date = request.get(\'from_date\', None)\n
 to_date = request.get(\'at_date\', None)\n
@@ -72,8 +76,8 @@ catalog_params = {}\n
 \n
 # get all organisation for the selected group\n
 if group not in (\'\', None):\n
-  group_uid = context.portal_categories.group[group].getUid()\n
-  organisation_uid_list = [x.uid for x in context.portal_catalog(portal_type="Organisation", default_group_uid=group_uid)]\n
+  group_uid = category_tool.group.restrictedTraverse(group).getUid()\n
+  organisation_uid_list = [x.uid for x in portal.portal_catalog(portal_type="Organisation", default_group_uid=group_uid)]\n
   if report_type == "sale":\n
     catalog_params[\'default_source_section_uid\'] = organisation_uid_list\n
   elif report_type:\n
@@ -81,13 +85,13 @@ if group not in (\'\', None):\n
     \n
 # add category params if defined\n
 if incoterm not in (\'\', None):\n
-  incoterm_uid = context.portal_categories.incoterm[incoterm].getUid()\n
+  incoterm_uid = category_tool.incoterm.restrictedTraverse(incoterm).getUid()\n
   catalog_params[\'default_incoterm_uid\'] = incoterm_uid\n
 if order not in (\'\', None):\n
-  order_uid = context.portal_categories.order[order].getUid()\n
+  order_uid = category_tool.order.restrictedTraverse(order).getUid()\n
   catalog_params[\'default_order_uid\'] = order_uid\n
 if delivery_mode not in (\'\', None):\n
-  delivery_mode_uid = context.portal_categories.delivery_mode[delivery_mode].getUid()\n
+  delivery_mode_uid = category_tool.delivery_mode.restrictedTraverse(delivery_mode).getUid()\n
   catalog_params[\'default_delivery_mode_uid\'] = delivery_mode_uid\n
 \n
 # compute sql params, we group and order by date and portal type\n
@@ -339,6 +343,9 @@ return line_list\n
                             <string>Products.ZSQLCatalog.SQLCatalog</string>
                             <string>Query</string>
                             <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>category_tool</string>
                             <string>container</string>
                             <string>request</string>
                             <string>None</string>
@@ -351,8 +358,6 @@ return line_list\n
                             <string>order</string>
                             <string>delivery_mode</string>
                             <string>catalog_params</string>
-                            <string>_getitem_</string>
-                            <string>context</string>
                             <string>group_uid</string>
                             <string>append</string>
                             <string>$append0</string>
@@ -374,6 +379,7 @@ return line_list\n
                             <string>result</string>
                             <string>period</string>
                             <string>client_title</string>
+                            <string>_getitem_</string>
                             <string>line_dict</string>
                             <string>line</string>
                             <string>product_title</string>
