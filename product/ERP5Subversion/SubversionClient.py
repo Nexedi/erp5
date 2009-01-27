@@ -54,34 +54,41 @@ class SubversionTimeoutError(SubversionError):
   """Raised when a Subversion transaction is too long.
   """
   pass
+
+class SubversionLoginError(SubversionError):
+  """Raised when an authentication is required.
+  """
+  # Declarative Security
+  security = ClassSecurityInfo()
+  def __init__(self, realm = None):
+    self._realm = realm
+
+  security.declarePublic('getRealm')
+  def getRealm(self):
+    return self._realm
+
+InitializeClass(SubversionLoginError)
+allow_class(SubversionLoginError)
+  
+    
+class SubversionSSLTrustError(SubversionError):
+  """Raised when a SSL certificate is not trusted.
+  """
+  # Declarative Security
+  security = ClassSecurityInfo()
+  
+  def __init__(self, trust_dict = None):
+    self._trust_dict = trust_dict
+    
+  security.declarePublic('getTrustDict')
+  def getTrustDict(self):
+    return self._trust_dict
+  
+InitializeClass(SubversionSSLTrustError)
+allow_class(SubversionSSLTrustError)
     
 try:
   import pysvn
-  
-  class SubversionLoginError(SubversionError):
-    """Raised when an authentication is required.
-    """
-    # Declarative Security
-    security = ClassSecurityInfo()
-    def __init__(self, realm = None):
-      self._realm = realm
-  
-    security.declarePublic('getRealm')
-    def getRealm(self):
-      return self._realm
-      
-  class SubversionSSLTrustError(SubversionError):
-    """Raised when a SSL certificate is not trusted.
-    """
-    # Declarative Security
-    security = ClassSecurityInfo()
-    
-    def __init__(self, trust_dict = None):
-      self._trust_dict = trust_dict
-      
-    security.declarePublic('getTrustDict')
-    def getTrustDict(self):
-      return self._trust_dict
   
   class Callback:
     """The base class for callback functions.
@@ -370,11 +377,6 @@ try:
   def newSubversionClient(container, **kw):
     return SubversionClient(container, **kw).__of__(container)
     
-  InitializeClass(SubversionSSLTrustError)
-  allow_class(SubversionSSLTrustError)
-  InitializeClass(SubversionLoginError)
-  allow_class(SubversionLoginError)
-  
 except ImportError:
   from zLOG import LOG, WARNING
   LOG('SubversionTool', WARNING,
