@@ -29,7 +29,9 @@
 
 from Acquisition import Implicit
 
-import time, os
+import time
+import os
+import sys
 from Products.ERP5Type.Utils import convertToUpperCase
 from MethodObject import Method
 from Globals import InitializeClass
@@ -376,6 +378,7 @@ try:
 except ImportError:
   from zLOG import LOG, WARNING
   LOG('SubversionTool', WARNING,
-      'could not import pysvn; until pysvn is installed properly, this tool will not work.')
+      'could not import pysvn; until pysvn is installed properly,'
+      ' this tool will not work.', error=sys.exc_info())
   def newSubversionClient(container, **kw):
     raise SubversionInstallationError, 'pysvn library is not installed'
