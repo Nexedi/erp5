@@ -3,6 +3,8 @@ agent_privilege
 bank_account_type
 collect_order_group
 currency_exchange_type
+destination_carrier
+destination_referral
 destination_region
 divergence_scope
 economical_class
@@ -25,6 +27,8 @@ salary_level
 site
 skill
 social_form
+source_carrier
+source_referral
 source_region
 specialise
 subordination

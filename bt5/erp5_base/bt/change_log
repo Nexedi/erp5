@@ -1,3 +1,6 @@
+2009-01-27 yusei
+* Added destination_carrier, destination_referral, source_carrier, source_referral categories which are defined in Arrow property sheet.
+
 2009-01-26 yusei
 * Added Monthly Range Movement Group.
 * Added a default view action to Day Movement Group.
