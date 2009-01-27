@@ -10,28 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_count</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_folder_handler</string> </key>
-            <value> <string>CMFBTreeFolderHandler</string> </value>
-        </item>
-        <item>
-            <key> <string>_mt_index</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_tree</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>215</string> </value>
         </item>
@@ -45,31 +23,9 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string encoding="base64">5qmf5qKw6KOF572u44O75bel5YW35Zmo5YW3</string> </value>
+            <value> <string>負ののれん</string> </value>
         </item>
       </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="Length" module="BTrees.Length"/>
-    </pickle>
-    <pickle> <int>0</int> </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="OOBTree" module="BTrees._OOBTree"/>
-    </pickle>
-    <pickle>
-      <none/>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="OOBTree" module="BTrees._OOBTree"/>
-    </pickle>
-    <pickle>
-      <none/>
     </pickle>
   </record>
 </ZopeData>
