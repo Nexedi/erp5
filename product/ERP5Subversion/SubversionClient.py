@@ -264,7 +264,7 @@ try:
       # Since plain Python classes are not convenient in 
       # Zope, convert the objects.
       try:
-      	status_list = [Status(x) for x in self.client.status(path=path, **kw)]
+        status_list = [Status(x) for x in self.client.status(path=path, **kw)]
       except pysvn.ClientError, error:
         excep = self.getException()
         if excep:

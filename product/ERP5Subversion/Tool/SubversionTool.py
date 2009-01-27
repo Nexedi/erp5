@@ -1083,7 +1083,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
       # can be (normal, added, modified, deleted, conflicted, unversioned)
       status = str(status_obj.getTextStatus())
       if str(status_obj.getReposTextStatus()) != 'none':
-	status = "outdated"
+        status = "outdated"
       if (show_unmodified or status != "normal") and status != "unversioned":
         something_modified = True
         # Get object path
