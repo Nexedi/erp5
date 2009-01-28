@@ -44,6 +44,10 @@
             <value> <string>Category</string> </value>
         </item>
         <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>その他の販売管理費</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string>その他の販売管理費</string> </value>
         </item>

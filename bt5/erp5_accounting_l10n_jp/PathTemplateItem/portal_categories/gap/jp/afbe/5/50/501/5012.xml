@@ -44,6 +44,10 @@
             <value> <string>Category</string> </value>
         </item>
         <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>広告宣伝費等</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string>広告宣伝費等</string> </value>
         </item>

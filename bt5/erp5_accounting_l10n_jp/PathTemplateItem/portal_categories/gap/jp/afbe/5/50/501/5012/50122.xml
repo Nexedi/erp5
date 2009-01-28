@@ -22,6 +22,10 @@
             <value> <string>Category</string> </value>
         </item>
         <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>販売手数料</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string>販売手数料</string> </value>
         </item>
