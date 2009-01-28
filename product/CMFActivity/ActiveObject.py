@@ -158,15 +158,9 @@ class ActiveObject(ExtensionClass.Base):
     """Tells if there is pending activities for this object.
     """
     activity_tool = getToolByName(self, 'portal_activities', None)
-    if activity_tool is None: return 0 # Do nothing if no portal_activities
-    try:
-      return activity_tool.hasActivity(self, **kw)
-    except ConflictError:
-      raise
-    except:
-      # If the portal_activities were not created
-      # there can not be any activity
-      return 0
+    if activity_tool is None:
+      return 0 # Do nothing if no portal_activities
+    return activity_tool.hasActivity(self, **kw)
 
   security.declareProtected( permissions.View, 'hasErrorActivity' )
   def hasErrorActivity(self, **kw):
