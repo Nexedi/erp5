@@ -1257,8 +1257,11 @@ class ERP5Generator(PortalGenerator):
 
     # Add CMF Report Tool
     if not p.hasObject('portal_report'):
-      addTool = p.manage_addProduct['CMFReportTool'].manage_addTool
-      addTool('CMF Report Tool', None)
+      try:
+        addTool = p.manage_addProduct['CMFReportTool'].manage_addTool
+        addTool('CMF Report Tool', None)
+      except AttributeError:
+        pass
 
     # Add ERP5 Tools
     addTool = p.manage_addProduct['ERP5'].manage_addTool
