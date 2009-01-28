@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>view_invoice</string> </value>
+            <value> <string>view_confirmed_invoice</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -47,7 +47,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>2.0</float> </value>
+            <value> <float>0.5</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -87,7 +87,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: object.getSimulationState() != \'confirmed\'</string> </value>
+            <value> <string>python: object.getSimulationState() == \'confirmed\'</string> </value>
         </item>
       </dictionary>
     </pickle>
