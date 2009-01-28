@@ -367,7 +367,7 @@ class Signature(Folder, SyncCode):
       set the XML corresponding to the object
     """
     self.xml = xml
-    if self.xml != None:
+    if self.xml is not None:
       self.setTempXML(None) # We make sure that the xml will not be erased
       self.setMD5(xml)
 
@@ -375,10 +375,8 @@ class Signature(Folder, SyncCode):
     """
       get the XML corresponding to the object
     """
-    xml =  getattr(self, 'xml', None)
-    if xml == '':
-      xml = None
-    return xml
+    #Never return empty string
+    return getattr(self, 'xml', None) or None
 
   def setTempXML(self, xml):
     """
@@ -443,7 +441,7 @@ class Signature(Folder, SyncCode):
     """
       set the rid
     """
-    if rid is type(u'a'):
+    if isinstance(rid, unicode):
       rid = rid.encode('utf-8')
     self.rid = rid
 
@@ -457,7 +455,7 @@ class Signature(Folder, SyncCode):
     """
       set the id
     """
-    if id is type(u'a'):
+    if isinstance(id, unicode):
       id = id.encode('utf-8')
     self.id = id
 
@@ -477,7 +475,7 @@ class Signature(Folder, SyncCode):
     """
       set the id of the object associated to this signature
     """
-    if id is type(u'a'):
+    if isinstance(id, unicode):
       id = id.encode('utf-8')
     self.object_id = id
 
