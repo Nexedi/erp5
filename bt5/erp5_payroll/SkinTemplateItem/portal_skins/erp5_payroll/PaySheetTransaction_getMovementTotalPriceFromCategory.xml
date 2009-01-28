@@ -53,33 +53,23 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if paysheet is None:\n
-  paysheet = context\n
+            <value> <string>\'\'\'\n
+  return the amount composed by all amount of paysheet line wich category of\n
+  category_list parameter is in variation_category_list of the PaySheet line \n
+  and wich has a base_contribution in the base_contribution_list\n
+\'\'\'\n
 \n
-portal = context.getPortalObject();\n
-portal_simulation = portal.portal_simulation\n
+total_price = 0\n
+movement_list = context.getMovementList(portal_type=(\'Pay Sheet Line\', \'Pay Sheet Cell\'))\n
+for movement in movement_list:\n
+  if movement.isMemberOf(tax_category) and movement.isMemberOf(base_contribution):\n
+    total_price += movement.getTotalPrice()\n
 \n
-params = {\n
-    \'section_uid\' : paysheet.getDestinationSectionUid(),\n
-    \'node_uid\' : paysheet.getSourceSectionUid(),\n
-    \'tax_category_uid\' :\\\n
-        portal.portal_categories.tax_category.employee_share.getUid(),\n
-    \'to_date\' : paysheet.getStartDate(),\n
-    \'from_date\' : DateTime(paysheet.getStartDate().year(), 1, 1),\n
-    \'simulation_state\'    : [\'confirmed\', \'stopped\', \'delivered\'],\n
-    \'precision\' : paysheet.getPriceCurrencyValue().getQuantityPrecision(),\n
-    \'resource_category\' : [\'base_amount/deductible_tax\', ],\n
-  }\n
+# Get Precision\n
+precision = context.getPriceCurrencyValue().getQuantityPrecision()\n
 \n
-\n
-\n
-deductible_tax = portal_simulation.getInventoryAssetPrice(**params)\n
-over_time = paysheet.PaySheetTransaction_getYearToDateOvertimeAmount()\n
-gross_salary = paysheet.PaySheetTransaction_getYearToDateGrossSalary()\n
-\n
-taxable_net_pay = gross_salary - over_time - deductible_tax\n
-\n
-return taxable_net_pay\n
+amount = round(total_price, precision)\n
+return amount\n
 </string> </value>
         </item>
         <item>
@@ -90,7 +80,7 @@ return taxable_net_pay\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>paysheet=None</string> </value>
+            <value> <string>base_contribution=None, tax_category=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -110,25 +100,24 @@ return taxable_net_pay\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>paysheet</string>
-                            <string>None</string>
-                            <string>context</string>
+                            <string>base_contribution</string>
+                            <string>tax_category</string>
+                            <string>total_price</string>
                             <string>_getattr_</string>
-                            <string>portal</string>
-                            <string>portal_simulation</string>
-                            <string>DateTime</string>
-                            <string>params</string>
-                            <string>_apply_</string>
-                            <string>deductible_tax</string>
-                            <string>over_time</string>
-                            <string>gross_salary</string>
-                            <string>taxable_net_pay</string>
+                            <string>context</string>
+                            <string>movement_list</string>
+                            <string>_getiter_</string>
+                            <string>movement</string>
+                            <string>_inplacevar_</string>
+                            <string>precision</string>
+                            <string>round</string>
+                            <string>amount</string>
                           </tuple>
                         </value>
                     </item>
@@ -142,12 +131,13 @@ return taxable_net_pay\n
             <value>
               <tuple>
                 <none/>
+                <none/>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PaySheetTransaction_getYearToDateTaxableNetPay</string> </value>
+            <value> <string>PaySheetTransaction_getMovementTotalPriceFromCategory</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
