@@ -72,11 +72,11 @@ class Telephone(Coordinate, Base):
   # be carefull to add a new regex.
   regex_list = [
     # Country, Area, City, Number, Extension*
-    "\+(?P<country>[\d ]+)(?P<toto>\(0\)|\ |\-)(?P<area>\d+)(\-|\ )(?P<city>\d+)(\-|\ )(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
+    "\+(?P<country>[\d ]+)(\(0\)|\ |\-)(?P<area>\d+)(\-|\ )(?P<city>\d+)(\-|\ )(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
 
     # Area, City, Number, Extension*
     "^(\(0\)|0)?(?P<area>\d+)(\-|\ |\/)(?P<city>\d+)(\-|\ )(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
-
+    "^\+(\(0\)|0)+(?P<area>\d+)(\-|\ |\/)(?P<city>\d+)(\-|\ )(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
     # Country, Area, Number, Extension*
     # +11(0)1-11111111/111      or +11(0)1-11111111/      or +11(0)1-11111111
     # +11(0)1-1111-1111/111      or +11(0)1-1111-1111/      or +11(0)1-1111-1111

@@ -933,6 +933,9 @@ class TestERP5Base(ERP5TypeTestCase):
       ['+111 11111111/111', '+111(0)-11111111/111'],
       ['+111 11111111/', '+111(0)-11111111'],
       ['+111 11111111', '+111(0)-11111111'],
+      ['+(0)1-1111-1111/111', '+(0)1-1111-1111/111'],
+      ['+(0)1-1111-1111/', '+(0)1-1111-1111'],
+      ['+(0)1-1111-1111', '+(0)1-1111-1111'],
       ['+(0)1-11111111/111', '+(0)1-11111111/111'],
       ['+(0)1-11111111/', '+(0)1-11111111'],
       ['+(0)1-11111111', '+(0)1-11111111'],
@@ -1081,7 +1084,6 @@ class TestERP5Base(ERP5TypeTestCase):
 
     for i in input_list:
       tel.fromText(coordinate_text=i[0])
-      print i
       self.assertEquals(i[1],tel.asText())
 
   def test_TelephoneWhenTheDefaultCountryAndAreaPreferenceIsBlank(self):
