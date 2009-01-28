@@ -396,7 +396,7 @@ class WizardTool(BaseTool):
     rc = wrapper(distant_method, **kw)
     return rc
 
-  def _callRemoteMethod(self, distant_method, server_url=None, wrap_result=1, use_proxy=0, **kw):
+  def _callRemoteMethod(self, distant_method, server_url=None, use_proxy=0, **kw):
     """ Call remote method on server and get result. """
     result_call = GeneratorCall()
     if server_url is None:
