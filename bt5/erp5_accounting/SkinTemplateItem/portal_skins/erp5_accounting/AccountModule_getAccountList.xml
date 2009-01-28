@@ -53,21 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-try:\n
-  # XXX not used !\n
-  currency = kwd[\'accounting_transaction_line_currency\']\n
-  id = currency.split(\'/\')[-1]\n
-except KeyError:\n
-  id = \'\'\n
-\n
-if not id:\n
-  id = \'&nbsp;\'\n
-\n
-kwd[\'select_expression\'] = "\'%s\' AS accounting_transaction_line_currency" % id\n
-\n
-# precision for editable fields\n
+            <value> <string># precision for editable fields\n
 params = context.ERP5Accounting_getParams(selection_name)\n
 if params.get(\'precision\', None) is not None:\n
   context.REQUEST.set(\'precision\', params[\'precision\'])\n
@@ -84,9 +70,7 @@ if sort_on is not None:\n
       new_sort_on.append(sort_on_item)\n
 \n
 return context.portal_catalog(sort_on=new_sort_on, **kwd)\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -126,15 +110,11 @@ return context.portal_catalog(sort_on=new_sort_on, **kwd)\n
                             <string>selection</string>
                             <string>selection_name</string>
                             <string>kwd</string>
-                            <string>_getitem_</string>
-                            <string>currency</string>
                             <string>_getattr_</string>
-                            <string>id</string>
-                            <string>KeyError</string>
-                            <string>_write_</string>
                             <string>context</string>
                             <string>params</string>
                             <string>None</string>
+                            <string>_getitem_</string>
                             <string>new_sort_on</string>
                             <string>_getiter_</string>
                             <string>sort_on_item</string>
