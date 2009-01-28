@@ -59,7 +59,7 @@ from Products.PythonScripts.standard import Object\n
 from Products.ZSQLCatalog.SQLCatalog import Query\n
 \n
 portal = context.getPortalObject()\n
-category_tool = portal.portal_catalog\n
+category_tool = portal.portal_categories\n
 \n
 request = container.REQUEST\n
 from_date = request.get(\'from_date\', None)\n
