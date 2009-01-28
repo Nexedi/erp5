@@ -58,8 +58,9 @@ packing_list = sci[\'object\']\n
 delivery_tool = sci.getPortal().portal_deliveries\n
 \n
 if packing_list.getPortalType() == \'Sale Packing List\':\n
-  explanation_uid = packing_list.getCausalityUid(\n
-                         portal_type=\'Sale Order\') or packing_list.getUid()\n
+  explanation_uid = packing_list.getCausalityUid(portal_type=\'Sale Order\')\n
+  if explanation_uid:\n
+    explanation_uid = (explanation_uid, packing_list.getUid())\n
 \n
   tag = \'build_invoice_%s\' % packing_list.getRelativeUrl()\n
   # WARNING: this tag is also used in InvoiceTransaction_postGeneration script\n
