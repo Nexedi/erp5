@@ -107,14 +107,28 @@ if builder_by_ptype.has_key(delivery_portal_type) :\n
   method_id_list = (\'expand\', \'edit\', \'updateAppliedRule\', \'Delivery_updateAppliedRule\',\n
                     \'immediateReindexObject\', \'recursiveImmediateReindexObject\')\n
 \n
+  explanation_uid_list = [delivery.getUid(), ]\n
+  packing_list = delivery.getCausalityValue(\n
+                             portal_type=(\'Sale Packing List\',\n
+                                          \'Purchase Packing List\'))\n
+  if packing_list is not None:\n
+    explanation_uid_list.append(packing_list.getUid())\n
+    order = packing_list.getCausalityValue(\n
+                             portal_type=(\'Sale Order\',\n
+                                          \'Purchase Order\'))\n
+    if order is not None:\n
+      explanation_uid_list.append(order.getUid())\n
+\n
+\n
   tag = \'invoice_transaction_build_%s\' % delivery.getRelativeUrl()\n
   builder.activate(\n
       after_method_id=method_id_list,\n
       tag=tag,\n
-      activate_kw=dict(tag=tag)).build(activate_kw=dict(tag=tag))\n
+      activate_kw=dict(tag=tag)).build(activate_kw=dict(tag=tag),\n
+                                       explanation_uid=explanation_uid_list)\n
 \n
   # build related payment transactions\n
-  portal_deliveries.payment_transaction_builder.activate(after_method_id=method_id_list).build()\n
+  portal_deliveries.payment_transaction_builder.activate(after_method_id=method_id_list).build(explanation_uid=explanation_uid_list)\n
 \n
   # set the object in building state.\n
   delivery.startBuilding()\n
@@ -173,6 +187,9 @@ if builder_by_ptype.has_key(delivery_portal_type) :\n
                             <string>expand_tag</string>
                             <string>activate_kw</string>
                             <string>method_id_list</string>
+                            <string>explanation_uid_list</string>
+                            <string>packing_list</string>
+                            <string>order</string>
                             <string>tag</string>
                             <string>dict</string>
                           </tuple>
