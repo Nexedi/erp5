@@ -59,6 +59,8 @@
                 <string>source | Source</string>
                 <string>destination | Destination</string>
                 <string>aggregate | Aggregate</string>
+                <string>price_currency | Price Currency</string>
+                <string>base_contribution | Base Contribution</string>
               </tuple>
             </value>
         </item>
