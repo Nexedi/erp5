@@ -85,6 +85,8 @@
                         <string>listbox_destination</string>
                         <string>listbox_destination_credit</string>
                         <string>listbox_destination_debit</string>
+                        <string>listbox_budget_section</string>
+                        <string>listbox_product_line</string>
                       </list>
                     </value>
                 </item>
@@ -109,6 +111,7 @@
                         <string>my_comment</string>
                         <string>my_translated_portal_type</string>
                         <string>my_translated_simulation_state_title</string>
+                        <string>my_translated_causality_state_title</string>
                       </list>
                     </value>
                 </item>

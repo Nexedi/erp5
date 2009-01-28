@@ -109,6 +109,7 @@
                         <string>my_comment</string>
                         <string>my_translated_portal_type</string>
                         <string>my_translated_simulation_state_title</string>
+                        <string>my_translated_causality_state_title</string>
                       </list>
                     </value>
                 </item>
