@@ -38,9 +38,8 @@ from zLOG import LOG, INFO, WARNING, ERROR, DEBUG
 from cStringIO import StringIO
 from UserDict import UserDict
 import xmlrpclib, socket, sys, traceback, urllib, urllib2, base64, cgi
-from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
-import zLOG
-import cookielib
+from AccessControl.SecurityManagement import newSecurityManager, getSecurityManager, setSecurityManager
+import zLOG, cookielib
 from urlparse import urlparse, urlunparse
 from base64 import encodestring, decodestring
 from urllib import quote, unquote
@@ -85,8 +84,9 @@ def _getAcCookieFromServer(url, opener, cookiejar, username, password, header_di
 
 def _setSuperSecurityManager(self):
   """ Change to super user account. """
-  user = self.getWrappedOwner()
-  newSecurityManager(self.REQUEST, user)
+  original_security_manager = getSecurityManager()
+  newSecurityManager(self.REQUEST, self.getWrappedOwner())
+  return original_security_manager
 
 class GeneratorCall(UserDict):
   """ Class use to generate/interpret XML-RPC call for the wizard. """
@@ -521,7 +521,7 @@ class WizardTool(BaseTool):
     global installation_status
     if use_super_manager:
       # set current security manager to owner of site
-      _setSuperSecurityManager(self.getPortalObject())
+      original_security_manager = _setSuperSecurityManager(self.getPortalObject())
 
     portal = self.getPortalObject()
     bt5_files = server_response.get("filedata", [])
@@ -579,7 +579,7 @@ class WizardTool(BaseTool):
     LOG("Wizard", INFO,
               "Completed installation for %s" %' '.join(bt5_filenames))
     if use_super_manager:
-      noSecurityManager()
+      setSecurityManager(original_security_manager)
 
   ######################################################
   ##               Navigation                         ##
@@ -828,10 +828,10 @@ class WizardTool(BaseTool):
   security.declareProtected(Permissions.View, 'getExpressConfigurationPreference')
   def getExpressConfigurationPreference(self, preference_id, default = None):
     """ Get Express configuration preference """
-    _setSuperSecurityManager(self.getPortalObject())
+    original_security_manager = _setSuperSecurityManager(self.getPortalObject())
     portal_preferences = getToolByName(self, 'portal_preferences')
     preference_value = portal_preferences.getPreference(preference_id, default)
-    noSecurityManager()
+    setSecurityManager(original_security_manager)
     return preference_value
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setExpressConfigurationPreference')
