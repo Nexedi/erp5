@@ -140,30 +140,16 @@
     <style:style style:name="date_with_time" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="date_style">\n
       <style:table-cell-properties style:vertical-align=\'middle\' style:repeat-content=\'false\' style:text-align-source=\'fix\' fo:border-right=\'0.002cm solid #000000\' />\n
     </style:style>\n
-    <number:number-style style:name="four_decimal">\n
-      <number:number number:decimal-places="4" number:min-integer-digits="1" number:grouping="true"/>\n
-    </number:number-style>\n
-    <number:number-style style:name="three_decimal">\n
-      <number:number number:decimal-places="3" number:min-integer-digits="1" number:grouping="true"/>\n
-    </number:number-style>\n
-    <number:number-style style:name="two_decimal">\n
-      <number:number number:decimal-places="2" number:min-integer-digits="1" number:grouping="true"/>\n
-    </number:number-style>\n
-    <number:number-style style:name="one_decimal">\n
-      <number:number number:decimal-places="1" number:min-integer-digits="1" number:grouping="true"/>\n
-    </number:number-style>\n
-    <style:style style:name="decimal_4" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="four_decimal">\n
-      <style:table-cell-properties style:vertical-align=\'middle\' style:repeat-content=\'false\' style:text-align-source=\'fix\' fo:border-right=\'0.002cm solid #000000\' />\n
-    </style:style>\n
-    <style:style style:name="decimal_3" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="three_decimal">\n
-      <style:table-cell-properties style:vertical-align=\'middle\' style:repeat-content=\'false\' style:text-align-source=\'fix\' fo:border-right=\'0.002cm solid #000000\' />\n
-    </style:style>\n
-    <style:style style:name="decimal_2" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="two_decimal">\n
-      <style:table-cell-properties style:vertical-align=\'middle\' style:repeat-content=\'false\' style:text-align-source=\'fix\' fo:border-right=\'0.002cm solid #000000\' />\n
-    </style:style>\n
-    <style:style style:name="decimal_1" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="one_decimal">\n
-      <style:table-cell-properties style:vertical-align=\'middle\' style:repeat-content=\'false\' style:text-align-source=\'fix\' fo:border-right=\'0.002cm solid #000000\' />\n
-    </style:style>\n
+    <tal:block tal:repeat="precision python: xrange(0,here.Base_getODSMaximumSupportedPrecision())">\n
+      <tal:block tal:define="figure_data_precision_style_name string:figure_data_precision_${precision}">\n
+        <number:number-style style:name="figure_data_precision_X" tal:attributes="style:name figure_data_precision_style_name">\n
+          <number:number number:decimal-places="X" number:min-integer-digits="1" number:grouping="true" tal:attributes="number:decimal-places precision"/>\n
+        </number:number-style>\n
+        <tal:block tal:repeat="style_prefix_name python: here.Base_getODSSupportedStylePrefixList()">\n
+          <style:style style:name="figure_X" style:family="table-cell" style:parent-style-name="figure" style:data-style-name="figure_data_precision_X" tal:attributes="style:name string:${style_prefix_name}figure_${precision}; style:data-style-name figure_data_precision_style_name ; style:parent-style-name string:${style_prefix_name}figure"/>\n
+        </tal:block>\n
+      </tal:block>\n
+    </tal:block>\n
   </office:automatic-styles>\n
 </tal:block>\n
 
