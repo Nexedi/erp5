@@ -186,18 +186,18 @@ class TestTranslation(ERP5TypeTestCase):
       if error:
         for key, item_list in error_dict.items():
           if len(item_list) != 0:
-            self.logMessage('\n%r' % key.encode('utf-8'))
+            self.logMessage("\n'%s'" % key.encode('utf-8'))
             self.logMessage('\t### Conflicting workflow with common states (ie, what user can see) ###')
             for item in item_list:
               # XXX Improve rendering
               self.logMessage(
-                  "\t%r\t%r\t%r\t%r" % \
+                  "\t%r\t%r\t'%s'\t%r" % \
                   item)
             self.logMessage('\n\t### All conflicting workflows (ie, problems asking to happen) ###')
             for item in result_dict[key]:
               # XXX Improve rendering
               self.logMessage(
-                  "\t%r\t%r\t%r" % \
+                  "\t%r\t%r\t'%s'" % \
                   item)
         self.fail(self.message)
 
