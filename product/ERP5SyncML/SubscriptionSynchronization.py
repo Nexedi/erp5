@@ -34,6 +34,8 @@ from Conduit.ERP5Conduit import ERP5Conduit
 from AccessControl import getSecurityManager
 from DateTime import DateTime
 from zLOG import LOG, DEBUG, INFO
+from lxml.etree import Element, SubElement
+from lxml import etree
 
 class SubscriptionSynchronization(XMLSyncUtils):
 
@@ -51,54 +53,50 @@ class SubscriptionSynchronization(XMLSyncUtils):
     subscription.setZopeUser(user)
     subscription.setAuthenticated(True)
 
-    xml_list = []
-    xml = xml_list.append
-    xml('<SyncML>\n')
+    xml = Element('SyncML')
     # syncml header
-    xml(self.SyncMLHeader(subscription.incrementSessionId(),
+    xml.append(self.SyncMLHeader(subscription.incrementSessionId(),
       subscription.incrementMessageId(), subscription.getPublicationUrl(),
       subscription.getSubscriptionUrl(), source_name=subscription.getLogin()))
 
     # syncml body
-    xml(' <SyncBody>\n')
+    sync_body = SubElement(xml, 'SyncBody')
 
     # We have to set every object as NOT_SYNCHRONIZED
     subscription.startSynchronization()
 
     # alert message
-    xml(self.SyncMLAlert(cmd_id, subscription.getSynchronizationType(),
+    sync_body.append(self.SyncMLAlert(cmd_id, subscription.getSynchronizationType(),
                             subscription.getTargetURI(),
                             subscription.getSourceURI(),
                             subscription.getLastAnchor(),
                             subscription.getNextAnchor()))
     cmd_id += 1
     syncml_put = self.SyncMLPut(cmd_id, subscription)
-    if syncml_put not in ('', None):
-      xml(syncml_put)
+    if syncml_put is not None:
+      sync_body.append(syncml_put)
       cmd_id += 1
-    xml(' </SyncBody>\n')
-    xml('</SyncML>\n')
-    xml_a = ''.join(xml_list)
 
+    xml_string = etree.tostring(xml, encoding='utf-8', xml_declaration=True,
+                                pretty_print=True)
     self.sendResponse(from_url=subscription.subscription_url,
-        to_url=subscription.publication_url, sync_id=subscription.getTitle(),
-        xml=xml_a,domain=subscription,
-        content_type=subscription.getSyncContentType())
+                      to_url=subscription.publication_url,
+                      sync_id=subscription.getTitle(),
+                      xml=xml_string, domain=subscription,
+                      content_type=subscription.getSyncContentType())
 
-    return {'has_response':1,'xml':xml_a}
+    return {'has_response':1, 'xml':xml_string}
 
   def SubSyncCred (self, subscription, msg=None, RESPONSE=None):
     """
       This method send crendentials
     """
     cmd_id = 1 # specifies a SyncML message-unique command identifier
-    xml_list = []
-    xml = xml_list.append
-    xml('<SyncML>\n')
+    xml = Element('SyncML')
     # syncml header
     data = "%s:%s" % (subscription.getLogin(), subscription.getPassword())
-    data=subscription.encode(subscription.getAuthenticationFormat(), data)
-    xml(self.SyncMLHeader(
+    data = subscription.encode(subscription.getAuthenticationFormat(), data)
+    xml.append(self.SyncMLHeader(
       subscription.incrementSessionId(),
       subscription.incrementMessageId(),
       subscription.getPublicationUrl(),
@@ -109,31 +107,32 @@ class SubscriptionSynchronization(XMLSyncUtils):
       authentication_type=subscription.getAuthenticationType()))
 
     # syncml body
-    xml(' <SyncBody>\n')
+    sync_body = SubElement(xml, 'SyncBody')
 
     # We have to set every object as NOT_SYNCHRONIZED
     subscription.startSynchronization()
 
     # alert message
-    xml(self.SyncMLAlert(cmd_id, subscription.getSynchronizationType(),
+    sync_body.append(self.SyncMLAlert(cmd_id, subscription.getSynchronizationType(),
                             subscription.getTargetURI(),
                             subscription.getSourceURI(),
                             subscription.getLastAnchor(),
                             subscription.getNextAnchor()))
     cmd_id += 1
-    xml(self.SyncMLPut(cmd_id, subscription))
+    syncml_put = self.SyncMLPut(cmd_id, subscription)
+    if syncml_put is not None:
+      sync_body.append(syncml_put)
     cmd_id += 1
-    xml('  <Final/>\n')
-    xml(' </SyncBody>\n')
-    xml('</SyncML>\n')
-    xml_a = ''.join(xml_list)
-
+    sync_body.append(Element('Final'))
+    xml_string = etree.tostring(xml, encoding='utf-8', xml_declaration=True,
+                                pretty_print=True)
     self.sendResponse(from_url=subscription.subscription_url,
-        to_url=subscription.publication_url, sync_id=subscription.getTitle(),
-        xml=xml_a, domain=subscription,
-        content_type=subscription.getSyncContentType())
+                      to_url=subscription.publication_url,
+                      sync_id=subscription.getTitle(),
+                      xml=xml_string, domain=subscription,
+                      content_type=subscription.getSyncContentType())
 
-    return {'has_response':1, 'xml':xml_a}
+    return {'has_response':1, 'xml':xml_string}
 
   def SubSyncModif(self, subscription, xml_client):
     """

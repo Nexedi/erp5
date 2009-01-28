@@ -92,8 +92,8 @@ class SynchronizationTool( SubscriptionSynchronization,
 
   # On the server, this is use to keep track of the temporary
   # copies.
-  objectsToRemove = [] 
-  
+  objectsToRemove = []
+
   security = ClassSecurityInfo()
 
   #
@@ -712,12 +712,12 @@ class SynchronizationTool( SubscriptionSynchronization,
     if solve_conflict:
       copy_path = conflict.getCopyPath()
       signature.delConflict(conflict)
-      if signature.getConflictList() == []:
+      if not signature.getConflictList():
         if copy_path is not None:
           # Delete the copy of the object if the there is one
           directory = object.aq_parent
           copy_id = copy_path[-1]
-          if hasattr(directory.aq_base, 'hasObject'):
+          if getattr(directory.aq_base, 'hasObject', None) is not None:
             # optimize the case of a BTree folder
             if directory.hasObject(id):
               directory._delObject(copy_id)
@@ -828,8 +828,6 @@ class SynchronizationTool( SubscriptionSynchronization,
     if content_type == self.CONTENT_TYPE['SYNCML_WBXML']:
       xml = self.xml2wbxml(xml)
       #LOG('sendHttpResponse, xml after wbxml: \n', DEBUG, self.hexdump(xml))
-    if isinstance(xml, unicode):
-      xml = xml.encode('utf-8')
     if domain is not None:
       gpg_key = domain.getGPGKey()
       if gpg_key not in ('',None):
@@ -868,7 +866,7 @@ class SynchronizationTool( SubscriptionSynchronization,
                                               content_type=content_type)
         elif to_url.find('file://') == 0:
           filename = to_url[len('file:/'):]
-          stream = file(filename,'w')
+          stream = file(filename, 'w')
           stream.write(xml)
           stream.close()
           # we have to use local files (unit testing for example

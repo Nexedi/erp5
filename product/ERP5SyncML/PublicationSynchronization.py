@@ -39,6 +39,8 @@ from AccessControl.SecurityManagement import newSecurityManager
 import commands
 from DateTime import DateTime
 from zLOG import LOG, DEBUG, INFO, WARNING
+from lxml.etree import Element, SubElement
+from lxml import etree
 
 class PublicationSynchronization(XMLSyncUtils):
   """
@@ -76,17 +78,15 @@ class PublicationSynchronization(XMLSyncUtils):
       subscriber.setSourceURI(self.getTargetURI(xml_client))
       subscriber.setTargetURI(self.getSourceURI(xml_client))
 
-      xml_list = []
-      xml = xml_list.append
       cmd_id = 1 # specifies a SyncML message-unique command identifier      
-      xml('<SyncML>\n')
+      xml = Element('SyncML')
       # syncml header
-      xml(self.SyncMLHeader(subscriber.getSessionId(),
+      xml.append(self.SyncMLHeader(subscriber.getSessionId(),
         subscriber.getMessageId(),
         subscriber.getSubscriptionUrl(),
         publication.getPublicationUrl()))
       # syncml body
-      xml(' <SyncBody>\n')
+      sync_body = SubElement(xml, 'SyncBody')
 
 
       #at the begining, the code is initialised at UNAUTHORIZED
@@ -95,7 +95,7 @@ class PublicationSynchronization(XMLSyncUtils):
         auth_code = self.AUTH_REQUIRED
         LOG("PubSyncInit there's no credential !!!", INFO,'')
         # Prepare the xml message for the Sync initialization package
-        xml(self.SyncMLChal(cmd_id, "SyncHdr",
+        sync_body.append(self.SyncMLChal(cmd_id, "SyncHdr",
           publication.getPublicationUrl(), subscriber.getSubscriptionUrl(),
           publication.getAuthenticationFormat(),
           publication.getAuthenticationType(), auth_code))
@@ -106,8 +106,8 @@ class PublicationSynchronization(XMLSyncUtils):
                                       auth_code,
                                       cmd_id,
                                       next_anchor,
-                                      subscription=subscriber).values()
-        xml(xml_status)
+                                      subscription=subscriber)
+        sync_body.extend(xml_status)
       else:
         # If slow sync, then resend everything
         if alert_code == self.SLOW_SYNC and \
@@ -119,7 +119,7 @@ class PublicationSynchronization(XMLSyncUtils):
   
         # Check if the last time synchronization is the same as the client one
         if subscriber.getNextAnchor() != last_anchor:
-          if last_anchor in (None, ''):
+          if not last_anchor:
             LOG('PubSyncInit', INFO, 'anchor null')
           else:
             mess = '\nsubscriber.getNextAnchor:\t%s\nsubscriber.getLastAnchor:\t%s\
@@ -159,24 +159,30 @@ class PublicationSynchronization(XMLSyncUtils):
         # Prepare the xml message for the Sync initialization package
         if auth_code == self.AUTH_ACCEPTED:
           xml_status, cmd_id = self.SyncMLStatus(xml_client, auth_code,
-              cmd_id, next_anchor, subscription=subscriber).values()
-          xml(xml_status)
+                                                 cmd_id, next_anchor,
+                                                 subscription=subscriber)
+          sync_body.extend(xml_status)
           # alert message
-          xml(self.SyncMLAlert(cmd_id, sync_type, subscriber.getTargetURI(),
-            subscriber.getSourceURI(), subscriber.getLastAnchor(),
-            next_anchor))
+          sync_body.append(self.SyncMLAlert(cmd_id, sync_type,
+                                            subscriber.getTargetURI(),
+                                            subscriber.getSourceURI(),
+                                            subscriber.getLastAnchor(),
+                                            next_anchor))
           cmd_id += 1
         else:
           # chal message
-          xml(self.SyncMLChal(cmd_id, "SyncHdr",
-            publication.getPublicationUrl(), subscriber.getSubscriptionUrl(),
-            publication.getAuthenticationFormat(),
-            publication.getAuthenticationType(), auth_code))
+          sync_body.append(self.SyncMLChal(cmd_id, "SyncHdr",
+                                           publication.getPublicationUrl(),
+                                           subscriber.getSubscriptionUrl(),
+                                           publication.getAuthenticationFormat(),
+                                           publication.getAuthenticationType(),
+                                           auth_code))
           cmd_id += 1
           xml_status, cmd_id = self.SyncMLStatus(xml_client,
-              self.AUTH_REQUIRED, cmd_id, next_anchor,
-              subscription=subscriber).values()
-          xml(xml_status)
+                                                 self.AUTH_REQUIRED, cmd_id,
+                                                 next_anchor,
+                                                 subscription=subscriber)
+          sync_body.extend(xml_status)
 
       # We have to set every object as NOT_SYNCHRONIZED
       subscriber.startSynchronization()
@@ -187,19 +193,17 @@ class PublicationSynchronization(XMLSyncUtils):
           has been started from the server (forbiden)"
       # a synchronisation is always starded from a client and can't be from
       # a server !
-
-    xml('  <Final/>\n')
-    xml(' </SyncBody>\n')
-    xml('</SyncML>\n')
-    xml_a = ''.join(xml_list)
+    sync_body.append(Element('Final'))
+    xml_string = etree.tostring(xml, encoding='utf-8', pretty_print=True)
     if publication.getSyncContentType() == self.CONTENT_TYPE['SYNCML_WBXML']:
-      xml_a = self.xml2wbxml(xml_a)
+      xml_string = self.xml2wbxml(xml_string)
     self.sendResponse(from_url=publication.getPublicationUrl(),
-      to_url=subscriber.getSubscriptionUrl(), sync_id=publication.getTitle(),
-      xml=xml_a, domain=publication,
-      content_type=publication.getSyncContentType())
+                      to_url=subscriber.getSubscriptionUrl(),
+                      sync_id=publication.getTitle(),
+                      xml=xml_string, domain=publication,
+                      content_type=publication.getSyncContentType())
 
-    return {'has_response':1, 'xml':xml_a}
+    return {'has_response':1, 'xml':xml_string}
 
   def PubSyncModif(self, publication, xml_client):
     """

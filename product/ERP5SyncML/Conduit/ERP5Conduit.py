@@ -1029,7 +1029,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     return an xml string corresponding to the node
     """
-    return etree.tostring(node, encoding='utf-8')
+    return etree.tostring(node, encoding='utf-8', pretty_print=True)
 
   def getGidFromObject(self, object):
     """
