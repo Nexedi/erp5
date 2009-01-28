@@ -203,143 +203,149 @@ registerFileExtension('pdft', FSPDFTemplate)
 registerMetaType('ERP5 PDF Template', FSPDFTemplate)
 
 # Dynamic Patch
-from Products.CMFReportTool.ReportTool import ReportTool
 try:
-  from Products.CMFReportTool.ReportTool import ZODBResourceHandler
-  HAS_ZODB_RESOURCE_HANDLER=1
+  from Products.CMFReportTool.ReportTool import ReportTool
 except ImportError:
-  from Products.CMFReportTool.ReportTool import ZODBHandler, ResourceHandler
-  HAS_ZODB_RESOURCE_HANDLER=0
-
-from Products.CMFReportTool.RenderPDF.Parser import TemplateParser,DocumentParser
-
-try:
-    # Zope 2.10 and later.
-    from Products.PageTemplates.Expressions import boboAwareZopeTraverse
-except ImportError:
-    # Zope 2.9 and earlier.
-    boboAwareZopeTraverse = None
-    from Products.PageTemplates.Expressions import restrictedTraverse
-
-from StringIO import StringIO
-import xml.dom.minidom
-import urllib,os.path
+  ReportTool = None
 
 
-if HAS_ZODB_RESOURCE_HANDLER:
-  class ERP5ResourceHandler(ZODBResourceHandler):
-    ''' Wrapper for ZODB Resources and files'''
+if ReportTool:
+  try:
+    from Products.CMFReportTool.ReportTool import ZODBResourceHandler
+    HAS_ZODB_RESOURCE_HANDLER=1
+  except ImportError:
+    from Products.CMFReportTool.ReportTool import ZODBHandler, ResourceHandler
+    HAS_ZODB_RESOURCE_HANDLER=0
 
-    def handleZODB(self,path):
+  from Products.CMFReportTool.RenderPDF.Parser import TemplateParser,DocumentParser
 
-      path = path.split('/')
-      if boboAwareZopeTraverse is None:
-          obj = restrictedTraverse(self.context,path,getSecurityManager())
-      else:
-          # XXX only the request should be required, but this looks ad-hoc..
-          econtext = dict(request=self.context.REQUEST)
-          obj = boboAwareZopeTraverse(self.context, path, econtext)
+  try:
+      # Zope 2.10 and later.
+      from Products.PageTemplates.Expressions import boboAwareZopeTraverse
+  except ImportError:
+      # Zope 2.9 and earlier.
+      boboAwareZopeTraverse = None
+      from Products.PageTemplates.Expressions import restrictedTraverse
 
-
-      # check type and e.g. call object if script ...
-      if callable(obj):
-        try:
-          obj = obj()
-        except (ConflictError, RuntimeError):
-          raise
-        except:
-          pass
-
-      ## for OFS.Image-like objects
-      if hasattr(obj,'_original'):
-        obj = obj._original._data()
-      elif hasattr(obj,'_data'):
-        obj = obj._data
-      elif hasattr(obj,'data'):
-        obj = obj.data
-
-      return StringIO(str(obj))
-else:
-  class ERP5ResourceHandler(ResourceHandler):
-    ''' Wrapper for ZODB Resources and files'''
-    def __init__(self, context=None, resource_path=None):
-        zodbhandler = ERP5ZODBHandler(context)
-        self.opener = urllib2.build_opener(zodbhandler)
-
-  class ERP5ZODBHandler(ZODBHandler):
-    def zodb_open(self, req):
-      path = req.get_selector()
-      path = path.split('/')
-      if boboAwareZopeTraverse is None:
-          obj = restrictedTraverse(self.context,path,getSecurityManager())
-      else:
-          # XXX only the request should be required, but this looks ad-hoc..
-          econtext = dict(request=self.context.REQUEST)
-          obj = boboAwareZopeTraverse(self.context, path, econtext)
-
-      # check type and e.g. call object if script ...
-      if callable(obj):
-        try:
-          obj = obj()
-        except (ConflictError, RuntimeError):
-          raise
-        except:
-          pass
-
-      ## for OFS.Image-like objects
-      if hasattr(obj,'_original'):
-        obj = obj._original._data()
-      elif hasattr(obj,'_data'):
-        obj = obj._data
-      elif hasattr(obj,'data'):
-        obj = obj.data
-
-      return StringIO(str(obj))
+  from StringIO import StringIO
+  import xml.dom.minidom
+  import urllib,os.path
 
 
+  if HAS_ZODB_RESOURCE_HANDLER:
+    class ERP5ResourceHandler(ZODBResourceHandler):
+      ''' Wrapper for ZODB Resources and files'''
 
-def ReportTool_renderPDF(self, templatename, document_xml, *args, **kwargs):
-  """
-    Render document using template
-  """
+      def handleZODB(self,path):
 
-  context = kwargs.get('context',None)
-  if context is None:
-    context = self
-
-  encoding = kwargs.get('encoding') or 'UTF-8'
-  #LOG('ReportTool_renderPDF', 0, 'encoding = %r' % encoding)
-  rhandler = ERP5ResourceHandler(context, getattr(self, 'resourcePath', None))
-
-  # if zope gives us the xml in unicode
-  # we need to encode it before it can be parsed
-  template_xml = getattr(context, templatename)(*args, **kwargs)
-  if type(template_xml) is type(u''):
-    template_xml = self._encode(template_xml, encoding)
-  if type(document_xml) is type(u''):
-    document_xml = self._encode(document_xml, encoding)
-  #LOG('ReportTool_renderPDF', 0, 'template_xml = %r, document_xml = %r' % (template_xml, document_xml))
-
-  # XXXXX Because reportlab does not support UTF-8, use Latin-1. What a mess.
-  template_xml = unicode(template_xml,encoding).encode('iso-8859-1')
-  document_xml = unicode(document_xml,encoding).encode('iso-8859-1','replace')
-  encoding = 'iso-8859-1'
-
-  # create the PDFTemplate from xml
-  template_dom = xml.dom.minidom.parseString(template_xml)
-  template_dom.encoding = encoding
-  template = TemplateParser(template_dom,encoding,resourceHandler=rhandler)()
-
-  # create the PDFDocment from xml
-  document_dom = xml.dom.minidom.parseString(document_xml)
-  document_dom.encoding = encoding
-  document = DocumentParser(document_dom,encoding,resourceHandler=rhandler)
-
-  # create the PDF itself using the document and the template
-  buf = StringIO()
-  document(template,buf)
-  buf.seek(0)
-  return buf.read()
+        path = path.split('/')
+        if boboAwareZopeTraverse is None:
+            obj = restrictedTraverse(self.context,path,getSecurityManager())
+        else:
+            # XXX only the request should be required, but this looks ad-hoc..
+            econtext = dict(request=self.context.REQUEST)
+            obj = boboAwareZopeTraverse(self.context, path, econtext)
 
 
-ReportTool.renderPDF = ReportTool_renderPDF
+        # check type and e.g. call object if script ...
+        if callable(obj):
+          try:
+            obj = obj()
+          except (ConflictError, RuntimeError):
+            raise
+          except:
+            pass
+
+        ## for OFS.Image-like objects
+        if hasattr(obj,'_original'):
+          obj = obj._original._data()
+        elif hasattr(obj,'_data'):
+          obj = obj._data
+        elif hasattr(obj,'data'):
+          obj = obj.data
+
+        return StringIO(str(obj))
+  else:
+    class ERP5ResourceHandler(ResourceHandler):
+      ''' Wrapper for ZODB Resources and files'''
+      def __init__(self, context=None, resource_path=None):
+          zodbhandler = ERP5ZODBHandler(context)
+          self.opener = urllib2.build_opener(zodbhandler)
+
+    class ERP5ZODBHandler(ZODBHandler):
+      def zodb_open(self, req):
+        path = req.get_selector()
+        path = path.split('/')
+        if boboAwareZopeTraverse is None:
+            obj = restrictedTraverse(self.context,path,getSecurityManager())
+        else:
+            # XXX only the request should be required, but this looks ad-hoc..
+            econtext = dict(request=self.context.REQUEST)
+            obj = boboAwareZopeTraverse(self.context, path, econtext)
+
+        # check type and e.g. call object if script ...
+        if callable(obj):
+          try:
+            obj = obj()
+          except (ConflictError, RuntimeError):
+            raise
+          except:
+            pass
+
+        ## for OFS.Image-like objects
+        if hasattr(obj,'_original'):
+          obj = obj._original._data()
+        elif hasattr(obj,'_data'):
+          obj = obj._data
+        elif hasattr(obj,'data'):
+          obj = obj.data
+
+        return StringIO(str(obj))
+
+
+
+  def ReportTool_renderPDF(self, templatename, document_xml, *args, **kwargs):
+    """
+      Render document using template
+    """
+
+    context = kwargs.get('context',None)
+    if context is None:
+      context = self
+
+    encoding = kwargs.get('encoding') or 'UTF-8'
+    #LOG('ReportTool_renderPDF', 0, 'encoding = %r' % encoding)
+    rhandler = ERP5ResourceHandler(context, getattr(self, 'resourcePath', None))
+
+    # if zope gives us the xml in unicode
+    # we need to encode it before it can be parsed
+    template_xml = getattr(context, templatename)(*args, **kwargs)
+    if type(template_xml) is type(u''):
+      template_xml = self._encode(template_xml, encoding)
+    if type(document_xml) is type(u''):
+      document_xml = self._encode(document_xml, encoding)
+    #LOG('ReportTool_renderPDF', 0, 'template_xml = %r, document_xml = %r' % (template_xml, document_xml))
+
+    # XXXXX Because reportlab does not support UTF-8, use Latin-1. What a mess.
+    template_xml = unicode(template_xml,encoding).encode('iso-8859-1')
+    document_xml = unicode(document_xml,encoding).encode('iso-8859-1','replace')
+    encoding = 'iso-8859-1'
+
+    # create the PDFTemplate from xml
+    template_dom = xml.dom.minidom.parseString(template_xml)
+    template_dom.encoding = encoding
+    template = TemplateParser(template_dom,encoding,resourceHandler=rhandler)()
+
+    # create the PDFDocment from xml
+    document_dom = xml.dom.minidom.parseString(document_xml)
+    document_dom.encoding = encoding
+    document = DocumentParser(document_dom,encoding,resourceHandler=rhandler)
+
+    # create the PDF itself using the document and the template
+    buf = StringIO()
+    document(template,buf)
+    buf.seek(0)
+    return buf.read()
+
+
+  ReportTool.renderPDF = ReportTool_renderPDF
