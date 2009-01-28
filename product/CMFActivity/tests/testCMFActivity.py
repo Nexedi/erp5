@@ -3205,6 +3205,20 @@ class TestCMFActivity(ERP5TypeTestCase):
     finally:
       delattr(Organisation, 'waitingActivity')
       Queue.tic = original_queue_tic
+  
+  def test_active_object_hasActivity(self):
+    active_object = self.portal.organisation_module.newContent(
+                                            portal_type='Organisation')
+    get_transaction().commit()
+    self.tic()
+    self.assertFalse(active_object.hasActivity())
+    for activity in ('SQLDict', 'SQLQueue'):
+      active_object.activate(activity=activity).getTitle()
+      get_transaction().commit()
+      self.assertTrue(active_object.hasActivity(), activity)
+      self.tic()
+      self.assertFalse(active_object.hasActivity(), activity)
+
 
 def test_suite():
   suite = unittest.TestSuite()
