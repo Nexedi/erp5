@@ -129,7 +129,7 @@ IDEAS:\n
                 </div>\n
                 <p class="clear"></p>\n
                 <div tal:content="request/portal_status_message | nothing" id="transition_message" />\n
-                <div id="information_area" tal:condition="python: request.has_key(\'field_errors\')" \n
+                <div id="information_area" tal:condition="request/field_errors | nothing" \n
                     i18n:translate="" i18n:domain="ui">\n
                   Input data has errors. Please look at the error messages below.\n
                 </div>\n
