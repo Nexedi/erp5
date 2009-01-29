@@ -78,8 +78,7 @@ else:\n
 \n
 if base_amount_dict:\n
   # get the application amount for this cell\n
-  model_line = cell.getParentValue()\n
-  for base in model_line.getBaseApplicationList():\n
+  for base in cell.getBaseApplicationList():\n
     if base_amount_dict.has_key(base):\n
       base_application += base_amount_dict[base][tax_category]\n
 \n
@@ -87,7 +86,7 @@ if base_amount_dict:\n
 salary_range_list = cell.getVariationCategoryList(\\\n
     base_category_list=\'salary_range\')\n
 if len(salary_range_list):\n
-  salary_range = salary_range_list[0] # a slice can have only one salary_range\n
+  salary_range = salary_range_list[0] # a cell can have only one salary_range\n
                                       # category\n
 else:\n
   salary_range = None\n
@@ -104,14 +103,16 @@ if salary_range:\n
     model_slice_min = cell.getQuantityRangeMin()\n
     model_slice_max = cell.getQuantityRangeMax()\n
 \n
+  if not quantity and base_application-model_slice_min>0:\n
+    if base_application <= model_slice_max:\n
+      quantity = base_application-model_slice_min\n
+    elif model_slice_max:\n
+      quantity = model_slice_max-model_slice_min\n
+    else:\n
+      quantity = base_application\n
 \n
-if not quantity and base_application-model_slice_min>0:\n
-  if base_application <= model_slice_max:\n
-    quantity = base_application-model_slice_min\n
-  elif model_slice_max:\n
-    quantity = model_slice_max-model_slice_min\n
-  else:\n
-    quantity = base_application\n
+else:\n
+  quantity = base_application\n
 \n
 return {\'quantity\':quantity, \'price\':price}\n
 
