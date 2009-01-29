@@ -26,14 +26,9 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
-
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-
+from Products.ERP5Type import Permissions, PropertySheet, Interface
 from Products.ERP5.Document.InvoiceLine import InvoiceLine
-from Products.ERP5.Variated import Variated
-
 from zLOG import LOG
 
 class PaySheetLine(InvoiceLine):

@@ -27,7 +27,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Invoice import Invoice
 from Products.ERP5Type.Utils import cartesianProduct
 from zLOG import LOG, DEBUG, INFO
