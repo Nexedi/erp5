@@ -70,12 +70,11 @@ if packing_list.getPortalType() == \'Purchase Packing List\':\n
   if invoice_line_builder is not None:\n
     invoice_line_builder.activate(\n
           tag=tag,\n
-          activate_kw=dict(tag=tag),\n
           after_method_id = [ \'expand\', \n
                               \'recursiveImmediateReindexObject\',\n
                               \'updateAppliedRule\',\n
                               \'immediateReindexObject\' ],\n
-          ).build(explanation_uid=explanation_uid)\n
+          ).build(activate_kw=dict(tag=tag), explanation_uid=explanation_uid)\n
   else:\n
     log(\'no purchase_invoice_builder found\')\n
 \n

@@ -1,3 +1,6 @@
+2009-01-29 yusei
+* Use activate_kw parameter in build method.
+
 2008-12-9 yusei
 * Display all selected business applications in listbox.
 
