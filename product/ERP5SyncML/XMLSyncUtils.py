@@ -330,7 +330,7 @@ class XMLSyncUtilsMixin(SyncCode):
       item_node.append(Element('MoreData'))
     return etree.tostring(xml, encoding='utf-8', pretty_print=True)
 
-  def deleteXMLObject(self, cmd_id=0, object_gid=None, rid=None, xml_object=''):
+  def deleteXMLObject(self, cmd_id=0, object_gid=None, rid=None):
     """
       Delete an object with the SyncML protocol
     """
@@ -664,28 +664,20 @@ class XMLSyncUtilsMixin(SyncCode):
 
       # Objects to remove
       #LOG('getSyncMLData remove object to remove ...', DEBUG, '')
-      object_gid_deleted = []
       for object_gid in subscriber.getGidList():
         if object_gid not in local_gid_list:
           # This is an object to remove
           signature = subscriber.getSignatureFromGid(object_gid)
           if signature.getStatus() != self.PARTIAL:
             # If partial, then we have a signature but no local object
-            xml_object = signature.getXML()
-            if xml_object is not None: # This prevent to delete an object that
-                                       # we were not able to create
-              rid = signature.getRid()
-              object_gid_deleted.append(object_gid)
-              syncml_data_list.append(self.deleteXMLObject(
-                                      xml_object=signature.getXML() or '',
-                                      object_gid=object_gid,
-                                      rid=rid,
-                                      cmd_id=cmd_id))
-              cmd_id += 1
-      #delete Signature if object does not exist anymore
-      for known_gid in subscriber.getGidList():
-        if known_gid not in local_gid_list:
-          subscriber.delSignature(known_gid)
+            rid = signature.getRid()
+            syncml_data_list.append(self.deleteXMLObject(object_gid=object_gid,
+                                                         rid=rid,
+                                                         cmd_id=cmd_id))
+            cmd_id += 1
+          #delete Signature if object does not exist anymore
+          subscriber.delSignature(object_gid)
+
     local_gid_list = []
     loop = 0
     for object_path in subscriber.getRemainingObjectPathList():
@@ -746,8 +738,8 @@ class XMLSyncUtilsMixin(SyncCode):
           cmd_id += 1
           signature.setStatus(status)
           subscriber.addSignature(signature)
-        elif signature.getStatus() == self.NOT_SYNCHRONIZED \
-            or signature.getStatus() == self.PUB_CONFLICT_MERGE:
+        elif signature.getStatus() in (self.NOT_SYNCHRONIZED,
+                                       self.PUB_CONFLICT_MERGE,):
           # We don't have synchronized this object yet
           xml_object = domain.getXMLFromObject(object)
           #LOG('getSyncMLData', DEBUG, 'checkMD5: %s' % str(signature.checkMD5(xml_object)))
@@ -1265,6 +1257,10 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                                     xml_declaration=True, pretty_print=False)
       xml_tree = etree.tostring(xml, encoding='utf-8', xml_declaration=True,
                                 pretty_print=False)
+      xml_confirmation_list = [etree.tostring(xml, encoding='utf-8',\
+                                              xml_declaration=True,\
+                                              pretty_print=False) for xml in \
+                                              xml_confirmation_list]
       domain.activate(activity='SQLQueue',
                       tag=domain.getId(),
                       priority=self.PRIORITY).activateSyncModif(
@@ -1377,7 +1373,11 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
         sync_node.append(E.Source(E.LocURI(source_uri)))
       for syncml_data in syncml_data_list:
         sync_node.append(etree.XML(syncml_data, parser=parser))
-    sync_body.extend(xml_confirmation_list)
+    for xml_confirmation in xml_confirmation_list:
+      if not isinstance(xml_confirmation, str):
+        sync_body.append(xml_confirmation)
+      else:
+        sync_body.append(etree.XML(xml_confirmation, parser=parser))
     sync_body.append(Element('Final'))
     xml_string = etree.tostring(xml_tree, encoding='utf-8', pretty_print=True)
 
