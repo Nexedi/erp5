@@ -75,10 +75,8 @@ property_list = [ \'slice\',\n
                   \'base\',\n
                   \'employer_share_price\',\n
                   \'employer_share_quantity\',\n
-                  \'employer_share_total_price\',\n
                   \'employee_share_price\',\n
                   \'employee_share_quantity\',\n
-                  \'employee_share_total_price\',\n
                   \'causality\',\n
                 ]\n
 for line in line_list: \n
@@ -88,7 +86,9 @@ for line in line_list: \n
       \'group\'  : line.getSourceSectionTitle(),\n
       \'source_section_title\': line.getSourceSectionTitle(),\n
       \'title\'  : line.getTitle(),\n
-      \'payroll_service\' : getattr(line, \'payroll_service\', None)\n
+      \'payroll_service\' : getattr(line, \'payroll_service\', None),\n
+      \'employer_share_total_price\' : round(getattr(line, \'employer_share_total_price\', 0), precision) or None,\n
+      \'employee_share_total_price\' : round(getattr(line, \'employee_share_total_price\', 0), precision) or None\n
       }\n
 \n
   addProperties(line=line, line_dict=line_dict, property_list=property_list)\n
@@ -145,6 +145,7 @@ return line_dict_list\n
                             <string>line</string>
                             <string>getattr</string>
                             <string>None</string>
+                            <string>round</string>
                             <string>line_dict</string>
                           </tuple>
                         </value>

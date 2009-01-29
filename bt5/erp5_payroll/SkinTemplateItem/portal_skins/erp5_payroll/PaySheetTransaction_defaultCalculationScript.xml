@@ -76,12 +76,12 @@ if tax_category_list != []:\n
 else:\n
   tax_category = None\n
 \n
-if base_amount_dict:\n
-  # get the application amount for this cell\n
-  for base in cell.getBaseApplicationList():\n
-    if base_amount_dict.has_key(base):\n
-      base_application += base_amount_dict[base][tax_category]\n
-\n
+# get the application amount for this cell\n
+for base in cell.getBaseApplicationList():\n
+  if base_amount_dict.has_key(base):\n
+    base_application += base_amount_dict[base][tax_category]\n
+if not len(cell.getBaseApplicationList()):\n
+  base_application = quantity\n
 \n
 salary_range_list = cell.getVariationCategoryList(\\\n
     base_category_list=\'salary_range\')\n
@@ -170,8 +170,8 @@ return {\'quantity\':quantity, \'price\':price}\n
                             <string>_getiter_</string>
                             <string>base</string>
                             <string>_inplacevar_</string>
-                            <string>salary_range_list</string>
                             <string>len</string>
+                            <string>salary_range_list</string>
                             <string>salary_range</string>
                             <string>model_slice_min</string>
                             <string>model_slice_max</string>
