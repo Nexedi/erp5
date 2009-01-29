@@ -141,7 +141,7 @@ FROM\n
   , catalog as parent\n
   , catalog as grandparent\n
 <dtml-in prefix="table" expr="from_table_list"> \n
-  <dtml-if expr="table_key != \'catalog\'">\n
+  <dtml-if expr="table_key not in (\'catalog\', \'movement\')">\n
   , <dtml-var table_item> AS <dtml-var table_key>\n
   </dtml-if>\n
 </dtml-in>\n
@@ -223,7 +223,7 @@ FROM\n
   , catalog as parent\n
   , catalog as grandparent\n
 <dtml-in prefix="table" expr="from_table_list"> \n
-  <dtml-if expr="table_key != \'catalog\'">\n
+  <dtml-if expr="table_key not in (\'catalog\', \'movement\')">\n
   , <dtml-var table_item> AS <dtml-var table_key>\n
   </dtml-if>\n
 </dtml-in>\n
