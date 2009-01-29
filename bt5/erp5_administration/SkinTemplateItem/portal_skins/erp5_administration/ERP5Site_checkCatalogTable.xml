@@ -73,8 +73,6 @@
   retry\n
     \n
 """\n
-context.log(\'starting with uid_min\', uid_min)\n
-context.log(\'starting with catalog_uid_list\', catalog_uid_list)\n
 from DateTime import DateTime\n
 from Products.CMFActivity.ActiveResult import ActiveResult\n
 active_result = ActiveResult()\n
@@ -89,15 +87,16 @@ if not catalog_kw.has_key(\'sort_on\'):\n
 if catalog_uid_list is None:\n
   # No uid list was given: fetch work to do from catalog and spawn activities\n
   first_run = uid_min is None\n
-  bundle_object_count = 200\n
   sql_kw = {}\n
   if uid_min is not None:\n
     # Check what is after last check\n
     catalog_kw[\'uid\'] = {\'query\': uid_min, \'range\': \'nlt\'}\n
   catalog_uid_list = [x.uid for x in context.portal_catalog(\n
-          limit=bundle_object_count * activity_count, \n
+          limit=bundle_object_count * activity_count,\n
           **catalog_kw)]\n
-  context.log(\'sql src\', context.portal_catalog(limit=bundle_object_count * activity_count, src__=1, **catalog_kw))\n
+  # Remove the uid once the parameter was given to catalog\n
+  if catalog_kw.has_key(\'uid\'):\n
+    catalog_kw.pop(\'uid\')\n
   if len(catalog_uid_list):\n
     # Get the last uid this pass will check, so that next pass will check a batch starting after this uid.\n
     uid_min = max(catalog_uid_list)\n
@@ -112,6 +111,7 @@ if catalog_uid_list is None:\n
       \'property_override_method_id\': property_override_method_id,\n
       \'active_process\': active_process,\n
       \'activity_count\': activity_count,\n
+      \'bundle_object_count\' : bundle_object_count,\n
       \'tag\': tag\n
     }\n
     for activity in xrange(activity_count):\n
@@ -140,9 +140,8 @@ else:\n
   retry_uid_list = []\n
   restrictedTraverse = context.getPortalObject().restrictedTraverse\n
   null_value_list = (\'\', None, 0.0, 0) # Values which are all considered equal.\n
-  catalog_line_list = context.portal_catalog(uid_list=catalog_uid_list, **catalog_kw)\n
+  catalog_line_list = context.portal_catalog(uid=catalog_uid_list, **catalog_kw)\n
   attribute_id_list = catalog_line_list.names()\n
-  context.log(\'attribute_id_list\', attribute_id_list)\n
   #attribute_id_list.remove(\'catalog_path\')\n
   for catalog_line in catalog_line_list:\n
     object_path = catalog_line[\'path\']\n
@@ -216,7 +215,7 @@ else:\n
   summary_list = []\n
   begin = catalog_uid_list[0]\n
   end = catalog_uid_list[-1]\n
-  entry_summary = \'Entries %s..%s\' % (begin, end)\n
+  entry_summary = \'%s Entries (%s..%s)\' % (len(catalog_uid_list), begin, end)\n
   summary_list.append(entry_summary)\n
   severity = len(result_list)\n
   if severity == 0:\n
@@ -242,6 +241,7 @@ else:\n
       \'property_override_method_id\': property_override_method_id,\n
       \'active_process\': active_process,\n
       \'activity_count\': activity_count,\n
+      \'bundle_object_count\' : bundle_object_count,\n
       \'tag\': tag\n
     }\n
     active_context.activate(tag=worker_tag, **activity_kw).ERP5Site_checkCatalogTable(catalog_uid_list=retry_uid_list, \n
@@ -297,12 +297,12 @@ return active_result\n
                             <string>retry</string>
                             <string>exception_portal_type_list</string>
                             <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>DateTime</string>
                             <string>Products.CMFActivity.ActiveResult</string>
                             <string>ActiveResult</string>
                             <string>active_result</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
                             <string>active_context</string>
                             <string>result_list</string>
                             <string>None</string>
