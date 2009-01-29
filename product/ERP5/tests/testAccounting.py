@@ -636,6 +636,10 @@ class TestTransactionValidation(AccountingTestCase):
     self.assertEquals('confirmed', transaction.getSimulationState())
     self.assertTrue(_checkPermission('Modify portal content', transaction))
 
+    doActionFor(transaction, 'start_action')
+    self.assertEquals('started', transaction.getSimulationState())
+    self.assertTrue(_checkPermission('Modify portal content', transaction))
+
     doActionFor(transaction, 'stop_action')
     self.assertEquals('stopped', transaction.getSimulationState())
     self.assertFalse(_checkPermission('Modify portal content', transaction))
