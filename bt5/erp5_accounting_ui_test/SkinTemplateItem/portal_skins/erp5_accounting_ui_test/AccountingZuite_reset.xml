@@ -55,6 +55,11 @@
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
 \n
+# validate rules\n
+for rule in portal.portal_rules.objectValues():\n
+  if rule.getReference() != \'default_payment_rule\':\n
+    rule.validate()\n
+\n
 # open all accounts\n
 for account in portal.account_module.objectValues():\n
   if account.getValidationState() != \'validated\':\n
@@ -143,6 +148,7 @@ return "Reset Successfully."\n
                             <string>context</string>
                             <string>portal</string>
                             <string>_getiter_</string>
+                            <string>rule</string>
                             <string>account</string>
                             <string>entity</string>
                             <string>pref</string>
