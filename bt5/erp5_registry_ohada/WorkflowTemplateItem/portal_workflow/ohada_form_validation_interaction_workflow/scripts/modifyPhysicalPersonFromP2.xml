@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -105,8 +93,11 @@ def attachLocationYearInfo(last_id):\n
 # the id_group is extended with the group path so that\n
 # each local registry has a different sequence\n
 default_address_city = request_eform.getPlace()\n
+group = (date.year(),)\n
 new_registry_number = request_eform.portal_ids.generateNewId(\n
-    id_group=\'sn-%s\' % request_eform.getGroup(), method=attachLocationYearInfo)\n
+                                     id_group = group,\n
+                                     method = attachLocationYearInfo)\n
+\n
 #variable used to store activity of the organisation,activities should be separated with commas, and no space between them\n
 activity_list=[]\n
 request_eform.setTitle(request_eform.getOwnerFirstName()+\' \'+request_eform.getOwnerLastName())\n
@@ -233,12 +224,6 @@ for history in history_list:\n
             </value>
         </item>
         <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>
@@ -287,6 +272,7 @@ for history in history_list:\n
                             <string>date</string>
                             <string>attachLocationYearInfo</string>
                             <string>default_address_city</string>
+                            <string>group</string>
                             <string>new_registry_number</string>
                             <string>activity_list</string>
                             <string>query</string>

@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -71,8 +59,8 @@ p_form = context.getObject()\n
 \n
 if p_form is not None:\n
   portal = context.getPortalObject()\n
-  rccm = current_object.getCorporateRegistrationCode()\n
-  pers_result = portal.person_module.searchFolder(corporate_registration_code=rccm)\n
+  rccm = p_form.getCorporateRegistrationCode()\n
+  pers_result = portal.organisation.searchFolder(corporate_registration_code=rccm)\n
   person_uid_list = [pers.getObject().getUid() for pers in pers_result]\n
 \n
   if len(person_uid_list) != 0 :\n
@@ -90,12 +78,6 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
             <value>
               <none/>
             </value>
@@ -134,7 +116,6 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                             <string>p_form</string>
                             <string>None</string>
                             <string>portal</string>
-                            <string>current_object</string>
                             <string>rccm</string>
                             <string>pers_result</string>
                             <string>append</string>

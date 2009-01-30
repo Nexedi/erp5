@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -65,7 +53,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>current_object = context.getObject()\n
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+current_object = context.getObject()\n
 assignment_list = current_object.getDestinationFormRelatedValueList()\n
 for assignment in assignment_list:\n
   if current_object.getPortalType()==\'M0\':\n
@@ -76,29 +67,25 @@ for assignment in assignment_list:\n
     portal = context.getPortalObject()\n
     rccm = current_object.getCorporateRegistrationCode()\n
     pers_result = context.ERP5RegistryOhada_getRelatedPersonList()\n
-    if len(pers_result) != 1:\n
+    if len(pers_result) < 1:\n
       raise ValidationFailed, \'There is no Person corresponding to the corporate registration code %s\' % rccm\n
     person = pers_result[0].getObject()\n
-    legal_form = person.getSocialForm()\n
+    #legal_form = person.getSocialForm()\n
   if assignment.getFunction()==\'entreprise/associe\' :\n
     if legal_form == \'gie\':\n
       assignment.getFunctionValue().setTitle(\'Membre du GIE\')\n
     elif legal_form == \'sarl\':\n
-      assignment.getFunctionValue().setTitle(\'Associ\xc3\xa9 de SARL\')\n
+      assignment.getFunctionValue().setTitle(\'Associé de SARL\')\n
     elif legal_form == \'sa\': \n
       assignment.getFunctionValue().setTitle(\'Actionnaire de SA\')\n
 \n
 return assignment_list\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
             <value>
               <none/>
             </value>
@@ -140,6 +127,8 @@ return assignment_list\n
                         <value>
                           <tuple>
                             <string>kw</string>
+                            <string>Products.DCWorkflow.DCWorkflow</string>
+                            <string>ValidationFailed</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>current_object</string>
@@ -151,7 +140,6 @@ return assignment_list\n
                             <string>rccm</string>
                             <string>pers_result</string>
                             <string>len</string>
-                            <string>ValidationFailed</string>
                             <string>_getitem_</string>
                             <string>person</string>
                           </tuple>

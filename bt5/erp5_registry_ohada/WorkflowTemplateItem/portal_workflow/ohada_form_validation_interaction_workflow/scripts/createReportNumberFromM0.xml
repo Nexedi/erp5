@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -83,6 +71,14 @@ def GenerateNewReportNumber(last_id):\n
     type_of_form = \'A\'\n
   elif request_eform.getPortalType()==\'S1\' or request_eform.getPortalType()==\'S5\':\n
     type_of_form = \'S\'\n
+  elif request_eform.getPortalType()==\'P2\' or request_eform.getPortalType()==\'P4\':\n
+    form_title = request_eform.getOwnerFirstName() + \' \' + request_eform.getOwnerLastName()\n
+    request_eform.setTitle(form_title) \n
+    type_of_form = \'M\'\n
+  elif request_eform.getPortalType()==\'M2\':\n
+    form_title = request_eform.getNewTitle()\n
+    request_eform.setTitle(form_title)\n
+    type_of_form = \'M\'\n
   else:\n
     type_of_form = \'M\'\n
   last_corporate_registration_code = str(str(last_id).split(\'-\').pop())\n
@@ -98,18 +94,6 @@ request_eform.edit(source_reference=new_report_number)\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>

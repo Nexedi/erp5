@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -114,9 +102,12 @@ def attachLocationYearInfo(last_id):\n
 # merchant_registry for merchants.\n
 # the id_group is extended with the group path so that\n
 # each local registry has a different sequence\n
+group = (application_date.year(),)\n
 \n
 new_registry_number = request_eform.portal_ids.generateNewId(\n
-        id_group =\'sn-%s\' % request_eform.getGroup(), method = attachLocationYearInfo)\n
+                                     id_group = group,\n
+                                     method = attachLocationYearInfo)\n
+\n
 # Update the request_eform with the allocated number\n
 request_eform.edit(registration_number = new_registry_number)\n
 # Update the registration date of the request_eform with the time when the registry officer\n
@@ -131,12 +122,6 @@ for history in history_list:\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
             <value>
               <none/>
             </value>
@@ -194,6 +179,7 @@ for history in history_list:\n
                             <string>organisation_list</string>
                             <string>context</string>
                             <string>attachLocationYearInfo</string>
+                            <string>group</string>
                             <string>new_registry_number</string>
                             <string>history_list</string>
                             <string>history</string>

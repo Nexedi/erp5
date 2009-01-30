@@ -10,27 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_bind_names</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_asgns</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
@@ -38,17 +17,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>M0_setAssignmentList</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>edit_order</string> </key>
-            <value>
-              <list/>
-            </value>
+            <value> <string>Base_doSelect</string> </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -56,7 +25,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string>application/x-www-form-urlencoded</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -91,16 +60,7 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_first_name</string>
-                        <string>listbox_last_name</string>
-                        <string>listbox_choice</string>
-                        <string>listbox_function</string>
-                        <string>listbox_id_card_number</string>
-                        <string>listbox_title</string>
-                        <string>listbox_start_date</string>
-                        <string>listbox_default_birthplace_address_city</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -120,11 +80,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>P0_viewAssignmentFastInputDialog</string> </value>
-        </item>
-        <item>
-            <key> <string>isIndexable</string> </key>
-            <value> <int>0</int> </value>
+            <value> <string>M2BisModule_viewM2BisList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -132,11 +88,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>P0_viewAssignmentFastInputDialog</string> </value>
+            <value> <string>M2BisModule_viewM2BisList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_dialog</string> </value>
+            <value> <string>form_list</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -148,15 +104,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Define Assignments</string> </value>
+            <value> <string>M2 Bis Module View</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>update_action</string> </key>
-            <value> <string>P0_updateAssignmentFastInputDialog</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -98,8 +86,11 @@ def attachLocationYearInfo(last_id):\n
 # each local registry has a different sequence\n
 default_address_city = request_eform.getPlace()\n
 \n
+group = (application_date.year(),)\n
 new_registry_number = request_eform.portal_ids.generateNewId(\n
-        id_group=\'sn-%s\' % request_eform.getGroup(), method=attachLocationYearInfo)\n
+                                     id_group = group,\n
+                                     method = attachLocationYearInfo)\n
+\n
 \n
 # Update the request_eform with the allocated number\n
 request_eform.edit(registration_number=new_registry_number)\n
@@ -114,12 +105,6 @@ for history in history_list:\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
             <value>
               <none/>
             </value>
@@ -168,6 +153,7 @@ for history in history_list:\n
                             <string>application_date</string>
                             <string>attachLocationYearInfo</string>
                             <string>default_address_city</string>
+                            <string>group</string>
                             <string>new_registry_number</string>
                             <string>history_list</string>
                             <string>_getiter_</string>

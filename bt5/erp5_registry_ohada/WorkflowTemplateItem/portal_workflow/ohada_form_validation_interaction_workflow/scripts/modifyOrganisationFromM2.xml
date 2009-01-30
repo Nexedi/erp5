@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -116,9 +104,12 @@ def attachLocationYearInfo(last_id):\n
 # using custom method attachLocationYearInfo\n
 # we use corporate_registry for corporations and\n
 # merchant_registry for merchants.\n
-new_registry_number = request_eform.portal_ids.generateNewId(\\\n
-    id_group = \'sn-%s\' % request_eform.getGroup(),\n
-    method=attachLocationYearInfo)\n
+group = (application_date.year(),)\n
+\n
+new_registry_number = request_eform.portal_ids.generateNewId(\n
+                                     id_group = group,\n
+                                     method = attachLocationYearInfo)\n
+\n
 \n
 #variable used to store activity of the organisation,activities should be\n
 #separated with commas, and no space between them\n
@@ -226,12 +217,6 @@ for m2_bis in m2_bis_list:\n
             </value>
         </item>
         <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>
@@ -291,6 +276,7 @@ for m2_bis in m2_bis_list:\n
                             <string>new_address</string>
                             <string>caracteristic_property_dict</string>
                             <string>attachLocationYearInfo</string>
+                            <string>group</string>
                             <string>new_registry_number</string>
                             <string>activity_list</string>
                             <string>append</string>

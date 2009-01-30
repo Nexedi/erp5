@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -141,7 +129,7 @@ def attachLocationYearInfo(last_id):\n
   new_corporate_registration_code  = \'%05d\' % int(str(int(last_corporate_registration_code)+1))\n
   return (\'-\'.join([\'SN\', location_initials, year,\n
     type_of_form,new_corporate_registration_code]))\n
-\n
+  \n
 # We shall now allocate a new registry number\n
 # using custom method attachLocationYearInfo\n
 # we use corporate_registry for corporations and\n
@@ -149,9 +137,13 @@ def attachLocationYearInfo(last_id):\n
 # the id_group is extended with the group path so that\n
 # each local registry has a different sequence\n
 default_address_city = request_eform.getDefaultAddressCity()\n
+\n
+group = (date.year(),)\n
+#id_group =\'sn-%s-%s\'%(str(date.year()),request_eform.getGroup())\n
 new_registry_number = request_eform.portal_ids.generateNewId(\n
-                                     id_group = \'sn-%s\' % request_eform.getGroup(),\n
+                                     id_group = group,\n
                                      method = attachLocationYearInfo)\n
+\n
 \n
 # Open all assignemnts that are in open_submitted state\n
 person_module = context.getPortalObject().person_module\n
@@ -225,18 +217,6 @@ for M0_bis in M0_bis_list:\n
             </value>
         </item>
         <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>
@@ -300,6 +280,7 @@ for M0_bis in M0_bis_list:\n
                             <string>m0_bis_activities</string>
                             <string>attachLocationYearInfo</string>
                             <string>default_address_city</string>
+                            <string>group</string>
                             <string>new_registry_number</string>
                             <string>context</string>
                             <string>person_module</string>

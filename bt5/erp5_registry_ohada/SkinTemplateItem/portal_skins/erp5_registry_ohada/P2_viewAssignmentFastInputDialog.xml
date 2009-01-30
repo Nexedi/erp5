@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -96,20 +90,19 @@
                         <string>listbox_last_name</string>
                         <string>listbox_id_card_number</string>
                         <string>listbox_title</string>
-                        <string>listbox_default_birthplace_city</string>
                         <string>listbox_status</string>
                         <string>listbox_choice</string>
                         <string>listbox_function</string>
                         <string>listbox_old_function</string>
+                        <string>listbox_start_date</string>
+                        <string>listbox_default_birthplace_address_city</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_start_date</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
