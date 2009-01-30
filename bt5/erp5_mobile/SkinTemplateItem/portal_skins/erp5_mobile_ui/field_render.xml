@@ -80,12 +80,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         <label>\n
           <tal:block tal:content="structure python: html_tuple[0]"\n
                     i18n:translate="" i18n:domain="ui"/>\n
-          <tal:block tal:condition="preferred_html_style_developper_mode">\n
-            <tal:block metal:use-macro="developper_shortcut_render/macros/field_developper"/>\n
-          </tal:block>\n
-          <tal:block tal:condition="preferred_html_style_translator_mode">\n
-            <tal:block metal:use-macro="developper_shortcut_render/macros/field_translator"/>\n
-          </tal:block>\n
         </label>\n
         <div class="input" tal:content="structure python: html_tuple[1]"/>\n
         <span tal:condition="python: field_has_error"\n

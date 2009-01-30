@@ -74,9 +74,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                              center_group python: form.get_fields_in_group(\'center\');\n
                              dialog_actions python: actions.get(dialog_category, []);\n
                              field_render here/field_render/macros/field_render">\n
-        <tal:block tal:condition="preferred_html_style_developper_mode">\n
-          <tal:block metal:use-macro="developper_shortcut_render/macros/form" />\n
-        </tal:block>\n
         <div tal:condition="python: len(left_group) or len(right_group) or len(center_group) or len(dialog_actions)>1"\n
              class="dialog_box">\n
           <div tal:condition="python: len(dialog_actions) > 1"\n
@@ -131,13 +128,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         <div tal:condition="python: len(bottom_group) > 0"\n
              class="bottom">\n
           <tal:block tal:repeat="field bottom_group">\n
-            <tal:block tal:condition="preferred_html_style_developper_mode">\n
-              <tal:block metal:use-macro="developper_shortcut_render/macros/field_developper"/>\n
-            </tal:block>\n
-            <tal:block tal:define="field_description python: here.Base_getFieldDescription(form_id=form.id, field=field)"\n
-                       tal:condition="preferred_html_style_translator_mode">\n
-              <tal:block metal:use-macro="developper_shortcut_render/macros/field_translator"/>\n
-            </tal:block>\n
             <tal:block tal:define="value python:request.get(field.id, None)"\n
                        tal:replace="structure python:field.render(value, request)" />\n
           </tal:block>\n

@@ -94,10 +94,6 @@ It is possible to specify a group id and a group title by naming a group followi
                 gid_list     python: \' \'.join([x[\'gid\'] for x in group_list if x!=\'hidden\']);\n
                 field_render nocall: here/field_render/macros/field_render">\n
 \n
-    <tal:block tal:condition="preferred_html_style_developper_mode">\n
-      <tal:block metal:use-macro="developper_shortcut_render/macros/form"/>\n
-    </tal:block>\n
-\n
     <tal:block tal:repeat="group group_list">\n
       <tal:block tal:define="gid     group/gid;">\n
         <fieldset tal:condition="python: gid.find(\'hidden\') < 0"\n
