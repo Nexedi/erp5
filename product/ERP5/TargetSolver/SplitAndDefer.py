@@ -56,7 +56,7 @@ class SplitAndDefer(CopyToTarget):
       while getattr(simulation_movement.getParentValue(), new_id, None) is not None:
         split_index += 1
         new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
-      # Adopt different dates for defferred movements
+      # Adopt different dates for deferred movements
       new_movement = simulation_movement.getParentValue().newContent(
                         portal_type="Simulation Movement",
                         id=new_id,
@@ -68,6 +68,7 @@ class SplitAndDefer(CopyToTarget):
 
                         resource=simulation_movement.getResource(),
                         quantity=movement_quantity - new_movement_quantity,
+                        quantity_unit=simulation_movement.getQuantityUnit(),
 
                         price=simulation_movement.getPrice(),
                         price_currency=simulation_movement.getPriceCurrency(),
@@ -76,7 +77,12 @@ class SplitAndDefer(CopyToTarget):
                         destination=simulation_movement.getDestination(),
                         source_section=simulation_movement.getSourceSection(),
                         destination_section=simulation_movement.getDestinationSection(),
+                        source_function=simulation_movement.getSourceFunction(),
+                        destination_function=simulation_movement.getDestinationFunction(),
+                        variation_category_list=simulation_movement.getVariationCategoryList(),
+                        variation_property_dict=simulation_movement.getVariationPropertyDict(),
 
+                        base_application_list=simulation_movement.getBaseApplicationList(),
                         base_contribution_list=simulation_movement.getBaseContributionList(),
                         description=simulation_movement.getDescription(),
                         activate_kw=self.activate_kw,
