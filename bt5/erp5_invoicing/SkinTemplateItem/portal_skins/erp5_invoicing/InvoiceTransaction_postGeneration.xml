@@ -53,32 +53,62 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>#\n
-#  this script is called on the Invoice after the delivery builder has created\n
-# the new Invoice.\n
-# it calls InvoiceTransaction_postGenerationActivity when indexing is done \n
-#\n
+            <value> <string>"""This script is called on the Invoice after the delivery builder has created\n
+the new Invoice.\n
+"""\n
+from Products.ERP5Type.Message import translateString\n
+try:\n
+  from Products.CMFCore.WorkflowCore import WorkflowException\n
+except ImportError:\n
+  # WorkflowException has not always been allowed in restricted\n
+  # environment, in this case, make sure WorkflowException is \n
+  # defined \n
+  class WorkflowException(Exception):\n
+    pass\n
 \n
 if related_simulation_movement_path_list is None:\n
   raise RuntimeError, \'related_simulation_movement_path_list is missing. Update ERP5 Product.\'\n
 \n
-activate_kw = dict(\n
-      after_path_and_method_id=(related_simulation_movement_path_list,\n
-                                  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\')),)\n
-\n
 invoice = context\n
-packing_list = invoice.getCausalityValue()\n
-if packing_list is not None:\n
-  order = packing_list.getCausalityValue()\n
-  if order is not None:\n
-    invoice.setSpecialise(order.getSpecialise())\n
-  # this is tax tag from packing_list_workflow scripts\n
-  activate_kw[\'after_tag\'] = \'build_invoice_tax_%s\' % packing_list.getRelativeUrl()\n
 \n
-invoice.activate(\n
-        **activate_kw\n
-        ).InvoiceTransaction_postGenerationActivity(\n
-                          related_simulation_movement_path_list=related_simulation_movement_path_list, **kw)\n
+# set resource from price currency\n
+if not invoice.getResource():\n
+  invoice.setResource(invoice.getPriceCurrency())\n
+\n
+related_packing_list = invoice.getDefaultCausalityValue()\n
+\n
+# copy trade condition:\n
+if not context.getSpecialise():\n
+  related_order = related_packing_list.getDefaultCausalityValue()\n
+  if related_order is not None:\n
+    context.edit(specialise=related_order.getSpecialise())\n
+\n
+# copy title, if not updating a new delivery\n
+if not invoice.hasTitle() and related_packing_list.hasTitle():\n
+  invoice.setTitle(related_packing_list.getTitle())\n
+\n
+# initialize accounting_workflow to confirmed state\n
+if invoice.getSimulationState() == \'draft\':\n
+  try :\n
+    context.getPortalObject().portal_workflow.doActionFor(\n
+      invoice, \'confirm_action\',\n
+      comment=translateString(\'Initialized by Delivery Builder.\'),\n
+      skip_period_validation=1)\n
+  except WorkflowException, e:\n
+    # The user cannot pass the transition, it\'s OK\n
+    pass\n
+\n
+  if invoice.getSimulationState() == \'draft\':\n
+    # call the workflow method, if the user cannot perform this operation.\n
+    invoice.confirm(comment=translateString(\'Initialized by Delivery Builder.\'),)\n
+\n
+\n
+# First set the invoice in the building state on the causality workflow\n
+invoice.startBuilding()\n
+\n
+# Then an activity should put the causality state in diverged or solved\n
+invoice.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
+  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))).updateCausalityState()\n
 </string> </value>
         </item>
         <item>
@@ -117,17 +147,20 @@ invoice.activate(\n
                           <tuple>
                             <string>related_simulation_movement_path_list</string>
                             <string>kw</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>translateString</string>
+                            <string>Products.CMFCore.WorkflowCore</string>
+                            <string>WorkflowException</string>
+                            <string>ImportError</string>
+                            <string>Exception</string>
                             <string>None</string>
                             <string>RuntimeError</string>
-                            <string>dict</string>
-                            <string>activate_kw</string>
                             <string>context</string>
                             <string>invoice</string>
                             <string>_getattr_</string>
-                            <string>packing_list</string>
-                            <string>order</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
+                            <string>related_packing_list</string>
+                            <string>related_order</string>
+                            <string>e</string>
                           </tuple>
                         </value>
                     </item>
