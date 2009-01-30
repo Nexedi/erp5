@@ -115,6 +115,13 @@ dialog.manage_addField(\n
 dialog.your_format.manage_edit_xmlrpc(\n
     dict(form_id=\'Base_viewDialogFieldLibrary\',\n
          field_id=\'your_format\'))\n
+dialog.manage_addField(\n
+         id=\'your_deferred_style\',\n
+         fieldname=\'ProxyField\',\n
+         title=\'\')\n
+dialog.your_deferred_style.manage_edit_xmlrpc(\n
+    dict(form_id=\'Base_viewDialogFieldLibrary\',\n
+         field_id=\'your_deferred_style\'))\n
 \n
 # Associate the dialog with type information\n
 type_information = portal.portal_types.getTypeInfo(portal_type)\n
