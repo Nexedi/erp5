@@ -100,6 +100,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                     i18n:translate="" i18n:domain="ui">Go</span>\n
             </button>\n
           </div>\n
+        <tal:block metal:define-macro="content">\n
           <div class="content"\n
                       tal:define="group_list python: form.Form_getGroupTitleAndId();\n
                                   gid_list   python: \' \'.join([x[\'gid\'] for x in group_list if x not in (\'bottom\', \'hidden\')]);">\n
@@ -118,9 +119,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
             </tal:block>\n
             <p class="clear"></p>\n
           </div>\n
+        </tal:block>\n
         </div>\n
       </tal:block>\n
     </tal:block>\n
+    <tal:block metal:define-macro="bottom">\n
     <tal:block metal:fill-slot="bottom">\n
       <tal:block tal:define="field_errors python: request.get(\'field_errors\',{});\n
                               dummy python: request.set(\'here\', here);\n
@@ -133,6 +136,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           </tal:block>\n
         </div>\n
       </tal:block>\n
+    </tal:block>\n
     </tal:block>\n
   </tal:block>\n
   </div>\n
