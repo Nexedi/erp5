@@ -263,7 +263,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>cell/debit|cell/AccountingTransactionModule_getSourceDebit</string> </value>
+            <value> <string>cell/debit | cell/AccountingTransaction_getTotalDebit</string> </value>
         </item>
       </dictionary>
     </pickle>

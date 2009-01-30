@@ -53,26 +53,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>params = context.portal_selections.getSelectionParamsFor(selection_name)\n
+            <value> <string>is_source = context.AccountingTransaction_isSourceView()\n
+total_debit = 0\n
+for line in context.getMovementList(\n
+      portal_type=context.getPortalAccountingMovementTypeList()):\n
+  if is_source:\n
+    total_debit += line.getDestinationInventoriatedTotalAssetDebit()\n
+  else:\n
+    total_debit += line.getSourceInventoriatedTotalAssetDebit()\n
 \n
-params[\'stat\'] = 1\n
-params[\'omit_input\'] = 1\n
-params[\'omit_output\'] = 0\n
-\n
-if params.get(\'operation_date\', {}).get(\'query\'):\n
-  buildSQLQuery = context.portal_catalog.buildSQLQuery\n
-  params[\'source_section_where_expression\'] = buildSQLQuery(\n
-            **{\'delivery.start_date\': params[\'operation_date\']})[\'where_expression\']\n
-  params[\'destination_section_where_expression\'] = buildSQLQuery(\n
-            **{\'delivery.stop_date\': params[\'operation_date\']})[\'where_expression\']\n
-  del params[\'operation_date\']\n
-\n
-result = context.AccountingTransactionModule_zGetAccountingTransactionList(\n
-              selection=selection,\n
-              selection_params=params, **params)\n
-row = result[0]\n
-return float(\'%.02f\' % (row.total_price and - row.total_price or 0.0))\n
-# vim: syntax=python\n
+return total_debit\n
 </string> </value>
         </item>
         <item>
@@ -83,7 +73,7 @@ return float(\'%.02f\' % (row.total_price and - row.total_price or 0.0))\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection=None, selection_name=None, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -103,25 +93,20 @@ return float(\'%.02f\' % (row.total_price and - row.total_price or 0.0))\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>selection</string>
-                            <string>selection_name</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>params</string>
-                            <string>_write_</string>
-                            <string>buildSQLQuery</string>
-                            <string>_getitem_</string>
-                            <string>_apply_</string>
-                            <string>result</string>
-                            <string>row</string>
-                            <string>float</string>
+                            <string>is_source</string>
+                            <string>total_debit</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                            <string>_inplacevar_</string>
                           </tuple>
                         </value>
                     </item>
@@ -133,15 +118,12 @@ return float(\'%.02f\' % (row.total_price and - row.total_price or 0.0))\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingTransactionModule_statSourceCredit</string> </value>
+            <value> <string>AccountingTransaction_getTotalCredit</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

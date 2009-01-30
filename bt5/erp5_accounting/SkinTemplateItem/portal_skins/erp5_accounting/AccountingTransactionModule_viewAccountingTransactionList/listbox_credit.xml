@@ -263,7 +263,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>cell/credit|cell/AccountingTransactionModule_getSourceCredit</string> </value>
+            <value> <string>cell/credit | cell/AccountingTransaction_getTotalCredit</string> </value>
         </item>
       </dictionary>
     </pickle>
