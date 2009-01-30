@@ -588,7 +588,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         for key, value in role_column_dict.items():
           new_query = Query(**{key : value})
           query_list.append(new_query)
-        operator_kw = {'operator': 'AND'}
+        operator_kw = {'operator': 'OR'}
         query = ComplexQuery(*query_list, **operator_kw)
         # If security_uid_list is empty, adding it to criterions will only
         # result in "false or [...]", so avoid useless overhead by not
