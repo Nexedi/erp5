@@ -54,7 +54,7 @@ class SplitAndDefer(CopyToTarget):
       split_index = 0
       new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
       applied_rule = simulation_movement.getParentValue()
-      while new_id in applied_rule.objectIds():
+      while getattr(aq_base(applied_rule), new_id, None) is not None:
         split_index += 1
         new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
       # Adopt different dates for deferred movements
