@@ -154,7 +154,7 @@ Test for Creating Reversal Transaction for an Accounting Transaction\n
 \n
 <!-- Post the transaction to the GL {{{\n
 because the \'create reversal\' action is only available when simulation_state =\n
-delivered. FIXME: we won\'t be able to delete the transaction later\n
+delivered.\n
 -->\n
 <tr>\n
   <td>selectAndWait</td>\n
@@ -173,7 +173,7 @@ delivered. FIXME: we won\'t be able to delete the transaction later\n
 </tr>\n
 <tr>\n
   <td>assertTextPresent</td>\n
-  <td>Posted</td>\n
+  <td>Posted to General Ledger</td>\n
   <td></td>\n
 </tr>\n
 <!-- next step to delivered step. -->\n
