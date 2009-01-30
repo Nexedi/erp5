@@ -98,7 +98,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
            </div>\n
 \n
 <!--         <div class="aff_options">\n
-          <a class="list_mode link" title="List Mode" tal:attributes="onclick string: affOptions()">\n
+          <a class="list_mode link" title="List Mode" onClick="affOptions()">\n
               <span class="mobil" i18n:translate="" i18n:domain="ui"> < Options ></span> \n
           </a>\n
          </div>   -->\n

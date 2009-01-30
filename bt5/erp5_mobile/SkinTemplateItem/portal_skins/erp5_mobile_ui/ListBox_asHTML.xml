@@ -194,7 +194,7 @@
               </tal:block>\n
 \t          <div name="selection_mui" style="padding-bottom: 5px;">\n
 \n
-                    <select id="select" tal:attributes="onChange string:applyHiddenType()">\n
+                    <select id="select" onChange="applyHiddenType()">\n
                       <tal:block tal:repeat="valueX here/getSearchValueList">\n
                         <tal:block tal:define="\n
                                      aliasX python: valueX[0];\n

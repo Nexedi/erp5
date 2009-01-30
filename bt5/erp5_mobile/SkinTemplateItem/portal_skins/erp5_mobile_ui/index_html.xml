@@ -87,9 +87,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           <div id="navigation_bar">\n
             <div id="favourites" class="mod_badg">\n
               <select name="select_favorite"\n
+                      onChange="submitAction(this.form,\'Base_doFavorite\')"\n
                       tal:define="ordered_global_actions python:here.getOrderedGlobalActionList(actions[\'global\']);\n
-                                  user_actions actions/user;"\n
-                      tal:attributes="onChange string:submitAction(this.form,\'Base_doFavorite\')">\n
+                                  user_actions actions/user;">\n
                 <option selected="selected" value=""\n
                         i18n:translate="" i18n:domain="ui">My favourites</option>\n
                 <tal:block tal:repeat="action ordered_global_actions">\n
@@ -124,8 +124,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
   \n
             <div id="modules" class="mod_badg">\n
               <select name="select_module"\n
-                      tal:define="module_list here/ERP5Site_getModuleItemList;"\n
-                      tal:attributes="onChange string:submitAction(this.form,\'Base_doModule\')">\n
+                      onChange="submitAction(this.form,\'Base_doModule\')">\n
+                      tal:define="module_list here/ERP5Site_getModuleItemList;">\n
                 <option selected="selected" value="" i18n:translate="" i18n:domain="ui">ERP5 Modules</option>\n
                 <option tal:repeat="module module_list"\n
                         tal:attributes="value python: module[1]"\n
@@ -142,7 +142,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
   \n
             <div id="language" class="mod_badg">\n
               <select name="select_language"\n
-                      tal:attributes="onChange string:submitAction(this.form,\'Base_doLanguage\')">\n
+                      onChange="submitAction(this.form,\'Base_doLanguage\')">\n
                 <option value=""\n
                         i18n:translate="" i18n:domain="ui">My language</option>\n
                 <option tal:repeat="language python: here.Localizer.get_languages_map()"\n

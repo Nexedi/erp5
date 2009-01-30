@@ -86,7 +86,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                                         }.get(dialog_category, \'Select\')"\n
                   i18n:translate="" i18n:domain="ui"></label>\n
             <select name="select_dialog" id="dialog_selector"\n
-                    tal:attributes="onChange string:submitAction(this.form,\'Base_doDialog\')">\n
+                    onChange="submitAction(this.form,\'Base_doDialog\')">\n
               <tal:block tal:repeat="action dialog_actions">\n
                 <option tal:attributes="value action/url;\n
                                         selected python: action is current_action and \'selected\' or None"\n
