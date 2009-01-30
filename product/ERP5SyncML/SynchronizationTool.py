@@ -901,13 +901,7 @@ class SynchronizationTool( SubscriptionSynchronization,
         auth_handler, TimeoutHTTPHandler)
     urllib2.install_opener(opener)
     to_encode = {}
-    head = '<?xml version="1.0" encoding="UTF-8"?>'
-
-    if content_type == self.CONTENT_TYPE['SYNCML_WBXML']:
-      #because xml2wbxml add the head to the xml
-      to_encode['text'] = xml
-    else:
-      to_encode['text'] = head + xml
+    to_encode['text'] = xml
     to_encode['sync_id'] = sync_id
     headers = {'User-Agent':'ERP5SyncML', 'Content-Type':content_type}
 
