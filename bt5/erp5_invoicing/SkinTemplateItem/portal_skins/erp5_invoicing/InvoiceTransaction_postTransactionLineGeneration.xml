@@ -77,10 +77,10 @@ if len(resources_keys.keys()) == 1 :\n
   # the lines. \n
   for line in context.contentValues(portal_type=accounting_line_portal_type):\n
     line.setResource(None)\n
-    assert(line.getResource() == sale_invoice.getResource())\n
+    assert(line.getResource() == context.getResource())\n
 else :\n
   raise ValueError, "%s doesn\'t have only one resource %s" % (\n
-              sale_invoice.getPath(), resources_keys.keys())\n
+              context.getPath(), resources_keys.keys())\n
 \n
 # round debit / credit on created transaction.\n
 context.AccountingTransaction_roundDebitCredit()\n
@@ -131,7 +131,6 @@ context.AccountingTransaction_roundDebitCredit()\n
                             <string>len</string>
                             <string>_getitem_</string>
                             <string>None</string>
-                            <string>sale_invoice</string>
                             <string>AssertionError</string>
                             <string>ValueError</string>
                           </tuple>
