@@ -65,14 +65,18 @@ class SplitAndDefer(CopyToTarget):
                         stop_date=self.stop_date,
                         order=simulation_movement.getOrder(),
                         deliverable=simulation_movement.isDeliverable(),
-                        quantity=movement_quantity-new_movement_quantity,
-                        price = simulation_movement.getPrice(),
-                        price_currency = simulation_movement.getPriceCurrency(),
-                        source = simulation_movement.getSource(),
-                        destination = simulation_movement.getDestination(),
-                        source_section = simulation_movement.getSourceSection(),
-                        resource = simulation_movement.getResource(),
-                        destination_section = simulation_movement.getDestinationSection(),
+
+                        resource=simulation_movement.getResource(),
+                        quantity=movement_quantity - new_movement_quantity,
+
+                        price=simulation_movement.getPrice(),
+                        price_currency=simulation_movement.getPriceCurrency(),
+
+                        source=simulation_movement.getSource(),
+                        destination=simulation_movement.getDestination(),
+                        source_section=simulation_movement.getSourceSection(),
+                        destination_section=simulation_movement.getDestinationSection(),
+
                         base_contribution_list=simulation_movement.getBaseContributionList(),
                         description=simulation_movement.getDescription(),
                         activate_kw=self.activate_kw,
