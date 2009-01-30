@@ -24,6 +24,7 @@
                 <string>search</string>
                 <string>select</string>
                 <string>editable_columns</string>
+                <string>stat_columns</string>
                 <string>editable</string>
               </list>
             </value>
@@ -230,6 +231,12 @@
                           <string>disabled</string>
                         </tuple>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>stat_columns</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>
