@@ -46,6 +46,7 @@ from urllib import quote, unquote
 from DateTime import DateTime
 from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlugin
 from Products.ERP5Type.Cache import CachingMethod
+from urlparse import urlparse
 
 # global (RAM) cookie storage
 cookiejar = cookielib.CookieJar()
@@ -399,9 +400,18 @@ class WizardTool(BaseTool):
   def _callRemoteMethod(self, distant_method, server_url=None, use_proxy=0, **kw):
     """ Call remote method on server and get result. """
     result_call = GeneratorCall()
+    friendly_server_url = server_url
     if server_url is None:
       # calculate it
       server_url = self.getServerUrl() + self.getServerRoot()
+      # include authentication if possible
+      user_and_password = self._getSubsribedUserAndPassword()
+      if (len(user_and_password)==2 and
+          user_and_password[0] and user_and_password[1]):
+        friendly_server_url = server_url
+        schema = urlparse(server_url)
+        server_url = '%s://%s:%s@%s%s' %(schema[0], user_and_password[0], user_and_password[1],
+                                         schema[1], schema[2])
     witch_tool = self._getRemoteWitchTool(server_url)
     parameter_dict = self.REQUEST.form.copy()
     if use_proxy:
@@ -419,7 +429,7 @@ class WizardTool(BaseTool):
       html = method(parameter_dict)
     except socket.error, message:
       html = _generateErrorXML("""Cannot contact the server: %s.
-                                  Please check your network settings."""  %server_url)
+                                  Please check your network settings."""  %friendly_server_url)
       zLOG.LOG('Wizard Tool socket error', zLOG.ERROR, message)
       result_call.update({"command": "show",
                           "data": html,
@@ -427,14 +437,14 @@ class WizardTool(BaseTool):
                           "previous": None})
     except xmlrpclib.ProtocolError, message:
       html = _generateErrorXML("""The server %s refused to reply.
-                                  Please contact erp5-dev@erp5.org""" % server_url)
+                                  Please contact erp5-dev@erp5.org""" %friendly_server_url)
       zLOG.LOG('Wizard Tool xmlrpc protocol error', zLOG.ERROR, message)
       result_call.update({"command": "show",
                           "data": html,
                           "next": None,
                           "previous": None})
     except xmlrpclib.Fault, message:
-      html = _generateErrorXML("Error/bug inside the server: %s." % server_url)
+      html = _generateErrorXML("Error/bug inside the server: %s." %friendly_server_url)
       zLOG.LOG('Wizard Tool xmlrpc fault', zLOG.ERROR, message)
       result_call.update({"command": "show",
                           "data": html,
