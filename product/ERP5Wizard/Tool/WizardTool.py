@@ -50,6 +50,7 @@ from urlparse import urlparse
 
 # global (RAM) cookie storage
 cookiejar = cookielib.CookieJar()
+last_loggedin_user_and_password = None
 referer  = None
 installation_status = {'bt5': {'current': 0,
                                'all': 0,},
@@ -267,7 +268,7 @@ class WizardTool(BaseTool):
   security.declareProtected(Permissions.View, 'proxy')
   def proxy(self, **kw):
     """Proxy a request to a server."""
-    global cookiejar, referer
+    global cookiejar, referer, last_loggedin_user_and_password
     if self.REQUEST['REQUEST_METHOD'] != 'GET':
       # XXX this depends on the internal of HTTPRequest.
       pos = self.REQUEST.stdin.tell()
@@ -315,6 +316,9 @@ class WizardTool(BaseTool):
     user_and_password = self._getSubsribedUserAndPassword()
     if (len(user_and_password)==2 and
         user_and_password[0] and user_and_password[1]):
+      if user_and_password!=last_loggedin_user_and_password:
+        # credentials changed we need to renew __ac cookie from server as well
+	cookiejar = cookielib.CookieJar() 
       # try login to server only once using cookie method
       if not _isUserAcknowledged(cookiejar):
         server_url = self.getServerUrl()
@@ -327,7 +331,8 @@ class WizardTool(BaseTool):
         if not _isUserAcknowledged(cookiejar):
           auth = 'Basic %s' % base64.standard_b64encode('%s:%s' % user_and_password)
           header_dict['Authorization'] = auth
-
+        # save last credentials we passed to server
+	last_loggedin_user_and_password = user_and_password
     if content_type:
       header_dict['Content-Type'] = content_type
 
