@@ -105,7 +105,7 @@ import logging
 # Main logging channel
 activity_logger = logging.getLogger('CMFActivity')
 # Some logging subchannels
-activity_tracking_logger = logging.getLogger('CMFActivity.Tracking')
+activity_tracking_logger = logging.getLogger('Tracking')
 activity_timing_logger = logging.getLogger('CMFActivity.TimingLog')
 
 # Direct logging to "[instancehome]/log/CMFActivity.log", if this directory exists.
