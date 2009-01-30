@@ -49,7 +49,19 @@ from Acquisition import aq_inner
 from ActivityBuffer import ActivityBuffer
 from zExceptions import ExceptionFormatter
 from BTrees.OIBTree import OIBTree
-from Products import iHotfix
+
+try:
+  from Products import iHotfix
+  localizer_lock = iHotfix._the_lock
+  localizer_contexts = iHotfix.contexts
+  LocalizerContext = iHotfix.Context
+except ImportError:
+  # Localizer 1.2 includes iHotFix patches
+  import Products.Localizer.patches
+  localizer_lock = Products.Localizer.patches._requests_lock
+  localizer_contexts = Products.Localizer.patches._requests
+  LocalizerContext = lambda request: request
+
 
 from ZODB.POSException import ConflictError
 from Products.MailHost.MailHost import MailHostError
@@ -1036,7 +1048,7 @@ class ActivityTool (Folder, UniqueObject):
     def invoke(self, message):
       if self.activity_tracking:
         activity_tracking_logger.info('invoking message: object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % ('/'.join(message.object_path), message.method_id, message.args, message.kw, message.activity_kw, message.user_name))
-      old_ihotfix_context = False
+      old_localizer_context = False
       if getattr(self, 'aq_chain', None) is not None:
         # Grab existing acquisition chain and extrach base objects.
         base_chain = [aq_base(x) for x in self.aq_chain]
@@ -1055,7 +1067,7 @@ class ActivityTool (Folder, UniqueObject):
         # runing unit tests. Recreate it if it does not exist.
         if getattr(request.other, 'PARENTS', None) is None:
           request.other['PARENTS'] = parents
-        # XXX: itools (used by iHotfix) requires PATH_INFO to be set, and it's
+        # XXX: itools (used by Localizer) requires PATH_INFO to be set, and it's
         # not when runing unit tests. Recreate it if it does not exist.
         if request.environ.get('PATH_INFO') is None:
           request.environ['PATH_INFO'] = '/Control_Panel/timer_service/process_timer'
@@ -1072,16 +1084,16 @@ class ActivityTool (Folder, UniqueObject):
           new_request.other['VirtualRootPhysicalPath'] = request_info['VirtualRootPhysicalPath']
         if 'HTTP_ACCEPT_LANGUAGE' in request_info:
           new_request.environ['HTTP_ACCEPT_LANGUAGE'] = request_info['HTTP_ACCEPT_LANGUAGE']
-          # Replace iHotfix Context, saving existing one
-          ihotfix_context = iHotfix.Context(new_request)
+          # Replace Localizer/iHotfix Context, saving existing one
+          localizer_context = LocalizerContext(new_request)
           id = get_ident()
-          iHotfix._the_lock.acquire()
+          localizer_lock.acquire()
           try:
-            old_ihotfix_context = iHotfix.contexts.get(id)
-            iHotfix.contexts[id] = ihotfix_context
+            old_localizer_context = localizer_contexts.get(id)
+            localizer_contexts[id] = localizer_context
           finally:
-            iHotfix._the_lock.release()
-          # Execute iHotfix "patch 2"
+            localizer_lock.release()
+          # Execute Localizer/iHotfix "patch 2"
           new_request.processInputs()
 
         new_request_container = request_container.__class__(REQUEST=new_request)
@@ -1100,17 +1112,17 @@ class ActivityTool (Folder, UniqueObject):
           # Restore default skin selection
           skinnable = self.getPortalObject()
           skinnable.changeSkin(skinnable.getSkinNameFromRequest(request))
-        if old_ihotfix_context is not False:
-          # Restore iHotfix context
+        if old_localizer_context is not False:
+          # Restore Localizer/iHotfix context
           id = get_ident()
-          iHotfix._the_lock.acquire()
+          localizer_lock.acquire()
           try:
-            if old_ihotfix_context is None:
-              del iHotfix.contexts[id]
+            if old_localizer_context is None:
+              del localizer_contexts[id]
             else:
-              iHotfix.contexts[id] = old_ihotfix_context
+              localizer_contexts[id] = old_localizer_context
           finally:
-            iHotfix._the_lock.release()
+            localizer_lock.release()
       if self.activity_tracking:
         activity_tracking_logger.info('invoked message')
       if my_self is not self: # We rewrapped self
