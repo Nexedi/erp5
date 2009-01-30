@@ -53,11 +53,12 @@ class SplitAndDefer(CopyToTarget):
     if movement_quantity > new_movement_quantity:
       split_index = 0
       new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
-      while getattr(simulation_movement.getParentValue(), new_id, None) is not None:
+      applied_rule = simulation_movement.getParentValue()
+      while new_id in applied_rule.objectIds():
         split_index += 1
         new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
       # Adopt different dates for deferred movements
-      new_movement = simulation_movement.getParentValue().newContent(
+      new_movement = applied_rule.newContent(
                         portal_type="Simulation Movement",
                         id=new_id,
                         efficiency=simulation_movement.getEfficiency(),
