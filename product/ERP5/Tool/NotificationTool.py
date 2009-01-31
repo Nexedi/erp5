@@ -31,6 +31,8 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
+from Products.ERP5.Document.Document import ConversionError
+from Products.ERP5.Document.EmailDocument import MimeTypeException
 
 from mimetypes import guess_type
 from email.MIMEMultipart import MIMEMultipart
