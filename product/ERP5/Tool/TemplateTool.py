@@ -47,10 +47,7 @@ from xml.dom.minidom import parse
 import struct
 import cPickle
 import posixpath
-try:
-  from base64 import b64encode, b64decode
-except ImportError:
-  from base64 import encodestring as b64encode, decodestring as b64decode
+from base64 import b64encode, b64decode
 from Products.ERP5Type.Message import translateString
 from zLOG import LOG, INFO
 

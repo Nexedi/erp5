@@ -40,12 +40,7 @@ from DateTime import DateTime
 from zLOG import LOG, DEBUG, INFO
 
 import md5
-
-try:
-    from base64 import b64encode, b64decode, b16encode, b16decode
-except ImportError:
-    from base64 import encodestring as b64encode, decodestring as b64decode, \
-        encodestring as b16encode, decodestring as b16decode
+from base64 import b64encode, b64decode, b16encode, b16decode
 
 #class Conflict(SyncCode, Implicit):
 class Conflict(SyncCode, Base):

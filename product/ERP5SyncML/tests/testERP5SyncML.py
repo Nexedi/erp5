@@ -34,13 +34,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
 from Products.ERP5SyncML.SyncCode import SyncCode
 from zLOG import LOG
-
-try:
-    from base64 import b64encode, b64decode, b16encode, b16decode
-except ImportError:
-    from base64 import encodestring as b64encode, decodestring as b64decode, \
-        encodestring as b16encode, decodestring as b16decode
-
+from base64 import b64encode, b64decode, b16encode, b16decode
 
 class TestERP5SyncMLMixin:
 
