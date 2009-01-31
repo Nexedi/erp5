@@ -28,7 +28,7 @@
 ##############################################################################
 
 from CopyToTarget import CopyToTarget
-from zLOG import LOG
+from Acquisition import aq_base
 
 class SplitAndDefer(CopyToTarget):
   """
