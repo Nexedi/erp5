@@ -27,12 +27,13 @@ def get_request():
 Products.ERP5Type.Utils.get_request = get_request
 Globals.get_request = get_request
 
-import itools.zope
-
-def get_context():
-  return current_app
-
-itools.zope.get_context = get_context
+try:
+  import itools.zope
+  def get_context():
+    return current_app
+  itools.zope.get_context = get_context
+except ImportError:
+  pass
 
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase, user_name
@@ -96,6 +97,25 @@ try:
 except ImportError:
   pass
 ZopeTestCase.installProduct('Localizer', quiet=install_product_quiet)
+try:
+  # Workaround Localizer >= 1.2 patch that doesn't work with
+  # ZopeTestCase REQUESTs (it's the same as iHotFix
+  from Products.Localizer import patches
+  from types import UnicodeType
+  # revert monkey patchs from Localizer
+  patches.get_request = get_request
+
+  class UnicodeSafeStringIO(patches.originalStringIO):
+    """StringIO like class which never fails with unicode."""
+    def write(self, s):
+      if isinstance(s, UnicodeType):
+        s = s.encode('utf8', 'repr')
+      patches.originalStringIO.write(self, s)
+  # Localizer will patch PageTemplate StringIO with
+  patches.LocalizerStringIO = UnicodeSafeStringIO
+except ImportError:
+  pass
+
 ZopeTestCase.installProduct('TimerService', quiet=install_product_quiet)
 
 # CMF
@@ -817,6 +837,10 @@ class ERP5TypeTestCase(PortalTestCase):
         ZopeTestCase._print('Ran Unit test of %s (installation failed)\n'
                             % title) # run_unit_test depends on this string.
         raise
+
+    def stepPdb(self, sequence=None, sequence_list=None):
+      import pdb; pdb.set_trace()
+      pass
 
     def publish(self, path, basic=None, env=None, extra=None,
                 request_method='GET', stdin=None, handle_errors=True):
