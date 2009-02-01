@@ -239,7 +239,7 @@ class XMLSyncUtilsMixin(SyncCode):
         xml.append(E.MsgRef('%s' % message_id))
       if cmd_ref:
         xml.append(E.CmdRef('%s' % cmd_ref))
-      xml.append(E.Meta(E.Type('application/vnd.syncml-devinf+xml')),
+      xml.extend((E.Meta(E.Type('application/vnd.syncml-devinf+xml')),
                  E.Item(E.Source(E.LocURI('./devinf11')),
                  E.Data(E.DevInf(
                    E.VerDTD('1.1'),
@@ -250,29 +250,27 @@ class XMLSyncUtilsMixin(SyncCode):
                    E.DevID(subscription.getSubscriptionUrl()),
                    E.DevTyp('workstation'),
                    E.UTC(),
-                   E.DataStore(
-                     E.SourceRef(subscription.getSourceURI()),
-                     Element('E.Rx-Pref').append(
-                       (E.CTType(conduit.getPreferedCapabilitieCTType()),
-                        E.VerCT(conduit.getPreferedCapabilitieVerCT()))
-                       )
-                     )
+                   E.DataStore(E.SourceRef(subscription.getSourceURI()))
                    )
                  )
-               ))
-      data_store = xml.find('DataStore')
+               )))
+      data_store = xml.find('Item/Data/DevInf/DataStore')
       tx_element_list = []
       rx_element_list = []
       for type in conduit.getCapabilitiesCTTypeList():
         if type != self.MEDIA_TYPE['TEXT_XML']:
-          for tx_version in conduit.getCapabilitiesVerCTList(type):
-            rx_element_list.append(E.Rx(E.CTType(type), E.VerCT(rx_version)))
-            tx_element_list.append(E.Tx(E.CTType(type), E.VerCT(rx_version)))
+          for x_version in conduit.getCapabilitiesVerCTList(type):
+            rx_element_list.append(E.Rx(E.CTType(type), E.VerCT(x_version)))
+            tx_element_list.append(E.Tx(E.CTType(type), E.VerCT(x_version)))
+      rx_pref = Element('Rx-Pref')
+      rx_pref.extend((E.CTType(conduit.getPreferedCapabilitieCTType()),
+                      E.VerCT(conduit.getPreferedCapabilitieVerCT())))
+      data_store.append(rx_pref)
       data_store.extend(rx_element_list)
-      data_store.append(Element('Tx-Pref').extend(
-                           (E.CTType(conduit.getPreferedCapabilitieCTType()),
-                            E.VerCT(conduit.getPreferedCapabilitieVerCT()))
-                            ))
+      tx_pref = Element('Tx-Pref')
+      tx_pref.extend((E.CTType(conduit.getPreferedCapabilitieCTType()),
+                      E.VerCT(conduit.getPreferedCapabilitieVerCT())))
+      data_store.append(tx_pref)
       data_store.extend(tx_element_list)
       data_store.append(E.SyncCap(
                           E.SyncType('2'),
