@@ -992,7 +992,8 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     # if it didn't raise Unauthorized, Ok
     response = self.publish('%s/Base_download' % f.getPath())
     self.assertEquals(file(__file__).read(), response.body)
-    self.assertEquals('text/plain', response.headers['content-type'])
+    self.assertEquals('text/plain',
+                      response.headers['content-type'].split(';')[0])
     self.assertEquals('attachment; filename="%s"' % os.path.basename(__file__),
                       response.headers['content-disposition'])
 
