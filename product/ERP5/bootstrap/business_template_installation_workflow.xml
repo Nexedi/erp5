@@ -1090,11 +1090,8 @@ AAA=</string> </value>
   <record id="12" aka="AAAAAAAAAAw=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Transitions</string>
-          <string>TransitionDefinition</string>
-        </tuple>
-        <none/>
+        <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -1154,7 +1151,7 @@ AAA=</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Delete Business Template</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -1166,11 +1163,8 @@ AAA=</string> </value>
   <record id="13" aka="AAAAAAAAAA0=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Transitions</string>
-          <string>TransitionDefinition</string>
-        </tuple>
-        <none/>
+        <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -1230,7 +1224,7 @@ AAA=</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Delete Business Template Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -1242,11 +1236,8 @@ AAA=</string> </value>
   <record id="14" aka="AAAAAAAAAA4=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Transitions</string>
-          <string>TransitionDefinition</string>
-        </tuple>
-        <none/>
+        <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -1306,7 +1297,7 @@ AAA=</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Install Business Template</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -1322,11 +1313,8 @@ AAA=</string> </value>
   <record id="15" aka="AAAAAAAAAA8=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Transitions</string>
-          <string>TransitionDefinition</string>
-        </tuple>
-        <none/>
+        <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -1386,7 +1374,7 @@ AAA=</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Install Business Template Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -1398,11 +1386,8 @@ AAA=</string> </value>
   <record id="16" aka="AAAAAAAAABA=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Transitions</string>
-          <string>TransitionDefinition</string>
-        </tuple>
-        <none/>
+        <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -1462,7 +1447,7 @@ AAA=</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Reinstall Business Template</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -1474,11 +1459,8 @@ AAA=</string> </value>
   <record id="17" aka="AAAAAAAAABE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Transitions</string>
-          <string>TransitionDefinition</string>
-        </tuple>
-        <none/>
+        <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -1538,7 +1520,7 @@ AAA=</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Reinstall Business Template Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -1550,11 +1532,8 @@ AAA=</string> </value>
   <record id="18" aka="AAAAAAAAABI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Transitions</string>
-          <string>TransitionDefinition</string>
-        </tuple>
-        <none/>
+        <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -1614,7 +1593,7 @@ AAA=</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Replace Business Template</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -1626,11 +1605,8 @@ AAA=</string> </value>
   <record id="19" aka="AAAAAAAAABM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Transitions</string>
-          <string>TransitionDefinition</string>
-        </tuple>
-        <none/>
+        <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -1690,7 +1666,7 @@ AAA=</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Uninstall Business Template</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -1702,11 +1678,8 @@ AAA=</string> </value>
   <record id="20" aka="AAAAAAAAABQ=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Transitions</string>
-          <string>TransitionDefinition</string>
-        </tuple>
-        <none/>
+        <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -1766,7 +1739,7 @@ AAA=</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Uninstall Business Template Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
@@ -2270,11 +2243,8 @@ AAA=</string> </value>
   <record id="30" aka="AAAAAAAAAB4=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -2293,11 +2263,8 @@ AAA=</string> </value>
   <record id="31" aka="AAAAAAAAAB8=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -2316,11 +2283,8 @@ AAA=</string> </value>
   <record id="32" aka="AAAAAAAAACA=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -2339,11 +2303,8 @@ AAA=</string> </value>
   <record id="33" aka="AAAAAAAAACE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
+        <global name="Guard" module="Products.DCWorkflow.Guard"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
