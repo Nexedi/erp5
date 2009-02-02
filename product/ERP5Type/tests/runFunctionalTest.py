@@ -231,12 +231,11 @@ def sendResult():
   file_content = urllib2.urlopen(result_uri).read()
   passes_re = re.compile('<th[^>]*>Tests passed</th>\n\s*<td[^>]*>([^<]*)')
   failures_re = re.compile('<th[^>]*>Tests failed</th>\n\s*<td[^>]*>([^<]*)')
-  check_re = re.compile('<img[^>]*?/check.gif"\s*[^>]*?>')
-  error_re = re.compile('<img[^>]*?/error.gif"\s*[^>]*?>')
-  error_title_re = re.compile('error.gif.*?>([^>]*?)</td></tr>', re.S)
-  pass_test_re = re.compile('<div style="padding-top: 10px;">\s*<p>\s*'
-                        '<img[^>]*?/check.gif".*?</div>\s.*?</div>\s*', re.S)
-  footer_re = re.compile('<h2> Remote Client Data </h2>.*</table>', re.S)
+  image_re = re.compile('<img[^>]*?>')
+  error_title_re = re.compile('(?:error.gif.*?>|title status_failed"><td[^>]*>)([^>]*?)</td></tr>', re.S)
+  result_re = re.compile('<div style="padding-top: 10px;">\s*<p>\s*'
+                        '<img.*?</div>\s.*?</div>\s*', re.S)
+  error_result_re = re.compile('.*(?:error.gif|title status_failed).*', re.S)
 
   passes = passes_re.search(file_content).group(1)
   failures = failures_re.search(file_content).group(1)
@@ -256,18 +255,19 @@ Tests failed: %4s
 Following tests failed:
 
 %s""" % (passes, failures, "\n".join(error_titles))
-  file_content = pass_test_re.sub('', file_content)
-  file_content = footer_re.sub('', file_content)
-  file_content = check_re.sub(
-                      '<span style="color: green">PASS</span>', file_content)
-  file_content = error_re.sub(
-                      '<span style="color: red">FAIL</span>', file_content)
+  detail = ''
+  for e in result_re.findall(file_content):
+    if error_result_re.match(e):
+      detail += e
+  detail = image_re.sub('', detail)
+  if detail:
+    detail = '<html><body>%s</body></html>' % detail
   status = (not failures)
   if send_mail:
     sendMail(subject=subject,
              body=summary,
              status=status,
-             attachments=[file_content],
+             attachments=[detail],
              from_mail='nobody@svn.erp5.org',
              to_mail=[email_to_address])
   if stdout:
@@ -276,7 +276,7 @@ Following tests failed:
     print '-' * 79
     print summary
     print '-' * 79
-    print file_content
+    print detail
   return int(failures)
 
 if __name__ == "__main__":
