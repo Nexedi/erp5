@@ -202,7 +202,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>number of line displayed by a lisbox when used in view mode (in a document for example)</string> </value>
+                    <value> <string>number of line displayed by a ListBox when used in view mode (in a document for example)</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
