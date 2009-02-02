@@ -183,9 +183,18 @@ def runFirefox():
   os.environ['DISPLAY'] = ':123'
   os.environ['HOME'] = profile_dir
   prepareFirefox()
+  # check if old zelenium or new zelenium
+  try:
+    urllib2.urlopen("http://%s:%d/%s/portal_tests/core/scripts/selenium-version.js" % \
+        (host, port, portal_name))
+  except urllib2.HTTPError:
+    # Zelenium 0.8
+    url_string = "http://%s:%d/%s/portal_tests/?auto=true&__ac_name=%s&__ac_password=%s"
+  else:
+    # Zelenium 0.8+ or later
+    url_string = "http://%s:%d/%s/portal_tests/core/TestRunner.html?test=..%%2Ftest_suite_html&auto=on&__ac_name=%s&__ac_password=%s"
   pid = os.spawnlp(os.P_NOWAIT, "firefox", "firefox", "-profile", profile_dir,
-      "http://%s:%d/%s/portal_tests/?auto=true&__ac_name=%s"
-          "&__ac_password=%s" % (host, port, portal_name, user, password))
+      url_string % (host, port, portal_name, user, password))
   os.environ['MOZ_NO_REMOTE'] = '0'
   print 'firefox : %d' % pid
   return pid
