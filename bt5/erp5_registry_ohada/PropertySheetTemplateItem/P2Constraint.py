@@ -54,7 +54,7 @@ class P2Constraint:
       'description'   : 'Property company modifcation must be definied',
       'type'          : 'PropertyExistence',
       'company_modifications'     : None,
-      'condition'     : 'python: object.getEstablishmentModification() == None',
+      'condition'     : 'python: object.getEstablishmentModification() == 0',
     },
     { 'id'            : 'establishment_modification_existence',
       'description'   : 'Property my establishment modification must be definied',

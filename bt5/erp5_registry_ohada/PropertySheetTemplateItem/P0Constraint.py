@@ -164,7 +164,7 @@ class P0Constraint:
       'description'   : 'Property must be definied',
       'type'          : 'PropertyExistence',
       'previous_activity_corporate_registration_code'     : None,
-      'condition'     : 'python: object.getActivityRestartCheck() != None',
+      'condition'     : 'python: object.getActivityRestartCheck() ==1',
       'message_no_such_property': 'for a restart activity you must define the previous registration code',
       'message_property_not_set': 'for a restart activity you must define the previous registration code',
     },

@@ -190,9 +190,9 @@ class P2:
     , 'type'       : 'string'
     , 'mode'       : 'w'
     },
-    { 'id'         : 'first_modification_date'
+    { 'id'         : 'first_administrator_modification_date'
     , 'description': 'Date'
-    , 'type'       : 'string'
+    , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'first_administrator_citizenship'
@@ -452,7 +452,7 @@ class P2:
     },
     { 'id'         : 'second_administrator_modification_date'
     , 'description': 'Date de modification'
-    , 'type'       : 'string'
+    , 'type'       : 'date'
     , 'mode'       : 'w'
     },
     { 'id'         : 'second_spouse_birthdate'

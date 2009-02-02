@@ -354,7 +354,7 @@ class P0:
     },
     { 'id'         : 'previous_activity_yes_check'
     , 'description': 'OUI'
-    , 'type'       : 'string'
+    , 'type'       : 'boolean'
     , 'mode'       : 'w'
     },
     { 'id'         : 'previous_owner_address'
