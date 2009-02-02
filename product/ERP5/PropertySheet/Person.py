@@ -219,6 +219,7 @@ class Person:
                               , 'role', 'role_id', 'role_title', 'role_value'
                                       , 'role_id_list', 'role_title_list', 'role_value_list'
                               , 'function', 'function_id', 'function_title', 'function_value'
+                                              , 'function_list', 'function_id_list', 'function_title_list', 'function_value_list'
                               , 'product_line', 'product_line_list', 'product_line_id_list'
                                               , 'product_line_title_list', 'product_line_value_list'
                               )
