@@ -136,7 +136,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Indicate if we display useful link for developper in interface or not</string> </value>
+                    <value> <string>Indicate if we display useful link for developer in interface or not</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -160,7 +160,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Developper Mode</string> </value>
+                    <value> <string>Developer Mode</string> </value>
                 </item>
               </dictionary>
             </value>
