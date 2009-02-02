@@ -1,3 +1,6 @@
+2009-02-02 Kazuhiko
+* add TemplateTool_deleteObsoleteTemplateList that removes all obsolete business templates.
+
 2009-01-19 Seb
 * moved script to check catalog from erp5_core to here
 * merge code of checking stock and checking catalog
