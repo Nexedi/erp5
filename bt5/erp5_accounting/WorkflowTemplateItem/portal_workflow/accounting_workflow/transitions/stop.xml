@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This action will post the transaction to the General Ledger. It can be journalized again thanks to the restart action</string> </value>
+            <value> <string>This action will post the transaction to the General Ledger. It can be journalised again thanks to the restart action</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
