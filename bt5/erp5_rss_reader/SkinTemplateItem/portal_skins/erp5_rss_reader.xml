@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>erp5_rss</string> </value>
+            <value> <string>erp5_rss_reader</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

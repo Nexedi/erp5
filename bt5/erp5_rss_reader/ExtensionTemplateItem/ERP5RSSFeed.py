@@ -55,3 +55,6 @@ def setTextContent(self):
     text_content = None
   if text_content is not None:
     self.edit(text_content=text_content)
+
+def setRSSItemProperties(self, rss_item):
+  pass
