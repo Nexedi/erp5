@@ -128,6 +128,9 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEquals(obj1.getId(), '%s-1' %date)
       self.assertEquals(obj2.getId(), '%s-2' %date)
       self.assertEquals(obj3.getId(), '%s-3' %date)
+      # add object and check its id
+      obj4 = self.newContent()
+      self.assertEquals(obj4.getId().split('-')[0], date)
 
 
     def test_03_emptyFolderIsBtree(self, quiet=0, run=1):
@@ -171,6 +174,97 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       date = date.replace("/", "")
       self.failUnless(date in obj1.getId())
       
+    def test_05_migrateFolderWithoutIdChange(self, quiet=0, run=1):
+      """
+      migrate folder from btree to hbtree, do not touch ids
+      """
+      if not run : return
+      # Create some objects
+      self.assertEquals(self.folder.getIdGenerator(), '')
+      self.assertEquals(len(self.folder), 0)
+      obj1 = self.newContent()
+      self.assertEquals(obj1.getId(), '1')
+      obj2 = self.newContent()
+      self.assertEquals(obj2.getId(), '2')
+      obj3 = self.newContent()
+      self.assertEquals(obj3.getId(), '3')
+      get_transaction().commit()
+      self.tic()      
+      # call migration script
+      self.folder.migrateToHBTree()
+      get_transaction().commit()
+      self.tic()
+      # check we now have a hbtree
+      self.assertEqual(self.folder.isBTree(), False)
+      self.assertEqual(self.folder.isHBTree(), True)
+      self.assertEqual(len(self.folder.getTreeIdList()), 1)
+      self.assertEqual(len(self.folder.objectIds()), 3)
+      # check params of objectIds in case of hbtree
+      self.assertEqual(len(self.folder.objectIds(base_id=None)), 3)
+      self.assertEqual(len(self.folder.objectValues()), 3)
+      self.assertEqual(len(self.folder.objectValues(base_id=None)), 3)
+      # check object ids
+      self.assertEquals(obj1.getId(), '1')
+      self.assertEquals(obj2.getId(), '2')
+      self.assertEquals(obj3.getId(), '3')
+      # add object and check its id
+      obj4 = self.newContent()
+      self.assertEquals(obj4.getId(), '4')
+
+    def test_06_migrateFolderChangeIdGenerationMethodLater(self, quiet=0, run=1):
+      """
+      migrate folder from btree to hbtree, do not touch ids
+      """
+      if not run : return
+      # Create some objects
+      self.assertEquals(self.folder.getIdGenerator(), '')
+      self.assertEquals(len(self.folder), 0)
+      obj1 = self.newContent()
+      self.assertEquals(obj1.getId(), '1')
+      obj2 = self.newContent()
+      self.assertEquals(obj2.getId(), '2')
+      obj3 = self.newContent()
+      self.assertEquals(obj3.getId(), '3')
+      get_transaction().commit()
+      self.tic()      
+      # call migration script
+      self.folder.migrateToHBTree()
+      get_transaction().commit()
+      self.tic()
+      # check we now have a hbtree
+      self.assertEqual(self.folder.isBTree(), False)
+      self.assertEqual(self.folder.isHBTree(), True)
+      self.assertEqual(len(self.folder.getTreeIdList()), 1)
+      self.assertEqual(len(self.folder.objectIds()), 3)
+      # check params of objectIds in case of hbtree
+      self.assertEqual(len(self.folder.objectIds(base_id=None)), 3)
+      self.assertEqual(len(self.folder.objectValues()), 3)
+      self.assertEqual(len(self.folder.objectValues(base_id=None)), 3)
+      # check object ids
+      self.assertEquals(obj1.getId(), '1')
+      self.assertEquals(obj2.getId(), '2')
+      self.assertEquals(obj3.getId(), '3')
+      # add object and check its id
+      obj4 = self.newContent()
+      self.assertEquals(obj4.getId(), '4')
+      # set id generator
+      id_generator_method = '_generatePerDayId'
+      self.folder.setIdGenerator(id_generator_method)
+      get_transaction().commit()
+      self.assertEquals(self.folder.getIdGenerator(), id_generator_method)
+      # check object ids
+      self.assertEquals(obj1.getId(), '1')
+      self.assertEquals(obj2.getId(), '2')
+      self.assertEquals(obj3.getId(), '3')
+      self.assertEquals(obj4.getId(), '4')
+      # add object and check its id
+      from DateTime import DateTime
+      date = DateTime().Date()
+      date = date.replace("/", "")
+      
+      obj5 = self.newContent()
+      self.assertEquals(obj5.getId().split('-')[0], date)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestFolderMigration))
