@@ -109,7 +109,7 @@ metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init"\n
 <tr>\n
   <td>type</td>\n
   <td>field_my_bar_category_title_list</td>\n
-  <td>az\xc3\xa9rt\xc3\xaf</td>\n
+  <td>azértï</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -124,7 +124,7 @@ metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init"\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>field_my_bar_category_title_list</td>\n
-  <td>az\xc3\xa9rt\xc3\xaf</td>\n
+  <td>azértï</td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
@@ -144,7 +144,7 @@ metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init"\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>field_my_bar_category_title_list</td>\n
-  <td>az\xc3\xa9rt\xc3\xaf</td>\n
+  <td>azértï</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
@@ -169,7 +169,7 @@ metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init"\n
 <tr>\n
   <td>type</td>\n
   <td>field_my_bar_category_title_list</td>\n
-  <td>az\xc3\xa9rt\xc3\xaf</td>\n
+  <td>azértï</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -184,7 +184,7 @@ metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init"\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>field_my_bar_category_title_list</td>\n
-  <td>az\xc3\xa9rt\xc3\xaf</td>\n
+  <td>azértï</td>\n
 </tr>\n
 \n
 </tbody></table>\n

@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.DurationField</string>
-          <string>DurationField</string>
-        </tuple>
-        <none/>
+        <global name="DurationField" module="Products.ERP5Form.DurationField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
