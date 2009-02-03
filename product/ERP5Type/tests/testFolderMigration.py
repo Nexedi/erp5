@@ -143,7 +143,7 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(self.folder.isHBTree(), False)
       
 
-    def test_04_migrateFolder(self, quiet=0, run=1):
+    def test_04_migrateEmptyFolder(self, quiet=0, run=1):
       """
       migrate empty folder from btree to hbtree
       """
