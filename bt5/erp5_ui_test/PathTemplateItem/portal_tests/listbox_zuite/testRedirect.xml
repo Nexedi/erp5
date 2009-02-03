@@ -107,8 +107,8 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>verifyLocation</td>\n
-  <td tal:content="python:\'*%s/foo_module/0/setSelectionQuickSortOrder*\' % here.getPortalObject().absolute_url_path()"/>\n
+  <td>verifyAbsoluteLocation</td>\n
+  <td tal:content="string:glob:${here/portal_url}/foo_module/0/setSelectionQuickSortOrder*" />\n
   <td></td>\n
 </tr>\n
 \n
@@ -180,8 +180,8 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>verifyLocation</td>\n
-  <td tal:content="python:\'*%s/foo_module/0\' % here.getPortalObject().absolute_url_path()"/>\n
+  <td>verifyAbsoluteLocation</td>\n
+  <td tal:content="string:glob:${here/portal_url}/foo_module/0" />\n
   <td></td>\n
 </tr>\n
 <!-- Go to last and verify -->\n
@@ -226,8 +226,8 @@
   <td>4 of 4</td>\n
 </tr>\n
 <tr>\n
-  <td>verifyLocation</td>\n
-  <td tal:content="python:\'*%s/foo_module/0/listbox_setPage\' % here.getPortalObject().absolute_url_path()"/>\n
+  <td>verifyAbsoluteLocation</td>\n
+  <td tal:content="string:glob:${here/portal_url}/foo_module/0/listbox_setPage" />\n
   <td></td>\n
 </tr>\n
 <!-- Go to previous and verify -->\n
@@ -262,8 +262,8 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>verifyLocation</td>\n
-  <td tal:content="python:\'*%s/foo_module/0\' % here.getPortalObject().absolute_url_path()"/>\n
+  <td>verifyAbsoluteLocation</td>\n
+  <td tal:content="string:glob:${here/portal_url}/foo_module/0" />\n
   <td></td>\n
 </tr>\n
 <!-- Go to first and verify -->\n
@@ -308,8 +308,8 @@
   <td>1 of 4</td>\n
 </tr>\n
 <tr>\n
-  <td>verifyLocation</td>\n
-  <td tal:content="python:\'*%s/foo_module/0/listbox_setPage\' % here.getPortalObject().absolute_url_path()"/>\n
+  <td>verifyAbsoluteLocation</td>\n
+  <td tal:content="string:glob:${here/portal_url}/foo_module/0/listbox_setPage" />\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -417,8 +417,8 @@
 </tr>\n
 <!-- END of inspired code -->\n
 <tr>\n
-  <td>verifyLocation</td>\n
-  <td tal:content="python:\'*%s/foo_module/0/unfoldDomain*\' % here.getPortalObject().absolute_url_path()"/>\n
+  <td>verifyAbsoluteLocation</td>\n
+  <td tal:content="string:glob:${here/portal_url}/foo_module/0/unfoldDomain*" />\n
   <td></td>\n
 </tr>\n
 \n

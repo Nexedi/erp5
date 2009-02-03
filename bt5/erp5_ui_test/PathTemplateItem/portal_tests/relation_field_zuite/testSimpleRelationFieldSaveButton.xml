@@ -118,8 +118,8 @@ button</td></tr>\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertLocation</td>\n
-  <td tal:content="python:\'*%s/portal_categories/foo_category/a/a1/view\' % here.getPortalObject().absolute_url_path()"/>\n
+  <td>assertAbsoluteLocation</td>\n
+  <td tal:content="string:glob:${here/portal_url}/portal_categories/foo_category/a/a1/view" />\n
   <td/>\n
 </tr>\n
 </tbody></table>\n
