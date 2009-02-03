@@ -175,7 +175,7 @@ delivered.\n
 <tr>\n
   <td>selectAndWait</td>\n
   <td>select_action</td>\n
-  <td>Validate Transaction</td>\n
+  <td>Post Transaction to General Ledger</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n

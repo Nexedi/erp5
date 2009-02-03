@@ -172,12 +172,12 @@ fixing. -->\n
 \n
 <!-- Post the transaction to the GL {{{\n
 because the \'create reversal\' action is only available when simulation_state =\n
-delivered. FIXME: we won\'t be able to delete the transaction later\n
+delivered.\n
 -->\n
 <tr>\n
   <td>selectAndWait</td>\n
   <td>select_action</td>\n
-  <td>Validate Transaction</td>\n
+  <td>Post Transaction to General Ledger</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
