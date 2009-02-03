@@ -318,7 +318,7 @@ class WizardTool(BaseTool):
         user_and_password[0] and user_and_password[1]):
       if user_and_password!=last_loggedin_user_and_password:
         # credentials changed we need to renew __ac cookie from server as well
-	cookiejar = cookielib.CookieJar() 
+	cookiejar.clear() 
       # try login to server only once using cookie method
       if not _isUserAcknowledged(cookiejar):
         server_url = self.getServerUrl()
@@ -351,7 +351,7 @@ class WizardTool(BaseTool):
     header_dict['REFERER'] = self.REQUEST.get('HTTP_REFERER', None) or referer
     request = urllib2.Request(url, data, header_dict)
     f = self.simple_opener_director.open(request)
-
+    
     try:
       data = f.read()
       metadata = f.info()
