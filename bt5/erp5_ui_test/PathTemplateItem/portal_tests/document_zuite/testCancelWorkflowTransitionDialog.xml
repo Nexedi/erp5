@@ -102,8 +102,8 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertAbsoluteLocation</td>\n
-  <td tal:content="string:glob:${here/portal_url}/foo_module/0/Foo_view*"/>\n
+  <td>assertLocation</td>\n
+  <td tal:content="python:\'*%s/foo_module/0/Foo_view*\' % here.getPortalObject().absolute_url_path()"/>\n
   <td></td>\n
 </tr>\n
 <!-- We check that the transition has not been passed by looking at the\n

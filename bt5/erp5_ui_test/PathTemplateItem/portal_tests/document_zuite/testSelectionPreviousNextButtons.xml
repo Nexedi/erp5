@@ -130,8 +130,8 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertAbsoluteLocation</td>\n
-  <td tal:content="string:glob:${here/portal_url}/foo_module/FooModule_viewFooList*"/>\n
+  <td>assertLocation</td>\n
+  <td tal:content="python:\'*%s/foo_module/FooModule_viewFooList*\' % here.getPortalObject().absolute_url_path()"/>\n
   <td></td>\n
 </tr>\n
 <tr>\n
