@@ -1652,7 +1652,6 @@ class TestPayroll(TestPayrollMixin):
                     resource_value=self.urssaf,
                     variation_category_list=['tax_category/employee_share'],
                     source_annotation_line_reference='tax1',
-                    base_application_list =  ['base_amount/base_salary',],
                     base_contribution_list = ['base_amount/deductible_tax',],)
     model_line.updateCellRange(base_id='movement')
     cell = model_line.newCell('tax_category/employee_share',
