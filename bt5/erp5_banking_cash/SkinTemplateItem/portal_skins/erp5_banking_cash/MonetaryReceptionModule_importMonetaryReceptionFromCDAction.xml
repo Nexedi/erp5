@@ -148,6 +148,7 @@ def create_movement(CD_head_dict, CD_line_list):\n
 \n
 \n
     resource_total_quantity += CD_line[\'quantity\']\n
+    container_line.getPrice() # Store "price" property on line when creating it, to avoid getting conflicts when reindexing.\n
 \n
   # once all cash containter created, create the movement line for the total\n
   movement_line = movement_head.newContent(id               = "movement"\n
