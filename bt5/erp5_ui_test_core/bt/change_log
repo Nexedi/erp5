@@ -1,2 +1,5 @@
+2009-02-03 Kazuhiko
+* define getAbsoluteLocation() in user-extensions.js for compatible with Zelenium based of Selenium 0.8 or later.
+
 2008-10-01 fabien
 * initial version

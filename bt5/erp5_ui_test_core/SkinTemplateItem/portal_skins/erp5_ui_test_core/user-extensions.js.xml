@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts22862605.97</string> </value>
+            <value> <string>ts33693326.63</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -81,6 +81,13 @@ Selenium.prototype.doType = function(locator, newText) {\n
     this.page().replaceText(element, newText);\n
 };\n
 \n
+/*\n
+ * Get the location of the current page. This function is missing in\n
+ * Selenium 0.8 or later.\n
+ */\n
+Selenium.prototype.getAbsoluteLocation = function() {\n
+    return this.page().location || this.browserbot.getCurrentWindow().location;\n
+};\n
 
 
 ]]></string> </value>
@@ -91,7 +98,7 @@ Selenium.prototype.doType = function(locator, newText) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1917</int> </value>
+            <value> <int>2156</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
