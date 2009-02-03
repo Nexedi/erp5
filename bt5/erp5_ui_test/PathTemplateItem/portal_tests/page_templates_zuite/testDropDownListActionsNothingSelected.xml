@@ -78,7 +78,7 @@ shouldn\'t do anything. -->\n
   </tr>\n
   <tr>\n
     <td>assertLocation</td>\n
-    <td tal:content="python: \'/foo_module/1/view\'">/erp5/foo_module/1/view</td>\n
+    <td tal:content="python:\'*%s/foo_module/1/view\' % here.getPortalObject().absolute_url_path()"/>\n
     <td/>\n
   </tr>\n
   <tr>\n

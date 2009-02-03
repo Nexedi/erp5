@@ -88,7 +88,7 @@
 </tr>\n
 <tr>\n
   <td>assertLocation</td>\n
-  <td>${base_url}/foo_module/0/view</td>\n
+  <td tal:content="python:\'*%s/foo_module/0/view\' % here.getPortalObject().absolute_url_path()"/>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -98,7 +98,7 @@
 </tr>\n
 <tr>\n
   <td>assertLocation</td>\n
-  <td>${base_url}/view</td>\n
+  <td tal:content="python:\'*%s/view\' % here.getPortalObject().absolute_url_path()"/>\n
   <td></td>\n
 </tr>\n
 \n

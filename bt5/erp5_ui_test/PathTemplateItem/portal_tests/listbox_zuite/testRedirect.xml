@@ -108,7 +108,7 @@
 </tr>\n
 <tr>\n
   <td>verifyLocation</td>\n
-  <td>${base_url}/foo_module/0/setSelectionQuickSortOrder</td>\n
+  <td tal:content="python:\'*%s/foo_module/0/setSelectionQuickSortOrder*\' % here.getPortalObject().absolute_url_path()"/>\n
   <td></td>\n
 </tr>\n
 \n
@@ -181,7 +181,7 @@
 </tr>\n
 <tr>\n
   <td>verifyLocation</td>\n
-  <td>${base_url}/foo_module/0</td>\n
+  <td tal:content="python:\'*%s/foo_module/0\' % here.getPortalObject().absolute_url_path()"/>\n
   <td></td>\n
 </tr>\n
 <!-- Go to last and verify -->\n
@@ -227,7 +227,7 @@
 </tr>\n
 <tr>\n
   <td>verifyLocation</td>\n
-  <td>${base_url}/foo_module/0/listbox_setPage</td>\n
+  <td tal:content="python:\'*%s/foo_module/0/listbox_setPage\' % here.getPortalObject().absolute_url_path()"/>\n
   <td></td>\n
 </tr>\n
 <!-- Go to previous and verify -->\n
@@ -263,7 +263,7 @@
 </tr>\n
 <tr>\n
   <td>verifyLocation</td>\n
-  <td>${base_url}/foo_module/0</td>\n
+  <td tal:content="python:\'*%s/foo_module/0\' % here.getPortalObject().absolute_url_path()"/>\n
   <td></td>\n
 </tr>\n
 <!-- Go to first and verify -->\n
@@ -309,7 +309,7 @@
 </tr>\n
 <tr>\n
   <td>verifyLocation</td>\n
-  <td>${base_url}/foo_module/0/listbox_setPage</td>\n
+  <td tal:content="python:\'*%s/foo_module/0/listbox_setPage\' % here.getPortalObject().absolute_url_path()"/>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -418,7 +418,7 @@
 <!-- END of inspired code -->\n
 <tr>\n
   <td>verifyLocation</td>\n
-  <td>${base_url}/foo_module/0/unfoldDomain</td>\n
+  <td tal:content="python:\'*%s/foo_module/0/unfoldDomain*\' % here.getPortalObject().absolute_url_path()"/>\n
   <td></td>\n
 </tr>\n
 \n
