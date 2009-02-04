@@ -892,7 +892,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue(
             self.getCatalogTool().buildSQLQuery(
             sort_on=(('catalog.title', 'ascending'),))['order_by_expression'] in \
-            ('catalog.title', '`catalog`.`title` ASC'))
+            ('catalog.title', '`catalog`.`title` ASC', 'catalog.title ASC'))
 
   def test_25_SortOnDescending(self, quiet=quiet, run=run_all_test):
     if not run: return
@@ -965,7 +965,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
               sort_on=(('catalog.title', 'ascending'),
                        ('catalog.id', 'asc')))
                        ['order_by_expression'].replace(' ', '') in \
-              ('catalog.title,catalog.id', '`catalog`.`title`ASC,`catalog`.`id`ASC'))
+              ('catalog.title,catalog.id', '`catalog`.`title`ASC,`catalog`.`id`ASC', 'catalog.titleASC,catalog.idASC'))
 
   def test_29_SortOnRelatedKey(self, quiet=quiet, run=run_all_test):
     """Sort-on parameter and related key. (Assumes that region_title is a \
