@@ -198,7 +198,7 @@ delivered.\n
 <tr>\n
   <td>selectAndWait</td>\n
   <td>select_action</td>\n
-  <td>Close Accounting Transaction</td>\n
+  <td>Definitively Close Transaction</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
