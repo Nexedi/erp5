@@ -2788,6 +2788,9 @@ VALUES
           - objects whose site_title is foo
           - objects whose site_description is bar
     """
+    if not run:
+      return
+
     portal = self.getPortalObject()
     def _create(**kw):
       return portal.organisation_module.newContent(portal_type='Organisation', **kw)
