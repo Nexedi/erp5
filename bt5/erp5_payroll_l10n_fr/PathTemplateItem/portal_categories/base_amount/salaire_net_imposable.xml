@@ -43,7 +43,9 @@
         </item>
         <item>
             <key> <string>short_title</string> </key>
-            <value> <string>SNI</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
