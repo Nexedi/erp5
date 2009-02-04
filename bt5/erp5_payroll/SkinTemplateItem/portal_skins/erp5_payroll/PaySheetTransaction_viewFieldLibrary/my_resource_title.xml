@@ -18,6 +18,7 @@
                 <string>base_category</string>
                 <string>portal_type</string>
                 <string>catalog_index</string>
+                <string>proxy_listbox_ids</string>
               </list>
             </value>
         </item>
@@ -125,6 +126,17 @@
                         <tuple>
                           <string>Payroll Service</string>
                           <string>Payroll Service</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>PayrollServiceModule_viewPayrollServiceList/listbox</string>
+                          <string>Payroll Services</string>
                         </tuple>
                       </list>
                     </value>

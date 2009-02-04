@@ -1,6 +1,7 @@
 2009-02-04 fabien
 * when a specialise model is defined on a paysheet, apply it automatically
 * rewrite the apply model script
+* add some proxy listbox ids
 
 2009-01-28 fabien
 * remove some unused script and refeactor some very similar scripts in a generic one
