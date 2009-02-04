@@ -18,6 +18,7 @@
                 <string>base_category</string>
                 <string>portal_type</string>
                 <string>catalog_index</string>
+                <string>relation_setter_id</string>
               </list>
             </value>
         </item>
@@ -132,6 +133,10 @@
                 <item>
                     <key> <string>read_only</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>relation_setter_id</string> </key>
+                    <value> <string>PaySheetTransaction_setSpecialiseAndApplyModel</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

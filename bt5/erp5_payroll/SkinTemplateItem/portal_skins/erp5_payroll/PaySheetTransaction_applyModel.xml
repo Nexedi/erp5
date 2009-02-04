@@ -53,8 +53,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>Base_translateString = context.Base_translateString\n
+            <value> <string encoding="cdata"><![CDATA[
+
+Base_translateString = context.Base_translateString\n
 paysheet = context\n
+\n
+# copy categories\n
+category_list = [\n
+  \'destination_section\', \'source_section\', \'source_payment\',\n
+  \'destination_payment\', \'price_currency\', \'ressource\',\n
+]\n
+new_category_dict = {}\n
 \n
 model = paysheet.getSpecialiseValue()\n
 \n
@@ -73,24 +82,26 @@ def getPropertyFromModel(model, property_name):\n
     if v:\n
       return v\n
 \n
-# set source and destination from the model if there is no value yet defined\n
-if not paysheet.getDestinationSection():\n
-  paysheet.setDestinationSection(getPropertyFromModel(model, \'destination_section\'))\n
+for category in category_list:\n
+  if force or not paysheet.getPropertyList(category):\n
+    v = getPropertyFromModel(model, category)\n
+    if v:\n
+      new_category_dict[category] = v\n
 \n
-if not paysheet.getSourceSection():\n
-  paysheet.setSourceSection(getPropertyFromModel(model, \'source_section\'))\n
+def copyPaymentCondition(paysheet, model):\n
+  filter_dict = {\'portal_type\': \'Payment Condition\'}\n
+  to_copy = model.contentIds(filter=filter_dict)\n
+  if len(to_copy) > 0 :\n
+    copy_data = model.manage_copyObjects(ids=to_copy)\n
+    paysheet.manage_pasteObjects(copy_data)\n
+  for other_models in model.getSpecialiseValueList():\n
+    copyPaymentCondition(paysheet, other_models)\n
 \n
-if not paysheet.getSourcePayment():\n
-  paysheet.setSourcePayment(getPropertyFromModel(model, \'source_payment\'))\n
-\n
-if not paysheet.getDestinationPayment():\n
-  paysheet.setDestinationPayment(getPropertyFromModel(model, \'destination_payment\'))\n
-\n
-if not paysheet.getPriceCurrency():\n
-  paysheet.setPriceCurrency(getPropertyFromModel(model, \'price_currency\'))\n
-\n
-if not paysheet.getResource():\n
-  paysheet.setResource(getPropertyFromModel(model, \'price_currency\'))\n
+filter_dict = {\'portal_type\': \'Payment Condition\'}\n
+if force:\n
+  paysheet.manage_delObjects(list(paysheet.contentIds(filter=filter_dict)))\n
+if len(paysheet.contentIds(filter=filter_dict)) == 0:\n
+  copyPaymentCondition(paysheet, model)\n
 \n
 # copy model sub objects into paysheet\n
 paysheet.PaySheetTransaction_copySubObject(\n
@@ -101,10 +112,14 @@ paysheet.PaySheetTransaction_copySubObject(\n
                   property_list=(\'quantity\',))\n
 paysheet.PaySheetTransaction_copySubObject(\'Payment Condition\')\n
 \n
+paysheet.edit(**new_category_dict)\n
+\n
 if not batch_mode:\n
   return context.Base_redirect(form_id,\n
                                keep_items=dict(portal_status_message=Base_translateString(\'Pay Sheet Transaction updated.\')))\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -114,7 +129,7 @@ if not batch_mode:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'view\', batch_mode=0</string> </value>
+            <value> <string>form_id=\'view\', batch_mode=0, force=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -134,7 +149,7 @@ if not batch_mode:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -142,14 +157,26 @@ if not batch_mode:\n
                           <tuple>
                             <string>form_id</string>
                             <string>batch_mode</string>
+                            <string>force</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>Base_translateString</string>
                             <string>paysheet</string>
+                            <string>category_list</string>
+                            <string>new_category_dict</string>
                             <string>model</string>
                             <string>None</string>
                             <string>dict</string>
                             <string>getPropertyFromModel</string>
+                            <string>_getiter_</string>
+                            <string>category</string>
+                            <string>v</string>
+                            <string>_write_</string>
+                            <string>copyPaymentCondition</string>
+                            <string>filter_dict</string>
+                            <string>list</string>
+                            <string>len</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -163,6 +190,7 @@ if not batch_mode:\n
             <value>
               <tuple>
                 <string>view</string>
+                <int>0</int>
                 <int>0</int>
               </tuple>
             </value>
