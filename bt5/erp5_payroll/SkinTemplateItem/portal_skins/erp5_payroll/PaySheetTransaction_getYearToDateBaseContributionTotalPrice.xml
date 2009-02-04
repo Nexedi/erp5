@@ -73,7 +73,6 @@ portal = context.getPortalObject();\n
 portal_simulation = portal.portal_simulation\n
 \n
 base_amount = portal.portal_categories.base_amount\n
-context.log(base_contribution_list)\n
 base_contribution_uid_list = [getattr(base_amount, category, None).getUid() for category in base_contribution_list]\n
 \n
 params = {\n

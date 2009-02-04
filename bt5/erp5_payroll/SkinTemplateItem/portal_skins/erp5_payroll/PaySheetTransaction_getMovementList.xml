@@ -67,7 +67,7 @@ from Products.ERP5Type.Message import translateString\n
 \n
 portal = context.getPortalObject();\n
 paysheet_line_list = context.contentValues(portal_type=\'Pay Sheet Line\')\n
-if context.getPriceCurrencyValue():\n
+if context.getPriceCurrencyValue() is not None:\n
   precision = context.getPriceCurrencyValue().getQuantityPrecision()\n
 else:\n
   precision = 2\n
@@ -238,6 +238,7 @@ return line_list\n
                             <string>context</string>
                             <string>portal</string>
                             <string>paysheet_line_list</string>
+                            <string>None</string>
                             <string>precision</string>
                             <string>line_list</string>
                             <string>_getiter_</string>
@@ -250,7 +251,6 @@ return line_list\n
                             <string>str</string>
                             <string>translated_base_application_list</string>
                             <string>payroll_service</string>
-                            <string>None</string>
                             <string>base_contribution_list</string>
                             <string>causality</string>
                             <string>base_application</string>
