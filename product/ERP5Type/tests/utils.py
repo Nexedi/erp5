@@ -33,7 +33,7 @@ import os
 
 import Products.ERP5Type
 from Products.MailHost.MailHost import MailHost
-
+from zLOG import LOG
 
 class FileUpload(file):
   """Act as an uploaded file.
