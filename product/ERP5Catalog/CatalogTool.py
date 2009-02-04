@@ -103,17 +103,9 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
       else:
         self.__dict__[name] = value
 
-    def allowedRolesAndUsers(self):
-        """
-        Return a list of roles and users with View permission.
-        Used by Portal Catalog to filter out items you're not allowed to see.
-
-        WARNING (XXX): some user base local role association is currently
-        being stored (ex. to be determined). This should be prevented or it will
-        make the table explode. To analyse the symptoms, look at the
-        user_and_roles table. You will find some user:foo values
-        which are not necessary.
-        """
+    def _getSecurityParameterList(self):
+      result_key = '_cache_result'
+      if result_key not in self.__dict__:
         ob = self.__ob
         security_product = getSecurityProduct(ob.acl_users)
         withnuxgroups = security_product == SECURITY_USING_NUX_USER_GROUPS
@@ -147,6 +139,12 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
           if len(new_role_list)>0:
             flat_localroles[key] = new_role_list
         localroles = flat_localroles
+
+        portal = self.getPortalObject()
+        role_dict = dict(portal.portal_catalog.getSQLCatalog().\
+                                              getSQLCatalogRoleKeysList())
+        getUserById = portal.acl_users.getUserById
+
         # For each local role of a user:
         #   If the local role grants View permission, add it.
         # Every addition implies 2 lines:
@@ -154,18 +152,72 @@ class IndexableObjectWrapper(CMFCoreIndexableObjectWrapper):
         #   user:<user_id>:<role_id>
         # A line must not be present twice in final result.
         allowed = sets.Set(rolesForPermissionOn('View', ob))
+        # XXX Owner is hardcoded, in order to prevent searching for user on the
+        # site root.
         allowed.discard('Owner')
         add = allowed.add
+        user_role_dict = {}
+        user_view_permission_role_dict = {}
         for user, roles in localroles.iteritems():
           if withnuxgroups:
             prefix = user
           else:
             prefix = 'user:' + user
           for role in roles:
-            if role in allowed:
+            if (role in role_dict) and (getUserById(user) is not None):
+              # If role is monovalued, check if key is a user.
+              # If not, continue to index it in roles_and_users table.
+              user_role_dict[role] = user
+              if role in allowed:
+                user_view_permission_role_dict[role] = user
+            elif role in allowed:
               add(prefix)
               add(prefix + ':' + role)
-        return list(allowed)
+
+        # __setattr__ explicitely set the parameter on the wrapper
+        setattr(self, result_key, 
+                (list(allowed), user_role_dict, 
+                 user_view_permission_role_dict))
+
+      # Return expected value
+      return self.__dict__[result_key]
+
+    def allowedRolesAndUsers(self):
+      """
+      Return a list of roles and users with View permission.
+      Used by Portal Catalog to filter out items you're not allowed to see.
+
+      WARNING (XXX): some user base local role association is currently
+      being stored (ex. to be determined). This should be prevented or it will
+      make the table explode. To analyse the symptoms, look at the
+      user_and_roles table. You will find some user:foo values
+      which are not necessary.
+      """
+      return self._getSecurityParameterList()[0]
+
+    def getAssignee(self):
+      """Returns the user ID of the user with 'Assignee' local role on this
+      document.
+
+      If there is more than one Assignee local role, the result is undefined.
+      """
+      return self._getSecurityParameterList()[1].get('Assignee', None)
+
+    def getViewPermissionAssignee(self):
+      """Returns the user ID of the user with 'Assignee' local role on this
+      document, if the Assignee role has View permission.
+
+      If there is more than one Assignee local role, the result is undefined.
+      """
+      return self._getSecurityParameterList()[2].get('Assignee', None)
+
+    def getViewPermissionAssignor(self):
+      """Returns the user ID of the user with 'Assignor' local role on this
+      document, if the Assignor role has View permission.
+
+      If there is more than one Assignor local role, the result is undefined.
+      """
+      return self._getSecurityParameterList()[2].get('Assignor', None)
 
     def __repr__(self):
       return '<Products.ERP5Catalog.CatalogTool.IndexableObjectWrapper'\
@@ -467,65 +519,63 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       catalog = self.getSQLCatalog(sql_catalog_id)
       column_map = catalog.getColumnMap()
 
+      # We only consider here the Owner role (since it was not indexed)
+      # since some objects may only be visible by their owner
+      # which was not indexed
+      for role, column_id in catalog.getSQLCatalogRoleKeysList():
+        # XXX This should be a list
+        if not user_is_superuser:
+          try:
+            # if called by an executable with proxy roles, we don't use
+            # owner, but only roles from the proxy.
+            eo = getSecurityManager()._context.stack[-1]
+            proxy_roles = getattr(eo, '_proxy_roles', None)
+            if not proxy_roles:
+              role_column_dict[column_id] = user_str
+          except IndexError:
+            role_column_dict[column_id] = user_str
+
       # Patch for ERP5 by JP Smets in order
       # to implement worklists and search of local roles
-      if kw.has_key('local_roles'):
-        local_roles = kw['local_roles']
+      local_roles = kw.get('local_roles', None)
+      if local_roles:
         local_role_dict = dict(catalog.getSQLCatalogLocalRoleKeysList())
         role_dict = dict(catalog.getSQLCatalogRoleKeysList())
         # XXX user is not enough - we should also include groups of the user
-        # Only consider local_roles if it is not empty
-        if local_roles not in (None, '', []): # XXX: Maybe "if local_roles:" is enough.
-          new_allowedRolesAndUsers = []
-          # Turn it into a list if necessary according to ';' separator
-          if isinstance(local_roles, str):
-            local_roles = local_roles.split(';')
-          # Local roles now has precedence (since it comes from a WorkList)
-          for user_or_group in allowedRolesAndUsers:
-            for role in local_roles:
-              # Performance optimisation
-              if local_role_dict.has_key(role):
+        new_allowedRolesAndUsers = []
+        new_role_column_dict = {}
+        # Turn it into a list if necessary according to ';' separator
+        if isinstance(local_roles, str):
+          local_roles = local_roles.split(';')
+        # Local roles now has precedence (since it comes from a WorkList)
+        for user_or_group in allowedRolesAndUsers:
+          for role in local_roles:
+            # Performance optimisation
+            if local_role_dict.has_key(role):
+              # XXX This should be a list
+              # If a given role exists as a column in the catalog,
+              # then it is considered as single valued and indexed
+              # through the catalog.
+              if not user_is_superuser:
                 # XXX This should be a list
-                # If a given role exists as a column in the catalog,
-                # then it is considered as single valued and indexed
-                # through the catalog.
-                if not user_is_superuser:
-                  # XXX This should be a list
-                  # which also includes all user groups
-                  column_id = local_role_dict[role]
-                  local_role_column_dict[column_id] = user_str
-              if role_dict.has_key(role):
+                # which also includes all user groups
+                column_id = local_role_dict[role]
+                local_role_column_dict[column_id] = user_str
+            if role_dict.has_key(role):
+              # XXX This should be a list
+              # If a given role exists as a column in the catalog,
+              # then it is considered as single valued and indexed
+              # through the catalog.
+              if not user_is_superuser:
                 # XXX This should be a list
-                # If a given role exists as a column in the catalog,
-                # then it is considered as single valued and indexed
-                # through the catalog.
-                if not user_is_superuser:
-                  # XXX This should be a list
-                  # which also includes all user groups
-                  column_id = role_dict[role]
-                  role_column_dict[column_id] = user_str
-              else:
-                # Else, we use the standard approach
-                new_allowedRolesAndUsers.append('%s:%s' % (user_or_group, role))
-          if local_role_column_dict == {}:
-            allowedRolesAndUsers = new_allowedRolesAndUsers
+                # which also includes all user groups
+                column_id = role_dict[role]
+                new_role_column_dict[column_id] = user_str
+            new_allowedRolesAndUsers.append('%s:%s' % (user_or_group, role))
+        if local_role_column_dict == {}:
+          allowedRolesAndUsers = new_allowedRolesAndUsers
+          role_column_dict = new_role_column_dict
 
-      else:
-        # We only consider here the Owner role (since it was not indexed)
-        # since some objects may only be visible by their owner
-        # which was not indexed
-        for role, column_id in catalog.getSQLCatalogRoleKeysList():
-          # XXX This should be a list
-          if not user_is_superuser:
-            try:
-              # if called by an executable with proxy roles, we don't use
-              # owner, but only roles from the proxy.
-              eo = getSecurityManager()._context.stack[-1]
-              proxy_roles = getattr(eo, '_proxy_roles', None)
-              if not proxy_roles:
-                role_column_dict[column_id] = user_str
-            except IndexError:
-              role_column_dict[column_id] = user_str
 
       return allowedRolesAndUsers, role_column_dict, local_role_column_dict
 
