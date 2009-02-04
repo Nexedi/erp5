@@ -69,17 +69,23 @@ search_params = \\\n
 \n
 paysheet_list = accounting_module.searchFolder( **search_params)\n
 \n
-yearly_work_time = 0\n
+nb_heures_supp = 0\n
 for paysheet in paysheet_list:\n
+  small_heures_supp = 0\n
+  big_heures_supp = 0\n
   annotation_line = paysheet.getAnnotationLineFromReference(\\\n
       reference=\'overtime_small_rate\')\n
-  nb_heures_supp = annotation_line.getQuantity()\n
+  if annotation_line is not None :\n
+    small_heures_supp = annotation_line.getQuantity()\n
+\n
   annotation_line = paysheet.getAnnotationLineFromReference(\\\n
       reference=\'overtime_big_rate\')\n
-  nb_heures_supp += annotation_line.getQuantity()\n
-  yearly_work_time += nb_heures_supp \n
+  if annotation_line is not None :\n
+    big_heures_supp = annotation_line.getQuantity()\n
 \n
-return yearly_work_time\n
+  nb_heures_supp += (small_heures_supp + big_heures_supp)\n
+\n
+return nb_heures_supp\n
 </string> </value>
         </item>
         <item>
@@ -126,11 +132,13 @@ return yearly_work_time\n
                             <string>search_params</string>
                             <string>_apply_</string>
                             <string>paysheet_list</string>
-                            <string>yearly_work_time</string>
+                            <string>nb_heures_supp</string>
                             <string>_getiter_</string>
                             <string>paysheet</string>
+                            <string>small_heures_supp</string>
+                            <string>big_heures_supp</string>
                             <string>annotation_line</string>
-                            <string>nb_heures_supp</string>
+                            <string>None</string>
                             <string>_inplacevar_</string>
                           </tuple>
                         </value>

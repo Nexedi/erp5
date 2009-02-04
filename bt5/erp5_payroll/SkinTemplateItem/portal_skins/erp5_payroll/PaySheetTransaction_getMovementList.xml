@@ -81,10 +81,7 @@ for paysheet_line in paysheet_line_list:\n
   translated_base_application_list = [str(translateString(x)) for x in base_application_list]\n
   base_application_list = \', \'.join(translated_base_application_list)\n
   payroll_service = paysheet_line.getResourceValue(portal_type=\'Payroll Service\')\n
-  if payroll_service is not None:\n
-    base_contribution_list = paysheet_line.getBaseContributionList()\n
-  else:\n
-    base_contribution_list = []\n
+  base_contribution_list = paysheet_line.getBaseContributionList()\n
   causality = paysheet_line.getCausality()\n
 \n
   base_list = [str(translateString(base_application)) for base_application in \\\n

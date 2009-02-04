@@ -78,11 +78,11 @@ else:\n
 \n
 # get the application amount for this cell\n
 for base in cell.getBaseApplicationList():\n
-  if base_amount_dict.has_key(base):\n
+  if base_amount_dict.has_key(base) and base_amount_dict[base].has_key(tax_category):\n
     base_application += base_amount_dict[base][tax_category]\n
+\n
 if not len(cell.getBaseApplicationList()):\n
   base_application = quantity\n
-\n
 salary_range_list = cell.getVariationCategoryList(\\\n
     base_category_list=\'salary_range\')\n
 if len(salary_range_list):\n
