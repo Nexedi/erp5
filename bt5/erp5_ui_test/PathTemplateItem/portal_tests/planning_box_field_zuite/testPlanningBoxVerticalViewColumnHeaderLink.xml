@@ -210,7 +210,7 @@
 <tr>\n
   <td>assertText</td>\n
   <td>//div[@id="group_lane_12"]</td>\n
-  <td tal:content="string:December 2008"> </td>\n
+  <td tal:content="string:December $year"> </td>\n
 </tr>\n
 <!-- tr>\n
   <td>verifyText</td>\n
