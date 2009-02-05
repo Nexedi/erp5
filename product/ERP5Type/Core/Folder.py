@@ -78,6 +78,9 @@ import os
 from zLOG import LOG, PROBLEM, WARNING
 import warnings
 
+# variable to inform about migration process
+migration_process_lock = "_migration_in_progress"
+
 REINDEX_SPLIT_COUNT = 100 # if folder containes more than this, reindexing should be splitted.
 from Products.ERP5Type.Message import translateString
 
@@ -441,6 +444,17 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     Then it will migrate foder from btree to hbtree.
     """    
     BUNDLE_COUNT = 10
+
+    # if folder is already migrated or migration process is in progress
+    # do not do anything beside logging    
+    if getattr(self, migration_process_lock, None) is not None \
+       or self.isHBTree():
+      LOG('migrateToHBTree', WARNING,
+        'Folder %s already migrated'%(self.getPath(),))
+      return
+    # lock folder migration early
+    setattr(self, migration_process_lock, 1)
+    
     # we may want to change all objects ids before migrating to new folder type
     # set new id generator here so that object created while migration
     # got a right id
@@ -479,7 +493,9 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     and migration
     """
     if getattr(self, "_tree", None) is not None:
-      delattr(self, "_tree")
+      delattr(self, "_tree")    
+    if getattr(self, migration_process_lock, None) is not None:
+      delattr(self, migration_process_lock)
 
   def _launchCopyObjectToHBTree(self, tag):
     """
