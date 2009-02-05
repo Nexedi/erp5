@@ -464,7 +464,7 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
     def _getWorklistActionList():
       worklist_result_dict = {}
       sql_catalog = portal_catalog.getSQLCatalog()
-      acceptable_key_dict = sql_catalog.getColumnMap()
+      acceptable_key_dict = sql_catalog.getColumnMap().copy()
       for related_key in sql_catalog.getSQLCatalogRelatedKeyList():
         related_key = related_key.split('|')
         acceptable_key_dict[related_key[0].strip()] = related_key[1].strip()
