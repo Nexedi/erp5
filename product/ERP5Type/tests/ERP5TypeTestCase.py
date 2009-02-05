@@ -787,7 +787,7 @@ class ERP5TypeTestCase(PortalTestCase):
               get_transaction().commit()
               ZopeTestCase.close(app)
               instance_home = os.environ['INSTANCE_HOME']
-              command = 'mysqldump %s > %s/dump.sql' \
+              command = 'mysqldump --skip-extended-insert %s > %s/dump.sql' \
                           % (getMySQLArguments(), instance_home)
               if not quiet:
                 ZopeTestCase._print('Dumping MySQL database with %s... ' \
