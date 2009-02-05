@@ -1938,6 +1938,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals([], [x.getObject() for x in
                            obj.searchFolder(portal_type='Bank Account')])
 
+  @todo_erp5
   def test_SubDocumentsWithAcquireLocalRoleSecurityIndexing(
                                    self, quiet=quiet, run=run_all_test):
     if not run: return    
@@ -3482,6 +3483,7 @@ VALUES
     result = folder.portal_catalog(portal_type=portal_type, reference='doc %', description='%')
     self.assertEqual(len(result), 2)
 
+  @todo_erp5
   def test_sortOnRelatedKeyWithUnsetRelation(self, quiet=quiet, run=run_all_test):
     """
       Check that sorting on a related key does not filter out objects for
