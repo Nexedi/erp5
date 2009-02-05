@@ -324,7 +324,7 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       
     def test_08_migrateFolderTwiceSimultaneously(self, quiet=0, run=1):
       """
-      migrate folder twice from btree to hbtree
+      migrate folder twice from btree to hbtree, simultaneously
       """
       if not run : return
       if not quiet:
@@ -373,7 +373,8 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
 
     def test_09_migrateFolderCreateNewObjectAtOnce(self, quiet=0, run=1):
       """
-      migrate folder from btree to hbtree, do not touch ids
+      migrate folder from btree to hbtree, create object with base, without any
+      previous checks
       """
       if not run : return
       # Create some objects
@@ -401,7 +402,8 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       
     def test_10_migrateFolderCreateMoreObjectAtOnceDifferentBase(self, quiet=0, run=1):
       """
-      migrate folder from btree to hbtree, do not touch ids
+      migrate folder from btree to hbtree, create objects with two bases,
+      without any previous checks
       """
       if not run : return
       # Create some objects
@@ -433,7 +435,7 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       
     def test_11_folderInMigratedFolderIsBTree(self, quiet=0, run=1):
       """
-      Test the folder is a BTree
+      Test the folder in HBTree folder is a BTree
       """
       if not run : return
       if not quiet:
