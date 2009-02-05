@@ -118,12 +118,12 @@ class PaySheetTransaction(Invoice):
     annotation_line_list = self.contentValues(portal_type=['Annotation Line'])
     if annotation_line_list:
       for annotation_line in annotation_line_list:
-        if annotation_line.getReference() == reference:
+        if (annotation_line.getReference() or annotation_line.getId()) == reference :
           return annotation_line
 
     # if not find in the paysheet, look on dependence tree
     for annotation_line in self.getInheritedObjectValueList(['Annotation Line']):
-      if annotation_line.getReference() == reference:
+      if (annotation_line.getReference() or annotation_line.getId()) == reference:
         return annotation_line
 
     return None 
@@ -355,14 +355,9 @@ class PaySheetTransaction(Invoice):
       if model_line.getSource():
         source_section = model_line.getSource()
       elif source_annotation_line_reference:
-        for annotation_line in paysheet.contentValues(
-                                    portal_type='Annotation Line'):
-          annotation_line_reference = annotation_line.getReference() \
-                                           or annotation_line.getId()
-          if annotation_line_reference == source_annotation_line_reference \
-              and annotation_line.getSource():
-            source_section = annotation_line.getSource()
-            break
+        annotation_line = paysheet.getAnnotationLineFromReference(source_annotation_line_reference)
+        if annotation_line is not None:
+          source_section = annotation_line.getSource()
 
       if model_line.getDescription():
         desc = model_line.getDescription()
@@ -412,7 +407,7 @@ class PaySheetTransaction(Invoice):
 
           def getModifiedCell(cell, slice_dict, tax_category):
             '''
-              return a cell with the modified values (contained in slice_dict)
+              return a cell with the edited values (contained in slice_dict)
             '''
             if slice_dict:
               if slice_dict.has_key(tax_category):
