@@ -67,11 +67,11 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.tic()      
 
 
-    def newContent(self):
+    def newContent(self, *args, **kwargs):
       """
         Create an object in self.folder and return it.
       """
-      return self.folder.newContent(portal_type='Folder')
+      return self.folder.newContent(portal_type='Folder', *args, **kwargs)
     
     def test_01_folderIsBtree(self, quiet=0, run=1):
       """
@@ -371,6 +371,34 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       obj4 = self.newContent()
       self.assertEquals(obj4.getId().split('-')[0], date)
 
+    def test_09_migrateFolderCreateNewObjectAtOnce(self, quiet=0, run=1):
+      """
+      migrate folder from btree to hbtree, do not touch ids
+      """
+      if not run : return
+      # Create some objects
+      self.assertEquals(self.folder.getIdGenerator(), '')
+      self.assertEquals(len(self.folder), 0)
+      obj1 = self.newContent()
+      self.assertEquals(obj1.getId(), '1')
+      obj2 = self.newContent()
+      self.assertEquals(obj2.getId(), '2')
+      obj3 = self.newContent()
+      self.assertEquals(obj3.getId(), '3')
+      get_transaction().commit()
+      self.tic()      
+      # call migration script
+      self.folder.migrateToHBTree()
+      get_transaction().commit()
+      self.tic()
+      obj4 = self.newContent(id='BASE-123')
+      self.assertEquals(obj4.getId(), 'BASE-123')
+      self.assertEqual(len(self.folder.objectIds(base_id=None)), 3)
+      self.assertEqual(len(self.folder.objectValues()), 4)
+      self.assertEqual(len(self.folder.objectValues(base_id=None)), 3)
+      self.assertEqual(len(self.folder.objectIds(base_id='BASE')), 1)
+      self.assertEqual(len(self.folder.objectValues(base_id='BASE')), 1)
+      
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestFolderMigration))
