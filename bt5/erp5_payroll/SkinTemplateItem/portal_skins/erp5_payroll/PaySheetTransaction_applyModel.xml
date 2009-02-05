@@ -61,7 +61,7 @@ paysheet = context\n
 # copy categories\n
 category_list = [\n
   \'destination_section\', \'source_section\', \'source_payment\',\n
-  \'destination_payment\', \'price_currency\', \'ressource\',\n
+  \'destination_payment\', \'price_currency\',\n
 ]\n
 new_category_dict = {}\n
 \n
@@ -87,6 +87,11 @@ for category in category_list:\n
     v = getPropertyFromModel(model, category)\n
     if v:\n
       new_category_dict[category] = v\n
+\n
+# copy the price_currency into the ressource :\n
+price_currency = getPropertyFromModel(model, category)\n
+if price_currency:\n
+  new_category_dict[\'resource\'] = price_currency\n
 \n
 def copyPaymentCondition(paysheet, model):\n
   filter_dict = {\'portal_type\': \'Payment Condition\'}\n
@@ -172,6 +177,7 @@ if not batch_mode:\n
                             <string>category</string>
                             <string>v</string>
                             <string>_write_</string>
+                            <string>price_currency</string>
                             <string>copyPaymentCondition</string>
                             <string>filter_dict</string>
                             <string>list</string>
