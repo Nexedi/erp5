@@ -431,6 +431,23 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(len(self.folder.objectIds(base_id='BASE-BELONG')), 1)
       self.assertEqual(len(self.folder.objectValues(base_id='BASE-BELONG')), 1)
       
+    def test_11_folderInMigratedFolderIsBTree(self, quiet=0, run=1):
+      """
+      Test the folder is a BTree
+      """
+      if not run : return
+      if not quiet:
+        message = 'Test folderIsBtree'
+        LOG('Testing... ', 0, message)
+      self.folder.migrateToHBTree()
+      get_transaction().commit()
+      self.tic()
+      infolder = self.newContent()
+
+      self.assertRaises(NotImplementedError, infolder.getTreeIdList)
+      self.assertEqual(infolder.isBTree(), True)
+      self.assertEqual(infolder.isHBTree(), False)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestFolderMigration))
