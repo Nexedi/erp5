@@ -386,7 +386,7 @@ class HBTreeFolder2Base (Persistent):
         """
         if htree is None:
           htree = self._htree
-          btree_list = [None,]
+          btree_list = []
         else:
           btree_list = []
         for obj_id in htree.keys():
