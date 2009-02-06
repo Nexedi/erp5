@@ -722,7 +722,9 @@ class ERP5TypeTestCase(PortalTestCase):
                 listbox_object_list = BusinessTemplate_getModifiedObject.__of__(bt)()
                 for listbox_line in listbox_object_list:
                   install_kw[listbox_line.object_id] = listbox_line.choice_item_list[0][1]
-              bt.install(light_install=light_install, object_to_update=install_kw)
+              bt.install(light_install=light_install,
+                         object_to_update=install_kw,
+                         update_translation=1)
               # Release locks
               get_transaction().commit()
               if not quiet:

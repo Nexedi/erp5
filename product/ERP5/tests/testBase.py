@@ -1040,6 +1040,19 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(org._getTypeBasedMethod('dummyFooMethod'), None)
     self.assertEqual(org._getTypeBasedMethod('dummyFoo2Method'), None)
 
+  def test_translate_table(self):
+    """check if Person portal type that is installed in erp5_base is
+    well indexed in translate table or not.
+    """
+    self.getPortal().person_module.newContent(portal_type='Person',
+                                         title='translate_table_test')
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals(1, len(self.getPortal().portal_catalog(
+      portal_type='Person', title='translate_table_test')))
+    self.assertEquals(1, len(self.getPortal().portal_catalog(
+      translated_portal_type='Person', title='translate_table_test')))
+
 class TestERP5PropertyManager(unittest.TestCase):
   """Tests for ERP5PropertyManager.
   """
