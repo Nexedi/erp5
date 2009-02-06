@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from zLOG import LOG, INFO
+from zLOG import LOG, INFO, WARNING
 from ZODB.POSException import ConflictError
 
 class SQLBase:
@@ -67,3 +67,32 @@ class SQLBase:
         break
     return result
 
+  def _validate_after_method_id(self, activity_tool, message, value):
+    return self._validate(activity_tool, method_id=value)
+
+  def _validate_after_path(self, activity_tool, message, value):
+    return self._validate(activity_tool, path=value)
+
+  def _validate_after_message_uid(self, activity_tool, message, value):
+    return self._validate(activity_tool, message_uid=value)
+
+  def _validate_after_path_and_method_id(self, activity_tool, message, value):
+    if not (isinstance(value, (tuple, list)) and len(value) == 2):
+      LOG('CMFActivity', WARNING,
+          'unable to recognize value for after_path_and_method_id: %r' % (value,))
+      return []
+    return self._validate(activity_tool, path=value[0], method_id=value[1])
+
+  def _validate_after_tag(self, activity_tool, message, value):
+    return self._validate(activity_tool, tag=value)
+
+  def _validate_after_tag_and_method_id(self, activity_tool, message, value):
+    # Count number of occurances of tag and method_id
+    if not (isinstance(value, (tuple, list)) and len(value) == 2):
+      LOG('CMFActivity', WARNING,
+          'unable to recognize value for after_tag_and_method_id: %r' % (value,))
+      return []
+    return self._validate(activity_tool, tag=value[0], method_id=value[1])
+
+  def _validate_serialization_tag(self, activity_tool, message, value):
+    return self._validate(activity_tool, serialization_tag=value)
