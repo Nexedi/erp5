@@ -428,8 +428,8 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(len(self.folder.objectIds(base_id=None)), 3)
       self.assertEqual(len(self.folder.objectValues()), 5)
       self.assertEqual(len(self.folder.objectValues(base_id=None)), 3)
-      self.assertEqual(len(self.folder.objectIds(base_id='BASE')), 2)
-      self.assertEqual(len(self.folder.objectValues(base_id='BASE')), 2)
+      self.assertEqual(len(self.folder.objectIds(base_id='BASE')), 1)
+      self.assertEqual(len(self.folder.objectValues(base_id='BASE')), 1)
       self.assertEqual(len(self.folder.objectIds(base_id='BASE-BELONG')), 1)
       self.assertEqual(len(self.folder.objectValues(base_id='BASE-BELONG')), 1)
       
