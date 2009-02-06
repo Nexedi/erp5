@@ -68,6 +68,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>default_params</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>description</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -250,18 +254,15 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:map(lambda x: (here.Localizer.erp5_ui.gettext(x), x), here.getPortalEventTypeList())</string> </value>
+            <value> <string>python:[(x, x) for x in here.getPortalEventTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
