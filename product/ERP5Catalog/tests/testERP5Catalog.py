@@ -916,10 +916,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
           self.getCatalogTool().buildSQLQuery(
           sort_on=(('ignored', 'ascending'),))['order_by_expression'])
   
+  @todo_erp5
   def test_27_SortOnAmbigousKeys(self, quiet=quiet, run=run_all_test):
-    # XXX This *describes* the current behaviour, which might be
-    # non optimal, but at least we have a test to make sure that bugs are not
-    # introduced here.
     if not run: return
     if not quiet:
       message = 'Test Sort On Ambigous Keys'
@@ -934,19 +932,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     
     # if not found on catalog, it won't do any filtering
     # in the above, start_date exists both in delivery and movement table.
-    self._catch_log_errors(ignored_level = sys.maxint)
-    self.assertEquals('',
-          self.getCatalogTool().buildSQLQuery(
-          sort_on=(('start_date', 'ascending'),))['order_by_expression'])
-    self._ignore_log_errors()
-    # buildSQLQuery will simply put a warning in the error log and ignore
-    # this key.
-    logged_errors = [ logrecord for logrecord in self.logged
-                       if logrecord[0] == 'SQLCatalog' ]
-    self.failUnless( 'this key is too ambiguous : start_date'
-                      in logged_errors[0][2])
-    self.failUnless( 'could not build sort index' in logged_errors[1][2])
-    
+    self.assertRaises(ValueError, self.getCatalogTool().buildSQLQuery,
+          sort_on=(('start_date', 'ascending'),))
+
     # of course, in that case, it's possible to prefix with table name
     self.assertTrue(
           self.getCatalogTool().buildSQLQuery(
@@ -975,12 +963,20 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       message = 'Test Sort On Related Keys'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
-    self.assertNotEquals('',
-              self.getCatalogTool().buildSQLQuery(region_title='',
-              sort_on=(('region_title', 'ascending'),))['order_by_expression'])
-    self.assertNotEquals('',
+    self.assertTrue(
+              self.getCatalogTool().buildSQLQuery(region_title='foo',
+              sort_on=(('region_title', 'ascending'),))['order_by_expression'].endswith('.`title` ASC'))
+    self.assertTrue(
+              self.getCatalogTool().buildSQLQuery(region_title='foo',
+              sort_on=(('region_title', 'descending'),))['order_by_expression'].endswith('.`title` DESC'))
+    self.assertTrue(
               self.getCatalogTool().buildSQLQuery(
-              sort_on=(('region_title', 'ascending'),))['order_by_expression'],
+              sort_on=(('region_title', 'ascending'),))['order_by_expression'].endswith('.`title` ASC'),
+              'sort_on parameter must be taken into account even if related key '
+              'is not a parameter of the current query')
+    self.assertTrue(
+              self.getCatalogTool().buildSQLQuery(
+              sort_on=(('region_title', 'descending'),))['order_by_expression'].endswith('.`title` DESC'),
               'sort_on parameter must be taken into account even if related key '
               'is not a parameter of the current query')
 
