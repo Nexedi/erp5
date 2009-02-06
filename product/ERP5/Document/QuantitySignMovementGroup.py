@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2008,2009 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -24,6 +24,26 @@
 # Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
+
+r"""
+Quantity Sign Movement Group is used to separate movements based on
+the signs of the quantities.
+
+This is probably used only in erp5_immobilisation. But this implementation
+has a serious problem that the quantity sign is not set in a movement,
+if the movement is created manually, because only this movement group
+set that property with a builder. So a builder always creates new movements,
+even if simulation movements match existing movements.
+
+This is not easy to fix, because nobody available knows how this is supposed
+to work precisely. In addition, it is questionable even that this movement
+group makes sense. From accounting point of view, if the same account is
+used, there is no problem in merging debits and credits.
+
+So somebody must consult the spec of immobilisation accounting, and the
+implementation of erp5_immobilisation seriously, to understand why and
+whether this is really required.
+"""
 
 from Products.ERP5.Document.MovementGroup import MovementGroup
 
