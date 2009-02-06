@@ -1384,7 +1384,7 @@ class Base( CopyContainer,
 
       Generic accessor. Calls the real accessor
     """
-    self._setProperty(key,value, type=type, **kw)
+    self._setProperty(key, value, type=type, **kw)
     self.reindexObject()
 
   def _setProperty(self, key, value, type=None, **kw):
