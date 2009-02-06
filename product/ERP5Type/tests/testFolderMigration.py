@@ -450,6 +450,42 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(infolder.isBTree(), True)
       self.assertEqual(infolder.isHBTree(), False)
 
+    def test_12_migrateFolderWithGoodIdsInIt(self, quiet=0, run=1):
+      """
+      migrate folder from btree to hbtree folder, which already has ids
+      HBTree-friendly
+      """
+      if not run : return
+      if not quiet:
+        message = 'Test migrateFolder'
+        LOG('Testing... ', 0, message)
+        
+      id_prefix = 'BASE'
+      obj1_id = '%s-1'%(id_prefix,)
+      obj2_id = '%s-2'%(id_prefix,)
+      obj3_id = '%s-3'%(id_prefix,)
+      # Create some objects
+      self.assertEquals(self.folder.getIdGenerator(), '')
+      self.assertEquals(len(self.folder), 0)
+      obj1 = self.newContent(id=obj1_id)
+      obj2 = self.newContent(id=obj2_id)
+      obj3 = self.newContent(id=obj3_id)
+      get_transaction().commit()
+      self.tic()      
+      # call migration script
+      self.folder.migrateToHBTree()
+      get_transaction().commit()
+      self.tic()
+      # check we now have a hbtree
+      self.assertEqual(self.folder.isBTree(), False)
+      self.assertEqual(self.folder.isHBTree(), True)
+      self.assertEqual(len(self.folder.getTreeIdList()), 1)
+      self.assertEqual(len(self.folder.objectIds()), 3)
+      # check params of objectIds in case of hbtree
+      self.assertEqual(len(self.folder.objectIds(base_id=None)), 0)
+      self.assertEqual(len(self.folder.objectValues()), 3)
+      self.assertEqual(len(self.folder.objectValues(base_id=id_prefix)), 3)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestFolderMigration))
