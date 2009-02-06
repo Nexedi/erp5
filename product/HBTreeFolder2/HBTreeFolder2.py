@@ -32,7 +32,7 @@ from AccessControl import getSecurityManager, ClassSecurityInfo
 from AccessControl.Permissions import access_contents_information, \
      view_management_screens
 from zLOG import LOG, INFO, ERROR, WARNING
-from Products.ZCatalog.Lazy import LazyMap, LazyFilter, LazyCat
+from Products.ZCatalog.Lazy import LazyMap, LazyFilter, LazyCat, LazyValues
 
 
 manage_addHBTreeFolder2Form = DTMLFile('folderAdd', globals())
@@ -98,7 +98,7 @@ class HBTreeFolder2Base (Persistent):
         self._htree = OOBTree()
         self._count = Length()
         self._tree_list = PersistentMapping()
-
+        
     def initBTrees(self):
         """ """
         return self._initBTrees()
@@ -257,7 +257,10 @@ class HBTreeFolder2Base (Persistent):
             self._tree_list[tree_id] = None
             
           htree = htree[sub_id]
-        # set object in subtree
+
+        if len(id_list) == 1 and not htree.has_key(None):
+            self._tree_list[None] = None
+        # set object in subtree            
         ob_id = id_list[-1]
         if htree.has_key(id):
             raise KeyError('There is already an item named "%s".' % id)
@@ -385,7 +388,7 @@ class HBTreeFolder2Base (Persistent):
           htree = self._htree
           btree_list = [None,]
         else:
-            btree_list = []
+          btree_list = []
         for obj_id in htree.keys():
           obj = htree[obj_id]
           if isinstance(obj, OOBTree):
@@ -419,9 +422,9 @@ class HBTreeFolder2Base (Persistent):
         """ return object ids for a given btree
         """
         if base_id is not None:
-          return LazyFilter(self._checkObjectId, self._getTree("%s" %base_id).keys())
+          return LazyValues(LazyFilter(self._checkObjectId, [(base_id, x) for x in self._getTree("%s" %base_id).keys()]))
         else:
-          return LazyFilter(self._checkObjectId, self._htree.keys())
+          return LazyValues(LazyFilter(self._checkObjectId, [(base_id, x) for x in self._htree.keys()]))
 
     def _isNotBTree(self, obj):
         """ test object is not a btree
@@ -431,10 +434,13 @@ class HBTreeFolder2Base (Persistent):
         else:
             return True
 
-    def _checkObjectId(self, id):
+    def _checkObjectId(self, ids):
         """ test id is not in btree id list
         """
-        return not self._tree_list.has_key(id)
+        base_id, obj_id = ids
+        if base_id is not None:
+            obj_id = "%s%s%s" %(base_id, H_SEPARATOR, obj_id)
+        return not self._tree_list.has_key(obj_id)
         
     security.declareProtected(access_contents_information,
                               'objectValues')
