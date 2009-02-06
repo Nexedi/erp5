@@ -1370,7 +1370,7 @@ class Base( CopyContainer,
   def getPropertyList(self, key, d=None):
     """Same as getProperty, but for list properties.
     """
-    return self.getProperty('%s_list' % key)
+    return self.getProperty('%s_list' % key, d=d)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setProperty' )
   def setProperty(self, key, value, type='string', **kw):
