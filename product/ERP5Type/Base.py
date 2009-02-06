@@ -1361,6 +1361,23 @@ class Base( CopyContainer,
         except TypeError:
           pass
       return method(**kw)
+    # Try a mono valued accessor if it is available
+    # and return it as a list
+    if accessor_name.endswith('List'):
+      mono_valued_accessor_name = accessor_name[:-4]
+      if hasattr(aq_portal_type[aq_key], mono_valued_accessor_name):
+        method = getattr(self, mono_valued_accessor_name)
+        # We have a monovalued property
+        if d is _MARKER:
+          result = method(**kw)
+        else:
+          try:
+            result = method(d, **kw)
+          except TypeError:
+            result = method(**kw)
+        if not isinstance(result, (list, tuple)):
+          result = [result]
+        return result
     else:
       if d is not _MARKER:
         return ERP5PropertyManager.getProperty(self, key, d=d, **kw)
@@ -1371,6 +1388,12 @@ class Base( CopyContainer,
     """Same as getProperty, but for list properties.
     """
     return self.getProperty('%s_list' % key, d=d)
+
+  security.declareProtected( Permissions.ModifyPortalContent, 'setPropertyList' )
+  def setPropertyList(self, key, value, **kw):
+    """Same as setProperty, but for list properties.
+    """
+    return self.setProperty('%s_list' % key, value, **kw)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setProperty' )
   def setProperty(self, key, value, type='string', **kw):
@@ -1422,6 +1445,24 @@ class Base( CopyContainer,
     if getattr(aq_portal_type[aq_key], public_accessor_name, None) is not None:
       method = getattr(self, public_accessor_name)
       return method(value, **kw)
+    # Try a mono valued setter if it is available
+    # and call it
+    if accessor_name.endswith('List'):
+      mono_valued_accessor_name = accessor_name[:-4]
+      mono_valued_public_accessor_name = public_accessor_name[:-4]
+      method = None
+      if hasattr(aq_portal_type[aq_key], mono_valued_accessor_name):
+        method = getattr(self, mono_valued_accessor_name)
+      elif hasattr(aq_portal_type[aq_key], mono_valued_public_accessor_name):
+        method = getattr(self, mono_valued_public_accessor_name)
+      if method is not None:
+        if isinstance(value, (list, tuple)):
+          value_len = len(value)
+          if value_len == 1:
+            mono_value = value[0]
+            return method(mono_value, **kw)
+        raise TypeError, \
+           "A mono valued property must be set with a list of len 1"
     # Finaly use standard PropertyManager
     #LOG("Changing attr: ",0, key)
     # If we are here, this means we do not use a property that

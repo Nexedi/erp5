@@ -2019,6 +2019,7 @@ class TestPropertySheet:
         {   'id'          : 'wrapped_region_title',
             'description' : 'The title of the region',
             'type'        : 'string',
+            'multivalued'        : 1,
             'acquisition_base_category'     : ('region',),
             'acquisition_portal_type'       : ('Category', ),
             'acquisition_copy_value'        : 0,
@@ -2504,6 +2505,83 @@ class TestPropertySheet:
       self.assertTrue(type_info in container.allowedContentTypes())
       container.newContent(portal_type='Test Add Permission Document')
 
+    def testPropertyListWithMonoValuedProperty(self):
+      """
+      Check that we can use setPropertyList and getPropertyList
+      on a mono valued property
+      """
+      self._addProperty('Person',
+                  ''' { 'id':         'foo_bar',
+                        'type':       'string',
+                        'mode':       'rw', }''')
+      person = self.getPersonModule().newContent(portal_type='Person')
+      email = person.newContent(portal_type='Email')
+      self.assertEquals(None, getattr(person, 'getFooBarList', None))
+      self.assertEquals(person.getFooBar(), None)
+      self.assertFalse(person.hasProperty('foo_bar'))
+      self.assertEquals(person.getProperty('foo_bar'), None)
+      self.assertEquals(person.getPropertyList('foo_bar'), [None])
+      person.setFooBar('foo')
+      self.assertEquals(person.getProperty('foo_bar'), 'foo')
+      self.assertEquals(person.getPropertyList('foo_bar'), ['foo'])
+      person.setFooBar(None)
+      self.assertEquals(person.getProperty('foo_bar'), None)
+      person.setPropertyList('foo_bar', ['bar'])
+      self.assertEquals(person.getProperty('foo_bar'), 'bar')
+      self.assertEquals(person.getPropertyList('foo_bar'), ['bar'])
+      self.assertRaises(TypeError, person.setPropertyList, 'foo_bar', 
+                        ['a', 'b'])
+
+    def testPropertyListOnMonoValuedAcquiredProperty(self,quiet=quiet, run=run_all_test):
+      """
+      Check that we can use setPropertyList and getPropertyList
+      on a mono valued acquired property
+      """
+      self._addProperty('Person',
+                  ''' { 'id':         'foo_bar',
+                        'type':       'string',
+                        'mode':       'rw', }''')
+      self._addProperty('Email',
+                  ''' { 'id':         'foo_bar',
+                        'type':       'string',
+                        'acquired_property_id': ('description', ),
+                        'acquisition_base_category': ( 'parent', ),
+                        'acquisition_portal_type'  : ( 'Person', ),
+                        'acquisition_copy_value'   : 0,
+                        'acquisition_mask_value'   : 1,
+                        'acquisition_accessor_id'  : 'getFooBar',
+                        'acquisition_depends'      : None,
+                        'mode':       'rw', }''')
+      person = self.getPersonModule().newContent(portal_type='Person')
+      email = person.newContent(portal_type='Email')
+      self.assertEquals(email.getPropertyList('foo_bar'), [None])
+      person.setPropertyList('foo_bar', ['foo'])
+      self.assertEquals(email.getPropertyList('foo_bar'), ['foo'])
+      email.setPropertyList('foo_bar', ['bar'])
+      self.assertEquals(email.getPropertyList('foo_bar'), ['bar'])
+      email.setPropertyList('foo_bar', [None])
+      self.assertEquals(email.getPropertyList('foo_bar'), ['foo'])
+      person.setPropertyList('foo_bar', [None])
+      self.assertEquals(email.getPropertyList('foo_bar'), [None])
+
+    def testPropertyListWithMultiValuedProperty(self):
+      """
+      Check that we can use setPropertyList and getPropertyList
+      on a multi valued property
+      """
+      self._addProperty('Person',
+                  ''' { 'id':         'foo_bar',
+                        'type':       'string',
+                        'multivalued': 1,
+                        'mode':       'rw', }''')
+      person = self.getPersonModule().newContent(portal_type='Person')
+      # We have None, like test_list_accessors
+      self.assertEquals(person.getFooBarList(), None)
+      self.assertEquals(person.getPropertyList('foo_bar'), None)
+      person.setPropertyList('foo_bar', ['foo', 'bar'])
+      self.assertEquals(person.getPropertyList('foo_bar'), ['foo', 'bar'])
+      person.setPropertyList('foo_bar', [])
+      self.assertEquals(person.getFooBarList(), [])
 
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests
