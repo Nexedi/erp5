@@ -72,12 +72,15 @@ for line in line_list:\n
   line.setQuantity(line_quantity)\n
   total_quantity += line_quantity\n
 \n
-# total_quantity should be 0, or we created a transaction where debit != credit\n
+# The total quantity should be zero with a little error, if simulation has been\n
+# completely applied, because the debit and the credit must be balanced. However,\n
+# this is not the case, if the delivery is divergent, as the builder does not\n
+# adopt prevision automatically, when a conflict happens between the simulation\n
+# and user-entered values.\n
 if abs(round(total_quantity, precision)) > 2 * resource.getBaseUnitQuantity():\n
-  raise ValueError, \'debit != credit for %s => %s\' % (\n
-        context.getPath(), total_quantity)\n
+  return\n
 \n
-# if the difference is <= the base quantity unit, we round the last line\n
+# if the difference is <= the base quantity unit, we round the last line.\n
 if line is not None:\n
   line.setQuantity(round(line.getQuantity() - total_quantity, precision))\n
 
@@ -131,7 +134,6 @@ if line is not None:\n
                             <string>line_quantity</string>
                             <string>_inplacevar_</string>
                             <string>abs</string>
-                            <string>ValueError</string>
                           </tuple>
                         </value>
                     </item>
