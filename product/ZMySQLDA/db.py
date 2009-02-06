@@ -404,8 +404,20 @@ class DB(TM):
             # Hm. maybe the db is hosed.  Let's restart it.
             self._forceReconnection()
             self.db.query(query)
-        except ProgrammingError:
+        except ProgrammingError, exception:
           LOG('ZMySQLDA', ERROR, 'query failed: %s' % (query,))
+          if exception[0] == 1064:
+            # 1064 = You have an error in your SQL syntax
+            # Replace MySQL brain dead error message with a more meaningful
+            # one. (MySQL only reports the SQL query *from* the error place,
+            # which strips important contextual information).
+            error_text = exception[1]
+            prefix, suffix = error_text.split("'", 1)
+            if prefix == "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ":
+              sql, suffix = suffix.rsplit("'", 1)
+              reference_sql = query
+              error_position = len(reference_sql) - len(sql)
+              raise ProgrammingError(exception[0], "%s '%s' HERE '%s' %s" % (prefix, reference_sql[:error_position], reference_sql[error_position:], suffix))
           raise
         return self.db.store_result()
 
