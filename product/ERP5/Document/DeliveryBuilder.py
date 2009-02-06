@@ -189,7 +189,9 @@ class DeliveryBuilder(OrderBuilder):
     if property_dict in (None, {}):
       return
     delivery = self.getPortalObject().restrictedTraverse(delivery_relative_url)
-    delivery.edit(comment=comment, **property_dict)
+    delivery.edit(comment=comment)
+    for (property, value) in property_dict.iteritems():
+      delivery.setPropertyList(property, value)
 
     # Try to remove existing properties/categories from Movements that
     # should exist on Deliveries.
