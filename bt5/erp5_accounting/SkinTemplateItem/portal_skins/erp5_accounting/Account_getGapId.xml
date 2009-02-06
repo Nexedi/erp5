@@ -66,16 +66,13 @@ if number_method == \'account_reference\':\n
   if reference:\n
     return reference\n
 \n
-# elif number_method == \'gap_id\':\n
-else:\n
-  # GAP id is the default rendering\n
-\n
-  current_gap = preference_tool.getPreferredAccountingTransactionGap()\n
-\n
-  for gap in context.getGapValueList() : \n
-    if current_gap in gap.getPath() : \n
-       return gap.getReference() or gap.getId()\n
-  return \'\'\n
+## elif number_method == \'gap_id\':\n
+# GAP id is the default rendering\n
+current_gap = preference_tool.getPreferredAccountingTransactionGap() or \'\'\n
+for gap in context.getGapValueList(): \n
+  if current_gap in gap.getPath(): \n
+     return gap.getReference() or gap.getId()\n
+return \'\'\n
 </string> </value>
         </item>
         <item>
