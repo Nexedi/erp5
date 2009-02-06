@@ -179,11 +179,11 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
               # Patch for ERP5 by JP Smets in order to
               # filter per portal type more easily (ie. without
               # hardcoding it all)
-              fmt_data._push({'portal_type': ' OR '.join(dict['portal_type'])})
+              fmt_data._push({'portal_type': '&portal_type='.join(dict['portal_type'])})
               # Patch for ERP5 by JP Smets in order
               # to implement worklists and search of local roles
               if dict.has_key('local_roles'):
-                fmt_data._push({'local_roles': join(dict['local_roles'],'%3B')})
+                fmt_data._push({'local_roles': '&local_roles='.join(dict['local_roles'])})
               else:
                 fmt_data._push({'local_roles': ''})
               res.append((id, {'name': qdef.actbox_name % fmt_data,
@@ -251,8 +251,8 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info):
       if is_permitted_worklist:
         format_data = TemplateDict()
         format_data._push(info)
-        format_data._push({'portal_type': ' OR '.join(variable_match['portal_type']),
-                           'local_roles': '%3B'.join(variable_match.get(SECURITY_PARAMETER_ID, []))})
+        format_data._push({'portal_type': '&portal_type='.join(variable_match['portal_type']),
+                           'local_roles': '&local_roles='.join(variable_match.get(SECURITY_PARAMETER_ID, []))})
         variable_match[WORKLIST_METADATA_KEY] = {'format_data': format_data,
                                                  'worklist_title': action_box_name,
                                                  'worklist_id': worklist_id,
