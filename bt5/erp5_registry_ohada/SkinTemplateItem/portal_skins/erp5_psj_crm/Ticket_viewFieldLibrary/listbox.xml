@@ -70,6 +70,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>description</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -252,7 +256,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:map(lambda x: (x, here.Localizer.erp5_ui.gettext(x)), here.getPortalEventTypeList())</string> </value>
+            <value> <string>python:[(x, x) for x in here.getPortalEventTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
