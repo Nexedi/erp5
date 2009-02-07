@@ -48,7 +48,7 @@
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test block Positioning</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test PlanningBox Block Positioning</td></tr>\n
 </thead><tbody tal:define="is_selenium_0_8 python:here.getPortalObject().portal_tests.getZeleniumVersion() > \'Zelenium-0.8\'">\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
@@ -180,17 +180,17 @@
   <tr>\n
     <td>verifyElementPositionTop</td>\n
     <td>id=group_1_activity_1_block_1</td>\n
-    <td>266</td>\n
+    <td>250</td>\n
   </tr>\n
   <tr>\n
     <td>verifyElementPositionTop</td>\n
     <td>id=group_2_activity_1_block_1</td>\n
-    <td>346</td>\n
+    <td>330</td>\n
   </tr>\n
   <tr>\n
     <td>verifyElementPositionTop</td>\n
     <td>id=group_3_activity_1_block_1</td>\n
-    <td>426</td>\n
+    <td>410</td>\n
   </tr>\n
   <tr>\n
     <td>verifyElementWidth</td>\n

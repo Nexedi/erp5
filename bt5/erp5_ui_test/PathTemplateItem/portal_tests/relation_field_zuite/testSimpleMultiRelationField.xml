@@ -50,7 +50,7 @@
 <thead>\n
 <tr><td rowspan="1" colspan="3">Test Multi Relation Field, using metadata tab\n
 to set categories</td></tr>\n
-</thead><tbody>\n
+</thead><tbody tal:define="is_selenium_0_8 python:here.getPortalObject().portal_tests.getZeleniumVersion() > \'Zelenium-0.8\'">\n
 <tal:block metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>open</td>\n
@@ -85,8 +85,13 @@ to set categories</td></tr>\n
 <tr>\n
   <td>type</td>\n
   <td>field_my_category_list</td>\n
+<tal:block tal:condition="is_selenium_0_8">\n
+  <td>bar_category/foo_module/0<br />bar_category/foo_module/1</td>\n
+</tal:block>\n
+<tal:block tal:condition="not:is_selenium_0_8">\n
   <td>bar_category/foo_module/0\n
 bar_category/foo_module/1</td>\n
+</tal:block>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -110,16 +115,26 @@ bar_category/foo_module/1</td>\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>field_my_bar_category_title_list</td>\n
+<tal:block tal:condition="is_selenium_0_8">\n
+  <td>Title 0<br />Title 1</td>\n
+</tal:block>\n
+<tal:block tal:condition="not:is_selenium_0_8">\n
   <td>Title 0\n
 Title 1</td>\n
+</tal:block>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
   <td>field_my_bar_category_title_list</td>\n
+<tal:block tal:condition="is_selenium_0_8">\n
+  <td>Title 0<br />Title 1<br />Title 1</td>\n
+</tal:block>\n
+<tal:block tal:condition="not:is_selenium_0_8">\n
   <td>Title 0\n
 Title 1\n
 Title 1</td>\n
+</tal:block>\n
   <td>Make sure than we can repeat the second item in a list</td>\n
 </tr>\n
 <tr>\n
@@ -131,18 +146,28 @@ Title 1</td>\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>field_my_bar_category_title_list</td>\n
+<tal:block tal:condition="is_selenium_0_8">\n
+  <td>Title 0<br />Title 1<br />Title 1</td>\n
+</tal:block>\n
+<tal:block tal:condition="not:is_selenium_0_8">\n
   <td>Title 0\n
 Title 1\n
 Title 1</td>\n
+</tal:block>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
   <td>field_my_bar_category_title_list</td>\n
+<tal:block tal:condition="is_selenium_0_8">\n
+  <td>Title 0<br />Title 0<br />Title 1<br />Title 1</td>\n
+</tal:block>\n
+<tal:block tal:condition="not:is_selenium_0_8">\n
   <td>Title 0\n
 Title 0\n
 Title 1\n
 Title 1</td>\n
+</tal:block>\n
   <td>Make sure that we can repeat the first item (default) in a list</td>\n
 </tr>\n
 <tr>\n
@@ -154,18 +179,28 @@ Title 1</td>\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>field_my_bar_category_title_list</td>\n
+<tal:block tal:condition="is_selenium_0_8">\n
+  <td>Title 0<br />Title 0<br />Title 1<br />Title 1</td>\n
+</tal:block>\n
+<tal:block tal:condition="not:is_selenium_0_8">\n
   <td>Title 0\n
 Title 0\n
 Title 1\n
 Title 1</td>\n
+</tal:block>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
   <td>field_my_bar_category_title_list</td>\n
+<tal:block tal:condition="is_selenium_0_8">\n
+  <td>Title 1<br />Title 0<br />Title 1</td>\n
+</tal:block>\n
+<tal:block tal:condition="not:is_selenium_0_8">\n
   <td>Title 1\n
 Title 0\n
 Title 1</td>\n
+</tal:block>\n
   <td>Make sure we can reorder items in a list</td>\n
 </tr>\n
 <tr>\n
@@ -177,9 +212,14 @@ Title 1</td>\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>field_my_bar_category_title_list</td>\n
+<tal:block tal:condition="is_selenium_0_8">\n
+  <td>Title 1<br />Title 0<br />Title 1</td>\n
+</tal:block>\n
+<tal:block tal:condition="not:is_selenium_0_8">\n
   <td>Title 1\n
 Title 0\n
 Title 1</td>\n
+</tal:block>\n
   <td></td>\n
 </tr>\n
 <!-- XXX don\'t test jump for now, because we don\'t have good locators anyway.\n
