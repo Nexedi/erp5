@@ -55,12 +55,20 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+"""\n
+We wait until all activities are finished\n
+\n
+RuntimeError is raised in case there is no way\n
+to finish activities.\n
+"""\n
+\n
+\n
 from Products.ERP5Type.Utils import sleep\n
 count = 1000\n
 while len(context.portal_activities.getMessageList()) > 0:\n
   context.portal_activities.process_timer(0, 0)\n
   count -= 1\n
-  sleep()\n
+  sleep(t=1)\n
   if count < 0:\n
     raise RuntimeError, \'tic is endless\'\n
 \n
@@ -128,6 +136,10 @@ return \'Done.\'\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>Zuite_waitForActivities</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Wait activities</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

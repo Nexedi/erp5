@@ -68,7 +68,7 @@
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/bar_module/ListBoxZuite_waitForActivities</td>\n
+  <td>${base_url}/bar_module/Zuite_waitForActivities</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

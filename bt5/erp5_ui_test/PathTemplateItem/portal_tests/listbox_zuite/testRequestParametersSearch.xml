@@ -63,7 +63,7 @@
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td tal:content="string:${here/portal_url}/foo_module/ListBoxZuite_waitForActivities"/>\n
+  <td tal:content="string:${here/portal_url}/foo_module/Zuite_waitForActivities"/>\n
   <td></td>\n
 </tr>\n
 <tr>\n

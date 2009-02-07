@@ -63,7 +63,7 @@
 </tr>\n
 <tr>\n
 \t<td>open</td>\n
-\t<td>${base_url}/foo_module/ListBoxZuite_waitForActivities</td>\n
+\t<td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
