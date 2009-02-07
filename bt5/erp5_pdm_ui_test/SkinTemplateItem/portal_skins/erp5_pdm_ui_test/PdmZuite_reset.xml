@@ -3,30 +3,15 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PythonScripts.PythonScript</string>
-          <string>PythonScript</string>
-        </tuple>
-        <none/>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -85,6 +70,11 @@ source_site_title = "erp5_pdm_ui_test_source_site_title"\n
 destination_site_id = "erp5_pdm_ui_test_destination_site"\n
 destination_site_title = "erp5_pdm_ui_test_destination_site_title"\n
 \n
+# validate rules\n
+for rule in portal.portal_rules.objectValues():\n
+  if rule.getReference() != \'default_payment_rule\':\n
+    rule.validate()\n
+\n
 # Create resource\n
 module = portal.getDefaultModule(resource_portal_type)\n
 resource = module.newContent(\n
@@ -124,12 +114,6 @@ return "Reset Successfully."\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
             <value>
               <none/>
             </value>
@@ -179,10 +163,11 @@ return "Reset Successfully."\n
                             <string>source_site_title</string>
                             <string>destination_site_id</string>
                             <string>destination_site_title</string>
+                            <string>_getiter_</string>
+                            <string>rule</string>
                             <string>module</string>
                             <string>resource</string>
                             <string>base_category</string>
-                            <string>_getiter_</string>
                             <string>site_id</string>
                             <string>site_title</string>
                             <string>site</string>
