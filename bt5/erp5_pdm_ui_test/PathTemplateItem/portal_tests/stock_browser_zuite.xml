@@ -3,21 +3,12 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Zelenium.zuite</string>
-          <string>Zuite</string>
-        </tuple>
-        <none/>
+        <global name="Zuite" module="Products.Zelenium.zuite"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>_objects</string> </key>
             <value>
