@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DeliveryBuilder" module="Products.ERP5Type.Document.DeliveryBuilder"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_folder_handler</string> </key>
+            <value> <string>CMFBTreeFolderHandler</string> </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>delivery_after_generation_script_id</string> </key>
+            <value> <string>SaleOrder_copyOpenSaleOrderProperties</string> </value>
+        </item>
+        <item>
+            <key> <string>delivery_cell_portal_type</string> </key>
+            <value> <string>Sale Order Cell</string> </value>
+        </item>
+        <item>
+            <key> <string>delivery_cell_separate_order</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>delivery_line_portal_type</string> </key>
+            <value> <string>Sale Order Line</string> </value>
+        </item>
+        <item>
+            <key> <string>delivery_module</string> </key>
+            <value> <string>sale_order_module</string> </value>
+        </item>
+        <item>
+            <key> <string>delivery_portal_type</string> </key>
+            <value> <string>Sale Order</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Build Sale Order from Open Sale Order related simulation movements.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>sale_order_builder</string> </value>
+        </item>
+        <item>
+            <key> <string>last_id</string> </key>
+            <value> <string>9</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Delivery Builder</string> </value>
+        </item>
+        <item>
+            <key> <string>simulation_select_method_id</string> </key>
+            <value> <string>DeliveryBuilder_getOpenSaleOrderRelatedSimulationMovementList</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Sale Order Builder</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>

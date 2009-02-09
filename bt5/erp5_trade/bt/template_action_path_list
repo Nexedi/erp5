@@ -26,12 +26,31 @@ Inventory Module | view
 Inventory Module | view_stock_export
 Inventory Module | view_stock_report
 Inventory | view
+Open Order Rule | view
+Open Sale Order Line | line_profile
+Open Sale Order Line | price_view
+Open Sale Order Line | quantity_view
+Open Sale Order Line | view
+Open Sale Order | apply_trade_condition
+Open Sale Order | detailed_report
+Open Sale Order | jump_to_related_sale_order
+Open Sale Order | order_print
+Open Sale Order | order_summary
+Open Sale Order | payment_condition
+Open Sale Order | profile_view
+Open Sale Order | reference_generate
+Open Sale Order | view
+Open Sale Order | view_discount
+Open Sale Order | view_stock
+Open Sale Order | view_tax
 Order Rule | view
 Organisation | jump_to_purchase_order
 Organisation | jump_to_purchase_packing_list
 Organisation | jump_to_sale_order
 Organisation | jump_to_sale_packing_list
 Payment Condition | view
+Periodicity Line | periodicity
+Periodicity Line | view
 Person | jump_to_purchase_order
 Person | jump_to_purchase_packing_list
 Person | jump_to_sale_order
@@ -116,6 +135,7 @@ Sale Packing List | view
 Sale Packing List | view_container_list
 Sale Packing List | view_stock
 Sale Trade Condition Module | view
+Sale Trade Condition | periodicity_line_list
 Sale Trade Condition | view
 Sale Trade Condition | view_discount
 Sale Trade Condition | view_payment

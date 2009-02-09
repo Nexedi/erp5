@@ -15,8 +15,12 @@ Inventory
 Inventory Cell
 Inventory Line
 Inventory Module
+Open Order Rule
+Open Sale Order
+Open Sale Order Line
 Order Rule
 Payment Condition
+Periodicity Line
 Purchase Order
 Purchase Order Cell
 Purchase Order Line

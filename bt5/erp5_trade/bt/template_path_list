@@ -2,9 +2,13 @@ portal_categories/resource/packing
 portal_categories/trade_date/**
 portal_deliveries/purchase_packing_list_builder
 portal_deliveries/purchase_packing_list_builder/**
+portal_deliveries/sale_order_builder
+portal_deliveries/sale_order_builder/**
 portal_deliveries/sale_packing_list_builder
 portal_deliveries/sale_packing_list_builder/**
 portal_rules/default_delivery_rule
 portal_rules/default_delivery_rule/**
+portal_rules/default_open_order_rule
+portal_rules/default_open_order_rule/**
 portal_rules/default_order_rule
 portal_rules/default_order_rule/**

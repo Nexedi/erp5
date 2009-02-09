@@ -250,6 +250,10 @@
                           <string>Sale Order</string>
                           <string>Sale Order</string>
                         </tuple>
+                        <tuple>
+                          <string>Open Sale Order</string>
+                          <string>Open Sale Order</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

@@ -8,6 +8,13 @@
  <portal_type id="Inventory Line">
   <item>Inventory Cell</item>
  </portal_type>
+ <portal_type id="Open Sale Order">
+  <item>Tax Line</item>
+  <item>Discount Line</item>
+ </portal_type>
+ <portal_type id="Periodicity Line">
+  <item>Predicate</item>
+ </portal_type>
  <portal_type id="Preference">
   <item>Sale Order</item>
  </portal_type>

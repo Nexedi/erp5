@@ -1,3 +1,6 @@
+2009-02-09 yusei
+* Added open order functionality.
+
 2009-01-29 yusei
 * Use activate_kw parameter in build method.
 

@@ -32,19 +32,34 @@
  <portal_type id="Inventory Module">
   <item>Inventory</item>
  </portal_type>
+ <portal_type id="Open Order Rule">
+  <item>Category Divergence Tester</item>
+  <item>Quantity Divergence Tester</item>
+  <item>Property Divergence Tester</item>
+ </portal_type>
+ <portal_type id="Open Sale Order">
+  <item>Discount</item>
+  <item>Payment Condition</item>
+  <item>Open Sale Order Line</item>
+  <item>Tax Line</item>
+  <item>Discount Line</item>
+ </portal_type>
  <portal_type id="Order Rule">
   <item>Property Divergence Tester</item>
   <item>Category Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
  </portal_type>
+ <portal_type id="Periodicity Line">
+  <item>Predicate</item>
+ </portal_type>
  <portal_type id="Preference">
   <item>Sale Order</item>
  </portal_type>
  <portal_type id="Purchase Order">
-  <item>Payment Condition</item>
   <item>Purchase Order Line</item>
   <item>Tax Line</item>
   <item>Discount Line</item>
+  <item>Payment Condition</item>
  </portal_type>
  <portal_type id="Purchase Order Line">
   <item>Purchase Order Line</item>
@@ -83,12 +98,13 @@
  </portal_type>
  <portal_type id="Rule Tool">
   <item>Order Rule</item>
+  <item>Open Order Rule</item>
   <item>Delivery Rule</item>
  </portal_type>
  <portal_type id="Sale Order">
-  <item>Sale Order Line</item>
   <item>Tax Line</item>
   <item>Discount Line</item>
+  <item>Sale Order Line</item>
   <item>Payment Condition</item>
  </portal_type>
  <portal_type id="Sale Order Line">
@@ -97,6 +113,7 @@
  </portal_type>
  <portal_type id="Sale Order Module">
   <item>Sale Order</item>
+  <item>Open Sale Order</item>
  </portal_type>
  <portal_type id="Sale Packing List">
   <item>Sale Packing List Line</item>
@@ -111,8 +128,9 @@
  <portal_type id="Sale Trade Condition">
   <item>Tax Model Line</item>
   <item>Payment Condition</item>
-  <item>Sale Supply Line</item>
+  <item>Periodicity Line</item>
   <item>Discount Model Line</item>
+  <item>Sale Supply Line</item>
  </portal_type>
  <portal_type id="Sale Trade Condition Module">
   <item>Sale Trade Condition</item>
