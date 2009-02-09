@@ -883,6 +883,24 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     obj.edit(**{property_name: property_value})
     self.assertEquals(obj.getProperty(property_name), property_value)
   
+  def test_10_setPropertyListNotDefinedProperty(self, quiet=quiet,
+                                            run=run_all_test):
+    """Test for setProperty for a list on Base, when the property is not defined.
+    """
+    if not run: return
+    portal = self.getPortal()
+    portal_type = "Organisation"
+    module = portal.getDefaultModule(portal_type=portal_type)
+    obj = module.newContent(portal_type=portal_type)
+    property_value = ('1', '2')
+    property_name = 'a_dummy_not_exising_property_list'
+    obj.setProperty(property_name, property_value)
+    self.assertEquals(obj.getProperty(property_name), property_value)
+    obj.setProperty(property_name, property_value)
+    self.assertEquals(obj.getProperty(property_name), property_value)
+    obj.edit(**{property_name: property_value})
+    self.assertEquals(obj.getProperty(property_name), property_value)
+  
   def test_11_setPropertyPropertyDefinedOnInstance(self,
                                         quiet=quiet, run=run_all_test):
     """Test for setProperty on Base, when the property is defined on the
@@ -1130,6 +1148,26 @@ class TestERP5PropertyManager(unittest.TestCase):
                                         if x['id'] == 'a_second_dummy_property'])
     self.assertEquals(type(ob.getProperty('a_second_dummy_property')),
                       type(DateTime()))
+
+  def test_setPropertyTypeLines(self):
+    ob = self._makeOne('ob')
+    ob._setProperty('a_dummy_list_property', ('1', '2'), type='lines')
+    self.assertEquals(['lines'], [x['type'] for x in ob.propertyMap()
+                                        if x['id'] == 'a_dummy_list_property'])
+    self.assertEquals(ob.getProperty('a_dummy_list_property'), ('1', '2'))
+
+    #Set Property without type argument
+    ob._setProperty('a_second_dummy_property_list', ('3', '4'))
+    self.assertEquals(['lines'], [x['type'] for x in ob.propertyMap()
+                                if x['id'] == 'a_second_dummy_property_list'])
+    self.assertEquals(ob.getProperty('a_second_dummy_property_list'),
+                                    ('3', '4'))
+    # same, but passing a list, not a tuple
+    ob._setProperty('a_third_dummy_property_list', ['5', '6'])
+    self.assertEquals(['lines'], [x['type'] for x in ob.propertyMap()
+                                if x['id'] == 'a_third_dummy_property_list'])
+    self.assertEquals(ob.getProperty('a_third_dummy_property_list'),
+                                    ('5', '6'))
 
   def test_getPropertyNonExistantProps(self):
     """getProperty return None if the value is not found.
