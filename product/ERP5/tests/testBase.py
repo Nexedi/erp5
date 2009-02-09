@@ -883,24 +883,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     obj.edit(**{property_name: property_value})
     self.assertEquals(obj.getProperty(property_name), property_value)
   
-  def test_10_setPropertyListNotDefinedProperty(self, quiet=quiet,
-                                            run=run_all_test):
-    """Test for setProperty for a list on Base, when the property is not defined.
-    """
-    if not run: return
-    portal = self.getPortal()
-    portal_type = "Organisation"
-    module = portal.getDefaultModule(portal_type=portal_type)
-    obj = module.newContent(portal_type=portal_type)
-    property_value = ('1', '2')
-    property_name = 'a_dummy_not_exising_property_list'
-    obj.setProperty(property_name, property_value)
-    self.assertEquals(obj.getProperty(property_name), property_value)
-    obj.setProperty(property_name, property_value)
-    self.assertEquals(obj.getProperty(property_name), property_value)
-    obj.edit(**{property_name: property_value})
-    self.assertEquals(obj.getProperty(property_name), property_value)
-  
   def test_11_setPropertyPropertyDefinedOnInstance(self,
                                         quiet=quiet, run=run_all_test):
     """Test for setProperty on Base, when the property is defined on the
