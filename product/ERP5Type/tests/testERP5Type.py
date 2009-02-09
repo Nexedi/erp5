@@ -2583,6 +2583,19 @@ class TestPropertySheet:
       person.setPropertyList('foo_bar', [])
       self.assertEquals(person.getFooBarList(), [])
 
+    def testUndefinedProperties(self):
+      """
+      Make sure that getProperty and setProperty on a property not defined
+      in a propertysheet is working properly.
+      """
+      person = self.getPersonModule().newContent(portal_type='Person')
+      self.assertEquals(person.getProperty('foo_bar'), None)
+      person.setProperty('foo_bar', 'foo')
+      self.assertEquals(person.getProperty('foo_bar'), 'foo')
+      self.assertEquals(person.getPropertyList('foo_bar_list'), None)
+      person.setProperty('foo_bar_list', ['foo', 'bar'])
+      self.assertEquals(list(person.getProperty('foo_bar_list')), ['foo', 'bar'])
+
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests
   # when this one fails.

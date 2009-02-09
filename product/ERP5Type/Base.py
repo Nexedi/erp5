@@ -1378,10 +1378,9 @@ class Base( CopyContainer,
         if not isinstance(result, (list, tuple)):
           result = [result]
         return result
-    else:
-      if d is not _MARKER:
-        return ERP5PropertyManager.getProperty(self, key, d=d, **kw)
-      return ERP5PropertyManager.getProperty(self, key, **kw)
+    if d is not _MARKER:
+      return ERP5PropertyManager.getProperty(self, key, d=d, **kw)
+    return ERP5PropertyManager.getProperty(self, key, **kw)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getPropertyList' )
   def getPropertyList(self, key, d=None):
