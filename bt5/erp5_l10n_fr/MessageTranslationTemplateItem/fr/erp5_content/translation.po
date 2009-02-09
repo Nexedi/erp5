@@ -538,7 +538,7 @@ msgid "Length"
 msgstr "Longueur"
 
 msgid "Liability"
-msgstr "Dettes"
+msgstr "Passif"
 
 msgid "Limited company (Ltd.)"
 msgstr "Société anonyme (SA)"
@@ -1072,10 +1072,10 @@ msgid "Tools and General Machinery"
 msgstr "Outils et machineries"
 
 msgid "Total Deduction"
-msgstr "Total Retenues"
+msgstr "Total retenues"
 
 msgid "Total Income"
-msgstr "Somme des produits"
+msgstr "Total gains"
 
 msgid "Trade and Other Receivables"
 msgstr "Créances client"
