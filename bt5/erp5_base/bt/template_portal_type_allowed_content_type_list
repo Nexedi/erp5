@@ -10,6 +10,7 @@ Delivery Builder | Causality Movement Group
 Delivery Builder | Day Movement Group
 Delivery Builder | Delivery Causality Assignment Movement Group
 Delivery Builder | Monthly Range Movement Group
+Delivery Builder | Nested Line Movement Group
 Delivery Builder | Order Movement Group
 Delivery Builder | Parent Explanation Movement Group
 Delivery Builder | Predicate
@@ -29,6 +30,7 @@ Order Builder | Base Variant Movement Group
 Order Builder | Category Movement Group
 Order Builder | Causality Assignment Movement Group
 Order Builder | Causality Movement Group
+Order Builder | Nested Line Movement Group
 Order Builder | Order Movement Group
 Order Builder | Parent Explanation Movement Group
 Order Builder | Predicate

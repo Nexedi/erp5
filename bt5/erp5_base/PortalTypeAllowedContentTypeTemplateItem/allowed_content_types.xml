@@ -16,6 +16,7 @@
  </portal_type>
  <portal_type id="Delivery Builder">
   <item>Parent Explanation Movement Group</item>
+  <item>Nested Line Movement Group</item>
   <item>Title Movement Group</item>
   <item>Predicate</item>
   <item>Property Movement Group</item>
@@ -46,6 +47,7 @@
  </portal_type>
  <portal_type id="Order Builder">
   <item>Order Movement Group</item>
+  <item>Nested Line Movement Group</item>
   <item>Variant Movement Group</item>
   <item>Predicate</item>
   <item>Base Variant Movement Group</item>
