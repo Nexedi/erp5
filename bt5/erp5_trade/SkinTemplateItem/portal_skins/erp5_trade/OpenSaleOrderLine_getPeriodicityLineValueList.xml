@@ -61,6 +61,8 @@
 def iterate(trade_condition, trade_condition_list):\n
   if trade_condition is None:\n
     return\n
+  elif trade_condition in trade_condition_list:\n
+    return\n
   else:\n
     trade_condition_list.append(trade_condition)\n
     for next_trade_condition in trade_condition.getSpecialiseValueList():\n
