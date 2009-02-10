@@ -55,7 +55,9 @@
             <key> <string>_body</string> </key>
             <value> <string>movement = state_change[\'object\']\n
 delivery = movement.getExplanationValue()\n
-delivery.Delivery_updateTaxLineList()\n
+# if we are already solving a divergence, don\'t update\n
+if delivery.getProperty(\'causality_state\') not in (\'solving\',):\n
+  delivery.Delivery_updateTaxLineList()\n
 </string> </value>
         </item>
         <item>
