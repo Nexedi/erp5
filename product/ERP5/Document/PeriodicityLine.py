@@ -102,5 +102,11 @@ class PeriodicityLine(Path, PeriodicityLineMixin):
     while next_start_date <= to_date:
       result.append((next_start_date,
                      self.getPeriodicityTermStopDate(next_start_date)))
-      next_start_date = self.getNextPeriodicalDate(next_start_date)
+      
+      new_next_start_date = self.getNextPeriodicalDate(next_start_date)
+      if new_next_start_date==next_start_date:
+        # prevent infinite loop.
+        break
+      else:
+        next_start_date = new_next_start_date
     return result
