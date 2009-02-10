@@ -1260,7 +1260,7 @@ class TestInvoice(TestInvoiceMixin):
 
     # accept decision
     builder_list = invoice.getBuilderList()
-    self.assertEquals(2, len(builder_list))
+    self.assertEquals(3, len(builder_list))
     for builder in builder_list:
       builder.solveDivergence(invoice.getRelativeUrl(),
                               divergence_to_accept_list=divergence_list)
@@ -1320,7 +1320,7 @@ class TestInvoice(TestInvoiceMixin):
 
     # adopt prevision
     builder_list = invoice.getBuilderList()
-    self.assertEquals(2, len(builder_list))
+    self.assertEquals(3, len(builder_list))
     for builder in builder_list:
       builder.solveDivergence(invoice.getRelativeUrl(),
                               divergence_to_adopt_list=divergence_list)
@@ -3135,7 +3135,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
 
     # accept decision
     builder_list = invoice.getBuilderList()
-    self.assertEquals(2, len(builder_list))
+    self.assertEquals(3, len(builder_list))
     for builder in builder_list:
       builder.solveDivergence(invoice.getRelativeUrl(),
                               divergence_to_accept_list=divergence_list)
