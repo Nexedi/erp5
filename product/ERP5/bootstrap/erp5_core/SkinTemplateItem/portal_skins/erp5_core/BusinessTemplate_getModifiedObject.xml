@@ -105,6 +105,7 @@ for object_id in keys:\n
   object_list.append(line)\n
   i += 1                                  \n
 \n
+object_list.sort(key=lambda x:(x.object_class, x.object_state))\n
 return object_list\n
 </string> </value>
         </item>

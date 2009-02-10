@@ -136,6 +136,7 @@ for bt in bt_id_list:\n
     object_list.append(line)\n
   i += 1 \n
 \n
+object_list.sort(key=lambda x:(x.bt_title, x.object_class, x.object_state))\n
 return object_list\n
 </string> </value>
         </item>
