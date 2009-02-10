@@ -100,7 +100,6 @@ def parseArgs():
     send_mail = 1
 
 def main():
-  setBaseUrl()
   setPreference()
   unsubscribeFromTimerService()
   status = getStatus()
@@ -214,11 +213,6 @@ def setPreference():
   urllib2.urlopen('http://%s:%d/%s/BTZuite_setPreference?__ac_name='
               '%s&__ac_password=%s&working_copy_list=%s' %
                                   (host, port, portal_name, user, password, bt5_dir_list))
-
-def setBaseUrl():
-  urllib2.urlopen('http://%s:%d/%s/Zuite_setBaseUrl?__ac_name='
-              '%s&__ac_password=%s&base_url=%s' %
-                                  (host, port, portal_name, user, password, portal_name))
 
 def unsubscribeFromTimerService():
   urllib2.urlopen('http://%s:%d/%s/portal_activities/?unsubscribe:method='
