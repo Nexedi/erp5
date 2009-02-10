@@ -182,7 +182,7 @@ class PeriodicityMixin:
             if not(validate_day and validate_week and validate_month):
               # We have to reset hours and minutes in order to make sure
               # we will start at the beginning of the next day
-              next_start_date = DateTime(next_start_date.strftime('%Y/%m/%d') + ' 00:00:00 %s' % next_start_date.timezone())
+              next_start_date = DateTime(next_start_date.Date() + ' 00:00:00 %s' % next_start_date.timezone())
               next_start_date = addToDate(next_start_date, day=1)
             else:
               # Everything is right, but the date is still not bigger
