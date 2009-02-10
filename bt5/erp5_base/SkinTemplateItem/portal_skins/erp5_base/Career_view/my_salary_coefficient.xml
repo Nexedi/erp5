@@ -74,7 +74,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>A coefficient related to the salary classification of the person</string> </value>
+                    <value> <string>Coefficient used to materialize different salary levels for persons who have the same qualification but not the same experience: such as 1.1 or 1.2 or 2.1 etc, the higher the figure, the higher the salary</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

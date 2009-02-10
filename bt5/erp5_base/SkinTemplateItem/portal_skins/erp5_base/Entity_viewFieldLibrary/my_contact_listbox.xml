@@ -89,7 +89,7 @@
                         </tuple>
                         <tuple>
                           <string>translated_portal_type</string>
-                          <string>Coordinate Type</string>
+                          <string>Contact Type</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
@@ -97,7 +97,7 @@
                         </tuple>
                         <tuple>
                           <string>translated_id</string>
-                          <string>Coordinate Function</string>
+                          <string>Contact Function</string>
                         </tuple>
                         <tuple>
                           <string>asText</string>
@@ -185,7 +185,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Coordinates</string> </value>
+                    <value> <string>Contacts</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>

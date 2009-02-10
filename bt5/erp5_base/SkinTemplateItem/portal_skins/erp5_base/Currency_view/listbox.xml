@@ -102,7 +102,7 @@
                         </tuple>
                         <tuple>
                           <string>base_price</string>
-                          <string>Exchange Rage</string>
+                          <string>Exchange Rate</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>

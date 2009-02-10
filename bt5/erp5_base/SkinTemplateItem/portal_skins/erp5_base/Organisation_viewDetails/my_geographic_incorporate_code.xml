@@ -74,7 +74,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The geographic incorporate code of this organisation, sometimes derivated from corporate code</string> </value>
+                    <value> <string>This is the official code of the city in which the company has been registered. Those codes can be found on different websites, depending upon the country needed. In France for instance, it is available on the INSEE website. (www.insee.fr)</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Geographic Incorporate Code</string> </value>
+                    <value> <string>Geographic Incorporation Code</string> </value>
                 </item>
               </dictionary>
             </value>
