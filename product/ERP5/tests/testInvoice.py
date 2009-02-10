@@ -3150,9 +3150,25 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
           invoice_line.getDeliveryRelatedValue(portal_type='Simulation Movement'
               ).getQuantity())
 
-    self.assertEquals([], packing_list.getDivergenceList())
-    self.assertEquals('solved', packing_list.getCausalityState())
+    # the packing list is divergent, because it is not frozen
+    self.assertEquals('diverged', packing_list.getCausalityState())
+      
+    divergence_list = packing_list.getDivergenceList()
+    self.assertEquals(1, len(divergence_list))
+
+    divergence = divergence_list[0]
+    self.assertEquals('quantity', divergence.tested_property)
+
+    # if we adopt prevision on this packing list, both invoice and packing list
+    # will be solved
+    for builder in packing_list.getBuilderList():
+      builder.solveDivergence(packing_list.getRelativeUrl(),
+                              divergence_to_adopt_list=divergence_list)
     
+    get_transaction().commit()
+    self.tic()
+    self.assertEquals('solved', packing_list.getCausalityState())
+    self.assertEquals('solved', invoice.getCausalityState())
   
 
 class TestPurchaseInvoice(TestInvoice, ERP5TypeTestCase):
