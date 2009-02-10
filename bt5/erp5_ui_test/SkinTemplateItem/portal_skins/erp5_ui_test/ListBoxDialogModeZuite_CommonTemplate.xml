@@ -58,11 +58,10 @@
 
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:metal="http://xml.zope.org/namespaces/metal">\n
-\n
   <tal:block metal:define-macro="init">\n
     <tr>\n
       <td>store</td>\n
-      <td tal:content="python: \'/\' + here.getPortalObject().getProperty(\'erp5_ui_test_base_url\',  here.getPortalObject().getId())">erp5</td>\n
+      <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>\n
       <td>base_url</td>\n
     </tr>\n
     <tr>\n

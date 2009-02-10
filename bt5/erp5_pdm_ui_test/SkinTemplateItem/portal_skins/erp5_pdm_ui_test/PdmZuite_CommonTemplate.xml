@@ -42,11 +42,10 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:metal="http://xml.zope.org/namespaces/metal">\n
   <tal:block metal:define-macro="init"\n
-            tal:define="base_url  python: \'/\' + here.getPortalObject().getProperty(\'erp5_ui_test_base_url\',  here.getPortalObject().getId());\n
-                        global is_selenium_0_8 python: here.getPortalObject().portal_tests.getZeleniumVersion() &gt; \'Zelenium-0.8\'">\n
+            tal:define="global is_selenium_0_8 python: here.getPortalObject().portal_tests.getZeleniumVersion() &gt; \'Zelenium-0.8\'">\n
     <tr>\n
       <td>store</td>\n
-      <td tal:content="base_url">erp5</td>\n
+      <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>\n
       <td>base_url</td>\n
     </tr>\n
     <tr tal:condition="is_selenium_0_8">\n
@@ -88,7 +87,7 @@
     </tr>\n
     <tr>\n
       <td>open</td>\n
-      <td tal:content="string:$base_url/internal_packing_list_module/$init_method" />\n
+      <td tal:content="string:$${base_url}/internal_packing_list_module/$init_method" />\n
       <td></td>\n
     </tr>\n
     <tr>\n

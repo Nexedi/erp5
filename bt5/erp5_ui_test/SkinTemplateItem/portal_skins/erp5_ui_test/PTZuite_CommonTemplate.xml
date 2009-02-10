@@ -62,12 +62,12 @@
     <!-- reuse listbox suite reset to clear modules. -->\n
     <tr>\n
       <td>store</td>\n
-      <td tal:content="python: \'/\' + here.getPortalObject().getProperty(\'erp5_ui_test_base_url\',  here.getPortalObject().getId())">erp5</td>\n
+      <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>\n
       <td>base_url</td>\n
     </tr>\n
     <tr>\n
       <td>open</td>\n
-      <td tal:content="string: ${here/portal_url}/foo_module/ListBoxZuite_reset"/>\n
+      <td>${base_url}/foo_module/ListBoxZuite_reset</td>\n
       <td></td>\n
     </tr>\n
     <tr>\n
@@ -78,7 +78,7 @@
     <tr>\n
       <td>open</td>\n
       <!-- create a Foo -->\n
-      <td tal:content="string: ${here/portal_url}/foo_module/Foo_createObjects?start:int=1&num:int=1"/>\n
+      <td>${base_url}/foo_module/Foo_createObjects?start:int=1&amp;num:int=1</td>\n
       <td></td>\n
     </tr>\n
     <tr>\n
