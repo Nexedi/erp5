@@ -605,12 +605,15 @@ def WorkflowTool_refreshWorklistCache(self):
           self.Base_zCreateWorklistTable()
       portal_catalog = getToolByName(self, 'portal_catalog')
       search_result = portal_catalog.unrestrictedSearchResults
-      acceptable_key_dict = portal_catalog.getSQLCatalog().getColumnMap()
+      sql_catalog = portal_catalog.getSQLCatalog()
+      acceptable_key_dict = sql_catalog.getColumnMap()
       # XXX: those hardcoded lists should be grabbed from the table dynamicaly
       # (and cached).
       table_column_id_set = ImmutableSet(
           [COUNT_COLUMN_TITLE] + self.Base_getWorklistTableColumnIDList())
-      security_column_id_list = ['security_uid', 'viewable_owner', 'owner']
+      security_column_id_list = ['security_uid'] + \
+        [x[1] for x in sql_catalog.getSQLCatalogRoleKeysList()] + \
+        [x[1] for x in sql_catalog.getSQLCatalogLocalRoleKeysList()]
       (worklist_list_grouped_by_condition, worklist_metadata) = \
         groupWorklistListByCondition(
           worklist_dict=worklist_dict,
