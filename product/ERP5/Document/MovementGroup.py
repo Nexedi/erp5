@@ -79,3 +79,7 @@ class MovementGroup(XMLObject):
     return sorted([[sorted(x[0], key=lambda x: x.getId()), x[1]] \
                    for x in self._separate(movement_list)],
                   key=lambda x: x[0][0].getId())
+
+  def isBranch(self):
+    # self is taken as branch point by the builder if returned value is True.
+    return False

@@ -64,57 +64,6 @@ class OrderLine(DeliveryLine):
     # Declarative interfaces
     __implements__ = ( Interface.Variated, )
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'hasLineContent')
-    def hasLineContent(self):
-      """Return true if the object contains lines.
-
-      This method only checks the first sub document because all sub
-      documents should be Order Line in reality if we have Order Line
-      inside Order Line.
-      """
-      return len(self) != 0 and self.objectValues()[0].meta_type == self.meta_type
-
-    def _getTotalPrice(self, default=0.0, context=None, fast=0):
-      """Returns the total price for this order line.
-
-      if hasLineContent: return sum of lines total price
-      if hasCellContent: return sum of cells total price
-      else: return quantity * price
-      if fast is argument true, then a SQL method will be used.
-      """
-      if self.hasLineContent():
-        meta_type = self.meta_type
-        return sum(l.getTotalPrice(context=context)
-                   for l in self.objectValues() if l.meta_type==meta_type)
-      return DeliveryLine._getTotalPrice(self,
-                                         default=default,
-                                         context=context,
-                                         fast=fast)
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getTotalQuantity')
-    def getTotalQuantity(self, fast=0):
-      """Returns the total quantity of this order line.
-
-      if hasLineContent: return sum of lines total quantity
-      if hasCellContent: return sum of cells total quantity
-      else: return quantity
-      if fast argument is true, then a SQL method will be used.
-      """
-      base_id = 'movement'
-      if self.hasLineContent():
-        meta_type = self.meta_type
-        return sum(l.getTotalQuantity() for l in
-            self.objectValues() if l.meta_type==meta_type)
-      elif self.hasCellContent(base_id=base_id):
-        if fast : # Use MySQL
-          aggregate = self.DeliveryLine_zGetTotal()[0]
-          return aggregate.total_quantity or 0.0
-        return sum([cell.getQuantity() for cell in self.getCellValueList()])
-      else:
-        return self.getQuantity()
-
     def applyToOrderLineRelatedMovement(self, portal_type='Simulation Movement', 
                                         method_id = 'expand'):
       """

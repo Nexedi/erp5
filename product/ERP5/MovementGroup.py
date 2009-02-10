@@ -76,8 +76,7 @@ class MovementGroupNode:
       for movement in movement_list[1:]:
         # We have a conflict here, because it is forbidden to have
         # 2 movements on the same node group
-        tmp_result = self._separate(movement)
-        self._movement_list, split_movement = tmp_result
+        self._movement_list, split_movement = self._separate(movement)
         if split_movement is not None:
           # We rejected a movement, we need to put it on another line
           # Or to create a new one
@@ -108,6 +107,9 @@ class MovementGroupNode:
       if key.startswith('_'):
         del(property_dict[key])
     return property_dict
+
+  def getCurrentMovementGroup(self):
+    return self._movement_group
 
   def getMovementList(self):
     """

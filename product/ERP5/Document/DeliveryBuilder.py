@@ -263,16 +263,16 @@ class DeliveryBuilder(OrderBuilder):
         simulation_movement_list.append(simulation_movement)
 
     # Collect
-    root_group = self.collectMovement(simulation_movement_list)
+    root_group_node = self.collectMovement(simulation_movement_list)
 
     # Build
     portal = self.getPortalObject()
     delivery_module = getattr(portal, self.getDeliveryModule())
     delivery_to_update_list = [delivery]
     self._resetUpdated()
-    delivery_list = self._deliveryGroupProcessing(
+    delivery_list = self._processDeliveryGroup(
       delivery_module,
-      root_group,
+      root_group_node,
       self.getDeliveryMovementGroupList(),
       delivery_to_update_list=delivery_to_update_list,
       divergence_list=divergence_to_adopt_list,

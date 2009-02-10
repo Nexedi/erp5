@@ -115,8 +115,19 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
       return self.getParentValue().isAccountable() and (not self.hasCellContent())
 
     def _getTotalPrice(self, default=0.0, context=None, fast=0):
-      """ Returns the total price for this line or the cells it contains. """
-      if not self.hasCellContent(base_id='movement'):
+      """
+        Returns the total price for this line, this line contains, or the cells it contains.
+
+        if hasLineContent: return sum of lines total price
+        if hasCellContent: return sum of cells total price
+        else: return quantity * price
+        if fast is argument true, then a SQL method will be used.
+      """
+      if self.hasLineContent():
+        meta_type = self.meta_type
+        return sum(l.getTotalPrice(context=context)
+                   for l in self.objectValues() if l.meta_type==meta_type)
+      elif not self.hasCellContent(base_id='movement'):
         return Movement._getTotalPrice(self, default=default, context=context)
       elif fast: # Use MySQL
         return self.DeliveryLine_zGetTotal()[0].total_price or 0.0
@@ -129,18 +140,34 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
       """
         Returns the quantity if no cell or the total quantity if cells
 
-        If fast is equal to 0, we returns the right quantity even
-        if there is nothing into the catalog or the catalog is not
-        up to date
+        if hasLineContent: return sum of lines total quantity
+        if hasCellContent: return sum of cells total quantity
+        else: return quantity
+        if fast argument is true, then a SQL method will be used.
       """
       base_id = 'movement'
-      if not self.hasCellContent(base_id=base_id):
-        return self.getQuantity()
-      else:
+      if self.hasLineContent():
+        meta_type = self.meta_type
+        return sum(l.getTotalQuantity() for l in
+            self.objectValues() if l.meta_type==meta_type)
+      elif self.hasCellContent(base_id=base_id):
         if fast : # Use MySQL
           aggregate = self.DeliveryLine_zGetTotal()[0]
           return aggregate.total_quantity or 0.0
         return sum([cell.getQuantity() for cell in self.getCellValueList()])
+      else:
+        return self.getQuantity()
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'hasLineContent')
+    def hasLineContent(self):
+      """Return true if the object contains lines.
+
+      This method only checks the first sub line because all sub
+      lines should be same meta type in reality if we have line
+      inside line.
+      """
+      return len(self) != 0 and self.objectValues()[0].meta_type == self.meta_type
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'hasCellContent')
