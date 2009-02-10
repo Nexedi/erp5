@@ -55,6 +55,7 @@
             <key> <string>_body</string> </key>
             <value> <string>portal_deliveries = context.getPortalObject().portal_deliveries\n
 return [portal_deliveries.sale_invoice_builder,\n
+        portal_deliveries.sale_invoice_tax_builder,\n
         portal_deliveries.sale_invoice_transaction_builder]\n
 </string> </value>
         </item>
