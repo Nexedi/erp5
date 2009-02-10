@@ -307,17 +307,13 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     # We do not want to update the same object more than twice in one
     # _deliveryGroupProcessing().
     self._resetUpdated()
-    delivery_list = self._unrestrictedProcessDeliveryGroup(
+    delivery_list = self._processDeliveryGroup(
                           delivery_module,
                           movement_group_node,
                           self.getDeliveryMovementGroupList(),
                           delivery_to_update_list=delivery_to_update_list,
                           **kw)
     return delivery_list
-
-  def _unrestrictedProcessDeliveryGroup(self, *args, **kw):
-    """This method wraps _processDeliveryGroup with UnrestrictedMethod."""
-    return UnrestrictedMethod(self._processDeliveryGroup)(*args, **kw)
 
   def _processDeliveryGroup(self, delivery_module, movement_group_node,
                             collect_order_list, movement_group_node_list=None,
@@ -775,6 +771,6 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     tv['builder_processed_list'] = {}
 
   # for backward compatibilities.
-  _deliveryGroupProcessing = _unrestrictedProcessDeliveryGroup
+  _deliveryGroupProcessing = _processDeliveryGroup
   _deliveryLineGroupProcessing = _processDeliveryLineGroup
   _deliveryCellGroupProcessing = _processDeliveryCellGroup
