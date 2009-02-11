@@ -44,9 +44,12 @@ class TradeConditionTestCase(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting', 'erp5_invoicing')
 
-  def setUp(self):
-    ERP5TypeTestCase.setUp(self)
+  size_category_list = ['small', 'big']
+  def afterSetUp(self):
     self.validateRules()
+    for category_id in self.size_category_list:
+      self.portal.portal_categories.size.newContent(id=category_id,
+                                                    title=category_id)
     self.base_amount = self.portal.portal_categories.base_amount
     self.tax = self.portal.tax_module.newContent(
                                     portal_type='Tax',
@@ -78,7 +81,7 @@ class TradeConditionTestCase(ERP5TypeTestCase):
                             created_by_builder=1,
                             title='Order')
 
-  def tearDown(self):
+  def beforeTearDown(self):
     get_transaction().abort()
     for module in (self.portal.tax_module,
                    self.portal.organisation_module,
@@ -89,21 +92,20 @@ class TradeConditionTestCase(ERP5TypeTestCase):
                    self.portal.portal_simulation,
                    self.trade_condition_module,
                    self.order_module,
-                   self.portal.portal_categories.base_amount,):
+                   self.portal.portal_categories.base_amount,
+                   self.portal.portal_categories.size,
+      ):
       module.manage_delObjects(list(module.objectIds()))
-    if 'test_invoice_transaction_rule' in self.portal.portal_rules.objectIds():
-      self.portal.portal_rules.manage_delObjects('test_invoice_transaction_rule')
     get_transaction().commit()
     self.tic()
-    ERP5TypeTestCase.tearDown(self)
 
 
 class AccountingBuildTestCase(TradeConditionTestCase):
   """Same as TradeConditionTestCase, but with a rule to generate
   accounting.
   """
-  def setUp(self):
-    TradeConditionTestCase.setUp(self)
+  def afterSetUp(self):
+    TradeConditionTestCase.afterSetUp(self)
     self.receivable_account = self.portal.account_module.newContent(
                                     id='receivable',
                                     title='Receivable',
@@ -186,6 +188,11 @@ class AccountingBuildTestCase(TradeConditionTestCase):
     get_transaction().commit()
     self.tic()
 
+  def beforeTearDown(self):
+    TradeConditionTestCase.beforeTearDown(self)
+    self.portal.portal_rules.manage_delObjects('test_invoice_transaction_rule')
+    get_transaction().commit()
+    self.tic()
 
 class TestApplyTradeCondition(TradeConditionTestCase):
   """Tests Applying Trade Conditions
@@ -762,8 +769,6 @@ class TestTaxLineCalculation(TradeConditionTestCase):
                           title='Base 1')
     self.resource.setBaseContributionValue(base_1)
     # make a resource with size variation
-    self.portal.portal_categories.size.newContent(id='small', title='Small')
-    self.portal.portal_categories.size.newContent(id='big', title='Big')
     self.resource.setVariationBaseCategoryList(('size',))
     self.resource.setVariationCategoryList(('size/big', 'size/small'))
 
