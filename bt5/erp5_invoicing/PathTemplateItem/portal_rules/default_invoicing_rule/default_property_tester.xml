@@ -72,6 +72,7 @@
               <tuple>
                 <string>start_date | Start Date</string>
                 <string>stop_date | Stop Date</string>
+                <string>price | Price</string>
               </tuple>
             </value>
         </item>
