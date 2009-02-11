@@ -53,18 +53,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># managers can edit the priority field in Preference_view, so they need to have the value\n
-if context.getPortalObject().portal_membership.checkPermission("Manage portal", context) :\n
-  #getAuthenticatedMember().hasRole(context, \'Manager\') :\n
-  return context.getPriority()\n
-\n
-# others just want a readable text.\n
-if context.getPriority() == 1 :\n
-  return "Site"\n
-elif context.getPriority() == 2 : \n
-  return "Group"\n
-else : \n
-  return "User"\n
+            <value> <string>priority_dict = {\n
+  1:\'Site\',\n
+  2:\'Group\',\n
+}\n
+return priority_dict.get(context.getPriority(), \'User\')\n
 </string> </value>
         </item>
         <item>
@@ -101,6 +94,7 @@ else : \n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>priority_dict</string>
                             <string>_getattr_</string>
                             <string>context</string>
                           </tuple>
