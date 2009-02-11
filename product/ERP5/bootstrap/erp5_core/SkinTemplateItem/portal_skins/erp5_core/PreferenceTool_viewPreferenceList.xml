@@ -72,7 +72,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_owner</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
