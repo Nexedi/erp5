@@ -61,7 +61,7 @@ if packing_list_state == "draft":\n
   packing_list.portal_workflow.doActionFor(\n
                                   packing_list,\n
                                   \'confirm_action\',\n
-                                  comment=Message(\'erp5_ui\', \'Initialized by Delivery Builder\'))\n
+                                  comment=Message(\'erp5_ui\', \'Initialised by Delivery Builder\'))\n
 </string> </value>
         </item>
         <item>

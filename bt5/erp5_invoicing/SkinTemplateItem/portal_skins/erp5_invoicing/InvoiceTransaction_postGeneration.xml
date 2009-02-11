@@ -92,7 +92,7 @@ if invoice.getSimulationState() == \'draft\':\n
   try :\n
     context.getPortalObject().portal_workflow.doActionFor(\n
       invoice, \'confirm_action\',\n
-      comment=translateString(\'Initialized by Delivery Builder.\'),\n
+      comment=translateString(\'Initialised by Delivery Builder.\'),\n
       skip_period_validation=1)\n
   except WorkflowException, e:\n
     # The user cannot pass the transition, it\'s OK\n
@@ -100,7 +100,7 @@ if invoice.getSimulationState() == \'draft\':\n
 \n
   if invoice.getSimulationState() == \'draft\':\n
     # call the workflow method, if the user cannot perform this operation.\n
-    invoice.confirm(comment=translateString(\'Initialized by Delivery Builder.\'),)\n
+    invoice.confirm(comment=translateString(\'Initialised by Delivery Builder.\'),)\n
 \n
 \n
 # First set the invoice in the building state on the causality workflow\n

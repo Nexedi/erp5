@@ -106,7 +106,7 @@ elif len(related_list) == 1:\n
                  "that_title" : context.getTitleOrId() }), \'utf8\'))\n
   else :\n
     url = context.absolute_url()\n
-    message = Base_translateString("You are not authorized to view the related document.")\n
+    message = Base_translateString("You are not authorised to view the related document.")\n
     relation_found = 0\n
 \n
 else:\n
@@ -125,7 +125,7 @@ else:\n
                            uid=get_uid_method(portal_type=portal_type,\n
                                               checked_permission=\'View\')))\n
 \n
-  # compute the list of objects we are actually authorized to view\n
+  # compute the list of objects we are actually authorised to view\n
   related_object_list = []\n
   for path in search_method(portal_type=portal_type) :\n
     obj = context.getPortalObject().restrictedTraverse(path, None)\n
@@ -138,7 +138,7 @@ else:\n
       related_object_list.append(obj)\n
   if len(related_object_list) == 0 :\n
     url = context.absolute_url()\n
-    message = Base_translateString("You are not authorized to view any related document.")\n
+    message = Base_translateString("You are not authorised to view any related document.")\n
     relation_found = 0\n
   else :\n
     request=context.REQUEST\n

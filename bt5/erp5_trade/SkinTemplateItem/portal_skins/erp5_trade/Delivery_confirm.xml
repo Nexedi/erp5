@@ -64,7 +64,7 @@ packing_list = context\n
 # Modify state\n
 packing_list_state = packing_list.getSimulationState()\n
 if packing_list_state == "draft":\n
-  packing_list.confirm(comment=translateString(\'Initialized by Delivery Builder.\'))\n
+  packing_list.confirm(comment=translateString(\'Initialised by Delivery Builder.\'))\n
 </string> </value>
         </item>
         <item>

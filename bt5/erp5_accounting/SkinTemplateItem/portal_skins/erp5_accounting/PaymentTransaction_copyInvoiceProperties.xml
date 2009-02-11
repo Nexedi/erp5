@@ -62,7 +62,7 @@ payment_transaction = context\n
 if payment_transaction.getSimulationState() == "draft":\n
   payment_transaction.portal_workflow.doActionFor(\n
      payment_transaction, \'plan_action\',\n
-     comment=translateString("Initialized by Delivery Builder."))\n
+     comment=translateString("Initialised by Delivery Builder."))\n
 </string> </value>
         </item>
         <item>

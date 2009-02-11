@@ -73,11 +73,11 @@
                     i18n:translate="" i18n:domain="ui"></option>\n
           </tal:block>\n
         </select>\n
-        <button type="submit" name="Base_doFavorite:method" title="Select Favorite"\n
+        <button type="submit" name="Base_doFavorite:method" title="Select Favourite"\n
                 i18n:attributes="title" i18n:domain="ui">\n
           <span class="image"></span>\n
           <span class="description"\n
-                i18n:translate="" i18n:domain="ui">Select Favorite</span>\n
+                i18n:translate="" i18n:domain="ui">Select Favourite</span>\n
         </button>\n
       </span>\n
       <span class="separator"><!--separator--></span>\n

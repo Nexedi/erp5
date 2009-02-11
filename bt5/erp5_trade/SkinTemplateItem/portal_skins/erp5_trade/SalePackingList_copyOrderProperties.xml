@@ -67,7 +67,7 @@ packing_list.PackingList_copyOrderProperties()\n
 packing_list_state = packing_list.getSimulationState()\n
 \n
 if packing_list_state == "draft":\n
-  packing_list.confirm(comment=translateString(\'Initialized by Delivery Builder.\'))\n
+  packing_list.confirm(comment=translateString(\'Initialised by Delivery Builder.\'))\n
 \n
 # First set the packing_list in the building state\n
 packing_list.startBuilding()\n
