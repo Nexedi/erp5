@@ -633,7 +633,6 @@ class SQLDict(RAMDict, SQLBase):
       result = readMessageList(path=None, method_id=None, processing_node=-1,
                                to_date=now_date, include_processing=0, offset=offset, count=READ_MESSAGE_LIMIT)
       validated_count = 0
-      #TIME_begin = time()
       while len(result) and validated_count < MAX_VALIDATED_LIMIT:
         get_transaction().commit()
 
@@ -652,8 +651,6 @@ class SQLDict(RAMDict, SQLBase):
           offset += READ_MESSAGE_LIMIT
           result = readMessageList(path=None, method_id=None, processing_node=-1,
                                    to_date=now_date, include_processing=0, offset=offset, count=READ_MESSAGE_LIMIT)
-      #TIME_end = time()
-      #LOG('SQLDict.distribute', INFO, '%0.4fs : %i messages => %i distributables' % (TIME_end - TIME_begin, offset - READ_MESSAGE_LIMIT + len(result), validated_count))
 
   # Validation private methods
   def _validate(self, activity_tool, method_id=None, message_uid=None, path=None, tag=None,
