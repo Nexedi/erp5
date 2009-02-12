@@ -672,9 +672,17 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       delivery_movement._edit(force_update=1, **property_dict)
       simulation_movement.edit(delivery_ratio=1)
 
-  def callAfterBuildingScript(self, delivery_list, movement_list=None, **kw):
+  def callAfterBuildingScript(self, *args, **kw):
     """
-      Call script on each delivery built
+      Call script on each delivery built.
+    """
+    callAfterBuildingScript = UnrestrictedMethod(self._callAfterBuildingScript)
+    return callAfterBuildingScript(*args, **kw)
+
+  def _callAfterBuildingScript(self, delivery_list, movement_list=None, **kw):
+    """
+      Call script on each delivery built.
+      This method is wrapped by UnrestrictedMethod.
     """
     if not len(delivery_list):
       return
