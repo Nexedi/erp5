@@ -25,7 +25,6 @@ from Products.ERP5Type.patches import PropertyManager
 from Products.ERP5Type.patches import DA
 from Products.ERP5Type.patches import DCWorkflow
 from Products.ERP5Type.patches import BTreeFolder2
-from Products.ERP5Type.patches import Transaction
 from Products.ERP5Type.patches import WorkflowTool
 from Products.ERP5Type.patches import XMLExportImport
 from Products.ERP5Type.patches import ppml
@@ -47,14 +46,10 @@ from Products.ERP5Type.patches import CMFCoreSkinnable
 from Products.ERP5Type.patches import CMFCoreSkinsTool
 from Products.ERP5Type.patches import CMFBTreeFolder
 from Products.ERP5Type.patches import OFSFolder
-from Products.ERP5Type.patches import Connection
-from Products.ERP5Type.patches import copy_reg_patch
-from Products.ERP5Type.patches import PersistencePatch
 from Products.ERP5Type.patches import PersistentMapping
 from Products.ERP5Type.patches import DateTimePatch
 from Products.ERP5Type.patches import PythonScript
 from Products.ERP5Type.patches import MailTemplates
-from Products.ERP5Type.patches import persistent_patch
 from Products.ERP5Type.patches import http_server
 
 # These symbols are required for backward compatibility
