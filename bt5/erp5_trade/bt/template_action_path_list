@@ -27,7 +27,6 @@ Inventory Module | view_stock_export
 Inventory Module | view_stock_report
 Inventory | view
 Open Order Rule | view
-Open Sale Order Line | line_profile
 Open Sale Order Line | price_view
 Open Sale Order Line | quantity_view
 Open Sale Order Line | view
