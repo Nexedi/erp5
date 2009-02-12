@@ -1,3 +1,6 @@
+2009-02-12 yusei
+* Invoice Line can now contain Invoice Line. This is useful if we want to make a invoice which collect all orders from divisions in one company and list up invoice line per each division.
+
 2009-02-03 yo
 * Editable fields must use "cell" instead of "here" in the tales expressions, so they may not use proxy fields created for my_* intact. Due to this error, total_price and total_quantity could be wrongly displayed.
 
