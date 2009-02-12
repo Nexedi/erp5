@@ -45,8 +45,6 @@
                 <string>source</string>
                 <string>destination</string>
                 <string>source_section</string>
-                <string>source_function</string>
-                <string>destination_function</string>
                 <string>destination_section</string>
                 <string>source_decision</string>
                 <string>destination_decision</string>
