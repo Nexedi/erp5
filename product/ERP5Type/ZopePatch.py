@@ -57,12 +57,6 @@ from Products.ERP5Type.patches import MailTemplates
 from Products.ERP5Type.patches import persistent_patch
 from Products.ERP5Type.patches import http_server
 
-# for python2.3 compatibility
-import threading
-if not hasattr(threading, 'local'):
-  from Products.ERP5Type.patches.threading_local import local as threading_local
-  threading.local = threading_local
-
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
 from Products.ERP5Type.patches.DCWorkflow import ValidationFailed, ERP5TransitionDefinition
