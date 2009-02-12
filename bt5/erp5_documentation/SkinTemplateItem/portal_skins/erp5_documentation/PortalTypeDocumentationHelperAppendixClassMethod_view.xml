@@ -68,7 +68,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>class_method_listbox</string>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>

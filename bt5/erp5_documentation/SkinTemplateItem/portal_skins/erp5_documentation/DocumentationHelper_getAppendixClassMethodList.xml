@@ -61,12 +61,9 @@
 def compareId(a, b):\n
   return cmp(normalise(a.id), normalise(b.id))\n
 \n
-class_method_list = kw["class_method_list"]\n
-obj = kw["obj"]\n
-\n
 result = map(\n
-  lambda x: obj.asContext(id=x),\n
-  class_method_list \n
+  lambda x: context.asContext(id=x),\n
+  class_method_list\n
 )\n
 result.sort(compareId)\n
 return result\n
@@ -80,7 +77,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>class_method_list, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -100,18 +97,16 @@ return result\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>class_method_list</string>
                             <string>kw</string>
                             <string>normalise</string>
                             <string>compareId</string>
-                            <string>_getitem_</string>
-                            <string>class_method_list</string>
-                            <string>obj</string>
                             <string>map</string>
                             <string>result</string>
                             <string>_getattr_</string>

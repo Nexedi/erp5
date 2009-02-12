@@ -13,15 +13,18 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>title</string>
+                <string>description</string>
                 <string>columns</string>
                 <string>list_method</string>
+                <string>selection_name</string>
                 <string>url_columns</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>class_method_listbox</string> </value>
+            <value> <string>listbox</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -62,6 +65,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -74,7 +81,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -94,18 +109,22 @@
                       <list>
                         <tuple>
                           <string>id</string>
-                          <string>id</string>
+                          <string>Id</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>class_method_listbox</string> </value>
+                    <value> <string>my_view_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>DocumentationHelper_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -114,8 +133,16 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>property_sheet_selection</string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Property Sheet</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
@@ -140,7 +167,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>DocumentationHelper_getAppendixClassMethodList</string> </value>
+            <value> <string>DocumentationHelper_getAppendixPropertySheetList</string> </value>
         </item>
       </dictionary>
     </pickle>
