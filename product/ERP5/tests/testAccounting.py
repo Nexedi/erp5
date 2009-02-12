@@ -236,7 +236,7 @@ class AccountingTestCase(ERP5TypeTestCase):
     # standalone accounting and only installs erp5_accounting_ui_test to have
     # some default content created.
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-            'erp5_accounting_ui_test')
+            'erp5_accounting_ui_test', 'erp5_ods_style')
 
 
 class TestAccounts(AccountingTestCase):
@@ -1874,10 +1874,6 @@ class TestClosingPeriod(AccountingTestCase):
 class TestAccountingExport(AccountingTestCase):
   """Test accounting export features with erp5_ods_style.
   """
-  def getBusinessTemplateList(self):
-    return AccountingTestCase.getBusinessTemplateList(self) + (
-        'erp5_ods_style', )
-
   def test_export_transaction(self):
     # test we can export an accounting transaction as ODS
     transaction = self._makeOne(lines=(
@@ -2518,10 +2514,6 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     return ('group/client', 'group/vendor/sub1', 'group/vendor/sub2',
             'payment_mode/check', 'region/%s' % self.default_region, )
   
-  def getBusinessTemplateList(self):
-    """Returns list of BT to be installed."""
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting', )
-
   def stepTic(self, **kw):
     """Flush activity queue. """
     self.tic()
