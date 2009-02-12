@@ -70,10 +70,10 @@ class TestDocumentationHelper(ERP5TypeTestCase):
     #test the report mode of the documentation of the whole site
     self.portal.REQUEST['class_name'] = site_do.getClassName()
     self.portal.REQUEST['uri'] = site_uri
-    self.portal.REQUEST['business_template_list'] = 'erp5_documentation',
-    self.portal.portal_classes.DocumentationHelper_viewReport()
-    self.portal.REQUEST['business_template_list'] = 'erp5_ui_test',
     self.portal.REQUEST['portal_skin'] = 'ODT'
+    self.portal.portal_classes.DocumentationHelper_viewReport()
+    self.portal.REQUEST['business_template_list'] = 'erp5_documentation',
+    self.portal.REQUEST['portal_skin'] = 'View'
     self.portal.portal_classes.DocumentationHelper_viewReport()
 
   def test_02_BusinessTemplate(self):
