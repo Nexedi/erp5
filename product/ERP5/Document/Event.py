@@ -51,6 +51,7 @@ class Event(EmailDocument, Movement):
   isPortalContent = 1
   isRADContent = 1
   isDelivery = 1
+  isMovement = 1
 
   # Declarative security
   security = ClassSecurityInfo()
