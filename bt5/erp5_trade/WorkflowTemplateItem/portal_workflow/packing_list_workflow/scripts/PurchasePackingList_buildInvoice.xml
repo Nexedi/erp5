@@ -69,6 +69,7 @@ if packing_list.getPortalType() == \'Purchase Packing List\':\n
   invoice_line_builder = getattr(delivery_tool, \'purchase_invoice_builder\', None)\n
   if invoice_line_builder is not None:\n
     invoice_line_builder.activate(\n
+          activity=\'SQLQueue\',\n
           tag=tag,\n
           after_method_id = [ \'expand\', \n
                               \'recursiveImmediateReindexObject\',\n
@@ -81,6 +82,7 @@ if packing_list.getPortalType() == \'Purchase Packing List\':\n
   invoice_tax_builder = getattr(delivery_tool, \'purchase_invoice_tax_builder\', None)\n
   if invoice_tax_builder is not None:\n
     invoice_tax_builder.activate(\n
+          activity=\'SQLQueue\',\n
           tag=tax_tag,\n
           after_tag=tag,\n
           after_method_id = [ \'expand\', \n
