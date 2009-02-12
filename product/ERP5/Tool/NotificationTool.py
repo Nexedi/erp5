@@ -30,6 +30,7 @@ from Globals import DTMLFile
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
+from AccessControl import ModuleSecurityInfo
 from Products.ERP5 import _dtmldir
 
 from mimetypes import guess_type
@@ -43,6 +44,9 @@ from email import Encoders
 
 class ConversionError(Exception): pass
 class MimeTypeException(Exception): pass
+
+security = ModuleSecurityInfo('Products.ERP5.Tool.NotificationTool')
+security.declarePublic('buildEmailMessage',)
 
 def buildAttachmentDictList(document_list, document_type_list=()):
   """return a list of dictionary which will be used by buildEmailMessage"""
