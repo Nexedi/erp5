@@ -45,9 +45,8 @@ class TestDocumentationHelper(ERP5TypeTestCase):
   This is the list of test
 
   """
-  auth = "ERP5TypeTestCase:"
   run_all_test = 1
- 
+
   def getTitle(self):
     return "DocumentationHelper"
 
@@ -56,7 +55,7 @@ class TestDocumentationHelper(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """return list of business templates to be installed. """
-    return 'erp5_documentation', 'erp5_ui_test'
+    return 'erp5_documentation', 'erp5_ui_test', 'erp5_odt_style'
 
   def test_01_ERP5Site(self):
     ZopeTestCase._print('\nTest Documentation ERP5Site')
@@ -67,10 +66,14 @@ class TestDocumentationHelper(ERP5TypeTestCase):
     self.assertTrue('erp5_core' in bt_title_set)
     self.assertTrue('erp5_documentation' in bt_title_set)
     self.portal.portal_classes.getDocumentationHelper(
-        'ERP5SiteDocumentationHelper', site_uri).view()
+        site_do.getClassName(), site_uri).view()
     #test the report mode of the documentation of the whole site
-    self.portal.REQUEST['class_name'] = 'ERP5SiteDocumentationHelper'
+    self.portal.REQUEST['class_name'] = site_do.getClassName()
     self.portal.REQUEST['uri'] = site_uri
+    self.portal.REQUEST['business_template_list'] = 'erp5_documentation',
+    self.portal.portal_classes.DocumentationHelper_viewReport()
+    self.portal.REQUEST['business_template_list'] = 'erp5_ui_test',
+    self.portal.REQUEST['portal_skin'] = 'ODT'
     self.portal.portal_classes.DocumentationHelper_viewReport()
 
   def test_02_BusinessTemplate(self):
@@ -85,8 +88,8 @@ class TestDocumentationHelper(ERP5TypeTestCase):
     self.assertTrue('foo_module' in bt_do.getModuleIdList())
     self.assertTrue('bar_module' in bt_do.getModuleIdList())
     self.portal.portal_classes.getDocumentationHelper(
-        'BusinessTemplateDocumentationHelper', bt_uri).view()
-    self.portal.REQUEST['class_name'] = 'ERP5SiteDocumentationHelper'
+        bt_do.getClassName(), bt_uri).view()
+    self.portal.REQUEST['class_name'] = bt_do.getClassName()
     self.portal.REQUEST['uri'] = bt_uri
     self.portal.portal_classes.DocumentationHelper_viewReport()
 
@@ -115,8 +118,8 @@ class TestDocumentationHelper(ERP5TypeTestCase):
     self.assertTrue('restrictedTraverse' in instance_foo.getClassMethodIdList())
     self.assertTrue('_baseGetDescription' in instance_foo.getAccessorMethodIdList())
     self.portal.portal_classes.getDocumentationHelper(
-        'PortalTypeInstanceDocumentationHelper', instance_uri).view()
-    self.portal.REQUEST['class_name'] = 'PortalTypeInstanceDocumentationHelper'
+        instance_foo.getClassName(), instance_uri).view()
+    self.portal.REQUEST['class_name'] = instance_foo.getClassName()
     self.portal.REQUEST['uri'] = instance_uri
     self.portal.portal_classes.DocumentationHelper_viewReport()
 
