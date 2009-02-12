@@ -1,5 +1,5 @@
 ##############################################################################
-#
+# -*- coding: utf8 -*-
 # Copyright (c) 2002-2009 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Łukasz Nowak <luke@nexedi.com>
