@@ -3598,7 +3598,14 @@ class TestAccountingTransactionTemplate(AccountingTestCase):
   def getTitle(self):
     return "Accounting Transaction Template"
 
+  def disableUserPreferenceList(self):
+    """Disable existing User preferences."""
+    for preference in self.portal.portal_preferences.objectValues():
+      if preference.getPriority() == Priority.USER:
+        preference.disable()
+
   def test_Template(self):
+    self.disableUserPreferenceList()
     self.login('claudie')
     preference = self.portal.portal_preferences.newContent('Preference')
     preference.priority = Priority.USER
@@ -3643,6 +3650,7 @@ class TestAccountingTransactionTemplate(AccountingTestCase):
   def test_Base_doAction(self):
     # test creating a template using Base_doAction script (this is what
     # erp5_xhtml_style does)
+    self.disableUserPreferenceList()
     self.login('claudie')
     preference = self.portal.portal_preferences.newContent('Preference')
     preference.priority = Priority.USER
