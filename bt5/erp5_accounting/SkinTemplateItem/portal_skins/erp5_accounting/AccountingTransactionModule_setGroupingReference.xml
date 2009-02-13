@@ -120,23 +120,34 @@ if grouping == \'grouping\':\n
     transaction_list = {}\n
     for line in grouped_line_list:\n
       transaction_list[portal.restrictedTraverse(line).getParentValue()] = 1\n
-    \n
+\n
     for transaction in transaction_list.keys():\n
+      if transaction.getPortalType() == \'Balance Transfer Transaction\':\n
+        transaction = transaction.getCausalityValue()\n
       # Check if this document has a payment_state\n
       if getattr(transaction, \'getPaymentState\', None) is not None:\n
         # if all [recievable|payable] lines were grouped, we can mark this\n
         # invoice as payed.\n
         cleared = 1\n
-        for line in transaction.getMovementList(\n
-                        portal_type=portal.getPortalAccountingMovementTypeList()):\n
-          if transaction.AccountingTransaction_isSourceView():\n
+\n
+        line_list = transaction.getMovementList(\n
+                       portal_type=portal.getPortalAccountingMovementTypeList())\n
+        for btt in transaction.getCausalityRelatedValueList(\n
+                           portal_type=\'Balance Transfer Transaction\'):\n
+          if btt.getSimulationState() == \'delivered\':\n
+            for btt_line in btt.getMovementList():\n
+              line_list.append(btt_line)\n
+\n
+        for line in line_list:\n
+          if line.getParentValue().AccountingTransaction_isSourceView():\n
             account = line.getSourceValue(portal_type=\'Account\')\n
           else:\n
             account = line.getDestinationValue(portal_type=\'Account\')\n
           if account is not None and account.getAccountTypeId() in ( \'payable\',\n
                                                                      \'receivable\' ):\n
             if line.getRelativeUrl() not in grouped_line_list:\n
-              cleared = 0\n
+              if not line.getGroupingReference():\n
+                cleared = 0\n
 \n
         if cleared and transaction.getPaymentState() != \'cleared\':\n
           if transaction.AccountingTransaction_isSourceView():\n
@@ -245,13 +256,15 @@ return context.AccountingTransactionModule_viewGroupingFastInputDialog(request)\
                             <string>getattr</string>
                             <string>None</string>
                             <string>cleared</string>
+                            <string>line_list</string>
+                            <string>btt</string>
+                            <string>btt_line</string>
                             <string>account</string>
                             <string>date</string>
                             <string>AssertionError</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>line_uid</string>
-                            <string>line_list</string>
                             <string>ungrouped_line_list</string>
                           </tuple>
                         </value>
