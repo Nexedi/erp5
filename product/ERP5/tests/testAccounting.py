@@ -2411,7 +2411,7 @@ class TestTransactions(AccountingTestCase):
 
 
 
-class TestAccountingWithSequences(ERP5TypeTestCase):
+class TestAccountingWithSequences(AccountingTestCase):
   """The first test for Accounting
   """
   def getAccountingModule(self):
