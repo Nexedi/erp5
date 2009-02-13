@@ -153,7 +153,7 @@ class TestOrderMixin:
   def stepCreateVariatedResource(self, sequence=None, sequence_list=None, \
                                  **kw):
     """
-      Create a resource with no variation
+      Create a resource with variation
     """
     portal = self.getPortal()
     resource_module = portal.getDefaultModule(self.resource_portal_type)
