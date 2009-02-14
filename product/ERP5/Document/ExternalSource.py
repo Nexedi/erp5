@@ -141,7 +141,7 @@ class ExternalSource(XMLObject, UrlMixIn):
   security.declareProtected(Permissions.View, 'isIndexContent')
   def isIndexContent(self, content=None):
     """
-      This method is able to answer a content object if it is an index or a
+      This method is able to tell if content object is an index or
       "real" content.  Sometimes (though not often) we want to define a content
       as index (e.g. if it is only a list of mailing list messages), so that we
       do not index it for searching etc).  Default implementation returns
