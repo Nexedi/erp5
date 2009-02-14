@@ -53,7 +53,7 @@ enc=base64.encodestring
 dec=base64.decodestring
 
 _MARKER = []
-STANDARD_IMAGE_FORMAT_LIST = ('png', 'jpg', 'gif', )
+STANDARD_IMAGE_FORMAT_LIST = ('png', 'jpg', 'gif', 'tif', )
 
 class TimeoutTransport(SafeTransport):
   """A xmlrpc transport with configurable timeout.
