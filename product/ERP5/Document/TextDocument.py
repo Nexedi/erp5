@@ -240,10 +240,11 @@ class TextDocument(Document, TextContent):
         Returns the content base URL based on the actual content
         (in HTML)
       """
-      html = self._asHTML()
-      base_list = re.findall(self.base_parser, str(html))
-      if base_list:
-        return base_list[0]
+      if self.hasBaseData():
+        html = self._asHTML()
+        base_list = re.findall(self.base_parser, str(html))
+        if base_list:
+          return base_list[0]
       return Document.getContentBaseURL(self)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
