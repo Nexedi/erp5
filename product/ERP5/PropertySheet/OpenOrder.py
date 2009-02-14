@@ -32,7 +32,7 @@ class OpenOrder:
   """
 
   _properties = (
-    {   'id'          : 'forecasting_term_days',
+    {   'id'          : 'forecasting_term_day_count',
         'description' : 'A number of days to be forecasted.',
         'type'        : 'int',
         'mode'        : 'w' },
