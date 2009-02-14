@@ -35,13 +35,6 @@ class Person:
 
   _properties = (
     # Personnal properties
-    { 'id'         : 'password'
-    , 'description': 'The password used by ERP5Security'
-    , 'type'       : 'string'
-    , 'write_permission' : 'Set own password'
-    , 'read_permission'  : 'Manage users'
-    , 'mode'       : 'w'
-    },
     { 'id'         : 'first_name'
     , 'description': 'First name.'
     , 'type'       : 'string'

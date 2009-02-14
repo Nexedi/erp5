@@ -90,6 +90,7 @@ class Person(XMLObject):
                       , PropertySheet.DublinCore
                       , PropertySheet.Reference
                       , PropertySheet.Person
+                      , PropertySheet.Login
                       , PropertySheet.Mapping
                       , PropertySheet.Task
                       )
