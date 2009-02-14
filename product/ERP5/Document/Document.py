@@ -1271,6 +1271,13 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
       return data
     kw['format'] = 'html'
     mime, html = self.convert(**kw)
+    return self._stripHTML(str(html))
+
+  def _stripHTML(self, html, charset=None):
+    """
+      A private method which can be reused by subclasses
+      to strip HTML content
+    """
     body_list = re.findall(self.body_parser, str(html))
     if len(body_list):
       stripped_html = body_list[0]
@@ -1279,6 +1286,9 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
     # find charset and convert to utf-8
     charset_list = self.charset_parser.findall(str(html)) # XXX - Not efficient is datastream 
                                                           # instance but hard to do better
+    if charset and not charset_list:
+      # Use optional parameter is we can not find encoding in HTML
+      charset_list = [charset]
     if charset_list and charset_list[0] not in ('utf-8', 'UTF-8'):
       try:
         stripped_html = unicode(str(stripped_html), 
