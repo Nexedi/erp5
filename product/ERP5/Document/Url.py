@@ -85,6 +85,51 @@ class UrlMixIn:
       url_string = url
     self.setUrlString(url_string)
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getURLServer')
+  def getURLServer(self):
+    """
+      Returns the server part of a URL
+
+      XXX - we must add here more consistency checking
+      based on the protocol of the URL
+
+      XXX - regular expressions would be better
+    """
+    url_string = self.getUrlString()
+    return url_string.split('/')[0].split(':')[0]
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getURLPort')
+  def getURLPort(self):
+    """
+      Returns the port part of a URL
+
+      XXX - we must add here more consistency checking
+      based on the protocol of the URL
+
+      XXX - regular expressions would be better
+    """
+    url_string = self.getUrlString()
+    server_part_list = url_string.split('/')[0].split(':')
+    if len(server_part_list) > 1:
+      return server_part_list[1]
+    return None
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getURLPath')
+  def getURLPath(self):
+    """
+      Returns the path part of a URL
+
+      XXX - we must add here more consistency checking
+      based on the protocol of the URL
+
+      XXX - regular expressions would be better
+    """
+    url_string = self.getUrlString()
+    return '/'.join(url_string.split('/')[1:])
+
 class Url(Coordinate, Base, UrlMixIn):
   """
   A Url is allows to represent in a standard way coordinates
