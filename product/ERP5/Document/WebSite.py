@@ -110,7 +110,7 @@ class WebSiteTraversalHook(Persistent):
 
     # If a skin selection is defined in this web site, change the skin now.
     skin_selection_name = container.getSkinSelectionName()
-    if skin_selection_name: # XXX missing support to portal_skin parameter
+    if skin_selection_name and request.get('portal_skin', None) is None:
       container.getPortalObject().changeSkin(skin_selection_name)
 
     # Set default language if any
