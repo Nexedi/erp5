@@ -40,6 +40,8 @@ from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import ConversionError
 from Products.ERP5.Tool.NotificationTool import buildEmailMessage
 
+from zLOG import LOG, INFO
+
 try:
   from Products.MimetypesRegistry.common import MimeTypeException
 except ImportError:
@@ -300,7 +302,9 @@ class EmailDocument(File, TextDocument):
               text_result = message_text.decode(part_encoding).encode('utf-8')
             else:
               text_result = message_text.decode().encode('utf-8')
-          except (UnicodeDecodeError, LookupError):
+          except (UnicodeDecodeError, LookupError), error_message:
+            LOG('EmailDocument.getTextContent', INFO, 
+                'Failed to decode %s TEXT message with error: %s' % (part_encoding, error_message))
             codec = self._guessEncoding(message_text)
             if codec is not None:
               try:
@@ -313,24 +317,12 @@ class EmailDocument(File, TextDocument):
           text_result = message_text
       elif part.get_content_type() == 'text/html' and not html_result and not part.is_multipart():
         part_encoding = part.get_content_charset()
-        message_text = part.get_payload(decode=1)
-        if part_encoding != 'utf-8':
-          try:
-            if part_encoding is not None:
-              text_result = message_text.decode(part_encoding).encode('utf-8')
-            else:
-              text_result = message_text.decode().encode('utf-8')
-          except (UnicodeDecodeError, LookupError):
-            codec = self._guessEncoding(message_text)
-            if codec is not None:
-              try:
-                text_result = message_text.decode(codec).encode('utf-8')
-              except (UnicodeDecodeError, LookupError):
-                text_result = repr(message_text)
-            else:
-              text_result = repr(message_text)
-        else:
-          text_result = message_text
+        part_html = part.get_payload(decode=1)
+        # Invoke Document class HTML stripper
+        html_result = self._stripHTML(part_html, charset=part_encoding)
+    if html_result:
+      # Give priority to HTML
+      text_result = html_result
     if default is _MARKER:
       return text_result
     return text_result or default
@@ -399,6 +391,8 @@ class EmailDocument(File, TextDocument):
     """
     For FCKEditor Compatibility, we should remove DTD,
     blank lines and some tags in html document
+
+    XXX - What is this SHIT !!!!!!!!!!!!!!!!!!!!!!!!!!
     """
     if html_text is None:
       html_text = self.getTextContent()
@@ -625,17 +619,6 @@ class EmailDocument(File, TextDocument):
       Send one by one
     """
     self.MailHost.send(message)
-
-  def _guessEncoding(self, string):
-    """
-    Some Email Clients indicate wrong encoding
-    This method try to guess which encoding is used.
-    """
-    try:
-      import chardet
-    except ImportError:
-      return None
-    return chardet.detect(string).get('encoding', None)
 
 ## Compatibility layer
 #from Products.ERP5Type import Document
