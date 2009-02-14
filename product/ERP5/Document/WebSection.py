@@ -126,13 +126,16 @@ class WebSection(Domain, PermanentURLMixIn):
       """
       section = aq_inner(self)
       while section.getPortalType() in ('Web Section', 'Web Site'):
-        if d is MARKER:
-          result = section.getProperty(key)
-        else:
-          result = section.getProperty(key, d)
-        if result:
+        result = section.getProperty(key, MARKER)
+        if result is not MARKER and result:
           return result
         section = section.aq_parent
+      # No property was defined on children neither on web site
+      # If a default is provided, return it
+      # else raise
+      if d is not MARKER:
+        return d
+      raise AttributeError('Web Section %s has no layout property %s' % (self.getUrl(), key))
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getWebSectionValue')
     def getWebSectionValue(self):
