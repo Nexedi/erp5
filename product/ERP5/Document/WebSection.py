@@ -65,7 +65,6 @@ class WebSection(Domain, PermanentURLMixIn):
       - WebSection_getDefaultDocumentValue
 
       - WebSection_getSectionValue
-
       - WebSection_getWebSiteValue
 
       It defines the following REQUEST global variables:
@@ -192,8 +191,15 @@ class WebSection(Domain, PermanentURLMixIn):
                 # force user to login as specified in Web Section
                 raise Unauthorized
           if document is not None:
-            self.REQUEST.set('current_web_document', document.__of__(self)) # Used to be document
+            self.REQUEST.set('current_web_document', document)
             self.REQUEST.set('is_web_section_default_document', 1)
+            document = aq_base(document.asContext(
+                id=self.getId(), # A quick hack to force URL to point to self
+                  # XXX - A better solution here consists of using PermanentURL
+                  # to find out under which id the document should be published
+                original_container=document.getParentValue(),
+                original_id=document.getId(),
+                editable_absolute_url=document.absolute_url()))
             return document.__of__(self)()
       return Domain.__call__(self)
 

@@ -28,6 +28,7 @@
 ##############################################################################
 
 import os
+import re
 import unittest
 import random
 
@@ -273,7 +274,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
   def test_05_WebPageVersioning(self, quiet=quiet, run=run_all_test):
     """
       Simple Case of showing the proper most recent public Web Page based on 
-      (language, version
+      (language, version)
     """
     if not run:
       return
@@ -364,7 +365,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.logout()
     self.assertRaises(Unauthorized,  websection._getExtensibleContent,  request,  document_reference)
     
-  def test_07_WebPageTextContentSubstituions(self, quiet=quiet, run=run_all_test):
+  def test_07_WebPageTextContentSubstitutions(self, quiet=quiet, run=run_all_test):
     """
       Simple Case of showing the proper text content with and without a substitution
       mapping method.
@@ -456,8 +457,16 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals(web_page_en,  websection.getDocumentValueList()[0].getObject())
 
   def test_09_DefaultDocumentForWebSection(self, quiet=quiet, run=run_all_test):
-    """ Testetting default document for a Web Section. Test  use case like workflow state of document.
-         Note: due to generic ERP5 Web implementation this test highly depends on WebSection_geDefaulttDocumentValueList
+    """
+      Testing the default document for a Web Section.
+
+      If a Web Section has a default document defined and if that default
+      document is published, then getDefaultDocumentValue on that 
+      web section should return the latest version in the most 
+      appropriate language of that default document.
+        
+      Note: due to generic ERP5 Web implementation this test highly depends 
+      on WebSection_geDefaulttDocumentValueList
     """
     if not run: return
     if not quiet:
@@ -470,19 +479,70 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     
     # create pages belonging to this publication_section 'documentation'
     web_page_en = portal.web_page_module.newContent(portal_type = 'Web Page', 
+                                                 id='section_home',
                                                  language = 'en', 
                                                  reference='NXD-DDP', 
                                                  publication_section_list=publication_section_category_id_list[:1])    
     websection.setAggregateValue(web_page_en)
     get_transaction().commit()
     self.tic()
-    self.assertEqual(None,   websection.getDefaultDocumentValue())
+    self.assertEqual(None, websection.getDefaultDocumentValue())
     # publish it
     web_page_en.publish()
     get_transaction().commit()
     self.tic()
-    self.assertEqual(web_page_en,   websection.getDefaultDocumentValue())
+    self.assertEqual(web_page_en, websection.getDefaultDocumentValue())
+    # and make sure that the base meta tag which is generated
+    # uses the web section rather than the portal
+    html_page = websection()
+    from Products.ERP5.Document.Document import Document
+    base_list = re.findall(Document.base_parser, str(html_page))
+    base_url = base_list[0]
+    self.assertEqual(base_url, "%s/%s/" % (websection.absolute_url(), websection.getId()))
     
+  def test_09b_DefaultDocumentForWebSite(self, quiet=quiet, run=run_all_test):
+    """
+      Testing the default document for a Web Site.
+
+      If a Web Section has a default document defined and if that default
+      document is published, then getDefaultDocumentValue on that 
+      web section should return the latest version in the most 
+      appropriate language of that default document.
+        
+      Note: due to generic ERP5 Web implementation this test highly depends 
+      on WebSection_geDefaulttDocumentValueList
+    """
+    if not run: return
+    if not quiet:
+      message = '\ntest_09b_DefaultDocumentForWebSite'
+      ZopeTestCase._print(message)    
+    portal = self.getPortal()
+    website = self.setupWebSite()
+    publication_section_category_id_list = ['documentation',  'administration']
+    
+    # create pages belonging to this publication_section 'documentation'
+    web_page_en = portal.web_page_module.newContent(portal_type = 'Web Page', 
+                                                 id='site_home',
+                                                 language = 'en', 
+                                                 reference='NXD-DDP-Site', 
+                                                 publication_section_list=publication_section_category_id_list[:1])    
+    website.setAggregateValue(web_page_en)
+    get_transaction().commit()
+    self.tic()
+    self.assertEqual(None, website.getDefaultDocumentValue())
+    # publish it
+    web_page_en.publish()
+    get_transaction().commit()
+    self.tic()
+    self.assertEqual(web_page_en, website.getDefaultDocumentValue())
+    # and make sure that the base meta tag which is generated
+    # uses the web site rather than the portal
+    html_page = website()
+    from Products.ERP5.Document.Document import Document
+    base_list = re.findall(Document.base_parser, str(html_page))
+    base_url = base_list[0]
+    self.assertEqual(base_url, "%s/%s/" % (website.absolute_url(), website.getId()))
+
   def test_10_WebSectionAuthorizationForcedForDefaultDocument(self, quiet=quiet, run=run_all_test):
     """ Check that when a Web Section contains a default document not accessible by user we have a chance to 
         require user to login.
@@ -1150,7 +1210,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.portal.Localizer.changeLanguage('jp')
     self.assertEquals(0, len(section.WebSection_getDocumentValueList()))
 
-    # First Japonese Object
+    # First Japanese Object
     self.changeUser('erp5user')
     page_jp_0.publish()
     get_transaction().commit()
