@@ -67,7 +67,7 @@ Example of macro use (similar to \'erp5_web_default_template\' use):\n
   </tal:block>\n
 -->\n
 \n
-<tal:block metal:define-macro="aggregate_populate_request">\n
+<tal:block metal:define-macro="populate_request">\n
   <tal:block tal:define="dialog_mode dialog_mode | nothing;\n
                          list_mode list_mode | nothing;\n
                          dummy python: request.set(\'dialog_mode\', dialog_mode);\n
@@ -91,8 +91,8 @@ Example of macro use (similar to \'erp5_web_default_template\' use):\n
                    group_list       python: aggregate[1];\n
                    widget_renderer  widget_renderer|nothing"\n
         tal:condition="python: len(group_list)"\n
-        tal:attributes="class python: \'wrapper\';\n
-                        id    python: \'wrapper_%s\' % aggregate_name;">\n
+        tal:attributes="class wrapper_class | string:wrapper;\n
+                        id    wrapper_id | python: \'wrapper_%s\' % aggregate_name;">\n
 \n
     <tal:block tal:repeat="group group_list">\n
       <tal:block tal:define="gid     group/gid;\n
@@ -115,7 +115,6 @@ Example of macro use (similar to \'erp5_web_default_template\' use):\n
         </tal:block>\n
       </tal:block>\n
     </tal:block>\n
-\n
   </div>\n
 </tal:block>\n
 \n
