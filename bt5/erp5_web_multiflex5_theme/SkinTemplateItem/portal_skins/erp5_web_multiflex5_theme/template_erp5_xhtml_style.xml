@@ -91,6 +91,9 @@ IDEAS:\n
           </tal:block>\n
           <link rel="icon" tal:attributes="href string:${portal_path}/favicon.ico" type="image/x-icon" />\n
           <link rel="shortcut icon" tal:attributes="href string:${portal_path}/favicon.ico" type="image/x-icon" />\n
+          <tal:block metal:define-slot="head">\n
+            <!-- this is a placeholder for different extensions to head which could be required by web themes -->\n
+          </tal:block>\n
         </head>\n
         <body tal:attributes="class body_css_class|nothing">\n
           <form id="main_form"\n

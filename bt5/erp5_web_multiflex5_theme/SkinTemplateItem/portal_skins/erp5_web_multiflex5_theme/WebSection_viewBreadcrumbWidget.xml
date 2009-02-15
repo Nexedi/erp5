@@ -54,8 +54,9 @@
   -->\n
 </tal:block>\n
 \n
-<tal:block tal:define="current_web_section python: request.get(\'current_web_section\', here);\n
-                       breadcrumb_list python: current_web_section.WebSection_getBreadcrumbItemList();">\n
+<tal:block tal:define="current_web_section python:request.get(\'current_web_section\', here);\n
+                       current_web_document python:request.get(\'current_web_document\', here);\n
+                       breadcrumb_list python: current_web_section.getBreadcrumbItemList(current_web_document);">\n
 <ul>\n
   <li class="nobullet">You are here:&nbsp;</li>\n
   <li tal:repeat="breadcrumb breadcrumb_list">\n

@@ -106,7 +106,7 @@
 ]">\n
       <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">\n
         <tal:block metal:fill-slot="layout">\n
-          <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_populate_request"/>\n
+          <tal:block metal:use-macro="here/aggregate_render/macros/populate_request"/>\n
 \n
   <!-- CONTAINER FOR ENTIRE PAGE -->\n
   <div class="container">\n
