@@ -174,7 +174,7 @@ class OpenOrderRule(DeliveryRule):
     if getPeriodicityLineValueList is None:
       raise RuntimeError, "Cannot find getPeriodicityLineValueList script"
     schedule_stop_date = (calculation_base_date+
-                          order_movement.getForecastingTermDays())
+                          order_movement.getForecastingTermDayCount())
     if schedule_stop_date > order_movement.getStopDate():
       schedule_stop_date = order_movement.getStopDate()
     

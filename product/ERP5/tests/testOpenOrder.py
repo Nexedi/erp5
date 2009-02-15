@@ -247,7 +247,7 @@ class TestOpenOrder(ERP5TypeTestCase):
     self.assertEqual(open_sale_order.getTotalPrice(), 100)
     self.assertEqual(open_sale_order.getTotalNetPrice(), 105)
 
-    open_sale_order.setForecastingTermDays(5)
+    open_sale_order.setForecastingTermDayCount(5)
     open_sale_order.order()
     open_sale_order.start()
 
@@ -268,7 +268,7 @@ class TestOpenOrder(ERP5TypeTestCase):
     self.assertEqual(applied_rule['1'].getStartDate(), DateTime(3000,2,10,10,0))
     self.assertEqual(applied_rule['1'].getStopDate(), DateTime(3000,2,11,10,0))
 
-    open_sale_order.setForecastingTermDays(10)
+    open_sale_order.setForecastingTermDayCount(10)
     self.portal.portal_rules.default_open_order_rule.expand(
       applied_rule,
       calculation_base_date=DateTime(3000,2,9))
@@ -334,7 +334,7 @@ class TestOpenOrder(ERP5TypeTestCase):
       specialise=self.portal.sale_trade_condition_module.trade_condition.getRelativeUrl(),
       start_date=DateTime(3000,2,9),
       stop_date=DateTime(3000,8,1),
-      forecasting_term_days=5
+      forecasting_term_day_count=5
       )
 
     # Remove other test's side effect.
