@@ -1,3 +1,6 @@
+2009-02-15 yusei
+* Fixed wrong field name in OpenSaleOrder_view.
+
 2009-02-09 yusei
 * Added open order functionality.
 
