@@ -51,7 +51,7 @@
               selection here/getSelection;\n
               portal_url_string here/getPortalUrlString;\n
               real_context here/getContext;\n
-              context_url real_context/getUrl;\n
+              context_url real_context/absolute_url;\n
               md5_string here/getMD5Checksum;\n
               line_list here/query;\n
               is_domain_tree_mode here/isDomainTreeMode;\n
