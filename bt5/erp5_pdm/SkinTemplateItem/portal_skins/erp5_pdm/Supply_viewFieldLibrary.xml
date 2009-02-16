@@ -108,6 +108,8 @@
                         <string>my_max_delay</string>
                         <string>my_min_delay</string>
                         <string>my_min_flow</string>
+                        <string>my_destination_account</string>
+                        <string>my_source_account</string>
                       </list>
                     </value>
                 </item>
