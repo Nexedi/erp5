@@ -43,6 +43,11 @@
                 <string>resource</string>
                 <string>source</string>
                 <string>destination</string>
+                <string>product_line</string>
+                <string>source_function</string>
+                <string>destination_function</string>
+                <string>source_project</string>
+                <string>destination_project</string>
               </tuple>
             </value>
         </item>
