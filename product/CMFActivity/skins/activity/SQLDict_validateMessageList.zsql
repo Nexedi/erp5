@@ -23,7 +23,7 @@ SELECT
 FROM
     message
 WHERE
-    processing_node >= -2
+    processing_node > -10
 <dtml-if expr="method_id is not None">
     AND method_id IN (
 <dtml-in method_id><dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>
