@@ -80,6 +80,9 @@ class SplitAndDefer(CopyToTarget):
                         destination_section=simulation_movement.getDestinationSection(),
                         source_function=simulation_movement.getSourceFunction(),
                         destination_function=simulation_movement.getDestinationFunction(),
+                        source_account=simulation_movement.getSourceAccount(),
+                        destination_account=simulation_movement.getDestinationAccount(),
+
                         variation_category_list=simulation_movement.getVariationCategoryList(),
                         variation_property_dict=simulation_movement.getVariationPropertyDict(),
 

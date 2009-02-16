@@ -65,7 +65,8 @@ class DefaultSupply:
                                   'start_date_range_max',
                                   'start_date_range_min',
                                   'comment', 'source_reference',
-                                  'p_variation_base_category_list'),
+                                  'p_variation_base_category_list',
+                                  'destination_account'),
             'mode'        : 'w' },
         # Define default sale supply line
         {   'id'          : 'sale_supply_line',
@@ -83,7 +84,8 @@ class DefaultSupply:
                                   'start_date_range_max',
                                   'start_date_range_min',
                                   'comment', 'destination_reference',
-                                  'p_variation_base_category_list'),
+                                  'p_variation_base_category_list',
+                                  'source_account'),
             'mode'        : 'w' },
        )
 
