@@ -53,11 +53,15 @@
             <key> <string>tested_property</string> </key>
             <value>
               <tuple>
-                <string>source_section | Source Section</string>
                 <string>resource | Resource</string>
+                <string>source_section | Source Section</string>
                 <string>destination_section | Destination Section</string>
                 <string>source | Source</string>
                 <string>destination | Destination</string>
+                <string>source_function | Source Function</string>
+                <string>destination_function | Destination Function</string>
+                <string>source_project | Source Project</string>
+                <string>destination_project | Destination Project</string>
                 <string>aggregate | Aggregate</string>
                 <string>price_currency | Price Currency</string>
                 <string>base_contribution | Base Contribution</string>
