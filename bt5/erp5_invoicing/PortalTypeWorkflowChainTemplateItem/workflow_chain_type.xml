@@ -1,27 +1,43 @@
 <workflow_chain>
  <chain>
   <type>Invoice Cell</type>
-  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, tax_interaction_workflow, pricing_interaction_workflow</workflow>
+  <workflow>pricing_interaction_workflow, delivery_movement_account_interaction_workflow, delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, tax_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Invoice Line</type>
-  <workflow>delivery_movement_simulation_interaction_workflow, tax_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow, delivery_movement_causality_interaction_workflow, edit_workflow</workflow>
+  <workflow>delivery_movement_simulation_interaction_workflow, delivery_movement_account_interaction_workflow, pricing_interaction_workflow, tax_interaction_workflow, trade_matrix_workflow, delivery_movement_causality_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Invoice Transaction Rule</type>
-  <workflow>rule_interaction_workflow, rule_validation_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, rule_interaction_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
   <type>Invoicing Rule</type>
-  <workflow>rule_validation_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Invoice Transaction</type>
   <workflow>delivery_tax_interaction_workflow</workflow>
  </chain>
  <chain>
+  <type>Purchase Order Cell</type>
+  <workflow>delivery_movement_account_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Order Line</type>
+  <workflow>delivery_movement_account_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Sale Invoice Transaction</type>
   <workflow>delivery_tax_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Order Cell</type>
+  <workflow>delivery_movement_account_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Order Line</type>
+  <workflow>delivery_movement_account_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Tax Rule</type>

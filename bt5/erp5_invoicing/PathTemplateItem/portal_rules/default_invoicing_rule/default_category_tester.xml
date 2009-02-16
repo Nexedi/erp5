@@ -65,6 +65,8 @@
                 <string>aggregate | Aggregate</string>
                 <string>price_currency | Price Currency</string>
                 <string>base_contribution | Base Contribution</string>
+                <string>source_account | Source Account</string>
+                <string>destination_account | Destination Account</string>
               </tuple>
             </value>
         </item>

@@ -1,3 +1,6 @@
+2009-02-16 jerome
+* copy source_account and destination_account from supply line on delivery lines, and enable this for divergence on invoice lines.
+
 2009-02-12 yusei
 * Invoice Line can now contain Invoice Line. This is useful if we want to make a invoice which collect all orders from divisions in one company and list up invoice line per each division.
 
