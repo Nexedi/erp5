@@ -101,10 +101,10 @@
                     tal:attributes="colspan python: total_depth - report_tree.depth + 1">\n
                     <a href="method"\n
                       tal:condition="report_tree/is_open"\n
-                      tal:attributes="href string:portal_selections/foldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">-&nbsp;<b tal:content="report_tree/obj/getTitleOrId" i18n:translate="" i18n:domain="ui">Domain</b></a>\n
+                      tal:attributes="href string:foldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">-&nbsp;<b tal:content="report_tree/obj/getTitleOrId" i18n:translate="" i18n:domain="ui">Domain</b></a>\n
                     <a href="method"\n
                       tal:condition="not: report_tree/is_open"\n
-                      tal:attributes="href string:portal_selections/unfoldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">+&nbsp;<tal:block tal:content="report_tree/obj/getTitleOrId" i18n:translate="" i18n:domain="ui">Domain</tal:block></a>\n
+                      tal:attributes="href string:unfoldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">+&nbsp;<tal:block tal:content="report_tree/obj/getTitleOrId" i18n:translate="" i18n:domain="ui">Domain</tal:block></a>\n
                   </div>\n
                 </div>\n
               </div>\n
@@ -136,10 +136,10 @@
                 <span tal:content="python: \'Short mode\'"></span>\n
 \n
               <select id="listbox_page_selection" name="list_start" title="Change Page" size="1"\n
-                  onChange="submitAction(this.form, \'context/portal_selections/setPage\')"\n
+                  onChange="submitAction(this.form, \'context/${field_id}_setPage\')"\n
                   tal:define="lines here/getMaxLineNumber"\n
                   tal:attributes="id string:${field_id}_page_selection;\n
-                                  onChange string:submitAction(this.form, \'${context_url}/portal_selections/setPage\')"\n
+                                  onChange string:submitAction(this.form, \'${context_url}/${field_id}_setPage\')"\n
                   i18n:domain="ui" i18n:attributes="title">\n
                   <option value="0"\n
                     tal:repeat="p python: range(0, here.total_pages)"\n
