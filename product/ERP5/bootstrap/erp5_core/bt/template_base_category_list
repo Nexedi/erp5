@@ -4,6 +4,7 @@ business_application
 causality
 delivery
 destination
+destination_account
 destination_administration
 destination_decision
 destination_function
@@ -20,6 +21,7 @@ quantity_unit
 resource
 size
 source
+source_account
 source_administration
 source_decision
 source_function
