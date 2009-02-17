@@ -69,8 +69,8 @@
               <tuple>
                 <string>document</string>
                 <string>file_document</string>
-                <string>recent_document</string>
                 <string>my_document</string>
+                <string>recent_document</string>
               </tuple>
             </value>
         </item>
@@ -100,7 +100,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Text</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
