@@ -61,7 +61,7 @@
 def compareId(a, b):\n
   return cmp(normalise(a.id), normalise(b.id))\n
 \n
-method_list = context.getWorkflowMethodURIList()\n
+method_list = context.getWorkflowMethodIdList()\n
 base_uri = context.getURI()\n
 \n
 result = map(\n

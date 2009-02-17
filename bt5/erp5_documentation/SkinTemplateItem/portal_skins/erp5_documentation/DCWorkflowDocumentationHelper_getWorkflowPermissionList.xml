@@ -60,11 +60,11 @@
 \n
 def compareId(a, b):\n
   return cmp(normalise(a.id), normalise(b.id))\n
-state_list = context.getPermissionURIList()\n
+state_list = context.getPermissionList()\n
 base_uri = context.getURI()\n
 result = map(\n
-  lambda x: context.asContext(id=x.split(\'.\')[-1], uri=x, base_uri=base_uri),\n
-  state_list \n
+  lambda x: context.asContext(id=x, base_uri=base_uri),\n
+  state_list\n
 )\n
 result.sort(compareId)\n
 return result\n

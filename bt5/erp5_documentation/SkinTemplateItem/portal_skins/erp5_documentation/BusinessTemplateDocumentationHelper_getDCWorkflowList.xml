@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>workflow_list = context.getDCWorkflowIdList()\n
+            <value> <string>workflow_list = context.getDcWorkflowIdList()\n
 site_name = context.getURI().split(\'/\')[1]\n
 base_uri = \'/\'+site_name+\'/portal_workflow\'\n
 result = map(\n

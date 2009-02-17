@@ -244,7 +244,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>your_class_name</string> </value>
+                    <value> <string>class_name</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

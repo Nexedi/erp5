@@ -77,7 +77,10 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_class_name</string>
+                        <string>your_uri</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -95,10 +98,7 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>your_class_name</string>
-                        <string>your_uri</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

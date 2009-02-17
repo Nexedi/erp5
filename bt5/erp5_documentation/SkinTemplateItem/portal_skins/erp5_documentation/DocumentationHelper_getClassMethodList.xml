@@ -60,7 +60,7 @@
 \n
 def compareId(a, b):\n
   return cmp(normalise(a.id), normalise(b.id))\n
-method_list = context.getClassMethodURIList(inherited=0)\n
+method_list = context.getClassMethodUriList()\n
 result = map(\n
   lambda x: context.asContext(id=x.split(\'.\')[-1], uri=x),\n
   method_list \n
