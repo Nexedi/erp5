@@ -28,13 +28,13 @@
 
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
-from DCWorkflowStateDocumentationHelper import DCWorkflowStateDocumentationHelper
+from DCWorkflowDocumentationHelper import DCWorkflowDocumentationHelper
 from Products.ERP5Type import Permissions
 
 # XXX To be implemented. For the moment,
-#     make it a subclass of DCWorkflowStateDocumentationHelper.
+#     make it a subclass of DCWorkflowDocumentationHelper.
 
-class InteractionWorkflowDocumentationHelper(DCWorkflowStateDocumentationHelper):
+class InteractionWorkflowDocumentationHelper(DCWorkflowDocumentationHelper):
   """
     Provides access to all documentation information
     of an interaction workflow.
