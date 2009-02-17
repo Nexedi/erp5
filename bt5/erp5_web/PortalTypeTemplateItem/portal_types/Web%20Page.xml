@@ -87,9 +87,9 @@
             <value>
               <tuple>
                 <string>document</string>
-                <string>web_document</string>
-                <string>recent_document</string>
                 <string>my_document</string>
+                <string>recent_document</string>
+                <string>web_document</string>
               </tuple>
             </value>
         </item>
@@ -119,7 +119,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
