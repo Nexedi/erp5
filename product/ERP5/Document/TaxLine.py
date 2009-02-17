@@ -64,8 +64,19 @@ class TaxLine(DeliveryLine):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'isAccountable')
     def isAccountable(self):
-      """ """
-      return 1 # XXX not sure
+      """Return true if the parent is accountable and
+      not an accounting transaction.
+
+      NOTE: this is because, if the parent is an accounting transaction,
+      the accounting is done with another accounting transaction line,
+      so making tax lines accountable would duplicate the accounting.
+      """
+      delivery = self.getParentValue()
+      if delivery.isAccountable(): 
+        portal = delivery.getPortalObject()
+        type_list = portal.getPortalAccountingTransactionTypeList()
+        return delivery.getPortalType() not in type_list
+      return 0
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'hasCellContent')
