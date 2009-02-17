@@ -117,7 +117,7 @@
                         <string>my_incoterm</string>
                         <string>my_delivery_mode</string>
                         <string>my_specialise_title</string>
-                        <string>my_forecasting_term_days</string>
+                        <string>my_forecasting_term_day_count</string>
                       </list>
                     </value>
                 </item>
