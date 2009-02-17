@@ -26,38 +26,10 @@
 #
 ##############################################################################
 
-from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
 from Products.ERP5Type import Permissions
-
-def getPermissionsOfRole(state=None, role=''):
-  """
-  Returns list of permissions for a given role with AVMC format above
-    A = Access contents information
-    V = View
-    M = Modify Portal Content
-    C = Add Portal Content
-  """
-  permissions = ""
-  if state != None:
-    if hasattr(state, '__dict__'):
-      if 'permission_roles' in state.__dict__.keys():
-        if 'View' in state.__dict__['permission_roles'].keys():
-          if role in state.__dict__['permission_roles']['View']:
-            permissions += "V"
-        if 'Access contents information' in state.__dict__['permission_roles'].keys():
-          if role in state.__dict__['permission_roles']['Access contents information']:
-            permissions += "A"
-        if 'Modify portal content' in state.__dict__['permission_roles'].keys():
-          if role in state.__dict__['permission_roles']['Modify portal content']:
-            permissions += "M"
-        if 'Add portal content' in state.__dict__['permission_roles'].keys():
-          if role in state.__dict__['permission_roles']['Add portal content']:
-            permissions += "C"
-  return permissions
-
 
 class DCWorkflowStateDocumentationHelper(DocumentationHelper):
   """
@@ -66,82 +38,75 @@ class DCWorkflowStateDocumentationHelper(DocumentationHelper):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def __init__(self, uri):
-    self.uri = uri
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDescription')
-  def getDescription(self):
-    return self.getDocumentedObject().__dict__["description"]
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getType')
   def getType(self):
     """
     Returns the type of the documentation helper
     """
     return "Workflow State"
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getId' )
-  def getId(self):
-    """
-    Returns the id of the documentation helper
-    """
-    return getattr(self.getDocumentedObject(), "__name__", "")
-
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
-  def getTitle(self):
-    """
-    Returns the title of the documentation helper
-    """
-    return getattr(self.getDocumentedObject(), "title", "")
-
-  def getSectionList(self):
-    """
-    Returns a list of documentation sections
-    """
-    return []
-
-  security.declareProtected( Permissions.AccessContentsInformation, 'getTransitionList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTransitionList')
   def getTransitionList(self):
     """
     Returns list of possible transitions from this state
     """
-    return getattr(self.getDocumentedObject(), "transitions", [])
+    return self.getDocumentedObject().transitions
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getPermissionsOfRoleOwner' )
+  def getPermissionsOfRole(self, role):
+    """
+    Returns list of permissions for a given role with AVMC format above
+      A = Access contents information
+      V = View
+      M = Modify Portal Content
+      C = Add Portal Content
+    """
+    permissions = ""
+    permission_roles = self.getDocumentedObject().permission_roles
+    if permission_roles:
+      if role in state.permission_roles.get('Access contents information', ()):
+        permissions += "A"
+      if role in state.permission_roles.get('View', ()):
+        permissions += "V"
+      if role in state.permission_roles.get('Modify portal content', ()):
+        permissions += "M"
+      if role in state.permission_roles.get('Add portal content', ()):
+        permissions += "C"
+    return permissions
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPermissionsOfRoleOwner')
   def getPermissionsOfRoleOwner(self):
     """
     """
-    return getPermissionsOfRole(self.getDocumentedObject(),'Owner')
+    return self.getPermissionsOfRole('Owner')
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getPermissionsOfRoleAssignor' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPermissionsOfRoleAssignor')
   def getPermissionsOfRoleAssignor(self):
     """
     """
-    return getPermissionsOfRole(self.getDocumentedObject(),'Assignor')
+    return self.getPermissionsOfRole('Assignor')
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getPermissionsOfRoleAssignee' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPermissionsOfRoleAssignee')
   def getPermissionsOfRoleAssignee(self):
     """
     """
-    return getPermissionsOfRole(self.getDocumentedObject(),'Assignee')
+    return self.getPermissionsOfRole('Assignee')
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getPermissionsOfRoleAssociate' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPermissionsOfRoleAssociate')
   def getPermissionsOfRoleAssociate(self):
     """
     """
-    return getPermissionsOfRole(self.getDocumentedObject(),'Associate')
+    return self.getPermissionsOfRole('Associate')
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getPermissionsOfRoleAuthor' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPermissionsOfRoleAuthor')
   def getPermissionsOfRoleAuthor(self):
     """
     """
-    return getPermissionsOfRole(self.getDocumentedObject(),'Author')
+    return self.getPermissionsOfRole('Author')
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getPermissionsOfRoleAuditor' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPermissionsOfRoleAuditor')
   def getPermissionsOfRoleAuditor(self):
     """
     """
-    return getPermissionsOfRole(self.getDocumentedObject(),'Auditor')
+    return self.getPermissionsOfRole('Auditor')
 
 InitializeClass(DCWorkflowStateDocumentationHelper)

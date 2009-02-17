@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
@@ -39,53 +38,21 @@ class PortalTypeRoleDocumentationHelper(DocumentationHelper):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def __init__(self, uri):
-    self.uri = uri
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDescription')
-  def getDescription(self):
-    documented_object = self.getDocumentedObject()
-    if documented_object is not None:
-      return documented_object.Description()
-    else:
-      return ''
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getType')
   def getType(self):
     """
     Returns the type of the documentation helper
     """
     return "Portal Type Role"
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getId' )
-  def getId(self):
-    """
-    Returns the id of the documentation helper
-    """
-    return getattr(self.getDocumentedObject(), "__name__", '')
-
-  security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )
-  def getSectionList(self):
-    """
-    Returns a list of documentation sections
-    """
-    return []
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
-  def getTitle(self):
-    """
-    Returns the title of the documentation helper
-    """
-    return getattr(self.getDocumentedObject(), "title", '')
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getCategoryList')
   def getCategoryList(self):
     """
     Returns the list of categories for the role
     """
     return getattr(self.getDocumentedObject(), "category", '')
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryScript' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryScript')
   def getBaseCategoryScript(self):
     """
     Returns the base category script of the role

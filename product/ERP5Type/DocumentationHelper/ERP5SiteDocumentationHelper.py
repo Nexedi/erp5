@@ -27,11 +27,9 @@
 #
 ##############################################################################
 
-from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
-from DocumentationSection import DocumentationSection
 from Products.ERP5Type import Permissions
 
 class ERP5SiteDocumentationHelper(DocumentationHelper):
@@ -39,77 +37,44 @@ class ERP5SiteDocumentationHelper(DocumentationHelper):
     Provides access to all documentation information
     of an ERP5 Site.
   """
-
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  # API Implementation
-  security.declareProtected( Permissions.AccessContentsInformation, 'getTitle' )
-  def getTitle(self):
-    """
-    Returns the title of the documentation helper
-    """
-    return getattr(self.getDocumentedObject(), "title", '')
+  _section_list = (
+    dict(
+      id='business_template',
+      title='Business Template',
+      class_name='BusinessTemplateDocumentationHelper',
+    ),
+  )
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getType' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getType')
   def getType(self):
     """
     Returns the type of the documentation helper
     """
     return "ERP5 Site"
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )
-  def getSectionList(self):
-    """
-    Returns a list of documentation sections
-    """
-    return map(lambda x: x.__of__(self), [
-      DocumentationSection(
-        id='business_template',
-        title='Business Template',
-        class_name='BusinessTemplateDocumentationHelper',
-        uri_list=self.getBusinessTemplateUriList(),
-      ),
-    ])
+  def getBusinessTemplateValueList(self):
+    bt_list = getattr(self, 'REQUEST', {}).get("business_template_list")
+    return (bt for bt in self.getPortalObject().portal_templates.objectValues()
+               if bt_list is None or bt.getTitle() in bt_list)
 
-  # Specific methods
-  security.declareProtected( Permissions.AccessContentsInformation, 'getDescription' )
-  def getDescription(self):
-    """
-    Returns the description of the documentation helper
-    """
-    return getattr(self.getDocumentedObject(), "description", '')
-
-  security.declareProtected( Permissions.AccessContentsInformation, 'getBusinessTemplateItemList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBusinessTemplateItemList')
   def getBusinessTemplateItemList(self):
     """
     """
-    REQUEST = getattr(self, 'REQUEST', None)
-    business_template_list = [bt.getTitle() for bt in self.getDocumentedObject().portal_templates.objectValues()]
-    if REQUEST is not None and "business_template_list" in REQUEST.keys():
-      business_template_list = REQUEST.get("business_template_list", [])
     return [(bt.getId(),
               getattr(bt, "title", ''),
               getattr(bt, "description", ''),
               getattr(bt, "version", ''),
               getattr(bt, "revision", ''))
-            for bt in self.getDocumentedObject().portal_templates.objectValues()
-            if bt.getInstallationState() == 'installed' and bt.getTitle() in business_template_list]
-  
-  security.declareProtected( Permissions.AccessContentsInformation, 'getBusinessTemplateURIList' )
-  def getBusinessTemplateURIList(self):
-    """
-    """
-    bt_list = self.getBusinessTemplateItemList()
-    base_uri = '/'+self.uri.split('/')[1]
-    return map(lambda x: ('%s/portal_templates/%s' % (base_uri, x[0]),x[1], x[2], x[3], x[4]), bt_list)
+            for bt in self.getBusinessTemplateValueList()]
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getBusinessTemplateUriList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBusinessTemplateUriList')
   def getBusinessTemplateUriList(self):
     """
     """
-    bt_list = self.getBusinessTemplateItemList()
-    base_uri = '/'+self.uri.split('/')[1]
-    return map(lambda x: ('%s/portal_templates/%s' % (base_uri, x[0])), bt_list)
+    return [bt.getPath() for bt in self.getBusinessTemplateValueList()]
 
 InitializeClass(ERP5SiteDocumentationHelper)

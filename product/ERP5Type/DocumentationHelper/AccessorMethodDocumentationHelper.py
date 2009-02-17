@@ -26,47 +26,10 @@
 #
 ##############################################################################
 
-from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
-from DocumentationHelper import DocumentationHelper
+from DocumentationHelper import DocumentationHelper, getCallableSignatureString
 from Products.ERP5Type import Permissions
-
-#return the definition string of an object representing a workflow method or a class method or an accessor
-def getDefinitionString(obj=None):
-  if obj is None:
-    return ""
-  func_code = getattr(obj, "func_code", None)
-  if func_code is None:
-    return ""
-  fc_var_names = getattr(func_code, "co_varnames", [])
-  fc = []
-  for i in range(len(fc_var_names)):
-    if fc_var_names[i] == 'args':
-      fc.append('*args')
-    elif fc_var_names[i] == 'kw':
-      fc.append('**kw')
-    else:
-      fc.append(fc_var_names[i])
-  fd = obj.func_defaults
-  acc_def = obj.__name__ + ' ('
-  if fd == None:
-    acc_def += ', '.join(fc)
-  else:
-    for x in range(len(fc)):
-      if (len(fc)-(x+1)<len(fd)):
-        if (x == len(fc)-1):
-          acc_def += " "+str(fc[x])+"='"+str(fd[x-len(fd)])+"'"
-        else:
-          acc_def += " "+str(fc[x])+"='"+str(fd[x-len(fd)])+"',"
-      else:
-        if (x == len(fc)-1):
-          acc_def += " "+str(fc[x])
-        else:
-          acc_def += " "+str(fc[x])+","
-  acc_def += ")"
-  return acc_def
-
 
 class AccessorMethodDocumentationHelper(DocumentationHelper):
   """
@@ -75,54 +38,55 @@ class AccessorMethodDocumentationHelper(DocumentationHelper):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def __init__(self, uri):
-    self.uri = uri
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle')
+  def getTitle(self):
+    """
+    """
+    obj = self.getDocumentedObject()
+    if obj is not None:
+      return obj.__name__
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getDescription')
   def getDescription(self):
-    return getattr(self.getDocumentedObject(), "__doc__", "")
+    """
+    """
+    obj = self.getDocumentedObject()
+    if obj is not None:
+      return obj.__doc__
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getType' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getType')
   def getType(self):
     """
     Returns the type of the documentation helper
     """
     return "Accessor Method"
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getTitle' )
-  def getTitle(self):
-    """
-    Returns the title of the documentation helper
-    """
-    return getattr(self.getDocumentedObject(), "__name__", "")
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSectionList')
-  def getSectionList(self):
-    """
-    Returns a list of documentation sections for accessors
-    """
-    return []
-
-  security.declareProtected( Permissions.AccessContentsInformation, 'getArgCount' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getArgCount')
   def getArgCount(self):
     """
     Returns the number of args of the accessor
     """
-    return self.getDocumentedObject().func_code.co_argcount
+    obj = self.getDocumentedObject()
+    if obj is not None:
+      return obj.func_code.co_argcount
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getVarNames' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getVarNames')
   def getVarNames(self):
     """
     Returns the list of args of the accessor
     """
-    return self.getDocumentedObject().func_code.co_varnames
+    obj = self.getDocumentedObject()
+    if obj is not None:
+      return obj.func_code.co_varnames
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getDefinition' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDefinition')
   def getDefinition(self):
     """
     Returns the definition of the accessor_method with the name and arguments
     """
-    return getDefinitionString(self.getDocumentedObject())
+    obj = self.getDocumentedObject()
+    if obj is not None:
+      return getCallableSignatureString(obj)
 
 
 InitializeClass(AccessorMethodDocumentationHelper)

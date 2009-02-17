@@ -26,12 +26,10 @@
 #
 ##############################################################################
 
-from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
-from DocumentationHelper import DocumentationHelper
+from DocumentationHelper import DocumentationHelper, getCallableSignatureString
 from Products.ERP5Type import Permissions
-from AccessorMethodDocumentationHelper import getDefinitionString
 
 class WorkflowMethodDocumentationHelper(DocumentationHelper):
   """
@@ -40,39 +38,32 @@ class WorkflowMethodDocumentationHelper(DocumentationHelper):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def __init__(self, uri):
-    self.uri = uri
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getDescription')
   def getDescription(self):
-    return getattr(self.getDocumentedObject(), "__doc__", '')
+    """
+    """
+    return self.getDocumentedObject().__doc__
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getType')
   def getType(self):
     """
     Returns the type of the documentation helper
     """
     return "Workflow Method"
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle')
   def getTitle(self):
     """
     Returns the title of the documentation helper
     """
+    # XXX May return _doNothing
     return getattr(self.getDocumentedObject(), "_transition_id", '')
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )
-  def getSectionList(self):
-    """
-    Returns a list of documentation sections
-    """
-    return []
-
-  security.declareProtected( Permissions.AccessContentsInformation, 'getDefinition' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDefinition')
   def getDefinition(self):
     """
     Returns the definition of the workflow_method with the name and arguments
     """
-    return getDefinitionString(self.getDocumentedObject())
+    return getCallableSignatureString(self.getDocumentedObject().im_func._m)
 
 InitializeClass(WorkflowMethodDocumentationHelper)

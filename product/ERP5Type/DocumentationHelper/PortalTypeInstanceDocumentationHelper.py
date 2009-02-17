@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
@@ -42,195 +41,153 @@ class PortalTypeInstanceDocumentationHelper(DocumentationHelper):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def __init__(self, uri):
-    self.uri = uri
+  _section_list = (
+    dict(
+      id='workflow_method',
+      title='Workflow Method',
+      class_name='WorkflowMethodDocumentationHelper',
+    ),
+    dict(
+      id='accessor_method',
+      title='Accessor',
+      class_name='AccessorMethodDocumentationHelper',
+    ),
+    dict(
+      id='class_method',
+      title='Class Methods',
+      class_name='ClassMethodDocumentationHelper',
+    ),
+  )
 
-  def getInstance(self):
-    return self.getPortalObject().restrictedTraverse(self.uri)
-
-  # API Implementation
-  security.declareProtected( Permissions.AccessContentsInformation, 'getTitle' )
-  def getTitle(self):
-    """
-    Returns the title of the documentation helper
-    """
-    return self.getInstance().getTitleOrId()
-
-  security.declareProtected( Permissions.AccessContentsInformation, 'getType' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getType')
   def getType(self):
     """
     Returns the type of the documentation helper
     """
     return "Portal Type Instance"
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )
-  def getSectionList(self):
-    """
-    Returns a list of documentation sections
-    """
-    section_list = []
-    if self.getWorkflowMethodURIList(inherited=0) != []:
-      section_list.append(
-        DocumentationSection(
-          id='workflow_method',
-          title='Workflow Method',
-          class_name='WorkflowMethodDocumentationHelper',
-          uri_list=self.getWorkflowMethodURIList(inherited=0),
-        )
-      )
-    if self.getAccessorMethodURIList(inherited=0) != []:
-      section_list.append(   
-        DocumentationSection(
-          id='accessor',
-          title='Accessor',
-          class_name='AccessorMethodDocumentationHelper',
-          uri_list=self.getAccessorMethodURIList(inherited=0),
-        )
-      )
-    if self.getClassMethodURIList(inherited=0) != []:  
-      section_list.append(
-        DocumentationSection(
-          id='class_method',
-          title='Class Methods',
-          class_name='ClassMethodDocumentationHelper',
-          uri_list=self.getClassMethodURIList(inherited=0),
-        )
-      )
-    return map(lambda x: x.__of__(self.getInstance()), section_list)
-
-  # Specific methods
-  security.declareProtected( Permissions.AccessContentsInformation, 'getPortalType' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPortalType')
   def getPortalType(self):
     """
     """
-    return self.getInstance().getPortalType()
+    return self.getDocumentedObject().getPortalType()
 
-  def _getPropertyHolder(self):
-    from Products.ERP5Type.Base import Base
-    property_holder = None
-    key = (self.getPortalType(), self.getInstance().__class__)
-    if not(Base.aq_portal_type.has_key(key)):
-      self.getInstance().initializePortalTypeDynamicProperties()
-    property_holder =  Base.aq_portal_type[(self.getPortalType(), self.getInstance().__class__)]
-    return property_holder
-
-  security.declareProtected( Permissions.AccessContentsInformation, 'getAccessorMethodItemList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getAccessorMethodItemList')
   def getAccessorMethodItemList(self):
     """
     """
     return self._getPropertyHolder().getAccessorMethodItemList()
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getAccessorMethodIdList' )
-  def getAccessorMethodIdList(self, inherited=1):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getAccessorMethodIdList')
+  def getAccessorMethodIdList(self):
     """
     """
     return self._getPropertyHolder().getAccessorMethodIdList()
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getAccessorMethodURIList' )
-  def getAccessorMethodURIList(self, inherited=1, local=1):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getAccessorMethodUriList')
+  def getAccessorMethodUriList(self):
     """
     Returns a list of URIs to accessor methods
     """
-    method_id_list = self.getAccessorMethodIdList(inherited=inherited)
-    klass = self.getInstance().__class__
+    method_id_list = self.getAccessorMethodIdList()
+    klass = self.getDocumentedObject().__class__
     class_name = klass.__name__
     module = klass.__module__
     uri_prefix = '%s.%s.' % (module, class_name)
     return map(lambda x: '%s%s' % (uri_prefix, x), method_id_list)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowMethodItemList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowMethodItemList')
   def getWorkflowMethodItemList(self):
     """
     """
     return self._getPropertyHolder().getWorkflowMethodItemList()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowObject' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowObject')
   def getWorkflowObject(self):
     """
     """
     return self._getPropertyHolder()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowMethodIdList' )
-  def getWorkflowMethodIdList(self, inherited=1):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowMethodIdList')
+  def getWorkflowMethodIdList(self):
     """
     """
     return self._getPropertyHolder().getWorkflowMethodIdList()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowMethodURIList' )
-  def getWorkflowMethodURIList(self, inherited=1, local=1):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowMethodUriList')
+  def getWorkflowMethodUriList(self):
     """
     Returns a list of URIs to workflow  methods
     """
     method_id_list = self.getWorkflowMethodIdList()
-    klass = self.getInstance().__class__
+    klass = self.getDocumentedObject().__class__
     class_name = klass.__name__
     module = klass.__module__
     uri_prefix = '' #'%s.%s.' % (module, class_name)
     return map(lambda x: '%s%s' % (uri_prefix, x), method_id_list)
 
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getActionMethodItemList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getActionMethodItemList')
   def getActionMethodItemList(self):
     """
     """
     return self._getPropertyHolder().getActionMethodItemList()
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getActionMethodIdList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getActionMethodIdList')
   def getActionMethodIdList(self):
     """
     """
     return self._getPropertyHolder().getActionMethodIdList()
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getClassMethodItemList' )
-  def getClassMethodItemList(self, inherited=1, local=1):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getClassMethodItemList')
+  def getClassMethodItemList(self, **kw):
     """
     Return a list of tuple (id, method) for every class method
     """
-    klass = self.getInstance().__class__
-    return self._getPropertyHolder().getClassMethodItemList(klass, inherited=inherited, local=local)
+    klass = self.getDocumentedObject().__class__
+    return self._getPropertyHolder().getClassMethodItemList(klass, **kw)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getClassMethodIdList' )
-  def getClassMethodIdList(self, inherited=1, local=1):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getClassMethodIdList')
+  def getClassMethodIdList(self, **kw):
     """
     Return a list of tuple (id, method) for every class method
     """
-    klass = self.getInstance().__class__
-    return self._getPropertyHolder().getClassMethodIdList(klass, inherited=inherited, local=local)
+    klass = self.getDocumentedObject().__class__
+    return self._getPropertyHolder().getClassMethodIdList(klass, **kw)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getClassMethodURIList' )
-  def getClassMethodURIList(self, inherited=1, local=1):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getClassMethodUriList')
+  def getClassMethodUriList(self, inherited=0, **kw):
     """
     Returns a list of URIs to class methods
     """
-    method_id_list = self.getClassMethodIdList(inherited=inherited, local=local)
-    klass = self.getInstance().__class__
+    method_id_list = self.getClassMethodIdList(inherited=inherited, **kw)
+    klass = self.getDocumentedObject().__class__
     class_name = klass.__name__
     module = klass.__module__
     uri_prefix = '%s.%s.' % (module, class_name)
     return map(lambda x: '%s%s' % (uri_prefix, x), method_id_list)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getClassPropertyItemList' )
-  def getClassPropertyItemList(self, inherited=1, local=1):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getClassPropertyItemList')
+  def getClassPropertyItemList(self, **kw):
     """
     Return a list of tuple (id, method) for every class method
     """
-    klass = self.getInstance().__class__
-    return self._getPropertyHolder().getClassPropertyItemList(klass, inherited=inherited, local=local)
+    klass = self.getDocumentedObject().__class__
+    return self._getPropertyHolder().getClassPropertyItemList(klass, **kw)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getClassPropertyIdList' )
-  def getClassPropertyIdList(self, inherited=1, local=1):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getClassPropertyIdList')
+  def getClassPropertyIdList(self, **kw):
     """
     Return a list of tuple (id, method) for every class method
     """
-    klass = self.getInstance().__class__
-    return self._getPropertyHolder().getClassPropertyIdList(klass, inherited=inherited, local=local)
+    klass = self.getDocumentedObject().__class__
+    return self._getPropertyHolder().getClassPropertyIdList(klass, **kw)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getGeneratedPropertyIdList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getGeneratedPropertyIdList')
   def getGeneratedPropertyIdList(self):
     """
     """
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getGeneratedBaseCategoryIdList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getGeneratedBaseCategoryIdList')
   def getGeneratedBaseCategoryIdList(self):
     """
     """

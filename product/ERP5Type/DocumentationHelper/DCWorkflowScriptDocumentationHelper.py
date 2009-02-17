@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from ScriptPythonDocumentationHelper import ScriptPythonDocumentationHelper
@@ -36,14 +35,5 @@ class DCWorkflowScriptDocumentationHelper(ScriptPythonDocumentationHelper):
   """
     Provides documentation about a workflow script
   """
-  security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSectionList')
-  def getSectionList(self):
-    """
-    Returns a list of documentation sections for workflow scripts
-    """
-    return []
 
 InitializeClass(DCWorkflowScriptDocumentationHelper)

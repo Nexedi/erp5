@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
@@ -39,42 +38,14 @@ class DCWorkflowVariableDocumentationHelper(DocumentationHelper):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def __init__(self, uri):
-    self.uri = uri
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDescription')
-  def getDescription(self):
-    return getattr(self.getDocumentedObject(), "description", '')
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getType')
   def getType(self):
     """
     Returns the type of the documentation helper
     """
     return "Workflow Variable"
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getId' )
-  def getId(self):
-    """
-    Returns the id of the documentation helper
-    """
-    return getattr(self.getDocumentedObject(), "__name__", '')
-
-  security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )
-  def getSectionList(self):
-    """
-    Returns a list of documentation sections
-    """
-    return []
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
-  def getTitle(self):
-    """
-    Returns the title of the documentation helper
-    """
-    return getattr(self.getDocumentedObject(), "title", '')
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultExpression' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDefaultExpression')
   def getDefaultExpression(self):
     """
     Returns the Default Expression of the documentation helper
@@ -84,7 +55,7 @@ class DCWorkflowVariableDocumentationHelper(DocumentationHelper):
       default_expr = self.getDocumentedObject().default_expr.text
     return default_expr
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getForCatalog' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getForCatalog')
   def getForCatalog(self):
     """
     Returns 1 if variable is available in the catalog
@@ -98,7 +69,7 @@ class DCWorkflowVariableDocumentationHelper(DocumentationHelper):
     else:
       return 'No'
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getUpdateAlways' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getUpdateAlways')
   def getUpdateAlways(self):
     """
     Returns 1 if variable is available in the history

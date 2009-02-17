@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2007-2008 Nexedi SA and Contributors. All Rights Reserved.
@@ -49,7 +50,6 @@ from WorkflowMethodDocumentationHelper import WorkflowMethodDocumentationHelper
 from DCWorkflowStateDocumentationHelper import DCWorkflowStateDocumentationHelper
 from DCWorkflowTransitionDocumentationHelper import DCWorkflowTransitionDocumentationHelper
 from DCWorkflowVariableDocumentationHelper import DCWorkflowVariableDocumentationHelper
-from DCWorkflowPermissionDocumentationHelper import DCWorkflowPermissionDocumentationHelper
 from DCWorkflowWorklistDocumentationHelper import DCWorkflowWorklistDocumentationHelper
 from DCWorkflowScriptDocumentationHelper import DCWorkflowScriptDocumentationHelper
 from SkinFolderDocumentationHelper import SkinFolderDocumentationHelper

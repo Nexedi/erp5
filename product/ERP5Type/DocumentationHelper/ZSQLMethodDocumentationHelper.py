@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
@@ -39,31 +38,14 @@ class ZSQLMethodDocumentationHelper(DocumentationHelper):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def __init__(self, uri):
-    self.uri = uri
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getType')
   def getType(self):
     """
     Returns the type of the documentation helper
     """
     return "Z SQL Method"
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getId' )
-  def getId(self):
-    """
-    Returns the id of the documentation helper
-    """
-    return getattr(self.getDocumentedObject(), "id", '')
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
-  def getTitle(self):
-    """
-    Returns the title of the documentation helper
-    """
-    return getattr(self.getDocumentedObject(), "title", '')
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSource' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSource')
   def getSource(self):
     """
     Returns the source code of the documentation helper
@@ -85,35 +67,35 @@ class ZSQLMethodDocumentationHelper(DocumentationHelper):
     source_html = portal_transforms.convertTo(mime_type, source_code, mimetype = src_mimetype)
     return source_html.getData()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getConnectionId' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getConnectionId')
   def getConnectionId(self):
     """
     Returns the title of the documentation helper
     """
     return getattr(self.getDocumentedObject(), "connection_id", '')
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getArgumentList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getArgumentList')
   def getArgumentList(self):
     """
     Returns the arguments of the documentation helper
     """
     return getattr(self.getDocumentedObject(), "arguments_src", [])
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getClassName' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getClassName')
   def getClassName(self):
     """
     Returns the class name of the documentation helper
     """
     return getattr(self.getDocumentedObject(), "class_name_", '')
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getClassFile' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getClassFile')
   def getClassFile(self):
     """
     Returns the class file of the documentation helper
     """
     return getattr(self.getDocumentedObject(), "class_file_", '')
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getMaxRows' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getMaxRows')
   def getMaxRows(self):
     """
     Returns the  of the documentation helper

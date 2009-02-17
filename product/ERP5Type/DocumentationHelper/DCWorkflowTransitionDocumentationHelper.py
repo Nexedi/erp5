@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
@@ -39,50 +38,21 @@ class DCWorkflowTransitionDocumentationHelper(DocumentationHelper):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def __init__(self, uri):
-    self.uri = uri
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getDescription')
-  def getDescription(self):
-    #return self.getDocumentedObject().__dict__["description"]
-    return getattr(self.getDocumentedObject(), "description", "")
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getType')
   def getType(self):
     """
     Returns the type of the documentation helper
     """
     return "Workflow Transition"
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getId' )
-  def getId(self):
-    """
-    Returns the id of the documentation helper
-    """
-    return getattr(self.getDocumentedObject(), "__name__", "")
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
-  def getTitle(self):
-    """
-    Returns the title of the documentation helper
-    """
-    return getattr(self.getDocumentedObject(), "title", "")
-
-  security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )
-  def getSectionList(self):
-    """
-    Returns a list of documentation sections
-    """
-    return []
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getNewStateId' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getNewStateId')
   def getNewStateId(self):
     """
     Returns the id of the new state for de workflow transition
     """
     return getattr(self.getDocumentedObject(), "new_state_id", '')
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTriggerType' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTriggerType')
   def getTriggerType(self):
     """
     Returns the trigger type for de workflow transition
@@ -91,28 +61,28 @@ class DCWorkflowTransitionDocumentationHelper(DocumentationHelper):
     trigger_type_id = getattr(self.getDocumentedObject(), "trigger_type", '')
     return trigger_type_list[trigger_type_id]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getScriptName' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getScriptName')
   def getScriptName(self):
     """
     Returns the name of the script for de workflow transition
     """
     return getattr(self.getDocumentedObject(), "script_name", '')
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getAfterScriptName' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getAfterScriptName')
   def getAfterScriptName(self):
     """
     Returns the name of the script for de workflow transition
     """
     return getattr(self.getDocumentedObject(), "after_script_name", '')
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableStateIds' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableStateIds')
   def getAvailableStateIds(self):
     """
     Returns available states in the workflow
     """
     return self.getDocumentedObject().getAvailableStateIds()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getGuardRoles' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getGuardRoles')
   def getGuardRoles(self):
     """
     Returns roles to pass this transition

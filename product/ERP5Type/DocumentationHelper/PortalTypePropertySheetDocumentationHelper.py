@@ -26,12 +26,13 @@
 #
 ##############################################################################
 
-from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
 from Products.ERP5Type import Permissions
 from Products.CMFCore.utils import getToolByName
+
+# XXX Use lxml instead.
 try:
   from libxml2 import parseDoc, parserError
   import_succeed = 1
@@ -47,32 +48,28 @@ class PortalTypePropertySheetDocumentationHelper(DocumentationHelper):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def __init__(self, uri):
-    self.uri = uri
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getType')
   def getType(self):
     """
     Returns the type of the documentation helper
     """
     return "Property Sheet"
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getId' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getId')
   def getId(self):
     """
     Returns the id of the documentation helper
     """
-    name = getattr(self.getDocumentedObject(), "name", '')
-    return name.split("/")[-1]
+    return self.uri.rsplit("/",1)[-1][:-3]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle')
   def getTitle(self):
     """
     Returns the title of the documentation helper
     """
-    return getattr(self.getDocumentedObject(), "name", '')
+    return self.getDocumentedObject().name
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getSourceCode' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceCode')
   def getSourceCode(self):
     """
     Returns the source code the property sheet
@@ -130,7 +127,6 @@ class PortalTypePropertySheetDocumentationHelper(DocumentationHelper):
             return xml
     else:
       return source_code
-
 
 
 InitializeClass(PortalTypePropertySheetDocumentationHelper)

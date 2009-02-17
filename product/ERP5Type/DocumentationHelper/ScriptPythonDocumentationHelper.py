@@ -26,12 +26,10 @@
 #
 ##############################################################################
 
-from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
 from Products.ERP5Type import Permissions
-from AccessorMethodDocumentationHelper import getDefinitionString
 
 class ScriptPythonDocumentationHelper(DocumentationHelper):
   """
@@ -40,38 +38,21 @@ class ScriptPythonDocumentationHelper(DocumentationHelper):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def __init__(self, uri):
-    self.uri = uri
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getType')
   def getType(self):
     """
     Returns the type of the documentation helper
     """
     return "Script Python"
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getId' )
-  def getId(self):
-    """
-    Returns the id of the documentation helper
-    """
-    return getattr(self.getDocumentedObject(), "id", '')
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
-  def getTitle(self):
-    """
-    Returns the title of the documentation helper
-    """
-    return getattr(self.getDocumentedObject(), "title", '')
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getParams' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getParams')
   def getParams(self):
     """
     Returns the title of the documentation helper
     """
     return getattr(self.getDocumentedObject(), "_params", '')
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getSourceCode' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceCode')
   def getSourceCode(self):
     """
     Returns the source code the script python
@@ -97,7 +78,7 @@ class ScriptPythonDocumentationHelper(DocumentationHelper):
     source_html = portal_transforms.convertTo(mime_type, source_code, mimetype = src_mimetype)
     return source_html.getData()
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getDefinition' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDefinition')
   def getDefinition(self):
     """
     Returns the definition of the script with the name of the script and arguments

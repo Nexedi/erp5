@@ -26,13 +26,16 @@
 #
 ##############################################################################
 
-from Acquisition import Implicit
+from Acquisition import Implicit, aq_base
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from App.config import getConfiguration
 import os
 import random
+from Products.ERP5Type.Base import Base
+from Products.ERP5Type.Utils import convertToUpperCase
+from DocumentationSection import DocumentationSection
 
 
 class TempObjectLibrary(object):
@@ -70,6 +73,27 @@ class TempObjectLibrary(object):
       self.portal_type_dict[portal_type] = temp_object
     return temp_object
 
+
+def getCallableSignatureString(func):
+  """Return the definition string of a callable object."""
+  from compiler.consts import CO_VARARGS, CO_VARKEYWORDS
+  args = list(func.func_code.co_varnames)
+  defaults = func.func_defaults or ()
+  i = func.func_code.co_argcount - len(defaults)
+  for default in defaults:
+    args[i] += '=' + repr(default)
+    i += 1
+  # XXX ERP5 code does not set co_flags attribute :(
+  flags = getattr(func.func_code, 'co_flags', None)
+  for flag, name, prefix in ((CO_VARARGS, 'args', '*'),
+                             (CO_VARKEYWORDS, 'kw', '**')):
+    if flags is not None and flags & flag \
+        or flags is None and i < len(args) and args[i] == name:
+      args[i] = prefix + args[i]
+      i += 1
+  return '%s(%s)' % (func.__name__, ', '.join(args[:i]))
+
+
 class DocumentationHelper(Implicit):
   """
     Example URIs
@@ -83,16 +107,25 @@ class DocumentationHelper(Implicit):
     Products.ERP5Type.Document.Person.notify
     Products.ERP5Type.Document.Person.isRAD
     portal_types/Person
-    portal_types/Person/actions#view
+    portal_types/Person?_actions#view
   """
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  _section_list = ()
 
   # Methods to override
   def __init__(self, uri):
     self.uri = uri
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getTempInstance' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getId')
+  def getId(self):
+    """
+    Returns the id of the documentation helper
+    """
+    return self.getDocumentedObject().id
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTempInstance')
   def getTempInstance(self, portal_type):
     """
     Returns a temporary instance of the given portal_type
@@ -175,12 +208,13 @@ class DocumentationHelper(Implicit):
         #documented_object = imp.load_module(fp, pathname, description)
     return documented_object
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle')
   def getTitle(self):
     """
     Returns the title of the documentation helper
     (ex. class name)
     """
-    raise NotImplemented
+    return getattr(aq_base(self.getDocumentedObject()), 'title', '')
 
   def getType(self):
     """
@@ -189,12 +223,28 @@ class DocumentationHelper(Implicit):
     """
     raise NotImplemented
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDescription')
+  def getDescription(self):
+    """
+    Returns the title of the documentation helper
+    """
+    return getattr(aq_base(self.getDocumentedObject()), 'description', '')
+
+  def getSectionUriList(self, id, **kw):
+    return getattr(self, 'get%sUriList' % convertToUpperCase(id))()
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getSectionList')
   def getSectionList(self):
     """
     Returns a list of documentation sections
     """
-    return []
+    section_list = []
+    for section in self._section_list:
+      uri_list = self.getSectionUriList(**section)
+      if uri_list:
+        section_list.append(DocumentationSection(uri_list=uri_list, **section)
+                            .__of__(self))
+    return section_list
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getURI')
   def getURI(self):
@@ -212,7 +262,7 @@ class DocumentationHelper(Implicit):
     """
     return self.__class__.__name__
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'view')
+  security.declareProtected(Permissions.View, 'view')
   def view(self):
     """
     Renders the documentation with a standard form
@@ -220,8 +270,17 @@ class DocumentationHelper(Implicit):
     """
     return getattr(self, '%s_view' % self.getClassName())()
 
-  security.declareProtected(Permissions.AccessContentsInformation, '__call__')
+  security.declareProtected(Permissions.View, '__call__')
   def __call__(self):
     return self.view()
+
+  def _getPropertyHolder(self):
+    property_holder = None
+    key = self.getPortalType(), self.getDocumentedObject().__class__
+    if not(Base.aq_portal_type.has_key(key)):
+      self.getDocumentedObject().initializePortalTypeDynamicProperties()
+    property_holder =  Base.aq_portal_type[key]
+    return property_holder
+
 
 InitializeClass(DocumentationHelper)

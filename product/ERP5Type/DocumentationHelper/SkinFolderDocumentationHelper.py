@@ -26,11 +26,10 @@
 #
 ##############################################################################
 
-from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
-from DocumentationSection import DocumentationSection
 from Products.ERP5Type import Permissions
 
 class SkinFolderDocumentationHelper(DocumentationHelper):
@@ -40,118 +39,75 @@ class SkinFolderDocumentationHelper(DocumentationHelper):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def __init__(self, uri):
-    self.uri = uri
+  _section_list = (
+    dict(
+      id='erp5_form',
+      title='ERP5 Form',
+      class_name='ERP5FormDocumentationHelper',
+    ),
+    dict(
+      id='zsql_method',
+      title='Z SQL Method',
+      class_name='ZSQLMethodDocumentationHelper',
+    ),
+    dict(
+      id='page_template',
+      title='Page Template',
+      class_name='PageTemplateDocumentationHelper',
+    ),
+    dict(
+      id='script_python',
+      title='Script (Python)',
+      class_name='ScriptPythonDocumentationHelper',
+    ),
+  )
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )
-  def getSectionList(self):
-    """
-    Returns a list of documentation sections
-    """
-    section_list = []
-    if self.getFileURIList(meta_type='ERP5 Form') != []:
-      section_list.append(
-        DocumentationSection(
-          id='erp5_form',
-          title='ERP5 Form',
-          class_name='ERP5FormDocumentationHelper',
-          uri_list=self.getFileURIList(meta_type='ERP5 Form'),
-        )
-      )
-    if self.getFileURIList(meta_type='Z SQL Method') != []: 
-      section_list.append(
-        DocumentationSection(
-          id='zsql_method',
-          title='Z SQL Method',
-          class_name='ZSQLMethodDocumentationHelper',
-          uri_list=self.getFileURIList(meta_type='Z SQL Method'),
-        )
-      )
-    if self.getFileURIList(meta_type='Page Template') != []:  
-      section_list.append(
-        DocumentationSection(
-          id='page_template',
-          title='Page Template',
-          class_name='PageTemplateDocumentationHelper',
-          uri_list=self.getFileURIList(meta_type='Page Template'),
-        )
-      )
-    if self.getFileURIList(meta_type='Script (Python)') != []:
-      section_list.append(
-        DocumentationSection(
-          id='script_python',
-          title='Script (Python)',
-          class_name='ScriptPythonDocumentationHelper',
-          uri_list=self.getFileURIList(meta_type='Script (Python)'),
-        )
-      )
-    return map(lambda x: x.__of__(self), section_list)
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getType' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getType')
   def getType(self):
     """
     Returns the type of the documentation helper
     """
     return "Skin Folder"
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getId' )
-  def getId(self):
-    """
-    Returns the id of the documentation helper
-    """
-    return getattr(self.getDocumentedObject(), "id", '')
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle' )
-  def getTitle(self):
-    """
-    Returns the title of the documentation helper
-    """
-    return getattr(self.getDocumentedObject(), "title", '')
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getMetaTypeList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getMetaTypeList')
   def getMetaTypeList(self):
-    meta_type_dict = {}
-    for file in self.getDocumentedObject().objectValues():
-      meta_type_dict[file.meta_type] = None
-    type_list = meta_type_dict.keys()
-    type_list.sort()
-    return type_list
+    return sorted(set(obj.meta_type
+                      for obj in self.getDocumentedObject().objectValues()))
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getFileIdList' )
+  def getFileValueList(self, meta_type=None):
+    return (obj for obj in self.getDocumentedObject().objectValues()
+                if meta_type in (None, obj.meta_type))
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getFileIdList')
   def getFileIdList(self, meta_type=None):
     """
     Returns the list of sub-objects ids of the documentation helper
     """
-    file_list = []
-    files = self.getDocumentedObject()
-    if files is not None:
-      for file in files.objectValues():
-        if not meta_type or file.meta_type == meta_type:
-          file_list.append(file.id)
-    return file_list
+    return [obj.id for obj in self.getFileValueList(meta_type)]
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getFileItemList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getFileItemList')
   def getFileItemList(self, meta_type=None):
     """
     Returns the list of sub-objects items of the documentation helper
     """
-    file_list = []
-    files = self.getDocumentedObject()
-    if files is not None:
-      for file in files.objectValues():
-        if not meta_type or file.meta_type == meta_type:
-          file_list.append((file.id, 
-                            getattr(file, "title", ""), 
-                            getattr(file, "description", ""),
-                            getattr(file, "meta_type", "")))
-    return file_list
-  security.declareProtected( Permissions.AccessContentsInformation, 'getFileURIList' )
-  def getFileURIList(self, meta_type=None):
+    obj_list = []
+    for obj in self.getFileValueList(meta_type):
+      obj = aq_base(obj)
+      obj_list.append((obj.id,
+                       getattr(obj, "title", ""),
+                       getattr(obj, "description", ""),
+                       getattr(obj, "meta_type", "")))
+    return obj_list
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getFileUriList')
+  def getFileUriList(self, meta_type=None):
     """
     """
-    file_list = self.getFileIdList(meta_type)
-    base_uri = '/%s/portal_skins/%s' % (self.getPortalObject().id, self.getDocumentedObject().id)
-    return map(lambda x: ('%s/%s' % (base_uri, x)), file_list)
+    prefix = self.uri + '/'
+    return [prefix + obj.id for obj in self.getFileValueList(meta_type)]
+
+  def getSectionUriList(self, title, **kw):
+    return self.getFileUriList(title)
 
 
 InitializeClass(SkinFolderDocumentationHelper)

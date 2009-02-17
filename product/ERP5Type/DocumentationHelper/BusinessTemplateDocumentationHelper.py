@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from DocumentationHelper import DocumentationHelper
@@ -39,140 +38,90 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
     Provides access to all documentation information
     of a business template.
   """
-
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  # API Implementation
-  security.declareProtected( Permissions.AccessContentsInformation, 'getTitle' )
-  def getTitle(self):
-    """
-    Returns the title of the documentation helper
-    """
-    return getattr(self.getDocumentedObject(), 'title', '')
+  _section_list = (
+    dict(
+      id='portal_type',
+      title='Portal Types',
+      class_name='PortalTypeDocumentationHelper',
+    ),
+    dict(
+      id='dc_workflow',
+      title='DC Workflows',
+      class_name='DCWorkflowDocumentationHelper',
+    ),
+    dict(
+      id='interaction_workflow',
+      title='Interaction Workflows',
+      class_name='InteractionWorkflowDocumentationHelper',
+    ),
+    dict(
+      id='skin_folder',
+      title='Skin Folders',
+      class_name='SkinFolderDocumentationHelper',
+    ),
+    dict(
+      id='module',
+      title='Module',
+      class_name='PortalTypeInstanceDocumentationHelper',
+    ),
+    dict(
+      id='catalog_method',
+      title='Catalog Method',
+      class_name='CatalogMethodDocumentationHelper',
+    ),
+    dict(
+      id='base_category',
+      title='Base Category',
+      class_name='BaseCategoryDocumentationHelper',
+    ),
+  )
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getType' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getType')
   def getType(self):
     """
     Returns the type of the documentation helper
     """
     return "Business Template"
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getSectionList' )
-  def getSectionList(self):
-    """
-    Returns a list of documentation sections
-    """
-    section_list = []
-    if self.getPortalTypeURIList() != []:
-      section_list.append(
-        DocumentationSection(
-          id='portal_type',
-          title='Portal Types',
-          class_name='PortalTypeDocumentationHelper',
-          uri_list=self.getPortalTypeURIList(),
-        )
-      )
-    if self.getDCWorkflowURIList() != []:
-      section_list.append(
-        DocumentationSection(
-          id='dc_workflow',
-          title='DC Workflows',
-          class_name='DCWorkflowDocumentationHelper',
-          uri_list=self.getDCWorkflowURIList(),
-        )
-      )
-    if self.getInteractionWorkflowURIList() != []:
-      section_list.append(
-        DocumentationSection(
-          id='interaction_workflow',
-          title='Interaction Workflows',
-          class_name='InteractionWorkflowDocumentationHelper',
-          uri_list=self.getInteractionWorkflowURIList(),
-        )
-      )
-    if self.getSkinFolderURIList() != []:
-      section_list.append(
-        DocumentationSection(
-          id='skin_folder',
-          title='Skin Folders',
-          class_name='SkinFolderDocumentationHelper',
-          uri_list=self.getSkinFolderURIList(),
-        )
-      )
-    if self.getModuleURIList() != []:
-      section_list.append(
-        DocumentationSection(
-          id='module',
-          title='Module',
-          class_name='PortalTypeInstanceDocumentationHelper',
-          uri_list=self.getModuleURIList(),
-        )
-      )
-    if self.getCatalogMethodURIList() != []:
-      section_list.append( 
-        DocumentationSection(
-          id='catalog_method',
-          title='Catalog Method',
-          class_name='CatalogMethodDocumentationHelper',
-          uri_list=self.getCatalogMethodURIList(),
-        )
-      )
-    if self.getBaseCategoryURIList() != []:
-      section_list.append(
-        DocumentationSection(
-          id='base_category',
-          title='Base Category',
-          class_name='BaseCategoryDocumentationHelper',
-          uri_list=self.getBaseCategoryURIList(),
-        )
-      )
-    return map(lambda x: x.__of__(self), section_list)
-
-  # Specific methods
-  security.declareProtected( Permissions.AccessContentsInformation, 'getDescription' )
-  def getDescription(self):
-    """
-    Returns the description of the documentation helper
-    """
-    return getattr(self.getDocumentedObject(), 'description', '')
-
-  security.declareProtected( Permissions.AccessContentsInformation, 'getVersion' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getVersion')
   def getVersion(self):
     """
     Returns the version of the business template
     """
     return getattr(self.getDocumentedObject(), 'version', '')
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getRevisionNumber' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getRevisionNumber')
   def getRevisionNumber(self):
     """
     Returns the revision number of the documentation helper
     """
     return getattr(self.getDocumentedObject(), 'revision', '')
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getBuildingState' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBuildingState')
   def getBuildingState(self):
     """
     Returns the building_state of the documentation helper
     """
     return self.getDocumentedObject().getBuildingState()
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getInstallationState' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getInstallationState')
   def getInstallationState(self):
     """
     Returns the installation_state of the documentation helper
     """
     return self.getDocumentedObject().getInstallationState()
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getMaintainerList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getMaintainerList')
   def getMaintainerList(self):
     """
     Returns the list of maintainers of the business template
     """
     return  getattr(self.getDocumentedObject(), 'maintainer', '')
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getDependencyList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDependencyList')
   def getDependencyList(self):
     """
     Returns the list of dependencies of the business template
@@ -180,36 +129,36 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
     return getattr(self.getDocumentedObject(), 'dependency', '')
 
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getPortalTypeIdList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPortalTypeIdList')
   def getPortalTypeIdList(self):
     """
     """
     return getattr(self.getDocumentedObject(), 'template_portal_type_id', [])
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getPortalTypeURIList' )
-  def getPortalTypeURIList(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPortalTypeUriList')
+  def getPortalTypeUriList(self):
     """
     """
     portal_type_list = self.getPortalTypeIdList()
     base_uri = '/'+self.uri.split('/')[1]+'/portal_types'
     return map(lambda x: ('%s/%s' % (base_uri, x)), portal_type_list)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getSkinFolderIdList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSkinFolderIdList')
   def getSkinFolderIdList(self):
     """
     """
     return getattr(self.getDocumentedObject(), 'template_skin_id', [])
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getSkinFolderURIList' )
-  def getSkinFolderURIList(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSkinFolderUriList')
+  def getSkinFolderUriList(self):
     """
     """
     skin_folder_list = self.getSkinFolderIdList()
     base_uri = '/' + self.getPortalObject().id + '/portal_skins'
     return map(lambda x: ('%s/%s' % (base_uri, x)), skin_folder_list)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getDCWorkflowIdList' )
-  def getDCWorkflowIdList(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDcWorkflowIdList')
+  def getDcWorkflowIdList(self):
     """
     """
     dc_workflow_list = []
@@ -221,15 +170,15 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
         dc_workflow_list.append(wf)
     return dc_workflow_list
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getDCWorkflowURIList' )
-  def getDCWorkflowURIList(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDcWorkflowUriList')
+  def getDcWorkflowUriList(self):
     """
     """
-    workflow_list = self.getDCWorkflowIdList()
+    workflow_list = self.getDcWorkflowIdList()
     base_uri = '/'+self.uri.split('/')[1]+'/portal_workflow'
     return map(lambda x: ('%s/%s' % (base_uri, x)), workflow_list)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getInteractionWorkflowIdList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getInteractionWorkflowIdList')
   def getInteractionWorkflowIdList(self):
     """
     """
@@ -242,57 +191,57 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
         workflow_list.append(wf)
     return workflow_list
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getInteractionWorkflowURIList' )
-  def getInteractionWorkflowURIList(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getInteractionWorkflowUriList')
+  def getInteractionWorkflowUriList(self):
     """
     """
     workflow_list = self.getInteractionWorkflowIdList()
     base_uri = '/'+self.uri.split('/')[1]+'/portal_workflow'
     return map(lambda x: ('%s/%s' % (base_uri, x)), workflow_list)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getBaseCategoryList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryList')
   def getBaseCategoryList(self):
     """
     """
     return getattr(self.getDocumentedObject(), 'template_base_category', '')
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getBaseCategoryURIList' )
-  def getBaseCategoryURIList(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryUriList')
+  def getBaseCategoryUriList(self):
     """
     """
     base_category_list = self.getBaseCategoryList()
     base_uri = '/'+self.uri.split('/')[1]+'/portal_categories'
     return map(lambda x: ('%s/%s' % (base_uri, x)), base_category_list)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getModuleIdList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getModuleIdList')
   def getModuleIdList(self):
     """
     """
     return getattr(self.getDocumentedObject(), 'template_module_id', [])
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getModuleURIList' )
-  def getModuleURIList(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getModuleUriList')
+  def getModuleUriList(self):
     """
     """
     module_list = self.getModuleIdList()
     base_uri = '/'+self.uri.split('/')[1]
     return map(lambda x: ('%s/%s' % (base_uri, x)), module_list)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getCatalogMethodIdList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getCatalogMethodIdList')
   def getCatalogMethodIdList(self):
     """
     """
     return getattr(self.getDocumentedObject(), 'template_catalog_method_id', [])
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getCatalogMethodURIList' )
-  def getCatalogMethodURIList(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getCatalogMethodUriList')
+  def getCatalogMethodUriList(self):
     """
     """
     catalog_method_list = self.getCatalogMethodIdList()
     base_uri = '/'+self.uri.split('/')[1]+'/portal_catalog'
     return map(lambda x: ('%s/%s' % (base_uri, x)), catalog_method_list)
 
-  security.declareProtected( Permissions.AccessContentsInformation, 'getTemplatePathList' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePathList')
   def getTemplatePathList(self):
     """
     """
