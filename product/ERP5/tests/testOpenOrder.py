@@ -102,12 +102,15 @@ class TestOpenOrder(ERP5TypeTestCase):
                                resource=internet_connection.getRelativeUrl(),
                                priced_quantity=1,
                                base_price=200)
+    # Use periodicity_minute=1 in order to see more details of DateTime
+    # instance. Because if the time is 00:00:00, then it omits to display
+    # some information like timezone for example.
     main_trade_condition.newContent(
       id='internet_connection_periodicity_line',
       portal_type='Periodicity Line',
       resource=internet_connection.getRelativeUrl(),
       periodicity_term_scope_type='until_the_end_of_month',
-      periodicity_minute=0,
+      periodicity_minute=1,
       periodicity_hour=0,
       periodicity_month_day=1)
     main_trade_condition.newContent(portal_type='Sale Supply Line',
@@ -173,19 +176,19 @@ class TestOpenOrder(ERP5TypeTestCase):
     """
     Make sure that periodicity line can generate correct schedule.
     """
+    # This across Summer time period, if server's timezone uses it.
     self.assertEqual(self.portal.sale_trade_condition_module.main_trade_condition.internet_connection_periodicity_line.getDatePeriodList(
       DateTime(2008,1,15), DateTime(2008,12,1)),
-                     [(DateTime(2008,2,1), DateTime(2008,2,29)),
-                      (DateTime(2008,3,1), DateTime(2008,3,31)),
-                      (DateTime(2008,4,1), DateTime(2008,4,30)),
-                      (DateTime(2008,5,1), DateTime(2008,5,31)),
-                      (DateTime(2008,6,1), DateTime(2008,6,30)),
-                      (DateTime(2008,7,1), DateTime(2008,7,31)),
-                      (DateTime(2008,8,1), DateTime(2008,8,31)),
-                      (DateTime(2008,9,1), DateTime(2008,9,30)),
-                      (DateTime(2008,10,1), DateTime(2008,10,31)),
-                      (DateTime(2008,11,1), DateTime(2008,11,30)),
-                      (DateTime(2008,12,1), DateTime(2008,12,31)),
+                     [(DateTime(2008,2,1,0,1), DateTime(2008,2,29)),
+                      (DateTime(2008,3,1,0,1), DateTime(2008,3,31)),
+                      (DateTime(2008,4,1,0,1), DateTime(2008,4,30)),
+                      (DateTime(2008,5,1,0,1), DateTime(2008,5,31)),
+                      (DateTime(2008,6,1,0,1), DateTime(2008,6,30)),
+                      (DateTime(2008,7,1,0,1), DateTime(2008,7,31)),
+                      (DateTime(2008,8,1,0,1), DateTime(2008,8,31)),
+                      (DateTime(2008,9,1,0,1), DateTime(2008,9,30)),
+                      (DateTime(2008,10,1,0,1), DateTime(2008,10,31)),
+                      (DateTime(2008,11,1,0,1), DateTime(2008,11,30)),
                       ])
     
     self.assertEqual(self.portal.sale_trade_condition_module.main_trade_condition.bread_periodicity_line.getDatePeriodList(
