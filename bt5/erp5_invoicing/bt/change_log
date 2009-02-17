@@ -1,3 +1,6 @@
+2009-02-17 yusei
+* Hide "Add Invoice Line" from the drop down action menu until invoice support to collect multiple different orders.
+
 2009-02-16 jerome
 * copy source_account and destination_account from supply line on delivery lines, and enable this for divergence on invoice lines.
 

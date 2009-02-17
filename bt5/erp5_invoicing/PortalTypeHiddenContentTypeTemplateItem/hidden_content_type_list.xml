@@ -1,6 +1,7 @@
 <hidden_content_type_list>
  <portal_type id="Invoice Line">
   <item>Invoice Cell</item>
+  <item>Invoice Line</item>
  </portal_type>
  <portal_type id="Invoice Transaction Rule">
   <item>Accounting Rule Cell</item>
