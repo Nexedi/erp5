@@ -1233,10 +1233,6 @@ class Catalog(Folder,
     if not self.isIndexable():
       return
 
-    portal_catalog = self.getSiteRoot().portal_catalog # XXX-JPS - This is a hardcoded name. Weird
-                                                       # Isn't self == self.getSiteRoot().portal_catalog
-                                                       # in this case ?
-
     # Reminder about optimization: It might be possible to issue just one
     # query to get enought results to check uid & path consistency.
     path_uid_dict = {}
@@ -1412,8 +1408,6 @@ class Catalog(Folder,
             append(value)
           kw[arg] = value_list
 
-        method = aq_base(method).__of__(portal_catalog) # Use method in
-                # the context of portal_catalog
         # Alter/Create row
         try:
           #start_time = DateTime()
