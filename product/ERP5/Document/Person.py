@@ -227,26 +227,35 @@ class Person(XMLObject):
 
         default (anything)
           Value to return if no passord is set on context.
-          Default: no default, raises AttributeError if property is not set.
+          Default: None
         format (string)
           String defining the format in which the password is expected.
           If passowrd is not available in that format, KeyError will be
           raised.
           Default: 'default'
       """
-      password = getattr(aq_base(self), 'password', *args)
-      format = kw.get('format', 'default')
-      try:
+      marker = []
+      password = getattr(aq_base(self), 'password', marker)
+      if password is marker:
+        if len(args):
+          password = args[0]
+        else:
+          password = None
+      else:
+        format = kw.get('format', 'default')
         # Backward compatibility: if it's not a PersistentMapping instance,
         # assume it's a monovalued string, which corresponds to default
         # password encoding.
         if isinstance(password, PersistentMapping):
-          password = password[format]
+          password = password.get(format, marker)
+          if password is marker:
+            if len(args):
+              password = args[0]
+            else:
+              password = None
         else:
           if format != 'default':
-            raise KeyError
-      except KeyError:
-        raise KeyError, 'Password is not available in %r format.' % (format, )
+            password = None
       return password
 
     # Time management
