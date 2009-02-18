@@ -1,7 +1,7 @@
 <workflow_chain>
  <chain>
   <type>Budget</type>
-  <workflow>budget_workflow, edit_workflow</workflow>
+  <workflow>budget_workflow, budget_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Budget Cell</type>
@@ -28,11 +28,11 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Node Budget Variation</type>
+  <type>Category Budget Variation</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Section Category Budget Variation</type>
+  <type>Node Budget Variation</type>
   <workflow>edit_workflow</workflow>
  </chain>
 </workflow_chain>

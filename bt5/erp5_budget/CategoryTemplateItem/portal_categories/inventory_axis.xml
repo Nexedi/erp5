@@ -35,21 +35,23 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>budget_variation</string>
+                <string>inventory_axis</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Define all possible budget variations</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>budget_variation</string> </value>
+            <value> <string>inventory_axis</string> </value>
         </item>
         <item>
             <key> <string>last_id</string> </key>
-            <value> <string>10</string> </value>
+            <value> <string>16</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -57,7 +59,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Budget Variation</string> </value>
+            <value> <string>Inventory Axis</string> </value>
         </item>
       </dictionary>
     </pickle>

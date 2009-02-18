@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string># Remove empty items\n
+item_list = filter(lambda x: x not in [(\'\',\'\'), [\'\',\'\']],\\\n
+                   item_list)\n
+\n
+sub_field_dict = {}\n
+split_depth = 1\n
+\n
+resolveCategory = context.getPortalObject().portal_categories.resolveCategory\n
+\n
+for item in item_list:\n
+  # Get value of the item\n
+  item_value = item[int(not is_right_display)]\n
+\n
+  # Hash key from item_value\n
+  item_split = string.split(item_value, \'/\')\n
+  item_key = string.join(item_split[:split_depth] , \'/\' )\n
+  base_category = item_split[0]\n
+\n
+  if not sub_field_dict.has_key(item_key):\n
+    # Create property dict\n
+    sub_field_property_dict = default_sub_field_property_dict.copy()\n
+    sub_field_property_dict[\'key\'] = item_key\n
+    sub_field_property_dict[\'required\'] = 0\n
+\n
+    # XXX for each "item_key" we must check if it can be multivaluated or not\n
+    if 0:\n
+      sub_field_property_dict[\'field_type\'] = \'MultiListField\'\n
+      sub_field_property_dict[\'size\'] = 5\n
+    sub_field_property_dict[\'field_type\'] = \'ListField\'\n
+    sub_field_property_dict[\'size\'] = 1\n
+\n
+    sub_field_property_dict[\'item_list\'] = [(\'\',\'\')]\n
+    sub_field_property_dict[\'value\'] = []\n
+    sub_field_dict[item_key] = sub_field_property_dict\n
+\n
+  sub_field_dict[item_key][\'item_list\'] =\\\n
+     sub_field_dict[item_key][\'item_list\'] + [item]\n
+  if item_value in value_list:\n
+    # XXX for each "item_key" we must check if it can be multivaluated or not\n
+    if 0:\n
+      sub_field_dict[item_key][\'value\'] =\\\n
+        sub_field_dict[item_key][\'value\'] + [item_value]\n
+\n
+    sub_field_dict[item_key][\'value\'] = item_value\n
+\n
+\n
+  base_category_value = resolveCategory(base_category)\n
+  if base_category_value is not None:\n
+    sub_field_dict[item_key][\'title\'] = base_category_value.getTranslatedTitle()\n
+  else:\n
+    sub_field_dict[item_key][\'title\'] = base_category\n
+   \n
+return sub_field_dict.values()\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>item_list, value_list, default_sub_field_property_dict={}, is_right_display=0</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>4</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>item_list</string>
+                            <string>value_list</string>
+                            <string>default_sub_field_property_dict</string>
+                            <string>is_right_display</string>
+                            <string>filter</string>
+                            <string>sub_field_dict</string>
+                            <string>split_depth</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>resolveCategory</string>
+                            <string>_getiter_</string>
+                            <string>item</string>
+                            <string>_getitem_</string>
+                            <string>int</string>
+                            <string>item_value</string>
+                            <string>string</string>
+                            <string>item_split</string>
+                            <string>item_key</string>
+                            <string>base_category</string>
+                            <string>sub_field_property_dict</string>
+                            <string>_write_</string>
+                            <string>base_category_value</string>
+                            <string>None</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <dictionary/>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Budget_hashVariationCategoryList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

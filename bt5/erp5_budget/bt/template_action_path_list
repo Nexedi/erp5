@@ -15,5 +15,5 @@ Budget | generate_structure
 Budget | original_budget
 Budget | transfer_line_list_view
 Budget | view
+Category Budget Variation | view
 Node Budget Variation | view
-Section Category Budget Variation | view

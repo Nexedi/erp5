@@ -8,7 +8,8 @@ Budget Transaction | edit_workflow
 Budget Transaction | pricing_interaction_workflow
 Budget Transfer Line | edit_workflow
 Budget Transfer | edit_workflow
+Budget | budget_interaction_workflow
 Budget | budget_workflow
 Budget | edit_workflow
+Category Budget Variation | edit_workflow
 Node Budget Variation | edit_workflow
-Section Category Budget Variation | edit_workflow

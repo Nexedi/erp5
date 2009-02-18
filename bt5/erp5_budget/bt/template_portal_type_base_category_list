@@ -3,3 +3,4 @@ Budget Transaction | group
 Budget Transfer Line | group
 Budget | budget_type
 Budget | specialise
+Node Budget Variation | aggregate

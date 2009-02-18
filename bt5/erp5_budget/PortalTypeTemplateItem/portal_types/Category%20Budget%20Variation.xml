@@ -49,15 +49,15 @@
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Section Category Budget Variation</string> </value>
+            <value> <string>ERP5 Category Budget Variation</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>  </string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addSectionCategoryBudgetVariation</string> </value>
+            <value> <string>addCategoryBudgetVariation</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Section Category Budget Variation</string> </value>
+            <value> <string>Category Budget Variation</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>

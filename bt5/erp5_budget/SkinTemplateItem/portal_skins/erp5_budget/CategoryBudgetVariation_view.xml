@@ -100,7 +100,8 @@
                         <string>my_int_index</string>
                         <string>my_translated_portal_type</string>
                         <string>my_budget_variation</string>
-                        <string>my_variation_base_category_list</string>
+                        <string>my_variation_base_category</string>
+                        <string>my_inventory_axis</string>
                       </list>
                     </value>
                 </item>
@@ -115,7 +116,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SectionCategoryBudgetVariation_view</string> </value>
+            <value> <string>CategoryBudgetVariation_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -123,7 +124,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SectionCategoryBudgetVariation_view</string> </value>
+            <value> <string>CategoryBudgetVariation_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -139,7 +140,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Section Category Budget Variation</string> </value>
+            <value> <string>Category Budget Variation</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

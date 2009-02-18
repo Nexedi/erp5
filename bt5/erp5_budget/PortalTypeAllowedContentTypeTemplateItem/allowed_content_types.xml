@@ -8,7 +8,7 @@
  </portal_type>
  <portal_type id="Budget Model">
   <item>Node Budget Variation</item>
-  <item>Section Category Budget Variation</item>
+  <item>Category Budget Variation</item>
  </portal_type>
  <portal_type id="Budget Model Module">
   <item>Budget Model</item>

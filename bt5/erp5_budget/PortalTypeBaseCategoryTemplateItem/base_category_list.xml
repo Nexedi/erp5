@@ -12,4 +12,7 @@
  <portal_type id="Budget Transfer Line">
   <item>group</item>
  </portal_type>
+ <portal_type id="Node Budget Variation">
+  <item>aggregate</item>
+ </portal_type>
 </base_category_list>

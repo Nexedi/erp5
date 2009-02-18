@@ -103,13 +103,16 @@
                         <string>my_variation_base_category</string>
                         <string>my_node_select_method_id</string>
                         <string>my_node_title_method_id</string>
+                        <string>my_inventory_axis</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_aggregate_title_list</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -125,7 +128,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SectionCategoryBudgetVariation_view</string> </value>
+            <value> <string>NodeBudgetVariation_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -141,7 +144,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Section Category Budget Variation</string> </value>
+            <value> <string>Node Budget Variation</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

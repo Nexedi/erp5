@@ -13,19 +13,26 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>budget_variation/line</string>
+                <string>inventory_axis/mirror_node</string>
+                <string>inventory_axis/mirror_node_category</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>description</string> </key>
+            <key> <string>codification</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>line</string> </value>
+            <value> <string>mirror_node_category</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -33,7 +40,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Line</string> </value>
+            <value> <string>Mirror Node Category</string> </value>
         </item>
       </dictionary>
     </pickle>
