@@ -3766,20 +3766,22 @@ VALUES
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
 
-    # Create some dummy documents
     def doCatalog(catalog, document):
       catalog.catalogObjectList([document], check_uid=0)
       result = catalog(select_expression='reference', uid=document.getUid())
       self.assertEqual(len(result), 1)
       return result[0].reference
 
+    # Create some dummy documents
     portal = self.getPortalObject()
     portal.foo = FooDocument()
     portal.bar = BarDocument()
+
     # Get instances, wrapping them in acquisition context implicitely.
     foo = portal.foo
     bar = portal.bar
 
+    # Consistency checks
     self.assertTrue(getattr(foo, 'getReference', None) is not None)
     self.assertTrue(getattr(bar, 'getReference', None) is None)
 
