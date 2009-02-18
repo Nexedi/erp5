@@ -88,6 +88,9 @@
                       <list>
                         <string>my_title</string>
                         <string>my_quantity</string>
+                        <string>my_consumed_budget</string>
+                        <string>my_available_budget</string>
+                        <string>my_engaged_budget</string>
                       </list>
                     </value>
                 </item>
