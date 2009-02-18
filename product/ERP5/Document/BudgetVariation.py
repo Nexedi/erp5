@@ -37,6 +37,7 @@ from zLOG import LOG
 
 class BudgetVariation(Predicate):
   """Base class for budget variations.
+
   """
 
   # Default Properties
@@ -65,7 +66,15 @@ class BudgetVariation(Predicate):
     """
 
   def initializeBudgetLine(self, budget_line):
-    """Initialize a budget line
+    """Initialize a budget line.
+  
+    Called when a new budget line is created.
+    """
+
+  def initializeBudget(self, budget):
+    """Initialize a budget.
+
+    Called when a budget is associated to a budget model.
     """
 
   def getBudgetLineVariationRangeCategoryList(self, budget_line):
@@ -73,8 +82,13 @@ class BudgetVariation(Predicate):
     """
     return []
 
+  def getBudgetVariationRangeCategoryList(self, budget):
+    """Returns the variation range categories for this budget
+    """
+    return []
+
   def getCellRangeForBudgetLine(self, budget_line, matrixbox=0):
-    """Return the cell range to use for the budget.
+    """Return the cell range to use for the budget line
     """
     return []
 

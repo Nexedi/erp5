@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -30,4 +30,4 @@ class BudgetVariation:
   Budget variation properties
   """
 
-  _categories = ( 'budget_variation', )
+  _categories = ( 'inventory_axis', 'budget_variation')

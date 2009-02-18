@@ -32,11 +32,8 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.BudgetVariation import BudgetVariation
 
 
-class NodeBudgetVariation(BudgetVariation):
-  """ A budget variation for node
-
-  A script will return the list of possible nodes, or they will be configured
-  explicitly on the budget variation.
+class CategoryBudgetVariation(BudgetVariation):
+  """ A budget variation based on a category
   """
   # Default Properties
   property_sheets = ( PropertySheet.Base
@@ -49,8 +46,8 @@ class NodeBudgetVariation(BudgetVariation):
                     )
 
   # CMF Type Definition
-  meta_type = 'ERP5 Node Budget Variation'
-  portal_type = 'Node Budget Variation'
+  meta_type = 'ERP5 Category Budget Variation'
+  portal_type = 'Category Budget Variation'
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
@@ -65,36 +62,14 @@ class NodeBudgetVariation(BudgetVariation):
     """This budget variation in a predicate
     """
 
-  def _getNodeList(self, context):
-    """Returns the list of possible nodes
-    """
-    node_select_method_id = self.getProperty('node_select_method_id')
-    if node_select_method_id:
-      return guarded_getattr(context, node_select_method_id)()
-    # no script defined, used the explicitly selected values
-    return self.getAggregateValueList()
-
-  def _getNodeTitle(self, node):
-    """Returns the title of a node
-    """
-    node_title_method_id = self.getProperty('node_title_method_id', 'getTitle')
-    return guarded_getattr(node, node_title_method_id)()
-
   def getCellRangeForBudgetLine(self, budget_line, matrixbox=0):
     """The cell range added by this variation
     """
-    base_category = self.getProperty('variation_base_category')
-    prefix = ''
-    if base_category:
-      prefix = '%s/' % base_category
-
-    node_item_list = [('%s%s' % (prefix, node.getRelativeUrl()),
-                       self._getNodeTitle(node))
-                           for node in self._getNodeList(budget_line)]
+    item_list = self.getBudgetLineVariationRangeCategoryList(budget_line)
     variation_category_list = budget_line.getVariationCategoryList()
     if matrixbox:
-      return [[i for i in node_item_list if i[0] in variation_category_list]]
-    return [[i[0] for i in node_item_list if i[0] in variation_category_list]]
+      return [[(i[1], i[0]) for i in item_list if i[1] in variation_category_list]]
+    return [[i[1] for i in item_list if i[1] in variation_category_list]]
 
   def getInventoryQueryDict(self, budget_cell):
     """ Query dict to pass to simulation query
@@ -104,43 +79,70 @@ class NodeBudgetVariation(BudgetVariation):
     base_category = self.getProperty('variation_base_category')
     if not base_category:
       return dict()
-    # TODO: pass base_category_list instead of stupidly iterating !
+    # XXX pass base_category= ...
     for criterion_category in budget_cell.getMembershipCriterionCategoryList():
       if '/' not in criterion_category: # safe ...
         continue
-      criterion_base_category, node_url = criterion_category.split('/', 1)
-      if criterion_base_category == base_category:
-        axis = self.getInventoryAxis()
-        if axis == 'movement':
-          axis = 'default_%s' % base_category
-        axis = '%s_uid' % axis
-        return {axis:
-                  self.getPortalObject().unrestrictedTraverse(node_url).getUid()}
+      criterion_base_category, category_url = criterion_category.split('/', 1)
 
+      # Different possible inventory axis here
+      axis = self.getInventoryAxis()
+      if axis == 'movement':
+        return {'default_%s_uid' % base_category:
+                  self.getPortalObject().portal_categories.getCategoryUid(criterion_category)}
+
+      if criterion_base_category == base_category:
+        return {axis: criterion_category}
     return dict()
 
+  def getBudgetVariationRangeCategoryList(self, context):
+    """Returns the Variation Range Category List that can be applied to this
+    budget.
+    """
+    base_category = self.getProperty('variation_base_category')
+    if not base_category:
+      return []
+
+    portal = self.getPortalObject()
+    item_list_method = portal.portal_preferences.getPreference(
+                          'preferred_category_child_item_list_method_id',
+                          'getCategoryChildCompactLogicalPathItemList')
+    
+    return getattr(portal.portal_categories._getOb(base_category),
+                        item_list_method)(
+                                base=1,
+                                local_sort_id=('int_index',
+                                               'translated_title'),
+                                checked_permission='View')
+    
 
   def getBudgetLineVariationRangeCategoryList(self, budget_line):
     """Returns the Variation Range Category List that can be applied to this
     budget line.
     """
     base_category = self.getProperty('variation_base_category')
-    prefix = ''
-    if base_category:
-      prefix = '%s/' % base_category
-    return [(self._getNodeTitle(node), '%s%s' % (prefix, node.getRelativeUrl()))
-                for node in self._getNodeList(budget_line)]
+    if not base_category:
+      return []
 
-  def getBudgetVariationRangeCategoryList(self, budget):
-    """Returns the Variation Range Category Listhat can be applied to this
-    budget.
-    """
-    base_category = self.getProperty('variation_base_category')
-    prefix = ''
-    if base_category:
-      prefix = '%s/' % base_category
-    return [(self._getNodeTitle(node), '%s%s' % (prefix, node.getRelativeUrl()))
-                for node in self._getNodeList(budget)]
+    portal = self.getPortalObject()
+    item_list_method = portal.portal_preferences.getPreference(
+                          'preferred_category_child_item_list_method_id',
+                          'getCategoryChildCompactLogicalPathItemList')
+    
+    # If this category is defined on budget level, only show subcategories.
+    budget = budget_line.getParentValue()
+    if base_category in budget.getVariationBaseCategoryList():
+      for budget_variation_category in budget.getVariationCategoryList():
+        if budget_variation_category.split('/')[0] == base_category:
+          base_category = budget_variation_category
+          break
+      
+    return getattr(portal.portal_categories.unrestrictedTraverse(base_category),
+                        item_list_method)(
+                                base=1,
+                                local_sort_id=('int_index',
+                                               'translated_title'),
+                                checked_permission='View')
 
   def initializeBudgetLine(self, budget_line):
     """Initialize a budget line

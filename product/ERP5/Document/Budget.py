@@ -31,12 +31,13 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Predicate import Predicate
 
+from Products.ERP5.Variated import Variated
 from Products.ERP5.Document.Delivery import Delivery
 from Products.ERP5.Document.Inventory import Inventory
 
 from zLOG import LOG
 
-class Budget(Predicate):
+class Budget(Predicate, Variated):
     """
     Budget means a kind of budget stock.
     """
@@ -52,6 +53,7 @@ class Budget(Predicate):
                       , PropertySheet.Arrow
                       , PropertySheet.Budget
                       , PropertySheet.Path
+                      , PropertySheet.VariationRange
                       )
 
     # CMF Type Definition

@@ -65,7 +65,7 @@ class BudgetModel(Predicate):
     for budget_variation in sorted(self.contentValues(
               portal_type=self.getPortalBudgetVariationTypeList(),),
               key=lambda x:x.getIntIndex()):
-      if not budget_variation.isMemberOf('budget_variation/cell'):
+      if not budget_variation.isMemberOf('budget_variation/budget_cell'):
         continue
       variation_cell_range = budget_variation.getCellRangeForBudgetLine(
                                budget_line, matrixbox=matrixbox)
@@ -107,8 +107,24 @@ class BudgetModel(Predicate):
     for budget_variation in sorted(self.contentValues(
               portal_type=self.getPortalBudgetVariationTypeList()),
               key=lambda x:x.getIntIndex()):
+      if budget_variation.isMemberOf('budget_variation/budget'):
+        continue
       variation_range = \
         budget_variation.getBudgetLineVariationRangeCategoryList(budget_line)
+      if variation_range and variation_range not in\
+                  variation_range_category_list:
+        variation_range_category_list.extend(variation_range)
+    return variation_range_category_list
+
+  def getBudgetVariationRangeCategoryList(self, budget):
+    variation_range_category_list = []
+    for budget_variation in sorted(self.contentValues(
+              portal_type=self.getPortalBudgetVariationTypeList()),
+              key=lambda x:x.getIntIndex()):
+      if not budget_variation.isMemberOf('budget_variation/budget'):
+        continue
+      variation_range = \
+        budget_variation.getBudgetVariationRangeCategoryList(budget)
       if variation_range and variation_range not in\
                   variation_range_category_list:
         variation_range_category_list.extend(variation_range)
@@ -118,5 +134,13 @@ class BudgetModel(Predicate):
     for budget_variation in sorted(self.contentValues(
               portal_type=self.getPortalBudgetVariationTypeList()),
               key=lambda x:x.getIntIndex()):
-      budget_variation.initializeBudgetLine(budget_line)
+      if not budget_variation.isMemberOf('budget_variation/budget'):
+        budget_variation.initializeBudgetLine(budget_line)
+
+  def initializeBudget(self, budget):
+    for budget_variation in sorted(self.contentValues(
+              portal_type=self.getPortalBudgetVariationTypeList()),
+              key=lambda x:x.getIntIndex()):
+      if budget_variation.isMemberOf('budget_variation/budget'):
+        budget_variation.initializeBudget(budget)
 
