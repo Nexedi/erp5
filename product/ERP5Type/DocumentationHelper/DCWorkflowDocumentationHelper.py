@@ -32,25 +32,26 @@ from DocumentationHelper import DocumentationHelper
 from Products.ERP5Type import Permissions
 from Products.DCWorkflowGraph.DCWorkflowGraph import getGraph
 
-def getStatePermissionsOfRole(state=None, role=''):
+def getStatePermissionsOfRole(state, role):
+  """
+  Returns list of permissions for a given role with AVMC format above
+    A = Access contents information
+    V = View
+    M = Modify Portal Content
+    C = Add Portal Content
+  """
   permissions = ""
-  if state != None:
-    if hasattr(state, '__dict__'):
-      if 'permission_roles' in state.__dict__.keys():
-        if 'View' in state.__dict__['permission_roles'].keys():
-          if role in state.__dict__['permission_roles']['View']:
-            permissions += "V"
-        if 'Access contents information' in state.__dict__['permission_roles'].keys():
-          if role in state.__dict__['permission_roles']['Access contents information']:
-            permissions += "A"
-        if 'Modify portal content' in state.__dict__['permission_roles'].keys():
-          if role in state.__dict__['permission_roles']['Modify portal content']:
-            permissions += "M"
-        if 'Add portal content' in state.__dict__['permission_roles'].keys():
-          if role in state.__dict__['permission_roles']['Add portal content']:
-            permissions += "C"
+  permission_roles = state.permission_roles
+  if permission_roles:
+    if role in permission_roles.get('Access contents information', ()):
+      permissions += "A"
+    if role in permission_roles.get('View', ()):
+      permissions += "V"
+    if role in permission_roles.get('Modify portal content', ()):
+      permissions += "M"
+    if role in permission_roles.get('Add portal content', ()):
+      permissions += "C"
   return permissions
-
 
 class DCWorkflowDocumentationHelper(DocumentationHelper):
   """

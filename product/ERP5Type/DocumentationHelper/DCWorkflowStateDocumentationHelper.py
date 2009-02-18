@@ -28,8 +28,9 @@
 
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
-from DocumentationHelper import DocumentationHelper
 from Products.ERP5Type import Permissions
+from DocumentationHelper import DocumentationHelper
+from DCWorkflowDocumentationHelper import getStatePermissionsOfRole
 
 class DCWorkflowStateDocumentationHelper(DocumentationHelper):
   """
@@ -53,25 +54,7 @@ class DCWorkflowStateDocumentationHelper(DocumentationHelper):
     return self.getDocumentedObject().transitions
 
   def getPermissionsOfRole(self, role):
-    """
-    Returns list of permissions for a given role with AVMC format above
-      A = Access contents information
-      V = View
-      M = Modify Portal Content
-      C = Add Portal Content
-    """
-    permissions = ""
-    permission_roles = self.getDocumentedObject().permission_roles
-    if permission_roles:
-      if role in state.permission_roles.get('Access contents information', ()):
-        permissions += "A"
-      if role in state.permission_roles.get('View', ()):
-        permissions += "V"
-      if role in state.permission_roles.get('Modify portal content', ()):
-        permissions += "M"
-      if role in state.permission_roles.get('Add portal content', ()):
-        permissions += "C"
-    return permissions
+    return getStatePermissionsOfRole(self.getDocumentedObject(), role)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPermissionsOfRoleOwner')
   def getPermissionsOfRoleOwner(self):
