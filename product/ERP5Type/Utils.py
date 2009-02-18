@@ -31,6 +31,8 @@ import os
 import re
 import string
 import time
+from md5 import new as md5_new
+from sha import new as sha_new
 
 from Globals import package_home
 from Globals import DevelopmentMode
@@ -38,6 +40,8 @@ from Acquisition import aq_base
 from Acquisition import aq_inner
 from Acquisition import aq_parent
 from Acquisition import aq_self
+
+from AccessControl.SecurityInfo import allow_class
 
 from Products.CMFCore import utils
 from Products.CMFCore.Expression import Expression
@@ -2725,4 +2729,36 @@ def sqlquote(x):
   else:
     raise TypeError, 'do not know how to handle type %s' % type(x)
   return x
+
+#####################################################
+# Hashing
+#####################################################
+
+class GenericSum:
+  def __init__(self, sum):
+    self.sum = sum
+
+  def digest(self):
+    return self.sum.digest()
+
+  def hexdigest(self):
+    return self.sum.hexdigest()
+
+  def update(self, data):
+    self.sum.update(data)
+
+  def copy(self):
+    return self.__class__(self.sum.copy())
+
+class md5(GenericSum):
+  def __init__(self, *args):
+    GenericSum.__init__(self, md5_new(*args))
+
+allow_class(md5)
+
+class sha(GenericSum):
+  def __init__(self, *args):
+    GenericSum.__init__(self, sha_new(*args))
+
+allow_class(sha)
 
