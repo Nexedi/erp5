@@ -31,6 +31,8 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
+from Globals import PersistentMapping
+from Acquisition import aq_base
 
 #from Products.ERP5.Core.Node import Node
 
@@ -185,6 +187,26 @@ class Person(XMLObject):
         return pw_validate(self.getPassword(), value)
       return False
 
+    def _setEncodedPassword(self, value, format='default'):
+      password = getattr(aq_base(self), 'password', None)
+      if password is None:
+        password = self.password = PersistentMapping()
+      self.password[format] = value
+
+    security.declarePublic('setPassword')
+    def setEncodedPassword(self, value, format='default'):
+      """
+        Set an already encoded password.
+      """
+      if not _checkPermission(Permissions.SetOwnPassword, self):
+        raise AccessControl_Unauthorized('setEncodedPassword')
+      self._setEncodedPassword(value, format=format)
+      self.reindexObject()
+
+    def _setPassword(self, value):
+      self.password = PersistentMapping()
+      self._setEncodedPassword(pw_encrypt(value))
+
     security.declarePublic('setPassword')
     def setPassword(self, value) :
       """
@@ -193,8 +215,39 @@ class Person(XMLObject):
       if value is not None:
         if not _checkPermission(Permissions.SetOwnPassword, self):
           raise AccessControl_Unauthorized('setPassword')
-        self._setPassword(pw_encrypt(value))
+        self._setPassword(value)
         self.reindexObject()
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'getPassword')
+    def getPassword(self, *args, **kw):
+      """
+        Retrieve password in desired format.
+
+        getPassword([default], [format='default'])
+
+        default (anything)
+          Value to return if no passord is set on context.
+          Default: no default, raises AttributeError if property is not set.
+        format (string)
+          String defining the format in which the password is expected.
+          If passowrd is not available in that format, KeyError will be
+          raised.
+          Default: 'default'
+      """
+      password = getattr(aq_base(self), 'password', *args)
+      format = kw.get('format', 'default')
+      try:
+        # Backward compatibility: if it's not a PersistentMapping instance,
+        # assume it's a monovalued string, which corresponds to default
+        # password encoding.
+        if isinstance(password, PersistentMapping):
+          password = password[format]
+        else:
+          if format != 'default':
+            raise KeyError
+      except KeyError:
+        raise KeyError, 'Password is not available in %r format.' % (format, )
+      return password
 
     # Time management
     security.declareProtected(Permissions.AccessContentsInformation, 
