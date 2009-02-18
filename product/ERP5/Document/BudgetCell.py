@@ -76,13 +76,11 @@ class BudgetCell(Predicate, MetaNode):
       Return a calculated title.
       """
       script = self._getTypeBasedMethod('asTitle')
-      try:
-        title = script()
-      except UnboundLocalError:
-        raise UnboundLocalError,\
+      if script is not None:
+        return script()
+      raise UnboundLocalError,\
               "Did not find title script for portal type: %r" %\
               self.getPortalType()
-      return title
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventory')
     def getCurrentInventory(self, **kw):
@@ -108,13 +106,11 @@ class BudgetCell(Predicate, MetaNode):
       Return consumed budget.
       """
       script = self._getTypeBasedMethod('getConsumedBudget')
-      try:
-        result = script(src__=src__)
-      except UnboundLocalError:
-        raise UnboundLocalError,\
+      if script is not None:
+        return script(src__=src__)
+      raise UnboundLocalError,\
               "Did not find consumed budget script for portal type: %r" % \
               self.getPortalType()
-      return result
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableBudget')
     def getAvailableBudget(self):
@@ -129,11 +125,9 @@ class BudgetCell(Predicate, MetaNode):
       Return Engaged budget.
       """
       script = self._getTypeBasedMethod('getEngagedBudget')
-      try:
-        result = script(src__=src__)
-      except UnboundLocalError:
-        raise UnboundLocalError,\
+      if script is not None:
+        return script(src__=src__)
+      raise UnboundLocalError,\
               "Did not find engaged budget script for portal type: %r" % \
               self.getPortalType()
-      return result
 
