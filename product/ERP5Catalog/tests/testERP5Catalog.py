@@ -49,6 +49,36 @@ try:
 except ImportError:
   pass
 
+from OFS.ObjectManager import ObjectManager
+from random import randint
+
+class IndexableDocument(ObjectManager):
+  def getUid(self):
+    uid = getattr(self, 'uid', None)
+    if uid is None:
+      self.uid = uid = randint(1, 100) + 100000
+    return uid
+
+  def __getattr__(self, name):
+    # Case for all "is..." magic properties (isMovement, ...)
+    if name.startswith('is'):
+      return 0
+    raise AttributeError, name
+
+  def getPath(self):
+    return '' # Whatever
+
+  def getRelativeUrl(self):
+    return '' # Whatever
+
+class FooDocument(IndexableDocument):
+  def getReference(self):
+    return 'foo'
+
+class BarDocument(IndexableDocument):
+  # Does not define any getReference method.
+  pass
+
 class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
   """
     Tests for ERP5 Catalog.
@@ -3728,6 +3758,54 @@ VALUES
     user = uf.getUserById(reference).__of__(uf)
     newSecurityManager(None, user)
     portal.view()
+
+  def test_IndexationContextIndependence(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test that indexation is context-independent'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    # Create some dummy documents
+    def doCatalog(catalog, document):
+      catalog.catalogObjectList([document], check_uid=0)
+      result = catalog(select_expression='reference', uid=document.getUid())
+      self.assertEqual(len(result), 1)
+      return result[0].reference
+
+    portal = self.getPortalObject()
+    portal.foo = FooDocument()
+    portal.bar = BarDocument()
+    # Get instances, wrapping them in acquisition context implicitely.
+    foo = portal.foo
+    bar = portal.bar
+
+    self.assertTrue(getattr(foo, 'getReference', None) is not None)
+    self.assertTrue(getattr(bar, 'getReference', None) is None)
+
+    # Clean indexing
+    portal_catalog = portal.portal_catalog
+    self.assertEqual(doCatalog(portal_catalog, foo), 'foo')
+    self.assertEqual(doCatalog(portal_catalog, bar), None)
+
+    # Index an object wrapped in a "poisoned" acquisition chain
+    bar_on_foo = portal.foo.bar
+    self.assertTrue(getattr(bar_on_foo, 'getReference', None) is not None)
+    self.assertEqual(bar_on_foo.getReference(), 'foo')
+    self.assertEqual(doCatalog(portal_catalog, bar_on_foo), None)
+
+    # Index an object with catalog wrapped in a "poisoned" acquisition chain
+    portal_catalog_on_foo = portal.foo.portal_catalog
+    self.assertTrue(getattr(portal_catalog_on_foo, 'getReference', None) is not None)
+    self.assertEqual(portal_catalog_on_foo.getReference(), 'foo')
+    self.assertEqual(doCatalog(portal_catalog_on_foo, foo), 'foo')
+    self.assertEqual(doCatalog(portal_catalog_on_foo, bar), None)
+
+    # Poison everything
+    self.assertEqual(doCatalog(portal_catalog_on_foo, bar_on_foo), None)
+
+    delattr(portal, 'foo')
+    delattr(portal, 'bar')
 
 def test_suite():
   suite = unittest.TestSuite()
