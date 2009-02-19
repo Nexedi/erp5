@@ -36,7 +36,6 @@ def addERP5RemoteUserManager(dispatcher, id, title=None, REQUEST=None):
     """ Add a ERP5UserManager to a Pluggable Auth Service. """
 
     eum = ERP5RemoteUserManager(id, title)
-    print eum
     dispatcher._setObject(eum.getId(), eum)
 
     if REQUEST is not None:
@@ -103,7 +102,6 @@ class ERP5RemoteUserManager(ERP5UserManager):
               portal = self.getPortalObject() 
               is_authenticated = int(portal.WizardTool_authenticateCredentials(login , password))
               if is_authenticated:
-                print is_authenticated
                 return login, login
             finally:
               setSecurityManager(sm)
