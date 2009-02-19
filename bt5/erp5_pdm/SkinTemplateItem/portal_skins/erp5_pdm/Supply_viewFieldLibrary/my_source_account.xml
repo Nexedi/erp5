@@ -277,7 +277,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Base_checkPermission(\'account_module\', \'Access Content Information\')</string> </value>
+            <value> <string>python: here.Base_checkPermission(\'account_module\', \'Access contents information\')</string> </value>
         </item>
       </dictionary>
     </pickle>
