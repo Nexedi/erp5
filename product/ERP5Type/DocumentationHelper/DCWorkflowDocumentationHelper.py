@@ -93,7 +93,7 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
             for role in getRoleList(self.getDocumentedObject())]
 
   def getStateUriList(self):
-    return ['%s/states#%s' % (self.uri, state)
+    return ['%s/states/%s' % (self.uri, state)
             for state in sorted(self.getDocumentedObject().states.objectIds())]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getStateItemList')
@@ -109,56 +109,17 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
       item_list.append(helper)
     return item_list
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTransitionIdList')
-  def getTransitionIdList(self):
-    """
-    """
-    transition_list = []
-    transitions = getattr(self.getDocumentedObject(), 'transitions', None)
-    if transitions is not None:
-      for transition in transitions.objectValues():
-        transition_list.append(transition.getId())
-    return transition_list
+  def getTransitionUriList(self):
+    return ['%s/transitions/%s' % (self.uri, transition)
+            for transition
+             in sorted(self.getDocumentedObject().transitions.objectIds())]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTransitionItemList')
-  def getTransitionItemList(self):
+  def getTransitionItemList(self, **kw):
     """
     """
-    transition_list = []
-    trigger_type_list = ['Automatic','Initiated by user action','Initiated by WorkflowMethod']
-    transitions = getattr(self.getDocumentedObject(), 'transitions', None)
-    if transitions is not None:
-      for transition in  self.getDocumentedObject().transitions.objectValues():
-        guard_roles = ""
-        guard = dir(transition.guard)
-        if hasattr(transition.guard, '__dict__'):
-          if 'roles' in transition.guard.__dict__.keys():
-            guard_roles = ', '.join(role for role in transition.guard.__dict__['roles'])
-        transition_list.append((transition.getId(),
-                                getattr(transition, "title", ""),
-                                trigger_type_list[transition.trigger_type],
-                                getattr(transition, "description", ""),
-                                guard_roles
-                              ))
-    return transition_list
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTransitionUriList')
-  def getTransitionUriList(self):
-    """
-    """
-    transition_id_list = self.getTransitionIdList()
-    return map(lambda x: ('%s/transitions/%s' % (self.uri, x)), transition_id_list)
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTransitionURIList')
-  def getTransitionURIList(self):
-    """
-    """
-    transition_item_list = self.getTransitionItemList()
-    klass = self.getDocumentedObject().__class__
-    class_name = klass.__name__
-    module = klass.__module__
-    uri_prefix = '%s.%s.' % (module, class_name)
-    return map(lambda x: ('%s%s' % (uri_prefix, x[0]), x[1], x[2], x[3], x[4]), transition_item_list)
+    return [self.getDocumentationHelper('DCWorkflowTransitionDocumentationHelper', uri)
+            for uri in self.getTransitionUriList()]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getVariableIdList')
   def getVariableIdList(self):

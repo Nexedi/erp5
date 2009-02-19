@@ -45,6 +45,14 @@ class DCWorkflowTransitionDocumentationHelper(DocumentationHelper):
     """
     return "Workflow Transition"
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTitle')
+  def getTitle(self):
+    """
+    Returns the title of the documentation helper
+    """
+    return DocumentationHelper.getTitle(self) \
+        or self.getDocumentedObject().actbox_name
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getNewStateId')
   def getNewStateId(self):
     """
@@ -75,24 +83,31 @@ class DCWorkflowTransitionDocumentationHelper(DocumentationHelper):
     """
     return getattr(self.getDocumentedObject(), "after_script_name", '')
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getRoleColumnList')
+  def getRoleColumnList(self):
+    """
+    """
+    return self.getDocumentationHelper('DCWorkflowDocumentationHelper',
+                                       self.uri.rsplit('/',2)[0]) \
+               .getRoleColumnList()
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableStateIds')
-  def getAvailableStateIds(self):
+  def getStateItemList(self, **kw):
     """
     Returns available states in the workflow
     """
-    return self.getDocumentedObject().getAvailableStateIds()
+    workflow_uri, transitions, transition_id = self.uri.rsplit('/',2)
+    helper = self.getDocumentationHelper('DCWorkflowDocumentationHelper', workflow_uri)
+    return [state for state in helper.getStateItemList(**kw)
+                  if transition_id in state.getDocumentedObject().transitions]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getGuardRoles')
   def getGuardRoles(self):
     """
     Returns roles to pass this transition
     """
-    role_list = ()
-    if hasattr(self.getDocumentedObject(),'guard'):
-      dir(self.getDocumentedObject().guard)
-      if hasattr(self.getDocumentedObject().guard, '__dict__'):
-        if 'roles' in self.getDocumentedObject().guard.__dict__.keys():
-          role_list = self.getDocumentedObject().guard.__dict__['roles']
-    return ', '.join(role for role in role_list)
+    guard = getattr(self.getDocumentedObject(), 'guard', None)
+    if guard is not None:
+      return ', '.join(guard.roles)
 
 InitializeClass(DCWorkflowTransitionDocumentationHelper)

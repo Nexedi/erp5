@@ -46,12 +46,15 @@ class DCWorkflowStateDocumentationHelper(DocumentationHelper):
     """
     return "Workflow State"
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTransitionList')
-  def getTransitionList(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTransitionItemList')
+  def getTransitionItemList(self, **kw):
     """
-    Returns list of possible transitions from this state
     """
-    return self.getDocumentedObject().transitions
+    state = self.getDocumentedObject()
+    base_uri = '/'.join(state.getPhysicalPath()[:-2] + ('transitions', ''))
+    return [self.getDocumentationHelper('DCWorkflowTransitionDocumentationHelper',
+                                        base_uri + id)
+            for id in state.transitions]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getRoleList')
   def getRoleList(self):
