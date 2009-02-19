@@ -31,8 +31,18 @@
 
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
 import sys, Permissions
+
+from AccessControl.Permissions import manage_users as ManageUsers
+from Products.PluggableAuthService.PluggableAuthService import registerMultiPlugin
+from Products.PluggableAuthService.permissions import ManageGroups
+from Products.ERP5Wizard.PAS.ERP5RemoteUserManager import \
+       ERP5RemoteUserManager, manage_addERP5RemoteUserManagerForm, addERP5RemoteUserManager
+
 this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals(this_module, globals(), permissions_module=Permissions)
+
+
+registerMultiPlugin(ERP5RemoteUserManager.meta_type)
 
 # Finish installation
 def initialize(context):
@@ -51,3 +61,13 @@ def initialize(context):
                     portal_tools=portal_tools,
                     content_constructors=content_constructors,
                     content_classes=content_classes)
+
+  # register ERP5Security plugin for Wizard
+  context.registerClass( ERP5RemoteUserManager
+                         , permission=ManageUsers
+                         , constructors=(
+                            manage_addERP5RemoteUserManagerForm,
+                            addERP5RemoteUserManager, )
+                         , visibility=None
+                         , icon='dtml/remote_user_manager_plugin.gif'
+                         )  
