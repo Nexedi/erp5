@@ -565,6 +565,13 @@ class ProxyField(ZMIField):
       result = ZMIField._get_user_input_value(self, key, REQUEST)
     return result
 
+  security.declareProtected('Access contents information', 'get_orig_value')
+  def get_orig_value(self, id):
+    """Get value for id; don't do any override calculation.
+    """
+    if id not in self.widget.property_names and self.is_delegated(id):
+      return self.getTemplateField().get_orig_value(id)
+    return ZMIField.get_orig_value(self, id)
 
   #
   # Performance improvement
