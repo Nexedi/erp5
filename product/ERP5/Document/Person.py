@@ -193,7 +193,7 @@ class Person(XMLObject):
         password = self.password = PersistentMapping()
       self.password[format] = value
 
-    security.declarePublic('setPassword')
+    security.declarePublic('setEncodedPassword')
     def setEncodedPassword(self, value, format='default'):
       """
         Set an already encoded password.
