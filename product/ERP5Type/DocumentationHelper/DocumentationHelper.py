@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from urllib import quote
 from Acquisition import Implicit, aq_base
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
@@ -117,6 +118,13 @@ class DocumentationHelper(Implicit):
   # Methods to override
   def __init__(self, uri):
     self.uri = uri
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getViewUrl')
+  def getViewUrl(self, **kw):
+    """
+    """
+    return 'DocumentationHelper_viewDocumentationHelper?uri=%s&class_name=%s' \
+           % (quote(self.uri), self.__class__.__name__)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getId')
   def getId(self):

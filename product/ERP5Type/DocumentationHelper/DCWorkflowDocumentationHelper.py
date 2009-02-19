@@ -32,26 +32,15 @@ from DocumentationHelper import DocumentationHelper
 from Products.ERP5Type import Permissions
 from Products.DCWorkflowGraph.DCWorkflowGraph import getGraph
 
-def getStatePermissionsOfRole(state, role):
-  """
-  Returns list of permissions for a given role with AVMC format above
-    A = Access contents information
-    V = View
-    M = Modify Portal Content
-    C = Add Portal Content
-  """
-  permissions = ""
-  permission_roles = state.permission_roles
-  if permission_roles:
-    if role in permission_roles.get('Access contents information', ()):
-      permissions += "A"
-    if role in permission_roles.get('View', ()):
-      permissions += "V"
-    if role in permission_roles.get('Modify portal content', ()):
-      permissions += "M"
-    if role in permission_roles.get('Add portal content', ()):
-      permissions += "C"
-  return permissions
+
+def getRoleList(workflow):
+  role_set = set()
+  for state in workflow.states.objectValues():
+    if state.permission_roles:
+      for role_list in state.permission_roles.itervalues():
+        role_set.update(role_list)
+  return sorted(role_set)
+
 
 class DCWorkflowDocumentationHelper(DocumentationHelper):
   """
@@ -97,55 +86,28 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
     return "DC Workflow"
 
-  # Specific methods
-  security.declareProtected(Permissions.AccessContentsInformation, 'getStateIdList')
-  def getStateIdList(self):
-    """
-    """
-    state_list = []
-    states = getattr(self.getDocumentedObject(), 'states', None)
-    if states is not None:
-      for state in states.objectValues():
-        state_list.append(state.getId())
-    return state_list
+  security.declareProtected(Permissions.AccessContentsInformation, 'getRoleColumnList')
+  def getRoleColumnList(self):
+    """Return the list of pertinent columns for permissions on states."""
+    return [(role.lower().replace(' ', '_') + '_permissions', role)
+            for role in getRoleList(self.getDocumentedObject())]
+
+  def getStateUriList(self):
+    return ['%s/states#%s' % (self.uri, state)
+            for state in sorted(self.getDocumentedObject().states.objectIds())]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getStateItemList')
-  def getStateItemList(self):
+  def getStateItemList(self, **kw):
     """
     """
-    state_list = []
-    states = getattr(self.getDocumentedObject(), 'states', None)
-    if states is not None:
-      for state in states.objectValues():
-        state_list.append((getattr(state, "id", ""),
-                           getattr(state, "title", ""),
-                           getStatePermissionsOfRole(state, 'Owner'),
-                           getStatePermissionsOfRole(state, 'Assignor'),
-                           getStatePermissionsOfRole(state, 'Assignee'),
-                           getStatePermissionsOfRole(state, 'Associate'),
-                           getStatePermissionsOfRole(state, 'Author'),
-                           getStatePermissionsOfRole(state, 'Auditor')
-                         ))
-    return state_list
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getStateUriList')
-  def getStateUriList(self):
-    """
-    """
-    state_id_list = self.getStateIdList()
-    return map(lambda x: ('%s/states/%s' % (self.uri, x)), state_id_list)
-
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getStateURIList')
-  def getStateURIList(self):
-    """
-    """
-    state_item_list = self.getStateItemList()
-    klass = self.getDocumentedObject().__class__
-    class_name = klass.__name__
-    module = klass.__module__
-    uri_prefix = '%s.%s.' % (module, class_name)
-    return map(lambda x: ('%s%s' % (uri_prefix, x[0]), x[1], x[2], x[3], x[4], x[5], x[6], x[7]), state_item_list)
+    item_list = []
+    role_column_list = self.getRoleColumnList()
+    for uri in self.getStateUriList():
+      helper = self.getDocumentationHelper('DCWorkflowStateDocumentationHelper', uri)
+      for column_id, role in role_column_list:
+        setattr(helper, column_id, helper.getPermissionsOfRole(role))
+      item_list.append(helper)
+    return item_list
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTransitionIdList')
   def getTransitionIdList(self):
@@ -278,7 +240,6 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
         worklist_list.append((wl.__name__, title, wl.__dict__["description"],guard_roles))
     return worklist_list
 
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getWorklistURIList')
   def getWorklistURIList(self):
     """
@@ -321,7 +282,6 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
                            ))
     return script_list
 
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getScriptURIList')
   def getScriptURIList(self):
     """
@@ -347,12 +307,12 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
     ""
 
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getGraphImageData')
   def getGraphImageData(self, format='png'):
     """
       Returns the graphic representation of the workflow as a PNG file
     """
     return getGraph(self, wf_id=getattr(self.getDocumentedObject(), "__name__", ''), format=format)
+
 
 InitializeClass(DCWorkflowDocumentationHelper)
