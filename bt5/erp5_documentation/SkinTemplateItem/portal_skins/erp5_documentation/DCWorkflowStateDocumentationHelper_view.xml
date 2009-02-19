@@ -100,12 +100,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_owner_permissions</string>
-                        <string>my_assignor_permissions</string>
-                        <string>my_assignee_permissions</string>
-                        <string>my_associate_permissions</string>
-                        <string>my_author_permissions</string>
-                        <string>my_auditor_permissions</string>
+                        <string>my_permissions</string>
                       </list>
                     </value>
                 </item>
