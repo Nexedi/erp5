@@ -62,7 +62,7 @@ class TestOrderMixin:
 
   def login(self, quiet=0, run=1):
     uf = self.getPortal().acl_users
-    uf._doAddUser('rc', '', ['Manager', 'Member'], [])
+    uf._doAddUser('rc', '', ['Manager', 'Member', 'Assignee'], [])
     user = uf.getUserById('rc').__of__(uf)
     newSecurityManager(None, user)
 
