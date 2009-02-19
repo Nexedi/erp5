@@ -96,7 +96,9 @@
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
               </dictionary>
             </value>
@@ -110,23 +112,23 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
+                          <string>getId</string>
                           <string>Id</string>
                         </tuple>
                         <tuple>
-                          <string>title</string>
+                          <string>getTitle</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>trigger_type</string>
+                          <string>getTriggerType</string>
                           <string>Trigger Type</string>
                         </tuple>
                         <tuple>
-                          <string>description</string>
+                          <string>getDescription</string>
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>role</string>
+                          <string>getGuardRoles</string>
                           <string>Role(s)</string>
                         </tuple>
                       </list>
@@ -134,7 +136,7 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -147,7 +149,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -165,28 +167,7 @@
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>DCWorkflowDocumentationHelper_getWorkflowTransitionUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>DCWorkflowDocumentationHelper_getWorkflowTransitionUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>trigger_type</string>
-                          <string>DCWorkflowDocumentationHelper_getWorkflowTransitionUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string>DCWorkflowDocumentationHelper_getWorkflowTransitionUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>role</string>
-                          <string>DCWorkflowDocumentationHelper_getWorkflowTransitionUrl</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -206,12 +187,28 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.DCWorkflowDocumentationHelper_getWorkflowTransitionList() != []</string> </value>
+            <value> <string>python: field.get_value(\'list_method\')()</string> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [(x, \'getViewUrl\') for x,y in field.get_value(\'columns\')]</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <tuple>
         <global name="Method" module="Products.Formulator.MethodField"/>
@@ -222,7 +219,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>DCWorkflowDocumentationHelper_getWorkflowTransitionList</string> </value>
+            <value> <string>getTransitionItemList</string> </value>
         </item>
       </dictionary>
     </pickle>

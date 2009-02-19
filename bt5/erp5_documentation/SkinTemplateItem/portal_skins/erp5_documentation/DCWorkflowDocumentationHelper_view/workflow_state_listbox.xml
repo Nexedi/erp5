@@ -126,7 +126,7 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -193,7 +193,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/getStateItemList</string> </value>
+            <value> <string>python: field.get_value(\'list_method\')()</string> </value>
         </item>
       </dictionary>
     </pickle>
