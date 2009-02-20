@@ -351,6 +351,10 @@
                           <string>Delivery Line Title</string>
                         </tuple>
                         <tuple>
+                          <string>object_portal_type</string>
+                          <string>Delivery Line Type</string>
+                        </tuple>
+                        <tuple>
                           <string>message</string>
                           <string>Description</string>
                         </tuple>
@@ -522,6 +526,12 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Line Level Divergences</string> </value>
+                </item>
+                <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>

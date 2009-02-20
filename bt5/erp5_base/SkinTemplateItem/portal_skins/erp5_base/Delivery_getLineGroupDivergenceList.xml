@@ -76,6 +76,7 @@ for divergence in divergence_list:\n
   object = portal_object.restrictedTraverse(object_relative_url)\n
   o = newTempBase(object.getParentValue(), object.getId(), uid=uid,\n
                   message=str(divergence.getTranslatedMessage()),\n
+                  object_portal_type=object.getTranslatedPortalType(),\n
                   object_title=object.getTranslatedTitle(),\n
                   prevision_title=prevision_title,\n
                   decision_title=decision_title,\n
