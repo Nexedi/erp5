@@ -117,6 +117,8 @@ for line in accounting_transaction_line_value_list:\n
 \n
 changed_lines = []\n
 for (node, section, mirror_section), line_info_list in lines_per_node.items():\n
+  if node is None:\n
+    continue\n
   total_price = sum([l[\'total_price\'] for l in line_info_list])\n
   # get the currency rounding for this section\n
   default_currency = None\n
