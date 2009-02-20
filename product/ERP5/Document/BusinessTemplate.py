@@ -1479,7 +1479,8 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
         else:
           self._objects[portal_type] = [workflow,]
       elif not self.is_bt_for_diff:
-        raise NotFound, 'portal type %s not found in workflow chain'\
+        raise NotFound, 'No workflow chain found for portal type %s. This '\
+                        'is probably a sign of a missing dependancy.'\
                                                     % portal_type
 
   # Function to generate XML Code Manually
