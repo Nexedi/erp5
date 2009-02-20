@@ -2364,6 +2364,9 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
       bta.addObject(obj=xml_data, name=name, path=root_path)
 
   def _importFile(self, file_name, file):
+    if not file_name.endswith('.xml'):
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
     type_roles_list = []
     xml = parse(file)
     xml_type_roles_list = xml.getElementsByTagName('role')
@@ -2627,6 +2630,9 @@ class ModuleTemplateItem(BaseTemplateItem):
             module.manage_permission(name, roles=role_list, acquire=acquire)
 
   def _importFile(self, file_name, file):
+    if not file_name.endswith('.xml'):
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
     dict = {}
     xml = parse(file)
     for id in ('portal_type', 'id', 'title', 'permission_list'):
@@ -2945,6 +2951,9 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
       self._objects[self.__class__.__name__+'/'+'result_key_list'] = key_list
 
   def _importFile(self, file_name, file):
+    if not file_name.endswith('.xml'):
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
     list = []
     xml = parse(file)
     key_list = xml.getElementsByTagName('key')
@@ -3036,6 +3045,9 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
       self._objects[self.__class__.__name__+'/'+'related_key_list'] = key_list
 
   def _importFile(self, file_name, file):
+    if not file_name.endswith('.xml'):
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
     list = []
     xml = parse(file)
     key_list = xml.getElementsByTagName('key')
@@ -3130,6 +3142,9 @@ class CatalogResultTableTemplateItem(BaseTemplateItem):
       self._objects[self.__class__.__name__+'/'+'result_table_list'] = key_list
 
   def _importFile(self, file_name, file):
+    if not file_name.endswith('.xml'):
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
     list = []
     xml = parse(file)
     key_list = xml.getElementsByTagName('key')
@@ -3222,6 +3237,9 @@ class CatalogKeywordKeyTemplateItem(BaseTemplateItem):
       self._objects[self.__class__.__name__+'/'+'keyword_key_list'] = key_list
 
   def _importFile(self, file_name, file):
+    if not file_name.endswith('.xml'):
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
     list = []
     xml = parse(file)
     key_list = xml.getElementsByTagName('key')
@@ -3314,6 +3332,9 @@ class CatalogDateTimeKeyTemplateItem(BaseTemplateItem):
       self._objects[self.__class__.__name__+'/'+'datetime_key_list'] = key_list
 
   def _importFile(self, file_name, file):
+    if not file_name.endswith('.xml'):
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
     list = []
     xml = parse(file)
     key_list = xml.getElementsByTagName('key')
@@ -3406,6 +3427,9 @@ class CatalogFullTextKeyTemplateItem(BaseTemplateItem):
       self._objects[self.__class__.__name__+'/'+'full_text_key_list'] = key_list
 
   def _importFile(self, file_name, file):
+    if not file_name.endswith('.xml'):
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
     list = []
     xml = parse(file)
     key_list = xml.getElementsByTagName('key')
@@ -3499,6 +3523,9 @@ class CatalogRequestKeyTemplateItem(BaseTemplateItem):
       self._objects[self.__class__.__name__+'/'+'request_key_list'] = key_list
 
   def _importFile(self, file_name, file):
+    if not file_name.endswith('.xml'):
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
     list = []
     xml = parse(file)
     key_list = xml.getElementsByTagName('key')
@@ -3591,6 +3618,9 @@ class CatalogMultivalueKeyTemplateItem(BaseTemplateItem):
       self._objects[self.__class__.__name__+'/'+'multivalue_key_list'] = key_list
 
   def _importFile(self, file_name, file):
+    if not file_name.endswith('.xml'):
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
     list = []
     xml = parse(file)
     key_list = xml.getElementsByTagName('key')
@@ -3682,6 +3712,9 @@ class CatalogTopicKeyTemplateItem(BaseTemplateItem):
       self._objects[self.__class__.__name__+'/'+'topic_key_list'] = key_list
 
   def _importFile(self, file_name, file):
+    if not file_name.endswith('.xml'):
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
     list = []
     xml = parse(file)
     key_list = xml.getElementsByTagName('key')
@@ -3773,6 +3806,9 @@ class CatalogScriptableKeyTemplateItem(BaseTemplateItem):
       self._objects[self.__class__.__name__+'/'+'scriptable_key_list'] = key_list
 
   def _importFile(self, file_name, file):
+    if not file_name.endswith('.xml'):
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
     list = []
     xml = parse(file)
     key_list = xml.getElementsByTagName('key')
@@ -3866,6 +3902,9 @@ class CatalogRoleKeyTemplateItem(BaseTemplateItem):
       self._objects[self.__class__.__name__+'/'+'role_key_list'] = key_list
 
   def _importFile(self, file_name, file):
+    if not file_name.endswith('.xml'):
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
     list = []
     xml = parse(file)
     key_list = xml.getElementsByTagName('key')
@@ -3959,6 +3998,9 @@ class CatalogLocalRoleKeyTemplateItem(BaseTemplateItem):
       self._objects[self.__class__.__name__+'/'+'local_role_key_list'] = key_list
 
   def _importFile(self, file_name, file):
+    if not file_name.endswith('.xml'):
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
     list = []
     xml = parse(file)
     key_list = xml.getElementsByTagName('key')
@@ -4185,6 +4227,9 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       bta.addObject(obj=xml_data, name=id, path=path)
 
   def _importFile(self, file_name, file):
+    if not file_name.endswith('.xml'):
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
     xml = parse(file)
     # local roles
     local_roles = xml.getElementsByTagName('local_roles')[0]
