@@ -1,3 +1,6 @@
+2009-02-20 yusei
+* Add a utility script to associate files in skin folder to cache manager.
+
 2008-12-26 kazuhiko
 * add a listbox to see duplicate entries in Glossary view.
 * add Portal Type -> Glossary importer.

@@ -1,3 +1,6 @@
+2009-02-20 yusei
+* Add a utility script to associate files in skin folder to cache manager.
+
 2009-01-14 yusei
 * Fixed a wrong link to activity tool under virtual host environment.
 
