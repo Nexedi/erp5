@@ -1,3 +1,6 @@
+2009-02-21 yo
+* Add accounts required for accounting settlements (i.e. balance account and profit and loss account).
+
 2009-01-27 Kazuhiko
 * reimplement based on typical Japanese accounting plan.
 
