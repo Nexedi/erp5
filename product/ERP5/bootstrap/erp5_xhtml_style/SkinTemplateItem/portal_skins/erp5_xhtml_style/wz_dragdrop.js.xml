@@ -10,6 +10,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>wz_dragdrop.js</string> </value>
         </item>
@@ -1766,11 +1770,11 @@ function hideGrips()\n
 \n
 \n
 /*                          (lt) \n
-          ___________\xc3\x82\xc2\xa4____________\n
+          ___________Â¤____________\n
          |                                             |\n
-(lb)\xc3\x82\xc2\xa4|                                              |\xc3\x82\xc2\xa4 (rt)\n
+(lb)Â¤|                                              |Â¤ (rt)\n
          |__________________________|\n
-                           \xc3\x82\xc2\xa4 (rb)\n
+                           Â¤ (rb)\n
 */\n
 \n
 function moveGripsToCorners()\n

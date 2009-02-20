@@ -19,7 +19,7 @@
         </item>
         <item>
             <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>FckHTTPCache</string> </value>
+            <value> <string>http_cache</string> </value>
         </item>
         <item>
             <key> <string>_Change_cache_settings_Permission</string> </key>

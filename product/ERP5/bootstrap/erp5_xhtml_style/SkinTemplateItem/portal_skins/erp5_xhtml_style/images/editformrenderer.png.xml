@@ -10,6 +10,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
             <key> <string>_EtagSupport__etag</string> </key>
             <value> <string>ts28410696.43</string> </value>
         </item>

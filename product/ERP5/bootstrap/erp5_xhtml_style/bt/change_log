@@ -1,4 +1,7 @@
 2009-02-20 yusei
+* Move ERP5Site_setSkinCache to erp5_forge and set http_cache as default cache manager to all image/css/js files in skin folders.
+
+2009-02-20 yusei
 * Add a utility script to associate files in skin folder to cache manager.
 
 2009-01-14 yusei
