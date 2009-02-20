@@ -129,20 +129,22 @@ class CategoryBudgetVariation(BudgetVariation):
                           'preferred_category_child_item_list_method_id',
                           'getCategoryChildCompactLogicalPathItemList')
     
-    # If this category is defined on budget level, only show subcategories.
+    item_list_method_parameter_dict = dict(
+          base=1,
+          local_sort_id=('int_index', 'translated_title'),
+          checked_permission='View')
+
+    # If this category is defined on budget level, starts at this level
     budget = budget_line.getParentValue()
     if base_category in budget.getVariationBaseCategoryList():
       for budget_variation_category in budget.getVariationCategoryList():
         if budget_variation_category.split('/')[0] == base_category:
           base_category = budget_variation_category
+          item_list_method_parameter_dict['is_self_excluded'] = False
           break
       
     return getattr(portal.portal_categories.unrestrictedTraverse(base_category),
-                        item_list_method)(
-                                base=1,
-                                local_sort_id=('int_index',
-                                               'translated_title'),
-                                checked_permission='View')
+                        item_list_method)(**item_list_method_parameter_dict)
 
   def initializeBudgetLine(self, budget_line):
     """Initialize a budget line
