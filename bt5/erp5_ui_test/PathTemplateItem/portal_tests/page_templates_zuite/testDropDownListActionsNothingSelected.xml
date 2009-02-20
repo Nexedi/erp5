@@ -59,7 +59,7 @@ Selected</td></tr>\n
 </tr>\n
 <!-- when clicking on the action button of a drop down when nothing is selected\n
 shouldn\'t do anything. -->\n
-<tal:block tal:repeat="button_title python:[\'Select Favorite\',\n
+<tal:block tal:repeat="button_title python:[\'Select Favourite\',\n
                                             \'Select Module\',\n
                                             \'Select Language\',\n
                                             \'Jump\',\n
