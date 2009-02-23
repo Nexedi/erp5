@@ -68,4 +68,4 @@ def initialize(context):
                             addERP5RemoteUserManager, )
                          , visibility=None
                          , icon='dtml/remote_user_manager_plugin.gif'
-                         )  
+                         )

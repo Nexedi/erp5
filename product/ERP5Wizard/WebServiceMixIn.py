@@ -27,28 +27,21 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass, DTMLFile
-from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
-from Products.ERP5Wizard import _dtmldir
-from AccessControl.SecurityManagement import newSecurityManager, \
-                                             getSecurityManager, setSecurityManager
-import zLOG
-from Products.ERP5Type.Cache import CachingMethod
 
-class IntrospectionTool(BaseTool):
-  """
- This tool provides both local and  remote introspection.
-  """
-  id = 'portal_introspections'
-  title = 'Introspection Tool'
 
-  meta_type = 'ERP5 Introspection Tool'
-  portal_type = 'Introspection Tool'
-  allowed_content_types = ('Anonymized Introspection Report', 'User Introspection Report',)
-  
+class WebServiceMixIn:
+  """
+  Do all kinds of web services in all kinds of protocols.
+  """
+
   security = ClassSecurityInfo()
-  security.declareProtected(Permissions.ManagePortal, 'manage_overview')
-  manage_overview = DTMLFile('explainIntrospectionTool', _dtmldir )
 
-InitializeClass(IntrospectionTool)
+  security.declareProtected('connect', Permissions.ManagePortal)
+  def connect(self, url, user=None, password=None, authentication_method=None):
+    """
+    Connect to remote instances
+    of any kind of web service (not only ERP5) with many
+    different kinds of authentication.
+    """
+    pass

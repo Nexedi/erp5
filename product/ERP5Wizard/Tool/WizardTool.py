@@ -47,6 +47,7 @@ from DateTime import DateTime
 from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlugin
 from Products.ERP5Type.Cache import CachingMethod
 from urlparse import urlparse
+from Products.ERP5Wizard.WebServiceMixIn import WebServiceMixIn
 
 # global (RAM) cookie storage
 cookiejar = cookielib.CookieJar()
@@ -169,7 +170,7 @@ _server_to_preference_ids_map = {'client_id': 'preferred_express_client_uid',
                                  'user_id': 'preferred_express_user_id',}
 
 
-class WizardTool(BaseTool):
+class WizardTool(BaseTool, WebServiceMixIn):
   """ WizardTool is able to generate custom business templates. """
 
   id = 'portal_wizard'
