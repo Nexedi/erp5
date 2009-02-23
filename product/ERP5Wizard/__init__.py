@@ -31,7 +31,6 @@
 
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
 import sys, Permissions
-
 from AccessControl.Permissions import manage_users as ManageUsers
 from Products.PluggableAuthService.PluggableAuthService import registerMultiPlugin
 from Products.PluggableAuthService.permissions import ManageGroups
@@ -40,17 +39,16 @@ from Products.ERP5Wizard.PAS.ERP5RemoteUserManager import \
 
 this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals(this_module, globals(), permissions_module=Permissions)
-
-
 registerMultiPlugin(ERP5RemoteUserManager.meta_type)
 
 # Finish installation
 def initialize(context):
   import Document
-  from Tool import WizardTool
+  from Tool import WizardTool, IntrospectionTool
   # Define object classes and tools
   object_classes = ()
-  portal_tools = (WizardTool.WizardTool,)
+  portal_tools = (WizardTool.WizardTool,
+                  IntrospectionTool.IntrospectionTool,)
   content_classes = ()
   content_constructors = ()
   # Do initialization step
