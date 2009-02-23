@@ -59,13 +59,13 @@ class IntrospectionTool(BaseTool, LogMixIn):
       Returns menu items for a given user
     """
     portal = self.getPortalObject()
-    user_name = kw.pop('user_name', None)
+    erp5_user_name = kw.pop('erp5_user_name', None)
     is_portal_manager = portal.portal_membership.checkPermission(Permissions.ManagePortal, \
                                                                  portal)
-    downgrade_authenticated_user = user_name is not None and is_portal_manager
+    downgrade_authenticated_user = erp5_user_name is not None and is_portal_manager
     if downgrade_authenticated_user:
       # downgrade to desired user
-      original_security_manager = _setSuperSecurityManager(self, user_name)
+      original_security_manager = _setSuperSecurityManager(self, erp5_user_name)
 
     # call the method implementing it
     erp5_menu_item_list = self._getTypeBasedMethod('getERP5MenuItemList',
