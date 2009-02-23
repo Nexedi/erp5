@@ -69,7 +69,7 @@ class IntrospectionTool(BaseTool, LogMixIn):
 
     # call the method implementing it
     erp5_menu_item_list = self._getTypeBasedMethod('getERP5MenuItemList',
-                     fallback_script_id='ERP5Site_getERP5MenuItemList')()
+                     fallback_script_id='ERP5Site_getERP5MenuItemList')(**kw)
 
     if downgrade_authenticated_user:
       # restore original Security Manager
