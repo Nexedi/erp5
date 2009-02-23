@@ -30,17 +30,18 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
+from AccessControl.SecurityManagement import setSecurityManager
 from Products.ERP5Wizard import _dtmldir
 from Products.ERP5Wizard.LogMixIn import LogMixIn
-from AccessControl.SecurityManagement import newSecurityManager, \
-                                             getSecurityManager, setSecurityManager
-import zLOG
+from Products.ERP5Wizard.Tool.WizardTool import _setSuperSecurityManager
 from Products.ERP5Type.Cache import CachingMethod
+
 
 class IntrospectionTool(BaseTool, LogMixIn):
   """
- This tool provides both local and  remote introspection.
+  This tool provides both local and  remote introspection.
   """
+  
   id = 'portal_introspections'
   title = 'Introspection Tool'
   meta_type = 'ERP5 Introspection Tool'
@@ -51,5 +52,29 @@ class IntrospectionTool(BaseTool, LogMixIn):
 
   security.declareProtected(Permissions.ManagePortal, 'manage_overview')
   manage_overview = DTMLFile('explainIntrospectionTool', _dtmldir )
+
+  security.declareProtected('getERP5MenuItemList', Permissions.View)
+  def getERP5MenuItemList(self, kw):
+    """
+      Returns menu items for a given user
+    """
+    portal = self.getPortalObject()
+    user_name = kw.pop('user_name', None)
+    is_portal_manager = portal.portal_membership.checkPermission(Permissions.ManagePortal, \
+                                                                 portal)
+    downgrade_authenticated_user = user_name is not None and is_portal_manager
+    if downgrade_authenticated_user:
+      # downgrade to desired user
+      original_security_manager = _setSuperSecurityManager(self, user_name)
+
+    # call the method implementing it
+    erp5_menu_item_list = self._getTypeBasedMethod('getERP5MenuItemList',
+                     fallback_script_id='ERP5Site_getERP5MenuItemList')()
+
+    if downgrade_authenticated_user:
+      # restore original Security Manager
+      setSecurityManager(original_security_manager)
+
+    return erp5_menu_item_list
 
 InitializeClass(IntrospectionTool)
