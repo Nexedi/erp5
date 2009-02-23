@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="StringField" module="Products.Formulator.StandardFields"/>
+        <global name="HyperLinkField" module="Products.ERP5Form.HyperLinkField"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -16,30 +16,13 @@
         <item>
             <key> <string>message_values</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key> <string>external_validator_failed</string> </key>
-                    <value> <string>The input failed the external validator.</string> </value>
-                </item>
-                <item>
-                    <key> <string>required_not_found</string> </key>
-                    <value> <string>Input is required but no input given.</string> </value>
-                </item>
-                <item>
-                    <key> <string>too_long</string> </key>
-                    <value> <string>Too much input was given.</string> </value>
-                </item>
-              </dictionary>
+              <dictionary/>
             </value>
         </item>
         <item>
             <key> <string>overrides</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
                 <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
@@ -53,23 +36,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>external_validator</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -81,27 +52,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
+                    <key> <string>href</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>unicode</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -111,10 +66,6 @@
             <key> <string>tales</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
                 <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
@@ -130,23 +81,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>external_validator</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -158,27 +97,13 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>href</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>unicode</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -188,10 +113,6 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
                 <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
@@ -205,24 +126,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>display_maxwidth</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>external_validator</string> </key>
-                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>extra</string> </key>
@@ -233,28 +142,12 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>href</string> </key>
+                    <value> <string>(tales)</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Destination State</string> </value>
-                </item>
-                <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>unicode</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <int>0</int> </value>
                 </item>
               </dictionary>
             </value>
@@ -273,7 +166,23 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/getNewStateId</string> </value>
+            <value> <string>python: (lambda x: x is not None and "%s (%s)" % (x.getTitle(), x.getId()))(here.getNewState())</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: (lambda x: x is not None and x.getViewUrl())(here.getNewState())</string> </value>
         </item>
       </dictionary>
     </pickle>
