@@ -39,7 +39,7 @@ class WebServiceMixIn:
   security = ClassSecurityInfo()
 
   security.declareProtected('connect', Permissions.ManagePortal)
-  def connect(self, url, user_name=None, password=None, authentication_method=None):
+  def connect(self, url, user_name=None, password=None, transport=None):
     """
     Connect to remote instances
     of any kind of web service (not only ERP5) with many
@@ -47,9 +47,9 @@ class WebServiceMixIn:
     authentication_method: 'xml-rpc' or 'soap'
     """
     # XXX: implement connection caching per zope thread
-    if authentication_method == 'xml-rpc':
+    if transport == 'xml-rpc':
       connection_handler = XMLRPCConnection(url, user_name, password)
-    elif authentication_method == 'soap':
+    elif transport == 'soap':
       connection_handler = SOAPConnection(url, user_name, password)
 
     connection_handler = connection_handler.connect()
