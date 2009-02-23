@@ -39,9 +39,9 @@ from Products.ERP5Type.Cache import CachingMethod
 
 class IntrospectionTool(BaseTool, LogMixIn):
   """
-  This tool provides both local and  remote introspection.
+  This tool provides both local and remote introspection.
   """
-  
+
   id = 'portal_introspections'
   title = 'Introspection Tool'
   meta_type = 'ERP5 Introspection Tool'
