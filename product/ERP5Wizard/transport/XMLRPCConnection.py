@@ -34,18 +34,19 @@ class XMLRPCConnection:
     Holds an XML-RPC connection to a remote XML-RPC server.
   """
 
-  def __init__(self, url, username = None, password = None):
+  def __init__(self, url, user_name = None, password = None):
     self.url = url
-    self._username = username
+    self._user_name = user_name
     self._password = password
 
   def connect(self):
     """Get a handle to a remote connection."""
     url = self.url
-    if self._username is not None and self._password is not None:
+    if self._user_name is not None and self._password is not None:
       # add HTTP Basic Authentication
       schema = urlparse(url)
-      url = '%s://%s:%s@%s%s' %(schema[0], self._username, self._password,
+      url = '%s://%s:%s@%s%s' %(schema[0], self._user_name, self._password,
                                 schema[1], schema[2])
     return xmlrpclib.ServerProxy(url, allow_none=1)
+
 
