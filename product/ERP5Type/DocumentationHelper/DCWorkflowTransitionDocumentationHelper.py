@@ -53,12 +53,14 @@ class DCWorkflowTransitionDocumentationHelper(DocumentationHelper):
     return DocumentationHelper.getTitle(self) \
         or self.getDocumentedObject().actbox_name
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getNewStateId')
-  def getNewStateId(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getNewState')
+  def getNewState(self):
     """
-    Returns the id of the new state for de workflow transition
     """
-    return getattr(self.getDocumentedObject(), "new_state_id", '')
+    new_state_id = self.getDocumentedObject().new_state_id
+    if new_state_id:
+      uri = '%s/states/%s' % (self.uri.rsplit('/',2)[0], new_state_id)
+      return self.getDocumentationHelper('DCWorkflowStateDocumentationHelper', uri)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTriggerType')
   def getTriggerType(self):
