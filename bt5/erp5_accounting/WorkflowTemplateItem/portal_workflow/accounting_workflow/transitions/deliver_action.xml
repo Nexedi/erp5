@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Close the accounting period, can\'t be reopened later, no more transaction can be input on this accounting period</string> </value>
+            <value> <string>Mark transaction that belongs to "closed" accounting periods</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

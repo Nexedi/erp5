@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The Accounting Period is closed. It is no longer possible to add accounting transactions in this period. A balance transaction has been created.</string> </value>
+            <value> <string>Closed State is used for accounting transactions that belong to "closed" accounting periods</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
