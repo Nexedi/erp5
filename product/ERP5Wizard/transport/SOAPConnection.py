@@ -27,7 +27,7 @@
 ##############################################################################
 
 
-class SOAPConnection(self):
+class SOAPConnection:
   """
     Holds a SOAP connection
   """
