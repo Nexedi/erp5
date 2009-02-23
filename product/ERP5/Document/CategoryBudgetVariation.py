@@ -85,10 +85,14 @@ class CategoryBudgetVariation(BudgetVariation):
         continue
       criterion_base_category, category_url = criterion_category.split('/', 1)
       if criterion_base_category == base_category:
+        category_uid = self.getPortalObject().portal_categories\
+                                .getCategoryUid(criterion_category)
         # Different possible inventory axis here
         if axis == 'movement':
-          return {'default_%s_uid' % base_category:
-                    self.getPortalObject().portal_categories.getCategoryUid(criterion_category)}
+          return {'default_%s_uid' % base_category: category_uid}
+        if axis in ('node', 'section', 'payment', 'function', 'project',
+                    'mirror_section', 'mirror_node' ):
+          return {'%s_uid' % axis: category_uid}
         return {axis: criterion_category}
     return dict()
 
