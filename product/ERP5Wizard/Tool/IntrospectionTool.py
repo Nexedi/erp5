@@ -31,23 +31,24 @@ from Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5Wizard import _dtmldir
+from Products.ERP5Wizard.LogMixIn import LogMixIn
 from AccessControl.SecurityManagement import newSecurityManager, \
                                              getSecurityManager, setSecurityManager
 import zLOG
 from Products.ERP5Type.Cache import CachingMethod
 
-class IntrospectionTool(BaseTool):
+class IntrospectionTool(BaseTool, LogMixIn):
   """
  This tool provides both local and  remote introspection.
   """
   id = 'portal_introspections'
   title = 'Introspection Tool'
-
   meta_type = 'ERP5 Introspection Tool'
   portal_type = 'Introspection Tool'
   allowed_content_types = ('Anonymized Introspection Report', 'User Introspection Report',)
-  
+
   security = ClassSecurityInfo()
+
   security.declareProtected(Permissions.ManagePortal, 'manage_overview')
   manage_overview = DTMLFile('explainIntrospectionTool', _dtmldir )
 
