@@ -74,24 +74,21 @@ class CategoryBudgetVariation(BudgetVariation):
   def getInventoryQueryDict(self, budget_cell):
     """ Query dict to pass to simulation query
     """
-    if not self.getInventoryAxis():
+    axis = self.getInventoryAxis()
+    if not axis:
       return dict()
     base_category = self.getProperty('variation_base_category')
     if not base_category:
       return dict()
-    # XXX pass base_category= ...
     for criterion_category in budget_cell.getMembershipCriterionCategoryList():
       if '/' not in criterion_category: # safe ...
         continue
       criterion_base_category, category_url = criterion_category.split('/', 1)
-
-      # Different possible inventory axis here
-      axis = self.getInventoryAxis()
-      if axis == 'movement':
-        return {'default_%s_uid' % base_category:
-                  self.getPortalObject().portal_categories.getCategoryUid(criterion_category)}
-
       if criterion_base_category == base_category:
+        # Different possible inventory axis here
+        if axis == 'movement':
+          return {'default_%s_uid' % base_category:
+                    self.getPortalObject().portal_categories.getCategoryUid(criterion_category)}
         return {axis: criterion_category}
     return dict()
 

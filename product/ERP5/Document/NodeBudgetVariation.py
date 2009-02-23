@@ -99,18 +99,17 @@ class NodeBudgetVariation(BudgetVariation):
   def getInventoryQueryDict(self, budget_cell):
     """ Query dict to pass to simulation query
     """
-    if not self.getInventoryAxis():
+    axis = self.getInventoryAxis()
+    if not axis:
       return dict()
     base_category = self.getProperty('variation_base_category')
     if not base_category:
       return dict()
-    # TODO: pass base_category_list instead of stupidly iterating !
     for criterion_category in budget_cell.getMembershipCriterionCategoryList():
       if '/' not in criterion_category: # safe ...
         continue
       criterion_base_category, node_url = criterion_category.split('/', 1)
       if criterion_base_category == base_category:
-        axis = self.getInventoryAxis()
         if axis == 'movement':
           axis = 'default_%s' % base_category
         axis = '%s_uid' % axis
