@@ -33,6 +33,12 @@ from Products.ERP5Type import Permissions
 from Products.DCWorkflowGraph.DCWorkflowGraph import getGraph
 
 
+permission_code_dict = { 'Access contents information': (0, 'A')
+                       , 'View'                       : (1, 'V')
+                       , 'Modify portal content'      : (2, 'M')
+                       , 'Add portal content'         : (3, 'C')
+                       }
+
 def getRoleList(workflow):
   role_set = set()
   for state in workflow.states.objectValues():
@@ -139,7 +145,7 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     variable_list = []
     variables = getattr(self.getDocumentedObject(), 'variables', None)
     if variables is not None:
-      for variable in  variables.objectValues():
+      for variable in variables.objectValues():
         variable_list.append((variable.getId(),
                               getattr(variable, "title", ""),
                               getattr(variable, "description", "")
@@ -164,11 +170,23 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     variable_id_list = self.getVariableIdList()
     return map(lambda x: ('%s/variables/%s' % (self.uri, x)), variable_id_list)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPermissionList')
-  def getPermissionList(self):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPermissionItemList')
+  def getPermissionItemList(self, **kw):
     """
     """
-    return getattr(self.getDocumentedObject(), "permissions", ())
+    permission_list = []
+    extra_code = 0
+    for permission in sorted(getattr(self.getDocumentedObject(),
+                                     "permissions", ())):
+      permission_code = permission_code_dict.get(permission)
+      if permission_code:
+        permission_code = permission_code[1]
+      else:
+        permission_code = str(extra_code)
+        extra_code += 1
+      permission_list.append(self.asContext(permission=permission,
+                                            code=permission_code))
+    return permission_list
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getWorklistIdList')
   def getWorklistIdList(self):

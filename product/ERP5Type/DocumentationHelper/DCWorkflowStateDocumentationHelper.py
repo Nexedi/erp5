@@ -30,7 +30,7 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from DocumentationHelper import DocumentationHelper
-from DCWorkflowDocumentationHelper import getRoleList
+from DCWorkflowDocumentationHelper import getRoleList, permission_code_dict
 
 class DCWorkflowStateDocumentationHelper(DocumentationHelper):
   """
@@ -62,6 +62,12 @@ class DCWorkflowStateDocumentationHelper(DocumentationHelper):
     """
     return getRoleList(self.getDocumentedObject().getWorkflow())
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getAcquiredPermissions')
+  def getAcquiredPermissions(self):
+    """
+    """
+    return self.getPermissionsOfRole(None)
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getPermissionsList')
   def getPermissionsList(self):
     """
@@ -76,17 +82,25 @@ class DCWorkflowStateDocumentationHelper(DocumentationHelper):
       M = Modify Portal Content
       C = Add Portal Content
     """
-    permissions = ""
-    permission_roles = self.getDocumentedObject().permission_roles
-    if permission_roles:
-      if role in permission_roles.get('Access contents information', ()):
-        permissions += "A"
-      if role in permission_roles.get('View', ()):
-        permissions += "V"
-      if role in permission_roles.get('Modify portal content', ()):
-        permissions += "M"
-      if role in permission_roles.get('Add portal content', ()):
-        permissions += "C"
+    permissions = []
+    state = self.getDocumentedObject()
+    permission_list = getattr(state.getWorkflow(), 'permissions', ())
+    if permission_list:
+      extra_sort = len(permission_code_dict)
+      extra_code = 0
+      for permission in sorted(permission_list):
+        permission_code = permission_code_dict.get(permission)
+        if permission_code is None:
+          permission_code = extra_sort, str(extra_code)
+          extra_code += 1
+        permission_info = state.getPermissionInfo(permission)
+        if role and role in permission_info['roles'] \
+           or not role and permission_info['acquired']:
+          permissions.append(permission_code)
+
+    permissions.sort()
+    permissions = ''.join(y for x,y in permissions)
+
     return permissions
 
 
