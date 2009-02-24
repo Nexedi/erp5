@@ -69,9 +69,7 @@
                     <value>
                       <list>
                         <string>workflow_variable_listbox</string>
-                        <string>workflow_worklist_listbox</string>
                         <string>workflow_script_listbox</string>
-                        <string>workflow_permission_listbox</string>
                       </list>
                     </value>
                 </item>

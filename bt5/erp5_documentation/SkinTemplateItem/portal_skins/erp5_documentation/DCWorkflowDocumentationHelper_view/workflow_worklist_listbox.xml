@@ -168,7 +168,7 @@
                         </tuple>
                         <tuple>
                           <string>role</string>
-                          <string>DCWorkflowDocumentationHelper_getWorkflowTransitionUrl</string>
+                          <string>DCWorkflowDocumentationHelper_getWorkflowWorklistUrl</string>
                         </tuple>
                       </list>
                     </value>

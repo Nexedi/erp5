@@ -121,6 +121,10 @@
                           <string>getTitle</string>
                           <string>Title</string>
                         </tuple>
+                        <tuple>
+                          <string>getAcquiredPermissions</string>
+                          <string>Acquired</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
