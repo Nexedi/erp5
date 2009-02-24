@@ -45,6 +45,8 @@ DEFAULT_CACHE_FACTORY = 'erp5_ui_long'
 
 from zLOG import LOG
 
+NBSP_UTF8 = u'\xA0'.encode('utf-8')
+
 manage_addCategoryForm=DTMLFile('dtml/category_add', globals())
 
 def addCategory( self, id, title='', REQUEST=None ):
@@ -216,8 +218,8 @@ class Category(Folder):
       logical_title_list = []
 
       if path_len >= 2:
-        logical_title_list.append(' ' * 4 * (path_len - 1))
-      
+        logical_title_list.append(NBSP_UTF8 * 4 * (path_len - 1))
+
       logical_title = getattr(self, item_method)()
       if logical_title in [None, '']:
         logical_title = self.getId()
