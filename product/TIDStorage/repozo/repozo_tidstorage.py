@@ -112,7 +112,7 @@ def backup(address, known_tid_storage_identifier_dict, repozo_formated_command, 
   load_count = 2
   while len(to_load):
     if load_count < 1:
-      raise ValueError, 'It was impossible to retrieve all required TIDs. Missing: %s' (to_load, )
+      raise ValueError('It was impossible to retrieve all required TIDs. Missing: %s' % to_load)
     to_load = []
     load_count -= 1
     stored_tid_dict = connection()
