@@ -252,7 +252,7 @@ class Message:
       newSecurityManager(None, user)
     else :
       LOG("CMFActivity", WARNING,
-          "Unable to find user %s in the portal" % user_name)
+          "Unable to find user %r in the portal" % user_name)
       noSecurityManager()
     return user
 
