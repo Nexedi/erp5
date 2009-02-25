@@ -57,6 +57,7 @@ from Products.ERP5Type import Constraint
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from zLOG import LOG, BLATHER, PROBLEM, WARNING
 
+from AccessControl.SecurityManagement import newSecurityManager, getSecurityManager
 
 #####################################################
 # Compatibility - XXX - BAD
