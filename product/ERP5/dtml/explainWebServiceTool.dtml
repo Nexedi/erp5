@@ -1,0 +1,9 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+<h3>Web Service Tool</h3>
+<p>
+Web Service Tool can do all kinds of web services in all kinds of protocols.
+</p>
+
+<dtml-var manage_page_footer>
