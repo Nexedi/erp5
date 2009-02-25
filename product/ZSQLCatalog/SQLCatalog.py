@@ -1812,6 +1812,26 @@ class Catalog(Folder,
         related_key_definition_cache[key] = result
     return result
 
+  @transactional_cache_decorator('SQLCatalog._getgetScriptableKeyDict')
+  def _getgetScriptableKeyDict(self):
+    result = {}
+    for scriptable_key_definition in self.sql_catalog_scriptable_keys:
+      split_scriptable_key_definition = scriptable_key_definition.split('|')
+      if len(split_scriptable_key_definition) != 2:
+        LOG('SQLCatalog', 100, 'Malformed scriptable key definition: %r. Ignored.' % (scriptable_key_definition, ))
+        continue
+      key, script_id = [x.strip() for x in split_scriptable_key_definition]
+      script = getattr(self, script_id, None)
+      if script is None:
+        LOG('SQLCatalog', 100, 'Scriptable key %r script %r is missing.' \
+            ' Skipped.' % (key, script_id))
+      else:
+        result[key] = script
+    return result
+
+  def getScriptableKeyScript(self, key):
+    return self._getgetScriptableKeyDict().get(key)
+
   @profiler_decorator
   def getColumnSearchKey(self, key, search_key_name=None):
     """
@@ -1859,14 +1879,18 @@ class Catalog(Folder,
       From key and value, determine the SearchKey to use and generate a Query
       from it.
     """
-    search_key, related_key_definition = self.getColumnSearchKey(key, search_key_name)
-    if search_key is None:
-      result = None
-    else:
-      if related_key_definition is None:
-        result = search_key.buildQuery(value, logical_operator=logical_operator, comparison_operator=comparison_operator)
+    script = self.getScriptableKeyScript(key)
+    if script is None:
+      search_key, related_key_definition = self.getColumnSearchKey(key, search_key_name)
+      if search_key is None:
+        result = None
       else:
-        result = search_key.buildQuery(search_value=value, sql_catalog=self, search_key_name=search_key_name, related_key_definition=related_key_definition, logical_operator=logical_operator, comparison_operator=comparison_operator)
+        if related_key_definition is None:
+          result = search_key.buildQuery(value, logical_operator=logical_operator, comparison_operator=comparison_operator)
+        else:
+          result = search_key.buildQuery(search_value=value, sql_catalog=self, search_key_name=search_key_name, related_key_definition=related_key_definition, logical_operator=logical_operator, comparison_operator=comparison_operator)
+    else:
+      result = script(value)
     return result
 
   @profiler_decorator
