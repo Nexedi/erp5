@@ -67,6 +67,8 @@ class AccountingTransaction(Delivery):
                       , PropertySheet.PaymentCondition
                       )
     
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'hasSourceSectionAccounting')
     def hasSourceSectionAccounting(self):
       """Return true if we should take into account accounting for source
       section.
@@ -82,6 +84,8 @@ class AccountingTransaction(Delivery):
           return section.isMemberOf(preferred_section_category)
       return 0
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'hasDestinationSectionAccounting')
     def hasDestinationSectionAccounting(self):
       """Return true if we should take into account accounting for destination
       section.
@@ -97,6 +101,8 @@ class AccountingTransaction(Delivery):
           return section.isMemberOf(preferred_section_category)
       return 0
     
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'SearchableText')
     def SearchableText(self):
       """Text for full text search"""
       text_list = []
