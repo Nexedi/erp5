@@ -1734,7 +1734,11 @@ class Catalog(Folder,
     column_map = self.getColumnMap()
     column_set = set(column_map)
     for related_key in self.sql_catalog_related_keys:
-      related_key_id = related_key.split(' | ')[0].strip()
+      split_entire_definition = related_key.split('|')
+      if len(split_entire_definition) != 2:
+        LOG('SQLCatalog', 100, 'Malformed related key definition: %r. Ignored.' % (entire_definition, ))
+        continue
+      related_key_id = split_entire_definition[0].strip()
       if related_key_id in column_set:
         LOG('SQLCatalog', 100, 'Related key %r has the same name as an existing column on tables %r' % (related_key_id, column_map[related_key_id]))
       column_set.add(related_key_id)
@@ -1796,7 +1800,11 @@ class Catalog(Folder,
     except KeyError:
       result = None
       for entire_definition in self.getSQLCatalogRelatedKeyList([key]):
-        name, definition = entire_definition.split(' | ')
+        split_entire_definition = entire_definition.split('|')
+        if len(split_entire_definition) != 2:
+          LOG('SQLCatalog', 100, 'Malformed related key definition: %r. Ignored.' % (entire_definition, ))
+          continue
+        name, definition = [x.strip() for x in split_entire_definition]
         if name == key:
           result = definition
           break
