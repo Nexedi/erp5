@@ -28,7 +28,7 @@
 
 from ExchangeProtocol import ExchangeProtocol
 from transaction._transaction import Transaction
-from zLOG import LOG, WARNING
+from zLOG import LOG, WARNING, INFO
 import socket
 import thread
 import struct
@@ -39,6 +39,8 @@ TID_STORAGE_ADDRESS = ('127.0.0.1', 9001)
 
 tid_storage = None
 zope_identifier = None
+
+LOG('TIDStorage',INFO,'Monkey patching transaction._transaction.Transaction._commitResources')
 
 # Borrowed from CMFActivity.ActivityTool.getCurrentNode
 def getZopeId():

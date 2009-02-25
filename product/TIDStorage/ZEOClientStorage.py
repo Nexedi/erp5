@@ -27,12 +27,15 @@
 ##############################################################################
 
 from ZEO.ClientStorage import ClientStorage
+from zLOG import LOG, WARNING, INFO
 
 LAST_COMMITED_TID_PROPERTY_ID = '_last_commited_tid'
 
 # Hook tpc_finish's hook method.
 # New hook must be a local method because it must access tpc_finish's "self"
 # and original hook.
+
+LOG('TIDStorage',INFO,'Monkey patching ClientStorage.tpc_finish and ClientStorage.getLastCommitedTID')
 
 original_tpc_finish = ClientStorage.tpc_finish
 def tpc_finish(self, txn, f=None):
