@@ -62,6 +62,8 @@ class WebServiceTool(BaseTool):
       connection_handler = XMLRPCConnection(url, user_name, password)
     elif transport == 'soap':
       connection_handler = SOAPConnection(url, user_name, password)
+    else:
+      raise # XXX Which exception 
     connection_handler = connection_handler.connect()
     return connection_handler
 
