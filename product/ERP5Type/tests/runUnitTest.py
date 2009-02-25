@@ -69,7 +69,7 @@ Options:
   --update_only=STRING
                              Specify the list of business template to update if
                              you don't want to update them all. You can give a list
-                             delimited with commans (e.g. erp5_core,erp5_xhtml_style).
+                             delimited with commas (e.g. erp5_core,erp5_xhtml_style).
                              This can be regular expressions. 
 """
 
@@ -427,6 +427,7 @@ def main():
       os.environ["run_only"] = arg
     elif opt == "--update_only":
       os.environ["update_only"] = arg
+      os.environ["update_business_templates"] = "1"
     elif opt == "--update_business_templates":
       os.environ["update_business_templates"] = "1"
 
