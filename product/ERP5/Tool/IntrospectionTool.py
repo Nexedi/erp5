@@ -74,7 +74,12 @@ class IntrospectionTool(BaseTool):
       # restore original Security Manager
       setSecurityManager(original_security_manager)
 
-    return erp5_menu_dict
+    # Unlazyfy URLs and other lazy values so that it can be marshalled
+    result = {}
+    for key, action_list in erp5_menu_dict.items():
+      result[key] = map(lambda action:dict(action), action_list)
+
+    return result
 
   security.declareProtected('getModuleItemList', Permissions.AccessContentsInformation)
   def getModuleItemList(self, user_name=_MARKER):
