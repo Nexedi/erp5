@@ -1,3 +1,6 @@
+2009-02-25 ivan
+* Add portal_introspections tool
+
 2009-01-27 yusei
 * Added destination_carrier, destination_referral, source_carrier, source_referral categories which are defined in Arrow property sheet.
 
