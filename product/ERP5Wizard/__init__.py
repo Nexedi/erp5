@@ -44,11 +44,10 @@ registerMultiPlugin(ERP5RemoteUserManager.meta_type)
 # Finish installation
 def initialize(context):
   import Document
-  from Tool import WizardTool, IntrospectionTool
+  from Tool import WizardTool
   # Define object classes and tools
   object_classes = ()
-  portal_tools = (WizardTool.WizardTool,
-                  IntrospectionTool.IntrospectionTool,)
+  portal_tools = (WizardTool.WizardTool,)
   content_classes = ()
   content_constructors = ()
   # Do initialization step
