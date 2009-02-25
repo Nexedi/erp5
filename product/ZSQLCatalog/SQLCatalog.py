@@ -1968,6 +1968,10 @@ class Catalog(Folder,
           # "KeywordKey".
           if search_key_name == 'Keyword':
             search_key_name = value['key'] = 'KeywordKey'
+          # Backward compatibility: former "ExactMatch" is now only available
+          # as "RawKey"
+          elif search_key_name == 'ExactMatch':
+            search_key_name = value['key'] = 'RawKey'
           result = self.buildSingleQuery(key, value, search_key_name)
         else:
           # Any other type, just create a query. (can be a DateTime, ...)
