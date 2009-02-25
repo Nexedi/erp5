@@ -38,7 +38,8 @@ from zLOG import LOG, INFO, WARNING, ERROR, DEBUG
 from cStringIO import StringIO
 from UserDict import UserDict
 import xmlrpclib, socket, sys, traceback, urllib, urllib2, base64, cgi
-from AccessControl.SecurityManagement import newSecurityManager, getSecurityManager, setSecurityManager
+from AccessControl.SecurityManagement import setSecurityManager
+from Products.ERP5Type.Utils import _setSuperSecurityManager
 import zLOG, cookielib
 from urlparse import urlparse, urlunparse
 from base64 import encodestring, decodestring
@@ -83,19 +84,6 @@ def _getAcCookieFromServer(url, opener, cookiejar, username, password, header_di
   request = urllib2.Request(url, data, header_dict)
   f = opener.open(request)
   return f
-
-def _setSuperSecurityManager(self, user_name=None):
-  """ Change to super user account or passed user_name.
-      Return original Security Manager
-  """
-  original_security_manager = getSecurityManager()
-  if user_name is not None:
-    user_folder = self.getPortalObject().acl_users
-    user = user_folder.getUserById(user_name).__of__(user_folder)
-  else:
-    user = self.getWrappedOwner()
-  newSecurityManager(self.REQUEST, user)
-  return original_security_manager
 
 class GeneratorCall(UserDict):
   """ Class use to generate/interpret XML-RPC call for the wizard. """
