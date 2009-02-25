@@ -252,7 +252,7 @@ class TIDStorage:
     self._transaction_id_to_storage_id_list_dict = {}
     self._storage_id_to_storage_id_set_dict = {}
     if tid_file_path is not None:
-      self._tid_file = LogFile(tid_file_path)
+      self._tid_file = openTIDLog()
       self._burst_period = burst_period
       self._full_dump_period = full_dump_period
       now = time.time()
@@ -508,6 +508,9 @@ def main(address, port):
 
 def openLog():
   return open(options.logfile_name, 'a', 0)
+
+def openTIDLog():
+  return open(options.status_file, 'a', 0)
 
 def HUPHandler(signal_number, stack):
   log('Rotating logfile...')
