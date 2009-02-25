@@ -32,9 +32,8 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from AccessControl.SecurityManagement import setSecurityManager
 from Products.ERP5 import _dtmldir
-from Products.ERP5Wizard.Tool.WizardTool import _setSuperSecurityManager
+from Products.ERP5Type.Utils import _setSuperSecurityManager
 from Products.ERP5Type.Cache import CachingMethod
-
 
 class IntrospectionTool(BaseTool):
   """
