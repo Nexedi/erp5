@@ -77,7 +77,7 @@ Limits:
    transactions are all finished (committed or aborted), a backup started at
    time T might actually contain data from moments before. There are pathologic
    cases where no coherency point can be found, so no backup can happen.
-   Also, bootstrap can prevent backups from happening if daemon if
+   Also, bootstrap can prevent backups from happening if daemon is
    misconfigured.
 
 Protocol:
