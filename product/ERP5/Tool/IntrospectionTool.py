@@ -76,4 +76,26 @@ class IntrospectionTool(BaseTool):
 
     return erp5_menu_dict
 
+  security.declareProtected('getModuleItemList', Permissions.AccessContentsInformation)
+  def getModuleItemList(self, user_name=_MARKER):
+    """
+      Returns menu items for a given user
+    """
+    portal = self.getPortalObject()
+    is_portal_manager = getToolByName(portal, 
+      'portal_membership').checkPermission(Permissions.ManagePortal, self)
+    downgrade_authenticated_user = user_name is not _MARKER and is_portal_manager
+    if downgrade_authenticated_user:
+      # downgrade to desired user
+      original_security_manager = _setSuperSecurityManager(self, erp5_user_name)
+
+    # call the method implementing it
+    erp5_module_list = portal.ERP5Site_getModuleItemList()
+
+    if downgrade_authenticated_user:
+      # restore original Security Manager
+      setSecurityManager(original_security_manager)
+
+    return erp5_module_list
+
 InitializeClass(IntrospectionTool)
