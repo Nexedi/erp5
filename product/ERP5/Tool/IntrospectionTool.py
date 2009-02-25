@@ -65,7 +65,7 @@ class IntrospectionTool(BaseTool):
     downgrade_authenticated_user = user_name is not _MARKER and is_portal_manager
     if downgrade_authenticated_user:
       # downgrade to desired user
-      original_security_manager = _setSuperSecurityManager(self, erp5_user_name)
+      original_security_manager = _setSuperSecurityManager(self, user_name)
 
     # call the method implementing it
     erp5_menu_dict = getToolByName(portal, 'portal_actions').listFilteredActionsFor(portal)
@@ -87,7 +87,7 @@ class IntrospectionTool(BaseTool):
     downgrade_authenticated_user = user_name is not _MARKER and is_portal_manager
     if downgrade_authenticated_user:
       # downgrade to desired user
-      original_security_manager = _setSuperSecurityManager(self, erp5_user_name)
+      original_security_manager = _setSuperSecurityManager(self, user_name)
 
     # call the method implementing it
     erp5_module_list = portal.ERP5Site_getModuleItemList()
