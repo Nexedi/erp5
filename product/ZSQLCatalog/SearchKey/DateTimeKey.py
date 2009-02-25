@@ -1,7 +1,9 @@
 ##############################################################################
 #
-# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
-#                     Ivan Tyagov <ivan@nexedi.com>
+# Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2007-2009 Nexedi SA and Contributors. All Rights Reserved.
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Vincent Pelletier <vincent@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -26,171 +28,241 @@
 #
 ##############################################################################
 
-from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery as Query
-from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
-from Products.ZSQLCatalog.SQLCatalog import getSearchKeyInstance
-from DateTime import DateTime
+import sys
 from SearchKey import SearchKey
-from pprint import pprint
+from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
+from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
+#from Products.ZSQLCatalog.SQLExpression import SQLExpression
+from zLOG import LOG
+from DateTime.DateTime import DateTime, DateTimeError, _cache
+from Products.ZSQLCatalog.Interface.ISearchKey import ISearchKey
+from Interface.Verify import verifyClass
+from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 
+MARKER = []
+
+timezone_dict = _cache._zmap
+
+date_completion_format_dict = {
+  None: ['01/01/%s', '01/%s'],
+  'international': ['%s/01/01', '%s/01']
+}
+
+@profiler_decorator
+def _DateTime(*args, **kw):
+  return DateTime(*args, **kw)
+
+@profiler_decorator
+def castDate(value):
+  date_kw = {'datefmt': 'international'}
+  if isinstance(value, dict):
+    # Convert value into a DateTime, and guess desired delta from what user
+    # input.
+    assert value['type'] == 'date'
+    format = value.get('format')
+    value = value['query']
+    if format == '%m/%d/%Y':
+      date_kw.pop('datefmt')
+  if isinstance(value, DateTime):
+    pass
+  elif isinstance(value, basestring):
+    try:
+      value = _DateTime(value, **date_kw)
+    except DateTimeError:
+      delimiter_count = countDelimiters(value)
+      if delimiter_count < 3:
+        split_value = value.split()
+        if split_value[-1].lower() in timezone_dict:
+          value = '%s %s' % (date_completion_format_dict[date_kw.get('datefmt')][delimiter_count] % (' '.join(split_value[:-1]), ), split_value[-1])
+        else:
+          value = date_completion_format_dict[date_kw.get('datefmt')][delimiter_count] % (value, )
+        value = _DateTime(value, **date_kw)
+      else:
+        raise
+  else:
+    raise TypeError, 'Unknown date type: %r' % (value)
+  return value.toZone('UTC')
+
+# (strongly) inspired from DateTime.DateTime.py
+delimiter_list = ' -/.:,+'
+
+def getMonthLen(datetime):
+  return datetime._month_len[datetime.isLeapYear()][datetime.month()]
+
+def getYearLen(datetime):
+  return 365 + datetime.isLeapYear()
+
+delta_list = [getYearLen, getMonthLen, 1, 1.0 / 24, 1.0 / (24 * 60), 1.0 / (24 * 60 * 60)]
+
+@profiler_decorator
+def countDelimiters(value):
+  assert isinstance(value, basestring)
+  # Detect if timezone was provided, to avoid counting it as in precision computation.
+  split_value = value.split()
+  if split_value[-1].lower() in timezone_dict:
+    value = ' '.join(split_value[:-1])
+  # Count delimiters
+  delimiter_count = 0
+  for char in value:
+    if char in delimiter_list:
+      delimiter_count += 1
+  return delimiter_count
+
+@profiler_decorator
+def getPeriodBoundaries(value):
+  first_date = castDate(value)
+  if isinstance(value, dict):
+    value = value['query']
+  # Try to guess how much was given in query.
+  if isinstance(value, basestring):
+    delimiter_count = countDelimiters(value)
+  elif isinstance(value, DateTime):
+    raise TypeError, 'Impossible to guess a precision from a DateTime type.'
+  else:
+    raise TypeError, 'Unknown date type: %r' % (value)
+  delta = delta_list[delimiter_count]
+  if callable(delta):
+    delta = delta(first_date)
+  return first_date, first_date + delta
+
+@profiler_decorator
+def wholePeriod(search_key, group, column, value_list, exclude=False):
+  if exclude:
+    first_operator = '<'
+    second_operator = '>='
+    logical_operator = 'or'
+  else:
+    first_operator = '>='
+    second_operator = '<'
+    logical_operator = 'and'
+  query_list = []
+  append = query_list.append
+  for value in value_list:
+    first_date, second_date = getPeriodBoundaries(value)
+    append(ComplexQuery([SimpleQuery(search_key=search_key, operator=first_operator, group=group, **{column: first_date}),
+                         SimpleQuery(search_key=search_key, operator=second_operator, group=group, **{column: second_date})],
+                        operator=logical_operator))
+  return query_list
+
+def matchWholePeriod(search_key, group, column, value_list, *ignored):
+  return wholePeriod(search_key, group, column, value_list)
+
+def matchNotWholePeriod(search_key, group, column, value_list, *ignored):
+  return wholePeriod(search_key, group, column, value_list, exclude=True)
+
+@profiler_decorator
+def matchExact(search_key, group, column, value_list, comparison_operator, logical_operator):
+  if comparison_operator is None:
+    comparison_operator = '='
+  value_list = [castDate(x) for x in value_list]
+  if logical_operator == 'or' and comparison_operator == '=':
+    query_list = [SimpleQuery(search_key=search_key, operator='in', group=group, **{column: value_list})]
+  else:
+    query_list = [SimpleQuery(search_key=search_key, operator=comparison_operator, group=group, **{column: x}) for x in value_list]
+  return query_list
+
+def getNextPeriod(value):
+  return getPeriodBoundaries(value)[1]
+
+@profiler_decorator
+def matchBeforeNextPeriod(search_key, group, column, value_list, comparison_operator, logical_operator):
+  return matchExact(search_key, group, column, [getNextPeriod(x) for x in value_list], '<', logical_operator)
+
+@profiler_decorator
+def matchAfterPeriod(search_key, group, column, value_list, comparison_operator, logical_operator):
+  return matchExact(search_key, group, column, [getNextPeriod(x) for x in value_list], '>=', logical_operator)
+
+operator_matcher_dict = {
+  None: matchWholePeriod,
+  '=': matchWholePeriod,
+  '!=': matchNotWholePeriod,
+  '<': matchExact,
+  '>=': matchExact,
+  '<=': matchBeforeNextPeriod,
+  '>': matchAfterPeriod,
+}
+
+# Behaviour of date time operators
+# Objects:
+#   2005/03/14 23:59:59
+#   2005/03/15 00:00:00
+#   2005/03/15 00:00:01
+#   2005/03/15 23:59:59
+#   2005/03/16 00:00:00
+#   2005/03/16 00:00:01
+#
+# Searches:
+#   "2005/03/15" (operator = None)
+#     Implicitely matches the whole period.
+#     2005/03/15 00:00:00
+#     2005/03/15 00:00:01
+#     2005/03/15 23:59:59
+#
+#   "=2005/03/15" (operator = '=')
+#     Behaves the same way as None operator.
+#     2005/03/15 00:00:00
+#     2005/03/15 00:00:01
+#     2005/03/15 23:59:59
+#
+#   "!=2005/03/15" (operator = '!=')
+#     Complementary of '=' operator.
+#     2005/03/14 23:59:59
+#     2005/03/16 00:00:00
+#     2005/03/16 00:00:01
+#
+#   "<2005/03/15" (operator = '<')
+#     Non-ambiguous (no difference wether time is considered as a period or a single point in time).
+#     2005/03/14 23:59:59
+#
+#   ">=2005/03/15" (operator = '>=')
+#     Complementary of '<' operator, and also non-ambiguous.
+#     2005/03/15 00:00:00
+#     2005/03/15 00:00:01
+#     2005/03/15 23:59:59
+#     2005/03/16 00:00:00
+#     2005/03/16 00:00:01
+#
+#   "<=2005/03/15" (operator = '<=')
+#     Union of results from '=' and '<' operators.
+#     2005/03/14 23:59:59
+#     2005/03/15 00:00:00
+#     2005/03/15 00:00:01
+#     2005/03/15 23:59:59
+#
+#   ">2005/03/15" (operator = '>')
+#     Complementary of '<=' operator.
+#     2005/03/16 00:00:00
+#     2005/03/16 00:00:01
 
 class DateTimeKey(SearchKey):
-  """ DateTimeKey key is an ERP5 portal_catalog search key which is used to render
-      SQL expression that will try to match values in DateTime MySQL columns.
-      It supports following special operator ['=', '%', '>' , '>=', '<', '<='] in
-      addition to main logical operators like ['OR', 'or', 'AND', 'and'].
-
-      Note: because all ERP5 datetime values are indexed in MySQL in 'UTC'
-      the respective passed date will be first converted to 'UTC' before inserted into
-      respective SQL query!
-
-      Examples (GMT+02, Bulgaria/Sofia for 'delivery.start_date'):
-
-        * '15/01/2008' --> "delivery.start_date = '2008-01-14 22:00'"
-
-        * '>=15/01/2008' --> "delivery.start_date >= '2008-01-14 22:00'"     
-
-        * '>=15/01/2008 or <=20/01/2008'
-          --> "delivery.start_date >= '2008-01-14 22:00' or delivery.start_date<='2008-01-19 22:00'"
-
-        * '>=15/01/2008 10:00 GMT+02 OR <=20/01/2008 05:12 Universal'
-          -->
-          "delivery.start_date >= '2008-01-15 08:00 Universal'
-            OR
-          delivery.start_date <= '2008-01-20 05:12 Universal'
-          "
+  """
+    This SearchKey allows generating date ranges from single, user-input dates.
   """
 
-  tokens =  ('DATE', 'OR', 'AND', 'NOT', 'EQUAL',
-             'GREATERTHAN', 'GREATERTHANEQUAL',
-             'LESSTHAN', 'LESSTHANEQUAL')
+  default_comparison_operator = None
+  get_operator_from_value = True
 
-  sub_operators =  ('GREATERTHAN', 'GREATERTHANEQUAL',
-                    'LESSTHAN', 'LESSTHANEQUAL', 'NOT', 'EQUAL',)
+  def _renderValueAsSearchText(self, value, operator):
+    return '"%s"' % (DateTime(value).ISO(), )
 
-  def t_OR(self, t):
-    r'\s+(OR|or)\s+'
-    # operator has leading and trailing ONLY one white space character
-    t.value = 'OR'
-    return t
-
-  def t_AND(self, t):
-    r'\s+(AND|and)\s+'
-    # operator has leading and trailing ONLY one white space character
-    t.value = 'AND'
-    return t
-
-  def t_NOT(self, t):
-    r'(\s+(NOT|not)\s+|!=)'
-    # operator has leading and trailing ONLY one white space character
-    t.value = t.value.upper().strip()
-    return t
-
-  t_GREATERTHANEQUAL = r'>=' 
-  t_LESSTHANEQUAL = r'<=' 
-  t_GREATERTHAN = r'>'
-  t_LESSTHAN = r'<'
-  t_EQUAL = r'='
-  t_DATE = r'\d{1,4}[(/|\.|\-) /.]\d{1,4}[(/|\.|\-) /.]\d{1,4}((\s.)*\d{0,2}:\d{0,2}(:\d{0,2})?)?(\sUniversal|\sGMT\+\d\d)?|\d\d\d\d%?'
-
-  def quoteSQLString(self, value, format):
-    """ Return a quoted string of the value.
-        Make sure to convert it to UTC first."""
-    if getattr(value, 'ISO', None) is not None:
-      value = "'%s'" % value.toZone('UTC').ISO()
-    else:
-      value = "'%s'" %DateTime(value).toZone('UTC').ISO()
-    return value
-
-  def buildQueryForTokenList(self, tokens, key, value, format):
-    """ Build a ComplexQuery for a token list """
+  @profiler_decorator
+  def _buildQuery(self, operator_value_dict, logical_operator, parsed, group):
+    column = self.getColumn()
     query_list = []
-    for group_tokens in self.groupByLogicalOperator(tokens, 'AND'):
-      token_values = [x.value for x in group_tokens]
-      sub_operator, sub_tokens = self.getOperatorForTokenList(group_tokens)
-      date_value = sub_tokens[0].value
-      days_offset = 0
-      # some format require special handling
-      if format != '%Y':
-        # full format (Year/Month/Day)
-        if sub_operator in ('=',):
-          # 2007/01/01 00:00 <= date < 2007/01/02
-          days_offset = 1
-      elif format == '%Y':
-        # incomplete format only Year because DateTime can not handle
-        # extend format and value by assumption that start of year is ment
-        # add days ofset accordingly
-        format = '%%%s/%%m/%%d' %format
-        date_value = '%s/01/01' %date_value
-        days_offset_map = {'=' : 366, '>' : 366,
-                           '>=' : 366, '<': -366, '<=':-366}
-        days_offset = days_offset_map[sub_operator]
-
-      # convert to UTC in given format
-      is_valid_date = 1
+    extend = query_list.extend
+    for comparison_operator, value_list in operator_value_dict.iteritems():
       try:
-        if format != '%m/%d/%Y':
-          # treat ambigious dates as "days before month before year"
-          date_value = DateTime(date_value, datefmt="international").toZone('UTC')
+        if parsed:
+          subquery_list = operator_matcher_dict[comparison_operator](
+                   self, group, column, value_list, comparison_operator,
+                   logical_operator)
         else:
-          # US style "month before day before year"
-          date_value = DateTime(date_value).toZone('UTC')
-      except:
-        is_valid_date = 0
-
-      query_kw = None
-      if is_valid_date:
-        if sub_operator == '=':
-          # transform to range 'key >= date  AND  date < key'
-          query_kw = {key: (date_value, date_value + days_offset,),
-                      'range': 'minmax'}
-        else:
-          query_kw = {key: date_value + days_offset,
-                      'range': sub_operator}  
-        query_kw['type'] = 'date'
+          subquery_list = matchExact(self, group, column, value_list, comparison_operator, logical_operator)
+      except DateTimeError:
+        LOG('DateTimeKey', 100, 'Got an exception while generating a query for %r %r.' % (comparison_operator, value_list), error=sys.exc_info())
       else:
-        # not a valid date, try to get an year range
-        is_year = 1
-        date_value = date_value.replace('%', '')
-        try: date_value = int(date_value)
-        except: is_year = 0
-        if is_year:
-          date_value = '%s/01/01' % date_value
-          date_value = DateTime(date_value).toZone('UTC')
-          query_kw = {key: (date_value, date_value + 366,),
-                      'type': 'date',
-                      'range': 'minmax'}
+        extend(subquery_list)
+    return query_list
 
-      # append only if it was possible to generate query
-      if query_kw is not None:
-        query_list.append(Query(**query_kw))
+verifyClass(ISearchKey, DateTimeKey)
 
-    # join query list in one really big ComplexQuery
-    if len(query_list):
-      complex_query = ComplexQuery(*query_list,
-                                   **{'operator': 'AND'})
-      return complex_query
-
-##  def buildSQLExpressionFromSearchString(self, key, value, format, mode, range_value, stat__):
-##    """ Tokenize/analyze passed string value and generate SQL query expressions. """
-##    where_expression = ''
-##    key = self.quoteSQLKey(key, format)
-##    tokens = self.tokenize(value)
-##    operators_mapping_list = self.groupByOperator(tokens)
-##    # new one
-##    for item in operators_mapping_list:
-##      row_tokens_values = []
-##      tokens = item['tokens']
-##      operator = item['operator']
-##      operator_value = None
-##      if operator is not None:
-##        # operator is standalone expression
-##        operator_value = operator.value
-##        where_expressions.append('%s' %operator_value)
-##      if len(tokens):
-##        # no it's not a stand alone expression,
-##        # determine it from list of tokens
-##        operator_value, sub_tokens = self.getOperatorForTokenList(tokens)
-##        row_tokens_values = [self.quoteSQLString(x.value, format) for x in sub_tokens]
-##        where_expression = "%s %s %s" %(key, operator_value, ' '.join(row_tokens_values))
-##    return where_expression, []

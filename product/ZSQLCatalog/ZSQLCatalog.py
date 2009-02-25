@@ -790,8 +790,9 @@ class ZCatalog(Folder, Persistent, Implicit):
         except ConflictError:
           raise
         except:
+          raise
           LOG('WARNING ZSQLCatalog', 0, 'wrapObject failed on the object %r' % (obj,), error=sys.exc_info())
-          failed_object_list.append(obj)
+          failed_object_list.append(obj) # XXX Strange JPS - why LOG and keep on ?? wrap_obj not defined
 
     # run activity or execute for each archive depending on priority
     if len(catalog_dict):
@@ -1043,7 +1044,7 @@ class ZCatalog(Folder, Persistent, Implicit):
   security.declarePublic('buildSqlQuery')
   buildSqlQuery = buildSQLQuery
 
-  def searchResults(self, REQUEST=None, used=None, sql_catalog_id=None, **kw):
+  def searchResults(self, REQUEST=None, sql_catalog_id=None, **kw):
     """
     Search the catalog according to the ZTables search interface.
     Search terms can be passed in the REQUEST or as keyword
@@ -1051,18 +1052,18 @@ class ZCatalog(Folder, Persistent, Implicit):
     """
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
-      return apply(catalog.searchResults, (REQUEST,used), kw)
+      return apply(catalog.searchResults, (REQUEST, ), kw)
     return []
 
   __call__=searchResults
 
-  def countResults(self, REQUEST=None, used=None, sql_catalog_id=None, **kw):
+  def countResults(self, REQUEST=None, sql_catalog_id=None, **kw):
     """
     Counts the number of items which satisfy the query defined in kw.
     """
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
-      return apply(catalog.countResults, (REQUEST,used), kw)
+      return apply(catalog.countResults, (REQUEST, ), kw)
     return []
 
 ## this stuff is so the find machinery works

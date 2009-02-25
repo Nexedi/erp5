@@ -28,20 +28,41 @@
 #
 ##############################################################################
 
-from SearchKey import SearchKey
-from Products.ZSQLCatalog.SearchText import parse
-from Products.ZSQLCatalog.Interface.ISearchKey import ISearchKey
+from Query import Query
+from Products.ZSQLCatalog.SQLExpression import SQLExpression
+from Products.ZSQLCatalog.Interface.IQuery import IQuery
 from Interface.Verify import verifyClass
 
-class FullTextKey(SearchKey):
+class SQLQuery(Query):
   """
-    This SearchKey generates SQL fulltext comparisons.
+    This Query subclass is used to wrap raw SQL text.
+    Use of this class is strongly discouraged, and it is only here for
+    backward compatibility.
   """
-  default_comparison_operator = 'match'
-  get_operator_from_value = False
+  def __init__(self, payload):
+    """
+      payload (string)
+        Raw SQL text.
+    """
+    if not isinstance(payload, basestring):
+      raise TypeError, 'Payload must be a string, got a %r: %r' % (type(payload), payload)
+    assert len(payload)
+    self.payload = '(' + payload + ')'
 
-  def parseSearchText(self, value):
-    return parse(value)
+  def asSearchText(self, sql_catalog):
+    return None
 
-verifyClass(ISearchKey, FullTextKey)
+  def asSQLExpression(self, sql_catalog, column_map, only_group_columns):
+    return SQLExpression(self, where_expression=self.payload)
+
+  def registerColumnMap(self, sql_catalog, column_map):
+    """
+      There is nothing to register for this type of Query subclass.
+    """
+    pass
+
+  def __repr__(self):
+    return '<%s (%r)>' % (self.__class__.__name__, self.payload)
+
+verifyClass(IQuery, SQLQuery)
 

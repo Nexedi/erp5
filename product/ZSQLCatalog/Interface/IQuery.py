@@ -1,7 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
-# Copyright (c) 2007-2009 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Vincent Pelletier <vincent@nexedi.com>
 #
@@ -28,20 +27,43 @@
 #
 ##############################################################################
 
-from SearchKey import SearchKey
-from Products.ZSQLCatalog.SearchText import parse
-from Products.ZSQLCatalog.Interface.ISearchKey import ISearchKey
-from Interface.Verify import verifyClass
+from Interface import Interface
 
-class FullTextKey(SearchKey):
+class IQuery(Interface):
   """
-    This SearchKey generates SQL fulltext comparisons.
+    A Query contains:
+    - a value
+    - an operator
+    - a column
+
+    It is the python representation of a predicate, independently of its
+    rendering (SQL or SearchText).
+    For SQL rendering to be possible, it is necesary for some data to be
+    centralized in a data structure known at EntireQuery level (to be able to
+    generate unique table aliases, for exemple). This is the role of
+    ColumnMap, and registerColumnMap method on this interface.
+
+    This interface also offers various rendering methods, one per rendering
+    format.
   """
-  default_comparison_operator = 'match'
-  get_operator_from_value = False
 
-  def parseSearchText(self, value):
-    return parse(value)
+  def asSearchTextExpression(sql_catalog, column=None):
+    """
+      Render a query in a user-oriented SearchText.
+      Returns None if there is this query has no SearchText representation,
+      but is SearchText-aware.
+      If column is provided, it must be used instead of local knowledge of
+      column name. It is used to make queries inside a related key render
+      correctly.
+    """
 
-verifyClass(ISearchKey, FullTextKey)
+  def asSQLExpression(sql_catalog, column_map, only_group_columns):
+    """
+      Render a query as an SQLExpression instance.
+    """
+
+  def registerColumnMap(sql_catalog, column_map):
+    """
+      Register a query to given column_map.
+    """
 

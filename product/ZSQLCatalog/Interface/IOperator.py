@@ -1,7 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
-# Copyright (c) 2007-2009 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Vincent Pelletier <vincent@nexedi.com>
 #
@@ -28,20 +27,45 @@
 #
 ##############################################################################
 
-from SearchKey import SearchKey
-from Products.ZSQLCatalog.SearchText import parse
-from Products.ZSQLCatalog.Interface.ISearchKey import ISearchKey
-from Interface.Verify import verifyClass
+from Interface import Interface
 
-class FullTextKey(SearchKey):
+class IOperator(Interface):
   """
-    This SearchKey generates SQL fulltext comparisons.
+    An operator is responsible for rendering a value and a column name as SQL
+    or Search Text.
+
+    This class is designed to be used as a singleton-per-operator.
   """
-  default_comparison_operator = 'match'
-  get_operator_from_value = False
 
-  def parseSearchText(self, value):
-    return parse(value)
+  def __init__(operator):
+    """
+      operator (string)
+        Operator's text representation. It is used both for SQL and SearchText
+        rendering.
+    """
 
-verifyClass(ISearchKey, FullTextKey)
+  def asSearchText(value):
+    """
+      Render given value as Search Text
+
+      value (see _renderValue)
+        Value to render as a string for use in a Search Text expression.
+    """
+
+  def asSQLExpression(column, value_list, only_group_columns):
+    """
+      Construct a SQLExpression instance from given column and value, with
+      contained glue text.
+      value_list can be a non-list instance, which must be handled that same
+      way as a list of one item.
+      only_group_columns (bool)
+        If false, the operator can add group columns in the "select_dict" of
+        returned SLQExpression.
+        Otherwise, it must not (SQL would be invalid).
+    """
+
+  def getOperator():
+    """
+      Accessor for operator's text representation.
+    """
 

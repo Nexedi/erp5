@@ -33,15 +33,16 @@ from Products.ZSQLCatalog.SearchText import parse
 from Products.ZSQLCatalog.Interface.ISearchKey import ISearchKey
 from Interface.Verify import verifyClass
 
-class FullTextKey(SearchKey):
+class KeywordKey(SearchKey):
   """
-    This SearchKey generates SQL fulltext comparisons.
+    This SearchKey generates matching comparison Queries suited for strings
+    with wilcards.
   """
-  default_comparison_operator = 'match'
-  get_operator_from_value = False
-
+  default_comparison_operator = 'like'
+  get_operator_from_value = True
+ 
   def parseSearchText(self, value):
     return parse(value)
 
-verifyClass(ISearchKey, FullTextKey)
+verifyClass(ISearchKey, KeywordKey)
 

@@ -1,7 +1,9 @@
 ##############################################################################
 #
-# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
-#                     Ivan Tyagov <ivan@nexedi.com>
+# Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2007-2009 Nexedi SA and Contributors. All Rights Reserved.
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Vincent Pelletier <vincent@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -26,68 +28,127 @@
 #
 ##############################################################################
 
-from Products.PythonScripts.Utility import allow_class
-from Query import QueryMixin
+from Query import Query
+from Products.ZSQLCatalog.SQLExpression import SQLExpression
+from SQLQuery import SQLQuery
+from Products.ZSQLCatalog.Interface.IQuery import IQuery
+from Interface.Verify import verifyClass
+from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 
-class ComplexQuery(QueryMixin):
+class ComplexQuery(Query):
   """
-  Used in order to concatenate many queries
+    A ComplexQuery represents logical operations between Query instances.
   """
-
+  @profiler_decorator
   def __init__(self, *args, **kw):
-    self.query_list = args
-    self.operator = kw.pop('operator', 'AND')
-    # XXX: What is that used for ?! It's utterly dangerous.
-    #self.__dict__.update(kw)
-
-  def getQueryList(self):
-    return self.query_list
-
-  def getRelatedTableMapDict(self):
-    result = {}
-    for query in self.getQueryList():
-      if not(isinstance(query, basestring)):
-        result.update(query.getRelatedTableMapDict())
-    return result
-
-  def asSQLExpression(self, key_alias_dict=None,
-                            ignore_empty_string=1,
-                            keyword_search_keys=None,
-                            datetime_search_keys=None,
-                            full_text_search_keys=None,
-                            stat__=0):
     """
-    Build the sql string
+      *args (tuple of Query or of list of Query)
+        list-type entry will extend subquery list, other entries will be
+        appended.
+      logical_operator ('and', 'or', 'not')
+        Logical operator.
+        Default: 'and'
+
+      Deprecated 
+        operator ('and', 'or', 'not')
+          See logical_operator.
+          logical_operator takes precedence if given.
+        unknown_column_dict (dict)
+          Only one key of this dictionnary is used here:
+            key: 'from_expression'
+            value: string
+            This value will be passed through to SQLExpression. If it is
+            provided, this ComplexQuery must have no subquery (regular
+            SQLExpression limitation)
+        implicit_table_list (list of strings)
+          Each entry in this list will be registered to column map. This is
+          used to make column mapper choose tables differently.
     """
-    sql_expression_list = []
-    select_expression_list = []
-    for query in self.getQueryList():
-      if isinstance(query, basestring):
-        sql_expression_list.append(query)
+    self.logical_operator = kw.pop('logical_operator', kw.pop('operator', 'and')).lower()
+    assert self.logical_operator in ('and', 'or', 'not'), self.logical_operator
+    unknown_column_dict = kw.pop('unknown_column_dict', {})
+    self.from_expression = unknown_column_dict.pop('from_expression', None)
+    self.implicit_table_list = kw.pop('implicit_table_list', [])
+    query_list = []
+    append = query_list.append
+    extend = query_list.extend
+    # Flaten the first level of list-type arguments
+    for arg in args:
+      if isinstance(arg, (list, tuple)):
+        extend(arg)
       else:
-        query_result = query.asSQLExpression(key_alias_dict=key_alias_dict,
-                               ignore_empty_string=ignore_empty_string,
-                               keyword_search_keys=keyword_search_keys,
-                               datetime_search_keys=datetime_search_keys,
-                               full_text_search_keys=full_text_search_keys,
-                               stat__=stat__)
-        sql_expression_list.append(query_result['where_expression'])
-        select_expression_list.extend(query_result['select_expression_list'])
-    operator = self.getOperator()
-    result = {'where_expression':('(%s)' %  \
-                         (' %s ' % operator).join(['(%s)' % x for x in sql_expression_list])),
-              'select_expression_list':select_expression_list}
+        append(arg)
+    new_query_list = []
+    append = new_query_list.append
+    # Iterate over the flaten argument list to cast each into a query type.
+    for query in query_list:
+      if not isinstance(query, Query):
+        query = SQLQuery(query)
+      append(query)
+    self.query_list = new_query_list
+
+  @profiler_decorator
+  def asSearchTextExpression(self, sql_catalog, column=None):
+    if column in (None, ''):
+      query_column = column
+    else:
+      query_column = ''
+    search_text_list = [y for y in [x.asSearchTextExpression(sql_catalog, column=query_column) for x in self.query_list] if y is not None]
+    if len(search_text_list) == 0:
+      result = ''
+    else:
+      if self.logical_operator in ('and', 'or'):
+        if len(search_text_list) == 1:
+          result = search_text_list[0]
+        else:
+          logical_operator = ' %s ' % (self.logical_operator.upper(), )
+          result = '(%s)' % (logical_operator.join(search_text_list), )
+      elif self.logical_operator == 'not':
+        assert len(search_text_list) == 1
+        result = '(NOT %s)' % (search_text_list[0], )
+      else:
+        raise ValueError, 'Unknown operator %r' % (self.logical_operator, )
+      if column not in (None, ''):
+        result = '%s:%s' % (column, result)
     return result
 
-  def getSQLKeyList(self):
-    """
-    Returns the list of keys used by this
-    instance
-    """
-    key_list=[]
-    for query in self.getQueryList():
-      if not(isinstance(query, basestring)):
-        key_list.extend(query.getSQLKeyList())
-    return key_list
+  @profiler_decorator
+  def asSQLExpression(self, sql_catalog, column_map, only_group_columns):
+    sql_expression_list = [x.asSQLExpression(sql_catalog, column_map, only_group_columns)
+                           for x in self.query_list]
+    if len(sql_expression_list) == 0:
+      sql_expression_list = [SQLExpression(self, where_expression='1')]
+    return SQLExpression(self,
+      sql_expression_list=sql_expression_list,
+      where_expression_operator=self.logical_operator,
+      from_expression=self.from_expression)
 
-allow_class(ComplexQuery)
+  @profiler_decorator
+  def registerColumnMap(self, sql_catalog, column_map):
+    for implicit_table_column in self.implicit_table_list:
+      column_map.registerColumn(implicit_table_column)
+    for query in self.query_list:
+      query.registerColumnMap(sql_catalog, column_map)
+
+  def __repr__(self):
+    return '<%s of %r.join(%r)>' % (self.__class__.__name__, self.logical_operator, self.query_list)
+
+  @profiler_decorator
+  def setTableAliasList(self, table_alias_list):
+    """
+      This function is here for backward compatibility.
+      This can only be used when there is one and only one subquery which
+      defines a setTableAliasList method.
+      
+      See RelatedQuery.
+    """
+    assert len(self.query_list) == 1
+    self.query_list[0].setTableAliasList(table_alias_list)
+
+  @profiler_decorator
+  def setGroup(self, group):
+    for query in self.query_list:
+      query.setGroup(group)
+
+verifyClass(IQuery, ComplexQuery)
+

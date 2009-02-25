@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL. All Rights Reserved.
+# Copyright (c) 2002-2009 Nexedi SARL. All Rights Reserved.
 # Copyright (c) 2001 Zope Corporation and Contributors. All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -45,7 +45,16 @@ from xml.dom.minidom import parse
 from xml.sax.saxutils import escape, quoteattr
 import os
 import md5
-from sets import ImmutableSet
+
+from Interface.IQueryCatalog import ISearchKeyCatalog
+from Interface.Verify import verifyClass
+
+PROFILING_ENABLED = False
+if PROFILING_ENABLED:
+  from tiny_profiler import profiler_decorator, profiler_report, profiler_reset
+else:
+  def profiler_decorator(func):
+    return func
 
 try:
   from Products.CMFCore.Expression import Expression
@@ -64,6 +73,7 @@ try:
   from Products.ERP5Type.Cache import enableReadOnlyTransactionCache
   from Products.ERP5Type.Cache import disableReadOnlyTransactionCache, CachingMethod
 except ImportError:
+  LOG('SQLCatalog', 100, 'Count not import CachingMethod, expect slowness.')
   def doNothing(context):
     pass
   class CachingMethod:
@@ -76,15 +86,53 @@ except ImportError:
       return self.function(*opts, **kw)
   enableReadOnlyTransactionCache = doNothing
   disableReadOnlyTransactionCache = doNothing
- 
+
+class caching_class_method_decorator:
+  def __init__(self, *args, **kw):
+    self.args = args
+    self.kw = kw
+
+  def __call__(self, method):
+    caching_method = CachingMethod(method, *self.args, **self.kw)
+    return lambda *args, **kw: caching_method(*args, **kw)
+    #def wrapper(wrapped_self):
+    #  LOG('caching_class_method_decorator', 0, 'lookup')
+    #  return caching_method(wrapped_self)
+    #return wrapper
+
+try:
+  from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+except ImportError:
+  LOG('SQLCatalog', 100, 'Count not import getTransactionalVariable, expect slowness.')
+  def getTransactionalVariable(context):
+    return {}
+
+class transactional_cache_decorator:
+  """
+    Implements singleton-style caching.
+    Wrapped method must have no parameters (besides "self").
+  """
+  def __init__(self, cache_id):
+    self.cache_id = cache_id
+
+  def __call__(self, method):
+    def wrapper(wrapped_self):
+      transactional_cache = getTransactionalVariable(None)
+      try:
+        return transactional_cache[self.cache_id]
+      except KeyError:
+        result = transactional_cache[self.cache_id] = method(wrapped_self)
+        return result
+    return wrapper
+
 try:
   from ZPublisher.HTTPRequest import record
 except ImportError:
   dict_type_list = (dict, )
 else:
   dict_type_list = (dict, record)
-   
-     
+
+
 UID_BUFFER_SIZE = 300
 OBJECT_LIST_SIZE = 300
 MAX_PATH_LEN = 255
@@ -184,6 +232,10 @@ class UidBuffer(TM):
     tid = get_ident()
     self.temporary_buffer.setdefault(tid, []).extend(iterable)
 
+DEBUG = False
+
+related_key_definition_cache = {}
+
 class Catalog(Folder,
               Persistent,
               Acquisition.Implicit,
@@ -219,6 +271,9 @@ class Catalog(Folder,
     - optmization: indexing objects should be deferred
       until timeout value or end of transaction
   """
+
+  __implements__ = ISearchKeyCatalog
+
   meta_type = "SQLCatalog"
   icon = 'misc_/ZCatalog/ZCatalog.gif' # FIXME: use a different icon
   security = ClassSecurityInfo()
@@ -463,6 +518,13 @@ class Catalog(Folder,
                       'a monovalued local role',
       'type': 'lines',
       'mode': 'w' },
+    { 'id': 'sql_catalog_table_vote_scripts',
+      'title': 'Table vote scripts',
+      'description': 'Scripts helping column mapping resolution',
+      'type': 'multiple selection',
+      'select_variable' : 'getPythonMethodIds',
+      'mode': 'w' },
+
   )
 
   sql_catalog_produce_reserved = ''
@@ -500,6 +562,7 @@ class Catalog(Folder,
   sql_catalog_scriptable_keys = ()
   sql_catalog_role_keys = ()
   sql_catalog_local_role_keys = ()
+  sql_catalog_table_vote_scripts = ()
 
   # These are ZODB variables, so shared by multiple Zope instances.
   # This is set to the last logical time when clearReserved is called.
@@ -887,26 +950,24 @@ class Catalog(Folder,
       keys = keys.keys()
       keys.sort()
       return keys
-    return CachingMethod(_getColumnIds, id='SQLCatalog.getColumnIds', cache_factory='erp5_content_long')()
+    return CachingMethod(_getColumnIds, id='SQLCatalog.getColumnIds', cache_factory='erp5_content_long')()[:]
 
+  @profiler_decorator
+  @transactional_cache_decorator('SQLCatalog.getColumnMap')
+  @profiler_decorator
+  @caching_class_method_decorator(id='SQLCatalog.getColumnMap', cache_factory='erp5_content_long')
+  @profiler_decorator
   def getColumnMap(self):
     """
     Calls the show column method and returns dictionnary of
     Field Ids
     """
-    def _getColumnMap():
-      keys = {}
-      for table in self.getCatalogSearchTableIds():
-        field_list = self._getCatalogSchema(table=table)
-        for field in field_list:
-          key = field
-          if not keys.has_key(key): keys[key] = []
-          keys[key].append(table)
-          key = '%s.%s' % (table, key)
-          if not keys.has_key(key): keys[key] = []
-          keys[key].append(table) # Is this inconsistent ?
-      return keys
-    return CachingMethod(_getColumnMap, id='SQLCatalog.getColumnMap', cache_factory='erp5_content_long')()
+    result = {}
+    for table in self.getCatalogSearchTableIds():
+      for field in self._getCatalogSchema(table=table):
+        result.setdefault(field, []).append(table)
+        result.setdefault('%s.%s' % (table, field), []).append(table) # Is this inconsistent ?
+    return result
 
   def getResultColumnIds(self):
     """
@@ -1332,7 +1393,7 @@ class Catalog(Folder,
         if self.isMethodFiltered(method_name):
           catalogged_object_list = []
           filter = self.filter_dict[method_name]
-          type_set = ImmutableSet(filter['type']) or None
+          type_set = frozenset(filter['type']) or None
           expression = filter['expression_instance']
           expression_cache_key_list = filter.get('expression_cache_key', '').split()
           for object in object_list:
@@ -1633,7 +1694,8 @@ class Catalog(Folder,
     """ Accesses a single record for a given path """
     return self.getMetadataForPath(path)
 
-  def getCatalogMethodIds(self):
+  def getCatalogMethodIds(self,
+      valid_method_meta_type_list=valid_method_meta_type_list):
     """Find Z SQL methods in the current folder and above
     This function return a list of ids.
     """
@@ -1658,6 +1720,26 @@ class Catalog(Folder,
     ids.sort()
     return ids
 
+  def getPythonMethodIds(self):
+    """
+      Returns a list of all python scripts available in
+      current sql catalog.
+    """
+    return self.getCatalogMethodIds(valid_method_meta_type_list=('Script (Python)', ))
+
+  @profiler_decorator
+  @transactional_cache_decorator('SQLCatalog._getSQLCatalogRelatedKeyList')
+  @profiler_decorator
+  def _getSQLCatalogRelatedKeySet(self):
+    column_map = self.getColumnMap()
+    column_set = set(column_map)
+    for related_key in self.sql_catalog_related_keys:
+      related_key_id = related_key.split(' | ')[0].strip()
+      if related_key_id in column_set:
+        LOG('SQLCatalog', 100, 'Related key %r has the same name as an existing column on tables %r' % (related_key_id, column_map[related_key_id]))
+      column_set.add(related_key_id)
+    return column_set
+
   def getSQLCatalogRelatedKeyList(self, key_list=None):
     """
     Return the list of related keys.
@@ -1666,10 +1748,9 @@ class Catalog(Folder,
     """
     if key_list is None:
       key_list = []
+    column_map = self._getSQLCatalogRelatedKeySet()
     # Do not generate dynamic related key for acceptable_keys
-    dynamic_key_list = [k for k in key_list \
-        if k not in self.getColumnMap().keys()]
-
+    dynamic_key_list = [k for k in key_list if k not in column_map]
     dynamic_list = self.getDynamicRelatedKeyList(dynamic_key_list)
     full_list = list(dynamic_list) + list(self.sql_catalog_related_keys)
     return full_list
@@ -1702,486 +1783,412 @@ class Catalog(Folder,
           %(table_index, table))
       return table_index
     return CachingMethod(_getTableIndex, id='SQLCatalog.getTableIndex', \
-                         cache_factory='erp5_content_long')(table=table)
+                         cache_factory='erp5_content_long')(table=table).copy()
 
-
-  def getIndex(self, table, column_list, all_column_list):
+  @profiler_decorator
+  def getRelatedKeyDefinition(self, key):
     """
-    Return possible index for a column list in a given table
+      Returns the definition of given related key name if found, None
+      otherwise.
     """
-    def _getIndex(table, column_list, all_column_list):
-      index_dict = self.getTableIndex(table)
-      if isinstance(column_list, str):
-        column_list = [column_list,]
-      # Get possible that can be used
-      possible_index = []
-      for index in index_dict.keys():
-        index_columns = index_dict[index]
-        for column in index_columns:
-          if column in column_list:
-            if index not in possible_index:
-              possible_index.append(index)
-      if len(possible_index) == 0:
-        return []
-      # Get the most suitable index
-      for index in possible_index:
-        # Make sure all column in index are used by the query
-        index_column = index_dict[index]
-        for column in index_column:
-          if column in column_list or column in all_column_list:
-            continue
-          else:
-            possible_index.remove(index)
-      LOG("SQLCatalog.getIndex", INFO, "index = %s for table %s and columns %s" \
-          %(possible_index, table, column_list))
-      return possible_index
-    return CachingMethod(_getIndex, id='SQLCatalog.getIndex', cache_factory='erp5_content_long')\
-          (table=table, column_list=column_list, all_column_list=all_column_list)
+    try:
+      result = related_key_definition_cache[key]
+    except KeyError:
+      result = None
+      for entire_definition in self.getSQLCatalogRelatedKeyList([key]):
+        name, definition = entire_definition.split(' | ')
+        if name == key:
+          result = definition
+          break
+      if result is not None:
+        related_key_definition_cache[key] = result
+    return result
 
+  @profiler_decorator
+  def getColumnSearchKey(self, key, search_key_name=None):
+    """
+      Return a SearchKey instance for given key, using search_key_name
+      as a SearchKey name if given, otherwise guessing from catalog
+      configuration. If there is no search_key_name given and no
+      SearchKey can be found, return None.
 
-  def buildSQLQuery(self, query_table='catalog', REQUEST=None,
-                          ignore_empty_string=1, query=None, stat__=0, **kw):
-    """ Builds a complex SQL query to simulate ZCatalog behaviour """
-    # Get search arguments:
-    if REQUEST is None and (kw is None or kw == {}):
-      # We try to get the REQUEST parameter
-      # since we have nothing handy
-      try: REQUEST=self.REQUEST
-      except AttributeError: pass
-
-    #LOG('SQLCatalog.buildSQLQuery, kw',0,kw)
-    # If kw and query are not set, then use REQUEST instead
-    if query is None and (kw is None or kw == {}):
-      kw = REQUEST
-
-    acceptable_key_map = self.getColumnMap()
-    full_text_search_keys = list(self.sql_catalog_full_text_search_keys)
-    keyword_search_keys = list(self.sql_catalog_keyword_search_keys)
-    datetime_search_keys = list(self.sql_catalog_datetime_search_keys)
-    topic_search_keys = self.sql_catalog_topic_search_keys
-    multivalue_keys = self.sql_catalog_multivalue_keys
-
-
-    # Compute "sort_index", which is a sort index, or none:
-    if kw.has_key('sort-on'):
-      sort_index=kw['sort-on']
-    elif hasattr(self, 'sort-on'):
-      sort_index=getattr(self, 'sort-on')
-    elif kw.has_key('sort_on'):
-      sort_index=kw['sort_on']
-    else: sort_index=None
-
-    # Compute the sort order
-    if kw.has_key('sort-order'):
-      so=kw['sort-order']
-    elif hasattr(self, 'sort-order'):
-      so=getattr(self, 'sort-order')
-    elif kw.has_key('sort_order'):
-      so=kw['sort_order']
-    else: so=None
-
-    # We must now turn sort_index into
-    # a dict with keys as sort keys and values as sort order
-    if isinstance(sort_index, basestring):
-      sort_index = [(sort_index, so)]
-    elif not isinstance(sort_index, (list, tuple)):
-      sort_index = None
-
-    # Rebuild keywords to behave as new style query (_usage='toto:titi' becomes {'toto':'titi'})
-    new_kw = {}
-    usage_len = len('_usage')
-    for k, v in kw.items():
-      if k.endswith('_usage'):
-        new_k = k[0:-usage_len]
-        if not new_kw.has_key(new_k):
-          new_kw[new_k] = {}
-        if not isinstance(new_kw[new_k], dict_type_list):
-          new_kw[new_k] = {'query': new_kw[new_k]}
-        split_v = v.split(':')
-        new_kw[new_k] = {split_v[0]: split_v[1]}
-      else:
-        if not new_kw.has_key(k):
-          new_kw[k] = v
-        else:
-          new_kw[k]['query'] = v
-    kw = new_kw
-
-    # Initialise Scriptable Dict
-    scriptable_key_dict = {}
-    for t in self.sql_catalog_scriptable_keys:
-      t = t.split('|')
-      key = t[0].strip()
-      if len(t)>1:
-        # method defined that will generate a ComplexQuery
-        method_id = t[1].strip()
-      else:
-        # no method define, let ScriptableKey generate a ComplexQuery
-        method_id = None
-      scriptable_key_dict[key] = method_id
-
-    # Build the list of Queries and ComplexQueries
-    query_dict = {}
-    key_list = [] # the list of column keys
-    key_alias_dict = {}
-    query_group_by_list = None # Useful to keep a default group_by passed by scriptable keys
-    query_related_table_map_dict = {}
-    if query is not None:
-      kw ['query'] = query
-    for key in kw.keys():
-      if key not in RESERVED_KEY_LIST:
-        value = kw[key]
-        current_query = None
-        new_query_dict = {}
-        if isinstance(value, (Query, ComplexQuery)):
-          current_query = value
-        elif scriptable_key_dict.has_key(key):
-          if scriptable_key_dict[key] is not None:
-            # Turn this key into a query by invoking a script          
-            method = getattr(self, scriptable_key_dict[key])
-            current_query = method(value) # May return None            
-          else:
-            # let default implementation of ScriptableKey generate ComplexQuery
-            search_key_instance = getSearchKeyInstance(ScriptableKey)
-            current_query = search_key_instance.buildQuery('', value)
-          if hasattr(current_query, 'order_by'): query_group_by_list = current_query.order_by
-        else:
-          if isinstance(value, dict_type_list):
-            new_query_dict = value.copy()
-            if 'query' in new_query_dict:
-              new_query_dict[key] = new_query_dict.pop('query')
-          else:
-            new_query_dict[key] = value
-          current_query = Query(**new_query_dict)
-        if current_query is not None:
-          query_dict[key] = current_query
-          key_list.extend(current_query.getSQLKeyList())
-          query_related_table_map_dict.update(current_query.getRelatedTableMapDict())
-
-    # if we have a sort index, we must take it into account to get related
-    # keys.
-    sort_key_dict = dict()
-    if sort_index:
-      for sort_info in sort_index:
-        sort_key = sort_info[0]
-        if sort_key not in key_list:
-          key_list.append(sort_key)
-        sort_key_dict[sort_key] = 1
-
-    related_tuples = self.getSQLCatalogRelatedKeyList(key_list=key_list)
-    
-    # Define related maps
-    # each tuple from `related_tuples` has the form (key,
-    # 'table1,table2,table3/column/where_expression')
-    related_keys = {}
-    related_method = {}
-    related_table_map = {}
-    related_column = {}
-    related_table_list = {}
-    table_rename_index = 0
-    related_methods = {} # related methods which need to be used
-    for t in related_tuples:
-      t_tuple = t.split('|')
-      key = t_tuple[0].strip()
-      if key in key_list:
-        if ignore_empty_string \
-            and kw.get(key, None) in ('', [], ())\
-            and key not in sort_key_dict:
-              # We don't ignore 0 and None, but if the key is used for sorting,
-              # we should not discard this key
-          continue
-        join_tuple = t_tuple[1].strip().split('/')
-        related_keys[key] = None
-        method_id = join_tuple[2]
-        table_list = tuple(join_tuple[0].split(','))
-        related_method[key] = method_id
-        related_table_list[key] = table_list
-        related_column[key] = join_tuple[1]
-        # Check if some aliases where specified in queries
-        map_list = query_related_table_map_dict.get(key,None)
-        # Rename tables to prevent conflicts
-        if not related_table_map.has_key((table_list,method_id)):
-          if map_list is None:
-            map_list = []
-            for table_id in table_list:
-              map_list.append((table_id,
-                 "related_%s_%s" % (table_id, table_rename_index))) # We add an index in order to alias tables in the join
-              table_rename_index += 1 # and prevent name conflicts
-          related_table_map[(table_list,method_id)] = map_list
-
-    # We take additional parameters from the REQUEST
-    # and give priority to the REQUEST
-    if REQUEST is not None:
-      for key in acceptable_key_map.iterkeys():
-        if REQUEST.has_key(key):
-          # Only copy a few keys from the REQUEST
-          if key in self.sql_catalog_request_keys:
-            kw[key] = REQUEST[key]
-
-    def getNewKeyAndUpdateVariables(key):
-      new_key = None
-      if query_table:
-        key_is_acceptable = key in acceptable_key_map # Only calculate once
-        key_is_related = key in related_keys
-        if key_is_acceptable or key_is_related:
-          if key_is_related: # relation system has priority (ex. security_uid)
-            # We must rename the key
-            method_id = related_method[key]
-            table_list = related_table_list[key]
-            if not related_methods.has_key((table_list,method_id)):
-              related_methods[(table_list,method_id)] = 1
-            # Prepend renamed table name
-            new_key = "%s.%s" % (related_table_map[(table_list,method_id)][-1][-1],
-                                 related_column[key])
-          elif key_is_acceptable:
-            if key.find('.') < 0:
-              # if the key is only used by one table, just append its name
-              if len(acceptable_key_map[key]) == 1 :
-                new_key = '%s.%s' % (acceptable_key_map[key][0], key)
-              # query_table specifies what table name should be used by default
-              elif '%s.%s' % (query_table, key) in acceptable_key_map:
-                new_key = '%s.%s' % (query_table, key)
-              elif key == 'uid':
-                # uid is always ambiguous so we can only change it here
-                new_key = 'catalog.uid'
-              else:
-                LOG('SQLCatalog', WARNING, 'buildSQLQuery this key is too ambiguous : %s' % key)
-            else:
-              new_key = key
-            if new_key is not None:
-              # Add table to table dict, we use catalog by default
-              from_table_dict[acceptable_key_map[new_key][0]] = acceptable_key_map[new_key][0]
-      else:
-        new_key = key
-      key_alias_dict[key] = new_key
-      return new_key
-
-    where_expression_list = []
-    select_expression_list = []
-    group_by_expression_list = []
-    where_expression = ''
-    select_expression = ''
-    group_by_expression = ''
-    select_expression_key = ''
-    
-    from_table_dict = {'catalog' : 'catalog'} # Always include catalog table
-    if len(kw):
-      if kw.has_key('select_expression_key'):
-        select_expression_key = kw['select_expression_key']
-        if type(select_expression_key) is type('a'):
-          select_expression_key = [select_expression_key]
-      if kw.has_key('select_expression'):
-        select_expression_list.append(kw['select_expression'])
-      if kw.has_key('group_by_expression'):
-        group_by_expression_list.append(kw['group_by_expression'])
-      # Grouping
-      group_by_list = kw.get('group_by', query_group_by_list)
-      if type(group_by_list) is type('a'): group_by_list = [group_by_list]
-      if group_by_list is not None:
-        try:
-          for key in group_by_list:
-            new_key = getNewKeyAndUpdateVariables(key)
-            group_by_expression_list.append(new_key)
-        except ConflictError:
-          raise
-        except:
-          LOG('SQLCatalog', WARNING, 'buildSQLQuery could not build the new group by expression', error=sys.exc_info())
-          group_by_expression = ''
-      if len(group_by_expression_list)>0:
-        group_by_expression = ','.join(group_by_expression_list)
-        group_by_expression = str(group_by_expression)
-
-    sort_on = None
-    sort_key_list = []
-    if sort_index is not None:
-      new_sort_index = []
-      for sort in sort_index:
-        if len(sort) == 2:
-          # Try to analyse expressions of the form "title AS unsigned"
-          sort_key_list = sort[0].split()
-          if len(sort_key_list) == 3:
-            sort_key = sort_key_list[0]
-            sort_type = sort_key_list[2]
-          elif len(sort_key_list):
-            sort_key = sort_key_list[0]
-            sort_type = None
-          else:
-            sort_key = sort[0]
-            sort_type = None
-          new_sort_index.append((sort_key, sort[1], sort_type))
-        elif len(sort) == 3:
-          new_sort_index.append(sort)
-      sort_index = new_sort_index
-      try:
-        new_sort_index = []
-        for (original_key, so, as_type) in sort_index:
-          key = getNewKeyAndUpdateVariables(original_key)
-          if key is None:
-            if original_key in select_expression_key:
-              key = original_key
-          if key is not None:
-            sort_key_list.append(key)
-            if as_type == 'int':
-              key = 'CAST(%s AS SIGNED)' % key
-            elif as_type:
-              key = 'CAST(%s AS %s)' % (key, as_type) # Different casts are possible
-            if so in ('descending', 'reverse', 'DESC'):
-              new_sort_index.append('%s DESC' % key)
-            else:
-              new_sort_index.append('%s' % key)
-          else:
-            LOG('SQLCatalog', WARNING, 'buildSQLQuery could not build sort '
-                'index (%s -> %s)' % (original_key, key))
-        sort_index = join(new_sort_index,',')
-        sort_on = str(sort_index)
-      except ConflictError:
-        raise
-      except:
-        LOG('SQLCatalog', WARNING, 'buildSQLQuery could not build the new sort index', error=sys.exc_info())
-        sort_on = ''
-        sort_key_list = []
-
-    for key in key_list:
-      if not key_alias_dict.has_key(key):
-        getNewKeyAndUpdateVariables(key)
-    if len(query_dict):
-      for key, query in query_dict.items():
-        query_result = query.asSQLExpression(key_alias_dict=key_alias_dict,
-                                    full_text_search_keys=full_text_search_keys,
-                                    keyword_search_keys=keyword_search_keys,
-                                    datetime_search_keys=datetime_search_keys,
-                                    ignore_empty_string=ignore_empty_string,
-                                    stat__=stat__)
-        if query_result['where_expression'] not in ('',None):
-          where_expression_list.append(query_result['where_expression'])
-        select_expression_list.extend(query_result['select_expression_list'])
-
-    # Calculate extra where_expression based on required joins
-    if query_table:
-      for k, tid in from_table_dict.items():
-        if k != query_table:
-          where_expression_list.append('%s.uid = %s.uid' % (query_table, tid))
-    # Calculate extra where_expressions based on related definition
-    for (table_list, method_id) in related_methods.keys():
-      related_method = getattr(self, method_id, None)
-      if related_method is not None:
-        table_id = {'src__' : 1} # Return query source, do not evaluate
-        table_id['query_table'] = query_table
-        table_index = 0
-        for t_tuple in related_table_map[(table_list,method_id)]:
-          table_id['table_%s' % table_index] = t_tuple[1] # table_X is set to mapped id
-          from_table_dict[t_tuple[1]] = t_tuple[0]
-          table_index += 1
-        where_expression_list.append(related_method(**table_id))
-    # Concatenate expressions
-    if kw.get('where_expression',None) not in (None,''):
-      where_expression_list.append(kw['where_expression'])
-    if len(where_expression_list)>1:
-      where_expression_list = ['(%s)' % x for x in where_expression_list]
-    where_expression = join(where_expression_list, ' AND ')
-    select_expression= join(select_expression_list,',')
-
-    limit_expression = kw.get('limit', None)
-    if isinstance(limit_expression, (list, tuple)):
-      limit_expression = '%s,%s' % (limit_expression[0], limit_expression[1])
-    elif limit_expression is not None:
-      limit_expression = str(limit_expression)
-
-    # force index if exists when doing sort as mysql doesn't manage them efficiently
-    if len(sort_key_list) > 0:
-      index_from_table = {}
-      # first group columns from a same table
-      for key in sort_key_list:
-        try:
-          related_table, column = key.split('.')
-        except ValueError:
-          # key is not of the form table.column
-          # so get table from dict
-          if len(from_table_dict) != 1:
-            continue
-          column = key
-          related_table = from_table_dict.keys()[0]
-
-        table = from_table_dict[related_table]
-        # Check if it's a column for which we want to specify index
-        index_columns = getattr(self, 'sql_catalog_index_on_order_keys', [])
-        sort_column = '%s.%s' %(table, column)
-        if not sort_column in index_columns:
-          continue
-        # Group columns
-        if not index_from_table.has_key(table):
-          index_from_table[table] = [column,]
-        else:
-          index_from_table[table].append(column)
-      # second ask index
-      for table in index_from_table.keys():
-        available_index_list = self.getIndex(table, index_from_table[table], key_list)
-        if len(available_index_list) > 0:
-          # Always give MySQL a chance to use PRIMARY key. It is much faster if
-          # current table is used in a join on primary key than forcing it to
-          # use another index.
-          # Note: due to a bug (?) in MySQL (at least 5.0.45 community), it is
-          # a syntax error to put "PRIMARY" keyword anywere besides at first
-          # position. Hence the "insert(0".
-          if 'PRIMARY' not in available_index_list:
-            available_index_list.insert(0, 'PRIMARY')
-          # tell mysql to use these index
-          table = from_table_dict.pop(related_table)
-          index_list_string = ', '.join(available_index_list)
-          table_with_index =  "%s use index(%s)"  %(related_table, index_list_string)
-          from_table_dict[table_with_index] = table
-
-    from_expression = kw.get('from_expression', None)
-    if from_expression is not None:
-      final_from_expression = ', '.join(
-        [from_expression.get(table, '`%s` AS `%s`' % (table, alias))
-         for alias, table in from_table_dict.iteritems()])
+      Also return a related key definition string with following rules:
+       - If returned SearchKey is a RelatedKey, value is its definition
+       - Otherwise, value is None
+    """
+    # Is key a "real" column or some related key ?
+    related_key_definition = None
+    if key in self.getColumnMap():
+      search_key = self.getSearchKey(key, search_key_name)
     else:
-      final_from_expression = None
-    # Use a dictionary at the moment.
-    return { 'from_table_list' : from_table_dict.items(),
-             'from_expression' : final_from_expression,
-             'order_by_expression' : sort_on,
-             'where_expression' : where_expression,
-             'limit_expression' : limit_expression,
-             'select_expression': select_expression,
-             'group_by_expression' : group_by_expression}
+      # Maybe a related key...
+      related_key_definition = self.getRelatedKeyDefinition(key)
+      if related_key_definition is None:
+        # Unknown
+        search_key = None
+      else:
+        # It's a related key
+        search_key = self.getSearchKey(key, 'RelatedKey')
+    return search_key, related_key_definition
+
+  @profiler_decorator
+  def getColumnDefaultSearchKey(self, key):
+    """
+      Return a SearchKey instance which would ultimately receive the value
+      associated with given key.
+    """
+    search_key, related_key_definition = self.getColumnSearchKey(key)
+    if search_key is None:
+      result = None
+    else:
+      if related_key_definition is not None:
+        search_key = search_key.getSearchKey(self, related_key_definition)
+    return search_key
+
+  @profiler_decorator
+  def buildSingleQuery(self, key, value, search_key_name=None, logical_operator=None, comparison_operator=None):
+    """
+      From key and value, determine the SearchKey to use and generate a Query
+      from it.
+    """
+    search_key, related_key_definition = self.getColumnSearchKey(key, search_key_name)
+    if search_key is None:
+      result = None
+    else:
+      if related_key_definition is None:
+        result = search_key.buildQuery(value, logical_operator=logical_operator, comparison_operator=comparison_operator)
+      else:
+        result = search_key.buildQuery(search_value=value, sql_catalog=self, search_key_name=search_key_name, related_key_definition=related_key_definition, logical_operator=logical_operator, comparison_operator=comparison_operator)
+    return result
+
+  @profiler_decorator
+  def buildQueryFromAbstractSyntaxTreeNode(self, node, key):
+    """
+      Build a query from given Abstract Syntax Tree (AST) node by recursing in
+      its childs.
+      This method calls itself recursively when walking the tree.
+
+      node
+        AST node being treated.
+      key
+        Default column (used when there is no explicit column in an AST leaf).
+
+      Expected node API is described in Interface/IAbstractSyntaxNode.py .
+    """
+    if node.isLeaf():
+      result = self.buildSingleQuery(key, node.getValue(), comparison_operator=node.getComparisonOperator())
+      if result is None:
+        # Unknown, skip loudly
+        LOG('SQLCatalog', 100, 'Unknown column %r, skipped.' % (key, ))
+    elif node.isColumn():
+      result = self.buildQueryFromAbstractSyntaxTreeNode(node.getSubNode(), node.getColumnName())
+    else:
+      query_list = []
+      value_dict = {}
+      append = query_list.append
+      for subnode in node.getNodeList():
+        if subnode.isLeaf():
+          value_dict.setdefault(subnode.getComparisonOperator(), []).append(subnode.getValue())
+        else:
+          subquery = self.buildQueryFromAbstractSyntaxTreeNode(subnode, key)
+          if subquery is not None:
+            append(subquery)
+      for comparison_operator, value_list in value_dict.iteritems():
+        subquery = self.buildSingleQuery(key, value_list, comparison_operator=comparison_operator)
+        if subquery is None:
+          LOG('SQLCatalog', 100, 'Unknown column %r, skipped.' % (key, ))
+        else:
+          append(subquery)
+      operator = node.getLogicalOperator()
+      if operator == 'not' or len(query_list) > 1:
+        result = ComplexQuery(query_list, operator=operator)
+      elif len(query_list) == 1:
+        result = query_list[0]
+      else:
+        result = None
+    return result
+
+  @profiler_decorator
+  def buildQuery(self, kw, ignore_empty_string=True, operator='and'):
+    query_list = []
+    append = query_list.append
+    # unknown_column_dict: contains all (key, value) pairs which could not be
+    # changed into queries. This is here for backward compatibility, because
+    # scripts can invoke this method and expect extra parameters (such as
+    # from_expression) to be handled. As they are normaly handled at
+    # buildSQLQuery level, we must store them into final ComplexQuery, which
+    # will handle them.
+    unknown_column_dict = {}
+    # implicit_table_list: contains all tables explicitely given as par of
+    # column names with empty values. This is for backward compatibility. See
+    # comment about empty values.
+    implicit_table_list = []
+    for key, value in kw.iteritems():
+      result = None
+      if isinstance(value, dict_type_list):
+        # Cast dict-ish types into plain dicts.
+        value = dict(value)
+      if ignore_empty_string and (
+          value == ''
+          or (isinstance(value, (list, tuple)) and len(value) == 0)
+          or (isinstance(value, dict) and (
+            'query' not in value
+            or value['query'] == ''
+            or (isinstance(value['query'], (list, tuple))
+              and len(value['query']) == 0)))):
+        # We have an empty value:
+        # - do not create a query from it
+        # - if key has a dot, add its left part to the list of "hint" tables
+        #   This is for backward compatibility, when giving a mapped column
+        #   with an empty value caused a join with catalog to appear in
+        #   resulting where-expression)
+        if '.' in key:
+          implicit_table_list.append(key)
+        LOG('buildQuery', WARNING, 'Discarding empty value for key %r: %r' % (key, value))
+      else:
+        if isinstance(value, _Query):
+          # Query instance: use as such, ignore key.
+          result = value
+        elif isinstance(value, basestring):
+          # String: parse using key's default search key.
+          search_key = self.getColumnDefaultSearchKey(key)
+          if search_key is not None:
+            abstract_syntax_tree = search_key.parseSearchText(value)
+            if abstract_syntax_tree is None:
+              # Parsing failed, create a query from the bare string.
+              result = self.buildSingleQuery(key, value)
+            else:
+              if DEBUG:
+                LOG('SQLCatalog', 0, 'Building queries from abstract syntax tree: %r' % (abstract_syntax_tree, ))
+              result = self.buildQueryFromAbstractSyntaxTreeNode(abstract_syntax_tree, key)
+        elif isinstance(value, dict):
+          # Dictionnary: might contain the search key to use.
+          search_key_name = value.get('key')
+          # Backward compatibility: former "Keyword" key is now named
+          # "KeywordKey".
+          if search_key_name == 'Keyword':
+            search_key_name = value['key'] = 'KeywordKey'
+          result = self.buildSingleQuery(key, value, search_key_name)
+        else:
+          # Any other type, just create a query. (can be a DateTime, ...)
+          result = self.buildSingleQuery(key, value)
+        if result is None:
+          # No query could be created, emit a log, add to unknown column dict.
+          unknown_column_dict[key] = value
+        else:
+          append(result)
+    if len(unknown_column_dict):
+      LOG('SQLCatalog', 100, 'Unknown columns %r, skipped.' % (unknown_column_dict.keys(), ))
+    return ComplexQuery(query_list, operator=operator, unknown_column_dict=unknown_column_dict, implicit_table_list=implicit_table_list)
+
+  @profiler_decorator
+  def buildOrderByList(self, sort_on=None, sort_order=None, order_by_expression=None):
+    """
+      Internal method. Should not be used by code outside buildSQLQuery.
+
+      It is in a separate method because this code is here to keep backward
+      compatibility with an ambiguous API, and as such is ugly. So it's better
+      to conceal it to its own method.
+
+      It does not preserve backward compatibility for:
+        'sort-on' parameter
+        'sort-on' property
+        'sort-order' parameter
+        'sort-order' property
+    """
+    order_by_list = []
+    append = order_by_list.append
+    if sort_on is not None:
+      if order_by_expression is not None:
+        LOG('SQLCatalog', 0, 'order_by_expression (%r) and sort_on (%r) were given. Ignoring order_by_expression.' % (order_by_expression, sort_on))
+      if not isinstance(sort_on, (tuple, list)):
+        sort_on = [[sort_on]]
+      for item in sort_on:
+        if isinstance(item, (tuple, list)):
+          item = list(item)
+        else:
+          item = [item]
+        if sort_order is not None and len(item) == 1:
+          item.append(sort_order)
+        if len(item) > 1:
+          if item[1] in ('descending', 'reverse', 'DESC'):
+            item[1] = 'DESC'
+          else:
+            item[1] = 'ASC'
+          if len(item) > 2:
+            if item[2] == 'int':
+              item[2] = 'SIGNED'
+        append(item)
+    elif order_by_expression is not None:
+      if not isinstance(order_by_expression, basestring):
+        raise TypeError, 'order_by_expression must be a basestring instance. Got %r.' % (order_by_expression, )
+      order_by_list = [[x.strip()] for x in order_by_expression.split(',')]
+    return order_by_list
+
+  @profiler_decorator
+  def buildSQLQuery(self, query_table='catalog', REQUEST=None,
+                          ignore_empty_string=1, only_group_columns=False,
+                          limit=None, extra_column_list=None,
+                          **kw):
+#    from traceback import format_list, extract_stack
+#    LOG('buildSQLQuery', 0, ''.join(format_list(extract_stack())))
+    if DEBUG:
+      LOG('buildSQLQuery', 0, repr(kw))
+    group_by_list = kw.pop('group_by_list', kw.pop('group_by', kw.pop('group_by_expression', None)))
+    if isinstance(group_by_list, basestring):
+      group_by_list = [x.strip() for x in group_by_list.split(',')]
+    select_dict = kw.pop('select_dict', kw.pop('select_list', kw.pop('select_expression', None)))
+    if isinstance(select_dict, basestring):
+      if len(select_dict):
+        real_select_dict = {}
+        for column in select_dict.split(','):
+          index = column.lower().find(' as ')
+          if index != -1:
+            real_select_dict[column[index + 4:].strip()] = column[:index].strip()
+          else:
+            real_select_dict[column.strip()] = None
+        select_dict = real_select_dict
+      else:
+        select_dict = None
+    elif isinstance(select_dict, (list, tuple)):
+      select_dict = dict([(x, None) for x in select_dict])
+    # Handle order_by_list
+    order_by_list = kw.pop('order_by_list', None)
+    sort_on = kw.pop('sort_on', None)
+    sort_order = kw.pop('sort_order', None)
+    order_by_expression = kw.pop('order_by_expression', None)
+    if order_by_list is None:
+      order_by_list = self.buildOrderByList(
+        sort_on=sort_on,
+        sort_order=sort_order,
+        order_by_expression=order_by_expression
+      )
+    else:
+      if sort_on is not None:
+        LOG('SQLCatalog', 0, 'order_by_list and sort_on were given, ignoring sort_on.')
+      if sort_order is not None:
+        LOG('SQLCatalog', 0, 'order_by_list and sort_order were given, ignoring sort_order.')
+      if order_by_expression is not None:
+        LOG('SQLCatalog', 0, 'order_by_list and order_by_expression were given, ignoring order_by_expression.')
+    # Handle from_expression
+    from_expression = kw.pop('from_expression', None)
+    # Handle where_expression
+    where_expression = kw.get('where_expression', None)
+    if isinstance(where_expression, basestring) and len(where_expression):
+      LOG('SQLCatalog', 100, 'Giving where_expression a string value is deprecated.')
+      # Transform given where_expression into a query, and update kw.
+      kw['where_expression'] = SQLQuery(where_expression)
+    # Handle select_expression_key
+    # It is required to support select_expression_key parameter for backward
+    # compatiblity, but I'm not sure if there can be a serious use for it in
+    # new API.
+    order_by_override_list = kw.pop('select_expression_key', None)
+    query = EntireQuery(
+      query=self.buildQuery(kw, ignore_empty_string=ignore_empty_string),
+      order_by_list=order_by_list,
+      order_by_override_list=order_by_override_list,
+      group_by_list=group_by_list,
+      select_dict=select_dict,
+      limit=limit,
+      catalog_table_name=query_table,
+      extra_column_list=extra_column_list,
+      from_expression=from_expression)
+    result = query.asSQLExpression(self, only_group_columns).asSQLExpressionDict()
+    if DEBUG:
+      LOG('buildSQLQuery', 0, repr(result))
+    return result
 
   # Compatibililty SQL Sql
   buildSqlQuery = buildSQLQuery
 
-  def queryResults(self, sql_method, REQUEST=None, used=None, src__=0, build_sql_query_method=None, **kw):
+  @profiler_decorator
+  @transactional_cache_decorator('SQLCatalog._getSearchKeyDict')
+  @profiler_decorator
+  @caching_class_method_decorator(id='SQLCatalog._getSearchKeyDict', cache_factory='erp5_content_long')
+  @profiler_decorator
+  def _getSearchKeyDict(self):
+    result = {}
+    search_key_column_dict = {
+      'KeywordKey': self.sql_catalog_keyword_search_keys,
+      'FullTextKey': self.sql_catalog_full_text_search_keys,
+      'DateTimeKey': self.sql_catalog_datetime_search_keys,
+    }
+    for key, column_list in search_key_column_dict.iteritems():
+      for column in column_list:
+        if column in result:
+          LOG('SQLCatalog', 100, 'Ambiguous configuration: column %r is set to use %r key, but also to use %r key. Former takes precedence.' % (column, result[column], key))
+        else:
+          result[column] = key
+    return result
+
+  @profiler_decorator
+  def getSearchKey(self, column, search_key=None):
+    """
+      Return an instance of a SearchKey class.
+
+      column (string)
+        The column for which the search key will be returned.
+      search_key (string)
+        If given, must be the name of a SearchKey class to be returned.
+        Returned value will be an instance of that class, even if column has
+        been configured to use a different one.
+    """
+    if search_key is None:
+      search_key = self._getSearchKeyDict().get(column, 'DefaultKey')
+    return getSearchKeyInstance(search_key, column)
+
+  def getComparisonOperator(self, operator):
+    """
+      Return an instance of an Operator class.
+
+      operator (string)
+        String defining the expected operator class.
+        See Operator module to have a list of available operators.
+    """
+    return getComparisonOperatorInstance(operator)
+
+  @profiler_decorator
+  def _queryResults(self, REQUEST=None, build_sql_query_method=None, **kw):
     """ Returns a list of brains from a set of constraints on variables """
     if build_sql_query_method is None:
       build_sql_query_method = self.buildSQLQuery
     query = build_sql_query_method(REQUEST=REQUEST, **kw)
+    # XXX: decide if this should be made normal
+    ENFORCE_SEPARATION = True
+    if ENFORCE_SEPARATION:
+      new_kw = {}
+      # Some parameters must be propagated:
+      for parameter_id in ('selection_domain', 'selection_report'):
+        if parameter_id in kw:
+          new_kw[parameter_id] = kw[parameter_id]
+      kw = new_kw
     kw['where_expression'] = query['where_expression']
     kw['sort_on'] = query['order_by_expression']
     kw['from_table_list'] = query['from_table_list']
-    kw['from_expression'] = query.get('from_expression')
+    kw['from_expression'] = query['from_expression']
     kw['limit_expression'] = query['limit_expression']
     kw['select_expression'] = query['select_expression']
     kw['group_by_expression'] = query['group_by_expression']
-    # Return the result
+    return kw
 
-    #LOG('acceptable_keys',0,'acceptable_keys: %s' % str(acceptable_keys))
-    #LOG('acceptable_key_map',0,'acceptable_key_map: %s' % str(acceptable_key_map))
-    #LOG('queryResults',0,'kw: %s' % str(kw))
-    #LOG('queryResults',0,'from_table_list: %s' % str(query['from_table_list']))
-    return sql_method(src__=src__, **kw)
+  def queryResults(self, sql_method, REQUEST=None, src__=0, build_sql_query_method=None, **kw):
+    sql_kw = self._queryResults(REQUEST=REQUEST, build_sql_query_method=build_sql_query_method, **kw)
+    if DEBUG and not src__:
+      LOG('queryResults', 0, sql_method(src__=1, **sql_kw))
+    return sql_method(src__=src__, **sql_kw)
       
-  def searchResults(self, REQUEST=None, used=None, **kw):
+  def searchResults(self, REQUEST=None, **kw):
     """ Returns a list of brains from a set of constraints on variables """
-    # The used argument is deprecated and is ignored
     method = getattr(self, self.sql_search_results)
-    return self.queryResults(method, REQUEST=REQUEST, used=used, **kw)
+    return self.queryResults(method, REQUEST=REQUEST, extra_column_list=self.getCatalogSearchResultKeys(), **kw)
 
   __call__ = searchResults
 
-  def countResults(self, REQUEST=None, used=None, stat__=1, **kw):
+  def countResults(self, REQUEST=None, **kw):
     """ Returns the number of items which satisfy the where_expression """
     # Get the search method
     method = getattr(self, self.sql_count_results)
-    return self.queryResults(method, REQUEST=REQUEST, used=used, stat__=stat__, **kw)
+    return self.queryResults(method, REQUEST=REQUEST, extra_column_list=self.getCatalogSearchResultKeys(), only_group_columns=True, **kw)
 
   def recordObjectList(self, path_list, catalog=1):
     """
@@ -2394,40 +2401,56 @@ Globals.default__class_init__(Catalog)
 
 class CatalogError(Exception): pass
 
-# pool of global preinitialized search keys instances
-SEARCH_KEY_INSTANCE_POOL = threading.local()
-# hook search keys and Query implementation 
-def getSearchKeyInstance(search_key_class):
-  """ Return instance of respective search_key class.
-      We should have them initialized only once."""
-  global SEARCH_KEY_INSTANCE_POOL
-  if not hasattr(SEARCH_KEY_INSTANCE_POOL, 'pool'):
-    pool = dict()
-    for klass in (DefaultKey, RawKey, KeyWordKey, DateTimeKey,
-                             FullTextKey, FloatKey, ScriptableKey, KeyMappingKey):
-      search_key_instance = klass()
-      search_key_instance.build()
-      pool[klass] = search_key_instance
-    SEARCH_KEY_INSTANCE_POOL.pool = pool
-
-  return SEARCH_KEY_INSTANCE_POOL.pool[search_key_class]
-  
-from Query.Query import QueryMixin
-from Query.SimpleQuery import NegatedQuery, SimpleQuery
+from Query.Query import Query as _Query
+from Query.SimpleQuery import SimpleQuery
 from Query.ComplexQuery import ComplexQuery
+from Query.AutoQuery import AutoQuery as Query
 
-# for of backwards compatability  
-QueryMixin = QueryMixin
-Query = SimpleQuery
-NegatedQuery = NegatedQuery
-ComplexQuery = ComplexQuery
- 
-from Products.ZSQLCatalog.SearchKey.DefaultKey import DefaultKey
-from Products.ZSQLCatalog.SearchKey.RawKey import RawKey
-from Products.ZSQLCatalog.SearchKey.KeyWordKey import KeyWordKey
-from Products.ZSQLCatalog.SearchKey.DateTimeKey import DateTimeKey
-from Products.ZSQLCatalog.SearchKey.FullTextKey import FullTextKey
-from Products.ZSQLCatalog.SearchKey.FloatKey import FloatKey
-from Products.ZSQLCatalog.SearchKey.ScriptableKey import ScriptableKey, KeyMappingKey
+def NegatedQuery(query):
+  return ComplexQuery(query, operator='not')
 
+allow_class(SimpleQuery)
+allow_class(ComplexQuery)
+
+import SearchKey
+SEARCH_KEY_INSTANCE_POOL = {}
+SEARCH_KEY_CLASS_CACHE = {}
+
+@profiler_decorator
+def getSearchKeyInstance(search_key_class_name, column):
+  assert isinstance(search_key_class_name, basestring)
+  try:
+    search_key_class = SEARCH_KEY_CLASS_CACHE[search_key_class_name]
+  except KeyError:
+    search_key_class = getattr(getattr(SearchKey, search_key_class_name),
+                               search_key_class_name)
+    SEARCH_KEY_CLASS_CACHE[search_key_class_name] = search_key_class
+  try:
+    instance_dict = SEARCH_KEY_INSTANCE_POOL[search_key_class]
+  except KeyError:
+    instance_dict = SEARCH_KEY_INSTANCE_POOL[search_key_class] = {}
+  try:
+    result = instance_dict[column]
+  except KeyError:
+    result = instance_dict[column] = search_key_class(column)
+  return result
+
+from Operator import operator_dict
+def getComparisonOperatorInstance(operator):
+  return operator_dict[operator]
+
+from Query.EntireQuery import EntireQuery
+from Query.SQLQuery import SQLQuery
+
+verifyClass(ISearchKeyCatalog, Catalog)
+
+if PROFILING_ENABLED:
+  def Catalog_dumpProfilerData(self):
+    return profiler_report()
+
+  def Catalog_resetProfilerData(self):
+    profiler_reset()
+
+  Catalog.dumpProfilerData = Catalog_dumpProfilerData
+  Catalog.resetProfilerData = Catalog_resetProfilerData
 

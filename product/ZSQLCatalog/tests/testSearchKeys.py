@@ -28,6 +28,7 @@
 
 import unittest
 from DateTime import DateTime
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ZSQLCatalog.SearchKey.DefaultKey import DefaultKey
 from Products.ZSQLCatalog.SearchKey.RawKey import RawKey
 from Products.ZSQLCatalog.SearchKey.KeyWordKey import KeyWordKey
@@ -37,19 +38,20 @@ from Products.ZSQLCatalog.SearchKey.FloatKey import FloatKey
 from Products.ZSQLCatalog.SQLCatalog import getSearchKeyInstance
 from Products.ZSQLCatalog.SearchKey.ScriptableKey import ScriptableKey, KeyMappingKey
 
-class TestSearchKeyLexer(unittest.TestCase):
+class TestSearchKeyLexer(ERP5TypeTestCase):
   """Test search keys
   """
   run_all_test = 1
   quiet = 0
-
+  
   def compare(self, search_key_class, search_value, expected_token_types):
     """ """
     key = getSearchKeyInstance(search_key_class)
-    tokens = key.tokenize(search_value)
+    tokens = key.tokenize(search_value)  
     token_types = [x.type for x in tokens]
-    self.assertEqual(token_types, list(expected_token_types))
+    self.assertSameSet(token_types, expected_token_types)  
 
+  
   def test_01ProperPoolInitialization(self, quiet=quiet, run=run_all_test):
     """ Check that search key pool is properly initialized """
     if not run: return
@@ -82,7 +84,6 @@ size/Child/34"""
     self.compare(DefaultKey, 
                 'S\xc3\xa9bastien or !="Doe John1" and Doe', 
                 ('WORD', 'OR', 'NOT', 'WORDSET', 'AND', 'WORD',))  
-    self.compare(DefaultKey, '.', ('WORD',))
                              
   def test_03KeyWordKey(self, quiet=quiet, run=run_all_test):
     """ Check lexer for KeyWordKey."""
@@ -101,37 +102,29 @@ size/Child/34"""
     self.compare(KeyWordKey, '<=John% and >="JOHN John"', 
                             ('LESSTHANEQUAL', 'KEYWORD', 'AND', 
                              'GREATERTHANEQUAL', 'WORDSET',))                             
-    self.compare(KeyWordKey, '=John% and >="JOHN John"',
-                            ('EXPLICITEQUALLITYWORD', 'AND',
+    self.compare(KeyWordKey, '=John% and >="JOHN John"', 
+                            ('EXPLICITEQUALLITYWORD', 'KEYWORD', 'AND', 
                              'GREATERTHANEQUAL', 'WORDSET',))
-    self.compare(KeyWordKey, '.', ('WORD',))
                              
   def test_04DateTimeKey(self, quiet=quiet, run=run_all_test):
     """ Check lexer for DateTimeKey."""
     if not run: return
-    self.compare(DateTimeKey, '2007.12.23', ('DATE',))
-    self.compare(DateTimeKey,
+    self.compare(DateTimeKey, '2007.12.23', ('DATE',))     
+    self.compare(DateTimeKey, 
                  '=2007.12.23 22:00:00 Universal or =23/12/2007 10:10 and !=2009-12-12',
                  ('EQUAL', 'DATE', 'OR', 'EQUAL', 'DATE', 'AND', 'NOT', 'DATE',))   
-    self.compare(DateTimeKey,
+    self.compare(DateTimeKey, 
                  '>=2007.12.23 22:00:00 GMT+02 or <=23/12/2007 and >2009/12/12 and <2009-11-11',
                  ('GREATERTHANEQUAL', 'DATE', 'OR', 'LESSTHANEQUAL', 'DATE', 
                    'AND', 'GREATERTHAN', 'DATE', 'AND', 'LESSTHAN', 'DATE'))
-
+                     
   def test_05FullTextKey(self, quiet=quiet, run=run_all_test):
-    """ Check lexer for FullTextKey."""
+    """ Check lexer for FullTextKey."""  
     if not run: return
-    self.compare(FullTextKey, 'John', ('WORD',))
-    self.compare(FullTextKey, 'John Doe', ('WORD', 'WORD',))
-    self.compare(FullTextKey, '+John -Doe',
-                 ('PLUS', 'WORD', 'MINUS', 'WORD',))
-    self.compare(FullTextKey, 'John*', ('WORD', 'ASTERISK'))
-    self.compare(FullTextKey, '+John*', ('PLUS', 'WORD', 'ASTERISK'))
-    self.compare(FullTextKey, '.', ('WORD',))
-    self.compare(FullTextKey, '"John Doe"', ('DOUBLEQUOTE', 'WORD', 'WORD', 'DOUBLEQUOTE'))
-    self.compare(FullTextKey, '+apple +(>turnover <strudel)',
-                 ('PLUS', 'WORD', 'PLUS', 'LEFTPARENTHES', 'GREATERTHAN', 'WORD',
-                  'LESSTHAN', 'WORD', 'RIGHTPARENTHES',))
+    self.compare(FullTextKey, 'John Doe', 
+                 ('WORD', 'WORD',)) 
+    self.compare(FullTextKey, '+John -Doe', 
+                 ('PLUS', 'WORD', 'MINUS', 'WORD',)) 
 
   def test_06ScriptableKey(self, quiet=quiet, run=run_all_test):
     """ Check lexer for ScriptableKey."""  
@@ -143,7 +136,7 @@ size/Child/34"""
                 'John Doe OR creation_date>=2005/12/12',
                 ('WORD', 'WORD', 'OR', 'KEYMAPPING',))                
                    
-class TestSearchKeyQuery(unittest.TestCase):
+class TestSearchKeyQuery(ERP5TypeTestCase):
   """Test search keys query generation
   """
   run_all_test = 1
@@ -206,12 +199,6 @@ class TestSearchKeyQuery(unittest.TestCase):
                 '%John and !=Doe%', 
                 "((((title = '%John') AND (title != 'Doe%'))))",
                 [])
-    # special chars
-    self.compare(DefaultKey,
-                 'title',
-                 '.',
-                 "((((title = '.'))))",
-                 [])
                 
   def test_02KeyWordKey(self, quiet=quiet, run=run_all_test):
     """ Check DefaultKey query generation"""
@@ -241,12 +228,6 @@ class TestSearchKeyQuery(unittest.TestCase):
                 '%John Doe% or =Doe John', 
                 "((((title LIKE '%John Doe%'))) OR (((title = 'Doe John'))))",
                 [])       
-    # special chars
-    self.compare(KeyWordKey,
-                 'title',
-                 '.',
-                 "((((title LIKE '%.%'))))",
-                 [])
                 
   def test_03DateTimeKey(self, quiet=quiet, run=run_all_test):
     """ Check DefaultKey query generation"""
@@ -368,18 +349,7 @@ class TestSearchKeyQuery(unittest.TestCase):
                 '1ab521ty', 
                 "delivery.stock = '1ab521ty'",
                 [])    
-    # special chars
-    self.compare(RawKey,
-                 'delivery.stock',
-                 '.',
-                 "delivery.stock = '.'",
-                 [])
-    #None values
-    self.compare(RawKey,
-                 'title',
-                 None,
-                 "title is NULL",
-                 [])
+                
   def test_06FullTextKey(self, quiet=quiet, run=run_all_test):
     """ Check FullTextKey query generation"""
     if not run: return
@@ -389,28 +359,6 @@ class TestSearchKeyQuery(unittest.TestCase):
                 "MATCH full_text.SearchableText AGAINST ('john' )",
                 ["MATCH full_text.SearchableText AGAINST ('john' ) AS full_text_SearchableText_relevance", 
                 "MATCH full_text.SearchableText AGAINST ('john' ) AS SearchableText_relevance"])    
-
-    # special chars
-    self.compare(FullTextKey,
-                'full_text.SearchableText',
-                '.',
-                "MATCH full_text.SearchableText AGAINST ('.' )",
-                ["MATCH full_text.SearchableText AGAINST ('.' ) AS full_text_SearchableText_relevance",
-                "MATCH full_text.SearchableText AGAINST ('.' ) AS SearchableText_relevance"])
-    #Boolean Mode
-    self.compare(FullTextKey,
-                'full_text.SearchableText',
-                'john stuart mill',
-                "MATCH full_text.SearchableText AGAINST ('+john +stuart +mill' IN BOOLEAN MODE)",
-                ["MATCH full_text.SearchableText AGAINST ('+john +stuart +mill' IN BOOLEAN MODE) AS full_text_SearchableText_relevance",
-                "MATCH full_text.SearchableText AGAINST ('+john +stuart +mill' IN BOOLEAN MODE) AS SearchableText_relevance"])
-
-    self.compare(FullTextKey,
-                'full_text.SearchableText',
-                'John*',
-                "MATCH full_text.SearchableText AGAINST ('John*' IN BOOLEAN MODE)",
-                ["MATCH full_text.SearchableText AGAINST ('John*' IN BOOLEAN MODE) AS full_text_SearchableText_relevance",
-                "MATCH full_text.SearchableText AGAINST ('John*' IN BOOLEAN MODE) AS SearchableText_relevance"])
     
   def test_07ScriptableKey(self, quiet=quiet, run=run_all_test):
     """ Check ScriptableKey query generation"""

@@ -1,7 +1,9 @@
 ##############################################################################
 #
-# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
-#                     Ivan Tyagov <ivan@nexedi.com>
+# Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2007-2009 Nexedi SA and Contributors. All Rights Reserved.
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Vincent Pelletier <vincent@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,23 +29,15 @@
 ##############################################################################
 
 from SearchKey import SearchKey
+from Products.ZSQLCatalog.Interface.ISearchKey import ISearchKey
+from Interface.Verify import verifyClass
 
 class RawKey(SearchKey):
-  """ RawKey key is an ERP5 portal_catalog search key which is used to render
-      SQL expression that will match exactly what's passed to it using equality ."""
+  """
+    This SearchKey does not do any parsing of given value.
+  """
+  default_comparison_operator = '='
+  get_operator_from_value = False
 
-  def build(self, **kwargs):
-    # this key doesn't require parsing
-    # It's required to implement it as it's used ONLY for ExactMath
-    pass
+verifyClass(ISearchKey, RawKey)
 
-  def buildSQLExpression(self, key, value, 
-                         format=None, mode=None, range_value=None, stat__=None):
-
-    if value is not None:
-      value = self.quoteSQLString(value, format)
-      key = self.quoteSQLKey(key, format)
-      where_expression = "%s = %s" % (key, value)
-    else:
-      where_expression = "%s is NULL" % (key)
-    return where_expression, []

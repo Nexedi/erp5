@@ -1,7 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
-# Copyright (c) 2007-2009 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Vincent Pelletier <vincent@nexedi.com>
 #
@@ -28,35 +27,73 @@
 #
 ##############################################################################
 
-from Products.ZSQLCatalog.Interface.IQuery import IQuery
-from Interface.Verify import verifyClass
+from Interface import Interface
 
-class Query(object):
+class INode(Interface):
   """
-    This is the base class of all kind of queries. Its only purpose is to be
-    able to distinguish any kind of value from a query.
+    Any kind of node in an Abstract Syntax Tree.
   """
 
-  __implements__ = IQuery
-  __allow_access_to_unprotected_subobjects__ = 1
+  def isLeaf():
+    """
+      Returns True if current node is a leaf in node tree.
+      Returns False otherwise.
+    """
 
-  def asSQLExpression(self, sql_catalog, column_map, only_group_columns):
+  def isColumn():
     """
-      To enable SQL rendering, overload this method in a subclass.
+      Returns True if current node is a column in node tree.
+      Returns False otherwise.
     """
-    raise TypeError, 'A %s cannot be rendered as an SQL expression.' % (self.__class__.__name__, )
 
-  def asSearchTextExpression(self, sql_catalog, column=None):
-    """
-      To enable Search Text rendering, overload this method in a subclass.
-    """
-    raise TypeError, 'A %s cannot be rendered as a SearchText expression.' % (self.__class__.__name__, )
+class IValueNode(INode):
+  """
+    Value- and comparison-operator-containig node.
+    They are leaf nodes in the syntax tree.
+  """
 
-  def registerColumnMap(self, sql_catalog, column_map):
+  def getValue():
     """
-      This method must always be overloaded by subclasses.
+      Returns node's value.
     """
-    raise NotImplementedError, '%s is incompeltely implemented.' % (self.__class__.__name__, )
 
-verifyClass(IQuery, Query)
+  def getComparisonOperator():
+    """
+      Returns node's comparison operator.
+    """
+
+class ILogicalNode(INode):
+  """
+    Logical-operator-containing node.
+    They are internal tree nodes.
+  """
+
+  def getLogicalOperator():
+    """
+      Returns node's logical operator.
+    """
+
+  def getNodeList():
+    """
+      Returns the list of subnodes.
+    """
+
+class IColumnNode(INode):
+  """
+    Column-name-containing node.
+    They are internal tree nodes.
+    Their value applies to any contained ValueNode, except if there is another
+    ColumnNode between current one and a ValueNode, for which the other
+    ColumnNode will take precedence.
+  """
+
+  def getColumnName():
+    """
+      Returns node's column name.
+    """
+
+  def getSubNode():
+    """
+      Returns node's (only) subnode.
+    """
 
