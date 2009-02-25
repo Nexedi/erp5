@@ -28,6 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
+from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from AccessControl.SecurityManagement import setSecurityManager
@@ -35,44 +36,44 @@ from Products.ERP5 import _dtmldir
 from Products.ERP5Type.Utils import _setSuperSecurityManager
 from Products.ERP5Type.Cache import CachingMethod
 
+_MARKER = []
+
 class IntrospectionTool(BaseTool):
   """
-  This tool provides both local and remote introspection.
+    This tool provides both local and remote introspection.
   """
 
   id = 'portal_introspections'
   title = 'Introspection Tool'
   meta_type = 'ERP5 Introspection Tool'
   portal_type = 'Introspection Tool'
-  allowed_content_types = ('Anonymized Introspection Report', 'User Introspection Report',)
+  allowed_content_types = ('Anonymized Introspection Report', 'User Introspection Report',) # XXX User Portal Type please
 
   security = ClassSecurityInfo()
 
   security.declareProtected(Permissions.ManagePortal, 'manage_overview')
   manage_overview = DTMLFile('explainIntrospectionTool', _dtmldir )
 
-  security.declareProtected('getERP5MenuItemList', Permissions.View)
-  def getERP5MenuItemList(self, kw):
+  security.declareProtected('getFilteredActionDict', Permissions.AccessContentsInformation)
+  def getFilteredActionDict(self, user_name=_MARKER):
     """
       Returns menu items for a given user
     """
     portal = self.getPortalObject()
-    erp5_user_name = kw.pop('erp5_user_name', None)
-    is_portal_manager = portal.portal_membership.checkPermission(Permissions.ManagePortal, \
-                                                                 portal)
-    downgrade_authenticated_user = erp5_user_name is not None and is_portal_manager
+    is_portal_manager = getToolByName(portal, 
+      'portal_membership').checkPermission(Permissions.ManagePortal, self)
+    downgrade_authenticated_user = user_name is not _MARKER and is_portal_manager
     if downgrade_authenticated_user:
       # downgrade to desired user
       original_security_manager = _setSuperSecurityManager(self, erp5_user_name)
 
     # call the method implementing it
-    erp5_menu_item_list = self._getTypeBasedMethod('getERP5MenuItemList',
-                     fallback_script_id='ERP5Site_getERP5MenuItemList')(**kw)
+    erp5_menu_dict = getToolByName(portal, 'portal_actions').listFilteredActionsFor(portal)
 
     if downgrade_authenticated_user:
       # restore original Security Manager
       setSecurityManager(original_security_manager)
 
-    return erp5_menu_item_list
+    return erp5_menu_dict
 
 InitializeClass(IntrospectionTool)
