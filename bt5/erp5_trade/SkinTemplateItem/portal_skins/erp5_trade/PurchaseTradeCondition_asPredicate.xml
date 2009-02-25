@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if context.getValidationState() == \'invalidated\':\n
+            <value> <string>if context.getValidationState() in (\'invalidated\', \'deleted\'):\n
   # return a predicate that will never apply\n
   return context.generatePredicate(criterion_property_list=(\'uid\',))\n
 \n
