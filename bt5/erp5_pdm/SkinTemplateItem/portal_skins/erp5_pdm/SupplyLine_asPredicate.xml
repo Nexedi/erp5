@@ -53,7 +53,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>base_category_tuple = (\'resource\',)\n
+            <value> <string>if context.getProperty(\'validation_state\') in (\'invalidated\', \'deleted\'):\n
+  # return a predicate that will never apply\n
+  return context.generatePredicate(criterion_property_list=(\'uid\',))\n
+\n
+base_category_tuple = (\'resource\',)\n
 \n
 if context.getSourceSection():\n
   base_category_tuple += (\'source_section\',)\n
@@ -111,9 +115,9 @@ return context.generatePredicate(membership_criterion_base_category_list = base_
                           <tuple>
                             <string>args</string>
                             <string>kw</string>
-                            <string>base_category_tuple</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>base_category_tuple</string>
                             <string>_inplacevar_</string>
                             <string>mapped_value_property_list</string>
                           </tuple>
