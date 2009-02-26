@@ -42,32 +42,17 @@ import urllib2
 from cStringIO import StringIO
 
 try:
-  import libxml2
+  import lxml
 except ImportError:
-  libxml2 = None
+  lxml = None
 try:
   import odfpy
 except ImportError:
   odfpy = None
 
-
-if libxml2:
-
-  class ErrorHandler:
-    """Collect errors"""
-    def __init__(self, file_name):
-      libxml2.lineNumbersDefault(1)
-      self.file_name = file_name
-      self.error_list = []
-
-    def onError(self, msg, data):
-      line = libxml2.lastError().line()
-      self.error_list.append('%s:%s: %s' % (self.file_name, line, msg))
-    onWarning = onError
-
-
-  class LibXML2Validator:
-    """Validate ODF document using RelaxNG and libxml2"""
+if lxml:
+  class LXMLValidator:
+    """Validate ODF document using RelaxNG and lxml"""
     schema_url = \
       'http://docs.oasis-open.org/office/v1.1/OS/OpenDocument-schema-v1.1.rng'
 
@@ -78,8 +63,7 @@ if libxml2:
       # download if local copy does not exists
       if not os.path.exists(self.schema_path):
         self._download()
-      ctxt = libxml2.relaxNGNewParserCtxt(self.schema_path)
-      self.relaxng = ctxt.relaxNGParse()
+      self.relaxng =  lxml.etree.RelaxNG(lxml.etree.parse(open(self.schema_path)))
 
     def validate(self, odf_file_content):
       error_list = []
@@ -98,20 +82,12 @@ if libxml2:
         r.close()
 
     def _validateXML(self, odf_file, content_file_name):
-      validationCtxt = self.relaxng.relaxNGNewValidCtxt()
-      err = ErrorHandler(content_file_name)
-
-      validationCtxt.setValidityErrorHandler(
-          err.onError, err.onWarning)
-
       zfd = zipfile.ZipFile(odf_file)
-      content = zfd.read(content_file_name)
+      doc = lxml.etree.parse(StringIO(zfd.read(content_file_name)))
+      self.relaxng.validate(doc)
+      return [error for error in str(self.relaxng.error_log).splitlines(True)]
 
-      validationCtxt.relaxNGValidateDoc(
-                libxml2.parseMemory(content, len(content)))
-      return err.error_list
-
-  Validator = LibXML2Validator
+  Validator = LXMLValidator
 
 elif odfpy:
 
