@@ -88,7 +88,7 @@
                       <list>
                         <string>my_function</string>
                         <string>my_subordination_title</string>
-                        <string>my_role</string>
+                        <string>my_role_list</string>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
                         <string>my_grade</string>
