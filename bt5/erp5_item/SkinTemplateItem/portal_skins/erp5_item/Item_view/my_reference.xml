@@ -77,11 +77,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>editable</string> </key>
+                    <key> <string>editable</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key>                 <string>external_validator</string> </key>
+                    <key> <string>external_validator</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -93,7 +93,7 @@
                     <value> <string>Item_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>hidden</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
