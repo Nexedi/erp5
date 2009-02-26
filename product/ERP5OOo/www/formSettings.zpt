@@ -22,6 +22,12 @@
                 tal:attributes="value request/ooo_stylesheet | here/ooo_stylesheet | nothing"/></td>
     </tr>
     <tr>
+      <td class="form-label">OOo Stylesheet Script</td>
+      <td><input name="script_name" value="default_ooo_script" type="text" size="20"
+                tal:attributes="value request/ooo_script_name | here/ooo_script_name | nothing"/></td>
+    </tr>
+    
+    <tr>
       <td align="left" valign="top">
       <div class="form-element">
         <em tal:condition="here/wl_isLocked">Locked by WebDAV</em>

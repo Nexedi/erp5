@@ -147,6 +147,7 @@ class OOoTemplate(ZopePageTemplate):
 
   # Default Attributes
   ooo_stylesheet = 'Base_getODTStyleSheet'
+  ooo_script_name = None
   ooo_xml_file_id = 'content.xml'
 
   # Default content type
@@ -225,13 +226,14 @@ class OOoTemplate(ZopePageTemplate):
     self.write(text)
 
   security.declareProtected('Change Page Templates', 'doSettings')
-  def doSettings(self, REQUEST, title, xml_file_id, ooo_stylesheet):
+  def doSettings(self, REQUEST, title, xml_file_id, ooo_stylesheet, script_name=None):
     """
       Change title, xml_file_id and ooo_stylesheet.
     """
     if SUPPORTS_WEBDAV_LOCKS and self.wl_isLocked():
       raise ResourceLockedError, "File is locked via WebDAV"
     self.ooo_stylesheet = ooo_stylesheet
+    self.ooo_script_name = script_name
     self.ooo_xml_file_id = xml_file_id
     self.pt_setTitle(title)
     #REQUEST.set('text', self.read()) # May not equal 'text'!
@@ -426,7 +428,13 @@ class OOoTemplate(ZopePageTemplate):
       # This is a system error
       raise ValueError, 'Can not render a template without a parent acquisition context'
     # Retrieve master document
-    ooo_document = getattr(here, self.ooo_stylesheet)
+    ooo_document = None
+    # If script is setting, call it
+    if (self.ooo_script_name is not None) and (self.ooo_script_name != ''):
+      ooo_script = getattr(here, self.ooo_script_name)
+      ooo_document = ooo_script(self.ooo_stylesheet)
+    else:
+      ooo_document = getattr(here, self.ooo_stylesheet)
     format = request.get('format')
     try:
       # If style is dynamic, call it
