@@ -282,6 +282,7 @@ class TestTIDServerV2:
   def log(self, message):
     sys.stdout.write(message)
 
-test = TestTIDServerV2(address, port)
-test.run()
+if __name__ == '__main__':
+  test = TestTIDServerV2(address, port)
+  test.run()
 
