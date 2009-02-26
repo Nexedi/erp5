@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="WebServiceTool" module="Products.ERP5.Tool.WebServiceTool"/>
+        <global name="WebServiceTool" module="Products.ERP5Type.Tool.WebServiceTool"/>
         <tuple/>
       </tuple>
     </pickle>
