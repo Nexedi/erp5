@@ -63,8 +63,11 @@ translateString = context.Base_translateString\n
 portal_type = kw.get(\'portal_type\', None)\n
 \n
 # ingest file (asynchronously)\n
-doc = context.portal_contributions.newContent(file = file,\n
-                                              portal_type = portal_type)\n
+if portal_type:\n
+  doc = context.portal_contributions.newContent(file = file,\n
+                                                portal_type = portal_type)\n
+else:\n
+  doc = context.portal_contributions.newContent(file=file)\n
 \n
 msg = translateString("${portal_type} created successfully.",\n
                        mapping = {\'portal_type\':doc.getPortalType()})\n
