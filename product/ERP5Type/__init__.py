@@ -59,7 +59,7 @@ def allowClassTool():
 
 def initialize( context ):
   # Import Product Components
-  from Tool import ClassTool, CacheTool, MemcachedTool, SessionTool
+  from Tool import ClassTool, CacheTool, MemcachedTool, SessionTool, WebServiceTool
   if USE_BASE_TYPE:
     from Tool import TypesTool
   import Document
@@ -73,6 +73,7 @@ def initialize( context ):
                    CacheTool.CacheTool,
                    MemcachedTool.MemcachedTool,
                    SessionTool.SessionTool,
+                   WebServiceTool.WebServiceTool,
                   )
   if USE_BASE_TYPE:
     content_classes = content_classes + (ERP5TypeInformation,)
