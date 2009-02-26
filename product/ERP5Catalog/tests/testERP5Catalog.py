@@ -946,7 +946,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
           self.getCatalogTool().buildSQLQuery(
           sort_on=(('ignored', 'ascending'),))['order_by_expression'])
   
-  @todo_erp5
   def test_27_SortOnAmbigousKeys(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
