@@ -497,7 +497,7 @@ def main(address, port):
   server = PoliteThreadingTCPServer((address, port), TIDServer)
   try:
     try:
-      log('Server listening.')
+      log('Server listening on %s:%s.'% server.server_address)
       server.serve_forever()
     except KeyboardInterrupt:
       log('Shuting down (received KeyboardInterrupt).')
