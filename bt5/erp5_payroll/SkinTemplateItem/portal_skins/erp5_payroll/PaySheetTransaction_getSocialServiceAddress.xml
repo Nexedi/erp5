@@ -60,10 +60,10 @@
   if the line_number is None, return all the address lines\n
 \'\'\'\n
 \n
-social_insurance_annotationi_line_value = \\\n
+social_insurance_annotation_line_value = \\\n
     context.getSocialInsuranceAnnotationLineValue()\n
-if social_insurance_annotationi_line_value is not None:\n
-  organisation = social_insurance_annotationi_line_value.getSourceValue()\n
+if social_insurance_annotation_line_value is not None:\n
+  organisation = social_insurance_annotation_line_value.getSourceValue()\n
 else:\n
   return \'\'\n
 \n
@@ -121,7 +121,7 @@ else:\n
                             <string>line_number</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>social_insurance_annotationi_line_value</string>
+                            <string>social_insurance_annotation_line_value</string>
                             <string>None</string>
                             <string>organisation</string>
                             <string>street_address</string>

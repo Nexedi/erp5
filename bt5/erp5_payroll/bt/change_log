@@ -1,3 +1,6 @@
+2009-02-26 fabien
+* update PaySheetTransaction_view and PaySheetModel_view to display payment_condition_payment_date only if cutom payment_condition_trade_date is selected.
+
 2009-02-04 fabien
 * when a specialise model is defined on a paysheet, apply it automatically
 * rewrite the apply model script
