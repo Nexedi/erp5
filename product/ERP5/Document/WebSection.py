@@ -118,7 +118,7 @@ class WebSection(Domain, PermanentURLMixIn):
       return PermanentURLMixIn.__bobo_traverse__(self, request, name)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getLayoutProperty')
-    def getLayoutProperty(self, key, d=MARKER):
+    def getLayoutProperty(self, key, default=None):
       """
         A simple method to get a property of the current by
         acquiring it from the current section or its parents.
@@ -129,12 +129,7 @@ class WebSection(Domain, PermanentURLMixIn):
         if result is not MARKER and result:
           return result
         section = section.aq_parent
-      # No property was defined on children neither on web site
-      # If a default is provided, return it
-      # else raise
-      if d is not MARKER:
-        return d
-      raise AttributeError('Web Section %s has no layout property %s' % (self.getUrl(), key))
+      return default
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getWebSectionValue')
     def getWebSectionValue(self):
