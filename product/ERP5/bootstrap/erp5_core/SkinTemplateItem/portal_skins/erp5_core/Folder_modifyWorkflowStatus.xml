@@ -79,11 +79,14 @@ for parameters in listbox:\n
                                         workflow_id=workflow_id,\n
                                         comment=comment)\n
 \n
+# activate something on the module after everything, so that user can know that something is happening in the background\n
 context.activate(after_tag=tag).getTitle()\n
 \n
-return request.RESPONSE.redirect( \'%s/%s?portal_status_message=%s\' % (\n
-                         context.absolute_url(), form_id,\n
-                        translateString("Workflow modification in progress.")))\n
+# reset selection checked uids\n
+context.portal_selections.setSelectionCheckedUidsFor(selection_name, [])\n
+\n
+return context.Base_redirect(form_id,\n
+          keep_items=dict(portal_status_message=translateString("Workflow modification in progress.")))\n
 </string> </value>
         </item>
         <item>
@@ -94,7 +97,7 @@ return request.RESPONSE.redirect( \'%s/%s?portal_status_message=%s\' % (\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox=None, comment=\'\', form_id=\'view\', **kw</string> </value>
+            <value> <string>listbox=None, comment=\'\', form_id=\'view\', selection_name=\'\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -114,7 +117,7 @@ return request.RESPONSE.redirect( \'%s/%s?portal_status_message=%s\' % (\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -123,6 +126,7 @@ return request.RESPONSE.redirect( \'%s/%s?portal_status_message=%s\' % (\n
                             <string>listbox</string>
                             <string>comment</string>
                             <string>form_id</string>
+                            <string>selection_name</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
@@ -141,6 +145,7 @@ return request.RESPONSE.redirect( \'%s/%s?portal_status_message=%s\' % (\n
                             <string>zip</string>
                             <string>workflow_action</string>
                             <string>workflow_id</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -156,6 +161,7 @@ return request.RESPONSE.redirect( \'%s/%s?portal_status_message=%s\' % (\n
                 <none/>
                 <string></string>
                 <string>view</string>
+                <string></string>
               </tuple>
             </value>
         </item>
