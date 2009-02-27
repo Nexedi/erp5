@@ -410,8 +410,9 @@ class WizardTool(BaseTool):
           user_and_password[0] and user_and_password[1]):
         friendly_server_url = server_url
         schema = urlparse(server_url)
-        server_url = '%s://%s:%s@%s%s' %(schema[0], user_and_password[0], user_and_password[1],
-                                         schema[1], schema[2])
+        server_url = '%s://%s@%s%s' %(schema[0], 
+                         '%s:%s' %(user_and_password[0], user_and_password[1]), \
+                         schema[1], schema[2])
     witch_tool = self._getRemoteWitchTool(server_url)
     parameter_dict = self.REQUEST.form.copy()
     if use_proxy:
