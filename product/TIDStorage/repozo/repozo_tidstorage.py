@@ -70,7 +70,9 @@ Usage: %(program)s [-h|--help] [-c|--config configuration_file]
   argument.
 """
 
+from tests.testTIDServer import TIDClient
 from ExchangeProtocol import ExchangeProtocol
+
 import socket
 import base64
 import imp
@@ -84,27 +86,12 @@ import traceback
 import md5
 import time
 import tempfile
-from struct import pack, unpack
+from struct import pack
 
 program = sys.argv[0]
 
 def log(message):
   print message
-
-class TIDClient:
-  def __init__(self, address):
-    # TODO: handle diconnections nicely
-    self._address = address
-    self._socket = socket.socket()
-    self._socket.connect(address)
-    self._protocol_handler = ExchangeProtocol(socket=self._socket)
-
-  def __call__(self):
-    """
-      Return dict currently stored on the server.
-    """
-    self._protocol_handler.send_field('dump')
-    return self._protocol_handler.recv_dict()
 
 def backup(address, known_tid_storage_identifier_dict, repozo_formated_command, zope_formated_url=None):
   connection = TIDClient(address)
@@ -115,7 +102,7 @@ def backup(address, known_tid_storage_identifier_dict, repozo_formated_command, 
       raise ValueError('It was impossible to retrieve all required TIDs. Missing: %s' % to_load)
     to_load = []
     load_count -= 1
-    stored_tid_dict = connection()
+    stored_tid_dict = connection.dump_all()
     #log(stored_tid_dict)
     for key, (file_path, storage_path, object_path) in known_tid_storage_identifier_dict.iteritems():
       if key not in stored_tid_dict and zope_formated_url is not None:
