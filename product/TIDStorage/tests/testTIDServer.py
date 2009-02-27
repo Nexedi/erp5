@@ -6,11 +6,6 @@ import socket
 import time
 import sys
 
-assert len(sys.argv) == 3, 'Requires exactly 2 arguments: <address> <port>'
-
-address = sys.argv[1]
-port = int(sys.argv[2])
-
 class TIDClient:
   def __init__(self, address):
     self._to_server = socket.socket()
@@ -283,6 +278,12 @@ class TestTIDServerV2:
     sys.stdout.write(message)
 
 if __name__ == '__main__':
+
+  assert len(sys.argv) == 3, 'Requires exactly 2 arguments: <address> <port>'
+
+  address = sys.argv[1]
+  port = int(sys.argv[2])
+
   test = TestTIDServerV2(address, port)
   test.run()
 
