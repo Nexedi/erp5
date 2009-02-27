@@ -63,7 +63,6 @@ for recipient in text.split(\',\'):\n
     recipient = recipient[recipient.find(\'<\') + 1:]\n
     recipient = recipient[:recipient.find(\'>\')]\n
   if recipient:\n
-    recipient = \'"%s"\' % (recipient)\n
     email = getResultValue(url_string=recipient, portal_type=\'Email\', parent_portal_type=\'Person\')\n
     if email is None:\n
       email = getResultValue(url_string=recipient, portal_type=\'Email\', parent_portal_type=\'Organisation\')\n
