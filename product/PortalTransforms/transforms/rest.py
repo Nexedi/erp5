@@ -23,6 +23,7 @@ class rest:
                     'traceback': 1,
                }
         html = HTML(orig, 
+                    report_level=2,
                     input_encoding=input_encoding, 
                     output_encoding=output_encoding, 
                     language_code=language, 
