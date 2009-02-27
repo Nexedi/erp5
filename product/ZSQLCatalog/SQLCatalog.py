@@ -1743,7 +1743,7 @@ class Catalog(Folder,
         if related_key_id in column_map:
           LOG('SQLCatalog', 100, 'Related key %r has the same name as an existing column on tables %r' % (related_key_id, column_map[related_key_id]))
         else:
-          LOG('SQLCatalog', 100, 'Related key %r is declared more than once.' % (related_key_id, )
+          LOG('SQLCatalog', 100, 'Related key %r is declared more than once.' % (related_key_id, ))
       column_set.add(related_key_id)
     return column_set
 
