@@ -58,7 +58,7 @@
 #kw[\'at_date\'] = DateTime()\n
 kw[\'item\'] = context.getRelativeUrl()\n
 \n
-last_affectation_list = context.portal_simulation.getTrackingList(**kw)\n
+last_affectation_list = context.portal_simulation.getCurrentTrackingList(**kw)\n
 \n
 if kw.get(\'src__\',0):\n
   return last_affectation_list\n

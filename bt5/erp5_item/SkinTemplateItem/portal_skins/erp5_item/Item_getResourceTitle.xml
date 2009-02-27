@@ -53,8 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.log(context.Item_getResourceValue())\n
-if context.Item_getResourceValue() is not None:\n
+            <value> <string>if context.Item_getResourceValue() is not None:\n
   return context.Item_getResourceValue().getTitle()\n
 return \'\'\n
 </string> </value>

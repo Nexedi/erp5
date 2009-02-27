@@ -56,7 +56,7 @@
             <value> <string>from DateTime import DateTime\n
 \n
 date = DateTime()\n
-last_affectation = context.portal_simulation.getTrackingList(item=context.getRelativeUrl(), at_date=date)\n
+last_affectation = context.portal_simulation.getCurrentTrackingList(item=context.getRelativeUrl(), at_date=date)\n
 \n
 if len(last_affectation) == 0:\n
   return None\n
