@@ -1739,7 +1739,7 @@ class Catalog(Folder,
         LOG('SQLCatalog', 100, 'Malformed related key definition: %r. Ignored.' % (entire_definition, ))
         continue
       related_key_id = split_entire_definition[0].strip()
-      if related_key_id in column_set:
+      if related_key_id in column_set and related_key_id in column_map:
         LOG('SQLCatalog', 100, 'Related key %r has the same name as an existing column on tables %r' % (related_key_id, column_map[related_key_id]))
       column_set.add(related_key_id)
     return column_set
