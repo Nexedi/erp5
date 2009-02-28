@@ -98,6 +98,8 @@ class ColumnMap(object):
     else:
       function = None
       column = raw_column
+    # Remove 'DISTINCT ' etc. from column.
+    column = column.split()[-1]
     # Remove '`' from column.
     column = column.replace('`', '')
     # Extract table name from column, if any.

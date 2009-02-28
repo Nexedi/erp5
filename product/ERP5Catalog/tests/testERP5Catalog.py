@@ -3808,6 +3808,14 @@ VALUES
     delattr(portal, 'foo')
     delattr(portal, 'bar')
 
+  def test_distinct_select_expression(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    portal_catalog = self.getCatalogTool()
+    res = portal_catalog.searchResults(
+      select_expression='count(DISTINCT catalog.reference) AS count_reference',
+    )
+    self.assertEquals(1, len(res))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Catalog))
