@@ -3813,6 +3813,7 @@ VALUES
     portal_catalog = self.getCatalogTool()
     res = portal_catalog.searchResults(
       select_expression='count(DISTINCT catalog.reference) AS count_reference',
+      group_by_expression='catalog.reference',
     )
     self.assertEquals(1, len(res))
 
