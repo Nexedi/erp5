@@ -1854,12 +1854,15 @@ class Catalog(Folder,
     else:
       # Maybe a related key...
       related_key_definition = self.getRelatedKeyDefinition(key)
-      if related_key_definition is None:
-        # Unknown
-        search_key = None
-      else:
+      if related_key_definition is not None:
         # It's a related key
         search_key = self.getSearchKey(key, 'RelatedKey')
+      elif self.getScriptableKeyScript(key) is not None:
+        # It's a scriptable key
+        search_key = self.getSearchKey(key, 'RawKey')
+      else:
+        # Unknown
+        search_key = None
     return search_key, related_key_definition
 
   @profiler_decorator
