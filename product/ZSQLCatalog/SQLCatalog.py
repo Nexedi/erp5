@@ -1847,7 +1847,7 @@ class Catalog(Folder,
        - If returned SearchKey is a RelatedKey, value is its definition
        - Otherwise, value is None
     """
-    # Is key a "real" column or some related key ?
+    # Is key a "real" column or some related key or scriptable key?
     related_key_definition = None
     if key in self.getColumnMap():
       search_key = self.getSearchKey(key, search_key_name)
