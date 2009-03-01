@@ -69,7 +69,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:https://www.tiolive.com/instance</string> </value>
+            <value> <string>string:${object_url}/ERP5Site_redirectToTioLiveInstance</string> </value>
         </item>
       </dictionary>
     </pickle>
