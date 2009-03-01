@@ -31,7 +31,7 @@ from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ZSQLCatalog.SearchKey.DefaultKey import DefaultKey
 from Products.ZSQLCatalog.SearchKey.RawKey import RawKey
-from Products.ZSQLCatalog.SearchKey.KeyWordKey import KeyWordKey
+from Products.ZSQLCatalog.SearchKey.KeywordKey import KeywordKey
 from Products.ZSQLCatalog.SearchKey.DateTimeKey import DateTimeKey
 from Products.ZSQLCatalog.SearchKey.FullTextKey import FullTextKey
 from Products.ZSQLCatalog.SearchKey.FloatKey import FloatKey
