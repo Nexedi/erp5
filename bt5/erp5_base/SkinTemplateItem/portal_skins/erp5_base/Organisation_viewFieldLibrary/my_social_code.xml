@@ -77,7 +77,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The Organisation\'s National Identification Number</string> </value>
+                    <value> <string>The Social Security Identification Number of the organisation.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -93,7 +93,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>National Identification Number</string> </value>
+                    <value> <string>Social Security Identification Number</string> </value>
                 </item>
               </dictionary>
             </value>

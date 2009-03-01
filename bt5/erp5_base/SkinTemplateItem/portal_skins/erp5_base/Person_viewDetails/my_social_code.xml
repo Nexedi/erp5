@@ -76,7 +76,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The Person\'s National Identification Number.</string> </value>
+                    <value> <string>The Social Security Identification Number of the person.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
