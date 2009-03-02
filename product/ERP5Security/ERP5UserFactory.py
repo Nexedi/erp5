@@ -157,8 +157,8 @@ class ERP5User(PropertiedUser):
                 return 0
                     
         # patch by Klaus for LocalRole blocking
-        if getattr(object, '_getAcquireLocalRoles', None) is not None:
-          if not object._getAcquireLocalRoles():
+        if getattr(inner_obj, '_getAcquireLocalRoles', None) is not None:
+          if not inner_obj._getAcquireLocalRoles():
             break
 
         inner = aq_inner( inner_obj )
