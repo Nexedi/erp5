@@ -13,6 +13,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>title</string>
+                <string>description</string>
                 <string>editable</string>
               </list>
             </value>
@@ -76,7 +78,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The usual name of the person.</string> </value>
+                    <value> <string>The usual name of the person or the organisation.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -88,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Person_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
