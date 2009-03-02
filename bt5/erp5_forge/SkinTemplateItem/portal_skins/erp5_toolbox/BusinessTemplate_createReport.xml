@@ -142,7 +142,7 @@ type_information.addAction(\n
     priority=max_priority+1,)\n
 \n
 type_information.addAction(\n
-    action_id.replace(\'report_\', \'export_\'),\n
+    action_id.replace(\'_report\', \'_export\'),\n
     report_name,\n
     "string:${object_url}/%s?your_portal_skin=ODS&your_format=" % dialog_form_name,\n
     "python: getattr(portal.portal_skins, \'erp5_ods_style\', None) is not None",\n
@@ -156,7 +156,7 @@ if context.getPortalType() == \'Business Template\' and \\\n
      context.getInstallationState() != \'installed\':\n
   context.setTemplateActionPathList(context.getTemplateActionPathList() +\n
       (\'%s | %s\' % (portal_type, action_id),\n
-       \'%s | %s\' % (portal_type, action_id.replace(\'report_\', \'export_\')), ))\n
+       \'%s | %s\' % (portal_type, action_id.replace(\'_report\', \'_export\')), ))\n
 \n
 # Create the report\n
 skin_folder.manage_addProduct[\'ERP5Form\'].addERP5Report(report_form_name, report_name)\n
