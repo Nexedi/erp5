@@ -76,7 +76,7 @@ period_list = closing_period.getParentValue().searchFolder(\n
 for period in period_list:\n
   period = period.getObject()\n
   if period.getSimulationState() in valid_state_list:\n
-    if start_date <= period.getStopDate():\n
+    if start_date <= period.getStopDate() and not stop_date <= period.getStartDate():\n
       raise ValidationFailed, translateString(\n
           "${date} is already in an open accounting period.",\n
           mapping={\'date\': start_date})\n
