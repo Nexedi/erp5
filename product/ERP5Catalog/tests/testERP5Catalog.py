@@ -3817,6 +3817,50 @@ VALUES
     )
     self.assertEquals(1, len(res))
 
+  def test_CatalogUidDuplicates(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Catalog Uid Duplicates'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ',0,message)
+
+    # Create an object just to allocate a new valid uid.
+    person_module = self.getPersonModule()
+    person = person_module.newContent(portal_type='Person')
+    get_transaction().commit()
+    self.tic()
+
+    # Make sure that the new object is catalogued.
+    portal_catalog = self.getPortalObject().portal_catalog
+    self.assertEquals(person, portal_catalog(uid=person.uid)[0].getObject())
+
+    # Delete the new object to free the uid.
+    available_uid = person.uid
+    person_module.manage_delObjects(uids=[available_uid])
+    get_transaction().commit()
+    self.tic()
+
+    # Make sure that the uid is not used any longer.
+    self.assertEquals(0, len(portal_catalog(uid=person.uid)))
+
+    # Now, we create two new objects without indexing, so the catalog
+    # will not know anything about these objects.
+    person1 = person_module.newContent(portal_type='Person', is_indexable=False)
+    person2 = person_module.newContent(portal_type='Person', is_indexable=False)
+
+    # Force to assign the same uid, and catalog them.
+    person1.uid = person2.uid = available_uid
+    person1.is_indexable = person2.is_indexable = True
+    portal_catalog.catalogObjectList([person1, person2])
+
+    # The catalog must have either or both of their uids, so 
+    # the objects must have different ones at this point.
+    self.assertNotEquals(person1.uid, person2.uid)
+    
+    # And they must have been catalogued.
+    self.assertEquals(person1, portal_catalog(uid=person1.uid)[0].getObject())
+    self.assertEquals(person2, portal_catalog(uid=person2.uid)[0].getObject())
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Catalog))
