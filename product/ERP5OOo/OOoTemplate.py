@@ -408,6 +408,7 @@ class OOoTemplate(ZopePageTemplate):
         extra_context.update(arg_dict)
         request.other.update(arg_dict)
       path = office_include.attrib['path']
+      del(office_include.attrib['path'])
       new_path = replaceIncludes(path)
       draw_object = Element('{%s}object' % xml_doc.nsmap.get('draw'))
       draw_object.attrib.update({'{%s}href' % xml_doc.nsmap.get('xlink'): new_path})
