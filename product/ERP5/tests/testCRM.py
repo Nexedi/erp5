@@ -342,12 +342,17 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
               title='Sender',
               subordination_value=customer_organisation,
               default_email_text='sender@customer.com')
-    # also create the recipient
+    # also create the recipients
     if 'me' not in portal.person_module.contentIds():
       portal.person_module.newContent(
               id='me',
               title='Me',
               default_email_text='me@erp5.org')
+    if 'he' not in portal.person_module.contentIds():
+      portal.person_module.newContent(
+              id='he',
+              title='He',
+              default_email_text='he@erp5.org')
 
     # make sure customers are available to catalog
     get_transaction().commit()
@@ -417,7 +422,10 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
     event = self._ingestMail('simple')
     get_transaction().commit()
     self.tic()
-    self.assertEquals('person_module/me', event.getDestination())
+    destination_list = event.getDestinationList()
+    destination_list.sort()
+    self.assertEquals(['person_module/he', 'person_module/me'],
+                      destination_list)
 
   def test_follow_up(self):
     # follow up is found automatically, based on the content of the mail, and
