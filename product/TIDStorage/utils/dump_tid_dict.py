@@ -35,16 +35,24 @@ import sys
 from struct import pack
 from base64 import encodestring
 from pprint import pprint
+from time import sleep
 
 def main():
   address = sys.argv[1]
   port = int(sys.argv[2])
 
   client = TIDClient((address, port))
+  if not client.bootstraped():
+    raise ValueError('Server not bootstraped')
+
   dump_dict = client.dump_all()
+  if not dump_dict:
+    raise ValueError('Received empty dict from server')
+
   for key,value in dump_dict.iteritems():
     dump_dict[key] = encodestring(pack('>Q', value)).rstrip()
   pprint(dump_dict)
+
 if __name__ == '__main__':
   assert len(sys.argv) == 3, 'Requires exactly 2 arguments: <address> <port>'
   sys.exit(main())
