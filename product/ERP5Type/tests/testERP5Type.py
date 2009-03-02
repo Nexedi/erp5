@@ -1353,7 +1353,9 @@ class TestPropertySheet:
       self.assertEquals(self.getPersonModule(), copy.getParentValue())
 
       # Test category accessor
-      gender = self.getCategoryTool().gender.newContent(
+      gender = self.getCategoryTool().gender._getOb('male', None)
+      if gender is None:
+        gender = self.getCategoryTool().gender.newContent(
                             portal_type='Category', id='male')
       # Category can not be used as asContext parameter
 #       new_copy = obj.asContext(gender=gender.getCategoryRelativeUrl())
