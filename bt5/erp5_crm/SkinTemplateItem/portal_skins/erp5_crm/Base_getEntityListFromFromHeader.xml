@@ -66,9 +66,9 @@ for recipient in text.split(\',\'):\n
     # Remove extra spaces.\n
     recipient = recipient.strip()\n
   if recipient:\n
-    email = getResultValue(url_string=recipient, portal_type=\'Email\', parent_portal_type=\'Person\')\n
+    email = getResultValue(url_string={\'query\':recipient, \'key\':\'ExactMatch\'}, portal_type=\'Email\', parent_portal_type=\'Person\')\n
     if email is None:\n
-      email = getResultValue(url_string=recipient, portal_type=\'Email\', parent_portal_type=\'Organisation\')\n
+      email = getResultValue(url_string={\'query\':recipient, \'key\':\'ExactMatch\'}, portal_type=\'Email\', parent_portal_type=\'Organisation\')\n
     if email is not None:\n
       result.append(email.getParentValue())\n
 return result\n
