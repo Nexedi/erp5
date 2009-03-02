@@ -62,6 +62,9 @@ for recipient in text.split(\',\'):\n
   if "<" in recipient:\n
     recipient = recipient[recipient.find(\'<\') + 1:]\n
     recipient = recipient[:recipient.find(\'>\')]\n
+  else:\n
+    # Remove extra spaces.\n
+    recipient = recipient.strip()\n
   if recipient:\n
     email = getResultValue(url_string=recipient, portal_type=\'Email\', parent_portal_type=\'Person\')\n
     if email is None:\n

@@ -1,3 +1,6 @@
+2009-03-02 yusei
+* Bug fixed. Recipients of ingested email should be set to destination category on event.
+
 2008-11-13 yusei
 * Start to develop version 5.4.
 
