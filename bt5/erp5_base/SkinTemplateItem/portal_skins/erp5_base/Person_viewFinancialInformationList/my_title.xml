@@ -76,7 +76,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The title of the document.</string> </value>
+                    <value> <string>The usual name of the person.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -88,7 +88,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Entity_viewFieldLibrary</string> </value>
+                    <value> <string>Person_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -96,7 +96,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Title</string> </value>
+                    <value> <string>Usual Name</string> </value>
                 </item>
               </dictionary>
             </value>
