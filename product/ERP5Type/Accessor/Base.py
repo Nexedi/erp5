@@ -204,7 +204,7 @@ except ImportError:
     class __roles__:
       @staticmethod
       def rolesForPermissionOn(ob):
-        roles = getattr(ob.im_self, '%s__roles__' % ob.__name__, None)
+        roles = getattr(aq_base(ob.im_self), '%s__roles__' % ob.__name__, None)
         if roles is None:
             return rolesForPermissionOn(None, ob.im_self, ('Manager',),
                                         '_Modify_portal_content_Permission')
@@ -215,7 +215,7 @@ except ImportError:
     class __roles__:
       @staticmethod
       def rolesForPermissionOn(ob):
-        roles = getattr(ob.im_self, '%s__roles__' % ob.__name__, None)
+        roles = getattr(aq_base(ob.im_self), '%s__roles__' % ob.__name__, None)
         if roles is None:
             return rolesForPermissionOn(None, ob.im_self, ('Manager',),
                                         '_Access_contents_information_Permission')
