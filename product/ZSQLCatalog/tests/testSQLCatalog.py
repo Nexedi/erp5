@@ -116,6 +116,7 @@ class DummyCatalog(SQLCatalog):
 
   sql_catalog_keyword_search_keys = ('keyword', )
   sql_catalog_datetime_search_keys = ('date', )
+  sql_catalog_scriptable_keys = ('scriptable_keyword | scriptableKeyScript', )
 
   def getColumnMap(self):
     return {
@@ -140,6 +141,9 @@ class DummyCatalog(SQLCatalog):
     assert 'table_1' in kw
     assert len(kw) == 4
     return '%(table_0)s.uid = %(query_table)s.uid AND %(table_0)s.other_uid = %(table_1)s' % kw
+
+  def scriptableKeyScript(self, value):
+    return SimpleQuery(operator='=', keyword=value)
 
 class TestSQLCatalog(unittest.TestCase):
   def setUp(self):
@@ -284,6 +288,10 @@ class TestSQLCatalog(unittest.TestCase):
                      ReferenceQuery(RelatedReferenceQuery(ReferenceQuery(operator='=', default='b')), operator='and')
                    , operator='and'), operator='and'),
                  {'query': ComplexQuery(Query(related_default='a'), Query(related_default='b'))})
+
+  def test_007_testScriptableKey(self):
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='=', keyword='%a%'), operator='and'),
+                 {'scriptable_keyword': '%a%'})
 
 ##return catalog(title=Query(title='a', operator='not'))
 #return catalog(title={'query': 'a', 'operator': 'not'})

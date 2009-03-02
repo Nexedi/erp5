@@ -1861,22 +1861,19 @@ class Catalog(Folder,
        - If returned SearchKey is a RelatedKey, value is its definition
        - Otherwise, value is None
     """
-    # Is key a "real" column or some related key or scriptable key?
+    # Is key a "real" column or some related key ?
     related_key_definition = None
     if key in self.getColumnMap():
       search_key = self.getSearchKey(key, search_key_name)
     else:
       # Maybe a related key...
       related_key_definition = self.getRelatedKeyDefinition(key)
-      if related_key_definition is not None:
-        # It's a related key
-        search_key = self.getSearchKey(key, 'RelatedKey')
-      elif self.getScriptableKeyScript(key) is not None:
-        # It's a scriptable key
-        search_key = self.getSearchKey(key, 'RawKey')
-      else:
+      if related_key_definition is None:
         # Unknown
         search_key = None
+      else:
+        # It's a related key
+        search_key = self.getSearchKey(key, 'RelatedKey')
     return search_key, related_key_definition
 
   @profiler_decorator
@@ -1998,9 +1995,12 @@ class Catalog(Folder,
           implicit_table_list.append(key)
         LOG('buildQuery', WARNING, 'Discarding empty value for key %r: %r' % (key, value))
       else:
+        script = self.getScriptableKeyScript(key)
         if isinstance(value, _Query):
           # Query instance: use as such, ignore key.
           result = value
+        elif script is not None:
+          result = script(value)
         elif isinstance(value, basestring):
           # String: parse using key's default search key.
           search_key = self.getColumnDefaultSearchKey(key)
