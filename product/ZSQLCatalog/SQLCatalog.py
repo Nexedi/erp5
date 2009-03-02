@@ -1314,6 +1314,11 @@ class Catalog(Folder,
       path_uid_dict = self.getUidDictForPathList(path_list=path_list)
       uid_path_dict = self.getPathDictForUidList(uid_list=uid_list)
 
+    # This dict will store uids and objects which are verified below.
+    # The purpose is to prevent multiple objects from having the same
+    # uid inside object_list.
+    assigned_uid_dict = {}
+
     for object in object_list:
       if not getattr(aq_base(object), 'uid', None):
         try:
@@ -1324,6 +1329,12 @@ class Catalog(Folder,
           raise RuntimeError, 'could not set missing uid for %r' % (object,)
       elif check_uid:
         uid = object.uid
+        if uid in assigned_uid_dict:
+          object.uid = self.newUid()
+          LOG('SQLCatalog', WARNING,
+              'uid of %r changed from %r to %r as old one is assigned to %r !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, object.uid, assigned_uid_dict[uid]))
+          uid = object.uid
+
         path = object.getPath()
         index = path_uid_dict.get(path, None)
         try:
@@ -1377,6 +1388,9 @@ class Catalog(Folder,
             object.uid = self.newUid()
             LOG('SQLCatalog', WARNING,
                 'uid of %r changed from %r to %r as old one is assigned to %s in catalog !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, object.uid, catalog_path))
+            uid = object.uid
+
+        assigned_uid_dict[uid] = object
 
     if method_id_list is None:
       method_id_list = self.sql_catalog_object_list
