@@ -731,6 +731,20 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.portal.portal_catalog(portal_search_text='')
     self.portal.portal_catalog(portal_search_text='a search text')
 
+    # Create a document.
+    document_1 = self.portal.document_module.newContent(portal_type='File')
+    document_1.setDescription('Hello. ScriptableKey is very useful if you want to make your own search syntax.')
+    document_2 = self.portal.document_module.newContent(portal_type='File')
+    document_2.setDescription('This test make sure that scriptable key feature on ZSQLCatalog works.')
+
+    get_transaction().commit()
+    self.tic()
+
+    # Use scriptable key to search above documents.
+    self.assertEqual(len(self.portal.portal_catalog(advanced_search_text='ScriptableKey')), 1)
+    self.assertEqual(len(self.portal.portal_catalog(advanced_search_text='RelatedKey')), 0)
+    self.assertEqual(len(self.portal.portal_catalog(advanced_search_text='make')), 2)
+
   def test_PDFTextContent(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
