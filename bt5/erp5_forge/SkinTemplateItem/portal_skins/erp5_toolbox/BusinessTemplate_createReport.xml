@@ -352,7 +352,7 @@ return context.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessTemplate_createReportDialog</string> </value>
+            <value> <string>BusinessTemplate_createReport</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

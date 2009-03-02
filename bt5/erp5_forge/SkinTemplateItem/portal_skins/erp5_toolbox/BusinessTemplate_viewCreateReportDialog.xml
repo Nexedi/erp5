@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>BusinessTemplate_createReportDialog</string> </value>
+            <value> <string>BusinessTemplate_createReport</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
