@@ -204,21 +204,27 @@ except ImportError:
     class __roles__:
       @staticmethod
       def rolesForPermissionOn(ob):
-        roles = getattr(aq_base(ob.im_self), '%s__roles__' % ob.__name__, None)
+        # we explictly call _aq_dynamic to prevent acquiering the attribute
+        # from container
+        roles = ob.im_self._aq_dynamic('%s__roles__' % ob.__name__)
         if roles is None:
             return rolesForPermissionOn(None, ob.im_self, ('Manager',),
                                         '_Modify_portal_content_Permission')
         else:
-            return roles        
+            # wrap explicitly, because we used _aq_dynamic
+            return roles.__of__(ob.im_self)
     Setter.__roles__ = __roles__
 
     class __roles__:
       @staticmethod
       def rolesForPermissionOn(ob):
-        roles = getattr(aq_base(ob.im_self), '%s__roles__' % ob.__name__, None)
+        # we explictly call _aq_dynamic to prevent acquiering the attribute
+        # from container
+        roles = ob.im_self._aq_dynamic('%s__roles__' % ob.__name__)
         if roles is None:
             return rolesForPermissionOn(None, ob.im_self, ('Manager',),
                                         '_Access_contents_information_Permission')
         else:
-            return roles        
+            # wrap explicitly, because we used _aq_dynamic
+            return roles.__of__(ob.im_self)
     Getter.__roles__ = __roles__

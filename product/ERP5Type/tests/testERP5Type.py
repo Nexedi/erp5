@@ -2467,6 +2467,15 @@ class TestPropertySheet:
         obj._edit(foo_bar="v3")
         self.assertEqual(obj.getFooBar(), "v3")
 
+    def test_accessor_security_and_getTitle_acquisition(self):
+      obj = self.getOrganisationModule().newContent(portal_type='Organisation')
+      self.assertTrue(guarded_hasattr(obj, 'getTitle'))
+      # getTitle__roles__ is defined on ERP5Site class, so it can be acquired,
+      # and this would be wrong
+      obj.manage_permission(Permissions.View, [], 0)
+      obj.manage_permission(Permissions.AccessContentsInformation, [], 0)
+      self.assertFalse(guarded_hasattr(obj, 'getTitle'))
+
     def test_AddPermission(self):
       # test "Add permission" on ERP5 Type Information
       self.portal.portal_types.manage_addTypeInformation(
