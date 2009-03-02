@@ -118,11 +118,11 @@
                         </tuple>
                         <tuple>
                           <string>start_date</string>
-                          <string>Begin</string>
+                          <string>Start Date</string>
                         </tuple>
                         <tuple>
                           <string>stop_date</string>
-                          <string>End</string>
+                          <string>Stop Date</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -137,11 +137,11 @@
                       <list>
                         <tuple>
                           <string>start_date</string>
-                          <string>Begin</string>
+                          <string>Start Date</string>
                         </tuple>
                         <tuple>
                           <string>stop_date</string>
-                          <string>End</string>
+                          <string>Stop Date</string>
                         </tuple>
                       </list>
                     </value>
