@@ -35,7 +35,6 @@ import sys
 from struct import pack
 from base64 import encodestring
 from pprint import pprint
-from time import sleep
 
 def main():
   address = sys.argv[1]
