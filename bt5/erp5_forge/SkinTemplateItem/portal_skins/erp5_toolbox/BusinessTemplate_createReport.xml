@@ -53,7 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
+            <value> <string encoding="cdata"><![CDATA[
+
+portal = context.getPortalObject()\n
 skin_folder = getattr(portal.portal_skins, skin_folder)\n
 \n
 type_name = portal_type.replace(\' \', \'\')\n
@@ -139,11 +141,22 @@ type_information.addAction(\n
     \'object_report\',\n
     priority=max_priority+1,)\n
 \n
+type_information.addAction(\n
+    action_id.replace(\'report_\', \'export_\'),\n
+    report_name,\n
+    "string:${object_url}/%s?your_portal_skin=ODS&your_format=" % dialog_form_name,\n
+    "python: getattr(portal.portal_skins, \'erp5_ods_style\', None) is not None",\n
+    \'View\',\n
+    \'object_exchange\',\n
+    priority=max_priority+1,)\n
+\n
+\n
 # Associate the dialog with type information in business template meta data\n
 if context.getPortalType() == \'Business Template\' and \\\n
      context.getInstallationState() != \'installed\':\n
   context.setTemplateActionPathList(context.getTemplateActionPathList() +\n
-      (\'%s | %s\' % (portal_type, action_id) ,), )\n
+      (\'%s | %s\' % (portal_type, action_id),\n
+       \'%s | %s\' % (portal_type, action_id.replace(\'report_\', \'export_\')), ))\n
 \n
 # Create the report\n
 skin_folder.manage_addProduct[\'ERP5Form\'].addERP5Report(report_form_name, report_name)\n
@@ -260,7 +273,9 @@ return [Object(uid=\'new_\',\n
 return context.Base_redirect(form_id,\n
     keep_items=dict(portal_status_message=\n
       context.Base_translateString(\'Report created.\')))\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
