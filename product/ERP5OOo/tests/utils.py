@@ -59,11 +59,8 @@ if lxml:
     def __init__(self, schema_url=schema_url):
       self.schema_url = schema_url
       self.schema_path = os.path.join(
-              tempfile.gettempdir(), 'OpenDocument.rng')
-      # download if local copy does not exists
-      if not os.path.exists(self.schema_path):
-        self._download()
-      self.relaxng =  lxml.etree.RelaxNG(lxml.etree.parse(open(self.schema_path)))
+        os.path.dirname(__file__), os.path.basename(schema_url))
+      self.relaxng =  lxml.etree.RelaxNG(lxml.etree.parse(self.schema_path))
 
     def validate(self, odf_file_content):
       error_list = []
@@ -71,15 +68,6 @@ if lxml:
       for f in ('content.xml', 'meta.xml', 'styles.xml', 'settings.xml'):
         error_list.extend(self._validateXML(odf_file, f))
       return error_list
-
-    def _download(self):
-      r = urllib2.urlopen(self.schema_url)
-      out_file = open(self.schema_path, 'w')
-      try:
-        out_file.write(r.read())
-      finally:
-        out_file.close()
-        r.close()
 
     def _validateXML(self, odf_file, content_file_name):
       zfd = zipfile.ZipFile(odf_file)
