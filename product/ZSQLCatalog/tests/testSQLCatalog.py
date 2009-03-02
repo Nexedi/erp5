@@ -116,6 +116,7 @@ class DummyCatalog(SQLCatalog):
 
   sql_catalog_keyword_search_keys = ('keyword', )
   sql_catalog_datetime_search_keys = ('date', )
+  sql_catalog_full_text_search_keys = ('fulltext', )
   sql_catalog_scriptable_keys = ('scriptable_keyword | scriptableKeyScript', )
 
   def getColumnMap(self):
@@ -124,6 +125,7 @@ class DummyCatalog(SQLCatalog):
       'default': ['foo', ],
       'keyword': ['foo', ],
       'date': ['foo', ],
+      'fulltext': ['foo', ],
       'other_uid': ['bar', ]
     }
 
@@ -172,6 +174,26 @@ class TestSQLCatalog(unittest.TestCase):
                    {column: '%a'})
       self.catalog(ReferenceQuery(ReferenceQuery(operator='<', default='a'), operator='and'),
                    {column: '<a'})
+      self.catalog(ReferenceQuery(ReferenceQuery(operator='<=', default='a'), operator='and'),
+                   {column: '<=a'})
+      self.catalog(ReferenceQuery(ReferenceQuery(operator='>=', default='a'), operator='and'),
+                   {column: '>=a'})
+      self.catalog(ReferenceQuery(ReferenceQuery(operator='>', default='a'), operator='and'),
+                   {column: '>a'})
+      self.catalog(ReferenceQuery(ReferenceQuery(operator='!=', default='a'), operator='and'),
+                   {column: '!=a'})
+      self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a b'), operator='and'),
+                   {column: 'a b'})
+      self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a >b'), operator='and'),
+                   {column: 'a >b'})
+      self.catalog(ReferenceQuery(ReferenceQuery(operator='>', default='a >b'), operator='and'),
+                   {column: '>a >b'})
+      self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='>a >b'), operator='and'),
+                   {column: '">a >b"'})
+      self.catalog(ReferenceQuery(ReferenceQuery(operator='>', default='>a >b'), operator='and'),
+                   {column: '>">a >b"'})
+      self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a OR b'), operator='and'),
+                   {column: 'a OR b'})
       self.catalog(ReferenceQuery(ReferenceQuery(operator='<', default='path'), operator='and'),
                    {column: {'query': 'path', 'range': 'max'}})
       self.catalog(ReferenceQuery(ReferenceQuery(operator='in', default=['a', 'b']), operator='and'),
@@ -226,11 +248,51 @@ class TestSQLCatalog(unittest.TestCase):
       self.catalog(ReferenceQuery(ReferenceQuery(operator='>', date=DateTime('2008/01/10 UTC')), operator='and'),
                    {column: {'query': '2008/01/10 UTC', 'range': 'nlt'}},
                    check_search_text=False)
+      self.catalog(ReferenceQuery(ReferenceQuery(
+                     ReferenceQuery(operator='>=', date=DateTime('2008/01/01 UTC')),
+                     ReferenceQuery(operator='<', date=DateTime('2009/01/01 UTC'))
+                   , operator='and'), operator='and'),
+                   {column: '2008 UTC'})
+      self.catalog(ReferenceQuery(ReferenceQuery(
+                     ReferenceQuery(operator='>=', date=DateTime('2008/02/01 UTC')),
+                     ReferenceQuery(operator='<', date=DateTime('2008/03/01 UTC'))
+                   , operator='and'), operator='and'),
+                   {column: '2008/02 UTC'})
+      self.catalog(ReferenceQuery(ReferenceQuery(
+                     ReferenceQuery(operator='>=', date=DateTime('2008/02/02 UTC')),
+                     ReferenceQuery(operator='<', date=DateTime('2008/02/03 UTC'))
+                   , operator='and'), operator='and'),
+                   {column: '2008/02/02 UTC'})
+      self.catalog(ReferenceQuery(ReferenceQuery(
+                     ReferenceQuery(operator='>=', date=DateTime('2008/02/02 10:00:00 UTC')),
+                     ReferenceQuery(operator='<', date=DateTime('2008/02/02 11:00:00 UTC'))
+                   , operator='and'), operator='and'),
+                   {column: '2008/02/02 10 UTC'})
+      self.catalog(ReferenceQuery(ReferenceQuery(
+                     ReferenceQuery(operator='>=', date=DateTime('2008/02/02 10:10:00 UTC')),
+                     ReferenceQuery(operator='<', date=DateTime('2008/02/02 10:11:00 UTC'))
+                   , operator='and'), operator='and'),
+                   {column: '2008/02/02 10:10 UTC'})
+      self.catalog(ReferenceQuery(ReferenceQuery(
+                     ReferenceQuery(operator='>=', date=DateTime('2008/02/02 10:10:10 UTC')),
+                     ReferenceQuery(operator='<', date=DateTime('2008/02/02 10:10:11 UTC'))
+                   , operator='and'), operator='and'),
+                   {column: '2008/02/02 10:10:10 UTC'})
 
   def test_004_KeywordKey(self):
     for column in ('keyword', 'related_keyword'):
       self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%a%'), operator='and'),
                    {column: 'a'})
+      self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%a b%'), operator='and'),
+                   {column: 'a b'})
+      self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%a b%'), operator='and'),
+                   {column: '"a b"'})
+      self.catalog(ReferenceQuery(ReferenceQuery(operator='!=', keyword='a'), operator='and'),
+                   {column: '!=a'})
+      self.catalog(ReferenceQuery(
+                     ReferenceQuery(ReferenceQuery(operator='like', keyword='%a'), operator='not')
+                   , operator='and'),
+                   {column: '!=%a'})
       self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%a'), operator='and'),
                    {column: '%a'})
       self.catalog(ReferenceQuery(ReferenceQuery(operator='<', keyword='a'), operator='and'),
@@ -292,6 +354,18 @@ class TestSQLCatalog(unittest.TestCase):
   def test_007_testScriptableKey(self):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='=', keyword='%a%'), operator='and'),
                  {'scriptable_keyword': '%a%'})
+
+  def test_008_testRawKey(self):
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='%a%'), operator='and'),
+                 {'default': {'query': '%a%', 'key': 'RawKey'}},
+                 check_search_text=False)
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='>a'), operator='and'),
+                 {'default': {'query': '>a', 'key': 'RawKey'}},
+                 check_search_text=False)
+
+  def test_009_testFullTextKey(self):
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a'), operator='and'),
+                 {'fulltext': 'a'})
 
 ##return catalog(title=Query(title='a', operator='not'))
 #return catalog(title={'query': 'a', 'operator': 'not'})
