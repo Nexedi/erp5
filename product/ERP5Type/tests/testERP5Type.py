@@ -549,11 +549,13 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       from Products.ERP5Type.Base import _aq_reset
       _aq_reset()
       self._catch_log_errors(ignored_level=INFO)
-      folder = self.getOrganisationModule()
-      orga = folder.newContent(portal_type='Organisation',)
-      # call an accessor, _aq_dynamic will generate accessors
-      orga.getId()
-      self._ignore_log_errors()
+      try:
+        folder = self.getOrganisationModule()
+        orga = folder.newContent(portal_type='Organisation',)
+        # call an accessor, _aq_dynamic will generate accessors
+        orga.getId()
+      finally:
+        self._ignore_log_errors()
     
     def test_09_RenameObjects(self, quiet=quiet, run=run_all_test):
       """Test object renaming.
