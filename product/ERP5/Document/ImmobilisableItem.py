@@ -121,8 +121,8 @@ class ImmobilisableItem(XMLObject, Amount):
           portal_type = self.getPortalDeliveryMovementTypeList() + \
                           ('Immobilisation Line', 'Immobilisation Cell')
           sql_dict['portal_type'] = portal_type
-        sql_dict['sort_on'] = 'movement.stop_date'
-        sql_dict['sort_order'] = 'ascending'
+        sql_dict['sort_on'] = [('movement.stop_date','ascending')]
+
 
         # Handle dates
         date_key = 'movement.stop_date'
@@ -1077,8 +1077,7 @@ class ImmobilisableItem(XMLObject, Amount):
       # Get tracking list
       sql_kw = self._getCleanSqlDict(**kw)
       sql_kw['item'] = self.getRelativeUrl()
-      sql_kw['sort_on'] = 'item.date'
-      sql_kw['sort_order'] = 'ascending'
+      sql_kw['sort_on'] = [('item.date','ascending')]
       change_list = self.portal_simulation.getCurrentTrackingHistoryList(**sql_kw)
       to_date = kw.get('to_date')
       # Collect data
