@@ -69,7 +69,7 @@ class IOperator(Interface):
       Accessor for operator's SQL representation.
     """
 
-  def getSearchTextOperator():
+  def getOperatorSearchText():
     """
       Accessor for operator's SearchText representation.
     """
