@@ -131,11 +131,11 @@
                       <list>
                         <tuple>
                           <string>PersonModule_viewPersonList/listbox</string>
-                          <string>Person View</string>
+                          <string>Persons</string>
                         </tuple>
                         <tuple>
                           <string>OrganisationModule_viewOrganisationList/listbox</string>
-                          <string>Organisation View</string>
+                          <string>Organisations</string>
                         </tuple>
                       </list>
                     </value>

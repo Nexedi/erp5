@@ -111,7 +111,7 @@
                       <list>
                         <tuple>
                           <string>PersonModule_viewPersonList/listbox</string>
-                          <string>Person View</string>
+                          <string>Persons</string>
                         </tuple>
                       </list>
                     </value>
