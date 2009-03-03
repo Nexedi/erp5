@@ -329,6 +329,10 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
       base_cat.newContent(portal_type='Category',
                           id='subcat',
                           codification="%s1" % code)
+    # add another function subcategory.
+    self.getCategoryTool()['function'].newContent(portal_type='Category',
+                                                  id='another_subcat',
+                                                  codification='Function2')
     self.defined_category = "group/subcat\n"\
                             "site/subcat\n"\
                             "function/subcat"
@@ -497,10 +501,60 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     person_list = self.portal.acl_users.erp5_users.getUserByLogin(user)
     self.assertEquals(1, len(person_list))
     self.assertEquals(self.username, person_list[0].getReference())
+
+  def testLocalRoleWithTraverser(self):
+    """Make sure that local role works correctly when traversing
+    """
+    self.assert_(not self.portal.portal_types.Person.acquire_local_roles)
     
+    self.getPersonModule().newContent(portal_type='Person',
+                                      id='first_last',
+                                      first_name='First',
+                                      last_name='Last')
+    loginable_person = self.getPersonModule().newContent(portal_type='Person',
+                                                         reference='guest',
+                                                         password='guest')
+    assignment = loginable_person.newContent(portal_type='Assignment',
+                                             function='another_subcat')
+    assignment.open()
+    get_transaction().commit()
+    self.tic()
+
+    person_module_type_information = self.getTypesTool()['Person Module']
+    person_module_type_information.addRole(
+      id='Auditor',
+      description='',
+      name='An Auditor role for testing',
+      condition='',
+      category='function/another_subcat',
+      base_category_script='',
+      base_category='')
+    person_module_type_information.updateRoleMapping()
+    get_transaction().commit()
+    self.tic()
+
+    person_module_path = self.getPersonModule().absolute_url(relative=1)
+    response = self.publish('/%s/view' % person_module_path,
+                            basic='guest:guest')
+    self.assertEqual(response.getStatus(), 200)
+    response = self.publish('/%s/first_last/getFirstName' % person_module_path,
+                            basic='guest:guest')
+    self.assertEqual(response.getStatus(), 401)
+
+    # Organisation does not have explicitly declared getTitle method in
+    # the class definition.
+    # Add organisation and make sure guest cannot access to its getTitle.
+    self.getOrganisationModule().newContent(portal_type='Organisation',
+                                            id='my_company',
+                                            title='Nexedi')
+    get_transaction().commit()
+    self.tic()
+    response = self.publish('/%s/my_company/getTitle' % self.getOrganisationModule().absolute_url(relative=1),
+                            basic='guest:guest')
+    self.assertEqual(response.getStatus(), 401)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestUserManagement))
   suite.addTest(unittest.makeSuite(TestLocalRoleManagement))
   return suite
-
