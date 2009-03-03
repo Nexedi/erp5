@@ -113,7 +113,7 @@ class SearchKey(object):
 
   @profiler_decorator
   def buildSearchTextExpression(self, operator, value, column=None):
-    operator_text = operator.getOperator()
+    operator_text = operator.getOperatorSearchText()
     if column is None:
       column = self.getColumn()
     if isinstance(value, (list, tuple)):
