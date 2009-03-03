@@ -240,7 +240,6 @@ class TIDStorage:
   _storage_id_lock = threading.RLock()
   _next_full_dump = None
   _next_dump = None
-  _tid_file = None
   _burst_period = None
   _full_dump_period = None
   
@@ -252,7 +251,6 @@ class TIDStorage:
     self._transaction_id_to_storage_id_list_dict = {}
     self._storage_id_to_storage_id_set_dict = {}
     if tid_file_path is not None:
-      self._tid_file = openTIDLog()
       self._burst_period = burst_period
       self._full_dump_period = full_dump_period
       now = time.time()
@@ -332,7 +330,7 @@ class TIDStorage:
           # Raises if not found
           storage_id_set.remove(storage_id)
       if has_bootstraped:
-        if self._tid_file is not None:
+        if tid_file is not None:
           now = time.time()
           can_full_dump = (self._next_full_dump is not None) and (self._next_full_dump < now)
           can_dump = (not can_full_dump) and (self._next_dump is not None) and (self._next_dump < now)
@@ -353,7 +351,7 @@ class TIDStorage:
             to_dump_dict = dict([(key, self._storage[key]) for key in self._since_last_burst])
             dump_code = 'd'
           if len(to_dump_dict):
-            self._tid_file.write('%.02f %s %r\n' % (now, dump_code, to_dump_dict))
+            self._dumpToTIDFile(now, dump_code, to_dump_dict)
             if can_full_dump:
               self._next_full_dump = now + self._full_dump_period
             if self._next_dump is not None:
@@ -363,6 +361,19 @@ class TIDStorage:
         doBootstrap()
     finally:
       self._storage_id_lock.release()
+
+  def rotateTIDFile(self):
+    global tid_file
+    self._storage_id_lock.acquire()
+    try:
+      tid_file = openTIDLog()
+      if tid_file is not None:
+        self._dumpToTIDFile(time.time(), 'f', self._storage)
+    finally:
+      self._storage_id_lock.release()
+
+  def _dumpToTIDFile(self, now, dump_code, to_dump_dict):
+    tid_file.write('%.02f %s %r\n' % (now, dump_code, to_dump_dict))
 
   def dump(self):
     self._storage_id_lock.acquire()
@@ -507,14 +518,23 @@ def server(address, port):
     server.server_close()
 
 def openLog():
-  return open(options.logfile_name, 'a', 0)
+  if options.fork:
+    result = open(options.logfile_name, 'a', 0)
+  else:
+    result = sys.stdout
+  return result
 
 def openTIDLog():
-  return open(options.status_file, 'a', 0)
+  if options.status_file is None:
+    result = None
+  else:
+    result = open(options.status_file, 'a', 0)
+  return result
 
 def HUPHandler(signal_number, stack):
   log('Rotating logfile...')
   sys.stdout = sys.stderr = openLog()
+  tid_storage.rotateTIDFile()
   log('Logfile rotated')
 
 def USR1Handler(signal_number, stack):
@@ -688,10 +708,12 @@ signal.signal(signal.SIGHUP, HUPHandler)
 signal.signal(signal.SIGUSR1, USR1Handler)
 signal.signal(signal.SIGTERM, TERMHandler)
 
+tid_file = openTIDLog()
+sys.stdout = sys.stderr = openLog()
+
 if options.fork:
   os.chdir('/')
   os.umask(027)
-  logfile = openLog()
   pidfile = open(options.pidfile_name, 'w')
   pid = os.fork()
   if pid == 0:
@@ -702,7 +724,6 @@ if options.fork:
       os.close(0)
       os.close(1)
       os.close(2)
-      sys.stdout = sys.stderr = logfile
       server(options.address, options.port)
       log('Exiting.')
     else:
