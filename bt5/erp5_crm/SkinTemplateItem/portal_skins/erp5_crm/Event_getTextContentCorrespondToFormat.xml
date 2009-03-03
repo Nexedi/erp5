@@ -64,7 +64,7 @@ else:\n
   if editable:\n
     return value\n
   else:\n
-    return newline_to_br(value)\n
+    return newline_to_br(value or "")\n
 </string> </value>
         </item>
         <item>
