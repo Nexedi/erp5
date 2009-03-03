@@ -1,5 +1,7 @@
 import logging
 from sgmllib import SGMLParser
+import re
+from cgi import escape
 
 from Products.PortalTransforms.interfaces import itransform
 from Products.PortalTransforms.utils import log
@@ -8,23 +10,62 @@ from Products.CMFDefault.utils import IllegalHTML
 from Products.CMFDefault.utils import SimpleHTMLParser
 from Products.CMFDefault.utils import VALID_TAGS
 from Products.CMFDefault.utils import NASTY_TAGS
+from Products.PortalTransforms.utils import safeToInt
 
 # tag mapping: tag -> short or long tag
 VALID_TAGS = VALID_TAGS.copy()
 NASTY_TAGS = NASTY_TAGS.copy()
 
-# add some tags to allowed types. This should be fixed in CMFDefault
+# add some tags to allowed types. These should be backported to CMFDefault.
 VALID_TAGS['ins'] = 1
 VALID_TAGS['del'] = 1
 VALID_TAGS['q'] = 1
-VALID_TAGS['map']=1
-VALID_TAGS['area']=1
+VALID_TAGS['map'] = 1
+VALID_TAGS['area'] = 1
+VALID_TAGS['abbr'] = 1
+VALID_TAGS['acronym'] = 1
+VALID_TAGS['var'] = 1
+VALID_TAGS['dfn'] = 1
+VALID_TAGS['samp'] = 1
+VALID_TAGS['address'] = 1
+VALID_TAGS['bdo'] = 1
+VALID_TAGS['thead'] = 1
+VALID_TAGS['tfoot'] = 1
+VALID_TAGS['col'] = 1
+VALID_TAGS['colgroup'] = 1
 
 msg_pat = """
 <div class="system-message">
 <p class="system-message-title">System message: %s</p>
 %s</d>
 """
+
+def hasScript(s):
+   """ Dig out evil Java/VB script inside an HTML attribute """
+
+   # look for "script" and "expression"
+   javascript_pattern = re.compile("([\s\n]*?s[\s\n]*?c[\s\n]*?r[\s\n]*?i[\s\n]*?p[\s\n]*?t[\s\n]*?:)|([\s\n]*?e[\s\n]*?x[\s\n]*?p[\s\n]*?r[\s\n]*?e[\s\n]*?s[\s\n]*?s[\s\n]*?i[\s\n]*?o[\s\n]*?n)", re.DOTALL|re.IGNORECASE)
+   s = decode_htmlentities(s)
+   return javascript_pattern.findall(s)
+
+def decode_htmlentities(s):
+   """ XSS code can be hidden with htmlentities """
+
+   entity_pattern = re.compile("&#(?P<htmlentity>x?\w+)?;?")
+   s = entity_pattern.sub(decode_htmlentity,s)
+   return s
+
+def decode_htmlentity(m):
+   entity_value = m.groupdict()['htmlentity']
+   if entity_value.lower().startswith('x'):
+      try:
+          return chr(int('0'+entity_value,16))
+      except ValueError:
+          return entity_value
+   try:
+      return chr(int(entity_value))
+   except ValueError:
+      return entity_value
 
 class StrippingParser(SGMLParser):
     """Pass only allowed tags;  raise exception for known-bad.
@@ -47,7 +88,7 @@ class StrippingParser(SGMLParser):
     def handle_data(self, data):
         if self.suppress: return
         if data:
-            self.result.append(data)
+            self.result.append(escape(data))
 
     def handle_charref(self, name):
         if self.suppress: return
@@ -74,23 +115,24 @@ class StrippingParser(SGMLParser):
         """
 
         if self.suppress: return
-        #if self.remove_javascript and tag == script and :
 
         if self.valid.has_key(tag):
             self.result.append('<' + tag)
 
+            remove_script = getattr(self,'remove_javascript',True)
+
             for k, v in attrs:
-                if self.remove_javascript and k.strip().lower().startswith('on'):
+                if remove_script and k.strip().lower().startswith('on'):
                     if not self.raise_error: continue
-                    else: raise IllegalHTML, 'Javascript event "%s" not allowed.' % k
-                elif self.remove_javascript and v.strip().lower().startswith('javascript:' ):
+                    else: raise IllegalHTML, 'Script event "%s" not allowed.' % k
+                elif remove_script and hasScript(v):
                     if not self.raise_error: continue
-                    else: raise IllegalHTML, 'Javascript URI "%s" not allowed.' % v
+                    else: raise IllegalHTML, 'Script URI "%s" not allowed.' % v
                 else:
                     self.result.append(' %s="%s"' % (k, v))
 
             #UNUSED endTag = '</%s>' % tag
-            if self.valid.get(tag):
+            if safeToInt(self.valid.get(tag)):
                 self.result.append('>')
             else:
                 self.result.append(' />')
@@ -103,10 +145,10 @@ class StrippingParser(SGMLParser):
             pass
 
     def unknown_endtag(self, tag):
-        if self.nasty.has_key(tag):
+        if self.nasty.has_key(tag) and not self.valid.has_key(tag):
             self.suppress = False
         if self.suppress: return
-        if self.valid.get(tag):
+        if safeToInt(self.valid.get(tag)):
             self.result.append('</%s>' % tag)
             #remTag = '</%s>' % tag
 
@@ -127,13 +169,19 @@ def scrubHTML(html, valid=VALID_TAGS, nasty=NASTY_TAGS,
 
 class SafeHTML:
     """Simple transform which uses CMFDefault functions to
-    clean potentially bad tags.
-    Tags must explicit be allowed in valid_tags to pass. Only the tags
-    themself are removed, not their contents. If tags are
-    removed and in nasty_tags, they are removed with
-    all of their contents.
-    Be aware that you may need to clean the cache to let a Object
-    call the transform again.
+    clean potentially bad tags.   
+
+    Tags must explicit be allowed in valid_tags to pass. Only
+    the tags themself are removed, not their contents. If tags
+    are removed and in nasty_tags, they are removed with
+    all of their contents.         
+    
+    Objects will not be transformed again with changed settings.
+    You need to clear the cache by e.g.
+    1.) restarting your zope or
+    2.) empty the zodb-cache via ZMI -> Control_Panel
+        -> Database Management -> main || other_used_database
+        -> Flush Cache.
     """
 
     __implements__ = itransform

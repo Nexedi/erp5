@@ -1,10 +1,35 @@
+1.4.1-nexedi - 2009-03-03
+=========================
+
+  * Allowed the abbr, acronym, var, dfn, samp, address, bdo, thead, tfoot,
+    col, and colgroup tags by default, since they are harmless, valid XHTML
+    and shouldn't be filtered. Fixes:
+    http://dev.plone.org/plone/ticket/6712 and
+    http://dev.plone.org/plone/ticket/7251
+    [limi] (backport from 1.5.5-final)
+
+  * Add another XSS fix from for handling extraneous brackets.
+  [dunny] (backport from 1.5.3-final)
+
+  * Add XSS fixes from Anton Stonor to safe_html transform.
+  [alecm, stonor] (backport from 1.5.3-final)
+
+  * casting to int is evil without previous check of the type. so we assume as
+    in CMFPlone just zero for non-int-castable values.
+    [jensens] (backport from 1.5.0-a1)
+
+  * the values in the safe_html valid tag dictionary can become strings when
+    modifying them via the ZMI. Explicitly convert them to integers before
+    testing their value.
+    [wichert] (backport from 1.5.0-a1)
+
 1.4.0-nexedi - 2008-10-24
-========================
+=========================
 
   * fixed an infinite loop bug.
 
   * remove PortalTransforms/configure.zcml that is not compatible with
-    Zope-2.8's five.
+    Zope-2.8's Five (1.0.2).
 
   * let the user configure 'initial_header_level' (cf
     'rest-header-level' directive).
@@ -16,7 +41,7 @@
     transform tool will be copied and this transform will be removed
     from copied one.
 
-1.4.0-final - 2006-06-16
+1.4.1-final - 2006-09-08
 ========================
 
   * Shut down a noisy logging message to DEBUG level.
