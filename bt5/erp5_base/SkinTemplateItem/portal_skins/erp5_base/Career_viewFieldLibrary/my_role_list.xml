@@ -92,7 +92,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The role of the person in the organisation.</string> </value>
+                    <value> <string>The roles of the person in the organisation.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -114,7 +114,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Role</string> </value>
+                    <value> <string>Roles</string> </value>
                 </item>
               </dictionary>
             </value>
