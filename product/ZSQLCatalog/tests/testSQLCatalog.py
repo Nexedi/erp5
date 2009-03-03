@@ -166,44 +166,49 @@ class TestSQLCatalog(unittest.TestCase):
           'Query: %r\nSearchText: %r\nReference: %r\nSecond rendering: %r' % \
                        (query, search_text, reference_param_dict, search_text_param_dict))
 
-  def test_001_DefaultKey(self):
-    for column in ('default', 'related_default'):
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a'), operator='and'),
-                   {column: 'a'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='like', default='%a'), operator='and'),
-                   {column: '%a'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='<', default='a'), operator='and'),
-                   {column: '<a'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='<=', default='a'), operator='and'),
-                   {column: '<=a'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='>=', default='a'), operator='and'),
-                   {column: '>=a'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='>', default='a'), operator='and'),
-                   {column: '>a'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='!=', default='a'), operator='and'),
-                   {column: '!=a'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a b'), operator='and'),
-                   {column: 'a b'})
-      self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='=', default='a'), ReferenceQuery(operator='>', default='b'), operator='or'), operator='and'),
-                   {column: 'a >b'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a > b'), operator='and'),
-                   {column: 'a > b'})
-      self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='>', default='a'), ReferenceQuery(operator='>', default='b'), operator='or'), operator='and'),
-                   {column: '>a >b'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='>a >b'), operator='and'),
-                   {column: '">a >b"'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='>', default='>a >b'), operator='and'),
-                   {column: '>">a >b"'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='in', default=['a', 'b']), operator='and'),
-                   {column: 'a OR b'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a OR b'), operator='and'),
-                   {column: '"a OR b"'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='<', default='path'), operator='and'),
-                   {column: {'query': 'path', 'range': 'max'}})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='in', default=['a', 'b']), operator='and'),
-                   {column: ['a', 'b']})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='in', default=['a', 'b']), operator='and'),
-                   {column: ['=a', '=b']})
+  def _testDefaultKey(self, column):
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a'), operator='and'),
+                 {column: 'a'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='like', default='%a'), operator='and'),
+                 {column: '%a'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='<', default='a'), operator='and'),
+                 {column: '<a'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='<=', default='a'), operator='and'),
+                 {column: '<=a'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='>=', default='a'), operator='and'),
+                 {column: '>=a'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='>', default='a'), operator='and'),
+                 {column: '>a'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='!=', default='a'), operator='and'),
+                 {column: '!=a'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a b'), operator='and'),
+                 {column: 'a b'})
+    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='=', default='a'), ReferenceQuery(operator='>', default='b'), operator='or'), operator='and'),
+                 {column: 'a >b'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a > b'), operator='and'),
+                 {column: 'a > b'})
+    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='>', default='a'), ReferenceQuery(operator='>', default='b'), operator='or'), operator='and'),
+                 {column: '>a >b'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='>a >b'), operator='and'),
+                 {column: '">a >b"'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='>', default='>a >b'), operator='and'),
+                 {column: '>">a >b"'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='in', default=['a', 'b']), operator='and'),
+                 {column: 'a OR b'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a OR b'), operator='and'),
+                 {column: '"a OR b"'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='<', default='path'), operator='and'),
+                 {column: {'query': 'path', 'range': 'max'}})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='in', default=['a', 'b']), operator='and'),
+                 {column: ['a', 'b']})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='in', default=['a', 'b']), operator='and'),
+                 {column: ['=a', '=b']})
+
+  def test_DefaultKey(self):
+    self._testDefaultKey('default')
+
+  def test_relatedDefaultKey(self):
+    self._testDefaultKey('related_default')
 
   def test_002_keyOverride(self):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='%a'), operator='and'),
@@ -213,111 +218,121 @@ class TestSQLCatalog(unittest.TestCase):
                  {'default': {'query': '<a', 'key': 'ExactMatch'}},
                  check_search_text=False)
 
-  def test_003_DateTimeKey(self):
-    for column in ('date', 'related_date'):
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='>=', date=DateTime('2008/10/01 12:10:21')), operator='and'),
-                   {column: {'query': '>2008/10/01 12:10:20', 'format': '%y/%m/%d'}})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='>=', date=DateTime('2008/10/01 12:10:21 CEST')), operator='and'),
-                   {column: {'query': '>2008/10/01 12:10:20 CEST', 'format': '%y/%m/%d'}})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='>=', date=DateTime('2008/10/01 12:10:21 CET')), operator='and'),
-                   {column: {'query': '>2008/10/01 12:10:20 CET', 'format': '%y/%m/%d'}})
-      self.catalog(ReferenceQuery(ReferenceQuery(
-                     ReferenceQuery(operator='>=', date=DateTime('2008/10/01 UTC')),
-                     ReferenceQuery(operator='<', date=DateTime('2008/10/02 UTC'))
-                   , operator='and'), operator='and'),
-                   {column: '2008/10/01 UTC'})
-      self.catalog(ReferenceQuery(ReferenceQuery(
-                     ReferenceQuery(operator='>=', date=DateTime('2008/01/01 UTC')),
-                     ReferenceQuery(operator='<', date=DateTime('2009/01/01 UTC'))
-                   , operator='and'), operator='and'),
-                   {column: '2008 UTC'})
-      self.catalog(ReferenceQuery(ReferenceQuery(
-                     ReferenceQuery(operator='>=', date=DateTime('2008/01/01 UTC')),
-                     ReferenceQuery(operator='<', date=DateTime('2008/02/01 UTC'))
-                   , operator='and'), operator='and'),
-                   {column: '2008/01 UTC'})
-      self.catalog(ReferenceQuery(ReferenceQuery(
-                     ReferenceQuery(operator='>=', date=DateTime('2008/10/01 UTC')),
-                     ReferenceQuery(operator='<', date=DateTime('2008/10/02 UTC'))
-                   , operator='and'), operator='and'),
-                   {column: {'type': 'date', 'query': '10/01/2008 UTC', 'format': '%m/%d/%Y'}})
-      self.catalog(ReferenceQuery(ReferenceQuery(
-                     ReferenceQuery(operator='>=', date=DateTime('2008/10/01 UTC')),
-                     ReferenceQuery(operator='<', date=DateTime('2008/10/02 UTC'))
-                   , operator='and'), operator='and'),
-                   {column: {'type': 'date', 'query': '01/10/2008 UTC', 'format': '%d/%m/%Y'}})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='in', date=[DateTime('2008/01/10 UTC'), DateTime('2008/01/09 UTC')]), operator='and'),
-                   {column: {'query': ['2008/01/10 UTC', '2008/01/09 UTC'], 'operator': 'in'}},
-                   check_search_text=False)
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='>', date=DateTime('2008/01/10 UTC')), operator='and'),
-                   {column: {'query': '2008/01/10 UTC', 'range': 'nlt'}},
-                   check_search_text=False)
-      self.catalog(ReferenceQuery(ReferenceQuery(
-                     ReferenceQuery(operator='>=', date=DateTime('2008/01/01 UTC')),
-                     ReferenceQuery(operator='<', date=DateTime('2009/01/01 UTC'))
-                   , operator='and'), operator='and'),
-                   {column: '2008 UTC'})
-      self.catalog(ReferenceQuery(ReferenceQuery(
-                     ReferenceQuery(operator='>=', date=DateTime('2008/02/01 UTC')),
-                     ReferenceQuery(operator='<', date=DateTime('2008/03/01 UTC'))
-                   , operator='and'), operator='and'),
-                   {column: '2008/02 UTC'})
-      self.catalog(ReferenceQuery(ReferenceQuery(
-                     ReferenceQuery(operator='>=', date=DateTime('2008/02/02 UTC')),
-                     ReferenceQuery(operator='<', date=DateTime('2008/02/03 UTC'))
-                   , operator='and'), operator='and'),
-                   {column: '2008/02/02 UTC'})
-      self.catalog(ReferenceQuery(ReferenceQuery(
-                     ReferenceQuery(operator='>=', date=DateTime('2008/02/02 10:00:00 UTC')),
-                     ReferenceQuery(operator='<', date=DateTime('2008/02/02 11:00:00 UTC'))
-                   , operator='and'), operator='and'),
-                   {column: '2008/02/02 10 UTC'})
-      self.catalog(ReferenceQuery(ReferenceQuery(
-                     ReferenceQuery(operator='>=', date=DateTime('2008/02/02 10:10:00 UTC')),
-                     ReferenceQuery(operator='<', date=DateTime('2008/02/02 10:11:00 UTC'))
-                   , operator='and'), operator='and'),
-                   {column: '2008/02/02 10:10 UTC'})
-      self.catalog(ReferenceQuery(ReferenceQuery(
-                     ReferenceQuery(operator='>=', date=DateTime('2008/02/02 10:10:10 UTC')),
-                     ReferenceQuery(operator='<', date=DateTime('2008/02/02 10:10:11 UTC'))
-                   , operator='and'), operator='and'),
-                   {column: '2008/02/02 10:10:10 UTC'})
+  def _testDateTimeKey(self, column):
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='>=', date=DateTime('2008/10/01 12:10:21')), operator='and'),
+                 {column: {'query': '>2008/10/01 12:10:20', 'format': '%y/%m/%d'}})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='>=', date=DateTime('2008/10/01 12:10:21 CEST')), operator='and'),
+                 {column: {'query': '>2008/10/01 12:10:20 CEST', 'format': '%y/%m/%d'}})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='>=', date=DateTime('2008/10/01 12:10:21 CET')), operator='and'),
+                 {column: {'query': '>2008/10/01 12:10:20 CET', 'format': '%y/%m/%d'}})
+    self.catalog(ReferenceQuery(ReferenceQuery(
+                   ReferenceQuery(operator='>=', date=DateTime('2008/10/01 UTC')),
+                   ReferenceQuery(operator='<', date=DateTime('2008/10/02 UTC'))
+                 , operator='and'), operator='and'),
+                 {column: '2008/10/01 UTC'})
+    self.catalog(ReferenceQuery(ReferenceQuery(
+                   ReferenceQuery(operator='>=', date=DateTime('2008/01/01 UTC')),
+                   ReferenceQuery(operator='<', date=DateTime('2009/01/01 UTC'))
+                 , operator='and'), operator='and'),
+                 {column: '2008 UTC'})
+    self.catalog(ReferenceQuery(ReferenceQuery(
+                   ReferenceQuery(operator='>=', date=DateTime('2008/01/01 UTC')),
+                   ReferenceQuery(operator='<', date=DateTime('2008/02/01 UTC'))
+                 , operator='and'), operator='and'),
+                 {column: '2008/01 UTC'})
+    self.catalog(ReferenceQuery(ReferenceQuery(
+                   ReferenceQuery(operator='>=', date=DateTime('2008/10/01 UTC')),
+                   ReferenceQuery(operator='<', date=DateTime('2008/10/02 UTC'))
+                 , operator='and'), operator='and'),
+                 {column: {'type': 'date', 'query': '10/01/2008 UTC', 'format': '%m/%d/%Y'}})
+    self.catalog(ReferenceQuery(ReferenceQuery(
+                   ReferenceQuery(operator='>=', date=DateTime('2008/10/01 UTC')),
+                   ReferenceQuery(operator='<', date=DateTime('2008/10/02 UTC'))
+                 , operator='and'), operator='and'),
+                 {column: {'type': 'date', 'query': '01/10/2008 UTC', 'format': '%d/%m/%Y'}})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='in', date=[DateTime('2008/01/10 UTC'), DateTime('2008/01/09 UTC')]), operator='and'),
+                 {column: {'query': ['2008/01/10 UTC', '2008/01/09 UTC'], 'operator': 'in'}},
+                 check_search_text=False)
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='>', date=DateTime('2008/01/10 UTC')), operator='and'),
+                 {column: {'query': '2008/01/10 UTC', 'range': 'nlt'}},
+                 check_search_text=False)
+    self.catalog(ReferenceQuery(ReferenceQuery(
+                   ReferenceQuery(operator='>=', date=DateTime('2008/01/01 UTC')),
+                   ReferenceQuery(operator='<', date=DateTime('2009/01/01 UTC'))
+                 , operator='and'), operator='and'),
+                 {column: '2008 UTC'})
+    self.catalog(ReferenceQuery(ReferenceQuery(
+                   ReferenceQuery(operator='>=', date=DateTime('2008/02/01 UTC')),
+                   ReferenceQuery(operator='<', date=DateTime('2008/03/01 UTC'))
+                 , operator='and'), operator='and'),
+                 {column: '2008/02 UTC'})
+    self.catalog(ReferenceQuery(ReferenceQuery(
+                   ReferenceQuery(operator='>=', date=DateTime('2008/02/02 UTC')),
+                   ReferenceQuery(operator='<', date=DateTime('2008/02/03 UTC'))
+                 , operator='and'), operator='and'),
+                 {column: '2008/02/02 UTC'})
+    self.catalog(ReferenceQuery(ReferenceQuery(
+                   ReferenceQuery(operator='>=', date=DateTime('2008/02/02 10:00:00 UTC')),
+                   ReferenceQuery(operator='<', date=DateTime('2008/02/02 11:00:00 UTC'))
+                 , operator='and'), operator='and'),
+                 {column: '2008/02/02 10 UTC'})
+    self.catalog(ReferenceQuery(ReferenceQuery(
+                   ReferenceQuery(operator='>=', date=DateTime('2008/02/02 10:10:00 UTC')),
+                   ReferenceQuery(operator='<', date=DateTime('2008/02/02 10:11:00 UTC'))
+                 , operator='and'), operator='and'),
+                 {column: '2008/02/02 10:10 UTC'})
+    self.catalog(ReferenceQuery(ReferenceQuery(
+                   ReferenceQuery(operator='>=', date=DateTime('2008/02/02 10:10:10 UTC')),
+                   ReferenceQuery(operator='<', date=DateTime('2008/02/02 10:10:11 UTC'))
+                 , operator='and'), operator='and'),
+                 {column: '2008/02/02 10:10:10 UTC'})
 
-  def test_004_KeywordKey(self):
-    for column in ('keyword', 'related_keyword'):
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%a%'), operator='and'),
-                   {column: 'a'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%a b%'), operator='and'),
-                   {column: 'a b'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%a b%'), operator='and'),
-                   {column: '"a b"'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='!=', keyword='a'), operator='and'),
-                   {column: '!=a'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='not like', keyword='%a'), operator='and'),
-                   {column: '!=%a'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%a'), operator='and'),
-                   {column: '%a'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='<', keyword='a'), operator='and'),
-                   {column: '<a'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='<', keyword='path'), operator='and'),
-                   {column: {'query': 'path', 'range': 'max'}})
-      self.catalog(ReferenceQuery(ReferenceQuery(
-                       ReferenceQuery(operator='like', keyword='%a%'),
-                       ReferenceQuery(operator='like', keyword='%b%')
-                     , operator='or'), operator='and'),
-                   {column: ['a', 'b']})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='in', keyword=['a', 'b']), operator='and'),
-                   {column: ['=a', '=b']})
-      self.catalog(ReferenceQuery(ReferenceQuery(
-                       ReferenceQuery(operator='like', keyword='%a%'),
-                       ReferenceQuery(operator='<', keyword='b')
-                     , operator='or'), operator='and'),
-                   {column: ['a', '<b']})
-      self.catalog(ReferenceQuery(ReferenceQuery(
-                       ReferenceQuery(operator='like', keyword='%a%'),
-                       ReferenceQuery(operator='like', keyword='%b')
-                     , operator='or'), operator='and'),
-                   {column: ['a', '%b']})
+  def test_DateTimeKey(self):
+    self._testDateTimeKey('date')
+
+  def test_relatedDateTimeKey(self):
+    self._testDateTimeKey('related_date')
+
+  def _testKeywordKey(self, column):
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%a%'), operator='and'),
+                 {column: 'a'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%a b%'), operator='and'),
+                 {column: 'a b'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%a b%'), operator='and'),
+                 {column: '"a b"'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='!=', keyword='a'), operator='and'),
+                 {column: '!=a'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='not like', keyword='%a'), operator='and'),
+                 {column: '!=%a'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%a'), operator='and'),
+                 {column: '%a'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='<', keyword='a'), operator='and'),
+                 {column: '<a'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='<', keyword='path'), operator='and'),
+                 {column: {'query': 'path', 'range': 'max'}})
+    self.catalog(ReferenceQuery(ReferenceQuery(
+                     ReferenceQuery(operator='like', keyword='%a%'),
+                     ReferenceQuery(operator='like', keyword='%b%')
+                   , operator='or'), operator='and'),
+                 {column: ['a', 'b']})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='in', keyword=['a', 'b']), operator='and'),
+                 {column: ['=a', '=b']})
+    self.catalog(ReferenceQuery(ReferenceQuery(
+                     ReferenceQuery(operator='like', keyword='%a%'),
+                     ReferenceQuery(operator='<', keyword='b')
+                   , operator='or'), operator='and'),
+                 {column: ['a', '<b']})
+    self.catalog(ReferenceQuery(ReferenceQuery(
+                     ReferenceQuery(operator='like', keyword='%a%'),
+                     ReferenceQuery(operator='like', keyword='%b')
+                   , operator='or'), operator='and'),
+                 {column: ['a', '%b']})
+
+  def test_KeywordKey(self):
+    self._testKeywordKey('keyword')
+
+  def test_relatedKeywordKey(self):
+    self._testKeywordKey('related_keyword')
 
   def test_005_SearchText(self):
     self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='like', keyword='%=a%'), ReferenceQuery(operator='like', keyword='%=b%'), operator='or'), operator='and'),
