@@ -133,12 +133,14 @@ class TestXHTML(ERP5TypeTestCase):
     # check that all proxy fields defined in business templates have a valid
     # target
     skins_tool = self.portal.portal_skins
+    error_list = []
     for field_path, field in skins_tool.ZopeFind(
               skins_tool, obj_metatypes=['ProxyField'], search_sub=1):
-      self.assertNotEqual(None, field.getTemplateField(),
-          '%s\nform_id:%s\nfield_id:%s\n' % (field_path,
-                                             field.get_value('form_id'),
-                                             field.get_value('field_id')))
+      template_field = field.getTemplateField()
+      if template_field is None:
+        error_list.append((field_path, field.get_value('form_id'),
+                           field.get_value('field_id')))
+    self.assertEquals(error_list, [])
 
 class W3Validator(object):
 
