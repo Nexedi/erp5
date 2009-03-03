@@ -54,7 +54,8 @@ class IntrospectionTool(BaseTool):
   security.declareProtected(Permissions.ManagePortal, 'manage_overview')
   manage_overview = DTMLFile('explainIntrospectionTool', _dtmldir )
 
-  security.declareProtected('getFilteredActionDict', Permissions.AccessContentsInformation)
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getFilteredActionDict')
   def getFilteredActionDict(self, user_name=_MARKER):
     """
       Returns menu items for a given user
@@ -81,7 +82,8 @@ class IntrospectionTool(BaseTool):
 
     return result
 
-  security.declareProtected('getModuleItemList', Permissions.AccessContentsInformation)
+  security.declareProtected(Permissions.AccessContentsInformation,
+                           'getModuleItemList')
   def getModuleItemList(self, user_name=_MARKER):
     """
       Returns menu items for a given user
