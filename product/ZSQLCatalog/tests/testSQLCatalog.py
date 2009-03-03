@@ -184,16 +184,20 @@ class TestSQLCatalog(unittest.TestCase):
                    {column: '!=a'})
       self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a b'), operator='and'),
                    {column: 'a b'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a >b'), operator='and'),
+      self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='=', default='a'), ReferenceQuery(operator='>', default='b'), operator='or'), operator='and'),
                    {column: 'a >b'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='>', default='a >b'), operator='and'),
+      self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a > b'), operator='and'),
+                   {column: 'a > b'})
+      self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='>', default='a'), ReferenceQuery(operator='>', default='b'), operator='or'), operator='and'),
                    {column: '>a >b'})
       self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='>a >b'), operator='and'),
                    {column: '">a >b"'})
       self.catalog(ReferenceQuery(ReferenceQuery(operator='>', default='>a >b'), operator='and'),
                    {column: '>">a >b"'})
-      self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a OR b'), operator='and'),
+      self.catalog(ReferenceQuery(ReferenceQuery(operator='in', default=['a', 'b']), operator='and'),
                    {column: 'a OR b'})
+      self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a OR b'), operator='and'),
+                   {column: '"a OR b"'})
       self.catalog(ReferenceQuery(ReferenceQuery(operator='<', default='path'), operator='and'),
                    {column: {'query': 'path', 'range': 'max'}})
       self.catalog(ReferenceQuery(ReferenceQuery(operator='in', default=['a', 'b']), operator='and'),

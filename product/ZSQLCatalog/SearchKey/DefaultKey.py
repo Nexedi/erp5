@@ -29,6 +29,7 @@
 ##############################################################################
 
 from SearchKey import SearchKey
+from Products.ZSQLCatalog.SearchText import parse
 from Products.ZSQLCatalog.Interface.ISearchKey import ISearchKey
 from Interface.Verify import verifyClass
 
@@ -40,6 +41,9 @@ class DefaultKey(SearchKey):
   """
   default_comparison_operator = '='
   get_operator_from_value = True
+
+  def parseSearchText(self, value):
+    return parse(value)
 
   def _guessComparisonOperator(self, value):
     if isinstance(value, basestring) and '%' in value:
