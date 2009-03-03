@@ -91,6 +91,8 @@ class EditorWidget(Widget.TextAreaWidget):
     """ 
       Render form in view only mode.
     """
+    if value is None:
+      value = ''
     return value
 
 EditorWidgetInstance = EditorWidget()
