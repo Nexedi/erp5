@@ -94,11 +94,11 @@
                         </tuple>
                         <tuple>
                           <string>start_date</string>
-                          <string>Start Date</string>
+                          <string>Validity Beginning Date</string>
                         </tuple>
                         <tuple>
                           <string>stop_date</string>
-                          <string>Stop Date</string>
+                          <string>Validity End Date</string>
                         </tuple>
                         <tuple>
                           <string>base_price</string>
