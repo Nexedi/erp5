@@ -12,15 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>read_only</string>
-                <string>editable_permission</string>
-                <string>not_viewable</string>
-                <string>required</string>
-                <string>viewable_permission</string>
-                <string>viewable_role</string>
-                <string>editable_role</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -107,10 +99,6 @@
                 <item>
                     <key> <string>read_only</string> </key>
                     <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
