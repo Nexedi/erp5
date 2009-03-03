@@ -32,6 +32,7 @@ from SearchKey import SearchKey
 from Products.ZSQLCatalog.SearchText import parse
 from Products.ZSQLCatalog.Interface.ISearchKey import ISearchKey
 from Interface.Verify import verifyClass
+from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 
 class KeywordKey(SearchKey):
   """
@@ -43,6 +44,26 @@ class KeywordKey(SearchKey):
  
   def parseSearchText(self, value):
     return parse(value)
+
+  def _buildQuery(self, operator_value_dict, logical_operator, parsed, group):
+    """
+      Treat "!=" operator specialy:
+       - if the value contains at least one "%", change operator into "not like"
+       - otherwise, let it go untouched
+    """
+    result = []
+    if '!=' in operator_value_dict:
+      column = self.getColumn()
+      original_different_list = operator_value_dict.pop('!=')
+      different_list = []
+      for value in original_different_list:
+        if isinstance(value, basestring) and '%' in value:
+          result.append(SimpleQuery(search_key=self, group=group, operator='not like', **{column: value}))
+        else:
+          different_list.append(value)
+        if len(different_list):
+          operator_value_dict['!='] = different_list
+    return result + SearchKey._buildQuery(self, operator_value_dict, logical_operator, parsed, group)
 
 verifyClass(ISearchKey, KeywordKey)
 

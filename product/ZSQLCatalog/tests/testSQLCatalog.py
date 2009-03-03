@@ -289,9 +289,7 @@ class TestSQLCatalog(unittest.TestCase):
                    {column: '"a b"'})
       self.catalog(ReferenceQuery(ReferenceQuery(operator='!=', keyword='a'), operator='and'),
                    {column: '!=a'})
-      self.catalog(ReferenceQuery(
-                     ReferenceQuery(ReferenceQuery(operator='like', keyword='%a'), operator='not')
-                   , operator='and'),
+      self.catalog(ReferenceQuery(ReferenceQuery(operator='not like', keyword='%a'), operator='and'),
                    {column: '!=%a'})
       self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%a'), operator='and'),
                    {column: '%a'})

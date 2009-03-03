@@ -138,6 +138,7 @@ operator_dict = {
   '<=': MonovaluedComparisonOperator('<='),
   '>=': MonovaluedComparisonOperator('>='),
   'like': MonovaluedComparisonOperator('like'),
+  'not like': MonovaluedComparisonOperator('not like', '!='),
   'match': MatchComparisonOperator('match'),
   'match_boolean': MatchComparisonOperator('match_boolean', mode=' IN BOOLEAN MODE'),
   'match_expansion': MatchComparisonOperator('match_expansion', mode=' WITH QUERY EXPANSION'),
