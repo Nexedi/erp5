@@ -151,7 +151,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getResource() and here.getResourceValue().getQuantityUnitList() and [(\'\', \'\')] + [(x.getLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in here.getResourceValue().getQuantityUnitValueList()] or [(\'\', \'\')]</string> </value>
+            <value> <string>python: here.getResource() and here.getResourceValue().getQuantityUnitList() and [(\'\', \'\')] + [(x.getTranslatedLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in here.getResourceValue().getQuantityUnitValueList()] or [(\'\', \'\')]</string> </value>
         </item>
       </dictionary>
     </pickle>

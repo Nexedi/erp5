@@ -124,7 +124,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: (\'cell\' in CONTEXTS and cell.getResource()) and cell.getResourceValue().getQuantityUnitList() and [(\'\', \'\')] + [(x.getLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in cell.getResourceValue().getQuantityUnitValueList()] or [(\'\', \'\')]</string> </value>
+            <value> <string>python: (\'cell\' in CONTEXTS and cell.getResource()) and cell.getResourceValue().getQuantityUnitList() and [(\'\', \'\')] + [(x.getTranslatedLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in cell.getResourceValue().getQuantityUnitValueList()] or [(\'\', \'\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
