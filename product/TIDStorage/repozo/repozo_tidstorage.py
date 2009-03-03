@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2.4
 
 ##############################################################################
 #
@@ -16,11 +16,11 @@
 # Essentialy "usage" and "parseargs" methods.
 # So it's released under the ZPL v2.0, as is Zope 2.8.8 .
 
-""" repozo wrapper to backup for multiple Data.fs files in a consistent way.
+""" repozo wrapper to backup for multiple Data.fs files and restore them in a consistent way.
 
 Usage: %(program)s [-h|--help] [-c|--config configuration_file]
        [--repozo repozo_command] [-R|--recover|--recover_check]
-       [-H|--host address] [-p|--port port_number] [-u|--url formated_url]
+       [--tid_log tid_log_file]
        [...]
 
   -h
@@ -40,91 +40,43 @@ Usage: %(program)s [-h|--help] [-c|--config configuration_file]
   -R
   --recover
     Instead of saving existing Data.fs, perform an automated recovery from
-    backups + timestamp file.
+    backups + timestamp file with optionally cutting file at found transaction.
 
   --recover_check
     Similar to above, except that it restores file to temp folder and compares
     with existing file.
     Files restored this way are automaticaly deleted after check.
   
-  -H address
-  --host address
-    TIDStorage server host address.
-    Overrides setting found in configuration_file.
-    Not required if recovering (see above).
-
-  -p port_number
-  --port port_number
-    TIDStorage port nuber.
-    Overrides setting found in configuration_file.
-    Not required if recovering (see above).
-
-  -u formated_url
-  --url formated_url
-    Zope base url, optionnaly with credentials.
-    Overrides setting found in configuration_file.
-    Not required if recovering (see above).
-
-  All others parameters are transmitted to repozo but are partly processed by
-  getopt. To transmit unprocessed parameters to repozo, pass them as an
-  argument.
+  -t tid_log_file
+  --tid_log tid_log_file
+    TID log file, which will be used to find TID, which then will be used to
+    cut restored file at found TID
 """
 
-from TIDClient import TIDClient
-from ExchangeProtocol import ExchangeProtocol
+from ZODB.FileStorage import FileStorage
 
-import socket
-import base64
 import imp
 import getopt
 import sys
 import os
-# urllib2 does not support (?) urls containing credentials
-# (http://login:password@...) but it's fine with urllib.
-from urllib import urlopen
-import traceback
 import md5
 import time
 import tempfile
-from struct import pack
+from shutil import copy
+
+from repozo.restore_tidstorage import parse, get_tid_position
 
 program = sys.argv[0]
 
 def log(message):
   print message
 
-def backup(address, known_tid_storage_identifier_dict, repozo_formated_command, zope_formated_url=None):
-  connection = TIDClient(address)
-  to_load = known_tid_storage_identifier_dict.keys()
-  load_count = 2
-  while len(to_load):
-    if load_count < 1:
-      raise ValueError('It was impossible to retrieve all required TIDs. Missing: %s' % to_load)
-    to_load = []
-    load_count -= 1
-    stored_tid_dict = connection.dump_all()
-    #log(stored_tid_dict)
-    for key, (file_path, storage_path, object_path) in known_tid_storage_identifier_dict.iteritems():
-      if key not in stored_tid_dict and zope_formated_url is not None:
-        to_load.append(key)
-        if object_path is not None:
-          serialize_url = zope_formated_url % (object_path, )
-          log(serialize_url)
-          try:
-            response = urlopen(serialize_url)
-          except Exception, message:
-            # Prevent exceptions from interrupting the backup.
-            # We don't care about how well the web server is working, the only
-            # important thing is to get all TIDs in TIDStorage, and it's checked
-            # later.
-            log(''.join(traceback.format_exception(*sys.exc_info())))
-
+def backup(known_tid_storage_identifier_dict, repozo_formated_command):
+  """Backups all ZODB files"""
   backup_count = 0
   total_count = len(known_tid_storage_identifier_dict)
   for key, (file_path, storage_path, object_path) in known_tid_storage_identifier_dict.iteritems():
-    tid_as_int = stored_tid_dict[key] + 1
-    tid = base64.encodestring(pack('>Q', tid_as_int)).rstrip()
-    repozo_command = repozo_formated_command % (storage_path, file_path, tid)
+    repozo_command = repozo_formated_command % (storage_path, file_path)
     if not os.access(storage_path, os.R_OK):
       os.makedirs(storage_path)
     log('Runing %r...' % (repozo_command, ))
@@ -133,7 +85,7 @@ def backup(address, known_tid_storage_identifier_dict, repozo_formated_command, 
     if status == 0:
       backup_count += 1
     else:
-      log('Error occured while saving %s: exit status=%i' % (file_path, status))
+      log('Error occurred while saving %s: exit status=%i' % (file_path, status))
   log('Saved %i FileStorages out of %i.' % (backup_count, total_count))
   return total_count - backup_count
 
@@ -147,14 +99,15 @@ def get_md5_diggest(file_instance, length):
     to_read = min(BLOCK_SIZE, length)
     buffer = read(to_read)
     if len(buffer) != to_read:
-      log('Warning: read %i instead of requiested %i, stopping read' % (len(buffer), to_read))
+      log('Warning: read %i instead of requested %i, stopping read' % (len(buffer), to_read))
       length = 0
     else:
       length -= to_read
     update(buffer)
   return md5sum.hexdigest()
 
-def recover(known_tid_storage_identifier_dict, repozo_formated_command, check=False):
+def recover(known_tid_storage_identifier_dict, repozo_formated_command, check=False, last_tid_dict=None):
+  """Recovers all ZODB files, when last_tid_dict is passed cut them at proper byte"""
   recovered_count = 0
   total_count = len(known_tid_storage_identifier_dict)
   for key, (file_path, storage_path, object_path) in known_tid_storage_identifier_dict.iteritems():
@@ -169,8 +122,18 @@ def recover(known_tid_storage_identifier_dict, repozo_formated_command, check=Fa
     status = os.WEXITSTATUS(status)
     if status == 0:
       recovered_count += 1
+      if last_tid_dict is not None:
+        pos = get_tid_position(file_path, last_tid_dict[key])
+        print 'Cutting restored file %s at %s byte' % (file_path, pos),
+        f = open(file_path,'a')
+        if not check:
+          f.truncate(pos)
+          print
+        else:
+          print 'only check, file untouched'
+        f.close()
     else:
-      log('Error occured while recovering %s: exit status=%i' % (file_path, status))
+      log('Error occurred while recovering %s: exit status=%i' % (file_path, status))
     if check:
       log('Info: Comparing restored %s with original %s' % (file_path, original_file_path))
       recovered_file = open(file_path, 'r')
@@ -217,11 +180,11 @@ def usage(code, msg=''):
 
 def parseargs():
   try:
-    opts, args = getopt.getopt(sys.argv[1:], 'vQr:FhzMRc:H:p:u:',
+    opts, args = getopt.getopt(sys.argv[1:], 'vQrt:FhzRc:',
                                ['help', 'verbose', 'quick', 'full',
-                                'gzip', 'print-max-tid', 'repository',
-                                'repozo=', 'config=', 'host=', 'port=',
-                                'url=', 'recover', 'recover_check'])
+                                'gzip', 'repository', 'repozo=',
+                                'config=','recover', 'recover_check',
+                                'tid_log='])
   except getopt.error, msg:
     usage(1, msg)
 
@@ -230,12 +193,12 @@ def parseargs():
     repozo_file_name = 'repozo.py'
     configuration_file_name = None
     repozo_opts = ['-B']
-    host = None
-    port = None
-    base_url = None
     known_tid_storage_identifier_dict = {}
     recover = False
     dry_run = False
+    status_file = None
+    status_file_backup_dir = None
+    recover_status_file = None
 
   options = Options()
 
@@ -254,17 +217,10 @@ def parseargs():
       options.recover = True
       if opt == '--recover_check':
         options.dry_run = True
-    elif opt in ('-H', '--host'):
-      options.host = arg
-    elif opt in ('-p', '--port'):
-      try:
-        options.port = int(port)
-      except ValueError, msg:
-        usage(1, msg)
-    elif opt in ('-u', '--url'):
-      options.url = arg
     elif opt in ('-r', '--repository'):
       options.repozo_opts.append('%s %s' % (opt, arg))
+    elif opt in ('-t', '--tid_log'):
+      options.recover_status_file = arg
     else:
       options.repozo_opts.append(opt)
 
@@ -285,25 +241,28 @@ def parseargs():
     options.timestamp_file_path = module.timestamp_file_path
   except AttributeError, msg:
     usage(1, msg)
-  for option_id in ('port', 'host', 'base_url'):
+  for option_id in ('status_file', 'status_file_backup_dir' ):
     if getattr(options, option_id) is None:
       setattr(options, option_id, getattr(module, option_id, None))
   # XXX: we do not check any option this way, it's too dangerous.
   #options.repozo_opts.extend(getattr(module, 'repozo_opts', []))
-  if options.port is None:
-    options.port = 9001
-
-  if options.host is None:
-    usage(1, 'Either -H or --host is required (or host value should be set in configuration file).')
 
   return options
 
+def backupStatusFile(status_file,destination_directory):
+  file_name = os.path.basename(status_file) + '-' + '%04d-%02d-%02d-%02d-%02d-%02d' % time.gmtime()[:6]
+  copy(status_file, os.path.sep.join((destination_directory,file_name)))
+  log("Written status file backup as %s" % os.path.sep.join((destination_directory,file_name)))
+  
 def main():
   options = parseargs()
-  address = (options.host, options.port)
-  zope_formated_url = options.base_url
-  if options.base_url is not None and '%s' not in zope_formated_url:
-    raise ValueError, 'Given base url (%r) is not properly formated, it must contain one \'%%s\'.' % (zope_formated_url, )
+  if not options.recover and options.recover_status_file:
+    raise ValueError("Status file path only for recovering")
+
+  last_tid_dict = None
+  if options.recover_status_file:
+    last_tid_dict = parse(options.recover_status_file)
+
   repozo_formated_command = '%s %s -r "%%s"' % (options.repozo_file_name, ' '.join(options.repozo_opts))
   if options.recover:
     timestamp_file = open(options.timestamp_file_path, 'r')
@@ -318,13 +277,14 @@ def main():
     result = recover(
       known_tid_storage_identifier_dict=options.known_tid_storage_identifier_dict,
       repozo_formated_command=repozo_formated_command,
-      check=options.dry_run)
+      check=options.dry_run,
+      last_tid_dict=last_tid_dict)
   else:
-    repozo_formated_command += ' -f "%s" -m "%s"'
+    repozo_formated_command += ' -f "%s"'
+    if options.status_file is not None and options.status_file_backup_dir is not None:
+      backupStatusFile(options.status_file, options.status_file_backup_dir)
     result = backup(
-      address=address,
       known_tid_storage_identifier_dict=options.known_tid_storage_identifier_dict,
-      zope_formated_url=zope_formated_url,
       repozo_formated_command=repozo_formated_command)
     if result == 0:
       # Paranoid mode:

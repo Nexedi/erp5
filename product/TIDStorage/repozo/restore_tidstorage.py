@@ -79,6 +79,19 @@ def parse(status_file):
 
 READCHUNK = 10 * 1024 * 1024
 
+def get_tid_position(filepath,last_tid):
+  tid = pack('>Q', last_tid + 1)
+  # Find the file position of the last completed transaction.
+  fs = FileStorage(filepath, read_only=True, stop=tid)
+  # Note that the FileStorage ctor calls read_index() which scans the file
+  # and returns "the position just after the last valid transaction record".
+  # getSize() then returns this position, which is exactly what we want,
+  # because we only want to copy stuff from the beginning of the file to the
+  # last valid transaction record.
+  pos = fs.getSize()
+  fs.close()
+  return pos
+
 def recover(data_fs_backup_path_dict, status_file):
   last_tid_dict = parse(status_file)
   for storage_id, (file_path, backup_path) in data_fs_backup_path_dict.iteritems():
@@ -105,17 +118,7 @@ def recover(data_fs_backup_path_dict, status_file):
       else:
         print 'Cannot find any file for %r: %r and %r do not exist.' % (storage_id, file_path, backup_path)
     if can_restore:
-      last_tid = last_tid_dict[storage_id] + 1
-      tid = pack('>Q', last_tid)
-      # Find the file position of the last completed transaction.
-      fs = FileStorage(backup_path, read_only=True, stop=tid)
-      # Note that the FileStorage ctor calls read_index() which scans the file
-      # and returns "the position just after the last valid transaction record".
-      # getSize() then returns this position, which is exactly what we want,
-      # because we only want to copy stuff from the beginning of the file to the
-      # last valid transaction record.
-      pos = fs.getSize()
-      fs.close()
+      pos = get_tid_position(backup_path,last_tid_dict[storage_id])
       print 'Restoring backup: %s bytes (transaction %r) from %s to %s' % (pos, tid, backup_path, file_path)
       source_file = open(backup_path, 'rb')
       destination_file = open(file_path, 'wb')

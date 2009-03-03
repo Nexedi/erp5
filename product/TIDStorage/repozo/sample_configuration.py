@@ -1,5 +1,5 @@
 # COMMON
-# This part is used both by server_v2.py and repozo_tidstorage_v2.py
+# This part is used both by tidstorage.py and repozo_tidstorage.py
 known_tid_storage_identifier_dict = {
   "((('localhost', 8200),), '2')":
     ('/home/vincent/zeo2/var2/Data.fs',
@@ -30,6 +30,8 @@ burst_period = 30
 full_dump_period = 300
 
 # REPOZO_TIDSTORAGE
-# This part is only used by repozo_tidstorage_v2.py
+# This part is only used by repozo_tidstorage.py
 timestamp_file_path = 'repozo_tidstorage_timestamp.log'
+# place to put backuped TIDStorage status_file logs
+status_file_backup_dir = '/home/vincent/tmp/repozo'
 

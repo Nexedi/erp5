@@ -28,6 +28,13 @@ because transactions are stored in ZODB in the order they are committed.
 So is T2 is in the backup, a part of T1 will also be, and backup will be
 inconsistent (T1 commit on B never happened).
 
+TIDStorage log and server log
+-----------------------------
+
+TIDStorage uses two logfiles - one which is used to inform administrator
+about server state (logfile_name in configuration) and TIDStorage log to which
+TIDs are appended (status_file in configuration).
+
 USAGE
 =====
 
@@ -49,6 +56,31 @@ Example:
 
 PYTHONPATH=/usr/lib/erp5/lib/python:/usr/lib/erp5/lib/python/Products/TIDStorage
 
+Typical scenario with failure, restoring from backup
+----------------------------------------------------
+
+ * Zopes and Zeos running
+ * TIDStorage running
+ * backups done using repozo/repozo_tidstorage.py (they might contain
+   incoherency), for every backup tidstorage.tid is saved
+ * system failure
+ * restore using repozo/repozo_tidstorage.py with -t tidstorage.tid from last
+   backup
+
+In this scenario only on restoration destination file is cut at point of last
+known TID position. This step is optional, as in some cases administrator
+might want to not cut this file.
+
+Typical scenario with failure, no restoring needed
+--------------------------------------------------
+
+ * Zopes and Zeos running
+ * TIDStorage running
+ * system failure
+ * no need to restore from backup, but there might be some laying transactions
+   in different ZODB files, system is incoherent
+ * administrator use repozo/restore_tidstorage.py to cut not correctly commited
+   transactions, system is coherent again
 
 TECHNICAL DETAILS
 =================
@@ -70,11 +102,13 @@ TIDStorage is composed of 3 parts:
  - A daemon
    This is TIDStorage itself, receiving TIDs from Zopes and delivering
    coherency points to backup scripts.
- - Backup scripts
+ - Backup scripts and other utilities
    Those scripts are (mostly) wrappers for repozo backup script, fetching
    coherency points from TIDStorage daemon and invoking repozo.
-   This requires a patch to be applied to regular repozo, so that it can
-   backup ZODBs only up to a given TID.
+   No changes to repozo.py are needed, as it is used only as subsystem
+   to do reliable backups and restore.
+   Using provided utils in utils/ directory is it possible to query
+   for last known TID from server and operate on TIDStorage log.
 
 Constraints under which TIDStorage was designed:
  - Zope performance
@@ -100,13 +134,15 @@ Constraints under which TIDStorage was designed:
    from crashed ones - as long as they are not corrupted.
 
 Limits:
- - Backup "lag"
-   As TIDStorage can only offer a coherency point when interdependent
-   transactions are all finished (committed or aborted), a backup started at
-   time T might actually contain data from moments before. There are pathologic
-   cases where no coherency point can be found, so no backup can happen.
-   Also, bootstrap can prevent backups from happening if daemon is
-   misconfigured.
+ - Restore "lag"
+   As TIDStorage can only offer a coherency point when inderdependent
+   transactions are all finished (committed or aborted), TIDStorage log file
+   backup from time T might actually contain data from moments before.
+   So while doing restore with -t option data will be cut to state as
+   time T - undefined, small lag.
+
+   There are even pathologic cases where no coherency point can be found,
+   so TIDStorage log file won't have any information.
 
 PROTOCOL SPECIFICATION
 ======================
