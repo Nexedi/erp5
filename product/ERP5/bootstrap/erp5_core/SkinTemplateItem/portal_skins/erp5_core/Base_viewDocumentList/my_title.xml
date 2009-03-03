@@ -13,8 +13,6 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>description</string>
                 <string>editable</string>
               </list>
             </value>
@@ -77,10 +75,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>The usual name of the person or the organisation.</string> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -95,10 +89,6 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Usual Name</string> </value>
                 </item>
               </dictionary>
             </value>
