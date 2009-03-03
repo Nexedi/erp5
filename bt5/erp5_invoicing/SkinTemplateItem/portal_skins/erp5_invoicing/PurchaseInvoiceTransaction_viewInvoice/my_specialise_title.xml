@@ -15,6 +15,7 @@
               <list>
                 <string>title</string>
                 <string>portal_type</string>
+                <string>proxy_listbox_ids</string>
               </list>
             </value>
         </item>
@@ -90,6 +91,17 @@
                         <tuple>
                           <string>Purchase Trade Condition</string>
                           <string>Purchase Trade Condition</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>PurchaseTradeConditionModule_viewPurchaseTradeConditionList/listbox</string>
+                          <string>Purchase Trade Conditions</string>
                         </tuple>
                       </list>
                     </value>
