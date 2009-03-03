@@ -73,10 +73,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>Person who is at the origin of the document</string> </value>
-                </item>
-                <item>
                     <key> <string>extra_context</string> </key>
                     <value>
                       <list/>
@@ -89,10 +85,6 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>DocumentIngestionMessage_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Sender / Caller</string> </value>
                 </item>
               </dictionary>
             </value>

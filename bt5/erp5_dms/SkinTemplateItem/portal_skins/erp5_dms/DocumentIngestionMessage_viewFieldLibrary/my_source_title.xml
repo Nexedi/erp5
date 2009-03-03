@@ -107,10 +107,6 @@
                     <value> <string>title</string> </value>
                 </item>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>Person who is at the origin of the document</string> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
                     <value> <int>1</int> </value>
                 </item>
@@ -143,7 +139,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Sender / Caller</string> </value>
+                    <value> <string>Sender or Caller</string> </value>
                 </item>
               </dictionary>
             </value>

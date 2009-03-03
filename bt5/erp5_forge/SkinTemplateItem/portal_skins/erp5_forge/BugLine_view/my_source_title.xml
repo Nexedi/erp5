@@ -104,7 +104,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Sender / Caller</string> </value>
+                    <value> <string>Sender or Caller</string> </value>
                 </item>
               </dictionary>
             </value>
