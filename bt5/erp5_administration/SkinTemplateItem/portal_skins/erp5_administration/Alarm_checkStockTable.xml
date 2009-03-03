@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>catalog_kw = {\'select_expression\': \'stock.quantity\', \'stock.quantity\': \'!=0\' }\n
+            <value> <string>catalog_kw = {\'select_dict\': {\'quantity\':\'stock.quantity\'}, \'stock.quantity\': \'!=0\' }\n
 return context.ERP5Site_checkCatalogTable(bundle_object_count=bundle_object_count,\n
                                         bundle_offset=bundle_offset,\n
                                         property_override_method_id=\'ERP5Site_getStockTableFilterDict\',\n
