@@ -493,7 +493,7 @@ class PoliteThreadingTCPServer(SocketServer.ThreadingTCPServer):
   daemon_threads = True
   allow_reuse_address = True
 
-def main(address, port):
+def server(address, port):
   server = PoliteThreadingTCPServer((address, port), TIDServer)
   try:
     try:
@@ -703,7 +703,7 @@ if options.fork:
       os.close(1)
       os.close(2)
       sys.stdout = sys.stderr = logfile
-      main(options.address, options.port)
+      server(options.address, options.port)
       log('Exiting.')
     else:
       pidfile.write(str(pid))
@@ -712,5 +712,5 @@ if options.fork:
   else:
     os._exit(0)
 else:
-  main(options.address, options.port)
+  server(options.address, options.port)
 

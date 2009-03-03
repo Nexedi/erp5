@@ -298,43 +298,46 @@ def parseargs():
 
   return options
 
-options = parseargs()
-address = (options.host, options.port)
-zope_formated_url = options.base_url
-if options.base_url is not None and '%s' not in zope_formated_url:
-  raise ValueError, 'Given base url (%r) is not properly formated, it must contain one \'%%s\'.' % (zope_formated_url, )
-repozo_formated_command = '%s %s -r "%%s"' % (options.repozo_file_name, ' '.join(options.repozo_opts))
-if options.recover:
-  timestamp_file = open(options.timestamp_file_path, 'r')
-  timestamp = ''
-  read_line = ' '
-  while len(read_line):
-    timestamp = read_line
-    read_line = timestamp_file.readline()
-  timestamp = timestamp.strip('\r\n \t')
-  if timestamp is not None:
-    repozo_formated_command += ' -o "%%s" -D %s' % (timestamp, )
-  result = recover(
-    known_tid_storage_identifier_dict=options.known_tid_storage_identifier_dict,
-    repozo_formated_command=repozo_formated_command,
-    check=options.dry_run)
-else:
-  repozo_formated_command += ' -f "%s" -m "%s"'
-  result = backup(
-    address=address,
-    known_tid_storage_identifier_dict=options.known_tid_storage_identifier_dict,
-    zope_formated_url=zope_formated_url,
-    repozo_formated_command=repozo_formated_command)
-  if result == 0:
-    # Paranoid mode:
-    # Issue a system-wide "sync" command to make sure all files which were saved
-    # are really present on disk.
-    os.system('sync')
-    timestamp_file = open(options.timestamp_file_path, 'a', 0)
-    try:
-      # Borrowed from repozo.
-      timestamp_file.write('\n%04d-%02d-%02d-%02d-%02d-%02d' % time.gmtime()[:6])
-    finally:
-      timestamp_file.close()
+def main():
+  options = parseargs()
+  address = (options.host, options.port)
+  zope_formated_url = options.base_url
+  if options.base_url is not None and '%s' not in zope_formated_url:
+    raise ValueError, 'Given base url (%r) is not properly formated, it must contain one \'%%s\'.' % (zope_formated_url, )
+  repozo_formated_command = '%s %s -r "%%s"' % (options.repozo_file_name, ' '.join(options.repozo_opts))
+  if options.recover:
+    timestamp_file = open(options.timestamp_file_path, 'r')
+    timestamp = ''
+    read_line = ' '
+    while len(read_line):
+      timestamp = read_line
+      read_line = timestamp_file.readline()
+    timestamp = timestamp.strip('\r\n \t')
+    if timestamp is not None:
+      repozo_formated_command += ' -o "%%s" -D %s' % (timestamp, )
+    result = recover(
+      known_tid_storage_identifier_dict=options.known_tid_storage_identifier_dict,
+      repozo_formated_command=repozo_formated_command,
+      check=options.dry_run)
+  else:
+    repozo_formated_command += ' -f "%s" -m "%s"'
+    result = backup(
+      address=address,
+      known_tid_storage_identifier_dict=options.known_tid_storage_identifier_dict,
+      zope_formated_url=zope_formated_url,
+      repozo_formated_command=repozo_formated_command)
+    if result == 0:
+      # Paranoid mode:
+      # Issue a system-wide "sync" command to make sure all files which were saved
+      # are really present on disk.
+      os.system('sync')
+      timestamp_file = open(options.timestamp_file_path, 'a', 0)
+      try:
+        # Borrowed from repozo.
+        timestamp_file.write('\n%04d-%02d-%02d-%02d-%02d-%02d' % time.gmtime()[:6])
+      finally:
+        timestamp_file.close()
+  return result
 
-sys.exit(result)
+if __name__ == '__main__':
+  sys.exit(main())
