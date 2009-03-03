@@ -72,11 +72,9 @@ if omit_order_resources:\n
   ignored_resource_uid_list = [q.getResourceUid() for q in context.getMovementList() \\\n
       if q.getResourceUid() is not None]\n
 \n
-  query = NegatedQuery(\n
+  kw[\'query\'] = NegatedQuery(\n
       Query(operator=\'IN\',**{\'stock.resource_uid\':ignored_resource_uid_list})\n
       )\n
-\n
-  kw.update(**query.asSQLExpression())\n
 \n
 kw[\'explanation_uid\'] = [context.getUid()] + [q.getUid() for q in \\\n
   context.getCausalityRelatedValueList(portal_type=context.getPortalDeliveryTypeList())]\n
