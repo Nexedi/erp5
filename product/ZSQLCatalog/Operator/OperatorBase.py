@@ -100,11 +100,17 @@ class OperatorBase(object):
 
   __implements__ = IOperator
 
-  def __init__(self, operator):
+  def __init__(self, operator, operator_search_text=None):
     self.operator = operator
+    if operator_search_text is None:
+      operator_search_text = operator
+    self.operator_search_text = operator_search_text
 
   def getOperator(self):
     return self.operator
+
+  def getOperatorSearchText(self):
+    return self.operator_search_text
 
   @profiler_decorator
   def _render(self, column, value):
