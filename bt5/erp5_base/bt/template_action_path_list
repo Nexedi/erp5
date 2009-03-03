@@ -49,6 +49,7 @@ Order Builder | view_profile
 Order Movement Group | view
 Order Tool | view
 Organisation Module | view
+Organisation | create_new_file
 Organisation | details
 Organisation | document_view
 Organisation | financial_view
@@ -58,6 +59,7 @@ Parent Explanation Movement Group | view
 Person Module | ooo_import
 Person Module | view
 Person | assignment
+Person | create_new_file
 Person | details
 Person | document_view
 Person | financial_view
