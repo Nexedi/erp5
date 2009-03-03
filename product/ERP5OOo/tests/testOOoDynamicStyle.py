@@ -58,7 +58,9 @@ class TestOooDynamicStyle(ZopeTestCase.FunctionalTestCase):
     ZopeTestCase.installProduct('PythonScripts')
     ZopeTestCase.installProduct('ERP5OOo')
     self.folder.Localizer = DummyLocalizer()
-    self.validator = Validator()
+    v12schema_url = os.path.join(os.path.dirname(__file__),
+                                 'OpenDocument-schema-v1.2-draft9.rng') 
+    self.validator = Validator(schema_url=v12schema_url)
     en_file_path = os.path.join(os.path.dirname(__file__),
                                 'test_document',
                                 'DYNAMIC_STYLE_en.odt')
