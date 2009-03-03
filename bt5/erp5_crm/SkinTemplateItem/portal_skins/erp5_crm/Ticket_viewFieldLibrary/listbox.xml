@@ -138,7 +138,7 @@
                         </tuple>
                         <tuple>
                           <string>source_title</string>
-                          <string>Sender</string>
+                          <string>Sender or Caller</string>
                         </tuple>
                         <tuple>
                           <string>destination_title</string>
