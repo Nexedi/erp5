@@ -160,6 +160,7 @@ class BufferedSocket:
     self._send_buffer_dict[ident] = []
 
 class TIDClient:
+  """Simple by design write only TIDClient using BufferedSocket"""
   def __init__(self, address):
     self._buffered_socket = BufferedSocket(address)
     self._field_exchange = ExchangeProtocol(socket=self._buffered_socket)
