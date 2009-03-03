@@ -89,12 +89,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Specific function of a coordinate</string> </value>
+                    <value> <string>Contact function of the data</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -114,7 +110,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Coordinate Function</string> </value>
+                    <value> <string>Contact Function</string> </value>
                 </item>
               </dictionary>
             </value>
