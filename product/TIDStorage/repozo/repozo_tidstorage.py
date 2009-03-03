@@ -70,7 +70,7 @@ Usage: %(program)s [-h|--help] [-c|--config configuration_file]
   argument.
 """
 
-from tests.testTIDServer import TIDClient
+from TIDClient import TIDClient
 from ExchangeProtocol import ExchangeProtocol
 
 import socket

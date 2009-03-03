@@ -30,7 +30,7 @@
 
 # Dumps TIDStorage dict configuration
 
-from tests.testTIDServer import TIDClient
+from TIDClient import TIDClient
 import sys
 from struct import pack
 from base64 import encodestring
