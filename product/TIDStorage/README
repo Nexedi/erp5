@@ -1,5 +1,8 @@
 TIDStorage
 
+SYNOPSIS
+========
+
 This product provides a way to have consistent backups when running a
 multi-storage instance (only ZEO is supported at the moment).
 
@@ -23,7 +26,32 @@ There is an even more tricky case. Consider the following:
 Here, T2 was able to commit entirely, but it must not be saved. This is
 because transactions are stored in ZODB in the order they are committed.
 So is T2 is in the backup, a part of T1 will also be, and backup will be
-inconsistent (T1 commit on B never happened).  
+inconsistent (T1 commit on B never happened).
+
+USAGE
+=====
+
+Put product in Zope Products to activate Zope-side patches.
+
+Create configuration, example is provided in repozo/sample_configuration.py
+
+Run bin/tidstorage.py with created configuration. As Zope commits transations
+it will connect to TIDStorage server, which will be shown in Zope and TIDStorage
+server logs.
+
+PYTHONPATH issues
+-----------------
+
+To run server and scripts there is a need to set correct PYTHONPATH - at least
+to product directory and for some tools to Zope lib/python.
+
+Example:
+
+PYTHONPATH=/usr/lib/erp5/lib/python:/usr/lib/erp5/lib/python/Products/TIDStorage
+
+
+TECHNICAL DETAILS
+=================
 
 TIDStorage fixes those issues by keeping track of transaction-to-tid relations
 for all (ZODB, via ZEO) storages involved in any transaction, and by tracking
@@ -80,7 +108,9 @@ Limits:
    Also, bootstrap can prevent backups from happening if daemon is
    misconfigured.
 
-Protocol:
+PROTOCOL SPECIFICATION
+======================
+
  All characters allowed in data, except \n and \r (0x0A & 0x0D).
  Each field ends with \n, \r is ignored.
  No escaping.
