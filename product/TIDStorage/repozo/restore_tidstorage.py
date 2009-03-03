@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2.4
 
 ##############################################################################
 #
@@ -181,8 +181,11 @@ def parseargs():
     usage(1, msg)
   return options
 
-options = parseargs()
-recover(
-  data_fs_backup_path_dict=options.data_fs_backup_path_dict,
-  status_file=options.status_file)
+def main():
+  options = parseargs()
+  recover(
+    data_fs_backup_path_dict=options.data_fs_backup_path_dict,
+    status_file=options.status_file)
 
+if __name__ == '__main__':
+  sys.exit(main())
