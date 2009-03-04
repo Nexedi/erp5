@@ -273,7 +273,8 @@ class CopyContainer:
     REQUEST = get_request()
     pw = getToolByName(self, 'portal_workflow')
     if 'edit_workflow' in pw.getChainFor(self)\
-        and not REQUEST.get('is_business_template_installation', 0):
+        and (REQUEST is None or
+            not REQUEST.get('is_business_template_installation', 0)):
       if REQUEST is not None and REQUEST.get('__cp', None):
         copied_item_list = _cb_decode(REQUEST['__cp'])[1]
         # Guess source item
