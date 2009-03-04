@@ -1354,7 +1354,7 @@ td.AnchorColumn {\n
   color:#F6A801;\n
   font-size:1pt;\n
   display:block;\n
-  height:100%;\n
+  height:35px;\n
   overflow:hidden;\n
   position:absolute;\n
   right:5px;\n
