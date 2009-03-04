@@ -50,7 +50,7 @@
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
   <tal:block tal:define="form_action string:logged_in;\n
              global form_id string:login_form;\n
-             js_list python: [\'%s/login_form.js\' % (here.portal_url(), )]">\n
+             js_list python: [\'%s/login_form.js\' % (here.portal_url(), ), \'%s/erp5.js\' % (here.portal_url(), )]">\n
     <tal:block metal:use-macro="here/main_template/macros/master">\n
       <tal:block metal:fill-slot="main">\n
         <div class="content login">\n
