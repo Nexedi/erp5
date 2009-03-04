@@ -354,14 +354,15 @@ class WizardTool(BaseTool):
       if f.code> 300 and f.code <400:
         # adjust return url which my contain proxy URLs as arguments
         location = metadata.getheader('location')
-        parsed_url = list(urlparse(location))
-        local_site_url_prefix = urllib.quote('%s/portal_wizard/proxy' \
-                                              %self.getPortalObject().absolute_url())
-        remote_url_parsed = urlparse(self.getServerUrl())
-        remote_site_url_prefix = '%s://%s/kb' %(remote_url_parsed[0], remote_url_parsed[1])
-        # fix arguments for returned location URL
-        parsed_url[4] = parsed_url[4].replace(local_site_url_prefix, remote_site_url_prefix)
-        response['location'] = urlunparse(parsed_url)
+        if location is not None:
+          parsed_url = list(urlparse(location))
+          local_site_url_prefix = urllib.quote('%s/portal_wizard/proxy' \
+                                                %self.getPortalObject().absolute_url())
+          remote_url_parsed = urlparse(self.getServerUrl())
+          remote_site_url_prefix = '%s://%s/kb' %(remote_url_parsed[0], remote_url_parsed[1])
+          # fix arguments for returned location URL
+          parsed_url[4] = parsed_url[4].replace(local_site_url_prefix, remote_site_url_prefix)
+          response['location'] = urlunparse(parsed_url)
 
       response.setStatus(f.code, f.msg)
       response.setHeader('content-type', metadata.getheader('content-type'))
