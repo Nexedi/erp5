@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts17405722.49</string> </value>
+            <value> <string>ts36185937.29</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -95,8 +95,8 @@ function updater(url, box_relative_url, dom_id, \n
 \n
  request_params[\'box_relative_url\'] = box_relative_url;\n
  request_params[\'parent_web_section_url\'] = parent_web_section_url; \n
- request_params[\'is_gadget_mode\'] = 1; \n
- request_params[\'editable_mode\'] = editable_mode; \n
+ request_params[\'is_gadget_mode:int\'] = 1; \n
+ request_params[\'editable_mode:int\'] = editable_mode; \n
 \n
 \n
  d = MochiKit.Async.doSimpleXMLHttpRequest(url, request_params);\n
@@ -368,7 +368,7 @@ MochiKit.DOM.addLoadEvent(initialize);
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>13096</int> </value>
+            <value> <int>13104</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
