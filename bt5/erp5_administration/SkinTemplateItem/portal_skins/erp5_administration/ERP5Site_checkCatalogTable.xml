@@ -166,10 +166,15 @@ else:\n
     if exception_portal_type_list is not None and \\\n
         actual_object.getPortalType() in exception_portal_type_list:\n
       continue\n
+    explanation_value = None\n
+    try:\n
+      explanation_value = actual_object.getExplanationValue()\n
+    except AttributeError:\n
+      pass\n
     # There is already activity changing the state\n
     if actual_object.hasActivity() \\\n
-          or (getattr(actual_object, \'getExplanationValue\', None) is not None \\\n
-          and actual_object.getExplanationValue().hasActivity()):\n
+          or (explanation_value is not None \\\n
+          and explanation_value.hasActivity()):\n
         continue\n
     if property_override_method_id is None:\n
       reference_dict = {}\n
@@ -335,8 +340,10 @@ return active_result\n
                             <string>message</string>
                             <string>actual_object</string>
                             <string>KeyError</string>
-                            <string>getattr</string>
+                            <string>explanation_value</string>
+                            <string>AttributeError</string>
                             <string>reference_dict</string>
+                            <string>getattr</string>
                             <string>attribute_id</string>
                             <string>reference_value</string>
                             <string>catalog_value</string>
