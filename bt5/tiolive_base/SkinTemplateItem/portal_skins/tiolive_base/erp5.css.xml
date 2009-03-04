@@ -1321,7 +1321,7 @@ td.AnchorColumn {\n
 }\n
 \n
 #fieldset-tiobar select{\n
-  margin-left: 5px;\n
+  margin-right: 5px;\n
 }\n
 \n
 #tiologin {\n
@@ -1334,7 +1334,6 @@ td.AnchorColumn {\n
   width:10%;\n
 }\n
 \n
-\n
 #link-login:link, #link-login:active, #link-login:visited {\n
   background:transparent url(http://www.tiolive.com/tiolive_image/icon-login.png) no-repeat scroll 100% 0pt;\n
   color:#FFFFFF;\n
@@ -1346,7 +1345,6 @@ td.AnchorColumn {\n
   font-weight:normal;\n
   text-transform:lowercase;\n
 }\n
-\n
 \n
 #fieldset-tiosearch {\n
   background:transparent url(http://www.tiolive.com/tiolive_image/input-tiosearch.png) no-repeat scroll 0pt 5px;\n
