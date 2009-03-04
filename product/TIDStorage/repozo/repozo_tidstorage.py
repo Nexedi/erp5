@@ -53,8 +53,6 @@ Usage: %(program)s [-h|--help] [-c|--config configuration_file]
     cut restored file at found TID
 """
 
-from ZODB.FileStorage import FileStorage
-
 import imp
 import getopt
 import sys
