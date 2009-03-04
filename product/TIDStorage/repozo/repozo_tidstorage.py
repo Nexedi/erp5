@@ -108,6 +108,17 @@ def recover(known_tid_storage_identifier_dict, repozo_formated_command, check=Fa
   """Recovers all ZODB files, when last_tid_dict is passed cut them at proper byte"""
   recovered_count = 0
   total_count = len(known_tid_storage_identifier_dict)
+  result = 0
+  for key, (file_path, storage_path, object_path) in known_tid_storage_identifier_dict.iteritems():
+    # check that indexes do not exists if cut shall be done
+    file_index = file_path + ".index"
+    if os.access(file_index, os.F_OK) and last_tid_dict is not None:
+      log('Error: Index file %s exists. Bug in ZODB makes it impossible to cut'
+          ' indexed file after restore. Cannot continue.' %
+        file_index)
+      result = 1
+  if result:
+    return result
   for key, (file_path, storage_path, object_path) in known_tid_storage_identifier_dict.iteritems():
     if not os.access(storage_path, os.R_OK):
       log('Warning: unable to recover %s because %s is missing/unreadable.' % (file_path, storage_path))
