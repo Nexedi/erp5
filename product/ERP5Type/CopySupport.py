@@ -26,6 +26,7 @@ from Acquisition import aq_base, aq_inner, aq_parent
 from Products.CMFCore.utils import getToolByName
 from Globals import PersistentMapping, MessageDialog
 from Products.ERP5Type.Utils import get_request
+from Products.ERP5Type.Message import translateString
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
 from Products.CMFActivity.Errors import ActivityPendingError
@@ -271,8 +272,9 @@ class CopyContainer:
     # Add info about copy to edit workflow
     REQUEST = get_request()
     pw = getToolByName(self, 'portal_workflow')
-    if 'edit_workflow' in pw.getChainFor(self):
-      if REQUEST is not None and REQUEST.get('__cp', None) :
+    if 'edit_workflow' in pw.getChainFor(self)\
+        and not REQUEST.get('is_business_template_installation', 0):
+      if REQUEST is not None and REQUEST.get('__cp', None):
         copied_item_list = _cb_decode(REQUEST['__cp'])[1]
         # Guess source item
         for c_item in copied_item_list:
@@ -282,12 +284,16 @@ class CopyContainer:
         else:
           source_item = '/'.join(copied_item_list[0])
         try:
-          pw.doActionFor(self, 'edit_action', wf_id='edit_workflow', comment='Object copied from %s' % source_item)
+          pw.doActionFor(self, 'edit_action', wf_id='edit_workflow',
+              comment=translateString('Object copied from ${source_item}',
+                            mapping=(dict(source_item=source_item))))
         except WorkflowException:
           pass
       else:
         try:
-          pw.doActionFor(self, 'edit_action', wf_id='edit_workflow', comment='Object copied as %s' % item.getId())
+          pw.doActionFor(self, 'edit_action', wf_id='edit_workflow',
+              comment=translateString('Object copied as ${item_id}',
+                            mapping=(dict(item_id=item.getId()))))
         except WorkflowException:
           pass
 
