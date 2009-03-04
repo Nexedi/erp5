@@ -110,6 +110,6 @@ class DCWorkflowTransitionDocumentationHelper(DocumentationHelper):
     """
     guard = getattr(self.getDocumentedObject(), 'guard', None)
     if guard is not None:
-      return ', '.join(guard.roles)
+      return ', '.join(sorted(guard.roles))
 
 InitializeClass(DCWorkflowTransitionDocumentationHelper)
