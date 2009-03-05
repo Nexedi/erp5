@@ -106,7 +106,6 @@ class ColumnMap(object):
     if '.' in column:
       # Assuming the part before the dot is a real table name, not an alias.
       table, column = column.split('.')
-      LOG('ColumnMap', 100, 'Column %r is pre-mapped. This use is strongly discouraged.' % (raw_column, ))
     else:
       table = None
 
