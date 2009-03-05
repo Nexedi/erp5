@@ -74,6 +74,8 @@ request.other[\'is_accounting_report\'] = True\n
 # role_filter_list == None means no filter on the role\n
 if role_filter_list == [\'\'] :\n
   role_filter_list = None\n
+if role_filter_list:\n
+  role_filter_list = [\'role/%s\' % r for r in role_filter_list]\n
 \n
 result = []\n
 \n
@@ -133,7 +135,14 @@ if not params[\'hide_grouping\']  :\n
 \n
 for party in context.Account_zDistinctSectionList():\n
   o = party.getObject()\n
-  if role_filter_list and o.getProperty(\'role\', []) not in role_filter_list:\n
+  keep_this_one = 1\n
+  if role_filter_list:\n
+    keep_this_one = 0\n
+    for role in role_filter_list:\n
+      if o.isMemberOf(role):\n
+        keep_this_one = 1\n
+\n
+  if not keep_this_one:\n
     continue\n
 \n
   if o.getPortalType() == \'Person\' or\\\n
@@ -222,16 +231,21 @@ return result\n
                             <string>gap_root</string>
                             <string>True</string>
                             <string>_write_</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>r</string>
                             <string>result</string>
                             <string>params</string>
                             <string>portal</string>
                             <string>simulation_tool</string>
                             <string>entity_columns</string>
                             <string>valid_node_uids</string>
-                            <string>_getiter_</string>
                             <string>account</string>
                             <string>party</string>
                             <string>o</string>
+                            <string>keep_this_one</string>
+                            <string>role</string>
                             <string>_apply_</string>
                             <string>title</string>
                             <string>_inplacevar_</string>
