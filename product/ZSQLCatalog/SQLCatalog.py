@@ -1887,7 +1887,8 @@ class Catalog(Folder,
       result = None
     else:
       if related_key_definition is not None:
-        search_key = search_key.getSearchKey(self, related_key_definition)
+        search_key = search_key.getSearchKey(sql_catalog=self,
+          related_key_definition=related_key_definition)
     return search_key
 
   @profiler_decorator
@@ -1905,13 +1906,15 @@ class Catalog(Folder,
         if related_key_definition is None:
           build_key = search_key
         else:
-          build_key = search_key.getSearchKey(self, related_key_definition,
-                                               search_key_name=search_key_name)
+          build_key = search_key.getSearchKey(sql_catalog=self,
+            related_key_definition=related_key_definition,
+            search_key_name=search_key_name)
         result = build_key.buildQuery(value, logical_operator=logical_operator,
                                       comparison_operator=comparison_operator)
         if related_key_definition is not None:
-          result = search_key.buildQuery(self, related_key_definition,
-                                         search_value=result)
+          result = search_key.buildQuery(sql_catalog=self,
+            related_key_definition=related_key_definition,
+            search_value=result)
     else:
       result = script(value)
     return result
@@ -1966,11 +1969,13 @@ class Catalog(Folder,
       if related_key_definition is None:
         build_key = search_key
       else:
-        build_key = search_key.getSearchKey(self, related_key_definition)
+        build_key = search_key.getSearchKey(sql_catalog=self,
+          related_key_definition=related_key_definition)
       result = self._buildQueryFromAbstractSyntaxTreeNode(node, build_key)
       if related_key_definition is not None:
-        result = search_key.buildQuery(self, related_key_definition,
-                                       search_value=result)
+        result = search_key.buildQuery(sql_catalog=self,
+          related_key_definition=related_key_definition,
+          search_value=result)
     return result
 
   @profiler_decorator
