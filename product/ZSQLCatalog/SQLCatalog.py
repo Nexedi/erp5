@@ -2014,7 +2014,7 @@ class Catalog(Folder,
         #   resulting where-expression)
         if '.' in key:
           implicit_table_list.append(key)
-        LOG('buildQuery', WARNING, 'Discarding empty value for key %r: %r' % (key, value))
+        LOG('SQLCatalog', WARNING, 'Discarding empty value for key %r: %r' % (key, value))
       else:
         script = self.getScriptableKeyScript(key)
         if isinstance(value, _Query):
