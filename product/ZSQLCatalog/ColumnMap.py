@@ -35,7 +35,7 @@ from SQLCatalog import profiler_decorator
 
 DEFAULT_GROUP_ID = None
 
-TRACE = False
+MAPPING_TRACE = False
 
 # TODO: handle left joins
 # TODO: handle straight joins
@@ -202,7 +202,7 @@ class ColumnMap(object):
           best_count += 1
       if best_count:
         LOG('ColumnMap', 100, 'Mapping vote led to a tie. Mapping to %r' % (best_choice, ))
-      if TRACE:
+      if MAPPING_TRACE:
         LOG('ColumnMap', 0, 'Mapping by vote %r to %r' % (column_name, best_choice))
       mapping_dict[column_name] = best_choice
       column_name_set.remove(column_name)
@@ -254,7 +254,7 @@ class ColumnMap(object):
                 break
           if use_allowed:
             for column_name in common_column_set:
-              if TRACE:
+              if MAPPING_TRACE:
                 LOG('ColumnMap', 0, 'Mapping by default %r to %r' % \
                     (column_name, table_name))
               mapping_dict[column_name] = table_name
@@ -281,7 +281,7 @@ class ColumnMap(object):
     # Do the actual mapping
     for column_name, table_name in mapping_dict.iteritems():
       # Mark this column as resolved
-      if TRACE:
+      if MAPPING_TRACE:
         LOG('ColumnMap', 0, 'Mapping column %s to table %s' % (column_name, table_name))
       self.registerTable(table_name, group=group)
       self.resolveColumn(column_name, table_name, group=group)
@@ -383,7 +383,7 @@ class ColumnMap(object):
         table_alias_number_dict[alias_table_name] = table_alias_number
       self.resolveTable(table_name, alias, group=group)
 
-    if TRACE:
+    if MAPPING_TRACE:
       # Key: group
       # Value: 2-tuple
       #  dict
