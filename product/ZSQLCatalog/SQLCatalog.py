@@ -73,7 +73,7 @@ try:
   from Products.ERP5Type.Cache import enableReadOnlyTransactionCache
   from Products.ERP5Type.Cache import disableReadOnlyTransactionCache, CachingMethod
 except ImportError:
-  LOG('SQLCatalog', 100, 'Count not import CachingMethod, expect slowness.')
+  LOG('SQLCatalog', WARNING, 'Count not import CachingMethod, expect slowness.')
   def doNothing(context):
     pass
   class CachingMethod:
@@ -103,7 +103,7 @@ class caching_class_method_decorator:
 try:
   from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 except ImportError:
-  LOG('SQLCatalog', 100, 'Count not import getTransactionalVariable, expect slowness.')
+  LOG('SQLCatalog', WARNING, 'Count not import getTransactionalVariable, expect slowness.')
   def getTransactionalVariable(context):
     return {}
 
@@ -1748,14 +1748,14 @@ class Catalog(Folder,
     for related_key in self.sql_catalog_related_keys:
       split_entire_definition = related_key.split('|')
       if len(split_entire_definition) != 2:
-        LOG('SQLCatalog', 100, 'Malformed related key definition: %r. Ignored.' % (entire_definition, ))
+        LOG('SQLCatalog', WARNING, 'Malformed related key definition: %r. Ignored.' % (entire_definition, ))
         continue
       related_key_id = split_entire_definition[0].strip()
       if related_key_id in column_set:
         if related_key_id in column_map:
-          LOG('SQLCatalog', 100, 'Related key %r has the same name as an existing column on tables %r' % (related_key_id, column_map[related_key_id]))
+          LOG('SQLCatalog', WARNING, 'Related key %r has the same name as an existing column on tables %r' % (related_key_id, column_map[related_key_id]))
         else:
-          LOG('SQLCatalog', 100, 'Related key %r is declared more than once.' % (related_key_id, ))
+          LOG('SQLCatalog', WARNING, 'Related key %r is declared more than once.' % (related_key_id, ))
       column_set.add(related_key_id)
     return column_set
 
@@ -1815,7 +1815,7 @@ class Catalog(Folder,
       for entire_definition in self.getSQLCatalogRelatedKeyList([key]):
         split_entire_definition = entire_definition.split('|')
         if len(split_entire_definition) != 2:
-          LOG('SQLCatalog', 100, 'Malformed related key definition: %r. Ignored.' % (entire_definition, ))
+          LOG('SQLCatalog', WARNING, 'Malformed related key definition: %r. Ignored.' % (entire_definition, ))
           continue
         name, definition = [x.strip() for x in split_entire_definition]
         if name == key:
@@ -1831,12 +1831,12 @@ class Catalog(Folder,
     for scriptable_key_definition in self.sql_catalog_scriptable_keys:
       split_scriptable_key_definition = scriptable_key_definition.split('|')
       if len(split_scriptable_key_definition) != 2:
-        LOG('SQLCatalog', 100, 'Malformed scriptable key definition: %r. Ignored.' % (scriptable_key_definition, ))
+        LOG('SQLCatalog', WARNING, 'Malformed scriptable key definition: %r. Ignored.' % (scriptable_key_definition, ))
         continue
       key, script_id = [x.strip() for x in split_scriptable_key_definition]
       script = getattr(self, script_id, None)
       if script is None:
-        LOG('SQLCatalog', 100, 'Scriptable key %r script %r is missing.' \
+        LOG('SQLCatalog', WARNING, 'Scriptable key %r script %r is missing.' \
             ' Skipped.' % (key, script_id))
       else:
         result[key] = script
@@ -1960,7 +1960,7 @@ class Catalog(Folder,
     search_key, related_key_definition = self.getColumnSearchKey(key)
     if search_key is None:
       # Unknown, skip loudly
-      LOG('SQLCatalog', 100, 'Unknown column %r, skipped.' % (key, ))
+      LOG('SQLCatalog', WARNING, 'Unknown column %r, skipped.' % (key, ))
     else:
       if related_key_definition is None:
         build_key = search_key
@@ -2049,7 +2049,7 @@ class Catalog(Folder,
         else:
           append(result)
     if len(unknown_column_dict):
-      LOG('SQLCatalog', 100, 'Unknown columns %r, skipped.' % (unknown_column_dict.keys(), ))
+      LOG('SQLCatalog', WARNING, 'Unknown columns %r, skipped.' % (unknown_column_dict.keys(), ))
     return ComplexQuery(query_list, operator=operator, unknown_column_dict=unknown_column_dict, implicit_table_list=implicit_table_list)
 
   @profiler_decorator
@@ -2071,7 +2071,7 @@ class Catalog(Folder,
     append = order_by_list.append
     if sort_on is not None:
       if order_by_expression is not None:
-        LOG('SQLCatalog', 0, 'order_by_expression (%r) and sort_on (%r) were given. Ignoring order_by_expression.' % (order_by_expression, sort_on))
+        LOG('SQLCatalog', WARNING, 'order_by_expression (%r) and sort_on (%r) were given. Ignoring order_by_expression.' % (order_by_expression, sort_on))
       if not isinstance(sort_on, (tuple, list)):
         sort_on = [[sort_on]]
       for item in sort_on:
@@ -2132,17 +2132,17 @@ class Catalog(Folder,
       )
     else:
       if sort_on is not None:
-        LOG('SQLCatalog', 0, 'order_by_list and sort_on were given, ignoring sort_on.')
+        LOG('SQLCatalog', WARNING, 'order_by_list and sort_on were given, ignoring sort_on.')
       if sort_order is not None:
-        LOG('SQLCatalog', 0, 'order_by_list and sort_order were given, ignoring sort_order.')
+        LOG('SQLCatalog', WARNING, 'order_by_list and sort_order were given, ignoring sort_order.')
       if order_by_expression is not None:
-        LOG('SQLCatalog', 0, 'order_by_list and order_by_expression were given, ignoring order_by_expression.')
+        LOG('SQLCatalog', WARNING, 'order_by_list and order_by_expression were given, ignoring order_by_expression.')
     # Handle from_expression
     from_expression = kw.pop('from_expression', None)
     # Handle where_expression
     where_expression = kw.get('where_expression', None)
     if isinstance(where_expression, basestring) and len(where_expression):
-      LOG('SQLCatalog', 100, 'Giving where_expression a string value is deprecated.')
+      LOG('SQLCatalog', INFO, 'Giving where_expression a string value is deprecated.')
       # Transform given where_expression into a query, and update kw.
       kw['where_expression'] = SQLQuery(where_expression)
     # Handle select_expression_key
@@ -2181,7 +2181,7 @@ class Catalog(Folder,
     for key, column_list in search_key_column_dict.iteritems():
       for column in column_list:
         if column in result:
-          LOG('SQLCatalog', 100, 'Ambiguous configuration: column %r is set to use %r key, but also to use %r key. Former takes precedence.' % (column, result[column], key))
+          LOG('SQLCatalog', WARNING, 'Ambiguous configuration: column %r is set to use %r key, but also to use %r key. Former takes precedence.' % (column, result[column], key))
         else:
           result[column] = key
     return result
