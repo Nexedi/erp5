@@ -28,7 +28,7 @@
 ##############################################################################
 
 import sys
-from zLOG import LOG
+from zLOG import LOG, WARNING, INFO
 from Interface.IColumnMap import IColumnMap
 from Interface.Verify import verifyClass
 from SQLCatalog import profiler_decorator
@@ -153,7 +153,7 @@ class ColumnMap(object):
   @profiler_decorator
   def registerCatalog(self):
     assert self.catalog_table_name is not None
-    LOG('ColumnMap', 100, 'Registering implicit catalog. This use is strongly discouraged.')
+    LOG('ColumnMap', WARNING, 'Registering implicit catalog. This use is strongly discouraged.')
     self.registerTable(self.catalog_table_name)
     self.resolveTable(self.catalog_table_name, self.catalog_table_name)
 
@@ -201,9 +201,9 @@ class ColumnMap(object):
         elif score == max_score:
           best_count += 1
       if best_count:
-        LOG('ColumnMap', 100, 'Mapping vote led to a tie. Mapping to %r' % (best_choice, ))
+        LOG('ColumnMap', WARNING, 'Mapping vote led to a tie. Mapping to %r' % (best_choice, ))
       if MAPPING_TRACE:
-        LOG('ColumnMap', 0, 'Mapping by vote %r to %r' % (column_name, best_choice))
+        LOG('ColumnMap', INFO, 'Mapping by vote %r to %r' % (column_name, best_choice))
       mapping_dict[column_name] = best_choice
       column_name_set.remove(column_name)
       for table_name, column_set in table_usage_dict.iteritems():
@@ -255,7 +255,7 @@ class ColumnMap(object):
           if use_allowed:
             for column_name in common_column_set:
               if MAPPING_TRACE:
-                LOG('ColumnMap', 0, 'Mapping by default %r to %r' % \
+                LOG('ColumnMap', INFO, 'Mapping by default %r to %r' % \
                     (column_name, table_name))
               mapping_dict[column_name] = table_name
               # This column must not be resolved any longer
@@ -271,7 +271,7 @@ class ColumnMap(object):
             # columns. This means that this table was not explicitely used, and
             # as each table contain a different amount of lines, we should not
             # join with any non-explicit table. Hence, we skip this mapping.
-            LOG('ColumnMap', 0, 'Skipping possible map of %r on %r as that table' \
+            LOG('ColumnMap', INFO, 'Skipping possible map of %r on %r as that table' \
                 ' is not explicitely used.' % (common_column_set, table_name))
 
     # Detect incomplete mappings
@@ -282,7 +282,7 @@ class ColumnMap(object):
     for column_name, table_name in mapping_dict.iteritems():
       # Mark this column as resolved
       if MAPPING_TRACE:
-        LOG('ColumnMap', 0, 'Mapping column %s to table %s' % (column_name, table_name))
+        LOG('ColumnMap', INFO, 'Mapping column %s to table %s' % (column_name, table_name))
       self.registerTable(table_name, group=group)
       self.resolveColumn(column_name, table_name, group=group)
       if table_name != catalog_table_name:
@@ -320,7 +320,7 @@ class ColumnMap(object):
         table_name_list = column_table_map.get(column_name, [])
         if len(table_name_list) == 0:
           if not(group is DEFAULT_GROUP_ID and column_name in self.related_key_dict):
-            LOG('ColumnMap', 100, 'Not a known column name: %r' % (column_name, ))
+            LOG('ColumnMap', WARNING, 'Not a known column name: %r' % (column_name, ))
           continue
         column_map_key = (group, column_name)
         if column_map_key in self.column_map:
@@ -355,11 +355,11 @@ class ColumnMap(object):
               column_vote_dict = vote_result_dict.setdefault(column, {})
               column_vote_dict[table] = column_vote_dict.get(table, 0) + 1
             else:
-              LOG('ColumnMap', 100, 'Vote script %r voted for a ' \
+              LOG('ColumnMap', WARNING, 'Vote script %r voted for a ' \
                   'non-candidate column: %r, candidates are: %r. Ignored.' %
                   (table_vote_method, column, column_name_set))
         else:
-          LOG('ColumnMap', 100, 'Vote script %r returned invalid data: %r. ' \
+          LOG('ColumnMap', WARNING, 'Vote script %r returned invalid data: %r. ' \
               'Ignored.' % (table_vote_method, vote_dict))
       self._mapColumns(column_table_map, table_usage_dict, column_name_set, group, vote_result_dict)
 
@@ -402,13 +402,13 @@ class ColumnMap(object):
         assert table_name not in table_dict, '%r in %r' % (table_name, table_dict)
         table_dict[table_name] = table_alias
       for group, (column_dict, table_dict) in summary_dict.iteritems():
-        LOG('ColumnMap', 0, 'Group %r:' % (group, ))
-        LOG('ColumnMap', 0, ' Columns:')
+        LOG('ColumnMap', INFO, 'Group %r:' % (group, ))
+        LOG('ColumnMap', INFO, ' Columns:')
         for column, table_name in column_dict.iteritems():
-          LOG('ColumnMap', 0, '  %r from table %r' % (column, table_name))
-        LOG('ColumnMap', 0, ' Tables:')
+          LOG('ColumnMap', INFO, '  %r from table %r' % (column, table_name))
+        LOG('ColumnMap', INFO, ' Tables:')
         for table_name, table_alias in table_dict.iteritems():
-          LOG('ColumnMap', 0, '  %r as %r' % (table_name, table_alias))
+          LOG('ColumnMap', INFO, '  %r as %r' % (table_name, table_alias))
 
   def asSQLColumn(self, raw_column, group=DEFAULT_GROUP_ID):
     if self.catalog_table_name is None or raw_column in self.column_ignore_set or \
@@ -442,7 +442,7 @@ class ColumnMap(object):
       column_map[column_map_key] = table_name
     elif previous_value != table_name:
       if column == 'uid':
-        LOG('ColumnMap', 100, 'Attempt to remap uid from %r to %r ignored.' % (previous_value, table_name))
+        LOG('ColumnMap', WARNING, 'Attempt to remap uid from %r to %r ignored.' % (previous_value, table_name))
       else:
         raise ValueError, 'Cannot remap a column to another table. column_map[%r] = %r, new = %r' % (column_map_key, column_map.get(column_map_key), table_name)
 
@@ -462,7 +462,7 @@ class ColumnMap(object):
     self.join_query_list.append(query)
 
   def addJoinQuery(self, query):
-    LOG('ColumnMap', 0, 'addJoinQuery use is discouraged')
+    LOG('ColumnMap', INFO, 'addJoinQuery use is discouraged')
     self._addJoinQuery(query)
 
   def iterJoinQueryList(self):
