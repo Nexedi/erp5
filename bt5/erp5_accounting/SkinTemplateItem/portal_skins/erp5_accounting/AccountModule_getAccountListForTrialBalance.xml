@@ -63,6 +63,7 @@ portal = context.getPortalObject()\n
 getInventoryList = portal.portal_simulation.getInventoryList\n
 getInventory = portal.portal_simulation.getInventoryAssetPrice\n
 Base_translateString = portal.Base_translateString\n
+selected_gap = gap_root\n
 \n
 inventory_movement_type_list = portal.getPortalInventoryMovementTypeList()\n
 # Balance Movement Type list is all movements that are both inventory movement\n
@@ -281,8 +282,9 @@ def getNodeTitleAndId(node_relative_url):\n
     return node_title_and_id_cache.setdefault(node_relative_url,\n
                   ( node.getUid(),\n
                     node.getTitle(),\n
-                    node.Account_getGapId(),\n
-                    node.getProperty(\'string_index\') ))\n
+                    node.Account_getGapId(gap_root=selected_gap),\n
+                    node.getProperty(\'string_index\'),\n
+                    node))\n
 \n
 # include all accounts, even those not selected before (no movements in the\n
 # period)\n
@@ -574,7 +576,7 @@ if account_type_to_group_by_payment:\n
 line_list = []\n
 for (node_relative_url, mirror_section_uid, payment_uid), data in \\\n
                                     line_per_account.items():\n
-  node_uid, node_title, node_id, string_index = getNodeTitleAndId(node_relative_url)\n
+  node_uid, node_title, node_id, string_index, node = getNodeTitleAndId(node_relative_url)\n
   if mirror_section_uid is not MARKER:\n
     if mirror_section_uid is None:\n
       node_title = \'%s (%s)\' % ( node_title, Base_translateString(\'None\'))\n
@@ -591,6 +593,9 @@ for (node_relative_url, mirror_section_uid, payment_uid), data in \\\n
   if not string_index:\n
     string_index = \'%-10s\' % node_id\n
   string_index = \'%s %s\' % (string_index, node_title)\n
+\n
+  if selected_gap and not node.isMemberOf(selected_gap):\n
+    continue\n
 \n
   initial_debit_balance = data.get(\'initial_debit_balance\', 0)\n
   initial_credit_balance = data.get(\'initial_credit_balance\', 0)\n
@@ -645,7 +650,8 @@ request.set(\'TrialBalance.final_balance_if_credit\', total_final_balance_if_cre
 if not per_account_class_summary:\n
   return line_list\n
 \n
-current_gap = portal.portal_preferences.getPreferredAccountingTransactionGap()\n
+current_gap = selected_gap or \\\n
+                 portal.portal_preferences.getPreferredAccountingTransactionGap()\n
 if current_gap.startswith(\'gap/\'):\n
   current_gap = current_gap[4:]\n
 def getAccountClass(account_relative_url):\n
@@ -717,7 +723,7 @@ return new_line_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>show_empty_accounts, expand_accounts, at_date, from_date, period_start_date, section_uid, simulation_state, precision, node_uid, per_account_class_summary=0, **kw</string> </value>
+            <value> <string>show_empty_accounts, expand_accounts, at_date, from_date, period_start_date, section_uid, simulation_state, precision, node_uid, gap_root=None, per_account_class_summary=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -737,7 +743,7 @@ return new_line_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>10</int> </value>
+                        <value> <int>11</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -752,6 +758,7 @@ return new_line_list\n
                             <string>simulation_state</string>
                             <string>precision</string>
                             <string>node_uid</string>
+                            <string>gap_root</string>
                             <string>per_account_class_summary</string>
                             <string>kw</string>
                             <string>Products.PythonScripts.standard</string>
@@ -766,6 +773,7 @@ return new_line_list\n
                             <string>getInventoryList</string>
                             <string>getInventory</string>
                             <string>Base_translateString</string>
+                            <string>selected_gap</string>
                             <string>inventory_movement_type_list</string>
                             <string>append</string>
                             <string>$append0</string>
@@ -847,6 +855,7 @@ return new_line_list\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <int>0</int>
               </tuple>
             </value>

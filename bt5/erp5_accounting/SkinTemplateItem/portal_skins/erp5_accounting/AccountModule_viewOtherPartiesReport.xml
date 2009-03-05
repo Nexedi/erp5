@@ -71,6 +71,7 @@
                         <string>your_omit_empty_accounts</string>
                         <string>your_omit_grouped_references</string>
                         <string>your_entity_role</string>
+                        <string>your_gap_root</string>
                       </list>
                     </value>
                 </item>

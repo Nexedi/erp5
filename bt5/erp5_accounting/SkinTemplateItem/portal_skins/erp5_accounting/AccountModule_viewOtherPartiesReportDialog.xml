@@ -65,7 +65,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_gap_root</string>
+                      </list>
                     </value>
                 </item>
                 <item>

@@ -67,7 +67,7 @@ simulation_state = request[\'simulation_state\']\n
 expand_accounts = request.get(\'expand_accounts\', False)\n
 show_empty_accounts = request[\'show_empty_accounts\']\n
 per_account_class_summary = request[\'per_account_class_summary\']\n
-\n
+gap_root = request.get(\'gap_root\', None)\n
 section_uid = portal.Base_getSectionUidListForSectionCategory(\n
                                    request[\'section_category\'])\n
 \n
@@ -116,7 +116,8 @@ return [ ReportSection(\n
                                   precision=precision,\n
                                   node_uid=node_uid,\n
                                   per_account_class_summary=\n
-                                          per_account_class_summary), )]\n
+                                          per_account_class_summary,\n
+                                  gap_root=gap_root,), )]\n
 </string> </value>
         </item>
         <item>
@@ -169,6 +170,7 @@ return [ ReportSection(\n
                             <string>expand_accounts</string>
                             <string>show_empty_accounts</string>
                             <string>per_account_class_summary</string>
+                            <string>gap_root</string>
                             <string>section_uid</string>
                             <string>period_start_date</string>
                             <string>currency</string>

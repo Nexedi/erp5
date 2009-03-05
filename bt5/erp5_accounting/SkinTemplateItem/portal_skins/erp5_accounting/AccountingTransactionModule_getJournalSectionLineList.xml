@@ -66,9 +66,18 @@ if payment:\n
 account_title_cache = dict()\n
 def getAccountId(node_relative_url):\n
   if node_relative_url not in account_title_cache:\n
-    title = portal.restrictedTraverse(node_relative_url).Account_getGapId()\n
+    title = portal.restrictedTraverse(node_relative_url).Account_getGapId(gap_root=gap_root)\n
     account_title_cache[node_relative_url] = title\n
   return account_title_cache[node_relative_url]\n
+\n
+\n
+account_in_gap_root_cache = dict()\n
+def isAccountInGapRoot(node_relative_url):\n
+  if node_relative_url not in account_in_gap_root_cache:\n
+    is_in = portal.restrictedTraverse(node_relative_url).isMemberOf(gap_root)\n
+    account_in_gap_root_cache[node_relative_url] = is_in\n
+  return account_in_gap_root_cache[node_relative_url]\n
+\n
 \n
 displayed_transaction = dict()\n
 total_credit = 0\n
@@ -90,8 +99,12 @@ for brain in portal.portal_simulation.getMovementHistoryList(\n
                                          (\'parent_uid\', \'descending\'),\n
                                          (\'stock.total_price\', \'descending\')),\n
                                 **extra_kw):\n
+  if gap_root and not isAccountInGapRoot(brain.node_relative_url):\n
+    continue\n
+\n
   debit = max(brain.total_price, 0) or 0\n
   credit = max(-(brain.total_price or 0), 0) or 0\n
+ \n
   mvt = brain.getObject()\n
   if payment_mode and not \\\n
         mvt.getPaymentMode(\'\').startswith(payment_mode):\n
@@ -153,7 +166,7 @@ return line_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection, at_date, from_date, portal_type, simulation_state, section_uid, payment_mode=None, payment=None, **kw</string> </value>
+            <value> <string>selection, at_date, from_date, portal_type, simulation_state, section_uid, payment_mode=None, payment=None, gap_root=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -173,7 +186,7 @@ return line_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>8</int> </value>
+                        <value> <int>9</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -187,6 +200,7 @@ return line_list\n
                             <string>section_uid</string>
                             <string>payment_mode</string>
                             <string>payment</string>
+                            <string>gap_root</string>
                             <string>kw</string>
                             <string>Products.PythonScripts.standard</string>
                             <string>Object</string>
@@ -201,6 +215,8 @@ return line_list\n
                             <string>_write_</string>
                             <string>account_title_cache</string>
                             <string>getAccountId</string>
+                            <string>account_in_gap_root_cache</string>
+                            <string>isAccountInGapRoot</string>
                             <string>displayed_transaction</string>
                             <string>total_credit</string>
                             <string>total_debit</string>
@@ -231,6 +247,7 @@ return line_list\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
                 <none/>
               </tuple>

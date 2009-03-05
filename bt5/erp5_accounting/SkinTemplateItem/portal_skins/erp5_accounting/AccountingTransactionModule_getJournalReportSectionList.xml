@@ -67,6 +67,7 @@ section_uid = context.Base_getSectionUidListForSectionCategory(\n
                                      request[\'section_category\'])\n
 payment_mode = request.get(\'payment_mode\')\n
 payment = request.get(\'payment\')\n
+gap_root = request.get(\'gap_root\')\n
 \n
 # Also get the currency, to know the precision\n
 currency = context.Base_getCurrencyForSection(request[\'section_category\'])\n
@@ -108,6 +109,7 @@ return [ReportSection(\n
                                 at_date=at_date,\n
                                 from_date=from_date,\n
                                 payment_mode=payment_mode,\n
+                                gap_root=gap_root,\n
                                 payment=payment))]\n
 
 
@@ -162,6 +164,7 @@ return [ReportSection(\n
                             <string>section_uid</string>
                             <string>payment_mode</string>
                             <string>payment</string>
+                            <string>gap_root</string>
                             <string>currency</string>
                             <string>precision</string>
                             <string>len</string>

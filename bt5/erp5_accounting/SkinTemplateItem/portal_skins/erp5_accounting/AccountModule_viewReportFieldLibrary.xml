@@ -90,6 +90,7 @@
                         <string>your_portal_type</string>
                         <string>your_node</string>
                         <string>your_gap</string>
+                        <string>your_gap_root</string>
                       </list>
                     </value>
                 </item>

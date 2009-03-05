@@ -68,10 +68,10 @@ if number_method == \'account_reference\':\n
 \n
 ## elif number_method == \'gap_id\':\n
 # GAP id is the default rendering\n
-current_gap = preference_tool.getPreferredAccountingTransactionGap() or \'\'\n
+current_gap = gap_root or preference_tool.getPreferredAccountingTransactionGap() or \'\'\n
 for gap in context.getGapValueList(): \n
   if current_gap in gap.getPath(): \n
-     return gap.getReference() or gap.getId()\n
+    return gap.getReference() or gap.getId()\n
 return \'\'\n
 </string> </value>
         </item>
@@ -83,7 +83,7 @@ return \'\'\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>gap_root=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -103,12 +103,13 @@ return \'\'\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>gap_root</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>preference_tool</string>
@@ -128,7 +129,9 @@ return \'\'\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

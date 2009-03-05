@@ -76,6 +76,7 @@ display_categories  = request.get(\'display_categories\', False)\n
 period_start_date = context\\\n
     .Base_getAccountingPeriodStartDateForSectionCategory(\n
           section_category=section_category, date=from_date or at_date)\n
+gap_root = request.get(\'gap_root\')\n
 \n
 # currency precision\n
 currency = portal.Base_getCurrencyForSection(request[\'section_category\'])\n
@@ -122,13 +123,14 @@ else:\n
       (\'credit\', \'Credit\'),\n
       (\'running_total_price\', \'Net\'), )\n
 \n
+# XXX getting all gap is wrong approach, it represents more than 1000\n
+# objects\n
 if gap:\n
   gap_value_list = cat_tool.gap.restrictedTraverse(gap)\\\n
                        .getCategoryChildValueList(is_self_excluded=0)\n
 else:\n
-  cat = \'gap/%s\' % (\n
-    context.portal_preferences.getPreferredAccountingTransactionGap()\n
-       or context.getPortalDefaultGapRoot())\n
+  cat = gap_root or (\'gap/%s\' % (\n
+    context.portal_preferences.getPreferredAccountingTransactionGap()))\n
 \n
   gap_value_list = cat_tool.resolveCategory(cat).getCategoryChildValueList()\n
 \n
@@ -311,6 +313,7 @@ return result\n
                             <string>False</string>
                             <string>display_categories</string>
                             <string>period_start_date</string>
+                            <string>gap_root</string>
                             <string>currency</string>
                             <string>precision</string>
                             <string>_write_</string>

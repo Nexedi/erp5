@@ -68,6 +68,7 @@
                     <value>
                       <list>
                         <string>your_gap</string>
+                        <string>your_gap_root</string>
                       </list>
                     </value>
                 </item>

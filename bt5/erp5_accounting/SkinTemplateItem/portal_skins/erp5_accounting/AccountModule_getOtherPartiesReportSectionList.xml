@@ -67,6 +67,7 @@ simulation_state = request[\'simulation_state\']\n
 role_filter_list = request.get(\'entity_role\', None)\n
 omit_balanced_accounts = request[\'omit_balanced_accounts\']\n
 from_date = request.get(\'from_date\', None)\n
+gap_root = request.get(\'gap_root\', None)\n
 \n
 request.other[\'is_accounting_report\'] = True\n
 \n
@@ -116,13 +117,15 @@ if omit_balanced_accounts :\n
                 ).getAccountTypeRelatedValueList(\n
                     strict_membership=1,\n
                     portal_type=\'Account\'):\n
-    valid_node_uids.append(account.getUid())\n
+    if not gap_root or account.isMemberOf(gap_root):\n
+      valid_node_uids.append(account.getUid())\n
   for account in portal.portal_categories.resolveCategory(\n
                     \'account_type/liability/payable\'\n
                 ).getAccountTypeRelatedValueList(\n
                     strict_membership=1,\n
                     portal_type=\'Account\'):\n
-    valid_node_uids.append(account.getUid())\n
+    if not gap_root or account.isMemberOf(gap_root):\n
+      valid_node_uids.append(account.getUid())\n
 \n
 if not params[\'hide_grouping\']  :\n
   entity_columns.append((\'grouping_reference\',\n
@@ -144,7 +147,7 @@ for party in context.Account_zDistinctSectionList():\n
     else:\n
       title = o.getTitle()\n
       if o.getProperty(\'role\', None):\n
-        title += \' (%s)\' % o.getRoleTitle()\n
+        title += \' (%s)\' % o.getRoleTranslatedTitle()\n
       result.append(\n
                  ReportSection(title=title,\n
                                level=1,\n
@@ -216,6 +219,7 @@ return result\n
                             <string>role_filter_list</string>
                             <string>omit_balanced_accounts</string>
                             <string>from_date</string>
+                            <string>gap_root</string>
                             <string>True</string>
                             <string>_write_</string>
                             <string>result</string>
