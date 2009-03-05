@@ -70,6 +70,14 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>Add portal content</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>Copy or Move</string> </key>
                     <value>
                       <list>

@@ -51,6 +51,7 @@
                 <string>Modify portal content</string>
                 <string>Access contents information</string>
                 <string>Copy or Move</string>
+                <string>Add portal content</string>
               </tuple>
             </value>
         </item>
