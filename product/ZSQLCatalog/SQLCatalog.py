@@ -1800,8 +1800,6 @@ class Catalog(Folder,
           table_index[line.KEY_NAME].append(line.COLUMN_NAME)
         else:
           table_index[line.KEY_NAME] = [line.COLUMN_NAME,]
-      LOG("SQLCatalog.getTableIndex", INFO, "index = %s for table = %s" \
-          %(table_index, table))
       return table_index
     return CachingMethod(_getTableIndex, id='SQLCatalog.getTableIndex', \
                          cache_factory='erp5_content_long')(table=table).copy()
