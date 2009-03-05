@@ -174,7 +174,7 @@ class IRelatedKey(ISearchKey):
       search_value (anything)
         If given, a condition on real column will be generated.
         Otherwise, only the SQL required to reach that column will be
-        generated. This is usefull when sorting on a virtual column, for
+        generated. This is useful when sorting on a virtual column, for
         example.
       search_key_name (string, None)
         If given, it overrides real column's default SearchKey.
