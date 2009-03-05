@@ -94,6 +94,7 @@
                         <string>my_collect_order_group</string>
                         <string>my_int_index</string>
                         <string>my_divergence_scope</string>
+                        <string>my_portal_type</string>
                       </list>
                     </value>
                 </item>

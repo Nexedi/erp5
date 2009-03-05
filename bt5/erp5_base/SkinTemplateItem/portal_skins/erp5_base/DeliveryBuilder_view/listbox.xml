@@ -118,6 +118,10 @@
                           <string>int_index</string>
                           <string>Sort Index</string>
                         </tuple>
+                        <tuple>
+                          <string>portal_type</string>
+                          <string>Type</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
