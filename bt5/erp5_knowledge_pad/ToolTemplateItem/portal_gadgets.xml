@@ -13,12 +13,12 @@
             <key> <string>_Access_Transient_Objects_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
-                <string>Author</string>
-                <string>Associate</string>
                 <string>Assignee</string>
-                <string>Manager</string>
+                <string>Assignor</string>
+                <string>Associate</string>
                 <string>Auditor</string>
+                <string>Author</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>
@@ -34,12 +34,13 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
-                <string>Author</string>
-                <string>Associate</string>
+                <string>Anonymous</string>
                 <string>Assignee</string>
-                <string>Manager</string>
+                <string>Assignor</string>
+                <string>Associate</string>
                 <string>Auditor</string>
+                <string>Author</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>
@@ -63,12 +64,12 @@
             <key> <string>_Access_session_data_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
-                <string>Author</string>
-                <string>Associate</string>
                 <string>Assignee</string>
-                <string>Manager</string>
+                <string>Assignor</string>
+                <string>Associate</string>
                 <string>Auditor</string>
+                <string>Author</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>
@@ -913,12 +914,12 @@
             <key> <string>_Copy_or_Move_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
-                <string>Author</string>
-                <string>Associate</string>
                 <string>Assignee</string>
-                <string>Manager</string>
+                <string>Assignor</string>
+                <string>Associate</string>
                 <string>Auditor</string>
+                <string>Author</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>
@@ -1015,12 +1016,12 @@
             <key> <string>_List_folder_contents_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
-                <string>Author</string>
-                <string>Associate</string>
                 <string>Assignee</string>
-                <string>Manager</string>
+                <string>Assignor</string>
+                <string>Associate</string>
                 <string>Auditor</string>
+                <string>Author</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>
@@ -1365,12 +1366,12 @@
             <key> <string>_View_History_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
-                <string>Author</string>
-                <string>Associate</string>
                 <string>Assignee</string>
-                <string>Manager</string>
+                <string>Assignor</string>
+                <string>Associate</string>
                 <string>Auditor</string>
+                <string>Author</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>
@@ -1378,11 +1379,11 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
-                <string>Assignee</string>
-                <string>Manager</string>
                 <string>Auditor</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>
