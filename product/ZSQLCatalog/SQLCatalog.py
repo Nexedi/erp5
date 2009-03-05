@@ -232,8 +232,6 @@ class UidBuffer(TM):
     tid = get_ident()
     self.temporary_buffer.setdefault(tid, []).extend(iterable)
 
-DEBUG = False
-
 related_key_definition_cache = {}
 
 class Catalog(Folder,
@@ -2029,8 +2027,6 @@ class Catalog(Folder,
               # Parsing failed, create a query from the bare string.
               result = self.buildSingleQuery(key, value)
             else:
-              if DEBUG:
-                LOG('SQLCatalog', 0, 'Building queries from abstract syntax tree: %r' % (abstract_syntax_tree, ))
               result = self.buildQueryFromAbstractSyntaxTreeNode(abstract_syntax_tree, key)
         elif isinstance(value, dict):
           # Dictionnary: might contain the search key to use.
@@ -2105,10 +2101,6 @@ class Catalog(Folder,
                           ignore_empty_string=1, only_group_columns=False,
                           limit=None, extra_column_list=None,
                           **kw):
-#    from traceback import format_list, extract_stack
-#    LOG('buildSQLQuery', 0, ''.join(format_list(extract_stack())))
-    if DEBUG:
-      LOG('buildSQLQuery', 0, repr(kw))
     group_by_list = kw.pop('group_by_list', kw.pop('group_by', kw.pop('group_by_expression', None)))
     if isinstance(group_by_list, basestring):
       group_by_list = [x.strip() for x in group_by_list.split(',')]
@@ -2169,8 +2161,6 @@ class Catalog(Folder,
       extra_column_list=extra_column_list,
       from_expression=from_expression)
     result = query.asSQLExpression(self, only_group_columns).asSQLExpressionDict()
-    if DEBUG:
-      LOG('buildSQLQuery', 0, repr(result))
     return result
 
   # Compatibililty SQL Sql
@@ -2248,8 +2238,6 @@ class Catalog(Folder,
 
   def queryResults(self, sql_method, REQUEST=None, src__=0, build_sql_query_method=None, **kw):
     sql_kw = self._queryResults(REQUEST=REQUEST, build_sql_query_method=build_sql_query_method, **kw)
-    if DEBUG and not src__:
-      LOG('queryResults', 0, sql_method(src__=1, **sql_kw))
     return sql_method(src__=src__, **sql_kw)
       
   def searchResults(self, REQUEST=None, **kw):
