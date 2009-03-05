@@ -95,10 +95,6 @@ class caching_class_method_decorator:
   def __call__(self, method):
     caching_method = CachingMethod(method, *self.args, **self.kw)
     return lambda *args, **kw: caching_method(*args, **kw)
-    #def wrapper(wrapped_self):
-    #  LOG('caching_class_method_decorator', 0, 'lookup')
-    #  return caching_method(wrapped_self)
-    #return wrapper
 
 try:
   from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
@@ -911,7 +907,6 @@ class Catalog(Folder,
       try:
         method_name = self.sql_catalog_schema
         method = getattr(self, method_name)
-        #LOG('_getCatalogSchema', 0, 'method_name = %r, method = %r, table = %r' % (method_name, method, table))
         search_result = method(table=table)
         for c in search_result:
           result_list.append(c.Field)
