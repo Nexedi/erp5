@@ -242,7 +242,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Business Template Title</string> </value>
+                    <value> <string>Business Template Name</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

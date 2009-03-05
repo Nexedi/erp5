@@ -323,7 +323,7 @@
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>Title</string>
+                          <string>Name</string>
                         </tuple>
                         <tuple>
                           <string>version</string>
@@ -364,7 +364,7 @@
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>Title</string>
+                          <string>Name</string>
                         </tuple>
                         <tuple>
                           <string>version</string>
@@ -537,7 +537,7 @@
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>Title</string>
+                          <string>Name</string>
                         </tuple>
                         <tuple>
                           <string>version</string>
@@ -579,7 +579,7 @@
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>Title</string>
+                          <string>Name</string>
                         </tuple>
                         <tuple>
                           <string>version</string>

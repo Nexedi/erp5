@@ -344,7 +344,7 @@
                         </tuple>
                         <tuple>
                           <string>bt_title</string>
-                          <string>BT Title</string>
+                          <string>Business Template Name</string>
                         </tuple>
                         <tuple>
                           <string>object_state</string>

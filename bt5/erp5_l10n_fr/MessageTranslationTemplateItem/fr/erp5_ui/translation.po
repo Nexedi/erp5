@@ -963,9 +963,6 @@ msgstr "N° de compte complet"
 msgid "BBAN Key"
 msgstr "Clé n° de compte"
 
-msgid "BT Title"
-msgstr "Titre du BT"
-
 msgid "Bad login provided."
 msgstr "Login incorrect"
 
@@ -1260,8 +1257,8 @@ msgstr "ID du Business Template"
 msgid "Business Template Installation Workflow"
 msgstr "Workflow d'installation du Business Template"
 
-msgid "Business Template Title"
-msgstr "Titre du Business Template"
+msgid "Business Template Name"
+msgstr "Nom du Business Template"
 
 msgid "Business Templates"
 msgstr "Business Templates"
