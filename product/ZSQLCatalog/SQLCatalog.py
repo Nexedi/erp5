@@ -1917,6 +1917,34 @@ class Catalog(Folder,
     return result
 
   @profiler_decorator
+  def _buildQueryFromAbstractSyntaxTreeNode(self, node, search_key):
+    if node.isLeaf():
+      result = search_key.buildQuery(node.getValue(), comparison_operator=node.getComparisonOperator())
+    elif node.isColumn():
+      result = self.buildQueryFromAbstractSyntaxTreeNode(node.getSubNode(), node.getColumnName())
+    else:
+      query_list = []
+      value_dict = {}
+      append = query_list.append
+      for subnode in node.getNodeList():
+        if subnode.isLeaf():
+          value_dict.setdefault(subnode.getComparisonOperator(), []).append(subnode.getValue())
+        else:
+          subquery = self._buildQueryFromAbstractSyntaxTreeNode(subnode, search_key)
+          if subquery is not None:
+            append(subquery)
+      for comparison_operator, value_list in value_dict.iteritems():
+        append(search_key.buildQuery(value_list, comparison_operator=comparison_operator))
+      operator = node.getLogicalOperator()
+      if operator == 'not' or len(query_list) > 1:
+        result = ComplexQuery(query_list, operator=operator)
+      elif len(query_list) == 1:
+        result = query_list[0]
+      else:
+        result = None
+    return result
+
+  @profiler_decorator
   def buildQueryFromAbstractSyntaxTreeNode(self, node, key):
     """
       Build a query from given Abstract Syntax Tree (AST) node by recursing in
@@ -1930,37 +1958,19 @@ class Catalog(Folder,
 
       Expected node API is described in Interface/IAbstractSyntaxNode.py .
     """
-    if node.isLeaf():
-      result = self.buildSingleQuery(key, node.getValue(), comparison_operator=node.getComparisonOperator())
-      if result is None:
-        # Unknown, skip loudly
-        LOG('SQLCatalog', 100, 'Unknown column %r, skipped.' % (key, ))
-    elif node.isColumn():
-      result = self.buildQueryFromAbstractSyntaxTreeNode(node.getSubNode(), node.getColumnName())
+    search_key, related_key_definition = self.getColumnSearchKey(key)
+    if search_key is None:
+      # Unknown, skip loudly
+      LOG('SQLCatalog', 100, 'Unknown column %r, skipped.' % (key, ))
     else:
-      query_list = []
-      value_dict = {}
-      append = query_list.append
-      for subnode in node.getNodeList():
-        if subnode.isLeaf():
-          value_dict.setdefault(subnode.getComparisonOperator(), []).append(subnode.getValue())
-        else:
-          subquery = self.buildQueryFromAbstractSyntaxTreeNode(subnode, key)
-          if subquery is not None:
-            append(subquery)
-      for comparison_operator, value_list in value_dict.iteritems():
-        subquery = self.buildSingleQuery(key, value_list, comparison_operator=comparison_operator)
-        if subquery is None:
-          LOG('SQLCatalog', 100, 'Unknown column %r, skipped.' % (key, ))
-        else:
-          append(subquery)
-      operator = node.getLogicalOperator()
-      if operator == 'not' or len(query_list) > 1:
-        result = ComplexQuery(query_list, operator=operator)
-      elif len(query_list) == 1:
-        result = query_list[0]
+      if related_key_definition is None:
+        build_key = search_key
       else:
-        result = None
+        build_key = search_key.getSearchKey(self, related_key_definition)
+      result = self._buildQueryFromAbstractSyntaxTreeNode(node, build_key)
+      if related_key_definition is not None:
+        result = search_key.buildQuery(self, related_key_definition,
+                                       search_value=result)
     return result
 
   @profiler_decorator
