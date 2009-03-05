@@ -175,8 +175,8 @@ class RelatedKey(SearchKey):
     #                Query(subordination_title="bar")
     #                , operator='OR')
     # Former catalog rendering (truncated where-expression):
-    #   AND ((catalog.title LIKE '%bil%') OR
-    #        (related_catalog_1.title = 'My Organisation'))
+    #   AND ((catalog.title LIKE '%foo%') OR
+    #        (related_catalog_1.title LIKE '%bar%'))
     #   AND (related_catalog_1.uid = related_category_0.category_uid AND
     #        related_category_0.base_category_uid = 873 AND
     #        related_category_0.uid = catalog.uid)
