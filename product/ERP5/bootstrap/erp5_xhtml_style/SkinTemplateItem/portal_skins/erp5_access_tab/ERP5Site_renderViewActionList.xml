@@ -57,6 +57,7 @@
               tal:define="module_list python:module_category[1]">\n
             <ul style="list-style-type:none; padding-left:10px;">\n
               <li style="font-weight:bold; color:#002e3f;"\n
+                  i18n:translate=""\n
                   tal:content="python:module_category[0]"/>\n
               <ul style="list-style-type:none; padding-left:0;">\n
                 <tal:block tal:repeat="module module_list">\n
