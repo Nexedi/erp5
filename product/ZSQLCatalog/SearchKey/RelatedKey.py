@@ -38,7 +38,6 @@ from Products.ZSQLCatalog.Interface.ISearchKey import IRelatedKey
 from Interface.Verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 
-MARKER = []
 BACKWARD_COMPATIBILITY = True
 
 class RelatedKey(SearchKey):
@@ -104,16 +103,11 @@ class RelatedKey(SearchKey):
 
   @profiler_decorator
   def buildQuery(self, sql_catalog, related_key_definition,
-                 search_value=MARKER, search_key_name=None,
-                 logical_operator=None, comparison_operator=None):
+                 search_value=None):
     self._buildRelatedKey(related_key_definition)
-    if search_value is MARKER:
-      join_condition = None
-    else:
-      join_condition = self._getSearchKey(sql_catalog, search_key_name).buildQuery(
-        search_value, group=self.getColumn(),
-        logical_operator=logical_operator,
-        comparison_operator=comparison_operator)
+    if isinstance(search_value, Query):
+      search_value.setGroup(self.getColumn())
+    join_condition = search_value
     return RelatedQuery(search_key=self,
                         join_condition=join_condition)
 

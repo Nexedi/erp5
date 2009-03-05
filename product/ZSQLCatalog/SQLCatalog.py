@@ -1903,9 +1903,15 @@ class Catalog(Folder,
         result = None
       else:
         if related_key_definition is None:
-          result = search_key.buildQuery(value, logical_operator=logical_operator, comparison_operator=comparison_operator)
+          build_key = search_key
         else:
-          result = search_key.buildQuery(search_value=value, sql_catalog=self, search_key_name=search_key_name, related_key_definition=related_key_definition, logical_operator=logical_operator, comparison_operator=comparison_operator)
+          build_key = search_key.getSearchKey(self, related_key_definition,
+                                               search_key_name=search_key_name)
+        result = build_key.buildQuery(value, logical_operator=logical_operator,
+                                      comparison_operator=comparison_operator)
+        if related_key_definition is not None:
+          result = search_key.buildQuery(self, related_key_definition,
+                                         search_value=result)
     else:
       result = script(value)
     return result

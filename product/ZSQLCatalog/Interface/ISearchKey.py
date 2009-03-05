@@ -155,7 +155,7 @@ class IRelatedKey(ISearchKey):
         Used to retrieve related key's ZSQLMethod.
     """
 
-  def buildQuery(sql_catalog, related_key_definition, search_value=None, search_key_name=None, logical_operator=None, comparison_operator=None):
+  def buildQuery(sql_catalog, related_key_definition, search_value=None):
     """
       group is useless here, since group is determined by ColumnMap at
       registration time. search_value becomes optional.
@@ -171,20 +171,10 @@ class IRelatedKey(ISearchKey):
           Table names are separated by ','
         - a column name
         - the name of the related key ZSQLMethod
-      search_value (anything)
+      search_value (None or Query)
         If given, a condition on real column will be generated.
         Otherwise, only the SQL required to reach that column will be
         generated. This is useful when sorting on a virtual column, for
         example.
-      search_key_name (string, None)
-        If given, it overrides real column's default SearchKey.
-      logical_operator (string, None)
-        If given, expresses the default logical link between operands.
-        It must be one of None, 'or' and 'and'.
-        It is overriden by operator present in search_value if it is a dict
-        and contains an 'operator' key.
-        'or' is assumed if not given or given with a None value.
-      comparison_operator (string, None)
-        If given, expresses the comparison between column and value.
     """
 
