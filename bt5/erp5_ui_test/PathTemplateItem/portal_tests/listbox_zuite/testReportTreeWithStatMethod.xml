@@ -128,8 +128,8 @@
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[1]</td>\n
-\t<td>+ a</td>\n
+\t<td>//tr[@id="listbox_data_line_0"]/td[1]/a[@class="tree_closed"]</td>\n
+\t<td>a</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
@@ -143,8 +143,8 @@
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[1]</td>\n
-\t<td>+ b</td>\n
+\t<td>//tr[@id="listbox_data_line_1"]/td[1]/a[@class="tree_closed"]</td>\n
+\t<td>b</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
@@ -169,7 +169,7 @@
 <!-- Click on + a -->\n
 <tr>\n
 \t<td>clickAndWait</td>\n
-\t<td>link=+ a</td>\n
+\t<td>link=a</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -179,8 +179,8 @@
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[1]</td>\n
-\t<td>- a</td>\n
+\t<td>//tr[@id="listbox_data_line_0"]/td[1]/a[@class="tree_open"]</td>\n
+\t<td>a</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyElementNotPresent</td>\n
@@ -260,8 +260,8 @@
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[1]</td>\n
-\t<td>+ a1</td>\n
+\t<td>//tr[@id="listbox_data_line_1"]/td[1]/a[@class="tree_closed"]</td>\n
+\t<td>a1</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyElementNotPresent</td>\n
@@ -275,8 +275,8 @@
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[1]</td>\n
-\t<td>+ a2</td>\n
+\t<td>//tr[@id="listbox_data_line_2"]/td[1]/a[@class="tree_closed"]</td>\n
+\t<td>a2</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyElementNotPresent</td>\n
@@ -326,8 +326,8 @@
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[1]</td>\n
-\t<td>+ a1</td>\n
+\t<td>//tr[@id="listbox_data_line_1"]/td[1]/a[@class="tree_closed"]</td>\n
+\t<td>a1</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyElementNotPresent</td>\n
@@ -341,8 +341,8 @@
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[1]</td>\n
-\t<td>+ a2</td>\n
+\t<td>//tr[@id="listbox_data_line_2"]/td[1]/a[@class="tree_closed"]</td>\n
+\t<td>a2</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyElementNotPresent</td>\n
@@ -377,8 +377,8 @@
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[1]</td>\n
-\t<td>- b</td>\n
+\t<td>//tr[@id="listbox_data_line_0"]/td[1]/a[@class="tree_open"]</td>\n
+\t<td>b</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyElementNotPresent</td>\n
@@ -448,8 +448,8 @@
 </tr>\n
 <tr>\n
 \t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[1]</td>\n
-\t<td>- b</td>\n
+\t<td>//tr[@id="listbox_data_line_0"]/td[1]/a[@class="tree_open"]</td>\n
+\t<td>b</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyElementNotPresent</td>\n
