@@ -106,7 +106,7 @@ Description: \n
 Start Date: %(start_date)s\n
 Stop Date: %(stop_date)s\n
 \n
-Please wisit ERP5: %(url)s\n
+Please visit ERP5: %(url)s\n
 """ % {\n
        \'assignor\': destination_decision_person.getTitle(),\n
        \'title\'   : task_report.getTitle(),\n
