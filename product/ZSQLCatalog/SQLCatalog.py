@@ -2094,9 +2094,9 @@ class Catalog(Folder,
   @profiler_decorator
   def buildSQLQuery(self, query_table='catalog', REQUEST=None,
                           ignore_empty_string=1, only_group_columns=False,
-                          limit=None, extra_column_list=None,
+                          limit=None, extra_column_list=(),
                           **kw):
-    group_by_list = kw.pop('group_by_list', kw.pop('group_by', kw.pop('group_by_expression', None)))
+    group_by_list = kw.pop('group_by_list', kw.pop('group_by', kw.pop('group_by_expression', ())))
     if isinstance(group_by_list, basestring):
       group_by_list = [x.strip() for x in group_by_list.split(',')]
     select_dict = kw.pop('select_dict', kw.pop('select_list', kw.pop('select_expression', None)))
@@ -2144,7 +2144,7 @@ class Catalog(Folder,
     # It is required to support select_expression_key parameter for backward
     # compatiblity, but I'm not sure if there can be a serious use for it in
     # new API.
-    order_by_override_list = kw.pop('select_expression_key', None)
+    order_by_override_list = kw.pop('select_expression_key', ())
     query = EntireQuery(
       query=self.buildQuery(kw, ignore_empty_string=ignore_empty_string),
       order_by_list=order_by_list,

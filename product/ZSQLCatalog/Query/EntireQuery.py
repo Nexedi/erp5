@@ -35,6 +35,12 @@ from Products.ZSQLCatalog.Interface.IEntireQuery import IEntireQuery
 from Interface.Verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 
+def defaultDict(value):
+  if value is None:
+    return {}
+  assert isinstance(value, dict)
+  return value
+
 class EntireQuery(object):
   """
     This is not a Query subclass, since it does not define a
@@ -47,28 +53,18 @@ class EntireQuery(object):
   column_map = None
 
   @profiler_decorator
-  def __init__(self, query, order_by_list=None, group_by_list=None,
+  def __init__(self, query, order_by_list=(), group_by_list=(),
                select_dict=None, limit=None, catalog_table_name=None,
-               extra_column_list=None, from_expression=None,
+               extra_column_list=(), from_expression=None,
                order_by_override_list=None):
-    def default(value):
-      if value is None:
-        return []
-      assert isinstance(value, (tuple, list))
-      return value
-    def defaultDict(value):
-      if value is None:
-        return {}
-      assert isinstance(value, dict)
-      return value
     self.query = query
-    self.order_by_list = default(order_by_list)
-    self.order_by_override_set = frozenset(default(order_by_override_list))
-    self.group_by_list = default(group_by_list)
+    self.order_by_list = list(order_by_list)
+    self.order_by_override_set = frozenset(order_by_override_list)
+    self.group_by_list = list(group_by_list)
     self.select_dict = defaultDict(select_dict)
     self.limit = limit
     self.catalog_table_name = catalog_table_name
-    self.extra_column_list = default(extra_column_list)
+    self.extra_column_list = list(extra_column_list)
     self.from_expression = from_expression
 
   def asSearchTextExpression(self, sql_catalog):
