@@ -103,7 +103,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The number of partner for the person.</string> </value>
+                    <value> <string>The number of partners for the person.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -123,7 +123,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Partners</string> </value>
+                    <value> <string>Number of Partners</string> </value>
                 </item>
               </dictionary>
             </value>
