@@ -58,8 +58,11 @@
               is_report_tree_mode here/isReportTreeMode;\n
               is_domain_tree_supported here/isDomainTreeSupported;\n
               is_report_tree_supported here/isReportTreeSupported;\n
+              show_anchor_column here/showAnchorColumn;\n
               show_select_column here/showSelectColumn;\n
               show_search_line here/showSearchLine;\n
+              stat_column_name_list python: here.getLabelValueList();\n
+              selected_search_field request/select_search_field | nothing;\n
               ">\n
   <!-- ListBox starts here.  -->\n
   <input type="hidden" name="list_selection_name" value="default" tal:attributes="value selection_name" />\n
@@ -97,7 +100,7 @@
                   <tal:block tal:repeat="i python: range(report_tree.depth)">\n
                     <div width="16" nowrap="nowrap">&nbsp;</div>\n
                   </tal:block>\n
-\t\t  <div colspan="1" style="text-align: left; vertical-align: top; white-space: nowrap;"\n
+                  <div colspan="1" style="text-align: left; vertical-align: top; white-space: nowrap;"\n
                     tal:attributes="colspan python: total_depth - report_tree.depth + 1">\n
                     <a href="method"\n
                       tal:condition="report_tree/is_open"\n
@@ -127,12 +130,13 @@
         <div style="padding: 0px; margin: 0px;">\n
           <div class="top_list">\n
             <div id="listbox_title_line" tal:attributes="id string:${field_id}_title_line" class="List_top">\n
-                <span id="listbox_record_number"\n
+                <!-- <tal:block tal:define="global field_id string:${field_id}" /> -->\n
+\t        <span id="listbox_record_number"\n
                   tal:attributes="id string:${field_id}_record_number"\n
                   i18n:translate="" i18n:domain="ui"><tal:block tal:replace="here/total_size" i18n:name="number">0</tal:block> record(s)</span>\n
-                <input type="hidden" id="listMax" tal:attributes="value python: len(here.getSearchValueList())">\n
-                <input type="hidden" id="itemMax" tal:attributes="value python: len(line_list)">\n
-                <input type="checkbox" name="check" id="check" onClick="simple_aff()" checked="checked">\n
+                 <input type="hidden" tal:attributes="id string:${field_id}_listMax; name string:${field_id}_listMax; value python: len(here.getSearchValueList())">\n
+                 <input type="hidden" tal:attributes="id string:${field_id}_itemMax; name string:${field_id}_itemMax; value python: len(line_list)">\n
+                 <br /><input type="checkbox" tal:attributes="id string:${field_id}_check; name string:${field_id}_check; onChange string:simple_aff(this.id)" checked="checked">\n
                 <span tal:content="python: \'Short mode\'"></span>\n
 \n
               <select id="listbox_page_selection" name="list_start" title="Change Page" size="1"\n
@@ -168,12 +172,10 @@
               </div>\n
               <tal:block tal:define="global tab_title python: range(7)"/>\n
               <tal:block tal:repeat="value here/getLabelValueList">\n
-                <tal:block tal:define="sql python: value[0];\n
-                                       title python: value[1];\n
-                                       sort_order python: value[2];\n
-                                       foo repeat/value/index;\n
-                                       bidule python: tab_title.insert(foo, value[1]);">\n
-                </tal:block>\n
+                  <tal:block tal:define="title python: value[1];\n
+                                         foo repeat/value/index;\n
+                                         bidule python: tab_title.insert(foo, title);">\n
+                  </tal:block>\n
               </tal:block>\n
             </div>\n
             <div tal:condition="python: show_search_line or is_report_tree_mode"\n
@@ -194,34 +196,36 @@
               </tal:block>\n
 \t          <div name="selection_mui" style="padding-bottom: 5px;">\n
 \n
-                    <select id="select" onChange="applyHiddenType()">\n
+                 <select id="select_search_field" onChange="javascript: this.form.submit();" name="select_search_field">\n
                       <tal:block tal:repeat="valueX here/getSearchValueList">\n
                         <tal:block tal:define="\n
                                      aliasX python: valueX[0];\n
                                      paramX python: valueX[1];\n
                                      search_fieldX python: valueX[2];\n
                                      foo2 repeat/valueX/index">\n
-                        <option tal:condition="aliasX" tal:content="python: tab_title[foo2]" i18n:domain="ui" i18n:translate="" tal:attributes="value python: foo2;"></option>\n
+                         <option  tal:condition="aliasX" tal:content="python: tab_title[foo2]" i18n:domain="ui" i18n:translate="" tal:attributes="value python: aliasX; selected python: aliasX==selected_search_field"></option>\n
                         </tal:block>\n
                       </tal:block>\n
                     </select>\n
 \n
-                <tal:block tal:condition="show_search_line"\n
-                tal:repeat="value here/getSearchValueList">\n
-                <div tal:define="alias python: value[0];\n
+                  <tal:block tal:condition="show_search_line"\n
+                             tal:repeat="value here/getSearchValueList">\n
+                    <div tal:define="alias python: value[0];\n
                                  param python: value[1];\n
                                  search_field python: value[2];\n
                                  foo repeat/value/index;"\n
-                 tal:attributes="id repeat/value/index">\n
-                  <span tal:condition="alias">\n
-                    <tal:block tal:condition="python: search_field is not None"\n
-                      tal:replace="structure python: search_field.render(value = param, key = alias)" />\n
-                    <input style="width: 40%;" tal:condition="python: search_field is None" name="id" size="8" value=""\n
-                      tal:attributes="name alias; value param; id python: \'%s%s\' % (\'input\', foo)"/>\n
-                  </span>\n
-                </div>\n
-              </tal:block>\n
-                </div>\n
+                         tal:attributes="id repeat/value/index">\n
+                     <tal:block tal:condition="python: alias==selected_search_field or (not selected_search_field and not foo)">\n
+                       <span tal:condition="alias">\n
+                        <tal:block tal:condition="python: search_field is not None"\n
+                                   tal:replace="structure python: search_field.render(value = param, key = alias)" />\n
+                        <input style="width: 40%;" name="id" size="8" value=""\n
+                               tal:attributes="name alias; value param; id python: \'%s%s\' % (\'input\', foo)"/>\n
+                       </span>\n
+                     </tal:block>\n
+                    </div>\n
+                  </tal:block>\n
+              </div>\n
             </div>\n
 \n
             <tal:block tal:repeat="line line_list" tal:define="checked_uid_set here/getCheckedUidSet">\n
@@ -254,17 +258,27 @@
                       type="hidden" value="1" name="listbox_uid:list"\n
                       tal:attributes="value python: line.getUid() or \'\';\n
                                       name string:${field_id}_uid:list" />\n
-                    <div class="right_title"\n
-                         tal:condition="not: repeat/valueY/index">\n
-                     <span tal:replace="structure html">value</span>\n
-                   </div>\n
-                   <div tal:attributes="id python: \'%s%s%s\' % (foo2, \'data\', foo)">\n
+                  <div class="left_data"\n
+                         tal:condition="not: repeat/valueY/index"\n
+                         tal:define="object_url python: \'%s/view\' % line.getObject().getAbsoluteUrl()">\n
+                      <!-- XXX it should be possible to test isSummary() -->\n
+                      <input tal:condition="python: form_id==\'Base_viewRelatedObjectList\' and line.getObject() is not None"\n
+                                 type="checkbox" value="checked" id="listbox_cb_1" name="uids:list"\n
+                                 tal:attributes="checked python: line.getUid() in checked_uid_set;\n
+                                                 value line/getUid; id string:${field_id}_cb_${line/getUid}" />\n
+                      <a tal:condition="python:not form_id==\'Base_viewWorkflowHistory\'" href="#"  tal:attributes="href string:${object_url}?selection_index=${selection_index}&amp;selection_name=${selection_name}&amp;ignore_layout:int=0&amp;reset:int=1"><img src="document_icon.gif" tal:attributes="src string:${portal_url_string}/images/line_clickable.png; title python: line.getObject().getRelativeUrl()" title="document"/></a>\n
+                      <span tal:condition="original_value" tal:replace="structure html">value</span>\n
+                  </div>\n
+                   <div tal:attributes="id python: \'%s_%s%s%s\' % (field_id, foo2, \'data\', foo)">\n
                      <div class="left_data" tal:condition="repeat/valueY/index">\n
                        <span style="color: green; font-size: 12px;" tal:content="title" i18n:domain="ui" i18n:translate=""> ID\n
                        </span>\n
                        <span style="color: green;">&nbsp;:&nbsp;</span>\n
                        <tal:block tal:condition="show_search_line">\n
-                         <span id="data_short" tal:content="data_short"/>\n
+                         <span tal:condition="python: isinstance(original_value,(float, int, long))"\n
+                               id="data_short" tal:content="python: original_value" />\n
+                         <span tal:condition="python: not isinstance(original_value,(float, int, long))"\n
+                               id="data_short" tal:content="data_short" />\n
                        </tal:block>\n
                        <tal:block tal:condition="not:show_search_line">\n
                          <span tal:replace="structure html">value</span>\n
@@ -275,17 +289,27 @@
               </tal:block>\n
             </div>\n
           </tal:block>\n
-            <div tal:condition="here/showStat" id="listbox_stat_line"\n
+          <div tal:condition="here/showStat" id="listbox_stat_line"\n
               tal:attributes="id string:${field_id}_stat_line">\n
               <div tal:condition="is_report_tree_mode" class="Data">&nbsp;</div>\n
               <div tal:condition="show_select_column" class="Data">&nbsp;</div>\n
-              <tal:block tal:repeat="valueZ here/getStatValueList">\n
-                <div class="Data" align="left"\n
-                  tal:define="original_value python: valueZ[0]; processed_value python: valueZ[1]"\n
-                  tal:attributes="align python: isinstance(original_value, (float, int, long)) and \'right\' or \'left\'"\n
-                  tal:content="processed_value" />\n
+                <tal:block tal:condition="python: stat_column_name_list is not None" tal:repeat="valueZ here/getStatValueList">\n
+                   <div class="left_data" tal:define="\n
+                    original_value python: valueZ[0];\n
+                    processed_value python: valueZ[1];\n
+                    foo repeat/valueZ/index">\n
+                    <span tal:condition="python: original_value is not None" style="color: green; font-size: 12px;" tal:content="python: stat_column_name_list[foo][1]" i18n:domain="ui" i18n:translate=""> ID\n
+                  </span>\n
+                  <span tal:condition="python: original_value is not None"  style="color: green;">&nbsp;:&nbsp;</span>\n
+                  <tal:block tal:condition="python: original_value is not None">\n
+                    <span align="right"\n
+                        tal:define="original_value python: valueZ[0]; processed_value python: valueZ[1]"\n
+                        tal:attributes="align python: isinstance(original_value, (float, int, long)) and \'right\' or \'left\'"\n
+                        tal:content="structure processed_value" />\n
+                  </tal:block>\n
+                </div>\n
               </tal:block>\n
-            </div>\n
+           </div>\n
         </div>\n
       </tal:block>\n
     </tal:block>\n

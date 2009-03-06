@@ -10,6 +10,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>erp5.js</string> </value>
         </item>
@@ -97,70 +101,86 @@ else\n
   }\n
 }\n
 \n
-function simple_aff () {\n
-var max_lenght = document.getElementById("listMax").value;\n
-var max_item = document.getElementById("itemMax").value;\n
-var check = document.getElementById("check");\n
-for (b = 0; b < max_item; b++)\n
-{\n
-for (a = 0; a < max_lenght; a++)\n
-  {\n
-    var foo = b + \'data\' + a;\n
-    var target = document.getElementById(foo);\n
+function simple_aff(dynamic_check_field) {\n
 \n
-    if (check.checked)\n
-      {\n
+ if(dynamic_check_field) \n
+ {\n
+  form_id=dynamic_check_field.split("listbox_")\n
+  max_lenght_field_id=form_id[0]+"listbox_listMax"\n
+  max_item_field_id=form_id[0]+"listbox_itemMax";\n
+  check_field_id=form_id[0]+"listbox_check";\n
+  var max_lenght = document.getElementById(max_lenght_field_id).value;\n
+  var max_item = document.getElementById(max_item_field_id).value;\n
+  var check = document.getElementById(check_field_id);\n
+\n
+  for (b = 0; b < max_item; b++)\n
+  {\n
+   for (a = 0; a < max_lenght; a++)\n
+    { var foo =form_id[0]+ \'listbox_\' + b + \'data\' + a;\n
+      var target = document.getElementById(foo);\n
+      if (check.checked)\n
+       {\n
         target.style.display = "none";\n
-      }\n
-    else\n
-      {\n
+       }\n
+      else\n
+       {\n
         target.style.display = "inline";\n
-      }\n
+       }\n
+    }\n
   }\n
-}\n
+ }\n
 }\n
 \n
 function applyHiddenType() {\n
 \n
-if (document.getElementById("listMax") && document.getElementById("fieldset_bottom"))\n
-  {\n
-var max_lenght = document.getElementById("listMax").value;\n
-var select = document.getElementById("select");\n
-if (select)\n
+ if(document.getElementById("listbox_listMax"))\n
+ { var max_item = document.getElementById("listbox_itemMax").value;\n
+   var max_lenght = document.getElementById("listbox_listMax").value;\n
+   hideListItems(\'\',max_item, max_lenght)\n
+ }\n
+\n
+/* XXX Hard code, get the number of box with show/hide mode */\n
+ for (i = 0; i < 5; i++) {\n
+  form_id = "x"+i+"_"\n
+  var max_lenght_field_id=form_id+"listbox_listMax"\n
+  var max_item_field_id=form_id+"listbox_itemMax"\n
+  if(document.getElementById(max_lenght_field_id) && document.getElementById(max_item_field_id) )\n
+   { \n
+    var max_item = document.getElementById(max_item_field_id).value;\n
+    var max_lenght = document.getElementById(max_lenght_field_id).value;\n
+    hideListItems(form_id,max_item, max_lenght)\n
+   }\n
+  }\n
+  affShortcuts ();\n
+}\n
+\n
+function hideListItems(form_id, max_item, max_length)\n
 {\n
-var field = document.getElementById("fieldset_bottom");\n
-var input\n
-var foo = "input";\n
-var foofoo\n
-\n
-\n
-  field.style.border = "solid 0px";\n
-for (a = 0; a < max_lenght; a++)\n
-  {\n
-    foofoo = foo + a;\n
-    if (document.getElementById(foofoo))\n
-      {\n
-        preinit = document.getElementById(foofoo);\n
-        preinit.value = "";\n
-      }\n
-  }\n
-\n
-for (a = 0; a < max_lenght; a++)\n
-  {\n
-    if (select.options[select.selectedIndex].value != a)\n
-      {\n
-        input = document.getElementById(a);\n
-        input.style.display = "none";\n
-      }\n
-    else\n
-      {\n
-        input = document.getElementById(a);\n
-        input.style.display = "inline";\n
-      }\n
-  }\n
-affShortcuts ();\n
+ check=form_id+"listbox_check";\n
+ for (b = 0; b < max_item; b++)\n
+ {\n
+  for (a = 0; a < max_length; a++)\n
+   { var foo =form_id+ \'listbox_\' + b + \'data\' + a;\n
+     var target = document.getElementById(foo);\n
+     if(target) \n
+       target.style.display = "none";\n
+   }\n
   }\n
 }\n
+\n
+function validateSearch(field_id)\n
+{\n
+  document.getElementById(field_id).value=\'\';\n
+  this.form.submit();\n
+}\n
+\n
+function isSeachSelectedProperty(index_id)\n
+{ \n
+ var select = document.getElementById(select);\n
+ if(select.options[select.selectedIndex].value == index_id)\n
+   return 1\n
+ else \n
+   return 0\n
 }\n
 \n
 function getTop(MyObject)\n

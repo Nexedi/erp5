@@ -10,6 +10,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>erp5.css</string> </value>
         </item>
@@ -420,6 +424,14 @@ ul li:before{\n
 \n
 .window {\n
 margin: 15px;\n
+}\n
+\n
+.AnchorColumn {\n
+  !important\n
+  border-style:none;\n
+  border-color:<dtml-var document_border_color>;\n
+  background-color:<dtml-var document_background_color>;\n
+  border-width:0;\n
 }\n
 \n
 .button {\n

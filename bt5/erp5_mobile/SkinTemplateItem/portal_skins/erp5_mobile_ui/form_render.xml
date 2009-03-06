@@ -90,7 +90,7 @@ It is possible to specify a group id and a group title by naming a group followi
   <tal:block\n
     tal:define="field_errors python: request.get(\'field_errors\', {});\n
                 dummy        python: request.set(\'here\', here);\n
-                group_list   python: form.Form_getGroupTitleAndId();\n
+\t\tgroup_list   python: form.Form_getGroupTitleAndId();\n
                 gid_list     python: \' \'.join([x[\'gid\'] for x in group_list if x!=\'hidden\']);\n
                 field_render nocall: here/field_render/macros/field_render">\n
 \n
@@ -109,12 +109,12 @@ It is possible to specify a group id and a group title by naming a group followi
           </div>\n
         </fieldset>\n
        <p tal:condition="python: gid.find(\'right\') >= 0 or (gid.find(\'left\') >= 0 and \'right\' not in gid_list)" class="clear"/>\n
-       <div class="div_gtt" align="middle">\n
+      </tal:block>\n
+      <p class="clear">&nbsp;</p>\n
+      </tal:block>\n
+      <div class="div_gtt" align="middle">\n
          <a class="link_white" tal:attributes="href python: \'%s%s%s%s\' % (context.REQUEST.URL0,\'?\', context.REQUEST.QUERY_STRING,\'#TOP\')">////////// Top of page \\\\\\\\\\\\\\\\\\\\</a>\n
        </div>\n
-      </tal:block>\n
-    </tal:block>\n
-    <p class="clear"></p>\n
   </tal:block>\n
 </tal:block>
 
