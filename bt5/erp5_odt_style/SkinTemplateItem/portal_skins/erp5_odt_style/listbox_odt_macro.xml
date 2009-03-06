@@ -101,20 +101,6 @@
                  is_report_tree_mode selection/report_tree_mode | nothing;" >\n
 \n
            <tal:block tal:condition="python: len(listboxline_list) > 1" >\n
-            <tal:block tal:condition="python: is_domain_tree_mode">\n
-               <tal:block tal:define="domain_list python: selection.getDomainList()"\n
-                   tal:condition="python: len(domain_list) > 0" >\n
-                 <table:table table:style-name=\'listbox-table\' table:name=\'listbox-table\'>\n
-                   <table:table-column table:style-name=\'listbox-table.A\'/>\n
-                   <table:table-row>\n
-                     <table:table-cell table:style-name=\'listbox-table.A1\' office:value-type=\'string\'>\n
-                       <text:p text:style-name=\'listbox-header\' tal:content="python: domain_list[-1]" />\n
-                     </table:table-cell>\n
-                   </table:table-row>\n
-                 </table:table>\n
-               </tal:block>\n
-              </tal:block>\n
-\n
                <table:table table:style-name=\'listbox-table\' table:name=\'listbox-table\'>\n
                 <tal:block tal:repeat="column_item python:listboxline_list[0].getColumnItemList()">\n
                  <table:table-column table:style-name=\'listbox-table.A\'/>\n
@@ -147,6 +133,15 @@
 \n
                    <tal:block tal:condition="python: listboxline.isTitleLine()">\n
                      <table:table-header-rows>\n
+                       <table:table-row>\n
+                         <table:table-cell table:style-name=\'listbox-table.A1\' \n
+                                           tal:attributes="table:number-columns-spanned python: len(listboxline.getColumnItemList())" \n
+                                           office:value-type=\'string\'>\n
+                            <text:p tal:condition=\'is_domain_tree_mode\'\n
+                                   text:style-name=\'listbox-header\'\n
+                                   tal:content="python: selection.getDomain() is not None and selection.getDomain().asDomainItemDict().values()[-1].getTitle() or \'\'"/>\n
+                         </table:table-cell>\n
+                       </table:table-row>\n
                        <table:table-row>\n
                          <table:table-cell table:style-name=\'listbox-table.A1\' \n
                                            tal:attributes="table:number-columns-spanned python: len(listboxline.getColumnItemList())" \n
