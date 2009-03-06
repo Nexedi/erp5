@@ -46,6 +46,7 @@ class OrderMovementGroup(MovementGroup):
 
   def test(self, movement, property_dict, **kw):
     if property_dict['causality'] in movement.getCausalityList():
+      property_dict['causality'] = movement.getCausalityList()
       return True, property_dict
     else:
       return False, property_dict
