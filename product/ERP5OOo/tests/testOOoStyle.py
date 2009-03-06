@@ -99,10 +99,16 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals('inline', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
-  def test_form_list_report_tree(self):
+  def test_form_list_domain_tree(self):
     self.portal.portal_selections.setListboxDisplayMode(
                   self.portal.REQUEST, 'DomainTreeMode',
                   'person_module_selection')
+    # XXX no proper API on selection / selection tool for this ?
+    self.portal.portal_selections.setSelectionParamsFor(
+                  selection_name='person_module_selection',
+                  params=dict(domain_path='portal_categories',
+                              domain_url='group',
+                              domain_list=()))
     response = self.publish(
                    '/%s/person_module/PersonModule_viewPersonList'
                     % self.portal.getId(), self.auth)
