@@ -99,7 +99,7 @@
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
-                          <string>Status</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
