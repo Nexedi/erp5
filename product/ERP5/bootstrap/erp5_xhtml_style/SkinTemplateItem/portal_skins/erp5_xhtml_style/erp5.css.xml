@@ -748,12 +748,12 @@ fieldset.bottom .field .input {\n
   float: None;\n
 }\n
 \n
-.listbox_domain_tree_table a.tree_open {\n
+a.tree_open {\n
   background: url(\'<dtml-var expr="portal_url()">/images/tree_open.png\') left no-repeat;\n
   padding-left:15px;\n
 }\n
 \n
-.listbox_domain_tree_table a.tree_closed {\n
+a.tree_closed {\n
   background: url(\'<dtml-var expr="portal_url()">/images/tree_closed.png\') left no-repeat;\n
   padding-left:15px;\n
 }\n

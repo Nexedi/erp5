@@ -416,8 +416,10 @@
                   tal:define="section_name python: line.getDomainTitle()">\n
                   <a tal:condition="section_name"\n
                     tal:define="method_id python: line.isOpen() and \'foldReport\' or \'unfoldReport\'"\n
-                    tal:attributes="href string:${method_id}?report_url=${line/getDomainUrl}&amp;form_id=${form_id}&amp;list_selection_name=${selection_name}"\n
-                    tal:content="structure python: \'%s%s&nbsp;%s\' % (\'&nbsp;&nbsp;\' * line.getDepth(), line.isOpen() and \'-\' or \'+\', section_name)" />\n
+                    tal:attributes="href string:${method_id}?report_url=${line/getDomainUrl}&amp;form_id=${form_id}&amp;list_selection_name=${selection_name};\n
+                                    class python:test(line.isOpen(), \'tree_open\', \'tree_closed\');\n
+                                    style python:\'white-space: nowrap;; margin-left: %spx\' % (line.getDepth() * 15)"\n
+                    tal:content="section_name"/>\n
                 </td>\n
                 <td class="AnchorColumn Data" tal:condition="python:show_anchor_column and len(render_result)" style="width: 20px;">\n
                   <a href="#" tal:attributes="href python:render_result[0][4]"><img src="document_icon.gif" alt="document" tal:attributes="src string:${portal_url_string}/images/line_clickable.png" /></a>\n
