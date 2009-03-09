@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>pass\n
+            <value> <string>context.Delivery_generateReference()\n
 </string> </value>
         </item>
         <item>
@@ -91,6 +91,8 @@
                         <value>
                           <tuple>
                             <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
