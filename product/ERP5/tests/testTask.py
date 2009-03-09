@@ -637,7 +637,7 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
         simulation_tool.manage_permission(permission, roles=(), acquire=1)
       self.logout()
 
-  def test_06_testTaskTitleAndReference(self, quiet=0, run=run_all_test):
+  def test_06_checkTaskReferenceOnCreationAndPaste(self, quiet=0, run=run_all_test):
     """Tests that task reference is set upon creation and coping"""
     if not run: return
     self.stepLogin()
