@@ -51,6 +51,9 @@ msgstr "${number} enregistrements "
 msgid "${page} of ${total_pages}"
 msgstr "${page} sur ${total_pages}"
 
+msgid "${payment_mode} at ${payment_date}"
+msgstr "${payment_mode} le ${payment_date}"
+
 msgid "${portal_type} created successfully."
 msgstr "${portal_type} créé avec succès."
 
@@ -932,6 +935,9 @@ msgstr "Attacher un document"
 
 msgid "Attachments"
 msgstr "Fichiers joints"
+
+msgid "Attendance"
+msgstr "Présence"
 
 msgid "August"
 msgstr "Août"
@@ -3048,6 +3054,9 @@ msgstr "Modules ERP5"
 msgid "ERP5 Site"
 msgstr "Site ERP5"
 
+msgid "Earned on this period"
+msgstr "Aquis sur cette période"
+
 msgid "Economic Class"
 msgstr "Classe économique"
 
@@ -3599,6 +3608,9 @@ msgstr "Fréquence en semaines"
 
 msgid "Friday"
 msgstr "Vendredi"
+
+msgid "From ${start_date} to ${stop_date}"
+msgstr "Du ${start_date} au ${stop_date}"
 
 msgid "From Date"
 msgstr "Date de début (inclus)"
@@ -4836,6 +4848,9 @@ msgstr "Montant Net"
 msgid "Net Width"
 msgstr "Laize des collections"
 
+msgid "Net payable"
+msgstr "Net à payer"
+
 msgid "Net width (cm)"
 msgstr "Laize utile (collection)(cm)"
 
@@ -5387,6 +5402,9 @@ msgstr "Page ${page} sur ${total_pages}"
 
 msgid "Page Content"
 msgstr "Contenu de la page"
+
+msgid "Paid vacation (in days)"
+msgstr "Congés payés (en jours)"
 
 msgid "Partners"
 msgstr "Partenaires"
@@ -6599,6 +6617,9 @@ msgstr "Disponible:"
 
 msgid "Releases a document and triggers the archival of any released document of a previous version"
 msgstr "Diffuse le document pour certaines personnes ayant le droit de le voir, et archive la version précédente."
+
+msgid "Remaining"
+msgstr "Restant"
 
 msgid "Remember my name"
 msgstr "Mémoriser mon Nom"
@@ -7922,6 +7943,9 @@ msgstr "Onglet 1"
 
 msgid "Tab name"
 msgstr "Nom de l'onglet"
+
+msgid "Taken on this period"
+msgstr "Pris sur cette période"
 
 msgid "Target Conversion Format"
 msgstr "Format de destination"
