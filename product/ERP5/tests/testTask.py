@@ -637,6 +637,29 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
         simulation_tool.manage_permission(permission, roles=(), acquire=1)
       self.logout()
 
+  def test_06_testTaskTitleAndReference(self, quiet=0, run=run_all_test):
+    """Tests that task reference is set upon creation and coping"""
+    if not run: return
+    self.stepLogin()
+    portal = self.getPortal()
+    task_module = portal.getDefaultModule(portal_type=self.task_portal_type)
+    task = task_module.newContent(portal_type=self.task_portal_type)
+
+    self.assertEqual(
+      task.getReference(),
+      'T %s'%(task.getId(),)
+    )
+
+    cb_data = task_module.manage_copyObjects(ids=[task.getId()])
+    p_data = task_module.manage_pasteObjects(cb_data)
+
+    new_task = task_module._getOb(p_data[0]['new_id'])
+
+    self.assertEqual(
+      new_task.getReference(),
+      'T %s'%(new_task.getId(),)
+    )
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestTask))
