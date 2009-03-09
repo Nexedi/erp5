@@ -525,13 +525,12 @@ margin: 15px;\n
 }\n
 \n
 .erp {\n
-  font-size: 18px;\n
   color: #3D7474;\n
   text-decoration: none;\n
 }\n
 \n
 .link_white {\n
-  font-size: 14px;\n
+  font-size: 12px;\n
   color: #FFFFFF;\n
 }\n
 \n
@@ -892,7 +891,7 @@ fieldset {\n
 \n
 .left_data {\n
   text-decoration: none;\n
-  padding-left: 30px;\n
+  padding-left: 10px;\n
   color: #000000;\n
   font-size: 12px;\n
 }\n
@@ -1034,6 +1033,7 @@ p.clear {\n
 \n
 body {\n
   background-color: <dtml-var background_color>;\n
+  font-size: 14px;\n
 }\n
 \n
 #transition_message {\n

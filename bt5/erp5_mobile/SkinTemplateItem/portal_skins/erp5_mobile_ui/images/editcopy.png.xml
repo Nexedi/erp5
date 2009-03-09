@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts32023537.13</string> </value>
+            <value> <string>ts36632017.06</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -27,17 +27,21 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABNUlEQVQ4y63Ua26CQBSGYfa/DRfQ
-nRhjDNbaegMJIFBALirI155ppmG4TRlqMv/g4eTMGzUA2mr1jqEzm72AnhtzNA7Xf0XxRJ4X8LwQ
-QRAr4Z1wVVV4PEqGcni9/hiF98I0dRSlDCawfibD12vOYMfxsd0eMZ/r02COJ8kNYZhgtzOxXL5h
-sXj9HzhN898dj61msArXDWAYDlSqacE06f1esBXQbm3bg0o1LZimieOMwb4f4XL5hEo1AkwvZNmN
-1cBfIlylGgEuy58Lk8F/qUaA6UI4XF+HrJrN5ghdFwsRYHqQpiB0aOJmNYeDhf3+/L0Oow3zCWSr
-6KqG8NPJZh8Q4OatNo+sGsJN02UfEGDZkVVDk1uWpw73VUO75lMrwX3VTIb7quGXqAQPVaM8saya
-rv+KL/BMivw4FHufAAAAAElFTkSuQmCC</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACI0lEQVQ4y3WSz2vUQBTH32Qmifmx
+m6V2s7S2WnuqoJ6WHjxKTx7qRSg9iSAWBI+9eFlW8Oy5CIVS2Gvx0r+i7BYLCnpyLdIiFOq25PfE
+95LNYmozkEwmb+b7vu/zhh0dfX9kWea+aVpOEPiQpgBCcLi89KN+f/BhfX31LQAkUDGU83MvNQwN
+Wi0H5uZcmJ2dhlrNhEbDVhcX77zu9T69wX2sUoBejOVxRWFZdlUVcHExAt8PbdO03+/u7r3qdDqi
+UqA80uxtWRa47k2Yn79lpmn6sNvtxtcJ/KdKbsgJzZxz0DRVLizcbg8GX9/pupqcnp6FBwefe5ub
+L39cKxDHEjwvQIgeujBgZsZSlpbuLqPoMgFuNl0IgmBla2vnxcbG82GpBClTDIYoEgNhMQwdbNtE
+LuQKIAxDGI3+IGT7seNMf9ze3ntQEoiiOBMRQmT2pZTY1pxJkkhcU5IEYwz5NFdUla1ecSChsl1K
+7qJer2HLXZiacnwUj4WqUpCPAfJMPQdZbhA5i6KQWjsWpHiSCszKsTaLfnJOTMl2XBKgMjwvP0xO
+NO1GxgpPgBgOf52dnPzePzzkdawzQcEUZ9ZoOK12+/49dMODIEIGScYmdycmCcTa2pMvOD+9WnO/
+/+2ZYZg7+GkSQDpYlFaUWXET86HrrNjzzwVTJkKVN7HYLyXjlClnw/GQgmXEk3UBvkoAjo9/siSJ
+Mvp0gWgmmPQQ7HFZyl/vyt9Q8UANqwAAAABJRU5ErkJggg==</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
-            <value> <int>22</int> </value>
+            <value> <int>16</int> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -45,7 +49,7 @@ rv+KL/BMivw4FHufAAAAAElFTkSuQmCC</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>366</int> </value>
+            <value> <int>604</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -53,7 +57,7 @@ rv+KL/BMivw4FHufAAAAAElFTkSuQmCC</string> </value>
         </item>
         <item>
             <key> <string>width</string> </key>
-            <value> <int>22</int> </value>
+            <value> <int>16</int> </value>
         </item>
       </dictionary>
     </pickle>

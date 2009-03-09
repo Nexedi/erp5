@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts32023538.7</string> </value>
+            <value> <string>ts36632017.53</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -27,12 +27,12 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAAIAAAAWCAIAAABlk9r+AAAAE0lEQVQIHWPYefZW9bzdDIOPAgDb
-/Vx5iYE+RgAAAABJRU5ErkJggg==</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAAIAAAAQCAYAAAA8qK60AAAAFUlEQVQIHWPYdf7e/6alh/4zDA4G
+AF1kZOHn/x4aAAAAAElFTkSuQmCC</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
-            <value> <int>22</int> </value>
+            <value> <int>16</int> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>76</int> </value>
+            <value> <int>78</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

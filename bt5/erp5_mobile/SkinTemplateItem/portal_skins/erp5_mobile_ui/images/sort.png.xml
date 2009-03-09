@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts32023538.79</string> </value>
+            <value> <string>ts36632017.62</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -27,14 +27,17 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAo0lEQVQ4y2P4//8/Ay0ww8gzmIGh
-4QYIYzUYCP7DMBkGXwNhWrh4AAxGDgpSg2WEBAWuYAEaxAPEElB8HYrFGBjahBkYJrGT7WKgIZ1A
-/AaInwLxZyh+BsRvGRgaSykKCqAhy4H4OxD/h+IvQDyd5KBADxYgxQg0aA0Q/wTir0A8h2qRBzSM
-CYjXAb0/j76FEKlBQUwmGqLlMSVBgTMTDbmgAACq7doyXcaG7AAAAABJRU5ErkJggg==</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAOCAYAAAAmL5yKAAABOklEQVQoFZXBP0uUcQAA4Of3vj+O
+9/JExcDUqMmpKZrjZmlujD6AKNlkY0KgUau4O7cIbUE1+AEKDKupAhWxQdRE7/3jwR2ReFk+T4oM
+NzCIQ5T+av4WzTmam7zf0ZZgDLOYwYALFeNU90nGdUV8wxMEFKjjBIVz8px0jzzXFXETU+hHiiMs
+4ZP/EPEDzxF0lNjRU9IiVBQtXRGjeIg+FDrqyLGKNd6mvGtgiCohDrLYz6+jgD5MIKLSEVDgKw54
+dZ0Pzwh3CVcpdwlvOF4IGME9ZCidlSHhyjqPh6i9pD7G/neqRySvA4bRRA2V80p8xGeWJtmdpljm
+6aq2gAHcRg2l3jJk2OLBBis/dUU0cAd1lHoLfltZ84eADNeQ+LeIBo7xBa2IUUyjgcLFAlJs4wX2
+go7E5VSotJ0CCJtSj+SHwqAAAAAASUVORK5CYII=</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
-            <value> <int>22</int> </value>
+            <value> <int>14</int> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -42,7 +45,7 @@ CYjXAb0/j76FEKlBQUwmGqLlMSVBgTMTDbmgAACq7doyXcaG7AAAAABJRU5ErkJggg==</string> </
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>220</int> </value>
+            <value> <int>371</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -50,7 +53,7 @@ CYjXAb0/j76FEKlBQUwmGqLlMSVBgTMTDbmgAACq7doyXcaG7AAAAABJRU5ErkJggg==</string> </
         </item>
         <item>
             <key> <string>width</string> </key>
-            <value> <int>22</int> </value>
+            <value> <int>16</int> </value>
         </item>
       </dictionary>
     </pickle>
