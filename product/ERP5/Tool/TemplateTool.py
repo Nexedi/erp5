@@ -806,18 +806,26 @@ class TemplateTool (BaseTool):
         del property_dict['id']
         version = property_dict['version']
         version_state = 'new'
-        for bt in self.searchFolder(title = property_dict['title']):
-          result = self.compareVersions(version, bt.getObject().getVersion())
+        installed_bt = \
+            self.getInstalledBusinessTemplate(property_dict['title'])
+        if installed_bt is not None:
+          installed_version = installed_bt.getVersion()
+          installed_revision = installed_bt.getRevision()
+          result = self.compareVersions(version, installed_version)
           if result == 0:
             version_state = 'present'
-            break
           elif result < 0:
             version_state = 'old'
+        else:
+          installed_version = ''
+          installed_revision = ''
         version_state_title = version_state_title_dict[version_state]
         uid = b64encode(cPickle.dumps((repository, id)))
         obj = newTempBusinessTemplate(self, 'temp_' + uid,
                                       version_state = version_state,
                                       version_state_title = version_state_title,
+                                      installed_version = installed_version,
+                                      installed_revision = installed_revision,
                                       repository = repository, **property_dict)
         obj.setUid(uid)
         template_list.append(obj)
