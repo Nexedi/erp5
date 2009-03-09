@@ -98,7 +98,7 @@ class DeliveryBuilder(OrderBuilder):
     """
     pass
 
-  def searchMovementList(self, applied_rule_uid=None,**kw):
+  def searchMovementList(self, *args, **kw):
     """
       defines how to query all Simulation Movements which meet certain criteria
       (including the above path path definition).
@@ -106,6 +106,11 @@ class DeliveryBuilder(OrderBuilder):
       First, select movement matching to criteria define on DeliveryBuilder
       Then, call script simulation_select_method to restrict movement_list
     """
+    searchMovementList = UnrestrictedMethod(self._searchMovementList)
+    return searchMovementList(*args, **kw)
+
+  def _searchMovementList(self, applied_rule_uid=None,**kw):
+    """This method is wrapped by UnrestrictedMethod."""
     movement_list = []
     # We only search Simulation Movement
     kw['portal_type'] = 'Simulation Movement'

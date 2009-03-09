@@ -145,7 +145,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       delivery_module = getattr(self.getPortalObject(), self.getDeliveryModule())
       getattr(delivery_module, delivery_module_before_building_script_id)()
 
-  def searchMovementList(self, applied_rule_uid=None,**kw):
+  def searchMovementList(self, *args, **kw):
     """
       Defines how to query all Simulation Movements which meet certain
       criteria (including the above path path definition).
@@ -154,6 +154,11 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       Then, call script simulation_select_method to restrict
       movement_list.
     """
+    searchMovementList = UnrestrictedMethod(self._searchMovementList)
+    return searchMovementList(*args, **kw)
+
+  def _searchMovementList(self, applied_rule_uid=None,**kw):
+    """This method is wrapped by UnrestrictedMethod."""
     from Products.ERP5Type.Document import newTempMovement
     movement_list = []
     for attribute, method in [('node_uid', 'getDestinationUid'),
