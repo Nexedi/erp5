@@ -61,7 +61,8 @@
               show_anchor_column here/showAnchorColumn;\n
               show_select_column here/showSelectColumn;\n
               show_search_line here/showSearchLine;\n
-              stat_column_name_list python: here.getLabelValueList();\n
+              search_value_list python: here.getSearchValueList();\n
+              label_value_list python: here.getLabelValueList();\n
               selected_search_field request/select_search_field | nothing;\n
               ">\n
   <!-- ListBox starts here.  -->\n
@@ -134,7 +135,7 @@
 \t        <span id="listbox_record_number"\n
                   tal:attributes="id string:${field_id}_record_number"\n
                   i18n:translate="" i18n:domain="ui"><tal:block tal:replace="here/total_size" i18n:name="number">0</tal:block> record(s)</span>\n
-                 <input type="hidden" tal:attributes="id string:${field_id}_listMax; name string:${field_id}_listMax; value python: len(here.getSearchValueList())">\n
+                 <input type="hidden" tal:attributes="id string:${field_id}_listMax; name string:${field_id}_listMax; value python: len(search_value_list)">\n
                  <input type="hidden" tal:attributes="id string:${field_id}_itemMax; name string:${field_id}_itemMax; value python: len(line_list)">\n
                  <br /><input type="checkbox" tal:attributes="id string:${field_id}_check; name string:${field_id}_check; onChange string:simple_aff(this.id)" checked="checked">\n
                 <span tal:content="python: \'Short mode\'"></span>\n
@@ -170,8 +171,8 @@
                   </tal:block>\n
                 </select>\n
               </div>\n
-              <tal:block tal:define="global tab_title python: range(7)"/>\n
-              <tal:block tal:repeat="value here/getLabelValueList">\n
+              <tal:block tal:define="global tab_title python: range(len(label_value_list))"/>\n
+              <tal:block tal:repeat="value label_value_list">\n
                   <tal:block tal:define="title python: value[1];\n
                                          foo repeat/value/index;\n
                                          bidule python: tab_title.insert(foo, title);">\n
@@ -196,33 +197,34 @@
               </tal:block>\n
 \t          <div name="selection_mui" style="padding-bottom: 5px;">\n
 \n
-                 <select id="select_search_field" onChange="javascript: this.form.submit();" name="select_search_field">\n
-                      <tal:block tal:repeat="valueX here/getSearchValueList">\n
+             <select id="select_search_field" onChange="javascript: showSearchSelectedColumn();" name="select_search_field">\n
+                   <tal:block tal:repeat="valueX search_value_list">\n
                         <tal:block tal:define="\n
                                      aliasX python: valueX[0];\n
                                      paramX python: valueX[1];\n
                                      search_fieldX python: valueX[2];\n
                                      foo2 repeat/valueX/index">\n
-                         <option  tal:condition="aliasX" tal:content="python: tab_title[foo2]" i18n:domain="ui" i18n:translate="" tal:attributes="value python: aliasX; selected python: aliasX==selected_search_field"></option>\n
+                          <option tal:condition="aliasX" tal:content="python: tab_title[foo2]" i18n:domain="ui" i18n:translate="" tal:attributes="value python: aliasX; selected python: aliasX==selected_search_field"></option>\n
                         </tal:block>\n
                       </tal:block>\n
                     </select>\n
+                    <input type="hidden" value="0" id="search_value_list_count"\n
+                           tal:attributes="value python: len(search_value_list)" />\n
 \n
                   <tal:block tal:condition="show_search_line"\n
-                             tal:repeat="value here/getSearchValueList">\n
-                    <div tal:define="alias python: value[0];\n
-                                 param python: value[1];\n
-                                 search_field python: value[2];\n
-                                 foo repeat/value/index;"\n
+                             tal:repeat="value search_value_list">\n
+                     <div tal:condition="python: value[0]"\n
+                         tal:define="alias python: value[0];\n
+                                     param python: value[1];\n
+                                     search_field python: value[2];\n
+                                     foo repeat/value/index"\n
                          tal:attributes="id repeat/value/index">\n
-                     <tal:block tal:condition="python: alias==selected_search_field or (not selected_search_field and not foo)">\n
-                       <span tal:condition="alias">\n
-                        <tal:block tal:condition="python: search_field is not None"\n
+                       <span tal:condition="alias"> <!--  -->\n
+                           <tal:block tal:condition="python: search_field is not None"\n
                                    tal:replace="structure python: search_field.render(value = param, key = alias)" />\n
-                        <input style="width: 40%;" name="id" size="8" value=""\n
+                           <input style="width: 40%;" name="id" size="8" value=""\n
                                tal:attributes="name alias; value param; id python: \'%s%s\' % (\'input\', foo)"/>\n
                        </span>\n
-                     </tal:block>\n
                     </div>\n
                   </tal:block>\n
               </div>\n
@@ -244,7 +246,7 @@
               <tal:block tal:repeat="valueY line/render">\n
                   <div tal:define="\n
                                   val repeat/valueY/index;\n
-                                  valueb python: here.getLabelValueList()[val];\n
+                                  valueb python: label_value_list[val];\n
                                   html python: valueY[0];\n
                                   original_value python: valueY[1];\n
                                   error python: valueY[2];\n
@@ -293,12 +295,12 @@
               tal:attributes="id string:${field_id}_stat_line">\n
               <div tal:condition="is_report_tree_mode" class="Data">&nbsp;</div>\n
               <div tal:condition="show_select_column" class="Data">&nbsp;</div>\n
-                <tal:block tal:condition="python: stat_column_name_list is not None" tal:repeat="valueZ here/getStatValueList">\n
+                <tal:block tal:condition="python: label_value_list is not None" tal:repeat="valueZ here/getStatValueList">\n
                    <div class="left_data" tal:define="\n
                     original_value python: valueZ[0];\n
                     processed_value python: valueZ[1];\n
                     foo repeat/valueZ/index">\n
-                    <span tal:condition="python: original_value is not None" style="color: green; font-size: 12px;" tal:content="python: stat_column_name_list[foo][1]" i18n:domain="ui" i18n:translate=""> ID\n
+                    <span tal:condition="python: original_value is not None" style="color: green; font-size: 12px;" tal:content="python: label_value_list[foo][1]" i18n:domain="ui" i18n:translate=""> ID\n
                   </span>\n
                   <span tal:condition="python: original_value is not None"  style="color: green;">&nbsp;:&nbsp;</span>\n
                   <tal:block tal:condition="python: original_value is not None">\n

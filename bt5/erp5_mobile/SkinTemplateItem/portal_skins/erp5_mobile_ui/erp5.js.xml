@@ -152,6 +152,7 @@ function applyHiddenType() {\n
    }\n
   }\n
   affShortcuts ();\n
+  showSearchSelectedColumn();\n
 }\n
 \n
 function hideListItems(form_id, max_item, max_length)\n
@@ -168,19 +169,43 @@ function hideListItems(form_id, max_item, max_length)\n
   }\n
 }\n
 \n
-function validateSearch(field_id)\n
+function showSearchSelectedColumn()\n
 {\n
-  document.getElementById(field_id).value=\'\';\n
-  this.form.submit();\n
-}\n
+  var select_search_field      = document.getElementById("select_search_field");\n
+//   var search_value_list_count  = select_search_field.length;\n
+  var search_value_list_count  = document.getElementById("search_value_list_count").value;\n
+  var selected_field           = select_search_field.options[select_search_field.selectedIndex];\n
+  var selected_field_value     = select_search_field.options[select_search_field.selectedIndex].value;\n
+  var selected_field_id        = document.getElementById(\'input\'+selected_field.index).id;\n
 \n
-function isSeachSelectedProperty(index_id)\n
-{ \n
- var select = document.getElementById(select);\n
- if(select.options[select.selectedIndex].value == index_id)\n
-   return 1\n
- else \n
-   return 0\n
+ if(selected_field) {\n
+  for (a = 0; a < search_value_list_count; a++)\n
+   { var foo =\'input\' + a;\n
+     var target_name = document.getElementById(foo);\n
+     if(target_name) {\n
+       var target_id   = target_name.id;\n
+       target_name.style.display=(target_id==selected_field_id)?\'inline\':\'none\';\n
+       if(target_id==selected_field_id)\n
+         select_search_field.selectedIndex=a;\n
+     }\n
+   }\n
+  }\n
+  else {\n
+    for (a = 0; a < search_value_list_count; a++)\n
+    { var foo =\'input\' + a;\n
+      var target_name = document.getElementById(foo);\n
+      var target_id   = target_name.id;\n
+\n
+      if(target_name) {\n
+        if(a==0)\n
+         target_name.style.display=\'inline\';\n
+        else\n
+         target_name.style.display=\'None\';\n
+      }\n
+    }\n
+  }\n
+\n
+   /* selected_search_column.style.visibility=(select.options[select.selectedIndex].value == )?\'visible\':\'hidden\'; */\n
 }\n
 \n
 function getTop(MyObject)\n
