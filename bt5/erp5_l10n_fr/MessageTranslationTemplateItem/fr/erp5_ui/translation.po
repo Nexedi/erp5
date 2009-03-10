@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 Localized Interface\n"
-"POT-Creation-Date: 2009-03-03 17:03+CET\n"
-"PO-Revision-Date: 2009-03-03 17:03+CET\n"
+"POT-Creation-Date: 2009-03-10 11:15+0000\n"
+"PO-Revision-Date: 2009-03-10 11:15+0000\n"
 "Last-Translator:  <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
@@ -126,6 +126,9 @@ msgstr "hier"
 msgid "10 newest items"
 msgstr "10 derniers documents"
 
+msgid "A Query about the current ${portal_type} was posted with ID ${query_id}."
+msgstr "Une question a été posée à propos de ${portal_type}, avec l'ID ${query_id}."
+
 msgid "A codification used to identify the category"
 msgstr "Une codification utilisée pour répertorier les catégories."
 
@@ -213,6 +216,11 @@ msgstr "Un court identifiant de la période comptable. Il sera utilisé pour gé
 msgid "A short title for the document"
 msgstr "Un court  titre du document."
 
+#: erp5/portal_skins/erp5_payroll/PaySheetTransaction_viewAsODTStyles
+#: [Glossary term 11672]
+msgid "A slip of paper included with your pay that records how much money you have earned and how much tax or insurance etc. has been taken out"
+msgstr "État de la rémunération et des retenues sur le salaire, que l'employeur remet au salarié au moment du versement de la paie."
+
 msgid "A typical per unit height of the resource"
 msgstr "Unité de mesure pour la hauteur d'une ressource."
 
@@ -224,6 +232,10 @@ msgstr "Unité de mesure utilisée pour calculer le poids d'une ressource."
 
 msgid "A typical per unit width of the resource"
 msgstr "Unité de mesure utilisée pour calculer la largeur d'une ressource."
+
+#: [Glossary term 11677]
+msgid "Absence Hours"
+msgstr "Heures d'absence"
 
 msgid "Accept"
 msgstr "Accepter"
@@ -624,6 +636,9 @@ msgstr "Unité de l'annotation"
 msgid "Annotation Value"
 msgstr "Valeur de l'annotation"
 
+msgid "Another currency with this currency code already exists."
+msgstr "Il existe déjà une devise avec ce code devise."
+
 msgid "Another document ${document_reference} - ${document_language} - ${document_version} already exists."
 msgstr "Un document ${document_reference} - ${document_language} - ${document_version} existe déjà."
 
@@ -969,6 +984,9 @@ msgstr "N° de compte complet"
 msgid "BBAN Key"
 msgstr "Clé n° de compte"
 
+msgid "BT Title"
+msgstr "Titre du BT"
+
 msgid "Bad login provided."
 msgstr "Login incorrect"
 
@@ -1013,6 +1031,9 @@ msgstr "N° de compte"
 
 msgid "Bank Account Title"
 msgstr "Domiciliation bancaire"
+
+msgid "Bank Account Type"
+msgstr "Type de compte en banque"
 
 msgid "Bank Accounts"
 msgstr "Comptes bancaires"
@@ -1265,6 +1286,9 @@ msgstr "Workflow d'installation du Business Template"
 
 msgid "Business Template Name"
 msgstr "Nom du Business Template"
+
+msgid "Business Template Title"
+msgstr "Titre du Business Template"
 
 msgid "Business Templates"
 msgstr "Business Templates"
@@ -2694,6 +2718,10 @@ msgstr "Description de la ligne de projet"
 msgid "Descriptions cleaned up."
 msgstr "Descriptions nettoyées"
 
+#: [Glossary term 11681]
+msgid "Designation"
+msgstr "Désignation"
+
 msgid "Destination"
 msgstr "Destination"
 
@@ -3891,6 +3919,10 @@ msgstr "Identifiant de la page web"
 msgid "Identification"
 msgstr "Numéro d'identification"
 
+#: [Glossary term 11681]
+msgid "Identifying word or words by which someone or something is called and classified or distinguished from others"
+msgstr "Mots par lequel quelqu'un ou quelque chose est appelé et classifié ou distingué des autres"
+
 msgid "Identity Criterion"
 msgstr "Critère d'identité"
 
@@ -3938,6 +3970,14 @@ msgstr "Importer des personnes depuis OpenOffice calc"
 
 msgid "Import Signature"
 msgstr "Importer sa signature"
+
+#: erp5_payroll/PaySheetTransaction_getListBoxColumnList [Glossary term 11666]
+msgid "In Payroll, there is generaly some taxes for the employee, and for the employer. This term is used to speak about the rate applied to the base that permit to calculate the amount of the tax paid by the employee."
+msgstr "Dans la paye, il y a généralement des taxes pour l'employé et pour l'employeur. Ce terme est utilisé pour désigner le taux appliqué sur la base qui permet de déterminer le montant de la taxe payé par l'employeur."
+
+#: erp5_payroll/PaySheetTransaction_getListBoxColumnList [Glossary term 11664]
+msgid "In Payroll, there is generaly some taxes for the employee, and for the employer. This term is used to speak about the rate applied to the base that permit to calculate the amount of the tax paid by the employer."
+msgstr "Dans la paye, il y a généralement des taxes pour l'employé et pour l'employeur. Ce terme est utilisé pour désigner le taux appliqué sur la base qui permet de déterminer le montant de la taxe payé par l'employeur."
 
 msgid "In a Sale Opportunity, contacted means that the third party, the prospect, has been contacted. The next step will be to make an offer."
 msgstr "Cet état indique que le prospect a été contacté par un utilisateur, dans le cadre d'une opportunité de vente."
@@ -4073,6 +4113,9 @@ msgstr "Solde débiteur initial"
 
 msgid "Initial End Date"
 msgstr "Date de fin initiale"
+
+msgid "Initialised by Delivery Builder."
+msgstr "Initialisé par le système."
 
 msgid "Initialized by Delivery Builder."
 msgstr "Initialisé par le système."
@@ -4575,6 +4618,9 @@ msgstr "Délai Max. (Jour)"
 msgid "Max. delay (day)"
 msgstr "Délai Max (jours)"
 
+msgid "Maximum user inactivity duration"
+msgstr "Durée maximale d'inactivité"
+
 msgid "May"
 msgstr "Mai"
 
@@ -4980,6 +5026,10 @@ msgstr "Solde"
 msgid "Normal Credit Balance"
 msgstr "Compte créditeur par nature"
 
+#: [Glossary term 11679]
+msgid "Normal Working Hours"
+msgstr "Heures normales"
+
 msgid "Not Greater Than"
 msgstr "Pas plus grand que"
 
@@ -5032,7 +5082,7 @@ msgid "November"
 msgstr "Novembre"
 
 msgid "Number"
-msgstr "Numéro de téléphone"
+msgstr "Numéro"
 
 msgid "Number of Lines Displayed in List Mode ListBoxes"
 msgstr "Nombre de lignes affichées en mode liste"
@@ -5066,6 +5116,12 @@ msgstr "Objet"
 
 msgid "Object Created."
 msgstr "Création effectuée"
+
+msgid "Object copied as ${item_id}"
+msgstr "Copié en tant que ${item_id}"
+
+msgid "Object copied from ${source_item}"
+msgstr "Copié depuis ${source_item}"
 
 msgid "Object created."
 msgstr "Objet créé"
@@ -5355,6 +5411,7 @@ msgstr "Autorisation de découvert"
 msgid "Overdraft facility of a bank account"
 msgstr "Ce champ sera coché si le compte bancaire permet un découvert."
 
+#: portal_categories/base_amount/overtime [Glossary term 3166]
 msgid "Overtime"
 msgstr "Heures supplémentaires"
 
@@ -5562,6 +5619,11 @@ msgstr "Cotisations"
 msgid "Payroll Taxes Report"
 msgstr "Rapport des taxes sur salaires"
 
+#: erp5/portal_skins/erp5_payroll/PaySheetTransaction_viewAsODTStyles
+#: [Glossary term 11672]
+msgid "Payslip"
+msgstr "Bulletin de paie"
+
 msgid "Pending"
 msgstr "En attente de traitement"
 
@@ -5646,6 +5708,9 @@ msgstr "Passer la commande"
 msgid "Place Order Action"
 msgstr "Passer la commande (action)"
 
+msgid "Placking List"
+msgstr "Bon de livraison"
+
 msgid "Plain Text"
 msgstr "Texte brut"
 
@@ -5706,6 +5771,9 @@ msgstr "Spécifiez une URL avant de naviguer dans le contenu"
 msgid "Please use link above ('Add gadget') to prepare it yourself."
 msgstr "Vous pouvez utiliser le lien \"Ajouter des gadgets\" ci-dessus afin d'ajouter de nouveaux gadgets"
 
+msgid "Port of the oood server."
+msgstr "Port du serveur oood."
+
 msgid "Portal Type Property"
 msgstr "Propriété du Portal Type"
 
@@ -5729,6 +5797,9 @@ msgstr "Valider le brouillard"
 
 msgid "Post a Query"
 msgstr "Poser une question"
+
+msgid "Post to Ledger"
+msgstr "Valider l'écriture au brouillard"
 
 msgid "Postal Code"
 msgstr "Code postal"
@@ -7728,6 +7799,9 @@ msgstr "Stock par variation"
 msgid "Stock per Variation"
 msgstr "Stock par variante"
 
+msgid "Stop"
+msgstr "Terminer l'étape de carrière"
+
 msgid "Stop Career Step"
 msgstr "Terminer l'étape de carrière"
 
@@ -7778,6 +7852,9 @@ msgstr "Soumettre (action)"
 
 msgid "Submit Event"
 msgstr "Soumettre au manager"
+
+msgid "Submit Event Action"
+msgstr "Soumettre au manager (action)"
 
 msgid "Submit for Review"
 msgstr "Demander une validation"
@@ -8084,6 +8161,14 @@ msgstr "Cotisations et taxes"
 
 msgid "Taxes"
 msgstr "Taxes"
+
+#: portal_categories/tax_category/employee_share [Glossary term 3163]
+msgid "Taxes paid by the employee"
+msgstr "Taxe payée par l'employé"
+
+#: portal_categories/tax_category/employer_share [Glossary term 3162]
+msgid "Taxes paid by the employer"
+msgstr "Taxe payée par l'employeur"
 
 msgid "Taxs"
 msgstr "Taxes"
@@ -8871,6 +8956,11 @@ msgstr "L'unité de la durée de travail doit être définie"
 msgid "There is no such document in the database. You may create an new document of type ${portal_type} in relation with ${title} according to relation ${base_category}. Use the form bellow to enter the ${catalog_index} values of new documents."
 msgstr "Il n'y a pas d'enregistrement à ce nom. Vous pouvez le créer maintenant."
 
+#: erp5/portal_skins/erp5_payroll/PaySheetTransaction_view [Glossary term
+#: 11670]
+msgid "Thing on which depreciation is calculated, a tax, an annuity."
+msgstr "Matière sur laquelle est calculé un amortissement, un impôt, une rente."
+
 msgid "Third Parties"
 msgstr "Tiers"
 
@@ -9651,6 +9741,14 @@ msgstr "Bienvenue. Vous êtes connecté."
 msgid "When a user of ERP5 wants to materialize a purchase that has been done by his company, he or she should use a purchase order. Purchase orders contain some general information about the buyer and the seller, and contain purchase order lines."
 msgstr "Une commande de vente permet de matérialiser un acte d'achat de produits ou services, en y définissant tous les détails nécessaires."
 
+#: [Glossary term 11677]
+msgid "When the employee is not present physically at work"
+msgstr "salarié qui n'est pas physiquement présent sur son lieu de travail."
+
+#: [Glossary term 11679]
+msgid "When the employee is present physically at work, and he is not in overtime"
+msgstr "Le salarié est présent physiquement sur son lieu de travail et n'est pas en heures supplémentaires"
+
 msgid "Width"
 msgstr "Laize"
 
@@ -9689,6 +9787,10 @@ msgstr "Fin de période"
 
 msgid "Work Period Start"
 msgstr "Début de période"
+
+#: portal_categories/base_amount/overtime [Glossary term 3166]
+msgid "Work done in addition to regular working hours"
+msgstr "Travail effectué en dehors des heures normales de travail"
 
 msgid "Work period end must be defined"
 msgstr "La fin de période doit être définie"
