@@ -73,7 +73,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                local_parameter_list local_parameter_list | python: {};\n
                dummy                python: local_parameter_list.update({\'object_uid\': object_uid, \'object_path\': object_path, \'form_id\': form_id});\n
                title                string:${template/title_or_id} - ${here/Title};\n
-               ">\n
+\n
+               "><!-- current_action python: here.ERP5Site_getCurrentDialogAction(current_url, dialog_actions); -->\n
 <div class="div1 small">\n
 \n
             <div class="title_index" align="middle">\n
@@ -111,9 +112,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
       </tal:block>\n
       <tal:block metal:fill-slot="main">\n
         <div tal:define="actions actions/object_view | python: []">\n
-          <div class="content nomarg div4" align="middle">\n
-              <span tal:repeat="action actions">\n
-                <a class="link" tal:attributes="href python: here.ERP5Site_renderLink(action[\'url\'], http_parameters)"\n
+          <div class="content nomarg div4" align="middle"><!-- tal:attributes="class python: action == current_action and \'selected\' or \'not_selected\'" -->\n
+              <span tal:repeat="action actions" >\n
+                <a tal:attributes="href python: here.ERP5Site_renderLink(action[\'url\'], http_parameters); class python: action == current_action and \'link_selected\' or \'link\'"\n
                    tal:content="action/name"\n
                    i18n:translate="" i18n:domain="ui"/>\n
               </span>\n

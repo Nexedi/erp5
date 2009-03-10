@@ -263,10 +263,10 @@
                   <div class="left_data"\n
                          tal:condition="not: repeat/valueY/index"\n
                          tal:define="object_url python: \'%s/view\' % line.getObject().getAbsoluteUrl()">\n
-                      <!-- XXX it should be possible to test isSummary() -->\n
-                      <input tal:condition="python: form_id==\'Base_viewRelatedObjectList\' and line.getObject() is not None"\n
+                      <!-- XXX it should be possible to test isSummary() form_id==\'Base_viewRelatedObjectList\' and-->\n
+                      <input tal:condition="python: line.getObject() is not None"\n
                                  type="checkbox" value="checked" id="listbox_cb_1" name="uids:list"\n
-                                 tal:attributes="checked python: line.getUid() in checked_uid_set;\n
+                                 tal:attributes="checked python: not form_id==\'Base_viewHistory\' and line.getUid() in checked_uid_set;\n
                                                  value line/getUid; id string:${field_id}_cb_${line/getUid}" />\n
                       <a tal:condition="python:not form_id==\'Base_viewWorkflowHistory\'" href="#"  tal:attributes="href string:${object_url}?selection_index=${selection_index}&amp;selection_name=${selection_name}&amp;ignore_layout:int=0&amp;reset:int=1"><img src="document_icon.gif" tal:attributes="src string:${portal_url_string}/images/line_clickable.png; title python: line.getObject().getRelativeUrl()" title="document"/></a>\n
                       <span tal:condition="original_value" tal:replace="structure html">value</span>\n

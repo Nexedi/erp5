@@ -718,6 +718,13 @@ textarea {\n
   text-decoration: none;\n
 }\n
 \n
+.link_selected {\n
+  color: #3C6464;\n
+  font-weight: bold;\n
+  font-size: 8pt;\n
+  text-decoration: underline;\n
+}\n
+\n
 .link2 {\n
   color: #3D7474;\n
   font-size: 12pt;\n
@@ -767,6 +774,7 @@ fieldset {\n
   text-align:center;\n
   position: absolute;\n
   padding-right: 3px;\n
+  padding-bottom: 3px;\n
   right: 0px;\n
   line-height: 85%;\n
   top: 50px;\n
@@ -928,6 +936,29 @@ fieldset {\n
   background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/exec16.png\');\n
 }\n
 \n
+.separator {\n
+  height: 24px;\n
+  width: 2px;\n
+  margin-left: 6px;\n
+  margin-right: 6px;\n
+  display: block;\n
+  float: left;\n
+}\n
+\n
+#context_bar {\n
+  padding-top: 2px;\n
+  padding-bottom: 2px;\n
+  /* border-bottom-width: 1px;\n
+  border-bottom-style: solid; */\n
+  color: inherit;\n
+  vertical-align: middle;\n
+}\n
+\n
+#context_bar .separator {\n
+  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/sepacla.png\');\n
+  height: 16px;\n
+}\n
+\n
 #context_bar .tool_buttons .jump_first .image {\n
   background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/2leftarrowb.png\');\n
 }\n
@@ -946,6 +977,50 @@ fieldset {\n
 \n
 #context_bar .tool_buttons .list_mode .image {\n
   background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/text_block.png\');\n
+}\n
+\n
+#context_bar .tool_buttons .new .image {\n
+  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/filenew.png\');\n
+}\n
+\n
+#context_bar .tool_buttons .clone .image {\n
+  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/fileclone.png\');\n
+}\n
+\n
+#context_bar .tool_buttons .cut .image {\n
+  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/editcut.png\');\n
+}\n
+\n
+#context_bar .tool_buttons .copy .image {\n
+  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/editcopy.png\');\n
+}\n
+\n
+#context_bar .tool_buttons .paste .image {\n
+  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/editpaste.png\');\n
+}\n
+\n
+#context_bar .tool_buttons .delete .image {\n
+  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/editdelete.png\');\n
+}\n
+\n
+#context_bar .tool_buttons .find .image {\n
+  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/find.png\');\n
+}\n
+\n
+#context_bar .tool_buttons .show_all .image {\n
+  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/showall.png\');\n
+}\n
+\n
+#context_bar .tool_buttons .filter .image {\n
+  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/filter.png\');\n
+}\n
+\n
+#context_bar .tool_buttons .filter_on .image {\n
+  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/filter_on.png\');\n
+}\n
+\n
+#context_bar .tool_buttons .sort .image {\n
+  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/sort.png\');\n
 }\n
 \n
 #navigation_bar button .image,\n
@@ -1010,7 +1085,10 @@ fieldset {\n
 #context_bar .tool_buttons a img {\n
   width: 16px;\n
   height: 16px;\n
+  margin: 0;\n
+  padding: 0;\n
   display: block;\n
+  background-repeat: no-repeat;\n
 }\n
 \n
 p.clear {\n

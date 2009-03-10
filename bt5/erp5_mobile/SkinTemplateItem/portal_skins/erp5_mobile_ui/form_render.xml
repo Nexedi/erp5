@@ -88,12 +88,12 @@ It is possible to specify a group id and a group title by naming a group followi
 \n
 <tal:block metal:define-macro="master">\n
   <tal:block\n
-    tal:define="field_errors python: request.get(\'field_errors\', {});\n
+    tal:define="\n
                 dummy        python: request.set(\'here\', here);\n
-\t\tgroup_list   python: form.Form_getGroupTitleAndId();\n
+                group_list   python: form.Form_getGroupTitleAndId();\n
                 gid_list     python: \' \'.join([x[\'gid\'] for x in group_list if x!=\'hidden\']);\n
                 field_render nocall: here/field_render/macros/field_render">\n
-\n
+   <!-- field_errors python: request.get(\'field_errors\', {}); -->\n
     <tal:block tal:repeat="group group_list">\n
       <tal:block tal:define="gid     group/gid;">\n
         <fieldset tal:condition="python: gid.find(\'hidden\') < 0"\n

@@ -72,11 +72,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
                          field_has_error  python: field_errors.has_key(field_id);\n
                          global form_id form_id | python: form.id;\n
                          field_description field/Field_getDescription;">\n
-    <div tal:define="html_render  python: field.render_htmlgrid(value, request, render_prefix=render_prefix)"\n
+       <div tal:define="html_render  python: field.render_htmlgrid(value, request, render_prefix=render_prefix)"\n
          tal:attributes="title field_description;\n
                          class python: \' \'.join([x for x in [\'field\', field.is_required() and \'required\' or None, field_has_error and \'error\' or None, field.get_value(\'css_class\') or None] if x is not None])"\n
          i18n:attributes="title" i18n:domain="ui">\n
-      <tal:block tal:repeat="html_tuple html_render">\n
+       <tal:block tal:repeat="html_tuple html_render">\n
         <label>\n
           <tal:block tal:content="structure python: html_tuple[0]"\n
                     i18n:translate="" i18n:domain="ui"/>\n

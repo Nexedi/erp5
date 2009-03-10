@@ -1,4 +1,9 @@
-2008-01-15 Kazuhiko
+2009-03-10 Mohamadou
+* In listmode it is now posible to copy/paste/cut/delete/find/filter/show_all/sort or add new element.
+* In document view it is possible to clone or add new one
+* In document view the current tab is highlighted.
+
+2009-01-15 Kazuhiko
 * Sync with erp5_xhtml_style (r.24958).
 
 2008-01-02 Nicolas

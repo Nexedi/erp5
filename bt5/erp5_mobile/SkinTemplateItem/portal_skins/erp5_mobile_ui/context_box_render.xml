@@ -66,30 +66,83 @@ XXX: Folder_filter accesses selection directly\n
 -->\n
 </tal:block>\n
 <tal:block metal:define-macro="master">\n
-<!-- XXX: exchange_actions seems to be bad condition -->\n
-  <span class="first"\n
+      <span class="first"\n
         tal:define="search_actions actions/object_search | nothing;\n
         exchange_actions actions/object_exchange | nothing;\n
         report_actions actions/object_report | nothing;\n
         button_actions actions/object_button | nothing;\n
+        fast_input_actions actions/object_fast_input | nothing;\n
         sort_actions actions/object_sort | nothing;\n
         ui_actions actions/object_ui | nothing;\n
-        print_actions actions/object_print | nothing">\n
+        print_actions actions/object_print | nothing;\n
+        list_mode list_mode | nothing">\n
+            <span class="tool_buttons" align="center">\n
+                <tal:block tal:condition="list_mode | nothing">\n
+                    <button class="cut" type="submit" name="Folder_cut:method" title="Cut"\n
+                            i18n:attributes="title" i18n:domain="ui">\n
+                      <span class="image"></span>\n
+                      <span class="description" i18n:translate="" i18n:domain="ui">Cut</span>\n
+                    </button>\n
+                    <button class="copy" type="submit" name="Folder_copy:method" title="Copy"\n
+                            i18n:attributes="title" i18n:domain="ui">\n
+                      <span class="image"></span>\n
+                      <span class="description" i18n:translate="" i18n:domain="ui">Copy</span>\n
+                    </button>\n
+                    <button class="paste" type="submit" name="Folder_paste:method" title="Paste"\n
+                            i18n:attributes="title" i18n:domain="ui">\n
+                      <span class="image"></span>\n
+                      <span class="description" i18n:translate="" i18n:domain="ui">Paste</span>\n
+                    </button>\n
+                    <span class="separator"><!--separator--></span>\n
+                  </tal:block>\n
 \n
-<!--      <div class="arrow"> -->\n
-        <div class="div_prev" id="div_prev">\n
-          <span class="tool_buttons">\n
-            <!-- XXX: exchange_actions seems to be bad condition -->\n
-            <span class="first"\n
-                  tal:define="search_actions actions/object_search | nothing;\n
-                  exchange_actions actions/object_exchange | nothing;\n
-                  report_actions actions/object_report | nothing;\n
-                  button_actions actions/object_button | nothing;\n
-                  sort_actions actions/object_sort | nothing;\n
-                  ui_actions actions/object_ui | nothing;\n
-                  print_actions actions/object_print | nothing">\n
-              <tal:block tal:condition="list_mode | nothing"></tal:block>\n
-  \n
+                  <button class="new" type="submit" title="New"\n
+                          tal:attributes="name python: list_mode and \'Folder_create:method\' or \'Base_createNewDocument:method\'"\n
+                          i18n:attributes="title" i18n:domain="ui">\n
+                    <span class="image"></span>\n
+                    <span class="description" i18n:translate="" i18n:domain="ui">New</span>\n
+                  </button>\n
+                  <button class="clone" type="submit" title="Clone"\n
+                          tal:condition="python: not list_mode"\n
+                          tal:attributes="name python: \'Base_createCloneDocument:method\'"\n
+                          i18n:attributes="title" i18n:domain="ui">\n
+                    <span class="image"></span>\n
+                    <span class="description" i18n:translate="" i18n:domain="ui">Clone</span>\n
+                  </button>\n
+                  <button tal:condition="list_mode" class="delete" type="submit" name="Folder_deleteObjectList:method" title="Delete"\n
+                          i18n:attributes="title" i18n:domain="ui">\n
+                    <span class="image"></span>\n
+                    <span class="description" i18n:translate="" i18n:domain="ui">Delete</span>\n
+                  </button>\n
+\n
+                  <tal:block tal:condition="list_mode">\n
+                    <span class="separator"><!--separator--></span>\n
+                    <a tal:condition="search_actions" class="find" title="Find"\n
+                       tal:attributes="href python: portal.ERP5Site_renderCustomLink(search_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_search\')"\n
+                       i18n:attributes="title" i18n:domain="ui">\n
+                      <span class="image"></span>\n
+                      <span class="description" i18n:translate="" i18n:domain="ui">Find</span>\n
+                    </a> <!---->\n
+                    <button class="show_all" type="submit" name="Folder_show:method" title="Show All"\n
+                            i18n:attributes="title" i18n:domain="ui">\n
+                      <span class="image"></span>\n
+                      <span class="description" i18n:translate="" i18n:domain="ui">Show All</span>\n
+                    </button>\n
+                    <button type="submit" name="Folder_filter:method" title="Filter"\n
+                            tal:attributes="class python: here.portal_selections.getSelectionInvertModeFor(request[\'selection_name\']) and \'filter_on\' or \'filter\';"\n
+                            i18n:attributes="title" i18n:domain="ui">\n
+                      <span class="image"></span>\n
+                      <span class="description" i18n:translate="" i18n:domain="ui">Filter</span>\n
+                    </button>\n
+                    <a tal:condition="sort_actions" class="sort" title="Sort"\n
+                       tal:attributes="href python: portal.ERP5Site_renderCustomLink(sort_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_sort\')"\n
+                       i18n:attributes="title" i18n:domain="ui">\n
+                      <span class="image"></span>\n
+                      <span class="description" i18n:translate="" i18n:domain="ui">Sort</span>\n
+                    </a>\n
+        </tal:block>\n
+                </span><br />\n
+              <div class="div_prev" id="div_prev">\n
               <div id="actions">\n
                 <select name="select_action"\n
                         tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doAction\')"                     tal:define="document_template_list here/getDocumentTemplateList | nothing">\n
@@ -155,8 +208,8 @@ XXX: Folder_filter accesses selection directly\n
                 </button>\n
                 -->\n
               </div>\n
-            </span>\n
-        </div>\n
+            </div>\n
+\n
 \n
     <tal:block tal:condition="not: list_mode | nothing">\n
     <tal:block tal:condition="request/selection_index | nothing">\n
@@ -195,8 +248,6 @@ XXX: Folder_filter accesses selection directly\n
 \n
         </div>\n
         </span>\n
-<!--      </div>  -->\n
-\n
       <script>\n
         loadDivSize();\n
       </script>\n
@@ -216,7 +267,7 @@ XXX: Folder_filter accesses selection directly\n
       </script>\n
     </tal:block>\n
   </tal:block>\n
-  </span>\n
+</span>\n
 </tal:block>
 
 ]]></string> </value>
