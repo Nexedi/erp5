@@ -62,7 +62,8 @@
 total_price = 0\n
 movement_list = context.getMovementList(portal_type=(\'Pay Sheet Line\', \'Pay Sheet Cell\'))\n
 for movement in movement_list:\n
-  if movement.isMemberOf(tax_category) and movement.isMemberOf(base_contribution):\n
+  if base_contribution is not None and tax_category is not None and\\\n
+      movement.isMemberOf(tax_category) and movement.isMemberOf(base_contribution):\n
     total_price += movement.getTotalPrice()\n
 \n
 # Get Precision\n
@@ -114,6 +115,7 @@ return amount\n
                             <string>movement_list</string>
                             <string>_getiter_</string>
                             <string>movement</string>
+                            <string>None</string>
                             <string>_inplacevar_</string>
                             <string>precision</string>
                             <string>round</string>

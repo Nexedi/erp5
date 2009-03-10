@@ -1,0 +1,409 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>OLE_documents_zipstring</string> </key>
+            <value> <string encoding="base64">UEsDBBQAAAAIAMCAlTg1Ytc5PgEAAEoHAAAVAAAATUVUQS1JTkYvbWFuaWZlc3QueG1stZVLasMw
+EED3PYXR3lbbVTFxAi30BOkBJvLYEeiHZhSS21cO5NM2lKZYOwmk90YjzWix2ltT7TCS9q4TT82j
+qNAp32s3duJj/V6/iNXyYWHB6QGJ29OgyvscnaedSNG1HkhT68AitaxaH9D1XiWLjtuv69vJtHyo
+LuBBG6zzwnioLjLsNdR8CNgJCMFoBZzjlDvXN0dXc61oGPcsLruHZEwdgLedkELeJbtNefNu0GOK
+xyDoWRIDJ9pALIMHpdBgnvooVYpxOmLOYnFXEcFgPDAWggcfUshPIBXCRz9GpHI3PYVeDM7em2Jw
+bWFEkq+aLQQq6riT/b1fUHJT9TRJN+pa8LcY7pRPnUhOtXoTnv38v2L+nUt8MEizYy0yzNZ41ttk
+Nw60IcmnYRPcODd83sQic/4Qz6ldyB//4fITUEsBAhQAFAAAAAgAwICVODVi1zk+AQAASgcAABUA
+AAAAAAAAAAAAAAAAAAAAAE1FVEEtSU5GL21hbmlmZXN0LnhtbFBLBQYAAAAAAQABAEMAAABxAQAA
+AAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="utf-8"?>\n
+<office:document-styles xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"\n
+                        xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0"\n
+                        xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"\n
+                        xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0"\n
+                        xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0"\n
+                        xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0"\n
+                        xmlns:xlink="http://www.w3.org/1999/xlink"\n
+                        xmlns:dc="http://purl.org/dc/elements/1.1/"\n
+                        xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0"\n
+                        xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0"\n
+                        xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0"\n
+                        xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0"\n
+                        xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0"\n
+                        xmlns:math="http://www.w3.org/1998/Math/MathML"\n
+                        xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0"\n
+                        xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0"\n
+                        xmlns:ooo="http://openoffice.org/2004/office"\n
+                        xmlns:ooow="http://openoffice.org/2004/writer"\n
+                        xmlns:oooc="http://openoffice.org/2004/calc"\n
+                        xmlns:dom="http://www.w3.org/2001/xml-events"\n
+                        xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+                        xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
+                        xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+                        office:version="1.1"\n
+                        tal:attributes="dummy python:request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\')"\n
+                        tal:define=\'data_dict here/PaySheetTransaction_getODTDataDict\'>\n
+  <office:font-face-decls>\n
+    <style:font-face style:name="StarSymbol" svg:font-family="StarSymbol" style:font-charset="x-symbol"/>\n
+    <style:font-face style:name="DejaVu Sans1" svg:font-family="\'DejaVu Sans\'" style:font-pitch="variable"/>\n
+    <style:font-face style:name="Times New Roman" svg:font-family="\'Times New Roman\'" style:font-family-generic="roman" style:font-pitch="variable"/>\n
+    <style:font-face style:name="Arial1" svg:font-family="Arial" style:font-family-generic="swiss" style:font-pitch="variable"/>\n
+    <style:font-face style:name="Arial" svg:font-family="Arial" style:font-adornments="Normalny" style:font-family-generic="swiss" style:font-pitch="variable"/>\n
+    <style:font-face style:name="DejaVu Sans" svg:font-family="\'DejaVu Sans\'" style:font-family-generic="swiss" style:font-pitch="variable"/>\n
+    <style:font-face style:name="DejaVu Sans2" svg:font-family="\'DejaVu Sans\'" style:font-family-generic="system" style:font-pitch="variable"/>\n
+  </office:font-face-decls>\n
+  <office:styles>\n
+    <style:default-style style:family="graphic">\n
+      <style:graphic-properties draw:shadow-offset-x="0.3cm" draw:shadow-offset-y="0.3cm" draw:start-line-spacing-horizontal="0.283cm" draw:start-line-spacing-vertical="0.283cm" draw:end-line-spacing-horizontal="0.283cm" draw:end-line-spacing-vertical="0.283cm" style:flow-with-text="true"/>\n
+      <style:paragraph-properties style:text-autospace="ideograph-alpha" style:line-break="strict" style:writing-mode="lr-tb" style:font-independent-line-spacing="false">\n
+        <style:tab-stops/>\n
+      </style:paragraph-properties>\n
+      <style:text-properties style:use-window-font-color="true" fo:font-size="12pt" fo:language="pl" fo:country="PL" style:font-size-asian="12pt" style:language-asian="pl" style:country-asian="PL" style:font-size-complex="12pt" style:language-complex="pl" style:country-complex="PL"/>\n
+    </style:default-style>\n
+    <style:default-style style:family="paragraph">\n
+      <style:paragraph-properties fo:hyphenation-ladder-count="no-limit" style:text-autospace="ideograph-alpha" style:punctuation-wrap="hanging" style:line-break="strict" style:tab-stop-distance="1.251cm" style:writing-mode="page"/>\n
+      <style:text-properties style:use-window-font-color="true" style:font-name="Times New Roman" fo:font-size="12pt" fo:language="pl" fo:country="PL" style:font-name-asian="DejaVu Sans1" style:font-size-asian="12pt" style:language-asian="pl" style:country-asian="PL" style:font-name-complex="DejaVu Sans1" style:font-size-complex="12pt" style:language-complex="pl" style:country-complex="PL" fo:hyphenate="false" fo:hyphenation-remain-char-count="2" fo:hyphenation-push-char-count="2"/>\n
+    </style:default-style>\n
+    <style:default-style style:family="table">\n
+      <style:table-properties table:border-model="collapsing"/>\n
+    </style:default-style>\n
+    <style:default-style style:family="table-row">\n
+      <style:table-row-properties fo:keep-together="always"/>\n
+    </style:default-style>\n
+    <style:style style:name="Standard" style:family="paragraph" style:class="text">\n
+      <style:text-properties style:font-name="Arial"/>\n
+    </style:style>\n
+    <style:style style:name="Text_20_body" style:display-name="Text body" style:family="paragraph" style:parent-style-name="Standard" style:class="text">\n
+      <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0.212cm"/>\n
+    </style:style>\n
+    <style:style style:name="Heading" style:family="paragraph" style:parent-style-name="Standard" style:next-style-name="Text_20_body" style:class="text">\n
+      <style:paragraph-properties fo:margin-top="0.423cm" fo:margin-bottom="0.212cm" fo:keep-with-next="always"/>\n
+      <style:text-properties style:font-name="DejaVu Sans" fo:font-size="14pt" style:font-name-asian="DejaVu Sans2" style:font-size-asian="14pt" style:font-name-complex="DejaVu Sans2" style:font-size-complex="14pt"/>\n
+    </style:style>\n
+    <style:style style:name="Heading_20_1" style:display-name="Heading 1" style:family="paragraph" style:parent-style-name="Header" style:next-style-name="Text_20_body" style:class="text">\n
+      <style:text-properties fo:font-size="115%" fo:font-weight="bold" style:font-size-asian="115%" style:font-weight-asian="bold" style:font-size-complex="115%" style:font-weight-complex="bold"/>\n
+    </style:style>\n
+    <style:style style:name="List" style:family="paragraph" style:parent-style-name="Text_20_body" style:class="list"/>\n
+    <style:style style:name="Header" style:family="paragraph" style:parent-style-name="Standard" style:next-style-name="Text_20_body" style:class="extra" style:master-page-name="">\n
+      <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" fo:text-align="start" style:justify-single-word="false" style:register-true="true" style:page-number="auto" fo:background-color="transparent" style:shadow="none" fo:keep-with-next="always" style:vertical-align="auto">\n
+        <style:tab-stops/>\n
+        <style:background-image/>\n
+      </style:paragraph-properties>\n
+      <style:text-properties style:font-name="Arial1" fo:font-size="7pt" style:font-name-asian="DejaVu Sans1" style:font-size-asian="14pt" style:font-name-complex="DejaVu Sans1" style:font-size-complex="14pt"/>\n
+    </style:style>\n
+    <style:style style:name="Header_20_left" style:display-name="Header left" style:family="paragraph" style:parent-style-name="Standard" style:class="extra">\n
+      <style:paragraph-properties text:number-lines="false" text:line-number="0">\n
+        <style:tab-stops>\n
+          <style:tab-stop style:position="9.5cm" style:type="center"/>\n
+          <style:tab-stop style:position="19.001cm" style:type="right"/>\n
+        </style:tab-stops>\n
+      </style:paragraph-properties>\n
+    </style:style>\n
+    <style:style style:name="Header_20_right" style:display-name="Header right" style:family="paragraph" style:parent-style-name="Standard" style:class="extra">\n
+      <style:paragraph-properties fo:text-align="end" style:justify-single-word="false" text:number-lines="false" text:line-number="0">\n
+        <style:tab-stops>\n
+          <style:tab-stop style:position="9.5cm" style:type="center"/>\n
+          <style:tab-stop style:position="19.001cm" style:type="right"/>\n
+        </style:tab-stops>\n
+      </style:paragraph-properties>\n
+      <style:text-properties fo:font-size="8pt" fo:font-weight="bold"/>\n
+    </style:style>\n
+    <style:style style:name="Footer" style:family="paragraph" style:parent-style-name="Standard" style:class="extra">\n
+      <style:paragraph-properties text:number-lines="false" text:line-number="0">\n
+        <style:tab-stops>\n
+          <style:tab-stop style:position="9.5cm" style:type="center"/>\n
+          <style:tab-stop style:position="19.001cm" style:type="right"/>\n
+        </style:tab-stops>\n
+      </style:paragraph-properties>\n
+      <style:text-properties fo:font-size="6pt"/>\n
+    </style:style>\n
+    <style:style style:name="Footer_20_right" style:display-name="Footer right" style:family="paragraph" style:parent-style-name="Standard" style:class="extra">\n
+      <style:paragraph-properties text:number-lines="false" text:line-number="0">\n
+        <style:tab-stops>\n
+          <style:tab-stop style:position="9.5cm" style:type="center"/>\n
+          <style:tab-stop style:position="19.001cm" style:type="right"/>\n
+        </style:tab-stops>\n
+      </style:paragraph-properties>\n
+    </style:style>\n
+    <style:style style:name="Table_20_Contents" style:display-name="Table Contents" style:family="paragraph" style:parent-style-name="Standard" style:class="extra">\n
+      <style:paragraph-properties fo:text-align="center" style:justify-single-word="false" text:number-lines="false" text:line-number="0"/>\n
+      <style:text-properties fo:font-size="7pt"/>\n
+    </style:style>\n
+    <style:style style:name="Table_20_Heading" style:display-name="Table Heading" style:family="paragraph" style:parent-style-name="Table_20_Contents" style:class="extra">\n
+      <style:paragraph-properties fo:text-align="end" style:justify-single-word="false" text:number-lines="false" text:line-number="0"/>\n
+      <style:text-properties fo:font-size="6pt" fo:font-style="normal" fo:font-weight="bold" style:font-style-asian="italic" style:font-weight-asian="normal" style:font-style-complex="italic" style:font-weight-complex="normal"/>\n
+    </style:style>\n
+    <style:style style:name="Caption" style:family="paragraph" style:parent-style-name="Standard" style:class="extra">\n
+      <style:paragraph-properties fo:margin-top="0.212cm" fo:margin-bottom="0.212cm" text:number-lines="false" text:line-number="0"/>\n
+      <style:text-properties fo:font-size="12pt" fo:font-style="italic" style:font-size-asian="12pt" style:font-style-asian="italic" style:font-size-complex="12pt" style:font-style-complex="italic"/>\n
+    </style:style>\n
+    <style:style style:name="Table" style:family="paragraph" style:parent-style-name="Caption" style:class="extra"/>\n
+    <style:style style:name="Text" style:family="paragraph" style:parent-style-name="Caption" style:class="extra"/>\n
+    <style:style style:name="Frame_20_contents" style:display-name="Frame contents" style:family="paragraph" style:parent-style-name="Text_20_body" style:class="extra"/>\n
+    <style:style style:name="Index" style:family="paragraph" style:parent-style-name="Standard" style:class="index">\n
+      <style:paragraph-properties text:number-lines="false" text:line-number="0"/>\n
+    </style:style>\n
+    <style:style style:name="Header_20_Title" style:display-name="Header Title" style:family="paragraph" style:parent-style-name="Header_20_right" style:master-page-name="">\n
+      <style:paragraph-properties style:page-number="auto" style:shadow="none"/>\n
+      <style:text-properties fo:text-transform="uppercase" fo:font-size="16pt"/>\n
+    </style:style>\n
+    <style:style style:name="Header_20_Title_Left" style:display-name="Header Title Left" style:family="paragraph" style:parent-style-name="Header_20_left" style:master-page-name="">\n
+      <style:paragraph-properties style:page-number="auto" style:shadow="none"/>\n
+      <style:text-properties fo:text-transform="uppercase" fo:font-size="16pt"/>\n
+    </style:style>\n
+    <style:style style:name="Big_20_Table_20_Content" style:display-name="Big Table Content" style:family="paragraph" style:parent-style-name="Table_20_Contents">\n
+      <style:text-properties fo:font-size="8pt" fo:font-weight="bold"/>\n
+    </style:style>\n
+    <style:style style:name="Big_20_Table_20_Content_20_Left" style:display-name="Big Table Content Left" style:family="paragraph" style:parent-style-name="Big_20_Table_20_Content">\n
+      <style:paragraph-properties fo:margin-left="0.049cm" fo:margin-right="0cm" fo:text-align="start" style:justify-single-word="false" fo:text-indent="0cm" style:auto-text-indent="false"/>\n
+    </style:style>\n
+    <style:style style:name="Item_20_Table_20_Title" style:display-name="Item Table Title" style:family="paragraph" style:parent-style-name="Table_20_Heading" style:class="extra">\n
+      <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>\n
+      <style:text-properties fo:font-size="7pt" style:font-weight-asian="normal" style:font-weight-complex="normal"/>\n
+    </style:style>\n
+    <style:style style:name="Table_20_Contents_20_Left" style:display-name="Table Contents Left" style:family="paragraph" style:parent-style-name="Table_20_Contents" style:class="extra">\n
+      <style:paragraph-properties fo:margin-left="0.2cm" fo:margin-right="0cm" fo:text-align="start" style:justify-single-word="false" fo:text-indent="0cm" style:auto-text-indent="false"/>\n
+    </style:style>\n
+    <style:style style:name="Table_20_Contents_20_Right" style:display-name="Table Contents Right" style:family="paragraph" style:parent-style-name="Table_20_Contents_20_Left" style:class="extra">\n
+      <style:paragraph-properties fo:margin-left="0cm" fo:margin-right="0.2cm" fo:text-align="end" style:justify-single-word="false" fo:text-indent="0cm" style:auto-text-indent="false"/>\n
+    </style:style>\n
+    <style:style style:name="Item_20_Table_20_Title_20_Left" style:display-name="Item Table Title Left" style:family="paragraph" style:parent-style-name="Item_20_Table_20_Title" style:class="extra">\n
+      <style:paragraph-properties fo:margin-left="0.049cm" fo:margin-right="0cm" fo:text-align="start" style:justify-single-word="false" fo:text-indent="0cm" style:auto-text-indent="false"/>\n
+    </style:style>\n
+    <style:style style:name="Item_20_Table_20_Title_20_Right" style:display-name="Item Table Title Right" style:family="paragraph" style:parent-style-name="Item_20_Table_20_Title" style:class="extra">\n
+      <style:paragraph-properties fo:margin-left="0cm" fo:margin-right="0.049cm" fo:text-align="end" style:justify-single-word="false" fo:text-indent="0cm" style:auto-text-indent="false"/>\n
+    </style:style>\n
+    <style:style style:name="Bullet_20_Symbols" style:display-name="Bullet Symbols" style:family="text">\n
+      <style:text-properties style:font-name="StarSymbol" fo:font-size="9pt" style:font-name-asian="StarSymbol" style:font-size-asian="9pt" style:font-name-complex="StarSymbol" style:font-size-complex="9pt"/>\n
+    </style:style>\n
+    <style:style style:name="Footnote_20_Symbol" style:display-name="Footnote Symbol" style:family="text"/>\n
+    <style:style style:name="Endnote_20_Symbol" style:display-name="Endnote Symbol" style:family="text"/>\n
+    <style:style style:name="Graphics" style:family="graphic">\n
+      <style:graphic-properties text:anchor-type="paragraph" svg:x="0cm" svg:y="0cm" style:wrap="dynamic" style:number-wrapped-paragraphs="no-limit" style:wrap-contour="false" style:vertical-pos="top" style:vertical-rel="paragraph" style:horizontal-pos="center" style:horizontal-rel="paragraph"/>\n
+    </style:style>\n
+    <style:style style:name="Header_20_Image" style:display-name="Header Image" style:family="graphic" style:parent-style-name="Graphics">\n
+      <style:graphic-properties svg:width="9.999cm" svg:height="0.049cm" text:anchor-type="paragraph" svg:x="0cm" svg:y="0cm" fo:margin-left="0cm" fo:margin-right="0cm" style:run-through="foreground" style:wrap="right" style:number-wrapped-paragraphs="no-limit" style:wrap-contour="false" style:vertical-pos="top" style:vertical-rel="paragraph" style:horizontal-pos="left" style:horizontal-rel="paragraph" fo:background-color="transparent" style:background-transparency="100%" style:shadow="none">\n
+        <style:background-image/>\n
+        <style:columns fo:column-count="1" fo:column-gap="0cm"/>\n
+      </style:graphic-properties>\n
+    </style:style>\n
+    <text:outline-style>\n
+      <text:outline-level-style text:level="1" style:num-format="">\n
+        <style:list-level-properties text:min-label-distance="0.381cm"/>\n
+      </text:outline-level-style>\n
+      <text:outline-level-style text:level="2" style:num-format="">\n
+        <style:list-level-properties text:min-label-distance="0.381cm"/>\n
+      </text:outline-level-style>\n
+      <text:outline-level-style text:level="3" style:num-format="">\n
+        <style:list-level-properties text:min-label-distance="0.381cm"/>\n
+      </text:outline-level-style>\n
+      <text:outline-level-style text:level="4" style:num-format="">\n
+        <style:list-level-properties text:min-label-distance="0.381cm"/>\n
+      </text:outline-level-style>\n
+      <text:outline-level-style text:level="5" style:num-format="">\n
+        <style:list-level-properties text:min-label-distance="0.381cm"/>\n
+      </text:outline-level-style>\n
+      <text:outline-level-style text:level="6" style:num-format="">\n
+        <style:list-level-properties text:min-label-distance="0.381cm"/>\n
+      </text:outline-level-style>\n
+      <text:outline-level-style text:level="7" style:num-format="">\n
+        <style:list-level-properties text:min-label-distance="0.381cm"/>\n
+      </text:outline-level-style>\n
+      <text:outline-level-style text:level="8" style:num-format="">\n
+        <style:list-level-properties text:min-label-distance="0.381cm"/>\n
+      </text:outline-level-style>\n
+      <text:outline-level-style text:level="9" style:num-format="">\n
+        <style:list-level-properties text:min-label-distance="0.381cm"/>\n
+      </text:outline-level-style>\n
+      <text:outline-level-style text:level="10" style:num-format="">\n
+        <style:list-level-properties text:min-label-distance="0.381cm"/>\n
+      </text:outline-level-style>\n
+    </text:outline-style>\n
+    <text:notes-configuration text:note-class="footnote" text:citation-style-name="Footnote_20_Symbol" style:num-format="1" text:start-value="0" text:footnotes-position="page" text:start-numbering-at="page"/>\n
+    <text:notes-configuration text:note-class="endnote" text:citation-style-name="Endnote_20_Symbol" text:master-page-name="Endnote" style:num-format="1" text:start-value="0"/>\n
+    <text:linenumbering-configuration text:number-lines="false" text:offset="0.499cm" style:num-format="1" text:number-position="left" text:increment="5"/>\n
+  </office:styles>\n
+  <office:automatic-styles>\n
+    <style:style style:name="Tableau4" style:family="table">\n
+      <style:table-properties style:width="19.001cm" table:align="margins" style:shadow="none"/>\n
+    </style:style>\n
+    <style:style style:name="Tableau4.A" style:family="table-column">\n
+      <style:table-column-properties style:column-width="6.334cm" style:rel-column-width="21845*"/>\n
+    </style:style>\n
+    <style:style style:name="Tableau4.B" style:family="table-column">\n
+      <style:table-column-properties style:column-width="6.334cm" style:rel-column-width="21844*"/>\n
+    </style:style>\n
+    <style:style style:name="Tableau4.1" style:family="table-row">\n
+      <style:table-row-properties style:min-row-height="1.723cm"/>\n
+    </style:style>\n
+    <style:style style:name="Tableau4.A1" style:family="table-cell">\n
+      <style:table-cell-properties fo:padding="0.097cm" fo:border="none"/>\n
+    </style:style>\n
+    <style:style style:name="Tableau4.A2" style:family="table-cell">\n
+      <style:table-cell-properties fo:padding="0.097cm" fo:border="none" style:vertical-align="middle"/>\n
+    </style:style>\n
+    <style:style style:name="P1" style:family="paragraph" style:parent-style-name="Table_20_Contents">\n
+      <style:text-properties style:font-name-asian="DejaVu Sans1" style:font-size-asian="14pt" style:font-name-complex="DejaVu Sans1" style:font-size-complex="14pt"/>\n
+    </style:style>\n
+    <style:style style:name="P2" style:family="paragraph" style:parent-style-name="Header_20_right">\n
+      <style:text-properties style:font-name-asian="DejaVu Sans1" style:font-size-asian="14pt" style:font-name-complex="DejaVu Sans1" style:font-size-complex="14pt"/>\n
+    </style:style>\n
+    <style:style style:name="fr1" style:family="graphic" style:parent-style-name="Header_20_Image">\n
+      <style:graphic-properties style:vertical-pos="top" style:vertical-rel="paragraph" style:horizontal-pos="left" style:horizontal-rel="paragraph" style:mirror="none" fo:clip="rect(0cm 0cm 0cm 0cm)" draw:luminance="0%" draw:contrast="0%" draw:red="0%" draw:green="0%" draw:blue="0%" draw:gamma="100%" draw:color-inversion="false" draw:image-opacity="100%" draw:color-mode="standard"/>\n
+    </style:style>\n
+    <style:style style:name="gr1" style:family="graphic">\n
+      <style:graphic-properties draw:textarea-horizontal-align="center" draw:textarea-vertical-align="middle" style:run-through="foreground" style:wrap="run-through" style:number-wrapped-paragraphs="no-limit" style:vertical-pos="from-top" style:vertical-rel="page" style:horizontal-pos="from-left" style:horizontal-rel="paragraph" draw:wrap-influence-on-position="once-concurrent" style:flow-with-text="false"/>\n
+    </style:style>\n
+    <style:page-layout style:name="pm1">\n
+      <style:page-layout-properties fo:page-width="21.001cm" fo:page-height="29.7cm" style:num-format="1" style:print-orientation="portrait" fo:margin-top="1cm" fo:margin-bottom="1cm" fo:margin-left="1cm" fo:margin-right="1cm" fo:background-color="transparent" style:writing-mode="lr-tb" style:footnote-max-height="0cm">\n
+        <style:background-image/>\n
+        <style:footnote-sep style:width="0.018cm" style:distance-before-sep="0.101cm" style:distance-after-sep="0.101cm" style:adjustment="left" style:rel-width="25%" style:color="#000000"/>\n
+      </style:page-layout-properties>\n
+      <style:header-style>\n
+        <style:header-footer-properties svg:height="2.200cm" fo:margin-left="0cm" fo:margin-right="0cm" fo:margin-bottom="0.499cm" fo:border="none" fo:padding="0cm" style:shadow="none" style:dynamic-spacing="false"/>\n
+      </style:header-style>\n
+      <style:footer-style>\n
+        <style:header-footer-properties fo:min-height="0.25cm" fo:margin-left="0cm" fo:margin-right="0cm" fo:margin-top="0cm" style:dynamic-spacing="false"/>\n
+      </style:footer-style>\n
+    </style:page-layout>\n
+    <style:page-layout style:name="pm2">\n
+      <style:page-layout-properties fo:page-width="21.001cm" fo:page-height="29.7cm" style:num-format="1" style:print-orientation="portrait" fo:margin-top="2cm" fo:margin-bottom="2cm" fo:margin-left="2cm" fo:margin-right="2cm" style:writing-mode="lr-tb" style:footnote-max-height="0cm">\n
+        <style:footnote-sep style:adjustment="left" style:rel-width="25%" style:color="#000000"/>\n
+      </style:page-layout-properties>\n
+      <style:header-style/>\n
+      <style:footer-style/>\n
+    </style:page-layout>\n
+  </office:automatic-styles>\n
+  <office:master-styles>\n
+    <style:master-page style:name="Standard" style:page-layout-name="pm1">\n
+      <style:header tal:define="default_language python:test(request.get(\'international_form\'), \'en\', here.Localizer.get_selected_language());\n
+                    date_renderer nocall:here/Base_viewFieldLibrary/my_date/render_pdf;\n
+                    orig_title python: \'Payslip\';\n
+                    en_title python: unicode(here.Base_translateString(orig_title, lang=default_language), \'utf-8\');\n
+                    my_title python: unicode(here.Base_translateString(orig_title), \'utf-8\');\n
+                    orig_period python: \'From ${start_date} to ${stop_date}\';\n
+                    en_period python: unicode(here.Base_translateString(orig_period, lang=default_language,\n
+                                                                mapping = {\'start_date\': date_renderer(here.getStartDate()),\n
+                                                                           \'stop_date\': date_renderer(here.getStopDate())}), \'utf-8\');\n
+                    my_period  python: unicode(here.Base_translateString(orig_period,\n
+                                                                mapping = {\'start_date\': date_renderer(here.getStartDate()),\n
+                                                                           \'stop_date\': date_renderer(here.getStopDate())}), \'utf-8\');\n
+                    image_path python: here.getPortalType().startswith(\'Pay Sheet Transaction\') and data_dict[\'destination_section_image_path\'] or (data_dict[\'destination_decision_image_path\'] or data_dict[\'destination_section_image_path\']);\n
+                    image_width python: here.getPortalType().startswith(\'Pay Sheet Transaction\') and data_dict[\'destination_section_image_width\'] or (data_dict[\'destination_decision_image_width\'] or data_dict[\'destination_section_image_width\']);\n
+                    image_height python: here.getPortalType().startswith(\'Pay Sheet Transaction\') and data_dict[\'destination_section_image_height\'] or (data_dict[\'destination_decision_image_height\'] or data_dict[\'destination_section_image_height\'])">\n
+        <table:table table:name="Tableau4" table:style-name="Tableau4">\n
+          <table:table-column table:style-name="Tableau4.A"/>\n
+          <table:table-column table:style-name="Tableau4.B"/>\n
+          <table:table-column table:style-name="Tableau4.A"/>\n
+          <table:table-row table:style-name="Tableau4.1">\n
+            <table:table-cell table:style-name="Tableau4.A1" office:value-type="string">\n
+              <text:p text:style-name="P1">\n
+                <office:include_img tal:condition="python: image_path and image_width and image_height"\n
+                                    maxwidth="6cm"\n
+                                    maxheight="2cm"\n
+                                    tal:attributes="path image_path;\n
+                                    draw:style-name string:fr1;\n
+                                    draw:z-index string:0;\n
+                                    text:anchor-type string:paragraph;\n
+                                    width image_width;\n
+                                    height image_height"/>\n
+              </text:p>\n
+            </table:table-cell>\n
+            <table:table-cell table:style-name="Tableau4.A2" office:value-type="string">\n
+            </table:table-cell>\n
+            <table:table-cell table:style-name="Tableau4.A1" office:value-type="string">\n
+              <text:p text:style-name="Header_20_Title"\n
+                      tal:content="en_title">\n
+              </text:p>\n
+              <text:p text:style-name="Header_20_right"\n
+                      tal:content="my_title" tal:condition="python: my_title != en_title">\n
+              </text:p>\n
+              <text:p text:style-name="Header_20_right"\n
+                      tal:content="en_period">\n
+              </text:p>\n
+              <text:p text:style-name="Header_20_right"\n
+                      tal:content="my_period" tal:condition="python: my_period != en_period">\n
+              </text:p>\n
+            </table:table-cell>\n
+          </table:table-row>\n
+        </table:table>\n
+      </style:header>\n
+      <style:footer>\n
+        <tal:block metal:use-macro="here/payroll_odt_macro/macros/footer" />\n
+        <text:p text:style-name="Footer">Generated with ERP5 – Open Source ERP suite (www.erp5.org)</text:p>\n
+      </style:footer>\n
+    </style:master-page>\n
+    <style:master-page style:name="Endnote" style:page-layout-name="pm2"/>\n
+  </office:master-styles>\n
+</office:document-styles>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/vnd.oasis.opendocument.text</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PaySheetTransaction_viewAsODTStyles</string> </value>
+        </item>
+        <item>
+            <key> <string>ooo_script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>ooo_stylesheet</string> </key>
+            <value> <string>PaySheet_getODTStyleSheet</string> </value>
+        </item>
+        <item>
+            <key> <string>ooo_xml_file_id</string> </key>
+            <value> <string>styles.xml</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

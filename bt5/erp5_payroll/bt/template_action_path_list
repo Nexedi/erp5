@@ -22,6 +22,7 @@ Pay Sheet Transaction | accounting_lines
 Pay Sheet Transaction | annotation_lines
 Pay Sheet Transaction | apply_model
 Pay Sheet Transaction | calcul
+Pay Sheet Transaction | pay_sheet_print
 Pay Sheet Transaction | view
 Pay Sheet Transaction | view_payment
 Pay Sheet Transaction | view_profile

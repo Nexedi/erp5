@@ -1,3 +1,9 @@
+2009-03-10 fabien
+* fix some minor problems
+* add a default action on Pay Sheet Transaction portal type to be able to print a Payslip
+* add AsODT and AsODTStyles files
+* increment version number because of the new style of the payslip
+
 2009-02-26 fabien
 * update PaySheetTransaction_view and PaySheetModel_view to display payment_condition_payment_date only if cutom payment_condition_trade_date is selected.
 

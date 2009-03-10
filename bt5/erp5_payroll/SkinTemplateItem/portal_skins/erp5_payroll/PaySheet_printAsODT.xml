@@ -53,48 +53,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>\'\'\'\n
-  this script return the total price of the base contribution list\n
-  from the first of january of the year of the paysheet and until\n
-  the start_date of this current paysheet. Return 0.0 if there is no amount.\n
-\'\'\'\n
+            <value> <string>if target_language:\n
+  container.REQUEST[\'AcceptLanguage\'].set(target_language, 10)\n
 \n
-if paysheet is None:\n
-    paysheet = context\n
-\n
-# test the list parameters\n
-if base_contribution_list is None:\n
-  base_contribution_list = []\n
-elif not (same_type(base_contribution_list, []) or\n
-          same_type(base_contribution_list, ())):\n
-  base_contribution_list = [base_contribution_list]\n
-\n
-portal = context.getPortalObject();\n
-portal_simulation = portal.portal_simulation\n
-\n
-base_amount = portal.portal_categories.base_amount\n
-\n
-for category in base_contribution_list:\n
-  category_value = getattr(base_amount, category, None)\n
-  if category_value is None:\n
-    raise ValueError, \'Category "%s/%s" not found.\' % (base_amount.getPath(), category)  \n
-  base_contribution_uid_list = category_value.getUid()\n
-\n
-params = {\n
-    \'node_uid\' : paysheet.getSourceSectionUid(),\n
-    \'mirror_section_uid\' : paysheet.getSourceSectionUid(),\n
-    \'section_uid\' : paysheet.getDestinationSectionUid(),\n
-    \'tax_category_uid\' :\\\n
-        portal.portal_categories.tax_category.employee_share.getUid(),\n
-    \'to_date\' : paysheet.getStartDate(),\n
-    \'from_date\' : DateTime(paysheet.getStartDate().year(), 1, 1),\n
-    \'simulation_state\'    : [\'confirmed\', \'stopped\', \'delivered\'],\n
-    \'precision\' : paysheet.getPriceCurrencyValue().getQuantityPrecision(),\n
-    \'base_contribution_uid\' : base_contribution_uid_list,\n
-    #\'src__\' : 1\n
-  }\n
-\n
-return portal_simulation.getInventoryAssetPrice(**params)\n
+return context.PaySheetTransaction_viewAsODT(format=format)\n
 </string> </value>
         </item>
         <item>
@@ -105,7 +67,7 @@ return portal_simulation.getInventoryAssetPrice(**params)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>paysheet=None, base_contribution_list=None</string> </value>
+            <value> <string>target_language=\'\', format=\'pdf\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -131,24 +93,12 @@ return portal_simulation.getInventoryAssetPrice(**params)\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>paysheet</string>
-                            <string>base_contribution_list</string>
-                            <string>None</string>
-                            <string>context</string>
-                            <string>same_type</string>
+                            <string>target_language</string>
+                            <string>format</string>
                             <string>_getattr_</string>
-                            <string>portal</string>
-                            <string>portal_simulation</string>
-                            <string>base_amount</string>
-                            <string>_getiter_</string>
-                            <string>category</string>
-                            <string>getattr</string>
-                            <string>category_value</string>
-                            <string>ValueError</string>
-                            <string>base_contribution_uid_list</string>
-                            <string>DateTime</string>
-                            <string>params</string>
-                            <string>_apply_</string>
+                            <string>_getitem_</string>
+                            <string>container</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
@@ -161,14 +111,14 @@ return portal_simulation.getInventoryAssetPrice(**params)\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <none/>
-                <none/>
+                <string></string>
+                <string>pdf</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PaySheetTransaction_getYearToDateBaseContributionTotalPrice</string> </value>
+            <value> <string>PaySheet_printAsODT</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
