@@ -1935,11 +1935,11 @@ class Catalog(Folder,
           subquery = self._buildQueryFromAbstractSyntaxTreeNode(subnode, search_key)
           if subquery is not None:
             append(subquery)
-      operator = node.getLogicalOperator()
+      logical_operator = node.getLogicalOperator()
       for comparison_operator, value_list in value_dict.iteritems():
-        append(search_key.buildQuery(value_list, comparison_operator=comparison_operator, logical_operator=operator))
-      if operator == 'not' or len(query_list) > 1:
-        result = ComplexQuery(query_list, operator=operator)
+        append(search_key.buildQuery(value_list, comparison_operator=comparison_operator, logical_operator=logical_operator))
+      if logical_operator == 'not' or len(query_list) > 1:
+        result = ComplexQuery(query_list, logical_operator=logical_operator)
       elif len(query_list) == 1:
         result = query_list[0]
       else:
