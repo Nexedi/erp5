@@ -299,6 +299,10 @@ class TestSQLCatalog(unittest.TestCase):
                  {column: '%a'})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='<', keyword='a'), operator='and'),
                  {column: '<a'})
+    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='like', keyword='%a%'), ReferenceQuery(operator='like', keyword='%b%'), operator='and'), operator='and'),
+                 {column: 'a AND b'})
+    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='like', keyword='%a%'), ReferenceQuery(operator='like', keyword='%b%'), operator='or'), operator='and'),
+                 {column: 'a OR b'})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='<', keyword='path'), operator='and'),
                  {column: {'query': 'path', 'range': 'max'}})
     self.catalog(ReferenceQuery(ReferenceQuery(
