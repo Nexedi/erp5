@@ -157,19 +157,6 @@
         <table:covered-table-cell/>\n
         <table:covered-table-cell/>\n
     </table:table-row>\n
-    <table:table-row table:style-name=\'Tableau1.4\'>\n
-        <table:table-cell table:style-name=\'Tableau1.A7\' \n
-                          office:value-type=\'string\' table:number-columns-spanned=\'5\'>\n
-              <text:p text:style-name=\'Item_20_Table_20_Title\'></text:p>\n
-        </table:table-cell>\n
-        <table:covered-table-cell/>\n
-        <table:covered-table-cell/>\n
-        <table:covered-table-cell/>\n
-        <table:covered-table-cell/>\n
-    </table:table-row>\n
-\n
-\n
-\n
 \n
     <table:table-row table:style-name=\'Tableau1.5\'>\n
       <table:table-cell table:style-name=\'Tableau1.A5\'\n
@@ -224,7 +211,7 @@
               tal:define="style_name python:\'Item_20_Table_20_Title\';\n
               left_style_name python:\'Table_20_Contents_20_Left\';\n
               right_style_name python:\'Table_20_Contents_20_Right\'">\n
-            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+            <table:table-cell table:style-name=\'Tableau1.A8\'\n
                               office:value-type=\'float\'\n
                               tal:condition="python: data_dict[\'year_to_date_gross_salary\']"\n
                               tal:attributes=\'office:value data_dict/year_to_date_gross_salary\'> \n
@@ -232,13 +219,13 @@
                       tal:content="python: quantity_renderer(data_dict[\'year_to_date_gross_salary\'])"\n
                       tal:attributes=\'text:style-name right_style_name\'>300000</text:p>\n
             </table:table-cell> \n
-            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+            <table:table-cell table:style-name=\'Tableau1.A8\'\n
                               office:value-type=\'string\'\n
                               tal:condition="python: not data_dict[\'year_to_date_gross_salary\']"> \n
               <text:p text:style-name=\'Table_20_Contents\'/>\n
             </table:table-cell>\n
 \n
-            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+            <table:table-cell table:style-name=\'Tableau1.A8\'\n
                               office:value-type=\'float\'\n
                               tal:condition="python: data_dict[\'year_to_date_slice_a\']"\n
                               tal:attributes=\'office:value data_dict/year_to_date_slice_a\'> \n
@@ -246,13 +233,13 @@
                       tal:content="python: quantity_renderer(data_dict[\'year_to_date_slice_a\'])"\n
                       tal:attributes=\'text:style-name right_style_name\'>300000</text:p>\n
             </table:table-cell> \n
-            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+            <table:table-cell table:style-name=\'Tableau1.A8\'\n
                               office:value-type=\'string\'\n
                               tal:condition="python: not data_dict[\'year_to_date_slice_a\']"> \n
               <text:p text:style-name=\'Table_20_Contents\'/>\n
             </table:table-cell>\n
 \n
-            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+            <table:table-cell table:style-name=\'Tableau1.A8\'\n
                               office:value-type=\'float\'\n
                               tal:condition="python: data_dict[\'year_to_date_worked_hour_count\']"\n
                               tal:attributes=\'office:value data_dict/year_to_date_worked_hour_count\'> \n
@@ -260,13 +247,13 @@
                       tal:content="python: hour_renderer(data_dict[\'year_to_date_worked_hour_count\'])"\n
                       tal:attributes=\'text:style-name right_style_name\'>300000</text:p>\n
             </table:table-cell> \n
-            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+            <table:table-cell table:style-name=\'Tableau1.A8\'\n
                               office:value-type=\'string\'\n
                               tal:condition="python: not data_dict[\'year_to_date_worked_hour_count\']"> \n
               <text:p text:style-name=\'Table_20_Contents\'/>\n
             </table:table-cell>\n
 \n
-            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+            <table:table-cell table:style-name=\'Tableau1.A8\'\n
                               office:value-type=\'float\'\n
                               tal:condition="python: data_dict[\'year_to_date_bonus_worked_hour_count\']"\n
                               tal:attributes=\'office:value data_dict/year_to_date_bonus_worked_hour_count\'> \n
@@ -274,13 +261,13 @@
                       tal:content="python: hour_renderer(data_dict[\'year_to_date_bonus_worked_hour_count\'])"\n
                       tal:attributes=\'text:style-name right_style_name\'>300000</text:p>\n
             </table:table-cell> \n
-            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+            <table:table-cell table:style-name=\'Tableau1.A8\'\n
                               office:value-type=\'string\'\n
                               tal:condition="python: not data_dict[\'year_to_date_bonus_worked_hour_count\']"> \n
               <text:p text:style-name=\'Table_20_Contents\'/>\n
             </table:table-cell>\n
 \n
-            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+            <table:table-cell table:style-name=\'Tableau1.A8\'\n
                               office:value-type=\'float\'\n
                               tal:condition="python: data_dict[\'year_to_date_bonus_worked_hour_amount\']"\n
                               tal:attributes=\'office:value data_dict/year_to_date_bonus_worked_hour_amount\'> \n
@@ -288,13 +275,13 @@
                       tal:content="python: quantity_renderer(data_dict[\'year_to_date_bonus_worked_hour_amount\'])"\n
                       tal:attributes=\'text:style-name right_style_name\'>300000</text:p>\n
             </table:table-cell> \n
-            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+            <table:table-cell table:style-name=\'Tableau1.A8\'\n
                               office:value-type=\'string\'\n
                               tal:condition="python: not data_dict[\'year_to_date_bonus_worked_hour_amount\']"> \n
               <text:p text:style-name=\'Table_20_Contents\'/>\n
             </table:table-cell>\n
 \n
-            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+            <table:table-cell table:style-name=\'Tableau1.A8\'\n
                               office:value-type=\'float\'\n
                               tal:condition="python: data_dict[\'year_to_date_taxable_net_salary\']"\n
                               tal:attributes=\'office:value data_dict/year_to_date_taxable_net_salary\'> \n
@@ -302,32 +289,12 @@
                       tal:content="python: quantity_renderer(data_dict[\'year_to_date_taxable_net_salary\'])"\n
                       tal:attributes=\'text:style-name right_style_name\'>300000</text:p>\n
             </table:table-cell> \n
-            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+            <table:table-cell table:style-name=\'Tableau1.A8\'\n
                               office:value-type=\'string\'\n
                               tal:condition="python: not data_dict[\'year_to_date_taxable_net_salary\']"> \n
               <text:p text:style-name=\'Table_20_Contents\'/>\n
             </table:table-cell>\n
 \n
-          </table:table-row>\n
-          <table:table-row table:style-name=\'Tableau1.4\' >\n
-              <table:table-cell table:style-name=\'Tableau1.A4\' office:value-type=\'string\'>\n
-                 <text:p text:style-name=\'Table_20_Contents\'/>\n
-              </table:table-cell>\n
-              <table:table-cell table:style-name=\'Tableau1.A4\' office:value-type=\'string\'>\n
-                 <text:p text:style-name=\'Table_20_Contents\'/>\n
-              </table:table-cell>\n
-              <table:table-cell table:style-name=\'Tableau1.A4\' office:value-type=\'string\'>\n
-                 <text:p text:style-name=\'Table_20_Contents\'/>\n
-              </table:table-cell>\n
-              <table:table-cell table:style-name=\'Tableau1.A4\' office:value-type=\'string\'>\n
-                 <text:p text:style-name=\'Table_20_Contents\'/>\n
-              </table:table-cell>\n
-              <table:table-cell table:style-name=\'Tableau1.A4\' office:value-type=\'string\'>\n
-                 <text:p text:style-name=\'Table_20_Contents\'/>\n
-              </table:table-cell>\n
-              <table:table-cell table:style-name=\'Tableau1.A4\' office:value-type=\'string\'>\n
-                 <text:p text:style-name=\'Table_20_Contents\'/>\n
-              </table:table-cell>\n
           </table:table-row>\n
         </table:table>\n
         <text:p text:style-name=\'Table_20_Contents\'/>\n
@@ -369,9 +336,6 @@
     </table:table-row>\n
 \n
   </tal:block>\n
-\n
-\n
-\n
   <tal:block metal:define-macro="footer">\n
     <text:p text:style-name="Footer">Dans votre intérêt et pour vous aider à faire valoir vos droits, conservez ce bulletin de paie sans limitation de durée.</text:p>\n
   </tal:block>\n
