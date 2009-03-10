@@ -66,8 +66,8 @@ def getAdvancedSearchTextParser():
     return parser
 
 @profiler_decorator
-def _parse(input, *args, **kw):
-  if getAdvancedSearchTextDetector()(input):
+def _parse(input, column_id_set, *args, **kw):
+  if getAdvancedSearchTextDetector()(input, column_id_set):
     result = getAdvancedSearchTextParser()(input, *args, **kw)
   else:
     result = None
@@ -274,12 +274,13 @@ if __name__ == '__main__':
     return result
 
   original_parse = _parse
+  fake_column_id_set = set(['a', 'b', 'c', 'd', 'title', 'toto', 'titi', 'foo', 'bar'])
 
   def parse(input, *args, **kw):
     """
       Parse input and walk generated AST.
     """
-    result = original_parse(input, *args, **kw)
+    result = original_parse(input, fake_column_id_set, *args, **kw)
     if result is not None:
       #print repr(result)
       result = walk(result)
@@ -309,7 +310,7 @@ if __name__ == '__main__':
     print repr(input)
     try:
       try:
-        detector_result = getAdvancedSearchTextDetector()(input)
+        detector_result = getAdvancedSearchTextDetector()(input, fake_column_id_set)
       except ParserOrLexerError, message:
         print '  Detector raise: %r' % (message, )
         detector_result = False

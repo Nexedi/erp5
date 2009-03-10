@@ -42,8 +42,8 @@ class KeywordKey(SearchKey):
   default_comparison_operator = 'like'
   get_operator_from_value = True
  
-  def parseSearchText(self, value):
-    return parse(value)
+  def parseSearchText(self, value, column_id_set):
+    return parse(value, column_id_set)
 
   def _buildQuery(self, operator_value_dict, logical_operator, parsed, group):
     """

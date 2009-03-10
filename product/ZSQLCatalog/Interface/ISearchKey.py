@@ -109,7 +109,7 @@ class ISearchKey(Interface):
         If given, expresses the comparison between column and value.
     """
 
-  def parseSearchText(value):
+  def parseSearchText(value, column_id_set):
     """
       Parse given value to generate an Abstract Syntax Tree representing its
       logical structure, or None if there is no obvious structure in given
@@ -118,6 +118,9 @@ class ISearchKey(Interface):
 
       value (string)
         The string to parse.
+      column_id_set (set)
+        A list of valid column names. This is used when deciding wether value
+        should really be parsed or remain a bare string.
 
       Returns: (None, AbstratSyntaxNode)
         AbstratSyntaxNode complies with the IAbstractSyntaxNode interface.
