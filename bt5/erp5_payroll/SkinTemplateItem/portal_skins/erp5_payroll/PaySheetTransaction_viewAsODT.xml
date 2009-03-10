@@ -139,7 +139,7 @@ AAA=</string> </value>
       </style:table-cell-properties>\n
     </style:style>\n
     <style:style style:family=\'table-row\' style:name=\'Tableau1.3\'>\n
-      <style:table-row-properties style:min-row-height=\'0.4cm\'/>\n
+      <style:table-row-properties style:min-row-height=\'0.35cm\'/>\n
     </style:style>\n
     <style:style style:family=\'table-cell\' style:name=\'Tableau1.A3\'>\n
       <style:table-cell-properties fo:padding=\'0cm\' fo:border-right=\'0.008cm solid #000000\' fo:border-top=\'none\' fo:background-color=\'transparent\' fo:border-left=\'0.008cm solid #000000\' fo:border-bottom=\'none\' style:vertical-align=\'middle\'>\n
@@ -592,7 +592,7 @@ AAA=</string> </value>
         </table:table-row>\n
         <table:table-row table:style-name=\'Tableau1.5\'>\n
           <table:table-cell table:style-name=\'Tableau1.A5\'\n
-                            table:number-columns-spanned=\'9\' office:value-type=\'string\'>\n
+                            table:number-columns-spanned=\'6\' office:value-type=\'string\'>\n
             <table:table table:style-name=\'Tableau3\' table:name=\'Tableau3\'>\n
               <table:table-column table:style-name=\'Tableau3.A\'/>\n
               <table:table-column table:style-name=\'Tableau3.B\'/>\n
@@ -619,20 +619,20 @@ AAA=</string> </value>
                   <text:p text:style-name=\'Item_20_Table_20_Title_20_Right\' tal:content="python: \'%s %s\' % (quantity_renderer(context.PaySheetTransaction_getMovementTotalPriceFromCategory(base_contribution=\'base_contribution/base_amount/net_salary\', tax_category=\'tax_category/employee_share\')), data_dict[\'currency\'])">800.000,00</text:p>\n
                 </table:table-cell>\n
               </table:table-row>\n
-              <table:table-row table:style-name=\'Tableau3.1\'>\n
-                <table:table-cell table:style-name=\'Tableau3.A1\' office:value-type=\'string\'>\n
+              <table:table-row table:style-name=\'Tableau1.4\'>\n
+                <table:table-cell table:style-name=\'Tableau3.A4\' office:value-type=\'string\'>\n
                   <text:p text:style-name=\'Table_20_Contents\'/>\n
                 </table:table-cell>\n
-                <table:table-cell table:style-name=\'Tableau3.A1\' office:value-type=\'string\'>\n
+                <table:table-cell table:style-name=\'Tableau3.A4\' office:value-type=\'string\'>\n
                   <text:p text:style-name=\'Table_20_Contents\'/>\n
                 </table:table-cell>\n
-                <table:table-cell table:style-name=\'Tableau3.A1\' office:value-type=\'string\'>\n
+                <table:table-cell table:style-name=\'Tableau3.A4\' office:value-type=\'string\'>\n
                   <text:p text:style-name=\'Table_20_Contents\'/>\n
                 </table:table-cell>\n
-                <table:table-cell table:style-name=\'Tableau3.A1\' office:value-type=\'string\'>\n
+                <table:table-cell table:style-name=\'Tableau3.A4\' office:value-type=\'string\'>\n
                   <text:p text:style-name=\'Table_20_Contents\'/>\n
                 </table:table-cell>\n
-                <table:table-cell table:style-name=\'Tableau3.A1\' office:value-type=\'string\'>\n
+                <table:table-cell table:style-name=\'Tableau3.A4\' office:value-type=\'string\'>\n
                   <text:p text:style-name=\'Table_20_Contents\'/>\n
                 </table:table-cell>\n
               </table:table-row>\n
@@ -642,9 +642,6 @@ AAA=</string> </value>
             </table:table>\n
             <text:p text:style-name=\'Table_20_Contents\'/>\n
           </table:table-cell>\n
-          <table:covered-table-cell/>\n
-          <table:covered-table-cell/>\n
-          <table:covered-table-cell/>\n
           <table:covered-table-cell/>\n
           <table:covered-table-cell/>\n
           <table:covered-table-cell/>\n
