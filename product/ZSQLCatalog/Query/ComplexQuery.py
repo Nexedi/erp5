@@ -35,6 +35,11 @@ from Products.ZSQLCatalog.Interface.IQuery import IQuery
 from Interface.Verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 
+logical_operator_search_text_dict = {
+  'and': 'AND',
+  'or': 'OR',
+}
+
 class ComplexQuery(Query):
   """
     A ComplexQuery represents logical operations between Query instances.
@@ -97,11 +102,11 @@ class ComplexQuery(Query):
     if len(search_text_list) == 0:
       result = ''
     else:
-      if self.logical_operator in ('and', 'or'):
+      if self.logical_operator in logical_operator_search_text_dict:
         if len(search_text_list) == 1:
           result = search_text_list[0]
         else:
-          logical_operator = ' %s ' % (self.logical_operator.upper(), )
+          logical_operator = ' %s ' % (logical_operator_search_text_dict[self.logical_operator], )
           result = '(%s)' % (logical_operator.join(search_text_list), )
       elif self.logical_operator == 'not':
         assert len(search_text_list) == 1
