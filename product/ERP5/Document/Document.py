@@ -1273,22 +1273,22 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
     mime, html = self.convert(**kw)
     return self._stripHTML(str(html))
 
+  def _guessEncoding(self, string):
+    """
+      Try to guess the encoding for this string.
+      Returns None if no encoding can be guessed.
+    """
+    try:
+      import chardet
+    except ImportError:
+      return None
+    return chardet.detect(string).get('encoding', None)
+
   def _stripHTML(self, html, charset=None):
     """
       A private method which can be reused by subclasses
       to strip HTML content
     """
-    def _guessEncoding(self, string):
-      """
-        Some Email Clients indicate wrong encoding
-        This method try to guess which encoding is used.
-      """
-      try:
-        import chardet
-      except ImportError:
-        return None
-      return chardet.detect(string).get('encoding', None)
-
     body_list = re.findall(self.body_parser, str(html))
     if len(body_list):
       stripped_html = body_list[0]
