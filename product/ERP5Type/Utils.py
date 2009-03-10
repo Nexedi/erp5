@@ -2763,6 +2763,19 @@ class sha(GenericSum):
 
 allow_class(sha)
 
+try:
+  import smbpasswd
+  class SambaPassword:
+    def __init__(self):
+      self.sum = smbpasswd
+
+    def hash(self, value):
+      return smbpasswd.hash(value)
+except ImportError:
+  class SambaPassword:
+    pass
+allow_class(SambaPassword)
+
 #####################################################
 # Security
 #####################################################
