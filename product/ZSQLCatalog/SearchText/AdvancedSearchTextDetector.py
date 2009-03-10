@@ -47,7 +47,7 @@ class AdvancedSearchTextDetector(lexer):
     return t
 
   def t_COLUMN(self, t):
-    self.found = t.value[:-1] in self.column_id_set
+    self.found = self.isColumn(t.value[:-1])
     t.type = 'WORD'
     return t
 
@@ -89,8 +89,8 @@ class AdvancedSearchTextDetector(lexer):
   def token(self):
     return self.token_list.pop(0)
 
-  def __call__(self, input, column_id_set):
-    self.column_id_set = column_id_set
+  def __call__(self, input, is_column):
+    self.isColumn = is_column
     self.found = False
     check_grammar = False
     self.token_list = token_list = []

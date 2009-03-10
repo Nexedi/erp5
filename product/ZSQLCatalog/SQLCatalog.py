@@ -1794,6 +1794,18 @@ class Catalog(Folder,
                          cache_factory='erp5_content_long')(table=table).copy()
 
   @profiler_decorator
+  def isValidColumn(self, column_id):
+    """
+      Tells wether given name is or not an existing column.
+
+      Warning: This includes "virtual" columns, such as related keys.
+    """
+    result = column_id in self.getColumnMap()
+    if not result:
+      result = self.getRelatedKeyDefinition(column_id) is not None
+    return result
+
+  @profiler_decorator
   def getRelatedKeyDefinition(self, key):
     """
       Returns the definition of given related key name if found, None
@@ -1981,9 +1993,6 @@ class Catalog(Folder,
     # column names with empty values. This is for backward compatibility. See
     # comment about empty values.
     implicit_table_list = []
-    # It's not a problem to use a dict instead of a set here, and saves a
-    # cast.
-    column_id_set = self.getColumnMap()
     for key, value in kw.iteritems():
       result = None
       if isinstance(value, dict_type_list):
@@ -2017,7 +2026,7 @@ class Catalog(Folder,
           # String: parse using key's default search key.
           search_key = self.getColumnDefaultSearchKey(key)
           if search_key is not None:
-            abstract_syntax_tree = search_key.parseSearchText(value, column_id_set)
+            abstract_syntax_tree = search_key.parseSearchText(value, self.isValidColumn)
             if abstract_syntax_tree is None:
               # Parsing failed, create a query from the bare string.
               result = self.buildSingleQuery(key, value)

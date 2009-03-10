@@ -42,8 +42,8 @@ class DefaultKey(SearchKey):
   default_comparison_operator = '='
   get_operator_from_value = True
 
-  def parseSearchText(self, value, column_id_set):
-    return parse(value, column_id_set)
+  def parseSearchText(self, value, is_column):
+    return parse(value, is_column)
 
   def _guessComparisonOperator(self, value):
     if isinstance(value, basestring) and '%' in value:

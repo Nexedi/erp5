@@ -40,8 +40,8 @@ class FullTextKey(SearchKey):
   default_comparison_operator = 'match'
   get_operator_from_value = False
 
-  def parseSearchText(self, value, column_id_set):
-    return parse(value, column_id_set)
+  def parseSearchText(self, value, is_column):
+    return parse(value, is_column)
 
 verifyClass(ISearchKey, FullTextKey)
 

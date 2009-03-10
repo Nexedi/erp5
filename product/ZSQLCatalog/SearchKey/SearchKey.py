@@ -341,7 +341,7 @@ class SearchKey(object):
       query = ComplexQuery(query_list, operator=logical_operator)
     return query
 
-  def parseSearchText(self, value, column_id_set):
+  def parseSearchText(self, value, is_column):
     return None
 
 verifyClass(ISearchKey, SearchKey)
