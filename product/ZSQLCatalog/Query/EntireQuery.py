@@ -68,7 +68,7 @@ class EntireQuery(object):
     self.from_expression = from_expression
 
   def asSearchTextExpression(self, sql_catalog):
-    return query.asSearchTextExpression(sql_catalog)
+    return self.query.asSearchTextExpression(sql_catalog)
 
   @profiler_decorator
   def asSQLExpression(self, sql_catalog, only_group_columns):
