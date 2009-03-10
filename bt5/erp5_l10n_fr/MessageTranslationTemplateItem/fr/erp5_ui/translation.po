@@ -5942,6 +5942,9 @@ msgstr "Imprimer le bon de commande"
 msgid "Print Packing List"
 msgstr "Imprimer le bon de livraison"
 
+msgid "Print Payslip"
+msgstr "Imprimer le bulletin de paie"
+
 msgid "Print Style"
 msgstr "Style impression"
 
@@ -9505,7 +9508,7 @@ msgid "VAT Code"
 msgstr "N° TVA"
 
 msgid "VAT ID"
-msgstr "ID de la TVA"
+msgstr "N° TVA"
 
 msgid "VAT code"
 msgstr "N° TVA"
