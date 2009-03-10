@@ -3161,22 +3161,22 @@ msgid "Employee Share"
 msgstr "Part Salariale"
 
 msgid "Employee Share Amount"
-msgstr "Montant Part Salariale"
+msgstr "Montant part salariale"
 
 msgid "Employee Share Rate"
-msgstr "Taux Part Salariale"
+msgstr "Taux part salariale"
 
 msgid "Employer"
 msgstr "Employeur"
 
 msgid "Employer Share"
-msgstr "Part Employeur"
+msgstr "Part employeur"
 
 msgid "Employer Share Amount"
-msgstr "Montant Part Employeur"
+msgstr "Montant part employeur"
 
 msgid "Employer Share Rate"
-msgstr "Taux Part Employeur"
+msgstr "Taux part employeur"
 
 msgid "Empty"
 msgstr "Vide"
@@ -8162,6 +8162,9 @@ msgstr "Règle de taxe"
 msgid "Tax title"
 msgstr "Cotisations et taxes"
 
+msgid "Taxable Net Pay"
+msgstr "Salaire net imposable"
+
 msgid "Taxes"
 msgstr "Taxes"
 
@@ -9155,6 +9158,12 @@ msgstr "Total Retenues"
 
 msgid "Total Duration"
 msgstr "Durée totale"
+
+msgid "Total Employee Tax"
+msgstr "Total taxes salariales"
+
+msgid "Total Employer Tax"
+msgstr "Total taxes patronales"
 
 msgid "Total Engaged Budget"
 msgstr "Budget engagé total"
