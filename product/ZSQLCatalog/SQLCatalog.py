@@ -1743,7 +1743,7 @@ class Catalog(Folder,
     for related_key in self.sql_catalog_related_keys:
       split_entire_definition = related_key.split('|')
       if len(split_entire_definition) != 2:
-        LOG('SQLCatalog', WARNING, 'Malformed related key definition: %r. Ignored.' % (entire_definition, ))
+        LOG('SQLCatalog', WARNING, 'Malformed related key definition: %r. Ignored.' % (related_key, ))
         continue
       related_key_id = split_entire_definition[0].strip()
       if related_key_id in column_set:
