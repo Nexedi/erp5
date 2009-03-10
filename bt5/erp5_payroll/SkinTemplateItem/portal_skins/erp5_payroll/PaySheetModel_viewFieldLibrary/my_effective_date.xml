@@ -119,7 +119,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The date since when this model is effective.</string> </value>
+                    <value> <string>The date when this model started being effective.</string> </value>
                 </item>
                 <item>
                     <key> <string>extra_context</string> </key>
