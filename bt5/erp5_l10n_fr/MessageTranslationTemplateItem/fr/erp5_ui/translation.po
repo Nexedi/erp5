@@ -3822,6 +3822,9 @@ msgstr "Cacher les onglets"
 msgid "Hides a document which was published or released by mistake by setting the validation_state to hidden."
 msgstr "Permet de définir le document comme étant caché, il ne sera visible que par son auteur."
 
+msgid "Hiring Date"
+msgstr "Date d'embauche"
+
 msgid "Historical Comparision"
 msgstr "Comparaison de l'historique "
 
