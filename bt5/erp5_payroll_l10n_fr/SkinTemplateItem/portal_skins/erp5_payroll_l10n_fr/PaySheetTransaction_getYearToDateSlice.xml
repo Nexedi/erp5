@@ -83,7 +83,7 @@ model = context.getSpecialiseValue()\n
 slice = model.getCell(slice_path)\n
 \n
 if not slice:\n
-  return None\n
+  return 0.0\n
 \n
 plafond = slice.getQuantityRangeMax()\n
 \n
@@ -165,13 +165,13 @@ return yearly_slice_amount\n
                             <string>yearly_slice_amount</string>
                             <string>model</string>
                             <string>slice</string>
-                            <string>None</string>
                             <string>plafond</string>
                             <string>gross_salary</string>
                             <string>slice_amount</string>
                             <string>_inplacevar_</string>
                             <string>_getiter_</string>
                             <string>paysheet</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

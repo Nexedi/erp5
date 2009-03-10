@@ -1,0 +1,402 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block\n
+  xmlns:draw=\'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\'\n
+  xmlns:office=\'urn:oasis:names:tc:opendocument:xmlns:office:1.0\' \n
+  xmlns:text=\'urn:oasis:names:tc:opendocument:xmlns:text:1.0\'\n
+  xmlns:ooo=\'http://openoffice.org/2004/office\'\n
+  xmlns:number=\'urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0\'\n
+  xmlns:dc=\'http://purl.org/dc/elements/1.1/\'\n
+  xmlns:meta=\'urn:oasis:names:tc:opendocument:xmlns:meta:1.0\'\n
+  xmlns:table=\'urn:oasis:names:tc:opendocument:xmlns:table:1.0\'\n
+  xmlns:dr3d=\'urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0\'\n
+  xmlns:fo=\'urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0\' \n
+  xmlns:style=\'urn:oasis:names:tc:opendocument:xmlns:style:1.0\'\n
+  xmlns:xforms=\'http://www.w3.org/2002/xforms\'\n
+  xmlns:form=\'urn:oasis:names:tc:opendocument:xmlns:form:1.0\'\n
+  xmlns:script=\'urn:oasis:names:tc:opendocument:xmlns:script:1.0\' \n
+  xmlns:ooow=\'http://openoffice.org/2004/writer\'\n
+  xmlns:svg=\'urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\'\n
+  xmlns:chart=\'urn:oasis:names:tc:opendocument:xmlns:chart:1.0\'\n
+  xmlns:dom=\'http://www.w3.org/2001/xml-events\'\n
+  xmlns:xlink=\'http://www.w3.org/1999/xlink\'\n
+  xmlns:xsd=\'http://www.w3.org/2001/XMLSchema\'\n
+  xmlns:xsi=\'http://www.w3.org/2001/XMLSchema-instance\'\n
+  xmlns:oooc=\'http://openoffice.org/2004/calc\'\n
+  xmlns:math=\'http://www.w3.org/1998/Math/MathML\'\n
+  xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
+  xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
+  xmlns:metal=\'http://xml.zope.org/namespaces/metal\'>\n
+  <tal:block metal:define-macro="other_informations" \n
+             tal:define="data_dict here/PaySheetTransaction_getOtherInformationsDataDict;\n
+             hour_renderer nocall:here/AnnotationLine_viewFieldLibrary/my_work_time_annotation_line_quantity/render_pdf;">\n
+    <table:table-row table:style-name=\'Tableau3.8\'>\n
+      <table:table-cell table:style-name=\'Tableau3.A8\' office:value-type=\'string\'>\n
+        <text:p text:style-name=\'Table_20_Contents\' />\n
+      </table:table-cell>\n
+      <table:table-cell table:style-name=\'Tableau3.B6\' office:value-type=\'string\'>\n
+        <text:p text:style-name=\'Table_20_Contents\'/>\n
+      </table:table-cell>\n
+      <table:table-cell table:style-name=\'Tableau3.B6\' office:value-type=\'string\'>\n
+        <text:p text:style-name=\'Table_20_Contents\'/>\n
+      </table:table-cell>\n
+      <table:table-cell table:style-name=\'Tableau3.B6\' office:value-type=\'string\'>\n
+        <text:p text:style-name=\'Table_20_Contents\'/>\n
+      </table:table-cell>\n
+      <table:table-cell table:style-name=\'Tableau3.E6\' office:value-type=\'string\'>\n
+        <text:p text:style-name=\'Table_20_Contents\'/>\n
+      </table:table-cell>\n
+    </table:table-row>\n
+    <table:table-row table:style-name=\'Tableau3.3\'>\n
+      <table:table-cell table:style-name=\'Tableau3.A7\' office:value-type=\'string\'>\n
+        <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
+                tal:condition=\'data_dict/source_section_career_title\'\n
+                tal:content=\'python:data_dict["source_section_career_title"]\'>Réceptionniste</text:p>\n
+        <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
+                tal:condition=\'data_dict/source_section_default_career_start_date\'\n
+                tal:content=\'python:data_dict["source_section_default_career_start_date"]\'>12/09/2005</text:p>\n
+        <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
+                tal:condition=\'data_dict/source_section_default_career_coefficient\'\n
+                tal:content=\'python:data_dict["source_section_default_career_coefficient"]\'>100</text:p>\n
+        <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
+                tal:condition=\'data_dict/source_section_default_career_salary_level\'\n
+                tal:content=\'python:data_dict["source_section_default_career_salary_level"]\'>1.2</text:p>\n
+        <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
+                tal:condition=\'data_dict/source_section_default_career_social_code\'\n
+                tal:content=\'python:data_dict["source_section_default_career_social_code"]\'>185897778270987</text:p>\n
+        <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
+                tal:condition=\'data_dict/source_section_default_career_collective_agreement_title\'\n
+                tal:content=\'python:data_dict["source_section_default_career_collective_agreement_title"]\'>Syntec</text:p>\n
+      </table:table-cell>\n
+      <table:table-cell table:style-name=\'Tableau3.A7\' office:value-type=\'string\'>\n
+        <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\'\n
+        tal:content="python: here.Base_translateString(\'Attendance\')"></text:p>\n
+        <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
+        tal:content="python: \'%s: %s\' % (here.Base_translateString(\'Normal working hours\'), hour_renderer(data_dict[\'worked_hour_count\']) or \'0\')"></text:p>\n
+        <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
+        tal:content="python: \'%s: %s\' % (here.Base_translateString(\'Overtime\'), hour_renderer(data_dict[\'bonus_worked_hour_count\']) or \'0\')"></text:p>\n
+        <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
+        tal:content="python: \'%s: %s\' % (here.Base_translateString(\'Absence hours\'), hour_renderer(data_dict[\'absence_hour_count\']) or \'0\')"></text:p>\n
+      </table:table-cell>\n
+      <table:table-cell table:style-name=\'Tableau3.A7\' office:value-type=\'string\'>\n
+        <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\'\n
+        tal:content="python: here.Base_translateString(\'Paid vacation (in days)\')"></text:p>\n
+        <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
+        tal:content="python: \'%s: %s\' % (here.Base_translateString(\'Earned on this period\'), \'\')"></text:p>\n
+        <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
+        tal:content="python: \'%s: %s\' % (here.Base_translateString(\'Taken on this period\'), \'\')"></text:p>\n
+        <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
+        tal:content="python: \'%s: %s\' % (here.Base_translateString(\'Remaining\'), \'\')"></text:p>\n
+      </table:table-cell>\n
+      <table:table-cell table:style-name=\'Tableau3.A7\' \n
+             office:value-type=\'string\' table:number-columns-spanned=\'2\'> \n
+        <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
+                tal:condition=\'data_dict/price_currency\'\n
+                tal:content=\'python:data_dict["price_currency"]\'>FCFA</text:p>\n
+        <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
+                tal:condition=\'data_dict/default_payment_condition_payment_text\'\n
+                tal:content=\'python:data_dict["default_payment_condition_payment_text"]\'>Payement: Chèque le 01/12/2009</text:p>\n
+        <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
+                tal:condition=\'data_dict/taxable_net_pay\'\n
+                tal:content=\'python:data_dict["taxable_net_pay"]\'>Salaire net imposable: 200 000</text:p>\n
+        <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
+                tal:condition=\'data_dict/total_employee_tax\'\n
+                tal:content=\'python:data_dict["total_employee_tax"]\'>Total cotisation employé: 200 000</text:p>\n
+        <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
+                tal:condition=\'data_dict/total_employer_tax\'\n
+                tal:content=\'python:data_dict["total_employer_tax"]\'>Total cotisation employeur: 200 000</text:p>\n
+      </table:table-cell>\n
+      <table:covered-table-cell/>\n
+    </table:table-row>\n
+    <table:table-row table:style-name=\'Tableau1.4\'>\n
+        <table:table-cell table:style-name=\'Tableau1.A4\' \n
+                          office:value-type=\'string\' table:number-columns-spanned=\'5\'>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title\'></text:p>\n
+        </table:table-cell>\n
+        <table:covered-table-cell/>\n
+        <table:covered-table-cell/>\n
+        <table:covered-table-cell/>\n
+        <table:covered-table-cell/>\n
+    </table:table-row>\n
+    <table:table-row table:style-name=\'Tableau1.4\'>\n
+        <table:table-cell table:style-name=\'Tableau1.A7\' \n
+                          office:value-type=\'string\' table:number-columns-spanned=\'5\'>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title\'></text:p>\n
+        </table:table-cell>\n
+        <table:covered-table-cell/>\n
+        <table:covered-table-cell/>\n
+        <table:covered-table-cell/>\n
+        <table:covered-table-cell/>\n
+    </table:table-row>\n
+\n
+\n
+\n
+\n
+    <table:table-row table:style-name=\'Tableau1.5\'>\n
+      <table:table-cell table:style-name=\'Tableau1.A5\'\n
+                        table:number-columns-spanned=\'5\' office:value-type=\'string\'>\n
+        <table:table table:style-name=\'Tableau4\' table:name=\'Tableau4\'>\n
+          <table:table-column table:style-name=\'Tableau4.A\'/>\n
+          <table:table-column table:style-name=\'Tableau4.B\'/>\n
+          <table:table-column table:style-name=\'Tableau4.C\'/>\n
+          <table:table-column table:style-name=\'Tableau4.D\'/>\n
+          <table:table-column table:style-name=\'Tableau4.E\'/>\n
+          <table:table-column table:style-name=\'Tableau4.F\'/>\n
+          <table:table-row>\n
+            <table:table-cell table:style-name=\'Tableau1.A2\' office:value-type=\'string\' table:number-columns-spanned=\'6\'>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title\'>\n
+                <tal:block i18n:translate="">Cumuls Annuels </tal:block>\n
+                <tal:block tal:condition="python: data_dict[\'year\']" tal:content="python: \'(%s)\' % data_dict[\'year\']"/>\n
+              </text:p>\n
+            </table:table-cell>\n
+            <table:covered-table-cell/>\n
+            <table:covered-table-cell/>\n
+            <table:covered-table-cell/>\n
+            <table:covered-table-cell/>\n
+          </table:table-row>\n
+          <table:table-row>\n
+            <table:table-cell table:style-name=\'Tableau1.A6\' office:value-type=\'string\' tal:define=\'orig_string string:Gross Salary; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title\'><span tal:replace=\'orig_message\'/></text:p>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/></text:p>\n
+            </table:table-cell>\n
+            <table:table-cell table:style-name=\'Tableau1.A6\' office:value-type=\'string\' tal:define=\'orig_string string:Tranche A; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title\'><span tal:replace=\'orig_message\'/></text:p>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/></text:p>\n
+            </table:table-cell>\n
+            <table:table-cell table:style-name=\'Tableau1.A6\' office:value-type=\'string\' tal:define=\'orig_string string:Heures Normales; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title\'><span tal:replace=\'orig_message\'/></text:p>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/></text:p>\n
+            </table:table-cell>\n
+            <table:table-cell table:style-name=\'Tableau1.A6\' office:value-type=\'string\' tal:define=\'orig_string string:Heures supp.; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title\'><span tal:replace=\'orig_message\'/></text:p>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/></text:p>\n
+            </table:table-cell>\n
+            <table:table-cell table:style-name=\'Tableau1.A6\' office:value-type=\'string\' tal:define=\'orig_string string:Rémunération Heures supp.; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title\'><span tal:replace=\'orig_message\'/></text:p>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/></text:p>\n
+            </table:table-cell>\n
+            <table:table-cell table:style-name=\'Tableau1.A6\' office:value-type=\'string\' tal:define=\'orig_string string:Net Imposable.; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title\'><span tal:replace=\'orig_message\'/></text:p>\n
+              <text:p text:style-name=\'Item_20_Table_20_Title\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/></text:p>\n
+            </table:table-cell>\n
+          </table:table-row>\n
+\n
+          <table:table-row table:style-name=\'Tableau1.3\' \n
+              tal:define="style_name python:\'Item_20_Table_20_Title\';\n
+              left_style_name python:\'Table_20_Contents_20_Left\';\n
+              right_style_name python:\'Table_20_Contents_20_Right\'">\n
+            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+                              office:value-type=\'float\'\n
+                              tal:condition="python: data_dict[\'year_to_date_gross_salary\']"\n
+                              tal:attributes=\'office:value data_dict/year_to_date_gross_salary\'> \n
+              <text:p text:style-name=\'Table_20_Contents\'\n
+                      tal:content="python: quantity_renderer(data_dict[\'year_to_date_gross_salary\'])"\n
+                      tal:attributes=\'text:style-name right_style_name\'>300000</text:p>\n
+            </table:table-cell> \n
+            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+                              office:value-type=\'string\'\n
+                              tal:condition="python: not data_dict[\'year_to_date_gross_salary\']"> \n
+              <text:p text:style-name=\'Table_20_Contents\'/>\n
+            </table:table-cell>\n
+\n
+            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+                              office:value-type=\'float\'\n
+                              tal:condition="python: data_dict[\'year_to_date_slice_a\']"\n
+                              tal:attributes=\'office:value data_dict/year_to_date_slice_a\'> \n
+              <text:p text:style-name=\'Table_20_Contents\'\n
+                      tal:content="python: quantity_renderer(data_dict[\'year_to_date_slice_a\'])"\n
+                      tal:attributes=\'text:style-name right_style_name\'>300000</text:p>\n
+            </table:table-cell> \n
+            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+                              office:value-type=\'string\'\n
+                              tal:condition="python: not data_dict[\'year_to_date_slice_a\']"> \n
+              <text:p text:style-name=\'Table_20_Contents\'/>\n
+            </table:table-cell>\n
+\n
+            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+                              office:value-type=\'float\'\n
+                              tal:condition="python: data_dict[\'year_to_date_worked_hour_count\']"\n
+                              tal:attributes=\'office:value data_dict/year_to_date_worked_hour_count\'> \n
+              <text:p text:style-name=\'Table_20_Contents\'\n
+                      tal:content="python: hour_renderer(data_dict[\'year_to_date_worked_hour_count\'])"\n
+                      tal:attributes=\'text:style-name right_style_name\'>300000</text:p>\n
+            </table:table-cell> \n
+            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+                              office:value-type=\'string\'\n
+                              tal:condition="python: not data_dict[\'year_to_date_worked_hour_count\']"> \n
+              <text:p text:style-name=\'Table_20_Contents\'/>\n
+            </table:table-cell>\n
+\n
+            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+                              office:value-type=\'float\'\n
+                              tal:condition="python: data_dict[\'year_to_date_bonus_worked_hour_count\']"\n
+                              tal:attributes=\'office:value data_dict/year_to_date_bonus_worked_hour_count\'> \n
+              <text:p text:style-name=\'Table_20_Contents\'\n
+                      tal:content="python: hour_renderer(data_dict[\'year_to_date_bonus_worked_hour_count\'])"\n
+                      tal:attributes=\'text:style-name right_style_name\'>300000</text:p>\n
+            </table:table-cell> \n
+            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+                              office:value-type=\'string\'\n
+                              tal:condition="python: not data_dict[\'year_to_date_bonus_worked_hour_count\']"> \n
+              <text:p text:style-name=\'Table_20_Contents\'/>\n
+            </table:table-cell>\n
+\n
+            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+                              office:value-type=\'float\'\n
+                              tal:condition="python: data_dict[\'year_to_date_bonus_worked_hour_amount\']"\n
+                              tal:attributes=\'office:value data_dict/year_to_date_bonus_worked_hour_amount\'> \n
+              <text:p text:style-name=\'Table_20_Contents\'\n
+                      tal:content="python: quantity_renderer(data_dict[\'year_to_date_bonus_worked_hour_amount\'])"\n
+                      tal:attributes=\'text:style-name right_style_name\'>300000</text:p>\n
+            </table:table-cell> \n
+            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+                              office:value-type=\'string\'\n
+                              tal:condition="python: not data_dict[\'year_to_date_bonus_worked_hour_amount\']"> \n
+              <text:p text:style-name=\'Table_20_Contents\'/>\n
+            </table:table-cell>\n
+\n
+            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+                              office:value-type=\'float\'\n
+                              tal:condition="python: data_dict[\'year_to_date_taxable_net_salary\']"\n
+                              tal:attributes=\'office:value data_dict/year_to_date_taxable_net_salary\'> \n
+              <text:p text:style-name=\'Table_20_Contents\'\n
+                      tal:content="python: quantity_renderer(data_dict[\'year_to_date_taxable_net_salary\'])"\n
+                      tal:attributes=\'text:style-name right_style_name\'>300000</text:p>\n
+            </table:table-cell> \n
+            <table:table-cell table:style-name=\'Tableau1.A3\'\n
+                              office:value-type=\'string\'\n
+                              tal:condition="python: not data_dict[\'year_to_date_taxable_net_salary\']"> \n
+              <text:p text:style-name=\'Table_20_Contents\'/>\n
+            </table:table-cell>\n
+\n
+          </table:table-row>\n
+          <table:table-row table:style-name=\'Tableau1.4\' >\n
+              <table:table-cell table:style-name=\'Tableau1.A4\' office:value-type=\'string\'>\n
+                 <text:p text:style-name=\'Table_20_Contents\'/>\n
+              </table:table-cell>\n
+              <table:table-cell table:style-name=\'Tableau1.A4\' office:value-type=\'string\'>\n
+                 <text:p text:style-name=\'Table_20_Contents\'/>\n
+              </table:table-cell>\n
+              <table:table-cell table:style-name=\'Tableau1.A4\' office:value-type=\'string\'>\n
+                 <text:p text:style-name=\'Table_20_Contents\'/>\n
+              </table:table-cell>\n
+              <table:table-cell table:style-name=\'Tableau1.A4\' office:value-type=\'string\'>\n
+                 <text:p text:style-name=\'Table_20_Contents\'/>\n
+              </table:table-cell>\n
+              <table:table-cell table:style-name=\'Tableau1.A4\' office:value-type=\'string\'>\n
+                 <text:p text:style-name=\'Table_20_Contents\'/>\n
+              </table:table-cell>\n
+              <table:table-cell table:style-name=\'Tableau1.A4\' office:value-type=\'string\'>\n
+                 <text:p text:style-name=\'Table_20_Contents\'/>\n
+              </table:table-cell>\n
+          </table:table-row>\n
+        </table:table>\n
+        <text:p text:style-name=\'Table_20_Contents\'/>\n
+      </table:table-cell>\n
+      <table:covered-table-cell/>\n
+      <table:covered-table-cell/>\n
+      <table:covered-table-cell/>\n
+      <table:covered-table-cell/>\n
+    </table:table-row>\n
+    <table:table-row table:style-name=\'Tableau3.6\' tal:condition="data_dict/description">\n
+      <table:table-cell table:style-name=\'Tableau3.A6\' office:value-type=\'string\' tal:define=\'orig_string string:Notes; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
+        <text:p text:style-name=\'P2\'><span tal:replace=\'orig_message\'/>\n
+          <span tal:omit-tag=\'\' tal:condition=\'python:translated_message != orig_message\'> / <span tal:replace=\'translated_message\'/></span>:</text:p>\n
+      </table:table-cell>\n
+      <table:table-cell table:style-name=\'Tableau3.B6\' office:value-type=\'string\'>\n
+        <text:p text:style-name=\'Table_20_Contents\'/>\n
+      </table:table-cell>\n
+      <table:table-cell table:style-name=\'Tableau3.B6\' office:value-type=\'string\'>\n
+        <text:p text:style-name=\'Table_20_Contents\'/>\n
+      </table:table-cell>\n
+      <table:table-cell table:style-name=\'Tableau3.B6\' office:value-type=\'string\'>\n
+        <text:p text:style-name=\'Table_20_Contents\'/>\n
+      </table:table-cell>\n
+      <table:table-cell table:style-name=\'Tableau3.E6\' office:value-type=\'string\'>\n
+        <text:p text:style-name=\'Table_20_Contents\'/>\n
+      </table:table-cell>\n
+    </table:table-row>\n
+    <table:table-row table:style-name=\'Tableau3.7\' tal:condition="data_dict/description">\n
+      <table:table-cell table:style-name=\'Tableau3.A7\' table:number-columns-spanned=\'5\' office:value-type=\'string\'>\n
+        <text:p text:style-name=\'P3\'><tal:block tal:repeat="line data_dict/description"><tal:block\n
+                tal:replace="line"/><text:line-break tal:condition="not:repeat/line/end"/></tal:block>\n
+      </text:p>\n
+      </table:table-cell>\n
+      <table:covered-table-cell/>\n
+      <table:covered-table-cell/>\n
+      <table:covered-table-cell/>\n
+      <table:covered-table-cell/>\n
+      <table:covered-table-cell/>\n
+    </table:table-row>\n
+\n
+  </tal:block>\n
+\n
+\n
+\n
+  <tal:block metal:define-macro="footer">\n
+    <text:p text:style-name="Footer">Dans votre intérêt et pour vous aider à faire valoir vos droits, conservez ce bulletin de paie sans limitation de durée.</text:p>\n
+  </tal:block>\n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/vnd.oasis.opendocument.text</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>payroll_odt_macro</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
