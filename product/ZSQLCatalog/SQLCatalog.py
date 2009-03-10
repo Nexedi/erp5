@@ -1956,6 +1956,7 @@ class Catalog(Folder,
     if search_key is None:
       # Unknown, skip loudly
       LOG('SQLCatalog', WARNING, 'Unknown column %r, skipped.' % (key, ))
+      result = None
     else:
       if related_key_definition is None:
         build_key = search_key
