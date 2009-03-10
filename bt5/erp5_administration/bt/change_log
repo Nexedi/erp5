@@ -1,5 +1,6 @@
 2009-03-10 Luke
 * add preview of consistency messages
+* add configurable views for Simulation Tool, Simulation Movement and Applied Rule
 
 2009-02-02 Kazuhiko
 * add TemplateTool_deleteObsoleteTemplateList that removes all obsolete business templates.

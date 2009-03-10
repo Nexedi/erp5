@@ -1,0 +1,274 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list>
+                <string>title</string>
+                <string>columns</string>
+                <string>sort</string>
+                <string>list_method</string>
+                <string>selection_name</string>
+                <string>url_columns</string>
+                <string>report_tree</string>
+                <string>report_root_list</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>my_recursive_subobject_listbox</string> </value>
+        </item>
+        <item>
+            <key> <string>message_values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>external_validator_failed</string> </key>
+                    <value> <string>The input failed the external validator.</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>overrides</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>tales</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>all_editable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>relative_url</string>
+                          <string>Path</string>
+                        </tuple>
+                        <tuple>
+                          <string>portal_type</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Source</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Destination</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource_title</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>variation_title</string>
+                          <string>Variation</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit</string>
+                          <string>UOM</string>
+                        </tuple>
+                        <tuple>
+                          <string>price</string>
+                          <string>Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>price_currency_reference</string>
+                          <string>Currency</string>
+                        </tuple>
+                        <tuple>
+                          <string>movement.start_date</string>
+                          <string>Start Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>movement.stop_date</string>
+                          <string>Stop Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>specialise_id</string>
+                          <string>Spec ID</string>
+                        </tuple>
+                        <tuple>
+                          <string>order</string>
+                          <string>Order</string>
+                        </tuple>
+                        <tuple>
+                          <string>order_ratio</string>
+                          <string>O/Rat</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery</string>
+                          <string>Delivery</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery_ratio</string>
+                          <string>D/Rat</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery_error</string>
+                          <string>D/Err</string>
+                        </tuple>
+                        <tuple>
+                          <string>simulation_state</string>
+                          <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>causality_state</string>
+                          <string>C/State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string>my_view_mode_listbox</string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>list_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>report_root_list</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>parent</string>
+                          <string>Parent</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>report_tree</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>simulation_movement_view_field_library_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>path</string>
+                          <string>ascending</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Children</string> </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>resource_title</string>
+                          <string>SimulationMovement_getResourceUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>order</string>
+                          <string>SimulationMovement_getOrderUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery</string>
+                          <string>SimulationMovement_getDeliveryUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>specialise_id</string>
+                          <string>AppliedRule_getSpecialiseUrl</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>searchFolder</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
