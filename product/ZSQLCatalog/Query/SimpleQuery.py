@@ -29,7 +29,6 @@
 ##############################################################################
 
 from Query import Query
-from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.Interface.IQuery import IQuery
 from Interface.Verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator

@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-import sys
 from zLOG import LOG, WARNING, INFO
 from Interface.IColumnMap import IColumnMap
 from Interface.Verify import verifyClass

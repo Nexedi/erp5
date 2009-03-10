@@ -18,7 +18,6 @@ import ExtensionClass
 import Globals
 import OFS.History
 from Globals import DTMLFile, PersistentMapping
-from string import split, join
 from thread import allocate_lock, get_ident
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
@@ -27,11 +26,9 @@ from App.config import getConfiguration
 from BTrees.Length import Length
 from Shared.DC.ZRDB.TM import TM
 
-from DateTime import DateTime
 from Acquisition import aq_parent, aq_inner, aq_base
 from zLOG import LOG, WARNING, INFO, TRACE
 from ZODB.POSException import ConflictError
-from DocumentTemplate.DT_Var import sql_quote
 from Products.PythonScripts.Utility import allow_class
 
 import time
@@ -39,7 +36,6 @@ import sys
 import urllib
 import string
 import pprint
-import threading
 from cStringIO import StringIO
 from xml.dom.minidom import parse
 from xml.sax.saxutils import escape, quoteattr
@@ -1450,7 +1446,7 @@ class Catalog(Folder,
         method = getattr(self, method_name)
         if method.meta_type in ("Z SQL Method", "LDIF Method"):
           # Build the dictionnary of values
-          arguments = split(method.arguments_src)
+          arguments = method.arguments_src.split()
         elif method.meta_type == "Script (Python)":
           arguments = \
             method.func_code.co_varnames[:method.func_code.co_argcount]

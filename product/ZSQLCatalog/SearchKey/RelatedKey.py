@@ -33,7 +33,6 @@ from Products.ZSQLCatalog.Query.Query import Query
 from Products.ZSQLCatalog.Query.RelatedQuery import RelatedQuery
 from Products.ZSQLCatalog.Query.SQLQuery import SQLQuery
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
-from zLOG import LOG
 from Products.ZSQLCatalog.Interface.ISearchKey import IRelatedKey
 from Interface.Verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator

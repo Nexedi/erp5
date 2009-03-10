@@ -27,18 +27,12 @@
 ##############################################################################
 
 import unittest
-import sys
 
-from DateTime import DateTime
 from Products.ZSQLMethods.SQL import SQL as ZSQLMethod
 from Products.CMFCore.Expression import Expression
 
 from Products.ZSQLCatalog.SQLCatalog import Catalog as SQLCatalog
 from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog as ZSQLCatalog
-from Products.ZSQLCatalog.SQLCatalog import Query
-from Products.ZSQLCatalog.SQLCatalog import ComplexQuery
-from Products.ZSQLCatalog.SQLCatalog import NegatedQuery
-
 
 class TestZSQLCatalog(unittest.TestCase):
   """Tests for ZSQL Catalog.

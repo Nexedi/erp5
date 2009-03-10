@@ -17,20 +17,18 @@ from Globals import DTMLFile, MessageDialog
 import Globals
 
 from OFS.Folder import Folder
-from OFS.FindSupport import FindSupport
-from OFS.ObjectManager import ObjectManager
 from DateTime import DateTime
 from Acquisition import Implicit, aq_base
 from Persistence import Persistent
 from DocumentTemplate.DT_Util import InstanceDict, TemplateDict
 from DocumentTemplate.DT_Util import Eval
 from AccessControl.Permission import name_trans
-from SQLCatalog import Catalog, CatalogError
-from AccessControl import ClassSecurityInfo, getSecurityManager
+from SQLCatalog import CatalogError
+from AccessControl import ClassSecurityInfo
 from AccessControl.DTML import RestrictedDTML
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Cache import clearCache
-import string, os, sys, types
+import string, sys
 import time
 import urllib
 from ZODB.POSException import ConflictError
