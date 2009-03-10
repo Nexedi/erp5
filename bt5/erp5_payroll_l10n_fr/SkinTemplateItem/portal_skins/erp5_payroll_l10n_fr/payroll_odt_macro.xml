@@ -111,11 +111,11 @@
         <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\'\n
         tal:content="python: here.Base_translateString(\'Attendance\')"></text:p>\n
         <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
-        tal:content="python: \'%s: %s\' % (here.Base_translateString(\'Normal working hours\'), hour_renderer(data_dict[\'worked_hour_count\']) or \'0\')"></text:p>\n
+        tal:content="python: \'%s: %s\' % (here.Base_translateString(\'Normal Working Hours\'), hour_renderer(data_dict[\'worked_hour_count\']) or \'0\')"></text:p>\n
         <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
         tal:content="python: \'%s: %s\' % (here.Base_translateString(\'Overtime\'), hour_renderer(data_dict[\'bonus_worked_hour_count\']) or \'0\')"></text:p>\n
         <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
-        tal:content="python: \'%s: %s\' % (here.Base_translateString(\'Absence hours\'), hour_renderer(data_dict[\'absence_hour_count\']) or \'0\')"></text:p>\n
+        tal:content="python: \'%s: %s\' % (here.Base_translateString(\'Absence Hours\'), hour_renderer(data_dict[\'absence_hour_count\']) or \'0\')"></text:p>\n
       </table:table-cell>\n
       <table:table-cell table:style-name=\'Tableau3.A7\' office:value-type=\'string\'>\n
         <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\'\n
