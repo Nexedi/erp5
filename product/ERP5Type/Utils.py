@@ -2770,7 +2770,7 @@ try:
       self.sum = smbpasswd
 
     def hash(self, value):
-      return smbpasswd.hash(value)
+      return self.sum.hash(value)
 except ImportError:
   class SambaPassword:
     pass
