@@ -276,11 +276,14 @@ if __name__ == '__main__':
   original_parse = _parse
   fake_column_id_set = set(['a', 'b', 'c', 'd', 'title', 'toto', 'titi', 'foo', 'bar'])
 
+  def isColumn(value):
+    return value in fake_column_id_set
+
   def parse(input, *args, **kw):
     """
       Parse input and walk generated AST.
     """
-    result = original_parse(input, fake_column_id_set, *args, **kw)
+    result = original_parse(input, isColumn, *args, **kw)
     if result is not None:
       #print repr(result)
       result = walk(result)
