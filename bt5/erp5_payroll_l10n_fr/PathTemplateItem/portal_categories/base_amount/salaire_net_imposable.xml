@@ -13,8 +13,9 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>base_amount/taxable_net_pay</string>
-                <string>base_amount/taxable_net_pay</string>
+                <string>base_amount/salaire_net_imposable</string>
+                <string>base_amount/salaire_net_imposable</string>
+                <string>base_amount/salaire_net_imposable</string>
               </tuple>
             </value>
         </item>
@@ -32,7 +33,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>taxable_net_pay</string> </value>
+            <value> <string>salaire_net_imposable</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
@@ -50,7 +51,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Taxable Net Pay</string> </value>
+            <value> <string>Salaire net imposable</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -136,8 +136,8 @@
                 tal:condition=\'data_dict/default_payment_condition_payment_text\'\n
                 tal:content=\'python:data_dict["default_payment_condition_payment_text"]\'>Payement: Chèque le 01/12/2009</text:p>\n
         <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
-                tal:condition=\'data_dict/taxable_net_pay\'\n
-                tal:content=\'python:data_dict["taxable_net_pay"]\'>Salaire net imposable: 200 000</text:p>\n
+                tal:condition=\'data_dict/salaire_net_imposable\'\n
+                tal:content=\'python:data_dict["salaire_net_imposable"]\'>Salaire net imposable: 200 000</text:p>\n
         <text:p text:style-name=\'Table_20_Contents_20_Left\'\n
                 tal:condition=\'data_dict/total_employee_tax\'\n
                 tal:content=\'python:data_dict["total_employee_tax"]\'>Total cotisation employé: 200 000</text:p>\n

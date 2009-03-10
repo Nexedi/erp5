@@ -1,5 +1,4 @@
 2009-03-10 fabien
-* rename salaire_net_imposabe base_amount into taxable_net_pay
 * add a macro used to display localised information in a part of the payslip
 * increment version number because of the new style of the payslip
 

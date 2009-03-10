@@ -121,13 +121,13 @@ def getPriceCurrencyId(currency):\n
     s += \'%s: %s\' % (translateString(\'Price Currency\'), currency)\n
   return s\n
 \n
-taxable_net_pay = context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
-    base_contribution=\'base_contribution/base_amount/taxable_net_pay\',\n
+salaire_net_imposable = context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
+    base_contribution=\'base_contribution/base_amount/salaire_net_imposable\',\n
     tax_category=\'tax_category/employee_share\')\n
-def getTaxableNetPayId(taxable_net_pay):\n
+def getTaxableNetPayId(salaire_net_imposable):\n
   s = \'\'\n
-  if taxable_net_pay:\n
-    s += \'%s: %s\' % (translateString(\'Taxable Net Pay\'), taxable_net_pay)\n
+  if salaire_net_imposable:\n
+    s += \'%s: %s\' % (translateString(\'Taxable Net Pay\'), salaire_net_imposable)\n
   return s\n
 \n
 total_employee_tax = context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
@@ -211,11 +211,11 @@ year_to_date_bonus_worked_hour_amount = context.PaySheetTransaction_getYearToDat
     base_contribution=\'base_contribution/base_amount/overtime\', \\\n
     tax_category=\'tax_category/employee_share\') or 0\n
 \n
-taxable_net_pay = context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
-    base_contribution=\'base_contribution/base_amount/taxable_net_pay\',\n
+salaire_net_imposable = context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
+    base_contribution=\'base_contribution/base_amount/salaire_net_imposable\',\n
     tax_category=\'tax_category/employee_share\')\n
 year_to_date_taxable_net_salary = context.PaySheetTransaction_getYearToDateBaseContributionTotalPrice(\\\n
-    paysheet=context, base_contribution_list=\'taxable_net_pay\') + taxable_net_pay\n
+    paysheet=context, base_contribution_list=\'salaire_net_imposable\') + salaire_net_imposable\n
 \n
 def unicodeDict(d):\n
   for k, v in d.items():\n
@@ -258,7 +258,7 @@ data_dict = {\n
   \'bonus_worked_hour_count\': bonus_worked_hour_count,\n
   \'absence_hour_count\': 0, #XXX currently absence hour are not take into \n
                            # account in payroll\n
-  \'taxable_net_pay\': getTaxableNetPayId(taxable_net_pay),\n
+  \'salaire_net_imposable\': getTaxableNetPayId(salaire_net_imposable),\n
   \'total_employee_tax\': getTotalEmployeeTaxId(total_employee_tax),\n
   \'total_employer_tax\': getTotalEmployerTaxId(total_employer_tax),\n
 }\n
@@ -316,7 +316,7 @@ return unicodeDict(data_dict)\n
                             <string>getCareerCoefficientId</string>
                             <string>getHiringDateId</string>
                             <string>getPriceCurrencyId</string>
-                            <string>taxable_net_pay</string>
+                            <string>salaire_net_imposable</string>
                             <string>getTaxableNetPayId</string>
                             <string>total_employee_tax</string>
                             <string>getTotalEmployeeTaxId</string>
