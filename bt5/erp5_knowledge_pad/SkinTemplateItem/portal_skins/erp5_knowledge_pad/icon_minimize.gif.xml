@@ -10,6 +10,14 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts36808051.84</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>icon_minimize.gif</string> </value>
         </item>
@@ -19,8 +27,8 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">R0lGODlhDwAPAIAAAI6Ojv///yH5BAAAAAAALAAAAAAPAA8AAAIgjI8ZwO1tgEpyTVTrtXznHYXg
-N4qe+DAoyGlXlqZsUgAAOw==</string> </value>
+            <value> <string encoding="base64">R0lGODlhDwAPAKEBAI6Ojv///////////yH5BAEAAAIALAAAAAAPAA8AAAI5lI8pwO1tQJi0BmCA
+3cCAbQEGAFaAAZQUYADqBBjAGwAGMD3MBBjApANMAAYADWAA0ACGoE4BPRQAADs=</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -32,7 +40,7 @@ N4qe+DAoyGlXlqZsUgAAOw==</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>73</int> </value>
+            <value> <int>104</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

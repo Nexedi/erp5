@@ -10,6 +10,14 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts36808051.89</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>icon_remove.gif</string> </value>
         </item>
@@ -19,9 +27,10 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">R0lGODlhDwAPALMAAPHx8X19fYeHh42NjZSUlJqamqKioqqqqrKysry8vM/Pz9ra2oKCgsbGxufn
-5////yH5BAAAAAAALAAAAAAPAA8AAwRD8MlJ6ws46yyDrd71UaG3MIHyCEHSvQ8SDElQTOVEYAyA
-w48G5kACDgKoxU8UCxhkhKUJ4wCgELDQiKkdlTbg7nYSAQA7</string> </value>
+            <value> <string encoding="base64">R0lGODlhDwAPAIQPAPHx8X19fYeHh42NjZSUlJqamqKioqqqqrKysry8vM/Pz9ra2oKCgsbGxufn
+5////////////////////////////////////////////////////////////////////yH5BAEA
+AA4ALAAAAAAPAA8AAAVRoCOOZOkEaKqmYvC8cPwEYiDfgRi8wwD3r4Ao8OoNHsZXQBSAGXuwgCgQ
+M8YCogDsOYAFRIGX8WF8BUSBVw/WewVEgZssIArIYwHRao8y+UchADs=</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -33,7 +42,7 @@ w48G5kACDgKoxU8UCxhkhKUJ4wCgELDQiKkdlTbg7nYSAQA7</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>150</int> </value>
+            <value> <int>212</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -74,6 +74,7 @@
          tal:attributes="id python: \'%s/%s\' %(here.getRelativeUrl(), box_id)">\n
 \n
       <h3 class="handle">\n
+        <span class="handle">\n
         <tal:block tal:condition="not: isAnon">\n
           <a class="clickable-block block-remove" \n
              i18n:translate="" \n
@@ -92,9 +93,9 @@
              i18n:attributes="title" \n
              title="Minimize"></a>\n
         </tal:block>\n
-        <span class="gadget_left_side"></span>\n
         <span class="gadget_title" \n
               tal:content="python: here.Base_translateString(gadget.getTitle())"/>\n
+        </span>\n
       </h3>\n
 \n
         <div class="minimize_wrapper"\n

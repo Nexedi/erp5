@@ -10,8 +10,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts25459544.09</string> </value>
+            <value> <string>ts36808113.24</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -28,7 +32,7 @@
   margin: 0em;\n
   padding: 0em;\n
   padding-top: 0em;\n
-  background-color: #DAE6F6; \n
+  background-color: inherit; \n
   min-height: 500px;\n
   width: 100%;\n
   float:left;\n
@@ -60,38 +64,24 @@
   width: 100%;\n
 }\n
 \n
-.handle {\n
+h3.handle {\n
   margin: 0;\n
-  padding: 5px;\n
+  padding: 0 0 0 10px;\n
   font-size: 14px;\n
   color: #fff;\n
-  height: 15px;\n
-  background: transparent url(images/tab_right_selected.png) no-repeat scroll right top;\n
+  background: transparent url(images/tab_left_selected.png) no-repeat scroll left top;\n
   border-bottom: 1px solid #3D6474;\n
 }\n
 \n
-.block h3 span.gadget_left_side{\n
-  background: transparent url(images/tab_left_selected.png) no-repeat scroll left top;\n
+h3.handle span.handle {\n
   display: block;\n
-  float: left;\n
-  margin-top: -5px;\n
-  margin-left: -5px;\n
-  height: 20px;\n
-  padding-top: 5px;\n
-  padding-left: 5px;\n
-  width: 10px;\n
+  min-height:20px;\n
+  padding: 5px 5px 0 0;\n
+  background: transparent url(images/tab_right_selected.png) no-repeat scroll right top;\n
 }\n
 \n
 .block h3 span.gadget_title{\n
-  display: block;\n
-  float: left;\n
-  margin-top: -5px;\n
-  margin-left: -5px;\n
-  padding-top: 5px;\n
-  height: 19px;\n
   min-width: 100px;\n
-  border-top: 1px solid #3d7474;\n
-  background-color: #e3eafa;\n
 }\n
 \n
 \n
@@ -99,7 +89,6 @@
 .clickable_image{\n
   cursor: pointer; \n
   margin-top: 5px!important;\n
-  margin-left: 1px!important;\n
   display: block;\n
   float: left;\n
 }\n
@@ -113,7 +102,7 @@
   background-position: center;\n
   cursor: pointer;\n
   padding: 0em;\n
-  margin: 0em;\n
+  margin: 0;\n
 }\n
 \n
 .block-remove {\n
@@ -126,7 +115,6 @@
 \n
 .block-edit-form {\n
   background-image: url(icon_edit.gif); \n
-  margin-right: 1pt;\n
 }\n
 \n
 .block-hover {\n
@@ -150,7 +138,8 @@ div.edit-form button{\n
   padding-top: 0.5em; \n
   padding-left: 1em;\n
   padding-bottom: 0.5em;\n
-  border: 1px solid black;\n
+  border: solid black;\n
+  border-width: 0 1px 1px 1px;\n
   background-color: #BDD0F0;\n
   overflow: auto;\n
 }\n
@@ -585,7 +574,7 @@ div.block div.worklist_list ul li a:hover{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>9522</long> </value>
+            <value> <int>9223</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
