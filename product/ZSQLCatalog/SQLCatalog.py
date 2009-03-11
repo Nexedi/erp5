@@ -2054,7 +2054,7 @@ class Catalog(Folder,
           append(result)
     if len(unknown_column_dict):
       LOG('SQLCatalog', WARNING, 'Unknown columns %r, skipped.' % (unknown_column_dict.keys(), ))
-    return ComplexQuery(query_list, operator=operator, unknown_column_dict=unknown_column_dict, implicit_table_list=implicit_table_list)
+    return ComplexQuery(query_list, logical_operator=operator, unknown_column_dict=unknown_column_dict, implicit_table_list=implicit_table_list)
 
   @profiler_decorator
   def buildOrderByList(self, sort_on=None, sort_order=None, order_by_expression=None):
@@ -2474,7 +2474,7 @@ from Query.ComplexQuery import ComplexQuery
 from Query.AutoQuery import AutoQuery as Query
 
 def NegatedQuery(query):
-  return ComplexQuery(query, operator='not')
+  return ComplexQuery(query, logical_operator='not')
 
 allow_class(SimpleQuery)
 allow_class(ComplexQuery)
