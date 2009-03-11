@@ -12,11 +12,11 @@ except:
 
 skip_meta_types = ('Image', 'File')
 
-def traverse(ob, r, result, command_line_arguments):
+def traverse(ob, r, result, command_line_arguments, first_occurence):
   if command_line_arguments['r'] and \
                 hasattr(aq_base(ob), 'objectValues'):
     for sub in [o for o in ob.objectValues() if o.meta_type not in skip_meta_types]:
-      traverse(sub, r, result, command_line_arguments)
+      traverse(sub, r, result, command_line_arguments, first_occurence)
   try:
     if hasattr(aq_base(ob), 'manage_FTPget'):
       text = ob.manage_FTPget()
@@ -32,9 +32,10 @@ def traverse(ob, r, result, command_line_arguments):
                              i+1+command_line_arguments['A']]
         path = '/'.join(ob.getPhysicalPath())
         result.append((ob.absolute_url(), path, "\n".join(context)))
-        break
+        if first_occurence:
+          break
 
-def grep(self, pattern, A=0, B=0, r=1, i=0, highlight=1):
+def grep(self, pattern, A=0, B=0, r=1, i=0, highlight=1, first_occurence=0):
   if not _checkPermission(Permissions.ManagePortal, self):
     raise Unauthorized(self)
   command_line_arguments = {} # emulate grep command line args
@@ -42,12 +43,13 @@ def grep(self, pattern, A=0, B=0, r=1, i=0, highlight=1):
   command_line_arguments['B'] = int(B)
   command_line_arguments['r'] = int(r)
   highlight = int(highlight)
+  first_occurence = int(first_occurence)
   re_flags = 0
   if int(i) :
     re_flags = re.IGNORECASE
   result = []
   rx = re.compile(pattern, re_flags)
-  traverse(self, rx, result, command_line_arguments)
+  traverse(self, rx, result, command_line_arguments, first_occurence)
 
   doctype = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'
   html = '<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">'
