@@ -90,6 +90,7 @@
                         <string>my_bank_account_number</string>
                         <string>my_bank_account_key</string>
                         <string>my_bank_account_holder_name</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
