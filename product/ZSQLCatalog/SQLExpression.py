@@ -127,8 +127,8 @@ class SQLExpression(object):
             message = message + '. I was created by %r, and I am working on %r (%r) out of [%s]' % (
               self.query,
               sql_expression,
-              sql_expression.getQuery(),
-              ', '.join('%r (%r)' % (x, x.getQuery()) for x in self.sql_expression_list))
+              sql_expression.query,
+              ', '.join('%r (%r)' % (x, x.query) for x in self.sql_expression_list))
           raise ValueError, message
         result[alias] = table_name
     return result
@@ -151,8 +151,8 @@ class SQLExpression(object):
           message = message + '. I was created by %r, and I am working on %r (%r) out of [%s]' % (
             self.query,
             sql_expression,
-            sql_expression.getQuery(),
-            ', '.join('%r (%r)' % (x, x.getQuery()) for x in self.sql_expression_list))
+            sql_expression.query,
+            ', '.join('%r (%r)' % (x, x.query) for x in self.sql_expression_list))
         raise ValueError, message
     return result
 
@@ -189,8 +189,8 @@ class SQLExpression(object):
             message = message + '. I was created by %r, and I am working on %r (%r) out of [%s]' % (
               self.query,
               sql_expression,
-              sql_expression.getQuery(),
-              ', '.join('%r (%r)' % (x, x.getQuery()) for x in self.sql_expression_list))
+              sql_expression.query,
+              ', '.join('%r (%r)' % (x, x.query) for x in self.sql_expression_list))
           raise ValueError, message
       result_dict.update(order_by_dict)
     return result_dict
@@ -247,8 +247,8 @@ class SQLExpression(object):
           message = message + '. I was created by %r, and I am working on %r (%r) out of [%s]' % (
             self.query,
             sql_expression,
-            sql_expression.getQuery(),
-            ', '.join('%r (%r)' % (x, x.getQuery()) for x in self.sql_expression_list))
+            sql_expression.query,
+            ', '.join('%r (%r)' % (x, x.query) for x in self.sql_expression_list))
         raise ValueError, message
     return result
 
@@ -304,8 +304,8 @@ class SQLExpression(object):
             message = message + '. I was created by %r, and I am working on %r (%r) out of [%s]' % (
               self.query,
               sql_expression,
-              sql_expression.getQuery(),
-              ', '.join('%r (%r)' % (x, x.getQuery()) for x in self.sql_expression_list))
+              sql_expression.query,
+              ', '.join('%r (%r)' % (x, x.query) for x in self.sql_expression_list))
           raise ValueError, message
         result[alias] = column
     return result
