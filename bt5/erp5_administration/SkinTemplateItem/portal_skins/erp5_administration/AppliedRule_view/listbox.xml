@@ -12,7 +12,9 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>selection_name</string>
+              </list>
             </value>
         </item>
         <item>
@@ -79,6 +81,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>AppliedRule_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>applied_rule_view_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
