@@ -53,8 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from ZTUtils import LazyFilter\n
-portal = context.getPortalObject()\n
+            <value> <string>portal = context.getPortalObject()\n
 \n
 if not organisation:\n
   organisation = portal.portal_preferences\\\n
@@ -70,8 +69,8 @@ search_kw = {\n
   \'portal_type\': portal.getPortalPaymentNodeTypeList(),\n
 }\n
 \n
-if not skip_invalidated_bank_accounts:\n
-  search_kw[\'validation_state\'] = \'!=validated\'\n
+if skip_invalidated_bank_accounts:\n
+  search_kw[\'validation_state\'] = \'!=invalidated\'\n
 \n
 if group_value is None:\n
   search_kw[\'parent_uid\'] = organisation_value.getUid()\n
@@ -81,6 +80,7 @@ else:\n
     uid_list.append(group_value.getUid())\n
     group_value = group_value.getParentValue()\n
   search_kw[\'parent_strict_group_uid\'] = uid_list\n
+  search_kw[\'parent_portal_type\'] = \'Organisation\'\n
 \n
 item_list = [(\'\', \'\')]\n
 for bank in portal.portal_catalog(**search_kw):\n
@@ -111,7 +111,7 @@ return item_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>organisation=None, skip_invalidated_bank_accounts=1</string> </value>
+            <value> <string>organisation=None, skip_invalidated_bank_accounts=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -139,8 +139,6 @@ return item_list\n
                           <tuple>
                             <string>organisation</string>
                             <string>skip_invalidated_bank_accounts</string>
-                            <string>ZTUtils</string>
-                            <string>LazyFilter</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
@@ -167,7 +165,7 @@ return item_list\n
             <value>
               <tuple>
                 <none/>
-                <int>1</int>
+                <int>0</int>
               </tuple>
             </value>
         </item>
