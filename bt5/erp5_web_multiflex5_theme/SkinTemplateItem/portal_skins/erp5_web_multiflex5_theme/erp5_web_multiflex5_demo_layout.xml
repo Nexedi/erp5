@@ -165,7 +165,7 @@
                     <key> <string>subcontent subcontent-box documentbox (4-13b. Document)</string> </key>
                     <value>
                       <list>
-                        <string>documentbox</string>
+                        <string>document_box</string>
                       </list>
                     </value>
                 </item>

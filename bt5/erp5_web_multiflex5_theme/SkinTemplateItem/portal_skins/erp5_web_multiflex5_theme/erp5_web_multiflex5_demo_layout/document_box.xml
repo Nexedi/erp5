@@ -23,7 +23,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>side_menu_1</string> </value>
+            <value> <string>document_box</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -82,19 +82,10 @@
                     <key> <string>default</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<ul>\n
-<li><a href="#">Menu item</a></li>\n
-<li><a href="#">Menu item</a>\n
-<ul>\n
-<li><a href="#">Submenu item</a></li>\n
-<li><a href="#">Submenu item</a></li>\n
-<li><a href="#">Submenu item</a></li>\n
-</ul>\n
-</li>\n
-<li><a href="#">Menu item</a></li>\n
-<li><a href="#">Menu item</a></li>\n
-<li><a href="#">Menu item</a></li>\n
-</ul>
+<h2>Cell subtitle</h2>\n
+<p class="demo">Here comes the content</p>\n
+<h2>Cell subtitle</h2>\n
+<p class="demo">Here comes the content</p>
 
 ]]></string> </value>
                 </item>
