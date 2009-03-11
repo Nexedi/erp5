@@ -75,6 +75,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>listbox_modification_date</string>
                       </list>
                     </value>
                 </item>

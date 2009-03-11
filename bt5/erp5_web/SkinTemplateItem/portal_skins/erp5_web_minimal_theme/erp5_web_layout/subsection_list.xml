@@ -3,12 +3,26 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="EditorField" module="Products.ERP5Form.EditorField"/>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
         <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
+        <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list>
+                <string>title</string>
+                <string>css_class</string>
+                <string>height</string>
+                <string>width</string>
+                <string>whitespace_preserve</string>
+                <string>default</string>
+                <string>enabled</string>
+              </list>
+            </value>
+        </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>subsection_list</string> </value>
@@ -21,22 +35,6 @@
                     <key> <string>external_validator_failed</string> </key>
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
-                <item>
-                    <key> <string>line_too_long</string> </key>
-                    <value> <string>A line was too long.</string> </value>
-                </item>
-                <item>
-                    <key> <string>required_not_found</string> </key>
-                    <value> <string>Input is required but no input given.</string> </value>
-                </item>
-                <item>
-                    <key> <string>too_long</string> </key>
-                    <value> <string>You entered too many characters.</string> </value>
-                </item>
-                <item>
-                    <key> <string>too_many_lines</string> </key>
-                    <value> <string>You entered too many lines.</string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -45,75 +43,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>alternate_name</string> </key>
+                    <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>css_class</string> </key>
+                    <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>description</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>external_validator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>extra</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>height</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_linelength</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_lines</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>unicode</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
+                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -124,26 +62,10 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>default</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
-                </item>
-                <item>
-                    <key> <string>description</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -152,55 +74,15 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>external_validator</string> </key>
+                    <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra</string> </key>
+                    <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>height</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_linelength</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_lines</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>text_editor</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>unicode</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
+                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -211,72 +93,28 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string>hidden_label</string> </value>
                 </item>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>field_id</string> </key>
+                    <value> <string>my_text_content</string> </value>
                 </item>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>external_validator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>extra</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>height</string> </key>
                     <value> <int>5</int> </value>
                 </item>
                 <item>
-                    <key> <string>hidden</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_linelength</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_lines</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>text_editor</string> </key>
-                    <value> <string>text_area</string> </value>
+                    <key> <string>target</string> </key>
+                    <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Subsections</string> </value>
-                </item>
-                <item>
-                    <key> <string>unicode</string> </key>
-                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>

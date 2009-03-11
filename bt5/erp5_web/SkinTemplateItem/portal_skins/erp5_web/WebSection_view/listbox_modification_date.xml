@@ -13,15 +13,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>whitespace_preserve</string>
-                <string>width</string>
+                <string>title</string>
+                <string>timezone_style</string>
                 <string>editable</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_description</string> </value>
+            <value> <string>listbox_modification_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -82,7 +82,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_description</string> </value>
+                    <value> <string>my_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -93,12 +93,12 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>whitespace_preserve</string> </key>
+                    <key> <string>timezone_style</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>40</int> </value>
+                    <key> <string>title</string> </key>
+                    <value> <string>Creation Date</string> </value>
                 </item>
               </dictionary>
             </value>
