@@ -88,9 +88,9 @@ params = {\n
         portal.portal_categories.tax_category.employee_share.getUid(),\n
     \'to_date\' : paysheet.getStartDate(),\n
     \'from_date\' : DateTime(paysheet.getStartDate().year(), 1, 1),\n
-    \'simulation_state\'    : [\'confirmed\', \'stopped\', \'delivered\'],\n
+    \'simulation_state\'    : [\'stopped\', \'delivered\'],\n
     \'precision\' : paysheet.getPriceCurrencyValue().getQuantityPrecision(),\n
-    \'base_contribution_uid\' : base_contribution_uid_list,\n
+    \'parent_base_contribution_uid\' : base_contribution_uid_list,\n
     #\'src__\' : 1\n
   }\n
 \n
