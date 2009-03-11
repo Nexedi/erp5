@@ -65,6 +65,19 @@ portal_workflow = portal_object.portal_workflow\n
 workflow_id_list = [x for x, y in context.getWorkflowStateItemList()]\n
 if not workflow_id in workflow_id_list:\n
   return []\n
+\n
+actor_name_cache = dict()\n
+def getActorName(actor):\n
+  # returns the name of the actor. If it\'s a person, show the usual name of the person\n
+  try:\n
+    return actor_name_cache[actor]\n
+  except KeyError:\n
+    actor_name_cache[actor] = actor\n
+    person = portal_object.portal_catalog.getResultValue(portal_type=\'Person\', reference=actor)\n
+    if person is not None:\n
+      actor_name_cache[actor] = person.getTitle()\n
+    return actor_name_cache[actor]\n
+\n
 # Get history\n
 # XXX Compatibility\n
 for history_name in [\'history\', \'building_history\', \'installation_history\']:\n
@@ -109,6 +122,8 @@ for workflow_item in workflow_item_list:\n
         value = \'. \'.join([\'%s\' % x for x in value])\n
       elif key == \'error_message\':\n
         value = \'%s\' % value\n
+      elif key == \'actor\':\n
+        value = getActorName(value)\n
       elif same_type(value, \'\') and key in ( \'action\', \'state\' ): \n
         value = context.Localizer.erp5_ui.gettext(value)\n
     if value is marker:\n
@@ -197,6 +212,9 @@ return result\n
                             <string>x</string>
                             <string>y</string>
                             <string>workflow_id_list</string>
+                            <string>dict</string>
+                            <string>actor_name_cache</string>
+                            <string>getActorName</string>
                             <string>history_name</string>
                             <string>workflow_item_list</string>
                             <string>_getitem_</string>
