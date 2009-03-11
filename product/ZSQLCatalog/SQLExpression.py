@@ -299,14 +299,18 @@ class SQLExpression(object):
       for alias, column in sql_expression.getSelectDict().iteritems():
         existing_value = result.get(alias)
         if existing_value not in (None, column):
-          message = '%r is a known alias for column %r, can\'t alias it now to column %r' % (alias, existing_value, column)
-          if DEBUG:
-            message = message + '. I was created by %r, and I am working on %r (%r) out of [%s]' % (
-              self.query,
-              sql_expression,
-              sql_expression.query,
-              ', '.join('%r (%r)' % (x, x.query) for x in self.sql_expression_list))
-          raise ValueError, message
+          if alias == 'SearchableText':
+            # Custom conflict resolution
+            column = '%s + %s' % (existing_value, column)
+          else:
+            message = '%r is a known alias for column %r, can\'t alias it now to column %r' % (alias, existing_value, column)
+            if DEBUG:
+              message = message + '. I was created by %r, and I am working on %r (%r) out of [%s]' % (
+                self.query,
+                sql_expression,
+                sql_expression.query,
+                ', '.join('%r (%r)' % (x, x.query) for x in self.sql_expression_list))
+            raise ValueError, message
         result[alias] = column
     return result
 
