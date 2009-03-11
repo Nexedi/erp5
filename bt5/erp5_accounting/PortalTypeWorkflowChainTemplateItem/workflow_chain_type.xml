@@ -21,7 +21,7 @@
  </chain>
  <chain>
   <type>Cash Register</type>
-  <workflow>validation_workflow</workflow>
+  <workflow>validation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Invoice Rule</type>
