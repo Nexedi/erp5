@@ -29,6 +29,7 @@
 
 import os
 import unittest
+import transaction
 
 from DateTime import DateTime
 from Products.ERP5Type.Utils import convertToUpperCase
@@ -1331,6 +1332,44 @@ class TestERP5Base(ERP5TypeTestCase):
     for relative_url in relative_url_list:
       self.assertTrue('/' in relative_url)
       self.assertNotEquals(None, self.portal.unrestrictedTraverse(relative_url))
+
+  def test_standard_translated_related_keys(self):
+    # make sure we can search by "translated_validation_state_title" and
+    # "translated_portal_type"
+    message_catalog = self.portal.Localizer.erp5_ui
+    lang = 'fr'
+    if lang not in [x['id'] for x in
+        self.portal.Localizer.get_languages_map()]:
+      self.portal.Localizer.manage_addLanguage(lang)
+
+    message_catalog.gettext('Draft', add=1)
+    message_catalog.gettext('Person', add=1)
+    message_catalog.message_edit('Draft', lang, 'Brouillon', '')
+    message_catalog.message_edit('Person', lang, 'Personne', '')
+
+    person_1 = self.portal.person_module.newContent(portal_type='Person')
+    person_1.validate()
+    person_2 = self.portal.person_module.newContent(portal_type='Person')
+    organisation = self.portal.organisation_module.newContent(
+                            portal_type='Organisation')
+    transaction.commit()
+    self.tic()
+
+    # patch the method, we'll abort later
+    self.portal.Localizer.get_selected_language = lambda: lang
+
+    self.assertEquals(set([person_1, person_2]),
+        set([x.getObject() for x in
+          self.portal.portal_catalog(translated_portal_type='Personne')]))
+    self.assertEquals(set([person_2, organisation]),
+        set([x.getObject() for x in
+          self.portal.portal_catalog(translated_validation_state_title='Brouillon',
+                                     portal_type=('Person', 'Organisation'))]))
+    self.assertEquals([person_2],
+        [x.getObject() for x in
+          self.portal.portal_catalog(translated_validation_state_title='Brouillon',
+                                     translated_portal_type='Personne')])
+    transaction.abort()
 
 
 def test_suite():
