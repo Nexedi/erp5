@@ -1,4 +1,5 @@
 portal_categories/base_amount/base_csg
+portal_categories/base_amount/base_forfait_social
 portal_categories/base_amount/salaire_net_imposable
 portal_categories/salary_range/france
 portal_categories/salary_range/france/tranche_1
