@@ -139,8 +139,8 @@ def wholePeriod(search_key, group, column, value_list, exclude=False):
   append = query_list.append
   for value in value_list:
     first_date, second_date = getPeriodBoundaries(value)
-    append(ComplexQuery([SimpleQuery(search_key=search_key, operator=first_operator, group=group, **{column: first_date}),
-                         SimpleQuery(search_key=search_key, operator=second_operator, group=group, **{column: second_date})],
+    append(ComplexQuery([SimpleQuery(search_key=search_key, comparison_operator=first_operator, group=group, **{column: first_date}),
+                         SimpleQuery(search_key=search_key, comparison_operator=second_operator, group=group, **{column: second_date})],
                         operator=logical_operator))
   return query_list
 
@@ -156,9 +156,9 @@ def matchExact(search_key, group, column, value_list, comparison_operator, logic
     comparison_operator = '='
   value_list = [castDate(x) for x in value_list]
   if logical_operator == 'or' and comparison_operator == '=':
-    query_list = [SimpleQuery(search_key=search_key, operator='in', group=group, **{column: value_list})]
+    query_list = [SimpleQuery(search_key=search_key, comparison_operator='in', group=group, **{column: value_list})]
   else:
-    query_list = [SimpleQuery(search_key=search_key, operator=comparison_operator, group=group, **{column: x}) for x in value_list]
+    query_list = [SimpleQuery(search_key=search_key, comparison_operator=comparison_operator, group=group, **{column: x}) for x in value_list]
   return query_list
 
 def getNextPeriod(value):

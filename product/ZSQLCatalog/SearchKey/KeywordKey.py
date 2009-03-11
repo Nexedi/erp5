@@ -58,7 +58,7 @@ class KeywordKey(SearchKey):
       different_list = []
       for value in original_different_list:
         if isinstance(value, basestring) and '%' in value:
-          result.append(SimpleQuery(search_key=self, group=group, operator='not like', **{column: value}))
+          result.append(SimpleQuery(search_key=self, group=group, comparison_operator='not like', **{column: value}))
         else:
           different_list.append(value)
         if len(different_list):

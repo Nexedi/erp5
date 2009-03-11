@@ -324,10 +324,10 @@ class SearchKey(object):
     append = query_list.append
     if logical_operator == 'or' and '=' in operator_value_dict:
       # Special case for equality with an 'or' logical operator: use SQL 'in'.
-      append(SimpleQuery(search_key=self, operator='in', group=group, **{column: operator_value_dict.pop('=')}))
+      append(SimpleQuery(search_key=self, comparison_operator='in', group=group, **{column: operator_value_dict.pop('=')}))
     for comparison_operator, value_list in operator_value_dict.iteritems():
       for value in value_list:
-        append(SimpleQuery(search_key=self, operator=comparison_operator, group=group, **{column: value}))
+        append(SimpleQuery(search_key=self, comparison_operator=comparison_operator, group=group, **{column: value}))
     return query_list
 
   @profiler_decorator

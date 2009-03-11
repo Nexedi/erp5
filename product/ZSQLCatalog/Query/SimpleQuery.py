@@ -32,6 +32,7 @@ from Query import Query
 from Products.ZSQLCatalog.Interface.IQuery import IQuery
 from Interface.Verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
+from zLOG import LOG, WARNING
 
 class SimpleQuery(Query):
   """
@@ -39,12 +40,12 @@ class SimpleQuery(Query):
     one or more values.
   """
   @profiler_decorator
-  def __init__(self, search_key=None, operator='=', group=None, **kw):
+  def __init__(self, search_key=None, comparison_operator='=', group=None, **kw):
     """
       search_key (None, SearchKey instance)
         If given, the instance of SearchKey which is responsible for column
         map registration and rendering (SQL and SearchText).
-      operator (string)
+      comparison_operator (string)
         The comparison operator which will be applied between column and
         values.
         See Operator/ComparisonOperator.py for possible values.
@@ -56,6 +57,10 @@ class SimpleQuery(Query):
           column name
         item value
           one or more values
+
+      Deprecated:
+        operator (string)
+          Use comparison_operator instead.
     """
     self.search_key = search_key
     if len(kw) != 1:
@@ -64,26 +69,32 @@ class SimpleQuery(Query):
     # Backward compatibility code (those changes should not be needed when
     # this Query is instanciated by a SearchKey, as operator should be correct
     # already).
-    operator = operator.lower()
-    if operator == 'in':
+    if len(kw) == 2 and 'operator' in kw:
+      operator = kw.pop('operator')
+      if comparison_operator not in (None, operator):
+        LOG('SimpleQuery', WARNING, 'Both "operator" and "comparison_operator" are provided, ignoring "operator".')
+      else:
+        comparison_operator = operator
+    comparison_operator = comparison_operator.lower()
+    if comparison_operator == 'in':
       if isinstance(value, (list, tuple)):
         if len(value) == 0:
           raise ValueError, 'Empty lists are not allowed.'
         elif len(value) == 1:
           value = value[0]
-          operator = '='
+          comparison_operator = '='
       else:
-        operator = '='
-    elif operator == '=':
+        comparison_operator = '='
+    elif comparison_operator == '=':
       if isinstance(value, (list, tuple)):
         if len(value) == 0:
           raise ValueError, 'Empty lists are not allowed.'
         elif len(value) == 1:
           value = value[0]
         else:
-          operator = 'in'
+          comparison_operator = 'in'
     self.value = value
-    self.operator = operator
+    self.comparison_operator = comparison_operator
     self.group = group
 
   @profiler_decorator
@@ -104,7 +115,7 @@ class SimpleQuery(Query):
     """
       Return an instance of OperatorBase class.
     """
-    return sql_catalog.getComparisonOperator(self.operator)
+    return sql_catalog.getComparisonOperator(self.comparison_operator)
 
   def getSearchKey(self, sql_catalog):
     """
@@ -121,7 +132,7 @@ class SimpleQuery(Query):
     return self.value
 
   def __repr__(self):
-    return '<%s %r %s %r>' % (self.__class__.__name__, self.getColumn(), self.operator, self.getValue())
+    return '<%s %r %s %r>' % (self.__class__.__name__, self.getColumn(), self.comparison_operator, self.getValue())
 
   def setGroup(self, group):
     self.group = group

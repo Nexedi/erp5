@@ -60,7 +60,7 @@ class ReferenceQuery:
       return self.column is not None and \
              other.getColumn() == self.column and \
              other.getValue() == self.value and \
-             other.operator == self.operator
+             other.comparison_operator == self.operator
     elif isinstance(other, ComplexQuery):
       if not (len(other.query_list) == len(self.args) and \
               other.logical_operator == self.operator):
@@ -136,7 +136,7 @@ class DummyCatalog(SQLCatalog):
     return '%(table_0)s.uid = %(query_table)s.uid AND %(table_0)s.other_uid = %(table_1)s' % kw
 
   def scriptableKeyScript(self, value):
-    return SimpleQuery(operator='=', keyword=value)
+    return SimpleQuery(comparison_operator='=', keyword=value)
 
 class TestSQLCatalog(unittest.TestCase):
   def setUp(self):
