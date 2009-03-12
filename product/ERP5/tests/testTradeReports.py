@@ -521,6 +521,71 @@ class TestTradeReports(ERP5ReportTestCase):
                       'total amount': 3*11 + 7*6 + 5*3 + 6})
 
 
+    # dates not specified -> they should be guessed
+    request['from_date'] = None
+    request['at_date'] = None
+    request['simulation_state'] = ['draft',]
+    request['aggregation_level'] = "year"
+    request['group_by'] = "both"
+    request['group'] = 'g2'
+    report_section_list = self.getReportSectionList(self.sale_order_module,
+                                                    'OrderModule_viewOrderReport')
+    self.assertEquals(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    stat_line_list = [l for l in line_list if l.isStatLine()]
+    self.assertEquals(3, len(data_line_list))
+    self.assertEquals(1, len(stat_line_list))
+    # First organisation    
+    d = {'Amount 2006': 75.0,
+                 'Amount 2007': 9.0,
+                 'Quantity 2006': None,
+                 'Quantity 2007': None,
+                 'Quantity Unit 2006': None,
+                 'Quantity Unit 2007': None,
+                 'client': 'Organisation_1',
+                 'product': None,
+                 'total amount': 84.0,
+                 'total quantity': None}
+    self.checkLineProperties(data_line_list[0],**d)
+    # Product one for organisation
+    d = {'Amount 2006': 33.0,
+                 'Amount 2007': 9.0,
+                 'Quantity 2006': 11.0,
+                 'Quantity 2007': 3.0,
+                 'Quantity Unit 2006': 'G',
+                 'Quantity Unit 2007': 'G',
+                 'client': None,
+                 'product': 'product_A',
+                 'total amount': 42.0,
+                 'total quantity': 14.0}
+    # Product two for organisation
+    self.checkLineProperties(data_line_list[1],**d)
+    d = {'Amount 2006': 42.0,
+                 'Amount 2007': 0,
+                 'Quantity 2006': 7.0,
+                 'Quantity 2007': 0,
+                 'Quantity Unit 2006': 'Kg',
+                 'Quantity Unit 2007': '',
+                 'client': None,
+                 'product': 'product_B',
+                 'total amount': 42.0,
+                 'total quantity': 7.0}
+    self.checkLineProperties(data_line_list[2],**d)
+    # stat line
+    d = {'Amount 2006': 75.0,
+                 'Amount 2007': 9.0,
+                 'Quantity 2006': None,
+                 'Quantity 2007': None,
+                 'Quantity Unit 2006': None,
+                 'Quantity Unit 2007': None,
+                 'client': 'Total',
+                 'product': None,
+                 'total amount': 84.0,
+                 'total quantity': None}
+    self.checkLineProperties(stat_line_list[0],**d)
+  
   def testStockReport(self):
     """
     Stock report.
