@@ -13,8 +13,15 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>base_amount/base_csb_non_deductible_pee</string>
+                <string>base_amount/base_csg_non_deductible_pee</string>
+                <string>base_amount/base_csg_non_deductible_pee</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>codification</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>
@@ -25,7 +32,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>base_csb_non_deductible_pee</string> </value>
+            <value> <string>base_csg_non_deductible_pee</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
