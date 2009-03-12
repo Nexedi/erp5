@@ -980,18 +980,18 @@ class ListBoxRenderer:
       elif meta_type_list is not None:
         params.setdefault('meta_type', meta_type_list)
 
-      # Remove useless parameters as FileUpload
+      # Remove FileUpload parameters
       for k, v in params.items():
         if k == "listbox":
           # listbox can also contain useless parameters
           new_list = []
           for line in v:
             for k1, v1 in line.items():
-              if v1 in (None, '') or hasattr(v1, 'read'):
+              if hasattr(v1, 'read'):
                 del line[k1]
             new_list.append(line)
           params[k] = new_list
-        if v in (None, '') or hasattr(v, 'read'):
+        if hasattr(v, 'read'):
           del params[k]
 
       # remove some erp5_xhtml_style specific parameters
