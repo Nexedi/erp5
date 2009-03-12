@@ -272,7 +272,7 @@
         </item>
         <item>
             <key> <string>background_color</string> </key>
-            <value> <string>#DAE6F6</string> </value>
+            <value> <string>#ABD0F4</string> </value>
         </item>
         <item>
             <key> <string>button_description_color</string> </key>
@@ -280,11 +280,11 @@
         </item>
         <item>
             <key> <string>context_bar_background_color</string> </key>
-            <value> <string>#BDD0F0</string> </value>
+            <value> <string>#82B3DC</string> </value>
         </item>
         <item>
             <key> <string>dialog_background_color</string> </key>
-            <value> <string>#BDD0F0</string> </value>
+            <value> <string>#BDD8F8</string> </value>
         </item>
         <item>
             <key> <string>dialog_border_color</string> </key>
@@ -334,7 +334,7 @@
         </item>
         <item>
             <key> <string>listbox_hover_background_color</string> </key>
-            <value> <string>#BDD0F0</string> </value>
+            <value> <string>#BDD8F8</string> </value>
         </item>
         <item>
             <key> <string>listbox_label_background_color</string> </key>
@@ -350,7 +350,7 @@
         </item>
         <item>
             <key> <string>main_border_color</string> </key>
-            <value> <string>#97B0D1</string> </value>
+            <value> <string>#DDF0FF</string> </value>
         </item>
         <item>
             <key> <string>navigation_bar_background_color</string> </key>
@@ -1094,7 +1094,6 @@ fieldset.bottom .field .input {\n
 .ListSummary {\n
   background: url(\'<dtml-var expr="portal_url()">/images/tab_left_selected.png\') top left no-repeat;\n
   color: #000;\n
-  background-color: <dtml-var document_background_color>;\n
   padding-left: 10px;\n
 }\n
 \n
@@ -1106,6 +1105,7 @@ fieldset.bottom .field .input {\n
 \n
 .ListSummary table {\n
   width: 100%;\n
+  background-color: <dtml-var document_background_color>;\n
   border-color: <dtml-var document_border_color>;\n
   border-style: solid;\n
   border-top-width: 1px;\n
