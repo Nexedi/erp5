@@ -32,10 +32,6 @@ try:
 except ImportError:
   pass
 
-# python2.3 compatibility
-if not hasattr(globals()['__builtins__'], 'set'):
-  from sets import Set as set
-
 class ActivityBuffer(TM):
 
   _p_oid=_p_changed=_registered=None
