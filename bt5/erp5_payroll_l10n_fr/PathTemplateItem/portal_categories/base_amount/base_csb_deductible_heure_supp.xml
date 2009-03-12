@@ -13,29 +13,19 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>base_amount/base_csg</string>
+                <string>base_amount/base_csb_deductible_heure_supp</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>codification</string> </key>
+            <key> <string>description</string> </key>
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value> <string>base de la CSG (= taxe prévoyance + salaire brut * 0.97)</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>base_csg</string> </value>
-        </item>
-        <item>
-            <key> <string>int_index</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>base_csb_deductible_heure_supp</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -43,7 +33,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Base CSG déductible</string> </value>
+            <value> <string>Base CSG déductibe heures supp.</string> </value>
         </item>
       </dictionary>
     </pickle>

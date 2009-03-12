@@ -18,6 +18,12 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>
@@ -26,6 +32,12 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>base_forfait_social</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
