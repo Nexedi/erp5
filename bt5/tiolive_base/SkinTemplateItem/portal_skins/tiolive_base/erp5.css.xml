@@ -10,8 +10,18 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>erp5.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_cache_namespace_keys</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>_local_properties</string> </key>
@@ -447,12 +457,7 @@ div, span, fieldset {\n
 }\n
 \n
 body {\n
-  background-color: <dtml-var background_color>;\n
-}\n
-\n
-#main_form {\n
-  background-color: inherit;\n
-  color: inherit;\n
+  background: #81B2DC url(<dtml-var expr="portal_url()">/tiolive_image/bg.png) repeat-y;\n
 }\n
 \n
 input#hidden_button {\n

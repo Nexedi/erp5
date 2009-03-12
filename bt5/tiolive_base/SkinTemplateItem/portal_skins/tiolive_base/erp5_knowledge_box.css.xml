@@ -10,8 +10,18 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>erp5_knowledge_box.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_cache_namespace_keys</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>_local_properties</string> </key>
@@ -38,7 +48,7 @@
         </item>
         <item>
             <key> <string>background_color</string> </key>
-            <value> <string>#ABD0F4</string> </value>
+            <value> <string>#E3EAFA</string> </value>
         </item>
         <item>
             <key> <string>globals</string> </key>
@@ -54,10 +64,19 @@
 \n
 .tab_selected {\n
   font-weight: bold;\n
-  background-color: <dtml-var background_color>; \n
+  background-color: <dtml-var background_color>;\n
   border-bottom: 1px solid <dtml-var background_color>;\n
 }\n
-
+\n
+#page_wrapper {\n
+  background: <dtml-var background_color>;;\n
+  margin:0 0 0.5em 0;\n
+  padding:0.2em 0 0 0;\n
+}\n
+\n
+div.block table.listbox button.sort_button{\n
+  background: inherit; \n
+}
 
 ]]></string> </value>
         </item>
