@@ -88,14 +88,14 @@ class TestTradeReports(ERP5ReportTestCase):
                                   id=colour_id)
 
     # create group categories
-    for group_id in ('g1', 'g2',):
+    for group_id in ('g1', 'g2', 'g3'):
       if not self.portal_categories['group'].has_key(group_id):
         self.portal_categories.group.newContent(
                                   portal_type='Category',
                                   title=group_id,
                                   reference=group_id,
                                   id=group_id)
-    # create organisations
+    # create organisations (with no organisation member of g3)
     if not self.organisation_module.has_key('Organisation_1'): 
       org = self.portal.organisation_module.newContent(
                               portal_type='Organisation',
@@ -112,6 +112,7 @@ class TestTradeReports(ERP5ReportTestCase):
                               id='Organisation_2',
                               group='g2',
                               site='demo_site_B')
+
     # create unit categories
     for unit_id in ('kg', 'g',):
       if not self.portal_categories['quantity_unit'].has_key(unit_id): 
@@ -583,6 +584,33 @@ class TestTradeReports(ERP5ReportTestCase):
                  'client': 'Total',
                  'product': None,
                  'total amount': 84.0,
+                 'total quantity': None}
+    self.checkLineProperties(stat_line_list[0],**d)
+  
+    # group set, with no matching organisations
+    request['simulation_state'] = ['draft',]
+    request['aggregation_level'] = "year"
+    request['group_by'] = "both"
+    request['group'] = 'g3'
+    report_section_list = self.getReportSectionList(self.sale_order_module,
+                                                    'OrderModule_viewOrderReport')
+    self.assertEquals(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    stat_line_list = [l for l in line_list if l.isStatLine()]
+    self.assertEquals(0, len(data_line_list))
+    self.assertEquals(1, len(stat_line_list))
+    # stat line
+    d = {'Amount 2006': None,
+                 'Amount 2007': None,
+                 'Quantity 2006': None,
+                 'Quantity 2007': None,
+                 'Quantity Unit 2006': None,
+                 'Quantity Unit 2007': None,
+                 'client': 'Total',
+                 'product': None,
+                 'total amount': None,
                  'total quantity': None}
     self.checkLineProperties(stat_line_list[0],**d)
   
