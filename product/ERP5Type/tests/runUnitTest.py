@@ -239,7 +239,8 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   os.environ.setdefault('EVENT_LOG_FILE', os.path.join(tests_home, 'zLOG.log'))
   os.environ.setdefault('EVENT_LOG_SEVERITY', '-300')
 
-  execfile(os.path.join(tests_framework_home, 'framework.py'))
+  execfile(os.path.join(tests_framework_home, 'framework.py'),
+              dict(__name__='__main__'))
   
   if WIN:
     products_home = os.path.join(real_instance_home, 'Products')
