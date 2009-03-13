@@ -135,7 +135,6 @@ result.append(ReportSection(\n
               path=context.getPhysicalPath(),\n
               selection_columns=selection_columns,\n
               listbox_display_mode=\'FlatListMode\',\n
-              title=context.Base_translateString(\'Order\'),\n
               selection_params=params,\n
               form_id=\'OrderModule_viewOrderStatList\'))\n
 \n

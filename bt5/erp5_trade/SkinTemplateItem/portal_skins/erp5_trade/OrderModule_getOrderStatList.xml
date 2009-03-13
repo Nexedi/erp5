@@ -68,15 +68,15 @@ aggregation_level = request.get(\'aggregation_level\', None)\n
 report_group_by = request.get(\'group_by\', None)\n
 # get all category\n
 incoterm = request.get(\'incoterm\', None)\n
-group = request.get(\'group\', None)\n
+section_category = request.get(\'section_category\', None)\n
 order = request.get(\'order\', None)\n
 delivery_mode = request.get(\'delivery_mode\', None)\n
 \n
 catalog_params = {}\n
 \n
-# get all organisation for the selected group\n
-if group not in (\'\', None):\n
-  group_uid = category_tool.group.restrictedTraverse(group).getUid()\n
+# get all organisation for the selected section category\n
+if section_category:\n
+  group_uid = category_tool.getCategoryValue(section_category).getUid()\n
   organisation_uid_list = [x.uid for x in portal.portal_catalog(portal_type="Organisation", default_group_uid=group_uid)]\n
   if report_type == "sale":\n
     catalog_params[\'default_source_section_uid\'] = organisation_uid_list or -1\n
@@ -357,7 +357,7 @@ return line_list\n
                             <string>aggregation_level</string>
                             <string>report_group_by</string>
                             <string>incoterm</string>
-                            <string>group</string>
+                            <string>section_category</string>
                             <string>order</string>
                             <string>delivery_mode</string>
                             <string>catalog_params</string>
