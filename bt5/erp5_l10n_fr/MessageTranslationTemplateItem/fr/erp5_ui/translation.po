@@ -1131,6 +1131,9 @@ msgstr "Bloquer le compte"
 msgid "Body"
 msgstr "Contenu de la page"
 
+msgid "Both"
+msgstr "Les deux"
+
 msgid "Both sections must be defined for invoices"
 msgstr "Le client et le fournisseur doivent être définis sur une facture"
 
@@ -4264,11 +4267,17 @@ msgstr "Émetteur de la facture"
 msgid "Invoice Transaction Rule"
 msgstr "Règle de facturation"
 
+msgid "Invoice Type"
+msgstr "Type de facture"
+
 msgid "Invoice View"
 msgstr "Facture"
 
 msgid "Invoice to"
 msgstr "Facturé à "
+
+msgid "Invoices Report"
+msgstr "Rapport des factures"
 
 msgid "Invoicing Rule"
 msgstr "Règle de facturation"
@@ -5635,6 +5644,12 @@ msgstr "Offres en attente"
 
 msgid "People"
 msgstr "Personnes"
+
+msgid "Per Product"
+msgstr "Par produit"
+
+msgid "Per Third Party"
+msgstr "Par tiers"
 
 msgid "Percentage"
 msgstr "Pourcentage"
