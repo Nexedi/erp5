@@ -74,7 +74,9 @@
                 </item>
                 <item>
                     <key> <string>items</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>size</string> </key>
@@ -136,7 +138,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Group By</string> </value>
+                    <value> <string>Kind of report</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -156,6 +158,22 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>request/group_by | nothing</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [(context.Base_translateString(x[0]), x[1]) for x in field.get_orig_value(\'items\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
