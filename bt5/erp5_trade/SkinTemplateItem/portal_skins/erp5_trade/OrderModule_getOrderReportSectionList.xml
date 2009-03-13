@@ -58,12 +58,13 @@ from Products.ERP5Type.DateUtils import getIntervalListBetweenDates\n
 from DateTime import DateTime\n
 result=[]\n
 \n
+request = container.REQUEST\n
 # list only if user has a login defined\n
-aggregation_level = context.REQUEST.get(\'aggregation_level\')\n
-from_date = context.REQUEST.get(\'from_date\')\n
-to_date = context.REQUEST.get(\'at_date\')\n
-group_by = context.REQUEST.get(\'group_by\')\n
-simulation_state = context.REQUEST.get(\'simulation_state\')\n
+aggregation_level = request.get(\'aggregation_level\')\n
+from_date = request.get(\'from_date\')\n
+to_date = request.get(\'at_date\')\n
+group_by = request.get(\'group_by\')\n
+simulation_state = request.get(\'simulation_state\')\n
 \n
 selection_columns = [(\'group_by\', "Group by")]\n
 if from_date is None:\n
@@ -120,6 +121,16 @@ elif "Purchase" in context.getPortalType():\n
   report_type = "purchase"\n
   line_portal_type = "Purchase Order Line"\n
   doc_portal_type = "Purchase Order"\n
+elif request.get(\'order_report_document_portal_type\'):\n
+  doc_portal_type = request.get(\'order_report_document_portal_type\')\n
+  if doc_portal_type == \'Purchase Invoice Transaction\':\n
+    line_portal_type = \'Invoice Line\'\n
+    report_type = \'purchase\'\n
+  elif doc_portal_type == \'Sale Invoice Transaction\':\n
+    line_portal_type = \'Invoice Line\'\n
+    report_type = \'sale\'\n
+  else:\n
+    raise ValueError, "unknown document portal type for report %s" % doc_portal_type\n
 else:\n
   raise ValueError, "unknown type for report"\n
 \n
@@ -183,7 +194,8 @@ return result\n
                             <string>DateTime</string>
                             <string>result</string>
                             <string>_getattr_</string>
-                            <string>context</string>
+                            <string>container</string>
+                            <string>request</string>
                             <string>aggregation_level</string>
                             <string>from_date</string>
                             <string>to_date</string>
@@ -199,6 +211,7 @@ return result\n
                             <string>q</string>
                             <string>select_expression</string>
                             <string>_getitem_</string>
+                            <string>context</string>
                             <string>interval_list_dict</string>
                             <string>interval_list</string>
                             <string>interval_column_list</string>
