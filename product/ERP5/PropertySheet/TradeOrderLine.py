@@ -33,7 +33,7 @@ class TradeOrderLine:
   _constraints = (
     { 'id'            : 'resource',
       'description'   : 'Resource must be defined',
-      'type'          : 'CategoryMembershipArity',
+      'type'          : 'CategoryAcquiredMembershipArity',
       'min_arity'     : '1',
       'max_arity'     : '1',
       'portal_type'   : ( ),
