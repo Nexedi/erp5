@@ -421,7 +421,7 @@ class TestTradeReports(ERP5ReportTestCase):
     request['from_date'] = DateTime(2006, 2, 2)
     request['at_date'] = DateTime(2007, 12, 31)
     request['simulation_state'] = ['draft',]
-    request['group'] = 'g2'
+    request['section_category'] = 'group/g2'
     report_section_list = self.getReportSectionList(self.sale_order_module,
                                                     'OrderModule_viewOrderReport')
     self.assertEquals(1, len(report_section_list))
@@ -484,7 +484,7 @@ class TestTradeReports(ERP5ReportTestCase):
     request['from_date'] = DateTime(2006, 2, 1)
     request['at_date'] = DateTime(2006, 2, 28)
     request['aggregation_level'] = "week"
-    request['group'] = None
+    request['section_category'] = None
     request['group_by'] = "client"
     request['simulation_state'] = ['cancelled', 'draft']
     report_section_list = self.getReportSectionList(self.sale_order_module,
@@ -528,7 +528,7 @@ class TestTradeReports(ERP5ReportTestCase):
     request['simulation_state'] = ['draft',]
     request['aggregation_level'] = "year"
     request['group_by'] = "both"
-    request['group'] = 'g2'
+    request['section_category'] = 'group/g2'
     report_section_list = self.getReportSectionList(self.sale_order_module,
                                                     'OrderModule_viewOrderReport')
     self.assertEquals(1, len(report_section_list))
@@ -587,11 +587,11 @@ class TestTradeReports(ERP5ReportTestCase):
                  'total quantity': None}
     self.checkLineProperties(stat_line_list[0],**d)
   
-    # group set, with no matching organisations
+    # section category set, with no matching organisations
     request['simulation_state'] = ['draft',]
     request['aggregation_level'] = "year"
     request['group_by'] = "both"
-    request['group'] = 'g3'
+    request['section_category'] = 'group/g3'
     report_section_list = self.getReportSectionList(self.sale_order_module,
                                                     'OrderModule_viewOrderReport')
     self.assertEquals(1, len(report_section_list))
