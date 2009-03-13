@@ -67,7 +67,7 @@ class TestERP5Base(ERP5TypeTestCase):
     return ('erp5_base',)
 
 
-  def afterSetUp(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def afterSetUp(self):
     """
       Initialize the ERP5 site.
     """
@@ -80,7 +80,13 @@ class TestERP5Base(ERP5TypeTestCase):
     self.createCategories()
     # self.login_as_member()
 
-
+  def beforeTearDown(self):
+    transaction.abort()
+    for module in ( self.portal.person_module,
+                    self.portal.organisation_module, ):
+      module.manage_delObjects(list(module.objectIds()))
+    transaction.commit()
+    self.tic()
 
   ##################################
   ##  Usefull methods
@@ -1322,6 +1328,7 @@ class TestERP5Base(ERP5TypeTestCase):
     active_process = portal_activities.newActiveProcess()
     portal_activities.ERP5Site_checkDataWithScript(method_id=test, tag=test,
                                        active_process=active_process.getPath())
+    transaction.commit()
     self.tic()
     relative_url_list = sum((x.detail.split('\n')
                              for x in active_process.getResultList()), [])
@@ -1346,6 +1353,8 @@ class TestERP5Base(ERP5TypeTestCase):
     message_catalog.gettext('Person', add=1)
     message_catalog.message_edit('Draft', lang, 'Brouillon', '')
     message_catalog.message_edit('Person', lang, 'Personne', '')
+
+    self.portal.ERP5Site_updateTranslationTable()
 
     person_1 = self.portal.person_module.newContent(portal_type='Person')
     person_1.validate()
