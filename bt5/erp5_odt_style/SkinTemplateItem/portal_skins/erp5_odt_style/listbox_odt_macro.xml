@@ -98,7 +98,7 @@
                  editable_fields python:dict([(column[0], getattr(listbox.aq_parent, \'listbox_%s\' % column[0], None)) for column in editable_columns]);\n
                  selection python:here.portal_selections.getSelectionFor(selection_name, REQUEST=request);\n
                  is_domain_tree_mode selection/domain_tree_mode | nothing;\n
-                 is_report_tree_mode selection/report_tree_mode | nothing;" >\n
+                 is_report_tree_mode selection/report_tree_mode | nothing;">\n
 \n
            <tal:block tal:condition="python: len(listboxline_list) > 1" >\n
                <table:table table:style-name=\'listbox-table\' table:name=\'listbox-table\'>\n
@@ -121,7 +121,7 @@
                     <tal:block tal:define="global style_text python:\'listbox-data-b\'"/>\n
                   </tal:block>\n
 \n
-                 <tal:block tal:condition="python: is_report_tree_mode">\n
+                 <tal:block tal:condition="is_report_tree_mode">\n
                     <table:table-row>\n
                     <table:table-cell style:name=\'listbox-table.A1\' office:value-type=\'string\'>\n
                      <tal:block tal:condition="listboxline/getSectionName">\n
@@ -133,13 +133,12 @@
 \n
                    <tal:block tal:condition="python: listboxline.isTitleLine()">\n
                      <table:table-header-rows>\n
-                       <table:table-row>\n
+                       <table:table-row tal:condition="is_domain_tree_mode">\n
                          <table:table-cell table:style-name=\'listbox-table.A1\' \n
                                            tal:attributes="table:number-columns-spanned python: len(listboxline.getColumnItemList())" \n
                                            office:value-type=\'string\'>\n
-                            <text:p tal:condition=\'is_domain_tree_mode\'\n
-                                   text:style-name=\'listbox-header\'\n
-                                   tal:content="python: selection.getDomain() is not None and selection.getDomain().asDomainItemDict().values()[-1].getTitle() or \'\'"/>\n
+                            <text:p text:style-name=\'listbox-header\'\n
+                                    tal:content="python: selection.getDomain() is not None and selection.getDomain().asDomainItemDict().values()[-1].getTitle() or \'\'"/>\n
                          </table:table-cell>\n
                        </table:table-row>\n
                        <table:table-row>\n
@@ -153,7 +152,7 @@
                          </table:table-cell>\n
                        </table:table-row>\n
                     </table:table-header-rows>\n
-                     <table:table-header-rows>\n
+                    <table:table-header-rows>\n
                     <table:table-row>\n
                     <tal:block tal:repeat="column_item python: listboxline.getColumnItemList()">\n
                      <tal:block tal:define="column_property python: column_item[1];\n
