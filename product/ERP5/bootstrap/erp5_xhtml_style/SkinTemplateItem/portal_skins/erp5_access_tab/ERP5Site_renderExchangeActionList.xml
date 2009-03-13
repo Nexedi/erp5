@@ -56,7 +56,7 @@
         <div style="width:25%; min-width:150px; float:left;"\n
             class="tabbertabcont"\n
             tal:define="module_list python:module_category[1]">\n
-          <ul style="list-style-type:none; padding-left:10px;"\n
+          <ul style="list-style-type:none; padding-left:10px; white-space:nowrap;"\n
               tal:condition="python:module_list">\n
             <li style="font-weight:bold; color:#002e3f;" i18n:translate=""\n
                 tal:content="python:module_category[0]" />\n

@@ -53,7 +53,7 @@
     <tr tal:repeat="row python: xrange(row_number)">\n
       <tal:block tal:repeat="module_category python: module_category_list[(row*max_per_line):((row+1)*max_per_line)]">\n
         <td>\n
-        <div style="width:25%; min-width:150px; float:left;"\n
+        <div style="width:25%; min-width:150px; float:left; white-space:nowrap;"\n
             class="tabbertabcont"\n
             tal:define="module_list python:module_category[1]">\n
           <ul style="list-style-type:none; padding-left:10px;"\n
