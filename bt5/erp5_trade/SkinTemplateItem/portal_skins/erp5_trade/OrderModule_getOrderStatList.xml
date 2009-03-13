@@ -79,10 +79,10 @@ if group not in (\'\', None):\n
   group_uid = category_tool.group.restrictedTraverse(group).getUid()\n
   organisation_uid_list = [x.uid for x in portal.portal_catalog(portal_type="Organisation", default_group_uid=group_uid)]\n
   if report_type == "sale":\n
-    catalog_params[\'default_source_section_uid\'] = organisation_uid_list\n
+    catalog_params[\'default_source_section_uid\'] = organisation_uid_list or -1\n
   elif report_type:\n
-    catalog_params[\'default_destination_section_uid\'] = organisation_uid_list\n
-    \n
+    catalog_params[\'default_destination_section_uid\'] = organisation_uid_list or -1\n
+\n
 # add category params if defined\n
 if incoterm not in (\'\', None):\n
   incoterm_uid = category_tool.incoterm.restrictedTraverse(incoterm).getUid()\n
@@ -117,6 +117,7 @@ elif to_date is not None:\n
   query = Query(range="ngt", **params)\n
 \n
 sort_on_list = [ (\'delivery.destination_section_uid\', \'ASC\'), (\'delivery.start_date\',\'ASC\')]\n
+\n
 result_list = context.portal_catalog.searchResults(limit=None,query=query,\n
                                                    portal_type=doc_portal_type,\n
                                                    simulation_state=simulation_state,\n
@@ -130,7 +131,9 @@ client_dict = {}\n
 product_dict = {}\n
 for result in result_list:\n
   result = result.getObject()\n
-  period = result.getStartDate().strftime(date_format)\n
+  period = result.getStartDate()\n
+  if period is not None:\n
+    period = period.strftime(date_format)\n
   if report_group_by in ("client", "both"):\n
     # client_title -> period -> amount\n
     if report_type == "sale":\n
