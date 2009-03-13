@@ -1,3 +1,6 @@
+2009-03-13 yusei
+* Correct 	delivery_movement_account_interaction_workflow title.
+
 2009-02-17 yusei
 * Hide "Add Invoice Line" from the drop down action menu until invoice support to collect multiple different orders.
 
