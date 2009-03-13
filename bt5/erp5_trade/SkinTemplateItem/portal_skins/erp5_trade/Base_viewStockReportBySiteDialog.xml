@@ -96,8 +96,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_at_date</string>
                         <string>your_site</string>
+                        <string>your_at_date</string>
                         <string>your_positive_stock</string>
                         <string>your_negative_stock</string>
                         <string>your_zero_stock</string>
