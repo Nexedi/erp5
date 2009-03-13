@@ -144,7 +144,7 @@ else:\n
 \n
     # Build a data structure to associate column index with object property and portal type\n
     column_mapping = {}\n
-    for (column_name, property_dict) in mapping[spreadsheet_name].items():\n
+    for (column_name, property_dict) in mapping.get(sheet_name, {}).items():\n
       for (column_id, column_title) in column_index.items():\n
         if column_name == column_title:\n
           column_mapping[column_id] = property_dict\n
