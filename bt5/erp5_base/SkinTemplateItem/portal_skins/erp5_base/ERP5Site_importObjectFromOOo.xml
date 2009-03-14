@@ -53,9 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
+            <value> <string>"""\n
   This script is an alpha version of what should be a generic OpenOffice importer,\n
     which is a collection of scripts and UI to import lots of objects to ERP5\n
     from a spreadsheet. The idea is to let the user map each spreadsheet column with\n
@@ -127,7 +125,7 @@ else:\n
       map_item = { \'portal_type\': portal_type_property.split(\'.\')[0]\n
                  , \'property\'   : portal_type_property.split(\'.\')[1]\n
                  }\n
-      if spreadsheet_name not in mapping.keys():\n
+      if spreadsheet_name not in mapping:\n
         mapping[spreadsheet_name] = {}\n
       mapping[spreadsheet_name][column_name] = map_item\n
 \n
@@ -139,7 +137,7 @@ else:\n
 \n
     # Build a data structure to associate column index with column title\n
     column_index = {}\n
-    for column_id in range(len(sheet_data[0])):\n
+    for column_id in xrange(len(sheet_data[0])):\n
       column_index[column_id] = sheet_data[0][column_id]\n
 \n
     # Build a data structure to associate column index with object property and portal type\n
@@ -154,8 +152,8 @@ else:\n
     object_list = {}\n
     for line in sheet_data[1:]:\n
       new_object_property_dict = {}\n
-      for line_property_index in range(len(line)):\n
-        if line_property_index in column_mapping.keys():\n
+      for line_property_index in xrange(len(line)):\n
+        if line_property_index in column_mapping:\n
           property_module = sheet_module\n
           property_module_url = property_module.getRelativeUrl()\n
           property_pt     = column_mapping[line_property_index][\'portal_type\']\n
@@ -171,7 +169,7 @@ else:\n
             # Create a new property value\n
             new_object_property_dict[property_id] = property_value\n
 \n
-      if len(new_object_property_dict.keys()) > 0:\n
+      if new_object_property_dict:\n
         object_list[property_module_url][property_pt].append(new_object_property_dict)\n
 \n
   context.activate(tag="object_OOo_import", priority=1, activity="SQLQueue").ERP5Site_importObjectFromOOoActivity(object_list=object_list)\n
@@ -179,9 +177,7 @@ else:\n
   return request.RESPONSE.redirect(context.absolute_url() + \'/view?portal_status_message=OpenOffice+document+importing.\')\n
 \n
 return context.ERP5Site_importObjectFromOOoFastInput(REQUEST=request)\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -248,7 +244,7 @@ return context.ERP5Site_importObjectFromOOoFastInput(REQUEST=request)\n
                             <string>sheet_data</string>
                             <string>sheet_module</string>
                             <string>column_index</string>
-                            <string>range</string>
+                            <string>xrange</string>
                             <string>column_id</string>
                             <string>column_mapping</string>
                             <string>property_dict</string>

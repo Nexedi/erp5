@@ -62,11 +62,10 @@ for portal_type in module.allowedContentTypes():\n
     #property_string = "%s.%s" % (portal_type.id, property[\'id\'])\n
     #property_list.append(property_string)\n
   for property in portal_type.getInstancePropertyAndBaseCategoryList():\n
-    property_string = "%s.%s" % (portal_type.id, property)\n
-    property_list.append(property_string)\n
+    property_list.append((portal_type.id, property))\n
 \n
 property_list.sort()\n
-return [(\'-- Ignore this Property --\', \'\')] + map(lambda x: (x,x), property_list)\n
+return [(\'-- Ignore this Property --\', \'\')] + map(lambda x: (x[1], \'%s.%s\' % (x[0], x[1])), property_list)\n
 </string> </value>
         </item>
         <item>
@@ -110,7 +109,6 @@ return [(\'-- Ignore this Property --\', \'\')] + map(lambda x: (x,x), property_
                             <string>_getattr_</string>
                             <string>portal_type</string>
                             <string>property</string>
-                            <string>property_string</string>
                             <string>map</string>
                           </tuple>
                         </value>
