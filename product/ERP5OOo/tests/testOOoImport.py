@@ -90,7 +90,7 @@ class TestOOoImport(ERP5TypeTestCase):
     """
       Return the list of required business templates.
     """
-    return ('erp5_base',)
+    return ('erp5_base', 'erp5_ooo_import')
 
   def afterSetUp(self):
     """
@@ -153,13 +153,15 @@ class TestOOoImport(ERP5TypeTestCase):
     { 'listbox_key': '004',
       'portal_type_property_list':'Person.default_email_text'}
     )
-    person_module.ERP5Site_importObjectFromOOo(import_file=f, listbox=listbox)
+    person_module.Base_importFile(import_file=f, listbox=listbox)
 
   def stepCheckActivitiesCount(self, sequence=None, sequence_list=None, **kw):
     message_list = self.getPortal().portal_activities.getMessageList()
-    self.assertEqual(1,len(message_list))
+    self.assertEqual(102, len(message_list)) # 101 import activities
+                                             # +1 immediateReindexObject for
+                                             # in portal_activities
     method_id = message_list[0].method_id
-    self.assertEqual('ERP5Site_importObjectFromOOoActivity',method_id)
+    self.assertEqual('Base_importFileLineDefaultScript',method_id)
 
   def stepCheckImportedPersonList(self, sequence=None, sequence_list=None, **kw):
     person_module = self.getPortal().person_module
@@ -176,8 +178,7 @@ class TestOOoImport(ERP5TypeTestCase):
 
   def test_01_ImportObjectFromOOoInActivities(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
-      Simulate import of OOo file true ERP5Site_importObjectFromOOoFastInput
-      For Person Module.
+      Simulate import of OOo file using Base_importFile for Person Module.
     """
     if not run: return
     sequence_list = SequenceList()
