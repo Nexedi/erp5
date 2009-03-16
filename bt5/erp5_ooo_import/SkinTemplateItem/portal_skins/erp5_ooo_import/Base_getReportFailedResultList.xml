@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Type.Document import newTempBase\n
+from string import zfill\n
+\n
+portal_object = context.getPortalObject()\n
+num = 0\n
+result_listbox = []\n
+\n
+if active_process_path is None:\n
+  #return []\n
+  active_process_path=context.REQUEST.get(\'active_process\')\n
+\n
+active_process_value = context.getPortalObject().restrictedTraverse(active_process_path)\n
+result_list = [[x.method_id, x.result] for x in active_process_value.getResultList()]\n
+\n
+result_list.sort()\n
+\n
+for [method_id, result] in result_list:\n
+  safe_id = context.Base_getSafeIdFromString(\'result %s\' % num)\n
+  num += 1\n
+  int_len = 7\n
+  if not result[\'success\']:\n
+      o = newTempBase(portal_object, safe_id)\n
+      o.setUid(  \'new_%s\' % zfill(num, int_len)) # XXX There is a security issue here\n
+      o.edit(uid=\'new_%s\' % zfill(num, int_len)) # XXX There is a security issue here\n
+      o.edit(**result[\'object\'])\n
+      result_listbox.append(o)\n
+\n
+return result_listbox\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>active_process_path=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>active_process_path</string>
+                            <string>kw</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
+                            <string>string</string>
+                            <string>zfill</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal_object</string>
+                            <string>num</string>
+                            <string>result_listbox</string>
+                            <string>None</string>
+                            <string>active_process_value</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>result_list</string>
+                            <string>method_id</string>
+                            <string>result</string>
+                            <string>safe_id</string>
+                            <string>_inplacevar_</string>
+                            <string>int_len</string>
+                            <string>_getitem_</string>
+                            <string>o</string>
+                            <string>_apply_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_getReportFailedResultList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

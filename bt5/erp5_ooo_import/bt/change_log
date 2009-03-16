@@ -1,0 +1,17 @@
+2009-03-13 Kazuhiko
+* remove portal_session and portal_caches/erp5_session_cache from this BT because they are already included in erp5_core since r.24571.
+
+2008-09-03 Fabien
+remove portal_session from path and add it on tools. The bt was not installable before.
+
+2008-07-16 Nicolas
+reset listbox selection in dialog
+
+2008-07-16 Nicolas
+Guess the best property which map the suggested one
+
+2008-05-12 rafael
+* Removed dependency
+
+2008-01-22 mohamadou
+* Creation of experimental OOo import bt

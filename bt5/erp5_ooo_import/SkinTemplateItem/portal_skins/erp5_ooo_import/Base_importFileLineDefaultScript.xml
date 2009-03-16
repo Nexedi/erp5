@@ -1,0 +1,279 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+#                                   Mohamadou Mbengue <mmbengue@gmail.com>\n
+#\n
+#  This is the Default script used by import module to create spreadshett line\'s as object \n
+#  With manager role, it\'s possible to use another script and add specifics changes.\n
+#  In this script the line to create is given as a parameter and is created in an activity \n
+#  witch returns the results of the processing (success=1 if the sstep passes or 0 if not).\n
+#  The result must be be of this format : \n
+#   {\n
+#    \'message\': translated_msg, ## The translated message of the active process result\n
+#    \'object_url\': new_object.getRelativeUrl(), ## The url of the object if creation is successfull\n
+#    \'object\': imported_line, ## Object propeties value\'s\n
+#    \'success\': success ## The result of the \n
+#   }\n
+#  The script must have proxy role manager\n
+#####################################################################################################\n
+\n
+from ZODB.POSException import ConflictError\n
+from Products.ERP5Type.Message import Message\n
+\n
+#Create new ERP5 objects In Activity from OOo document\n
+imported_line = object_url = None\n
+\n
+portal = context.getPortalObject()\n
+container = portal.restrictedTraverse(container_relative_url)\n
+\n
+portal_type_object = None\n
+for allowed_portal_type in container.allowedContentTypes():\n
+  if portal_type == allowed_portal_type.id:\n
+    portal_type_object = allowed_portal_type\n
+    break\n
+\n
+if portal_type_object is None:\n
+  raise ValueError, \'Disallowed subobject type: %s\' % portal_type\n
+else:\n
+  # Default result\n
+  success = 1\n
+  translated_msg = Message(\n
+       \'erp5_ui\',\n
+       \'Object created successfully - Type: ${portal_type}\',\n
+       mapping=dict(portal_type=Message(\'erp5_ui\',\n
+                                        portal_type)))\n
+  imported_line = imported_line_property_dict.copy()\n
+\n
+  # Get portal type objects\n
+  base_category_list = portal_type_object.getInstanceBaseCategoryList()\n
+  \n
+  # Create the object\n
+  new_object = container.newContent(portal_type=portal_type)\n
+\n
+  # Separate categories from properties\n
+  imported_line_category_dict = {}\n
+  for prop_key in imported_line_property_dict.keys():\n
+    if prop_key in base_category_list:\n
+      imported_line_category_dict[prop_key] = imported_line_property_dict.pop(prop_key)\n
+\n
+  # Save properties on object\n
+  try:\n
+    new_object.edit(**imported_line_property_dict)\n
+  except ConflictError:\n
+    raise\n
+  except Exception, error:\n
+    translated_msg = Message(\'erp5_ui\',\n
+                     \'An error Occurred while creating object: ${error}\',\n
+                     mapping=dict(error=Message(\'erp5_ui\',\n
+                                                \'${error}\',\n
+                                                mapping=dict(error=error)))\n
+                     )\n
+    success = 0\n
+\n
+  # Save the categories\n
+  for category, value in imported_line_category_dict.items():\n
+    category_dict = context.ERP5Site_getCategoriesFullPath(\n
+                                       category_dict={category: value})\n
+    if category_dict not in (None, {}):\n
+      try:\n
+        new_object.edit(**category_dict)\n
+      except ConflictError:\n
+        raise\n
+      except Exception, error:\n
+        #context.log(\'category: %s\' %category)\n
+        translated_msg = Message(\n
+                     \'erp5_ui\',\n
+                     \'An error Occurred while importing the category ${category} - ${error}\',\n
+                     mapping=dict(category=Message(\'erp5_ui\',\n
+                                                   \'${category}\',\n
+                                                   mapping=dict(category=category)),\n
+                                  error=Message(\'erp5_ui\',\n
+                                                \'${error}\',\n
+                                                mapping=dict(error=error))))\n
+        success = 0\n
+        # Delete the object if error occurs\n
+        #container.manage_delObjects([new_object.getId()])\n
+      del imported_line_category_dict[category]\n
+\n
+  # Not found categories\n
+  if imported_line_category_dict not in ({}, None):\n
+    value_list = \', \'.join(imported_line_category_dict.values())\n
+    category_list = \', \'.join(imported_line_category_dict.keys())\n
+\n
+    translated_msg = Message(\'erp5_ui\',\n
+           \'An error occured, values ("${value_list}") not found in categories ("${category_list}")\',\n
+           mapping=dict(value_list=value_list, category_list=category_list))\n
+    success = 0\n
+\n
+  if not success:\n
+    # Delete the object if error occurs\n
+    container.manage_delObjects([new_object.getId()])\n
+  return {\n
+    \'message\': translated_msg,\n
+    \'object_url\': new_object.getRelativeUrl(),\n
+    \'object\': imported_line,\n
+    \'success\': success\n
+  }\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>container_relative_url, portal_type, imported_line_property_dict, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>container_relative_url</string>
+                            <string>portal_type</string>
+                            <string>imported_line_property_dict</string>
+                            <string>kw</string>
+                            <string>ZODB.POSException</string>
+                            <string>ConflictError</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>Message</string>
+                            <string>None</string>
+                            <string>imported_line</string>
+                            <string>object_url</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>container</string>
+                            <string>portal_type_object</string>
+                            <string>_getiter_</string>
+                            <string>allowed_portal_type</string>
+                            <string>ValueError</string>
+                            <string>success</string>
+                            <string>dict</string>
+                            <string>translated_msg</string>
+                            <string>base_category_list</string>
+                            <string>new_object</string>
+                            <string>imported_line_category_dict</string>
+                            <string>prop_key</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
+                            <string>Exception</string>
+                            <string>error</string>
+                            <string>category</string>
+                            <string>value</string>
+                            <string>category_dict</string>
+                            <string>value_list</string>
+                            <string>category_list</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_importFileLineDefaultScript</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

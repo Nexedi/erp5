@@ -1,0 +1,386 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Type.Document import newTempFile\n
+from Products.ERP5OOo.OOoUtils import CorruptedOOoFile\n
+from Products.ERP5.Document.Document import ConversionError\n
+from Products.ERP5OOo.OOoUtils import OOoParser\n
+import string\n
+\n
+request  = context.REQUEST\n
+\n
+def getSpreadsheet(file):\n
+  ooo_parser = OOoParser()\n
+\n
+  # Extract tables from the speadsheet file\n
+  if file is None:\n
+    return {}\n
+  elif hasattr(file, \'headers\'):\n
+    # if the file is not an open office format, try to convert it using oood\n
+    content_type = file.headers.get(\'Content-Type\', \'\')\n
+    if not (content_type.startswith(\'application/vnd.sun.xml\')\n
+       or content_type.startswith(\'application/vnd.oasis.opendocument\')):\n
+\n
+      from Products.ERP5Type.Document import newTempOOoDocument\n
+      tmp_ooo = newTempOOoDocument(context, file.filename)\n
+      tmp_ooo.edit(data=file.read(), content_type=content_type)\n
+      tmp_ooo.convertToBaseFormat()\n
+      ignored, import_file_content = tmp_ooo.convert(\'sxc\')\n
+      ooo_parser.openFromString(str(import_file_content))\n
+    else:\n
+      ooo_parser.openFile(file)\n
+  else:\n
+    ooo_parser.openFromString(file)\n
+\n
+\n
+  return ooo_parser.getSpreadsheetsMapping()\n
+\n
+def cleanUid(uid):\n
+  """method which clean an Uid"""\n
+  clean = uid.strip(string.ascii_letters+\'_\')\n
+  return long(clean)\n
+\n
+# if listbox is empty, then we are in the first step\n
+if listbox is None:\n
+  listbox = []\n
+\n
+if len(listbox) == 0:\n
+  # First step\n
+  # The purpose of this step is to read the first line of the spreadsheet_name\n
+  # and to propose a mapping interface to the user\n
+  try:\n
+    spreadsheets = getSpreadsheet(import_file)\n
+  except ConversionError:\n
+    raise\n
+    return context.Base_redirect(\n
+               form_id=dialog_id,\n
+               keep_items={\n
+                 \'portal_status_message\': \'This file format is not handle.\'})\n
+  # Put the result of OOo parsing in the request\n
+  request.set(\'ooo_import_spreadsheet_data\', spreadsheets)\n
+\n
+  # Start a session and store the content of the file\n
+  session_id = context.browser_id_manager.getBrowserId(create=1)\n
+  session = context.portal_sessions[session_id]\n
+  temp_file = newTempFile(context, session_id)\n
+  temp_file.edit(data=spreadsheets)\n
+\n
+  #create a temporary file_name\n
+  timestamp = "%s" % DateTime.timeTime(DateTime())\n
+  timestamp = timestamp.split(\'.\')[0]\n
+  temp_import_file_name = "temp_file_%s" % timestamp\n
+  # Put the generated file_name in the request\n
+  request.set(\'temp_import_file_name\', temp_import_file_name)\n
+  session[temp_import_file_name] = temp_file\n
+\n
+  return context.Base_viewFileImportMappingDialog(REQUEST=request)\n
+\n
+else:\n
+  # Second Step\n
+  # Read the mapping entered by the user, and import the spreadsheet\'s lines\n
+\n
+  if import_file is not None:\n
+    spreadsheets = getSpreadsheet(import_file)\n
+  else:\n
+    # Get the file content from the session\n
+    session_id = context.browser_id_manager.getBrowserId()\n
+    session = context.portal_sessions[session_id]\n
+    # get the temp_file_name from the request\n
+    temp_file_name = request.get(\'temp_file_name\')\n
+    # Should raise an error if this implementation is buggy\n
+    temp_file = session[temp_file_name]\n
+    # Clear this session after import is done\n
+    session[temp_file_name] = None\n
+    spreadsheets = temp_file.getData()\n
+\n
+  # Build the data mapping\n
+  mapping = {}\n
+  request.set(\'ooo_import_spreadsheet_data\', spreadsheets)\n
+\n
+  listbox_ordered_lines = context.Base_getSpreadsheetColumnNameList()\n
+\n
+  for line in listbox_ordered_lines:\n
+\n
+    # The gererated uid in Base_getSpreadsheetColumnNameList is like new_000001\n
+    # We just use the number \'0000001\' to index the line in the dict\n
+    listbox_id = cleanUid(line.getUid())\n
+    portal_type_property = None\n
+    if same_type(listbox, dict):\n
+      portal_type_property = listbox[listbox_id][\'portal_type_property_list\']\n
+    else:\n
+      for listbox_dict in listbox:\n
+        listbox_key = cleanUid(listbox_dict[\'listbox_key\'])\n
+        if listbox_key == listbox_id:\n
+          portal_type_property = listbox_dict[\'portal_type_property_list\']\n
+          break\n
+\n
+    if portal_type_property not in (\'\', None):\n
+      spreadsheet_name = getattr(line, \'spreadsheet_name\')\n
+      column_name = getattr(line, \'spreadsheet_column\')\n
+\n
+      portal_type, property = portal_type_property.split(\'.\', 1)\n
+\n
+      if not mapping.has_key(spreadsheet_name):\n
+        mapping[spreadsheet_name] = (portal_type, {})\n
+      mapping[spreadsheet_name][1][column_name] = property\n
+\n
+      # portal_type should be the same for all columns\n
+      if portal_type != mapping[spreadsheet_name][0]:\n
+        raise AttributeError, "Portal type is not the same for all columns"\n
+\n
+  # If no mapping is given\n
+  if mapping == {}:\n
+    raise AttributeError, \'Mapping not found\'\n
+\n
+  # Create the active process for all the lines\n
+  active_process_value = context.portal_activities.newActiveProcess()\n
+  active_process_path  = active_process_value.getRelativeUrl()\n
+  # Convert each spreadsheet\n
+  for sheet_name, sheet_data in spreadsheets.items():\n
+\n
+    # Build a data structure to associate column index with column title\n
+    column_index = {}\n
+    if sheet_data:\n
+      for column_id in range(len(sheet_data[0])):\n
+        column_index[column_id] = sheet_data[0][column_id]\n
+\n
+    # Build a data structure to associate column index with object property and portal type\n
+    column_mapping = {}\n
+    for (column_name, property_dict) in mapping[spreadsheet_name][1].items():\n
+      for (column_id, column_title) in column_index.items():\n
+        if column_name == column_title:\n
+          column_mapping[column_id] = property_dict\n
+          break\n
+\n
+    # Create a dict to describe each line in property\n
+    for line in sheet_data[1:]:\n
+\n
+      imported_line_property_dict = {}\n
+\n
+      for line_property_index in range(len(line)):\n
+        if column_mapping.has_key(line_property_index):\n
+          property_value = line[line_property_index]\n
+          if property_value:\n
+            # Create a new property value\n
+            property_id = column_mapping[line_property_index]\n
+            imported_line_property_dict[property_id] = property_value.encode(\'UTF-8\')\n
+      \n
+       \n
+      # If the line is not empty, activate an activity for it\n
+      if imported_line_property_dict not in [{}, None]:\n
+        tag = "OOo_import_%s" % active_process_value.getId()\n
+        portal_type = mapping[spreadsheet_name][0]\n
+        active_process = context.activate(tag=tag,\n
+                         priority=1,\n
+                         activity="SQLQueue",\n
+                         active_process=active_process_path)\n
+ \n
+        if getattr(context, import_file_line_script, None) is None:\n
+          raise AttributeError, \'specified script "%s" does not exists\' % import_file_line_script\n
+\n
+        getattr(active_process, import_file_line_script)(context.getRelativeUrl(),\n
+                portal_type,\n
+                imported_line_property_dict,\n
+                active_process=active_process_path)\n
+\n
+  #Add the active_process in the selection\n
+  context.Base_addActiveProcessInSelection(active_process_path=active_process_path)\n
+\n
+  return context.Base_redirect(form_id=\'Base_viewFileImportReportDialog\',\n
+                               keep_items={\n
+                                 \'active_process\': active_process_path,\n
+                                 \'portal_status_message\': \'OpenOffice document importing report.\'})\n
+\n
+raise NotImplementedError\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>dialog_id=None, import_file=None, import_file_line_script=\'Base_importFileLineDefaultScript\', listbox=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>4</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>dialog_id</string>
+                            <string>import_file</string>
+                            <string>import_file_line_script</string>
+                            <string>listbox</string>
+                            <string>kw</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempFile</string>
+                            <string>Products.ERP5OOo.OOoUtils</string>
+                            <string>CorruptedOOoFile</string>
+                            <string>Products.ERP5.Document.Document</string>
+                            <string>ConversionError</string>
+                            <string>OOoParser</string>
+                            <string>string</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>getSpreadsheet</string>
+                            <string>cleanUid</string>
+                            <string>None</string>
+                            <string>len</string>
+                            <string>spreadsheets</string>
+                            <string>session_id</string>
+                            <string>_getitem_</string>
+                            <string>session</string>
+                            <string>temp_file</string>
+                            <string>DateTime</string>
+                            <string>timestamp</string>
+                            <string>temp_import_file_name</string>
+                            <string>_write_</string>
+                            <string>temp_file_name</string>
+                            <string>mapping</string>
+                            <string>listbox_ordered_lines</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                            <string>listbox_id</string>
+                            <string>portal_type_property</string>
+                            <string>same_type</string>
+                            <string>dict</string>
+                            <string>listbox_dict</string>
+                            <string>listbox_key</string>
+                            <string>getattr</string>
+                            <string>spreadsheet_name</string>
+                            <string>column_name</string>
+                            <string>portal_type</string>
+                            <string>property</string>
+                            <string>AttributeError</string>
+                            <string>active_process_value</string>
+                            <string>active_process_path</string>
+                            <string>sheet_name</string>
+                            <string>sheet_data</string>
+                            <string>column_index</string>
+                            <string>range</string>
+                            <string>column_id</string>
+                            <string>column_mapping</string>
+                            <string>property_dict</string>
+                            <string>column_title</string>
+                            <string>imported_line_property_dict</string>
+                            <string>line_property_index</string>
+                            <string>property_value</string>
+                            <string>property_id</string>
+                            <string>tag</string>
+                            <string>active_process</string>
+                            <string>NotImplementedError</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+                <string>Base_importFileLineDefaultScript</string>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_importFile</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
