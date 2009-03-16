@@ -1,3 +1,6 @@
+2009-03-16 Kazuhiko
+* remove ooo_import action in Person Module that is replaced by erp5_ooo_import business template with more generic and better import function.
+
 2009-02-25 ivan
 * Add portal_introspections tool
 * Add portal_web_services tool
