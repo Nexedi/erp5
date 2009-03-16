@@ -56,6 +56,7 @@
             <value> <string>message_dict = {}\n
 \n
 def add_message(message, comment):\n
+  \n
   if not message:\n
     return\n
   if message in message_dict:\n
@@ -152,14 +153,21 @@ for i in page_template_list:\n
 #\n
 # Workflow\n
 #\n
+s_title_list = []\n
 for i in context.portal_workflow.objectValues():\n
   add_message(i.title_or_id(), portal_url.getRelativeContentURL(i))\n
+  \n
   if not i.states:\n
     continue\n
   for s in i.states.values():\n
-    if s.title:\n
-      add_message(s.title, portal_url.getRelativeContentURL(s))\n
-\n
+     s_title = s.title\n
+     if s_title:\n
+       # adding a context in msg_id for more precise translation\n
+       msg_id = \'%s [state in %s]\' % (s_title, i.id)\n
+       add_message(msg_id, portal_url.getRelativeContentURL(s))\n
+       # also use state title as msg_id for compatibility\n
+       add_message(s_title, portal_url.getRelativeContentURL(s))\n
+  \n
   if not i.transitions:\n
     continue\n
   for t in i.transitions.values():\n
@@ -275,7 +283,10 @@ return printed\n
                             <string>value</string>
                             <string>label</string>
                             <string>Base_findStaticTranslationText</string>
+                            <string>s_title_list</string>
                             <string>s</string>
+                            <string>s_title</string>
+                            <string>msg_id</string>
                             <string>t</string>
                             <string>worklist</string>
                             <string>action_title</string>
