@@ -90,6 +90,7 @@
                         <string>your_omit_grouping_reference</string>
                         <string>your_portal_skin</string>
                         <string>your_format</string>
+                        <string>your_deferred_style</string>
                       </list>
                     </value>
                 </item>
