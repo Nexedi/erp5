@@ -74,10 +74,12 @@ delivery_mode = request.get(\'delivery_mode\', None)\n
 \n
 catalog_params = {}\n
 \n
-# get all organisation for the selected section category\n
+# get all organisations for the selected section category\n
 if section_category:\n
   group_uid = category_tool.getCategoryValue(section_category).getUid()\n
-  organisation_uid_list = [x.uid for x in portal.portal_catalog(portal_type="Organisation", default_group_uid=group_uid)]\n
+  organisation_uid_list = [x.uid for x in portal.portal_catalog(\n
+                                            portal_type="Organisation",\n
+                                            default_group_uid=group_uid)]\n
   if report_type == "sale":\n
     catalog_params[\'default_source_section_uid\'] = organisation_uid_list or -1\n
   elif report_type:\n
@@ -106,7 +108,7 @@ elif aggregation_level == "day":\n
 \n
 params = {"delivery.start_date":(from_date, to_date)}\n
 query=None\n
-if from_date is not None and to_date is not None:  \n
+if from_date is not None and to_date is not None:\n
   params = {"delivery.start_date":(from_date, to_date)}\n
   query = Query(range="minngt", **params)\n
 elif from_date is not None:\n
@@ -118,11 +120,17 @@ elif to_date is not None:\n
 \n
 sort_on_list = [ (\'delivery.destination_section_uid\', \'ASC\'), (\'delivery.start_date\',\'ASC\')]\n
 \n
-result_list = context.portal_catalog.searchResults(limit=None,query=query,\n
+if request.get(\'use_selection\'):\n
+  selection_name = request[\'selection_name\']\n
+  result_list = \\\n
+        context.portal_selections.callSelectionFor(request[\'selection_name\'])\n
+else:\n
+  result_list = context.portal_catalog.searchResults(limit=None,query=query,\n
                                                    portal_type=doc_portal_type,\n
                                                    simulation_state=simulation_state,\n
                                                    sort_on=sort_on_list,\n
                                                    **catalog_params)\n
+\n
 \n
 # we build two dict, one that store amount per period per client\n
 # and another that either store amount per period per product and per client\n
@@ -140,13 +148,14 @@ for result in result_list:\n
       client_title = result.getDestinationSectionTitle()\n
     else:\n
       client_title = result.getSourceSectionTitle()\n
+    # FIXME: if two clients have the same title, do we want to group ?\n
     if not client_dict.has_key(client_title):\n
       client_dict[client_title] = {}\n
     if client_dict[client_title].has_key(period):\n
       client_dict[client_title][period][\'amount\'] = client_dict[client_title][period][\'amount\'] + result.getTotalPrice()\n
     else:\n
       client_dict[client_title][period] = {\'amount\' : result.getTotalPrice()}\n
-    if not product_dict.has_key(client_title):      \n
+    if not product_dict.has_key(client_title):\n
       line_dict = product_dict[client_title] = {}\n
     else:\n
       line_dict = product_dict[client_title]\n
@@ -157,6 +166,7 @@ for result in result_list:\n
     # client_title -> product_title -> period -> amount/quantity...\n
     # or product_title -> period -> amount/quantity...\n
     for line in result.contentValues(filter = {\'portal_type\':line_portal_type}):\n
+      # FIXME: if two resources have the same title, do we want to group ?\n
       product_title = line.getResourceTitle()\n
       if not line_dict.has_key(product_title):\n
         line_dict[product_title] = {period :{"amount" : line.getTotalPrice(),\n
@@ -283,7 +293,7 @@ else:\n
         period_counter_dict[\'total amount\'] = period_counter_dict[\'total amount\'] + line_total_amount\n
       else:\n
         period_counter_dict[\'total amount\'] = line_total_amount\n
-      append(obj)   \n
+      append(obj)\n
 \n
     line_list.sort(sortProduct)\n
 \n
@@ -376,13 +386,14 @@ return line_list\n
                             <string>query</string>
                             <string>_apply_</string>
                             <string>sort_on_list</string>
+                            <string>_getitem_</string>
+                            <string>selection_name</string>
                             <string>result_list</string>
                             <string>client_dict</string>
                             <string>product_dict</string>
                             <string>result</string>
                             <string>period</string>
                             <string>client_title</string>
-                            <string>_getitem_</string>
                             <string>line_dict</string>
                             <string>line</string>
                             <string>product_title</string>
