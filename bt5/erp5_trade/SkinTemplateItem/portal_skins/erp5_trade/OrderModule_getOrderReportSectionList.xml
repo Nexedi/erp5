@@ -64,18 +64,44 @@ aggregation_level = request.get(\'aggregation_level\')\n
 from_date = request.get(\'from_date\')\n
 to_date = request.get(\'at_date\')\n
 group_by = request.get(\'group_by\')\n
-simulation_state = request.get(\'simulation_state\')\n
+simulation_state = request.get(\'simulation_state\', ())\n
+\n
+# define some parameter dependings on module\n
+if "Sale" in context.getPortalType():\n
+  report_type = "sale"\n
+  line_portal_type = "Sale Order Line"\n
+  doc_portal_type = "Sale Order"\n
+elif "Purchase" in context.getPortalType():\n
+  report_type = "purchase"\n
+  line_portal_type = "Purchase Order Line"\n
+  doc_portal_type = "Purchase Order"\n
+elif request.get(\'order_report_document_portal_type\'):\n
+  doc_portal_type = request.get(\'order_report_document_portal_type\')\n
+  if doc_portal_type == \'Purchase Invoice Transaction\':\n
+    line_portal_type = \'Invoice Line\'\n
+    report_type = \'purchase\'\n
+  elif doc_portal_type == \'Sale Invoice Transaction\':\n
+    line_portal_type = \'Invoice Line\'\n
+    report_type = \'sale\'\n
+  else:\n
+    raise ValueError, "unknown document portal type for report %s" % doc_portal_type\n
+else:\n
+  raise ValueError, "unknown type for report"\n
 \n
 selection_columns = [(\'group_by\', "Group by")]\n
 if from_date is None:\n
   # get the minimum start date in catalog\n
   from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery\n
   kw = {"delivery.start_date" : None, "key":"DefaultKey"}\n
-  q = NegatedQuery(Query(**kw))  \n
+  q = NegatedQuery(Query(**kw))\n
   select_expression = "MIN(delivery.start_date)"\n
   group_by = "delivery.start_date"\n
-  from_date = DateTime(context.portal_catalog(select_expression=select_expression,\n
-                                     group_by_expression=group_by,query=q,\n
+  from_date = DateTime(context.portal_catalog(\n
+                                     select_expression=select_expression,\n
+                                     group_by_expression=group_by,\n
+                                     simulation_state=simulation_state,\n
+                                     portal_type=doc_portal_type,\n
+                                     query=q,\n
                                      limit=1)[0][2])\n
 \n
  \n
@@ -103,7 +129,7 @@ else:\n
   else:\n
     selection_columns = [(\'client\', "Client"), (\'product\', "Product")]\n
     stat_columns = [(\'client\', "client"), (\'product\', "product")]\n
-  for x in interval_list:    \n
+  for x in interval_list:\n
     interval_column_list.extend([("Amount %s" %x,"Amount %s" %x), ("Quantity %s" %x,"Quantity %s" %x),\n
                                  ("Quantity Unit %s" %x,"Quantity Unit %s" %x)])\n
   total_column_list = [(\'total amount\', \'Total Amount\'),(\'total quantity\', \'Total Quantity\')]\n
@@ -111,28 +137,6 @@ else:\n
 \n
 selection_columns.extend(interval_column_list)\n
 selection_columns.extend(total_column_list)\n
-\n
-# define some parameter dependings on module\n
-if "Sale" in context.getPortalType():\n
-  report_type = "sale"\n
-  line_portal_type = "Sale Order Line"\n
-  doc_portal_type = "Sale Order"\n
-elif "Purchase" in context.getPortalType():\n
-  report_type = "purchase"\n
-  line_portal_type = "Purchase Order Line"\n
-  doc_portal_type = "Purchase Order"\n
-elif request.get(\'order_report_document_portal_type\'):\n
-  doc_portal_type = request.get(\'order_report_document_portal_type\')\n
-  if doc_portal_type == \'Purchase Invoice Transaction\':\n
-    line_portal_type = \'Invoice Line\'\n
-    report_type = \'purchase\'\n
-  elif doc_portal_type == \'Sale Invoice Transaction\':\n
-    line_portal_type = \'Invoice Line\'\n
-    report_type = \'sale\'\n
-  else:\n
-    raise ValueError, "unknown document portal type for report %s" % doc_portal_type\n
-else:\n
-  raise ValueError, "unknown type for report"\n
 \n
 params=dict(period_list=interval_list, report_type=report_type,\n
             doc_portal_type=doc_portal_type, line_portal_type=line_portal_type,\n
@@ -201,6 +205,11 @@ return result\n
                             <string>to_date</string>
                             <string>group_by</string>
                             <string>simulation_state</string>
+                            <string>context</string>
+                            <string>report_type</string>
+                            <string>line_portal_type</string>
+                            <string>doc_portal_type</string>
+                            <string>ValueError</string>
                             <string>selection_columns</string>
                             <string>None</string>
                             <string>Products.ZSQLCatalog.SQLCatalog</string>
@@ -211,7 +220,6 @@ return result\n
                             <string>q</string>
                             <string>select_expression</string>
                             <string>_getitem_</string>
-                            <string>context</string>
                             <string>interval_list_dict</string>
                             <string>interval_list</string>
                             <string>interval_column_list</string>
@@ -222,10 +230,6 @@ return result\n
                             <string>stat_columns</string>
                             <string>total_column_list</string>
                             <string>total_stat_list</string>
-                            <string>report_type</string>
-                            <string>line_portal_type</string>
-                            <string>doc_portal_type</string>
-                            <string>ValueError</string>
                             <string>dict</string>
                             <string>params</string>
                           </tuple>
