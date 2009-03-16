@@ -101,7 +101,8 @@ class TaxRule(DeliveryRule):
         else:
           for existing_simulation_movement in \
                 existing_simulation_movement_list:
-            if existing_simulation_movement.getDelivery() is None:
+            if existing_simulation_movement.getDelivery() is None\
+                and not "split" in existing_simulation_movement.getId():
               existing_simulation_movement.edit(**property_dict)
 
     # Pass to base class
