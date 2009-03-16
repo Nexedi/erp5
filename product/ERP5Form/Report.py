@@ -341,7 +341,6 @@ class ReportSection:
                                   self.selection_stats, REQUEST=REQUEST)
 
     self.saved_request_form = REQUEST.form
-    REQUEST.form = {}
 
   security.declarePublic('popReport')
   def popReport(self, context, render_prefix=None):
