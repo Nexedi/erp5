@@ -65,42 +65,31 @@ category_list = [\n
 ]\n
 new_category_dict = {}\n
 \n
-model = paysheet.getSpecialiseValue()\n
+model = paysheet.getSpecialiseValue().getEffectiveModel(paysheet)\n
 \n
 if model is None:\n
   return context.Base_redirect(form_id,\n
      keep_items=dict(portal_status_message=Base_translateString(\'No pay sheet model.\')))\n
 \n
-def getPropertyFromModel(model, property_name):\n
-  """Get a property from the paysheet model, or from a specialised model.\n
-  """\n
-  v = model.getProperty(property_name)\n
-  if v:\n
-    return v\n
-  for specialised_model in model.getSpecialiseValueList():\n
-    v = getPropertyFromModel(specialised_model, property_name)\n
-    if v:\n
-      return v\n
-\n
 for category in category_list:\n
   if force or not paysheet.getPropertyList(category):\n
-    v = getPropertyFromModel(model, category)\n
+    v = model.getModelIneritanceEffectiveProperty(paysheet, category)\n
     if v:\n
       new_category_dict[category] = v\n
 \n
 # copy the price_currency into the ressource :\n
-price_currency = getPropertyFromModel(model, category)\n
+price_currency = model.getModelIneritanceEffectiveProperty(paysheet, \'price_currency\')\n
 if price_currency:\n
   new_category_dict[\'resource\'] = price_currency\n
 \n
 def copyPaymentCondition(paysheet, model):\n
   filter_dict = {\'portal_type\': \'Payment Condition\'}\n
-  to_copy = model.contentIds(filter=filter_dict)\n
-  if len(to_copy) > 0 :\n
-    copy_data = model.manage_copyObjects(ids=to_copy)\n
-    paysheet.manage_pasteObjects(copy_data)\n
-  for other_models in model.getSpecialiseValueList():\n
-    copyPaymentCondition(paysheet, other_models)\n
+  effective_model_list = model.getInheritanceEffectiveModelTreeAsList(paysheet)\n
+  for effective_model in effective_model_list:\n
+    to_copy = effective_model.contentIds(filter=filter_dict)\n
+    if len(to_copy) > 0 :\n
+      copy_data = effective_model.manage_copyObjects(ids=to_copy)\n
+      paysheet.manage_pasteObjects(copy_data)\n
 \n
 filter_dict = {\'portal_type\': \'Payment Condition\'}\n
 if force:\n
@@ -121,7 +110,8 @@ paysheet.edit(**new_category_dict)\n
 \n
 if not batch_mode:\n
   return context.Base_redirect(form_id,\n
-                               keep_items=dict(portal_status_message=Base_translateString(\'Pay Sheet Transaction updated.\')))\n
+                   keep_items=dict(portal_status_message=\\\n
+                       Base_translateString(\'Pay Sheet Transaction updated.\')))\n
 
 
 ]]></string> </value>
@@ -172,7 +162,6 @@ if not batch_mode:\n
                             <string>model</string>
                             <string>None</string>
                             <string>dict</string>
-                            <string>getPropertyFromModel</string>
                             <string>_getiter_</string>
                             <string>category</string>
                             <string>v</string>

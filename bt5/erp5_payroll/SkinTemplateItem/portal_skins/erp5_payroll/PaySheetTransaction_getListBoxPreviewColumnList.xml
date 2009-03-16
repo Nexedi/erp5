@@ -72,7 +72,6 @@ if not editable:\n
 def sortByIntIndex(a, b):\n
   return cmp(a.getIntIndex(), b.getIntIndex())\n
 \n
-model = context.getSpecialiseValue(0)\n
 portal_type_list = [\'Pay Sheet Model Line\']\n
 sub_object_list = context.getInheritedObjectValueList(portal_type_list)\n
 sub_object_list.sort(sortByIntIndex)\n
@@ -83,7 +82,7 @@ model_line_list = [line for line in model_line_list if line.isEditable()]\n
 for model_line in model_line_list:\n
   for tax_category in model_line.getTaxCategoryValueList():\n
     price = (tax_category.getId()+\'_price\', tax_category.getTitle()+\' Rate\')\n
-    quantity = (tax_category.getId()+\'_quantity\', \n
+    quantity = (tax_category.getId()+\'_quantity\',\n
                 tax_category.getTitle()+\' Amount\')\n
     if price not in column_list:\n
       column_list.append(price)\n
@@ -137,9 +136,8 @@ return column_list\n
                             <string>not_editable_columns</string>
                             <string>_getattr_</string>
                             <string>sortByIntIndex</string>
-                            <string>context</string>
-                            <string>model</string>
                             <string>portal_type_list</string>
+                            <string>context</string>
                             <string>sub_object_list</string>
                             <string>model_line_list</string>
                             <string>append</string>

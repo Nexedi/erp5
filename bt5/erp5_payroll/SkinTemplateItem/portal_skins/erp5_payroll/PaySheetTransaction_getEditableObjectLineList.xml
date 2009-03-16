@@ -68,7 +68,6 @@ from Products.ERP5Type.Message import translateString\n
 def sortByIntIndex(a, b):\n
   return cmp(a.getIntIndex(), b.getIntIndex())\n
 \n
-model = context.getSpecialiseValue(0)\n
 portal_type_list = [\'Pay Sheet Model Line\']\n
 sub_object_list = context.getInheritedObjectValueList(portal_type_list)\n
 sub_object_list.sort(sortByIntIndex)\n
@@ -257,10 +256,9 @@ return line_list\n
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
                             <string>sortByIntIndex</string>
+                            <string>portal_type_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>model</string>
-                            <string>portal_type_list</string>
                             <string>sub_object_list</string>
                             <string>model_line_list</string>
                             <string>append</string>

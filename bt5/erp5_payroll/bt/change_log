@@ -1,3 +1,7 @@
+2009-03-16 fabien
+* add a field version on Pay Sheet Model
+* use new methods from PaySheetModel class
+
 2009-03-10 fabien
 * fix some minor problems
 * add a default action on Pay Sheet Transaction portal type to be able to print a Payslip
