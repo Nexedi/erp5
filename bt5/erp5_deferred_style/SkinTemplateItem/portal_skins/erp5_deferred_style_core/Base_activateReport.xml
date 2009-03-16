@@ -62,17 +62,16 @@ skin_name = request.get(\'deferred_portal_skin\', \'ODT\')  or \'ODT\'\n
 portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
 \n
-try:\n
-  person_value = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
-except ValueError:\n
+person_value = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
+if person_value is None:\n
   portal.changeSkin(None)\n
   return context.Base_redirect(\'view\', keep_items=dict(\n
-              portal_status_message=N_("You didn\'t defined your email address")))\n
+              portal_status_message=N_("No person found for your user")))\n
 \n
 if person_value.getDefaultEmailText(\'\') == \'\':\n
   portal.changeSkin(None)\n
   return context.Base_redirect(\'view\', keep_items=dict(\n
-              portal_status_message=N_("You didn\'t defined your email address")))\n
+              portal_status_message=N_("You haven\'t defined your email address")))\n
   \n
 active_process = portal.portal_activities.newActiveProcess()\n
 user_name = context.portal_membership.getAuthenticatedMember().getUserName()\n
@@ -91,6 +90,9 @@ for k, v in request.other.items():\n
       \'SERVER_URL\', \'AUTHENTICATION_PATH\', \'USER_PREF_LANGUAGES\', \'PARENTS\',\n
       \'PUBLISHED\', \'AcceptLanguage\', \'AcceptCharset\', \'RESPONSE\',\n
       \'ACTUAL_URL\'):\n
+    # XXX proxy fields stores a cache in request.other that cannot be pickled\n
+    if k.startswith(\'field__proxyfield\'):\n
+      continue\n
     request_other[k] = v\n
 \n
 localizer_language = portal.Localizer.get_selected_language()\n
@@ -114,7 +116,7 @@ portal.portal_simulation.activate(activity=\'SQLQueue\', after_tag=tag, priority
            active_process_url=active_process.getRelativeUrl(),\n
            skin_name=skin_name,\n
            localizer_language=localizer_language,\n
-           title=form.getProperty(\'title\'),\n
+           title=N_(form.getProperty(\'title\')),\n
            request_other=request_other,\n
            form_path=form.getPhysicalPath(),\n
            user_name=user_name,\n
@@ -183,7 +185,6 @@ return context.Base_redirect(\'view\', keep_items=dict(\n
                             <string>portal</string>
                             <string>N_</string>
                             <string>person_value</string>
-                            <string>ValueError</string>
                             <string>None</string>
                             <string>dict</string>
                             <string>active_process</string>
