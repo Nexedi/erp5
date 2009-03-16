@@ -12,7 +12,9 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>required</string>
+              </list>
             </value>
         </item>
         <item>
@@ -79,6 +81,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>AccountModule_viewDialogFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
