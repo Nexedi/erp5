@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+# get a dict like {\'religion\': \'MRD\', \'gender\': \'M\'} and returns {\'religion\': \'MSM/MRD\', gender: \'male\'} so that \n
+# we can call an edit(category_dict) directly on the object it browse recursively the subcategories of the \n
+# category (key in the dict) and find a matching reference or title.\n
+# Christophe Dumez <christophe@nexedi.com>\n
+\n
+#def getMatchingCategoryUsingCodification(root_category, codification):\n
+#  sub_cat_list = root_category.objectValues()\n
+#  for sub_cat in sub_cat_list:\n
+#    if sub_cat.getCodification() == codification:\n
+#      return sub_cat\n
+#    matching_cat = getMatchingCategoryUsingCodification(sub_cat, codification)\n
+#    if matching_cat is not None:\n
+#      return matching_cat\n
+\n
+result_dict = {}\n
+for category_name in category_dict.keys():\n
+  subcat_code = category_dict[category_name]\n
+  category_object = context.getPortalObject().portal_categories[category_name]\n
+  result_list = context.portal_catalog(portal_type=\'Category\', reference=\'=\'+str(subcat_code), relative_url=category_name+\'%\')\n
+  if len(result_list) != 0:\n
+    result_cat_fullpath = \'/\'.join(result_list[0].getRelativeUrl().split(\'/\')[1:])\n
+    result_dict[category_name]=result_cat_fullpath\n
+  else:\n
+    result_list = context.portal_catalog(portal_type=\'Category\', title=\'=\'+str(subcat_code), relative_url=category_name+\'%\')\n
+    if len(result_list) != 0:\n
+      result_cat_fullpath = \'/\'.join(result_list[0].getRelativeUrl().split(\'/\')[1:])\n
+      result_dict[category_name]=result_cat_fullpath\n
+  #result_cat = getMatchingCategoryUsingCodification(root_category=category_object, codification=subcat_code)\n
+  #if result_cat is not None:\n
+  #  result_cat_fullpath = \'/\'.join(result_cat.getPath().split(\'/\')[4:])\n
+  #  result_dict[category_name]=result_cat_fullpath\n
+\n
+return result_dict\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>category_dict</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>category_dict</string>
+                            <string>result_dict</string>
+                            <string>_getiter_</string>
+                            <string>_getattr_</string>
+                            <string>category_name</string>
+                            <string>_getitem_</string>
+                            <string>subcat_code</string>
+                            <string>context</string>
+                            <string>category_object</string>
+                            <string>str</string>
+                            <string>result_list</string>
+                            <string>len</string>
+                            <string>result_cat_fullpath</string>
+                            <string>_write_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_getCategoriesFullPath</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
