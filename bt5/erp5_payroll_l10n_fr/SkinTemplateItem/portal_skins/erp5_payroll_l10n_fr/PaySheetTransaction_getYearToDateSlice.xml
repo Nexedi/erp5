@@ -79,7 +79,7 @@ paysheet_list = accounting_module.searchFolder(**search_params)\n
 \n
 yearly_slice_amount = 0\n
 # get the slice value for this paysheet :\n
-model = context.getSpecialiseValue()\n
+model = context.getSpecialiseValue().getEffectiveModel(context)\n
 slice = model.getCell(slice_path)\n
 \n
 if not slice:\n
@@ -98,7 +98,7 @@ else:\n
 yearly_slice_amount += slice_amount\n
 \n
 for paysheet in paysheet_list :\n
-  model = paysheet.getSpecialiseValue()\n
+  model = paysheet.getSpecialiseValue().getEffectiveModel(paysheet)\n
   if model is not None:\n
     slice = model.getCell(slice_path)\n
     plafond = slice.getQuantityRangeMax()\n

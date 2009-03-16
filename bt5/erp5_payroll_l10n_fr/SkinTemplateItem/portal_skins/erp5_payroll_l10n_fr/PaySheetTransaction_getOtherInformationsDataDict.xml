@@ -57,17 +57,7 @@
 request = context.REQUEST\n
 quantity_renderer = context.Base_viewFieldLibrary.my_money_quantity.render_pdf\n
 \n
-model = context.getSpecialiseValue()\n
-def getPropertyFromModel(model, property_name):\n
-  """Get a property from the paysheet model, or from a specialised model.\n
-  """\n
-  v = model.getProperty(property_name)\n
-  if v:\n
-    return v\n
-  for specialised_model in model.getSpecialiseValueList():\n
-    v = getPropertyFromModel(specialised_model, property_name)\n
-    if v:\n
-      return v\n
+model = context.getSpecialiseValue().getEffectiveModel(context)\n
 \n
 def getFieldAsString(field):\n
   return \', \'.join(getFieldAsLineList(field))\n
@@ -211,9 +201,6 @@ year_to_date_bonus_worked_hour_amount = context.PaySheetTransaction_getYearToDat
     base_contribution=\'base_contribution/base_amount/overtime\', \\\n
     tax_category=\'tax_category/employee_share\') or 0\n
 \n
-salaire_net_imposable = context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
-    base_contribution=\'base_contribution/base_amount/salaire_net_imposable\',\n
-    tax_category=\'tax_category/employee_share\')\n
 year_to_date_taxable_net_salary = context.PaySheetTransaction_getYearToDateBaseContributionTotalPrice(\\\n
     paysheet=context, base_contribution_list=\'salaire_net_imposable\') + salaire_net_imposable\n
 \n
@@ -247,7 +234,7 @@ data_dict = {\n
   \'price_currency\': getPriceCurrencyId(context.getPriceCurrencyReference() or \'\'),\n
   \'year\': str(context.getStartDate() is not None and context.getStartDate().year() or \'\'),\n
   \'description\': getFieldAsLineList(context.getDescription() or\n
-                 getPropertyFromModel(model, \'description\') or \'\'),\n
+                 model.getModelIneritanceEffectiveProperty(context, \'description\') or \'\'),\n
   \'year_to_date_gross_salary\': year_to_date_gross_salary,\n
   \'year_to_date_slice_a\': year_to_date_slice_a,\n
   \'year_to_date_worked_hour_count\': year_to_date_worked_hour_count,\n
@@ -306,7 +293,6 @@ return unicodeDict(data_dict)\n
                             <string>request</string>
                             <string>quantity_renderer</string>
                             <string>model</string>
-                            <string>getPropertyFromModel</string>
                             <string>getFieldAsLineList</string>
                             <string>getFieldAsString</string>
                             <string>getSocialCodeId</string>
