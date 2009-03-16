@@ -26,6 +26,7 @@
 #
 ##############################################################################
 import os, sys
+import transaction
 if __name__ == '__main__':
   execfile(os.path.join(sys.path[0], 'framework.py'))
 
@@ -103,11 +104,15 @@ class TestTranslation(ERP5TypeTestCase):
     return target_business_templates
 
   def getTranslation(self, msgid):
-    result = self.portal.Localizer.translate(
-        domain=self.domain, msgid=msgid, lang=self.lang)
+    
+    result = self.portal.Localizer.erp5_ui.gettext(
+          msgid, default='')
+    #result = self.portal.Localizer.translate(
+        #domain=self.domain, msgid=msgid, lang=self.lang)
     if (result == msgid) and (self.lang != 'en'):
-      result = None
-    return result
+      #result = None
+      result = self.portal.Localizer.erp5_ui.gettext(msgid)
+    return result.encode('utf8')
 
   def logMessage(self, message):
     self.message += '%s\n' % message
@@ -131,7 +136,8 @@ class TestTranslation(ERP5TypeTestCase):
         for state in workflow.states.items():
           state_title = state[1].title
           state_id = state[0]
-          translated_state_title = self.getTranslation(state_title)
+	  msgid = '%s [state in %s]' % (state_title, workflow_id)
+          translated_state_title = self.getTranslation(msgid)
 
           if translated_state_title is not None:
             if translation_dict.has_key(translated_state_title):
@@ -182,7 +188,8 @@ class TestTranslation(ERP5TypeTestCase):
               error_dict[key].append((
                 workflow_id, wrong_state_id, state_title, state_id_list))
               error = 1
-
+      #import pdb
+      #pdb.set_trace()
       if error:
         for key, item_list in error_dict.items():
           if len(item_list) != 0:
@@ -199,6 +206,7 @@ class TestTranslation(ERP5TypeTestCase):
               self.logMessage(
                   "\t%r\t%r\t'%s'" % \
                   item)
+        
         self.fail(self.message)
 
   def test_01_EnglishTranslation(self, quiet=0, run=run_all_test):
@@ -235,6 +243,44 @@ class TestTranslation(ERP5TypeTestCase):
     """
     self.lang = 'pt-BR'
     self.checkWorkflowStateTitle(quiet=quiet, run=run)
+  
+  def test_standard_translated_related_keys(self):
+    # make sure we can search by "translated_validation_state_title" and
+    # "translated_portal_type"
+    message_catalog = self.portal.Localizer.erp5_ui
+    lang = 'fr'
+    if lang not in [x['id'] for x in
+        self.portal.Localizer.get_languages_map()]:
+      self.portal.Localizer.manage_addLanguage(lang)
+
+    message_catalog.gettext('Draft', add=1)
+    message_catalog.gettext('Person', add=1)
+    message_catalog.message_edit('Draft', lang, 'Brouillon', '')
+    message_catalog.message_edit('Person', lang, 'Personne', '')
+
+    person_1 = self.portal.person_module.newContent(portal_type='Person')
+    person_1.validate()
+    person_2 = self.portal.person_module.newContent(portal_type='Person')
+    organisation = self.portal.organisation_module.newContent(
+                            portal_type='Organisation')
+    transaction.commit()
+    self.tic()
+
+    # patch the method, we'll abort later
+    self.portal.Localizer.get_selected_language = lambda: lang
+
+    self.assertEquals(set([person_1, person_2]),
+        set([x.getObject() for x in
+          self.portal.portal_catalog(translated_portal_type='Personne')]))
+    self.assertEquals(set([person_2, organisation]),
+        set([x.getObject() for x in
+          self.portal.portal_catalog(translated_validation_state_title='Brouillon',
+                                     portal_type=('Person', 'Organisation'))]))
+    self.assertEquals([person_2],
+        [x.getObject() for x in
+          self.portal.portal_catalog(translated_validation_state_title='Brouillon',
+                                     translated_portal_type='Personne')])
+    transaction.abort()
 
 if __name__ == '__main__':
   framework()
