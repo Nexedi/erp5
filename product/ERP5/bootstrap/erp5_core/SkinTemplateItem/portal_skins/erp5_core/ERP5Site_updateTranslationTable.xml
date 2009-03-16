@@ -82,7 +82,11 @@ for wf in context.portal_workflow.objectValues():\n
         # translate state title as well\n
         if state.title != \'\' :\n
           state_var_title = \'%s_title\' % state_var\n
-          translated_message = context.Localizer.erp5_ui.gettext(state.title.decode(\'utf-8\'), lang=lang).encode(\'utf-8\')\n
+          msg_id = \'%s [state in %s]\' % (state.title, wf.id)\n
+          translated_message = context.Localizer.erp5_ui.gettext(msg_id, default=\'\').encode(\'utf-8\')\n
+          if translated_message == \'\':\n
+            translated_message = context.Localizer.erp5_ui.gettext(state.title.decode(\'utf-8\'), lang=lang).encode(\'utf-8\')\n
+          #translated_message = context.Localizer.erp5_ui.gettext(state.title.decode(\'utf-8\'), lang=lang).encode(\'utf-8\')\n
           key = (lang, state_var_title, state_id, state.title)\n
           if not translated_keys.has_key(key):\n
             translated_keys[key] = None # mark as translated\n
@@ -177,6 +181,7 @@ return printed\n
                             <string>obj</string>
                             <string>_inplacevar_</string>
                             <string>state_var_title</string>
+                            <string>msg_id</string>
                             <string>translated_message</string>
                             <string>ptype</string>
                             <string>title</string>

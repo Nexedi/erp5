@@ -78,6 +78,9 @@ def getActorName(actor):\n
       actor_name_cache[actor] = person.getTitle()\n
     return actor_name_cache[actor]\n
 \n
+def getMessageIdForWorkflowState(title, workflow_id):\n
+  return \'%s [state in %s]\' % (title, workflow_id)\n
+\n
 # Get history\n
 # XXX Compatibility\n
 for history_name in [\'history\', \'building_history\', \'installation_history\']:\n
@@ -117,14 +120,17 @@ for workflow_item in workflow_item_list:\n
           value = wf_transitions.get(value, marker) and (wf_transitions[value].id or wf_transitions[value].actbox_name) or value\n
     if display:\n
       if key == \'error_message\' and same_type(value, \'\'):\n
-        value = context.Localizer.erp5_ui.gettext(value)\n
+        value = context.Localizer.erp5_ui.gettext(value)    \n
       elif key == \'error_message\' and same_type(value, []):\n
         value = \'. \'.join([\'%s\' % x for x in value])\n
       elif key == \'error_message\':\n
         value = \'%s\' % value\n
       elif key == \'actor\':\n
         value = getActorName(value)\n
-      elif same_type(value, \'\') and key in ( \'action\', \'state\' ): \n
+      elif same_type(value, \'\') and key in (\'state\' ):\n
+        value = getMessageIdForWorkflowState(value, workflow_id) \n
+        value = context.Localizer.erp5_ui.gettext(value)\n
+      elif same_type(value, \'\') and key in ( \'action\'):\n
         value = context.Localizer.erp5_ui.gettext(value)\n
     if value is marker:\n
       value = \'Does not exist\'\n
@@ -215,6 +221,7 @@ return result\n
                             <string>dict</string>
                             <string>actor_name_cache</string>
                             <string>getActorName</string>
+                            <string>getMessageIdForWorkflowState</string>
                             <string>history_name</string>
                             <string>workflow_item_list</string>
                             <string>_getitem_</string>
