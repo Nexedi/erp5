@@ -10145,3 +10145,6 @@ msgstr "la largeur en pixel des micro-images."
 
 msgid "the width in pixel of nano image"
 msgstr "La largeur en pixel des images nano."
+
+msgid "Use Current Selection"
+msgstr "Utiliser la selection courante"
