@@ -49,6 +49,8 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
 from DateTime import DateTime
+import transaction
+
 
 class TestPayrollMixin(ERP5ReportTestCase):
 
@@ -144,7 +146,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
   def _safeTic(self):
     """Like tic, but swallowing errors, usefull for teardown"""
     try:
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
     except RuntimeError:
       pass
@@ -170,7 +172,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
       activity_tool.manageCancel(message.object_path, message.method_id)
       ZopeTestCase._print('\nCancelling active message %s.%s()\n'
                           % (message.object_path, message.method_id) )
-    get_transaction().commit()
+    transaction.commit()
 
   def login(self):
     uf = self.getPortal().acl_users
@@ -189,7 +191,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
         self.getPortal().portal_categories.newContent(\
                                           portal_type='Base Category',
                                           id=base_cat)
-        get_transaction().commit()
+        transaction.commit()
         self.tic()
       path = self.getPortal().portal_categories[base_cat]
       for cat in cat_string.split("/")[1:] :
@@ -200,7 +202,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
                     title=cat.replace('_', ' ').title(),)
         else:
           path = path[cat]
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # check categories have been created
     for cat_string in self.getNeededCategoryList() :
@@ -247,7 +249,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
       self.YEN = currency_module.newContent(
           portal_type = self.currency_portal_type,
           reference = "YEN", id = "YEN" )
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
     else:
       self.EUR = currency_module.EUR
@@ -275,7 +277,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
         career_subordination_value=career_subordination_value,
         career_grade=career_grade,
                )
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     return person
 
@@ -286,7 +288,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
                                    portal_type=self.organisation_portal_type,
                                    id=id,
                                    title=title)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     return organisation
 
@@ -313,7 +315,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
                             product_line=product_line)
     payroll_service.setVariationBaseCategoryList(variation_base_category_list)
     payroll_service.setVariationCategoryList(variation_category_list)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     return payroll_service
 
@@ -344,7 +346,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
         destination_section_value=organisation,
         source_section_value=person,)
     paysheet_model.setPriceCurrency(price_currency)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     return paysheet_model
@@ -357,7 +359,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
         base_id=base_id)
     slice_value.setQuantityRangeMax(max_value)
     slice_value.setQuantityRangeMin(min_value)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     return slice_value
 
@@ -427,7 +429,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
                         base_application_list=base_application_list,
                         base_contribution_list=base_contribution_list,
                         variation_category_list=variation_category_list,)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # put values in Model Line cells
@@ -443,7 +445,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
           cell.setQuantity(amount)
         if percent != None:
           cell.setPrice(percent)
-        get_transaction().commit()
+        transaction.commit()
         self.tic()
 
     return model_line
@@ -466,7 +468,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
         start_date                = DateTime(2008, 1, 1),
         stop_date                 = DateTime(2008, 1, 31),)
     paysheet.setPriceCurrency('currency_module/EUR')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     return paysheet
 
@@ -482,7 +484,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
     portal_type_list = ['Annotation Line', 'Payment Condition',
                         'Pay Sheet Model Ratio Line']
     paysheet.PaySheetTransaction_copySubObject(portal_type_list)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     return paysheet_line_list
 
@@ -752,16 +754,13 @@ class TestPayroll(TestPayrollMixin):
     pay_sheet_line_count = len(self.model.contentValues(portal_type=\
         self.paysheet_line_portal_type)) + 2 # because in this test, 2 lines
                                              # are added
-
     paysheet = self.createPaySheet(self.model)
-
     paysheet_line_count_before_calculation = \
         len(paysheet.contentValues(portal_type= \
         self.paysheet_line_portal_type))
 
     # calculate the pay sheet
     pay_sheet_line_list = self.calculatePaySheet(paysheet=paysheet)
-
     paysheet_line_count_after_calculation = \
         len(paysheet.contentValues(portal_type= \
         self.paysheet_line_portal_type))
@@ -779,14 +778,12 @@ class TestPayroll(TestPayrollMixin):
 
         self.assertEqualAmounts(pay_sheet_line, correct_value_slice_list,
             base_salary, i)
-
       elif service == self.labour_id:
         cell = pay_sheet_line.getCell('tax_category/'+\
             self.tax_category_employee_share,
             'salary_range/'+ self.france_settings_forfait)
         value = cell.getTotalPrice()
         self.assertEqual(base_salary, value)
-
       else:
         self.fail("Unknown service for line %s" % pay_sheet_line)
 
@@ -841,15 +838,12 @@ class TestPayroll(TestPayrollMixin):
     model_reference_dict = model_employee.getInheritanceModelReferenceDict(\
         portal_type_list=portal_type_list)
 
-
     # check data's are corrected
     number_of_different_references = []
     for model in model_reference_dict.keys():
       number_of_different_references.extend(model_reference_dict[model])
-
     self.assertEqual(len(number_of_different_references), 3) # here, there is
                                                 # 3 differents annotation line
-
     # check the model number
     self.assertEqual(len(model_reference_dict), 3)
     self.assertEqual(model_reference_dict[model_employee.getRelativeUrl()],
@@ -902,8 +896,6 @@ class TestPayroll(TestPayrollMixin):
     # 4 differents annotation lines, and with the 3 ones have been had before
     # that's make 7 !
 
-
-
     # check the model number
     self.assertEqual(len(model_reference_dict), 3)
     self.assertEqual(set(model_reference_dict[model_employee.getRelativeUrl()]),
@@ -912,7 +904,6 @@ class TestPayroll(TestPayrollMixin):
         set(['2', 'worked_time_duration']))
     self.assertEqual(set(model_reference_dict[model_country.getRelativeUrl()]),
         set(['3','4', 'social_insurance']))
-
 
     # same test with a multi model inheritance
     model_a = self.paysheet_model_module.newContent(id='model_a',
@@ -1787,7 +1778,7 @@ class TestPayroll(TestPayrollMixin):
                                                             'quantity'),)
     cell_employer.edit(price=-.42, quantity=2998, tax_category='employer_share')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # AccountingTransactionModule_getPaySheetMovementMirrorSectionItemList is
@@ -1985,7 +1976,7 @@ class TestPayroll(TestPayrollMixin):
     cell_employer_b.edit(price=-.32, quantity=3000,
                          salary_range='france/tranche_b',
                          tax_category='employer_share')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # set request variables and render
@@ -2183,7 +2174,7 @@ class TestPayroll(TestPayrollMixin):
                                                             'quantity'),)
     cell_employer.edit(price=-.40, quantity=3000, tax_category='employer_share')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # set request variables and render
@@ -2303,7 +2294,7 @@ class TestPayroll(TestPayrollMixin):
                     membership_criterion_base_category_list=('product_line',),
                     membership_criterion_category_list=('product_line/payroll_tax_1',))
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     cell_list = rule.contentValues(portal_type='Accounting Rule Cell')
@@ -2461,7 +2452,7 @@ class TestPayroll(TestPayrollMixin):
 
     ps.plan()
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     related_applied_rule = ps.getCausalityRelatedValue(
@@ -2471,7 +2462,7 @@ class TestPayroll(TestPayrollMixin):
     # build accounting lines
     ps.confirm()
     ps.start()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     accounting_line_list = ps.contentValues(
@@ -2593,6 +2584,422 @@ class TestPayroll(TestPayrollMixin):
     # check values on the paysheet
     self.assertEquals(paysheet.contentValues()[0].contentValues()[0].getTotalPrice(), 10000)
     self.assertEquals(paysheet.contentValues()[1].contentValues()[0].getTotalPrice(), -800)
+
+  def testModelWithoutRefValidity(self):
+    '''
+    If no reference are defined on a model, the behavior is that this model is
+    always valid. So check a Pay Sheet Transaction Line is created after
+    calling the calculation script
+    '''
+    eur = self.portal.currency_module.EUR
+    model_without_ref = self.paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=self.variation_settings_category_list,
+        effective_date=DateTime(2009, 1, 1),
+        expiration_date=DateTime(2009, 12, 31))
+    model_without_ref.setPriceCurrencyValue(eur)
+
+    urssaf_slice_list = [ 'salary_range/'+self.france_settings_slice_a,]
+    urssaf_share_list = [ 'tax_category/'+self.tax_category_employee_share,]
+    salary_slice_list = ['salary_range/'+self.france_settings_forfait,]
+    salary_share_list = ['tax_category/'+self.tax_category_employee_share,]
+    variation_category_list_urssaf = urssaf_share_list + urssaf_slice_list
+    variation_category_list_salary = salary_share_list + salary_slice_list
+
+    model_line_1 = self.createModelLine(model=model_without_ref,
+        id='model_line_1',
+        variation_category_list=variation_category_list_salary,
+        resource=self.labour,
+        share_list=salary_share_list,
+        slice_list=salary_slice_list,
+        values=[[[10000, None],],],
+        base_application_list=[],
+        base_contribution_list=['base_amount/base_salary', 'base_amount/gross_salary'])
+    model_line_1.setIntIndex(1)
+
+    # create the paysheet
+    paysheet = self.portal.accounting_module.newContent(
+                              portal_type='Pay Sheet Transaction',
+                              specialise_value=model_without_ref,
+                              start_date=DateTime(2008, 1, 1),
+                              stop_date=DateTime(2008, 1, 31))
+    paysheet.PaySheetTransaction_applyModel()
+
+    portal_type_list = ['Pay Sheet Model Line',]
+
+    # if no reference, we don't care about dates
+    sub_object_list = paysheet.getInheritedObjectValueList(portal_type_list)
+    
+    self.assertEquals(len(paysheet.contentValues(portal_type='Pay Sheet Line')), 0)
+    # calculate the pay sheet
+    pay_sheet_line_list = self.calculatePaySheet(paysheet=paysheet)
+    self.assertEquals(len(paysheet.contentValues(portal_type='Pay Sheet Line')), 1)
+    # check values on the paysheet
+    self.assertEquals(paysheet.contentValues()[0].contentValues()[0].getTotalPrice(), 10000)
+
+
+  def testModelWithoutDateValidity(self):
+    '''
+    If no date are defined on a model, the behavior is that this model
+    is always valid. (XXX check if it's what we want)
+    So check that a line is created after calling calculation script, even if
+    there is no start_date or stop_date
+    '''
+    eur = self.portal.currency_module.EUR
+    model_without_date = self.paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=self.variation_settings_category_list,
+        reference='fabien_model_without_date')
+
+    urssaf_slice_list = [ 'salary_range/'+self.france_settings_slice_a,]
+    urssaf_share_list = [ 'tax_category/'+self.tax_category_employee_share,]
+    salary_slice_list = ['salary_range/'+self.france_settings_forfait,]
+    salary_share_list = ['tax_category/'+self.tax_category_employee_share,]
+    variation_category_list_urssaf = urssaf_share_list + urssaf_slice_list
+    variation_category_list_salary = salary_share_list + salary_slice_list
+
+    model_line_2 = self.createModelLine(model=model_without_date,
+        id='model_line_2',
+        variation_category_list=variation_category_list_salary,
+        resource=self.labour,
+        share_list=salary_share_list,
+        slice_list=salary_slice_list,
+        values=[[[10000, None],],],
+        base_application_list=[],
+        base_contribution_list=['base_amount/base_salary', 'base_amount/gross_salary'])
+    model_line_2.setIntIndex(1)
+
+    # create the paysheet
+    paysheet = self.portal.accounting_module.newContent(
+                              portal_type='Pay Sheet Transaction',
+                              specialise_value=model_without_date,
+                              start_date=DateTime(2008, 1, 1),
+                              stop_date=DateTime(2008, 1, 31),
+                              price_currency_value=eur)
+    paysheet.PaySheetTransaction_applyModel()
+
+    portal_type_list = ['Pay Sheet Model Line',]
+
+    # if no dates, we don't care about dates
+    sub_object_list = paysheet.getInheritedObjectValueList(portal_type_list)
+    
+    self.assertEquals(len(paysheet.contentValues(portal_type='Pay Sheet Line')), 0)
+    # calculate the pay sheet
+    pay_sheet_line_list = self.calculatePaySheet(paysheet=paysheet)
+    self.assertEquals(len(paysheet.contentValues(portal_type='Pay Sheet Line')), 1)
+    # check values on the paysheet
+    self.assertEquals(paysheet.contentValues()[0].contentValues()[0].getTotalPrice(), 10000)
+
+  def testModelDateValidity(self):
+    '''
+    check that model effective_date and expiration_date are take into account.
+    '''
+    eur = self.portal.currency_module.EUR
+    model_1 = self.paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=self.variation_settings_category_list,
+        reference='fabien_model_2009',
+        effective_date=DateTime(2009, 1, 1),
+        expiration_date=DateTime(2009, 06, 30))
+    
+    model_2 = self.paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=self.variation_settings_category_list,
+        reference='fabien_model_2009',
+        effective_date=DateTime(2009, 07, 1),
+        expiration_date=DateTime(2009, 12, 31))
+
+    urssaf_slice_list = [ 'salary_range/'+self.france_settings_slice_a,]
+    urssaf_share_list = [ 'tax_category/'+self.tax_category_employee_share,]
+    salary_slice_list = ['salary_range/'+self.france_settings_forfait,]
+    salary_share_list = ['tax_category/'+self.tax_category_employee_share,]
+    variation_category_list_urssaf = urssaf_share_list + urssaf_slice_list
+    variation_category_list_salary = salary_share_list + salary_slice_list
+    
+    model_line_3 = self.createModelLine(model=model_1,
+        id='model_line_3',
+        variation_category_list=variation_category_list_salary,
+        resource=self.labour,
+        share_list=salary_share_list,
+        slice_list=salary_slice_list,
+        values=[[[20000, None],],],
+        base_application_list=[],
+        base_contribution_list=['base_amount/base_salary', 'base_amount/gross_salary'])
+    model_line_3.setIntIndex(1)
+
+    model_line_4 = self.createModelLine(model=model_2,
+        id='model_line_4',
+        variation_category_list=variation_category_list_salary,
+        resource=self.labour,
+        share_list=salary_share_list,
+        slice_list=salary_slice_list,
+        values=[[[30000, None],],],
+        base_application_list=[],
+        base_contribution_list=['base_amount/base_salary', 'base_amount/gross_salary'])
+    model_line_4.setIntIndex(1)
+
+    # create the paysheet
+    paysheet = self.portal.accounting_module.newContent(
+                              portal_type='Pay Sheet Transaction',
+                              specialise_value=model_1,
+                              start_date=DateTime(2009, 07, 1),
+                              stop_date=DateTime(2009, 07, 31),
+                              price_currency_value=eur)
+    paysheet.PaySheetTransaction_applyModel()
+
+    self.assertEquals(len(paysheet.contentValues(portal_type='Pay Sheet Line')), 0)
+    # calculate the pay sheet
+    pay_sheet_line_list = self.calculatePaySheet(paysheet=paysheet)
+    self.assertEquals(len(paysheet.contentValues(portal_type='Pay Sheet Line')), 1)
+    # check values on the paysheet, if it's model_2, the total_price should be 30000.
+    self.assertEquals(paysheet.contentValues()[0].contentValues()[0].getTotalPrice(), 30000)
+
+  def testModelVersioning(self):
+    '''
+    check that latest version is used in case of more thant one model is matching
+    using dates
+    '''
+    eur = self.portal.currency_module.EUR
+
+    # define a non effective model
+    model_1 = self.paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=self.variation_settings_category_list,
+        reference='fabien_model_2009',
+        effective_date=DateTime(2009, 01, 1),
+        expiration_date=DateTime(2009, 02, 28))
+
+    # define two models with same references and same dates
+    # but different version number
+    model_2 = self.paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=self.variation_settings_category_list,
+        reference='fabien_model_2009',
+        effective_date=DateTime(2009, 07, 1),
+        expiration_date=DateTime(2009, 12, 31),
+        version='002')
+
+    model_3 = self.paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=self.variation_settings_category_list,
+        reference='fabien_model_2009',
+        effective_date=DateTime(2009, 07, 1),
+        expiration_date=DateTime(2009, 12, 31),
+        version='001')
+    transaction.commit()
+    self.tic()
+
+    # create the paysheet
+    paysheet = self.portal.accounting_module.newContent(
+                              portal_type='Pay Sheet Transaction',
+                              specialise_value=model_1,
+                              start_date=DateTime(2009, 07, 1),
+                              stop_date=DateTime(2009, 07, 31),
+                              price_currency_value=eur)
+    paysheet.PaySheetTransaction_applyModel()
+
+    # the effective model should be model_2 because of the effective date and
+    # version number
+    specialise_value = paysheet.getSpecialiseValue()
+    self.assertEquals(specialise_value.getEffectiveModel(paysheet), model_2)
+
+    # check the effective model tree list
+    self.assertEquals(specialise_value.getInheritanceEffectiveModelTreeAsList(paysheet),
+        [model_2])
+    # calculate the pay sheet
+    pay_sheet_line_list = self.calculatePaySheet(paysheet=paysheet)
+
+  def testComplexModelInheritanceScheme(self):
+    '''
+    check inheritance and effective model with a more complexe inheritance tree
+    '''
+
+    # the inheritance tree look like this :
+#                                        model_employee
+#   (model_1, 01/01/09, 28/02/09) ; (model_2, 01/07/09, 31/12/09) ; (model_2, 01/07/09, 31/12/09)
+#                                              |
+#                                              |
+#                                              |
+#                                        model_company
+#                (model_4, 01/07/09, 31/12/09), (model_5, 01/07/09, 31/12/09)
+#                                              |
+#                                              |
+#                                              |
+#                                        model_company
+#                (model_6, 01/07/09, 31/12/09), (model_7, 01/07/09, 31/12/09)
+
+
+    eur = self.portal.currency_module.EUR
+    urssaf_slice_list = [ 'salary_range/'+self.france_settings_slice_a,]
+    urssaf_share_list = [ 'tax_category/'+self.tax_category_employee_share,]
+    salary_slice_list = ['salary_range/'+self.france_settings_forfait,]
+    salary_share_list = ['tax_category/'+self.tax_category_employee_share,]
+    variation_category_list_urssaf = urssaf_share_list + urssaf_slice_list
+    variation_category_list_salary = salary_share_list + salary_slice_list
+
+    # define a non effective model
+    model_1 = self.paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=self.variation_settings_category_list,
+        reference='fabien_model_2009',
+        effective_date=DateTime(2009, 01, 1),
+        expiration_date=DateTime(2009, 02, 28))
+    model_line_1 = self.createModelLine(model=model_1,
+        id='model_line_1',
+        variation_category_list=variation_category_list_salary,
+        resource=self.labour,
+        share_list=salary_share_list,
+        slice_list=salary_slice_list,
+        values=[[[10000, None],],],
+        base_application_list=[],
+        base_contribution_list=['base_amount/base_salary', 'base_amount/gross_salary'])
+
+    # define two models with same references and same dates
+    # but different version number
+    model_2 = self.paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=self.variation_settings_category_list,
+        reference='fabien_model_2009',
+        effective_date=DateTime(2009, 07, 1),
+        expiration_date=DateTime(2009, 12, 31),
+        version='002')
+    model_line_2 = self.createModelLine(model=model_2,
+        id='model_line_2',
+        variation_category_list=variation_category_list_salary,
+        resource=self.labour,
+        share_list=salary_share_list,
+        slice_list=salary_slice_list,
+        values=[[[20000, None],],],
+        base_application_list=[],
+        base_contribution_list=['base_amount/base_salary', 'base_amount/gross_salary'])
+
+    model_3 = self.paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=self.variation_settings_category_list,
+        reference='fabien_model_2009',
+        effective_date=DateTime(2009, 07, 1),
+        expiration_date=DateTime(2009, 12, 31),
+        version='001')
+    model_line_3 = self.createModelLine(model=model_3,
+        id='model_line_3',
+        variation_category_list=variation_category_list_salary,
+        resource=self.labour,
+        share_list=salary_share_list,
+        slice_list=salary_slice_list,
+        values=[[[30000, None],],],
+        base_application_list=[],
+        base_contribution_list=['base_amount/base_salary', 'base_amount/gross_salary'])
+
+    # define two models with same references and same dates
+    # but different version number
+    model_4 = self.paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=self.variation_settings_category_list,
+        reference='fabien_model_level_2_2009',
+        effective_date=DateTime(2009, 01, 1),
+        expiration_date=DateTime(2009, 06, 30),
+        version='002')
+    model_line_4 = self.createModelLine(model=model_4,
+        id='model_line_4',
+        variation_category_list=variation_category_list_salary,
+        resource=self.labour,
+        share_list=salary_share_list,
+        slice_list=salary_slice_list,
+        values=[[[40000, None],],],
+        base_application_list=[],
+        base_contribution_list=['base_amount/base_salary', 'base_amount/gross_salary'])
+
+    model_5 = self.paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=self.variation_settings_category_list,
+        reference='fabien_model_level_2_2009',
+        effective_date=DateTime(2009, 07, 1),
+        expiration_date=DateTime(2009, 12, 31),
+        version='001')
+    model_line_5 = self.createModelLine(model=model_5,
+        id='model_line_5',
+        variation_category_list=variation_category_list_salary,
+        resource=self.labour,
+        share_list=salary_share_list,
+        slice_list=salary_slice_list,
+        values=[[[50000, None],],],
+        base_application_list=[],
+        base_contribution_list=['base_amount/base_salary', 'base_amount/gross_salary'])
+
+    # third level : define two models with same references and same dates
+    # but different version number
+    model_6 = self.paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=self.variation_settings_category_list,
+        reference='fabien_model_level_3_2009',
+        effective_date=DateTime(2009, 01, 1),
+        expiration_date=DateTime(2009, 06, 30),
+        version='002')
+    model_line_6 = self.createModelLine(model=model_6,
+        id='model_line_6',
+        variation_category_list=variation_category_list_salary,
+        resource=self.labour,
+        share_list=salary_share_list,
+        slice_list=salary_slice_list,
+        values=[[[60000, None],],],
+        base_application_list=[],
+        base_contribution_list=['base_amount/base_salary', 'base_amount/gross_salary'])
+
+    model_7 = self.paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=self.variation_settings_category_list,
+        reference='fabien_model_level_3_2009',
+        effective_date=DateTime(2009, 07, 1),
+        expiration_date=DateTime(2009, 12, 31),
+        version='001')
+    model_line_7 = self.createModelLine(model=model_7,
+        id='model_line_7',
+        variation_category_list=variation_category_list_salary,
+        resource=self.labour,
+        share_list=salary_share_list,
+        slice_list=salary_slice_list,
+        values=[[[70000, None],],],
+        base_application_list=[],
+        base_contribution_list=['base_amount/base_salary', 'base_amount/gross_salary'])
+
+    transaction.commit()
+    self.tic()
+
+    # create the paysheet
+    paysheet = self.portal.accounting_module.newContent(
+                              portal_type='Pay Sheet Transaction',
+                              specialise_value=model_1,
+                              start_date=DateTime(2009, 07, 1),
+                              stop_date=DateTime(2009, 07, 31),
+                              price_currency_value=eur)
+    specialise_value = paysheet.getSpecialiseValue()
+
+    # design some heritance trees, and check them:
+    model_1.setSpecialiseValue(model_4)
+    model_4.setSpecialiseValue(model_6)
+    paysheet.PaySheetTransaction_applyModel()
+    self.assertEquals(specialise_value.getInheritanceModelTreeAsList(),
+        [model_1, model_4, model_6])
+    self.assertEquals(specialise_value.getInheritanceEffectiveModelTreeAsList(paysheet),
+        [model_2,])
+
+    model_1.setSpecialiseValue(None)
+    model_2.setSpecialiseValue(model_5)
+    model_5.setSpecialiseValue(model_6)
+    paysheet.PaySheetTransaction_applyModel()
+    self.assertEquals(specialise_value.getInheritanceModelTreeAsList(),
+        [model_1,])
+    self.assertEquals(specialise_value.getInheritanceEffectiveModelTreeAsList(paysheet),
+        [model_2, model_5, model_7])
+
+    paysheet.setSpecialiseValue(model_3)
+    model_3.setSpecialiseValue(model_5)
+    model_5.setSpecialiseValue(model_6)
+    paysheet.PaySheetTransaction_applyModel()
+    self.assertEquals(specialise_value.getInheritanceModelTreeAsList(),
+        [model_1,])
+    self.assertEquals(specialise_value.getInheritanceEffectiveModelTreeAsList(paysheet),
+        [model_2, model_5, model_7])
 
 import unittest
 def test_suite():
