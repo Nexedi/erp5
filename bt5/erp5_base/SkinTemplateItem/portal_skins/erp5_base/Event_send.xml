@@ -97,7 +97,7 @@ elif same_type(to_url, \'\'):\n
 if attachment_list is None:\n
   attachment_list = []\n
 document_type_list = context.getPortalDocumentTypeList()\n
-for attachment in context.getAggregateValueList():\n
+for attachment in context.getAggregateValueList(portal_type=document_type_list):\n
   mime_type, content = attachment.getMimeTypeAndContent()\n
   name = attachment.getReference()\n
 \n
