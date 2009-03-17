@@ -255,7 +255,7 @@ class TestTranslation(ERP5TypeTestCase):
     message_catalog.gettext("Draft",add=1)
     message_catalog.gettext("Validated [state in item_workflow]", add=1)
     message_catalog.message_edit(
-              'Validated', self.lang, 'Validé', '')
+              'Validated', self.lang, 'Validé'.decode('utf8'), '')
     message_catalog.message_edit(
     "Validated [state in item_workflow]",self.lang,"En bon usage", '')
     message_catalog.message_edit('Draft', self.lang, '', '')
@@ -272,6 +272,7 @@ class TestTranslation(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     self.portal.Localizer.get_selected_language = lambda: self.lang
+    
     self.assertEquals(
          item.getTranslatedValidationStateTitle(),'Draft')
     item.validate()
@@ -279,6 +280,7 @@ class TestTranslation(ERP5TypeTestCase):
                               "En bon usage") 
     self.assertEquals(
          organisation.getTranslatedValidationStateTitle(),'Validé')
+    
     
      
     
