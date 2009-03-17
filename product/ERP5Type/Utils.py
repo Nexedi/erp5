@@ -263,17 +263,29 @@ def getPath(object_or_path, **kw):
   if kw.get('tuple'):
     return path.split('/')
   return path
+  
+# Get Message Id for Workflow State
+def getMessageIdForWorkflowState(title, workflow_id):
+  return '%s [state in %s]' % (title, workflow_id)
 
-def int2letters(i):
-  """
-  Convert an integer to letters, to generate spreadsheet column id
-  A, B, C ..., Z, AA, AB, ..., AZ, BA, ..., ZZ, AAA ...
-  """
-  if i < 26:
-    return (chr(i + ord('A')))
-  d, m = divmod(i, 26)
-  return int2letter(d - 1) + int2letter(m)
+def getMessageIdWithContext(msg_id,context,workflow_id):
+  return '%s [%s in %s]' % (msg_id,context, workflow_id)
 
+def getTranslationStringWithContext(self,msg_id, context,      context_id):
+   portal = self.getPortalObject()
+   portal_workflow = portal.portal_workflow
+   localizer = portal.Localizer
+   selected_language = localizer.get_selected_language()
+   msg_id_context = getMessageIdWithContext(msg_id,context, context_id)
+   result = localizer.erp5_ui.gettext(
+               msg_id_context,default='')   
+   if result == '':
+     result = localizer.erp5_ui.gettext(msg_id)
+   return result.encode('utf8')
+from AccessControl import ModuleSecurityInfo
+ModuleSecurityInfo('Products.ERP5Type.Utils').declarePublic(
+'getMessageIdForWorkflowState','getTranslationStringWithContext',
+'getMessageIdWithContext' )
 #####################################################
 # Globals initialization
 #####################################################
@@ -406,8 +418,9 @@ class TempDocumentConstructor(DocumentConstructor):
       # Make some methods public.
       for method_id in ('reindexObject', 'recursiveReindexObject',
                         'activate', 'setUid', 'setTitle', 'getTitle',
-                        'edit', 'setProperty', 'getUid', 'setCriterion',
-                        'setCriterionPropertyList'):
+                        'edit', 'setProperty', 'getUid',
+                        'setCriterion',
+               'setCriterionPropertyList','manage_delObjects'):
         setattr(TempDocument, '%s__roles__' % method_id, None)
 
       self.klass = TempDocument
