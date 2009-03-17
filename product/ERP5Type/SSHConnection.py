@@ -63,11 +63,9 @@ class SSHConnection(object):
     rsa_key = paramiko.RSAKey.from_private_key_file(self.key_path)
     try:
       self.transport.connect(username=self.username, pkey=rsa_key)
-    except SSHException:
+    except SSHException, e:
       self.transport.close()
-      raise SSHConnectionError(self.host +
-                 ": The svn key is not good for this server," +
-                 " check if the hostname_erp5 is set to your wanted server")
+      raise SSHConnectionError(str(e))
     else:
       self.sftp = paramiko.SFTPClient.from_transport(self.transport)
 
