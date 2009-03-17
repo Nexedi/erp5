@@ -36,7 +36,7 @@ from AccessControl.SecurityManagement import newSecurityManager, \
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
 from string import zfill
 import sys
-
+from zLOG import LOG
 from Products.ERP5Type.Message import Message
 
 # dependency order
@@ -188,8 +188,7 @@ class TestTranslation(ERP5TypeTestCase):
               error_dict[key].append((
                 workflow_id, wrong_state_id, state_title, state_id_list))
               error = 1
-      #import pdb
-      #pdb.set_trace()
+      
       if error:
         for key, item_list in error_dict.items():
           if len(item_list) != 0:
@@ -243,7 +242,46 @@ class TestTranslation(ERP5TypeTestCase):
     """
     self.lang = 'pt-BR'
     self.checkWorkflowStateTitle(quiet=quiet, run=run)
-  
+    
+  def test_06_FrenchTranslationOfMessageWithContext(self, quiet=0,
+         run=run_all_test):
+    """
+    Test French translation
+    """
+    self.lang = 'fr'
+    
+    message_catalog = self.portal.Localizer.erp5_ui
+    message_catalog.gettext('Validated', add=1)
+    message_catalog.gettext("Draft",add=1)
+    message_catalog.gettext("Validated [state in item_workflow]", add=1)
+    message_catalog.message_edit(
+              'Validated', self.lang, 'Validé', '')
+    message_catalog.message_edit(
+    "Validated [state in item_workflow]",self.lang,"En bon usage", '')
+    message_catalog.message_edit('Draft', self.lang, '', '')
+    organisation_module = self.getPortal().organisation_module
+    organisation = organisation_module.newContent(
+                  portal_type='Organisation',
+                  title = 'My Organisation')
+    organisation.validate()
+    item_module = self.getPortal().item_module
+    item = item_module.newContent(portal_type='Item',
+                                  title = 'Lot A')
+                                  
+
+    transaction.commit()
+    self.tic()
+    self.portal.Localizer.get_selected_language = lambda: self.lang
+    self.assertEquals(
+         item.getTranslatedValidationStateTitle(),'Draft')
+    item.validate()
+    self.assertEquals(item.getTranslatedValidationStateTitle(),
+                              "En bon usage") 
+    self.assertEquals(
+         organisation.getTranslatedValidationStateTitle(),'Validé')
+    
+     
+    
   def test_standard_translated_related_keys(self):
     # make sure we can search by "translated_validation_state_title" and
     # "translated_portal_type"
@@ -263,15 +301,17 @@ class TestTranslation(ERP5TypeTestCase):
     person_2 = self.portal.person_module.newContent(portal_type='Person')
     organisation = self.portal.organisation_module.newContent(
                             portal_type='Organisation')
+    
     transaction.commit()
     self.tic()
 
     # patch the method, we'll abort later
     self.portal.Localizer.get_selected_language = lambda: lang
-
     self.assertEquals(set([person_1, person_2]),
         set([x.getObject() for x in
           self.portal.portal_catalog(translated_portal_type='Personne')]))
+    LOG("ORGANISATION TEST",0,organisation)
+   
     self.assertEquals(set([person_2, organisation]),
         set([x.getObject() for x in
           self.portal.portal_catalog(translated_validation_state_title='Brouillon',
