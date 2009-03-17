@@ -108,8 +108,16 @@ class TranslatedTitleGetter(TitleGetter):
     def __call__(self, instance):
       portal_workflow = getToolByName(instance, 'portal_workflow')
       localizer = getToolByName(instance, 'Localizer')
-      wf = portal_workflow.getWorkflowById(self._key)
+      wf_id = self._key
+      wf = portal_workflow.getWorkflowById(wf_id)
+      selected_language = localizer.get_selected_language()
       state_title = wf._getWorkflowStateOf(instance).title
-      return localizer.erp5_ui.gettext(state_title).encode('utf8')
+      msg_id = '%s [state in %s]' % (state_title, wf_id)
+      result = localizer.erp5_ui.gettext(msg_id,
+             lang=selected_language,default='')      
+      if result == '':
+        result = localizer.erp5_ui.gettext(state_title,
+                              lang=selected_language)
+      return result
 
     psyco.bind(__call__)
