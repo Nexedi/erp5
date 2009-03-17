@@ -118,6 +118,6 @@ class TranslatedTitleGetter(TitleGetter):
       if result == '':
         result = localizer.erp5_ui.gettext(state_title,
                               lang=selected_language)
-      return result
+      return result.encode('utf8')
 
     psyco.bind(__call__)
