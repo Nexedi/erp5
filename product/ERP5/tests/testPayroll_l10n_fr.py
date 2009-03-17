@@ -41,25 +41,10 @@ class TestPayroll_l10n_fr(TestPayrollMixin):
   def getTitle(self):
     return "Payroll_l10n_fr"
 
-  def login(self):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('admin', 'admin', ['Manager', 'Assignee', 'Assignor',
-                               'Associate', 'Auditor', 'Author'], [])
-    user = uf.getUserById('admin').__of__(uf)
-    newSecurityManager(None, user)
-
   def getBusinessTemplateList(self):
     """ """
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
         'erp5_payroll', 'erp5_payroll_l10n_fr')
-
-
-  def test_01_btInstallation(self):
-    '''
-      this test must be replace with real test
-      it's just here because a test method must be present to launch test
-    '''
-    pass
 
   def test_01_getYearToDateSlice(self):
     '''
@@ -72,7 +57,6 @@ class TestPayroll_l10n_fr(TestPayrollMixin):
             variation_settings_category_list=self.variation_settings_category_list)
     model.setPriceCurrencyValue(eur)
 
-    
     self.addSlice(model, 'salary_range/%s' % \
         self.france_settings_slice_a, 0, 1000)
     self.addSlice(model, 'salary_range/%s' % \
@@ -178,4 +162,3 @@ def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPayroll_l10n_fr))
   return suite
- 
