@@ -342,17 +342,15 @@ class ReportSection:
 
     self.saved_request_form = REQUEST.form
 
-    # REQUEST.form is cleared here, because when rendering a report section
-    # with a listbox, listbox gets parameters from request.form and edits
-    # selection with those parameters, so if you happen to pass explicitly
-    # selection params that have the same name as some request parameters (some
-    # dialog fields) but different values, listbox would not use your explicit
-    # parameters, but the ones from REQUEST.form.
-    # As a result, request parameters are not available inside a report
-    # section, and if one needs to access report parameters from inside a
-    # report section, he have to store them in selection parameters in the
-    # report method (the method returning the list of ReportSection)
-    REQUEST.form = {}
+    # When rendering a report section with a listbox, listbox gets parameters
+    # from request.form and edits selection with those parameters, so if you
+    # happen to pass explicitly selection params that have the same name as
+    # some request parameters (some dialog fields) but different values,
+    # listbox would not use your explicit parameters, but the ones from
+    # REQUEST.form, so we remove eventual request parameters that have the same
+    # name of selections parameters passed explicitly.
+    for selection_parameter in (self.selection_params or ()):
+      REQUEST.form.pop(selection_parameter, None)
 
   security.declarePublic('popReport')
   def popReport(self, context, render_prefix=None):
