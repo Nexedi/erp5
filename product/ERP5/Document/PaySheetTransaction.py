@@ -246,7 +246,7 @@ class PaySheetTransaction(Invoice):
     '''
       return the not editable lines as dict
     '''
-    model = paysheet.getSpecialiseValue()
+    model = paysheet.getSpecialiseValue().getEffectiveModel(paysheet)
 
     def sortByIntIndex(a, b):
       return cmp(a.getIntIndex(), b.getIntIndex())
@@ -314,7 +314,7 @@ class PaySheetTransaction(Invoice):
     # current_amount = base_amount_dict[base_amount][share]
     base_amount_dict = {}
 
-    model = paysheet.getSpecialiseValue()
+    model = paysheet.getSpecialiseValue().getEffectiveModel(paysheet)
 
     def sortByIntIndex(a, b):
       return cmp(a.getIntIndex(), b.getIntIndex())
@@ -503,7 +503,7 @@ class PaySheetTransaction(Invoice):
       If property_list is provided, only subobjects with at least one of those
       properties is defined will be taken into account
     '''
-    model = self.getSpecialiseValue()
+    model = self.getSpecialiseValue().getEffectiveModel(self)
     model_reference_dict = model.getInheritanceModelReferenceDict(
                                    portal_type_list=portal_type_list,
                                    property_list=property_list)

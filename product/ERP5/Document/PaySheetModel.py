@@ -80,12 +80,17 @@ class PaySheetModel(TradeCondition, XMLMatrix, Delivery):
     cell = XMLMatrix.getCell(self, *kw, **kwd)
     # if cell not found, look on the inherited models
     if cell is None:
-      for specialised_model in self.getSpecialiseValueList():
-        cell = specialised_model.getCell(*kw, **kwd)
+      if kwd.has_key('paysheet'):
+        model_list = self.getInheritanceEffectiveModelTreeAsList(kwd['paysheet'])
+      else:
+        model_list = self.getInheritanceModelTreeAsList()
+      if self in model_list:
+        model_list.remove(self)
+      for specialised_model in model_list:
+        cell = XMLMatrix.getCell(specialised_model, *kw, **kwd)
         if cell is not None:
           return cell
     return cell
-
 
   security.declareProtected(Permissions.AccessContentsInformation,
       'getReferenceDict')
