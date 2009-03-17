@@ -278,10 +278,11 @@ def int2letters(i):
   return int2letter(d - 1) + int2letter(m)
 
 #Get message id for translation
-def getMessageIdWithContext(msg_id,context,workflow_id):
-  return '%s [%s in %s]' % (msg_id,context, workflow_id)
+def getMessageIdWithContext(msg_id, context, context_id):
+  return '%s [%s in %s]' % (msg_id,context,context_id)
+
 #Get translation of msg id
-def getTranslationStringWithContext(self,msg_id, context,      context_id):
+def getTranslationStringWithContext(self, msg_id, context,      context_id):
    portal = self.getPortalObject()
    portal_workflow = portal.portal_workflow
    localizer = portal.Localizer
