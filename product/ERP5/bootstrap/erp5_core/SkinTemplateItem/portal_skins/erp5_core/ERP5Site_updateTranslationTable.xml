@@ -54,7 +54,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Document import newTempBase\n
-from Products.ERP5Type.Utils import getTranslationStringWithContext\n
+from Products.ERP5Type.Utils import getMessageIdWithContext\n
 \n
 supported_languages = context.Localizer.get_supported_languages()\n
 translated_keys = {} # This dict prevents entering the same key twice\n
@@ -83,7 +83,7 @@ for wf in context.portal_workflow.objectValues():\n
         # translate state title as well\n
         if state.title != \'\' :\n
           state_var_title = \'%s_title\' % state_var\n
-          msg_id = msg_id = \'%s [state in %s]\' % (state.title, wf.id)\n
+          msg_id = getMessageIdWithContext(state.title,\'state\',wf.id)\n
           translated_message = context.Localizer.erp5_ui.gettext(msg_id, default=\'\').encode(\'utf-8\')\n
           if translated_message == \'\':\n
             translated_message = context.Localizer.erp5_ui.gettext(state.title.decode(\'utf-8\'), lang=lang).encode(\'utf-8\')\n
@@ -164,7 +164,7 @@ return printed\n
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
                             <string>Products.ERP5Type.Utils</string>
-                            <string>getTranslationStringWithContext</string>
+                            <string>getMessageIdWithContext</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>supported_languages</string>
