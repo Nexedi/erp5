@@ -56,6 +56,8 @@
             <value> <string>request = context.REQUEST\n
 from Products.ERP5Type.Document import newTempBase\n
 from Products.ERP5Type.Document import newTempMappedValue\n
+from Products.ERP5Type.Utils import getTranslationStringWithContext\n
+\n
 \n
 marker = []\n
 result = []\n
@@ -78,8 +80,7 @@ def getActorName(actor):\n
       actor_name_cache[actor] = person.getTitle()\n
     return actor_name_cache[actor]\n
 \n
-def getMessageIdForWorkflowState(title, workflow_id):\n
-  return \'%s [state in %s]\' % (title, workflow_id)\n
+\n
 \n
 # Get history\n
 # XXX Compatibility\n
@@ -128,8 +129,7 @@ for workflow_item in workflow_item_list:\n
       elif key == \'actor\':\n
         value = getActorName(value)\n
       elif same_type(value, \'\') and key in (\'state\' ):\n
-        value = getMessageIdForWorkflowState(value, workflow_id) \n
-        value = context.Localizer.erp5_ui.gettext(value)\n
+        value = getTranslationStringWithContext(context,value, key, workflow_id)\n
       elif same_type(value, \'\') and key in ( \'action\'):\n
         value = context.Localizer.erp5_ui.gettext(value)\n
     if value is marker:\n
@@ -207,6 +207,8 @@ return result\n
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
                             <string>newTempMappedValue</string>
+                            <string>Products.ERP5Type.Utils</string>
+                            <string>getTranslationStringWithContext</string>
                             <string>marker</string>
                             <string>result</string>
                             <string>i</string>
@@ -221,7 +223,6 @@ return result\n
                             <string>dict</string>
                             <string>actor_name_cache</string>
                             <string>getActorName</string>
-                            <string>getMessageIdForWorkflowState</string>
                             <string>history_name</string>
                             <string>workflow_item_list</string>
                             <string>_getitem_</string>
