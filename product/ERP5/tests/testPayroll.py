@@ -2565,9 +2565,10 @@ class TestPayroll(TestPayrollMixin):
     pay_sheet_line_list = self.calculatePaySheet(paysheet=paysheet)
     self.assertEquals(len(paysheet.contentValues(portal_type='Pay Sheet Line')), 3)
     # check values on the paysheet
-    self.assertEquals(paysheet.contentValues()[0].contentValues()[0].getTotalPrice(), 10000)
-    self.assertEquals(paysheet.contentValues()[1].contentValues()[0].getTotalPrice(), 8000)
-    self.assertEquals(paysheet.contentValues()[2].contentValues()[0].getTotalPrice(), -800)
+    line_list = paysheet.contentValues()
+    self.assertEquals(line_list[0].contentValues()[0].getTotalPrice(), 10000)
+    self.assertEquals(line_list[1].contentValues()[0].getTotalPrice(), 8000)
+    self.assertEquals(line_list[2].contentValues()[0].getTotalPrice(), -800)
 
     # create a paysheet with one normal line and an intermediate line
     model_line_2.setCreatePaysheetLine(False)
