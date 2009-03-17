@@ -15,6 +15,7 @@
               <list>
                 <string>title</string>
                 <string>columns</string>
+                <string>all_columns</string>
                 <string>sort</string>
                 <string>list_method</string>
                 <string>selection_name</string>
@@ -82,6 +83,121 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>relative_url</string>
+                          <string>Path</string>
+                        </tuple>
+                        <tuple>
+                          <string>portal_type</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Source</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Destination</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource_title</string>
+                          <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>variation_title</string>
+                          <string>Variation</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit</string>
+                          <string>UOM</string>
+                        </tuple>
+                        <tuple>
+                          <string>price</string>
+                          <string>Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>price_currency_reference</string>
+                          <string>Currency</string>
+                        </tuple>
+                        <tuple>
+                          <string>movement.start_date</string>
+                          <string>Start Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>movement.stop_date</string>
+                          <string>Stop Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>specialise</string>
+                          <string>Specialise</string>
+                        </tuple>
+                        <tuple>
+                          <string>order</string>
+                          <string>Order</string>
+                        </tuple>
+                        <tuple>
+                          <string>order_ratio</string>
+                          <string>O/Rat</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery</string>
+                          <string>Delivery</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery_ratio</string>
+                          <string>D/Rat</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery_error</string>
+                          <string>D/Err</string>
+                        </tuple>
+                        <tuple>
+                          <string>simulation_state</string>
+                          <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>causality_state</string>
+                          <string>C/State</string>
+                        </tuple>
+                        <tuple>
+                          <string>categories_list</string>
+                          <string>Categories</string>
+                        </tuple>
+                        <tuple>
+                          <string>causality</string>
+                          <string>Causality</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_section_title</string>
+                          <string>Source Section</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_section_title</string>
+                          <string>Destination Section</string>
+                        </tuple>
+                        <tuple>
+                          <string>showDict</string>
+                          <string>Dict</string>
+                        </tuple>
+                        <tuple>
+                          <string>specialise_title</string>
+                          <string>Specialise Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>variation_text</string>
+                          <string>Variation Text</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>all_editable_columns</string> </key>
                     <value>
                       <list/>
@@ -140,8 +256,12 @@
                           <string>Stop Date</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_id</string>
-                          <string>Spec ID</string>
+                          <string>causality</string>
+                          <string>Causality</string>
+                        </tuple>
+                        <tuple>
+                          <string>specialise</string>
+                          <string>Specialise</string>
                         </tuple>
                         <tuple>
                           <string>order</string>
