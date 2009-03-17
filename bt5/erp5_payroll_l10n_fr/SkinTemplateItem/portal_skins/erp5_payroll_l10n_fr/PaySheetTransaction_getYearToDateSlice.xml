@@ -68,48 +68,50 @@ from_date=DateTime(context.getStartDate().year(), 1, 1)\n
 to_date=context.getStartDate()\n
 \n
 search_params = \\\n
-  { \n
+  {\n
    \'portal_type\'         : \'Pay Sheet Transaction\',\n
    \'delivery.start_date\' : {\'range\': "minmax", \'query\': (from_date, to_date)},\n
    \'delivery.source_section_uid\' : context.getSourceSectionUid(),\n
-   \'simulation_state\'    : [\'confirmed\', \'stopped\', \'delivered\'],\n
+   \'simulation_state\'    : [\'stopped\', \'delivered\'],\n
   }\n
 \n
-paysheet_list = accounting_module.searchFolder(**search_params)\n
+paysheet_list = [r.getObject() for r in accounting_module.searchFolder(**search_params)]\n
 \n
 yearly_slice_amount = 0\n
 # get the slice value for this paysheet :\n
 model = context.getSpecialiseValue().getEffectiveModel(context)\n
-slice = model.getCell(slice_path)\n
+slice = model.getCell(slice_path, paysheet=context)\n
 \n
-if not slice:\n
+if slice is None:\n
   return 0.0\n
 \n
-plafond = slice.getQuantityRangeMax()\n
+plafond_max = slice.getQuantityRangeMax()\n
+plafond_min = slice.getQuantityRangeMin()\n
 \n
-gross_salary = context.PaySheetTransaction_getAmountFromBaseParticipationList(\\\n
-    base_participation_list=(\'gross_salary\',),\n
-    category_list=\'tax_category/employee_share\')\n
+gross_salary = context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
+    base_contribution=\'base_contribution/base_amount/gross_salary\',\n
+    tax_category=\'tax_category/employee_share\')\n
 \n
-if gross_salary < plafond:\n
-  slice_amount = gross_salary\n
+if gross_salary < plafond_max:\n
+  slice_amount = gross_salary - plafond_min\n
 else:\n
-  slice_amount = plafond\n
+  slice_amount = plafond_max - plafond_min\n
 yearly_slice_amount += slice_amount\n
 \n
 for paysheet in paysheet_list :\n
   model = paysheet.getSpecialiseValue().getEffectiveModel(paysheet)\n
   if model is not None:\n
     slice = model.getCell(slice_path)\n
-    plafond = slice.getQuantityRangeMax()\n
-    gross_salary=paysheet.PaySheetTransaction_getAmountFromBaseParticipationList(\\\n
-        base_participation_list=(\'gross_salary\',), \n
-        category_list=\'tax_category/employee_share\')\n
+    plafond_max = slice.getQuantityRangeMax()\n
+    plafond_min = slice.getQuantityRangeMin()\n
+    gross_salary=paysheet.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
+        base_contribution=\'base_contribution/base_amount/gross_salary\',\n
+        tax_category=\'tax_category/employee_share\')\n
     slice_amount = 0\n
-    if gross_salary < plafond:\n
-      slice_amount = gross_salary\n
+    if gross_salary < plafond_max:\n
+      slice_amount = gross_salary - plafond_min\n
     else:\n
-      slice_amount = plafond\n
+      slice_amount = plafond_max - plafond_min\n
     yearly_slice_amount += slice_amount\n
 \n
 return yearly_slice_amount\n
@@ -160,18 +162,22 @@ return yearly_slice_amount\n
                             <string>from_date</string>
                             <string>to_date</string>
                             <string>search_params</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
                             <string>_apply_</string>
+                            <string>r</string>
                             <string>paysheet_list</string>
                             <string>yearly_slice_amount</string>
                             <string>model</string>
                             <string>slice</string>
-                            <string>plafond</string>
+                            <string>None</string>
+                            <string>plafond_max</string>
+                            <string>plafond_min</string>
                             <string>gross_salary</string>
                             <string>slice_amount</string>
                             <string>_inplacevar_</string>
-                            <string>_getiter_</string>
                             <string>paysheet</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

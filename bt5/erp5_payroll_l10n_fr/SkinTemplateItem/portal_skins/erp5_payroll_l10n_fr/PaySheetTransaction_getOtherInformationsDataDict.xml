@@ -164,7 +164,7 @@ def getPaymentConditionText(paysheet):\n
   if date:\n
     if paysheet.getProperty(\'default_payment_condition_payment_mode_title\'):\n
       return \'%s: %s\' % (translateString(\'Payment\'),\n
-          translateString(\'${payment_mode} at ${payment_date}\', \n
+          translateString(\'${payment_mode} at ${payment_date}\',\n
             mapping = {\'payment_mode\': paysheet.getProperty(\'default_payment_condition_payment_mode_title\'),\n
                        \'payment_date\':date}))\n
     else:\n
