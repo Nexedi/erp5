@@ -5075,9 +5075,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if self.getBuildingState() != 'built':
         raise TemplateConditionError, \
               'Business Template must be built before export'
-      if self.getInstallationState() == 'installed':
-        raise TemplateConditionError, \
-              'Can not export installed Business Template'
 
       if local:
         # we export into a folder tree
