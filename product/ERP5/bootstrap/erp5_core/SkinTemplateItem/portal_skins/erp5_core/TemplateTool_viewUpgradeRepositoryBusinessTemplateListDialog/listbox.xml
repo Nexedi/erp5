@@ -540,6 +540,18 @@
                           <string></string>
                         </tuple>
                         <tuple>
+                          <string>revision</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>installed_version</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>installed_revision</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
                           <string>description</string>
                           <string></string>
                         </tuple>
