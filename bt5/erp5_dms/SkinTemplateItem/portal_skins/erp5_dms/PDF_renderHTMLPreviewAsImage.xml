@@ -46,7 +46,7 @@
                  format request/format|string:jpg;">\n
   <img src="" \n
       tal:attributes="src\n
-        string:${here/absolute_url}/index_html?display=${display}&format=${format}&frame=${frame}">\n
+        string:${here/absolute_url}/index_html?display=${display}&format=${format}&frame=${frame}&resolution:int=200">\n
 </div>
 
 ]]></string> </value>
