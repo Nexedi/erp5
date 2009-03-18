@@ -139,16 +139,16 @@ if WIN:
   erp5_home = os.path.sep.join(
       tests_framework_home.split(os.path.sep)[:-4])
   zope_home = os.path.join(erp5_home, 'Zope')
-  software_home = os.path.join(zope_home, 'lib', 'python')
 elif os.path.isdir('/usr/lib64/zope/lib/python'):
-  software_home = '/usr/lib64/zope/lib/python'
   zope_home = '/usr/lib64/zope'
 elif os.path.isdir('/usr/lib/erp5/lib/python'):
-  software_home = '/usr/lib/erp5/lib/python'
   zope_home = '/usr/lib/erp5'
+elif os.path.isdir('/usr/lib/zope2.8/lib/python'):
+  zope_home = '/usr/lib/zope2.8'
 else:
-  software_home = '/usr/lib/zope/lib/python'
   zope_home = '/usr/lib/zope'
+software_home = os.path.join(zope_home, 'lib', 'python')
+
 # handle 'system global' instance and windows
 if WIN:
   real_instance_home = os.path.join(erp5_home, 'ERP5Instance')
