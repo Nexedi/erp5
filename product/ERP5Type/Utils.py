@@ -41,6 +41,7 @@ from Acquisition import aq_inner
 from Acquisition import aq_parent
 from Acquisition import aq_self
 
+from AccessControl import ModuleSecurityInfo
 from AccessControl.SecurityInfo import allow_class
 
 from Products.CMFCore import utils
@@ -276,7 +277,7 @@ def int2letters(i):
 
 #Get message id for translation
 def getMessageIdWithContext(msg_id, context, context_id):
-  return '%s [%s in %s]' % (msg_id,context,context_id)
+  return '%s [%s in %s]' % (msg_id, context, context_id)
 
 #Get translation of msg id
 def getTranslationStringWithContext(self, msg_id, context, context_id):
@@ -284,16 +285,15 @@ def getTranslationStringWithContext(self, msg_id, context, context_id):
    portal_workflow = portal.portal_workflow
    localizer = portal.Localizer
    selected_language = localizer.get_selected_language()
-   msg_id_context = getMessageIdWithContext(msg_id,context, context_id)
+   msg_id_context = getMessageIdWithContext(msg_id, context, context_id)
    result = localizer.erp5_ui.gettext(
-               msg_id_context,default='')   
+               msg_id_context, default='')   
    if result == '':
      result = localizer.erp5_ui.gettext(msg_id)
    return result.encode('utf8')
-from AccessControl import ModuleSecurityInfo
+
 ModuleSecurityInfo('Products.ERP5Type.Utils').declarePublic(
-'getMessageIdForWorkflowState','getTranslationStringWithContext',
-'getMessageIdWithContext' )
+  'getMessageIdWithContext', 'getTranslationStringWithContext')
 
 #####################################################
 # Globals initialization
@@ -801,7 +801,6 @@ def importLocalDocument(class_id, document_path = None):
     setattr(Products.ERP5Type.Document, document_constructor_name,
                                       document_constructor)
     setDefaultClassProperties(document_class)
-    from AccessControl import ModuleSecurityInfo
     ModuleSecurityInfo('Products.ERP5Type.Document').declareProtected(
         Permissions.AddPortalContent, document_constructor_name,)
     InitializeClass(document_class)
