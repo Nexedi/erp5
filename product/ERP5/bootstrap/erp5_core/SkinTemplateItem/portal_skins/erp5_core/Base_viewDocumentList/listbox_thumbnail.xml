@@ -140,7 +140,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:cell.portal_type==\'Image\'</string> </value>
+            <value> <string>python:cell.portal_type != \'File\'</string> </value>
         </item>
       </dictionary>
     </pickle>
