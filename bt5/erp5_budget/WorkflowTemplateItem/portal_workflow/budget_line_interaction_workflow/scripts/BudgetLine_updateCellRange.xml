@@ -57,6 +57,21 @@
 \n
 base_id = \'cell\'\n
 line.updateCellRange(base_id=base_id)\n
+\n
+# TODO: here we should update membership criterion category list on existing cell\n
+# and add an interaction on newCell to initialize this membership\n
+\n
+# also update membership criterion category list on line\n
+if line.getMembershipCriterionBaseCategoryList():\n
+  line.setMembershipCriterionCategoryList([])\n
+  budget_line_category_list = line.getCategoryList()\n
+  for variation in budget_line_category_list:\n
+    if not variation:\n
+      continue\n
+    base, category = variation.split(\'/\', 1)\n
+    if base in line.getMembershipCriterionBaseCategoryList():\n
+      line.setMembershipCriterionCategoryList(\n
+            [variation,] + line.getMembershipCriterionCategoryList())\n
 </string> </value>
         </item>
         <item>
@@ -98,6 +113,11 @@ line.updateCellRange(base_id=base_id)\n
                             <string>line</string>
                             <string>base_id</string>
                             <string>_getattr_</string>
+                            <string>budget_line_category_list</string>
+                            <string>_getiter_</string>
+                            <string>variation</string>
+                            <string>base</string>
+                            <string>category</string>
                           </tuple>
                         </value>
                     </item>

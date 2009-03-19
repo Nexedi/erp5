@@ -115,7 +115,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: list(cell_index) + [context.getResource(base=1),] # XXX make this in a script ? or interaction workflow ?</string> </value>
+            <value> <string>python: list(cell_index) + context.getMembershipCriterionCategoryList() + [context.getResource(base=1),] # XXX make this in a script ? or interaction workflow ?</string> </value>
         </item>
       </dictionary>
     </pickle>
