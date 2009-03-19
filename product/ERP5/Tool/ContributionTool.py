@@ -380,7 +380,7 @@ class ContributionTool(BaseTool):
           document.activate().Document_convertToBaseFormatAndDiscoverMetadata(
             file_name=name, user_login=user_login)
       else:
-        if document.isExternalDocument():
+        if existing_document.isExternalDocument():
           document = existing_document
           # If this is an external document, update its content
           # document.activate().updateContentFromURL() # XXX I think this is no longer useful with alarms
