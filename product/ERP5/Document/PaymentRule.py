@@ -160,6 +160,10 @@ class PaymentRule(Rule):
     def test(self, context, tested_base_category_list=None):
       """Test if this rule apply.
       """
+
+      # XXX for now disable this rule
+      return False
+
       if context.getParentValue()\
           .getSpecialiseValue().getPortalType() == 'Payment Rule':
         return False
