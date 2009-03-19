@@ -528,15 +528,11 @@ class ERP5TypeTestCase(PortalTestCase):
     def validateRules(self):
       """
       try to validate all rules in rule_tool.
-      XXX except the default payment rule.
       """
       rule_tool = self.getRuleTool()
       for rule in rule_tool.contentValues(
           portal_type=rule_tool.getPortalRuleTypeList()):
-        if rule.getId() != 'default_payment_rule':
-          rule.validate()
-        else:
-          warnings.warn('Rule %s not validated' % rule.getId())
+        rule.validate()
 
     def tic(self):
       """
