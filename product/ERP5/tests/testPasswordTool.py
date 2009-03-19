@@ -62,6 +62,8 @@ class TestPasswordTool(ERP5TypeTestCase):
     get_transaction().abort()
     # clear modules if necessary
     self.portal.person_module.manage_delObjects(list(self.portal.person_module.objectIds()))
+    # reset password tool internal structure
+    self.portal.portal_password.password_request_dict.clear()
     get_transaction().commit()
     self.tic()
 
@@ -240,13 +242,10 @@ class TestPasswordTool(ERP5TypeTestCase):
     key = self.portal.portal_password.password_request_dict.keys()[0]
     sequence.edit(key=key)
     # modify date
-    new_kw = {}
     for k, v in self.portal.portal_password.password_request_dict.items():
       login, date = v
       date = DateTime() - 1
-      new_kw[k] = (login, date)
-      
-    self.portal.portal_password.password_request_dict = new_kw
+      self.portal.portal_password.password_request_dict[k] = (login, date)
 
   def stepSimulateExpirationAlarm(self, sequence=None, sequence_list=None, **kw):
     """
