@@ -264,7 +264,11 @@ class ContributionTool(BaseTool):
     #document.notifyWorkflowCreated()
 
     # Allow reindexing, reindex it and return the document
-    delattr(document, 'isIndexable')
+    try:
+      delattr(document, 'isIndexable')
+    except AttributeError:
+      # Document does not have such attribute
+      pass
     document.reindexObject()
     return document
 
