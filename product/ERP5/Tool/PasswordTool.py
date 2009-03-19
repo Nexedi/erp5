@@ -33,12 +33,12 @@ from Globals import InitializeClass, DTMLFile, get_request
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
-from zLOG import LOG
+from zLOG import LOG, INFO
 import time, random, md5
 from DateTime import DateTime
 from Products.ERP5Type.Message import translateString
 from Acquisition import aq_base
-from BTrees.OOBTree import OOBTree
+from Globals import PersistentMapping
 
 class PasswordTool(BaseTool):
   """
@@ -61,7 +61,7 @@ class PasswordTool(BaseTool):
   password_request_dict = {}
   
   def __init__(self):
-    self.password_request_dict = OOBTree()
+    self.password_request_dict = PersistentMapping()
 
   def mailPasswordResetRequest(self, user_login=None, REQUEST=None):
     """
@@ -88,8 +88,17 @@ class PasswordTool(BaseTool):
     url = "%s/portal_password/resetPassword?reset_key=%s" %(self.getPortalObject().absolute_url() , random_url)
     # generate expiration date
     expiration_date = DateTime() + self._expiration_day
+    
+    # XXX before r26093, password_request_dict was initialized by an OOBTree and
+    # replaced by a dict on each request, so if it's data structure is not up
+    # to date, we update it if needed
+    if not isinstance(self.password_request_dict, PersistentMapping):
+      LOG('ERP5.PasswordTool', INFO, 'Updating password_request_dict to'
+                                     ' PersistentMapping')
+      self.password_request_dict = PersistentMapping()
+    
     # register request
-    self.password_request_dict = {random_url : (user_login, expiration_date)}
+    self.password_request_dict[random_url] = (user_login, expiration_date)
 
     # send mail
     subject = "[%s] Reset of your password" %(self.getPortalObject().getTitle())

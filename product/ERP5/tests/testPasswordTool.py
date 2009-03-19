@@ -27,6 +27,7 @@
 ##############################################################################
 
 import unittest
+import transaction
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -336,6 +337,64 @@ class TestPasswordTool(ERP5TypeTestCase):
                       
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
+
+  def test_two_concurrent_password_reset(self):
+    personA = self.portal.person_module.newContent(portal_type="Person",
+                                    reference="userA",
+                                    password="passwordA",
+                                    default_email_text="userA@example.invalid")
+    assignment = personA.newContent(portal_type='Assignment')
+    assignment.open()
+
+    personB = self.portal.person_module.newContent(portal_type="Person",
+                                    reference="userB",
+                                    password="passwordB",
+                                    default_email_text="userB@example.invalid")
+    assignment = personB.newContent(portal_type='Assignment')
+    assignment.open()
+    transaction.commit()
+    self.tic()
+
+    self._assertUserExists('userA', 'passwordA')
+    self._assertUserExists('userB', 'passwordB')
+    
+    self.assertEquals(0, len(self.portal.portal_password.password_request_dict))
+    self.portal.portal_password.mailPasswordResetRequest(user_login="userA")
+    self.assertEquals(1, len(self.portal.portal_password.password_request_dict))
+    key_a = self.portal.portal_password.password_request_dict.keys()[0]
+    transaction.commit()
+    self.tic()
+
+    self.portal.portal_password.mailPasswordResetRequest(user_login="userB")
+    possible_key_list =\
+        self.portal.portal_password.password_request_dict.keys()
+    self.assertEquals(2, len(possible_key_list))
+    key_b = [k for k in possible_key_list if k != key_a][0]
+    transaction.commit()
+    self.tic()
+
+    self._assertUserExists('userA', 'passwordA')
+    self._assertUserExists('userB', 'passwordB')
+
+    self.portal.portal_password.changeUserPassword(user_login="userA",
+                                                   password="newA",
+                                                   password_confirmation="newA",
+                                                   password_key=key_a)
+    transaction.commit()
+    self.tic()
+
+    self._assertUserExists('userA', 'newA')
+    self._assertUserExists('userB', 'passwordB')
+
+    self.portal.portal_password.changeUserPassword(user_login="userB",
+                                                   password="newB",
+                                                   password_confirmation="newB",
+                                                   password_key=key_b)
+    transaction.commit()
+    self.tic()
+
+    self._assertUserExists('userA', 'newA')
+    self._assertUserExists('userB', 'newB')
 
 
 class TestPasswordToolWithCRM(TestPasswordTool):
