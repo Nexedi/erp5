@@ -146,16 +146,27 @@ class NodeBudgetVariation(BudgetVariation):
     """
     budget_line_variation_category_list =\
        list(budget_line.getVariationBaseCategoryList() or [])
+    budget_line_membership_criterion_base_category_list =\
+       list(budget_line.getMembershipCriterionBaseCategoryList() or [])
     base_category = self.getProperty('variation_base_category')
     if base_category:
       budget_line_variation_category_list.append(base_category)
       budget_line.setVariationBaseCategoryList(
               budget_line_variation_category_list)
+    if self.isMemberOf('budget_variation/budget_line'):
+      budget_line_membership_criterion_base_category_list.append(base_category)
+      budget_line.setMembershipCriterionBaseCategoryList(
+          budget_line_membership_criterion_base_category_list)
 
   def initializeBudget(self, budget):
     """Initialize a budget.
     """
-    # same as budget line
-    return self.initializeBudgetLine(budget)
+    budget_variation_category_list =\
+       list(budget.getVariationBaseCategoryList() or [])
+    base_category = self.getProperty('variation_base_category')
+    if base_category:
+      budget_variation_category_list.append(base_category)
+      budget.setVariationBaseCategoryList(
+              budget_variation_category_list)
 
 
