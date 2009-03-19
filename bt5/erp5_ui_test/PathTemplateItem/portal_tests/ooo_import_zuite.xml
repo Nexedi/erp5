@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="Zuite" module="Products.Zelenium.zuite"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>filename_glob</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>filesystem_path</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ooo_import_zuite</string> </value>
+        </item>
+        <item>
+            <key> <string>test_case_metatypes</string> </key>
+            <value>
+              <tuple>
+                <string>File</string>
+                <string>Page Template</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>testsuite_name</string> </key>
+            <value> <string>Testing the OOo import</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

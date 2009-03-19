@@ -1,3 +1,6 @@
+2009-03-19 Mohamadou
+* add functional tests for erp5_ooo_import .
+
 2008-10-01 fabien
 * redefine Selenium.prototype.doType function in user-extensions.js. This is made to be able to test file upload.
 * move all things used by other ui_test in erp5_ui_test_core framework

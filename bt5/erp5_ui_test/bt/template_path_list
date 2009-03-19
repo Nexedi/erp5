@@ -27,6 +27,8 @@ portal_tests/listbox_zuite
 portal_tests/listbox_zuite/**
 portal_tests/matrixbox_zuite
 portal_tests/matrixbox_zuite/**
+portal_tests/ooo_import_zuite
+portal_tests/ooo_import_zuite/**
 portal_tests/page_templates_zuite
 portal_tests/page_templates_zuite/**
 portal_tests/planning_box_field_zuite
