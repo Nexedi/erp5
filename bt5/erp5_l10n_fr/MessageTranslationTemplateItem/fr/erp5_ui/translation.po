@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 Localized Interface\n"
 "POT-Creation-Date: 2009-03-10 11:15+0000\n"
-"PO-Revision-Date: 2009-03-10 11:15+0000\n"
+"PO-Revision-Date: 2009-03-19 16:58+0100\n"
 "Last-Translator:  <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
@@ -264,8 +264,8 @@ msgstr "Accesseurs"
 msgid "Account"
 msgstr "Compte"
 
-msgid "Account ${account_title} is not opened."
-msgstr "Le compte ${account_title} n'est pas ouvert."
+msgid "Account ${account_title} is not validated."
+msgstr "Le compte ${account_title} n'est pas validé."
 
 msgid "Account Module"
 msgstr "Module des comptes"
@@ -412,6 +412,9 @@ msgid "Acknowledge Event"
 msgstr "Prendre en compte l'évènement"
 
 msgid "Acknowledged"
+msgstr "Pris en compte"
+
+msgid "Acknowledged [state in event_workflow]"
 msgstr "Pris en compte"
 
 msgid "Acquisition Append Value"
@@ -648,6 +651,9 @@ msgstr "Réponse"
 msgid "Answered"
 msgstr "Résolu"
 
+msgid "Answered [state in query_workflow]"
+msgstr "Répondu"
+
 msgid "Any Documents"
 msgstr "N'importe quel document"
 
@@ -843,6 +849,9 @@ msgstr "Importer les conditions de vente"
 msgid "Apply Trade Condition"
 msgstr "Appliquer les conditions de vente"
 
+msgid "Approval Requested [state in ticket_workflow]"
+msgstr "Autorisation demandée"
+
 msgid "Approve"
 msgstr "Approuver"
 
@@ -859,6 +868,9 @@ msgid "Archive Document Action"
 msgstr "Archiver (action)"
 
 msgid "Archived"
+msgstr "Archivé"
+
+msgid "Archived [state in document_publication_workflow]"
 msgstr "Archivé"
 
 msgid "Area"
@@ -915,6 +927,18 @@ msgstr "Événements assignés"
 msgid "Assigned Translations"
 msgstr "Traductions assignées"
 
+msgid "Assigned [state in bug_workflow]"
+msgstr "Assigné"
+
+msgid "Assigned [state in document_ingestion_workflow]"
+msgstr "Assigné"
+
+msgid "Assigned [state in document_publication_workflow]"
+msgstr "Assigné"
+
+msgid "Assigned [state in event_workflow]"
+msgstr "Assigné"
+
 msgid "Assignee"
 msgstr "Personne affectée"
 
@@ -967,6 +991,15 @@ msgid "Authorization Forced"
 msgstr "Autorisation forcée"
 
 msgid "Auto Planned"
+msgstr "Planifié automatiquement"
+
+msgid "Auto Planned [state in open_order_workflow]"
+msgstr "Planifié automatiquement"
+
+msgid "Auto Planned [state in order_workflow]"
+msgstr "Planifié automatiquement"
+
+msgid "Auto Planned [state in task_workflow]"
 msgstr "Planifié automatiquement"
 
 msgid "Automatically disabled when enabling ${preference_title}."
@@ -1263,10 +1296,16 @@ msgstr "En construction"
 msgid "Building State"
 msgstr "État d'avancement"
 
+msgid "Building [state in delivery_causality_workflow]"
+msgstr "En construction"
+
 msgid "Building is used when a packing list is confirmed, during the calculation process of ERP5. A building causality state indicates that the system is calculating whether the Packing list is convergent or divergent."
 msgstr "Cet état est affiché lorsque la livraison de vente ou d'acaht est en cours de construction. Cete état disparaitra dés qu'ERP5 aura terminé ses calculs."
 
 msgid "Built"
+msgstr "Construit"
+
+msgid "Built [state in business_template_building_workflow]"
 msgstr "Construit"
 
 msgid "Business Field"
@@ -1354,6 +1393,9 @@ msgid "Calculated Price"
 msgstr "Prix calculé"
 
 msgid "Calculating"
+msgstr "Calcul en cours"
+
+msgid "Calculating [state in delivery_causality_workflow]"
 msgstr "Calcul en cours"
 
 msgid "Calculation Order"
@@ -1447,6 +1489,60 @@ msgid "Canceled"
 msgstr "Annulé"
 
 msgid "Cancelled"
+msgstr "Annulé"
+
+msgid "Cancelled [state in accounting_period_workflow]"
+msgstr "Annulé"
+
+msgid "Cancelled [state in accounting_workflow]"
+msgstr "Annulé"
+
+msgid "Cancelled [state in assignment_workflow]"
+msgstr "Annulé"
+
+msgid "Cancelled [state in bug_event_workflow]"
+msgstr "Annulé"
+
+msgid "Cancelled [state in bug_workflow]"
+msgstr "Annulé"
+
+msgid "Cancelled [state in career_workflow]"
+msgstr "Annulé"
+
+msgid "Cancelled [state in document_publication_workflow]"
+msgstr "Annulé"
+
+msgid "Cancelled [state in event_workflow]"
+msgstr "Annulé"
+
+msgid "Cancelled [state in inventory_workflow]"
+msgstr "Annulé"
+
+msgid "Cancelled [state in open_order_workflow]"
+msgstr "Annulé"
+
+msgid "Cancelled [state in order_workflow]"
+msgstr "Annulé"
+
+msgid "Cancelled [state in packing_list_workflow]"
+msgstr "Annulé"
+
+msgid "Cancelled [state in query_workflow]"
+msgstr "Annulé"
+
+msgid "Cancelled [state in requirement_analysis_workflow]"
+msgstr "Annulé"
+
+msgid "Cancelled [state in sale_opportunity_workflow]"
+msgstr "Annulé"
+
+msgid "Cancelled [state in task_report_workflow]"
+msgstr "Annulé"
+
+msgid "Cancelled [state in task_workflow]"
+msgstr "Annulé"
+
+msgid "Cancelled [state in ticket_workflow]"
 msgstr "Annulé"
 
 msgid "Cancelled."
@@ -1725,11 +1821,14 @@ msgstr "Cloner le ticket et les évènements"
 msgid "Close"
 msgstr "Clôturer"
 
+msgid "Close Accounting Period"
+msgstr "Clôturer la période comptable"
+
+msgid "Close Accounting Period Action"
+msgstr "Clôturer la période comptable (action)"
+
 msgid "Close Accounting Transaction"
 msgstr "Clôturer la transaction "
-
-msgid "Close Assignment"
-msgstr "Terminer l'affectation"
 
 msgid "Close Bug"
 msgstr "Clôturer le bogue"
@@ -1766,6 +1865,21 @@ msgstr "Date de fermeture"
 
 msgid "Closed State is used for accounting transactions that belong to \"closed\" accounting periods"
 msgstr "Cette action permet de clôturer la période comptable de manière définitive. Elle n pourra plus ni être réouverte ni modifiée, et les transactions de cette période ne seront également plus modifiables."
+
+msgid "Closed [state in accounting_period_workflow]"
+msgstr "Clôturé"
+
+msgid "Closed [state in accounting_workflow]"
+msgstr "Clôturé"
+
+msgid "Closed [state in bug_workflow]"
+msgstr "Clôturé"
+
+msgid "Closed [state in project_workflow]"
+msgstr "Clôturé"
+
+msgid "Closed [state in ticket_workflow]"
+msgstr "Clôturé"
 
 msgid "Closing Date"
 msgstr "Date de clôture"
@@ -1927,6 +2041,24 @@ msgid "Confirmation"
 msgstr "Confirmer "
 
 msgid "Confirmed"
+msgstr "Confirmé"
+
+msgid "Confirmed [state in accounting_workflow]"
+msgstr "Confirmé"
+
+msgid "Confirmed [state in order_workflow]"
+msgstr "Confirmé"
+
+msgid "Confirmed [state in packing_list_workflow]"
+msgstr "Confirmé"
+
+msgid "Confirmed [state in requirement_analysis_workflow]"
+msgstr "Confirmé"
+
+msgid "Confirmed [state in task_report_workflow]"
+msgstr "Confirmé"
+
+msgid "Confirmed [state in task_workflow]"
 msgstr "Confirmé"
 
 msgid "Constraints"
@@ -2091,10 +2223,16 @@ msgstr "Rapport d'inventaire converti"
 msgid "Converted Quantity"
 msgstr "Quantité convertie"
 
+msgid "Converted [state in processing_status_workflow]"
+msgstr "Converti"
+
 msgid "Converted quantity"
 msgstr "Quantité convertie"
 
 msgid "Converting"
+msgstr "Conversion en cours"
+
+msgid "Converting [state in processing_status_workflow]"
 msgstr "Conversion en cours"
 
 msgid "Coordinate Function"
@@ -2343,6 +2481,9 @@ msgstr "Exercice N"
 msgid "Current Value"
 msgstr "Valeur actuelle"
 
+msgid "Current [state in edit_workflow]"
+msgstr "Actuel"
+
 msgid "Current career comments"
 msgstr "Commentaires"
 
@@ -2427,11 +2568,11 @@ msgstr "Date à laquelle le document a été ingéré."
 msgid "Date has expire."
 msgstr "La date a expirée"
 
-msgid "Date is not in an opened Accounting Period for destination section."
-msgstr "La date n'est pas dans une période comptable ouverte pour la section destination."
-
-msgid "Date is not in an opened Accounting Period for source section."
+msgid "Date is not in a started Accounting Period for source section."
 msgstr "La date n'est pas dans une période comptable ouverte pour la section source."
+
+msgid "Date is not in an started Accounting Period for destination section."
+msgstr "La date n'est pas dans une période comptable ouverte pour la section destination."
 
 msgid "Date must be defined"
 msgstr "La date doit être définie"
@@ -2604,13 +2745,7 @@ msgstr "Définit si l'inventaire est complet ou tournant. En cas d'inventaire co
 msgid "Defines who will provide the bill"
 msgstr "Le fournisseur de factures."
 
-msgid "Definitively Close Accounting Period"
-msgstr "Clôturer la période comptable de manière définitive"
-
 msgid "Definitively Close Transaction"
-msgstr "Clôturer définitivement"
-
-msgid "Definitively close"
 msgstr "Clôturer définitivement"
 
 msgid "Delcares a packing list as packed, ready for shipment"
@@ -2629,6 +2764,84 @@ msgid "Delete a document in ERP5"
 msgstr "Cette action supprime le document, ce dernier ne sera plus visible ni éditable."
 
 msgid "Deleted"
+msgstr "Supprimé"
+
+msgid "Deleted [state in account_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in accounting_period_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in accounting_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in assignment_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in bug_event_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in bug_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in business_template_installation_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in document_ingestion_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in document_publication_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in event_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in inventory_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in knowledge_pad_validation_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in notification_message_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in open_order_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in order_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in packing_list_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in preference_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in project_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in query_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in requirement_analysis_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in rule_validation_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in sale_opportunity_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in task_report_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in task_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in ticket_workflow]"
+msgstr "Supprimé"
+
+msgid "Deleted [state in validation_workflow]"
 msgstr "Supprimé"
 
 msgid "Deleted objects: ${object_ids}"
@@ -2658,8 +2871,26 @@ msgstr "Livré"
 msgid "Delivered Quantity"
 msgstr "Qté livrée"
 
+msgid "Delivered [state in bug_event_workflow]"
+msgstr "Clos"
+
+msgid "Delivered [state in event_workflow]"
+msgstr "Posté"
+
+msgid "Delivered [state in internal_packing_list_workflow]"
+msgstr "Livré"
+
+msgid "Delivered [state in packing_list_workflow]"
+msgstr "Livré"
+
+msgid "Delivered [state in requirement_analysis_workflow]"
+msgstr "Livré"
+
+msgid "Delivered [state in task_report_workflow]"
+msgstr "Clos"
+
 msgid "Delivery Builder"
-msgstr "Constructeur de livraisons"
+msgstr "Delivery Builder"
 
 msgid "Delivery Cell"
 msgstr "Cellule de livraison"
@@ -2828,7 +3059,10 @@ msgid "Disable Preference"
 msgstr "Désactiver la préférence"
 
 msgid "Disabled"
-msgstr "Désactivée"
+msgstr "Désactivé"
+
+msgid "Disabled [state in preference_workflow]"
+msgstr "Désactivé"
 
 msgid "Discount"
 msgstr "Remise"
@@ -2873,6 +3107,9 @@ msgid "Distributed Ram Cache Plugin"
 msgstr "Greffon de cache de ram distribué"
 
 msgid "Diverged"
+msgstr "Divergent"
+
+msgid "Diverged [state in delivery_causality_workflow]"
 msgstr "Divergent"
 
 msgid "Divergence"
@@ -3046,6 +3283,93 @@ msgstr "Demandes d'assistance à l'état brouillon"
 msgid "Draft To Validate"
 msgstr "Brouillons à valider"
 
+msgid "Draft [state in account_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in accounting_period_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in accounting_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in assignment_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in bug_event_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in bug_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in business_template_building_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in career_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in delivery_causality_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in document_ingestion_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in document_publication_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in event_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in external_document_publication_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in inventory_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in notification_message_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in open_order_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in order_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in packing_list_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in project_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in publication_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in query_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in requirement_analysis_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in rule_validation_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in sale_opportunity_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in task_report_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in task_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in ticket_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in user_account_workflow]"
+msgstr "Brouillon"
+
+msgid "Draft [state in validation_workflow]"
+msgstr "Brouillon"
+
 msgid "Drafts to Publish"
 msgstr "Brouillons à publier"
 
@@ -3137,7 +3461,13 @@ msgid "Embedded"
 msgstr "Inclus"
 
 msgid "Embedded Document"
-msgstr "Document intégré"
+msgstr "Intégré"
+
+msgid "Embedded Document [state in document_publication_workflow]"
+msgstr "Intégré"
+
+msgid "Embedded [state in category_publication_workflow]"
+msgstr "Intégré"
 
 msgid "Emission Letter"
 msgstr "Lettre d'émission"
@@ -3184,6 +3514,9 @@ msgstr "Taux part employeur"
 msgid "Empty"
 msgstr "Vide"
 
+msgid "Empty [state in processing_status_workflow]"
+msgstr "Vide"
+
 msgid "Empty lines deleted."
 msgstr "Lignes vides supprimées"
 
@@ -3197,6 +3530,9 @@ msgid "Enable Preference"
 msgstr "Activer la préférence"
 
 msgid "Enabled"
+msgstr "Activé"
+
+msgid "Enabled [state in preference_workflow]"
 msgstr "Activé"
 
 msgid "Enables a preference"
@@ -3230,6 +3566,9 @@ msgid "Enquire"
 msgstr "Recevoir une demande"
 
 msgid "Enquired"
+msgstr "Demande reçue"
+
+msgid "Enquired [state in sale_opportunity_workflow]"
 msgstr "Demande reçue"
 
 msgid "Entity"
@@ -3374,6 +3713,21 @@ msgid "Expire Event"
 msgstr "Faire expirer l'évènement"
 
 msgid "Expired"
+msgstr "Expiré"
+
+msgid "Expired Protected [state in category_publication_workflow]"
+msgstr ""
+
+msgid "Expired Published [state in category_publication_workflow]"
+msgstr ""
+
+msgid "Expired [state in category_publication_workflow]"
+msgstr "Expiré"
+
+msgid "Expired [state in event_workflow]"
+msgstr "Expiré"
+
+msgid "Expired [state in sale_opportunity_workflow]"
 msgstr "Expiré"
 
 msgid "Explanation"
@@ -3752,7 +4106,10 @@ msgid "Global agreement that applies to certain types of companies, and define c
 msgstr "Le nom de la Convention Collective."
 
 msgid "Globally Enabled"
-msgstr "Activée pour le site entier"
+msgstr "Activé pour le site entier"
+
+msgid "Globally Enabled [state in preference_workflow]"
+msgstr "Activé pour le site entier"
 
 msgid "Glossary"
 msgstr "Glossaire"
@@ -3833,6 +4190,9 @@ msgid "Help"
 msgstr "Aide"
 
 msgid "Hidden"
+msgstr "Caché"
+
+msgid "Hidden [state in document_publication_workflow]"
 msgstr "Caché"
 
 msgid "Hidden documents are documents which were published or released by mistake. This state models exception handling in the publication process."
@@ -4150,6 +4510,9 @@ msgstr "État de l'installation"
 msgid "Installed"
 msgstr "Installé"
 
+msgid "Installed [state in business_template_installation_workflow]"
+msgstr "Installé"
+
 msgid "Instructions"
 msgstr "Instructions"
 
@@ -4201,6 +4564,15 @@ msgstr "Invalider (action)"
 msgid "Invalidated"
 msgstr "Invalidé"
 
+msgid "Invalidated [state in account_workflow]"
+msgstr "Invalidé"
+
+msgid "Invalidated [state in rule_validation_workflow]"
+msgstr "Invalidé"
+
+msgid "Invalidated [state in validation_workflow]"
+msgstr "Invalidé"
+
 msgid "Inventories"
 msgstr "Inventaires"
 
@@ -4236,6 +4608,9 @@ msgstr "Graphique de l'inventaire avec variations"
 
 msgid "Inventory Workflow"
 msgstr "Workflow d'inventaire"
+
+msgid "Invisible [state in knowledge_pad_validation_workflow]"
+msgstr "Invisible"
 
 msgid "Invoice"
 msgstr "Facture"
@@ -4334,6 +4709,9 @@ msgid "Journalise Transaction Action"
 msgstr "Passer l'écriture au brouillard (action)"
 
 msgid "Journalised"
+msgstr "Brouillard"
+
+msgid "Journalised [state in accounting_workflow]"
 msgstr "Brouillard"
 
 msgid "Journalize"
@@ -4759,6 +5137,9 @@ msgstr "Compte Miroir"
 msgid "Missing"
 msgstr "Manquant"
 
+msgid "Missing [state in packing_list_container_workflow]"
+msgstr "Manquant"
+
 msgid "Mobile Telephone"
 msgstr "Téléphone portable"
 
@@ -4772,6 +5153,9 @@ msgid "Modification Date"
 msgstr "Date de modification"
 
 msgid "Modified"
+msgstr "Modifié"
+
+msgid "Modified [state in business_template_building_workflow]"
 msgstr "Modifié"
 
 msgid "Modify Transaction"
@@ -4942,6 +5326,12 @@ msgstr "Nouvelle valeur"
 msgid "New Web Page of section ${web_section}."
 msgstr "Nouvelles pages web de la section ${web_section}."
 
+msgid "New [state in document_ingestion_workflow]"
+msgstr "Nouveau"
+
+msgid "New [state in event_workflow]"
+msgstr "Nouveau"
+
 msgid "New default Web Page for section ${web_section}."
 msgstr "Nouvelle page par défaut pour la section ${web_section}."
 
@@ -5046,6 +5436,9 @@ msgid "Not Grouped Lines in Beginning Balance"
 msgstr "Lignes non lettrées du solde initial"
 
 msgid "Not Installed"
+msgstr "Pas installé"
+
+msgid "Not Installed [state in business_template_installation_workflow]"
 msgstr "Pas installé"
 
 msgid "Not Less Than"
@@ -5156,6 +5549,15 @@ msgstr "Commandes à suivre"
 msgid "Offered Sale Orders to Follow"
 msgstr "Propositions de vente à suivre"
 
+msgid "Offered [state in open_order_workflow]"
+msgstr "Proposé"
+
+msgid "Offered [state in order_workflow]"
+msgstr "Proposé"
+
+msgid "Offered [state in sale_opportunity_workflow]"
+msgstr "Proposé"
+
 msgid "Offers to Send"
 msgstr "Offres à suivre"
 
@@ -5189,15 +5591,6 @@ msgstr "Sans comptes non mouvementés"
 msgid "Open"
 msgstr "Ouvert"
 
-msgid "Open Account"
-msgstr "Ouvrir"
-
-msgid "Open Accounting Period"
-msgstr "Ouvrir la période comptable"
-
-msgid "Open Assignment"
-msgstr "Ouvrir l'affectation"
-
 msgid "Open Bug"
 msgstr "Bogue ouvert"
 
@@ -5221,6 +5614,15 @@ msgstr "Ouvrir le ticket"
 
 msgid "Open Ticket Action"
 msgstr "Ouvrir le ticket (action)"
+
+msgid "Open [state in bug_workflow]"
+msgstr "Ouvert"
+
+msgid "Open [state in project_workflow]"
+msgstr "Ouvert"
+
+msgid "Open [state in ticket_workflow]"
+msgstr "Ouvert"
 
 msgid "Open the account and helps input transactions on it"
 msgstr "Permet d'ouvrir un compte et d'y ajouter des transactions."
@@ -5297,6 +5699,12 @@ msgstr "Workflow d'interaction des mouvements de commande"
 msgid "Order Placed"
 msgstr "Commande passée"
 
+msgid "Order Placed [state in open_order_workflow]"
+msgstr "Commandé"
+
+msgid "Order Placed [state in order_workflow]"
+msgstr "Commandé"
+
 msgid "Order Reference"
 msgstr "Réf. commande"
 
@@ -5338,6 +5746,9 @@ msgstr "Commande passée"
 
 msgid "Ordered Quantity"
 msgstr "Qté commandée"
+
+msgid "Ordered [state in task_workflow]"
+msgstr "Demandé"
 
 msgid "Orders"
 msgstr "Commandes"
@@ -5402,6 +5813,9 @@ msgstr "Sortant"
 msgid "Outgoing Events"
 msgstr "Événements sortants"
 
+msgid "Outgoing [state in event_workflow]"
+msgstr "Sortant"
+
 msgid "Outsourcing Sort"
 msgstr "Tri Tiers"
 
@@ -5440,6 +5854,9 @@ msgid "PDM"
 msgstr "PDM"
 
 msgid "Packed"
+msgstr "Emballé"
+
+msgid "Packed [state in packing_list_container_workflow]"
 msgstr "Emballé"
 
 msgid "Packing List Causality Workflow"
@@ -5642,6 +6059,12 @@ msgstr "Événements en attente"
 msgid "Pending Offers"
 msgstr "Offres en attente"
 
+msgid "Pending [state in document_staging_workflow]"
+msgstr "En attente"
+
+msgid "Pending [state in event_workflow]"
+msgstr "En attente"
+
 msgid "People"
 msgstr "Personnes"
 
@@ -5750,6 +6173,24 @@ msgstr "Cette action permet de plannifier une action. Cette dernière sera exéc
 msgid "Planned"
 msgstr "Planifié"
 
+msgid "Planned [state in accounting_workflow]"
+msgstr "planifié"
+
+msgid "Planned [state in bug_event_workflow]"
+msgstr "Planifié"
+
+msgid "Planned [state in open_order_workflow]"
+msgstr "Planifié"
+
+msgid "Planned [state in order_workflow]"
+msgstr "Planifié"
+
+msgid "Planned [state in requirement_analysis_workflow]"
+msgstr "Planifié"
+
+msgid "Planned [state in task_workflow]"
+msgstr "Planifié"
+
 msgid "Planning"
 msgstr "Planning"
 
@@ -5828,7 +6269,16 @@ msgstr "Événements postés"
 msgid "Posted State is used for accounting transactions that have been properly posted to the ledger accounts and validated by an accountant"
 msgstr "La transaction est au brouillard validé mais peut etre réouverte afin d'être modifiée."
 
+msgid "Posted [state in event_workflow]"
+msgstr "Posté"
+
+msgid "Posted [state in query_workflow]"
+msgstr "Posté"
+
 msgid "Posted to General Ledger"
+msgstr "Brouillard validé"
+
+msgid "Posted to General Ledger [state in accounting_workflow]"
 msgstr "Brouillard validé"
 
 msgid "Posted to Ledger"
@@ -5984,6 +6434,9 @@ msgstr "Priorité"
 msgid "Private"
 msgstr "Privé"
 
+msgid "Private [state in document_staging_workflow]"
+msgstr "Privé"
+
 msgid "Privilege"
 msgstr "Droits"
 
@@ -6122,6 +6575,12 @@ msgstr "Testeur de propriété"
 msgid "Prospect Contacted"
 msgstr "Prospect contacté"
 
+msgid "Prospect Contacted [state in sale_opportunity_workflow]"
+msgstr "Prospect Contacté"
+
+msgid "Protected [state in category_publication_workflow]"
+msgstr "Protégé"
+
 msgid "Protocol"
 msgstr "Protocole"
 
@@ -6130,6 +6589,15 @@ msgstr "Provision"
 
 msgid "Public"
 msgstr "Publique"
+
+msgid "Public [state in document_staging_workflow]"
+msgstr "Public"
+
+msgid "Public [state in external_document_publication_workflow]"
+msgstr "Public"
+
+msgid "Public [state in knowledge_pad_validation_workflow]"
+msgstr "Public"
 
 msgid "Publication Date"
 msgstr "Date de publication"
@@ -6160,6 +6628,18 @@ msgstr "Publié"
 
 msgid "Published Alive"
 msgstr "Publié (modifiable)"
+
+msgid "Published Alive [state in document_publication_workflow]"
+msgstr "Publié (modifiable)"
+
+msgid "Published [state in category_publication_workflow]"
+msgstr "Publié"
+
+msgid "Published [state in document_publication_workflow]"
+msgstr "Publié"
+
+msgid "Published [state in publication_workflow]"
+msgstr "Publié"
 
 msgid "Published:"
 msgstr "Publié:"
@@ -6426,7 +6906,10 @@ msgid "Re-install Business Template"
 msgstr "Réinstaller le Business Template"
 
 msgid "Ready"
-msgstr "Prêt à l'envoi"
+msgstr "Prêt "
+
+msgid "Ready [state in packing_list_workflow]"
+msgstr "Prêt"
 
 msgid "Real Begin Date"
 msgstr "Véritable date de début"
@@ -6459,6 +6942,9 @@ msgid "Receive Packing List Action"
 msgstr "Déclarer reçu (action)"
 
 msgid "Received"
+msgstr "Reçu"
+
+msgid "Received [state in packing_list_workflow]"
 msgstr "Reçu"
 
 msgid "Received date"
@@ -6561,6 +7047,15 @@ msgid "Reject Offer"
 msgstr "Rejeter la proposition"
 
 msgid "Rejected"
+msgstr "Rejeté"
+
+msgid "Rejected [state in open_order_workflow]"
+msgstr "Rejeté"
+
+msgid "Rejected [state in order_workflow]"
+msgstr "Rejeté"
+
+msgid "Rejected [state in sale_opportunity_workflow]"
 msgstr "Rejeté"
 
 msgid "Rejects a document which was submitted by setting its validation state to draft."
@@ -6704,6 +7199,12 @@ msgstr "Diffusé"
 msgid "Released Alive"
 msgstr "Diffusé (modifiable)"
 
+msgid "Released Alive [state in document_publication_workflow]"
+msgstr "Diffusé (modifiable)"
+
+msgid "Released [state in document_publication_workflow]"
+msgstr "Diffusé"
+
 msgid "Released:"
 msgstr "Disponible:"
 
@@ -6728,13 +7229,13 @@ msgstr "Renommer l'onglet"
 msgid "Renderer ID"
 msgstr "Méthode de restitution de tout objet"
 
-msgid "Reopen Accounting Period"
-msgstr "Réouvrir la période comptable"
-
 msgid "Reopens a document that would have been closed previously, in order to modify it, such as an accounting period"
 msgstr "Cette action permet de réouvrir un document clôturé afin de pouvoir l'éditer à nouveau, comme une période comptable par exemple."
 
 msgid "Replaced"
+msgstr "Remplacé"
+
+msgid "Replaced [state in business_template_installation_workflow]"
 msgstr "Remplacé"
 
 msgid "Reply to"
@@ -6851,6 +7352,9 @@ msgstr "Résoudre les fichiers SVN en conflit"
 msgid "Resolved"
 msgstr "Résolu"
 
+msgid "Resolved [state in bug_workflow]"
+msgstr "Résolu"
+
 msgid "Resource"
 msgstr "Ressource principale"
 
@@ -6887,8 +7391,14 @@ msgstr "Action de workflow répondre"
 msgid "Responded"
 msgstr "Reponse envoyée"
 
+msgid "Responded [state in event_workflow]"
+msgstr "Réponse envoyée"
+
 msgid "Restart"
 msgstr "Réouvrir"
+
+msgid "Restart Accounting Period"
+msgstr "Redémarrer la période comptable"
 
 msgid "Restart Task"
 msgstr "Redémarrer la tâche"
@@ -7322,6 +7832,9 @@ msgstr "Méthode sensorielle"
 msgid "Sent"
 msgstr "Expédié"
 
+msgid "Sent [state in bug_event_workflow]"
+msgstr "Posté"
+
 msgid "September"
 msgstr "Septembre"
 
@@ -7406,6 +7919,12 @@ msgstr "Partagé"
 msgid "Shared Alive"
 msgstr "Partagé (modifiable)"
 
+msgid "Shared Alive [state in document_publication_workflow]"
+msgstr "Partagé (modifiable)"
+
+msgid "Shared [state in document_publication_workflow]"
+msgstr "Partagé"
+
 msgid "Ship"
 msgstr "Expédier"
 
@@ -7425,6 +7944,9 @@ msgid "Ship the packing list and declares a packing list as shipped"
 msgstr "Déclare la livraison comme expédiée"
 
 msgid "Shipped"
+msgstr "Expédié"
+
+msgid "Shipped [state in packing_list_workflow]"
 msgstr "Expédié"
 
 msgid "Shipping Date"
@@ -7553,6 +8075,9 @@ msgstr "Forme de la Société"
 msgid "Sold"
 msgstr "Vente conclue"
 
+msgid "Sold [state in sale_opportunity_workflow]"
+msgstr "Vendu"
+
 msgid "Solve Alarm"
 msgstr "Résoudre l'alarme"
 
@@ -7568,10 +8093,16 @@ msgstr "Méthode pour résoudre les problèmes de l'alarme"
 msgid "Solved"
 msgstr "Résolu"
 
+msgid "Solved [state in delivery_causality_workflow]"
+msgstr "Résolu"
+
 msgid "Solver List"
 msgstr "Liste des résolutions"
 
 msgid "Solving"
+msgstr "Résolution en cours"
+
+msgid "Solving [state in delivery_causality_workflow]"
 msgstr "Résolution en cours"
 
 msgid "Solving means that an action has been taken to correct the divergent state of a document in ERP5. During the calculations, the state will be displayed as Solving. Once the calculations are over, the state will become Solved."
@@ -7718,6 +8249,9 @@ msgstr "Diviser"
 msgid "Split Document"
 msgstr "Découper le document"
 
+msgid "Split Document [state in document_publication_workflow]"
+msgstr "Découper le document"
+
 msgid "Split Prevision"
 msgstr "Découper la livraison"
 
@@ -7742,6 +8276,12 @@ msgstr "Association entre la colonne du tableur et la propriété"
 msgid "Spreadsheet Name"
 msgstr "Nom de la feuille de calcul"
 
+msgid "Start Accounting Period"
+msgstr "Démarrer la période comptable"
+
+msgid "Start Assignment"
+msgstr "Démarrer l'affectation"
+
 msgid "Start Career Step"
 msgstr "Démarrer l'étape de carrière"
 
@@ -7758,6 +8298,24 @@ msgid "Start to Work on It"
 msgstr "Commencer à travailler sur ce thème"
 
 msgid "Started"
+msgstr "Commencé"
+
+msgid "Started [state in accounting_period_workflow]"
+msgstr "Ouvert"
+
+msgid "Started [state in assignment_workflow]"
+msgstr "Démarré"
+
+msgid "Started [state in career_workflow]"
+msgstr "Démarré"
+
+msgid "Started [state in open_order_workflow]"
+msgstr "Commencé"
+
+msgid "Started [state in requirement_analysis_workflow]"
+msgstr "Commencé"
+
+msgid "Started [state in task_report_workflow]"
 msgstr "Commencé"
 
 msgid "Started crawling external source."
@@ -7820,6 +8378,9 @@ msgstr "Stock par variante"
 msgid "Stop"
 msgstr "Terminer l'étape de carrière"
 
+msgid "Stop Assignment"
+msgstr "Terminer l'affectation"
+
 msgid "Stop Career Step"
 msgstr "Terminer l'étape de carrière"
 
@@ -7827,6 +8388,21 @@ msgid "Stop Date"
 msgstr "Date de fin"
 
 msgid "Stopped"
+msgstr "Terminé"
+
+msgid "Stopped [state in assignment_workflow]"
+msgstr "Terminé"
+
+msgid "Stopped [state in career_workflow]"
+msgstr "Terminé"
+
+msgid "Stopped [state in open_order_workflow]"
+msgstr "Terminé"
+
+msgid "Stopped [state in requirement_analysis_workflow]"
+msgstr "Terminé"
+
+msgid "Stopped [state in task_report_workflow]"
 msgstr "Terminé"
 
 msgid "Street Address"
@@ -7897,6 +8473,15 @@ msgstr "Opportunités de ventes soumises à valider"
 
 msgid "Submitted Support Requests"
 msgstr "Demandes d'assistance soumises"
+
+msgid "Submitted [state in document_publication_workflow]"
+msgstr "Soumis"
+
+msgid "Submitted [state in notification_message_workflow]"
+msgstr "Soumis"
+
+msgid "Submitted [state in sale_opportunity_workflow]"
+msgstr "Soumis"
 
 msgid "Subpages"
 msgstr "Sous-pages"
@@ -8028,6 +8613,12 @@ msgid "Suspend Project"
 msgstr "Suspendre le projet"
 
 msgid "Suspended"
+msgstr "Suspendu"
+
+msgid "Suspended [state in open_order_workflow]"
+msgstr "Suspendu"
+
+msgid "Suspended [state in project_workflow]"
 msgstr "Suspendu"
 
 msgid "Symbol"
@@ -8230,17 +8821,14 @@ msgstr "Template créé"
 msgid "Templates"
 msgstr "Modèles"
 
-msgid "Temporary Close Accounting Period"
+msgid "Temporarily Stop Accounting Period"
 msgstr "Clôturer temporairement la période comptable"
 
-msgid "Temporary Closed"
-msgstr "Fermé temporairement"
+msgid "Temporarily Stopped"
+msgstr "Clôturé temporairement"
 
-msgid "Temporary close"
-msgstr "Clôturer la période comptable"
-
-msgid "Temporary closed"
-msgstr "Temporairement clôturée"
+msgid "Temporarily Stopped [state in accounting_period_workflow]"
+msgstr "Clôturé temporairement"
 
 msgid "Term"
 msgstr "Terme"
@@ -9312,7 +9900,13 @@ msgstr "Liste des Fournitures"
 msgid "Translated"
 msgstr "Traduit"
 
+msgid "Translated [state in document_publication_workflow]"
+msgstr "Traduit"
+
 msgid "Translation Requested"
+msgstr "Traduction demandée"
+
+msgid "Translation Requested [state in document_publication_workflow]"
 msgstr "Traduction demandée"
 
 msgid "Translations to Assign"
@@ -9453,6 +10047,9 @@ msgstr "Mis à jour"
 msgid "Updated Business Templates"
 msgstr "Business Templates mis à jour"
 
+msgid "Updated [state in assignment_workflow]"
+msgstr "Mis à jour"
+
 msgid "Upgrade Business Templates from Repositories"
 msgstr "Mettre à jour les Business Templates depuis les dépôts"
 
@@ -9480,11 +10077,17 @@ msgstr "Transférer un fichier"
 msgid "Uploaded"
 msgstr "Chargé"
 
+msgid "Uploaded [state in processing_status_workflow]"
+msgstr "Mis à jour"
+
 msgid "Url of the document"
 msgstr "Url du document"
 
 msgid "Usage"
 msgstr "Usage"
+
+msgid "Use Current Selection"
+msgstr "Utiliser la selection courante"
 
 msgid "Use the Post action to send a message, place a phone call or post a note."
 msgstr "Cette action est utilisée pour envoyer un évènement."
@@ -9540,6 +10143,9 @@ msgstr "N° TVA"
 msgid "Validate"
 msgstr "Valider"
 
+msgid "Validate Account"
+msgstr "Valider le compte"
+
 msgid "Validate Accounting Transaction"
 msgstr "Valider le brouillard"
 
@@ -9565,6 +10171,21 @@ msgid "Validate Workflow Action"
 msgstr "Valider le Changement d'état"
 
 msgid "Validated"
+msgstr "Validé"
+
+msgid "Validated [state in account_workflow]"
+msgstr "Validé"
+
+msgid "Validated [state in inventory_workflow]"
+msgstr "Validé"
+
+msgid "Validated [state in notification_message_workflow]"
+msgstr "Validé"
+
+msgid "Validated [state in rule_validation_workflow]"
+msgstr "Validé"
+
+msgid "Validated [state in validation_workflow]"
 msgstr "Validé"
 
 msgid "Validates a document in ERP5"
@@ -9692,6 +10313,9 @@ msgstr "Source"
 
 msgid "View Style"
 msgstr "Style vue"
+
+msgid "Visible [state in knowledge_pad_validation_workflow]"
+msgstr "Visible"
 
 msgid "Visit"
 msgstr "Visite"
@@ -10145,6 +10769,3 @@ msgstr "la largeur en pixel des micro-images."
 
 msgid "the width in pixel of nano image"
 msgstr "La largeur en pixel des images nano."
-
-msgid "Use Current Selection"
-msgstr "Utiliser la selection courante"
