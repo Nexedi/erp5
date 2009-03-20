@@ -70,6 +70,7 @@
                     <value>
                       <list>
                         <string>text_content</string>
+                        <string>my_thumbnail</string>
                       </list>
                     </value>
                 </item>
