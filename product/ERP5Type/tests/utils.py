@@ -76,9 +76,12 @@ class DummyMessageCatalog:
   __allow_access_to_unprotected_subobjects__ = 1
   def __init__(self):
     self._translated = []
-  def gettext(self, word, *args, **kw):
+  def gettext(self, word, lang=None, add=1, default=None, **kw):
     self._translated.append(word)
-    return word
+    if default is None:
+      return word
+    else:
+      return default
 
 class DummyLocalizer:
   """A replacement for stock cookie - based localizer.
