@@ -96,13 +96,16 @@ if from_date is None:\n
   q = NegatedQuery(Query(**kw))\n
   select_expression = "MIN(delivery.start_date)"\n
   group_by = "delivery.start_date"\n
-  from_date = DateTime(context.portal_catalog(\n
+  from_date = DateTime()\n
+  result_list = context.portal_catalog(\n
                                      select_expression=select_expression,\n
                                      group_by_expression=group_by,\n
                                      simulation_state=simulation_state,\n
                                      portal_type=doc_portal_type,\n
                                      query=q,\n
-                                     limit=1)[0][2])\n
+                                     limit=1)\n
+  if result_list:\n
+    from_date = DateTime(result_list[0][2])\n
 \n
  \n
 # get period list between given date\n
@@ -219,6 +222,7 @@ return result\n
                             <string>_apply_</string>
                             <string>q</string>
                             <string>select_expression</string>
+                            <string>result_list</string>
                             <string>_getitem_</string>
                             <string>interval_list_dict</string>
                             <string>interval_list</string>
