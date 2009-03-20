@@ -53,9 +53,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># In normal web sites, pages only in a selected language should be displayed.\n
-kw[\'all_languages\'] = False\n
-return context.WebSection_getDocumentValueListBase(**kw)\n
+            <value> <string># In normal web sites pages, if nothing is specify, only in a selected language should be displayed.\n
+return context.WebSection_getDocumentValueListBase(all_languages=all_languages, **kw)\n
 </string> </value>
         </item>
         <item>
@@ -66,7 +65,7 @@ return context.WebSection_getDocumentValueListBase(**kw)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>all_languages=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -86,15 +85,14 @@ return context.WebSection_getDocumentValueListBase(**kw)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>all_languages</string>
                             <string>kw</string>
-                            <string>False</string>
-                            <string>_write_</string>
                             <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -109,7 +107,9 @@ return context.WebSection_getDocumentValueListBase(**kw)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
