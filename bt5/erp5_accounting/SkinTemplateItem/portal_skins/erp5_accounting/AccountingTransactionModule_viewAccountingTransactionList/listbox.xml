@@ -164,6 +164,10 @@
                           <string>modification_date</string>
                           <string>Modification Date</string>
                         </tuple>
+                        <tuple>
+                          <string>delivery_mirror_section_title_with_link</string>
+                          <string>Third Party (with Link)</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -439,7 +443,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>delivery_mirror_section_title</string>
+                          <string>delivery_mirror_section_title_with_link</string>
                           <string>AccountingTransaction_getThirdPartyUrl</string>
                         </tuple>
                       </list>
