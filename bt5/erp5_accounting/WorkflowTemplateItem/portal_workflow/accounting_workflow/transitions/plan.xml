@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Plan will set the document State as planned in ERP5</string> </value>
+            <value> <string>A planned transaction is planned to be processed. The further step will be to confirm the transaction.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

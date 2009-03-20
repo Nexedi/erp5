@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The Accounting Period will be temporary closed, but can be reopenned. In this state it is not possible to post transactions during this period.</string> </value>
+            <value> <string>The Accounting Period will be temporarily stopped, but can be restarted. In this state it is not possible to post transactions during this period until the period is restarted.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Temporary Close Accounting Period</string> </value>
+            <value> <string>Temporarily Stop Accounting Period</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

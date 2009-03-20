@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Open Accounting Period</string> </value>
+            <value> <string>Start Accounting Period</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Opens the accounting period in order to input transactions.</string> </value>
+            <value> <string>Starts the accounting period in order to input transactions.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Open Accounting Period Action</string> </value>
+            <value> <string>Start Accounting Period Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

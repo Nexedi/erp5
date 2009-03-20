@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Close action will close either an accounting period, a transaction or an account. Those documents cannot be modified anymore, except the accounting period that can be reopened,</string> </value>
+            <value> <string>The account will be closed and not transaction can be input on it any more.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

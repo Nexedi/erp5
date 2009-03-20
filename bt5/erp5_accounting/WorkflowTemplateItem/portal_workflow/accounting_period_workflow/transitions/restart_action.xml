@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Reopen Accounting Period</string> </value>
+            <value> <string>Restart Accounting Period</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Reopens an accounting period to input new transactions</string> </value>
+            <value> <string>Restarts an accounting period that has been stopped, in order to input new transactions</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Reopen Accounting Period Action</string> </value>
+            <value> <string>Restart Accounting Period Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

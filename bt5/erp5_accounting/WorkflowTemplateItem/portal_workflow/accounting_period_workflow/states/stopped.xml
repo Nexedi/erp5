@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The Accounting Period is temporary closed, but can be openned back. In this state it is not possible to post transactions during this period.</string> </value>
+            <value> <string>The Accounting Period is temporary stopped, but can be restarted. In this state it is not possible to post transactions during this period.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -25,7 +25,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Temporary closed</string> </value>
+            <value> <string>Temporary Stopped</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>

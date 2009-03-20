@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Definitively Close Accounting Period</string> </value>
+            <value> <string>Definitively Stop Accounting Period</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Close the accounting period, can\'t be reopened later, no more transaction can be input on this accounting period</string> </value>
+            <value> <string>Closes the accounting period, can\'t be restarted later, no more transaction can be input on this accounting period.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Definitively Close Accounting Period Action</string> </value>
+            <value> <string>Close Accounting Period Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

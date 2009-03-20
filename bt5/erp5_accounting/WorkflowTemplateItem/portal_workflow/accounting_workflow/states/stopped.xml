@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Posted State is used for accounting transactions that have been properly posted to the ledger accounts and validated by an accountant</string> </value>
+            <value> <string>Posted State is used for accounting transactions that have been properly posted to the ledger accounts and validated by an accountant.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

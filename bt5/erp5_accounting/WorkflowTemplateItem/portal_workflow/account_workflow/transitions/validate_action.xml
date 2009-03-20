@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Open Account</string> </value>
+            <value> <string>Validate Account</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Open the account and helps input transactions on it</string> </value>
+            <value> <string>Validates the account and helps input transactions on it</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Open Account Action</string> </value>
+            <value> <string>Validate Account Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

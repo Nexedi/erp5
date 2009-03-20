@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Mark transaction that belongs to "closed" accounting periods</string> </value>
+            <value> <string>Mark transaction that belongs to "closed" accounting periods: the transaction has been fully processed.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

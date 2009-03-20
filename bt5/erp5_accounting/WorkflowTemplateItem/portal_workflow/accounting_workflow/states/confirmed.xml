@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Confirmed State is used for accounting transactions that have to be turned into real accounting transactions</string> </value>
+            <value> <string>Confirmed State is used for accounting transactions that have to be turned into real accounting transactions. This is generally the manager role to confirm a transaction, before it is processed by the accountant.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

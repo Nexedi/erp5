@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Closed State is used for accounting transactions that belong to "closed" accounting periods</string> </value>
+            <value> <string>Closed State is used for accounting transactions that belong to "closed" accounting periods. Basically, the transaction has been completely processed.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
