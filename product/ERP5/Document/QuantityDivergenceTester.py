@@ -73,16 +73,22 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
     quantity = simulation_movement.getCorrectedQuantity()
     d_error = simulation_movement.getDeliveryError()
 
+    extra_parameters = dict()
+    if abs(quantity - d_quantity) < 1:
+     # if the difference between quantities are small, use repr to have more
+     # precise float display in the divergence message.
+     extra_parameters = dict(
+         decision_title=repr(d_quantity),
+         prevision_title=repr(quantity),)
+
     message = DivergenceMessage(object_relative_url= delivery.getRelativeUrl(),
                  divergence_scope='quantity',
                  simulation_movement = simulation_movement,
                  decision_value = d_quantity ,
-                 # use repr to have more precise float display
-                 decision_title = repr(d_quantity),
                  prevision_value = quantity,
-                 prevision_title = repr(quantity),
                  tested_property='quantity',
                  message='Quantity',
+                 **extra_parameters
                  )
 
 
