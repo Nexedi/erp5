@@ -89,7 +89,7 @@ for line in transaction.contentValues(filter=dict(\n
 \n
     if account is not None and account.getValidationState() != \'validated\':\n
       raise ValidationFailed, translateString(\n
-          "Account ${account_title} is not opened.",\n
+          "Account ${account_title} is not validated.",\n
            mapping=dict(account_title=unicode(\n
               account.Account_getFormattedTitle(), \'utf8\')))\n
       \n

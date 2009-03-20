@@ -123,7 +123,7 @@ if not skip_period_validation :\n
       if apd.getStartDate().Date() <= transaction_date.Date() <= apd.getStopDate().Date():\n
         valid_date = True\n
     if not valid_date:\n
-      raise ValidationFailed(translateString("Date is not in an opened Accounting Period "\n
+      raise ValidationFailed(translateString("Date is not in a started Accounting Period "\n
                                              "for source section."))\n
   # do the same for destination section \n
   if destination_section is not None:\n
@@ -147,7 +147,7 @@ if not skip_period_validation :\n
       if apd.getStartDate().Date() <= transaction_date.Date() <= apd.getStopDate().Date():\n
         valid_date = True\n
     if not valid_date:\n
-      raise ValidationFailed(translateString("Date is not in an opened Accounting Period "\n
+      raise ValidationFailed(translateString("Date is not in an started Accounting Period "\n
                                              "for destination section."))\n
 
 
