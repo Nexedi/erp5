@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Reopens a document that would have been closed previously, in order to modify it, such as an accounting period</string> </value>
+            <value> <string>Restarts a document that would have been closed previously, in order to modify it, such as an accounting period</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

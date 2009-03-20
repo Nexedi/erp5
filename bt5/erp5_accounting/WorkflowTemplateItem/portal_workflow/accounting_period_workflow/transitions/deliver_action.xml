@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Definitively Stop Accounting Period</string> </value>
+            <value> <string>Close Accounting Period</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
