@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Action that will open the Career</string> </value>
+            <value> <string>Career that has been started</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -19,7 +19,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Open</string> </value>
+            <value> <string>Started</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>

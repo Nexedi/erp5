@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>This action will reject the message that has been submitted</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

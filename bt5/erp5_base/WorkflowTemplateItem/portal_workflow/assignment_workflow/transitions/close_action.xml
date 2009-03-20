@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Close Assignment</string> </value>
+            <value> <string>Stop Assignment</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Action done by the user that will close the assignment of a person</string> </value>
+            <value> <string>Action done by the user that will stop (close) the assignment of a person</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Close Assignment Action</string> </value>
+            <value> <string>Stop Assignment Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

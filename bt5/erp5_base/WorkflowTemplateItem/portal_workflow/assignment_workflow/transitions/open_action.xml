@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Open Assignment</string> </value>
+            <value> <string>Start Assignment</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Action called by user that will open the assignment</string> </value>
+            <value> <string>Action called by user that will start (open) the assignment</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Open Assignment Action</string> </value>
+            <value> <string>Start Assignment Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

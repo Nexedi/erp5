@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Keep the current and create a new one with the difference between prevision and current</string> </value>
+            <value> <string>Keep the current Packing List and create a new one with the difference between prevision and current</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

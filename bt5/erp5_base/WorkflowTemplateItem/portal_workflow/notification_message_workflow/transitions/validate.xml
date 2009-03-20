@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Validates a document in ERP5</string> </value>
+            <value> <string>Validates the message</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

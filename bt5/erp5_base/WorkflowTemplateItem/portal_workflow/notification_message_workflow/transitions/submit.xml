@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Submit a message in order for someone to validate it.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

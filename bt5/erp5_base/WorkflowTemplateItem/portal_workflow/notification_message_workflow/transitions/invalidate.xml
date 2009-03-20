@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This action invalidates a document in ERP5</string> </value>
+            <value> <string>This action invalidates the message</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
