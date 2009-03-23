@@ -53,41 +53,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ZSQLCatalog.SQLCatalog import ComplexQuery\n
-from Products.ZSQLCatalog.SQLCatalog import Query\n
-\n
-from string import zfill\n
-global result_list\n
-global uid\n
-uid = 0\n
-result_list = []\n
-\n
-# Get the list of attachments\n
+            <value> <string># Get the list of attachments\n
 attachment_pdf_list=[]\n
 current_object = context.getObject()\n
 \n
-attachment_list = current_object.getAggregateValueList()\n
-attachment_pdf_list.extend(filter(lambda x:(x.getPortalType() in [\'PDF\',\'Image\']),attachment_list))\n
-\n
+attachment_pdf_list = current_object.getAggregateValueList(\n
+   portal_type=(\'PDF\', \'Image\'))\n
 \n
 attachment_pdf_uid_list =[x.getUid() for x in attachment_pdf_list]\n
 \n
 if not attachment_pdf_uid_list :\n
   return []\n
+result_list = [x.getObject() for x in current_object.searchFolder(\n
+                       portal_type=(\'PDF\', \'Image\'))]\n
 \n
-# Build query\n
-\n
-query = ComplexQuery(\n
-                     Query(parent_uid=current_object.getUid()),\n
-                     Query(uid=attachment_pdf_uid_list),\n
-                     operator="OR")\n
-\n
-\n
-kw[\'portal_type\'] = (\'PDF\',\'Image\')\n
-result_uid = [x.getUid() for x in context.portal_catalog(parent_uid = current_object.getUid(),query=query, **kw)]\n
-\n
-result_document = [x.getObject() for x in current_object.portal_catalog(query=query, **kw)]\n
-return result_document\n
+return attachment_pdf_list + attachment_list\n
 </string> </value>
         </item>
         <item>
@@ -126,29 +106,17 @@ return result_document\n
                           <tuple>
                             <string>lines_num</string>
                             <string>kw</string>
-                            <string>Products.ZSQLCatalog.SQLCatalog</string>
-                            <string>ComplexQuery</string>
-                            <string>Query</string>
-                            <string>string</string>
-                            <string>zfill</string>
-                            <string>uid</string>
-                            <string>result_list</string>
                             <string>attachment_pdf_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>current_object</string>
-                            <string>attachment_list</string>
-                            <string>filter</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>x</string>
                             <string>attachment_pdf_uid_list</string>
-                            <string>query</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
-                            <string>result_uid</string>
-                            <string>result_document</string>
+                            <string>result_list</string>
+                            <string>attachment_list</string>
                           </tuple>
                         </value>
                     </item>
