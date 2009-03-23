@@ -53,7 +53,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>message_dict = {}\n
+            <value> <string>from Products.ERP5Type.Utils import getMessageIdWithContext\n
+message_dict = {}\n
 \n
 def add_message(message, comment):\n
   \n
@@ -65,6 +66,8 @@ def add_message(message, comment):\n
     comment_list = message_dict[message] = []\n
   if comment not in comment_list:\n
     comment_list.append(comment)\n
+\n
+\n
 \n
 portal_url = context.portal_url\n
 \n
@@ -163,7 +166,7 @@ for i in context.portal_workflow.objectValues():\n
      s_title = s.title\n
      if s_title:\n
        # adding a context in msg_id for more precise translation\n
-       msg_id = \'%s [state in %s]\' % (s_title, i.id)\n
+       msg_id = getMessageIdWithContext(s_title,\'state\',i.id)      \n
        add_message(msg_id, portal_url.getRelativeContentURL(s))\n
        # also use state title as msg_id for compatibility\n
        add_message(s_title, portal_url.getRelativeContentURL(s))\n
@@ -172,8 +175,22 @@ for i in context.portal_workflow.objectValues():\n
     continue\n
   for t in i.transitions.values():\n
     if t.actbox_name:\n
+      #adding a context in msg_id for more precise translation\n
+      msg_id = getMessageIdWithContext(t.actbox_name,\'transition\',i.id)\n
+      add_message(msg_id, portal_url.getRelativeContentURL(t))\n
+      # also use action box name as msg_id for compatibility\n
       add_message(t.actbox_name, portal_url.getRelativeContentURL(t))\n
+    if t.title:\n
+      #adding a context in msg_id for more precise translation\n
+      msg_id = getMessageIdWithContext(t.title,\'transition\',i.id)\n
+      add_message(msg_id, portal_url.getRelativeContentURL(t))\n
+      # also use transition title as msg_id for compatibility\n
+      add_message(t.title, portal_url.getRelativeContentURL(t))\n
   for worklist in i.worklists.objectValues():\n
+    #adding a context in msg_id for more precise translation\n
+    msg_id = getMessageIdWithContext(worklist.actbox_name,\'worklist\',i.id)\n
+    add_message(msg_id, portal_url.getRelativeContentURL(worklist))\n
+    # also use worklist action box name as msg_id for compatibility\n
     add_message(worklist.actbox_name, portal_url.getRelativeContentURL(worklist))\n
 \n
 \n
@@ -198,7 +215,7 @@ def format(string):\n
   line_list = string.split(\'\\n\')\n
   length = len(line_list)\n
   if length==1:\n
-    return \'"%s"\' % string\n
+    return \'"%s"\' % string.replace(\'"\', \'\\\\"\')\n
   else:\n
     return \'\\n\'.join([\'""\']+[format(i) for i in line_list])\n
 \n
@@ -259,6 +276,8 @@ return printed\n
                           <tuple>
                             <string>_print_</string>
                             <string>_print</string>
+                            <string>Products.ERP5Type.Utils</string>
+                            <string>getMessageIdWithContext</string>
                             <string>message_dict</string>
                             <string>add_message</string>
                             <string>_getattr_</string>
