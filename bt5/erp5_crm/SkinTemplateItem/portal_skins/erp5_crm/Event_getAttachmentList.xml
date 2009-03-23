@@ -54,20 +54,15 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># Get the list of attachments\n
-attachment_pdf_list=[]\n
-current_object = context.getObject()\n
+portal_type_list = (\'PDF\', \'Image\',)\n
 \n
-attachment_pdf_list = current_object.getAggregateValueList(\n
-   portal_type=(\'PDF\', \'Image\'))\n
+aggregate_list = context.getAggregateValueList(\n
+   portal_type=portal_type_list)\n
 \n
-attachment_pdf_uid_list =[x.getUid() for x in attachment_pdf_list]\n
+sub_document_list = [x.getObject() for x in context.searchFolder(\n
+   portal_type=portal_type_list)]\n
 \n
-if not attachment_pdf_uid_list :\n
-  return []\n
-result_list = [x.getObject() for x in current_object.searchFolder(\n
-                       portal_type=(\'PDF\', \'Image\'))]\n
-\n
-return attachment_pdf_list + attachment_list\n
+return aggregate_list + sub_document_list\n
 </string> </value>
         </item>
         <item>
@@ -106,17 +101,15 @@ return attachment_pdf_list + attachment_list\n
                           <tuple>
                             <string>lines_num</string>
                             <string>kw</string>
-                            <string>attachment_pdf_list</string>
+                            <string>portal_type_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>current_object</string>
+                            <string>aggregate_list</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>x</string>
-                            <string>attachment_pdf_uid_list</string>
-                            <string>result_list</string>
-                            <string>attachment_list</string>
+                            <string>sub_document_list</string>
                           </tuple>
                         </value>
                     </item>
