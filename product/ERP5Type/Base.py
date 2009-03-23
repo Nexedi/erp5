@@ -3158,7 +3158,10 @@ class Base( CopyContainer,
     wf_list = list(portal_workflow.getWorkflowsFor(self))
     if wf is not None: wf_list = [wf] + wf_list
     for wf in wf_list:
-      history = wf.getInfoFor(self, 'history', None)
+      try:
+        history = wf.getInfoFor(self, 'history', None)
+      except:
+        history = None
       if history is not None:
         if len(history):
           # Then get the first line of edit_workflow
@@ -3183,7 +3186,10 @@ class Base( CopyContainer,
       wf_list = [wf] + wf_list
     max_date = None
     for wf in wf_list:
-      history = wf.getInfoFor(self, 'history', None)
+      try:
+        history = wf.getInfoFor(self, 'history', None)
+      except:
+        history = None
       if history is not None and len(history):
         date = history[-1].get('time', None)
         # Then get the last line of edit_workflow
