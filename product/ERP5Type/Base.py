@@ -3160,7 +3160,7 @@ class Base( CopyContainer,
     for wf in wf_list:
       try:
         history = wf.getInfoFor(self, 'history', None)
-      except:
+      except AttributeError:
         history = None
       if history is not None:
         if len(history):
@@ -3188,7 +3188,7 @@ class Base( CopyContainer,
     for wf in wf_list:
       try:
         history = wf.getInfoFor(self, 'history', None)
-      except:
+      except AttributeError:
         history = None
       if history is not None and len(history):
         date = history[-1].get('time', None)
