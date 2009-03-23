@@ -108,23 +108,32 @@ function simple_aff(dynamic_check_field) {\n
   form_id=dynamic_check_field.split("listbox_")\n
   max_lenght_field_id=form_id[0]+"listbox_listMax"\n
   max_item_field_id=form_id[0]+"listbox_itemMax";\n
-  check_field_id=form_id[0]+"listbox_check";\n
+  span_field_id=form_id[0]+"listbox_check";\n
   var max_lenght = document.getElementById(max_lenght_field_id).value;\n
   var max_item = document.getElementById(max_item_field_id).value;\n
-  var check = document.getElementById(check_field_id);\n
+  var span_field = document.getElementById(span_field_id);\n
+\n
+  if (span_field.className=="div_short_mode") {\n
+     var span_className="div_short_mode"\n
+  }\n
+  else {\n
+     var span_className="div_normal_mode"\n
+  }\n
 \n
   for (b = 0; b < max_item; b++)\n
   {\n
    for (a = 0; a < max_lenght; a++)\n
     { var foo =form_id[0]+ \'listbox_\' + b + \'data\' + a;\n
       var target = document.getElementById(foo);\n
-      if (check.checked)\n
+      if (span_className=="div_short_mode")\n
        {\n
-        target.style.display = "none";\n
+        target.style.display = "inline";\n
+        span_field.className="div_normal_mode"\n
        }\n
       else\n
        {\n
-        target.style.display = "inline";\n
+        target.style.display = "none";\n
+        span_field.className="div_short_mode"\n
        }\n
     }\n
   }\n

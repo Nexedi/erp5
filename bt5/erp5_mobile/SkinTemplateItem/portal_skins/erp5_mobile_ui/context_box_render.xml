@@ -76,197 +76,65 @@ XXX: Folder_filter accesses selection directly\n
         ui_actions actions/object_ui | nothing;\n
         print_actions actions/object_print | nothing;\n
         list_mode list_mode | nothing">\n
-            <span class="tool_buttons" align="center">\n
-                <tal:block tal:condition="list_mode | nothing">\n
-                    <button class="cut" type="submit" name="Folder_cut:method" title="Cut"\n
-                            i18n:attributes="title" i18n:domain="ui">\n
-                      <span class="image"></span>\n
-                      <span class="description" i18n:translate="" i18n:domain="ui">Cut</span>\n
-                    </button>\n
-                    <button class="copy" type="submit" name="Folder_copy:method" title="Copy"\n
-                            i18n:attributes="title" i18n:domain="ui">\n
-                      <span class="image"></span>\n
-                      <span class="description" i18n:translate="" i18n:domain="ui">Copy</span>\n
-                    </button>\n
-                    <button class="paste" type="submit" name="Folder_paste:method" title="Paste"\n
-                            i18n:attributes="title" i18n:domain="ui">\n
-                      <span class="image"></span>\n
-                      <span class="description" i18n:translate="" i18n:domain="ui">Paste</span>\n
-                    </button>\n
-                    <span class="separator"><!--separator--></span>\n
-                  </tal:block>\n
 \n
-                  <button class="new" type="submit" title="New"\n
-                          tal:attributes="name python: list_mode and \'Folder_create:method\' or \'Base_createNewDocument:method\'"\n
-                          i18n:attributes="title" i18n:domain="ui">\n
-                    <span class="image"></span>\n
-                    <span class="description" i18n:translate="" i18n:domain="ui">New</span>\n
-                  </button>\n
-                  <button class="clone" type="submit" title="Clone"\n
-                          tal:condition="python: not list_mode"\n
-                          tal:attributes="name python: \'Base_createCloneDocument:method\'"\n
-                          i18n:attributes="title" i18n:domain="ui">\n
-                    <span class="image"></span>\n
-                    <span class="description" i18n:translate="" i18n:domain="ui">Clone</span>\n
-                  </button>\n
-                  <button tal:condition="list_mode" class="delete" type="submit" name="Folder_deleteObjectList:method" title="Delete"\n
-                          i18n:attributes="title" i18n:domain="ui">\n
-                    <span class="image"></span>\n
-                    <span class="description" i18n:translate="" i18n:domain="ui">Delete</span>\n
-                  </button>\n
-\n
-                  <tal:block tal:condition="list_mode">\n
-                    <span class="separator"><!--separator--></span>\n
-                    <a tal:condition="search_actions" class="find" title="Find"\n
-                       tal:attributes="href python: portal.ERP5Site_renderCustomLink(search_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_search\')"\n
-                       i18n:attributes="title" i18n:domain="ui">\n
-                      <span class="image"></span>\n
-                      <span class="description" i18n:translate="" i18n:domain="ui">Find</span>\n
-                    </a> <!---->\n
-                    <button class="show_all" type="submit" name="Folder_show:method" title="Show All"\n
-                            i18n:attributes="title" i18n:domain="ui">\n
-                      <span class="image"></span>\n
-                      <span class="description" i18n:translate="" i18n:domain="ui">Show All</span>\n
-                    </button>\n
-                    <button type="submit" name="Folder_filter:method" title="Filter"\n
-                            tal:attributes="class python: here.portal_selections.getSelectionInvertModeFor(request[\'selection_name\']) and \'filter_on\' or \'filter\';"\n
-                            i18n:attributes="title" i18n:domain="ui">\n
-                      <span class="image"></span>\n
-                      <span class="description" i18n:translate="" i18n:domain="ui">Filter</span>\n
-                    </button>\n
-                    <a tal:condition="sort_actions" class="sort" title="Sort"\n
-                       tal:attributes="href python: portal.ERP5Site_renderCustomLink(sort_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_sort\')"\n
-                       i18n:attributes="title" i18n:domain="ui">\n
-                      <span class="image"></span>\n
-                      <span class="description" i18n:translate="" i18n:domain="ui">Sort</span>\n
-                    </a>\n
-        </tal:block>\n
-                </span><br />\n
               <div class="div_prev" id="div_prev">\n
-              <div id="actions">\n
-                <select name="select_action"\n
-                        tal:attributes="onChange string:submitAction(this.form,\'${url}/Base_doAction\')"                     tal:define="document_template_list here/getDocumentTemplateList | nothing">\n
-                  <option selected="selected" value=""\n
-                          i18n:translate="" i18n:domain="ui">Action...\n
-                  </option>\n
-                  <tal:block tal:repeat="content here/allowedContentTypes | nothing">\n
-                    <tal:block tal:condition="python: not content.getId() in here.portal_types.getTypeInfo(here).getHiddenContentTypeList()">\n
-                      <option tal:attributes="value python: \'add \' + content.getId()"\n
-                    i18n:translate="" i18n:domain="ui">Add\n
-                        <tal:block tal:content="content/Title"\n
-                                  i18n:name="portal_type" i18n:translate="" i18n:domain="ui">\n
-                        </tal:block>\n
-                      </option>\n
-                    </tal:block>\n
-                  </tal:block>\n
-                  <tal:block tal:condition="document_template_list">\n
-                    <option disabled="disabled">-- \n
-                      <tal:block i18n:translate="" i18n:domain="ui">Templates</tal:block> --\n
-                    </option>\n
-                    <tal:block tal:repeat="document_template document_template_list">\n
-                      <option tal:attributes="value python:\'template \' + document_template.getRelativeUrl()"\n
-                      i18n:translate="" i18n:domain="ui">Add\n
-                        <tal:block tal:content="document_template/getTitle"\n
-                                i18n:name="document_template"></tal:block>\n
-                      </option>\n
-                    </tal:block>\n
-                  </tal:block>\n
-                  <option disabled="disabled">-- \n
-                    <tal:block i18n:translate="" i18n:domain="ui">Workflows</tal:block> --\n
-                  </option>\n
-                  <tal:block tal:repeat="action actions/workflow">\n
-                    <option tal:content="action/name"\n
-                            tal:attributes="value python: \'workflow \' + action[\'url\']"\n
-                            i18n:translate="" i18n:domain="ui"></option>\n
-                  </tal:block>\n
-                  <option disabled="disabled">-- \n
-                    <tal:block i18n:translate="" i18n:domain="ui">Object</tal:block> --\n
-                  </option>\n
-                  <tal:block tal:repeat="action actions/object_action | nothing">\n
-                    <option tal:content="action/name"\n
-                            tal:attributes="value python: \'object \' + action[\'url\']"\n
-                            i18n:translate="" i18n:domain="ui"></option>\n
-                  </tal:block>\n
-                  <tal:block tal:replace=\'nothing\'>\n
-                  <!-- XXX folder actions is inherited from CMF, but not used in ERP5 (for now) -->\n
-                    <option disabled="disabled">--\n
-                      <tal:block i18n:translate="" i18n:domain="ui">folder</tal:block> --\n
-                    </option>\n
-                    <tal:block tal:repeat="action actions/folder">\n
-                      <option tal:content="action/name"\n
-                              tal:attributes="value python: \'folder \' + action[\'url\']"\n
-                              i18n:translate="" i18n:domain="ui"></option>\n
-                    </tal:block>\n
-                  </tal:block>\n
-                </select>\n
-                <!--\n
-                <button class="button" type="submit" name="Base_doAction:method" title="Action"\n
-                        i18n:attributes="title" i18n:domain="ui">\n
-                  <span class="image"></span>\n
-                  <span class="description"\n
-                      i18n:translate="" i18n:domain="ui">Action</span>\n
-                </button>\n
-                -->\n
+\n
+          <tal:block tal:condition="not: list_mode | nothing">\n
+            <tal:block tal:condition="request/selection_index | nothing">\n
+              <!-- Navigation buttons starts here -->\n
+               <span class="tool_buttons">\n
+                 <div class="div_navigation" align="center" id="div_navigation">\n
+                  <a class="jump_first" title="First"\n
+                                   tal:attributes="href python: \'portal_selections/viewFirst?%s\' % (http_parameters, )"\n
+                                   i18n:attributes="title" i18n:domain="ui">\n
+                    <span class="image"></span>\n
+                    <span class="description" i18n:translate="" i18n:domain="ui">First</span>\n
+                  </a> \n
+                  <a class="jump_previous" title="Previous"\n
+                     tal:attributes="href python: \'portal_selections/viewPrevious?%s\' % (http_parameters, )"\n
+                     i18n:attributes="title" i18n:domain="ui">\n
+                    <span class="image"></span>\n
+                    <span class="description" i18n:translate="" i18n:domain="ui">Previous</span>\n
+                  </a>\n
+                  <a class="list_mode" title="List Mode" tal:attributes="href python: here.portal_selections.getSelectionListUrlFor(request[\'selection_name\'])"\n
+                     i18n:attributes="title" i18n:domain="ui">\n
+                    <span class="image"></span>\n
+                    <span class="description" i18n:translate="" i18n:domain="ui">List Mode</span>\n
+                  </a>\n
+                  <a class="jump_next" title="Next"\n
+                     tal:attributes="href python: \'portal_selections/viewNext?%s\' % (http_parameters, )"\n
+                     i18n:attributes="title" i18n:domain="ui">\n
+                    <span class="image"></span>\n
+                    <span class="description" i18n:translate="" i18n:domain="ui">Next</span>\n
+                  </a>\n
+                   <a class="jump_last" title="Last"\n
+                                   tal:attributes="href python: \'portal_selections/viewLast?%s\' % (http_parameters, )"\n
+                                   i18n:attributes="title" i18n:domain="ui">\n
+                    <span class="image"></span>\n
+                    <span class="description" i18n:translate="" i18n:domain="ui">Last</span>\n
+                  </a>\n
+               </div>\n
+              </span>\n
+              <script>\n
+                loadDivSize();\n
+              </script>\n
+              <div id="shortcuts" class="shortcuts">\n
+                <a class="import_export"\n
+                   title="Import / Export"\n
+                   tal:attributes="href python:here.ERP5Site_renderLink(\'Person_exportPersonAsvCard\',http_parameters)"\n
+                   i18n:attributes="title" i18n:domain="ui">\n
+                  <button class="button" i18n:translate="" i18n:domain="ui">\n
+                    <span class="link" i18n:translate="" i18n:domain="ui">Export as vCard</span>\n
+                  </button>\n
+                </a>\n
               </div>\n
+              <script>\n
+                affShortcuts ();\n
+              </script>\n
+            </tal:block>\n
+             </tal:block>\n
             </div>\n
 \n
-\n
-    <tal:block tal:condition="not: list_mode | nothing">\n
-    <tal:block tal:condition="request/selection_index | nothing">\n
-        <span class="tool_buttons">\n
-        <div class="div_next" align="right" id="div_next">\n
-\n
-<!--          <a class="jump_first" title="First"\n
-            tal:attributes="href python: \'portal_selections/viewFirst?%s\' % (http_parameters, )"\n
-            i18n:attributes="title" i18n:domain="ui">\n
-            <span class="image"></span>\n
-            <span class="description" i18n:translate="" i18n:domain="ui">First</span>\n
-          </a>  -->\n
-          <a class="jump_previous" title="Previous"\n
-            tal:attributes="href python: \'portal_selections/viewPrevious?%s\' % (http_parameters, )"\n
-            i18n:attributes="title" i18n:domain="ui">\n
-            <span class="image"></span>\n
-            <span class="description" i18n:translate="" i18n:domain="ui">Previous</span>\n
-          </a>\n
-          <a class="list_mode" title="List Mode" tal:attributes="href python: here.portal_selections.getSelectionListUrlFor(request[\'selection_name\'])"\n
-             i18n:attributes="title" i18n:domain="ui">\n
-            <span class="image"></span>\n
-            <span class="description" i18n:translate="" i18n:domain="ui">List Mode</span>\n
-          </a>\n
-          <a class="jump_next" title="Next"\n
-            tal:attributes="href python: \'portal_selections/viewNext?%s\' % (http_parameters, )"\n
-            i18n:attributes="title" i18n:domain="ui">\n
-            <span class="image"></span>\n
-            <span class="description" i18n:translate="" i18n:domain="ui">Next</span>\n
-          </a>\n
-<!--          <a class="jump_last" title="Last"\n
-            tal:attributes="href python: \'portal_selections/viewLast?%s\' % (http_parameters, )"\n
-            i18n:attributes="title" i18n:domain="ui">\n
-            <span class="image"></span>\n
-            <span class="description" i18n:translate="" i18n:domain="ui">Last</span>\n
-          </a>   -->\n
-\n
-        </div>\n
-        </span>\n
-      <script>\n
-        loadDivSize();\n
-      </script>\n
-\n
-      <div id="shortcuts" class="shortcuts">\n
-        <a class="import_export"\n
-            title="Import / Export"\n
-            tal:attributes="href python:here.ERP5Site_renderLink(\'Person_exportPersonAsvCard\',http_parameters)"\n
-            i18n:attributes="title" i18n:domain="ui">\n
-          <button class="button" i18n:translate="" i18n:domain="ui">\n
-            <span class="link">Export as vCard</span>\n
-          </button>\n
-        </a>\n
-      </div>\n
-      <script>\n
-        affShortcuts ();\n
-      </script>\n
-    </tal:block>\n
-  </tal:block>\n
 </span>\n
 </tal:block>
 

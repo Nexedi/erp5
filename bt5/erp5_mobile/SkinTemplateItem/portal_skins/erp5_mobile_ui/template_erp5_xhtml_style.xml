@@ -112,6 +112,7 @@ IDEAS:\n
       <div id="master">\n
         <tal:block metal:define-slot="main"/>\n
       </div>\n
+      <div id="context_bar"> <tal:block metal:define-slot="context_actions"/></div>\n
     </form>\n
   </body>\n
 </html>\n

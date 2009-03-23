@@ -75,7 +75,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         </div>\n
         <div class="window">\n
           <div class="modules"><br>\n
-            <span class="link2">Main menu</span>\n
+            <span class="link2" i18n:translate="" i18n:domain="ui">Main menu</span>\n
             <!--\n
             <tal:block tal:condition="not: here/portal_membership/isAnonymousUser">\n
               <span class="link2" i18n:translate="" i18n:domain="ui">of</span>\n

@@ -83,6 +83,9 @@ IDEAS:\n
      <tal:block metal:fill-slot="context_bar">\n
        <tal:block metal:define-slot="context_bar"/>\n
      </tal:block>\n
+     <tal:block metal:fill-slot="context_actions">\n
+       <tal:block metal:define-slot="context_actions"/>\n
+     </tal:block>\n
     </tal:block>\n
   </tal:block>\n
 </tal:block>

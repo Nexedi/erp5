@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts36632016.93</string> </value>
+            <value> <string>ts37807875.21</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -27,18 +27,18 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAABg0lEQVQ4y2P4//8/Ay0wA80NphQQ
-aXA9k6iolxUvr30CkMNKRYONWaWlg3s0NBL+s7KKNxFjOLFBwaqkFFFfW7v2X2BgyV8GBn6ChhNt
-sIiIR92MGQd/Xbr07r+vb/4/BgaOeqA4I8UG8/E51DU1rf959er7/+vWXf3v6Zn3i4mJpwaXy0kw
-2KKusnLZz5UrL/3v7Nzzf9asE//9/PJ/s7IKYw0Wog3m4dGry8mZ9XPKlGP/MzIW/6+s3PB/5syT
-/52ds/6xsgq2AtWwk2UwF5daXXR038/q6i3/09IW/a+q2vgfxDYzy/jPxMS7BqiGi0yD5ep8fBp/
-lpSs+9/QsPV/efmG//r6iUBDRTcC5aXJDgo2NpE6d/fKn62te8Au1dNL/M/IKAhyqQRFkcfGxlPn
-4VH+s7Bw438jo1SgAsF1QHERipMbB4dAnbV1zl9Dwwxg7pPYDBSTpEoGYWbm7JaUtP4PDOuNhAwl
-xWBmII4FZrQ5xBhKisHUKzaHXg0yZAwGAKelJSawQlTuAAAAAElFTkSuQmCC</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAOCAYAAAAmL5yKAAABZElEQVQoz2NgQAH1TKKiXla8vPYJ
+QA4rA+nAmFVaOrhHQyPhPyureBM5hrAqKUXU19au/RcYWPKXgYGfZENYRUQ86mbMOPjr0qV3/319
+8/8xMHDUA8UZiTaAj8+hrqlp/c+rV9//X7fu6n9Pz7xfTEw8NcS6BGiARV1l5bKfK1de+t/Zuef/
+rFkn/vv55f9mZRUmyjusPDx6dTk5s35OmXLsf0bG4v+VlRv+z5x58r+zc9Y/VlbBVqAadrwGcHGp
+1UVH9/2srt7yPy1t0f+qqo3/QWwzs4z/TEy8a4BquAgYIFfn49P4s6Rk3f+Ghq3/y8s3/NfXTwRq
+Ft0IlJcm6AU2NpE6d/fKn62te8A26+kl/mdkFATZLEFUILKx8dR5eJT/LCzc+N/IKPU/A4PgOqC4
+CNHRyMEhUGdtnfPX0DADmBolNgPFJElKSMzMnN2Sktb/gWGxkVTNIMAMxLHAhDeHWM0AN8F7pQD6
+pwEAAAAASUVORK5CYII=</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
-            <value> <int>22</int> </value>
+            <value> <int>14</int> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -46,7 +46,7 @@ xWBmII4FZrQ5xBhKisHUKzaHXg0yZAwGAKelJSawQlTuAAAAAElFTkSuQmCC</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>444</int> </value>
+            <value> <int>413</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -54,7 +54,7 @@ xWBmII4FZrQ5xBhKisHUKzaHXg0yZAwGAKelJSawQlTuAAAAAElFTkSuQmCC</string> </value>
         </item>
         <item>
             <key> <string>width</string> </key>
-            <value> <int>22</int> </value>
+            <value> <int>16</int> </value>
         </item>
       </dictionary>
     </pickle>

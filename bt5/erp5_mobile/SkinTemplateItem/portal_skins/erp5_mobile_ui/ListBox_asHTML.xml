@@ -137,8 +137,8 @@
                   i18n:translate="" i18n:domain="ui"><tal:block tal:replace="here/total_size" i18n:name="number">0</tal:block> record(s)</span>\n
                  <input type="hidden" tal:attributes="id string:${field_id}_listMax; name string:${field_id}_listMax; value python: len(search_value_list)">\n
                  <input type="hidden" tal:attributes="id string:${field_id}_itemMax; name string:${field_id}_itemMax; value python: len(line_list)">\n
-                 <br /><input type="checkbox" tal:attributes="id string:${field_id}_check; name string:${field_id}_check; onChange string:simple_aff(this.id)" checked="checked">\n
-                <span tal:content="python: \'Short mode\'"></span>\n
+                 <br />\n
+                 <span tal:attributes="id string:${field_id}_check; name string:${field_id}_check; onClick string:simple_aff(this.id)" class="div_short_mode" i18n:translate="" i18n:domain="ui">Toggle Detailed Mode</span>\n
 \n
               <select id="listbox_page_selection" name="list_start" title="Change Page" size="1"\n
                   onChange="submitAction(this.form, \'context/${field_id}_setPage\')"\n
@@ -204,7 +204,7 @@
                                      paramX python: valueX[1];\n
                                      search_fieldX python: valueX[2];\n
                                      foo2 repeat/valueX/index">\n
-                          <option tal:condition="aliasX" tal:content="python: tab_title[foo2]" i18n:domain="ui" i18n:translate="" tal:attributes="value python: aliasX; selected python: aliasX==selected_search_field"></option>\n
+                         <option tal:condition="aliasX" tal:content="python: tab_title[foo2]" i18n:domain="ui" i18n:translate="" tal:attributes="value python: aliasX; selected python: aliasX==selected_search_field"></option>\n
                         </tal:block>\n
                       </tal:block>\n
                     </select>\n
@@ -219,10 +219,10 @@
                                      search_field python: value[2];\n
                                      foo repeat/value/index"\n
                          tal:attributes="id repeat/value/index">\n
-                       <span tal:condition="alias"> <!--  -->\n
-                           <tal:block tal:condition="python: search_field is not None"\n
+                       <span tal:condition="alias">\n
+                        <tal:block tal:condition="python: search_field is not None"\n
                                    tal:replace="structure python: search_field.render(value = param, key = alias)" />\n
-                           <input style="width: 40%;" name="id" size="8" value=""\n
+                        <input style="width: 40%;" name="id" size="8" value=""\n
                                tal:attributes="name alias; value param; id python: \'%s%s\' % (\'input\', foo)"/>\n
                        </span>\n
                     </div>\n
@@ -264,11 +264,10 @@
                          tal:condition="not: repeat/valueY/index"\n
                          tal:define="object_url python: \'%s/view\' % line.getObject().getAbsoluteUrl()">\n
                       <!-- XXX it should be possible to test isSummary() form_id==\'Base_viewRelatedObjectList\' and-->\n
-                      <input tal:condition="python: line.getObject() is not None"\n
-                                 type="checkbox" value="checked" id="listbox_cb_1" name="uids:list"\n
-                                 tal:attributes="checked python: not form_id==\'Base_viewHistory\' and line.getUid() in checked_uid_set;\n
-                                                 value line/getUid; id string:${field_id}_cb_${line/getUid}" />\n
-                      <a tal:condition="python:not form_id==\'Base_viewWorkflowHistory\'" href="#"  tal:attributes="href string:${object_url}?selection_index=${selection_index}&amp;selection_name=${selection_name}&amp;ignore_layout:int=0&amp;reset:int=1"><img src="document_icon.gif" tal:attributes="src string:${portal_url_string}/images/line_clickable.png; title python: line.getObject().getRelativeUrl()" title="document"/></a>\n
+                       <input tal:condition="python: not form_id==\'Base_viewWorkflowHistory\' and line.getObject() is not None"  type="checkbox" value="checked" id="listbox_cb_1" name="uids:list"\n
+                              tal:attributes="checked python: line.getUid() in checked_uid_set;\n
+                                              value line/getUid; id string:${field_id}_cb_${line/getUid}" />\n
+                       <a tal:condition="python: not form_id==\'Base_viewWorkflowHistory\'" href="#"  tal:attributes="href string:${object_url}?selection_index=${selection_index}&amp;selection_name=${selection_name}&amp;ignore_layout:int=0&amp;reset:int=1"><img src="document_icon.gif" tal:attributes="src string:${portal_url_string}/images/line_clickable.png; title python: line.getObject().getRelativeUrl()" title="document" i18n:translate="" i18n:domain="ui"/></a>\n
                       <span tal:condition="original_value" tal:replace="structure html">value</span>\n
                   </div>\n
                    <div tal:attributes="id python: \'%s_%s%s%s\' % (field_id, foo2, \'data\', foo)">\n

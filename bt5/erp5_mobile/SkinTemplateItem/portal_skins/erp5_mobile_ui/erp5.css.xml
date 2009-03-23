@@ -472,6 +472,17 @@ margin: 15px;\n
   border-color: #3D7474;\n
   background-color: #C1DAD2;\n
   margin-bottom: 5px;\n
+  /*padding-top: 10px;*/\n
+}\n
+\n
+.div_navigation {\n
+  border-top: solid 1px;\n
+  /*border-bottom: solid 1px;*/\n
+  border-color: #3D7474;\n
+  background-color: #C1DAD2;\n
+  margin-bottom: 5px;\n
+  position: absolute;\n
+  right: 10px;\n
 }\n
 \n
 .List_top {\n
@@ -525,12 +536,13 @@ margin: 15px;\n
 }\n
 \n
 .erp {\n
+  font-size: 18px;\n
   color: #3D7474;\n
   text-decoration: none;\n
 }\n
 \n
 .link_white {\n
-  font-size: 12px;\n
+  font-size: 14px;\n
   color: #FFFFFF;\n
 }\n
 \n
@@ -725,6 +737,14 @@ textarea {\n
   text-decoration: underline;\n
 }\n
 \n
+.div_short_mode, .div_normal_mode {\n
+  color: #3D7474;\n
+  font-weight: bold;\n
+  font-size: 8pt;\n
+  text-decoration: underline;\n
+  cursor: pointer;\n
+}\n
+\n
 .link2 {\n
   color: #3D7474;\n
   font-size: 12pt;\n
@@ -753,8 +773,8 @@ fieldset {\n
 }\n
 \n
 .div_prev {\n
-  margin-top: 10px;\n
-  width: 0px;\n
+  margin-top: 5px;\n
+  width: 95%;\n
   text-align:left;\n
   padding-left:5px;\n
   line-height:85%;\n
@@ -770,14 +790,14 @@ fieldset {\n
   border-bottom-color: #3D7474;\n
   border-right: solid 1px;\n
   border-right-color: #3D7474;\n
-  width: 60px;\n
+  width: 70px;\n
   text-align:center;\n
   position: absolute;\n
   padding-right: 3px;\n
   padding-bottom: 3px;\n
   right: 0px;\n
-  line-height: 85%;\n
-  top: 50px;\n
+  /*line-height: 85%;*/\n
+  top: 100px;\n
 }\n
 \n
 .div_sc {\n
@@ -899,7 +919,7 @@ fieldset {\n
 \n
 .left_data {\n
   text-decoration: none;\n
-  padding-left: 10px;\n
+  padding-left: 30px;\n
   color: #000000;\n
   font-size: 12px;\n
 }\n
@@ -932,8 +952,15 @@ fieldset {\n
   background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/search.png\');\n
 }\n
 \n
-#actions button .image {\n
+#actions button .image{\n
   background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/exec16.png\');\n
+  position: relative;\n
+  background-repeat: no-repeat;\n
+}\n
+#jump button .image {\n
+  background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/jump.png\');\n
+  position: relative;\n
+  background-repeat: no-repeat;\n
 }\n
 \n
 .separator {\n
@@ -1111,7 +1138,6 @@ p.clear {\n
 \n
 body {\n
   background-color: <dtml-var background_color>;\n
-  font-size: 14px;\n
 }\n
 \n
 #transition_message {\n

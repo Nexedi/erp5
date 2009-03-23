@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts36632017.57</string> </value>
+            <value> <string>ts37809759.72</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -27,15 +27,10 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABnklEQVQ4EQXBu0uVYRwA4Of3ntfP
-bphgN4gazLK1oBqEEioHiZZcWlukoSGI1gMFTQ3NDQ31JwQtGpWQ0CCRFNgFA8FTYUMHBC/f8f16
-ngAA2oNsDjK8ynQNAAAAAAmA9i48Yt9Lfo8DIBAIBAKBgAxAa5RyAQdI17k6z8wELiOjABIKFvAi
-A+1MuUazRj1LusiZ48y8xScEAADW0ctANUTvCnGKZi/pJEOXaH1l5ywqFECgwRJeZaAaJW8ycJ/d
-Hf7dpDXM8Du+L6BCAwg0+IOSkXheUb7xpR+HOLLCwGFWx9AFBAAarCMCgdM4jz2AbUAFAIBAgx94
-k9HgLxaR0AAAAAoKAg26KBkJJzCJCgUAABmBggY9fEYno2ARPxFoABDYYWSL25PEOHUi9VOWGZSR
-cA43UKEAIKFmZY6+ZeqKjSligjRPpwlAH/oRAACALWzTHiGeUt5z9AHTdUbCGKZQoQAgoYfX3PlA
-PMYa20+YriEA+3EQAQCAwrENbt2juktvjrRE7yOeZUAXXQAAAFaCh7O0lulV5BblF6vNf1Jpfaan
-JZnNAAAAAElFTkSuQmCC</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAeklEQVQ4y2NgQAH1QFwOxDMZyAAg
+zQ3/IbgRJvgfD0YHDf+xs0m2HYbLSHFBK8wABigGsjtJcUE3Li8Q6wJdBiTboVgNiLlICoj/JGJS
+QQMWTLwLsMRSAym2qzCgxhCI7sRIsQRcMAktpTZD0w9pYfCfimFAcSxQCQAAJw9uCBnYXCcAAAAA
+SUVORK5CYII=</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -47,7 +42,7 @@ JZnNAAAAAElFTkSuQmCC</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>471</int> </value>
+            <value> <int>179</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
