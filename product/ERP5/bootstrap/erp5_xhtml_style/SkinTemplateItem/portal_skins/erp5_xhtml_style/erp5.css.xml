@@ -484,7 +484,8 @@ a:hover {\n
   text-decoration: underline;\n
 }\n
 \n
-p.clear {\n
+p.clear,\n
+div.clear{\n
   height: 0;\n
   margin: 0;\n
   padding: 0;\n
@@ -1139,7 +1140,8 @@ a.tree_closed {\n
   padding-left: 1px;\n
 }\n
 \n
-.ListContent table {\n
+.ListContent table,\n
+table.listbox {\n
   width: 100%;\n
   border-collapse: collapse;\n
   border-color: <dtml-var document_border_color>;\n
@@ -1188,7 +1190,8 @@ a.tree_closed {\n
 }\n
 \n
 .ListContent tr.DataA:hover,\n
-.ListContent tr.DataB:hover {\n
+.ListContent tr.DataB:hover, \n
+table.listbox tbody tr:hover{\n
   color: inherit;\n
   background-color: <dtml-var listbox_hover_background_color>;\n
 }\n
@@ -1213,6 +1216,194 @@ td.AnchorColumn {\n
   border-color:<dtml-var document_border_color>;\n
   background-color:<dtml-var document_background_color>;\n
   border-width:0;\n
+}\n
+\n
+/* Popup info window style */\n
+div.search_popup {\n
+  background-color: #c3e3df;\n
+  display: none;\n
+  position:fixed;\n
+  left:500px;\n
+  width:150px;\n
+  top:130px;\n
+  padding:10px;\n
+  border:1px solid black;\n
+  z-index:100;\n
+}\n
+\n
+div.popup_row{\n
+  clear:right;\n
+}\n
+\n
+div.popup_row span.popup_label{\n
+  font-weight: bold;\n
+}\n
+\n
+div.popup_row a{\n
+  color: green!important;\n
+}\n
+div.searchResultHeader {\n
+  border-top: 1px solid <dtml-var document_border_color>;\n
+  background-color: <dtml-var listbox_label_background_color>;\n
+  padding: .2em;\n
+}\n
+\n
+div.searchResultHeader .right {float: right}\n
+div.searchResultHeader .left  {float: left}\n
+\n
+/* Document list\n
+------------------------------------------------*/\n
+table.documentList {\n
+  width: 100%;\n
+  margin-bottom: 1em;\n
+  border: 1px solid;\n
+  border-color:<dtml-var document_border_color>;\n
+}\n
+\n
+table.documentList thead    {background: #e6e6e6}\n
+\n
+table.documentList thead th,\n
+table.documentList a {\n
+  font-weight: normal\n
+}\n
+\n
+table.documentList td,\n
+table.documentList th {\n
+  text-align: left;\n
+  padding: .3em;\n
+  border: 1px solid <dtml-var document_border_color>;\n
+}\n
+\n
+table.documentList tbody tr.even {background: <dtml-var listbox_even_background_color>;}\n
+table.documentList tbody tr.odd  {background: <dtml-var listbox_odd_background_color>;}\n
+\n
+table.documentList tbody tr:hover {background:<dtml-var listbox_hover_background_color>}\n
+\n
+table.documentList tbody td.icon {\n
+  text-align: center;\n
+  padding: 0;\n
+}\n
+\n
+table.documentList tbody td.icon a {\n
+  display: block;\n
+  padding: .3em;\n
+}\n
+\n
+table.documentList tbody tr td div.coordinates a {\n
+  color:green;\n
+}\n
+\n
+\n
+/* Search results list\n
+------------------------------------------------*/\n
+\n
+div#main_content.list_mode{\n
+  font-size:0.7em;\n
+  line-height:1.5em;\n
+}\n
+\n
+div.search.result .resultList {\n
+  padding: 1em;\n
+  width: 70%;\n
+  margin: 0 auto;\n
+}\n
+\n
+div.search.result .resultList p {margin-bottom: 0}\n
+\n
+div.search.result .resultList h3 {\n
+  font-size: 120%;\n
+  font-weight: normal;\n
+  margin-bottom: 1em;\n
+}\n
+\n
+div.search.result .resultList ul.pages li a {\n
+  padding: .1em .3em;\n
+  border: 1px solid transparent;\n
+}\n
+\n
+div.search.result .resultList ul.pages li a:hover {\n
+  border: 1px solid #dedade;\n
+  background: #eee;\n
+}\n
+\n
+div.search.result .resultList table {\n
+  border-collapse: inherit;\n
+  border-spacing: .3em;\n
+}\n
+\n
+div.search.result .resultList .search_result_portal_type,\n
+div.search.result .resultList .search_result_title {\n
+  display: inline;\n
+}\n
+\n
+div.search.result .resultList .search_result_portal_type{\n
+  font-size: 80%;\n
+}\n
+\n
+div.search.result .resultList .search_result_title a{\n
+  font-weight: bold;\n
+  font-size: 120%;\n
+}\n
+\n
+div.search.result .resultList .search_result_portal_type:before {\n
+  content: "[";\n
+}\n
+div.search.result .resultList .search_result_portal_type:after {\n
+  content: "]";\n
+}\n
+\n
+div.search.result .resultList table.documentList caption {\n
+  font-weight: bold;\n
+  text-align: left;\n
+}\n
+\n
+div.search.result .resultList table.documentList td {\n
+  vertical-align: middle;\n
+  border: transparent;\n
+  margin:0;\n
+}\n
+\n
+div.search.result .resultList table.documentList td ul    {list-style: none}\n
+div.search.result .resultList table.documentList td ul li {margin: 0}\n
+\n
+div.search.result .resultList table.documentList td blockquote {\n
+  border: 1px solid #e6e2e6;\n
+  border-top-color: #000;\n
+  margin: .5em 0 2em;\n
+  padding: 1em;\n
+  background: #eee;\n
+}\n
+\n
+div.search.result .resultList {\n
+  padding: 1em;\n
+  padding-top: 0em;\n
+  padding-bottom: 1em;\n
+  padding-left: 0em;\n
+  padding-right: 0em;\n
+}\n
+\n
+div.search.result div.searchBar {\n
+  margin-bottom: 2em;\n
+}\n
+\n
+div.searchResultHeader #style_toggle_icon,\n
+    table.listbox #style_toggle_icon {\n
+      padding:0;\n
+      border: 0px;\n
+      border-color:red;\n
+      margin:0;\n
+      vertical-align:bottom;\n
+}\n
+\n
+div.searchResultHeader {\n
+  border-style: solid;\n
+  border-width: 1px 1px 0 1px;\n
+  border-color:<dtml-var document_border_color>;\n
+  margin-top: 0em;\n
+}\n
+\n
+div.search .centeredInner {\n
+ text-align: center;\n
 }\n
 \n
 /* MatrixBox */\n

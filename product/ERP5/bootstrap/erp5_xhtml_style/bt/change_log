@@ -1,3 +1,9 @@
+2009-03-24 fabien
+* split ListBox_asHTML page template. Now there is 3 PT : ListBox_asSearchStyleHTML, ListBox_asTableStyleHTML and ListBox_asStandardHTML
+* add css selectors to handle listbox search and table style
+* change the method called in the top right search box
+* move some form and scripts from erp5_web and erp5_new_km to here
+
 2009-02-20 yusei
 * Move ERP5Site_setSkinCache to erp5_forge and set http_cache as default cache manager to all image/css/js files in skin folders.
 

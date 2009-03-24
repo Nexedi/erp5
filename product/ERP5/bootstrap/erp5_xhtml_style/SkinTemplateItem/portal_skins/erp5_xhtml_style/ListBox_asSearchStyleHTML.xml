@@ -1,0 +1,426 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block metal:define-macro="main"\n
+tal:define="  listbox_max_lines  python: int(here.getMaxLineNumber());\n
+              total_line         python: int(here.total_size);\n
+              current_page       python: int(here.current_page) + 1;\n
+              current_page_max   python: listbox_max_lines * current_page;\n
+              current_page_start python: (listbox_max_lines * (current_page - 1)) + 1;\n
+              current_page_stop  python: (total_line < current_page_max) and total_line or current_page_max;\n
+              is_web_mode        request/is_web_mode | nothing;\n
+              absolute_url       real_context/absolute_url;">\n
+\n
+  <!-- ListBox (search mode) starts here.  -->\n
+  <input type="hidden" \n
+         name="list_selection_name" \n
+         value="default" \n
+         tal:attributes="value selection_name" />\n
+  <input tal:condition="md5_string" \n
+         type="hidden" \n
+         name="md5_object_uid_list" \n
+         value="checksum" \n
+         tal:attributes="value md5_string" />\n
+  <input type="hidden" name="listbox_uid" value="1"/>\n
+\n
+  <input tal:condition="python:form_id and is_gadget_mode" type="hidden" name="gadget_form_id" tal:attributes="value form_id" />\n
+  \n
+  <tal:block tal:define="expand python: 1;\n
+                         date_renderer python: context.getContext().DocumentModule_viewFieldLibrary.listbox_modification_date.render_pdf;">\n
+    <tal:block metal:use-macro="template/macros/ListBoxContainer">\n
+      <tal:block metal:fill-slot="ListBoxBody">\n
+\n
+        <div class="search result">\n
+\n
+          <!-- Advanced Search header -->\n
+          <div class="centeredInner searchBar" \n
+               tal:condition="python:not is_gadget_mode and show_search_line and here.getParamDict().has_key(\'your_search_text\')">\n
+\n
+            <input type="hidden" name="all_languages" value="1" />\n
+            <input name="top_your_search_text" \n
+                   size="40" \n
+                   value="" \n
+                   tal:condition="python:here.getParamDict().has_key(\'your_search_text\')"\n
+                   id="SearchableText"\n
+                   type="text"\n
+                   onkeypress="submitFormOnEnter(event, \n
+                                        \'main_form\',\n
+                                        \'ERP5Site_processAdvancedSearch\');"\n
+                   tal:attributes="value python:here.getParamDict()[\'your_search_text\']"/>\n
+\n
+            <input name="top_your_search_text" \n
+                   size="40" \n
+                   value="" \n
+                   tal:condition="python:not here.getParamDict().has_key(\'your_search_text\')"\n
+                   id="SearchableText"\n
+                   type="text"\n
+                   onkeypress="submitFormOnEnter(event, \n
+                                        \'main_form\',\n
+                                        \'ERP5Site_processAdvancedSearch\');"\n
+                   tal:attributes="value python:here.getParamDict()[\'your_search_text\']"/>\n
+\n
+            <input class="button" \n
+                   i18n:domain="ui" i18n:attributes="value"\n
+                   value="Search" \n
+                   name="ERP5Site_processAdvancedSearch:method" \n
+                   type="submit" />\n
+          </div>\n
+\n
+          <!-- Result Header -->\n
+          <div class="resultList">\n
+            <div class="searchResultHeader" >\n
+\n
+                <span class="left" \n
+                      tal:define="table_form_id request/current_form_id | form_id">\n
+\n
+                 <a tal:condition="not:is_gadget_mode"\n
+                    tal:attributes="href string:${absolute_url}/${table_form_id}?list_style=table">\n
+                    <img id="style_toggle_icon" \n
+                         src="erp5/images/search_style_icon.png" \n
+                         alt="Search Icon"\n
+                         height="16"\n
+                         title="Table mode"\n
+                         i18n:domain="ui" i18n:attributes="title"/>\n
+                   </a>\n
+\n
+                  <input tal:condition="python:not is_gadget_mode and (is_domain_tree_supported or is_report_tree_supported)"\n
+                         type="image" src="text_block.png" id="listbox_flat_list_mode"\n
+                         title="Flat List" name="setFlatListMode:method"\n
+                         value="1" alt="Flat List"\n
+                         tal:attributes="src string:${portal_url_string}/images/text_block.png;\n
+                                         id string:${field_id}_flat_list_mode"\n
+                         i18n:domain="ui" i18n:attributes="title" />\n
+                  <input tal:condition="python: not is_gadget_mode and is_report_tree_supported"\n
+                         type="image" src="view_tree.png" id="listbox_report_tree_mode"\n
+                         title="Report Tree" name="setReportTreeMode:method"\n
+                         value="1" alt="Report Tree"\n
+                         tal:attributes="src string:${portal_url_string}/images/view_tree.png;\n
+                                         id string:${field_id}_report_tree_mode"\n
+                         i18n:domain="ui" i18n:attributes="title" />\n
+                  <input tal:condition="python: not is_gadget_mode and is_domain_tree_supported"\n
+                         type="image" src="view_choose.png" id="listbox_domain_tree_mode"\n
+                         title="Domain Tree" name="setDomainTreeMode:method"\n
+                         value="1" alt="Domain Tree"\n
+                         tal:attributes="src string:${portal_url_string}/images/view_choose.png;\n
+                                         id string:${field_id}_domain_tree_mode"\n
+                         i18n:domain="ui" i18n:attributes="title" />\n
+\n
+                  <input  tal:condition="python:not is_gadget_mode and (is_domain_tree_supported or is_report_tree_supported)"\n
+                         type="image" src="images/showall.png" id="listbox_reset_selection"\n
+                         title="Show All" name="Folder_show:method"\n
+                         id="listbox_reset_selection"\n
+                         value="1" alt="Flat List"\n
+                         tal:attributes="src string:${portal_url_string}/images/showall.png;"\n
+                         i18n:domain="ui" i18n:attributes="title" />\n
+\n
+                  <!-- supporting table mode for gadget mode -->\n
+                  <button tal:condition="is_gadget_mode"\n
+                          tal:define = "params python: {\'list_style\':\'table\'}"\n
+                          title="Table mode"\n
+                          type="button"\n
+                          tal:attributes="onclick python: real_context.KnowledgePad_generateAjaxCall(absolute_url+\'/\'+table_form_id,box,box_id,params);"\n
+                          i18n:domain="ui" i18n:attributes="title">\n
+                    <img id="style_toggle_icon"\n
+                         alt="Table Mode Icon"\n
+                         src="erp5/images/search_style_icon.png" \n
+                         height="16"/></button>\n
+\n
+                  <a tal:attributes="id string:${field_id}_title; href here/getListActionUrl">\n
+                    <em i18n:translate="" \n
+                        i18n:domain="ui" tal:content="here/getTitle" tal:condition="here/getTitle"/>\n
+                  </a>\n
+\n
+                  <!-- supporting domain tree mode for gadget mode  (disabled)-->\n
+                  <!--\n
+                  <br tal:condition="is_gadget_mode"/>\n
+                  <button tal:condition="python: is_gadget_mode and (is_domain_tree_supported or is_report_tree_supported)"\n
+                          tal:define = "params python: {\'setFlatListMode:method\':1}"\n
+                          id="listbox_flat_list_mode"\n
+                          type="button"\n
+                          title="Flat List"\n
+                          alt="Flat List"\n
+                          tal:attributes="id string:${field_id}_flat_list_mode;\n
+                                          onclick python: real_context.KnowledgePad_generateAjaxCall(absolute_url+\'/\'+form_id,box,box_id,params);"\n
+                          i18n:domain="ui" i18n:attributes="title">\n
+                    <img src="text_block.png"\n
+                         tal:attributes="src string:${portal_url_string}/images/text_block.png;"/></button>\n
+\n
+                  <button tal:condition="python: is_gadget_mode and is_report_tree_supported"\n
+                          tal:define = "params python: {\'setReportTreeMode:method\':1}"\n
+                          style="cursor:pointer;" id="listbox_report_tree_mode"\n
+                          type="button"\n
+                          title="Report Tree"\n
+                          alt="Report Tree"\n
+                          tal:attributes="id string:${field_id}_report_tree_mode;\n
+                                          onclick python: real_context.KnowledgePad_generateAjaxCall(absolute_url+\'/\'+form_id,box,box_id,params);"\n
+                          i18n:domain="ui" i18n:attributes="title">\n
+                    <img src="view_tree.png"\n
+                         tal:attributes="src string:${portal_url_string}/images/view_tree.png;"/></button>\n
+\n
+                  <button tal:condition="python: is_gadget_mode and is_domain_tree_supported"\n
+                          tal:define = "params python: {\'setDomainTreeMode:method\':\'1\'}"\n
+                          style="cursor:pointer;" id="listbox_domain_tree_mode"\n
+                          type="button"\n
+                          title="Domain Tree"\n
+                          alt="Domain Tree"\n
+                          tal:attributes="id string:${field_id}_domain_tree_mode;\n
+                                          onclick python: real_context.KnowledgePad_generateAjaxCall(absolute_url+\'/\'+form_id,box,box_id,params);"\n
+                          i18n:domain="ui" i18n:attributes="title">\n
+                    <img src="view_choose.png"\n
+                         tal:attributes="src string:${portal_url_string}/images/view_choose.png;"/></button>\n
+                   -->\n
+                </span>\n
+\n
+                <span class="right">\n
+                  <tal:block tal:condition="python: total_line > 0"\n
+                             tal:replace="structure python: real_context.Base_translateString(\'Results <em>${start} - ${stop}</em> of <em>${total}</em>.\', mapping=dict(start=current_page_start, stop=current_page_stop, total=total_line))"/>\n
+\n
+                  <span tal:condition="python: total_line == 0" \n
+                        class="warning" \n
+                        i18n:translate="" \n
+                        i18n:domain="ui">No result !</span>\n
+                </span>\n
+              <div class="clear"></div>\n
+            </div>\n
+\n
+            <!-- Found results -->\n
+            <table cellpadding="0" cellspacing="0" class="documentList"\n
+                   tal:define="website python: getattr(real_context,\n
+                   \'getWebSiteValue\', None) and real_context.getWebSiteValue()\n
+                   or None">\n
+\n
+              <tal:block tal:repeat="line line_list">\n
+                <tr tal:define="css python: test(repeat[\'line\'].index % 2, \'even\', \'odd\');\n
+                                obj line/getObject;\n
+                                url obj/absolute_url;\n
+                                is_document python: obj.getPortalType() in\n
+                                  real_context.getPortalDocumentTypeList();\n
+                                hidden_pop_dom_id string:dom_popup_${field_id}_${repeat/line/index};\n
+                                details_dom_id string:${field_id}_search_details_${repeat/line/index};"\n
+                    tal:attributes="id string:${field_id}_data_line_${repeat/line/index}; \n
+                                    class css;">\n
+\n
+                  <td class="icon">\n
+                    <a tal:condition="is_document"\n
+                       tal:attributes="href string: ${url}/Base_download"\n
+                       i18n:translate="" \n
+                       i18n:domain="ui" \n
+                       title="Download Document">\n
+                       <img tal:attributes="src obj/getIcon"\n
+                        alt="Document Icon"/>\n
+                    </a>\n
+                    <img tal:condition="not: is_document"\n
+                    tal:attributes="src obj/getIcon"\n
+                    alt="Object Icon"\n
+                    />\n
+                  </td>\n
+\n
+                  <td>\n
+                    <div class="item_nohighlight"\n
+                         tal:attributes="onmouseover string: showPopik(\'${hidden_pop_dom_id}\', true);\n
+                                         onmouseout string: showPopik(\'${hidden_pop_dom_id}\', false);">\n
+\n
+                      <div class="search_popup"  \n
+                           style="z-index:100;"\n
+                           tal:condition="is_web_mode" \n
+                           tal:attributes="id hidden_pop_dom_id">\n
+                          <span tal:replace="structure python: obj.Document_getPopupInfo(website)"/>\n
+                      </div>\n
+\n
+                      <div class="search_result_portal_type">\n
+                        <a tal:content="obj/getTranslatedPortalType"\n
+                            tal:attributes="href string:${url}/view"/>\n
+                      </div>\n
+\n
+                      <div class="search_result_title">\n
+                        <a tal:content="python: obj.getTitle() or (hasattr(obj, \'getReference\') and obj.getReference()) or obj.getId()" \n
+                            tal:attributes="href string:${url}/view"/>\n
+                      </div>\n
+\n
+                      <span class="searchDetails found" \n
+                            tal:content="structure python: obj.Base_showFoundText(obj, selection)"/>\n
+\n
+                      <div class="searchDetails coordinates">\n
+                        <tal:block tal:condition="obj/getReference|nothing">\n
+                          <a tal:attributes="href string: ${url}/view"\n
+                             tal:content="obj/getReference|nothing"/>&nbsp;-&nbsp;\n
+                        </tal:block>\n
+\n
+                        <tal:block \n
+                          tal:condition="is_web_mode" \n
+                          tal:repeat="section python: website.getWebSectionValueList(obj)">\n
+                          <a href="#" \n
+                             tal:content="section/getCompactTranslatedTitle"\n
+                             tal:attributes="href python: \'%s/view\' %section.absolute_url()"/>\n
+                          &nbsp;-&nbsp;\n
+                        </tal:block>\n
+\n
+\n
+                        <tal:block tal:repeat="owner obj/Base_getOwnerInfoList">\n
+                            <a tal:content="owner/title" \n
+                               tal:attributes="href owner/url"/>\n
+                           &nbsp;-&nbsp;\n
+                        </tal:block>\n
+ \n
+                        <a tal:content="python: date_renderer(obj.getModificationDate())" \n
+                           tal:attributes="href string: ${url}/Base_viewHistory"/>\n
+                      </div>\n
+\n
+\n
+                    </div>\n
+                  </td>\n
+                </tr>\n
+              </tal:block>\n
+            </table>\n
+          </div>\n
+\n
+          <!-- result page -->\n
+          <div class="centeredInner searchPages" tal:condition="python: total_line > listbox_max_lines">\n
+            <p>Result Page:\n
+              <!-- Dirty Hack that will generate different setPage urls. This is a bug in selection_tool! -->\n
+              <a href="#"\n
+                 tal:condition="python: not is_gadget_mode and field_id.strip() != \'listbox\'"\n
+                 tal:repeat="p python: range(0, here.total_pages)"\n
+                 tal:content="python: p+1"\n
+                 tal:attributes="class python: p == here.current_page and \'selected\' or nothing;\n
+                                 href  python: \'%s_setPage?%s_list_start=%s&amp;listbox_uid:list=&amp;list_selection_name=&amp;list_style=search\' % (field_id, field_id, p*listbox_max_lines)"/>\n
+\n
+              <a href="#"\n
+                 tal:condition="python: not is_gadget_mode and field_id.strip()==\'listbox\'"\n
+                 tal:repeat="p python: range(0, here.total_pages)"\n
+                 tal:content="python: p+1"\n
+                 tal:attributes="class python: p == here.current_page and \'selected\' or nothing;\n
+                                 href  python: \'setPage?%s_page_selection=%s&amp;selection_name=%s&amp;form_id=%s&amp;listbox_uid:list=&amp;list_selection_name=%s&amp;list_start=%s&amp;reset=1\' % (field_id, p+1, selection_name, form_id, selection_name, p*listbox_max_lines)"/>\n
+\n
+              <tal:block tal:repeat="p python: range(0, here.total_pages)">\n
+                <a tal:condition="is_gadget_mode"\n
+                   tal:define = "params python: {\'setPage:method\':\'\', \'list_start\': p*listbox_max_lines}"\n
+                   style="cursor:pointer;"\n
+                   tal:content="python: p+1"\n
+                   tal:attributes="class python: p == here.current_page and \'selected\' or nothing;\n
+                                   onclick python: real_context.KnowledgePad_generateAjaxCall(absolute_url+\'/\'+form_id,box,box_id,params)"/>\n
+              </tal:block>\n
+            </p>\n
+          </div>\n
+\n
+          <!-- Advanced Search footer -->\n
+          <div class="centeredInner extendedSearchBar" tal:condition="python: not is_gadget_mode and show_search_line">\n
+\n
+            <input name="bottom_your_search_text" \n
+                   size="40" \n
+                   value="" id="SearchableTextBottom"\n
+                   tal:condition="python:here.getParamDict().has_key(\'your_search_text\')"\n
+                   type="text" \n
+                   onkeypress="submitFormOnEnter(event, \n
+                                        \'main_form\',\n
+                                        \'ERP5Site_processAdvancedSearchBottom\');"\n
+                   tal:attributes="value python:here.getParamDict()[\'your_search_text\']"/>\n
+\n
+            <input name="bottom_your_search_text" \n
+                   size="40" \n
+                   value="" id="SearchableTextBottom"\n
+                   tal:condition="python:not here.getParamDict().has_key(\'your_search_text\')"\n
+                   type="text"\n
+                   onkeypress="submitFormOnEnter(event, \n
+                                        \'main_form\',\n
+                                        \'ERP5Site_processAdvancedSearchBottom\');"/>\n
+\n
+            <input class="button" \n
+                   i18n:domain="ui" i18n:attributes="value"\n
+                   value="Search" \n
+                   name="ERP5Site_processAdvancedSearchBottom:method" \n
+                   type="submit" />\n
+          </div>\n
+\n
+          <!-- Advanced Search footer for gadgets -->\n
+          <div class="centeredInner extendedSearchBar" tal:condition="python: is_gadget_mode and show_search_line">\n
+\n
+            <input tal:define ="params python: {\'ERP5Site_processAdvancedSearchBottom:method\':\'\',\'bottom_your_search_text\':\'this.value\'};"\n
+                   name="bottom_your_search_text" \n
+                   size="25" \n
+                   value="" id="SearchableTextBottom"\n
+                   tal:condition="python: here.getParamDict().has_key(\'your_search_text\')"\n
+                   type="text"\n
+                   tal:attributes=\'value python:here.getParamDict()["your_search_text"];\n
+                                   onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(absolute_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
+\n
+\n
+            <input tal:define ="params python: {\'ERP5Site_processAdvancedSearchBottom:method\':\'\',\'bottom_your_search_text\':\'this.value\'};"\n
+                   name="bottom_your_search_text" \n
+                   size="25" \n
+                   value="" id="SearchableTextBottom"\n
+                   tal:condition="python:not here.getParamDict().has_key(\'your_search_text\')"\n
+                   type="text"\n
+                   tal:attributes=\'onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(absolute_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
+\n
+          </div>\n
+\n
+        </div>\n
+      </tal:block>\n
+    </tal:block>\n
+  </tal:block>\n
+  <!-- ListBox ends here.  -->\n
+\n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ListBox_asSearchStyleHTML</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Listboxes in search engine style</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
