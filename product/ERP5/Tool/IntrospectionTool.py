@@ -104,36 +104,4 @@ class IntrospectionTool(BaseTool):
 
     return erp5_module_list
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                           'getActivityMessageList')
-  def getActivityMessageList(self, processing_node=None):
-    """
-      Returns the activity messages (as dict) list
-    """
-    portal_activities = self.getPortalObject().portal_activities
-    m_list = portal_activities.getMessageList()
-    
-    def getPropertyDict(message):
-      return message.__dict__
-      #return dict(object_path = message.object_path, 
-      #            method_id = message.method_id,
-      #            processing_node = message.processing_node) 
-    
-    
-    return [ getPropertyDict(m) for m in m_list ]
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                           'installBusinessTemplate')
-  def installBusinesstemplate(self, url="", activate_kw={} ):
-    """
-      install one business template
-    """
-    portal_templates = self.getPortalObject().portal_templates
-    
-    bt = portal_templates.download(url)    
-    bt.activate(**activate_kw).install(force=True)
-    return [ bt.getId() , bt.getTitle() ]
-
-
-
 InitializeClass(IntrospectionTool)
