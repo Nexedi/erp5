@@ -75,7 +75,8 @@ Description:\n
                       i18n:translate="" i18n:domain="ui">Standard Type</option>\n
             </tal:block>\n
           </select>\n
-          <input i18n:domain="ui" i18n:attributes="value" type="submit" name="search_area/WebSite_viewQuickSearchResultList:method" value="Search"/>\n
+          <input i18n:domain="ui" i18n:attributes="value" type="submit"\n
+          name="search_area/ERP5Site_viewQuickSearchResultList:method" value="Search"/>\n
         </div>\n
         <div class="searchOptions">\n
           <a tal:attributes="href string: search_area/Base_viewAdvancedSearchDialog" i18n:translate="" i18n:domain="ui">Advanced Search</a> | <a href="javascript:void 0" onclick="javascript:openTips();" value="" i18n:translate="" i18n:domain="ui">Search Tips</a>\n
