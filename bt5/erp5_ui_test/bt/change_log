@@ -1,3 +1,6 @@
+2009-03-24
+* add proxy role to Base_clearCache because worklist are cached.
+
 2009-03-19 Mohamadou
 * add functional tests for erp5_ooo_import .
 
