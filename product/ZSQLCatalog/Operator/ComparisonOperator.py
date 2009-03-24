@@ -126,6 +126,7 @@ class MatchComparisonOperator(MonovaluedComparisonOperator):
       select_dict=select_dict,
       where_expression=match_string,
       order_by_dict=order_by_dict,
+      can_merge_select_dict=True,
     )
 
 verifyClass(IOperator, MatchComparisonOperator)

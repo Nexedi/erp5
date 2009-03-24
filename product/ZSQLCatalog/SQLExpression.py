@@ -70,13 +70,15 @@ class SQLExpression(object):
                sql_expression_list=(),
                select_dict=None,
                limit=None,
-               from_expression=None):
+               from_expression=None,
+               can_merge_select_dict=False):
     if DEBUG:
       self.query = query
     self.table_alias_dict = defaultDict(table_alias_dict)
     self.order_by_list = list(order_by_list)
     self.group_by_list = list(group_by_list)
     self.order_by_dict = defaultDict(order_by_dict)
+    self.can_merge_select_dict = can_merge_select_dict
     # Only one of (where_expression, where_expression_operator) must be given (never both)
     assert None in (where_expression, where_expression_operator)
     # Exactly one of (where_expression, where_expression_operator) must be given, except if sql_expression_list is given and contains exactly one entry
@@ -283,6 +285,41 @@ class SQLExpression(object):
     """
     return SQL_LIST_SEPARATOR.join(self.getGroupByset())
 
+  def canMergeSelectDict(self):
+    return self.can_merge_select_dict
+
+  @profiler_decorator
+  def _getSelectDict(self):
+    result = self.select_dict.copy()
+    mergeable_set = set()
+    if self.canMergeSelectDict():
+      mergeable_set.update(result)
+    for sql_expression in self.sql_expression_list:
+      can_merge_sql_expression = sql_expression.canMergeSelectDict()
+      sql_expression_select_dict, sql_expression_mergeable_set = \
+        sql_expression._getSelectDict()
+      mergeable_set.update(sql_expression_mergeable_set)
+      for alias, column in sql_expression_select_dict.iteritems():
+        existing_value = result.get(alias)
+        if existing_value not in (None, column):
+          if can_merge_sql_expression and alias in mergeable_set:
+            # Custom conflict resolution
+            column = '%s + %s' % (existing_value, column)
+          else:
+            import pdb; pdb.set_trace()
+            message = '%r is a known alias for column %r, can\'t alias it now to column %r' % (alias, existing_value, column)
+            if DEBUG:
+              message = message + '. I was created by %r, and I am working on %r (%r) out of [%s]' % (
+                self.query,
+                sql_expression,
+                sql_expression.query,
+                ', '.join('%r (%r)' % (x, x.query) for x in self.sql_expression_list))
+            raise ValueError, message
+        result[alias] = (column, can_merge_sql_expression)
+        if can_merge_sql_expression:
+          mergeable_set.add(alias)
+    return result, mergeable_set
+
   @profiler_decorator
   def getSelectDict(self):
     """
@@ -294,25 +331,7 @@ class SQLExpression(object):
       checks that they don't alias different columns with the same name. If
       they do, it raises a ValueError.
     """
-    result = self.select_dict.copy()
-    for sql_expression in self.sql_expression_list:
-      for alias, column in sql_expression.getSelectDict().iteritems():
-        existing_value = result.get(alias)
-        if existing_value not in (None, column):
-          if alias == 'SearchableText':
-            # Custom conflict resolution
-            column = '%s + %s' % (existing_value, column)
-          else:
-            message = '%r is a known alias for column %r, can\'t alias it now to column %r' % (alias, existing_value, column)
-            if DEBUG:
-              message = message + '. I was created by %r, and I am working on %r (%r) out of [%s]' % (
-                self.query,
-                sql_expression,
-                sql_expression.query,
-                ', '.join('%r (%r)' % (x, x.query) for x in self.sql_expression_list))
-            raise ValueError, message
-        result[alias] = column
-    return result
+    return self._getSelectDict()[0]
 
   @profiler_decorator
   def getSelectExpression(self):
