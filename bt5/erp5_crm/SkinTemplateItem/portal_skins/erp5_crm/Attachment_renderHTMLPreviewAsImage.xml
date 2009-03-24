@@ -44,9 +44,22 @@
                  display request/display|string:small;\n
                  format request/format|string:jpg;"> \n
   <p tal:repeat="image_list python: here.Event_getAttachmentList()">\n
+\n
   <img src="" \n
       tal:attributes="src string:${image_list/absolute_url}/index_html?display=${display}&format=${format}&frame=${frame}&resolution:int=200">\n
    </p>\n
+   <tal:block tal:define="information_list here/getAttachmentInformationList | python:\n
+    [{\'To\': \'erp5-report@erp5.org\', \'uid\': \'part_0\', \'index\': 0}, \n
+     {\'index\': 2, \'uid\': \'part_2\', \'Content-Transfer-Encoding\': \'7bit\', \'MIME-Version\': \'1.0\'}, \n
+     {\'index\': 3, \'uid\': \'part_3\', \'Content-Disposition\': \'inline\', \'Content-Transfer-Encoding\': \'7bit\', \'MIME-Version\': \'1.0\'}]">\n
+\n
+    <p tal:repeat="information information_list">\n
+     <tal:block tal:condition="python: information[\'content_type\'].split(\'/\')[0] == \'image\'" >\n
+       <img src="" tal:attributes="src python:\'getAttachmentData?index:int=%s\' % information[\'index\']"/>\n
+      </tal:block>\n
+    </p>\n
+\n
+</tal:block>\n
 </div>
 
 ]]></string> </value>
