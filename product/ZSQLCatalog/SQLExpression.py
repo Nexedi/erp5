@@ -306,7 +306,6 @@ class SQLExpression(object):
             # Custom conflict resolution
             column = '%s + %s' % (existing_value, column)
           else:
-            import pdb; pdb.set_trace()
             message = '%r is a known alias for column %r, can\'t alias it now to column %r' % (alias, existing_value, column)
             if DEBUG:
               message = message + '. I was created by %r, and I am working on %r (%r) out of [%s]' % (
