@@ -228,6 +228,10 @@
                           <string>file_extension</string>
                           <string>file_extension</string>
                         </tuple>
+                        <tuple>
+                          <string>mime_type</string>
+                          <string>mime_type</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
