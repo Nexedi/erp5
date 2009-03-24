@@ -21,7 +21,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-WebSite_viewAdvancedSearchResultList?validation_state=split&local_roles=%(local_roles)s&portal_type=%(portal_type)s&reset=1
+ERP5Site_viewSearchResult?validation_state=split&local_roles=%(local_roles)s&portal_type=%(portal_type)s&reset=1
 
 ]]></string> </value>
         </item>
