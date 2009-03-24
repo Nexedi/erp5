@@ -82,7 +82,7 @@ accounts.\n
 <tr>\n
   <td>selectAndWait</td>\n
   <td>select_action</td>\n
-  <td>label=Close Account</td>\n
+  <td>label=Invalidate Account</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
