@@ -352,6 +352,12 @@ class TestSQLCatalog(unittest.TestCase):
                  {'keyword': '<"=a OR =b"'})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%"a" OR "b"%'), operator='and'),
                  {'keyword': '"\\"a\\" OR \\"b\\""'})
+    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a'),
+                                               ReferenceQuery(ReferenceQuery(operator='match', fulltext='b'), operator='not'), operator='or'), operator='and'),
+                 {'fulltext': 'a NOT b'})
+    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a'),
+                                               ReferenceQuery(ReferenceQuery(operator='match', fulltext='b'), operator='not'), operator='and'), operator='and'),
+                 {'fulltext': 'a AND NOT b'})
 
   def test_006_testRelatedKey_with_multiple_join(self):
     # The name of catalog parameter does not matter at all
