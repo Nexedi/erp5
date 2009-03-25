@@ -351,7 +351,7 @@ class ListBoxWidget(Widget.Widget):
                                  description=('The id of the object action'
                                               ' to display the current list'),
                                  default='list',
-                                 required=1)
+                                 required=0)
     property_names.append('list_action')
 
     page_template = fields.StringField('page_template',
