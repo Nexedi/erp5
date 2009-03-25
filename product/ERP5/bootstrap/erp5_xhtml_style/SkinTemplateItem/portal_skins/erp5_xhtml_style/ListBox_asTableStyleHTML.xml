@@ -438,7 +438,7 @@
           <!-- Advanced Search header -->\n
           <div class="centeredInner extendedSearchBar"\n
                tal:condition="python:not is_gadget_mode and show_search_line and here.getParamDict().has_key(\'advanced_search_text\')">\n
-            <input name="advanced_search_text" size="40" value="" id="SearchableTextBottom"\n
+            <input name="advanced_search_text" size="40" value=""\n
                    type="text" tal:attributes="value python:here.getParamDict()[\'advanced_search_text\']"\n
                    onkeypress="submitFormOnEnter(event,\n
                                     \'main_form\',\n
