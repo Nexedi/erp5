@@ -283,8 +283,14 @@ tal:define="  listbox_max_lines  python: int(here.getMaxLineNumber());\n
 \n
                       <div class="searchDetails coordinates">\n
                         <tal:block tal:condition="obj/getReference|nothing">\n
-                          <a tal:attributes="href string: ${url}/view"\n
-                             tal:content="obj/getReference|nothing"/>&nbsp;-&nbsp;\n
+                          <tal:block tal:condition="is_web_mode">\n
+                            <a tal:attributes="href python: \'%s/view\' % website.getPermanentURL(obj)"\n
+                               tal:content="obj/getReference|nothing"/>&nbsp;-&nbsp;\n
+                          </tal:block>\n
+                          <tal:block tal:condition="python: not is_web_mode">\n
+                            <a tal:attributes="href string: ${url}/view"\n
+                               tal:content="obj/getReference|nothing"/>&nbsp;-&nbsp;\n
+                          </tal:block>\n
                         </tal:block>\n
 \n
                         <tal:block \n
