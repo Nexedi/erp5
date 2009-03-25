@@ -72,7 +72,7 @@ tal:define="  listbox_max_lines  python: int(here.getMaxLineNumber());\n
 \n
           <!-- Advanced Search header -->\n
           <div class="centeredInner searchBar" \n
-               tal:condition="python:not is_gadget_mode and show_search_line and here.getParamDict().has_key(\'your_search_text\')">\n
+               tal:condition="python:not is_gadget_mode and show_search_line">\n
 \n
             <input type="hidden" name="all_languages" value="1" />\n
             <input name="top_your_search_text" \n
@@ -94,8 +94,7 @@ tal:define="  listbox_max_lines  python: int(here.getMaxLineNumber());\n
                    type="text"\n
                    onkeypress="submitFormOnEnter(event, \n
                                         \'main_form\',\n
-                                        \'ERP5Site_processAdvancedSearch\');"\n
-                   tal:attributes="value python:here.getParamDict()[\'your_search_text\']"/>\n
+                                        \'ERP5Site_processAdvancedSearch\');">\n
 \n
             <input class="button" \n
                    i18n:domain="ui" i18n:attributes="value"\n
@@ -161,12 +160,18 @@ tal:define="  listbox_max_lines  python: int(here.getMaxLineNumber());\n
                     <img id="style_toggle_icon"\n
                          alt="Table Mode Icon"\n
                          src="erp5/images/search_style_icon.png" \n
-                         height="16"/></button>\n
+                         height="16"/>\n
+                  </button>\n
 \n
-                  <a tal:attributes="id string:${field_id}_title; href here/getListActionUrl">\n
+                  <a tal:attributes="id string:${field_id}_title; href here/getListActionUrl"\n
+                     tal:condition="python: here.field.get_value(\'list_action\') != \'list\'">\n
                     <em i18n:translate="" \n
                         i18n:domain="ui" tal:content="here/getTitle" tal:condition="here/getTitle"/>\n
                   </a>\n
+                  <tal:block tal:condition="python: here.field.get_value(\'list_action\') == \'list\'">\n
+                    <em i18n:translate="" \n
+                        i18n:domain="ui" tal:content="here/getTitle" tal:condition="here/getTitle"/>\n
+                  </tal:block>\n
 \n
                   <!-- supporting domain tree mode for gadget mode  (disabled)-->\n
                   <!--\n
