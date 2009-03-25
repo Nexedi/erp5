@@ -164,11 +164,11 @@ tal:define="  listbox_max_lines  python: int(here.getMaxLineNumber());\n
                   </button>\n
 \n
                   <a tal:attributes="id string:${field_id}_title; href here/getListActionUrl"\n
-                     tal:condition="python: here.field.get_value(\'list_action\') != \'list\'">\n
+                     tal:condition="python: here.field.get_value(\'list_action\')">\n
                     <em i18n:translate="" \n
                         i18n:domain="ui" tal:content="here/getTitle" tal:condition="here/getTitle"/>\n
                   </a>\n
-                  <tal:block tal:condition="python: here.field.get_value(\'list_action\') == \'list\'">\n
+                  <tal:block tal:condition="python: not here.field.get_value(\'list_action\')">\n
                     <em i18n:translate="" \n
                         i18n:domain="ui" tal:content="here/getTitle" tal:condition="here/getTitle"/>\n
                   </tal:block>\n
