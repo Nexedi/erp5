@@ -55,9 +55,15 @@
             <key> <string>_body</string> </key>
             <value> <string>translateString = context.Base_translateString\n
 translated_type = \'\'\n
+\n
+if getattr(context, \'getWebSectionValue\', None) is not None:\n
+  context_search = context.getWebSectionValue()\n
+else:\n
+  context_search = context.getPortalObject()\n
+\n
 if field_your_search_portal_type:\n
   if field_your_search_portal_type == \'all\':\n
-    return context.Base_redirect(\'ERP5Site_viewSearchResult\',\n
+    return context_search.Base_redirect(\'ERP5Site_viewSearchResult\',\n
                                   keep_items=dict(SearchableText=field_your_search_text, reset=1,\n
                                   your_search_text=field_your_search_text,\n
                                   portal_type=list(context.getPortalDocumentTypeList()),\n
@@ -66,7 +72,7 @@ if field_your_search_portal_type:\n
 \n
   translated_type = translateString(field_your_search_portal_type)\n
 \n
-return context.Base_redirect(\'ERP5Site_viewSearchResult\',\n
+return context_search.Base_redirect(\'ERP5Site_viewSearchResult\',\n
                               keep_items=dict(SearchableText=field_your_search_text, reset=1,\n
                               your_search_text=field_your_search_text,\n
                               translated_portal_type=translated_type,\n
@@ -116,6 +122,9 @@ return context.Base_redirect(\'ERP5Site_viewSearchResult\',\n
                             <string>context</string>
                             <string>translateString</string>
                             <string>translated_type</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>context_search</string>
                             <string>dict</string>
                             <string>list</string>
                           </tuple>
