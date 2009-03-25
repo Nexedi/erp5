@@ -448,7 +448,7 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>list</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
