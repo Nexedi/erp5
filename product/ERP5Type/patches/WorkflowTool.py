@@ -397,6 +397,7 @@ def generateActionList(worklist_metadata, worklist_result, portal_url):
               'worklist_id': metadata['worklist_id'],
               'workflow_title': metadata['workflow_title'],
               'workflow_id': metadata['workflow_id'],
+              'count': format_data['count'],
               'permissions': (),  # Predetermined.
               'category': metadata['action_box_category']})
   return action_list
