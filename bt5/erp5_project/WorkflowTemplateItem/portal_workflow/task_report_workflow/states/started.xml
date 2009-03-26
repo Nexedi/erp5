@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>The task processing has been started by the assignee</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

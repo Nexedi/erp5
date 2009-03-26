@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The task will return to started state.</string> </value>
+            <value> <string>The start is restarted by the manager</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Restart Task</string> </value>
+            <value> <string>Restart Task Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

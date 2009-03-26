@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Close Requirement</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Close Requirement</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

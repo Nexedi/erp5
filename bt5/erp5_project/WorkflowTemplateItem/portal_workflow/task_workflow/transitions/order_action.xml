@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Order</string> </value>
+            <value> <string>Order Task</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The Assignor of a Task may set a task a \'ordered\' by invoking the \'Order\' action. Ordered task still need to be confirmed before Task Report is generated.</string> </value>
+            <value> <string>The task has been ordered by a manager</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Order</string> </value>
+            <value> <string>Order Task Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
