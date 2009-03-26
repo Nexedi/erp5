@@ -331,6 +331,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>anchor</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
@@ -490,7 +494,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>product_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -524,6 +528,12 @@
                     <value> <string>Listbox</string> </value>
                 </item>
                 <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>url_columns</string> </key>
                     <value>
                       <list/>
@@ -538,11 +548,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
