@@ -205,7 +205,11 @@ class WebSite(WebSection):
         to find which sections apply.
       """
       def getWebSectionUidList(section):
-        result = [section.getUid()]
+        # Only return visible web section
+        if section.isVisible():
+          result = [section.getUid()]
+        else:
+          result = []
         for o in section.contentValues(portal_type='Web Section'):
           result.extend(getWebSectionUidList(o))
         return result
