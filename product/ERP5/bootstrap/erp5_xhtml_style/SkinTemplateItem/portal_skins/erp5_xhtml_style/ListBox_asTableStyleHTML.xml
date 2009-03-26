@@ -395,7 +395,7 @@
                            tal:attributes="title python: \'Next Page: page %s\' % next_page;\n
                                            id    string:${field_id}_next_page;\n
                                            onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)">&gt;&gt;</button>\n
-                    <button tal:define ="params python: {field_id+\'_lastPage:method\':\'\',\'total_size\':total_line}"\n
+                    <button tal:define ="params python: {field_id+\'_lastPage:method\':\'\',\'total_size\':int(here.total_size)}"\n
                            name="lastPage"\n
                            type="button"\n
                            tal:attributes="title python: Base_translateString(\'Last page: Page ${total_page}\', mapping={\'total_page\': total_page});\n
