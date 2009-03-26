@@ -46,7 +46,8 @@
                        status python: options.get(\'status\', None);\n
                        group python: options.get(\'group\', None);\n
                        project python: options.get(\'project\', None);\n
-                       language python: options.get(\'language\', None);">\n
+                       language python: options.get(\'language\', None);\n
+                       version python: options.get(\'version\', None);">\n
   \n
   <div class="popup_row" tal:condition="owner">\n
     <span class="popup_label" \n
@@ -83,6 +84,12 @@
           i18n:translate="" i18n:domain="ui">Language:</span>\n
     <tal:block tal:replace="language|nothing"/>\n
   </div>  \n
+    \n
+  <div class="popup_row" tal:condition="version">    \n
+    <span class="popup_label" \n
+          i18n:translate="" i18n:domain="ui">Version:</span>\n
+    <tal:block tal:replace="version|nothing"/>\n
+  </div>  \n
   \n
   <div class="popup_row" tal:condition="group">\n
     <span class="popup_label" \n
@@ -96,13 +103,26 @@
     <tal:block tal:replace="project|nothing"/>\n
   </div>\n
     \n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Document_viewPopupTemplate</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

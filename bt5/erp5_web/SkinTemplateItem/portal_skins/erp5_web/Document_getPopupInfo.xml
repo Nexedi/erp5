@@ -97,6 +97,11 @@ try:\n
 except AttributeError:\n
   pass\n
 \n
+try:\n
+  doc_info[\'version\'] = context.getVersion() or \'\'\n
+except AttributeError:\n
+  pass\n
+\n
 # add web sections document belongs too\n
 if website is None:\n
   website = context.getWebSiteValue()  \n
