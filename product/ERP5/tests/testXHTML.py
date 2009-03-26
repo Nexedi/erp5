@@ -141,6 +141,23 @@ class TestXHTML(ERP5TypeTestCase):
         error_list.append((field_path, field.get_value('form_id'),
                            field.get_value('field_id')))
     self.assertEquals(error_list, [])
+    
+  def test_emptySelectionNameInListbox(self):
+    # check all empty selection name in listboxes
+    skins_tool = self.portal.portal_skins
+    error_list = []
+    for form_path, form in skins_tool.ZopeFind(
+              skins_tool, obj_metatypes=['ERP5 Form'], search_sub=1):
+      try:
+       fields = form.get_fields()
+      except AttributeError, e:
+        print "%s is broken: %s" % (form_path, e)
+      for field in fields:
+        if field.meta_type =='ListBox':
+          selection_name = field.get_value("selection_name")
+          if selection_name in ("",None):
+            error_list.append(form_path)
+    self.assertEquals(error_list, [])
 
 class W3Validator(object):
 
