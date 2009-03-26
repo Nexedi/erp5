@@ -455,7 +455,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>cache_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -492,6 +492,12 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Cache Plugins</string> </value>
+                </item>
+                <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
