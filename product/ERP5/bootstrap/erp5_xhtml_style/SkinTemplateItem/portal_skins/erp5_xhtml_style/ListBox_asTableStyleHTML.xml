@@ -147,10 +147,15 @@
                          alt="Search mode"\n
                          src="erp5/images/table_style_icon.png"\n
                          height="16"/></button>\n
-\n
-                  <a tal:attributes="id string:${field_id}_title; href here/getListActionUrl">\n
-                    <em i18n:domain="ui" i18n:translate="" tal:content="here/getTitle" tal:condition="here/getTitle"/>\n
+                  <a tal:attributes="id string:${field_id}_title; href here/getListActionUrl"\n
+                     tal:condition="python: here.field.get_value(\'list_action\')">\n
+                    <em i18n:translate="" \n
+                        i18n:domain="ui" tal:content="here/getTitle" tal:condition="here/getTitle"/>\n
                   </a>\n
+                  <tal:block tal:condition="python: not here.field.get_value(\'list_action\')">\n
+                    <em i18n:translate="" \n
+                        i18n:domain="ui" tal:content="here/getTitle" tal:condition="here/getTitle"/>\n
+                  </tal:block>\n
                   <!-- supporting domain tree mode for gadget mode (disabled)-->\n
                   <!--\n
                   <br tal:condition="is_gadget_mode"/>\n

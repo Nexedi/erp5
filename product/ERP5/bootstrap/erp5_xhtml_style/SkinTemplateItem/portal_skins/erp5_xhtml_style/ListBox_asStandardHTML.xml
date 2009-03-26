@@ -179,9 +179,15 @@
               </td>\n
               <td style="width: 100%; vertical-align: middle">\n
                 &nbsp;\n
-                <a id="listbox_title" href="list" class="listbox_title"\n
-                  tal:attributes="id string:${field_id}_title; href here/getListActionUrl">\n
-                  <tal:block tal:content="here/getTitle" i18n:domain="ui" i18n:translate=""/>:</a>\n
+                <a tal:attributes="id string:${field_id}_title; href here/getListActionUrl"\n
+                   tal:condition="python: here.field.get_value(\'list_action\')">\n
+                  <em i18n:translate="" \n
+                      i18n:domain="ui" tal:content="here/getTitle" tal:condition="here/getTitle"/>\n
+                </a>\n
+                <tal:block tal:condition="python: not here.field.get_value(\'list_action\')">\n
+                  <em i18n:translate="" \n
+                      i18n:domain="ui" tal:content="here/getTitle" tal:condition="here/getTitle"/>\n
+                </tal:block>\n
                 <span id="listbox_record_number" class="listbox_record_number"\n
                   tal:attributes="id string:${field_id}_record_number"\n
                   i18n:translate="" i18n:domain="ui"><tal:block tal:replace="here/total_size" i18n:name="number">0</tal:block> record(s)</span>\n
