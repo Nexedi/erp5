@@ -225,7 +225,7 @@ class ListBoxWidget(Widget.Widget):
                                  description=('The name of the selection to store'
                                               'params of selection'),
                                  default='',
-                                 required=0)
+                                 required=1)
     property_names.append('selection_name')
 
     meta_types = fields.ListTextAreaField('meta_types',
