@@ -1034,7 +1034,7 @@ class Catalog(Folder,
       id_tool = getattr(self.getPortalObject(), 'portal_ids', None)
       if id_tool is not None:
         if self._max_uid is None:
-          self._max_uid = Length()
+          self._max_uid = Length(1)
         uid_list = id_tool.generateNewLengthIdList(id_group='catalog_uid',
                      id_count=UID_BUFFER_SIZE, default=self._max_uid())
         # TODO: if this method is kept and former uid allocation code is
@@ -1125,7 +1125,7 @@ class Catalog(Folder,
         #   raise RuntimeError, 'Newly generated UID (%s) seems too big ! - vincent' % (uid,)
         # end
         if self._max_uid is None:
-          self._max_uid = Length()
+          self._max_uid = Length(1)
         if uid > self._max_uid():
           self._max_uid.set(uid)
         return long(uid)
@@ -1316,6 +1316,10 @@ class Catalog(Folder,
           raise
         except:
           raise RuntimeError, 'could not set missing uid for %r' % (object,)
+      elif isinstance(object.uid, int) and object.uid == 0:
+        # Several Tool objects have uid=0 (not 0L) from the beginning, but
+        # we need an unique uid for each object.
+        object.uid = self.newUid()
       elif check_uid:
         uid = object.uid
         if uid in assigned_uid_dict:
