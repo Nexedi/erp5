@@ -314,7 +314,7 @@ class SQLExpression(object):
                 sql_expression.query,
                 ', '.join('%r (%r)' % (x, x.query) for x in self.sql_expression_list))
             raise ValueError, message
-        result[alias] = (column, can_merge_sql_expression)
+        result[alias] = column
         if can_merge_sql_expression:
           mergeable_set.add(alias)
     return result, mergeable_set
