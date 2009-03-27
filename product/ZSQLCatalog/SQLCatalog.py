@@ -1309,7 +1309,7 @@ class Catalog(Folder,
     assigned_uid_dict = {}
 
     for object in object_list:
-      if not getattr(aq_base(object), 'uid', None):
+      if getattr(aq_base(object), 'uid', None) is None:
         try:
           object.uid = self.newUid()
         except ConflictError:
@@ -1330,9 +1330,9 @@ class Catalog(Folder,
           index = long(index)
         except TypeError:
           index = None
-        if index is not None and index < 0:
-          raise CatalogError, 'A negative uid %d is used for %s. Your catalog is broken. Recreate your catalog.' % (index, path)
-        if index:
+        if index is not None:
+          if index < 0:
+            raise CatalogError, 'A negative uid %d is used for %s. Your catalog is broken. Recreate your catalog.' % (index, path)
           if uid != index or isinstance(uid, int):
             # We want to make sure that uid becomes long if it is an int
             LOG('SQLCatalog', WARNING, 'uid of %r changed from %r (property) to %r (catalog, by path) !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, index))

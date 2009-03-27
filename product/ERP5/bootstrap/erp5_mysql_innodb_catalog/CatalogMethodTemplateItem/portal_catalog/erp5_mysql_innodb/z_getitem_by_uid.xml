@@ -110,7 +110,7 @@ path_only</string> </value>
 SELECT <dtml-if path_only>path<dtml-else>uid,path</dtml-if> from catalog \n
 WHERE \n
   1 = 1\n
-<dtml-if uid>\n
+<dtml-if expr="uid is not None">\n
   AND <dtml-sqltest uid op=eq type="int">\n
 </dtml-if>\n
 <dtml-if uid_list>\n
@@ -160,7 +160,7 @@ WHERE \n
 SELECT <dtml-if path_only>path<dtml-else>uid,path</dtml-if> from catalog \n
 WHERE \n
   1 = 1\n
-<dtml-if uid>\n
+<dtml-if expr="uid is not None">\n
   AND <dtml-sqltest uid op=eq type="int">\n
 </dtml-if>\n
 <dtml-if uid_list>\n
