@@ -255,7 +255,7 @@ class DomainTool(BaseTool):
                 if value is not None:
                   mapped_value_property_dict[mapped_value_property] = value
         # Update mapped value
-        mapped_value = mapped_value.asContext(**mapped_value_property_dict)
+        mapped_value.edit(**mapped_value_property_dict)
       return mapped_value
 
     # XXX FIXME method should not be public 
@@ -312,7 +312,7 @@ class DomainTool(BaseTool):
         if explanation_only:
           return explanation_dict
         # Update mapped value
-        mapped_value = mapped_value.asContext(**mapped_value_property_dict)
+        mapped_value.edit(**mapped_value_property_dict)
       return mapped_value
 
 
