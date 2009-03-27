@@ -1243,7 +1243,8 @@ div.popup_row a{\n
   color: green!important;\n
 }\n
 div.searchResultHeader {\n
-  border-top: 1px solid <dtml-var document_border_color>;\n
+  margin-top: 0em;\n
+  border: 1px solid <dtml-var document_border_color>;\n
   background-color: <dtml-var listbox_label_background_color>;\n
   padding: .2em;\n
 }\n
@@ -1256,7 +1257,8 @@ div.searchResultHeader .left  {float: left}\n
 table.documentList {\n
   width: 100%;\n
   margin-bottom: 1em;\n
-  border: 1px solid;\n
+  border-style: solid;\n
+  border-width: 0 1px 1px 1px;\n
   border-color:<dtml-var document_border_color>;\n
 }\n
 \n
@@ -1393,13 +1395,6 @@ div.searchResultHeader #style_toggle_icon,\n
       border-color:red;\n
       margin:0;\n
       vertical-align:bottom;\n
-}\n
-\n
-div.searchResultHeader {\n
-  border-style: solid;\n
-  border-width: 1px 1px 0 1px;\n
-  border-color:<dtml-var document_border_color>;\n
-  margin-top: 0em;\n
 }\n
 \n
 div.search .centeredInner {\n

@@ -259,8 +259,8 @@ tal:define="  listbox_max_lines  python: int(here.getMaxLineNumber());\n
 \n
                   <td>\n
                     <div class="item_nohighlight"\n
-                         tal:attributes="onmouseover string: showPopik(\'${hidden_pop_dom_id}\', true);\n
-                                         onmouseout string: showPopik(\'${hidden_pop_dom_id}\', false);">\n
+                         tal:attributes="onmouseover python: is_web_mode and \'showPopik(\\\'%s\\\', true)\' % hidden_pop_dom_id or None;\n
+                                         onmouseout python: is_web_mode and \'showPopik(\\\'%s\\\', false)\' % hidden_pop_dom_id or None;">\n
 \n
                       <div class="search_popup"  \n
                            style="z-index:100;"\n
