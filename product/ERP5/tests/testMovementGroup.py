@@ -34,12 +34,16 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 class MovementGroupTestCase(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
-    return ('erp5_base', )
+    return ('erp5_base', 'erp5_pdm', 'erp5_trade')
 
   def afterSetUp(self):
     self.builder = self.portal.portal_deliveries.newContent(
-                              portal_type='Delivery Builder',
-                              id='test_builder')
+          portal_type='Delivery Builder',
+          delivery_module = 'internal_packing_list_module',
+          delivery_portal_type = 'Internal Packing List',
+          delivery_line_portal_type = 'Internal Packing List Line',
+          delivery_cell_portal_type = 'Internal Packing List Cell',
+      )
     self.folder = self.portal.portal_simulation.newContent(
                               portal_type='Applied Rule')
     
@@ -210,9 +214,165 @@ class TestPropertyAssignmentMovementGroup(MovementGroupTestCase):
     self.assertEquals(1, len(group_list))
     self.assertEquals(dict(), group_list[0].getGroupEditDict())
 
+class TestOrderMovementGroup(MovementGroupTestCase):
+  """Tests Order Movement Group - grouping and separating by
+  root Applied Rule Causality, in case if that causality is Order"""
+  document_portal_type = 'Sale Order'
+  def test_order_movement_group_grouping(self):
+    order = self.portal.getDefaultModule(self.document_portal_type) \
+      .newContent(portal_type=self.document_portal_type)
+    applied_rule = self.portal.portal_simulation.newContent(
+      portal_type='Applied Rule',
+      causality_value = order
+    )
+
+    movement_list = (
+      applied_rule.newContent(portal_type='Simulation Movement'),
+      applied_rule.newContent(portal_type='Simulation Movement')
+    )
+
+    self.builder.newContent(
+                  portal_type='Order Movement Group',
+                  collect_order_group='delivery')
+
+    movement_group_node = self.builder.collectMovement(movement_list)
+    group_list = movement_group_node.getGroupList()
+    self.assertEquals(1, len(group_list))
+    self.assertEquals(dict(causality_list=[order.getRelativeUrl()]),
+                      group_list[0].getGroupEditDict())
+
+  def test_order_movement_group_separating(self):
+    order_1 = self.portal.getDefaultModule(self.document_portal_type) \
+      .newContent(portal_type=self.document_portal_type)
+    applied_rule_1 = self.portal.portal_simulation.newContent(
+      portal_type='Applied Rule',
+      causality_value = order_1
+    )
+
+    order_2 = self.portal.getDefaultModule(self.document_portal_type) \
+      .newContent(portal_type=self.document_portal_type)
+    applied_rule_2 = self.portal.portal_simulation.newContent(
+      portal_type='Applied Rule',
+      causality_value = order_2
+    )
+
+    movement_list = (
+      applied_rule_1.newContent(portal_type='Simulation Movement'),
+      applied_rule_2.newContent(portal_type='Simulation Movement')
+    )
+
+    self.builder.newContent(
+                  portal_type='Order Movement Group',
+                  collect_order_group='delivery')
+
+    movement_group_node = self.builder.collectMovement(movement_list)
+    group_list = movement_group_node.getGroupList()
+    self.assertEquals(2, len(group_list))
+    self.assertEquals(1, len([group for group in group_list if
+      group.getGroupEditDict() == dict(causality_list=[order_1.getRelativeUrl()])]))
+    self.assertEquals(1, len([group for group in group_list if
+      group.getGroupEditDict() == dict(causality_list=[order_2.getRelativeUrl()])]))
+
+class TestOrderMovementGroupDelivery(TestOrderMovementGroup):
+  """Tests Order Movement Group - grouping and separating by
+  root Applied Rule Causality, in case if that causality is Delivery"""
+  document_portal_type = 'Sale Packing List'
+
+class TestDeliveryCausalityAssignmentMovementGroup(MovementGroupTestCase):
+  """Tests Delivery Causality Assignment Movement Group
+  This Movement Group never separates"""
+  order_portal_type = 'Sale Order'
+  order_line_portal_type = 'Sale Order Line'
+  delivery_portal_type = 'Sale Packing List'
+  delivery_line_portal_type = 'Sale Packing List Line'
+
+  def test_delivery_causality_assignment_movement_group(self):
+    order = self.portal.getDefaultModule(self.order_portal_type) \
+      .newContent(portal_type=self.order_portal_type)
+    order_line_1 = order.newContent(portal_type=self.order_line_portal_type)
+    order_line_2 = order.newContent(portal_type=self.order_line_portal_type)
+
+    delivery_1 = self.portal.getDefaultModule(self.delivery_portal_type) \
+      .newContent(portal_type=self.delivery_portal_type)
+    delivery_1_line = delivery_1.newContent(portal_type=self.delivery_line_portal_type)
+
+    delivery_2 = self.portal.getDefaultModule(self.delivery_portal_type) \
+      .newContent(portal_type=self.delivery_portal_type)
+    delivery_2_line = delivery_2.newContent(portal_type=self.delivery_line_portal_type)
+
+    applied_rule = self.portal.portal_simulation.newContent(
+      portal_type='Applied Rule',
+      causality_value = order
+    )
+    order_movement_list = (
+      applied_rule.newContent(
+        portal_type='Simulation Movement',
+        order_value = order_line_1,
+        delivery_value = delivery_1_line),
+      applied_rule.newContent(
+        portal_type='Simulation Movement',
+        order_value = order_line_2,
+        delivery_value = delivery_2_line),
+    )
+
+    movement_list = [
+        q.newContent(portal_type='Applied Rule') \
+        .newContent(portal_type='Simulation Movement') \
+        for q in order_movement_list
+    ]
+
+    self.builder.newContent(
+                  portal_type='Delivery Causality Assignment Movement Group',
+                  collect_order_group='delivery')
+
+    movement_group_node = self.builder.collectMovement(movement_list)
+    group_list = movement_group_node.getGroupList()
+
+    self.assertEquals(1, len(group_list))
+    self.assertEquals(dict(causality_list=[delivery_1.getRelativeUrl(),
+      delivery_2.getRelativeUrl()]),
+                      group_list[0].getGroupEditDict())
+
+class TestDuplicatedKeyRaiseException(MovementGroupTestCase):
+  """Test, that it is not allowed to have more than one movement group to update
+  same key during building process"""
+  document_portal_type = 'Sale Order'
+  def test(self):
+    from Products.ERP5.Document.OrderBuilder import DuplicatedPropertyDictKeysError
+    order = self.portal.getDefaultModule(self.document_portal_type) \
+      .newContent(portal_type=self.document_portal_type)
+    applied_rule = self.portal.portal_simulation.newContent(
+      portal_type='Applied Rule',
+      causality_value = order
+    )
+
+    movement_list = (
+      applied_rule.newContent(portal_type='Simulation Movement'),
+      applied_rule.newContent(portal_type='Simulation Movement')
+    )
+
+    self.builder.newContent(
+                  portal_type='Order Movement Group',
+                  collect_order_group='delivery')
+
+    self.builder.newContent(
+                  portal_type='Order Movement Group',
+                  collect_order_group='delivery')
+
+    movement_relative_url_list = [q.getRelativeUrl() for q in movement_list]
+    self.assertRaises(
+      DuplicatedPropertyDictKeysError,
+      self.builder.build,
+      movement_relative_url_list = movement_relative_url_list
+    )
 
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPropertyMovementGroup))
   suite.addTest(unittest.makeSuite(TestPropertyAssignmentMovementGroup))
+  suite.addTest(unittest.makeSuite(TestOrderMovementGroup))
+  suite.addTest(unittest.makeSuite(TestOrderMovementGroupDelivery))
+  suite.addTest(unittest.makeSuite(TestDeliveryCausalityAssignmentMovementGroup))
+  suite.addTest(unittest.makeSuite(TestDuplicatedKeyRaiseException))
   return suite
+
