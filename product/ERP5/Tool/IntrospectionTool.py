@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+import os
+import tempfile
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
 from Products.CMFCore.utils import getToolByName
@@ -34,6 +36,8 @@ from Products.ERP5Type import Permissions
 from AccessControl.SecurityManagement import setSecurityManager
 from Products.ERP5 import _dtmldir
 from Products.ERP5Type.Utils import _setSuperSecurityManager
+from App.config import getConfiguration
+import tarfile
 
 _MARKER = []
 
@@ -103,5 +107,84 @@ class IntrospectionTool(BaseTool):
       setSecurityManager(original_security_manager)
 
     return erp5_module_list
+
+  security.declareProtected(Permissions.ManagePortal, 'getLocalFile')
+  def _getLocalFile(self, REQUEST, RESPONSE, file_path, 
+                         tmp_file_path='/tmp/', compressed=1):
+    """
+      It should return the local file compacted as tar.gz.
+    """
+    if file_path.startswith('/'):
+      raise IOError, 'The file path must be relative not absolute'
+    instance_home = getConfiguration().instancehome
+    file_path = os.path.join(instance_home, file_path)
+    if not os.path.exists(file_path):
+      raise IOError, 'The file: %s does not exist.' % file_path
+
+    if compressed:
+      tmp_file_path = tempfile.mktemp(dir=tmp_file_path)
+      tmp_file = tarfile.open(tmp_file_path,"w:gz")
+      tmp_file.add(file_path)
+      tmp_file.close()
+      RESPONSE.setHeader('Content-type', 'application/x-tar')
+    else:
+      tmp_file_path = file_path
+
+    f = open(tmp_file_path)
+    try:
+      RESPONSE.setHeader('Content-Length', os.stat(tmp_file_path).st_size)
+      RESPONSE.setHeader('Content-Disposition', \
+                 'attachment;filename="%s.tar.gz"' % file_path.split('/')[-1])
+      for data in f:
+        RESPONSE.write(data)
+    finally:
+      f.close()
+
+    if compressed:
+      os.remove(tmp_file_path)
+
+    return ''
+
+  security.declareProtected(Permissions.ManagePortal, 'getAccessLog')
+  def getAccessLog(self,  compressed=1, REQUEST=None):
+    """
+      Get the Access Log.
+    """
+    if REQUEST is not None:
+      response = REQUEST.RESPONSE
+    else:
+      return "FAILED"
+
+    return self._getLocalFile(REQUEST, response, 
+                               file_path='log/Z2.log', 
+                               compressed=1) 
+
+  security.declareProtected(Permissions.ManagePortal, 'getAccessLog')
+  def getEventLog(self,  compressed=1, REQUEST=None):
+    """
+      Get the Access Log.
+    """
+    if REQUEST is not None:
+      response = REQUEST.RESPONSE
+    else:
+      return "FAILED"
+
+    return self._getLocalFile(REQUEST, response,
+                               file_path='log/event.log',
+                               compressed=1)
+
+  security.declareProtected(Permissions.ManagePortal, 'getAccessLog')
+  def getDataFs(self,  compressed=1, REQUEST=None):
+    """
+      Get the Access Log.
+    """
+    if REQUEST is not None:
+      response = REQUEST.RESPONSE
+    else:
+      return "FAILED"
+
+    return self._getLocalFile(REQUEST, response,
+                               file_path='var/Data.fs',
+                               compressed=1)
 
 InitializeClass(IntrospectionTool)
