@@ -40,6 +40,7 @@ from Acquisition import aq_parent, aq_inner
 
 class CollectError(Exception): pass
 class MatrixError(Exception): pass
+class DuplicatedPropertyDictKeysError(Exception): pass
 
 class OrderBuilder(XMLObject, Amount, Predicate):
   """
@@ -259,7 +260,11 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     property_dict = {}
     if not len(instance_list):
       for movement_group_node in movement_group_node_list:
-        property_dict.update(movement_group_node.getGroupEditDict())
+        for k,v in movement_group_node.getGroupEditDict().iteritems():
+          if k in property_dict:
+            raise DuplicatedPropertyDictKeysError(k)
+          else:
+            property_dict[k] = v
     else:
       # we want to check the original delivery first.
       # so sort instance_list by that current is exists or not.
