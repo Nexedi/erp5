@@ -18,6 +18,7 @@
                 <string>sort</string>
                 <string>list_method</string>
                 <string>selection_name</string>
+                <string>editable_columns</string>
               </list>
             </value>
         </item>
@@ -121,6 +122,21 @@
                         <tuple>
                           <string>portal_type</string>
                           <string>Type</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>int_index</string>
+                        </tuple>
+                        <tuple>
+                          <string>tested_property</string>
+                          <string>tested_property</string>
                         </tuple>
                       </list>
                     </value>
