@@ -41,12 +41,12 @@ class OrderMovementGroup(MovementGroup):
   def _getPropertyDict(self, movement, **kw):
     property_dict = {}
     order_relative_url = self._getOrderRelativeUrl(movement)
-    property_dict['causality'] = order_relative_url
+    property_dict['causality_list'] = [order_relative_url]
     return property_dict
 
   def test(self, movement, property_dict, **kw):
-    if property_dict['causality'] in movement.getCausalityList():
-      property_dict['causality'] = movement.getCausalityList()
+    if set(property_dict['causality_list']).issubset(movement.getCausalityList()):
+      property_dict['causality_list'] = movement.getCausalityList()
       return True, property_dict
     else:
       return False, property_dict
