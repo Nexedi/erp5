@@ -47,6 +47,7 @@ tal:define="  listbox_max_lines  python: int(here.getMaxLineNumber());\n
               current_page_start python: (listbox_max_lines * (current_page - 1)) + 1;\n
               current_page_stop  python: (total_line < current_page_max) and total_line or current_page_max;\n
               is_web_mode        request/is_web_mode | nothing;\n
+              box python: real_context.restrictedTraverse(box_relative_url);\n
               absolute_url       real_context/absolute_url;">\n
 \n
   <!-- ListBox (search mode) starts here.  -->\n
