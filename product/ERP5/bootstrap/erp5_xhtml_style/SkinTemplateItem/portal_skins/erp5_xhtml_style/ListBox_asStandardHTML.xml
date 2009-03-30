@@ -42,25 +42,7 @@
 <tal:block\n
   xmlns:tal="http://xml.zope.org/namespaces/tal"\n
   xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-  xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
-  tal:define="field_id here/getId;\n
-              form_id python: here.getForm().id;\n
-              selection_name here/getSelectionName;\n
-              requested_selection_name here/getRequestedSelectionName;\n
-              selection_index here/getSelectionIndex;\n
-              selection here/getSelection;\n
-              portal_url_string here/getPortalUrlString;\n
-              real_context here/getContext;\n
-              context_url real_context/absolute_url;\n
-              md5_string here/getMD5Checksum;\n
-              line_list here/query;\n
-              is_domain_tree_mode here/isDomainTreeMode;\n
-              is_report_tree_mode here/isReportTreeMode;\n
-              is_domain_tree_supported here/isDomainTreeSupported;\n
-              is_report_tree_supported here/isReportTreeSupported;\n
-              show_select_column here/showSelectColumn;\n
-              show_search_line here/showSearchLine;\n
-              ">\n
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
   <tal:block metal:define-macro="main">\n
 \n
   <tal:replace tal:content="nothing">\n
