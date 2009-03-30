@@ -51,7 +51,7 @@
               selection here/getSelection;\n
               portal_url_string here/getPortalUrlString;\n
               real_context here/getContext;\n
-              context_url real_context/getUrl;\n
+              context_url real_context/absolute_url;\n
               md5_string here/getMD5Checksum;\n
               line_list here/query;\n
               is_domain_tree_mode here/isDomainTreeMode;\n
@@ -62,13 +62,6 @@
               show_search_line here/showSearchLine;\n
               ">\n
   <tal:block metal:define-macro="main">\n
-\n
-  <!-- ListBox starts here.  -->\n
-  <input type="hidden" name="list_selection_name" value="default" tal:attributes="value selection_name" />\n
-  <input type="hidden" name="list_selection_name" value="default"\n
-                       tal:attributes="value selection_name;\n
-                                       name string:${field_id}_list_selection_name" />\n
-  <input tal:condition="md5_string" type="hidden" name="md5_object_uid_list" value="checksum" tal:attributes="value md5_string" />\n
 \n
   <tal:replace tal:content="nothing">\n
     Because TAL cannot accept unbalanced tags, the support for a domain tree is realized by a macro.\n
@@ -82,6 +75,7 @@
         <table tal:condition="is_domain_tree_mode"\n
           style="width: 100%;" cellpadding="0" cellspacing="0"\n
           tal:define="selected_domain_path here/getSelectedDomainPath">\n
+          summary="This table contains the domain tree with the switch button"\n
           <tr>\n
             <td valign="top">\n
               <select name="domain_root_url"\n
@@ -95,21 +89,25 @@
                 </tal:block>\n
               </select>\n
               <table id="listbox_domain_tree_table" cellpadding="0"\n
+                summary="This table contains the domain tree"\n
+                class="listbox_domain_tree_table"\n
                 tal:attributes="id string:${field_id}_domain_tree_table"\n
                 tal:define="report_tree_list python: here.makeReportTreeList(report_path = selected_domain_path, unfolded_list = selection.getDomainList(), is_report_opened = False);\n
                             total_depth python: max([report_tree.depth for report_tree in report_tree_list] + [-1])">\n
                 <tr tal:repeat="report_tree report_tree_list">\n
                   <tal:block tal:repeat="i python: range(report_tree.depth)">\n
-                    <td width="16" nowrap="nowrap">&nbsp;</td>\n
+                    <td width="12" nowrap="nowrap">&nbsp;</td>\n
                   </tal:block>\n
 \t\t  <td colspan="1" style="text-align: left; vertical-align: top; white-space: nowrap;"\n
                     tal:attributes="colspan python: total_depth - report_tree.depth + 1">\n
-                    <a href="method"\n
+                    <a href="method" class="tree_open"\n
                       tal:condition="report_tree/is_open"\n
-                      tal:attributes="href string:foldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">-&nbsp;<b tal:content="report_tree/obj/getTranslatedTitleOrId">Domain</b></a>\n
-                    <a href="method"\n
+                      tal:attributes="href string:foldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">\n
+                      <b tal:content="report_tree/obj/getTranslatedTitleOrId">Domain</b></a>\n
+                    <a href="method" class="tree_closed"\n
                       tal:condition="not: report_tree/is_open"\n
-                      tal:attributes="href string:unfoldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">+&nbsp;<tal:block tal:content="report_tree/obj/getTranslatedTitleOrId">Domain</tal:block></a>\n
+                      tal:attributes="href string:unfoldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">\n
+                      <tal:block tal:content="report_tree/obj/getTranslatedTitleOrId">Domain</tal:block></a>\n
                   </td>\n
                 </tr>\n
               </table>\n
@@ -179,14 +177,15 @@
               </td>\n
               <td style="width: 100%; vertical-align: middle">\n
                 &nbsp;\n
-                <a tal:attributes="id string:${field_id}_title; href here/getListActionUrl"\n
+                <a class="listbox_title"\n
+                   tal:attributes="id string:${field_id}_title; href here/getListActionUrl"\n
                    tal:condition="python: here.field.get_value(\'list_action\')">\n
-                  <em i18n:translate="" \n
-                      i18n:domain="ui" tal:content="here/getTitle" tal:condition="here/getTitle"/>\n
+                  <tal:block i18n:translate="" \n
+                      i18n:domain="ui" tal:content="here/getTitle" tal:condition="here/getTitle"/>:\n
                 </a>\n
                 <tal:block tal:condition="python: not here.field.get_value(\'list_action\')">\n
-                  <em i18n:translate="" \n
-                      i18n:domain="ui" tal:content="here/getTitle" tal:condition="here/getTitle"/>\n
+                  <tal:block i18n:translate="" \n
+                      i18n:domain="ui" tal:content="here/getTitle" tal:condition="here/getTitle"/>:\n
                 </tal:block>\n
                 <span id="listbox_record_number" class="listbox_record_number"\n
                   tal:attributes="id string:${field_id}_record_number"\n
