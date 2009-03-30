@@ -56,8 +56,8 @@
       <tal:block tal:condition="expand">\n
         <table tal:condition="is_domain_tree_mode"\n
           style="width: 100%;" cellpadding="0" cellspacing="0"\n
-          tal:define="selected_domain_path here/getSelectedDomainPath">\n
           summary="This table contains the domain tree with the switch button"\n
+          tal:define="selected_domain_path here/getSelectedDomainPath">\n
           <tr>\n
             <td valign="top">\n
               <select name="domain_root_url"\n
