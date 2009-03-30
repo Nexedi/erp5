@@ -1668,6 +1668,9 @@ msgstr "Workflow de causalité"
 msgid "Cell Level Divergences"
 msgstr "Divergences au niveau des cellules"
 
+msgid "Line Level Divergences"
+msgstr "Divergences au niveau des lignes"
+
 msgid "Cells"
 msgstr "Cellules"
 
