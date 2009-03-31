@@ -208,13 +208,12 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       movement_list = []
       add_movement = movement_list.append
       extend_movement = movement_list.extend
-      sub_object_list = self.contentValues(filter={'portal_type': portal_type})
+      sub_object_list = self.objectValues(portal_type=portal_type)
       extend_sub_object = sub_object_list.extend
       append_sub_object = sub_object_list.append
       while sub_object_list:
         sub_object = sub_object_list.pop()
-        content_list = sub_object.contentValues(
-                          filter={'portal_type': portal_type})
+        content_list = sub_object.objectValues(portal_type=portal_type)
         if sub_object.hasCellContent():
           cell_list = sub_object.getCellValueList()
           if len(cell_list) != len(content_list):
