@@ -53,18 +53,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery\n
-\n
-# Get The documents in all storage structure. ie.: This scripts get all Files and Images\n
-# distributed in many Project Lines in one Project.\n
-query = ComplexQuery(\n
-  Query(relative_url=\'%s/%%\' % context.getRelativeUrl()),\n
-  Query(follow_up_uid=context.getUid()),\n
-  operator=\'OR\')\n
-\n
-return context.portal_catalog(\n
+            <value> <string>sub_document_list = context.portal_catalog(\n
            portal_type=portal_type,\n
-           query=query)\n
+           relative_url=\'%s/%%\' % context.getRelativeUrl())\n
+\n
+follow_up_related_document_list = context.portal_catalog(\n
+           portal_type=portal_type,\n
+           follow_up_uid=context.getUid())\n
+\n
+if not sub_document_list:\n
+  return follow_up_related_document_list\n
+\n
+if not follow_up_related_document_list:\n
+  return sub_document_list\n
+\n
+return [doc for doc in follow_up_related_document_list] + [doc for doc in sub_document_list]\n
 </string> </value>
         </item>
         <item>
@@ -103,12 +106,14 @@ return context.portal_catalog(\n
                           <tuple>
                             <string>portal_type</string>
                             <string>kw</string>
-                            <string>Products.ZSQLCatalog.SQLCatalog</string>
-                            <string>Query</string>
-                            <string>ComplexQuery</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>query</string>
+                            <string>sub_document_list</string>
+                            <string>follow_up_related_document_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>doc</string>
                           </tuple>
                         </value>
                     </item>
