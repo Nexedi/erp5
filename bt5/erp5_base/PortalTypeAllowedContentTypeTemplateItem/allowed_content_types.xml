@@ -1,105 +1,106 @@
 <allowed_content_type_list>
- <portal_type id="Agent">
-  <item>Agent Privilege</item>
- </portal_type>
- <portal_type id="Bank Account">
-  <item>Agent</item>
- </portal_type>
- <portal_type id="Currency">
-  <item>Currency Exchange Line</item>
- </portal_type>
- <portal_type id="Currency Exchange Line">
-  <item>Currency Exchange Cell</item>
- </portal_type>
- <portal_type id="Currency Module">
-  <item>Currency</item>
- </portal_type>
- <portal_type id="Delivery Builder">
-  <item>Parent Explanation Movement Group</item>
-  <item>Nested Line Movement Group</item>
-  <item>Title Movement Group</item>
-  <item>Predicate</item>
-  <item>Property Movement Group</item>
-  <item>Causality Movement Group</item>
-  <item>Category Movement Group</item>
-  <item>Variant Movement Group</item>
-  <item>Base Variant Movement Group</item>
-  <item>Order Movement Group</item>
-  <item>Property Assignment Movement Group</item>
-  <item>Root Applied Rule Causality Movement Group</item>
-  <item>Variation Property Movement Group</item>
-  <item>Delivery Causality Assignment Movement Group</item>
-  <item>Quantity Sign Movement Group</item>
-  <item>Day Movement Group</item>
-  <item>Requirement Movement Group</item>
-  <item>Monthly Range Movement Group</item>
-  <item>Causality Assignment Movement Group</item>
-  <item>Split Movement Group</item>
- </portal_type>
- <portal_type id="Delivery Tool">
-  <item>Delivery Builder</item>
- </portal_type>
- <portal_type id="Notification Message">
-  <item>Role Definition</item>
- </portal_type>
- <portal_type id="Notification Message Module">
-  <item>Notification Message</item>
- </portal_type>
- <portal_type id="Order Builder">
-  <item>Order Movement Group</item>
-  <item>Nested Line Movement Group</item>
-  <item>Variant Movement Group</item>
-  <item>Predicate</item>
-  <item>Base Variant Movement Group</item>
-  <item>Parent Explanation Movement Group</item>
-  <item>Root Applied Rule Causality Movement Group</item>
-  <item>Split Movement Group</item>
-  <item>Causality Assignment Movement Group</item>
-  <item>Variation Property Movement Group</item>
-  <item>Requirement Movement Group</item>
-  <item>Quantity Sign Movement Group</item>
-  <item>Category Movement Group</item>
-  <item>Title Movement Group</item>
-  <item>Property Movement Group</item>
-  <item>Causality Movement Group</item>
- </portal_type>
- <portal_type id="Order Tool">
-  <item>Order Builder</item>
- </portal_type>
- <portal_type id="Organisation">
-  <item>Address</item>
-  <item>Link</item>
-  <item>Bank Account</item>
-  <item>Fax</item>
-  <item>Chat Address</item>
-  <item>Telephone</item>
-  <item>Credit Card</item>
-  <item>Document</item>
-  <item>Image</item>
-  <item>Email</item>
-  <item>File</item>
- </portal_type>
- <portal_type id="Organisation Module">
-  <item>Organisation</item>
- </portal_type>
- <portal_type id="Person">
-  <item>Chat Address</item>
-  <item>Address</item>
-  <item>Assignment</item>
-  <item>Telephone</item>
-  <item>Credit Card</item>
-  <item>Email</item>
-  <item>File</item>
-  <item>Fax</item>
-  <item>Link</item>
-  <item>Bank Account</item>
-  <item>Career</item>
-  <item>Image</item>
- </portal_type>
- <portal_type id="Person Module">
-  <item>Person</item>
- </portal_type>
- <portal_type id="Query Module">
-  <item>Query</item>
- </portal_type>
+  <portal_type id="Agent">
+    <item>Agent Privilege</item>
+  </portal_type>
+  <portal_type id="Bank Account">
+    <item>Agent</item>
+  </portal_type>
+  <portal_type id="Currency">
+    <item>Currency Exchange Line</item>
+  </portal_type>
+  <portal_type id="Currency Exchange Line">
+    <item>Currency Exchange Cell</item>
+  </portal_type>
+  <portal_type id="Currency Module">
+    <item>Currency</item>
+  </portal_type>
+  <portal_type id="Delivery Builder">
+    <item>Parent Explanation Movement Group</item>
+    <item>Nested Line Movement Group</item>
+    <item>Title Movement Group</item>
+    <item>Predicate</item>
+    <item>Property Movement Group</item>
+    <item>Causality Movement Group</item>
+    <item>Category Movement Group</item>
+    <item>Variant Movement Group</item>
+    <item>Base Variant Movement Group</item>
+    <item>Order Movement Group</item>
+    <item>Property Assignment Movement Group</item>
+    <item>Root Applied Rule Causality Movement Group</item>
+    <item>Variation Property Movement Group</item>
+    <item>Delivery Causality Assignment Movement Group</item>
+    <item>Quantity Sign Movement Group</item>
+    <item>Day Movement Group</item>
+    <item>Requirement Movement Group</item>
+    <item>Monthly Range Movement Group</item>
+    <item>Tax Line Delivery Movement Group</item>
+    <item>Causality Assignment Movement Group</item>
+    <item>Split Movement Group</item>
+  </portal_type>
+  <portal_type id="Delivery Tool">
+    <item>Delivery Builder</item>
+  </portal_type>
+  <portal_type id="Notification Message">
+    <item>Role Definition</item>
+  </portal_type>
+  <portal_type id="Notification Message Module">
+    <item>Notification Message</item>
+  </portal_type>
+  <portal_type id="Order Builder">
+    <item>Order Movement Group</item>
+    <item>Nested Line Movement Group</item>
+    <item>Variant Movement Group</item>
+    <item>Predicate</item>
+    <item>Base Variant Movement Group</item>
+    <item>Parent Explanation Movement Group</item>
+    <item>Root Applied Rule Causality Movement Group</item>
+    <item>Split Movement Group</item>
+    <item>Causality Assignment Movement Group</item>
+    <item>Variation Property Movement Group</item>
+    <item>Requirement Movement Group</item>
+    <item>Quantity Sign Movement Group</item>
+    <item>Category Movement Group</item>
+    <item>Title Movement Group</item>
+    <item>Property Movement Group</item>
+    <item>Causality Movement Group</item>
+  </portal_type>
+  <portal_type id="Order Tool">
+    <item>Order Builder</item>
+  </portal_type>
+  <portal_type id="Organisation">
+    <item>Address</item>
+    <item>Link</item>
+    <item>Bank Account</item>
+    <item>Fax</item>
+    <item>Chat Address</item>
+    <item>Telephone</item>
+    <item>Credit Card</item>
+    <item>Document</item>
+    <item>Image</item>
+    <item>Email</item>
+    <item>File</item>
+  </portal_type>
+  <portal_type id="Organisation Module">
+    <item>Organisation</item>
+  </portal_type>
+  <portal_type id="Person">
+    <item>Chat Address</item>
+    <item>Address</item>
+    <item>Assignment</item>
+    <item>Telephone</item>
+    <item>Credit Card</item>
+    <item>Email</item>
+    <item>File</item>
+    <item>Fax</item>
+    <item>Link</item>
+    <item>Bank Account</item>
+    <item>Career</item>
+    <item>Image</item>
+  </portal_type>
+  <portal_type id="Person Module">
+    <item>Person</item>
+  </portal_type>
+  <portal_type id="Query Module">
+    <item>Query</item>
+  </portal_type>
 </allowed_content_type_list>
