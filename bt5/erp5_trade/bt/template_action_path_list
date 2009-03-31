@@ -12,6 +12,7 @@ Internal Packing List Cell | view
 Internal Packing List Line | quantity_view
 Internal Packing List Line | view
 Internal Packing List Line | view_price
+Internal Packing List Module | delivery_line_report
 Internal Packing List Module | view
 Internal Packing List Module | workflow_report
 Internal Packing List | details
@@ -58,6 +59,7 @@ Purchase Order Cell | view
 Purchase Order Line | price_view
 Purchase Order Line | quantity_view
 Purchase Order Line | view
+Purchase Order Module | delivery_line_report
 Purchase Order Module | order_export
 Purchase Order Module | order_report
 Purchase Order Module | view
@@ -75,6 +77,7 @@ Purchase Packing List Line | apparel_fabric_item_fast_input
 Purchase Packing List Line | quantity_view
 Purchase Packing List Line | view
 Purchase Packing List Line | view_price
+Purchase Packing List Module | delivery_line_report
 Purchase Packing List Module | view
 Purchase Packing List | details
 Purchase Packing List | jump_related_order
@@ -93,6 +96,7 @@ Returned Sale Packing List Cell | view
 Returned Sale Packing List Line | price_view
 Returned Sale Packing List Line | quantity_view
 Returned Sale Packing List Line | view
+Returned Sale Packing List Module | delivery_line_report
 Returned Sale Packing List Module | view
 Returned Sale Packing List Module | workflow_report
 Returned Sale Packing List | jump_related_sale_invoice
@@ -102,6 +106,7 @@ Sale Order Cell | view
 Sale Order Line | price_view
 Sale Order Line | quantity_view
 Sale Order Line | view
+Sale Order Module | delivery_line_report
 Sale Order Module | order_export
 Sale Order Module | order_report
 Sale Order Module | view
@@ -123,6 +128,7 @@ Sale Packing List Cell | view
 Sale Packing List Line | price_view
 Sale Packing List Line | quantity_view
 Sale Packing List Line | view
+Sale Packing List Module | delivery_line_report
 Sale Packing List Module | view
 Sale Packing List Module | workflow_report
 Sale Packing List | container_fast_input
