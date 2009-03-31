@@ -357,13 +357,6 @@ data_dict = {\n
   \'destination_administration_vatid\':\n
           getVatId(destination_administration.getProperty(\'vat_code\', \'\')),\n
 \n
-  \'destination_decision_title\': context.getDestinationDecisionTitle() or \'\',\n
-  \'destination_decision_telfax\': getPhoneAndFax(context.getDestinationDecision() and\n
-      context.getDestinationDecisionValue().getTelephoneText() or \'\',\n
-      context.getDestinationDecision() and context.getDestinationDecisionValue().getFaxText() or \'\'),\n
-  \'destination_decision_email\': getEmail(context.getDestinationDecision() and\n
-      context.getDestinationDecisionValue().getEmailText() or \'\'),\n
-\n
   \'reference\': context.getReference() or \'\',\n
   \'start_date\': getOrderedDate(context.getStartDate()) or \'\',\n
   \'stop_date\': getOrderedDate(context.getStopDate()) or \'\',\n

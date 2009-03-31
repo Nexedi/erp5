@@ -323,9 +323,9 @@ AAA=</string> </value>
                     my_period  python: unicode(here.Base_translateString(orig_period,\n
                                                                 mapping = {\'start_date\': date_renderer(here.getStartDate()),\n
                                                                            \'stop_date\': date_renderer(here.getStopDate())}), \'utf-8\');\n
-                    image_path python: here.getPortalType().startswith(\'Pay Sheet Transaction\') and data_dict[\'destination_section_image_path\'] or (data_dict[\'destination_decision_image_path\'] or data_dict[\'destination_section_image_path\']);\n
-                    image_width python: here.getPortalType().startswith(\'Pay Sheet Transaction\') and data_dict[\'destination_section_image_width\'] or (data_dict[\'destination_decision_image_width\'] or data_dict[\'destination_section_image_width\']);\n
-                    image_height python: here.getPortalType().startswith(\'Pay Sheet Transaction\') and data_dict[\'destination_section_image_height\'] or (data_dict[\'destination_decision_image_height\'] or data_dict[\'destination_section_image_height\'])">\n
+                    image_path python: here.getPortalType().startswith(\'Pay Sheet Transaction\') and data_dict[\'destination_section_image_path\'] or data_dict[\'destination_section_image_path\'];\n
+                    image_width python: here.getPortalType().startswith(\'Pay Sheet Transaction\') and data_dict[\'destination_section_image_width\'] or data_dict[\'destination_section_image_width\'];\n
+                    image_height python: here.getPortalType().startswith(\'Pay Sheet Transaction\') and data_dict[\'destination_section_image_height\'] or data_dict[\'destination_section_image_height\']">\n
         <table:table table:name="Tableau4" table:style-name="Tableau4">\n
           <table:table-column table:style-name="Tableau4.A"/>\n
           <table:table-column table:style-name="Tableau4.B"/>\n
