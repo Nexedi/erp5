@@ -1,3 +1,6 @@
+2009-03-31 Kazuhiko
+* update MochiKit.js to 1.4.2.
+
 2009-03-24 fabien
 * split ListBox_asHTML page template. Now there is 3 PT : ListBox_asSearchStyleHTML, ListBox_asTableStyleHTML and ListBox_asStandardHTML
 * add css selectors to handle listbox search and table style
