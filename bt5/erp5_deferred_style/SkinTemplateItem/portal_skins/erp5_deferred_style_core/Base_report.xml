@@ -72,8 +72,7 @@ report_section_list.sort(lambda a, b:cmp(a[0], b[0]))\n
 def dummyReportMethod():\n
   return report_section_list\n
 \n
-# XXX Hardcoded format\n
-report_data = context.report_view.pt_render(\n
+report_data = context.restrictedTraverse(form_path).report_view.pt_render(\n
       extra_context=dict(options={\'format\': format},\n
                          rendered_report_item_list=[r[1] for r in report_section_list],\n
                          report_method=dummyReportMethod,\n
