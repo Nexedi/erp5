@@ -56,7 +56,7 @@
             <value> <string>request = container.REQUEST\n
 RESPONSE =  request.RESPONSE\n
 \n
-format = request.get(\'format\', \'pdf\') or \'pdf\'\n
+format = request.get(\'format\', \'\')\n
 skin_name = request.get(\'deferred_portal_skin\', \'ODT\')  or \'ODT\'\n
 \n
 portal = context.getPortalObject()\n
@@ -112,7 +112,12 @@ for idx, report_section in enumerate(report_section_list):\n
                                          report_section_idx=idx,\n
                                          request_other=request_other)\n
 \n
-portal.portal_simulation.activate(activity=\'SQLQueue\', after_tag=tag, priority=priority).Base_report(\n
+activity_context = context\n
+if activity_context == portal:\n
+  # portal is not an active object\n
+  activity_context = portal.portal_simulation\n
+\n
+activity_context.activate(activity=\'SQLQueue\', after_tag=tag, priority=priority).Base_report(\n
            active_process_url=active_process.getRelativeUrl(),\n
            skin_name=skin_name,\n
            localizer_language=localizer_language,\n
@@ -203,6 +208,7 @@ return context.Base_redirect(\'view\', keep_items=dict(\n
                             <string>idx</string>
                             <string>report_section</string>
                             <string>doc</string>
+                            <string>activity_context</string>
                           </tuple>
                         </value>
                     </item>
