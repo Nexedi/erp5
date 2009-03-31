@@ -120,6 +120,8 @@
                         <string>my_amortisation_method</string>
                         <string>my_source_trade_title_list</string>
                         <string>my_base_contribution_list</string>
+                        <string>my_destination_account</string>
+                        <string>my_source_account</string>
                       </list>
                     </value>
                 </item>
