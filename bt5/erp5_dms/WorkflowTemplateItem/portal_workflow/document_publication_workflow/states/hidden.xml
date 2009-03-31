@@ -34,6 +34,7 @@
                 <string>publish</string>
                 <string>publish_action</string>
                 <string>publish_alive</string>
+                <string>publish_alive_action</string>
                 <string>release</string>
                 <string>release_action</string>
                 <string>release_alive</string>
