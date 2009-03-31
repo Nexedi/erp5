@@ -90,7 +90,7 @@ attachment_list = (\n
 portal.portal_notifications.sendMessage(\n
   recipient=user_name,\n
   subject=title,\n
-  message=\'\\nYour report is attached.\\n\',\n
+  message=N_(\'Your report is attached.\\n\'),\n
   message_text_format=\'text/plain\',\n
   notifier_list=(\'Mail Message\',),\n
   store_as_event=False,\n
