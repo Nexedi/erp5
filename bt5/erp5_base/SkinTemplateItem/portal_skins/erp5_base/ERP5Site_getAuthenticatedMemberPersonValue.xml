@@ -61,7 +61,7 @@
 if user_name is None:\n
   user_name = context.portal_membership.getAuthenticatedMember()\n
 found_user_list = context.portal_catalog(portal_type=\'Person\', \n
-                                         reference=user_name)\n
+                                         reference=str(user_name))\n
 found_users = len(found_user_list)\n
 if found_users != 1:\n
   return None\n
@@ -107,6 +107,7 @@ return found_user_list[0].getObject()\n
                             <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>str</string>
                             <string>found_user_list</string>
                             <string>len</string>
                             <string>found_users</string>
