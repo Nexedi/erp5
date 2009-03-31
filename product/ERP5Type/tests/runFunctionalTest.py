@@ -22,6 +22,7 @@ Options:
   -s, --stdout               prints the results on stdout instead of sending
                              results by email (unless email_to_address is also
                              passed explictly)
+  -d, --debug                run firefox on current DISPLAY instead of on Xvfb                             passed explictly)
   --host                     the hostname of this ERP5 instance
   --port                     the port of this ERP5 instance
   --portal_name              the ID of the ERP5 site
@@ -40,6 +41,7 @@ user = 'ERP5TypeTestCase'
 password = ''
 send_mail = 0
 stdout = 0
+debug = 0
 email_to_address = 'erp5-report@erp5.org'
 
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
@@ -68,13 +70,14 @@ def usage(stream, msg=None):
 def parseArgs():
   global send_mail
   global stdout
+  global debug
   global email_to_address
   global host
   global port
   global portal_name
   try:
     opts, args = getopt.getopt(sys.argv[1:],
-          "hs", ["help", "stdout",
+          "hsd", ["help", "stdout", "debug",
                  "email_to_address=", "host=", "port=", "portal_name="] )
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
@@ -83,6 +86,8 @@ def parseArgs():
   for opt, arg in opts:
     if opt in ("-s", "--stdout"):
       stdout = 1
+    elif opt in ("-d", "--debug"):
+      debug = 1
     elif opt == '--email_to_address':
       email_to_address = arg
       send_mail = 1
@@ -106,7 +111,8 @@ def main():
   xvfb_pid = None
   firefox_pid = None
   try:
-    xvfb_pid = runXvfb()
+    if not debug:
+      xvfb_pid = runXvfb()
     firefox_pid = runFirefox()
     while True:
       sleep(10)
@@ -179,7 +185,8 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
 
 def runFirefox():
   os.environ['MOZ_NO_REMOTE'] = '1'
-  os.environ['DISPLAY'] = ':123'
+  if not debug:
+    os.environ['DISPLAY'] = ':123'
   os.environ['HOME'] = profile_dir
   prepareFirefox()
   # check if old zelenium or new zelenium
