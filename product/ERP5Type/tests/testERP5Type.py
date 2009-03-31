@@ -2609,6 +2609,26 @@ class TestPropertySheet:
       person.setProperty('foo_bar_list', ['foo', 'bar'])
       self.assertEquals(list(person.getProperty('foo_bar_list')), ['foo', 'bar'])
 
+    def test_objectValues_contentValues(self):
+      """
+      Test checked_permission parameter on Folder.objectValues and
+      Folder.contentValues.
+      Also test that there is no difference between objectValues and
+      contentValues about security.
+      """
+      person = self.getPersonModule().newContent(portal_type='Person')
+      address = person.newContent(portal_type='Address')
+
+      def check(count):
+        for values in person.objectValues, person.contentValues:
+          self.assertEqual(1, len(values()))
+          self.assertEqual(count, len(values(checked_permission='View')))
+      check(1)
+
+      for permission in 'View', 'Access contents information':
+        address.manage_permission(permission, roles=(), acquire=0)
+        check(0)
+
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests
   # when this one fails.
