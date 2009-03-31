@@ -80,9 +80,18 @@ while object is not None:\n
   explanation_uid_list.append(object.getUid())\n
   object = object.getCausalityValue()\n
     \n
-delivery_builder_list = delivery.getBuilderList()\n
-for delivery_builder in delivery_builder_list:\n
-  delivery_builder.activate(activity=\'SQLQueue\',after_tag=tag).build(explanation_uid=explanation_uid_list)\n
+previous_tag = None\n
+for delivery_builder in delivery.getBuilderList():\n
+  this_builder_tag = \'%s_split_%s\' % (delivery.getPath(),\n
+                                      delivery_builder.getId())\n
+  after_tag = [tag]\n
+  if previous_tag:\n
+    after_tag.append(previous_tag)\n
+  delivery_builder.activate(activity=\'SQLQueue\',\n
+                            tag=this_builder_tag,\n
+                            after_tag=after_tag).build(\n
+                                  explanation_uid=explanation_uid_list)\n
+  previous_tag = this_builder_tag\n
 </string> </value>
         </item>
         <item>
@@ -133,8 +142,10 @@ for delivery_builder in delivery_builder_list:\n
                             <string>None</string>
                             <string>explanation_uid_list</string>
                             <string>object</string>
-                            <string>delivery_builder_list</string>
+                            <string>previous_tag</string>
                             <string>delivery_builder</string>
+                            <string>this_builder_tag</string>
+                            <string>after_tag</string>
                           </tuple>
                         </value>
                     </item>
