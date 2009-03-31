@@ -57,17 +57,19 @@
 \n
 searchPredicateList = line.getPortalObject().portal_domains.searchPredicateList\n
 \n
-for predicate in searchPredicateList(\n
+if not line.getDestinationAccount():\n
+  for predicate in searchPredicateList(\n
                     context=line, portal_type=\'Purchase Supply Line\'):\n
-  if predicate.getDestinationAccount():\n
-    line.setDestinationAccount(predicate.getDestinationAccount())\n
-    break\n
+    if predicate.getDestinationAccount():\n
+      line.setDestinationAccount(predicate.getDestinationAccount())\n
+      break\n
 \n
-for predicate in searchPredicateList(\n
+if not line.getSourceAccount():\n
+  for predicate in searchPredicateList(\n
                     context=line, portal_type=\'Sale Supply Line\'):\n
-  if predicate.getSourceAccount():\n
-    line.setSourceAccount(predicate.getSourceAccount())\n
-    break\n
+    if predicate.getSourceAccount():\n
+      line.setSourceAccount(predicate.getSourceAccount())\n
+      break\n
 </string> </value>
         </item>
         <item>
