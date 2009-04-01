@@ -59,6 +59,9 @@
 if context.has_key(\'test_web_site\'):\n
   context.manage_delObjects(\'test_web_site\')\n
 \n
+if context.has_key(\'test_web_site_2\'):\n
+  context.manage_delObjects(\'test_web_site_2\')\n
+\n
 # Create new users\n
 if not context.person_module.has_key(\'test_webmaster\'):\n
   context.person_module.newContent(id=\'test_webmaster\', portal_type=\'Person\')\n
