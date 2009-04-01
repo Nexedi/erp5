@@ -406,7 +406,7 @@
               </tr>\n
             </tfoot>\n
 \n
-            <tbody>\n
+            <tbody tal:condition="line_list">\n
               <tr tal:repeat="line line_list" tal:define="checked_uid_set here/getCheckedUidSet">\n
                 <td tal:condition="python: show_select_column and not is_gadget_mode"\n
                     class="DataA" style="width: 50px; text-align: center; vertical-align: middle"\n
