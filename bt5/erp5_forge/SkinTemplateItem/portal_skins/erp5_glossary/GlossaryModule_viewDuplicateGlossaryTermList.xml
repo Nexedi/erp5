@@ -41,6 +41,14 @@
             <value> <string>Base_doSelect</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string>Display duplicate glossary terms that have the same reference, language and business_field.</string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value> <string>[]</string> </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -56,7 +64,6 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -74,12 +81,6 @@
                 </item>
                 <item>
                     <key> <string>center</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -125,7 +126,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Glossary</string> </value>
+            <value> <string>Duplicate Glossary Terms</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
