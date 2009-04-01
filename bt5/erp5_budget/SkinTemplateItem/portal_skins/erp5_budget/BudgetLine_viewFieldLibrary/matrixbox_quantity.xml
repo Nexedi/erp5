@@ -99,7 +99,7 @@
                 </item>
                 <item>
                     <key> <string>extra</string> </key>
-                    <value> <string>align="right"</string> </value>
+                    <value> <string>style="text-align:right"</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
