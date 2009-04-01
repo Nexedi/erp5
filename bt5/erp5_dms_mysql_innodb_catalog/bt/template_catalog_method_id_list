@@ -1,6 +1,2 @@
 erp5_mysql_innodb/SQLCatalog_makeAdvancedSearchQuery
 erp5_mysql_innodb/SQLCatalog_makeQuickSearchQuery
-erp5_mysql_innodb/z0_drop_versioning
-erp5_mysql_innodb/z0_uncatalog_versioning
-erp5_mysql_innodb/z_catalog_versioning_list
-erp5_mysql_innodb/z_create_versioning

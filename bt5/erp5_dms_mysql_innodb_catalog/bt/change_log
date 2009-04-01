@@ -1,3 +1,6 @@
+2009-04-01 vincentd
+* Move versioning table to erp5_mysql_innodb_catalog.
+
 2008-11-13 yusei
 * Start to develop version 5.4.
 
