@@ -70,7 +70,7 @@ def getWorkLineList(line,worker):\n
   return result\n
 \n
 listbox = []\n
-worker_list = context.getParent().getSourceValueList()\n
+worker_list = context.getParentValue().getSourceValueList()\n
 work_line_list = []\n
 for worker in worker_list:\n
   work_line_list.extend(getWorkLineList(context,worker))\n

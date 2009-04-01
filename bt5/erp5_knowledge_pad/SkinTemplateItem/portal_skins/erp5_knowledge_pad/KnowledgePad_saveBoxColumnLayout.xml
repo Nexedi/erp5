@@ -77,7 +77,7 @@ if not context.portal_membership.isAnonymousUser():\n
     else:\n
       new_user_layout.append(item)\n
   # parent is part of layout element\n
-  knowledge_pad = context.restrictedTraverse(box_url).getParent()\n
+  knowledge_pad = context.restrictedTraverse(box_url).getParentValue()\n
   # join columns \n
   new_user_layout = \'##\'.join(new_user_layout)\n
   #  update only if necessary\n

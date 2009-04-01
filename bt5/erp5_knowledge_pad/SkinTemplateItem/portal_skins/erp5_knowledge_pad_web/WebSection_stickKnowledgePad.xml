@@ -56,7 +56,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 knowledge_pad = context.restrictedTraverse(knowledge_pad_url)\n
-knowledge_pad_module = knowledge_pad.getParent()\n
+knowledge_pad_module = knowledge_pad.getParentValue()\n
 \n
 # copy/paste\n
 cp = knowledge_pad_module.manage_copyObjects(ids=[knowledge_pad.getId()])\n
