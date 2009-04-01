@@ -376,6 +376,10 @@ class TestDomainTool(TestPredicateMixIn):
           return -1
       return 0
 
+    def sort_key_method(x):
+      hasCellContent = getattr(x, 'hasCellContent', None)
+      return bool(hasCellContent and hasCellContent(base_id='path'))
+
     get_transaction().commit()
     self.tic()
     domain_tool = self.getDomainTool()
@@ -384,16 +388,24 @@ class TestDomainTool(TestPredicateMixIn):
                      'variation/%s/blue' % self.resource.getRelativeUrl()])
     mapped_value = domain_tool.generateMappedValue(context,sort_method=sort_method)
     self.assertEquals(mapped_value.getProperty('base_price'),45)
+    mapped_value = domain_tool.generateMappedValue(context,sort_key_method=sort_key_method)
+    self.assertEquals(mapped_value.getProperty('base_price'),45)
     context = self.resource.asContext(
                      categories=['resource/%s' % self.resource.getRelativeUrl(),
                      'variation/%s/red' % self.resource.getRelativeUrl()])
     mapped_value = domain_tool.generateMappedValue(context,sort_method=sort_method)
+    self.assertEquals(mapped_value.getProperty('base_price'),26)
+    mapped_value = domain_tool.generateMappedValue(context,sort_key_method=sort_key_method)
     self.assertEquals(mapped_value.getProperty('base_price'),26)
     # Now check the price
     self.assertEquals(self.resource.getPrice(context=self.resource.asContext(
                      categories=['resource/%s' % self.resource.getRelativeUrl(),
                      'variation/%s/blue' % self.resource.getRelativeUrl()]),
                      sort_method=sort_method),45)
+    self.assertEquals(self.resource.getPrice(context=self.resource.asContext(
+                     categories=['resource/%s' % self.resource.getRelativeUrl(),
+                     'variation/%s/blue' % self.resource.getRelativeUrl()]),
+                     sort_key_method=sort_key_method),45)
 
   def test_06_SQLQueryDoesNotReturnTooManyPredicates(self, quiet=0, run=run_all_test):
     if not run: return

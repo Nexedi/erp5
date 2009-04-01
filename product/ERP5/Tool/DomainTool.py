@@ -60,7 +60,7 @@ class DomainTool(BaseTool):
                             ignored_category_list=None,
                             tested_base_category_list=None,
                             filter_method=None, acquired=1,
-                            strict=True, **kw):
+                            strict=True, sort_key_method=None, **kw):
       # XXX: about "strict" parameter: This is a transition parameter,
       # allowing someone hitting a bug to revert to original behaviour easily.
       # It is not a correct name, as pointed out by Jerome. But instead of
@@ -68,9 +68,11 @@ class DomainTool(BaseTool):
       """
       Search all predicates which corresponds to this particular 
       context.
-      
-      - The sort_method parameter allows to give a method which will be
-        used in order to sort the list of predicates found. The most
+
+      - sort_method parameter is deprecated: use sort_key_method instead.
+
+      - sort_key_method parameter is passed to list.sort as key parameter if it
+        is not None. This allows to sort the list of predicates found. The most
         important predicate is the first one in the list.
 
       - ignored_category_list:  this is the list of category that we do
@@ -203,8 +205,12 @@ class DomainTool(BaseTool):
 #       LOG('searchPredicateList, result_list before sort', 0, result_list)
       if filter_method is not None:
         result_list = filter_method(result_list)
-      if sort_method is not None:
-        result_list.sort(sort_method)
+      if sort_key_method is not None:
+        result_list.sort(key=sort_key_method)
+      elif sort_method is not None:
+        LOG('searchPredicateList', 0,
+            'sort_method parameter is deprecated: sort_key_method instead')
+        result_list.sort(cmp=sort_method)
 #       LOG('searchPredicateList, result_list after sort', 0, result_list)
       return result_list
 
