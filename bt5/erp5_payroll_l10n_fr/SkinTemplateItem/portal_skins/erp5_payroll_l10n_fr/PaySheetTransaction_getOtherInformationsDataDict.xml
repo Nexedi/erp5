@@ -127,7 +127,7 @@ def getTotalEmployeeTaxId(total_employee_tax):\n
   s = \'\'\n
   if total_employee_tax:\n
     s += \'%s: %s\' % (translateString(\'Total Employee Tax\'),\n
-        quantity_renderer(total_employee_tax))\n
+        quantity_renderer(total_employee_tax*-1))\n
   return s\n
 \n
 total_employer_tax = context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
@@ -137,7 +137,7 @@ def getTotalEmployerTaxId(total_employer_tax):\n
   s = \'\'\n
   if total_employer_tax:\n
     s += \'%s: %s\' % (translateString(\'Total Employer Tax\'),\n
-        quantity_renderer(total_employer_tax))\n
+        quantity_renderer(total_employer_tax*-1))\n
   return s\n
 \n
 \n
