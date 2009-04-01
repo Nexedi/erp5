@@ -201,7 +201,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>glossary_module_selection</string> </value>
+                    <value> <string>glossary_module_duplicate_term_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

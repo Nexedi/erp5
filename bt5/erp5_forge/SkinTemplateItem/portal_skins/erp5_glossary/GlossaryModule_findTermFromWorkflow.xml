@@ -61,7 +61,7 @@ if export_tsv:\n
   for i in result:\n
     print \'\\t\'.join(map(lambda x:\'"%s"\'%x, (i[\'reference\'], i[\'language\'],\n
                                             i[\'business_field\'],\n
-                                            i[\'title\'], i[\'description\'],)))\n
+                                            i[\'title\'], i[\'description\'], i[\'workflow_id\'])))\n
   return printed\n
 else:\n
   portal_catalog = context.portal_catalog\n

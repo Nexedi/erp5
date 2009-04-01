@@ -160,7 +160,7 @@
 <dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(**selection_params), **selection_params)">\n
 \n
 select distinct\n
-  catalog.path, catalog.uid, count(*) as num_of_duplicates\n
+  catalog.path, catalog.uid, count(*)-1 as num_of_duplicates\n
 from\n
   <dtml-in prefix="table" expr="query[\'from_table_list\']">\n
     <dtml-if "table_key not in (\'catalog\',)">\n
@@ -226,7 +226,7 @@ having\n
 <dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(**selection_params), **selection_params)">\n
 \n
 select distinct\n
-  catalog.path, catalog.uid, count(*) as num_of_duplicates\n
+  catalog.path, catalog.uid, count(*)-1 as num_of_duplicates\n
 from\n
   <dtml-in prefix="table" expr="query[\'from_table_list\']">\n
     <dtml-if "table_key not in (\'catalog\',)">\n

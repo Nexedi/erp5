@@ -112,6 +112,10 @@
                           <string>State</string>
                         </tuple>
                         <tuple>
+                          <string>GlossaryTerm_getDuplicateGlossaryTermCount</string>
+                          <string>Num of duplicates</string>
+                        </tuple>
+                        <tuple>
                           <string>causality_title</string>
                           <string>Original English Term</string>
                         </tuple>
