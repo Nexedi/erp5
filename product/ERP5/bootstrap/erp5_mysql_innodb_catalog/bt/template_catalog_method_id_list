@@ -15,6 +15,7 @@ erp5_mysql_innodb/z0_drop_record
 erp5_mysql_innodb/z0_drop_roles_and_users
 erp5_mysql_innodb/z0_drop_stock
 erp5_mysql_innodb/z0_drop_translation
+erp5_mysql_innodb/z0_drop_versioning
 erp5_mysql_innodb/z0_uncatalog_alarm
 erp5_mysql_innodb/z0_uncatalog_category
 erp5_mysql_innodb/z0_uncatalog_fulltext
@@ -26,6 +27,7 @@ erp5_mysql_innodb/z0_uncatalog_movement
 erp5_mysql_innodb/z0_uncatalog_predicate
 erp5_mysql_innodb/z0_uncatalog_predicate_category
 erp5_mysql_innodb/z0_uncatalog_stock
+erp5_mysql_innodb/z0_uncatalog_versioning
 erp5_mysql_innodb/z_catalog_alarm_list
 erp5_mysql_innodb/z_catalog_delivery_list
 erp5_mysql_innodb/z_catalog_fulltext_list
@@ -43,6 +45,7 @@ erp5_mysql_innodb/z_catalog_predicate_list
 erp5_mysql_innodb/z_catalog_roles_and_users_list
 erp5_mysql_innodb/z_catalog_stock_list
 erp5_mysql_innodb/z_catalog_translation_list
+erp5_mysql_innodb/z_catalog_versioning_list
 erp5_mysql_innodb/z_clear_reserved
 erp5_mysql_innodb/z_count_results
 erp5_mysql_innodb/z_create_alarm
@@ -62,6 +65,7 @@ erp5_mysql_innodb/z_create_record
 erp5_mysql_innodb/z_create_roles_and_users
 erp5_mysql_innodb/z_create_stock
 erp5_mysql_innodb/z_create_translation
+erp5_mysql_innodb/z_create_versioning
 erp5_mysql_innodb/z_delete_recorded_object_list
 erp5_mysql_innodb/z_delete_translation_list
 erp5_mysql_innodb/z_delete_uid
