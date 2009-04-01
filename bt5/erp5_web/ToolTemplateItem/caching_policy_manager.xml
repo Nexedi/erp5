@@ -1,0 +1,361 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="CachingPolicyManager" module="Products.CMFCore.CachingPolicyManager"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_policies</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_policy_ids</string> </key>
+            <value>
+              <tuple>
+                <string>unauthenticated web pages</string>
+                <string>unauthenticated</string>
+                <string>authenticated</string>
+              </tuple>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>authenticated</string> </key>
+                    <value>
+                      <object>
+                        <klass>
+                          <global id="2.1" name="CachingPolicy" module="Products.CMFCore.CachingPolicyManager"/>
+                        </klass>
+                        <tuple/>
+                        <state>
+                          <dictionary>
+                            <item>
+                                <key> <string>_etag_func</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_max_age_secs</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_mtime_func</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_must_revalidate</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_no_cache</string> </key>
+                                <value> <int>1</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_no_store</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_policy_id</string> </key>
+                                <value> <string>authenticated</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>_predicate</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_vary</string> </key>
+                                <value> <string></string> </value>
+                            </item>
+                          </dictionary>
+                        </state>
+                      </object>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>unauthenticated</string> </key>
+                    <value>
+                      <object>
+                        <klass> <reference id="2.1"/> </klass>
+                        <tuple/>
+                        <state>
+                          <dictionary>
+                            <item>
+                                <key> <string>_etag_func</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_max_age_secs</string> </key>
+                                <value> <int>3600</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_mtime_func</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_must_revalidate</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_no_cache</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_no_store</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_policy_id</string> </key>
+                                <value> <string>unauthenticated</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>_predicate</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_vary</string> </key>
+                                <value> <string>Accept-Language, Cookie</string> </value>
+                            </item>
+                          </dictionary>
+                        </state>
+                      </object>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>unauthenticated web pages</string> </key>
+                    <value>
+                      <object>
+                        <klass> <reference id="2.1"/> </klass>
+                        <tuple/>
+                        <state>
+                          <dictionary>
+                            <item>
+                                <key> <string>_etag_func</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_max_age_secs</string> </key>
+                                <value> <int>300</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_mtime_func</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_must_revalidate</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_no_cache</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_no_store</string> </key>
+                                <value> <int>0</int> </value>
+                            </item>
+                            <item>
+                                <key> <string>_policy_id</string> </key>
+                                <value> <string>unauthenticated web pages</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>_predicate</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>_vary</string> </key>
+                                <value> <string>Accept-Language, Cookie</string> </value>
+                            </item>
+                          </dictionary>
+                        </state>
+                      </object>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="Expression" module="Products.CMFCore.Expression"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <tuple>
+        <global name="Expression" module="Products.CMFCore.Expression"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>object/modified</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <tuple>
+        <global name="Expression" module="Products.CMFCore.Expression"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>python: member is not None</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <tuple>
+        <global name="Expression" module="Products.CMFCore.Expression"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="7" aka="AAAAAAAAAAc=">
+    <pickle>
+      <tuple>
+        <global name="Expression" module="Products.CMFCore.Expression"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>object/modified</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="8" aka="AAAAAAAAAAg=">
+    <pickle>
+      <tuple>
+        <global name="Expression" module="Products.CMFCore.Expression"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>python: member is None</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="9" aka="AAAAAAAAAAk=">
+    <pickle>
+      <tuple>
+        <global name="Expression" module="Products.CMFCore.Expression"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="10" aka="AAAAAAAAAAo=">
+    <pickle>
+      <tuple>
+        <global name="Expression" module="Products.CMFCore.Expression"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>object/modified</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="11" aka="AAAAAAAAAAs=">
+    <pickle>
+      <tuple>
+        <global name="Expression" module="Products.CMFCore.Expression"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>python: member is None and object.getPortalType() in ("Web Page", "Web Section", "Web Site")</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
