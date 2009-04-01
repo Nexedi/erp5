@@ -763,6 +763,50 @@ class TestTaxLineCalculation(TradeConditionTestCase):
     self.assertEquals(0, tax_line.getQuantity())
     self.assertEquals(0, tax_line.getTotalPrice())
 
+  def test_clone_order_line_quantity_update_tax_line(self):
+    base_1 = self.base_amount.newContent(
+                          portal_type='Category',
+                          title='Base 1')
+    self.resource.setBaseContributionValue(base_1)
+    tax_model_line = self.trade_condition.newContent(
+                  portal_type='Tax Model Line',
+                  base_application_value=base_1,
+                  float_index=1,
+                  efficiency=0.2,
+                  resource_value=self.tax)
+    
+    self.order.Order_applyTradeCondition(self.trade_condition, force=1)
+
+    # this creates a tax line, with quantity 0, and it will be updated when
+    # needed
+    tax_line_list = self.order.contentValues(portal_type='Tax Line')
+    self.assertEquals(1, len(tax_line_list))
+    tax_line = tax_line_list[0]
+    self.assertEquals(0, tax_line.getQuantity())
+    self.assertEquals(self.tax, tax_line.getResourceValue())
+    self.assertEquals(0.2, tax_line.getPrice())
+
+    order_line = self.order.newContent(
+                          portal_type=self.order_line_type,
+                          resource_value=self.resource,
+                          quantity=10,
+                          price=10,)
+
+    transaction.commit()
+    # tax lines are updated
+    tax_line_list = self.order.contentValues(portal_type='Tax Line')
+    self.assertEquals(1, len(tax_line_list))
+    tax_line = tax_line_list[0]
+    self.assertEquals(100, tax_line.getQuantity())
+    self.assertEquals(0.2, tax_line.getPrice())
+    self.assertEquals(20, tax_line.getTotalPrice())
+    
+    # clone the order line
+    cloned_order_line = order_line.Base_createCloneDocument(batch_mode=1)
+    # the tax line is updated
+    self.assertEquals(200, tax_line.getQuantity())
+    self.assertEquals(40, tax_line.getTotalPrice())
+
   def test_order_cell_and_tax_line(self):
     base_1 = self.base_amount.newContent(
                           portal_type='Category',
