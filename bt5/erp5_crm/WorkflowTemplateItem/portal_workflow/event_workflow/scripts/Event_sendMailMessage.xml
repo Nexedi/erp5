@@ -69,7 +69,7 @@ if event.getPortalType() in (\'Mail Message\', ):\n
     if event.getSource():\n
       event.send()\n
     else:\n
-      event.send(mfrom=object.portal_preferences.getPreferredEventSenderEmail())\n
+      event.send(mfrom=portal.portal_preferences.getPreferredEventSenderEmail())\n
 </string> </value>
         </item>
         <item>
@@ -120,7 +120,6 @@ if event.getPortalType() in (\'Mail Message\', ):\n
                             <string>_getattr_</string>
                             <string>portal</string>
                             <string>send_mail</string>
-                            <string>object</string>
                           </tuple>
                         </value>
                     </item>
