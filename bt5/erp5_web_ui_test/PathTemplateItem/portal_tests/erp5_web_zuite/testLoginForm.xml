@@ -53,7 +53,7 @@
 <tal:block metal:use-macro="here/Zuite_erp5_web_common/macros/init" />\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/web_site_module/WebSiteModule_createTestSite</td>\n
+  <td>${base_url}/web_site_module/WebSiteModule_createTestSite?id=test_web_site&amp;title=Test Web Site</td>\n
   <td></td>\n
   <td>Create a new site</td>\n
 </tr>\n
