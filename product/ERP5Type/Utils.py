@@ -265,10 +265,10 @@ def getPath(object_or_path, **kw):
     return path.split('/')
   return path
 
-def int2letters(i):
+def int2letter(i):
   """
   Convert an integer to letters, to generate spreadsheet column id
-  A, B, C ..., Z, AA, AB, ..., AZ, BA, ..., ZZ, AAA ...
+  0=>A, 25=>Z, 26=>AA, 27=>AB, ...
   """
   if i < 26:
     return (chr(i + ord('A')))
