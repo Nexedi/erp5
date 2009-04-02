@@ -39,7 +39,7 @@ class CategoryDivergenceTester(PropertyDivergenceTester):
   consistency between delivery movement and simulation movement
   for some specific categories.
   """
-  meta_type = 'ERP5 Divergence Tester'
+  meta_type = 'ERP5 Category Divergence Tester'
   portal_type = 'Category Divergence Tester'
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1

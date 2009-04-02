@@ -49,8 +49,8 @@ class BudgetTransfer(Supply):
       )
     
     # CMF Type Definition
-    meta_type='ERP5 Folder'
-    portal_type='Budget Transfer'    
+    meta_type='ERP5 Budget Transfer'
+    portal_type='Budget Transfer'
     add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1

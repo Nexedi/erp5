@@ -37,6 +37,8 @@ class IngestionFile(Base, Folder):
   for ingested file in Contribution Registry Tool.
   """
 
+  meta_type = 'ERP5 Ingestion File'
+
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 

@@ -50,8 +50,8 @@ class BudgetTransferLine(SupplyLine):
     )
     
     # CMF Type Definition
-    meta_type='ERP5 Document'
-    portal_type='Budget Transfer Line'    
+    meta_type='ERP5 Budget Transfer Line'
+    portal_type='Budget Transfer Line'
     add_permission = Permissions.AddPortalContent
     isPortalContent = 1
     isRADContent = 1

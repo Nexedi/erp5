@@ -39,7 +39,7 @@ class PropertyDivergenceTester(XMLObject):
   consistency between delivery movement and simulation movement
   for some specific properties.
   """
-  meta_type = 'ERP5 Divergence Tester'
+  meta_type = 'ERP5 Property Divergence Tester'
   portal_type = 'Property Divergence Tester'
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1

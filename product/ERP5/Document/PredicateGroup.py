@@ -34,6 +34,6 @@ class PredicateGroup(Predicate):
   aaaa
   """
   #pass
-  meta_type = 'ERP5 Predicate'
+  meta_type = 'ERP5 Predicate Group'
   portal_type = 'Predicate Group'
 
