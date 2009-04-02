@@ -19,7 +19,7 @@ Options:
   -h, --help                 this help screen
   --email_to_address=STRING  send results to this address by email (defaults to
                              erp5-report@erp5.org)
-  -s, --stdout               prints the results on stdout instead of sending
+  -s, --stdout               print the results on stdout instead of sending
                              results by email (unless email_to_address is also
                              passed explictly)
   -d, --debug                run firefox on current DISPLAY instead of on Xvfb
@@ -28,6 +28,7 @@ Options:
   --portal_name              the ID of the ERP5 site
                              URLs will start with:
                                  http://${host}:${port}/${portal_name}/
+  --run_only=STRING          run only specified test suite (should be only one)
 Notes:
   * You need to prepepare first test environment by using following command:
   ./runUnitTest.py --save prepareFunctionalTest.py                           
@@ -43,6 +44,7 @@ send_mail = 0
 stdout = 0
 debug = 0
 email_to_address = 'erp5-report@erp5.org'
+run_only=''
 
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
 # handle 'system global' instance
@@ -75,14 +77,15 @@ def parseArgs():
   global host
   global port
   global portal_name
+  global run_only
   try:
     opts, args = getopt.getopt(sys.argv[1:],
           "hsd", ["help", "stdout", "debug",
-                 "email_to_address=", "host=", "port=", "portal_name="] )
+                 "email_to_address=", "host=", "port=", "portal_name=", "run_only="] )
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
     sys.exit(2)
-  
+
   for opt, arg in opts:
     if opt in ("-s", "--stdout"):
       stdout = 1
@@ -100,6 +103,8 @@ def parseArgs():
       port = int(arg)
     elif opt == "--portal_name":
       portal_name = arg
+    elif opt == "--run_only":
+      run_only = arg
 
   if not stdout:
     send_mail = 1
@@ -199,6 +204,8 @@ def runFirefox():
   else:
     # Zelenium 0.8+ or later
     url_string = "http://%s:%d/%s/portal_tests/core/TestRunner.html?test=..%%2Ftest_suite_html&auto=on&__ac_name=%s&__ac_password=%s"
+  if run_only:
+    url_string = url_string.replace('/portal_tests/', '/portal_tests/%s/' % run_only)
   pid = os.spawnlp(os.P_NOWAIT, "firefox", "firefox", "-profile", profile_dir,
       url_string % (host, port, portal_name, user, password))
   os.environ['MOZ_NO_REMOTE'] = '0'
@@ -207,8 +214,8 @@ def runFirefox():
 
 def getStatus():
   try:
-    status = urllib2.urlopen('http://%s:%d/%s/TestTool_getResults'
-                                % (host, port, portal_name)).read()
+    status = urllib2.urlopen('http://%s:%d/%s/TestTool_getResults?test_zuite_relative_url=%s'
+                                % (host, port, portal_name, run_only)).read()
   except urllib2.HTTPError, e:
     if e.msg == "No Content" :
       status = ""
@@ -227,8 +234,9 @@ def unsubscribeFromTimerService():
                                   (host, port, portal_name, user, password))
 
 def sendResult():
-  result_uri = urllib2.urlopen('http://%s:%d/%s/TestTool_getResults' %
-                                    (host, port, portal_name)).readline()
+  result_uri = urllib2.urlopen('http://%s:%d/%s/TestTool_getResults?test_zuite_relative_url=%s' %
+                                    (host, port, portal_name, run_only)).readline()
+  print result_uri
   file_content = urllib2.urlopen(result_uri).read()
   passes_re = re.compile('<th[^>]*>Tests passed</th>\n\s*<td[^>]*>([^<]*)')
   failures_re = re.compile('<th[^>]*>Tests failed</th>\n\s*<td[^>]*>([^<]*)')
