@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.newContent(id=id, title=id, portal_type=\'Web Site\')\n
+            <value> <string>context.newContent(id=id, title=title, portal_type=\'Web Site\')\n
 return "Created Successfully."\n
 </string> </value>
         </item>
