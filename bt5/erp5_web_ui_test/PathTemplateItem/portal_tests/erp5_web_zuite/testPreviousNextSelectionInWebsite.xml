@@ -43,12 +43,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test Login Form</title>\n
+<title>Test Previous Next Selection In Website</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test Login Form</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test Previous Next Selection In Website</td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/Zuite_erp5_web_common/macros/init" />\n
 <tr>\n
@@ -98,8 +98,7 @@
 <tr>\n
   <td>open</td>\n
  \n
-<td>${base_url}/web_site_module/WebSiteModule_createTestSite/?id=test_web_site_2\n
-&amp;title=Test Web Site II</td>\n
+<td>${base_url}/web_site_module/WebSiteModule_createTestSite/?id=test_web_site_2&amp;title=Test Web Site II</td>\n
   <td></td>\n
   <td>Create a second site</td>\n
 </tr>\n
