@@ -207,7 +207,8 @@
                             i18n:attributes="title"\n
                             i18n:domain="ui"\n
                             class="clickable_image"\n
-                            onclick="toggleElement(\'rename_tab_dialog\');" />\n
+                            onclick="toggleElement(\'rename_tab_dialog\');" \n
+                            alt="edit"/>\n
 \n
                         <img src="icon_remove.gif" \n
                             title="Remove"\n
@@ -219,7 +220,8 @@
                             \\\'%s\\\', \\\'%s\\\',\\\'/%s\\\')\' \n
                              %(active_knowledge_pad.getRelativeUrl(), \n
                                mode,\n
-                               context.getId())" />\n
+                               context.getId())" \n
+                            alt="remove"/>\n
                         <img src="icon_remove.gif" \n
                              title="Remove"\n
                              i18n:attributes="title"\n
@@ -231,7 +233,8 @@
                              %(active_knowledge_pad.getRelativeUrl(), \n
                                mode,\n
                                context.getPortalObject().getId(),\n
-                               context.getRelativeUrl())" />\n
+                               context.getRelativeUrl())" \n
+                             alt="remove"/>\n
                     </li>\n
 \n
                     <li tal:condition="not: is_active"\n
@@ -274,7 +277,8 @@
         </tr>\n
       </table>\n
 \n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>
