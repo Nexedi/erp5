@@ -22,7 +22,7 @@ Options:
   -s, --stdout               prints the results on stdout instead of sending
                              results by email (unless email_to_address is also
                              passed explictly)
-  -d, --debug                run firefox on current DISPLAY instead of on Xvfb                             passed explictly)
+  -d, --debug                run firefox on current DISPLAY instead of on Xvfb
   --host                     the hostname of this ERP5 instance
   --port                     the port of this ERP5 instance
   --portal_name              the ID of the ERP5 site
