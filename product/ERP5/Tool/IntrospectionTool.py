@@ -108,7 +108,6 @@ class IntrospectionTool(BaseTool):
 
     return erp5_module_list
 
-  security.declareProtected(Permissions.ManagePortal, 'getLocalFile')
   def _getLocalFile(self, REQUEST, RESPONSE, file_path, 
                          tmp_file_path='/tmp/', compressed=1):
     """
