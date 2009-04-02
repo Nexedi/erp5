@@ -39,6 +39,8 @@ class Capacity(XMLObject):
     """
         Mix-in
     """
+    meta_type = 'ERP5 Capacity'
+    
     isCapacity = 1
 
     # Declarative security
