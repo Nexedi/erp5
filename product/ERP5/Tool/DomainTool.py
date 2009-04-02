@@ -69,7 +69,8 @@ class DomainTool(BaseTool):
       Search all predicates which corresponds to this particular 
       context.
 
-      - sort_method parameter is deprecated: use sort_key_method instead.
+      - sort_method parameter should not be used, if possible, because
+        it can be very slow. Use sort_key_method instead.
 
       - sort_key_method parameter is passed to list.sort as key parameter if it
         is not None. This allows to sort the list of predicates found. The most
@@ -208,8 +209,6 @@ class DomainTool(BaseTool):
       if sort_key_method is not None:
         result_list.sort(key=sort_key_method)
       elif sort_method is not None:
-        LOG('searchPredicateList', 0,
-            'sort_method parameter is deprecated: sort_key_method instead')
         result_list.sort(cmp=sort_method)
 #       LOG('searchPredicateList, result_list after sort', 0, result_list)
       return result_list
