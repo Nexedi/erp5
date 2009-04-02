@@ -57,11 +57,13 @@ class TestFormPrintout(ERP5TypeTestCase):
     foo_file = open(foo_file_path, 'rb')
     custom = self.portal.portal_skins.custom
     addStyleSheet = custom.manage_addProduct['OFSP'].manage_addFile
-    addStyleSheet(id='Foo_getODTStyleSheet', file=foo_file, title='',
-                  precondition='', content_type = 'application/vnd.oasis.opendocument.text')
+    if custom._getOb('Foo_getODTStyleSheet', None) is None:
+      addStyleSheet(id='Foo_getODTStyleSheet', file=foo_file, title='',
+                    precondition='', content_type = 'application/vnd.oasis.opendocument.text')
     erp5OOo = custom.manage_addProduct['ERP5OOo']
     addOOoTemplate = erp5OOo.addOOoTemplate
-    addOOoTemplate(id='Foo_viewAsOdt', title='')
+    if custom._getOb('Foo_viewAsOdt', None) is None:
+      addOOoTemplate(id='Foo_viewAsOdt', title='')
     request = self.app.REQUEST
     Foo_viewAsOdt = custom.Foo_viewAsOdt
     Foo_viewAsOdt.doSettings(request, title='', xml_file_id='content.xml',
@@ -72,9 +74,9 @@ class TestFormPrintout(ERP5TypeTestCase):
     builder = OOoBuilder(foo_file)
     content = builder.extract('content.xml')
     Foo_viewAsOdt.pt_edit(content, content_type='application/vnd.oasis.opendocument.text')
-
-    erp5OOo.addFormPrintout(id='Foo_viewAsPrintout', title='',
-                            form_name='Foo_view', template='Foo_getODTStyleSheet')
+    if custom._getOb('Foo_viewAsPrintout', None) is None:
+      erp5OOo.addFormPrintout(id='Foo_viewAsPrintout', title='',
+                              form_name='Foo_view', template='Foo_getODTStyleSheet')
 
   def login(self):
     uf = self.getPortal().acl_users
@@ -82,7 +84,7 @@ class TestFormPrintout(ERP5TypeTestCase):
     user = uf.getUserById('tatuya').__of__(uf)
     newSecurityManager(None, user)
                           
-  def _test_01_Paragraph(self, quiet=0, run=run_all_test):
+  def test_01_Paragraph(self, quiet=0, run=run_all_test):
     """
     mapping a field to a paragraph
     """
@@ -371,3 +373,8 @@ class TestFormPrintout(ERP5TypeTestCase):
     meta.xml not supported yet
     """
     pass
+
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestFormPrintout))
+  return suite
