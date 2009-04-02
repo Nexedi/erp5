@@ -38,7 +38,7 @@ class MonthlyRangeMovementGroup(MovementGroup):
   This movement group is used to collect movements that have datetime
   which is in the same month.
   """
-  meta_type = 'ERP5 Movement Group'
+  meta_type = 'ERP5 Monthly Range Movement Group'
   portal_type = 'Monthly Range Movement Group'
 
   def _getPropertyDict(self, movement, **kw):

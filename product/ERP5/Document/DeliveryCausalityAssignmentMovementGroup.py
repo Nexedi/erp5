@@ -33,7 +33,7 @@ class DeliveryCausalityAssignmentMovementGroup(CausalityAssignmentMovementGroup)
   simulation movements instead of order relation. This is intended to be used
   in deeper level of simulation tree.
   """
-  meta_type = 'ERP5 Movement Group'
+  meta_type = 'ERP5 Delivery Causality Assignment Movement Group'
   portal_type = 'Delivery Causality Assignment Movement Group'
 
   def _addCausalityToEdit(self, movement, property_dict=None):

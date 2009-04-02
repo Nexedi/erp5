@@ -35,7 +35,7 @@ class CategoryMovementGroup(PropertyMovementGroup):
   This movement group is used to group movements that have the same
   categories (eg. source, destination, etc.).
   """
-  meta_type = 'ERP5 Movement Group'
+  meta_type = 'ERP5 Category Movement Group'
   portal_type = 'Category Movement Group'
 
   def _getPropertyDict(self, movement, **kw):

@@ -35,7 +35,7 @@ class RootAppliedRuleCausalityMovementGroup(MovementGroup):
   This movement group is used to group movements whose root apply rule
   has the same causality.
   """
-  meta_type = 'ERP5 Movement Group'
+  meta_type = 'ERP5 Root Applied Rule Causality Movement Group'
   portal_type = 'Root Applied Rule Causality Movement Group'
 
   def _getPropertyDict(self, movement, **kw):

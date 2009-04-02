@@ -41,7 +41,7 @@ class PropertyAssignmentMovementGroup(MovementGroup):
      movements, None otherwise.
   None values are always ignored, even in 'common' mode
   """
-  meta_type = 'ERP5 Movement Group'
+  meta_type = 'ERP5 Property Assignment Movement Group'
   portal_type = 'Property Assignment Movement Group'
   
   property_sheets = (

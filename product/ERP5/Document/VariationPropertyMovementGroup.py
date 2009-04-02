@@ -35,7 +35,7 @@ class VariationPropertyMovementGroup(MovementGroup):
   This movement group is used to group movements that have the same
   variation property dict.
   """
-  meta_type = 'ERP5 Movement Group'
+  meta_type = 'ERP5 Variation Property Movement Group'
   portal_type = 'Variation Property Movement Group'
 
   def _getPropertyDict(self, movement, **kw):

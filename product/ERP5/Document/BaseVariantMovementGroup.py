@@ -32,7 +32,7 @@ class BaseVariantMovementGroup(MovementGroup):
   The purpose of MovementGroup is to define how movements are grouped,
   and how values are updated from simulation movements.
   """
-  meta_type = 'ERP5 Movement Group'
+  meta_type = 'ERP5 Base Variant Movement Group'
   portal_type = 'Base Variant Movement Group'
 
   def _getPropertyDict(self, movement, **kw):

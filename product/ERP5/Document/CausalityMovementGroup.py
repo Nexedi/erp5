@@ -32,7 +32,7 @@ class CausalityMovementGroup(MovementGroup):
   The purpose of MovementGroup is to define how movements are grouped,
   and how values are updated from simulation movements.
   """
-  meta_type = 'ERP5 Movement Group'
+  meta_type = 'ERP5 Causality Movement Group'
   portal_type = 'Causality Movement Group'
 
 

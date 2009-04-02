@@ -36,7 +36,7 @@ class ParentExplanationMovementGroup(MovementGroup):
   transactions lines. We need to put accounting lines in the same
   invoices than invoice lines.
   """
-  meta_type = 'ERP5 Movement Group'
+  meta_type = 'ERP5 Parent Explanation Movement Group'
   portal_type = 'Parent Explanation Movement Group'
 
   def _getPropertyDict(self, movement, **kw):

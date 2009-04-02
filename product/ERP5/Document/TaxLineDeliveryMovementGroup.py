@@ -32,7 +32,7 @@ class TaxLineDeliveryMovementGroup(MovementGroup):
   This movement group is used to group movements for tax lines, they should end
   up in the same invoice than the corresponding invoice line.
   """
-  meta_type = 'ERP5 Movement Group'
+  meta_type = 'ERP5 Tax Line Delivery Movement Group'
   portal_type = 'Tax Line Delivery Movement Group'
 
   def _getPropertyDict(self, movement, **kw):

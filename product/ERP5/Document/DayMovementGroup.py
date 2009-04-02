@@ -33,7 +33,7 @@ class DayMovementGroup(MovementGroup):
   """
   This movement group is used to group movements which belong to the same day
   """
-  meta_type = 'ERP5 Movement Group'
+  meta_type = 'ERP5 Day Movement Group'
   portal_type = 'Day Movement Group'
 
   def _getPropertyDict(self, movement, **kw):

@@ -35,7 +35,7 @@ class PropertyMovementGroup(MovementGroup):
   This movement group is used to group movements that have the same
   properties (eg. start_date, stop_date, etc.).
   """
-  meta_type = 'ERP5 Movement Group'
+  meta_type = 'ERP5 Property Movement Group'
   portal_type = 'Property Movement Group'
 
   def _getPropertyDict(self, movement, **kw):

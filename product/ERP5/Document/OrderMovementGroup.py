@@ -35,7 +35,7 @@ class OrderMovementGroup(MovementGroup):
   This movement group is used to group movements that come from the same
   Order.
   """
-  meta_type = 'ERP5 Movement Group'
+  meta_type = 'ERP5 Order Movement Group'
   portal_type = 'Order Movement Group'
 
   def _getPropertyDict(self, movement, **kw):

@@ -35,7 +35,7 @@ class CausalityAssignmentMovementGroup(MovementGroup):
   This movement group is used in order to define the causality on lines
   and cells.
   """
-  meta_type = 'ERP5 Movement Group'
+  meta_type = 'ERP5 Causality Assignment Movement Group'
   portal_type = 'Causality Assignment Movement Group'
 
   def _getPropertyDict(self, movement, **kw):
