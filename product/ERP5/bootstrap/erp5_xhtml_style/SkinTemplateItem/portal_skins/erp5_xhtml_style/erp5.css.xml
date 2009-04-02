@@ -1134,14 +1134,14 @@ a.tree_closed {\n
   background-repeat: no-repeat;\n
 }\n
 \n
-.ListContent {\n
+.listbox {\n
   color: #000;\n
   background-color: <dtml-var document_background_color>;\n
   padding-left: 1px;\n
 }\n
 \n
-.ListContent table,\n
-table.listbox {\n
+.listbox table,\n
+table.listbox.table {\n
   width: 100%;\n
   border-collapse: collapse;\n
   border-color: <dtml-var document_border_color>;\n
@@ -1152,33 +1152,33 @@ table.listbox {\n
   border-right-width: 1px;\n
 }\n
 \n
-.ListContent .listbox_label_line td.Data {\n
+.listbox .listbox_label_line td.Data {\n
   border-top-width: 1px;\n
 }\n
 \n
-.ListContent .listbox_label_line {\n
+.listbox .listbox_label_line {\n
   color: <dtml-var font_color>;\n
   background-color: <dtml-var listbox_label_background_color>;\n
 /*   font-size: 90%; */\n
 }\n
 \n
-.ListContent .listbox_stat_line {\n
+.listbox .listbox_stat_line {\n
   color: inherit;\n
   background-color: <dtml-var listbox_stat_background_color>;\n
 }\n
 \n
-.ListContent .listbox_stat_line td.Data {\n
+.listbox .listbox_stat_line td.Data {\n
   border-top-width: 1px;\n
   border-top-style: solid;\n
   border-color: <dtml-var document_border_color>;\n
 }\n
 \n
-.ListContent tr.DataA {\n
+.listbox tr.DataA {\n
   color: inherit;\n
   background-color: <dtml-var listbox_odd_background_color>;\n
 }\n
 \n
-.ListContent tr.DataB {\n
+.listbox tr.DataB {\n
   color: inherit;\n
   background-color: <dtml-var listbox_even_background_color>;\n
 }\n
@@ -1189,14 +1189,14 @@ table.listbox {\n
   vertical-align: middle;\n
 }\n
 \n
-.ListContent tr.DataA:hover,\n
-.ListContent tr.DataB:hover, \n
-table.listbox tbody tr:hover{\n
+.listbox tr.DataA:hover,\n
+.listbox tr.DataB:hover, \n
+table.listbox.table tr.tbody:hover{\n
   color: inherit;\n
   background-color: <dtml-var listbox_hover_background_color>;\n
 }\n
 \n
-.ListContent td {\n
+.listbox td {\n
   border-color: <dtml-var document_border_color>;\n
   border-style: solid;\n
   border-top-width: 0;\n
@@ -1207,9 +1207,48 @@ table.listbox tbody tr:hover{\n
   padding-right: 1px;\n
 }\n
 \n
-.ListContent .error {\n
+.listbox .error {\n
   color: #F00;\n
 }\n
+\n
+table.listbox {\n
+  width: 100%;\n
+  margin-bottom: 1em;\n
+  border-style: solid;\n
+  border-width: 0 1px 1px 1px;\n
+  border-color:<dtml-var document_border_color>;\n
+}\n
+\n
+table.listbox .thead    {background: #e6e6e6}\n
+\n
+table.listbox .thead th,\n
+table.listbox a {\n
+  font-weight: normal\n
+}\n
+\n
+table.listbox td,\n
+table.listbox th {\n
+  text-align: left;\n
+  padding: .3em;\n
+  border: 1px solid <dtml-var document_border_color>;\n
+}\n
+\n
+table.listbox tr.tbody:hover {background:<dtml-var listbox_hover_background_color>}\n
+\n
+table.listbox .tbody td.icon {\n
+  text-align: center;\n
+  padding: 0;\n
+}\n
+\n
+table.listbox .tbody td.icon a {\n
+  display: block;\n
+  padding: .3em;\n
+}\n
+\n
+table.listbox tr.tbody td div.coordinates a {\n
+  color:green;\n
+}\n
+\n
 td.AnchorColumn {\n
   !important\n
   border-style:none;\n
@@ -1251,49 +1290,6 @@ div.searchResultHeader {\n
 \n
 div.searchResultHeader .right {float: right}\n
 div.searchResultHeader .left  {float: left}\n
-\n
-/* Document list\n
-------------------------------------------------*/\n
-table.documentList {\n
-  width: 100%;\n
-  margin-bottom: 1em;\n
-  border-style: solid;\n
-  border-width: 0 1px 1px 1px;\n
-  border-color:<dtml-var document_border_color>;\n
-}\n
-\n
-table.documentList thead    {background: #e6e6e6}\n
-\n
-table.documentList thead th,\n
-table.documentList a {\n
-  font-weight: normal\n
-}\n
-\n
-table.documentList td,\n
-table.documentList th {\n
-  text-align: left;\n
-  padding: .3em;\n
-  border: 1px solid <dtml-var document_border_color>;\n
-}\n
-\n
-table.documentList tbody tr.even {background: <dtml-var listbox_even_background_color>;}\n
-table.documentList tbody tr.odd  {background: <dtml-var listbox_odd_background_color>;}\n
-\n
-table.documentList tbody tr:hover {background:<dtml-var listbox_hover_background_color>}\n
-\n
-table.documentList tbody td.icon {\n
-  text-align: center;\n
-  padding: 0;\n
-}\n
-\n
-table.documentList tbody td.icon a {\n
-  display: block;\n
-  padding: .3em;\n
-}\n
-\n
-table.documentList tbody tr td div.coordinates a {\n
-  color:green;\n
-}\n
 \n
 \n
 /* Search results list\n
@@ -1354,21 +1350,21 @@ div.search.result .resultList .search_result_portal_type:after {\n
   content: "]";\n
 }\n
 \n
-div.search.result .resultList table.documentList caption {\n
+div.search.result .resultList table.listbox caption {\n
   font-weight: bold;\n
   text-align: left;\n
 }\n
 \n
-div.search.result .resultList table.documentList td {\n
+div.search.result .resultList table.listbox td {\n
   vertical-align: middle;\n
   border: transparent;\n
   margin:0;\n
 }\n
 \n
-div.search.result .resultList table.documentList td ul    {list-style: none}\n
-div.search.result .resultList table.documentList td ul li {margin: 0}\n
+div.search.result .resultList table.listbox td ul    {list-style: none}\n
+div.search.result .resultList table.listbox td ul li {margin: 0}\n
 \n
-div.search.result .resultList table.documentList td blockquote {\n
+div.search.result .resultList table.listbox td blockquote {\n
   border: 1px solid #e6e2e6;\n
   border-top-color: #000;\n
   margin: .5em 0 2em;\n
@@ -1389,7 +1385,7 @@ div.search.result div.searchBar {\n
 }\n
 \n
 div.searchResultHeader #style_toggle_icon,\n
-    table.listbox #style_toggle_icon {\n
+table.listbox.table #style_toggle_icon {\n
       padding:0;\n
       border: 0px;\n
       border-color:red;\n

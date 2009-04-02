@@ -91,7 +91,7 @@
 \n
           <input tal:condition="python:is_gadget_mode" type="hidden" name="dom_id" tal:attributes="value dom_id" />\n
 \n
-          <table class="listbox">\n
+          <table class="listbox table">\n
           \n
             <caption>\n
                 <span class="left">\n
@@ -210,8 +210,7 @@
                 </span>\n
             </caption>\n
 \n
-            <thead>\n
-              <tr>\n
+              <tr class ="thead">\n
                 <td tal:condition="python:not is_gadget_mode and show_select_column"\n
                     class="Data" style="width: 50px; text-align: center; vertical-align: middle;float:left;">\n
                   <input id="listbox_check_all" type="image"\n
@@ -270,7 +269,7 @@
                   </tal:block>\n
                 </tal:block>\n
               </tr>\n
-              <tr tal:condition="show_search_line">\n
+              <tr class="thead" tal:condition="show_search_line">\n
                 <td tal:condition="python: show_select_column and show_search_line and not is_gadget_mode"\n
                     class="Data" style="width: 50px; text-align: center; vertical-align: middle">\n
                   <input id="listbox_select" type="image" src="exec16.png"\n
@@ -304,13 +303,13 @@
                   </tal:block>\n
                 </td>\n
               </tr>\n
-            </thead>\n
 \n
             <tal:replace tal:content="nothing">\n
               TODO: Move pagination pre-calcultion higher in that code.\n
             </tal:replace>\n
-            <tfoot tal:condition="python: int(here.total_size) > int(here.getMaxLineNumber())">\n
-              <tr tal:define="max_lines      python: here.getMaxLineNumber();\n
+              <tr tal:condition="python: int(here.total_size) > int(here.getMaxLineNumber())"\n
+                class="tfoot"\n
+                tal:define="max_lines      python: here.getMaxLineNumber();\n
                               total_page     python: here.total_pages;\n
                               page_id        python: here.current_page;\n
                               current_page   python: page_id + 1;\n
@@ -404,10 +403,9 @@
                   </tal:block>\n
                 </td>\n
               </tr>\n
-            </tfoot>\n
 \n
-            <tbody tal:condition="line_list">\n
-              <tr tal:repeat="line line_list" tal:define="checked_uid_set here/getCheckedUidSet">\n
+              <tr class="tbody" tal:condition="line_list"\n
+                tal:repeat="line line_list" tal:define="checked_uid_set here/getCheckedUidSet">\n
                 <td tal:condition="python: show_select_column and not is_gadget_mode"\n
                     class="DataA" style="width: 50px; text-align: center; vertical-align: middle"\n
                     >\n
@@ -436,7 +434,6 @@
                   </td>\n
                 </tal:block>\n
               </tr>\n
-            </tbody>\n
 \n
           </table>\n
 \n

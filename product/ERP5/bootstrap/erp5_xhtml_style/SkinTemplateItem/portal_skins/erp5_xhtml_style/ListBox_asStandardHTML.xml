@@ -258,7 +258,7 @@
             </tr>\n
           </table>\n
         </div>\n
-        <div class="ListContent">\n
+        <div class="listbox">\n
           <table cellpadding="0" cellspacing="0"\n
                  summary="This table contains the listbox content">\n
             <tr id="listbox_label_line" class="listbox_label_line"\n
