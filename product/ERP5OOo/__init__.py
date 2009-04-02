@@ -45,7 +45,8 @@ ModuleSecurityInfo('Products.ERP5OOo.OOoUtils').declarePublic('newOOoParser',)
 
 # Define object classes and tools
 from OOoTemplate import OOoTemplate
-object_classes = (OOoTemplate, )
+from FormPrintout import FormPrintout
+object_classes = (OOoTemplate, FormPrintout)
 portal_tools = ()
 content_classes = ()
 content_constructors = ()
