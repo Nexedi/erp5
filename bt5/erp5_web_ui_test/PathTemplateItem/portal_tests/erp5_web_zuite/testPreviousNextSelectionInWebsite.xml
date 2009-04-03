@@ -82,7 +82,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/a</td>\n
+  <td>//tr/td[3]/a[text()="Test Web Site"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -127,7 +127,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/a</td>\n
+  <td>//tr/td[3]/a[text()="Test Web Site II"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -142,7 +142,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//div[@id=\'context_bar\']/span[4]/span[1]/a[2]/span[1]</td>\n
+  <td>//div[@id=\'context_bar\']//a[@title="Previous"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -157,12 +157,12 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[3]/a</td>\n
+  <td>//tr/td[3]/a[text()="Test Web Site"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//div[@id=\'context_bar\']/span[4]/span[1]/a[4]/span[1]</td>\n
+  <td>//div[@id=\'context_bar\']//a[@title="Next"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
