@@ -135,7 +135,7 @@
     <chart:plot-area chart:style-name="chart_picture">\n
       <tal:block metal:define-slot="chart-axis"/>\n
       <tal:block tal:repeat="column_item column_item_list">\n
-        <tal:block tal:define="col_id python:Utils.int2letters(repeat[\'column_item\'].index+1);\n
+        <tal:block tal:define="col_id python:Utils.int2letter(repeat[\'column_item\'].index+1);\n
                    chart_values_cell_range_address string:local-table.$$${col_id}$$2:.$$${col_id}$$${chart_repeated};\n
                    chart_label_cell_address string:local-table.$$${col_id}$$1">\n
           <chart:series tal:condition="python:chart_type != \'chart:circle\'"\n
