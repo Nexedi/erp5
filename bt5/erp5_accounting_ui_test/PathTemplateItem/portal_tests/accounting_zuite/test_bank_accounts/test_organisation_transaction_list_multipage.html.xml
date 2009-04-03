@@ -117,13 +117,7 @@ Test Transactions related to an Organisation, with multiple pages and date range
 <tr>\n
   <td>selectAndWait</td>\n
   <td>listbox_page_selection</td>\n
-  <td>2 of 3</td>\n
-</tr>\n
-<tr>\n
-  <!-- workaround for #206 -->\n
-  <td>clickAndWait</td>\n
-  <td>link=Transactions</td>\n
-  <td></td>\n
+  <td>label=2 of 3</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
