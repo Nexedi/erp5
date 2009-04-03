@@ -319,3 +319,48 @@ class WebSection(Domain, PermanentURLMixIn):
         cache[key] = result
 
       return result
+
+    security.declareProtected(Permissions.View, 'getSiteMapTree')
+    def getSiteMapTree(self, **kw):
+      """
+        Return a site map tree section dependent breadcrumb in the
+        form of a list of dicts whose structure is provided as a tree
+        so that it is easy to implement recursive call with TAL/METAL:
+
+        [
+          {
+            'url'      : '/erp5/web_site_module/site/section',
+            'level'    : 1,
+            'translated_title' : 'Section Title',
+            'subsection' : [
+              {
+                'url'      : '/erp5/web_site_module/site/section/reference',
+                'level'    : 2,
+                'translated_title' : 'Sub Section Title',
+                'subsection' : None,
+              },
+              ...
+            ],
+          }
+          ...
+        ]
+
+        This method must be implemented through a
+        portal type dependent script:
+          WebSection_getSiteMapTree
+      """
+      cache = getReadOnlyTransactionCache(self)
+      if cache is not None:
+        key = ('getSiteMapTree', self) + tuple(kw.items())
+        try:
+          return cache[key]
+        except KeyError:
+          pass
+
+      result = self._getTypeBasedMethod('getSiteMapTree',
+                     fallback_script_id='WebSection_getSiteMapTree')(**kw)
+
+      if cache is not None:
+        cache[key] = result
+
+      return result
