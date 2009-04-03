@@ -39,72 +39,10 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block\n
+<tal:block metal:define-macro="main"\n
   xmlns:tal="http://xml.zope.org/namespaces/tal"\n
   xmlns:metal="http://xml.zope.org/namespaces/metal"\n
   xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
-  <tal:block metal:define-macro="main">\n
-\n
-  <tal:replace tal:content="nothing">\n
-    Because TAL cannot accept unbalanced tags, the support for a domain tree is realized by a macro.\n
-    The macro ListBoxContainer is a no-op, if not in domain tree mode. Otherwise, the macro constructs\n
-    a domain tree and extracts the body in an extra table.\n
-  </tal:replace>\n
-\n
-  <tal:block tal:define="expand python: 0">\n
-    <tal:block metal:define-macro="ListBoxContainer">\n
-      <tal:block tal:condition="expand">\n
-        <table tal:condition="is_domain_tree_mode"\n
-          style="width: 100%;" cellpadding="0" cellspacing="0"\n
-          summary="This table contains the domain tree with the switch button"\n
-          tal:define="selected_domain_path here/getSelectedDomainPath">\n
-          <tr>\n
-            <td valign="top">\n
-              <select name="domain_root_url"\n
-                tal:attributes="onChange string:submitAction(this.form, \'${context_url}/setDomainRoot\')">\n
-                <tal:block tal:repeat="c here/getDomainRootList">\n
-                  <option value="base_domain"\n
-                    tal:define="path python: c[0]; title python: c[1]"\n
-                    tal:attributes="selected python: path == selected_domain_path; value path"\n
-                    tal:content="title"\n
-                    i18n:translate="" i18n:domain="ui">Base Domain</option>\n
-                </tal:block>\n
-              </select>\n
-              <table id="listbox_domain_tree_table" cellpadding="0"\n
-                summary="This table contains the domain tree"\n
-                class="listbox_domain_tree_table"\n
-                tal:attributes="id string:${field_id}_domain_tree_table"\n
-                tal:define="report_tree_list python: here.makeReportTreeList(report_path = selected_domain_path, unfolded_list = selection.getDomainList(), is_report_opened = False);\n
-                            total_depth python: max([report_tree.depth for report_tree in report_tree_list] + [-1])">\n
-                <tr tal:repeat="report_tree report_tree_list">\n
-                  <tal:block tal:repeat="i python: range(report_tree.depth)">\n
-                    <td width="12" nowrap="nowrap">&nbsp;</td>\n
-                  </tal:block>\n
-\t\t  <td colspan="1" style="text-align: left; vertical-align: top; white-space: nowrap;"\n
-                    tal:attributes="colspan python: total_depth - report_tree.depth + 1">\n
-                    <a href="method" class="tree_open"\n
-                      tal:condition="report_tree/is_open"\n
-                      tal:attributes="href string:foldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">\n
-                      <b tal:content="report_tree/obj/getTranslatedTitleOrId">Domain</b></a>\n
-                    <a href="method" class="tree_closed"\n
-                      tal:condition="not: report_tree/is_open"\n
-                      tal:attributes="href string:unfoldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">\n
-                      <tal:block tal:content="report_tree/obj/getTranslatedTitleOrId">Domain</tal:block></a>\n
-                  </td>\n
-                </tr>\n
-              </table>\n
-            </td>\n
-            <td style="vertical-align: top">\n
-              <tal:block metal:define-slot="ListBoxBody" />\n
-            </td>\n
-          </tr>\n
-        </table>\n
-        <tal:block tal:condition="not: is_domain_tree_mode">\n
-          <tal:block metal:define-slot="ListBoxBody" />\n
-        </tal:block>\n
-      </tal:block>\n
-    </tal:block>\n
-  </tal:block>\n
 \n
   <tal:block tal:define="expand python: 1">\n
     <tal:block metal:use-macro="template/macros/ListBoxContainer">\n
@@ -445,8 +383,6 @@
     </tal:block>\n
   </tal:block>\n
   <!-- ListBox ends here.  -->\n
-  </tal:block>\n
-\n
 </tal:block>\n
 
 

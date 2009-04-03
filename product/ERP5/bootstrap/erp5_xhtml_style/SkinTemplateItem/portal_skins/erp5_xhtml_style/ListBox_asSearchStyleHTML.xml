@@ -40,7 +40,10 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <tal:block metal:define-macro="main"\n
-tal:define="  listbox_max_lines  python: int(here.getMaxLineNumber());\n
+  xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"\n
+  tal:define="listbox_max_lines  python: int(here.getMaxLineNumber());\n
               total_line         python: int(here.total_size);\n
               current_page       python: int(here.current_page) + 1;\n
               current_page_max   python: listbox_max_lines * current_page;\n

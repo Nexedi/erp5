@@ -39,7 +39,10 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block metal:define-macro="main">\n
+<tal:block metal:define-macro="main"\n
+  xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
 \n
   <!-- ListBox (table mode) starts here -->\n
   <input type="hidden" name="list_selection_name" value="default" tal:attributes="value selection_name" />\n
@@ -63,22 +66,6 @@
          type="hidden" name="list_start" \n
          tal:attributes="value here/getLineStart" />\n
   \n
-  <tal:replace tal:content="nothing">\n
-    Because TAL cannot accept unbalanced tags, the support for a domain tree is realized by a macro.\n
-    The macro ListBoxContainer is a no-op, if not in domain tree mode. Otherwise, the macro constructs\n
-    a domain tree and extracts the body in an extra table.\n
-  </tal:replace>\n
-\n
-  <tal:block tal:define="expand python: 0">\n
-    <tal:block metal:define-macro="ListBoxContainer">\n
-      <tal:block tal:condition="expand">\n
-        <tal:block tal:condition="not: is_domain_tree_mode">\n
-          <tal:block metal:define-slot="ListBoxBody" />\n
-        </tal:block>\n
-      </tal:block>\n
-    </tal:block>\n
-  </tal:block>\n
-\n
   <tal:block tal:define="expand python: 1;\n
              table_form_id request/current_form_id | form_id;\n
              Base_translateString python: real_context.Base_translateString;\n
