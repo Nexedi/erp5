@@ -84,7 +84,8 @@ if pref.owner_info()[\'id\'] != str(context.REQUEST.AUTHENTICATED_USER):\n
   cb = ptool.manage_copyObjects([\'accounting_zuite_preference\'])\n
   # FIXME: how could this work ???\n
   ptool.manage_pasteObjects(cb)\n
-  \n
+pref.edit(preferred_accounting_transaction_at_date=None)\n
+pref.edit(preferred_accounting_transaction_from_date=None)\n
 pref.enable()\n
 \n
 # reset selections\n
@@ -99,6 +100,8 @@ stool.setSelectionFor(\'person_selection\', None)\n
 stool.setSelectionFor(\'organisation_selection\', None)\n
 stool.setSelectionFor(\'grouping_reference_fast_input_selection\', None)\n
 stool.setSelectionFor(\'accounting_transaction_module_grouping_reference_fast_input\', None)\n
+stool.setSelectionFor(\'entity_transaction_selection\', None)\n
+stool.setSelectionFor(\'account_module_selection\', None)\n
 \n
 # delete the "dummy account" we create in test_account_gap_parallel_list_field\n
 dummy_account_list = portal.account_module.searchFolder(\n
@@ -156,10 +159,10 @@ return "Reset Successfully."\n
                             <string>str</string>
                             <string>ptool</string>
                             <string>cb</string>
+                            <string>None</string>
                             <string>stool</string>
                             <string>form</string>
                             <string>getattr</string>
-                            <string>None</string>
                             <string>listbox</string>
                             <string>dummy_account_list</string>
                           </tuple>

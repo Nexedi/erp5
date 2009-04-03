@@ -302,29 +302,6 @@ Test domain tree of Account Module\n
 </tr>\n
 <!-- }}} -->\n
 \n
-<!-- tear down: reset selection in the tree {{{ -->\n
-<tr>\n
-  <td>selectAndWait</td>\n
-  <td>//select[@name=\'domain_root_url\']</td>\n
-  <td>Account Type</td>\n
-</tr>\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>listbox_flat_list_mode</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>Folder_show:method</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>10 record(s)</td>\n
-</tr>\n
-<!-- }}} -->\n
-\n
 </tbody></table>\n
 </body>\n
 </html> <!-- vim: syntax=html foldmethod=marker\n

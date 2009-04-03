@@ -206,19 +206,6 @@ Test Transactions related to an Organisation, with multiple pages and date range
 </tr>\n
 <!-- }}} -->\n
 \n
-<!-- {{{ tear down -->\n
-<tr>\n
-  <td>assertSelected</td>\n
-  <td>listbox_page_selection</td>\n
-  <td>2 of 3</td>\n
-</tr>\n
-<tr>\n
-  <td>selectAndWait</td>\n
-  <td>listbox_page_selection</td>\n
-  <td>1 of 3</td>\n
-</tr>\n
-<!-- }}} -->\n
-\n
 </tbody></table>\n
 </body>\n
 </html> <!-- vim: syntax=html foldmethod=marker\n

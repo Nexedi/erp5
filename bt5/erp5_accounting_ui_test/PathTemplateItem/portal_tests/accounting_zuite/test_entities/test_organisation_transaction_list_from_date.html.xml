@@ -279,54 +279,6 @@ Test Transactions related to an Organisation, with start date\n
 </tr>\n
 <!-- }}} -->\n
 \n
-<!-- {{{ Tear down -->\n
-<tr>\n
-  <td>assertSelected</td>\n
-  <td>listbox_page_selection</td>\n
-  <td>label=2 of 3</td>\n
-</tr>\n
-<tr>\n
-  <td>selectAndWait</td>\n
-  <td>listbox_page_selection</td>\n
-  <td>label=1 of 3</td>\n
-</tr>\n
-<tr>\n
-  <td>open</td>\n
-  <td>${base_url}</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>selectAndWait</td>\n
-  <td>select_module</td>\n
-  <td>Accounts</td>\n
-</tr>\n
-<tr>\n
-  <td>selectAndWait</td>\n
-  <td>select_jump</td>\n
-  <td>Accounting Preference</td>\n
-</tr>\n
-<tr>\n
-  <td>type</td>\n
-  <td>subfield_field_my_preferred_accounting_transaction_from_date_year</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>type</td>\n
-  <td>subfield_field_my_preferred_accounting_transaction_from_date_month</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>type</td>\n
-  <td>subfield_field_my_preferred_accounting_transaction_from_date_day</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>Base_edit:method</td>\n
-  <td></td>\n
-</tr>\n
-<!-- }}} -->\n
-\n
 </tbody></table>\n
 </body>\n
 </html> <!-- vim: syntax=html foldmethod=marker\n
