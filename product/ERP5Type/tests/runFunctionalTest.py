@@ -77,6 +77,7 @@ def parseArgs():
   global host
   global port
   global portal_name
+  global portal_url
   global run_only
   try:
     opts, args = getopt.getopt(sys.argv[1:],
@@ -108,6 +109,8 @@ def parseArgs():
 
   if not stdout:
     send_mail = 1
+
+  portal_url = "http://%s:%d/%s" % (host, port, portal_name)
 
 def main():
   setPreference()
@@ -196,26 +199,25 @@ def runFirefox():
   prepareFirefox()
   # check if old zelenium or new zelenium
   try:
-    urllib2.urlopen("http://%s:%d/%s/portal_tests/core/scripts/selenium-version.js" % \
-        (host, port, portal_name))
+    urllib2.urlopen("%s/portal_tests/core/scripts/selenium-version.js" % portal_url)
   except urllib2.HTTPError:
     # Zelenium 0.8
-    url_string = "http://%s:%d/%s/portal_tests/?auto=true&__ac_name=%s&__ac_password=%s"
+    url_string = "%s/portal_tests/?auto=true&__ac_name=%s&__ac_password=%s" % (portal_url, user, password)
   else:
     # Zelenium 0.8+ or later
-    url_string = "http://%s:%d/%s/portal_tests/core/TestRunner.html?test=..%%2Ftest_suite_html&auto=on&__ac_name=%s&__ac_password=%s"
+    url_string = "%s/portal_tests/core/TestRunner.html?test=../test_suite_html&auto=on&resultsUrl=%s/portal_tests/postResults&__ac_name=%s&__ac_password=%s" % (portal_url, portal_url, user, password)
   if run_only:
-    url_string = url_string.replace('/portal_tests/', '/portal_tests/%s/' % run_only)
+    url_string = url_string.replace('/portal_tests/', '/portal_tests/%s/' % run_only, 1)
   pid = os.spawnlp(os.P_NOWAIT, "firefox", "firefox", "-profile", profile_dir,
-      url_string % (host, port, portal_name, user, password))
+      url_string)
   os.environ['MOZ_NO_REMOTE'] = '0'
   print 'firefox : %d' % pid
   return pid
 
 def getStatus():
   try:
-    status = urllib2.urlopen('http://%s:%d/%s/TestTool_getResults?test_zuite_relative_url=%s'
-                                % (host, port, portal_name, run_only)).read()
+    status = urllib2.urlopen('%s/portal_tests/TestTool_getResults'
+                             % portal_url).read()
   except urllib2.HTTPError, e:
     if e.msg == "No Content" :
       status = ""
@@ -224,18 +226,17 @@ def getStatus():
   return status
 
 def setPreference():
-  urllib2.urlopen('http://%s:%d/%s/BTZuite_setPreference?__ac_name='
-              '%s&__ac_password=%s&working_copy_list=%s' %
-                                  (host, port, portal_name, user, password, bt5_dir_list))
+  urllib2.urlopen('%s/BTZuite_setPreference?__ac_name='
+                  '%s&__ac_password=%s&working_copy_list=%s' %
+                  (portal_url, user, password, bt5_dir_list))
 
 def unsubscribeFromTimerService():
-  urllib2.urlopen('http://%s:%d/%s/portal_activities/?unsubscribe:method='
+  urllib2.urlopen('%s/portal_activities/?unsubscribe:method='
                   '&__ac_name=%s&__ac_password=%s' %
-                                  (host, port, portal_name, user, password))
+                  (portal_url, user, password))
 
 def sendResult():
-  result_uri = urllib2.urlopen('http://%s:%d/%s/TestTool_getResults?test_zuite_relative_url=%s' %
-                                    (host, port, portal_name, run_only)).readline()
+  result_uri = urllib2.urlopen('%s/portal_tests/TestTool_getResults' % portal_url).readline()
   print result_uri
   file_content = urllib2.urlopen(result_uri).read()
   passes_re = re.compile('<th[^>]*>Tests passed</th>\n\s*<td[^>]*>([^<]*)')
