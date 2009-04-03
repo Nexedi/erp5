@@ -3265,6 +3265,36 @@ class TestCMFActivity(ERP5TypeTestCase):
       self.tic()
       self.assertFalse(active_object.hasActivity(), activity)
 
+  def test_active_object_hasActivity_does_not_catch_exceptions(self):
+    """
+    Some time ago, hasActivity was doing a silent try/except, and this was
+    a possible disaster for some projects. Here we make sure that if the 
+    SQL request fails, then the exception is not ignored
+    """
+    active_object = self.portal.organisation_module.newContent(
+                                            portal_type='Organisation')
+    get_transaction().commit()
+    self.tic()
+    self.assertFalse(active_object.hasActivity())
+
+    # Monkey patch to induce any error artificially in the sql connection.
+    def query(self, query_string,*args, **kw):
+      raise ValueError
+
+    from Products.ZMySQLDA.db import DB
+    DB.original_query = DB.query
+    try:
+      active_object.activate().getTitle()
+      get_transaction().commit()
+      self.assertTrue(active_object.hasActivity())
+      # Make the sql request not working
+      DB.original_query = DB.query
+      DB.query = query
+      # Make sure then that hasActivity fails
+      self.assertRaises(ValueError, active_object.hasActivity)
+    finally:
+      DB.query = DB.original_query
+      del DB.original_query
 
 def test_suite():
   suite = unittest.TestSuite()
