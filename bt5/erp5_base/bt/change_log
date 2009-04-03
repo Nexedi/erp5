@@ -1,3 +1,6 @@
+2009-04-03 yusei
+* Add decimal alignment option to Quantity Divergence Tester.
+
 2009-03-16 Kazuhiko
 * remove ooo_import action in Person Module that is replaced by erp5_ooo_import business template with more generic and better import function.
 
