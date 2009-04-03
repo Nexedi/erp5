@@ -338,6 +338,32 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=self.quiet)
 
+  def test_QuantityDivergenceTesterCompareMethod(self):
+    rule = self.portal.portal_rules.newContent(portal_type='Delivery Rule')
+    divergence_tester = rule.newContent(portal_type='Quantity Divergence Tester')
+
+    self.assert_(not divergence_tester.isDecimalAlignmentEnabled())
+    self.assertEqual(divergence_tester.compare(3.0, 3.001), False)
+    self.assertEqual(divergence_tester.compare(3.0, 3.0), True)
+
+    divergence_tester.setDecimalAlignmentEnabled(True)
+    divergence_tester.setDecimalRoundingOption('ROUND_DOWN')
+    divergence_tester.setDecimalExponent('0.01')
+
+    self.assertEqual(divergence_tester.compare(3.0, 3.001), True)
+    self.assertEqual(divergence_tester.compare(3.0, 3.0), True)
+
+    divergence_tester.setDecimalExponent('0.001')
+    self.assertEqual(divergence_tester.compare(3.0, 3.001), False)
+
+    divergence_tester.setDecimalRoundingOption('ROUND_UP')
+    divergence_tester.setDecimalExponent('0.01')
+    self.assertEqual(divergence_tester.compare(3.0, 3.001), False)
+
+    divergence_tester.setDecimalRoundingOption('ROUND_HALF_UP')
+    divergence_tester.setDecimalExponent('0.01')
+    self.assertEqual(divergence_tester.compare(3.0, 3.001), True)
+
 
 def test_suite():
   suite = unittest.TestSuite()

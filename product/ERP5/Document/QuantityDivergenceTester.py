@@ -59,8 +59,8 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       , PropertySheet.DivergenceTester
+                      , PropertySheet.DecimalOption
                      )
-
 
   def explain(self, simulation_movement):
     """
@@ -109,6 +109,31 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
       message.decision_title = repr(d_quantity)
       if delivery_ratio == 0 and quantity > 0:
         return [message]
-    if d_quantity != quantity + d_error:
+
+    if not self.compare(d_quantity, quantity+d_error):
       return [message]
     return []
+
+  def compare(self, x, y):
+    if self.isDecimalAlignmentEnabled():
+      from decimal import (Decimal, ROUND_DOWN, ROUND_UP, ROUND_CEILING,
+                           ROUND_FLOOR, ROUND_HALF_DOWN, ROUND_HALF_EVEN,
+                           ROUND_HALF_UP)
+      # Python2.4 did not support ROUND_05UP yet.
+      rounding_option_dict = {'ROUND_DOWN':ROUND_DOWN,
+                              'ROUND_UP':ROUND_UP,
+                              'ROUND_CEILING':ROUND_CEILING,
+                              'ROUND_FLOOR':ROUND_FLOOR,
+                              'ROUND_HALF_DOWN':ROUND_HALF_DOWN,
+                              'ROUND_HALF_EVEN':ROUND_HALF_EVEN,
+                              'ROUND_HALF_UP':ROUND_HALF_UP}
+      rounding_option = rounding_option_dict.get(self.getDecimalRoundingOption(),
+                                                 ROUND_DOWN)
+      
+      return (Decimal(str(x)).quantize(Decimal(self.getDecimalExponent()),
+                                       rounding=rounding_option)
+              ==
+              Decimal(str(y)).quantize(Decimal(self.getDecimalExponent()),
+                                       rounding=rounding_option))
+    else:
+      return x==y
