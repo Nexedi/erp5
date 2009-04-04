@@ -712,6 +712,7 @@ class TestOOoImport(ERP5TypeTestCase):
     sequence_list.play(self, quiet=quiet)
   '''
 
+  # CategoryTool_importCategoryFile tests
   def test_CategoryTool_importCategoryFile(self):
     # tests simple use of CategoryTool_importCategoryFile script
     self.portal.portal_categories.CategoryTool_importCategoryFile(
@@ -745,8 +746,61 @@ class TestOOoImport(ERP5TypeTestCase):
     self.assertEquals('A Country', france.getDescription())
     self.assertEquals('FR', france.getCodification())
     self.assertEquals(1, france.getIntIndex())
+  
+  def test_CategoryTool_importCategoryFile_PathStars(self):
+    # tests CategoryTool_importCategoryFile with * in the paths columns
+    self.portal.portal_categories.CategoryTool_importCategoryFile(
+        import_file=makeFileUpload('import_region_category_path_stars.sxc'))
+    get_transaction().commit()
+    self.tic()
+    region = self.portal.portal_categories.region
+    self.assertEqual(2, len(region))
+    self.assertTrue('europe' in region.objectIds())
+    self.assertTrue('germany' in region.europe.objectIds())
+    self.assertTrue('france' in region.europe.objectIds())
+    france = region.europe.france
+    self.assertEquals('France', france.getTitle())
+    self.assertEquals('A Country', france.getDescription())
+    self.assertEquals('FR', france.getCodification())
+    self.assertEquals(1, france.getIntIndex())
+    
+  def test_CategoryTool_importCategoryFile_PathStars_noID(self):
+    # tests CategoryTool_importCategoryFile with * in the paths columns, and no
+    # ID column, and non ascii titles
+    self.portal.portal_categories.CategoryTool_importCategoryFile(
+            import_file=makeFileUpload(
+              'import_region_category_path_stars_non_ascii.sxc'))
+    get_transaction().commit()
+    self.tic()
+    region = self.portal.portal_categories.region
+    self.assertEqual(2, len(region))
+    self.assertTrue('europe' in region.objectIds())
+    self.assertTrue('germany' in region.europe.objectIds())
+    self.assertTrue('france' in region.europe.objectIds())
+    france = region.europe.france
+    self.assertEquals('Frànce', france.getTitle())
+    self.assertEquals('A Country', france.getDescription())
+    self.assertEquals('FR', france.getCodification())
+    self.assertEquals(1, france.getIntIndex())
 
-  # simple OOoParser tests
+  def test_CategoryTool_importCategoryFile_DuplicateIds(self):
+    # tests CategoryTool_importCategoryFile when a document contain same
+    # categories ID at different level (a good candidate for an acquisition
+    # bug)
+    self.portal.portal_categories.CategoryTool_importCategoryFile(
+        import_file=makeFileUpload('import_region_category_duplicate_ids.sxc'))
+    get_transaction().commit()
+    self.tic()
+    region = self.portal.portal_categories.region
+    self.assertEqual(1, len(region))
+    self.assertEquals(['europe'], list(region.objectIds()))
+    self.assertEquals(['france'], list(region.europe.objectIds()))
+    self.assertEquals(['europe'], list(region.europe.france.objectIds()))
+    self.assertEquals(['france'], list(region.europe.france.europe.objectIds()))
+    self.assertEquals([], list(region.europe.france.europe.france.objectIds()))
+
+
+  # OOoParser tests
   def test_getSpreadSheetMapping(self):
     parser = OOoParser()
     parser.openFile(open(makeFilePath('import_data_list.ods'), 'rb'))
@@ -766,6 +820,111 @@ class TestOOoImport(ERP5TypeTestCase):
         open(makeFilePath('import_data_list.ods'), 'rb').read())
     mapping = parser.getSpreadsheetsMapping()
     self.assertEquals(['Person'], mapping.keys())
+
+  def test_getSpreadSheetMappingStyle(self):
+    parser = OOoParser()
+    parser.openFile(open(makeFilePath('import_data_list_with_style.ods'), 'rb'))
+    mapping = parser.getSpreadsheetsMapping()
+    self.assertEquals(['Feuille1'], mapping.keys())
+    self.assertEquals(mapping['Feuille1'][1],
+                      ['a line with style'])
+    self.assertEquals(mapping['Feuille1'][2],
+                      ['a line with multiple styles'])
+    self.assertEquals(mapping['Feuille1'][3],
+                      ['http://www.erp5.org'])
+    self.assertEquals(mapping['Feuille1'][4],
+                      ['john.doe@example.com'])
+
+  def test_getSpreadSheetMappingDataTypes(self):
+    parser = OOoParser()
+    parser.openFile(open(makeFilePath('import_data_list_data_type.ods'), 'rb'))
+    mapping = parser.getSpreadsheetsMapping()
+    self.assertEquals(['Feuille1'], mapping.keys())
+    self.assertEquals(mapping['Feuille1'][0],
+                      ['1234.5678'])
+    self.assertEquals(mapping['Feuille1'][1],
+                      ['1234.5678'])
+    self.assertEquals(mapping['Feuille1'][2],
+                      ['0.1'])
+    self.assertEquals(mapping['Feuille1'][3],
+                      ['2008-11-14'])
+    self.assertEquals(mapping['Feuille1'][4],
+                      ['2008-11-14T10:20:30']) # supported by DateTime
+    self.assertEquals(mapping['Feuille1'][5],
+                      ['PT12H34M56S']) # maybe not good, this is raw format
+
+  # Base_getCategoriesSpreadSheetMapping tests
+  def test_Base_getCategoriesSpreadSheetMapping(self):
+    # test structure returned by Base_getCategoriesSpreadSheetMapping
+    mapping = self.portal.Base_getCategoriesSpreadSheetMapping(
+        import_file=makeFileUpload('import_region_category.sxc'))
+    self.assertTrue(isinstance(mapping, dict))
+    self.assertEquals(['region'], list(mapping.keys()))
+    region = mapping['region']
+    self.assertTrue(isinstance(region, list))
+    self.assertEquals(6, len(region))
+    # base category is contained in the list
+    self.assertEquals(dict(path='region',
+                           title='region'),
+                      region[0])
+    self.assertEquals(dict(path='region/europe',
+                           title='Europe'),
+                      region[1])
+    self.assertEquals(dict(codification='FR',
+                           description='A Country',
+                           int_index='1',
+                           path='region/europe/france',
+                           title='France'),
+                      region[2])
+    # strings are encoded in UTF8
+    self.assertTrue(isinstance(region[1]['title'], str))
+    self.assertTrue(isinstance(region[1]['path'], str))
+    for k in region[1].keys():
+      self.assertTrue(isinstance(k, str), (k, type(k)))
+
+  def test_Base_getCategoriesSpreadSheetMapping_DuplicateIdsAtSameLevel(self):
+    # tests Base_getCategoriesSpreadSheetMapping when a document contain same
+    # categories ID at the same level, in that case, a ValueError is raised
+    import_file = makeFileUpload(
+        'import_region_category_duplicate_ids_same_level.sxc')
+    try:
+      self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
+             import_file=import_file)
+    except ValueError, error:
+      # 'france' is the duplicate ID in this spreadsheet
+      self.assertTrue('france' in str(error), str(error))
+    else:
+      self.fail('ValueError not raised')
+    
+    # Base_getCategoriesSpreadSheetMapping performs checks on the spreadsheet,
+    # an "invalid spreadsheet" error handler can be provided, to report errors
+    # nicely.
+    message_list = []
+    def on_invalid_spreadsheet(message):
+      message_list.append(message)
+
+    import_file = makeFileUpload(
+        'import_region_category_duplicate_ids_same_level.sxc')
+    self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(import_file,
+         invalid_spreadsheet_error_handler=on_invalid_spreadsheet)
+    
+    self.assertEquals(1, len(message_list))
+    self.assertTrue('france' in str(message_list[0]))
+
+  def test_Base_getCategoriesSpreadSheetMapping_WrongHierarchy(self):
+    # tests Base_getCategoriesSpreadSheetMapping when the spreadsheet has an
+    # invalid hierarchy (#788)
+    import_file = makeFileUpload(
+        'import_region_category_wrong_hierarchy.sxc')
+    try:
+      self.portal.portal_categories.Base_getCategoriesSpreadSheetMapping(
+             import_file=import_file)
+    except ValueError, error:
+      # 'wrong_hierarchy' is the ID of the category where the problem happens
+      self.assertTrue('wrong_hierarchy' in str(error), str(error))
+    else:
+      self.fail('ValueError not raised')
+
 
 def test_suite():
   suite = unittest.TestSuite()
