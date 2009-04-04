@@ -1671,7 +1671,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
       ob = types_tool._getOb(portal_type)
       prop_value = getattr(ob, self.class_property, ())
       if not allowed_type in prop_value and not self.is_bt_for_diff:
-        raise ValueError, "%s  %s not found in portal type %s" % (
+        raise ValueError, "%s %s not found in portal type %s" % (
                              getattr(self, 'name', self.__class__.__name__),
                              allowed_type, portal_type)
 
