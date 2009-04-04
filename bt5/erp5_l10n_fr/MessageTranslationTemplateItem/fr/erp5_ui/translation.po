@@ -285,6 +285,9 @@ msgstr "Extrait de compte"
 msgid "Account Type"
 msgstr "Type de Compte"
 
+msgid "Account Type must be set"
+msgstr "Le type de compte doit être défini"
+
 msgid "Account Workflow"
 msgstr "Workflow de compte"
 
@@ -1668,9 +1671,6 @@ msgstr "Workflow de causalité"
 msgid "Cell Level Divergences"
 msgstr "Divergences au niveau des cellules"
 
-msgid "Line Level Divergences"
-msgstr "Divergences au niveau des lignes"
-
 msgid "Cells"
 msgstr "Cellules"
 
@@ -1856,9 +1856,6 @@ msgstr "Cette action permet de clôturer la période comptable de manière défi
 
 msgid "Closed"
 msgstr "Clôturé"
-
-msgid "Closed Account"
-msgstr "Compte fermé"
 
 msgid "Closed Accounting Period"
 msgstr "Période comptable clôturée"
@@ -3718,12 +3715,6 @@ msgstr "Faire expirer l'évènement"
 msgid "Expired"
 msgstr "Expiré"
 
-msgid "Expired Protected [state in category_publication_workflow]"
-msgstr ""
-
-msgid "Expired Published [state in category_publication_workflow]"
-msgstr ""
-
 msgid "Expired [state in category_publication_workflow]"
 msgstr "Expiré"
 
@@ -4047,6 +4038,9 @@ msgstr "Numéro de compte (Plan comptable)"
 
 msgid "GAP Root"
 msgstr "Plan comptable"
+
+msgid "GAP must be set"
+msgstr "Le plan comptable doit être défini"
 
 msgid "GSM"
 msgstr "Portable"
@@ -4561,6 +4555,9 @@ msgstr "Mode international"
 msgid "Invalidate"
 msgstr "Invalider"
 
+msgid "Invalidate Account"
+msgstr "Invalider le compte"
+
 msgid "Invalidate Action"
 msgstr "Invalider (action)"
 
@@ -4857,6 +4854,9 @@ msgstr "Licence"
 
 msgid "Line"
 msgstr "Ligne"
+
+msgid "Line Level Divergences"
+msgstr "Divergences au niveau des lignes"
 
 msgid "Lines created."
 msgstr "Ordre enregistré"
