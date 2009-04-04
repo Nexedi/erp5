@@ -46,6 +46,7 @@ class Account:
   _constraints = (
     { 'id': 'account_type_category_existence',
       'description': 'Account Type must be set',
+      'message_category_not_set': 'Account Type must be set',
       'type': 'CategoryExistence',
       'account_type' : 1,
       'condition' : 'python: object.getValidationState() not'
@@ -54,6 +55,7 @@ class Account:
     { 'id': 'gap_category_existence',
       'description': 'GAP must be set',
       'type': 'CategoryExistence',
+      'message_category_not_set': 'GAP must be set',
       'gap' : 1,
       'condition' : 'python: object.getValidationState() not'
                      ' in ("invalidated", "deleted")'
