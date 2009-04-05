@@ -3451,6 +3451,9 @@ msgstr "Segmentation"
 msgid "Email"
 msgstr "Email"
 
+msgid "Email Confirmation"
+msgstr "Confirmation email"
+
 msgid "Email Ingestion Address"
 msgstr "Adresse email pour l'ingestion"
 
@@ -7286,6 +7289,9 @@ msgstr "Demander l'autorisation du manager"
 msgid "Request Processing"
 msgstr "Demander le traîtement"
 
+msgid "Request Subscription"
+msgstr "Enregistrer la requête d'inscription"
+
 msgid "Request Translation"
 msgstr "Demander la traduction"
 
@@ -9620,6 +9626,9 @@ msgstr "Passe l'écriture au brouillard validé."
 
 msgid "This document is not converted yet."
 msgstr "Ce document n'est pas encore converti"
+
+msgid "This email address is already registered."
+msgstr "Cette adresse email est déjà enregistrée."
 
 msgid "This is the official code of the city in which the company has been registered. Those codes can be found on different websites, depending upon the country needed. In France for instance, it is available on the INSEE website. (www.insee.fr)"
 msgstr "Le code géographique de l'organisation, ce code est parfois dérivé  du numéro d'immatriculation, et est disponible sur le site de l'Insee."
