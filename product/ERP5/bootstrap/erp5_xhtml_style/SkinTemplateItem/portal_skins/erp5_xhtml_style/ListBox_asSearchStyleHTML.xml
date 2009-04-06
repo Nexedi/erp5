@@ -113,7 +113,7 @@
                  <a tal:condition="not:is_gadget_mode"\n
                     tal:attributes="href string:${context_url}/${table_form_id}?list_style=table">\n
                     <img id="style_toggle_icon" \n
-                         src="erp5/images/search_style_icon.png" \n
+                         tal:attributes="src string:${portal_url_string}/images/search_style_icon.png" \n
                          alt="Search Icon"\n
                          height="16"\n
                          title="Table mode"\n
@@ -159,7 +159,7 @@
                           i18n:domain="ui" i18n:attributes="title">\n
                     <img id="style_toggle_icon"\n
                          alt="Table Mode Icon"\n
-                         src="erp5/images/search_style_icon.png" \n
+                         tal:attributes="src string:${portal_url_string}/images/search_style_icon.png" \n
                          height="16"/>\n
                   </button>\n
 \n
