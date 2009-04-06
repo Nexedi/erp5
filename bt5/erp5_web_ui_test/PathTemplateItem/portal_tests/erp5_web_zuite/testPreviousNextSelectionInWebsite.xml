@@ -85,12 +85,10 @@
   <td>//tr/td[3]/a[text()="Test Web Site"]</td>\n
   <td></td>\n
 </tr>\n
-\n
-\n
 <tr>\n
-  <td>clickAndWait</td>\n
-  <td>//button[@name=\'Base_edit:method\']</td>\n
-   <td></td>\n
+  <td>assertLocation</td>\n
+  <td>${base_url}/web_site_module/test_web_site/view*</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
@@ -127,11 +125,10 @@
   <td>//tr/td[3]/a[text()="Test Web Site II"]</td>\n
   <td></td>\n
 </tr>\n
-\n
 <tr>\n
-  <td>clickAndWait</td>\n
-  <td>//button[@name=\'Base_edit:method\']</td>\n
-   <td></td>\n
+  <td>assertLocation</td>\n
+  <td>${base_url}/web_site_module/test_web_site_2/view*</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
