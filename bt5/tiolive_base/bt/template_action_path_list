@@ -1,6 +1,3 @@
-portal_actions | download_access_log_file
-portal_actions | download_datafs_file
-portal_actions | download_event_log_file
 portal_actions | tiolive_documentation
 portal_actions | tiolive_instance
 portal_actions | tiolive_profile

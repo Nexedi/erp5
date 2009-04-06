@@ -1,3 +1,6 @@
+2009-04-06 ivan
+* Revert Rafael's changes (r26190)
+
 2009-03-27 rafael
 * Added new actions to provide download of logs and Data.fs for Manager Users Only.
 
