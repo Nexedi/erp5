@@ -609,11 +609,8 @@
   <record id="8" aka="AAAAAAAAAAg=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.States</string>
-          <string>StateDefinition</string>
-        </tuple>
-        <none/>
+        <global name="StateDefinition" module="Products.DCWorkflow.States"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -649,6 +646,8 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>build</string>
+                <string>build_action</string>
                 <string>edit</string>
               </tuple>
             </value>
