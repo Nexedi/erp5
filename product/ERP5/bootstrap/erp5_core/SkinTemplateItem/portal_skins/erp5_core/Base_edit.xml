@@ -67,7 +67,7 @@
 from Products.Formulator.Errors import FormValidationError\n
 from Products.CMFActivity.Errors import ActivityPendingError\n
 \n
-request=context.REQUEST\n
+request=container.REQUEST\n
 portal = context.getPortalObject()\n
 Base_translateString = portal.Base_translateString\n
 \n
@@ -254,6 +254,12 @@ except ActivityPendingError,e:\n
 \n
 ignore_layout = int(ignore_layout)\n
 editable_mode = int(editable_mode)\n
+spp = context.getPhysicalPath()\n
+spp =list(spp)\n
+s_url = request["SERVER_URL"]\n
+spp.insert(0,s_url)\n
+#calculate direct the url instead of using absolute_url\n
+new_url = \'/\'.join(spp)\n
 \n
 if not selection_index:\n
   redirect_url = \'%s/%s?ignore_layout:int=%s&editable_mode:int=%s&portal_status_message=%s\' % (\n
@@ -262,6 +268,16 @@ if not selection_index:\n
                                   ignore_layout,\n
                                   editable_mode,\n
                                   message)\n
+\n
+elif context.getPortalType()==\'Web Site\':\n
+  redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&ignore_layout:int=%s&editable_mode=%s&portal_status_message=%s\' % (\n
+                              new_url,\n
+                              form_id,\n
+                              selection_index,\n
+                              selection_name,\n
+                              ignore_layout,\n
+                              editable_mode,\n
+                              message)\n
 else:\n
   redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&ignore_layout:int=%s&editable_mode=%s&portal_status_message=%s\' % (\n
                               context.absolute_url(),\n
@@ -272,7 +288,9 @@ else:\n
                               editable_mode,\n
                               message)\n
 \n
+\n
 result = request[\'RESPONSE\'].redirect(redirect_url) \n
+\n
 if silent_mode: return result, \'redirect\'\n
 return result\n
 
@@ -326,8 +344,9 @@ return result\n
                             <string>Products.CMFActivity.Errors</string>
                             <string>ActivityPendingError</string>
                             <string>_getattr_</string>
-                            <string>context</string>
+                            <string>container</string>
                             <string>request</string>
+                            <string>context</string>
                             <string>portal</string>
                             <string>Base_translateString</string>
                             <string>None</string>
@@ -359,6 +378,10 @@ return result\n
                             <string>encapsulated_editor</string>
                             <string>e</string>
                             <string>int</string>
+                            <string>spp</string>
+                            <string>list</string>
+                            <string>s_url</string>
+                            <string>new_url</string>
                             <string>result</string>
                           </tuple>
                         </value>
