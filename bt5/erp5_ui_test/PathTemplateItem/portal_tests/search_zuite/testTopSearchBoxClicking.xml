@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Search Top Box Clicking</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Test a search on the top box clicking on the search button</td></tr>\n
+</thead><tbody>\n
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+\t<td>type</td>\n
+\t<td>field_your_search_text</td>\n
+\t<td>Title</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@title=\'Search\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyText</td>\n
+\t<td>//div[@class=\'searchResultHeader\']/span[@class=\'right\']</td>\n
+\t<td>Results 1 - 1 of 1.</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyText</td>\n
+\t<td>//tr[@id=\'listbox_data_line_0\']//div[@class=\'search_result_title\']</td>\n
+\t<td>Title 1</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']//div[@class=\'search_result_title\']/a</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyText</td>\n
+\t<td>//div[@id=\'breadcrumb\']</td>\n
+\t<td>erp5  / Foos  / Title 1  / </td>\n
+</tr>\n
+</tbody></table>\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testTopSearchBoxClicking</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
