@@ -224,17 +224,6 @@ class ContributionTool(BaseTool):
           document.edit(file=kw['file'])
           return document
 
-    #
-    # Strong possibility of a new file.
-    #
-    try:
-      self._checkId(file_name)
-    except BadRequest:
-      extension = ''
-      if '.' in file_name:
-        extension = '.%s' % file_name.split('.')[-1]
-      file_name = '%s%s' % (self.generateNewId(), extension)
-
     # Then put the file inside ourselves for a short while
     if container_path is not None:
       container = self.getPortalObject().restrictedTraverse(container_path)
