@@ -66,7 +66,7 @@
   <input tal:condition="python:form_id and is_gadget_mode" type="hidden" name="gadget_form_id" tal:attributes="value form_id" />\n
   \n
   <tal:block tal:define="expand python: 1;\n
-                         date_renderer python: context.getContext().DocumentModule_viewFieldLibrary.listbox_modification_date.render_pdf;">\n
+                         date_renderer python: context.getContext().ERP5Site_viewSearchResult.listbox_modification_date.render_pdf;">\n
     <tal:block metal:use-macro="template/macros/ListBoxContainer">\n
       <tal:block metal:fill-slot="ListBoxBody">\n
 \n
