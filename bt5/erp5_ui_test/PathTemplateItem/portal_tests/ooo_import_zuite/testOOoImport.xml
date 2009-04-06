@@ -50,11 +50,15 @@
 <thead>\n
 <tr><td rowspan="1" colspan="3">Test OOo Importing </td></tr>\n
 </thead><tbody>\n
-<!-- <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" /> -->\n
 <tr>\n
   <td>store</td>\n
   <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>\n
   <td>base_url</td>\n
+</tr>\n
+<tr>\n
+  <td>setTimeout</td>\n
+  <td>600000</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
