@@ -66,35 +66,38 @@ IDEAS:\n
           <meta http-equiv="Content-Style-Type" content="text/css" />\n
           <title tal:define="title title | string:ERP5"\n
                  tal:content="python: \'%s | %s\' % (title, here.getPortalObject().title_or_id())"></title>\n
+          <tal:block tal:repeat="css css_list">\n
+            <link tal:attributes="href css" type="text/css" rel="stylesheet" />\n
+          </tal:block>\n
           <tal:block tal:replace="nothing">\n
-            <!-- Render each field\'s css and include css\'s and javascripts. -->\n
+            <!-- Render each field\'s css and javascript. -->\n
           </tal:block>\n
           <tal:block tal:condition="python: form is not None">\n
             <tal:block tal:repeat="group python: [x for x in form.get_groups(include_empty=0) if x != \'hidden\']">\n
               <tal:block tal:repeat="field python: form.get_fields_in_group(group)">\n
                 <tal:block tal:define="css python: field.render_css(REQUEST=request)">\n
-                  <style type="text/css"\n
-                         tal:condition="python: css is not None"\n
-                         tal:content="css">\n
+                  <style tal:condition="python: css is not None"\n
+                         tal:content="css"\n
+                         tal:attributes="type python:\'text/css\'">\n
                   </style>\n
                 </tal:block>\n
-                <tal:block tal:define="dummy python: css_list.extend(field.get_css_list(REQUEST=request))" />\n
                 <tal:block tal:define="dummy python: js_list.extend(field.get_javascript_list(REQUEST=request))" />\n
               </tal:block>\n
             </tal:block>\n
           </tal:block>\n
-          <tal:block tal:repeat="css css_list">\n
-            <link tal:attributes="href css" type="text/css" rel="stylesheet" />\n
-          </tal:block>\n
+          <!-- May need to remove duplicates -->\n
           <tal:block tal:repeat="js js_list">\n
             <script tal:attributes="src js" type="text/javascript"></script>\n
           </tal:block>\n
           <link rel="icon" tal:attributes="href string:${portal_path}/favicon.ico" type="image/x-icon" />\n
           <link rel="shortcut icon" tal:attributes="href string:${portal_path}/favicon.ico" type="image/x-icon" />\n
+          <tal:block metal:define-slot="head">\n
+            <!-- this is a placeholder for different extensions to head which could be required by web themes -->\n
+          </tal:block>\n
         </head>\n
-        <body>\n
+        <body tal:attributes="class body_css_class|nothing">\n
           <form id="main_form"\n
-                tal:attributes="enctype form/Form_getEnctype | enctype | nothing;\n
+                tal:attributes="enctype enctype | form/Form_getEnctype | nothing;\n
                 action url;\n
                 method python:str(path(\'form/method | string:post\')).lower()">\n
             <fieldset id="hidden_fieldset">\n
@@ -123,13 +126,13 @@ IDEAS:\n
                 </div>\n
                 <div id="logged_in_as">\n
                   <tal:block tal:condition="not: portal/portal_membership/isAnonymousUser">\n
-                    <span class="logged_txt" i18n:translate="" i18n:domain="ui">Logged in as :</span>\n
+                    <span class="logged_txt" i18n:translate="" i18n:domain="ui">Logged In as :</span>\n
                     <tal:block tal:replace="python:portal.portal_membership.getAuthenticatedMember().getUserName()" />\n
                   </tal:block>\n
                 </div>\n
                 <p class="clear"></p>\n
                 <div tal:content="request/portal_status_message | nothing" id="transition_message" />\n
-                <div id="information_area" tal:condition="request/field_errors | nothing" \n
+                <div id="information_area" tal:condition="request/field_errors | nothing"\n
                     i18n:translate="" i18n:domain="ui">\n
                   Input data has errors. Please look at the error messages below.\n
                 </div>\n
