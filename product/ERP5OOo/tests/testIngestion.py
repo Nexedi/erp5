@@ -47,8 +47,8 @@ conversion_server_host = ('127.0.0.1', 8008)
 
 # test files' home
 TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
-FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,6})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
-REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,6})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
+FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z&é@{]{3,7})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
+REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z&é@{]{3,7})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
 
 def printAndLog(msg):
   """
@@ -655,6 +655,7 @@ class TestIngestion(ERP5TypeTestCase):
     self.assertEquals(context.getReference(), 'TEST')
     self.assertEquals(context.getLanguage(), 'en')
     self.assertEquals(context.getVersion(), '002')
+    self.assertEquals(context.getSourceReference(), file_name)
 
   def stepCheckConvertedContent(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1343,6 +1344,59 @@ class TestIngestion(ERP5TypeTestCase):
                  ,'stepTic'
                  ,'stepReuploadTextFromContributionTool'
                  ,'stepUploadAnotherTextFromContributionTool'
+                ]
+    self.playSequence(step_list, quiet)
+
+  def stepUploadTextFromContributionToolWithNonASCIIFilename(self, 
+                                 sequence=None, sequence_list=None, **kw):
+    """
+      Upload a file from contribution.
+    """
+    f = makeFileUpload('T&é@{T-en-002.doc')
+    document = self.portal.portal_contributions.newContent(file=f)
+    sequence.edit(document_id=document.getId())
+    get_transaction().commit()
+
+  def stepDiscoverFromFilenameWithNonASCIIFilename(self, 
+                                 sequence=None, sequence_list=None, **kw):
+    """
+      Upload a file using contribution tool. This should trigger metadata
+      discovery and we should have basic coordinates immediately,
+      from first stage.
+    """
+    context = self.getDocument(sequence.get('document_id'))
+    file_name = 'T&é@{T-en-002.doc'
+    # First make sure the regular expressions work
+    property_dict = context.getPropertyDictFromFileName(file_name)
+    self.assertEquals(property_dict['reference'], 'T&é@{T')
+    self.assertEquals(property_dict['language'], 'en')
+    self.assertEquals(property_dict['version'], '002')
+    # Then make sure content discover works
+    # XXX - This part must be extended
+    property_dict = context.getPropertyDictFromContent()
+    self.assertEquals(property_dict['title'], 'title')
+    self.assertEquals(property_dict['description'], 'comments')
+    self.assertEquals(property_dict['subject_list'], ['keywords'])
+    # Then make sure metadata discovery works
+    self.assertEquals(context.getReference(), 'T&é@{T')
+    self.assertEquals(context.getLanguage(), 'en')
+    self.assertEquals(context.getVersion(), '002')
+    self.assertEquals(context.getSourceReference(), file_name)
+
+  def test_13_UploadTextFromContributionToolWithNonASCIIFilename(self, 
+                                           quiet=QUIET, run=RUN_ALL_TEST):
+    """
+      Make sure that when upload file from contribution tool, it creates a new
+      document in document module. when reupload same filename file, then it
+      does not create a new document and update existing document.
+    """
+    if not run: return
+    if not quiet:
+      printAndLog('test_13_UploadTextFromContributionToolWithNonASCIIFilename')
+    step_list = [ 'stepCleanUp'
+                 ,'stepUploadTextFromContributionToolWithNonASCIIFilename'
+                 ,'stepTic'
+                 ,'stepDiscoverFromFilenameWithNonASCIIFilename'
                 ]
     self.playSequence(step_list, quiet)
 
