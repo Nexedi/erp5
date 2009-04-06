@@ -61,6 +61,9 @@
 context.setContainerLayout(\'erp5_web_layout\')\n
 context.setContentLayout(\'erp5_web_content_layout\')\n
 context.setLayoutConfigurationFormId(\'WebSection_viewDefaultThemeConfiguration\')\n
+lang_list = context.Localizer.get_supported_languages()\n
+context.setAvailableLanguageSet(lang_list)\n
+context.setStaticLanguageSelection(1)\n
 </string> </value>
         </item>
         <item>
@@ -101,6 +104,7 @@ context.setLayoutConfigurationFormId(\'WebSection_viewDefaultThemeConfiguration\
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>lang_list</string>
                           </tuple>
                         </value>
                     </item>
