@@ -517,9 +517,7 @@ class ODFStrategy(Implicit):
       if listbox_column_index >= listbox_column_size:
         break
       value = listbox_column_list[listbox_column_index][1]
-      # if value is None, remaining the ODF original text
-      if value is not None:
-        self._set_column_value(column, value)
+      self._set_column_value(column, value)
       column_span = self._get_column_span_size(column)
       listbox_column_index = self._next_listbox_column_index(column_span,
                                                              listbox_column_index,
