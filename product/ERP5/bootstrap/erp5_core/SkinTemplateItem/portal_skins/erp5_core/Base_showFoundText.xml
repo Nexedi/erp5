@@ -61,67 +61,21 @@
   containing searched words as well highlighting the searched \n
   words in the text itself.\n
 """\n
-is_gadget_mode = context.REQUEST.get(\'is_gadget_mode\', 0)\n
-\n
-if is_gadget_mode:\n
-  # in gadget mode less space is available thus show less text\n
-  max_text_length = 100\n
-  max_lines = 1\n
-\n
-def getRandomDocumentTextExcerpt():\n
-  # try to get somewhat arbitrary choice of searchable attrs\n
-  if isinstance(document_text, str) and document_text!=\'\':\n
-    start = min(len(document_text) - 300, 200)\n
-    return \'... %s ...\' %document_text[start:start + max_text_length]\n
-\n
-# get search words from listbox selection\n
-argument_names = (\'advanced_search_text\', \n
-                  \'title\',\n
-                  \'reference\',\n
-                  \'searchabletext\', \n
-                  \'searchabletext_any\',\n
-                  \'searchabletext_all\', \n
-                  \'searchabletext_phrase\',)\n
-\n
-if document_text is None:\n
-  # convert object to text (if possible)\n
-  if getattr(context, \'asText\', None) is not None and \\\n
-      getattr(context, \'hasBaseData\', None) is not None:\n
-    if context.hasBaseData():\n
-      # document is successfully converted\n
-      document_text = context.asText()\n
-    else:\n
-      # document not converted (due to a conversion error), return message to user\n
-      return context.Base_translateString(\'Document is not converted or missing content.\')\n
-\n
 \n
 if selection is not None:\n
   params = selection.getParams()\n
 else:\n
-  params = context.portal_selections.getSelectionParamsFor(\'web_search_result_selection\')\n
+  params = context.portal_selections.getSelectionParamsFor(\'search_result_selection\')\n
+search_words = params.get(\'your_search_text\')\n
 \n
-params = [params.get(name, \'\') for name in argument_names]\n
-params = [(hasattr(par, \'sort\') and \'\'.join(par) or par) for par in params]\n
-search_string = \' \'.join(params)\n
+if document_text is None:\n
+  document_text = context.getSearchableText()\n
 \n
-if search_string.strip() == \'\':\n
-  # listbox uses its own method, not searching\n
-  return getRandomDocumentTextExcerpt()\n
-\n
-search_argument_list = context.Base_parseSearchString(search_string)\n
-search_words = search_argument_list.get(\'searchabletext\', None)\n
-\n
-if search_words in (\'\', None,):\n
-  # the searched words are empty (e.g. because we used only parameters \n
-  # without pure searchable text)\n
-  return getRandomDocumentTextExcerpt()\n
-\n
-# get fragments of text containing searched words\n
 found_text_fragments = context.Base_getExcerptText(\n
                          context, \\\n
                          document_text, \\\n
                          search_words, \\\n
-                         tags = (\'<div style="font-weight:bold;display:inline;">\', \'</div>\'), \\\n
+                         tags = (\'<em>\', \'</em>\'), \\\n
                          trail = 5, \\\n
                          maxlines = max_lines)\n
 result = \' \'.join(map(str, found_text_fragments))\n
@@ -173,22 +127,10 @@ return result\n
                             <string>selection</string>
                             <string>max_lines</string>
                             <string>max_text_length</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>is_gadget_mode</string>
-                            <string>getRandomDocumentTextExcerpt</string>
-                            <string>argument_names</string>
                             <string>None</string>
-                            <string>getattr</string>
+                            <string>_getattr_</string>
                             <string>params</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>name</string>
-                            <string>par</string>
-                            <string>hasattr</string>
-                            <string>search_string</string>
-                            <string>search_argument_list</string>
+                            <string>context</string>
                             <string>search_words</string>
                             <string>found_text_fragments</string>
                             <string>map</string>
