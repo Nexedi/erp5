@@ -1,9 +1,9 @@
-# -*- coding: latin1 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2007,2009 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2007,2009 Nexedi SA and Contributors. All Rights Reserved.
 #          Aurélien Calonne <aurel@nexedi.com>
-#          Lukasz Nowak <luke@nexedi.com>
+#          Łukasz Nowak <luke@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
