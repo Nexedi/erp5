@@ -110,6 +110,9 @@ class DummyLocalizer:
             {'selected': False, 'id': 'pl', 'title': 'Polish'},
             {'selected': False, 'id': 'fr', 'title': 'French'},]
 
+  def get_supported_languages(self):
+    return ('en', 'fr', 'pl')
+
   def changeLanguage(self, lang):
     self.lang = lang
 
