@@ -16,9 +16,7 @@
                 <string>title</string>
                 <string>columns</string>
                 <string>sort</string>
-                <string>list_method</string>
                 <string>selection_name</string>
-                <string>default_params</string>
                 <string>search</string>
                 <string>select</string>
                 <string>editable_columns</string>
@@ -72,10 +70,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>default_params</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>editable_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -85,10 +79,6 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>list_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -148,17 +138,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>default_params</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>is_self_excluded</string>
-                          <string>1</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
@@ -188,12 +167,6 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
                 </item>
                 <item>
                     <key> <string>search</string> </key>
@@ -228,22 +201,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>objectValues</string> </value>
         </item>
       </dictionary>
     </pickle>
