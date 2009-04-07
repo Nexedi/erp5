@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ExternalMethod" module="Products.ExternalMethod.ExternalMethod"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_function</string> </key>
+            <value> <string>checkFolderHandler</string> </value>
+        </item>
+        <item>
+            <key> <string>_module</string> </key>
+            <value> <string>ERP5Administration</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>checkFolderHandler</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
