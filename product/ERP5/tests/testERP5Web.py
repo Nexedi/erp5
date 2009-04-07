@@ -1,4 +1,5 @@
 ##############################################################################
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2004, 2005, 2006 Nexedi SARL and Contributors. 
 # All Rights Reserved.
