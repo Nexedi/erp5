@@ -805,8 +805,8 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertSameSet([sub_web_section], 
                        web_site.getWebSectionValueList(web_page))
 
-    # Set leaf web section visible
-    # Nothing is returned
+    # Set leaf web section visible, which should be returned even if parent is
+    # not visible
     web_section.setVisible(0)
     sub_web_section.setVisible(1)
     _commit()
