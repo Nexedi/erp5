@@ -68,10 +68,6 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     return ('erp5_base',
             'erp5_web',
-            #'erp5_ingestion',
-            #'erp5_ingestion_mysql_innodb_catalog',
-            #'erp5_dms',
-            #'erp5_dms_mysql_innodb_catalog',
             )
 
   def afterSetUp(self):
@@ -763,8 +759,6 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     return ('erp5_base',
-            'erp5_mysql_innodb_catalog',
-            'erp5_dms_mysql_innodb_catalog',
             'erp5_web',
             )
 
