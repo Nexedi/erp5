@@ -85,7 +85,7 @@ class WebSiteTraversalHook(Persistent):
         i += 1
       # Insert the web site path after the common part of the path
       if path_len > common_index + 1:
-        path = website_path + path[common_index + 1:]
+        path = website_path[0:common_index+1] + path[common_index + 1:]
     rpp = request.other.get('VirtualRootPhysicalPath', ('', ))
     i = 0
     for name in rpp[:len(path)]:
@@ -97,6 +97,7 @@ class WebSiteTraversalHook(Persistent):
     #  # Replace the last id of the path with the name which
     #  # was used to lookup the document
     #  path = path[:-1] + (self._v_request[DOCUMENT_NAME_KEY],)
+    LOG("Path",0,path)
     return path[i:]
 
   def __call__(self, container, request):
@@ -151,6 +152,7 @@ class WebSite(WebSection):
         """
           Returns the current web site (ie. self) though containment acquisition
         """
+       
         return self
 
     # Static Language Selection support
