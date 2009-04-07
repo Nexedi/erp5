@@ -220,26 +220,30 @@ class WebSite(WebSection):
                          id='WebSite._getWebSectionUidList',
                          cache_factory='erp5_content_medium')
 
-      section_list = self.portal_domains.searchPredicateList(document, 
-                        portal_type='Web Section',
-                        uid=_getWebSectionUidList(self))
+      web_section_uid_list = _getWebSectionUidList(self)
+      if web_section_uid_list:
+        section_list = self.portal_domains.searchPredicateList(document, 
+                          portal_type='Web Section',
+                          uid=web_section_uid_list)
 
-      section_dict = {}
+        section_dict = {}
 
-      for section in section_list:
-        section_dict[section.getPhysicalPath()] = section
+        for section in section_list:
+          section_dict[section.getPhysicalPath()] = section
 
-      # Eliminate path
-      for section in section_list:
-        path = section.getPhysicalPath()
-        for i in range(0, len(path)-1):
-          sub_path = path[0:i]
-          if section_dict.has_key(sub_path):
-            del section_dict[sub_path]
+        # Eliminate path
+        for section in section_list:
+          path = section.getPhysicalPath()
+          for i in range(0, len(path)-1):
+            sub_path = path[0:i]
+            if section_dict.has_key(sub_path):
+              del section_dict[sub_path]
 
-      section_list = section_dict.values()
+        section_list = section_dict.values()
 
-      # Sort by Index
-      section_list.sort(key=lambda x: x.getIntIndex())
+        # Sort by Index
+        section_list.sort(key=lambda x: x.getIntIndex())
 
-      return section_list
+        return section_list
+      else:
+        return []
