@@ -281,7 +281,7 @@
                       </div>\n
 \n
                       <span class="searchDetails found" \n
-                            tal:content="structure python: obj.Base_showFoundText(obj, selection)"/>\n
+                            tal:content="structure python: obj.Base_showFoundText(selection=selection)"/>\n
 \n
                       <div class="searchDetails coordinates">\n
                         <tal:block tal:condition="obj/getReference|nothing">\n
