@@ -77,7 +77,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.web_site_module = self.portal.web_site_module
     self.portal_id = self.portal.getId()
 
-  def tearDown(self):
+  def beforeTearDown(self):
     get_transaction().abort()
     def clearModule(module):
       module.manage_delObjects(list(module.objectIds()))

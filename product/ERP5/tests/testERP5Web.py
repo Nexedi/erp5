@@ -1,4 +1,5 @@
 ##############################################################################
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2004, 2005, 2006 Nexedi SARL and Contributors. 
 # All Rights Reserved.
@@ -80,7 +81,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.web_site_module = self.portal.web_site_module
     self.portal_id = self.portal.getId()
 
-  def tearDown(self):
+  def beforeTearDown(self):
     get_transaction().abort()
     def clearModule(module):
       module.manage_delObjects(list(module.objectIds()))
@@ -783,7 +784,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     get_transaction().commit()
     self.tic()
 
-  def tearDown(self):
+  def beforeTearDown(self):
     get_transaction().abort()
     def clearModule(module):
       module.manage_delObjects(list(module.objectIds()))
