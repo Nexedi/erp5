@@ -29,7 +29,9 @@ from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.CMFCore.utils import _checkPermission, getToolByName    
 from Products.ERP5Type import PropertySheet, Permissions
-from Products.ERP5Form.ListBox import ListBox 
+from Products.ERP5Form.ListBox import ListBox
+from Products.ERP5Form.FormBox import FormBox
+from Products.ERP5Form.ImageField import ImageField
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 
 from Acquisition import Implicit
@@ -73,7 +75,7 @@ def add_and_edit(self, id, REQUEST):
   'Add and Edit' button is pressed.
 
   Keyword arguments:
-  id -- id of the object we just added
+  id -- the id of the object we just added
   """
   if REQUEST is None:
     return
@@ -90,7 +92,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
 
   The Form Printout enables to create a ODF document.
 
-  The Form Printout receives a name of a ERP5 form, and a template name.
+  The Form Printout receives an ERP5 form name, and a template name.
   Using their parameters, the Form Printout genereate a ODF document,
   a form as a ODF document content, and a template as a document layout.
 
@@ -132,10 +134,6 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
   # default attributes
   template = None
   form_name = None
-
-  def __str__(self): return self.index_html()
-
-  def __len__(self): return 1
 
   def __init__(self, id, title='', form_name='', template=''):
     """Initialize id, title, form_name, template.
@@ -209,16 +207,17 @@ InitializeClass(FormPrintout)
 NAME_SPACE_DICT = {'draw':'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0',
                    'table':'urn:oasis:names:tc:opendocument:xmlns:table:1.0',
                    'text':'urn:oasis:names:tc:opendocument:xmlns:text:1.0',
-                   'office':'urn:oasis:names:tc:opendocument:xmlns:office:1.0'}
+                   'office':'urn:oasis:names:tc:opendocument:xmlns:office:1.0',
+                   'xlink':'http://www.w3.org/1999/xlink'}
 
 class ODFStrategy(Implicit):
   """ODFStrategy creates a ODF Document. """
   
   def render(self, extra_context={}):
-    """Render a odt document, form as a content, template as a template.
+    """Render a odf document, form as a content, template as a template.
 
     Keyword arguments:
-    extra_context -- a dictionary, guess contains
+    extra_context -- a dictionary, expected:
                      'here' : where it call
                      'printout_template' : the template object, tipically a OOoTemplate
                      'container' : the object which has a form printout object
@@ -226,7 +225,6 @@ class ODFStrategy(Implicit):
     """
     here = extra_context['here']
     if here is None:
-      # This is a system error
       raise ValueError, 'Can not create a ODF Document without a parent acquisition context'
     form = extra_context['form']
     if not extra_context.has_key('printout_template') or extra_context['printout_template'] is None:
@@ -234,12 +232,12 @@ class ODFStrategy(Implicit):
 
     odf_template = extra_context['printout_template']
     
-    # First, render a OOoTemplate itself with its style
+    # First, render the Template if it has a pt_render method
     ooo_document = None
     if hasattr(odf_template, 'pt_render'):
       ooo_document = odf_template.pt_render(here, extra_context=extra_context)
     else:
-      # File object, OOoBuilder directly support a file object
+      # File object can be a template
       ooo_document = odf_template 
 
     # Create a new builder instance
@@ -247,8 +245,9 @@ class ODFStrategy(Implicit):
 
     # content.xml
     ooo_builder = self._replace_content_xml(ooo_builder=ooo_builder, extra_context=extra_context)
-    # styles.xml and meta.xml are not supported yet
-    # ooo_builder = self._replace_styles_xml(ooo_builder=ooo_builder, extra_context=extra_context)
+    # styles.xml
+    ooo_builder = self._replace_styles_xml(ooo_builder=ooo_builder, extra_context=extra_context)
+    # meta.xml is not supported yet
     # ooo_builder = self._replace_meta_xml(ooo_builder=ooo_builder, extra_context=extra_context)
         
     # Update the META informations
@@ -258,25 +257,25 @@ class ODFStrategy(Implicit):
     return ooo
 
   def _replace_content_xml(self, ooo_builder=None, extra_context=None):
-    doc_xml = ooo_builder.extract('content.xml')
+    content_xml = ooo_builder.extract('content.xml')
     # mapping ERP5Form to ODF
     form = extra_context['form']
     here = getattr(self, 'aq_parent', None)
-    ordinaly_group_list = [group for group in form.get_groups() if group not in ['meta','style']]
-    doc_xml = self._replace_xml_by_form(doc_xml=doc_xml,
-                                        form=form,
-                                        here=here,
-                                        extra_context=extra_context,
-                                        group_list=ordinaly_group_list)
-    # mapping ERP5Report report method to ODF
-    doc_xml = self._replace_xml_by_report_section(doc_xml=doc_xml,
-                                                  extra_context=extra_context)
 
-    if isinstance(doc_xml, unicode):
-      doc_xml = doc_xml.encode('utf-8')
+    content_element_tree = etree.XML(content_xml)
+    content_element_tree = self._replace_xml_by_form(element_tree=content_element_tree,
+                                                     form=form,
+                                                     here=here,
+                                                     extra_context=extra_context)
+    # mapping ERP5Report report method to ODF
+    content_element_tree = self._replace_xml_by_report_section(element_tree=content_element_tree,
+                                                               extra_context=extra_context)
+    content_xml = etree.tostring(content_element_tree)
+    if isinstance(content_xml, unicode):
+      content_xml = content_xml.encode('utf-8')
  
     # Replace content.xml in master openoffice template
-    ooo_builder.replace('content.xml', doc_xml)
+    ooo_builder.replace('content.xml', content_xml)
     return ooo_builder
 
   # this method not supported yet
@@ -284,19 +283,19 @@ class ODFStrategy(Implicit):
     """
     replacing styles.xml file in a ODF document
     """
-    doc_xml = ooo_builder.extract('styles.xml')
+    styles_xml = ooo_builder.extract('styles.xml')
     form = extra_context['form']
     here = getattr(self, 'aq_parent', None)
-    doc_xml = self._replace_xml_by_form(doc_xml=doc_xml,
-                                        form=form,
-                                        here=here,
-                                        extra_context=extra_context,
-                                        group_list=['styles'])
-
-    if isinstance(doc_xml, unicode):
-      doc_xml = doc_xml.encode('utf-8')
+    styles_element_tree = etree.XML(styles_xml)
+    styles_element_tree = self._replace_xml_by_form(element_tree=styles_element_tree,
+                                                    form=form,
+                                                    here=here,
+                                                    extra_context=extra_context)
+    styles_xml = etree.tostring(styles_element_tree)
+    if isinstance(styles_xml, unicode):
+      styles_xml = styles_xml.encode('utf-8')
  
-    ooo_builder.replace('styles.xml', doc_xml)
+    ooo_builder.replace('styles.xml', styles_xml)
     return ooo_builder
 
   # this method not implemented yet
@@ -304,54 +303,60 @@ class ODFStrategy(Implicit):
     """
     replacing meta.xml file in a ODF document
     """
-    doc_xml = ooo_builder.extract('meta.xml')
+    meta_xml = ooo_builder.extract('meta.xml')
 
     if isinstance(doc_xml, unicode):
-      doc_xml = doc_xml.encode('utf-8')
+      meta_xml = meta_xml.encode('utf-8')
  
-    ooo_builder.replace('meta.xml', doc_xml)
+    ooo_builder.replace('meta.xml', meta_xml)
     return ooo_builder
 
-  def _replace_xml_by_form(self, doc_xml=None, form=None, here=None,
-                           group_list=[], extra_context=None):
-    field_list = [f for g in group_list for f in form.get_fields_in_group(g)]
-    content = etree.XML(doc_xml)
+  def _replace_xml_by_form(self, element_tree=None, form=None, here=None,
+                           extra_context=None, render_prefix=None):
+    field_list = form.get_fields() 
     REQUEST = get_request()
-    for (count,field) in enumerate(field_list):
+    for (count, field) in enumerate(field_list):
       if isinstance(field, ListBox):
-        content = self._append_table_by_listbox(content=content,
-                                                listbox=field,
-                                                REQUEST=REQUEST) 
+        element_tree = self._append_table_by_listbox(element_tree=element_tree,
+                                                     listbox=field,
+                                                     REQUEST=REQUEST,
+                                                     render_prefix=render_prefix)
+      elif isinstance(field, FormBox):
+        sub_form = getattr(here, field.get_value('formbox_target_id'))
+        content = self._replace_xml_by_formbox(element_tree=element_tree,
+                                               field_id=field.id,
+                                               form = sub_form,
+                                               REQUEST=REQUEST)
+      #elif isinstance(field, ImageField):
+      #  element_tree = self._replace_xml_by_image_field(element_tree=element_tree,
+      #                                                 image_field=field)
       else:
-        field_value = field.get_value('default')
-        content = self._replace_node_via_reference(content=content,
-                                                   field_id=field.id,
-                                                   field_value=field_value)
-    return etree.tostring(content)
-
-  def _replace_node_via_reference(self, content=None, field_id=None, field_value=None):
+        element_tree = self._replace_node_via_reference(element_tree=element_tree,
+                                                        field=field)
+    return element_tree
+  
+  def _replace_node_via_reference(self, element_tree=None, field=None):
+    field_id = field.id
+    field_value = field.get_value('default')
     # text:reference-mark text:name="invoice-date"
     reference_xpath = '//text:reference-mark[@text:name="%s"]' % field_id
-    reference_list = content.xpath(reference_xpath, namespaces=NAME_SPACE_DICT)
+    reference_list = element_tree.xpath(reference_xpath, namespaces=NAME_SPACE_DICT)
     if len(reference_list) > 0:
       node = reference_list[0].getparent()
-      ## remove such a "bbb"
-      ## <text:p>aaa<br/>bbb</text:p>
+      # remove such a "bbb": <text:p>aaa<br/>bbb</text:p>
       for child in node.getchildren():
         child.tail = ''
       node.text = field_value
-    return content
+    return element_tree
   
-  def _replace_xml_by_report_section(self, doc_xml=None, extra_context=None):
+  def _replace_xml_by_report_section(self, element_tree=None, extra_context=None):
     if not extra_context.has_key('report_method') or extra_context['report_method'] is None:
-      return doc_xml
+      return element_tree
     report_method = extra_context['report_method']
     report_section_list = report_method()
     portal_object = self.getPortalObject()
-    content = etree.XML(doc_xml)
     REQUEST = get_request()
     request = extra_context.get('REQUEST', REQUEST)
-
     render_prefix = None
     for (index, report_item) in enumerate(report_section_list):
       if index > 0:
@@ -360,31 +365,55 @@ class ODFStrategy(Implicit):
       here = report_item.getObject(portal_object)
       form_id = report_item.getFormId()
       form = getattr(here, form_id)
-      for field in form.get_fields():
-        if field.meta_type == 'ListBox':
-          content = self._append_table_by_listbox(content=content,
-                                                  listbox=field,
-                                                  REQUEST=request,
-                                                  render_prefix=render_prefix) 
+      element_tree = self._replace_xml_by_form(element_tree=element_tree,
+                                               form=form,
+                                               here=here,
+                                               extra_context=extra_context,
+                                               render_prefix=render_prefix)
       report_item.popReport(portal_object, render_prefix = render_prefix)
-   
-    return etree.tostring(content)
+    return element_tree
+
+  def _replace_xml_by_formbox(self, element_tree=None, field_id=None, form=None, REQUEST=None):
+    draw_xpath = '//draw:frame[@draw:name="%s"]/draw:text-box/*' % field_id
+    text_list = element_tree.xpath(draw_xpath, namespaces=NAME_SPACE_DICT)
+    if len(text_list) == 0:
+      return element_tree
+    parent = text_list[0].getparent()
+    parent.clear()
+    # this form.__call__() possibly has a side effect,
+    # so must clear the 'here' context for listBox.get_value()
+    box = form(REQUEST=REQUEST);
+    REQUEST.set('here', None)
+    node = etree.XML(box)
+    # TODO style_copy
+    if node is not None:
+      for child in node.getchildren():
+        parent.append(child)
+    return element_tree
+
+  def _replace_xml_by_image_field(self, element_tree=None, image_field=None):
+    alt = image_field.get_value('description') or image_field.get_value('title')
+    image_xpath = '//draw:frame[@draw:name="%s"]/*' % image_field.id
+    image_list = element_tree.xpath(image_xpath, namespaces=NAME_SPACE_DICT)
+    if len(image_list) > 0:
+      image_list[0].set("{%s}href" % NAME_SPACE_DICT['xlink'], image_field.absolute_url())
+    return element_tree
 
   def _append_table_by_listbox(self,
-                               content=None, 
+                               element_tree=None, 
                                listbox=None,
                                REQUEST=None,
                                render_prefix=None):
     table_id = listbox.id
     table_xpath = '//table:table[@table:name="%s"]' % table_id
     # this list should be one item list
-    target_table_list = content.xpath(table_xpath, namespaces=NAME_SPACE_DICT)
+    target_table_list = element_tree.xpath(table_xpath, namespaces=NAME_SPACE_DICT)
     if len(target_table_list) is 0:
-      return content
+      return element_tree
 
     target_table = target_table_list[0]
     newtable = deepcopy(target_table)
-    # <table:table-header-rows>
+
     table_header_rows_xpath = '%s/table:table-header-rows' % table_xpath
     table_row_xpath = '%s/table:table-row' % table_xpath
     table_header_rows_list = newtable.xpath(table_header_rows_xpath,  namespaces=NAME_SPACE_DICT)
@@ -392,7 +421,6 @@ class ODFStrategy(Implicit):
 
     # copy row styles from ODF Document
     has_header_rows = len(table_header_rows_list) > 0
-    LOG('FormPrintout has_header_rows', INFO, has_header_rows)
     (row_top, row_middle, row_bottom) = self._copy_row_style(table_row_list,
                                                              has_header_rows=has_header_rows)
 
@@ -411,8 +439,8 @@ class ODFStrategy(Implicit):
                                          REQUEST=REQUEST, 
                                          render_prefix=render_prefix)
     
-    # if ODF table has heder rows, does not update the header rows
-    # if ODF table does not have header rows, insert the listbox title line
+    # if ODF table has header rows, does not update the header rows
+    # if does not have header rows, insert the listbox title line
     is_top = True
     for (index, listboxline) in enumerate(listboxline_list):
       listbox_column_list = listboxline.getColumnItemList()
@@ -441,9 +469,8 @@ class ODFStrategy(Implicit):
     else:
       # report section iteration
       parent_paragraph.append(newtable)
-      # TODO: it would be better append a paragraph or linebreak
       
-    return content
+    return element_tree
 
   def _copy_row_style(self, table_row_list=[], has_header_rows=False):
     row_top = None
@@ -490,7 +517,7 @@ class ODFStrategy(Implicit):
       if listbox_column_index >= listbox_column_size:
         break
       value = listbox_column_list[listbox_column_index][1]
-      # if value is None, remaining ODF orinal text
+      # if value is None, remaining the ODF original text
       if value is not None:
         self._set_column_value(column, value)
       column_span = self._get_column_span_size(column)
@@ -502,7 +529,7 @@ class ODFStrategy(Implicit):
   def _set_column_value(self, column, value):
     if value is None:
       # to eliminate a default value, remove "office:*" attributes.
-      # if remaining "office:*" attribetes, the column shows its default value,
+      # if remaining these attribetes, the column shows its default value,
       # such as '0.0', '$0'
       attrib = column.attrib
       for key in attrib.keys():
@@ -512,11 +539,25 @@ class ODFStrategy(Implicit):
     column_value = unicode(str(value),'utf-8')
     column.text = column_value
     column_children = column.getchildren()
+    first_child = None
     if len(column_children) > 0:
-      column_children[0].text = column_value
+      first_child = deepcopy(column_children[0])
+      first_child.text = column_value
+    for child in column_children:
+      column.remove(child)
+    column.append(first_child)
     if column_value != '':
-      column.set("{%s}value" % NAME_SPACE_DICT['office'], column_value)
-    
+      value_attribute = self._get_column_value_attribute(column)
+      if value_attribute is not None:
+        column.set(value_attribute, column_value)
+
+  def _get_column_value_attribute(self, column):
+    attrib = column.attrib
+    for key in attrib.keys():
+      if key.endswith("value"):
+        return key
+    return None
+  
   def _get_column_span_size(self, column=None):
     span_attribute = "{%s}number-columns-spanned" % NAME_SPACE_DICT['table']
     column_span = 1
@@ -538,7 +579,6 @@ class ODFStrategy(Implicit):
       return []
     odf_cell_list = row_middle.findall("{%s}table-cell" % NAME_SPACE_DICT['table'])
     column_span_list = []
-    span_attribute = "{%s}number-columns-spanned" % NAME_SPACE_DICT['table']
     for column in odf_cell_list:
       column_span = self._get_column_span_size(column)
       column_span_list.append(column_span)

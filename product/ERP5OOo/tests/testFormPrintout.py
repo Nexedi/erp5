@@ -27,11 +27,8 @@
 ##############################################################################
 
 import unittest
-from threading import Thread
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-from Products.ERP5Form.Selection import Selection
-from Products.ERP5Form.SelectionTool import SelectionTool
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from zLOG import LOG , INFO
 import os
@@ -270,7 +267,7 @@ class TestFormPrintout(ERP5TypeTestCase):
     self.assertFalse(content_xml.find("foo_title_2") > 0)
     self.assertTrue(content_xml.find("foo_title_3") > 0)
 
-    # 4. Irregular case: listbox have not a stat line, but table has a stat line
+    # 4. Irregular case: listbox has not a stat line, but table has a stat line
     if test1._getOb("foo_2", None) is None:
       test1.newContent("foo_2", portal_type='Foo Line')
     get_transaction().commit()
@@ -300,7 +297,7 @@ class TestFormPrintout(ERP5TypeTestCase):
     self.assertFalse(content_xml.find("foo_title_3") > 0)
     self.assertTrue(content_xml.find("foo_title_4") > 0)
 
-    # 5. Normal case: the listobx of a form and the ODF table are same layout
+    # 5. Normal case: the listobx and the ODF table are same layout
     foo_form.manage_renameObject('listbox', 'listbox2', REQUEST=request)
     listbox2 = foo_form.listbox2
     test1.foo_1.setTitle('foo_title_5')
