@@ -750,6 +750,69 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
       portal_type='Document',
       sort_on=[('translated_portal_type', 'ascending')])
 
+  def test_11_getWebSectionValueList(self, quiet=quiet, run=run_all_test):
+    """ Check getWebSectionValueList from Web Site.
+    Only visible web section should be returned.
+    """
+    if not run: return
+    if not quiet:
+      message = 'test_11_getWebSectionValueList'
+      ZopeTestCase._print(message)
+
+    portal = self.getPortal()
+    web_site_portal_type = 'Web Site'
+    web_section_portal_type = 'Web Section'
+    web_page_portal_type = 'Web Page'
+
+    # Create web site and web section
+    web_site_module = portal.getDefaultModule(web_site_portal_type)
+    web_site = web_site_module.newContent(portal_type=web_site_portal_type)
+    web_section = web_site.newContent(portal_type=web_section_portal_type)
+    sub_web_section = web_section.newContent(portal_type=web_section_portal_type)
+
+    # Create a document
+    web_page_module = portal.getDefaultModule(web_page_portal_type)
+    web_page = web_page_module.newContent(portal_type=web_page_portal_type)
+
+    # Commit transaction
+    def _commit():
+      portal.portal_caches.clearAllCache()
+      get_transaction().commit()
+      self.tic()
+
+    # By default, as now Web Section is visible, nothing should be returned
+    _commit()
+    self.assertSameSet([], web_site.getWebSectionValueList(web_page))
+
+    # Explicitely set both web section invisible
+    web_section.setVisible(0)
+    sub_web_section.setVisible(0)
+    _commit()
+    self.assertSameSet([], web_site.getWebSectionValueList(web_page))
+
+    # Set parent web section visible
+    web_section.setVisible(1)
+    sub_web_section.setVisible(0)
+    _commit()
+    self.assertSameSet([web_section], 
+                       web_site.getWebSectionValueList(web_page))
+
+    # Set both web section visible
+    # Only leaf web section is returned
+    web_section.setVisible(1)
+    sub_web_section.setVisible(1)
+    _commit()
+    self.assertSameSet([sub_web_section], 
+                       web_site.getWebSectionValueList(web_page))
+
+    # Set leaf web section visible
+    # Nothing is returned
+    web_section.setVisible(0)
+    sub_web_section.setVisible(1)
+    _commit()
+    self.assertSameSet([sub_web_section], 
+                       web_site.getWebSectionValueList(web_page))
+
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
   Test for erp5_web with simple security.
