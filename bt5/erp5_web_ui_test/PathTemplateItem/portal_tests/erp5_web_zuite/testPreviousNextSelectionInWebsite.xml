@@ -141,6 +141,11 @@
  <td></td>\n
 </tr>\n
 <tr>\n
+  <td>assertLocation</td>\n
+  <td>${base_url}/web_site_module/test_web_site/WebSite_view*</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>open</td>\n
   <td>${base_url}/web_site_module/view?ignore_layout=1</td>\n
   <td></td>\n
@@ -158,6 +163,11 @@
 <tr>\n
   <td>assertTitle</td>\n
   <td>Web Site - Test Web Site II | ERP5</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertLocation</td>\n
+  <td>${base_url}/web_site_module/test_web_site_2/WebSite_view*</td>\n
   <td></td>\n
 </tr>\n
 </tbody></table>\n

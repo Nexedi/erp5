@@ -106,6 +106,11 @@
   <td>Web Site - Test Web Site | ERP5</td>\n
   <td></td>\n
 </tr>\n
+<tr>\n
+  <td>assertLocation</td>\n
+  <td>${base_url}/web_site_module/web_site_test/WebSite_view*</td>\n
+  <td></td>\n
+</tr>\n
 </tbody></table>\n
 </body>\n
 </html>\n
