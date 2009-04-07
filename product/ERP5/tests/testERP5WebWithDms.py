@@ -76,14 +76,14 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.web_site_module = self.portal.web_site_module
     self.portal_id = self.portal.getId()
 
+  def clearModule(self, module):
+    module.manage_delObjects(list(module.objectIds()))
+    get_transaction().commit()
+    self.tic()
+
   def beforeTearDown(self):
-    get_transaction().abort()
-    def clearModule(module):
-      module.manage_delObjects(list(module.objectIds()))
-      get_transaction().commit()
-      self.tic()
-    clearModule(self.portal.web_site_module)
-    clearModule(self.portal.web_page_module)
+    self.clearModule(self.portal.web_site_module)
+    self.clearModule(self.portal.web_page_module)
 
   def setupWebSite(self, **kw):
     """
