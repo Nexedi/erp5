@@ -779,6 +779,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.portal.Localizer = DummyLocalizer()
     self.createUser('admin', ['Manager'])
     self.createUser('erp5user', ['Auditor', 'Author'])
+    self.createUser('web_user', ['Assignor'])
     get_transaction().commit()
     self.tic()
 
@@ -1043,22 +1044,65 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     if not quiet:
       message = '\ntest_04_ExpireUserAction'
       ZopeTestCase._print(message)
+
     self.changeUser('admin')
     web_site_module = self.portal.web_site_module
-    site = web_site_module.newContent(portal_type='Web Site',
-                                      id='site')
+    site = web_site_module.newContent(portal_type='Web Site', id='site')
 
-    section_1 = site.newContent(portal_type='Web Section', 
-                              id='section')
-
+    # create websections in a site and in anothers web sections
+    section_1 = site.newContent(portal_type='Web Section', id='section_1')
+    section_2 = site.newContent(portal_type='Web Section', id='section_2')
+    section_3 = site.newContent(portal_type='Web Section', id='section_3')
+    section_4 = site.newContent(portal_type='Web Section', id='section_4')
+    section_5 = section_3.newContent(portal_type='Web Section', id='section_5')
+    section_6 = section_4.newContent(portal_type='Web Section', id='section_6')
     get_transaction().commit()
     self.tic()
 
-    section_1.expire()
+    # test if a manager can expire them
+    try:
+      section_1.expire()
+      section_5.expire()
+    except Unauthorized:
+      self.fail("Admin should be able to expire a Web Section.")
+      
+    # test if a user (ASSIGNOR) can expire them
+    self.changeUser('web_user')
+    try:
+      section_2.expire()
+      section_6.expire()
+    except Unauthorized:
+      self.fail("An user should be able to expire a Web Section.")
+      
+  def test_05_createWebSection(self, quiet=quiet, run=run_all_test):
+    """ Test to create web sections with many users """
+    if not run: return
+    if not quiet:
+      message = '\ntest_05_createWebSection'
+      ZopeTestCase._print(message)
+      
+    self.changeUser('admin')
+    web_site_module = self.portal.web_site_module
+    site = web_site_module.newContent(portal_type='Web Site', id='site')
 
-    self.changeUser('erp5user')
-        
+    # test for admin
+    try:
+      section_1 = site.newContent(portal_type='Web Section', id='section_1')
+      section_2 = section_1.newContent(portal_type='Web Section', id='section_2')
+    except Unauthorized:
+      self.fail("Admin should be able to create a Web Section.")
 
+    # test as a web user (assignor)
+    self.changeUser('web_user')
+    try:
+      section_2 = site.newContent(portal_type='Web Section', id='section_2')
+      section_3 = section_2.newContent(portal_type='Web Section', id='section_3')
+      self.fail("A web user should not be able to create a Web Section.")
+    except Unauthorized:
+      pass
+
+      
+    
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Web))
