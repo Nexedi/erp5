@@ -330,7 +330,7 @@ class ODFStrategy(Implicit):
                                                REQUEST=REQUEST)
       #elif isinstance(field, ImageField):
       #  element_tree = self._replace_xml_by_image_field(element_tree=element_tree,
-      #                                                 image_field=field)
+      #                                                  image_field=field)
       else:
         element_tree = self._replace_node_via_reference(element_tree=element_tree,
                                                         field=field)
@@ -529,9 +529,6 @@ class ODFStrategy(Implicit):
     return row
 
   def _set_column_value(self, column, value):
-    # if the value is a DefaultValue, uses the ODF template value
-    if isinstance(value, DefaultValue) or value == DefaultValue:
-      return
     self._clear_column_value(column)
     if value is None:
       value = ''
@@ -611,18 +608,3 @@ class ODTStrategy(ODFStrategy):
   """ODTStrategy create a ODT Document from a form and a ODT template"""
   pass
 
-class DefaultValue:
-  """The DefaultValue is the marker object which indicate that using template value
-
-  Python Script Example: 'number' column uses ODF table cell value
-
-  from Products.PythonScripts.standard import Object
-  from Products.ERP5OOo.FormPrintout import DefaultValue
-
-  return [ Object(number=DefaultValue(),
-                  total_price=context.getTotalPrice())]
-  """
-  pass
-
-InitializeClass(DefaultValue)
-allow_class(DefaultValue)

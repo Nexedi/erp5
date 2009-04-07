@@ -42,8 +42,6 @@ document_classes = updateGlobals( this_module, globals(), permissions_module = P
 from AccessControl import ModuleSecurityInfo
 ModuleSecurityInfo('Products.ERP5OOo.OOoUtils').declarePublic('OOoParser',)
 ModuleSecurityInfo('Products.ERP5OOo.OOoUtils').declarePublic('newOOoParser',)
-# Allow access to DefaultValue from scripts
-ModuleSecurityInfo('Products.ERP5OOo.FormPrintout').declarePublic('DefalutValue',)
 
 # Define object classes and tools
 from OOoTemplate import OOoTemplate
