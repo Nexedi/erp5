@@ -146,6 +146,19 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(self.folder.isHBTree(), False)
       
 
+    def test_03a_filledFolderIsBtree(self, quiet=0, run=1):
+      """
+      Test the folder is a BTree
+      """
+      if not run : return
+      if not quiet:
+        message = 'Test FilledFolderIsBtree'
+        LOG('Testing... ', 0, message)
+      self.folder.newContent()
+      self.assertRaises(NotImplementedError, self.folder.getTreeIdList)
+      self.assertEqual(self.folder.isBTree(), True)
+      self.assertEqual(self.folder.isHBTree(), False)
+
     def test_04_migrateEmptyFolder(self, quiet=0, run=1):
       """
       migrate empty folder from btree to hbtree
@@ -173,6 +186,10 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       date = DateTime().Date()
       date = date.replace("/", "")
       self.failUnless(date in obj1.getId())
+      # check we still have a hbtree
+      self.assertEqual(self.folder.isBTree(), False)
+      self.assertEqual(self.folder.isHBTree(), True)
+      self.assertEqual(len(self.folder.objectIds()), 1)      
       
     def test_05_migrateFolderWithoutIdChange(self, quiet=0, run=1):
       """
@@ -492,6 +509,65 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(len(self.folder.objectValues()), 4)
       self.assertEqual(len(self.folder.objectValues(base_id=id_prefix)), 3)
       
+
+    def test_13_wrongFolderHandlerFix(self, quiet=0, run=1):
+      if not run : return
+      if not quiet:
+        message = 'Test migrateFolder'
+        LOG('Testing... ', 0, message)
+
+      self.assertEqual(self.folder.isBTree(), True)
+      self.assertEqual(self.folder.isHBTree(), False)
+
+      setattr(self.folder,'_folder_handler','VeryWrongHandler')
+      get_transaction().commit()
+      self.tic()
+
+      self.assertEqual(self.folder.isBTree(), False)
+      self.assertEqual(self.folder.isHBTree(), False)
+
+      self.assertEquals(self.folder._fixFolderHandler(), True)
+      get_transaction().commit()
+
+      self.assertEqual(self.folder.isBTree(), True)
+      self.assertEqual(self.folder.isHBTree(), False)
+
+      self.folder.migrateToHBTree()
+      get_transaction().commit()
+      self.tic()
+     
+      self.assertEqual(self.folder.isBTree(), False)
+      self.assertEqual(self.folder.isHBTree(), True)
+
+    def test_14_wrongFolderHandlerMigrate(self, quiet=0, run=1):
+      if not run : return
+      if not quiet:
+        message = 'Test migrateFolder'
+        LOG('Testing... ', 0, message)
+
+      self.assertEqual(self.folder.isBTree(), True)
+      self.assertEqual(self.folder.isHBTree(), False)
+
+      setattr(self.folder,'_folder_handler','VeryWrongHandler')
+      get_transaction().commit()
+      self.tic()
+
+      self.assertEqual(self.folder.isBTree(), False)
+      self.assertEqual(self.folder.isHBTree(), False)
+
+      self.folder.migrateToHBTree()
+      get_transaction().commit()
+      self.tic()
+
+      self.assertEqual(self.folder.isBTree(), False)
+      self.assertEqual(self.folder.isHBTree(), True)
+
+      self.folder.newContent()
+      get_transaction().commit()
+      self.tic()
+
+      self.assertEqual(self.folder.isBTree(), False)
+      self.assertEqual(self.folder.isHBTree(), True)
 
 def test_suite():
   suite = unittest.TestSuite()

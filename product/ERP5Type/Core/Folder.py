@@ -581,6 +581,21 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     else:
       return CMFBTreeFolder._fixCount(self)
 
+  def _fixFolderHandler(self):
+    """Fixes _folder_handler if it is a string
+
+    Bug affecting BTree folders in ERP5Type/patches/Folder.py introduced
+    string value for _folder_handler, which mades methods isBTree and isHBTree
+    fail.
+
+    Returns True in case of founded and fixed error, in case
+    of no error returns False.
+    """
+    if isinstance(self._folder_handler,str):
+      delattr(self, '_folder_handler')
+      return True
+    return False
+
   def manage_cleanup(self):
     """Calls self._cleanup() and reports the result as text.
     """

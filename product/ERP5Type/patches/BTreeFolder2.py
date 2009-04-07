@@ -97,10 +97,3 @@ def _cleanup(self):
 
 BTreeFolder2Base._cleanup = _cleanup
 
-def __init__(self, id=None):
-  self._folder_handler = 'CMFBTreeFolderHandler'
-  if id is not None:
-      self.id = id
-  self._initBTrees()
-
-BTreeFolder2Base.__init__ = __init__
