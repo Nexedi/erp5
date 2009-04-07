@@ -269,15 +269,7 @@ if not selection_index:\n
                                   editable_mode,\n
                                   message)\n
 \n
-elif context.getPortalType()==\'Web Site\':\n
-  redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&ignore_layout:int=%s&editable_mode=%s&portal_status_message=%s\' % (\n
-                              new_url,\n
-                              form_id,\n
-                              selection_index,\n
-                              selection_name,\n
-                              ignore_layout,\n
-                              editable_mode,\n
-                              message)\n
+\n
 else:\n
   redirect_url = \'%s/%s?selection_index=%s&selection_name=%s&ignore_layout:int=%s&editable_mode=%s&portal_status_message=%s\' % (\n
                               context.absolute_url(),\n
