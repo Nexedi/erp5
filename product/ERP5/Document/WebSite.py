@@ -85,7 +85,7 @@ class WebSiteTraversalHook(Persistent):
         i += 1
       # Insert the web site path after the common part of the path
       if path_len > common_index + 1:
-        path = website_path[0:common_index+1] + path[common_index + 1:]
+        path = website_path + path[common_index + 1:]
     rpp = request.other.get('VirtualRootPhysicalPath', ('', ))
     i = 0
     for name in rpp[:len(path)]:
