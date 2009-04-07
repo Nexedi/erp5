@@ -234,8 +234,8 @@ class WebSite(WebSection):
         # Eliminate path
         for section in section_list:
           path = section.getPhysicalPath()
-          for i in range(0, len(path)-1):
-            sub_path = path[0:i]
+          for i in range(0, len(path)):
+            sub_path = tuple(path[0:i])
             if section_dict.has_key(sub_path):
               del section_dict[sub_path]
 
