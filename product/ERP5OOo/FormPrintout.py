@@ -27,7 +27,8 @@
 ##############################################################################
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Products.CMFCore.utils import _checkPermission, getToolByName    
+from Products.CMFCore.utils import _checkPermission, getToolByName
+from Products.PythonScripts.Utility import allow_class
 from Products.ERP5Type import PropertySheet, Permissions
 from Products.ERP5Form.ListBox import ListBox
 from Products.ERP5Form.FormBox import FormBox
@@ -102,9 +103,9 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
   Fields <-> Paragraphs:      supported
   ListBox <-> Table:          supported
   Report Section <-> Tables:  experimentally supported
-  FormBox <-> Frame:          not supported yet
+  FormBox <-> Frame:          experimentally supported
   Photo <-> Image:            not supported yet
-  Style group <-> styles.xml: not supported yet
+  Style group <-> styles.xml: supported
   Meta group <-> meta.xml:    not supported yet
   """
   
@@ -397,6 +398,7 @@ class ODFStrategy(Implicit):
     image_list = element_tree.xpath(image_xpath, namespaces=NAME_SPACE_DICT)
     if len(image_list) > 0:
       image_list[0].set("{%s}href" % NAME_SPACE_DICT['xlink'], image_field.absolute_url())
+    
     return element_tree
 
   def _append_table_by_listbox(self,
@@ -442,6 +444,7 @@ class ODFStrategy(Implicit):
     # if ODF table has header rows, does not update the header rows
     # if does not have header rows, insert the listbox title line
     is_top = True
+    last_index = len(listboxline_list) - 1
     for (index, listboxline) in enumerate(listboxline_list):
       listbox_column_list = listboxline.getColumnItemList()
       if listboxline.isTitleLine() and not has_header_rows:
@@ -454,13 +457,13 @@ class ODFStrategy(Implicit):
         row = self._update_column_value(row, listbox_column_list)
         newtable.append(row)
         is_top = False
+      elif listboxline.isStatLine() or index is last_index:
+        row = deepcopy(row_bottom)
+        row = self._update_column_stat_value(row, listbox_column_list, row_middle)
+        newtable.append(row)
       elif index > 0 and listboxline.isDataLine():
         row = deepcopy(row_middle)
         row = self._update_column_value(row, listbox_column_list)
-        newtable.append(row)
-      elif listboxline.isStatLine():
-        row = deepcopy(row_bottom)
-        row = self._update_column_stat_value(row, listbox_column_list, row_middle)
         newtable.append(row)
 
     # direct listbox mapping
@@ -507,6 +510,7 @@ class ODFStrategy(Implicit):
     return row
 
   def _update_column_stat_value(self, row=None, listbox_column_list=[], row_middle=None):
+    """stat line is capable of column span setting"""
     if row_middle is None:
       return row
     odf_cell_list = row.findall("{%s}table-cell" % NAME_SPACE_DICT['table'])
@@ -525,15 +529,13 @@ class ODFStrategy(Implicit):
     return row
 
   def _set_column_value(self, column, value):
+    # if the value is a DefaultValue, uses the ODF template value
+    if isinstance(value, DefaultValue) or value == DefaultValue:
+      return
+    self._clear_column_value(column)
     if value is None:
-      # to eliminate a default value, remove "office:*" attributes.
-      # if remaining these attribetes, the column shows its default value,
-      # such as '0.0', '$0'
-      attrib = column.attrib
-      for key in attrib.keys():
-        if key.startswith("{%s}" % NAME_SPACE_DICT['office']):
-          del attrib[key]
-        value = ''
+      value = ''
+      self._remove_column_value(column)
     column_value = unicode(str(value),'utf-8')
     column.text = column_value
     column_children = column.getchildren()
@@ -543,11 +545,34 @@ class ODFStrategy(Implicit):
       first_child.text = column_value
     for child in column_children:
       column.remove(child)
-    column.append(first_child)
+    if first_child is not None:
+      column.append(first_child)
     if column_value != '':
       value_attribute = self._get_column_value_attribute(column)
       if value_attribute is not None:
         column.set(value_attribute, column_value)
+
+  def _remove_column_value(self, column):
+    # to eliminate a default value, remove "office:*" attributes.
+    # if remaining these attribetes, the column shows its default value,
+    # such as '0.0', '$0'
+    attrib = column.attrib
+    for key in attrib.keys():
+      if key.startswith("{%s}" % NAME_SPACE_DICT['office']):
+        del attrib[key]
+    column_children = column.getchildren()
+    for child in column_children:
+      column.remove(child)
+
+  def _clear_column_value(self, column):
+    attrib = column.attrib
+    for key in attrib.keys():
+      value_attribute = self._get_column_value_attribute(column)
+      if value_attribute is not None:
+        column.set(value_attribute, '')
+    column_children = column.getchildren()
+    for child in column_children:
+      child.text = ''
 
   def _get_column_value_attribute(self, column):
     attrib = column.attrib
@@ -555,7 +580,7 @@ class ODFStrategy(Implicit):
       if key.endswith("value"):
         return key
     return None
-  
+           
   def _get_column_span_size(self, column=None):
     span_attribute = "{%s}number-columns-spanned" % NAME_SPACE_DICT['table']
     column_span = 1
@@ -585,3 +610,19 @@ class ODFStrategy(Implicit):
 class ODTStrategy(ODFStrategy):
   """ODTStrategy create a ODT Document from a form and a ODT template"""
   pass
+
+class DefaultValue:
+  """The DefaultValue is the marker object which indicate that using template value
+
+  Python Script Example: 'number' column uses ODF table cell value
+
+  from Products.PythonScripts.standard import Object
+  from Products.ERP5OOo.FormPrintout import DefaultValue
+
+  return [ Object(number=DefaultValue(),
+                  total_price=context.getTotalPrice())]
+  """
+  pass
+
+InitializeClass(DefaultValue)
+allow_class(DefaultValue)
