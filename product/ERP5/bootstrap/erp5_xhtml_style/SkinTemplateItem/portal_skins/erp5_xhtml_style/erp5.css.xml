@@ -1397,6 +1397,11 @@ div.search .centeredInner {\n
  text-align: center;\n
 }\n
 \n
+.searchDetails em {\n
+  font-style:normal;\n
+  font-weight:bold;\n
+}\n
+\n
 /* MatrixBox */\n
 .MatrixContent {\n
   color: #000;\n
