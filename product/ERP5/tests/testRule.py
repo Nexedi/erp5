@@ -81,12 +81,8 @@ class TestRuleMixin(TestOrderMixin):
     return "Rule"
 
   def getBusinessTemplateList(self):
-    """
-    Add erp5_dms_mysql_innodb_catalog, as for now, it's the one in charge of
-    cataloging the version property.
-    """
     return TestOrderMixin.getBusinessTemplateList(self) + ('erp5_accounting',
-                'erp5_invoicing', 'erp5_dms_mysql_innodb_catalog',)
+                'erp5_invoicing',)
 
   def createPackingList(self):
     """
