@@ -2003,6 +2003,16 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                                 *cell_key)
     self.assertEquals(2-1+len(cell_key_list), len(order.getMovementList()))
 
+    # Make sure that portal_type argument works correctly.
+    self.assertEqual(len(order.getMovementList(portal_type='Sale Order Line')),
+                     len([movement
+                          for movement in order.getMovementList()
+                          if movement.portal_type=='Sale Order Line']))
+    self.assertEqual(len(order.getMovementList(portal_type='Sale Order Cell')),
+                     len([movement
+                          for movement in order.getMovementList()
+                          if movement.portal_type=='Sale Order Cell']))
+
   def test_19b_getTotalQuantityAndPrice(self, quiet=0, run=run_all_test):
     """
     Check getTotalQuantity and getTotalPrice.
