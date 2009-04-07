@@ -283,21 +283,14 @@
                       <span class="searchDetails found" \n
                             tal:content="structure python: obj.Base_showFoundText(selection=selection)"/>\n
 \n
-                      <div class="searchDetails coordinates">\n
+                      <div tal:condition="is_web_mode"\n
+                           class="searchDetails coordinates">\n
                         <tal:block tal:condition="obj/getReference|nothing">\n
-                          <tal:block tal:condition="is_web_mode">\n
-                            <a tal:attributes="href python: \'%s/view\' % website.getPermanentURL(obj)"\n
-                               tal:content="obj/getReference|nothing"/>&nbsp;-&nbsp;\n
-                          </tal:block>\n
-                          <tal:block tal:condition="python: not is_web_mode">\n
-                            <a tal:attributes="href string: ${url}/view"\n
-                               tal:content="obj/getReference|nothing"/>&nbsp;-&nbsp;\n
-                          </tal:block>\n
+                          <a tal:attributes="href python: \'%s/view\' % website.getPermanentURL(obj)"\n
+                             tal:content="obj/getReference|nothing"/>&nbsp;-&nbsp;\n
                         </tal:block>\n
 \n
-                        <tal:block \n
-                          tal:condition="is_web_mode" \n
-                          tal:repeat="section python: website.getWebSectionValueList(obj)">\n
+                        <tal:block tal:repeat="section python: website.getWebSectionValueList(obj)">\n
                           <a href="#" \n
                              tal:content="section/getCompactTranslatedTitle"\n
                              tal:attributes="href python: \'%s/view\' %section.absolute_url()"/>\n
@@ -310,12 +303,18 @@
                                tal:attributes="href owner/url"/>\n
                            &nbsp;-&nbsp;\n
                         </tal:block>\n
- \n
                         <a tal:content="python: date_renderer(obj.getModificationDate())" \n
                            tal:attributes="href string: ${url}/Base_viewHistory"/>\n
                       </div>\n
-\n
-\n
+                      <div tal:condition="not: is_web_mode"\n
+                           class="searchDetails coordinates">\n
+                        <tal:block tal:condition="obj/getReference|nothing">\n
+                          <a tal:attributes="href string: ${url}/view"\n
+                             tal:content="obj/getReference|nothing"/>&nbsp;-&nbsp;\n
+                        </tal:block>\n
+                        <a tal:content="python: date_renderer(obj.getModificationDate())" \n
+                           tal:attributes="href string: ${url}/Base_viewHistory"/>\n
+                      </div>\n
                     </div>\n
                   </td>\n
                 </tr>\n
