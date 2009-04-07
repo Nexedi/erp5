@@ -14,6 +14,7 @@
             <value>
               <list>
                 <string>title</string>
+                <string>css_class</string>
                 <string>columns</string>
                 <string>list_method</string>
                 <string>selection_name</string>
@@ -119,6 +120,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string>hidden_label</string> </value>
                 </item>
                 <item>
                     <key> <string>default_params</string> </key>
