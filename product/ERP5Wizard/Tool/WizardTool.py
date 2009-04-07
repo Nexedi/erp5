@@ -545,7 +545,7 @@ class WizardTool(BaseTool):
     installation_status['bt5']['all'] = len(bt5_files)
     #execute_after_setup_script = install_standard_bt5 =  install_customer_bt5 = False # dev mode
     for bt5_id in bt5_filenames:
-      if bt5_id.startswith('http://'):
+      if bt5_id.startswith('http://') or bt5_id.startswith('file://') :
         ## direct download of bt5 files available
         if install_standard_bt5:
           bt  = portal_templates.download(bt5_id)
