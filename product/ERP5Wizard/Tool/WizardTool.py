@@ -789,9 +789,10 @@ class WizardTool(BaseTool):
     server_url = self.getServerUrl() + self.getServerRoot()
     server_response = self._callRemoteMethod('getBT5FilesForBusinessConfiguration', server_url)
     ## save erp5_uid which will make it possible to distingush different business conf for client
-    current_bc_index = server_response['server_buffer'].get('current_bc_index', None)
-    if current_bc_index is not None:
-      self._setServerInfo(current_bc_index = current_bc_index)
+    if server_response.get('server_buffer', None) is not None:
+      current_bc_index = server_response['server_buffer'].get('current_bc_index', None)
+      if current_bc_index is not None:
+        self._setServerInfo(current_bc_index = current_bc_index)
     self.installBT5FilesFromServer(server_response, True)
     server_response = self._callRemoteMethod('finalizeInstallation', server_url)
     LOG("Wizard", INFO,
