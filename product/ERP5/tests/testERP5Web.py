@@ -1137,11 +1137,34 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     except Unauthorized:
       self.fail("An user should be able to expire a Web Section.")
       
-  def test_05_createWebSection(self, quiet=quiet, run=run_all_test):
+  def test_05_createWebSite(self, quiet=quiet, run=run_all_test):
+    """ Test to create web sites with many users """
+    if not run: return
+    if not quiet:
+      message = '\ntest_05_createWebSite'
+      ZopeTestCase._print(message)
+      
+    self.changeUser('admin')
+    web_site_module = self.portal.web_site_module
+
+    # test for admin
+    try:
+      site_1 = web_site_module.newContent(portal_type='Web Site', id='site_1')
+    except Unauthorized:
+      self.fail("Admin should be able to create a Web Site.")
+
+    # test as a web user (assignor)
+    self.changeUser('webmaster') 
+    try:
+      site_2 = web_site_module.newContent(portal_type='Web Site', id='site_2')
+    except Unauthorized:
+      self.fail("A webmaster should be able to create a Web Site.")
+
+  def test_06_createWebSection(self, quiet=quiet, run=run_all_test):
     """ Test to create web sections with many users """
     if not run: return
     if not quiet:
-      message = '\ntest_05_createWebSection'
+      message = '\ntest_06_createWebSection'
       ZopeTestCase._print(message)
       
     self.changeUser('admin')
