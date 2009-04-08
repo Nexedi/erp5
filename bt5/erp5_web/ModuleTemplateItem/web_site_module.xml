@@ -251,6 +251,8 @@
   </permission>
   <permission type='list'>
    <name>Add portal content</name>
+   <role>Assignor</role>
+   <role>Manager</role>
   </permission>
   <permission type='list'>
    <name>Add portal folders</name>
@@ -350,6 +352,8 @@
   </permission>
   <permission type='list'>
    <name>Copy or Move</name>
+   <role>Assignor</role>
+   <role>Manager</role>
   </permission>
   <permission type='list'>
    <name>Create Transient Objects</name>
