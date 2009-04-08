@@ -1160,11 +1160,8 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     try:
       section_2 = site.newContent(portal_type='Web Section', id='section_2')
       section_3 = section_2.newContent(portal_type='Web Section', id='section_3')
-      self.fail("A webmaster should not be able to create a Web Section.")
     except Unauthorized:
-      pass
-
-      
+      self.fail("A webmaster should be able to create a Web Section.")
     
 def test_suite():
   suite = unittest.TestSuite()
