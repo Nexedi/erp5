@@ -460,6 +460,11 @@ body {\n
   background: #81B2DC url(<dtml-var expr="portal_url()">/tiolive_image/bg.png) repeat-y;\n
 }\n
 \n
+#main_form {\n
+  background-color: inherit;\n
+  color: inherit;\n
+}\n
+\n
 input#hidden_button {\n
   width: 0;\n
   height: 0;\n
@@ -485,7 +490,8 @@ a:hover {\n
   text-decoration: underline;\n
 }\n
 \n
-p.clear {\n
+p.clear,\n
+div.clear{\n
   height: 0;\n
   margin: 0;\n
   padding: 0;\n
@@ -1134,13 +1140,14 @@ fieldset.bottom .field .input {\n
   background-repeat: no-repeat;\n
 }\n
 \n
-.ListContent {\n
+.listbox {\n
   color: #000;\n
   background-color: <dtml-var document_background_color>;\n
   padding-left: 1px;\n
 }\n
 \n
-.ListContent table {\n
+.listbox table,\n
+table.listbox.table {\n
   width: 100%;\n
   border-collapse: collapse;\n
   border-color: <dtml-var document_border_color>;\n
@@ -1151,33 +1158,33 @@ fieldset.bottom .field .input {\n
   border-right-width: 1px;\n
 }\n
 \n
-.ListContent .listbox_label_line td.Data {\n
+.listbox .listbox_label_line td.Data {\n
   border-top-width: 1px;\n
 }\n
 \n
-.ListContent .listbox_label_line {\n
+.listbox .listbox_label_line {\n
   color: <dtml-var font_color>;\n
   background-color: <dtml-var listbox_label_background_color>;\n
 /*   font-size: 90%; */\n
 }\n
 \n
-.ListContent .listbox_stat_line {\n
+.listbox .listbox_stat_line {\n
   color: inherit;\n
   background-color: <dtml-var listbox_stat_background_color>;\n
 }\n
 \n
-.ListContent .listbox_stat_line td.Data {\n
+.listbox .listbox_stat_line td.Data {\n
   border-top-width: 1px;\n
   border-top-style: solid;\n
   border-color: <dtml-var document_border_color>;\n
 }\n
 \n
-.ListContent tr.DataA {\n
+.listbox tr.DataA {\n
   color: inherit;\n
   background-color: <dtml-var listbox_odd_background_color>;\n
 }\n
 \n
-.ListContent tr.DataB {\n
+.listbox tr.DataB {\n
   color: inherit;\n
   background-color: <dtml-var listbox_even_background_color>;\n
 }\n
@@ -1188,13 +1195,14 @@ fieldset.bottom .field .input {\n
   vertical-align: middle;\n
 }\n
 \n
-.ListContent tr.DataA:hover,\n
-.ListContent tr.DataB:hover {\n
+.listbox tr.DataA:hover,\n
+.listbox tr.DataB:hover, \n
+table.listbox.table tr.tbody:hover{\n
   color: inherit;\n
   background-color: <dtml-var listbox_hover_background_color>;\n
 }\n
 \n
-.ListContent td {\n
+.listbox td {\n
   border-color: <dtml-var document_border_color>;\n
   border-style: solid;\n
   border-top-width: 0;\n
@@ -1205,15 +1213,199 @@ fieldset.bottom .field .input {\n
   padding-right: 1px;\n
 }\n
 \n
-.ListContent .error {\n
+.listbox .error {\n
   color: #F00;\n
 }\n
+\n
+table.listbox {\n
+  width: 100%;\n
+  margin-bottom: 1em;\n
+  border-style: solid;\n
+  border-width: 0 1px 1px 1px;\n
+  border-color:<dtml-var document_border_color>;\n
+}\n
+\n
+table.listbox .thead    {background: #e6e6e6}\n
+\n
+table.listbox .thead th,\n
+table.listbox a {\n
+  font-weight: normal\n
+}\n
+\n
+table.listbox td,\n
+table.listbox th {\n
+  text-align: left;\n
+  padding: .3em;\n
+  border: 1px solid <dtml-var document_border_color>;\n
+}\n
+\n
+table.listbox tr.tbody:hover {background:<dtml-var listbox_hover_background_color>}\n
+\n
+table.listbox .tbody td.icon {\n
+  text-align: center;\n
+  padding: 0;\n
+}\n
+\n
+table.listbox .tbody td.icon a {\n
+  display: block;\n
+  padding: .3em;\n
+}\n
+\n
+table.listbox tr.tbody td div.coordinates a {\n
+  color:green;\n
+}\n
+\n
 td.AnchorColumn {\n
   !important\n
   border-style:none;\n
   border-color:<dtml-var document_border_color>;\n
   background-color:<dtml-var document_background_color>;\n
   border-width:0;\n
+}\n
+\n
+/* Popup info window style */\n
+div.search_popup {\n
+  background-color: #c3e3df;\n
+  display: none;\n
+  position:fixed;\n
+  left:500px;\n
+  width:150px;\n
+  top:130px;\n
+  padding:10px;\n
+  border:1px solid black;\n
+  z-index:100;\n
+}\n
+\n
+div.popup_row{\n
+  clear:right;\n
+}\n
+\n
+div.popup_row span.popup_label{\n
+  font-weight: bold;\n
+}\n
+\n
+div.popup_row a{\n
+  color: green!important;\n
+}\n
+div.searchResultHeader {\n
+  margin-top: 0em;\n
+  border: 1px solid <dtml-var document_border_color>;\n
+  background-color: <dtml-var listbox_label_background_color>;\n
+  padding: .2em;\n
+}\n
+\n
+div.searchResultHeader .right {float: right}\n
+div.searchResultHeader .left  {float: left}\n
+\n
+\n
+/* Search results list\n
+------------------------------------------------*/\n
+\n
+div#main_content.list_mode{\n
+  font-size:0.7em;\n
+  line-height:1.5em;\n
+}\n
+\n
+div.search.result .resultList {\n
+  padding: 1em;\n
+  width: 70%;\n
+  margin: 0 auto;\n
+}\n
+\n
+div.search.result .resultList p {margin-bottom: 0}\n
+\n
+div.search.result .resultList h3 {\n
+  font-size: 120%;\n
+  font-weight: normal;\n
+  margin-bottom: 1em;\n
+}\n
+\n
+div.search.result .resultList ul.pages li a {\n
+  padding: .1em .3em;\n
+  border: 1px solid transparent;\n
+}\n
+\n
+div.search.result .resultList ul.pages li a:hover {\n
+  border: 1px solid #dedade;\n
+  background: #eee;\n
+}\n
+\n
+div.search.result .resultList table {\n
+  border-collapse: inherit;\n
+  border-spacing: .3em;\n
+}\n
+\n
+div.search.result .resultList .search_result_portal_type,\n
+div.search.result .resultList .search_result_title {\n
+  display: inline;\n
+}\n
+\n
+div.search.result .resultList .search_result_portal_type{\n
+  font-size: 80%;\n
+}\n
+\n
+div.search.result .resultList .search_result_title a{\n
+  font-weight: bold;\n
+  font-size: 120%;\n
+}\n
+\n
+div.search.result .resultList .search_result_portal_type:before {\n
+  content: "[";\n
+}\n
+div.search.result .resultList .search_result_portal_type:after {\n
+  content: "]";\n
+}\n
+\n
+div.search.result .resultList table.listbox caption {\n
+  font-weight: bold;\n
+  text-align: left;\n
+}\n
+\n
+div.search.result .resultList table.listbox td {\n
+  vertical-align: middle;\n
+  border: transparent;\n
+  margin:0;\n
+}\n
+\n
+div.search.result .resultList table.listbox td ul    {list-style: none}\n
+div.search.result .resultList table.listbox td ul li {margin: 0}\n
+\n
+div.search.result .resultList table.listbox td blockquote {\n
+  border: 1px solid #e6e2e6;\n
+  border-top-color: #000;\n
+  margin: .5em 0 2em;\n
+  padding: 1em;\n
+  background: #eee;\n
+}\n
+\n
+div.search.result .resultList {\n
+  padding: 1em;\n
+  padding-top: 0em;\n
+  padding-bottom: 1em;\n
+  padding-left: 0em;\n
+  padding-right: 0em;\n
+}\n
+\n
+div.search.result div.searchBar {\n
+  margin-bottom: 2em;\n
+}\n
+\n
+div.searchResultHeader #style_toggle_icon,\n
+table.listbox.table #style_toggle_icon {\n
+      padding:0;\n
+      border: 0px;\n
+      border-color:red;\n
+      margin:0;\n
+      vertical-align:bottom;\n
+}\n
+\n
+div.search .centeredInner {\n
+ text-align: center;\n
+}\n
+\n
+.searchDetails em {\n
+  font-style:normal;\n
+  font-weight:bold;\n
 }\n
 \n
 /* MatrixBox */\n
@@ -1297,7 +1489,6 @@ td.AnchorColumn {\n
   color: black;\n
 }\n
 \n
-\n
 /* TioLive modifications */\n
 #main_bar {\n
   padding-bottom: 0px;\n
@@ -1370,7 +1561,8 @@ td.AnchorColumn {\n
   margin-right:35px;\n
   width:130px;\n
   border: none!important;\n
-}
+}\n
+
 
 ]]></string> </value>
         </item>
