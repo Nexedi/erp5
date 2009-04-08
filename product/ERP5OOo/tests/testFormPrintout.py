@@ -143,6 +143,7 @@ class TestFormPrintout(ERP5TypeTestCase):
 
     ## 4. False case: does not set a ODF template
     self.assertTrue(foo_printout.template == 'Foo_getODTStyleSheet')
+    tmp_template = foo_printout.template 
     foo_printout.template = None
     # template == None, causes a ValueError 
     try: 
@@ -151,7 +152,17 @@ class TestFormPrintout(ERP5TypeTestCase):
       # e -> 'Can not create a ODF Document without a odf_template'
       self.assertTrue(True)
 
-
+    # put back
+    foo_printout.template = tmp_template
+    
+    # 5. Normal case: just call a FormPrintout object
+    test1.setTitle("call!")
+    odf_document = foo_printout() # call
+    self.assertTrue(odf_document is not None)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    self.assertTrue(content_xml.find("call!") > 0)
+    
   def test_02_Table_01_Normal(self, run=run_all_test):
     """To test listbox and ODF table mapping
     
