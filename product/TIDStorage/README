@@ -144,6 +144,11 @@ Limits:
    There are even pathologic cases where no coherency point can be found,
    so TIDStorage log file won't have any information.
 
+Daemeon signal support:
+ - HUP repoens all log files
+ - USR1 dumps tid configuration into log file
+ - TERM kills daemon
+
 PROTOCOL SPECIFICATION
 ======================
 
