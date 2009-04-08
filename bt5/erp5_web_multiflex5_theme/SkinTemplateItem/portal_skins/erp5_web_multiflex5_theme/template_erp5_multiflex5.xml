@@ -102,7 +102,6 @@
                                   \'%s/mf54_content.css\' % portal_path,\n
 ];\n
                            global js_list python:[\n
-                                  \'%s/erp5_tabber.js\' % portal_path,\n
 ]">\n
       <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">\n
         <tal:block metal:fill-slot="layout">\n
