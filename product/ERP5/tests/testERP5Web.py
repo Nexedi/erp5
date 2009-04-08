@@ -1138,7 +1138,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       self.fail("An user should be able to expire a Web Section.")
       
   def test_05_createWebSite(self, quiet=quiet, run=run_all_test):
-    """ Test to create web sites with many users """
+    """ Test to create or clone web sites with many users """
     if not run: return
     if not quiet:
       message = '\ntest_05_createWebSite'
@@ -1160,8 +1160,13 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     except Unauthorized:
       self.fail("A webmaster should be able to create a Web Site.")
 
+    site_2_copy = web_site_module.manage_copyObjects(ids=(site_2.getId(),))
+    site_2_clone = web_site_module[web_site_module.manage_pasteObjects(
+      site_2_copy)[0]['new_id']]
+    self.assertEquals(site_2_clone.getPortalType(), 'Web Site')
+
   def test_06_createWebSection(self, quiet=quiet, run=run_all_test):
-    """ Test to create web sections with many users """
+    """ Test to create or clone web sections with many users """
     if not run: return
     if not quiet:
       message = '\ntest_06_createWebSection'
@@ -1185,6 +1190,14 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       section_3 = section_2.newContent(portal_type='Web Section', id='section_3')
     except Unauthorized:
       self.fail("A webmaster should be able to create a Web Section.")
+    section_2_copy = site.manage_copyObjects(ids=(section_2.getId(),))
+    section_2_clone = site[site.manage_pasteObjects(
+      section_2_copy)[0]['new_id']]
+    self.assertEquals(section_2_clone.getPortalType(), 'Web Section')
+    section_3_copy = section_2.manage_copyObjects(ids=(section_3.getId(),))
+    section_3_clone = section_2[section_2.manage_pasteObjects(
+      section_3_copy)[0]['new_id']]
+    self.assertEquals(section_3_clone.getPortalType(), 'Web Section')
     
 def test_suite():
   suite = unittest.TestSuite()
