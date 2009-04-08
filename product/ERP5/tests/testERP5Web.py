@@ -842,7 +842,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.portal.Localizer = DummyLocalizer()
     self.createUser('admin', ['Manager'])
     self.createUser('erp5user', ['Auditor', 'Author'])
-    self.createUser('web_user', ['Assignor'])
+    self.createUser('webmaster', ['Assignor'])
     get_transaction().commit()
     self.tic()
 
@@ -1130,7 +1130,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       self.fail("Admin should be able to expire a Web Section.")
       
     # test if a user (ASSIGNOR) can expire them
-    self.changeUser('web_user')
+    self.changeUser('webmaster')
     try:
       section_2.expire()
       section_6.expire()
@@ -1155,12 +1155,12 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     except Unauthorized:
       self.fail("Admin should be able to create a Web Section.")
 
-    # test as a web user (assignor)
-    self.changeUser('web_user')
+    # test as a webmaster (assignor)
+    self.changeUser('webmaster')
     try:
       section_2 = site.newContent(portal_type='Web Section', id='section_2')
       section_3 = section_2.newContent(portal_type='Web Section', id='section_3')
-      self.fail("A web user should not be able to create a Web Section.")
+      self.fail("A webmaster should not be able to create a Web Section.")
     except Unauthorized:
       pass
 
