@@ -53,6 +53,7 @@
                 <string>Modify portal content</string>
                 <string>Delete objects</string>
                 <string>Copy or Move</string>
+                <string>Add portal folders</string>
               </tuple>
             </value>
         </item>

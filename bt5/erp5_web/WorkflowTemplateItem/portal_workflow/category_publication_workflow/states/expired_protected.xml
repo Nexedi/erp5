@@ -76,6 +76,12 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>Add portal folders</string> </key>
+                    <value>
+                      <tuple/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>Copy or Move</string> </key>
                     <value>
                       <tuple/>
