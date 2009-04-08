@@ -1199,6 +1199,65 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       section_3_copy)[0]['new_id']]
     self.assertEquals(section_3_clone.getPortalType(), 'Web Section')
     
+  def test_07_createCategory(self, quiet=quiet, run=run_all_test):
+    """ Test to create or clone categories with many users """
+    if not run: return
+    if not quiet:
+      message = '\ntest_07_createCategory'
+      ZopeTestCase._print(message)
+      
+    self.changeUser('admin')
+    portal_categories = self.portal.portal_categories
+    publication_section = portal_categories.publication_section
+
+    # test for admin
+    try:
+      base_category_1 = portal_categories.newContent(portal_type='Base Category', id='base_category_1')
+    except Unauthorized:
+      self.fail("Admin should be able to create a Base Category.")
+    try:
+      category_1 = publication_section.newContent(portal_type='Category', id='category_1')
+      category_2 = category_1.newContent(portal_type='Category', id='category_3')
+    except Unauthorized:
+      self.fail("Admin should be able to create a Category.")
+    category_1_copy = publication_section.manage_copyObjects(ids=(category_1.getId(),))
+    category_1_clone = publication_section[publication_section.manage_pasteObjects(
+      category_1_copy)[0]['new_id']]
+    self.assertEquals(category_1_clone.getPortalType(), 'Category')
+    category_2_copy = category_1.manage_copyObjects(ids=(category_2.getId(),))
+    category_2_clone = category_1[category_1.manage_pasteObjects(
+      category_2_copy)[0]['new_id']]
+    self.assertEquals(category_2_clone.getPortalType(), 'Category')
+
+    # test as a web user (assignor)
+    self.changeUser('webmaster') 
+    try:
+      base_category_2 = portal_categories.newContent(portal_type='Base Category', id='base_category_2')
+      self.fail("A webmaster should not be able to create a Base Category.")
+    except Unauthorized:
+      pass
+    try:
+      category_3 = publication_section.newContent(portal_type='Category', id='category_3')
+      category_4 = category_3.newContent(portal_type='Category', id='category_4')
+    except Unauthorized:
+      self.fail("A webmaster should be able to create a Category.")
+    # try to clone a sub category of the same owner whose parent is a
+    # base category.
+    category_3_copy = publication_section.manage_copyObjects(ids=(category_3.getId(),))
+    category_3_clone = publication_section[publication_section.manage_pasteObjects(
+      category_3_copy)[0]['new_id']]
+    self.assertEquals(category_3_clone.getPortalType(), 'Category')
+    # try to clone a sub category of the different owner
+    category_2_copy = category_1.manage_copyObjects(ids=(category_2.getId(),))
+    category_2_clone = category_1[category_1.manage_pasteObjects(
+      category_2_copy)[0]['new_id']]
+    self.assertEquals(category_2_clone.getPortalType(), 'Category')
+    # try to clone a sub category of the same owner
+    category_4_copy = category_3.manage_copyObjects(ids=(category_4.getId(),))
+    category_4_clone = category_3[category_3.manage_pasteObjects(
+      category_4_copy)[0]['new_id']]
+    self.assertEquals(category_4_clone.getPortalType(), 'Category')
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Web))
