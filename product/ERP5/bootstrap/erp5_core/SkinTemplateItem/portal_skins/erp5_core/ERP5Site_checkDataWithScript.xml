@@ -82,7 +82,6 @@ if relative_url:\n
   depth = len(relative_url.split(\'/\'))\n
 else:\n
   depth = 0\n
-\n
 maximum_depth = 1\n
 \n
 assert depth <= maximum_depth\n
@@ -114,7 +113,16 @@ else:\n
     if full or not getattr(document, \'isHBTree\', lambda: 0)():\n
       id_list = document.objectIds()\n
       if not depth:\n
-        id_list = tuple(x for x in id_list if x.endswith(\'_module\'))\n
+        id_list = tuple(x for x in id_list if x.endswith(\'_module\') or x in [\n
+          \'portal_alarms\',\n
+          \'portal_categories\',\n
+          \'portal_deliveries\',\n
+          \'portal_orders\',\n
+          \'portal_preferences\',\n
+          \'portal_simulation\',\n
+          \'portal_templates\',\n
+          \'portal_trash\',\n
+        ])\n
     else:\n
       from DateTime import DateTime\n
       id_list = []\n
