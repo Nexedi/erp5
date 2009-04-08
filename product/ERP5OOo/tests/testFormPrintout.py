@@ -31,10 +31,10 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from zLOG import LOG , INFO
+from lxml import etree
 import os
 
 class TestFormPrintout(ERP5TypeTestCase):
-  quiet = 1
   run_all_test = 1
 
   def getTitle(self):
@@ -67,7 +67,6 @@ class TestFormPrintout(ERP5TypeTestCase):
                              ooo_stylesheet='Foo_getODTStyleSheet')
     #Foo_viewAsOdt.pt_upload(request, file=foo_file)
     #render_result = Foo_viewAsOdt(REQUEST=request)
-    #LOG('testFormPrintout render_result:', INFO, render_result)
     builder = OOoBuilder(foo_file)
     content = builder.extract('content.xml')
     Foo_viewAsOdt.pt_edit(content, content_type='application/vnd.oasis.opendocument.text')
@@ -75,16 +74,30 @@ class TestFormPrintout(ERP5TypeTestCase):
       erp5OOo.addFormPrintout(id='Foo_viewAsPrintout', title='',
                               form_name='Foo_view', template='Foo_getODTStyleSheet')
 
+    ## append 'test1' data to a listbox
+    foo_module = self.portal.foo_module
+    if foo_module._getOb('test1', None) is None:
+      foo_module.newContent(id='test1', portal_type='Foo')
+    test1 =  foo_module.test1
+    if test1._getOb("foo_1", None) is None:
+      test1.newContent("foo_1", portal_type='Foo Line')
+    if test1._getOb("foo_2", None) is None:
+      test1.newContent("foo_2", portal_type='Foo Line')
+    get_transaction().commit()
+    self.tic()
+    
   def login(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('tatuya', '', ['Manager'], [])
     user = uf.getUserById('tatuya').__of__(uf)
     newSecurityManager(None, user)
                           
-  def test_01_Paragraph(self, quiet=0, run=run_all_test):
+  def test_01_Paragraph(self, run=run_all_test):
     """
     mapping a field to a paragraph
     """
+    if not run: return
+    
     portal = self.getPortal()
     foo_module = self.portal.foo_module
     if foo_module._getOb('test1', None) is None:
@@ -139,63 +152,44 @@ class TestFormPrintout(ERP5TypeTestCase):
       self.assertTrue(True)
 
 
-  def test_02_Table(self, quiet=0, run=run_all_test):
+  def test_02_Table_01_Normal(self, run=run_all_test):
+    """To test listbox and ODF table mapping
+    
+     * Test Data Format
+    
+     ODF table named 'listbox':
+     +------------------------------+
+     |  ID | Title | Quantity |Date |
+     |-----+-------+----------+-----|
+     |     |       |          |     |
+     |-----+-------+----------+-----|
+     |   Total     |          |     |
+     +------------------------------+
     """
-    To test mapping a listbox(Form) to a table(ODF)
-    """
-    portal = self.getPortal()
-    ## append 'test1' data to a listbox
-    foo_module = self.portal.foo_module
-    if foo_module._getOb('test1', None) is None:
-      foo_module.newContent(id='test1', portal_type='Foo')
-    test1 =  foo_module.test1
-    if test1._getOb("foo_1", None) is None:
-      test1.newContent("foo_1", portal_type='Foo Line')
-    get_transaction().commit()
-    self.tic()
     # test target
-    foo_printout = portal.foo_module.test1.Foo_viewAsPrintout
-
-    # Test Data format
-    #
-    # * ODF table named 'listbox':
-    # +------------------------------+
-    # |  ID | Title | Quantity |Date |
-    # |-----+-------+----------+-----|
-    # |     |       |          |     |
-    # |-----+-------+----------+-----|
-    # |   Total     |          |     |
-    # +------------------------------+
-    #
-    # * ODF table named 'listbox2':
-    # +-------------------------------+
-    # |  A    |   B   |   C   |   D   |
-    # |-------+-------+-------+-------|
-    # |       |       |       |       |
-    # +-------+-------+-------+-------+
-    #
-    # * ODF table named 'listbox3':
-    # the table listbox3 has not table header.
-    # first row is table content, too.
-    # +-------------------------------+
-    # |  1    |   2   |   3   |   4   |
-    # |-------+-------+-------+-------|
-    # |       |       |       |       |
-    # +-------+-------+-------+-------+
-    # 
-
-    # 1. Normal Case: ODF table last row is stat line
-    test1.foo_1.setTitle('foo_title_1')
+    test1 = self.portal.foo_module.test1
+    foo_printout = test1.Foo_viewAsPrintout
     foo_form = test1.Foo_view
     listbox = foo_form.listbox
     request = self.app.REQUEST 
     request['here'] = test1
+    
+    # 1. Normal Case: ODF table last row is stat line
+    test1.foo_1.setTitle('foo_title_1')
+    message = listbox.ListBox_setPropertyList(
+      field_list_method = 'objectValues',
+      field_portal_types = 'Foo Line | Foo Line',
+      field_stat_method = 'portal_catalog',
+      field_stat_columns = 'quantity | Foo_statQuantity',
+      field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
+    self.failUnless('Set Successfully' in message)
     listboxline_list = listbox.get_value('default', render_format = 'list',
                                          REQUEST = request)
-    self.assertEqual(len(listboxline_list), 3)
+    self.assertEqual(len(listboxline_list), 4)
     self.assertTrue(listboxline_list[0].isTitleLine())
     self.assertTrue(listboxline_list[1].isDataLine())
-    self.assertTrue(listboxline_list[2].isStatLine())
+    self.assertTrue(listboxline_list[2].isDataLine())
+    self.assertTrue(listboxline_list[3].isStatLine())
     column_list = listboxline_list[0].getColumnPropertyList()
     self.assertEqual(len(column_list), 4)
     self.assertTrue(listboxline_list[1].getColumnProperty('id') == "foo_1")
@@ -209,7 +203,17 @@ class TestFormPrintout(ERP5TypeTestCase):
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("foo_title_1") > 0)
 
-    # 2. Irregular case: listbox columns count smaller than table columns count
+  def test_02_Table_02_SmallerThanListboxColumns(self, run=run_all_test):
+    """2. Irregular case: listbox columns count smaller than table columns count"""
+    if not run: return 
+    # test target
+    test1 = self.portal.foo_module.test1
+    foo_printout = test1.Foo_viewAsPrintout
+    foo_form = test1.Foo_view
+    listbox = foo_form.listbox
+    request = self.app.REQUEST 
+    request['here'] = test1
+
     test1.foo_1.setTitle('foo_title_2')
     message = listbox.ListBox_setPropertyList(
       field_list_method = 'objectValues',
@@ -222,10 +226,11 @@ class TestFormPrintout(ERP5TypeTestCase):
                      [('id', 'ID'), ('title', 'Title'), ('quantity', 'Quantity')])
     listboxline_list = listbox.get_value('default', render_format = 'list',
                                          REQUEST = request)
-    self.assertEqual(len(listboxline_list), 3)
+    self.assertEqual(len(listboxline_list), 4)
     self.assertTrue(listboxline_list[0].isTitleLine())
     self.assertTrue(listboxline_list[1].isDataLine())
-    self.assertTrue(listboxline_list[2].isStatLine())
+    self.assertTrue(listboxline_list[2].isDataLine())
+    self.assertTrue(listboxline_list[3].isStatLine())
     self.assertTrue(listboxline_list[1].getColumnProperty('title') == "foo_title_2")
     
     column_list = listboxline_list[0].getColumnPropertyList()
@@ -240,7 +245,17 @@ class TestFormPrintout(ERP5TypeTestCase):
     self.assertFalse(content_xml.find("foo_title_1") > 0)
     self.assertTrue(content_xml.find("foo_title_2") > 0)
 
-    # 3. Irregular case: listbox columns count larger than table columns count
+  def test_02_Table_03_ListboxColumnsLargerThanTable(self, run=run_all_test):
+    """3. Irregular case: listbox columns count larger than table columns count"""
+    if not run: return 
+    # test target
+    test1 = self.portal.foo_module.test1
+    foo_printout = test1.Foo_viewAsPrintout
+    foo_form = test1.Foo_view
+    listbox = foo_form.listbox
+    request = self.app.REQUEST 
+    request['here'] = test1
+
     test1.foo_1.setTitle('foo_title_3')
     message = listbox.ListBox_setPropertyList(
       field_list_method = 'objectValues',
@@ -252,13 +267,12 @@ class TestFormPrintout(ERP5TypeTestCase):
     self.failUnless('Set Successfully' in message)
     listboxline_list = listbox.get_value('default', render_format = 'list',
                                          REQUEST = request)
-    self.assertEqual(len(listboxline_list), 3)
+    self.assertEqual(len(listboxline_list), 4)
     self.assertTrue(listboxline_list[1].getColumnProperty('title') == "foo_title_3")
     
     column_list = listboxline_list[0].getColumnPropertyList()
     self.assertEqual(len(column_list), 5)
     odf_document = foo_printout.index_html(REQUEST=request)
-    LOG('testFormPrintout', INFO, 'content:%s' % content_xml)
     #test_output = open("/tmp/test_02_03_Table.odf", "w")
     #test_output.write(odf_document)
     self.assertTrue(odf_document is not None)
@@ -267,13 +281,19 @@ class TestFormPrintout(ERP5TypeTestCase):
     self.assertFalse(content_xml.find("foo_title_2") > 0)
     self.assertTrue(content_xml.find("foo_title_3") > 0)
 
-    # 4. Irregular case: listbox has not a stat line, but table has a stat line
-    if test1._getOb("foo_2", None) is None:
-      test1.newContent("foo_2", portal_type='Foo Line')
-    get_transaction().commit()
-    self.tic()
+  def test_02_Table_04_ListboxHasNotStat(self, run=run_all_test):
+    """4. Irregular case: listbox has not a stat line, but table has a stat line"""
+    if not run: return 
+    # test target
+    test1 = self.portal.foo_module.test1
+    foo_printout = test1.Foo_viewAsPrintout
+    foo_form = test1.Foo_view
+    listbox = foo_form.listbox
+    request = self.app.REQUEST 
+    request['here'] = test1
 
     test1.foo_1.setTitle('foo_title_4')
+    test1.foo_1.setStartDate('2009-01-01')
     message = listbox.ListBox_setPropertyList(
       field_list_method = 'objectValues',
       field_portal_types = 'Foo Line | Foo Line',
@@ -297,7 +317,41 @@ class TestFormPrintout(ERP5TypeTestCase):
     self.assertFalse(content_xml.find("foo_title_3") > 0)
     self.assertTrue(content_xml.find("foo_title_4") > 0)
 
-    # 5. Normal case: the listobx and the ODF table are same layout
+    content = etree.XML(content_xml)
+    table_row_xpath = '//table:table[@table:name="listbox"]/table:table-row'
+    odf_table_rows = content.xpath(table_row_xpath, namespaces=content.nsmap)
+    self.assertEqual(len(odf_table_rows), 2)
+    # to test copying ODF table cell styles 
+    first_row = odf_table_rows[0]
+    first_row_columns = first_row.getchildren()
+    last_row = odf_table_rows[-1]
+    last_row_columns = last_row.getchildren()
+    span_attribute = "{%s}number-columns-spanned" % content.nsmap['table']
+    self.assertFalse(first_row_columns[0].attrib.has_key(span_attribute))
+    self.assertEqual(int(last_row_columns[0].attrib[span_attribute]), 2)
+
+  def test_02_Table_05_NormalSameLayout(self, run=run_all_test):
+    """5. Normal case: the listobx and the ODF table are same layout
+
+    * Test Data Format:
+    
+     ODF table named 'listbox2'
+     +-------------------------------+
+     |  A    |   B   |   C   |   D   |
+     |-------+-------+-------+-------|
+     |       |       |       |       |
+     +-------+-------+-------+-------+
+    """
+    if not run: return
+
+    # test target
+    test1 = self.portal.foo_module.test1
+    foo_printout = test1.Foo_viewAsPrintout
+    foo_form = test1.Foo_view
+    listbox = foo_form.listbox
+    request = self.app.REQUEST 
+    request['here'] = test1
+
     foo_form.manage_renameObject('listbox', 'listbox2', REQUEST=request)
     listbox2 = foo_form.listbox2
     test1.foo_1.setTitle('foo_title_5')
@@ -325,15 +379,44 @@ class TestFormPrintout(ERP5TypeTestCase):
     # put back the field name
     foo_form.manage_renameObject('listbox2', 'listbox', REQUEST=request)
 
-    # 6. Normal case: ODF table does not have a header
+    
+  def test_02_Table_06_TableDoesNotHaveAHeader(self, run=run_all_test):
+    """6. Normal case: ODF table does not have a header
+     * Test Data format:
+    
+     ODF table named 'listbox3'
+     the table listbox3 has not table header.
+     first row is a table content, too.
+     +-------------------------------+
+     |  1    |   2   |   3   |   4   |
+     |-------+-------+-------+-------|
+     |       |       |       |       |
+     +-------+-------+-------+-------+
+    """
+    if not run: return 
+    # test target
+    test1 = self.portal.foo_module.test1
+    foo_printout = test1.Foo_viewAsPrintout
+    foo_form = test1.Foo_view
+    listbox = foo_form.listbox
+    request = self.app.REQUEST 
+    request['here'] = test1
+
     foo_form.manage_renameObject('listbox', 'listbox3', REQUEST=request)
     listbox3 = foo_form.listbox3
     test1.foo_1.setTitle('foo_title_6')
+    message = listbox3.ListBox_setPropertyList(
+      field_list_method = 'objectValues',
+      field_portal_types = 'Foo Line | Foo Line',
+      field_stat_method = 'portal_catalog',
+      field_stat_columns = 'quantity | Foo_statQuantity',
+      field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
+    self.failUnless('Set Successfully' in message)
     listboxline_list = listbox3.get_value('default', render_format = 'list',
                                          REQUEST = request)
     self.assertEqual(len(listboxline_list), 4)
     self.assertTrue(listboxline_list[1].getColumnProperty('title') == "foo_title_6")
-
+    
     odf_document = foo_printout.index_html(REQUEST=request)
     #test_output = open("/tmp/test_02_06_Table.odf", "w")
     #test_output.write(odf_document)
@@ -346,26 +429,74 @@ class TestFormPrintout(ERP5TypeTestCase):
     # put back the field name
     foo_form.manage_renameObject('listbox3', 'listbox', REQUEST=request)
 
-  def _test_03_Frame(self, quiet=0, run=run_all_test):
+  def test_02_Table_07_CellFormat(self, run=run_all_test):
+    """7. Normal case: cell format cetting"""
+    if not run: return 
+    # test target
+    test1 = self.portal.foo_module.test1
+    foo_printout = test1.Foo_viewAsPrintout
+    foo_form = test1.Foo_view
+    listbox = foo_form.listbox
+    request = self.app.REQUEST 
+    request['here'] = test1
+
+    test1.foo_1.setTitle('foo_title_7')
+    test1.foo_1.setStartDate('2009-04-20')
+    message = listbox.ListBox_setPropertyList(
+      field_list_method = 'objectValues',
+      field_portal_types = 'Foo Line | Foo Line',
+      field_stat_method = 'portal_catalog',
+      field_stat_columns = 'quantity | Foo_statQuantity',
+      field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
+    self.failUnless('Set Successfully' in message)
+    listboxline_list = listbox.get_value('default', render_format = 'list',
+                                         REQUEST = request)
+    self.assertEqual(len(listboxline_list), 4)
+    self.assertTrue(listboxline_list[1].getColumnProperty('title') == "foo_title_7")
+    LOG('testFormPrintout start_date', INFO, listboxline_list[1].getColumnProperty('start_date'))
+      
+    odf_document = foo_printout.index_html(REQUEST=request)
+    #test_output = open("/tmp/test_02_07_Table.odf", "w")
+    #test_output.write(odf_document)
+    self.assertTrue(odf_document is not None)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    self.assertFalse(content_xml.find("foo_title_6") > 0)
+    self.assertTrue(content_xml.find("foo_title_7") > 0)
+
+    content = etree.XML(content_xml)
+    table_row_xpath = '//table:table[@table:name="listbox"]/table:table-row'
+    odf_table_rows = content.xpath(table_row_xpath, namespaces=content.nsmap)
+    LOG('testFormPrintout odf_table_rows', INFO, odf_table_rows)
+    self.assertEqual(len(odf_table_rows), 3)
+    # to test ODF table cell number format
+    first_row = odf_table_rows[0]
+    first_row_columns = first_row.getchildren()
+    date_column = first_row_columns[3]
+    date_value_attrib = "{%s}date-value" % content.nsmap['office']
+    self.assertTrue(date_column.attrib.has_key(date_value_attrib))
+    self.assertEqual(date_column.attrib[date_value_attrib], '2009-04-20')
+    
+  def _test_03_Frame(self, run=run_all_test):
     """
     Frame not supported yet
     """
     pass
 
-  def _test_04_Iteration(self, quiet=0, run=run_all_test):
+  def _test_04_Iteration(self, run=run_all_test):
     """
     Iteration(ReportSection) not supported yet.
     Probably to support *ReportBox* would be better.
     """
     pass
 
-  def _test_05_Styles(self, quiet=0, run=run_all_test):
+  def _test_05_Styles(self, run=run_all_test):
     """
     styles.xml not supported yet
     """
     pass
 
-  def _test_06_Meta(self, quiet=0, run=run_all_test):
+  def _test_06_Meta(self, run=run_all_test):
     """
     meta.xml not supported yet
     """
