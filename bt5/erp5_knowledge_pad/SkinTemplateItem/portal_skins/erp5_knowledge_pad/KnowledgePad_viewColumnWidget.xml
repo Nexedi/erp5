@@ -70,8 +70,7 @@
                        request.get(\'is_knowledge_pad_template_used\', 0);">\n
 \n
     <div class="block" \n
-         tal:condition="python: gadget is not None"\n
-         tal:attributes="id python: \'%s/%s\' %(here.getRelativeUrl(), box_id)">\n
+      tal:condition="python: gadget is not None">\n
 \n
       <h3 class="handle">\n
         <span class="handle">\n
@@ -111,19 +110,21 @@
             <form action="KnowledgeBox_baseEdit"\n
                   tal:condition="not: is_asynchronous_gadget"\n
                   tal:define="box_relative_url python: box.getRelativeUrl();">\n
-              <span tal:replace="structure python: getattr(box, edit_form_id)()"/>\n
-              <input type="hidden" \n
-                     name="box_relative_url" \n
-                     tal:attributes="value box_relative_url"/>\n
-              <input type="hidden" \n
-                     name="cancel_url" \n
-                     tal:attributes="value cancel_url;\n
-                       name python: \'%s_cancel_url\' \n
-                                     %box_relative_url.replace(\'/\', \'_\')"/> \n
-              <button type="submit"\n
-                     i18n:translate="" \n
-                     i18n:domain="ui" \n
-                     name="KnowledgeBox_baseEdit:method">Save</button>\n
+              <div>\n
+                <span tal:replace="structure python: getattr(box, edit_form_id)()"/>\n
+                <input type="hidden" \n
+                       name="box_relative_url" \n
+                       tal:attributes="value box_relative_url"/>\n
+                <input type="hidden" \n
+                       name="cancel_url" \n
+                       tal:attributes="value cancel_url;\n
+                         name python: \'%s_cancel_url\' \n
+                                       %box_relative_url.replace(\'/\', \'_\')"/> \n
+                <button type="submit"\n
+                       i18n:translate="" \n
+                       i18n:domain="ui" \n
+                       name="KnowledgeBox_baseEdit:method">Save</button>\n
+              </div>\n
             </form>\n
 \n
             <tal:block tal:condition="is_asynchronous_gadget">\n
@@ -172,7 +173,8 @@
 \n
   </div>\n
   </tal:block>\n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>
