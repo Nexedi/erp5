@@ -13,14 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>lines</string>
                 <string>title</string>
+                <string>lines</string>
                 <string>columns</string>
                 <string>sort</string>
-                <string>editable_columns</string>
-                <string>default_params</string>
-                <string>list_action</string>
                 <string>portal_types</string>
+                <string>editable_columns</string>
+                <string>list_action</string>
               </list>
             </value>
         </item>
@@ -106,12 +105,6 @@
                           <string>Modification Date</string>
                         </tuple>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>default_params</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
                 <item>
