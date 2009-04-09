@@ -455,7 +455,6 @@ body {\n
 }\n
 \n
 #main_form {\n
-  background-color: inherit;\n
   color: inherit;\n
 }\n
 \n
