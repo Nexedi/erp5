@@ -85,8 +85,11 @@ def printAndLog(msg):
 def makeFilePath(name):
   return os.getenv('INSTANCE_HOME') + '/../Products/ERP5OOo/tests/test_document/' + name
 
-def makeFileUpload(name):
-  return FileUpload(makeFilePath(name), name)
+def makeFileUpload(name, as_name=None):
+  if as_name is None:
+    as_name = name
+  path = makeFilePath(name)
+  return FileUpload(path, as_name)
 
 
 class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
@@ -447,13 +450,13 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     document1 = self.portal.portal_contributions.newContent(file=file)
 
     # (2) TEST, 002, fr
-    filename = 'TEST-fr-002.odt'
-    file = makeFileUpload(filename)
+    as_name = 'TEST-fr-002.odt'
+    file = makeFileUpload(filename, as_name)
     document2 = self.portal.portal_contributions.newContent(file=file)
 
     # (3) TEST, 003, en
-    filename = 'TEST-en-003.odt'
-    file = makeFileUpload(filename)
+    as_name = 'TEST-en-003.odt'
+    file = makeFileUpload(filename, as_name)
     document3 = self.portal.portal_contributions.newContent(file=file)
 
     # create docs to contain references in text_content:

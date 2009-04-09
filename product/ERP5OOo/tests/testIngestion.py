@@ -64,9 +64,11 @@ def printAndLog(msg):
 def makeFilePath(name):
   return os.path.join(TEST_FILES_HOME, name)
 
-def makeFileUpload(name):
+def makeFileUpload(name, as_name=None):
+  if as_name is None:
+    as_name = name
   path = makeFilePath(name)
-  return FileUpload(path, name)
+  return FileUpload(path, as_name)
 
 class TestIngestion(ERP5TypeTestCase):
   """
@@ -1352,7 +1354,7 @@ class TestIngestion(ERP5TypeTestCase):
     """
       Upload a file from contribution.
     """
-    f = makeFileUpload('T&é@{T-en-002.doc')
+    f = makeFileUpload('TEST-en-002.doc', 'T&é@{T-en-002.doc')
     document = self.portal.portal_contributions.newContent(file=f)
     sequence.edit(document_id=document.getId())
     get_transaction().commit()
