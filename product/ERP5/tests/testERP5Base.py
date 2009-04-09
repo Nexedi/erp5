@@ -1315,7 +1315,7 @@ class TestERP5Base(ERP5TypeTestCase):
   def test_ERP5Site_checkDataWithScript(self):
     test = 'test_ERP5Site_checkDataWithScript'
     createZODBPythonScript(self.getSkinsTool().custom, test, '',
-                                           'return context.getRelativeUrl(),')
+                           'return context.absolute_url(relative=1),')
 
     organisation = self.getOrganisationModule() \
                        .newContent(portal_type='Organisation')
@@ -1335,7 +1335,7 @@ class TestERP5Base(ERP5TypeTestCase):
 
     self.assertEquals(len(relative_url_list), len(set(relative_url_list)))
     for obj in organisation, person, person.getDefaultEmailValue():
-      self.assertTrue(obj.getRelativeUrl() in relative_url_list)
+      self.assertTrue(obj.absolute_url(relative=1) in relative_url_list)
     for relative_url in relative_url_list:
       self.assertTrue('/' in relative_url)
       self.assertNotEquals(None, self.portal.unrestrictedTraverse(relative_url))
