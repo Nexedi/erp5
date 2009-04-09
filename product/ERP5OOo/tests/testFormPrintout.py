@@ -1,5 +1,5 @@
 ##############################################################################
-#
+# -*- coding: utf-8 -*-
 # Copyright (c) 2009 Nexedi KK and Contributors. All Rights Reserved.
 #                    Tatuya Kamada <tatuya@nexedi.com>
 #
@@ -162,6 +162,14 @@ class TestFormPrintout(ERP5TypeTestCase):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("call!") > 0)
+
+    # 5. Normal case: utf-8 string
+    test1.setTitle("Français")
+    odf_document = foo_printout() 
+    self.assertTrue(odf_document is not None)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    self.assertTrue(content_xml.find("Français") > 0)
     
   def test_02_Table_01_Normal(self, run=run_all_test):
     """To test listbox and ODF table mapping

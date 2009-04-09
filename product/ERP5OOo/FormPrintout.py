@@ -268,10 +268,8 @@ class ODFStrategy(Implicit):
     # mapping ERP5Report report method to ODF
     content_element_tree = self._replaceXmlByReportSection(element_tree=content_element_tree,
                                                            extra_context=extra_context)
-    content_xml = etree.tostring(content_element_tree)
-    if isinstance(content_xml, unicode):
-      content_xml = content_xml.encode('utf-8')
-
+    content_xml = etree.tostring(content_element_tree, encoding='utf-8')
+ 
     # Replace content.xml in master openoffice template
     ooo_builder.replace('content.xml', content_xml)
     return ooo_builder
@@ -289,9 +287,7 @@ class ODFStrategy(Implicit):
                                                  form=form,
                                                  here=here,
                                                  extra_context=extra_context)
-    styles_xml = etree.tostring(styles_element_tree)
-    if isinstance(styles_xml, unicode):
-      styles_xml = styles_xml.encode('utf-8')
+    styles_xml = etree.tostring(styles_element_tree, encoding='utf-8')
 
     ooo_builder.replace('styles.xml', styles_xml)
     return ooo_builder
@@ -334,8 +330,20 @@ class ODFStrategy(Implicit):
     return element_tree
 
   def _replaceNodeViaReference(self, element_tree=None, field=None):
+    """replace nodes (e.g. paragraphs) via ODF reference"""
+    element_tree = self._replaceNodeViaRangeReference(element_tree=element_tree, field=field)
+    element_tree = self._replaceNodeViaPointReference(element_tree=element_tree, field=field)
+    return element_tree
+  
+  def _replaceNodeViaPointReference(self, element_tree=None, field=None):
+    """replace via ODF point reference
+    
+    point reference example:
+     <text:reference-mark text:name="invoice-date"/>
+    """
     field_id = field.id
     field_value = field.get_value('default')
+    value = self._toUnicodeString(field_value)
     # text:reference-mark text:name="invoice-date"
     reference_xpath = '//text:reference-mark[@text:name="%s"]' % field_id
     reference_list = element_tree.xpath(reference_xpath, namespaces=element_tree.nsmap)
@@ -344,9 +352,31 @@ class ODFStrategy(Implicit):
       # remove such a "bbb": <text:p>aaa<br/>bbb</text:p>
       for child in node.getchildren():
         child.tail = ''
-      node.text = field_value
+      node.text = value
     return element_tree
+  
+  def _replaceNodeViaRangeReference(self, element_tree=None, field=None):
+    """replace via ODF range reference
 
+    range reference example:
+    <text:reference-mark-start text:name="week"/>Monday<text:reference-mark-end text:name="week"/>
+    """
+    field_value = field.get_value('default')
+    value = self._toUnicodeString(field_value)
+    range_reference_xpath = '//text:reference-mark-start[@text:name="%s"]' % field.id
+    reference_list = element_tree.xpath(range_reference_xpath, namespaces=element_tree.nsmap)
+    if len(reference_list) is 0:
+      return element_tree
+    target_node = reference_list[0]
+    target_node.tail = value
+    for node in target_node.itersiblings():
+      end_tag_name = '{%s}reference-mark-end' % element_tree.nsmap['text']
+      name_attribute = '{%s}name' % element_tree.nsmap['text']
+      if node.tag == end_tag_name and node.get(name_attribute) == field.id:
+         break
+      node.tail = ''
+    return element_tree
+  
   def _replaceXmlByReportSection(self, element_tree=None, extra_context=None):
     if not extra_context.has_key('report_method') or extra_context['report_method'] is None:
       return element_tree
@@ -602,6 +632,12 @@ class ODFStrategy(Implicit):
       column_span = self._getColumnSpanSize(column)
       column_span_list.append(column_span)
     return column_span_list
+
+  def _toUnicodeString(self, field_value = None):
+    value = ''
+    if field_value is not None:
+      value = unicode(str(field_value), 'utf-8')
+    return value
 
 class ODTStrategy(ODFStrategy):
   """ODTStrategy create a ODT Document from a form and a ODT template"""
