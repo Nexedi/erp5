@@ -439,6 +439,8 @@ body {\n
 }\n
 \n
 #tiologin {\n
+  font-size:9pt;\n
+  color:#FFFFFF;\n
   float:left;\n
   height:100%;\n
   line-height:23px;\n
@@ -448,13 +450,16 @@ body {\n
   width:10%;\n
 }\n
 \n
+#tiologin img#user-img{\n
+  vertical-align: middle;\n
+  padding: 3px;\n
+}\n
+\n
 #link-login:link, #link-login:active, #link-login:visited {\n
-background:transparent url(<dtml-var expr="portal_url()">/tiolive_image/icon-login.png) no-repeat scroll 100% 0pt;\n
   color:#FFFFFF;\n
   float:left;\n
   height:100%;\n
   line-height:23px;\n
-  padding-right:20px;\n
   font-size:9pt;\n
   font-weight:normal;\n
   text-transform:lowercase;\n
@@ -504,7 +509,8 @@ background:transparent url(<dtml-var expr="portal_url()">/tiolive_image/icon-log
   margin: 0;\n
   padding: 0;\n
   top: 0;\n
-\twidth:135px;\t\n
+  margin-left: 3px;\n
+\twidth:132px;\t\n
 \theight:19px;\n
 \t\n
 }\n
@@ -519,14 +525,6 @@ background:transparent url(<dtml-var expr="portal_url()">/tiolive_image/icon-log
 #top-bar fieldset{\n
 \n
   padding: 5px;\n
-\n
-}\n
-\n
-#top-bar #tiologin{\n
-\n
-\tfont-family: Trebuchet, Verdana, Helvetica, Sans;\n
-\tcolor:#000;\n
-\tfont-size:11pt;\n
 \n
 }\n
 
