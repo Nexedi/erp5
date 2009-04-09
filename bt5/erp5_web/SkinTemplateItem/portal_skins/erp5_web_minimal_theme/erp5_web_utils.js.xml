@@ -27,13 +27,18 @@
         </item>
         <item>
             <key> <string>raw</string> </key>
-            <value> <string>function showPopik(dom_id, what){\n
+            <value> <string>function showPopik(dom_id, what, delay){\n
+  if (delay == null){\n
+     delay = 500;\n
+  }\n
   obj = getElement(dom_id);\n
   if(what==true){\n
-    obj.style.display=\'block\';}\n
+    setTimeout(function() {obj.style.display=\'block\';}, delay)\n
+    }\n
   else{\n
     obj.style.display=\'none\';}\n
-}</string> </value>
+}\n
+</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
