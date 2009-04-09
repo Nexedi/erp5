@@ -408,7 +408,6 @@ body {\n
 }\n
 \n
 \n
-\n
 /* TioLive selectors */\n
 #main_bar {\n
   padding-bottom: 0px;\n
@@ -418,6 +417,7 @@ body {\n
 #context_bar {\n
   padding-bottom: 0px;\n
   padding-top: 0px;\n
+  border: none;\n
 }\n
 \n
 #top-bar {\n
@@ -430,10 +430,9 @@ body {\n
 #fieldset-tiobar {\n
   float:left;\n
   overflow:hidden;\n
-  width:65%;\n
+  width:60%;\n
   border-style: none;\n
   font-size:11pt;\n
-  margin-top:5px;\n
 }\n
 \n
 #fieldset-tiobar select{\n
@@ -451,7 +450,7 @@ body {\n
 }\n
 \n
 #link-login:link, #link-login:active, #link-login:visited {\n
-  background:transparent url(http://www.tiolive.com/tiolive_image/icon-login.png) no-repeat scroll 100% 0pt;\n
+background:transparent url(<dtml-var expr="portal_url()">/tiolive_image/icon-login.png) no-repeat scroll 100% 0pt;\n
   color:#FFFFFF;\n
   float:left;\n
   height:100%;\n
@@ -463,24 +462,73 @@ body {\n
 }\n
 \n
 #fieldset-tiosearch {\n
-  background:transparent url(http://www.tiolive.com/tiolive_image/input-tiosearch.png) no-repeat scroll 0pt 5px;\n
-  border:medium none;\n
-  color:#F6A801;\n
-  font-size:1pt;\n
-  display:block;\n
-  height:35px;\n
-  overflow:hidden;\n
-  position:absolute;\n
-  right:5px;\n
-  width:175px;\n
+\n
+\tborder:none;\n
+\tfont-size:1pt;\n
+\tcolor:#f6a801;\n
+\tbackground: url(<dtml-var expr="portal_url()">/tiolive_image/input-tiosearch.png) no-repeat transparent;\n
+\tbackground-position: 0 5px;\n
+\n
 }\n
 \n
-#fieldset-tiosearch input {\n
-  line-height:10px;\n
-  margin-top:8px;\n
-  margin-right:35px;\n
-  width:130px;\n
-  border: none!important;\n
+#fieldset-tiosearch input.input-submit {\n
+\n
+  border:none;\n
+  background: url(<dtml-var expr="portal_url()">/tiolive_image/input-tiosearch.png) no-repeat transparent;\n
+  background-position: 100px 0;\n
+\tcursor: pointer;\n
+  \n
+}\n
+\n
+#fieldset-tiosearch input.input-text, #fieldset-tiosearch input.input-text:hover, #fieldset-tiosearch input.input-text:focus {\n
+\n
+\tbackground: transparent;\n
+\tborder:none;\n
+\n
+}\n
+\n
+#fieldset-tiosearch {\n
+\n
+  margin: 0;\n
+\twidth:163px;\n
+\tposition: absolute;\n
+\tright:5px;\n
+\toverflow: hidden;\n
+\tdisplay:block;\n
+\theight: 23px;\n
+\n
+}\n
+\n
+#fieldset-tiosearch input.input-text {\n
+\n
+  border: 0;\n
+  margin: 0;\n
+  padding: 0;\n
+  top: 0;\n
+\twidth:135px;\t\n
+\theight:19px;\n
+\t\n
+}\n
+\n
+#fieldset-tiosearch input.input-submit {\n
+\n
+  width: 23px;\n
+  height: 23px;\n
+  \n
+}\n
+\n
+#top-bar fieldset{\n
+\n
+  padding: 5px;\n
+\n
+}\n
+\n
+#top-bar #tiologin{\n
+\n
+\tfont-family: Trebuchet, Verdana, Helvetica, Sans;\n
+\tcolor:#000;\n
+\tfont-size:11pt;\n
+\n
 }\n
 
 

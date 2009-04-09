@@ -122,12 +122,6 @@ IDEAS:\n
                     /\n
                   </tal:block>\n
                 </div>\n
-                <div id="logged_in_as">\n
-                  <tal:block tal:condition="not: portal/portal_membership/isAnonymousUser">\n
-                    <span class="logged_txt" i18n:translate="" i18n:domain="ui">Logged in as :</span>\n
-                    <tal:block tal:replace="python:portal.portal_membership.getAuthenticatedMember().getUserName()" />\n
-                  </tal:block>\n
-                </div>\n
                 <p class="clear"></p>\n
                 <div tal:content="request/portal_status_message | nothing" id="transition_message" />\n
                 <div id="information_area" tal:condition="request/field_errors | nothing" \n
