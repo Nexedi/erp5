@@ -183,7 +183,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
                                'inline;filename="%s%s"' % (self.title_or_id(), guess_extension(content_type)))
     return printout
 
-  security.declareProtected('View management screens', '__call__')  
+  security.declareProtected('View', '__call__')  
   def __call__(self, *args, **kwargs):
     return self.index_html(REQUEST=get_request())
                 
