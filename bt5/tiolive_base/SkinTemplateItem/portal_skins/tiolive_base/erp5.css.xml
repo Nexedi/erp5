@@ -417,7 +417,6 @@ body {\n
 #context_bar {\n
   padding-bottom: 0px;\n
   padding-top: 0px;\n
-  border: none;\n
 }\n
 \n
 #top-bar {\n
