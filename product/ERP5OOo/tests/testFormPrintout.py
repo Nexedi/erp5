@@ -118,7 +118,11 @@ class TestFormPrintout(ERP5TypeTestCase):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("Foo title!") > 0)
-
+    self.assertEqual(request.RESPONSE.getHeader('content-type'),
+                     'application/vnd.oasis.opendocument.text; charset=utf-8')
+    self.assertEqual(request.RESPONSE.getHeader('content-disposition'),
+                     'inline;filename="Foo_viewAsPrintout.odt"')
+    
     # 2. Normal case: change the field value and check again the ODF document
     test1.setTitle("Changed Title!")
     #foo_form.my_title.set_value('default', "Changed Title!")
@@ -156,14 +160,15 @@ class TestFormPrintout(ERP5TypeTestCase):
     foo_printout.template = tmp_template
     
     # 5. Normal case: just call a FormPrintout object
+    request.RESPONSE.setHeader('Content-Type', 'text/html')
     test1.setTitle("call!")
     odf_document = foo_printout() # call
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("call!") > 0)
-    # when just call FormPrintout, it does not set content-type
-    self.assertEqual(request.RESPONSE.getHeader('Content-Type'), None)
+    # when just call FormPrintout, it does not change content-type
+    self.assertEqual(request.RESPONSE.getHeader('content-type'), 'text/html')
 
     # 5. Normal case: utf-8 string
     test1.setTitle("Français")
