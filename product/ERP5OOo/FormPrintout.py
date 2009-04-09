@@ -150,7 +150,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
     self.form_name = form_name
     self.template = template
 
-  security.declareProtected('View management screens', 'index_html')
+  security.declareProtected('View', 'index_html')
   def index_html(self, icon=0, preview=0, width=None, height=None, REQUEST=None):
     """Render and view a printout document."""
     
@@ -178,14 +178,14 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
     content_type = printout_template.content_type
     self.strategy = self._createStrategy(content_type)
     printout = self.strategy.render(extra_context=extra_context)
-    REQUEST.RESPONSE.setHeader('Content-Type','%s; charset=utf-8' % content_type)
-    REQUEST.RESPONSE.setHeader('Content-disposition',
-                               'inline;filename="%s%s"' % (self.title_or_id(), guess_extension(content_type)))
+    if REQUEST is not None:
+      REQUEST.RESPONSE.setHeader('Content-Type','%s; charset=utf-8' % content_type)
+      REQUEST.RESPONSE.setHeader('Content-disposition',
+                                 'inline;filename="%s%s"' % (self.title_or_id(), guess_extension(content_type)))
     return printout
 
-  security.declareProtected('View', '__call__')  
-  def __call__(self, *args, **kwargs):
-    return self.index_html(REQUEST=get_request())
+  security.declareProtected('View', '__call__')
+  __call__ = index_html
                 
   security.declareProtected('Manage properties', 'doSettings')
   def doSettings(self, REQUEST, title='', form_name='', template=''):

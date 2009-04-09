@@ -162,6 +162,8 @@ class TestFormPrintout(ERP5TypeTestCase):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("call!") > 0)
+    # when just call FormPrintout, it does not set content-type
+    self.assertEqual(request.RESPONSE.getHeader('Content-Type'), None)
 
     # 5. Normal case: utf-8 string
     test1.setTitle("Français")
