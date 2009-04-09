@@ -44,6 +44,9 @@ def openTestFile(filename):
 
 
 class TestCRM(ERP5TypeTestCase):
+  def getTitle(self):
+    return "CRM"
+
   def getBusinessTemplateList(self):
     return ('erp5_base',
             'erp5_crm',)
@@ -317,6 +320,8 @@ class TestCRM(ERP5TypeTestCase):
 class TestCRMMailIngestion(ERP5TypeTestCase):
   """Test Mail Ingestion for standalone CRM.
   """
+  def getTitle(self):
+    return "CRM Mail Ingestion"
 
   def getBusinessTemplateList(self):
     # Mail Ingestion must work with CRM alone.
@@ -560,6 +565,8 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
 class TestCRMMailSend(ERP5TypeTestCase):
   """Test Mail Sending for CRM
   """
+  def getTitle(self):
+    return "CRM Mail Sending"
 
   def getBusinessTemplateList(self):
     # In this test, We will attach some document portal types in event.
@@ -569,7 +576,6 @@ class TestCRMMailSend(ERP5TypeTestCase):
             'erp5_ingestion_mysql_innodb_catalog',
             'erp5_crm',
             'erp5_web',
-            'erp5_dms_mysql_innodb_catalog',
             'erp5_dms',
             )
 
