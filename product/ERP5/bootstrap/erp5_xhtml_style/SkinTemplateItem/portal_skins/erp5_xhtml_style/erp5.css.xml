@@ -1099,7 +1099,7 @@ a.tree_closed {\n
 .ListSummary {\n
   background: url(\'<dtml-var expr="portal_url()">/images/tab_left_selected.png\') top left no-repeat;\n
   color: #000;\n
-  background-color: <dtml-var document_background_color>;\n
+  background-color: transparent;\n
   padding-left: 10px;\n
 }\n
 \n
