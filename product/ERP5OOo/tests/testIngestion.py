@@ -95,8 +95,7 @@ class TestIngestion(ERP5TypeTestCase):
     """
     return ('erp5_base',
             'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
-            'erp5_web', 'erp5_crm',
-            'erp5_dms_mysql_innodb_catalog', 'erp5_dms')
+            'erp5_web', 'erp5_crm', 'erp5_dms')
 
   def afterSetUp(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
