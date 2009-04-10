@@ -91,7 +91,7 @@ def GlobalTranslationService_translate(self, domain, msgid, *args, **kw):
     # Placeless!
     return msgid
 
-  localizer = getattr(context, 'Localizer', None)
+  localizer = getattr(context.getPortalObject(), 'Localizer', None)
   if localizer is None:
     LOG('ERP5Type.patches.Localizer', ERROR, 'could not find a Localizer '
          'object in acquisition context, message will not be translated')
