@@ -73,7 +73,7 @@
 </tr>\n
 <tr>\n
 \t<td>click</td>\n
-\t<td>//input[@id=\'listbox_cb_KFMnaHR0cDovL3RvcnJlbnQuZXJwNS5vcmcvZGlzdHMvc25hcHNob3QvdGVzdF9idDUnCnAxClMndGVzdF9hY2NvdW50aW5nX2ZyLmJ0NScKcDIKdC4=\']</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']//input[@type=\'checkbox\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -113,7 +113,7 @@
 </tr>\n
 <tr>\n
 \t<td>click</td>\n
-\t<td>//input[@id=\'listbox_cb_KFMnaHR0cDovL3RvcnJlbnQuZXJwNS5vcmcvZGlzdHMvc25hcHNob3QvdGVzdF9idDUnCnAxClMndGVzdF9hY2NvdW50aW5nX2luLmJ0NScKcDIKdC4=\']</td>\n
+  <td>//tr[@id=\'listbox_data_line_2\']//input[@type=\'checkbox\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -133,7 +133,7 @@
 </tr>\n
 <tr>\n
 \t<td>click</td>\n
-\t<td>//input[@id=\'listbox_cb_KFMnaHR0cDovL3RvcnJlbnQuZXJwNS5vcmcvZGlzdHMvc25hcHNob3QvdGVzdF9idDUnCnAxClMndGVzdF9hY2NvdW50aW5nX3BsLmJ0NScKcDIKdC4=\']</td>\n
+  <td>//tr[@id=\'listbox_data_line_3\']//input[@type=\'checkbox\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -158,7 +158,7 @@
 </tr>\n
 <tr>\n
 \t<td>click</td>\n
-\t<td>//input[@id=\'listbox_cb_KFMnaHR0cDovL3RvcnJlbnQuZXJwNS5vcmcvZGlzdHMvc25hcHNob3QvdGVzdF9idDUnCnAxClMndGVzdF93ZWIuYnQ1JwpwMgp0Lg==\']</td>\n
+  <td>//tr[@id=\'listbox_data_line_6\']//input[@type=\'checkbox\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -173,7 +173,7 @@
 </tr>\n
 <tr>\n
 \t<td>click</td>\n
-\t<td>//input[@id=\'listbox_cb_KFMnaHR0cDovL3RvcnJlbnQuZXJwNS5vcmcvZGlzdHMvc25hcHNob3QvdGVzdF9idDUnCnAxClMndGVzdF94aHRtbF9zdHlsZS5idDUnCnAyCnQu\']</td>\n
+  <td>//tr[@id=\'listbox_data_line_7\']//input[@type=\'checkbox\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n

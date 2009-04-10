@@ -74,7 +74,7 @@
 </tr>\n
 <tr>\n
 \t<td>click</td>\n
-\t<td>//input[@id=\'listbox_cb_KFMnaHR0cDovL3RvcnJlbnQuZXJwNS5vcmcvZGlzdHMvc25hcHNob3QvdGVzdF9idDUnCnAxClMndGVzdF9jb3JlLmJ0NScKcDIKdC4=\']</td>\n
+  <td>//tr[@id=\'listbox_data_line_4\']//input[@type=\'checkbox\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
