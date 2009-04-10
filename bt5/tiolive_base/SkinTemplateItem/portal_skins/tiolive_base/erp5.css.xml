@@ -446,11 +446,12 @@ body {\n
   line-height:23px;\n
   margin:0pt;\n
   padding:5px 0pt 0pt;\n
-  text-align:center;\n
+  text-align: left;\n
   width:20%;\n
 }\n
 \n
 #tiologin img#user-img{\n
+  margin-left: 5px;\n
   vertical-align: middle;\n
   padding: 3px;\n
 }\n
