@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts36808113.24</string> </value>
+            <value> <string>ts39376843.32</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -315,6 +315,16 @@ div.block table.listbox{\n
   border:medium none!important;\n
   margin:0em!important;\n
 }\n
+.box_inner_content .input,\n
+.box_inner_content .search.result .resultList{\n
+  width:100%!important;\n
+  margin:0em!important;\n
+  padding:0em!important;\n
+}\n
+\n
+.box_inner_content .search.result .extendedSearchBar{\n
+  display:none;\n
+}\n
 \n
 div.block table.listbox .right{\n
   float:right;\n
@@ -566,7 +576,8 @@ div.block div.worklist_list ul li table.listbox thead td,div.block div.worklist_
 \n
 div.block div.worklist_list ul li a:hover{\n
   text-decoration:none;\n
-}</string> </value>
+}\n
+</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -574,7 +585,7 @@ div.block div.worklist_list ul li a:hover{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>9223</int> </value>
+            <value> <long>9446</long> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

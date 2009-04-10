@@ -50,6 +50,7 @@
     <h4 i18n:translate="" tal:content="cell/getTitle"/>\n
   \n
     <img tal:condition="image_id"\n
+        alt="gadget screenshot"\n
         tal:attributes="src python:\'%s/%s\' \n
                                     %(gadget.absolute_url(), image_id)"/>\n
     <p i18n:translate="" tal:content="cell/getDescription"/>\n
