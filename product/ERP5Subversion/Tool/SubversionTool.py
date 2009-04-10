@@ -48,6 +48,7 @@ from OFS.Traversable import NotFound
 from Products.ERP5Type.patches.copyTree import copytree, Error
 from Products.ERP5Type.patches.cacheWalk import cacheWalk
 from time import ctime
+import transaction
 
 try:
   import pysvn
@@ -1124,7 +1125,7 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
     path = mktemp() + os.sep
     try:
       # XXX: Big hack to make export work as expected.
-      get_transaction().commit()
+      transaction.commit()
       business_template.export(path=path, local=1)
       # svn del deleted files
       self.deleteOldFiles(svn_path, path)
