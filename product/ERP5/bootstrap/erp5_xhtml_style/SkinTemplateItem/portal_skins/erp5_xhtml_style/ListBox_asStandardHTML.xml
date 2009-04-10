@@ -341,10 +341,9 @@
                   class="DataA" style="width: 50px; text-align: center; vertical-align: middle"\n
                   tal:attributes="class css">\n
                   <input tal:condition="python: not line.isSummary() and line.getObject() is not None"\n
-                    type="checkbox" value="checked" id="listbox_cb_1" name="uids:list"\n
+                    type="checkbox" value="checked" name="uids:list"\n
                     tal:attributes="checked python: line.getUid() in checked_uid_set;\n
-                                    value line/getUid;\n
-                                    id string:${field_id}_cb_${line/getUid}" />\n
+                                    value line/getUid;">\n
                   <tal:block tal:condition="python: line.isSummary() or line.getObject() is None"></tal:block>\n
                 </td>\n
                 <tal:block tal:repeat="value render_result">\n
