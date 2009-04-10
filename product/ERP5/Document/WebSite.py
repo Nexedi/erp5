@@ -63,6 +63,10 @@ class WebSiteTraversalHook(Persistent):
     # Only consider Web Site for absolute_url
     request = getattr(self, '_v_request', None)
     if request is None: request = self._v_request = get_request()
+    # In ignore_layout case, we only remove empty element from path
+    # XXX more support required for ignore_layout?
+    if request.get('ignore_layout', None):
+      return tuple([x for x in path if x])
     website_path = request.get(WEBSITE_KEY, None)
     select_language = request.get(WEBSITE_LANGUAGE_KEY, None)
     if website_path:
@@ -73,7 +77,6 @@ class WebSiteTraversalHook(Persistent):
       # Search for the common part index
       # XXX more testing should be added to check
       # if the URL is the kind of URL which is a Web Site
-      # XXX more support required for ignore_layout
       common_index = 0
       i = 0
       path_len = len(path)
