@@ -35,17 +35,20 @@ from Products.ERP5Form.FormBox import FormBox
 from Products.ERP5Form.ImageField import ImageField
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 
-from Acquisition import Implicit
+from Acquisition import Implicit, aq_base
 from Globals import InitializeClass, DTMLFile, Persistent, get_request
 from AccessControl import ClassSecurityInfo
 from AccessControl.Role import RoleManager
 from OFS.SimpleItem import Item, SimpleItem
-from urllib import quote
+from OFS.Image import File
+from urllib import quote, quote_plus
 from copy import deepcopy
 from lxml import etree
 from zLOG import LOG, DEBUG, INFO, WARNING
 from mimetypes import guess_extension
 from DateTime import DateTime
+from decimal import Decimal
+import re
 
 try:
   from webdav.Lockable import ResourceLockedError
@@ -99,15 +102,16 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
   a form as a ODF document content, and a template as a document layout.
 
   WARNING: The Form Printout currently supports only ODT format document.
-  And the functions only supports paragraphs and tables.
+
+  The functions status:
   
-  Fields <-> Paragraphs:      supported
-  ListBox <-> Table:          supported
-  Report Section <-> Tables:  experimentally supported
-  FormBox <-> Frame:          experimentally supported
-  Photo <-> Image:            not supported yet
-  Style group <-> styles.xml: supported
-  Meta group <-> meta.xml:    not supported yet
+  Fields -> Paragraphs:      supported
+  ListBox -> Table:          supported
+  Report Section -> Frames:  experimentally supported
+  FormBox -> Frame:          experimentally supported
+  ImageField -> Photo:       supported
+  styles.xml:                supported
+  meta.xml:                  not supported yet
   """
   
   meta_type = "ERP5 Form Printout"
@@ -211,6 +215,8 @@ InitializeClass(FormPrintout)
 class ODFStrategy(Implicit):
   """ODFStrategy creates a ODF Document. """
 
+  odf_existent_name_list = []
+  
   def render(self, extra_context={}):
     """Render a odf document, form as a content, template as a template.
 
@@ -240,7 +246,8 @@ class ODFStrategy(Implicit):
 
     # Create a new builder instance
     ooo_builder = OOoBuilder(ooo_document)
-
+    self.odf_existent_name_list = ooo_builder.getNameList()
+    
     # content.xml
     ooo_builder = self._replaceContentXml(ooo_builder=ooo_builder, extra_context=extra_context)
     # styles.xml
@@ -264,10 +271,12 @@ class ODFStrategy(Implicit):
     content_element_tree = self._replaceXmlByForm(element_tree=content_element_tree,
                                                   form=form,
                                                   here=here,
-                                                  extra_context=extra_context)
+                                                  extra_context=extra_context,
+                                                  ooo_builder=ooo_builder)
     # mapping ERP5Report report method to ODF
     content_element_tree = self._replaceXmlByReportSection(element_tree=content_element_tree,
-                                                           extra_context=extra_context)
+                                                           extra_context=extra_context,
+                                                           ooo_builder=ooo_builder)
     content_xml = etree.tostring(content_element_tree, encoding='utf-8')
  
     # Replace content.xml in master openoffice template
@@ -286,7 +295,8 @@ class ODFStrategy(Implicit):
     styles_element_tree = self._replaceXmlByForm(element_tree=styles_element_tree,
                                                  form=form,
                                                  here=here,
-                                                 extra_context=extra_context)
+                                                 extra_context=extra_context,
+                                                 ooo_builder=ooo_builder)
     styles_xml = etree.tostring(styles_element_tree, encoding='utf-8')
 
     ooo_builder.replace('styles.xml', styles_xml)
@@ -306,7 +316,7 @@ class ODFStrategy(Implicit):
     return ooo_builder
 
   def _replaceXmlByForm(self, element_tree=None, form=None, here=None,
-                           extra_context=None, render_prefix=None):
+                           extra_context=None, render_prefix=None, ooo_builder=None):
     field_list = form.get_fields() 
     REQUEST = get_request()
     for (count, field) in enumerate(field_list):
@@ -321,12 +331,13 @@ class ODFStrategy(Implicit):
                                             field_id=field.id,
                                             form = sub_form,
                                             REQUEST=REQUEST)
-      #elif isinstance(field, ImageField):
-      #  element_tree = self._replaceXmlByImageField(element_tree=element_tree,
-      #                                                  image_field=field)
+      elif isinstance(field, ImageField):
+        element_tree = self._replaceXmlByImageField(element_tree=element_tree,
+                                                    image_field=field,
+                                                    ooo_builder=ooo_builder)
       else:
         element_tree = self._replaceNodeViaReference(element_tree=element_tree,
-                                                        field=field)
+                                                     field=field)
     return element_tree
 
   def _replaceNodeViaReference(self, element_tree=None, field=None):
@@ -377,7 +388,7 @@ class ODFStrategy(Implicit):
       node.tail = ''
     return element_tree
   
-  def _replaceXmlByReportSection(self, element_tree=None, extra_context=None):
+  def _replaceXmlByReportSection(self, element_tree=None, extra_context=None, ooo_builder=None):
     if not extra_context.has_key('report_method') or extra_context['report_method'] is None:
       return element_tree
     report_method = extra_context['report_method']
@@ -386,6 +397,8 @@ class ODFStrategy(Implicit):
     REQUEST = get_request()
     request = extra_context.get('REQUEST', REQUEST)
     render_prefix = None
+
+    frame_paragraph_index_dict = {}
     for (index, report_item) in enumerate(report_section_list):
       if index > 0:
         render_prefix = 'x%s' % index
@@ -393,14 +406,48 @@ class ODFStrategy(Implicit):
       here = report_item.getObject(portal_object)
       form_id = report_item.getFormId()
       form = getattr(here, form_id)
-      element_tree = self._replaceXmlByForm(element_tree=element_tree,
-                                            form=form,
-                                            here=here,
-                                            extra_context=extra_context,
-                                            render_prefix=render_prefix)
+
+      report_section_frame_xpath = '//draw:frame[@draw:name="%s"]' % form_id
+      frame_list = element_tree.xpath(report_section_frame_xpath, namespaces=element_tree.nsmap)
+      if len(frame_list) is 0:
+        continue
+      frame = frame_list[0]
+      paragraph = frame.getparent()
+      parent = paragraph.getparent()
+      frame_paragraph_element_tree = deepcopy(paragraph)
+      if not form_id in frame_paragraph_index_dict:
+        frame_paragraph_index_dict[form_id] = parent.index(paragraph)  
+        parent.remove(paragraph)
+      else:
+        self._setReportSectionFrameName(form_id=form_id,
+                                        frame_paragraph_index=frame_paragraph_index_dict[form_id],
+                                        frame_paragraph_element_tree=frame_paragraph_element_tree)
+
+      frame_paragraph_index = frame_paragraph_index_dict[form_id]
+      frame_paragraph_element_tree = self._replaceXmlByForm(element_tree=frame_paragraph_element_tree,
+                                                            form=form,
+                                                            here=here,
+                                                            extra_context=extra_context,
+                                                            ooo_builder=ooo_builder)
+        
+
+      parent.insert(frame_paragraph_index, frame_paragraph_element_tree)
+      frame_paragraph_index_dict[form_id] = frame_paragraph_index + 1
       report_item.popReport(portal_object, render_prefix = render_prefix)
     return element_tree
 
+  def _setReportSectionFrameName(self,
+                                 form_id='',
+                                 frame_paragraph_index=0,
+                                 frame_paragraph_element_tree=None):
+    report_section_frame_name =  "%s_%s" % (form_id, frame_paragraph_index)
+    draw_name_attribute = '{%s}name' % frame_paragraph_element_tree.nsmap['draw']
+    report_section_frame = frame_paragraph_element_tree.xpath('draw:frame[@draw:name="%s"]' % form_id,
+                                                              namespaces=frame_paragraph_element_tree.nsmap)
+    if len(report_section_frame) is 0:
+      return
+    report_section_frame[0].set(draw_name_attribute, report_section_frame_name)
+  
   def _replaceXmlByFormbox(self, element_tree=None, field_id=None, form=None, REQUEST=None):
     draw_xpath = '//draw:frame[@draw:name="%s"]/draw:text-box/*' % field_id
     text_list = element_tree.xpath(draw_xpath, namespaces=element_tree.nsmap)
@@ -419,15 +466,68 @@ class ODFStrategy(Implicit):
         parent.append(child)
     return element_tree
 
-  def _replaceXmlByImageField(self, element_tree=None, image_field=None):
+  def _replaceXmlByImageField(self, element_tree=None, image_field=None, ooo_builder=None):
     alt = image_field.get_value('description') or image_field.get_value('title')
     image_xpath = '//draw:frame[@draw:name="%s"]/*' % image_field.id
     image_list = element_tree.xpath(image_xpath, namespaces=element_tree.nsmap)
-    if len(image_list) > 0:
-      image_list[0].set("{%s}href" % element_tree.nsmap['xlink'], image_field.absolute_url())
-
+    if len(image_list) is 0:
+      return element_tree
+    path = image_field.get_value('default')
+    picture = self.getPortalObject().unrestrictedTraverse(path)
+    picture_data = getattr(aq_base(picture), 'data', None)
+    picture_type = picture.getContentType()
+    picture_path = self._createOdfUniqueFileName(path=path, picture_type=picture_type)
+    ooo_builder.addFileEntry(picture_path, media_type=picture_type, content=picture_data)
+    image_node = image_list[0]
+    picture_size = self._getPictureSize(picture, image_node)
+    image_node.set('{%s}href' % element_tree.nsmap['xlink'], picture_path)
+    image_frame = image_node.getparent()
+    image_frame.set('{%s}width' % element_tree.nsmap['svg'], picture_size[0])
+    image_frame.set('{%s}height' % element_tree.nsmap['svg'], picture_size[1])
     return element_tree
 
+  def _createOdfUniqueFileName(self, path='', picture_type=''):
+    extension = guess_extension(picture_type)
+    picture_path = 'Pictures/%s%s' % (quote_plus(path), extension)     
+    if picture_path not in self.odf_existent_name_list:
+      return picture_path
+    number = 0
+    while True:
+      picture_path = 'Pictures/%s_%s%s' % (path, number, extension)
+      if picture_path not in self.odf_existent_name_list:
+        return picture_path
+      number += 1
+
+  def _getPictureSize(self, picture=None, image_node=None):
+    if picture is None or image_node is None:
+      return ('0cm', '0cm')
+    draw_frame_node = image_node.getparent()
+    svg_width = draw_frame_node.attrib.get('{%s}width' % draw_frame_node.nsmap['svg'])
+    svg_height = draw_frame_node.attrib.get('{%s}height' % draw_frame_node.nsmap['svg'])
+    if svg_width is None or svg_height is None:
+      return ('0cm', '0cm')
+    # if not match causes exception
+    width_tuple = re.match("(\d[\d\.]*)(.*)", svg_width).groups()
+    height_tuple = re.match("(\d[\d\.]*)(.*)", svg_height).groups()
+    unit = width_tuple[1]
+    w = Decimal(width_tuple[0])
+    h = Decimal(height_tuple[0])
+    aspect_ratio = 1
+    try: # try image properties
+      aspect_ratio = Decimal(picture.width) / Decimal(picture.height)
+    except (TypeError, ZeroDivisionError):
+      try: # try ERP5.Document.Image API
+        height = Decimal(picture.getHeight())
+        if height:
+          aspect_ratio = Decimal(picture.getWidth()) / height
+      except AttributeError: # fallback to Photo API
+        height = float(picture.height())
+        if height:
+          aspect_ratio = Decimal(picture.width()) / height
+    w = h * aspect_ratio
+    return (str(w) + unit, str(h) + unit)
+   
+  
   def _appendTableByListbox(self,
                             element_tree=None, 
                             listbox=None,
@@ -484,7 +584,7 @@ class ODFStrategy(Implicit):
         row = self._updateColumnValue(row, listbox_column_list)
         newtable.append(row)
         is_top = False
-      elif listboxline.isStatLine() or index is last_index:
+      elif listboxline.isStatLine() or (index is last_index and listboxline.isDataLine()):
         row = deepcopy(row_bottom)
         row = self._updateColumnStatValue(row, listbox_column_list, row_middle)
         newtable.append(row)

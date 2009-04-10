@@ -479,7 +479,6 @@ class TestFormPrintout(ERP5TypeTestCase):
                                          REQUEST = request)
     self.assertEqual(len(listboxline_list), 4)
     self.assertTrue(listboxline_list[1].getColumnProperty('title') == "foo_title_7")
-    LOG('testFormPrintout start_date', INFO, listboxline_list[1].getColumnProperty('start_date'))
       
     odf_document = foo_printout.index_html(REQUEST=request)
     #test_output = open("/tmp/test_02_07_Table.odf", "w")
@@ -493,7 +492,6 @@ class TestFormPrintout(ERP5TypeTestCase):
     content = etree.XML(content_xml)
     table_row_xpath = '//table:table[@table:name="listbox"]/table:table-row'
     odf_table_rows = content.xpath(table_row_xpath, namespaces=content.nsmap)
-    LOG('testFormPrintout odf_table_rows', INFO, odf_table_rows)
     self.assertEqual(len(odf_table_rows), 3)
     # to test ODF table cell number format
     first_row = odf_table_rows[0]
@@ -502,7 +500,41 @@ class TestFormPrintout(ERP5TypeTestCase):
     date_value_attrib = "{%s}date-value" % content.nsmap['office']
     self.assertTrue(date_column.attrib.has_key(date_value_attrib))
     self.assertEqual(date_column.attrib[date_value_attrib], '2009-04-20')
-    
+
+
+  def test_02_Table_08_Nodata(self, run=run_all_test):
+    """7. Normal case: list box has no data"""
+    if not run: return 
+    # test target
+    test1 = self.portal.foo_module.test1
+    foo_printout = test1.Foo_viewAsPrintout
+    foo_form = test1.Foo_view
+    listbox = foo_form.listbox
+    request = self.app.REQUEST 
+    request['here'] = test1
+
+    test1.foo_1.setTitle('foo_title_8')
+    message = listbox.ListBox_setPropertyList(
+      field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
+    self.failUnless('Set Successfully' in message)
+    listboxline_list = listbox.get_value('default', render_format = 'list',
+                                         REQUEST = request)
+    # title line only
+    self.assertEqual(len(listboxline_list), 1)
+      
+    odf_document = foo_printout.index_html(REQUEST=request)
+    #test_output = open("/tmp/test_02_08_Table.odf", "w")
+    #test_output.write(odf_document)
+    self.assertTrue(odf_document is not None)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+
+    content = etree.XML(content_xml)
+    table_row_xpath = '//table:table[@table:name="listbox"]/table:table-row'
+    odf_table_rows = content.xpath(table_row_xpath, namespaces=content.nsmap)
+    # no rows
+    self.assertEqual(len(odf_table_rows), 0)
+
   def _test_03_Frame(self, run=run_all_test):
     """
     Frame not supported yet
