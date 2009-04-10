@@ -100,7 +100,6 @@ class WebSiteTraversalHook(Persistent):
     #  # Replace the last id of the path with the name which
     #  # was used to lookup the document
     #  path = path[:-1] + (self._v_request[DOCUMENT_NAME_KEY],)
-    LOG("Path",0,path)
     return path[i:]
 
   def __call__(self, container, request):
