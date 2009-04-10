@@ -343,7 +343,7 @@
                   <input tal:condition="python: not line.isSummary() and line.getObject() is not None"\n
                     type="checkbox" value="checked" name="uids:list"\n
                     tal:attributes="checked python: line.getUid() in checked_uid_set;\n
-                                    value line/getUid;">\n
+                                    value line/getUid;" />\n
                   <tal:block tal:condition="python: line.isSummary() or line.getObject() is None"></tal:block>\n
                 </td>\n
                 <tal:block tal:repeat="value render_result">\n
