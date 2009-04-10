@@ -447,7 +447,7 @@ body {\n
   margin:0pt;\n
   padding:5px 0pt 0pt;\n
   text-align:center;\n
-  width:10%;\n
+  width:20%;\n
 }\n
 \n
 #tiologin img#user-img{\n
@@ -455,6 +455,9 @@ body {\n
   padding: 3px;\n
 }\n
 \n
+#link-login{\n
+  float:left;\n
+}\n
 #link-login:link, #link-login:active, #link-login:visited {\n
   color:#FFFFFF;\n
   float:left;\n
