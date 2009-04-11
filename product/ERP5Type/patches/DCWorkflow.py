@@ -220,10 +220,11 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info):
   def getPortalTypeListForWorkflow(workflow_id):
       workflow_tool = getToolByName(self, 'portal_workflow')
       result = []
+      append = result.append
       for type_info in workflow_tool._listTypeInfo():
         portal_type = type_info.id
         if workflow_id in workflow_tool.getChainFor(portal_type):
-          result.append(portal_type)
+          append(portal_type)
       return result
 
   _getPortalTypeListForWorkflow = CachingMethod(getPortalTypeListForWorkflow,
@@ -234,11 +235,13 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info):
   variable_match_dict = {}
   security_manager = getSecurityManager()
   portal = self.getPortalObject()
+  workflow_id = self.id
+  workflow_title = self.title
   for worklist_id, worklist_definition in self.worklists.items():
     action_box_name = worklist_definition.actbox_name
     guard = worklist_definition.guard
     if action_box_name:
-      variable_match = dict([(x, [y % info for y in worklist_definition.getVarMatch(x)]) for x in worklist_definition.getVarMatchKeys()])
+      variable_match = dict(((x, [y % info for y in worklist_definition.getVarMatch(x)]) for x in worklist_definition.getVarMatchKeys()))
       variable_match.setdefault('portal_type', portal_type_list)
 
       is_permitted_worklist = 0
@@ -256,8 +259,8 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info):
         variable_match[WORKLIST_METADATA_KEY] = {'format_data': format_data,
                                                  'worklist_title': action_box_name,
                                                  'worklist_id': worklist_id,
-                                                 'workflow_title': self.title,
-                                                 'workflow_id': self.id,
+                                                 'workflow_title': workflow_title,
+                                                 'workflow_id': workflow_id,
                                                  'action_box_url': worklist_definition.actbox_url,
                                                  'action_box_category': worklist_definition.actbox_category}
         variable_match_dict[worklist_id] = variable_match
