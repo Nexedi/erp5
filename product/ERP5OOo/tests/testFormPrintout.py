@@ -28,6 +28,7 @@
 
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from zLOG import LOG , INFO
@@ -73,6 +74,9 @@ class TestFormPrintout(ERP5TypeTestCase):
     if custom._getOb('Foo_viewAsPrintout', None) is None:
       erp5OOo.addFormPrintout(id='Foo_viewAsPrintout', title='',
                               form_name='Foo_view', template='Foo_getODTStyleSheet')
+    if custom._getOb('FooReport_viewAsPrintout', None) is None:
+      erp5OOo.addFormPrintout(id='FooReport_viewAsPrintout',
+                              title='')
 
     ## append 'test1' data to a listbox
     foo_module = self.portal.foo_module
@@ -541,16 +545,91 @@ class TestFormPrintout(ERP5TypeTestCase):
     """
     pass
 
-  def _test_04_Iteration(self, run=run_all_test):
+  def test_04_Iteration(self, run=run_all_test):
     """
-    Iteration(ReportSection) not supported yet.
-    Probably to support *ReportBox* would be better.
+    Iteration using ERP5Report ReportSection test
     """
-    pass
+    custom = self.portal.portal_skins.custom
+    erp5form = custom.manage_addProduct['ERP5Form']
+    erp5form.addERP5Report(id='FooReport_view', title='Foo Report')
+    foo_report_view = custom.FooReport_view
+    foo_report_view.report_method = 'FooReport_getReportSectionList'
 
+    erp5form.addERP5Form(id='Foo2_view', title='Foo2')
+    foo2_view = custom.Foo2_view
+    foo2_view.manage_addField('listbox_report', 'listbox report', 'ListBox')
+    listbox_report = foo2_view.listbox_report
+    message = listbox_report.ListBox_setPropertyList(
+      field_list_method = 'objectValues',
+      field_portal_types = 'Foo Line | Foo Line',
+      field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
+    self.failUnless('Set Successfully' in message)
+    createZODBPythonScript(
+        self.portal.portal_skins.custom,
+        'FooReport_getReportSectionList',
+        '',
+r"""
+from Products.ERP5Form.Report import ReportSection
+
+r1 = ReportSection(path=context.getPhysicalPath(),
+                   form_id='Foo2_view',
+                   selection_report_list = [''])
+r2 = ReportSection(path=context.getPhysicalPath(),
+                   form_id='Foo2_view',
+                   selection_report_list = [''])
+report_section_list = [r1, r2]
+return report_section_list
+"""
+        )
+    test1 = self.portal.foo_module.test1
+    test1.foo_1.setTitle('foo_04_Iteration')
+    foo_report_printout = test1.FooReport_viewAsPrintout
+    foo_report_printout.doSettings(REQUEST=None,
+                                   title='',
+                                   form_name='FooReport_view',
+                                   template='Foo_getODTStyleSheet')
+    odf_document = foo_report_printout()
+
+    #test_output = open("/tmp/test_04_Iteratoin.odf", "w")
+    #test_output.write(odf_document)
+    self.assertTrue(odf_document is not None)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    self.assertTrue(content_xml.find("foo_04_Iteration") > 0)
+    content = etree.XML(content_xml)
+    frame_xpath = '//draw:frame[@draw:name="FooReport_getReportSectionList"]'
+    frame_list = content.xpath(frame_xpath, namespaces=content.nsmap)
+    self.assertEqual(len(frame_list), 1)
+    frame1_xpath = '//draw:frame[@draw:name="FooReport_getReportSectionList_1"]'
+    frame1_list = content.xpath(frame1_xpath, namespaces=content.nsmap)
+    self.assertEqual(len(frame1_list), 1)
+
+    # 02. no report section
+    custom.manage_delObjects(['FooReport_getReportSectionList'])
+    createZODBPythonScript(
+      self.portal.portal_skins.custom,
+      'FooReport_getReportSectionList',
+      '',
+r"""
+return []
+"""
+      )
+    odf_document = foo_report_printout()
+    #test_output = open("/tmp/test_04_02_Iteratoin.odf", "w")
+    #test_output.write(odf_document)
+    self.assertTrue(odf_document is not None)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    self.assertFalse(content_xml.find("foo_04_Iteration") > 0)
+    content = etree.XML(content_xml)
+    frame_xpath = '//draw:frame[@draw:name="FooReport_getReportSectionList"]'
+    frame_list = content.xpath(frame_xpath, namespaces=content.nsmap)
+    # the frame was removed
+    self.assertEqual(len(frame_list), 0)
+     
   def _test_05_Styles(self, run=run_all_test):
     """
-    styles.xml not supported yet
+    styles.xml not tested yet
     """
     pass
 

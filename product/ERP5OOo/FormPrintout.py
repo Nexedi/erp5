@@ -303,7 +303,7 @@ class ODFStrategy(Implicit):
     return ooo_builder
 
   # this method not implemented yet
-  def _replaceMetaXml(self, ooo_builder=None, extra_content=None):
+  def _replaceMetaXml(self, ooo_builder=None, extra_context=None):
     """
     replacing meta.xml file in a ODF document
     """
@@ -316,15 +316,14 @@ class ODFStrategy(Implicit):
     return ooo_builder
 
   def _replaceXmlByForm(self, element_tree=None, form=None, here=None,
-                           extra_context=None, render_prefix=None, ooo_builder=None):
+                           extra_context=None, ooo_builder=None):
     field_list = form.get_fields() 
     REQUEST = get_request()
     for (count, field) in enumerate(field_list):
       if isinstance(field, ListBox):
         element_tree = self._appendTableByListbox(element_tree=element_tree,
                                                   listbox=field,
-                                                  REQUEST=REQUEST,
-                                                  render_prefix=render_prefix)
+                                                  REQUEST=REQUEST)
       elif isinstance(field, FormBox):
         sub_form = getattr(here, field.get_value('formbox_target_id'))
         content = self._replaceXmlByFormbox(element_tree=element_tree,
@@ -398,52 +397,55 @@ class ODFStrategy(Implicit):
     request = extra_context.get('REQUEST', REQUEST)
     render_prefix = None
 
-    frame_paragraph_index_dict = {}
+    report_section_frame_xpath = '//draw:frame[@draw:name="%s"]' % report_method.__name__
+    frame_list = element_tree.xpath(report_section_frame_xpath, namespaces=element_tree.nsmap)
+    if len(frame_list) is 0:
+      return element_tree
+    frame = frame_list[0]
+    frame_paragraph = frame.getparent()
+    office_body = frame_paragraph.getparent()
+    # remove if no report section
+    if len(report_section_list) is 0:
+      office_body.remove(frame_paragraph)
+      return element_tree
+    frame_paragraph_element_tree = deepcopy(frame_paragraph)
+    frame_paragraph_index = office_body.index(frame_paragraph)
+    temporary_element_tree = deepcopy(frame_paragraph)
     for (index, report_item) in enumerate(report_section_list):
-      if index > 0:
-        render_prefix = 'x%s' % index
+      render_prefix = 'x%s' % index
       report_item.pushReport(portal_object, render_prefix = render_prefix)
       here = report_item.getObject(portal_object)
       form_id = report_item.getFormId()
       form = getattr(here, form_id)
-
-      report_section_frame_xpath = '//draw:frame[@draw:name="%s"]' % form_id
-      frame_list = element_tree.xpath(report_section_frame_xpath, namespaces=element_tree.nsmap)
-      if len(frame_list) is 0:
-        continue
-      frame = frame_list[0]
-      paragraph = frame.getparent()
-      parent = paragraph.getparent()
-      frame_paragraph_element_tree = deepcopy(paragraph)
-      if not form_id in frame_paragraph_index_dict:
-        frame_paragraph_index_dict[form_id] = parent.index(paragraph)  
-        parent.remove(paragraph)
+      
+      frame_paragraph_element_tree = deepcopy(temporary_element_tree)
+      if index is 0:
+        office_body.remove(frame_paragraph)
       else:
-        self._setReportSectionFrameName(form_id=form_id,
-                                        frame_paragraph_index=frame_paragraph_index_dict[form_id],
+        self._setReportSectionFrameName(report_method_name=report_method.__name__,
+                                        frame_paragraph_index=index,
                                         frame_paragraph_element_tree=frame_paragraph_element_tree)
 
-      frame_paragraph_index = frame_paragraph_index_dict[form_id]
+
       frame_paragraph_element_tree = self._replaceXmlByForm(element_tree=frame_paragraph_element_tree,
                                                             form=form,
                                                             here=here,
                                                             extra_context=extra_context,
                                                             ooo_builder=ooo_builder)
-        
-
-      parent.insert(frame_paragraph_index, frame_paragraph_element_tree)
-      frame_paragraph_index_dict[form_id] = frame_paragraph_index + 1
+      office_body.insert(frame_paragraph_index, frame_paragraph_element_tree)
+      frame_paragraph_index += 1
       report_item.popReport(portal_object, render_prefix = render_prefix)
     return element_tree
 
   def _setReportSectionFrameName(self,
-                                 form_id='',
+                                 report_method_name='',
                                  frame_paragraph_index=0,
                                  frame_paragraph_element_tree=None):
-    report_section_frame_name =  "%s_%s" % (form_id, frame_paragraph_index)
+    report_section_frame_name =  "%s_%s" % (report_method_name, frame_paragraph_index)
     draw_name_attribute = '{%s}name' % frame_paragraph_element_tree.nsmap['draw']
-    report_section_frame = frame_paragraph_element_tree.xpath('draw:frame[@draw:name="%s"]' % form_id,
-                                                              namespaces=frame_paragraph_element_tree.nsmap)
+    report_section_frame = frame_paragraph_element_tree.xpath(
+      'draw:frame[@draw:name="%s"]' % report_method_name,
+      namespaces=frame_paragraph_element_tree.nsmap)
     if len(report_section_frame) is 0:
       return
     report_section_frame[0].set(draw_name_attribute, report_section_frame_name)
@@ -531,8 +533,7 @@ class ODFStrategy(Implicit):
   def _appendTableByListbox(self,
                             element_tree=None, 
                             listbox=None,
-                            REQUEST=None,
-                            render_prefix=None):
+                            REQUEST=None):
     table_id = listbox.id
     table_xpath = '//table:table[@table:name="%s"]' % table_id
     # this list should be one item list
@@ -556,9 +557,7 @@ class ODFStrategy(Implicit):
     # clear original table 
     parent_paragraph = target_table.getparent()
     target_index = parent_paragraph.index(target_table)
-    # 'render_prefix is None' means it is the first table of iteration
-    if render_prefix is None:
-      parent_paragraph.remove(target_table)
+    parent_paragraph.remove(target_table)
     # clear rows 
     for table_row in table_row_list:
       newtable.remove(table_row)
@@ -566,7 +565,7 @@ class ODFStrategy(Implicit):
     listboxline_list = listbox.get_value('default',
                                          render_format='list',
                                          REQUEST=REQUEST, 
-                                         render_prefix=render_prefix)
+                                         render_prefix=None)
     
     # if ODF table has header rows, does not update the header rows
     # if does not have header rows, insert the listbox title line
@@ -593,13 +592,8 @@ class ODFStrategy(Implicit):
         row = self._updateColumnValue(row, listbox_column_list)
         newtable.append(row)
 
-    # direct listbox mapping
-    if render_prefix is None:
-      parent_paragraph.insert(target_index, newtable)
-    else:
-      # report section iteration
-      parent_paragraph.append(newtable)
-
+    parent_paragraph.insert(target_index, newtable)
+ 
     return element_tree
 
   def _copyRowStyle(self, table_row_list=[], has_header_rows=False):
@@ -663,7 +657,6 @@ class ODFStrategy(Implicit):
     if isinstance(value, DateTime):
       value = value.strftime('%Y-%m-%d')
     column_value = unicode(str(value),'utf-8')
-    column.text = column_value
     column_children = column.getchildren()
     first_child = None
     if len(column_children) > 0:
@@ -686,6 +679,7 @@ class ODFStrategy(Implicit):
     for key in attrib.keys():
       if key.startswith("{%s}" % column.nsmap['office']):
         del attrib[key]
+    column.text = ''
     column_children = column.getchildren()
     for child in column_children:
       column.remove(child)
@@ -696,10 +690,22 @@ class ODFStrategy(Implicit):
       value_attribute = self._getColumnValueAttribute(column)
       if value_attribute is not None:
         column.set(value_attribute, '')
+    column.text = ''
     column_children = column.getchildren()
     for child in column_children:
-      child.text = ''
+      # clear data except style
+      style_attribute_tuple = self._getStyleAttributeTuple(child)
+      child.clear()
+      if style_attribute_tuple is not None:
+        child.set(style_attribute_tuple[0], style_attribute_tuple[1])
 
+  def _getStyleAttributeTuple(self, element):
+    attrib = element.attrib
+    for key in attrib.keys():
+      if key.endswith('style-name'):
+        return (key, attrib[key])
+    return None
+  
   def _getColumnValueAttribute(self, column):
     attrib = column.attrib
     for key in attrib.keys():
