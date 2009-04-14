@@ -10090,7 +10090,7 @@ msgid "Uploaded"
 msgstr "Chargé"
 
 msgid "Uploaded [state in processing_status_workflow]"
-msgstr "Mis à jour"
+msgstr "Chargé"
 
 msgid "Url of the document"
 msgstr "Url du document"
