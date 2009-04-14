@@ -68,23 +68,27 @@ else:\n
   params = context.portal_selections.getSelectionParamsFor(\'search_result_selection\')\n
 search_words = params.get(\'your_search_text\')\n
 \n
-if document_text is None:\n
-  document_text = context.getSearchableText()\n
+if search_words is None:\n
+  return \'\'\n
+else:\n
 \n
-found_text_fragments = context.Base_getExcerptText(\n
-                         context, \\\n
-                         document_text, \\\n
-                         search_words, \\\n
-                         tags = (\'<em>\', \'</em>\'), \\\n
-                         trail = 5, \\\n
-                         maxlines = max_lines)\n
-result = \' \'.join(map(str, found_text_fragments))\n
+  if document_text is None:\n
+    document_text = context.getSearchableText()\n
 \n
-# Document may contains charactors which utf8 codec cannot decode.\n
-unicode_result = result.decode(\'utf-8\', \'ignore\')\n
-result = unicode_result.encode(\'utf-8\')\n
+  found_text_fragments = context.Base_getExcerptText(\n
+                           context, \\\n
+                           document_text, \\\n
+                           search_words, \\\n
+                           tags = (\'<em>\', \'</em>\'), \\\n
+                           trail = 5, \\\n
+                           maxlines = max_lines)\n
+  result = \' \'.join(map(str, found_text_fragments))\n
 \n
-return result\n
+  # Document may contains charactors which utf8 codec cannot decode.\n
+  unicode_result = result.decode(\'utf-8\', \'ignore\')\n
+  result = unicode_result.encode(\'utf-8\')\n
+\n
+  return result\n
 
 
 ]]></string> </value>
