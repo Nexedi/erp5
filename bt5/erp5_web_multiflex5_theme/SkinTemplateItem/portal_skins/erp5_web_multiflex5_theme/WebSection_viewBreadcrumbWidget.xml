@@ -58,9 +58,21 @@
                        current_web_document python:request.get(\'current_web_document\', here);\n
                        breadcrumb_list python: current_web_section.getBreadcrumbItemList(current_web_document);">\n
 <ul>\n
-  <li class="nobullet" i18n:translate="" i18n:domain="ui">You are here</li><span>&nbsp;:&nbsp;</span>\n
+  <li class="nobullet" \n
+      i18n:translate=""\n
+      i18n:domain="ui"\n
+      i18n:attributes="title"\n
+      title="This breadcrumb help you to remind you where you are in the web site.">You are here</li><span>&nbsp;:&nbsp;</span>\n
   <li tal:repeat="breadcrumb breadcrumb_list">\n
-    <a href="#" tal:attributes="href python:breadcrumb[1].absolute_url()"       \n
+    <a href="#" tal:condition="not: repeat/breadcrumb/end"\n
+                i18n:domain="ui" i18n:attributes="title"\n
+                title="A previous emplacement in the web site."\n
+                tal:attributes="href python:breadcrumb[1].absolute_url();"      \n
+                tal:content="python:breadcrumb[0]">Home</a>\n
+    <a href="#" tal:condition="repeat/breadcrumb/end"\n
+                i18n:domain="ui" i18n:attributes="title"\n
+                title="You are here."\n
+                tal:attributes="href python:breadcrumb[1].absolute_url();"      \n
                 tal:content="python:breadcrumb[0]">Home</a>\n
   </li>\n
 </ul>\n

@@ -39,13 +39,12 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-\n
 <tal:block metal:define-macro="widget">\n
         <a id="anchor-sidemenu-4" tal:attributes="id gid"></a>\n
         <div class="corner-subcontent-top" tal:condition="python:len(field_list)"></div>\n
         <div tal:attributes="class python: gid.lstrip(aggregate_name);"\n
              tal:condition="python:len(field_list)">\n
-          <h1 class="group_title" tal:content="python: gtitle">4-01a. Side menu 1</h1>                  \n
+          <h1 class="group_title" i18n:translate="" i18n:domain="ui" tal:content="python: gtitle">4-01a. Side menu 1</h1>                  \n
           <fieldset class="widget">\n
             <legend i18n:translate="" i18n:domain="ui" tal:content="python: gtitle" class="group_title"/>\n
             <tal:block tal:repeat="field field_list">\n
@@ -60,8 +59,20 @@
 ]]></string> </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>multiflex5_box_renderer</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

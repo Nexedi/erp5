@@ -58,7 +58,9 @@
 \n
 <tal:block tal:define="current_web_site python:request.get(\'current_web_site\', here);\n
                        menu_item_list python:current_web_site.WebSection_getSiteMapTree(depth=3)">\n
-  <ul tal:repeat="menu_item menu_item_list">\n
+  <ul tal:repeat="menu_item menu_item_list"\n
+      i18n:translate="" i18n:domain="ui" i18n:attributes="title"\n
+      title="Navigate threw the web site.">\n
     <li tal:condition="python: menu_item is not None"><a href="#" tal:attributes="href menu_item/url"\n
             tal:content="menu_item/translated_title">Drop-down Menu<!--[if IE 7]><!--></a><!--<![endif]-->\n
       <!--[if lte IE 6]><table><tr><td><![endif]-->\n
