@@ -1317,7 +1317,7 @@ def setDefaultProperties(property_holder, object=None, portal=None):
                         read_permission=read_permission,
                         write_permission=write_permission)
       else:
-        raise TypeError, '"%s" is illegal type for propertysheet' % \
+        raise TypeError, '"%s" is invalid type for propertysheet' % \
                                             prop['type']
     # Create Category Accessors
     for cat in cat_list:
@@ -1453,7 +1453,7 @@ def setDefaultProperties(property_holder, object=None, portal=None):
           #  # setattr(property_holder, prop['id'], defaults[prop['type']])
           #  pass
       else:
-          raise TypeError, '"%s" is illegal type for propertysheet' % \
+          raise TypeError, '"%s" is invalid type for propertysheet' % \
                                           prop['type']
 
 ##########################################

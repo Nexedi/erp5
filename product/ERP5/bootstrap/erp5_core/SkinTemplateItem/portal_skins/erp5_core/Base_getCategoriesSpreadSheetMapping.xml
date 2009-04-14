@@ -269,7 +269,7 @@ for table_name in spreadsheets.keys():\n
             if clean_title != cell_id:\n
               category_properties[\'title\'] = clean_title\n
 \n
-          # Detect illegal IDs\n
+          # Detect invalid IDs\n
           if path_element_id in property_id_list:\n
             invalid_spreadsheet_error_handler(translateString(\n
                 "The ID ${id} is invalid, it\'s a reserved property name",\n
