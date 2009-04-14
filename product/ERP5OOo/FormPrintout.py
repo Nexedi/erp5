@@ -475,7 +475,7 @@ class ODFStrategy(Implicit):
     if len(image_list) is 0:
       return element_tree
     path = image_field.get_value('default')
-    picture = self.getPortalObject().unrestrictedTraverse(path)
+    picture = self.getPortalObject().restrictedTraverse(path)
     picture_data = getattr(aq_base(picture), 'data', None)
     picture_type = picture.getContentType()
     picture_path = self._createOdfUniqueFileName(path=path, picture_type=picture_type)
@@ -741,7 +741,9 @@ class ODFStrategy(Implicit):
 
   def _toUnicodeString(self, field_value = None):
     value = ''
-    if field_value is not None:
+    if isinstance(field_value, unicode):
+      value = field_value
+    elif field_value is not None:
       value = unicode(str(field_value), 'utf-8')
     return value
 

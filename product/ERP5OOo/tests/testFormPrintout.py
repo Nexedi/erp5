@@ -181,6 +181,14 @@ class TestFormPrintout(ERP5TypeTestCase):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("Français") > 0)
+
+    # 6. Normal case: unicode string
+    test1.setTitle(u'Français test2')
+    odf_document = foo_printout() 
+    self.assertTrue(odf_document is not None)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    self.assertTrue(content_xml.find("Français test2") > 0)
     
   def test_02_Table_01_Normal(self, run=run_all_test):
     """To test listbox and ODF table mapping
