@@ -1148,39 +1148,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
       return 0
 
     security.declareProtected( Permissions.AccessContentsInformation, 'isAcquiredMemberOf' )
-    def isAcquiredMemberOf(self, context, category, strict=0):
-      """
-        Tests if an object if member of a given category
-        Category is a string here. It could be more than a string (ex. an object)
-      """
-      if getattr(aq_base(context), 'isCategory', 0):
-        return context.isAcquiredMemberOf(category)
-      if strict:
-        for c in self._getAcquiredCategoryList(context):
-          if c == category:
-            return 1
-      else:
-        for c in self._getAcquiredCategoryList(context):
-          if c.find(category) >= 0:
-            return 1
-      return 0
-
-    security.declareProtected( Permissions.AccessContentsInformation, 'isAcquiredMemberOf' )
-    def isAcquiredMemberOf(self, context, category):
-      """
-        Tests if an object if member of a given category
-        Category is a string here. It could be more than a string (ex. an object)
-
-        XXX Should include acquisition ?
-      """
-      if getattr(aq_base(context), 'isCategory', 0):
-        return context.isAcquiredMemberOf(category)
-      for c in self._getAcquiredCategoryList(context):
-        if c.find(category) >= 0:
-          return 1
-      return 0
-
-    security.declareProtected( Permissions.AccessContentsInformation, 'isAcquiredMemberOf' )
     def isAcquiredMemberOf(self, context, category):
       """
         Tests if an object if member of a given category
