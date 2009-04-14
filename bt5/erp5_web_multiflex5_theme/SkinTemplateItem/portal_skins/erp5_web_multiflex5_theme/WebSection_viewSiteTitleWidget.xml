@@ -69,15 +69,17 @@
   <a class="sitelogo"\n
      href="#"\n
      title="Home"\n
+     i18n:translate="" i18n:domain="ui"\n
      tal:attributes="href current_web_site/absolute_url;\n
                      title python:current_web_site.getLayoutProperty(\'layout_header_title\')"></a> <!-- Make a script for search an image who have the site in follow_up / install DMS-->\n
   <div class="sitename">\n
   <h1><a href="#"\n
          title="Home"\n
+         i18n:translate="" i18n:domain="ui"\n
          tal:content="current_web_section_header_title"\n
          tal:attributes="href current_web_site/absolute_url;\n
                          title current_web_section_header_title">Site Name</a></h1>\n
-  <h2 tal:content="python:current_web_section.getLayoutProperty(\'layout_header_moto\')">Open Source Designs</h2>\n
+  <h2 i18n:translate="" i18n:domain="ui" tal:content="python:current_web_section.getLayoutProperty(\'layout_header_moto\')">Open Source Designs</h2>\n
 </tal:block>
 
 ]]></string> </value>

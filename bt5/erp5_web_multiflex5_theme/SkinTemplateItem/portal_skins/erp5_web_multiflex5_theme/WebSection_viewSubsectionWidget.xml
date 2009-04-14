@@ -57,8 +57,10 @@
 \n
 \n
 <ul tal:define="current_web_section python:request.get(\'current_web_section\', here)">\n
-  <li tal:repeat="subsection python:current_web_section.WebSection_getSiteMapTree(depth=1)"><a href="#" tal:content="subsection/translated_title"\n
-  tal:attributes="href subsection/url">Menu item</a></li>\n
+  <li tal:repeat="subsection python:current_web_section.WebSection_getSiteMapTree(depth=1)">\n
+    <a href="#" tal:content="subsection/translated_title"\n
+                tal:attributes="href subsection/url">Menu item</a>\n
+  </li>\n
 </ul>
 
 ]]></string> </value>
