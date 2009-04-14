@@ -159,6 +159,11 @@
 .navbar ul li {float:left; z-index:auto !important /*Non-IE6*/; z-index:1000 /*IE6*/; background-color:<tal:block tal:replace="secondary_color"/>;}\n
 .navbar ul li a {float:none !important /*Non-IE6*/; float:left /*IE-6*/; display:block; height:3.1em; line-height:3.1em; padding:0 16px 0 16px; text-decoration:none; font-weight:bold; color:rgb(100,100,100); border-right:solid 0px <tal:block tal:replace="menu_color"/>;}\n
 .navbar ul li ul {display:none; border:none;}\n
+.navbar ul li ul li a {float:none !important /*Non-IE6*/; float:left /*IE-6*/; display:block; height:3.1em; line-height:3.1em; padding:0 16px 0 16px; text-decoration:none; font-weight:bold; color:rgb(100,100,100); border-right:solid 0px <tal:block tal:replace="menu_color"/>;}\n
+.navbar ul li ul li ul {display:none; border:none;}\n
+.navbar ul li:hover ul li ul {display:none; border:none;}\n
+.navbar ul li ul li ul li a {float:none !important /*Non-IE6*/; float:left /*IE-6*/; display:block; height:3.1em; line-height:3.1em; padding:0 16px 0 16px; text-decoration:none; font-weight:bold; color:rgb(100,100,100); border-right:solid 0px <tal:block tal:replace="menu_color"/>;}\n
+\n
 \n
 /* SUBMENU (Non-IE6 hovering) */\n
 .navbar ul li:hover {position:relative;} /*Sylvain IE hack*/\n
@@ -166,6 +171,9 @@
 .navbar ul li:hover ul {display:block; width:10.0em; position:absolute; z-index:1000; top:3.0em; margin-top:0.1em; left:0; padding:0px 16px 0px 16px; border-top:solid 1px rgb(215,215,215);}\n
 .navbar ul li:hover ul li a {white-space:normal; display:block; width:10.0em; height:auto; line-height:1.3em; margin-left:-17px; padding:4px 16px 4px 16px; border-right:solid 1px rgb(215,215,215); border-left:solid 1px rgb(215,215,215); border-bottom: solid 1px rgb(215,215,215); background-color:<tal:block tal:replace="menu_color"/>; font-weight:normal; color:rgb(100,100,100);} /*Color subcells normal mode*/\n
 .navbar ul li:hover ul li a:hover {background-color:<tal:block tal:replace="secondary_color"/>; text-decoration:none;} /*Color subcells hovering mode*/\n
+.navbar ul li:hover ul li:hover ul {display:block; width:10.0em; position:absolute; z-index:1000; top:-0.2em; left:11.4em; padding:0px 16px 0px 16px; border-top:solid 1px rgb(215,215,215);}\n
+.navbar ul li:hover ul li:hover ul li a {white-space:normal; display:block; width:10.0em; height:auto; line-height:1.3em; margin-left:-17px; padding:4px 16px 4px 16px; border-right:solid 1px rgb(215,215,215); border-left:solid 1px rgb(215,215,215); border-bottom: solid 1px rgb(215,215,215); background-color:<tal:block tal:replace="menu_color"/>; font-weight:normal; color:rgb(100,100,100);}\n
+.navbar ul li:hover ul li:hover ul li a:hover {background-color:<tal:block tal:replace="secondary_color"/>; text-decoration:none;} /*Color subcells hovering mode*/\n
 \n
 /* SUBMENU (IE6 hovering) */\n
 .navbar table {position:absolute; z-index:1000; top:0px; left:-1px; border-collapse:collapse;}\n
@@ -173,6 +181,10 @@
 .navbar ul li a:hover ul {display:block; width:10.0em; position:absolute; z-index:1000; top:3.1em; t\\op:3.0em; left:0px; marg\\in-top:0.1em; border-top:solid 1px rgb(215,215,215); }\n
 .navbar ul li a:hover ul li a {white-space:normal; display:block; w\\idth:10.0em; height:1px; line-height:1.3em; padding:4px 16px 4px 16px; border-right:solid 1px rgb(215,215,215); border-left:solid 1px rgb(215,215,215); border-bottom: solid 1px rgb(215,215,215); background-color:<tal:block tal:replace="menu_color"/>; font-weight:normal; color:rgb(100,100,100);} /*Color subcells normal mode*/\n
 .navbar ul li a:hover ul li a:hover {background-color:<tal:block tal:replace="secondary_color"/>; text-decoration:none;} /*Color subcells hovering mode*/\n
+.navbar ul li a:hover ul li a:hover ul {display:block; width:10.0em; position:absolute; z-index:1000; top:3.1em; t\\op:3.0em; left:0px; marg\\in-top:0.1em; border-top:solid 1px rgb(215,215,215); }\n
+.navbar ul li a:hover ul li a:hover ul li a {white-space:normal; display:block; w\\idth:10.0em; height:1px; line-height:1.3em; padding:4px 16px 4px 16px; border-right:solid 1px rgb(215,215,215); border-left:solid 1px rgb(215,215,215); border-bottom: solid 1px rgb(215,215,215); background-color:<tal:block tal:replace="menu_color"/>; font-weight:normal; color:rgb(100,100,100);} /*Color subcells normal mode*/\n
+.navbar ul li a:hover ul li a:hover ul li a:hover {background-color:<tal:block tal:replace="secondary_color"/>; text-decoration:none;} /*Color subcells hovering mode*/\n
+\n
 \n
 /************/\n
 /*  CONTENT */\n

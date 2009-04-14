@@ -57,24 +57,27 @@
 </tal:block>\n
 \n
 <tal:block tal:define="current_web_site python:request.get(\'current_web_site\', here);\n
-                       menu_item_list python:current_web_site.WebSection_getSiteMapTree(depth=2)">\n
-\n
-<ul tal:repeat="menu_item menu_item_list">\n
-  <li tal:condition="menu_item/subsection"><a href="#" tal:attributes="href menu_item/url"\n
-          tal:content="menu_item/translated_title">Drop-down Menu<!--[if IE 7]><!--></a><!--<![endif]-->\n
-    <!--[if lte IE 6]><table><tr><td><![endif]-->\n
-    <ul>\n
-      <li tal:repeat="sub_item menu_item/subsection">\n
-        <a href="#" tal:attributes="href sub_item/url" tal:content="sub_item/translated_title">Menu subitem 1</a>\n
-      </li>\n
-    </ul>\n
-    <!--[if lte IE 6]></td></tr></table></a><![endif]-->\n
-  </li>\n
-  <li tal:condition="not:menu_item/subsection"><a href="#" tal:attributes="href menu_item/url" \n
-          tal:content="menu_item/translated_title">Overview</a></li>\n
-</ul>\n
-\n
-</tal:block>
+                       menu_item_list python:current_web_site.WebSection_getSiteMapTree(depth=3)">\n
+  <ul tal:repeat="menu_item menu_item_list">\n
+    <li tal:condition="python: menu_item is not None"><a href="#" tal:attributes="href menu_item/url"\n
+            tal:content="menu_item/translated_title">Drop-down Menu<!--[if IE 7]><!--></a><!--<![endif]-->\n
+      <!--[if lte IE 6]><table><tr><td><![endif]-->\n
+      <ul metal:define-macro="generateTree">\n
+        <li tal:repeat="item menu_item/subsection">\n
+          <a href="#" tal:attributes="href item/url" tal:content="item/translated_title">Menu subitem 1</a>\n
+          <tal:recurse define="menu_item item"\n
+                               condition="nocall: menu_item/subsection">\n
+            <metal:call use-macro="here/WebSection_viewNavigationWidget/macros/generateTree" />\n
+          </tal:recurse>\n
+        </li>\n
+      </ul>\n
+      <!--[if lte IE 6]></td></tr></table></a><![endif]-->\n
+    </li>\n
+    <li tal:condition="not:menu_item/subsection"><a href="#" tal:attributes="href menu_item/url" \n
+            tal:content="menu_item/translated_title">Overview</a></li>\n
+  </ul>\n
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>
