@@ -317,11 +317,13 @@ class Message:
     user_email = portal.getProperty('email_to_address',
                        portal.getProperty('email_from_address'))
 
+    email_from_name = portal.getProperty('email_from_name',
+                       portal.getProperty('email_from_address'))
     call_traceback = ''
     if self.call_traceback:
       call_traceback = 'Created at:\n%s' % self.call_traceback
 
-    mail_text = """From: %s
+    mail_text = """From: %s <%s>
 To: %s
 Subject: %s
 
@@ -338,7 +340,8 @@ Named Parameters: %r
 Exception: %s %s
 
 %s
-""" % (activity_tool.email_from_address, user_email, message, message,
+""" % (email_from_name, activity_tool.email_from_address, 
+       user_email, message, message,
        activity_tool.getCurrentNode(), self.user_name,
        '/'.join(self.object_path), self.method_id, self.args, self.kw,
        call_traceback, self.exc_type, self.exc_value, self.traceback)
