@@ -187,10 +187,6 @@ for i in context.portal_workflow.objectValues():\n
       # also use transition title as msg_id for compatibility\n
       add_message(t.title, portal_url.getRelativeContentURL(t))\n
   for worklist in i.worklists.objectValues():\n
-    #adding a context in msg_id for more precise translation\n
-    msg_id = getMessageIdWithContext(worklist.actbox_name,\'worklist\',i.id)\n
-    add_message(msg_id, portal_url.getRelativeContentURL(worklist))\n
-    # also use worklist action box name as msg_id for compatibility\n
     add_message(worklist.actbox_name, portal_url.getRelativeContentURL(worklist))\n
 \n
 \n
