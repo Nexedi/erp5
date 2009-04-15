@@ -523,6 +523,10 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals(person.getCareerActivityTitle(), 'Software')
     self.assertEquals(person.getCareerReference(), '1234')
 
+    # activity must be acquired on person
+    self.assertEquals(person.getActivity(), person.getCareerActivity())
+    self.assertEquals('Software', person.getActivityTitle())
+
     # Set & Check function
     function_categories = self.getCategoryList(base_category='function')
     function_path   = function_categories[1]['path']
