@@ -1,5 +1,6 @@
 <key_list>
- <key>destination_person_title | category,catalog/title/z_related_destination_person</key>
- <key>source_organisation_title | category,catalog/title/z_related_source_organisation</key>
- <key>source_person_title | category,catalog/title/z_related_source_person</key>
+  <key>default_email_text | catalog,email/url_string/z_related_default_email</key>
+  <key>destination_person_title | category,catalog/title/z_related_destination_person</key>
+  <key>source_organisation_title | category,catalog/title/z_related_source_organisation</key>
+  <key>source_person_title | category,catalog/title/z_related_source_person</key>
 </key_list>
