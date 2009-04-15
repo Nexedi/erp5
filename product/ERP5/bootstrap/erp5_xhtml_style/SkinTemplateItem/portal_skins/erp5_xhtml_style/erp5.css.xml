@@ -1401,6 +1401,16 @@ div.search .centeredInner {\n
   font-weight:bold;\n
 }\n
 \n
+div.search .searchPages a{\n
+  text-decoration: underline;\n
+}\n
+\n
+div.search .searchPages .selected{\n
+  color: #CB0D00;\n
+  font-weight:bold;\n
+  text-decoration: none;\n
+}\n
+\n
 /* MatrixBox */\n
 .MatrixContent {\n
   color: #000;\n
