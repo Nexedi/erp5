@@ -277,7 +277,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.getClassification(here.portal_preferences.getPreferredDocumentClassification())</string> </value>
+            <value> <string>python: here.portal_preferences.getPreferredDocumentClassification()</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -293,7 +293,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:tuple(here.portal_categories.classification.getCategoryChildLogicalPathItemList(display_none_category=0,filter_node=1,local_sort_id=\'title\',checked_permission=\'View\'))</string> </value>
+            <value> <string>python: here.portal_categories.classification.getCategoryChildLogicalPathItemList(display_none_category=1,filter_node=1,local_sort_id=\'title\',checked_permission=\'View\')</string> </value>
         </item>
       </dictionary>
     </pickle>
