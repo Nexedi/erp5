@@ -174,11 +174,11 @@ class TestSQLCatalog(unittest.TestCase):
                  {column: '!=a'})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a b'), operator='and'),
                  {column: 'a b'})
-    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='=', default='a'), ReferenceQuery(operator='>', default='b'), operator='or'), operator='and'),
+    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='=', default='a'), ReferenceQuery(operator='>', default='b'), operator='and'), operator='and'),
                  {column: 'a >b'})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='a > b'), operator='and'),
                  {column: 'a > b'})
-    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='>', default='a'), ReferenceQuery(operator='>', default='b'), operator='or'), operator='and'),
+    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='>', default='a'), ReferenceQuery(operator='>', default='b'), operator='and'), operator='and'),
                  {column: '>a >b'})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='>a >b'), operator='and'),
                  {column: '">a >b"'})
@@ -353,8 +353,11 @@ class TestSQLCatalog(unittest.TestCase):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%"a" OR "b"%'), operator='and'),
                  {'keyword': '"\\"a\\" OR \\"b\\""'})
     self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a'),
-                                               ReferenceQuery(ReferenceQuery(operator='match', fulltext='b'), operator='not'), operator='or'), operator='and'),
+                                               ReferenceQuery(ReferenceQuery(operator='match', fulltext='b'), operator='not'), operator='and'), operator='and'),
                  {'fulltext': 'a NOT b'})
+    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a'),
+                                               ReferenceQuery(ReferenceQuery(operator='match', fulltext='b'), operator='not'), operator='or'), operator='and'),
+                 {'fulltext': 'a OR NOT b'})
     self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a'),
                                                ReferenceQuery(ReferenceQuery(operator='match', fulltext='b'), operator='not'), operator='and'), operator='and'),
                  {'fulltext': 'a AND NOT b'})

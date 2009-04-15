@@ -155,7 +155,7 @@ class AdvancedSearchTextParser(lexer):
     if len(p) == 2:
       p[0] = p[1]
     elif len(p) == 3:
-      p[0] = p[1].push('or', p[2])
+      p[0] = p[1].push('and', p[2])
     else:
       p[0] = p[1].push('or', p[3])
 
