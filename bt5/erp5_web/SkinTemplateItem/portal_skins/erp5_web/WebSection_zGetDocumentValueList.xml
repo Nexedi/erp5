@@ -94,10 +94,10 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>language\n
-all_languages\n
-all_versions\n
-validation_state:list\n
+            <value> <string>language\r\n
+all_languages\r\n
+all_versions\r\n
+validation_state:list\r\n
 kw</string> </value>
         </item>
         <item>
@@ -143,74 +143,88 @@ kw</string> </value>
           is_translation_order_by="query[\'order_by_expression\'] is not None and\n
             \'translated_message\' in query[\'order_by_expression\']">\n
 \n
-<dtml-comment>\n
-  Currently, there is no other choice to implement this method as an SQL catalog until SQLCatalog \n
-  can support more features which are needed here. Once SQLCatalog supports those feature, \n
-  this method should be refactored to use catalog only.\n
-  \n
-   The subquery is named catalog to prevent use another LEFT JOIN.\n
-</dtml-comment>\n
+  <dtml-comment>\n
+    Currently, there is no other choice to implement this method as an SQL catalog until SQLCatalog\n
+    can support more features which are needed here. Once SQLCatalog supports those feature,\n
+    this method should be refactored to use catalog only.\n
 \n
-SELECT\n
-  catalog.path AS path, catalog.uid AS uid, catalog.modification_date,\n
-  catalog.reference, catalog.int_index,  catalog.creation_date , catalog.title, \n
-  catalog.priority\n
-  <dtml-if is_translation_order_by>  \n
-    ,catalog.translated_message\n
-  </dtml-if>\n
+     The subquery is named catalog to prevent use another LEFT JOIN.\n
+  </dtml-comment>\n
 \n
-FROM\n
-   (\n
-    SELECT\n
-      catalog.uid, catalog.path, catalog.int_index, catalog.modification_date,\n
-      catalog.reference, my_versioning.language, my_versioning.version,\n
-      catalog.creation_date, catalog.title\n
-      , MAX(CONCAT(CASE my_versioning.language\n
-                                       WHEN  <dtml-sqlvar language type="string"> THEN \'3\'\n
-                                       WHEN \'en\' THEN \'2\'\n
-                                       ELSE \'1\' END,\n
-                            my_versioning.version)) AS priority\n
-      <dtml-if is_translation_order_by>\n
-        ,related_translation_intermediate.translated_message\n
-      </dtml-if>\n
-    FROM\n
-      <dtml-in prefix="table" expr="query[\'from_table_list\']">\n
+  SELECT\n
+    catalog.path AS path,\n
+    catalog.uid AS uid,\n
+    catalog.modification_date,\n
+    catalog.reference,\n
+    catalog.int_index,\n
+    catalog.creation_date,\n
+    catalog.title,\n
+    catalog.priority\n
+    <dtml-if is_translation_order_by>\n
+      , catalog.translated_message\n
+    </dtml-if>\n
+\n
+  FROM\n
+    (\n
+      SELECT\n
+        catalog.uid,\n
+        catalog.path,\n
+        catalog.int_index,\n
+        catalog.modification_date,\n
+        catalog.reference,\n
+        my_versioning.language,\n
+        my_versioning.version,\n
+        catalog.creation_date,\n
+        catalog.title,\n
+        MAX(CONCAT(CASE my_versioning.language\n
+                   WHEN <dtml-sqlvar language type="string"> THEN \'3\'\n
+                   WHEN \'en\' THEN \'2\'\n
+                   ELSE \'1\' END,\n
+            my_versioning.version)) AS priority\n
+        <dtml-if is_translation_order_by>\n
+          , related_translation_intermediate.translated_message\n
+        </dtml-if>\n
+      FROM\n
+        <dtml-in prefix="table" expr="query[\'from_table_list\']">\n
           <dtml-var table_item> AS <dtml-var table_key>,\n
-      </dtml-in>\n
-      versioning AS my_versioning\n
-      <dtml-if is_translation_order_by>\n
-        ,translation AS related_translation_intermediate\n
-      </dtml-if>\n
-    WHERE\n
-      my_versioning.uid = catalog.uid\n
-      <dtml-if "query[\'where_expression\']">\n
+        </dtml-in>\n
+        versioning AS my_versioning\n
+        <dtml-if is_translation_order_by>\n
+          , translation AS related_translation_intermediate\n
+        </dtml-if>\n
+      WHERE\n
+        my_versioning.uid = catalog.uid\n
+        <dtml-if "query[\'where_expression\']">\n
           AND <dtml-var "query[\'where_expression\']">\n
-      </dtml-if>\n
-<dtml-if all_languages>\n
+        </dtml-if>\n
 \n
-<dtml-else>\n
-      AND my_versioning.language = <dtml-sqlvar language type="string"> \n
-</dtml-if>\n
+        <dtml-if all_languages>\n
+        <dtml-else>\n
+          AND my_versioning.language = <dtml-sqlvar language type="string">\n
+        </dtml-if>\n
+\n
+      GROUP BY\n
+        catalog.uid\n
+      ORDER BY\n
+        priority DESC\n
+    ) AS catalog,\n
+      versioning AS my_versioning\n
+\n
+  WHERE\n
+    catalog.uid = my_versioning.uid\n
+  <dtml-if all_versions>\n
     GROUP BY\n
       catalog.uid\n
-    ORDER BY\n
-      priority DESC\n
-  ) AS catalog, versioning AS my_versioning\n
-     WHERE\n
-          catalog.uid = my_versioning.uid\n
-<dtml-if all_versions>\n
+  <dtml-else>\n
     GROUP BY\n
-      catalog.uid\n
-<dtml-else>\n
-     GROUP BY\n
-       catalog.reference\n
-     HAVING \n
-         MAX(CONCAT(CASE my_versioning.language\n
-                                       WHEN  <dtml-sqlvar language type="string"> THEN \'3\'\n
-                                       WHEN \'en\' THEN \'2\'\n
-                                       ELSE \'1\' END,\n
-                            my_versioning.version)) = catalog.priority\n
-</dtml-if>\n
+      catalog.reference\n
+    HAVING\n
+      MAX(CONCAT(CASE my_versioning.language\n
+                 WHEN  <dtml-sqlvar language type="string"> THEN \'3\'\n
+                 WHEN \'en\' THEN \'2\'\n
+                 ELSE \'1\' END,\n
+          my_versioning.version)) = catalog.priority\n
+  </dtml-if>\n
 \n
   ORDER BY\n
   <dtml-if "query[\'order_by_expression\']">\n
@@ -220,15 +234,18 @@ FROM\n
       <dtml-var "query[\'order_by_expression\']">\n
     </dtml-if>\n
   <dtml-else>\n
-    catalog.int_index, catalog.reference\n
+    catalog.int_index,\n
+    catalog.reference\n
   </dtml-if>\n
-<dtml-if "query[\'limit_expression\']">\n
-  LIMIT <dtml-var "query[\'limit_expression\']">\n
-<dtml-else>\n
-  LIMIT 1000\n
-</dtml-if>\n
 \n
-</dtml-let>
+  <dtml-if "query[\'limit_expression\']">\n
+    LIMIT <dtml-var "query[\'limit_expression\']">\n
+  <dtml-else>\n
+    LIMIT 1000\n
+  </dtml-if>\n
+\n
+</dtml-let>\n
+
 
 ]]></string> </value>
         </item>
@@ -273,74 +290,88 @@ FROM\n
           is_translation_order_by="query[\'order_by_expression\'] is not None and\n
             \'translated_message\' in query[\'order_by_expression\']">\n
 \n
-<dtml-comment>\n
-  Currently, there is no other choice to implement this method as an SQL catalog until SQLCatalog \n
-  can support more features which are needed here. Once SQLCatalog supports those feature, \n
-  this method should be refactored to use catalog only.\n
-  \n
-   The subquery is named catalog to prevent use another LEFT JOIN.\n
-</dtml-comment>\n
+  <dtml-comment>\n
+    Currently, there is no other choice to implement this method as an SQL catalog until SQLCatalog\n
+    can support more features which are needed here. Once SQLCatalog supports those feature,\n
+    this method should be refactored to use catalog only.\n
 \n
-SELECT\n
-  catalog.path AS path, catalog.uid AS uid, catalog.modification_date,\n
-  catalog.reference, catalog.int_index,  catalog.creation_date , catalog.title, \n
-  catalog.priority\n
-  <dtml-if is_translation_order_by>  \n
-    ,catalog.translated_message\n
-  </dtml-if>\n
+     The subquery is named catalog to prevent use another LEFT JOIN.\n
+  </dtml-comment>\n
 \n
-FROM\n
-   (\n
-    SELECT\n
-      catalog.uid, catalog.path, catalog.int_index, catalog.modification_date,\n
-      catalog.reference, my_versioning.language, my_versioning.version,\n
-      catalog.creation_date, catalog.title\n
-      , MAX(CONCAT(CASE my_versioning.language\n
-                                       WHEN  <dtml-sqlvar language type="string"> THEN \'3\'\n
-                                       WHEN \'en\' THEN \'2\'\n
-                                       ELSE \'1\' END,\n
-                            my_versioning.version)) AS priority\n
-      <dtml-if is_translation_order_by>\n
-        ,related_translation_intermediate.translated_message\n
-      </dtml-if>\n
-    FROM\n
-      <dtml-in prefix="table" expr="query[\'from_table_list\']">\n
+  SELECT\n
+    catalog.path AS path,\n
+    catalog.uid AS uid,\n
+    catalog.modification_date,\n
+    catalog.reference,\n
+    catalog.int_index,\n
+    catalog.creation_date,\n
+    catalog.title,\n
+    catalog.priority\n
+    <dtml-if is_translation_order_by>\n
+      , catalog.translated_message\n
+    </dtml-if>\n
+\n
+  FROM\n
+    (\n
+      SELECT\n
+        catalog.uid,\n
+        catalog.path,\n
+        catalog.int_index,\n
+        catalog.modification_date,\n
+        catalog.reference,\n
+        my_versioning.language,\n
+        my_versioning.version,\n
+        catalog.creation_date,\n
+        catalog.title,\n
+        MAX(CONCAT(CASE my_versioning.language\n
+                   WHEN <dtml-sqlvar language type="string"> THEN \'3\'\n
+                   WHEN \'en\' THEN \'2\'\n
+                   ELSE \'1\' END,\n
+            my_versioning.version)) AS priority\n
+        <dtml-if is_translation_order_by>\n
+          , related_translation_intermediate.translated_message\n
+        </dtml-if>\n
+      FROM\n
+        <dtml-in prefix="table" expr="query[\'from_table_list\']">\n
           <dtml-var table_item> AS <dtml-var table_key>,\n
-      </dtml-in>\n
-      versioning AS my_versioning\n
-      <dtml-if is_translation_order_by>\n
-        ,translation AS related_translation_intermediate\n
-      </dtml-if>\n
-    WHERE\n
-      my_versioning.uid = catalog.uid\n
-      <dtml-if "query[\'where_expression\']">\n
+        </dtml-in>\n
+        versioning AS my_versioning\n
+        <dtml-if is_translation_order_by>\n
+          , translation AS related_translation_intermediate\n
+        </dtml-if>\n
+      WHERE\n
+        my_versioning.uid = catalog.uid\n
+        <dtml-if "query[\'where_expression\']">\n
           AND <dtml-var "query[\'where_expression\']">\n
-      </dtml-if>\n
-<dtml-if all_languages>\n
+        </dtml-if>\n
 \n
-<dtml-else>\n
-      AND my_versioning.language = <dtml-sqlvar language type="string"> \n
-</dtml-if>\n
+        <dtml-if all_languages>\n
+        <dtml-else>\n
+          AND my_versioning.language = <dtml-sqlvar language type="string">\n
+        </dtml-if>\n
+\n
+      GROUP BY\n
+        catalog.uid\n
+      ORDER BY\n
+        priority DESC\n
+    ) AS catalog,\n
+      versioning AS my_versioning\n
+\n
+  WHERE\n
+    catalog.uid = my_versioning.uid\n
+  <dtml-if all_versions>\n
     GROUP BY\n
       catalog.uid\n
-    ORDER BY\n
-      priority DESC\n
-  ) AS catalog, versioning AS my_versioning\n
-     WHERE\n
-          catalog.uid = my_versioning.uid\n
-<dtml-if all_versions>\n
+  <dtml-else>\n
     GROUP BY\n
-      catalog.uid\n
-<dtml-else>\n
-     GROUP BY\n
-       catalog.reference\n
-     HAVING \n
-         MAX(CONCAT(CASE my_versioning.language\n
-                                       WHEN  <dtml-sqlvar language type="string"> THEN \'3\'\n
-                                       WHEN \'en\' THEN \'2\'\n
-                                       ELSE \'1\' END,\n
-                            my_versioning.version)) = catalog.priority\n
-</dtml-if>\n
+      catalog.reference\n
+    HAVING\n
+      MAX(CONCAT(CASE my_versioning.language\n
+                 WHEN  <dtml-sqlvar language type="string"> THEN \'3\'\n
+                 WHEN \'en\' THEN \'2\'\n
+                 ELSE \'1\' END,\n
+          my_versioning.version)) = catalog.priority\n
+  </dtml-if>\n
 \n
   ORDER BY\n
   <dtml-if "query[\'order_by_expression\']">\n
@@ -350,15 +381,18 @@ FROM\n
       <dtml-var "query[\'order_by_expression\']">\n
     </dtml-if>\n
   <dtml-else>\n
-    catalog.int_index, catalog.reference\n
+    catalog.int_index,\n
+    catalog.reference\n
   </dtml-if>\n
-<dtml-if "query[\'limit_expression\']">\n
-  LIMIT <dtml-var "query[\'limit_expression\']">\n
-<dtml-else>\n
-  LIMIT 1000\n
-</dtml-if>\n
 \n
-</dtml-let>
+  <dtml-if "query[\'limit_expression\']">\n
+    LIMIT <dtml-var "query[\'limit_expression\']">\n
+  <dtml-else>\n
+    LIMIT 1000\n
+  </dtml-if>\n
+\n
+</dtml-let>\n
+
 
 ]]></string> </value>
                     </item>
