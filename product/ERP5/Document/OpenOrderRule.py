@@ -32,7 +32,6 @@ from Products.ERP5.Document.DeliveryRule import DeliveryRule
 from zLOG import LOG, WARNING
 from DateTime import DateTime
 
-
 class OpenOrderRule(DeliveryRule):
   """
   Order Rule object make sure an Order in the simulation
@@ -73,8 +72,12 @@ class OpenOrderRule(DeliveryRule):
       delivered child, and is in order, it can be modified.
       Else, it cannot be modified.
     """
-    movement_type = 'Simulation Movement'
     order = applied_rule.getDefaultCausalityValue()
+    if getattr(order, 'expandOpenOrderRule', None) is not None:
+      # Delegate implementation of expand to the SubscriptionItem or 
+      # to the OpenOrder instance
+      return order.expandOpenOrderRule(applied_rule, force=force, **kw)
+    movement_type = 'Simulation Movement'    
     if order is not None:
       order_movement_list = order.getMovementList(
         portal_type=order.getPortalOrderMovementTypeList())
