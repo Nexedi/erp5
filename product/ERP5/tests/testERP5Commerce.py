@@ -32,6 +32,7 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
+import transaction
 
 SESSION_ID = "12345678"
 
@@ -63,7 +64,19 @@ class TestCommerce(ERP5TypeTestCase):
     shipping.setSupplyLinePriceCurrency(currency.getRelativeUrl())
     shipping.setBasePrice(10.0)
     shipping.setProductLine('shipping')
-    
+    transaction.commit()
+    self.tic()
+
+  def clearModule(self, module):
+    module.manage_delObjects(list(module.objectIds()))
+    transaction.commit()
+    self.tic()
+
+  def beforeTearDown(self):
+    self.clearModule(self.portal.product_module)
+    self.clearModule(self.portal.sale_order_module)
+    self.clearModule(self.portal.currency_module)
+
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
     uf._doAddUser('ivan', '', ['Manager'], [])
@@ -123,9 +136,10 @@ class TestCommerce(ERP5TypeTestCase):
     request = self.app.REQUEST
     default_product = self.getDefaultProduct()
     request.set('session_id', SESSION_ID)
-    
-    # add in two speps same product and check that we do not create
+
+    # add in two steps same product and check that we do not create
     # new Sale Order Line but just increase quantity on existing one
+    portal.Resource_addToShoppingCart(default_product, 1)
     portal.Resource_addToShoppingCart(default_product, 1)
     shoppping_cart_items =  portal.SaleOrder_getShoppingCartItemList()
     self.assertEquals(1, len(shoppping_cart_items))
@@ -149,7 +163,9 @@ class TestCommerce(ERP5TypeTestCase):
     another_product = self.getDefaultProduct(id = '2')
     request.set('session_id', SESSION_ID)
     
-    # add second diff product and check that we create new Sale Order Line 
+    # add second diff product and check that we create new Sale Order Line
+    portal.Resource_addToShoppingCart(default_product, 1)
+    portal.Resource_addToShoppingCart(default_product, 1)
     portal.Resource_addToShoppingCart(another_product, 1)
     shoppping_cart_items =  portal.SaleOrder_getShoppingCartItemList()
     self.assertEquals(2, len(shoppping_cart_items))
@@ -176,7 +192,10 @@ class TestCommerce(ERP5TypeTestCase):
     default_product = self.getDefaultProduct()
     another_product = self.getDefaultProduct(id = '2')
     request.set('session_id', SESSION_ID)
-    
+    portal.Resource_addToShoppingCart(default_product, 1)
+    portal.Resource_addToShoppingCart(default_product, 1)
+    portal.Resource_addToShoppingCart(another_product, 1)
+
     shopping_cart = portal.SaleOrder_getShoppingCart()
     self.assertEquals(40.0, \
          float(shopping_cart.SaleOrder_getShoppingCartTotalPrice()))
