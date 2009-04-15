@@ -69,7 +69,7 @@ if not person_list:\n
 \n
 # Find authenticated user\n
 user = context.portal_membership.getAuthenticatedMember()\n
-user_person = context.portal_catalog.getResultValue(portal_type=\'Person\', reference=user)\n
+user_person = context.portal_catalog.getResultValue(portal_type=\'Person\', reference=str(user))\n
 \n
 # For every person, create an event\n
 if not single_event:\n
@@ -84,11 +84,11 @@ if not single_event:\n
     count += 1\n
     # Trigger appropriate workflow action\n
     if direction == \'incoming\':\n
-      event.setSourceValue(person)\n
+      event.setSourceValue(person.getObject())\n
       event.setDestinationValue(user_person)\n
       event.receive()\n
     else:\n
-      event.setDestinationValue(person)\n
+      event.setDestinationValue(person.getObject())\n
       event.setSourceValue(user_person)\n
       event.plan()\n
 else:\n
@@ -103,7 +103,7 @@ else:\n
                             title=title, \n
                             follow_up=follow_up,\n
                             text_content=text_content) # text_format is set by Event_init\n
-  event.setDestinationValueList(person_list)\n
+  event.setDestinationValueList([person.getObject() for person in person_list])\n
   event.setSourceValue(user_person)\n
   event.plan()\n
   count = 1\n
@@ -166,6 +166,7 @@ context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_st
                             <string>module</string>
                             <string>person_list</string>
                             <string>user</string>
+                            <string>str</string>
                             <string>user_person</string>
                             <string>count</string>
                             <string>_getiter_</string>
@@ -176,6 +177,8 @@ context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_st
                             <string>portal_status_message</string>
                             <string>_apply_</string>
                             <string>dict</string>
+                            <string>append</string>
+                            <string>$append0</string>
                           </tuple>
                         </value>
                     </item>
