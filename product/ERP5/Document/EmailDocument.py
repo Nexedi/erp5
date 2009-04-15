@@ -101,6 +101,8 @@ class EmailDocument(File, TextDocument):
                     , PropertySheet.Arrow
                     , PropertySheet.Task
                     , PropertySheet.ItemAggregation
+                    , PropertySheet.EmailHeader
+                    , PropertySheet.Reference
                     )
 
   # Declarative interfaces
@@ -227,6 +229,78 @@ class EmailDocument(File, TextDocument):
       i += 1
     return KeyError, "No attachment with index %s" % index
 
+  # Helper methods which override header property sheet
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSender')
+  def getSender(self, *args):
+    """
+    """
+    if not self.hasData():
+      return self._baseGetSender(*args)
+    return self.getContentInformation().get('From', *args)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getRecipient')
+  def getRecipient(self, *args):
+    """
+    """
+    if not self.hasData():
+      return self._baseGetRecipient(*args)
+    return self.getContentInformation().get('To', *args)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getCcRecipient')
+  def getCcRecipient(self, *args):
+    """
+    """
+    if not self.hasData():
+      return self._baseGetCcRecipient(*args)
+    return self.getContentInformation().get('Cc', *args)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getGroupingReference')
+  def getGroupingReference(self, *args):
+    """
+      The reference refers here to the Thread of messages.
+    """
+    if not self.hasData():
+      result = self._baseGetGroupingReference(*args)
+    else:
+      if not len(args):
+	args = (self._baseGetGroupingReference(),)
+      result = self.getContentInformation().get('References', *args)
+      if result:
+	result = result.split() # Only take the first reference
+	if result:
+	  result = result[0]
+    if result:
+      return result
+    return self.getSourceReference(*args)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSourceReference')
+  def getSourceReference(self, *args):
+    """
+      The Message-ID is considered here as the source reference
+      of the message on the sender side (source)
+    """
+    if not self.hasData():
+      return self._baseGetSourceReference(*args)
+    if not len(args):
+      args = (self._baseGetSourceReference(),)
+    content_information = self.getContentInformation()
+    return content_information.get('Message-ID') or content_information.get('Message-Id', *args)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationReference')
+  def getDestinationReference(self, *args):
+    """
+      The In-Reply-To is considered here as the reference
+      of the thread on the side of a former sender (destination)
+
+      This is a hack which can be acceptable since 
+      the reference of an email is shared.
+    """
+    if not self.hasData():
+      return self._baseGetDestinationReference(*args)
+    if not len(args):
+      args = (self._baseGetDestinationReference(),)
+    return self.getContentInformation().get('In-Reply-To', *args)
+
   # Overriden methods
   security.declareProtected(Permissions.AccessContentsInformation, 'getTitle')
   def getTitle(self, default=_MARKER):
@@ -250,6 +324,7 @@ class EmailDocument(File, TextDocument):
   
   def title_or_id(self):
     """Return the title if it is not blank and the id otherwise.
+       XXX - What is this !!!! why here ???
     """
     return self.getTitleOrId()
 
@@ -345,7 +420,7 @@ class EmailDocument(File, TextDocument):
         return 'text/html'
     return 'text/plain'
 
-  # Conversion API
+  # Conversion API Implementation
   def _convertToBaseFormat(self):
     """
       Build a structure which can be later used
@@ -447,6 +522,8 @@ class EmailDocument(File, TextDocument):
     """
       This is used in order to respond to a mail,
       this put a 'Re: ' before the orignal subject
+
+      XXX - not multilingual
     """
     reply_subject = self.getTitle()
     if reply_subject.find('Re: ') != 0:
@@ -467,6 +544,8 @@ class EmailDocument(File, TextDocument):
     """
       Sends the current event content by email. If documents are
       attached through the aggregate category, enclose them.
+
+      XXX - needs to be unified with Event methods
 
       from_url - the sender of this email. If not provided
                  we will use source to find a valid
@@ -617,9 +696,7 @@ class EmailDocument(File, TextDocument):
   def sendMailHostMessage(self, message):
     """
       Send one by one
+
+      XXX - Needs to be unified with Event methods
     """
     self.MailHost.send(message)
-
-## Compatibility layer
-#from Products.ERP5Type import Document
-#Document.MailMessage = EmailDocument
