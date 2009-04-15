@@ -407,6 +407,10 @@ body {\n
   background-color: <dtml-var document_background_color>;\n
 }\n
 \n
+#status #logged_in_as {\n
+  display: none;\n
+}\n
+\n
 \n
 /* TioLive selectors */\n
 #main_bar {\n
