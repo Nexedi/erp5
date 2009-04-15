@@ -457,65 +457,8 @@ class EmailDocument(File, TextDocument):
         return '> ' + str(body).replace('\n', '\n> ')
     elif self.getTextFormat() == 'text/html':
       return '<br/><blockquote type="cite">\n%s\n</blockquote>' %\
-                                self.serializeAndCleanHtmlContentForFCKEditor()
+                                self.asStrippedHTML()
     return ''
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'serializeAndCleanHtmlContentForFCKEditor')
-  def serializeAndCleanHtmlContentForFCKEditor(self, html_text=None):
-    """
-    For FCKEditor Compatibility, we should remove DTD,
-    blank lines and some tags in html document
-
-    XXX - What is this SHIT !!!!!!!!!!!!!!!!!!!!!!!!!!
-    """
-    if html_text is None:
-      html_text = self.getTextContent()
-    if not html_text:
-      return html_text
-    if not import_libxml2:
-      return html_text
-    #Null char. is not allowed by parser
-    html_text = html_text.replace(chr(0), '')
-    exclude_tag_list = ('html', 'head', 'body',)
-    xsl_as_string = """<?xml version="1.0" ?>
-<xsl:stylesheet version="1.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <xsl:output omit-xml-declaration="yes" indent="no"/>
-  <xsl:template match="/">
-    <xsl:apply-templates select="*|@*|text()|comment()|processing-instruction()"/>
-  </xsl:template>
-
-  <xsl:template match="*|@*|text()|comment()|processing-instruction()">
-    <xsl:copy select=".">
-      <xsl:apply-templates select="*|@*|text()|comment()|processing-instruction()"/>
-    </xsl:copy>
-  </xsl:template>
-
-  <xsl:template match="%s">
-    <xsl:apply-templates select="*|text()|comment()|processing-instruction()"/>
-  </xsl:template>
-
-</xsl:stylesheet>
-  """ % ('|'.join(exclude_tag_list))
-    html_doc = libxml2.htmlParseDoc(html_text, None)
-    stylesheet_doc = libxml2.parseDoc(xsl_as_string)
-    stylesheet = libxslt.parseStylesheetDoc(stylesheet_doc)
-    result_doc = stylesheet.applyStylesheet(html_doc, None)
-    clean_text = result_doc.serialize('utf-8', 0)
-    html_doc.freeDoc()
-    result_doc.freeDoc()
-    stylesheet.freeStylesheet()
-    #Remove All xml declarations
-    clean_text = re.sub('<\?xml.*\?>', '', clean_text).strip()
-    #Remove blank and new Lines
-    new_text_list = []
-    for line in clean_text.split('\n'):
-      line = line.strip()
-      if line:
-        new_text_list.append(line)
-    clean_text = '\n'.join(new_text_list)
-    return clean_text
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getReplySubject')
   def getReplySubject(self):
