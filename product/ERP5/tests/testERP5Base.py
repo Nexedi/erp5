@@ -847,6 +847,27 @@ class TestERP5Base(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  def test_SubordinationAcquisition(self):
+    """
+    Tests that persons acquire properties through subordination.
+    """
+    portal_categories = self.portal.portal_categories
+    organisation = self.portal.organisation_module.newContent(
+                            portal_type='Organisation',
+                            role_value=portal_categories.role.client,
+                            activity_value=portal_categories.activity.software,
+                            group_value=portal_categories.group.nexedi,)
+    person = self.portal.person_module.newContent(
+                            portal_type='Person',
+                            career_subordination_value=organisation)
+    self.assertEquals(portal_categories.role.client,
+                      person.getRoleValue())
+    self.assertEquals(portal_categories.activity.software,
+                      person.getActivityValue())
+    self.assertEquals(portal_categories.group.nexedi,
+                      person.getGroupValue())
+
+
   # Dates
   def test_05_DatesOnPerson(self, quiet=QUIET, run=RUN_ALL_TEST):
     """Tests dates on Person objects.
