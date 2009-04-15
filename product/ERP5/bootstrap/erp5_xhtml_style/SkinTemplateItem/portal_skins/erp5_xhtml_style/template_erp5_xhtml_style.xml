@@ -119,10 +119,7 @@ IDEAS:\n
               </div>\n
               <div id="status">\n
                 <div id="breadcrumb">\n
-                  <tal:block tal:repeat="item here/breadcrumbs">\n
-                    <a tal:attributes="href item/url" tal:content="item/title" />\n
-                    /\n
-                  </tal:block>\n
+                  <tal:block metal:use-macro="here/breadcrumb_render/macros/breadcrumb" />\n
                 </div>\n
                 <div id="logged_in_as">\n
                   <tal:block tal:condition="not: portal/portal_membership/isAnonymousUser">\n
