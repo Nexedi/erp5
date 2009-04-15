@@ -76,6 +76,7 @@ class TestCommerce(ERP5TypeTestCase):
     self.clearModule(self.portal.product_module)
     self.clearModule(self.portal.sale_order_module)
     self.clearModule(self.portal.currency_module)
+    self.portal.portal_caches.clearAllCache()
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
