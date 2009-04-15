@@ -34,7 +34,9 @@
         <item>
             <key> <string>acquisition_base_category</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>subordination</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -48,12 +50,14 @@
         <item>
             <key> <string>acquisition_object_id</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>default_career</string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python: []</string> </value>
+            <value> <string>python: [\'Organisation\', \'Career\']</string> </value>
         </item>
         <item>
             <key> <string>acquisition_sync_value</string> </key>
@@ -79,7 +83,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>fallback_base_category</string> </key>
