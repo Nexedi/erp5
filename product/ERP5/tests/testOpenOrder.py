@@ -44,6 +44,7 @@ class TestOpenOrder(ERP5TypeTestCase):
     return ('erp5_base',
             'erp5_pdm',
             'erp5_trade',
+            'erp5_open_trade',
             )
 
   def afterSetUp(self):

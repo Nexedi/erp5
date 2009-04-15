@@ -2,7 +2,6 @@ container_interaction_workflow
 delivery_tax_interaction_workflow
 internal_packing_list_workflow
 inventory_workflow
-open_order_workflow
 order_workflow
 packing_list_container_workflow
 packing_list_workflow

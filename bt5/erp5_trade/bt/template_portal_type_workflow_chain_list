@@ -32,15 +32,6 @@ Inventory Line | pricing_interaction_workflow
 Inventory Line | trade_matrix_workflow
 Inventory | edit_workflow
 Inventory | inventory_workflow
-Open Order Rule | rule_validation_workflow
-Open Sale Order Line | edit_workflow
-Open Sale Order Line | order_movement_simulation_interaction_workflow
-Open Sale Order Line | pricing_interaction_workflow
-Open Sale Order Line | tax_interaction_workflow
-Open Sale Order Line | trade_matrix_workflow
-Open Sale Order | delivery_tax_interaction_workflow
-Open Sale Order | edit_workflow
-Open Sale Order | open_order_workflow
 Order Rule | edit_workflow
 Order Rule | rule_validation_workflow
 Payment Condition | edit_workflow

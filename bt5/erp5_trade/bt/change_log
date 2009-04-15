@@ -1,3 +1,6 @@
+2009-04-15 Kazuhiko
+* move open order functionality to erp5_open_order BT.
+
 2009-03-13 yusei
 * Correct workflow titles.
 

@@ -48,18 +48,6 @@
   <workflow>trade_matrix_workflow, pricing_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Open Order Rule</type>
-  <workflow>rule_validation_workflow</workflow>
- </chain>
- <chain>
-  <type>Open Sale Order</type>
-  <workflow>edit_workflow, open_order_workflow, delivery_tax_interaction_workflow</workflow>
- </chain>
- <chain>
-  <type>Open Sale Order Line</type>
-  <workflow>tax_interaction_workflow, order_movement_simulation_interaction_workflow, pricing_interaction_workflow, edit_workflow, trade_matrix_workflow</workflow>
- </chain>
- <chain>
   <type>Order Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
@@ -121,11 +109,11 @@
  </chain>
  <chain>
   <type>Sale Packing List</type>
-  <workflow>edit_workflow, packing_list_workflow, delivery_causality_interaction_workflow, delivery_simulation_interaction_workflow, delivery_causality_workflow, packing_list_container_workflow</workflow>
+  <workflow>edit_workflow, packing_list_workflow, delivery_causality_interaction_workflow, delivery_simulation_interaction_workflow, packing_list_container_workflow, delivery_causality_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Packing List Cell</type>
-  <workflow>pricing_interaction_workflow, delivery_movement_simulation_interaction_workflow, container_interaction_workflow, delivery_movement_causality_interaction_workflow</workflow>
+  <workflow>pricing_interaction_workflow, container_interaction_workflow, delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Packing List Line</type>

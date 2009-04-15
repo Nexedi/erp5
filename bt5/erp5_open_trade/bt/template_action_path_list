@@ -11,6 +11,7 @@ Open Internal Order | view
 Open Internal Order | view_discount
 Open Internal Order | view_stock
 Open Internal Order | view_tax
+Open Order Rule | view
 Open Purchase Order Module | view
 Open Purchase Order | apply_trade_condition
 Open Purchase Order | detailed_report
@@ -40,3 +41,6 @@ Open Sale Order | view
 Open Sale Order | view_discount
 Open Sale Order | view_stock
 Open Sale Order | view_tax
+Periodicity Line | periodicity
+Periodicity Line | view
+Sale Trade Condition | periodicity_line_list

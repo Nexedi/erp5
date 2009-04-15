@@ -1,5 +1,9 @@
 <workflow_chain>
  <chain>
+  <type>Open Order Rule</type>
+  <workflow>rule_validation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Open Sale Order</type>
   <workflow>edit_workflow, open_order_workflow, delivery_tax_interaction_workflow</workflow>
  </chain>

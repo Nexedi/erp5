@@ -1,8 +1,4 @@
 <property_sheet_list>
- <portal_type id="Open Sale Order">
-  <item>OpenOrder</item>
-  <item>PaymentCondition</item>
- </portal_type>
  <portal_type id="Sale Order">
   <item>PaymentCondition</item>
  </portal_type>

@@ -11,18 +11,9 @@ Internal Packing List | Internal Packing List Line
 Inventory Line | Inventory Cell
 Inventory Module | Inventory
 Inventory | Inventory Line
-Open Order Rule | Category Divergence Tester
-Open Order Rule | Property Divergence Tester
-Open Order Rule | Quantity Divergence Tester
-Open Sale Order | Discount
-Open Sale Order | Discount Line
-Open Sale Order | Open Sale Order Line
-Open Sale Order | Payment Condition
-Open Sale Order | Tax Line
 Order Rule | Category Divergence Tester
 Order Rule | Property Divergence Tester
 Order Rule | Quantity Divergence Tester
-Periodicity Line | Predicate
 Preference | Sale Order
 Purchase Order Line | Purchase Order Cell
 Purchase Order Line | Purchase Order Line
@@ -44,11 +35,9 @@ Returned Sale Packing List Module | Returned Sale Packing List
 Returned Sale Packing List | Container
 Returned Sale Packing List | Returned Sale Packing List Line
 Rule Tool | Delivery Rule
-Rule Tool | Open Order Rule
 Rule Tool | Order Rule
 Sale Order Line | Sale Order Cell
 Sale Order Line | Sale Order Line
-Sale Order Module | Open Sale Order
 Sale Order Module | Sale Order
 Sale Order | Discount Line
 Sale Order | Payment Condition
@@ -61,7 +50,6 @@ Sale Packing List | Sale Packing List Line
 Sale Trade Condition Module | Sale Trade Condition
 Sale Trade Condition | Discount Model Line
 Sale Trade Condition | Payment Condition
-Sale Trade Condition | Periodicity Line
 Sale Trade Condition | Sale Supply Line
 Sale Trade Condition | Tax Model Line
 Tax Module | Tax

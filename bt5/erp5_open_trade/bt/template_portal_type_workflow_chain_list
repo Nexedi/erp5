@@ -1,3 +1,4 @@
+Open Order Rule | rule_validation_workflow
 Open Sale Order Line | edit_workflow
 Open Sale Order Line | order_movement_simulation_interaction_workflow
 Open Sale Order Line | pricing_interaction_workflow
