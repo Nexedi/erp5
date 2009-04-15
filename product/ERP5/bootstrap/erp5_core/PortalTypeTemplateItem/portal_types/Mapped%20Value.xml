@@ -28,6 +28,10 @@
             </value>
         </item>
         <item>
+            <key> <string>acquire_local_roles</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>allowed_content_types</string> </key>
             <value>
               <tuple/>
@@ -41,7 +45,7 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>transformed_resource_icon.gif</string> </value>
+            <value> <string>file_icon.gif</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
@@ -62,6 +66,12 @@ identify a bank account.</string> </value>
             <value> <int>1</int> </value>
         </item>
         <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>hidden_content_type_list</string> </key>
             <value>
               <tuple/>
@@ -73,6 +83,10 @@ identify a bank account.</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
