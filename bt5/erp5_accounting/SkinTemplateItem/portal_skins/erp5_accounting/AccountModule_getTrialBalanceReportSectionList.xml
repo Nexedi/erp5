@@ -91,7 +91,7 @@ gap = request.get(\'gap\', None)\n
 if gap:\n
   gap_value = portal.portal_categories.gap.restrictedTraverse(gap)\n
   node_uid = [x.uid for x in gap_value.getCategoryMemberValueList(\n
-                portal_type=\'Account\')]\n
+                portal_type=\'Account\')] or -1\n
 \n
 request.set(\'is_accounting_report\', True)\n
 \n
