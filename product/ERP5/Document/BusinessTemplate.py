@@ -4366,7 +4366,7 @@ class BusinessTemplate(XMLObject):
          , 'meta_type'      : meta_type
          , 'description'    : """\
 Business Template is a set of definitions, such as skins, portal types and categories. This is used to set up a new ERP5 site very efficiently."""
-         , 'icon'           : 'order_line_icon.gif'
+         , 'icon'           : 'file_icon.gif'
          , 'product'        : 'ERP5Type'
          , 'factory'        : 'addBusinessTemplate'
          , 'immediate_view' : 'BusinessTemplate_view'
