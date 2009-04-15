@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>detect_converted_file</string> </value>
+            <value> <string>Detect Converted File</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
