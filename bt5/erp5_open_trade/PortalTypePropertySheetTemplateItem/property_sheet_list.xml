@@ -1,0 +1,14 @@
+<property_sheet_list>
+ <portal_type id="Open Internal Order">
+  <item>PaymentCondition</item>
+  <item>OpenOrder</item>
+ </portal_type>
+ <portal_type id="Open Purchase Order">
+  <item>OpenOrder</item>
+  <item>PaymentCondition</item>
+ </portal_type>
+ <portal_type id="Open Sale Order">
+  <item>OpenOrder</item>
+  <item>PaymentCondition</item>
+ </portal_type>
+</property_sheet_list>

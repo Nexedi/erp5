@@ -1,0 +1,6 @@
+Open Internal Order | OpenOrder
+Open Internal Order | PaymentCondition
+Open Purchase Order | OpenOrder
+Open Purchase Order | PaymentCondition
+Open Sale Order | OpenOrder
+Open Sale Order | PaymentCondition

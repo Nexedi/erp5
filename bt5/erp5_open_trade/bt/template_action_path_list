@@ -1,0 +1,42 @@
+Open Internal Order Module | view
+Open Internal Order | apply_trade_condition
+Open Internal Order | detailed_report
+Open Internal Order | jump_to_related_sale_order
+Open Internal Order | order_print
+Open Internal Order | order_summary
+Open Internal Order | payment_condition
+Open Internal Order | profile_view
+Open Internal Order | reference_generate
+Open Internal Order | view
+Open Internal Order | view_discount
+Open Internal Order | view_stock
+Open Internal Order | view_tax
+Open Purchase Order Module | view
+Open Purchase Order | apply_trade_condition
+Open Purchase Order | detailed_report
+Open Purchase Order | jump_to_related_sale_order
+Open Purchase Order | order_print
+Open Purchase Order | order_summary
+Open Purchase Order | payment_condition
+Open Purchase Order | profile_view
+Open Purchase Order | reference_generate
+Open Purchase Order | view
+Open Purchase Order | view_discount
+Open Purchase Order | view_stock
+Open Purchase Order | view_tax
+Open Sale Order Line | price_view
+Open Sale Order Line | quantity_view
+Open Sale Order Line | view
+Open Sale Order Module | view
+Open Sale Order | apply_trade_condition
+Open Sale Order | detailed_report
+Open Sale Order | jump_to_related_sale_order
+Open Sale Order | order_print
+Open Sale Order | order_summary
+Open Sale Order | payment_condition
+Open Sale Order | profile_view
+Open Sale Order | reference_generate
+Open Sale Order | view
+Open Sale Order | view_discount
+Open Sale Order | view_stock
+Open Sale Order | view_tax
