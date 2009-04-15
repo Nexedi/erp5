@@ -178,7 +178,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
                          report_method=report_method,
                          form=form,
                          here=obj)
-    # set property to aquisition
+    # set property to do aquisition
     content_type = printout_template.content_type
     self.strategy = self._createStrategy(content_type)
     printout = self.strategy.render(extra_context=extra_context)
@@ -475,6 +475,8 @@ class ODFStrategy(Implicit):
     if len(image_list) is 0:
       return element_tree
     path = image_field.get_value('default')
+    if path is not None:
+      path = path.encode()
     picture = self.getPortalObject().restrictedTraverse(path)
     picture_data = getattr(aq_base(picture), 'data', None)
     picture_type = picture.getContentType()
@@ -526,7 +528,12 @@ class ODFStrategy(Implicit):
         height = float(picture.height())
         if height:
           aspect_ratio = Decimal(picture.width()) / height
-    w = h * aspect_ratio
+    resize_w = h * aspect_ratio
+    resize_h = w / aspect_ratio
+    if resize_w < w:
+      w = resize_w
+    elif resize_h < h:
+      h = resize_h
     return (str(w) + unit, str(h) + unit)
    
   
