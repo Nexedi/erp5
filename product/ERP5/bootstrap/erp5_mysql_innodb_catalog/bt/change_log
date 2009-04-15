@@ -1,3 +1,6 @@
+2009-04-15 Kazuhiko
+* add effective_date and expiration_date in versioning table.
+
 2009-04-01 vincentd
 * Move here versioning table from erp5_dms_mysql_innodb_catalog.
 

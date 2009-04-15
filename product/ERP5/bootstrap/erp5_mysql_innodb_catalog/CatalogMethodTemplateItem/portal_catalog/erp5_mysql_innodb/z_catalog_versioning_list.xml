@@ -24,6 +24,18 @@
                         <value>
                           <dictionary>
                             <item>
+                                <key> <string>getEffectiveDate</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>getExpirationDate</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>getLanguage</string> </key>
                                 <value>
                                   <dictionary/>
@@ -58,6 +70,8 @@
                             <string>getLanguage</string>
                             <string>getVersion</string>
                             <string>getRevision</string>
+                            <string>getEffectiveDate</string>
+                            <string>getExpirationDate</string>
                           </list>
                         </value>
                     </item>
@@ -83,7 +97,9 @@
             <value> <string>uid\r\n
 getLanguage\r\n
 getVersion\r\n
-getRevision</string> </value>
+getRevision\r\n
+getEffectiveDate\r\n
+getExpirationDate</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -132,7 +148,8 @@ VALUES\n
   <dtml-sqlvar expr="getVersion[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getLanguage[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getRevision[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="getEffectiveDate[loop_item]" type="datetime" optional>\n
+  <dtml-sqlvar expr="getEffectiveDate[loop_item]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="getExpirationDate[loop_item]" type="datetime" optional>\n
 )\n
 <dtml-if sequence-end>\n
 <dtml-else>\n
@@ -188,7 +205,8 @@ VALUES\n
   <dtml-sqlvar expr="getVersion[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getLanguage[loop_item]" type="string" optional>,\n
   <dtml-sqlvar expr="getRevision[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="getEffectiveDate[loop_item]" type="datetime" optional>\n
+  <dtml-sqlvar expr="getEffectiveDate[loop_item]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="getExpirationDate[loop_item]" type="datetime" optional>\n
 )\n
 <dtml-if sequence-end>\n
 <dtml-else>\n
