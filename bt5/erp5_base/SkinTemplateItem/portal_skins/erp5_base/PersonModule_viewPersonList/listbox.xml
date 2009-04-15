@@ -189,6 +189,10 @@
                           <string>Marital Status</string>
                         </tuple>
                         <tuple>
+                          <string>activity_title</string>
+                          <string>Activity</string>
+                        </tuple>
+                        <tuple>
                           <string>reference</string>
                           <string>Login</string>
                         </tuple>
@@ -275,6 +279,10 @@ Role & Region
                         <tuple>
                           <string>product_line</string>
                           <string>Product Interest</string>
+                        </tuple>
+                        <tuple>
+                          <string>activity</string>
+                          <string>Activity</string>
                         </tuple>
                       </list>
                     </value>
@@ -426,6 +434,10 @@ Role & Region
                           <string>Marital Status</string>
                         </tuple>
                         <tuple>
+                          <string>activity_title</string>
+                          <string>Activity</string>
+                        </tuple>
+                        <tuple>
                           <string>reference</string>
                           <string>Login</string>
                         </tuple>
@@ -546,6 +558,10 @@ Role & Region
                         <tuple>
                           <string>default_address_text</string>
                           <string>Address</string>
+                        </tuple>
+                        <tuple>
+                          <string>activity_title</string>
+                          <string>Activity</string>
                         </tuple>
                         <tuple>
                           <string>reference</string>
