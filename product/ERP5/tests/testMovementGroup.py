@@ -366,6 +366,72 @@ class TestDuplicatedKeyRaiseException(MovementGroupTestCase):
       movement_relative_url_list = movement_relative_url_list
     )
 
+class TestCategoryMovementGroup(MovementGroupTestCase):
+  def test_category_movement_group_grouping(self):
+    movement_list = ( self.folder.newContent(
+                        temp_object=1,
+                        portal_type='Simulation Movement',
+                        source='1'),
+                      self.folder.newContent(
+                        temp_object=1,
+                        portal_type='Simulation Movement',
+                        source='1'))
+    self.builder.newContent(
+                  portal_type='Category Movement Group',
+                  collect_order_group='delivery',
+                  tested_property_list=('source',))
+    movement_group_node = self.builder.collectMovement(movement_list)
+    group_list = movement_group_node.getGroupList()
+    self.assertEquals(1, len(group_list))
+    self.assertEquals(dict(source_list=['1']),
+                      group_list[0].getGroupEditDict())
+
+  def test_category_movement_group_separating(self):
+    movement_list = ( self.folder.newContent(
+                        temp_object=1,
+                        portal_type='Simulation Movement',
+                        source='1'),
+                      self.folder.newContent(
+                        temp_object=1,
+                        portal_type='Simulation Movement',
+                        source='2'))
+    self.builder.newContent(
+                  portal_type='Category Movement Group',
+                  collect_order_group='delivery',
+                  tested_property_list=('source',))
+    movement_group_node = self.builder.collectMovement(movement_list)
+    group_list = movement_group_node.getGroupList()
+    self.assertEquals(2, len(group_list))
+    self.assertEquals(1, len([group for group in group_list if
+      group.getGroupEditDict() == dict(source_list=['1'])]))
+    self.assertEquals(1, len([group for group in group_list if
+      group.getGroupEditDict() == dict(source_list=['2'])]))
+
+  def test_category_movement_group_and_separating(self):
+    movement_list = ( self.folder.newContent(
+                        temp_object=1,
+                        portal_type='Simulation Movement',
+                        destination='A',
+                        source='1'),
+                      self.folder.newContent(
+                        temp_object=1,
+                        destination='A',
+                        portal_type='Simulation Movement',
+                        source='2'))
+    self.builder.newContent(
+                  portal_type='Category Movement Group',
+                  collect_order_group='delivery',
+                  tested_property_list=('destination', 'source'))
+    movement_group_node = self.builder.collectMovement(movement_list)
+    group_list = movement_group_node.getGroupList()
+    self.assertEquals(2, len(group_list))
+    self.assertEquals(1, len([group for group in group_list if
+      group.getGroupEditDict() == dict(destination_list=['A'],
+                                       source_list=['1'])]))
+    self.assertEquals(1, len([group for group in group_list if
+      group.getGroupEditDict() == dict(destination_list=['A'],
+                                       source_list=['2'])]))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPropertyMovementGroup))
@@ -374,5 +440,6 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestOrderMovementGroupDelivery))
   suite.addTest(unittest.makeSuite(TestDeliveryCausalityAssignmentMovementGroup))
   suite.addTest(unittest.makeSuite(TestDuplicatedKeyRaiseException))
+  suite.addTest(unittest.makeSuite(TestCategoryMovementGroup))
   return suite
 
