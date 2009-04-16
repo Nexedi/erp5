@@ -30,7 +30,17 @@
         <item>
             <key> <string>_range_criterion</string> </key>
             <value>
-              <dictionary/>
+              <dictionary>
+                <item>
+                    <key> <string>start_date</string> </key>
+                    <value>
+                      <tuple>
+                        <none/>
+                        <none/>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
             </value>
         </item>
         <item>
@@ -42,6 +52,33 @@
         <item>
             <key> <string>default_reference</string> </key>
             <value> <string>default_order_rule</string> </value>
+        </item>
+        <item>
+            <key> <string>expandable_property</string> </key>
+            <value>
+              <tuple>
+                <string>source</string>
+                <string>source_section</string>
+                <string>source_function</string>
+                <string>source_account</string>
+                <string>start_date</string>
+                <string>stop_date</string>
+                <string>destination</string>
+                <string>destination_section</string>
+                <string>destination_function</string>
+                <string>destination_account</string>
+                <string>description</string>
+                <string>resource</string>
+                <string>variation_category_list</string>
+                <string>variation_property_dict</string>
+                <string>base_contribution_list</string>
+                <string>aggregate_list</string>
+                <string>price</string>
+                <string>price_currency</string>
+                <string>quantity</string>
+                <string>quantity_unit</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
