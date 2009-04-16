@@ -176,6 +176,14 @@ kw</string> </value>
         my_versioning.version,\n
         catalog.creation_date,\n
         catalog.title,\n
+        <dtml-if all_versions>\n
+        <dtml-else>\n
+        CONCAT(CASE my_versioning.language\n
+                   WHEN <dtml-sqlvar language type="string"> THEN \'3\'\n
+                   WHEN \'en\' THEN \'2\'\n
+                   ELSE \'1\' END,\n
+            my_versioning.version) AS current_priority,\n
+        </dtml-if>\n
         MAX(CONCAT(CASE my_versioning.language\n
                    WHEN <dtml-sqlvar language type="string"> THEN \'3\'\n
                    WHEN \'en\' THEN \'2\'\n
@@ -207,23 +215,13 @@ kw</string> </value>
         catalog.uid\n
       ORDER BY\n
         priority DESC\n
-    ) AS catalog,\n
-      versioning AS my_versioning\n
+    ) AS catalog\n
 \n
-  WHERE\n
-    catalog.uid = my_versioning.uid\n
   <dtml-if all_versions>\n
-    GROUP BY\n
-      catalog.uid\n
   <dtml-else>\n
-    GROUP BY\n
-      catalog.reference\n
-    HAVING\n
-      MAX(CONCAT(CASE my_versioning.language\n
-                 WHEN  <dtml-sqlvar language type="string"> THEN \'3\'\n
-                 WHEN \'en\' THEN \'2\'\n
-                 ELSE \'1\' END,\n
-          my_versioning.version)) = catalog.priority\n
+    WHERE\n
+      catalog.priority = catalog.current_priority\n
+    GROUP BY reference\n
   </dtml-if>\n
 \n
   ORDER BY\n
@@ -233,9 +231,9 @@ kw</string> </value>
     <dtml-else>\n
       <dtml-var "query[\'order_by_expression\']">\n
     </dtml-if>\n
-  <dtml-else>\n
-    catalog.int_index,\n
-    catalog.reference\n
+  <dtml-else> \t \t \n
+     catalog.int_index,\n
+     catalog.reference\n
   </dtml-if>\n
 \n
   <dtml-if "query[\'limit_expression\']">\n
@@ -323,6 +321,14 @@ kw</string> </value>
         my_versioning.version,\n
         catalog.creation_date,\n
         catalog.title,\n
+        <dtml-if all_versions>\n
+        <dtml-else>\n
+        CONCAT(CASE my_versioning.language\n
+                   WHEN <dtml-sqlvar language type="string"> THEN \'3\'\n
+                   WHEN \'en\' THEN \'2\'\n
+                   ELSE \'1\' END,\n
+            my_versioning.version) AS current_priority,\n
+        </dtml-if>\n
         MAX(CONCAT(CASE my_versioning.language\n
                    WHEN <dtml-sqlvar language type="string"> THEN \'3\'\n
                    WHEN \'en\' THEN \'2\'\n
@@ -354,23 +360,13 @@ kw</string> </value>
         catalog.uid\n
       ORDER BY\n
         priority DESC\n
-    ) AS catalog,\n
-      versioning AS my_versioning\n
+    ) AS catalog\n
 \n
-  WHERE\n
-    catalog.uid = my_versioning.uid\n
   <dtml-if all_versions>\n
-    GROUP BY\n
-      catalog.uid\n
   <dtml-else>\n
-    GROUP BY\n
-      catalog.reference\n
-    HAVING\n
-      MAX(CONCAT(CASE my_versioning.language\n
-                 WHEN  <dtml-sqlvar language type="string"> THEN \'3\'\n
-                 WHEN \'en\' THEN \'2\'\n
-                 ELSE \'1\' END,\n
-          my_versioning.version)) = catalog.priority\n
+    WHERE\n
+      catalog.priority = catalog.current_priority\n
+    GROUP BY reference\n
   </dtml-if>\n
 \n
   ORDER BY\n
@@ -380,9 +376,9 @@ kw</string> </value>
     <dtml-else>\n
       <dtml-var "query[\'order_by_expression\']">\n
     </dtml-if>\n
-  <dtml-else>\n
-    catalog.int_index,\n
-    catalog.reference\n
+  <dtml-else> \t \t \n
+     catalog.int_index,\n
+     catalog.reference\n
   </dtml-if>\n
 \n
   <dtml-if "query[\'limit_expression\']">\n
