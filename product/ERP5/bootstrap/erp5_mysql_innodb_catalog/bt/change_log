@@ -1,5 +1,8 @@
+2009-04-16 Kazuhiko
+* Use versioning table only for documents having getVersion.
+
 2009-04-15 Kazuhiko
-* add effective_date and expiration_date in versioning table.
+* Add effective_date and expiration_date in versioning table.
 
 2009-04-01 vincentd
 * Move here versioning table from erp5_dms_mysql_innodb_catalog.
