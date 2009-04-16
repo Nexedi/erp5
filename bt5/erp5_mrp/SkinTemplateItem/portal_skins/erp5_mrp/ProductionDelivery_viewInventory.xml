@@ -93,7 +93,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_variation_category_item_list</string>
+                      </list>
                     </value>
                 </item>
                 <item>
