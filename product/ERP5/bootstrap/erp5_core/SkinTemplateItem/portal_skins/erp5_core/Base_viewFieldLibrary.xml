@@ -111,6 +111,7 @@
                         <string>my_checkbox</string>
                         <string>my_text_content</string>
                         <string>my_text_format</string>
+                        <string>my_lines_field</string>
                       </list>
                     </value>
                 </item>

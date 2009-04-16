@@ -91,6 +91,7 @@
                         <string>my_start_date_range_min</string>
                         <string>my_test_method_id</string>
                         <string>my_version</string>
+                        <string>my_expandable_property_list</string>
                       </list>
                     </value>
                 </item>
