@@ -50,6 +50,12 @@ class AppliedRule:
 
             'type'        : 'string',
             'mode'        : 'w' },
+        {  'id'          : 'expandable_property',
+           'description' : 'List of properties used in expand',
+           'type'        : 'lines',
+           'default'     : [],
+           'multivalued' : 1,
+           'mode'        : 'w' },
   )
 
   _categories = ('specialise', 'causality', 'order', )

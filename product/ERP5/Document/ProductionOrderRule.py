@@ -58,23 +58,26 @@ class ProductionOrderRule(OrderRule):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       , PropertySheet.Task
+                      , PropertySheet.AppliedRule
                       )
 
     # Simulation workflow
     security.declareProtected(Permissions.AccessContentsInformation,
                               '_getExpandablePropertyDict')
-    def _getExpandablePropertyDict(self, applied_rule, movement, 
-                                   default_property_list=None, **kw):
+    def _getExpandablePropertyDict(self, applied_rule, movement, **kw):
       """
       Return a Dictionary with the Properties used to edit 
       the simulation movement.
       """
       property_dict = {}
 
-      if default_property_list is None:
-        # XXX Hardcoded value
-#         LOG("Order Rule , _getExpandablePropertyDict", WARNING,
-#             "Hardcoded properties set")
+      default_property_list = self.getExpandablePropertyList()
+      # For backward compatibility, we keep for some time the list
+      # of hardcoded properties. Theses properties should now be
+      # defined on the rule itself
+      if len(default_property_list) == 0:
+        LOG("Order Rule , _getExpandablePropertyDict", WARNING,
+                   "Hardcoded properties set, please define your rule correctly")
         default_property_list = (
           'destination', 
           'destination_section',
