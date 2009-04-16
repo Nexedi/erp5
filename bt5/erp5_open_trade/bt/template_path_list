@@ -1,2 +1,4 @@
+portal_deliveries/sale_order_builder
+portal_deliveries/sale_order_builder/**
 portal_rules/default_open_order_rule
 portal_rules/default_open_order_rule/**
