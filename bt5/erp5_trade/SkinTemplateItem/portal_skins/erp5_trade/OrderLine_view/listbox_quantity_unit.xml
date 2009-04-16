@@ -132,7 +132,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.isMovement() and not cell.getVariationCategoryList()</string> </value>
+            <value> <string>python: cell.isMovement()</string> </value>
         </item>
       </dictionary>
     </pickle>

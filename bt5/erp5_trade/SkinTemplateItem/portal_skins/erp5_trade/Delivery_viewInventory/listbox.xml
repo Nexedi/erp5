@@ -18,6 +18,7 @@
                 <string>list_method</string>
                 <string>selection_name</string>
                 <string>default_params</string>
+                <string>editable_columns</string>
                 <string>domain_tree</string>
                 <string>domain_root_list</string>
                 <string>list_action</string>
@@ -100,12 +101,16 @@
                           <string>Resource</string>
                         </tuple>
                         <tuple>
-                          <string>variation_text</string>
+                          <string>variation_category_item_list</string>
                           <string>Variation</string>
                         </tuple>
                         <tuple>
                           <string>getQuantity</string>
                           <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>order_quantity_unit</string>
+                          <string>Order Quantity Unit</string>
                         </tuple>
                         <tuple>
                           <string>getCurrentInventory</string>
@@ -159,6 +164,17 @@
                 <item>
                     <key> <string>domain_tree</string> </key>
                     <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>order_quantity_unit</string>
+                          <string>Order Quantity Unit</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
