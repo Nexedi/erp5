@@ -430,7 +430,7 @@
             <input name="advanced_search_text" size="40" value=""\n
                    type="text" tal:attributes="value python:here.getParamDict()[\'advanced_search_text\']"\n
                    onkeypress="submitFormOnEnter(event,\n
-                                    \'main_form\',\n
+                                    this.form,\n
                                     \'ERP5Site_processAdvancedSearch\');"/>\n
             <input class="button" value="Search" name="ERP5Site_processAdvancedSearch:method" type="submit" />\n
 \n

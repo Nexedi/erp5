@@ -83,7 +83,7 @@
                    tal:condition="python:here.getParamDict().has_key(\'your_search_text\')"\n
                    type="text"\n
                    onkeypress="submitFormOnEnter(event, \n
-                                        \'main_form\',\n
+                                        this.form,\n
                                         \'ERP5Site_processAdvancedSearch\');"\n
                    tal:attributes="value python:here.getParamDict()[\'your_search_text\']"/>\n
 \n
@@ -93,7 +93,7 @@
                    tal:condition="python:not here.getParamDict().has_key(\'your_search_text\')"\n
                    type="text"\n
                    onkeypress="submitFormOnEnter(event, \n
-                                        \'main_form\',\n
+                                        this.form,\n
                                         \'ERP5Site_processAdvancedSearch\');">\n
 \n
             <input class="button" \n
@@ -360,7 +360,7 @@
                    tal:condition="python:here.getParamDict().has_key(\'your_search_text\')"\n
                    type="text" \n
                    onkeypress="submitFormOnEnter(event, \n
-                                        \'main_form\',\n
+                                        this.form,\n
                                         \'ERP5Site_processAdvancedSearchBottom\');"\n
                    tal:attributes="value python:here.getParamDict()[\'your_search_text\']"/>\n
 \n
@@ -370,7 +370,7 @@
                    tal:condition="python:not here.getParamDict().has_key(\'your_search_text\')"\n
                    type="text"\n
                    onkeypress="submitFormOnEnter(event, \n
-                                        \'main_form\',\n
+                                        this.form,\n
                                         \'ERP5Site_processAdvancedSearchBottom\');"/>\n
 \n
             <input class="button" \n

@@ -183,11 +183,11 @@ function fixLeftRightHeightAndFocus(fix_height) {\n
 \n
 // This function can be used to catch ENTER pressed in an input \n
 // and modify respective main form action\n
-function submitFormOnEnter(event, main_form_id, method_name){\n
-  var key_code = event.keyCode;\n
-  if(key_code == 13){\n
-    var main_form = getElement(main_form_id)\n
-    main_form.action=method_name;};\n
+function submitFormOnEnter(event, form, method_name){\n
+  if(event.keyCode == 13){\n
+    form.action = method_name;\n
+    form.submit();\n
+  }\n
 }\n
 \n
 var old_index=0;\n
