@@ -400,7 +400,7 @@ msgid "Accounting Workflow"
 msgstr "Workflow de comptabilité"
 
 msgid "Accounting preferences: The default currency when creating new transactions"
-msgstr "The devise à utiliser par défaut lorsque de nouvelles écritures sont créées"
+msgstr "La devise à utiliser par défaut lorsque de nouvelles écritures sont créées"
 
 msgid "Accounting preferences: The default organisation to use when creating a new accounting transaction"
 msgstr "L'organisation à utiliser par défaut quand on crée de nouvelles écritures."
@@ -4388,7 +4388,7 @@ msgid "Follow up"
 msgstr "Suivi"
 
 msgid "Follow up must be set to acknowledge an Event."
-msgstr "Le suivi doit être renseignée pour prendre en compte un évènement."
+msgstr "Le suivi doit être renseigné pour prendre en compte un évènement."
 
 msgid "Force"
 msgstr "Forcer"
@@ -4847,7 +4847,7 @@ msgid "Index used to sort the transformation transformed resources"
 msgstr "Index utilisé pour classer les nomenclatures."
 
 msgid "Indicate how often (in days) the event will happen (every x days)"
-msgstr "Pour montrer combien de fois en nombre de jours l'évènement aura lieu."
+msgstr "Montre combien de fois en nombre de jours l'évènement aura lieu."
 
 msgid "Indicate how often (in hours) the event will happen (every x hours)"
 msgstr "Montre combien de fois en nombre d'heures l'évènement aura lieu."
@@ -4856,10 +4856,10 @@ msgid "Indicate how often (in minutes) the event will happen (every x minutest)"
 msgstr "Montre combien de fois en nombre de minutes l'évènement aura lieu."
 
 msgid "Indicate how often (in week) the event will happen (every x weeks)"
-msgstr "Indique combien de fois en nombre de semaines l'évènement aura lieu."
+msgstr "Montre combien de fois en nombre de semaines l'évènement aura lieu."
 
 msgid "Indicate how often in day the event will happen (every x days)"
-msgstr "Pour montrer combien de fois en nombre de jours l'évènement aura lieu."
+msgstr "Montre combien de fois en nombre de jours l'évènement aura lieu."
 
 msgid "Indicate how often in hour the event will happen (every x hours)"
 msgstr "Montre combien de fois en nombre d'heures l'évènement aura lieu."
@@ -4868,7 +4868,7 @@ msgid "Indicate how often in minutes the event will happen (every x minutest)"
 msgstr "Montre combien de fois en nombre de minutes l'évènement aura lieu."
 
 msgid "Indicate how often in week the event will happen (every x weeks)"
-msgstr "Indique combien de fois en nombre de semaines l'évènement aura lieu."
+msgstr "Montre combien de fois en nombre de semaines l'évènement aura lieu."
 
 msgid "Indicates how often (in months) the event will happen (every x months)"
 msgstr "Montre combien de fois en nombre de mois l'évènement aura lieu."
@@ -10355,7 +10355,7 @@ msgid "The security key for this bank account. IBAN stands for International Ban
 msgstr "Le code IBAN (International Bank Account Number) est le code de vérification d'un compte en banque."
 
 msgid "The single event option can only be used with outgoing messages."
-msgstr "L'option d'évènement unique ne peut être utilisée que pour les évènements sortant."
+msgstr "L'option d'évènement unique ne peut être utilisée que pour les évènements sortants."
 
 msgid "The solved state is displayed whenever a divergent state has been corrected by a user of ERP5. A divergent state can strike a sales packing list for example, or an invoice, whenever the ordered and delivered quantities are different. Unless a user would take an action to solve this situation, the document could not be processed. When an action has been taken and the divergent state has been corrected, the document will display the Solved state, and users will be able to process it again."
 msgstr "Cet état s'affiche lorsqu'un état divergent est redevenu convergent, grâce à l'action d'un utilisateur."
