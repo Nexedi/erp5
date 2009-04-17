@@ -79,6 +79,7 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                        <string>support_request_listbox</string>
                       </list>
                     </value>
                 </item>
@@ -95,6 +96,8 @@
                     <value>
                       <list>
                         <string>listbox_delivery_start_date</string>
+                        <string>support_request_listbox_start_date</string>
+                        <string>support_request_listbox_stop_date</string>
                       </list>
                     </value>
                 </item>

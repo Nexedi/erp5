@@ -1,5 +1,8 @@
 <key_list>
  <key>event_causality_ticket_uid | category,catalog,category,catalog/uid/z_related_event_causality_ticket</key>
+ <key>related_source_decision_or_destination_decision | category,catalog,catalog/uid/z_related_source_decision_or_destination_decision</key>
  <key>related_source_or_destination | category,catalog,catalog/uid/z_related_source_or_destination</key>
+ <key>related_source_or_source_decision_or_destination_or_destination_decision | category,catalog,catalog/uid/z_related_source_or_source_decision_or_destination_or_destination_decision</key>
+ <key>related_source_section_or_destination_section | category,catalog,catalog/uid/z_related_source_section_or_destination_section</key>
  <key>source_organisation_title | category,catalog/title/z_related_source_organisation</key>
 </key_list>
