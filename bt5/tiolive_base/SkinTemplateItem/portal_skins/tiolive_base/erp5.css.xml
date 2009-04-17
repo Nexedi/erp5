@@ -290,7 +290,7 @@
         </item>
         <item>
             <key> <string>context_bar_background_color</string> </key>
-            <value> <string>#82B3DC</string> </value>
+            <value> <string>#A8D3FC</string> </value>
         </item>
         <item>
             <key> <string>dialog_background_color</string> </key>
@@ -414,11 +414,6 @@ body {\n
 \n
 /* TioLive selectors */\n
 #main_bar {\n
-  padding-bottom: 0px;\n
-  padding-top: 0px;\n
-}\n
-\n
-#context_bar {\n
   padding-bottom: 0px;\n
   padding-top: 0px;\n
 }\n
