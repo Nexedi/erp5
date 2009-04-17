@@ -38,6 +38,7 @@ from DateTime.DateTime import DateTime, DateTimeError, _cache
 from Products.ZSQLCatalog.Interface.ISearchKey import ISearchKey
 from Interface.Verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
+from Products.ZSQLCatalog.SearchText import parse
 
 MARKER = []
 
@@ -241,6 +242,9 @@ class DateTimeKey(SearchKey):
 
   default_comparison_operator = None
   get_operator_from_value = True
+
+  def parseSearchText(self, value, is_column):
+    return parse(value, is_column)
 
   def _renderValueAsSearchText(self, value, operator):
     return '"%s"' % (DateTime(value).ISO(), )
