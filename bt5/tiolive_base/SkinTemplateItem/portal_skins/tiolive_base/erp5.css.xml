@@ -530,6 +530,10 @@ body {\n
   padding: 5px;\n
 \n
 }\n
+\n
+#transition_message {\n
+  color: #c40;\n
+}\n
 
 
 ]]></string> </value>
