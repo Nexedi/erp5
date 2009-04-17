@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="BaseCategory" module="Products.ERP5Type.Document.BaseCategory"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>acquisition_base_category</string> </key>
+            <value>
+              <tuple>
+                <string>delivery</string>
+                <string>order</string>
+                <string>parent</string>
+                <string>resource</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_portal_type</string> </key>
+            <value> <string>python: list(portal.getPortalAcquisitionMovementTypeList() + portal.getPortalItemTypeList() + portal.getPortalDeliveryTypeList() + portal.getPortalOrderTypeList() + portal.getPortalInvoiceTypeList() + portal.getPortalResourceTypeList())</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>use</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Defines resources utilisation in system, allows to\n
+distinguish resources by its usage - sell able, purchasable, taxes,\n
+discount, any other special utilisation.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>use</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Base Category</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>use</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
