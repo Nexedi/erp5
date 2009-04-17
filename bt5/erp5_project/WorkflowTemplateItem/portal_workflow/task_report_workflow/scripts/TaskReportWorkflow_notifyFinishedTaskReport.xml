@@ -68,8 +68,7 @@ if source_person is not None \\\n
      and destination_decision_person is not None \\\n
      and destination_decision_person.getDefaultEmailText() \\\n
      and destination_decision_person.getReference():\n
-  source_user = portal.portal_membership.getMemberById(source_person.getReference())\n
-  if source_user is not None:\n
+  if len(portal.acl_users.erp5_users.getUserByLogin(source_person.getReference())):\n
     message = """\n
 %s has finished the task report titled with %s.\n
 Please look at this URL:\n
@@ -132,7 +131,7 @@ container.PackingList_updateAppliedRule(state_change)\n
                             <string>source_person</string>
                             <string>destination_decision_person</string>
                             <string>None</string>
-                            <string>source_user</string>
+                            <string>len</string>
                             <string>message</string>
                             <string>container</string>
                           </tuple>
