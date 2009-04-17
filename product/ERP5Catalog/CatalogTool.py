@@ -676,11 +676,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         Calls ZCatalog.searchResults with extra arguments that
         limit the results to what the user is allowed to see.
         """
-        if not _checkPermission(
-            Permissions.AccessInactivePortalContent, self):
-            now = DateTime()
-            kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
-            kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
+        #if not _checkPermission(
+        #    Permissions.AccessInactivePortalContent, self):
+        #    now = DateTime()
+        #    kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
+        #    kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
 
         catalog_id = self.getPreferredSQLCatalogId(kw.pop("sql_catalog_id", None))
         query = self.getSecurityQuery(query=query, sql_catalog_id=catalog_id, **kw)
