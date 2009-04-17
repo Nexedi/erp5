@@ -1,0 +1,7 @@
+<type_roles>
+  <role id='Assignor'>
+   <property id='title'>Web Master</property>
+   <property id='priority'>10.0</property>
+   <multi_property id='category'>group/web</multi_property>
+  </role>
+</type_roles>

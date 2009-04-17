@@ -67,15 +67,19 @@ if context.has_key(\'test_web_site_2\'):\n
 \n
 # Create new users\n
 if not context.person_module.has_key(\'test_webmaster\'):\n
-  context.person_module.newContent(id=\'test_webmaster\', portal_type=\'Person\')\n
-\n
-person = context.person_module.test_webmaster\n
+  person = context.person_module.newContent(id=\'test_webmaster\', portal_type=\'Person\')\n
+else:\n
+  person = context.person_module.test_webmaster\n
 person.edit(first_name=\'Test\', last_name=\'Webmaster\',\n
             reference=\'test_webmaster\', password=\'test_webmaster\')\n
 person.setRole(\'internal\')\n
-assignment = person.newContent(portal_type=\'Assignment\')\n
-assignment.open()\n
-\n
+if not len(person.objectValues(portal_type=\'Assignment\')):\n
+  assignment = person.newContent(portal_type=\'Assignment\')\n
+  assignment.edit(group=\'web\',\n
+                  start_date=DateTime(\'2000/01/01\'),\n
+                  stop_date=DateTime(\'2990/12/31\'))\n
+  if assignment.getValidationState() != \'open\':\n
+    assignment.open()\n
 if person.getValidationState() != \'validated\':\n
   person.validate()\n
 \n
@@ -127,7 +131,9 @@ return \'Reset Successfully.\'\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>person</string>
+                            <string>len</string>
                             <string>assignment</string>
+                            <string>DateTime</string>
                           </tuple>
                         </value>
                     </item>
