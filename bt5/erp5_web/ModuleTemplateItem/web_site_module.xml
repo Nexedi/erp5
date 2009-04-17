@@ -256,6 +256,8 @@
   </permission>
   <permission type='list'>
    <name>Add portal folders</name>
+   <role>Assignor</role>
+   <role>Manager</role>
   </permission>
   <permission type='list'>
    <name>Add portal member</name>
