@@ -32,7 +32,6 @@ import sys
 from SearchKey import SearchKey
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
-#from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from zLOG import LOG
 from DateTime.DateTime import DateTime, DateTimeError, _cache
 from Products.ZSQLCatalog.Interface.ISearchKey import ISearchKey
