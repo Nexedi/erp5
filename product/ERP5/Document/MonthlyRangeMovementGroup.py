@@ -52,14 +52,14 @@ class MonthlyRangeMovementGroup(MovementGroup):
         property_dict[property_name] = end_of_month
     return property_dict
 
-  def test(self, object, property_dict, property_list=None, **kw):
+  def test(self, document, property_dict, property_list=None, **kw):
     start_date = property_dict.get('start_date', None)
     stop_date = property_dict.get('stop_date', None)
     if start_date is None or stop_date is None:
       return False, property_dict
 
-    target_start_date = object.getProperty('start_date', None)
-    target_stop_date = object.getProperty('stop_date', None)
+    target_start_date = document.getProperty('start_date', None)
+    target_stop_date = document.getProperty('stop_date', None)
     if target_start_date is None or target_stop_date is None:
       return False, property_dict
 

@@ -44,6 +44,6 @@ class BaseVariantMovementGroup(MovementGroup):
     property_dict['_base_category_list'] = category_list
     return property_dict
 
-  def test(self, object, property_dict, **kw):
+  def test(self, document, property_dict, **kw):
     # This movement group does not affect updating.
     return True, {}

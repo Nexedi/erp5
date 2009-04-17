@@ -44,8 +44,8 @@ class VariantMovementGroup(MovementGroup):
     property_dict['variation_category_list'] = category_list
     return property_dict
 
-  def test(self, object, property_dict, **kw):
-    category_list = object.getVariationCategoryList()
+  def test(self, document, property_dict, **kw):
+    category_list = document.getVariationCategoryList()
     if category_list is None:
       category_list = []
     category_list.sort()

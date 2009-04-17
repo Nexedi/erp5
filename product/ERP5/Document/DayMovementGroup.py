@@ -43,10 +43,10 @@ class DayMovementGroup(MovementGroup):
     property_dict['stop_date'] = addToDate(start_date, day=1)
     return property_dict
 
-  def test(self, object, property_dict, **kw):
+  def test(self, document, property_dict, **kw):
     start_date = property_dict['start_date']
     stop_date = property_dict['stop_date']
-    if object.getStartDate() <= start_date < stop_date <= object.getStopDate():
+    if document.getStartDate() <= start_date < stop_date <= document.getStopDate():
       return True, property_dict
     else:
       return False, property_dict

@@ -38,7 +38,7 @@ class SplitMovementGroup(MovementGroup):
   def _getPropertyDict(self, movement, **kw):
     return {}
 
-  def test(self, object, property_dict, **kw):
+  def test(self, document, property_dict, **kw):
     return True, property_dict
 
   def _separate(self, movement_list):

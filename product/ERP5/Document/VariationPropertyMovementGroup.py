@@ -41,9 +41,9 @@ class VariationPropertyMovementGroup(MovementGroup):
   def _getPropertyDict(self, movement, **kw):
     return {'variation_property_dict':movement.getVariationPropertyDict()}
 
-  def test(self, object, property_dict, **kw):
+  def test(self, document, property_dict, **kw):
     updatable = False
-    variation_property_dict = object.getVariationPropertyDict()
+    variation_property_dict = document.getVariationPropertyDict()
     variation_property_list = variation_property_dict.keys()
     if len(variation_property_list) == \
            len(property_dict['variation_property_dict']):

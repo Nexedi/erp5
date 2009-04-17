@@ -40,8 +40,8 @@ class TitleMovementGroup(MovementGroup):
     property_dict['title'] = self._getTitle(movement)
     return property_dict
 
-  def test(self, object, property_dict, **kw):
-    # If title is different, we want to update existing object instead
+  def test(self, document, property_dict, **kw):
+    # If title is different, we want to update existing document instead
     # of creating a new one.
     return True, property_dict
 

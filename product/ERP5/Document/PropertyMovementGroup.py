@@ -44,13 +44,13 @@ class PropertyMovementGroup(MovementGroup):
       property_dict[prop] = movement.getProperty(prop, None)
     return property_dict
 
-  def test(self, object, property_dict, property_list=None, **kw):
+  def test(self, document, property_dict, property_list=None, **kw):
     if property_list not in (None, []):
       target_property_list = [x for x in self.getTestedPropertyList() \
                               if x in property_list]
     else:
       target_property_list = self.getTestedPropertyList()
     for prop in target_property_list:
-      if property_dict[prop] != object.getProperty(prop, None):
+      if property_dict[prop] != document.getProperty(prop, None):
         return False, property_dict
     return True, property_dict

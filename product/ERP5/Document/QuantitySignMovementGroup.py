@@ -84,8 +84,8 @@ class QuantitySignMovementGroup(MovementGroup):
         [tmp_list[0], {'quantity_sign':0}],
         ]
 
-  def test(self, object, property_dict, **kw):
-    if object.getQuantitySign() == property_dict['quantity_sign']:
+  def test(self, document, property_dict, **kw):
+    if document.getQuantitySign() == property_dict['quantity_sign']:
       return True, property_dict
     else:
       return False, property_dict

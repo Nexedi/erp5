@@ -54,7 +54,7 @@ class MovementGroup(XMLObject):
     # This method should be defined in sub classes.
     raise NotImplementedError
 
-  def test(self, object, property_dict, **kw):
+  def test(self, document, property_dict, **kw):
     # This method should be defined in sub classes.
     raise NotImplementedError
 
