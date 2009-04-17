@@ -361,7 +361,7 @@ msgid "Accounting Rule Cell Line"
 msgstr "Ligne de cellule de règle comptable"
 
 msgid "Accounting Transaction"
-msgstr "Ecriture d'opérations diverses"
+msgstr "Écriture d'opérations diverses"
 
 msgid "Accounting Transaction Line"
 msgstr "Ligne d'écriture comptable"
@@ -400,10 +400,10 @@ msgid "Accounting Workflow"
 msgstr "Workflow de comptabilité"
 
 msgid "Accounting preferences: The default currency when creating new transactions"
-msgstr "The devise à utiliser par défaut lorsque de nouvelles écritures sont créees"
+msgstr "The devise à utiliser par défaut lorsque de nouvelles écritures sont créées"
 
 msgid "Accounting preferences: The default organisation to use when creating a new accounting transaction"
-msgstr "L'organisation à utiliser par défault quand on crée de nouvelles écritures."
+msgstr "L'organisation à utiliser par défaut quand on crée de nouvelles écritures."
 
 msgid "Accounting preferences: The default section category for reporting"
 msgstr "La catégorie de section par défaut pour les rapports."
@@ -586,7 +586,7 @@ msgid "Aggregated Industrial Process"
 msgstr "Explications données sur le Modèle"
 
 msgid "Aggregation Level"
-msgstr "Niveau d'aggrégation"
+msgstr "Niveau d'agrégation"
 
 msgid "Alarm"
 msgstr "Alarme"
@@ -955,13 +955,13 @@ msgid "Assign Document [transition in document_ingestion_workflow]"
 msgstr "Assigner"
 
 msgid "Assign Event"
-msgstr "Affecter le traîtement"
+msgstr "Affecter le traitement"
 
 msgid "Assign Event Action [transition in event_workflow]"
 msgstr "Assigner l'évènement"
 
 msgid "Assign Event [transition in event_workflow]"
-msgstr "Affecter le traîtement"
+msgstr "Affecter le traitement"
 
 msgid "Assign Translation"
 msgstr "Affecter la traduction"
@@ -985,7 +985,7 @@ msgid "Assigned"
 msgstr "Affecté"
 
 msgid "Assigned Events"
-msgstr "Événements assignés"
+msgstr "Évènements assignés"
 
 msgid "Assigned Translations"
 msgstr "Traductions assignées"
@@ -1324,7 +1324,7 @@ msgid "Bug"
 msgstr "Bogue"
 
 msgid "Bug Event workflow"
-msgstr "Worflow des événements de bogue"
+msgstr "Worflow des évènements de bogue"
 
 msgid "Bug Line"
 msgstr "Ligne de bogue"
@@ -1372,7 +1372,7 @@ msgid "Building [state in delivery_causality_workflow]"
 msgstr "En construction"
 
 msgid "Building is used when a packing list is confirmed, during the calculation process of ERP5. A building causality state indicates that the system is calculating whether the Packing list is convergent or divergent."
-msgstr "Cet état est affiché lorsque la livraison de vente ou d'acaht est en cours de construction. Cete état disparaitra dés qu'ERP5 aura terminé ses calculs."
+msgstr "Cet état est affiché lorsque la livraison de vente ou d'achat est en cours de construction. Cet état disparaîtra dés qu'ERP5 aura terminé ses calculs."
 
 msgid "Built"
 msgstr "Construit"
@@ -1855,7 +1855,7 @@ msgid "Changelog"
 msgstr "Changelog"
 
 msgid "Chat Address"
-msgstr "Adresse de tchat"
+msgstr "Adresse de Messagerie Instantanée"
 
 msgid "Check All"
 msgstr "Cocher Tous"
@@ -1897,7 +1897,7 @@ msgid "Checkbooks"
 msgstr "Formules numérotées"
 
 msgid "Checkbox field used to define whether the default page should be displayed."
-msgstr "Champ utilisé pour montrer si la page par défaut du site doit êre affichée."
+msgstr "Champ utilisé pour montrer si la page par défaut du site doit être affichée."
 
 msgid "Checkbox field used to determine if the metric type of the resource is the default measure"
 msgstr "Champ utilisé pour déterminer si le type métrique de la ressource la mesure par défaut."
@@ -2029,7 +2029,7 @@ msgid "Close Ticket [transition in ticket_workflow]"
 msgstr "Clôturer le ticket"
 
 msgid "Close action will close either an accounting period, a transaction or an account. Those documents cannot be modified anymore, except the accounting period that can be reopened,"
-msgstr "Cette action permet de clôturer une transaction comptable. Une fois cloturée, une transaction ne peut plus être modifiée."
+msgstr "Cette action permet de clôturer une transaction comptable. Une fois clôturée, une transaction ne peut plus être modifiée."
 
 msgid "Close the accounting period, can't be reopened later, no more transaction can be input on this accounting period"
 msgstr "Cette action permet de clôturer la période comptable de manière définitive. Elle n pourra plus ni être ré ouverte ni modifiée, et les transactions de cette période ne seront également plus modifiables."
@@ -2317,7 +2317,7 @@ msgid "Container Quantity"
 msgstr "Nombre de contenants"
 
 msgid "Container State"
-msgstr "Etat du container"
+msgstr "État du container"
 
 msgid "Container Workflow"
 msgstr "Workflow de container"
@@ -2527,10 +2527,10 @@ msgid "Create New Document(s)"
 msgstr "Création"
 
 msgid "Create New Event"
-msgstr "Créer un nouvel événement"
+msgstr "Créer un nouvel évènement"
 
 msgid "Create New Events"
-msgstr "Créer des nouveaux événements"
+msgstr "Créer des nouveaux évènements"
 
 msgid "Create New File"
 msgstr "Créer un nouveau fichier"
@@ -2545,13 +2545,13 @@ msgid "Create Pay Sheet Line"
 msgstr "Créer la ligne de feuille de paye"
 
 msgid "Create Related Event"
-msgstr "Créer un événement lié"
+msgstr "Créer un évènement lié"
 
 msgid "Create Related Event Action [transition in event_workflow]"
 msgstr "Créer un évènement lié"
 
 msgid "Create Related Event [transition in event_workflow]"
-msgstr "Créer un événement lié"
+msgstr "Créer un évènement lié"
 
 msgid "Create Related Payment"
 msgstr "Créer l'écriture de trésorerie correspondante"
@@ -2593,7 +2593,7 @@ msgid "Created Clone ${portal_type}."
 msgstr "${portal_type} cloné."
 
 msgid "Created and associated ${count} new events to the selected ticket."
-msgstr "${count} nouveaux événements ont été créés et associés au ticket"
+msgstr "${count} nouveaux évènements ont été créés et associés au ticket"
 
 msgid "Created and associated a new ${portal_type} to the ticket."
 msgstr "${portal_type} créé et associé au ticket"
@@ -2695,7 +2695,7 @@ msgid "Current Description"
 msgstr "Description actuelle"
 
 msgid "Current Editing State"
-msgstr "Etat actuel"
+msgstr "État actuel"
 
 msgid "Current Function"
 msgstr "CSP"
@@ -2929,7 +2929,7 @@ msgid "Default quantity"
 msgstr "La quantité par défaut"
 
 msgid "Default state of the document"
-msgstr "Etat par défaut d'un document."
+msgstr "État par défaut d'un document."
 
 msgid "Default variation"
 msgstr "Choix par défaut"
@@ -2950,7 +2950,7 @@ msgid "Defines the additional term (in days) allowed to the customer to pay his 
 msgstr "Définit un délai en jours qui prolonge un délai de paiement \"fin de mois\"."
 
 msgid "Defines the maximum number of links which can be followed in the crawling process. If set to 0 (default), no crawling happens"
-msgstr "Definit le nombre maximum de liens à suivre dans le processus d'exploration; si c'est à 0(valeur par défaut), pas d'exploration."
+msgstr "Définit le nombre maximum de liens à suivre dans le processus d'exploration; si c'est à 0(valeur par défaut), pas d'exploration."
 
 msgid "Defines to who the invoice will be sent"
 msgstr "Définit la personne à qui la facture doit être envoyée."
@@ -2959,10 +2959,10 @@ msgid "Defines visibility of current section."
 msgstr "Définit si la section actuelle est visible ou non."
 
 msgid "Defines when one needs to notify about an ingestion (None, always, if problem)"
-msgstr "Definit quand est ce qu'on doit envoyer une notification pour l'ingestion(Jamais, Toujours, En cas de besoin)"
+msgstr "Définit quand est ce qu'on doit envoyer une notification pour l'ingestion(Jamais, Toujours, En cas de besoin)"
 
 msgid "Defines whether the crawling process should be local to a single domain or IP host. If so, crawling will not try to access links outside the initial host."
-msgstr "Definit si le processus d'exploration doit être local à un seul domaine ou doit être hébérgé."
+msgstr "Définit si le processus d'exploration doit être local à un seul domaine ou doit être hébergé."
 
 msgid "Defines whether the inventory is partial or full. If this is a full inventory, any items not in the inventory will be considered as missing."
 msgstr "Définit si l'inventaire est complet ou tournant. En cas d'inventaire complet, le stock des articles non repris dans le document d'inventaire est considéré comme nul."
@@ -3025,7 +3025,7 @@ msgid "Delete Business Template [transition in business_template_installation_wo
 msgstr "Supprimer le business template"
 
 msgid "Delete Document Action [transition in document_ingestion_workflow]"
-msgstr "Supprimer le documentdocument"
+msgstr "Supprimer le document"
 
 msgid "Delete Document Action [transition in document_publication_workflow]"
 msgstr "Supprimer le document"
@@ -3374,10 +3374,10 @@ msgid "Details"
 msgstr "Détails"
 
 msgid "Determines if acquired value should be copied"
-msgstr "Determine si la valeur acquise doit etre copiée"
+msgstr "Détermine si la valeur acquise doit être copiée"
 
 msgid "Determines if the acquired value should be appended"
-msgstr "Determine si la valeur acquise doit être ajoutée"
+msgstr "Détermine si la valeur acquise doit être ajoutée"
 
 msgid "Determines if the acquired value should be synced"
 msgstr "Détermine si la valeur acquise doit être synchronisée"
@@ -3446,7 +3446,7 @@ msgid "Discount Ratio"
 msgstr "Taux de remise"
 
 msgid "Discount Ratio Quantity Step"
-msgstr "Echelle du taux de remise"
+msgstr "Échelle du taux de remise"
 
 msgid "Discount Ratio Variation Axes"
 msgstr "Axe de variation du taux de remise"
@@ -3638,7 +3638,7 @@ msgid "Draft Campaigns"
 msgstr "Campagnes à l'état brouillon"
 
 msgid "Draft Events"
-msgstr "Événements à l'état brouillon"
+msgstr "Évènements à l'état brouillon"
 
 msgid "Draft Meetings"
 msgstr "Réunions à l'état brouillon"
@@ -3776,22 +3776,22 @@ msgid "ERP5 Site"
 msgstr "Site ERP5"
 
 msgid "Earned on this period"
-msgstr "Aquis sur cette période"
+msgstr "Acquis sur cette période"
 
 msgid "Economic Class"
 msgstr "Classe économique"
 
 msgid "Edit"
-msgstr "Editer"
+msgstr "Éditer"
 
 msgid "Edit ${portal_type}"
 msgstr "Éditer ${portal_type}"
 
 msgid "Edit Action [transition in edit_workflow]"
-msgstr "Editer"
+msgstr "Éditer"
 
 msgid "Edit Business Template [transition in business_template_building_workflow]"
-msgstr "Editer le business template"
+msgstr "Éditer le business template"
 
 msgid "Edit Parent ${portal_type}"
 msgstr "Éditer ${portal_type}"
@@ -3803,13 +3803,13 @@ msgid "Edit Workflow"
 msgstr "Éditions"
 
 msgid "Edit [transition in document_publication_workflow]"
-msgstr "Editer"
+msgstr "Éditer"
 
 msgid "Edit [transition in edit_workflow]"
-msgstr "Editer"
+msgstr "Éditer"
 
 msgid "Edit [transition in processing_status_workflow]"
-msgstr "Editer"
+msgstr "Éditer"
 
 msgid "Editable"
 msgstr "Éditable"
@@ -4016,52 +4016,52 @@ msgid "Evaluate"
 msgstr "Évaluer"
 
 msgid "Event"
-msgstr "Événement"
+msgstr "Évènement"
 
 msgid "Event Activity"
 msgstr "Rapport d'activité"
 
 msgid "Event Date"
-msgstr "Date de l'événement"
+msgstr "Date de l'évènement"
 
 msgid "Event Detailed Report"
 msgstr "Rapport détaillé"
 
 msgid "Event Direction"
-msgstr "Direction de l'événement"
+msgstr "Direction de l'évènement"
 
 msgid "Event Module"
-msgstr "Module des événements"
+msgstr "Module des évènements"
 
 msgid "Event Nature"
-msgstr "Nature de l'événement"
+msgstr "Nature de l'évènement"
 
 msgid "Event Origin"
-msgstr "Evènement d'origine"
+msgstr "Évènement d'origine"
 
 msgid "Event Preview"
-msgstr "Aperçu de l'événement"
+msgstr "Aperçu de l'évènement"
 
 msgid "Event Sender Email"
-msgstr "Email de l'expediteur"
+msgstr "Email de l'expéditeur"
 
 msgid "Event Title"
-msgstr "Titre de l'événement"
+msgstr "Titre de l'évènement"
 
 msgid "Event Type"
-msgstr "Type de l'événement"
+msgstr "Type de l'évènement"
 
 msgid "Events"
-msgstr "Evènements"
+msgstr "Évènements"
 
 msgid "Events in this state are incoming events or carbon copies of outgoing events received through the email interface of ERP5 CRM."
-msgstr "Les évènements à l'état Nouveau sont prêts à être traîtés par un utilisateur."
+msgstr "Les évènements à l'état Nouveau sont prêts à être traités par un utilisateur."
 
 msgid "Events in this state are incoming events or carbon copies of outgoing events which have been responded and which do not need further processing through assignment. "
 msgstr "Une réponse a été envoyée."
 
 msgid "Events in this state are outgoing events which have been assigned and are waiting to be sent."
-msgstr "L'évènement a été assigné et attend d'être traîté par un utilisateur."
+msgstr "L'évènement a été assigné et attend d'être traité par un utilisateur."
 
 msgid "Events in this state are outgoing events which were posted. Some events may be delivered later, whenever the recipient confirms he received them."
 msgstr "Les évènements dans cet état ont été envoyés au destinataire."
@@ -4268,7 +4268,7 @@ msgid "File Path"
 msgstr "Chemin du fichier"
 
 msgid "File State"
-msgstr "Etat du document"
+msgstr "État du document"
 
 msgid "File Type"
 msgstr "Type de ficher"
@@ -4388,7 +4388,7 @@ msgid "Follow up"
 msgstr "Suivi"
 
 msgid "Follow up must be set to acknowledge an Event."
-msgstr "Le suivi doit être renseignée pour prendre en compte un événement."
+msgstr "Le suivi doit être renseignée pour prendre en compte un évènement."
 
 msgid "Force"
 msgstr "Forcer"
@@ -4406,7 +4406,7 @@ msgid "Format in which the user wants to export the document containing all task
 msgstr "Le format dans lequel l'utilisateur veut exporter le document contenant tous les rapports de tâche du projet."
 
 msgid "Format of the event content"
-msgstr "Format du contenu de l'évenement."
+msgstr "Format du contenu de l'évènement."
 
 msgid "Format of the text contained in the page"
 msgstr "Format du contenu"
@@ -4685,7 +4685,7 @@ msgid "History"
 msgstr "Historique"
 
 msgid "Hostname"
-msgstr "Nom dhôte"
+msgstr "Nom d'hôte"
 
 msgid "Hostname of the oood server."
 msgstr "Nom de l'hébergeur du serveur oood."
@@ -4820,7 +4820,7 @@ msgid "Incoming"
 msgstr "Entrant"
 
 msgid "Incoming and Outgoing Events"
-msgstr "Evènements entrants et sortants"
+msgstr "Évènements entrants et sortants"
 
 msgid "Indented Compact Title"
 msgstr "Titre compact indenté"
@@ -4847,37 +4847,37 @@ msgid "Index used to sort the transformation transformed resources"
 msgstr "Index utilisé pour classer les nomenclatures."
 
 msgid "Indicate how often (in days) the event will happen (every x days)"
-msgstr "Pour montrer combien de fois en nombre de jours l'évenement aura lieu."
+msgstr "Pour montrer combien de fois en nombre de jours l'évènement aura lieu."
 
 msgid "Indicate how often (in hours) the event will happen (every x hours)"
-msgstr "Montre combien de fois en nombre d'heures l'évenement aura lieu."
+msgstr "Montre combien de fois en nombre d'heures l'évènement aura lieu."
 
 msgid "Indicate how often (in minutes) the event will happen (every x minutest)"
-msgstr "Montre combien de fois en nombre de minutes l'évenement aura lieu."
+msgstr "Montre combien de fois en nombre de minutes l'évènement aura lieu."
 
 msgid "Indicate how often (in week) the event will happen (every x weeks)"
-msgstr "Indique combien de fois en nombre de semaines l'évenement aura lieu."
+msgstr "Indique combien de fois en nombre de semaines l'évènement aura lieu."
 
 msgid "Indicate how often in day the event will happen (every x days)"
-msgstr "Pour montrer combien de fois en nombre de jours l'évenement aura lieu."
+msgstr "Pour montrer combien de fois en nombre de jours l'évènement aura lieu."
 
 msgid "Indicate how often in hour the event will happen (every x hours)"
-msgstr "Montre combien de fois en nombre d'heures l'évenement aura lieu."
+msgstr "Montre combien de fois en nombre d'heures l'évènement aura lieu."
 
 msgid "Indicate how often in minutes the event will happen (every x minutest)"
-msgstr "Montre combien de fois en nombre de minutes l'évenement aura lieu."
+msgstr "Montre combien de fois en nombre de minutes l'évènement aura lieu."
 
 msgid "Indicate how often in week the event will happen (every x weeks)"
-msgstr "Indique combien de fois en nombre de semaines l'évenement aura lieu."
+msgstr "Indique combien de fois en nombre de semaines l'évènement aura lieu."
 
 msgid "Indicates how often (in months) the event will happen (every x months)"
-msgstr "Montre combien de fois en nombre de mois l'évenement aura lieu."
+msgstr "Montre combien de fois en nombre de mois l'évènement aura lieu."
 
 msgid "Indicates how often in month the event will happen (every x months)"
-msgstr "Montre combien de fois en nombre de mois l'évenement aura lieu."
+msgstr "Montre combien de fois en nombre de mois l'évènement aura lieu."
 
 msgid "Indicates if an alarm is enabled or not (working or not)"
-msgstr "Ce champ montre si l'alarme est activée ou non( si ca marche ou pas)"
+msgstr "Ce champ montre si l'alarme est activée ou non( si ça marche ou pas)"
 
 msgid "Indicates if we display a link to contextual help or not"
 msgstr "Indique si on montre le lien sur l'aide contextuelle."
@@ -4892,10 +4892,10 @@ msgid "Indicates that the conversion of document to an open document is in proce
 msgstr "Cet état indique que le document est en cours de conversion."
 
 msgid "Indicates when the periodic event starts"
-msgstr "Indique quand l'évenement périodique commence."
+msgstr "Indique quand l'évènement périodique commence."
 
 msgid "Indicates when the periodic event stops"
-msgstr "Indique quand l'évenement période prend fin."
+msgstr "Indique quand l'évènement période prend fin."
 
 msgid "Individual Variation"
 msgstr "Variation individuelle"
@@ -5696,7 +5696,7 @@ msgid "Modify Transaction"
 msgstr "Modifier la transaction"
 
 msgid "Modify Transaction (journalise)"
-msgstr "Modifer l'écriture"
+msgstr "Modifier l'écriture"
 
 msgid "Modify UI"
 msgstr "Modifier l'interface utilisateur"
@@ -5783,10 +5783,10 @@ msgid "Name of a script or a method that displays a title for the node"
 msgstr "Le nom d'un script ou d'une méthode qui affiche le titre d'un noeud"
 
 msgid "Name of a script or a method that should return the list of nodes"
-msgstr "Le nom d'un script ou d'une methode qui retourne les noeuds utilisés"
+msgstr "Le nom d'un script ou d'une méthode qui retourne les noeuds utilisés"
 
 msgid "Name of the script called to generate temporary domains"
-msgstr "Nom du script qui génére des noms temporaires de domaines"
+msgstr "Nom du script qui génère des noms temporaires de domaines"
 
 msgid "Name ot the method used to display information about the result of the alarm"
 msgstr "Méthode utilisée pour montrer les résultats de l'alarme."
@@ -5843,7 +5843,7 @@ msgid "New ${portal_type} created."
 msgstr "Nouveau ${portal_type} créé."
 
 msgid "New Event"
-msgstr "Nouvel événement"
+msgstr "Nouvel évènement"
 
 msgid "New File"
 msgstr "Nouveau fichier"
@@ -5870,7 +5870,7 @@ msgid "New default Web Page for section ${web_section}."
 msgstr "Nouvelle page par défaut pour la section ${web_section}."
 
 msgid "New event created."
-msgstr "Nouvel événement créé."
+msgstr "Nouvel évènement créé."
 
 msgid "Next"
 msgstr "Suivant"
@@ -6003,7 +6003,7 @@ msgid "Notification Message Content List"
 msgstr "Liste de contenu des messages de notification"
 
 msgid "Notification Message Module"
-msgstr "Module des messages de notificaton"
+msgstr "Module des messages de notification"
 
 msgid "Notification Message Workflow"
 msgstr "Workflow des messages de notification"
@@ -6354,7 +6354,7 @@ msgid "Outgoing"
 msgstr "Sortant"
 
 msgid "Outgoing Events"
-msgstr "Événements sortants"
+msgstr "Évènements sortants"
 
 msgid "Outgoing [state in event_workflow]"
 msgstr "Sortant"
@@ -6535,7 +6535,7 @@ msgid "Payee"
 msgstr "Destinataire du Paiement"
 
 msgid "Payer"
-msgstr "Emetteur du paiement"
+msgstr "Émetteur du paiement"
 
 msgid "Payment"
 msgstr "Règlement"
@@ -6559,7 +6559,7 @@ msgid "Payment Rule"
 msgstr "Règle de paiement"
 
 msgid "Payment Transaction"
-msgstr "Ecriture de trésorerie"
+msgstr "Écriture de trésorerie"
 
 msgid "Payment Transaction Lines"
 msgstr "Lignes comptables"
@@ -6600,7 +6600,7 @@ msgid "Pending"
 msgstr "En attente de traitement"
 
 msgid "Pending Events"
-msgstr "Événements en attente"
+msgstr "Évènements en attente"
 
 msgid "Pending Offers"
 msgstr "Offres en attente"
@@ -6684,7 +6684,7 @@ msgid "Phone Call"
 msgstr "Appel téléphonique"
 
 msgid "Physical location where the task is being performed"
-msgstr "Le lieu physique où la tâche est en train d'être executée"
+msgstr "Le lieu physique où la tâche est en train d'être exécutée"
 
 msgid "Place Order"
 msgstr "Passer la commande"
@@ -6747,7 +6747,7 @@ msgid "Plan [transition in bug_event_workflow]"
 msgstr "Planifier"
 
 msgid "Plan will set the document State as planned in ERP5"
-msgstr "Cette action permet de plannifier une action. Cette dernière sera exécutée par la suite."
+msgstr "Cette action permet de planifier une action. Cette dernière sera exécutée par la suite."
 
 msgid "Planned"
 msgstr "Planifié"
@@ -6867,10 +6867,10 @@ msgid "Posted"
 msgstr "Envoyé"
 
 msgid "Posted Events"
-msgstr "Événements postés"
+msgstr "Évènements postés"
 
 msgid "Posted State is used for accounting transactions that have been properly posted to the ledger accounts and validated by an accountant"
-msgstr "La transaction est au brouillard validé mais peut etre réouverte afin d'être modifiée."
+msgstr "La transaction est au brouillard validé mais peut être réouverte afin d'être modifiée."
 
 msgid "Posted [state in event_workflow]"
 msgstr "Posté"
@@ -7224,7 +7224,7 @@ msgid "Publication Section"
 msgstr "Section de publication"
 
 msgid "Publication State"
-msgstr "Etat de publication"
+msgstr "État de publication"
 
 msgid "Publication Workflow"
 msgstr "Workflow de publication"
@@ -7674,7 +7674,7 @@ msgid "Reference Documents"
 msgstr "Référencer les documents"
 
 msgid "Reference Prefix"
-msgstr "Prefixe pour les références"
+msgstr "Préfixe pour les références"
 
 msgid "Reference categories"
 msgstr "Pour"
@@ -7689,7 +7689,7 @@ msgid "Reference lookup regular expression"
 msgstr "Expression régulière de recherche des documents référencés"
 
 msgid "Reference of the Payment chosen by the accountant or the person in charge of accounting in ERP5. The payment reference can be a check number for example. Payment Reference only appears in Payment transactions"
-msgstr "Reference du piement, choisie par le ou la comptable, cela peut-être un numéro de chèque par exemple."
+msgstr "Référence du paiement, choisie par le ou la comptable, cela peut-être un numéro de chèque par exemple."
 
 msgid "Reference of the web page used to retrieved it"
 msgstr "Référence de la page web utilisée pour le retrouver"
@@ -7725,7 +7725,7 @@ msgid "Reinstall Business Template Action [transition in business_template_insta
 msgstr "Réinstaller le business template"
 
 msgid "Reinstall Business Template [transition in business_template_installation_workflow]"
-msgstr "Réinstaller le busines templatetemplate"
+msgstr "Réinstaller le business template"
 
 msgid "Reject"
 msgstr "Rejeter l'offre"
@@ -7833,7 +7833,7 @@ msgid "Related Documents"
 msgstr "Documents liés"
 
 msgid "Related Events"
-msgstr "Événements liés"
+msgstr "Évènements liés"
 
 msgid "Related Invoice"
 msgstr "Facture correspondante"
@@ -8034,13 +8034,13 @@ msgid "Request Approval of Manager [transition in ticket_workflow]"
 msgstr "Demander l'autorisation du manager"
 
 msgid "Request Processing"
-msgstr "Demander le traîtement"
+msgstr "Demander le traitement"
 
 msgid "Request Processing Action [transition in event_workflow]"
 msgstr "Demander le traitement"
 
 msgid "Request Processing [transition in event_workflow]"
-msgstr "Demander le traîtement"
+msgstr "Demander le traitement"
 
 msgid "Request Subscription"
 msgstr "Enregistrer la requête d'inscription"
@@ -8169,7 +8169,7 @@ msgid "Respond Workflow Action"
 msgstr "Action de workflow répondre"
 
 msgid "Responded"
-msgstr "Reponse envoyée"
+msgstr "Réponse envoyée"
 
 msgid "Responded [state in event_workflow]"
 msgstr "Réponse envoyée"
@@ -8346,7 +8346,7 @@ msgid "Sale Opportunity Type"
 msgstr "Type de l'opportunité de vente"
 
 msgid "Sale Opportunity converted into Sale"
-msgstr "L'opportunité de vente est un succés, l'offre a été acceptée et le produit a été vendu."
+msgstr "L'opportunité de vente est un succès, l'offre a été acceptée et le produit a été vendu."
 
 msgid "Sale Order"
 msgstr "Commande de vente"
@@ -8568,7 +8568,7 @@ msgid "Select Language"
 msgstr "Langue"
 
 msgid "Select Method ID"
-msgstr "Méthode de séléction"
+msgstr "Méthode de sélection"
 
 msgid "Select Module"
 msgstr "Sélectionner un module"
@@ -8628,7 +8628,7 @@ msgid "Sender / Caller"
 msgstr "Expéditeur/origine"
 
 msgid "Sender or Caller"
-msgstr "Emetteur"
+msgstr "Émetteur"
 
 msgid "Sender or Provider"
 msgstr "Expéditeur ou prestataire"
@@ -8760,7 +8760,7 @@ msgid "Ship"
 msgstr "Expédier"
 
 msgid "Ship From"
-msgstr "Expediteur"
+msgstr "Expéditeur"
 
 msgid "Ship Packing List"
 msgstr "Expédier"
@@ -8796,10 +8796,10 @@ msgid "Short Title"
 msgstr "Titre court"
 
 msgid "Short description of the event that will appear in the search result list."
-msgstr "Une description de l'évenement."
+msgstr "Une description de l'évènement."
 
 msgid "Short description that will appear in the search result list."
-msgstr "Description qui apparait dans les resultats de recherche"
+msgstr "Description qui apparaît dans les résultats de recherche"
 
 msgid "Short title is diplayed in any navigation widget (breadrumb, navigation menu, section list, ...) with a higher priority than long title, except in Site Map"
 msgstr "Le court titre est affiché dans les outils de navigation avec une priorité plus élevée que le titre long sauf dans un Plan du Site."
@@ -9207,7 +9207,7 @@ msgid "State of a document that has been invalidated in ERP5"
 msgstr "Le document a été invalidé par un utilisateur."
 
 msgid "State of a document that has been planned in ERP5"
-msgstr "Une ou plusieurs opérations ont été plannifiées pour ce document. Un utilisateur devra prendre en charge la réalisation de ces opérations en temps voulu."
+msgstr "Une ou plusieurs opérations ont été planifiées pour ce document. Un utilisateur devra prendre en charge la réalisation de ces opérations en temps voulu."
 
 msgid "State of a document that has been validated in ERP5"
 msgstr "Le document a été validé par un utilisateur."
@@ -9264,7 +9264,7 @@ msgid "Stop Career Step"
 msgstr "Terminer l'étape de carrière"
 
 msgid "Stop Career Step Action [transition in career_workflow]"
-msgstr "Terminer l'étaoe de carrière"
+msgstr "Terminer l'étape de carrière"
 
 msgid "Stop Career Step [transition in career_workflow]"
 msgstr "Terminer l'étape de carrière"
@@ -9507,7 +9507,7 @@ msgid "Surcharge Ratio"
 msgstr "Ratio de surcharge"
 
 msgid "Surcharge Ratio Quantity Step"
-msgstr "Echelle du ratio de surchage"
+msgstr "Échelle du ratio de surcharge"
 
 msgid "Surcharge Ratio Variation Axes"
 msgstr "Axes de variation du ratio de surcharge"
@@ -9707,7 +9707,7 @@ msgid "Tell if there is a unit test or not that check the bug"
 msgstr "Champ pour montrer s'il existe ou non un test unitaire pour le bogue."
 
 msgid "Tell when we need to notify users of alarm's result"
-msgstr "Precise quand les utilisateurs doivent être prévenus des résultats de l'alarme"
+msgstr "Précise quand les utilisateurs doivent être prévenus des résultats de l'alarme"
 
 msgid "Tells who requested the ticket"
 msgstr "La personne qui a  demandé le ticket."
@@ -9788,7 +9788,7 @@ msgid "The Accounting Period is open. It is therefore possible to post accountin
 msgstr "La période comptable est ouverte et peut recevoir des transactions."
 
 msgid "The Accounting Period is temporary closed, but can be opened back. In this state it is not possible to post transactions during this period."
-msgstr "La période comptable est clôturée temporairement, elle peut etre définitivement clôturée ou réouverte."
+msgstr "La période comptable est clôturée temporairement, elle peut être définitivement clôturée ou réouverte."
 
 msgid "The Accounting Period will be temporary closed, but can be reopened. In this state it is not possible to post transactions during this period."
 msgstr "Clôture la période comptable. Cette dernière pourra cependant être réouverte."
@@ -9806,7 +9806,7 @@ msgid "The EAN 13 code of this product"
 msgstr "Le code EAN-13 du produit"
 
 msgid "The ID of a form which can be used to assess related events."
-msgstr "Id du formulaire utilisé pour évaluer les évenements liés au Ticket."
+msgstr "Id du formulaire utilisé pour évaluer les évènements liés au Ticket."
 
 msgid "The ID of a form which can be used to configure layout preferences."
 msgstr "L'ID du formulaire utilisé pour configurer la mise en page des préférences."
@@ -9989,10 +9989,10 @@ msgid "The default currency when creating new transactions"
 msgstr "La devise à utiliser par défaut quand on créé de nouvelles transactions."
 
 msgid "The default height of text area fields"
-msgstr "la longueur par défault des champs de type TextArea."
+msgstr "la longueur par défaut des champs de type TextArea."
 
 msgid "The default organisation to use when creating a new accounting transaction"
-msgstr "L'organisation à utiliser par défault quand on crée de nouvelles transactions."
+msgstr "L'organisation à utiliser par défaut quand on crée de nouvelles transactions."
 
 msgid "The default reference of the service"
 msgstr "La référence par défaut d'un service."
@@ -10010,7 +10010,7 @@ msgid "The document is private and can be seen only by its owner."
 msgstr "Le document est privé et ne peut être vu que par son propriétaire."
 
 msgid "The employee must be defined"
-msgstr "Le salarié doit être defini"
+msgstr "Le salarié doit être défini"
 
 msgid "The employee must have a career grade"
 msgstr "Le salarié doit avoir un grade"
@@ -10289,10 +10289,10 @@ msgid "The quantity of the ticket request"
 msgstr "La quantité d'une demande de ticket."
 
 msgid "The ratio used to surcharge the supply line price"
-msgstr "le taux utilisé pour surchager le prix d'une ligne tarifaire."
+msgstr "le taux utilisé pour surcharger le prix d'une ligne tarifaire."
 
 msgid "The receive logical transition sets the event state to new"
-msgstr "Cette action permet de crer un nouvel évènement correspondant à une demande ou un message reçu de l'extérieur par un client ou un prospect par exemple."
+msgstr "Cette action permet de créer un nouvel évènement correspondant à une demande ou un message reçu de l'extérieur par un client ou un prospect par exemple."
 
 msgid "The reference for the bug"
 msgstr "La référence du bogue"
@@ -10355,7 +10355,7 @@ msgid "The security key for this bank account. IBAN stands for International Ban
 msgstr "Le code IBAN (International Bank Account Number) est le code de vérification d'un compte en banque."
 
 msgid "The single event option can only be used with outgoing messages."
-msgstr "L'option d'événement unique ne peut être utilisée que pour les événements sortant."
+msgstr "L'option d'évènement unique ne peut être utilisée que pour les évènements sortant."
 
 msgid "The solved state is displayed whenever a divergent state has been corrected by a user of ERP5. A divergent state can strike a sales packing list for example, or an invoice, whenever the ordered and delivered quantities are different. Unless a user would take an action to solve this situation, the document could not be processed. When an action has been taken and the divergent state has been corrected, the document will display the Solved state, and users will be able to process it again."
 msgstr "Cet état s'affiche lorsqu'un état divergent est redevenu convergent, grâce à l'action d'un utilisateur."
@@ -10424,7 +10424,7 @@ msgid "The title of the document"
 msgstr "Le titre du document"
 
 msgid "The title of the event to be added."
-msgstr "Le titre de l'évenement à ajouter."
+msgstr "Le titre de l'évènement à ajouter."
 
 msgid "The title of the resource involved"
 msgstr "Le titre de la principale ressource concernée."
@@ -10442,7 +10442,7 @@ msgid "The unit price at which a product or service is traded. This price is a n
 msgstr "Prix net unitaire d'un produit ou service. Ce prix net intègre tous les éléments de définition de prix applicables dans le contexte courant (ex : prix additionnel, remises)."
 
 msgid "The unit price for the base product, not taking into account options or discounts."
-msgstr "Prix de base du produit ou du service, ne tenant pas compte des remises eventuelles."
+msgstr "Prix de base du produit ou du service, ne tenant pas compte des remises éventuelles."
 
 msgid "The username this person will use to log in the system. The system will check that there isn't another user with the same username."
 msgstr "Le nom d'utilisateur utilisé par une personne pour se connecter à ERP5."
@@ -10540,10 +10540,10 @@ msgid "This option helps define whether an account is normally Credit or Debit b
 msgstr "Cette option permet de définir si un compte est de nature a être débiteur ou créditeur."
 
 msgid "This state is shown when the goods that are shipped equal the previsions"
-msgstr "Cet état indique que la quantité ommandée et la quantitée livrée par exemple sont identiques. Dans le cas contraire, l'état serait divergent, et cette situation devrait être résolue par un utilisateur."
+msgstr "Cet état indique que la quantité commandée et la quantité livrée par exemple sont identiques. Dans le cas contraire, l'état serait divergent, et cette situation devrait être résolue par un utilisateur."
 
 msgid "This will be the state displayed whenever ERP5 is doing calculation. After the calculation is over, this state will be turned to another state, such as delivered for example, or solved."
-msgstr "Cet état est affiché lorsqu'ERP5 exécute des calculs. Cet état disparaitra lorsque les calculs seront terminés."
+msgstr "Cet état est affiché lorsqu'ERP5 exécute des calculs. Cet état disparaîtra lorsque les calculs seront terminés."
 
 msgid "This workflow method is called to convert a file to a certain format"
 msgstr "Permet de convertir un document dans un autre format."
@@ -10576,7 +10576,7 @@ msgid "Ticket Workflow"
 msgstr "Workflow des tickets"
 
 msgid "Ticket and events are cloned."
-msgstr "Tickets et événements clônés."
+msgstr "Tickets et évènements clonés."
 
 msgid "Tickets"
 msgstr "Tickets"
@@ -10759,13 +10759,13 @@ msgid "Transactions"
 msgstr "Transactions"
 
 msgid "Transactions Related To This Account"
-msgstr "Ecritures liées à ce compte"
+msgstr "Écritures liées à ce compte"
 
 msgid "Transactions Related To This Bank Account"
-msgstr "Ecritures liées à ce compte en banque"
+msgstr "Écritures liées à ce compte en banque"
 
 msgid "Transactions Related To This Entity"
-msgstr "Ecritures liées à ce tiers"
+msgstr "Écritures liées à ce tiers"
 
 msgid "Transactions Related to This Account"
 msgstr "Écritures liées à ce compte"
@@ -10864,7 +10864,7 @@ msgid "Type"
 msgstr "Type"
 
 msgid "Type Width"
-msgstr "Laize coupe-Type (cm)"
+msgstr "Laize coupe-type (cm)"
 
 msgid "Type Width (cm)"
 msgstr "Laize coupe-type (cm)"
@@ -11035,13 +11035,13 @@ msgid "Usage"
 msgstr "Usage"
 
 msgid "Use Current Selection"
-msgstr "Utiliser la selection courante"
+msgstr "Utiliser la sélection courante"
 
 msgid "Use the Post action to send a message, place a phone call or post a note."
 msgstr "Cette action est utilisée pour envoyer un évènement."
 
 msgid "Usefull for intermediated lines. By default, Pay Sheet Lines are created (checked)."
-msgstr "Utile pour les lignes intermédiaires. Par défault, les ligne de feuille de paye sont créées (case cochée)."
+msgstr "Utile pour les lignes intermédiaires. Par défaut, les ligne de feuille de paye sont créées (case cochée)."
 
 msgid "User"
 msgstr "Utilisateur"
@@ -11341,7 +11341,7 @@ msgid "Web View"
 msgstr "Vue Web"
 
 msgid "WebDAV Access"
-msgstr "Accés WebDAV"
+msgstr "Accès WebDAV"
 
 msgid "Webmaster"
 msgstr "Webmaster"
@@ -11391,10 +11391,10 @@ msgid "Width (m)"
 msgstr "Largeur (m)"
 
 msgid "Will set the sale opportunity state as sold. This means that the sale opportunity is successful and that the customer has accepted the offer that has been made to him/her"
-msgstr "Cette action permet de conclure la vente, ce qui signifie que le client a accepté l'offre qui lui a été faite. L'opportunité de vente est donc un succés."
+msgstr "Cette action permet de conclure la vente, ce qui signifie que le client a accepté l'offre qui lui a été faite. L'opportunité de vente est donc un succès."
 
 msgid "Will update the quantity of invoiced products depending upon the quantity of products that have been packed in the container."
-msgstr "Permet de mettre à jour la quantité deuis un container."
+msgstr "Permet de mettre à jour la quantité de produits facturés, en fonction du nombre de produits du container."
 
 msgid "With"
 msgstr "Avec"
@@ -11536,7 +11536,7 @@ msgid "You do not have permission to add new bug."
 msgstr "Vous n'avez pas la permission d'ajouter un nouveau bogue."
 
 msgid "You do not have permission to add new event."
-msgstr "Vous n'avez pas la permission d'ajouter un nouvel événement."
+msgstr "Vous n'avez pas la permission d'ajouter un nouvel évènement."
 
 msgid "You do not have the permissions to edit the object."
 msgstr "Vous n'avez pas la permission d'éditer cet objet."
@@ -11599,7 +11599,7 @@ msgid "comment"
 msgstr "Commentaire"
 
 msgid "content of the event"
-msgstr "Le contenu de l'évenement."
+msgstr "Le contenu de l'évènement."
 
 msgid "date at wich the bug was fixed"
 msgstr "Date à laquelle le bug a été corrigé."
@@ -11701,7 +11701,7 @@ msgid "quantity of the inventory"
 msgstr "quantité de l'inventaire"
 
 msgid "script used to do localized calculs"
-msgstr "Script utilisé pour faire certains caculs."
+msgstr "Script utilisé pour faire certains calculs."
 
 msgid "serial number of the container"
 msgstr "numéro de série du contenant"
