@@ -54,7 +54,16 @@ MAX_VALIDATED_LIMIT = 1000
 # Read this many messages to validate.
 READ_MESSAGE_LIMIT = 1000
 # Process this many messages in each dequeueMessage call.
-MESSAGE_BUNDLE_SIZE = 10
+# Downside of setting to a "small" value: the cost of reserving a batch of
+# few messages increases relatively to the cost of executing activities,
+# making CMFActivity overhead significant.
+# Downside of setting to a "big" value: if there are many slow activities in
+# a multi-activity-node environment, multiple slow activities will be reserved
+# by a single node, making a suboptimal use of the parallelisation offered by
+# the cluster.
+# Before increasing this value, consider using SQLDict with group methods
+# first.
+MESSAGE_BUNDLE_SIZE = 1
 
 class SQLQueue(RAMQueue, SQLBase):
   """
