@@ -1,14 +1,14 @@
 ##############################################################################
 #
-# Copyright (c) 2002-2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2005 Nexedi SA and Contributors. All Rights Reserved.
 #                    Sebastien Robin <seb@nexedi.com>
 #                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -23,19 +23,15 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301,
+# USA.
 #
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
-from Products.CMFCore.utils import getToolByName
-
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Interface
 from Products.ERP5.Document.Rule import Rule
-#from Products.ERP5Type.Base import TempBase
 
-from zLOG import LOG
 
 class InvoicingRule(Rule):
   """
@@ -137,7 +133,7 @@ class InvoicingRule(Rule):
     - add/modify/remove child movements to match prevision
     """
     parent_movement = applied_rule.getParentValue()
-    if parent_movement is not None: 
+    if parent_movement is not None:
       if not parent_movement.isFrozen():
         add_list, modify_dict, \
           delete_list = self._getCompensatedMovementList(applied_rule, **kw)
@@ -155,12 +151,9 @@ class InvoicingRule(Rule):
           else:
             new_mvmt = applied_rule.newContent(portal_type=self.movement_type)
           new_mvmt.edit(**movement_dict)
-	 
 
     # Pass to base class
     Rule.expand(self, applied_rule, force=force, **kw)
 
   def isDeliverable(self, movement):
     return movement.getResource() is not None
-
-
