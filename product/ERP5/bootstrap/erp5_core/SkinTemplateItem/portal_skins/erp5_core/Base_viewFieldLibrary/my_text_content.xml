@@ -307,7 +307,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:(here.hasFile() and \'page\') or \'\'</string> </value>
+            <value> <string>python:(getattr(here, \'hasFile\', None) is not None and here.hasFile() and \'page\') or \'\'</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -339,7 +339,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>not:here/hasFile</string> </value>
+            <value> <string>python:getattr(here, \'hasFile\', None) is not None and not here.hasFile()</string> </value>
         </item>
       </dictionary>
     </pickle>
