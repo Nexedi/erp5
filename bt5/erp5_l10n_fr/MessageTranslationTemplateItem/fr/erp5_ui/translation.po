@@ -4016,7 +4016,7 @@ msgid "Evaluate"
 msgstr "Évaluer"
 
 msgid "Event"
-msgstr "Évènement"
+msgstr "Evènement"
 
 msgid "Event Activity"
 msgstr "Rapport d'activité"
