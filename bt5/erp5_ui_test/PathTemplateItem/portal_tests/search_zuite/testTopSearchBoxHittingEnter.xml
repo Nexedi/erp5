@@ -60,7 +60,7 @@
 <tr>\n
 \t<td>type</td>\n
 \t<td>field_your_search_text</td>\n
-\t<td>Title</td>\n
+\t<td>Title portal_type:Foo</td>\n
 </tr>\n
 <tr>\n
 \t<td>keyPressAndWait</td>\n
