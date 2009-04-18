@@ -1,3 +1,6 @@
+2009-04-18 Kazuhiko
+* Version 5.4.1
+
 2009-03-13 Kazuhiko
 * remove portal_session and portal_caches/erp5_session_cache from this BT because they are already included in erp5_core since r.24571.
 

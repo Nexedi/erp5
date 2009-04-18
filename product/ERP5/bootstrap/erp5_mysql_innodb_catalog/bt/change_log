@@ -1,3 +1,6 @@
+2009-04-18 Kazuhiko
+* Version 5.4.1
+
 2009-04-16 Kazuhiko
 * Use versioning table only for documents having getVersion.
 

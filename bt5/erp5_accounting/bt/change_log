@@ -1,3 +1,6 @@
+2009-04-18 Kazuhiko
+* Version 5.4.1
+
 2009-02-06 yo
 * Stop raising an exception, even if the credit is not equal to the debit in a built delivery, in the post processing script, because the builder may not blindly adopt prevision when updating existing lines, thus it can be unbalanced.
 

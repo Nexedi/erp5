@@ -1,3 +1,6 @@
+2009-04-18 Kazuhiko
+* Version 5.4.1
+
 2009-01-05 nicolas
 add TypeBasedMethod for all Deliveries which remove source_reference and destination_reference after cloning
 
