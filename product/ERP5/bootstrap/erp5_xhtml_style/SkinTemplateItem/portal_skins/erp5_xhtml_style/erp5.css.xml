@@ -1110,6 +1110,7 @@ a.tree_closed {\n
 \n
 .ListSummary table {\n
   width: 100%;\n
+  background-color: <dtml-var document_background_color>;\n
   border-color: <dtml-var document_border_color>;\n
   border-style: solid;\n
   border-top-width: 1px;\n
