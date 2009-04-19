@@ -137,7 +137,7 @@ class EmailDocument(File, TextDocument):
             text = text.decode(encoding).encode('utf-8')
           else:
             text = text.decode().encode('utf-8')
-        except UnicodeDecodeError:
+        except (UnicodeDecodeError, LookupError), error_message:
           encoding = self._guessEncoding(text)
           if encoding is not None:
             text = text.decode(encoding).encode('utf-8')
