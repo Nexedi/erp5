@@ -398,7 +398,7 @@ class PropertyHolder:
       by postponing security declaration.
 
       WARNING: we optimize size by not setting security if 
-      it is the same as the default. This may be  a bit
+      it is the same as the default. This may be a bit
       dangerous if classes use another default
       security.
     """
@@ -2409,10 +2409,15 @@ class Base( CopyContainer,
   security.declareProtected( Permissions.View, 'Title' )
   Title = getTitleOrId
 
+  # CMF Compatibility
+  security.declareProtected( Permissions.View, 'title_or_id' )
+  title_or_id = getTitleOrId
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTitleAndId')
   def getTitleAndId(self):
-    """Returns the title and the id in parenthesis
+    """
+      Returns the title and the id in parenthesis
     """
     return self.title_and_id()
 
@@ -2524,7 +2529,7 @@ class Base( CopyContainer,
       r = self.getShortTitle()
       if r: return r
     if self.getProperty('reference'):
-      r = self.getReference()
+      r = self.getProperty('reference') 
       if r: return r
     r = self._baseGetTitle() # No need to test existence since all Base instances have this method
     if r: return r      # Also useful whenever title is calculated
