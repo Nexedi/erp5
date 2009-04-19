@@ -33,7 +33,7 @@ from Products.ERP5Type.Base import WorkflowMethod
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
-from Products.ERP5.Document.Document import Document
+from Products.ERP5.Document.Document import Document, ConversionError
 from Products.ERP5Type.WebDAVSupport import TextContent
 from Products.CMFDefault.utils import isHTMLSafe
 import re
@@ -209,17 +209,15 @@ class TextDocument(Document, TextContent):
         src_mimetype = 'text/%s' % src_mimetype
       # check if document has set text_content and convert if necessary
       text_content = self.getTextContent()
-      if text_content is not None:
+      if text_content:
         portal_transforms = getToolByName(self, 'portal_transforms')
         result = portal_transforms.convertToData(mime_type, text_content,
                                                  object=self, context=self,
-                                                 filename=self.title_or_id(),
+                                                 filename=self.getTitleOrId(),
                                                  mimetype=src_mimetype)
         if result is None:
-            # portal_transforms fails to convert.
-            LOG('TextDocument.convert', WARNING,
-                'portal_transforms failed to convert to %s: %r' % (mime_type, self))
-            result = ''
+          raise ConversionError('TextDocument conversion error. '
+                                'portal_transforms failed to convert to %s: %r' % (mime_type, self))
 
         if substitution_method_parameter_dict is None:
           substitution_method_parameter_dict = {}

@@ -33,7 +33,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.Image import Image
-from Products.ERP5.Document.Document import ConversionCacheMixin
+from Products.ERP5.Document.Document import ConversionCacheMixin, ConversionError
 from Products.ERP5.Document.File import _unpackData
 
 from zLOG import LOG, WARNING
@@ -161,13 +161,11 @@ class PDFDocument(Image, ConversionCacheMixin):
           portal_transforms = getToolByName(self, 'portal_transforms')
           result = portal_transforms.convertToData(mime_type, content,
                                                    context=self,
-                                                   filename=self.title_or_id(),
+                                                   filename=self.getTitleOrId(),
                                                    mimetype=src_mimetype)
           if result is None:
-              # portal_transforms fails to convert.
-              LOG('TextDocument.convert', WARNING,
-                  'portal_transforms failed to convert to %s: %r' % (mime_type, self))
-              result = ''
+            raise ConversionError('PDFDocument conversion error. '
+                                  'portal_transforms failed to convert to %s: %r' % (mime_type, self))
           text += result
       return text
 
