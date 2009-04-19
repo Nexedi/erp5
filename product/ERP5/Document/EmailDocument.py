@@ -140,9 +140,12 @@ class EmailDocument(File, TextDocument):
         except (UnicodeDecodeError, LookupError), error_message:
           encoding = self._guessEncoding(text)
           if encoding is not None:
-            text = text.decode(encoding).encode('utf-8')
+            try:
+              text = text.decode(encoding).encode('utf-8')
+            except (UnicodeDecodeError, LookupError), error_message:
+              text = repr(text)[1:-1]
           else:
-            text = repr(text)
+            text = repr(text)[1:-1]
         if name in result:
           result[name] = '%s %s' % (result[name], text)
         else:
