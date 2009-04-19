@@ -322,12 +322,6 @@ class EmailDocument(File, TextDocument):
       subject = ''.join(subject.split('\n'))
     return subject
   
-  def title_or_id(self):
-    """Return the title if it is not blank and the id otherwise.
-       XXX - What is this !!!! why here ???
-    """
-    return self.getTitleOrId()
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getStartDate')
   def getStartDate(self, default=_MARKER):
     """

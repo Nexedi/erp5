@@ -317,7 +317,7 @@ class Image(File, OFSImage):
       portal_transforms = getToolByName(self, 'portal_transforms')
       result = portal_transforms.convertToData(mime_type, content,
                                                object=self, context=self,
-                                               filename=self.title_or_id(),
+                                               filename=self.getTitleOrId(),
                                                mimetype=src_mimetype)
       if result is None:
           # portal_transforms fails to convert.

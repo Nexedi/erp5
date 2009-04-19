@@ -114,7 +114,7 @@ class Transformation(XMLObject, Predicate, Variated):
 
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getVariationRangeBaseCategoryItemList')
-    def getVariationRangeBaseCategoryItemList(self,display_id='title_or_id',**kw):
+    def getVariationRangeBaseCategoryItemList(self, display_id='getTitleOrId', **kw):
         """
           Returns possible variations of the transformation
           as a list of tuples (id, title). This is mostly

@@ -179,7 +179,7 @@ class Amount(Base, Variated):
 
   security.declareProtected(Permissions.AccessContentsInformation, 
                             'getVariationBaseCategoryItemList')
-  def getVariationBaseCategoryItemList(self,display_id='title_or_id',**kw):
+  def getVariationBaseCategoryItemList(self,display_id='getTitleOrId',**kw):
     """
     Returns a list of base_category tuples.
     """
@@ -455,6 +455,7 @@ class Amount(Base, Variated):
   def getNetTargetQuantity(self):
     """
       Take into account efficiency in target quantity
+      XXX - dreprecated
     """
     quantity = self.getTargetQuantity()
     efficiency = self.getTargetEfficiency()
