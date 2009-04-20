@@ -52,6 +52,9 @@ class PropertyAssignmentMovementGroup(MovementGroup):
     return True, property_dict
 
   def _separate(self, movement_list):
+    if not movement_list:
+      return []
+    
     property_dict = {}
 
     for prop in self.getTestedPropertyList():

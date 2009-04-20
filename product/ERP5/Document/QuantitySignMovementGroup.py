@@ -62,6 +62,9 @@ class QuantitySignMovementGroup(MovementGroup):
     return property_dict
 
   def _separate(self, movement_list):
+    if not movement_list:
+      return []
+    
     tmp_list = [[], [], []] # -1:minus, 0:zero, 1:plus
     for movement in movement_list:
       tmp_list[cmp(movement.getQuantity(), 0)].append(movement)
