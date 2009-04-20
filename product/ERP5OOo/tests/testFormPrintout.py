@@ -486,8 +486,8 @@ class TestFormPrintout(ERP5TypeTestCase):
     self.assertTrue(listboxline_list[1].getColumnProperty('title') == "foo_title_6")
     
     odf_document = foo_printout.index_html(REQUEST=request)
-    test_output = open("/tmp/test_02_06_Table.odf", "w")
-    test_output.write(odf_document)
+    #test_output = open("/tmp/test_02_06_Table.odf", "w")
+    #test_output.write(odf_document)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
@@ -581,7 +581,7 @@ class TestFormPrintout(ERP5TypeTestCase):
     
   def _test_03_Frame(self, run=run_all_test):
     """
-    Frame not supported yet
+    Frame not tested yet
     """
     pass
 
@@ -692,6 +692,12 @@ return []
   def _test_06_Meta(self, run=run_all_test):
     """
     meta.xml not supported yet
+    """
+    pass
+
+  def _test_07_Image(self, run=run_all_test):
+    """
+    Image mapping not tested yet
     """
     pass
 
