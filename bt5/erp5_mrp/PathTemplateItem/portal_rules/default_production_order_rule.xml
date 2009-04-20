@@ -54,6 +54,25 @@
             <value> <string>default_production_order_rule</string> </value>
         </item>
         <item>
+            <key> <string>expandable_property</string> </key>
+            <value>
+              <tuple>
+                <string>destination</string>
+                <string>destination_section</string>
+                <string>start_date</string>
+                <string>stop_date</string>
+                <string>resource</string>
+                <string>variation_category_list</string>
+                <string>variation_property_dict</string>
+                <string>aggregate_list</string>
+                <string>price</string>
+                <string>price_currency</string>
+                <string>quantity</string>
+                <string>quantity_unit</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>default_production_order_rule</string> </value>
         </item>
