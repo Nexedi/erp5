@@ -59,11 +59,7 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:metal="http://xml.zope.org/namespaces/metal">\n
   <tal:block metal:define-macro="init">\n
-    <tr>\n
-      <td>store</td>\n
-      <td tal:content="python:here.getPortalObject().absolute_url()">http://example.com/erp5</td>\n
-      <td>base_url</td>\n
-    </tr>\n
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
     <tr>\n
       <td>open</td>\n
       <td>${base_url}/foo_module/ListBoxDialogModeZuite_reset</td>\n
