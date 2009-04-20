@@ -1,3 +1,6 @@
+2009-04-20 Kazuhiko
+* add TestTool_getSkinName and TestTool_setSkinNameCookie so as to unify functional tests for normal skin and mobile skin.
+
 2009-02-03 Kazuhiko
 * define getAbsoluteLocation() in user-extensions.js for compatible with Zelenium based of Selenium 0.8 or later.
 
