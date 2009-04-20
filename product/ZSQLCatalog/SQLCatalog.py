@@ -225,6 +225,7 @@ class UidBuffer(TM):
     self.temporary_buffer.setdefault(tid, []).extend(iterable)
 
 related_key_definition_cache = {}
+related_key_warned_column_set = set()
 
 class Catalog(Folder,
               Persistent,
@@ -1740,7 +1741,9 @@ class Catalog(Folder,
         LOG('SQLCatalog', WARNING, 'Malformed related key definition: %r. Ignored.' % (related_key, ))
         continue
       related_key_id = split_entire_definition[0].strip()
-      if related_key_id in column_set:
+      if related_key_id in column_set and \
+         related_key_id not in related_key_warned_column_set:
+        related_key_warned_column_set.add(related_key_id)
         if related_key_id in column_map:
           LOG('SQLCatalog', WARNING, 'Related key %r has the same name as an existing column on tables %r' % (related_key_id, column_map[related_key_id]))
         else:
