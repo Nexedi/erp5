@@ -31,12 +31,13 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5OOo.OOoUtils import OOoBuilder
+from Products.ERP5OOo.tests.utils import Validator
 from zLOG import LOG , INFO
 from lxml import etree
 import os
 
 class TestFormPrintout(ERP5TypeTestCase):
-  run_all_test = 0
+  run_all_test = 1
 
   def getTitle(self):
     """
@@ -96,13 +97,23 @@ class TestFormPrintout(ERP5TypeTestCase):
       test1.newContent("foo_2", portal_type='Foo Line')
     get_transaction().commit()
     self.tic()
+
+    # XML validator
+    v12schema_url = os.path.join(os.path.dirname(__file__),
+                                 'OpenDocument-schema-v1.2-draft9.rng') 
+    self.validator = Validator(schema_url=v12schema_url)
     
   def login(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('tatuya', '', ['Manager'], [])
     user = uf.getUserById('tatuya').__of__(uf)
     newSecurityManager(None, user)
-                          
+
+  def _validate(self, odf_file_data):
+    error_list = self.validator.validate(odf_file_data)
+    if error_list:
+      self.fail(''.join(error_list))
+
   def test_01_Paragraph(self, run=run_all_test):
     """
     mapping a field to a paragraph
@@ -572,6 +583,8 @@ class TestFormPrintout(ERP5TypeTestCase):
 
     erp5form.addERP5Form(id='Foo2_view', title='Foo2')
     foo2_view = custom.Foo2_view
+    # Attention: Report.py popReport, pushReport
+    # only accepts named 'listbox' Listbox
     foo2_view.manage_addField('listbox', 'listbox', 'ListBox')
     listbox = foo2_view.listbox
 
@@ -630,6 +643,8 @@ return report_section_list
     frame1_list = content.xpath(frame1_xpath, namespaces=content.nsmap)
     self.assertEqual(len(frame1_list), 1)
 
+    self._validate(odf_document)
+    
     # 02. no report section
     custom.manage_delObjects(['FooReport_getReportSectionList'])
     createZODBPythonScript(
