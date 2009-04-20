@@ -262,7 +262,7 @@ class FolderMixIn(ExtensionClass.Base):
     return my_id
 
   security.declareProtected(Permissions.View, 'hasContent')
-  def hasContent(self,id):
+  def hasContent(self, id):
     return self.hasObject(id)
 
   # Get the content
@@ -404,6 +404,10 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   _edit = Base._edit
   security.declareProtected( Permissions.ModifyPortalContent, 'setTitle' )
   setTitle = Base.setTitle
+  security.declareProtected( Permissions.AccessContentsInformation, 'title_or_id' )
+  title_or_id = Base.title_or_id
+  security.declareProtected( Permissions.AccessContentsInformation, 'Title' )
+  Title = Base.Title
   _setPropValue = Base._setPropValue
   _propertyMap = Base._propertyMap # are there any others XXX ?
   PUT_factory = WebDAVFolder.PUT_factory
