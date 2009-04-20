@@ -1631,6 +1631,10 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
     return modified_object_list
 
   def _importFile(self, file_name, file):
+    if not file_name.endswith('.xml'):
+      if not file_name.endswith('.zexp'):
+        LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
     # import workflow chain for portal_type
     dict = {}
     xml = parse(file)
@@ -1738,6 +1742,10 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
     return modified_object_list
 
   def _importFile(self, file_name, file):
+    if not file_name.endswith('.xml'):
+      if not file_name.endswith('.zexp'):
+        LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
     path, name = posixpath.split(file_name)
     xml = parse(file)
     portal_type_list = xml.getElementsByTagName('portal_type')
@@ -2447,6 +2455,10 @@ class SitePropertyTemplateItem(BaseTemplateItem):
 
   def _importFile(self, file_name, file):
     # recreate list of site property from xml file
+    if not file_name.endswith('.xml'):
+      if not file_name.endswith('.zexp'):
+        LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
     xml = parse(file)
     property_list = xml.getElementsByTagName('property')
     for prop in property_list:
@@ -2884,6 +2896,10 @@ class RoleTemplateItem(BaseTemplateItem):
     p.__ac_roles__ = tuple(roles.keys())
 
   def _importFile(self, file_name, file):
+    if not file_name.endswith('.xml'):
+      if not file_name.endswith('.zexp'):
+        LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
     xml = parse(file)
     role_list = xml.getElementsByTagName('role')
     for role in role_list:
