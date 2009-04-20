@@ -34,37 +34,37 @@ from Products.ERP5.Document.PaySheetLine import PaySheetLine
 from zLOG import LOG
 
 class PaySheetModelLine(PaySheetLine, Predicate):
-    """
-      A PaySheetModelLine object allows to implement lines in
-      PaySheetModel.
-      A PaySheetModelLine contain all parameters witch make it possible to
-      calculate a service contribution.
-    """
+  """
+    A PaySheetModelLine object allows to implement lines in
+    PaySheetModel.
+    A PaySheetModelLine contain all parameters witch make it possible to
+    calculate a service contribution.
+  """
 
-    meta_type = 'ERP5 Pay Sheet Model Line'
-    portal_type = 'Pay Sheet Model Line'
-    add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
+  meta_type = 'ERP5 Pay Sheet Model Line'
+  portal_type = 'Pay Sheet Model Line'
+  add_permission = Permissions.AddPortalContent
+  isPortalContent = 1
+  isRADContent = 1
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative interfaces
-    __implements__ = ( Interface.Variated, )
+  # Declarative interfaces
+  __implements__ = ( Interface.Variated, )
 
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Amount
-                      , PropertySheet.Task
-                      , PropertySheet.Arrow
-                      , PropertySheet.Movement
-                      , PropertySheet.Price
-                      , PropertySheet.VariationRange
-                      , PropertySheet.MappedValue
-                      , PropertySheet.PaySheetModelLine
-                      , PropertySheet.Predicate
-                      )
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.Amount
+                    , PropertySheet.Task
+                    , PropertySheet.Arrow
+                    , PropertySheet.Movement
+                    , PropertySheet.Price
+                    , PropertySheet.VariationRange
+                    , PropertySheet.MappedValue
+                    , PropertySheet.PaySheetModelLine
+                    , PropertySheet.Predicate
+                    )
