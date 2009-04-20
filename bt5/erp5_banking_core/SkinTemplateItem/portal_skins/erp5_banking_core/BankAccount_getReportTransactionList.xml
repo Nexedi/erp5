@@ -69,7 +69,9 @@
 
 from Products.ERP5Type.Document import newTempBase\n
 \n
-if reference is None:\n
+if reference == []:\n
+  return []\n
+elif reference is None:\n
   account_list = [context]\n
 else:\n
   account_list = context.BankAccount_getReportInformationList(reference=reference, \n
