@@ -57,6 +57,7 @@
   context.REQUEST.RESPONSE.setCookie(\'portal_skin\', skin_name)\n
 else:\n
   context.REQUEST.RESPONSE.expireCookie(\'portal_skin\')\n
+return context.REQUEST.RESPONSE.redirect(context.absolute_url())\n
 </string> </value>
         </item>
         <item>
@@ -67,7 +68,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>skin_name=\'\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -87,7 +88,7 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -107,7 +108,9 @@ else:\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string></string>
+              </tuple>
             </value>
         </item>
         <item>
