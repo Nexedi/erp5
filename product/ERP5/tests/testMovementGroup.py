@@ -432,6 +432,20 @@ class TestCategoryMovementGroup(MovementGroupTestCase):
       group.getGroupEditDict() == dict(destination_list=['A'],
                                        source_list=['2'])]))
 
+
+class TestMovementGroupCommonAPI(unittest.TestCase):
+
+  def test_separateMethod(self):
+    """Make sure that _separate method works if argument is an empty list."""
+    import Products.ERP5Type.Document
+    for name in Products.ERP5Type.Document.__dict__:
+      if name[0].isupper() and name.endswith('MovementGroup'):
+        module = getattr(Products.ERP5Type.Document, name)
+        class_ = getattr(module, name)
+        instance = class_('dummy')
+        self.assertEqual(instance._separate([]), [])
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPropertyMovementGroup))
@@ -441,5 +455,6 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestDeliveryCausalityAssignmentMovementGroup))
   suite.addTest(unittest.makeSuite(TestDuplicatedKeyRaiseException))
   suite.addTest(unittest.makeSuite(TestCategoryMovementGroup))
+  suite.addTest(unittest.makeSuite(TestMovementGroupCommonAPI))
   return suite
 
