@@ -1073,14 +1073,14 @@ class Movement(XMLObject, Amount):
   def getSourceArrowList(self, context=None):
     # Naive implementation - XXX
     return self._getCategoryMembershipList(self, ('source', 'source_section', 'source_project', 
-                                                  'source_trade', 'source_function', )):
+                                                  'source_trade', 'source_function', ))
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationArrowList')
   def getDestinationArrowList(self, context=None):
     # Naive implementation - XXX
     return self._getCategoryMembershipList(self, ('destination', 'destination_section',
                                                   'destination_project', 
-                                                  'destination_trade', 'destination_function', )):
+                                                  'destination_trade', 'destination_function', ))
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setSourceArrowList')
   def setSourceArrowList(self, path):
