@@ -236,16 +236,8 @@
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>quantity_unit</string>
-                          <string>UOM</string>
-                        </tuple>
-                        <tuple>
                           <string>price</string>
                           <string>Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>price_currency_reference</string>
-                          <string>Currency</string>
                         </tuple>
                         <tuple>
                           <string>movement.start_date</string>
