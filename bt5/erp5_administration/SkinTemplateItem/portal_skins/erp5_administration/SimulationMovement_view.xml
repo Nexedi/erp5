@@ -94,6 +94,7 @@
                         <string>my_delivery_ratio</string>
                         <string>my_delivery_error</string>
                         <string>my_price</string>
+                        <string>my_frozen</string>
                       </list>
                     </value>
                 </item>
