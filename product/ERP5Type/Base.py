@@ -2406,11 +2406,11 @@ class Base( CopyContainer,
         return title
     return self.getId()
 
-  security.declareProtected( Permissions.View, 'Title' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'Title' )
   Title = getTitleOrId
 
   # CMF Compatibility
-  security.declareProtected( Permissions.View, 'title_or_id' )
+  security.declareProtected(Permissions.AccessContentsInformation, 'title_or_id' )
   title_or_id = getTitleOrId
 
   security.declareProtected(Permissions.AccessContentsInformation,
