@@ -129,7 +129,7 @@ class DeliveryBuilder(OrderBuilder):
       movement_list = select_method(**kw)
     # XXX Use buildSQLQuery will be better
     movement_list = [x for x in movement_list if \
-                     x.getDeliveryRelatedValueList()==[]]
+                     x.getDeliveryValueList()==[]]
     # XXX  Add predicate test
     # XXX FIXME Check that there is no double in the list
     # Because we can't trust simulation_select_method

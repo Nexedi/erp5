@@ -65,6 +65,17 @@ class TestPackingListMixin(TestOrderMixin):
                       stepCheckPackingListIsNotDivergent \
                       stepCheckOrderPackingList '
 
+  confirmed_order_without_packing_list = default_order_sequence + '\
+                      stepCreateNotVariatedResource \
+                      stepTic \
+                      stepCreateOrderLine \
+                      stepSetOrderLineResource \
+                      stepSetOrderLineDefaultValues \
+                      stepOrderOrder \
+                      stepTic \
+                      stepConfirmOrder \
+                      stepTic '
+
   default_sequence_with_duplicated_lines = default_order_sequence + '\
                       stepCreateNotVariatedResource \
                       stepTic \
@@ -1337,6 +1348,37 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     if err_list:
       self.fail(''.join(err_list))
 
+  def test_15_CheckBuilderCanBeCalledTwiveSafely(self):
+    """
+    Builder design should allows to call the build method as many times as we 
+    want. Make sure that we will not have duplicated packing list if build is 
+    called several times.
+    """
+    delivery_builder = getattr(self.getPortalObject().portal_deliveries, 
+                               self.delivery_builder_id)
+ 
+    def doNothing(self, *args, **kw):
+      pass
+    original_delivery_builder_build =  delivery_builder.__class__.build
+
+    try:
+      # We patch the delivery builder to make sure that it will not be
+      # called by activities
+      delivery_builder.__class__.build = doNothing
+      sequence_list = SequenceList()
+
+      # Test with a simply order without cell
+      sequence_string = self.confirmed_order_without_packing_list
+      sequence_list.addSequenceString(sequence_string)
+      sequence_list.play(self)
+
+      # Now restore the build method and make sure first call returns document
+      delivery_builder.__class__.build = original_delivery_builder_build
+      self.assertTrue(len(delivery_builder.build()) > 0)
+      # The second call should returns empty result even if tic not called
+      self.assertTrue(len(delivery_builder.build()) ==  0)
+    finally:
+      delivery_builder.build = original_delivery_builder_build
 
 class TestPurchasePackingListMixin(TestPackingListMixin):
   """Mixing class with steps to test purchase packing lists.
