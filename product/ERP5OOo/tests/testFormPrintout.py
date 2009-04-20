@@ -22,7 +22,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301,
+# USA.
 #
 ##############################################################################
 
@@ -144,6 +145,7 @@ class TestFormPrintout(ERP5TypeTestCase):
                      'application/vnd.oasis.opendocument.text; charset=utf-8')
     self.assertEqual(request.RESPONSE.getHeader('content-disposition'),
                      'inline;filename="Foo_viewAsPrintout.odt"')
+    self._validate(odf_document)
     
     # 2. Normal case: change the field value and check again the ODF document
     test1.setTitle("Changed Title!")
@@ -153,7 +155,8 @@ class TestFormPrintout(ERP5TypeTestCase):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("Changed Title!") > 0)
-
+    self._validate(odf_document)
+    
     # 3. False case: change the field name 
     test1.setTitle("you cannot find")
     # rename id 'my_title' to 'xxx_title', then does not match in the ODF document
@@ -164,6 +167,7 @@ class TestFormPrintout(ERP5TypeTestCase):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertFalse(content_xml.find("you cannot find") > 0)
+    self._validate(odf_document)
     # put back
     foo_form.manage_renameObject('xxx_title', 'my_title', REQUEST=request)
 
@@ -191,7 +195,8 @@ class TestFormPrintout(ERP5TypeTestCase):
     self.assertTrue(content_xml.find("call!") > 0)
     # when just call FormPrintout, it does not change content-type
     self.assertEqual(request.RESPONSE.getHeader('content-type'), 'text/html')
-
+    self._validate(odf_document)
+    
     # 5. Normal case: utf-8 string
     test1.setTitle("Français")
     odf_document = foo_printout() 
@@ -199,7 +204,8 @@ class TestFormPrintout(ERP5TypeTestCase):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("Français") > 0)
-
+    self._validate(odf_document)
+    
     # 6. Normal case: unicode string
     test1.setTitle(u'Français test2')
     odf_document = foo_printout() 
@@ -207,7 +213,8 @@ class TestFormPrintout(ERP5TypeTestCase):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("Français test2") > 0)
-    
+    self._validate(odf_document)
+        
   def test_02_Table_01_Normal(self, run=run_all_test):
     """To test listbox and ODF table mapping
     
@@ -258,7 +265,8 @@ class TestFormPrintout(ERP5TypeTestCase):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("foo_title_1") > 0)
-
+    self._validate(odf_document)
+    
   def test_02_Table_02_SmallerThanListboxColumns(self, run=run_all_test):
     """2. Irregular case: listbox columns count smaller than table columns count"""
     if not run: return 
@@ -300,6 +308,7 @@ class TestFormPrintout(ERP5TypeTestCase):
     content_xml = builder.extract("content.xml")
     self.assertFalse(content_xml.find("foo_title_1") > 0)
     self.assertTrue(content_xml.find("foo_title_2") > 0)
+    self._validate(odf_document)
 
   def test_02_Table_03_ListboxColumnsLargerThanTable(self, run=run_all_test):
     """3. Irregular case: listbox columns count larger than table columns count"""
@@ -336,7 +345,8 @@ class TestFormPrintout(ERP5TypeTestCase):
     content_xml = builder.extract("content.xml")
     self.assertFalse(content_xml.find("foo_title_2") > 0)
     self.assertTrue(content_xml.find("foo_title_3") > 0)
-
+    self._validate(odf_document)
+    
   def test_02_Table_04_ListboxHasNotStat(self, run=run_all_test):
     """4. Irregular case: listbox has not a stat line, but table has a stat line"""
     if not run: return 
@@ -385,7 +395,8 @@ class TestFormPrintout(ERP5TypeTestCase):
     span_attribute = "{%s}number-columns-spanned" % content.nsmap['table']
     self.assertFalse(first_row_columns[0].attrib.has_key(span_attribute))
     self.assertEqual(int(last_row_columns[0].attrib[span_attribute]), 2)
-
+    self._validate(odf_document)
+    
   def test_02_Table_05_NormalSameLayout(self, run=run_all_test):
     """5. Normal case: the listobx and the ODF table are same layout
 
@@ -431,6 +442,7 @@ class TestFormPrintout(ERP5TypeTestCase):
     content_xml = builder.extract("content.xml")
     self.assertFalse(content_xml.find("foo_title_4") > 0)
     self.assertTrue(content_xml.find("foo_title_5") > 0)
+    self._validate(odf_document)
     
     # put back the field name
     foo_form.manage_renameObject('listbox2', 'listbox', REQUEST=request)
@@ -474,14 +486,15 @@ class TestFormPrintout(ERP5TypeTestCase):
     self.assertTrue(listboxline_list[1].getColumnProperty('title') == "foo_title_6")
     
     odf_document = foo_printout.index_html(REQUEST=request)
-    #test_output = open("/tmp/test_02_06_Table.odf", "w")
-    #test_output.write(odf_document)
+    test_output = open("/tmp/test_02_06_Table.odf", "w")
+    test_output.write(odf_document)
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertFalse(content_xml.find("foo_title_5") > 0)
     self.assertTrue(content_xml.find("foo_title_6") > 0)
-
+    self._validate(odf_document)
+    
     # put back the field name
     foo_form.manage_renameObject('listbox3', 'listbox', REQUEST=request)
 
@@ -530,7 +543,7 @@ class TestFormPrintout(ERP5TypeTestCase):
     date_value_attrib = "{%s}date-value" % content.nsmap['office']
     self.assertTrue(date_column.attrib.has_key(date_value_attrib))
     self.assertEqual(date_column.attrib[date_value_attrib], '2009-04-20')
-
+    self._validate(odf_document)
 
   def test_02_Table_08_Nodata(self, run=run_all_test):
     """7. Normal case: list box has no data"""
@@ -564,7 +577,8 @@ class TestFormPrintout(ERP5TypeTestCase):
     odf_table_rows = content.xpath(table_row_xpath, namespaces=content.nsmap)
     # no rows
     self.assertEqual(len(odf_table_rows), 0)
-
+    self._validate(odf_document)
+    
   def _test_03_Frame(self, run=run_all_test):
     """
     Frame not supported yet
@@ -667,7 +681,8 @@ return []
     frame_list = content.xpath(frame_xpath, namespaces=content.nsmap)
     # the frame was removed
     self.assertEqual(len(frame_list), 0)
-     
+    self._validate(odf_document)
+    
   def _test_05_Styles(self, run=run_all_test):
     """
     styles.xml not tested yet

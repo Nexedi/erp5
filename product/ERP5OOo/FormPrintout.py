@@ -22,12 +22,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-#
+# Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301,
+# USA.
 ##############################################################################
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Products.CMFCore.utils import _checkPermission, getToolByName
+from Products.CMFCore.utils import _checkPermission
 from Products.PythonScripts.Utility import allow_class
 from Products.ERP5Type import PropertySheet, Permissions
 from Products.ERP5Form.ListBox import ListBox
@@ -316,14 +316,15 @@ class ODFStrategy(Implicit):
     return ooo_builder
 
   def _replaceXmlByForm(self, element_tree=None, form=None, here=None,
-                           extra_context=None, ooo_builder=None):
+                           extra_context=None, ooo_builder=None, iteration_index=0):
     field_list = form.get_fields(include_disabled=1) 
     REQUEST = get_request()
     for (count, field) in enumerate(field_list):
       if isinstance(field, ListBox):
         element_tree = self._appendTableByListbox(element_tree=element_tree,
                                                   listbox=field,
-                                                  REQUEST=REQUEST)
+                                                  REQUEST=REQUEST,
+                                                  iteration_index=iteration_index)
       elif isinstance(field, FormBox):
         if not hasattr(here, field.get_value('formbox_target_id')):
           continue
@@ -332,23 +333,25 @@ class ODFStrategy(Implicit):
                                             field=field,
                                             form=sub_form,
                                             extra_context=extra_context,
-                                            ooo_builder=ooo_builder)
+                                            ooo_builder=ooo_builder,
+                                            iteration_index=iteration_index)
       elif isinstance(field, ImageField):
         element_tree = self._replaceXmlByImageField(element_tree=element_tree,
                                                     image_field=field,
-                                                    ooo_builder=ooo_builder)
+                                                    ooo_builder=ooo_builder,
+                                                    iteration_index=iteration_index)
       else:
         element_tree = self._replaceNodeViaReference(element_tree=element_tree,
-                                                     field=field)
+                                                     field=field, iteration_index=iteration_index)
     return element_tree
 
-  def _replaceNodeViaReference(self, element_tree=None, field=None):
+  def _replaceNodeViaReference(self, element_tree=None, field=None, iteration_index=0):
     """replace nodes (e.g. paragraphs) via ODF reference"""
     element_tree = self._replaceNodeViaRangeReference(element_tree=element_tree, field=field)
     element_tree = self._replaceNodeViaPointReference(element_tree=element_tree, field=field)
     return element_tree
   
-  def _replaceNodeViaPointReference(self, element_tree=None, field=None):
+  def _replaceNodeViaPointReference(self, element_tree=None, field=None, iteration_index=0):
     """replace via ODF point reference
     
     point reference example:
@@ -370,9 +373,14 @@ class ODFStrategy(Implicit):
           paragraph_node.text = value
       else:
         self._appendParagraphsWithLineList(target_node=target_node, line_list=field_value)
+    # set when using report section
+    self._setUniqueElementName(base_name=field.id,
+                               iteration_index=iteration_index,
+                               xpath=reference_xpath,
+                               element_tree=element_tree)
     return element_tree
   
-  def _replaceNodeViaRangeReference(self, element_tree=None, field=None):
+  def _replaceNodeViaRangeReference(self, element_tree=None, field=None, iteration_index=0):
     """replace via ODF range reference
 
     range reference example:
@@ -395,6 +403,12 @@ class ODFStrategy(Implicit):
         node.tail = ''
     else:
       self._appendParagraphsWithLineList(target_node=target_node, line_list=field_value)
+
+    # set when using report section
+    self._setUniqueElementName(base_name=field.id,
+                               iteration_index=iteration_index,
+                               xpath=range_reference_xpath,
+                               element_tree=element_tree)
     return element_tree
 
   def _appendParagraphsWithLineList(self, target_node=None, line_list=None):
@@ -459,39 +473,57 @@ class ODFStrategy(Implicit):
       if index is 0:
         office_body.remove(frame_paragraph)
       else:
-        self._setReportSectionFrameName(report_method_name=report_method.__name__,
-                                        frame_paragraph_index=index,
-                                        frame_paragraph_element_tree=frame_paragraph_element_tree)
+        self._setUniqueElementName(base_name=report_method.__name__,
+                                   iteration_index=index,
+                                   xpath=report_section_frame_xpath,
+                                   element_tree=frame_paragraph_element_tree)
 
       frame_paragraph_element_tree = self._replaceXmlByForm(element_tree=frame_paragraph_element_tree,
                                                             form=form,
                                                             here=here,
                                                             extra_context=extra_context,
-                                                            ooo_builder=ooo_builder)
+                                                            ooo_builder=ooo_builder,
+                                                            iteration_index=index)
       office_body.insert(frame_paragraph_index, frame_paragraph_element_tree)
       frame_paragraph_index += 1
       report_item.popReport(portal_object, render_prefix=None)
     return element_tree
 
-  def _setReportSectionFrameName(self,
-                                 report_method_name='',
-                                 frame_paragraph_index=0,
-                                 frame_paragraph_element_tree=None):
-    report_section_frame_name =  "%s_%s" % (report_method_name, frame_paragraph_index)
-    draw_name_attribute = '{%s}name' % frame_paragraph_element_tree.nsmap['draw']
-    report_section_frame = frame_paragraph_element_tree.xpath(
-      'draw:frame[@draw:name="%s"]' % report_method_name,
-      namespaces=frame_paragraph_element_tree.nsmap)
-    if len(report_section_frame) is 0:
+  def _setUniqueElementName(self, base_name='', iteration_index=0, xpath='', element_tree=None):
+    """create a unique element name and set it to the element tree
+
+    Keyword arguments:
+    base_name -- the base name of the element
+    iteration_index -- iteration index
+    xpath -- xpath expression which was used to search the element
+    element_tree -- element tree
+    """
+    if iteration_index is 0:
       return
-    report_section_frame[0].set(draw_name_attribute, report_section_frame_name)
-  
+    def getNameAttribute(target_element=None):
+      if target_element is None:
+        return None
+      attrib = target_element.attrib
+      for key in attrib.keys():
+        if key.endswith("}name"):
+          return key
+      return None
+    odf_element_name =  "%s_%s" % (base_name, iteration_index)
+    result_list = element_tree.xpath(xpath, namespaces=element_tree.nsmap)
+    if len(result_list) is 0:
+      return
+    target_element = result_list[0]
+    name_attribute = getNameAttribute(target_element)
+    if name_attribute is not None:
+      target_element.set(name_attribute, odf_element_name)
+ 
   def _replaceXmlByFormbox(self,
                            element_tree=None,
                            field=None,
                            form=None,
                            extra_context=None,
-                           ooo_builder=None):
+                           ooo_builder=None,
+                           iteration_index=0):
     field_id = field.id
     enabled = field.get_value('enabled')
     draw_xpath = '//draw:frame[@draw:name="%s"]/draw:text-box/*' % field_id
@@ -504,14 +536,24 @@ class ODFStrategy(Implicit):
     if not enabled:
       office_body.remove(frame_paragraph)
       return element_tree
+    # set when using report section
+    self._setUniqueElementName(base_name=field_id,
+                               iteration_index=iteration_index,
+                               xpath=draw_xpath,
+                               element_tree=element_tree)
     self._replaceXmlByForm(element_tree=frame_paragraph,
                            form=form,
                            here=extra_context['here'],
                            extra_context=extra_context,
-                           ooo_builder=ooo_builder)
+                           ooo_builder=ooo_builder,
+                           iteration_index=iteration_index)
     return element_tree
 
-  def _replaceXmlByImageField(self, element_tree=None, image_field=None, ooo_builder=None):
+  def _replaceXmlByImageField(self,
+                              element_tree=None,
+                              image_field=None,
+                              ooo_builder=None,
+                              iteration_index=0):
     alt = image_field.get_value('description') or image_field.get_value('title')
     image_xpath = '//draw:frame[@draw:name="%s"]/*' % image_field.id
     image_list = element_tree.xpath(image_xpath, namespaces=element_tree.nsmap)
@@ -531,6 +573,11 @@ class ODFStrategy(Implicit):
     image_frame = image_node.getparent()
     image_frame.set('{%s}width' % element_tree.nsmap['svg'], picture_size[0])
     image_frame.set('{%s}height' % element_tree.nsmap['svg'], picture_size[1])
+    # set when using report section
+    self._setUniqueElementName(base_name=image_field.id,
+                               iteration_index=iteration_index,
+                               xpath=image_xpath,
+                               element_tree=element_tree)
     return element_tree
 
   def _createOdfUniqueFileName(self, path='', picture_type=''):
@@ -583,7 +630,8 @@ class ODFStrategy(Implicit):
   def _appendTableByListbox(self,
                             element_tree=None, 
                             listbox=None,
-                            REQUEST=None):
+                            REQUEST=None,
+                            iteration_index=0):
     table_id = listbox.id
     table_xpath = '//table:table[@table:name="%s"]' % table_id
     # this list should be one item list
@@ -642,11 +690,21 @@ class ODFStrategy(Implicit):
         row = self._updateColumnValue(row, listbox_column_list)
         newtable.append(row)
 
+    self._setUniqueElementName(base_name=table_id,
+                               iteration_index=iteration_index,
+                               xpath=table_xpath,
+                               element_tree=newtable)
     parent_paragraph.insert(target_index, newtable)
  
     return element_tree
 
   def _copyRowStyle(self, table_row_list=[], has_header_rows=False):
+    def removeOfficeAttribute(row):
+      if row is None or has_header_rows: return
+      odf_cell_list = row.findall("{%s}table-cell" % row.nsmap['table'])
+      for odf_cell in odf_cell_list:
+        self._removeColumnValue(odf_cell)
+          
     row_top = None
     row_middle = None
     row_bottom = None
@@ -667,6 +725,9 @@ class ODFStrategy(Implicit):
         row_top = deepcopy(table_row_list[0])
         row_middle = deepcopy(table_row_list[1])
         row_bottom = deepcopy(table_row_list[-1])
+
+    # remove office attribute if create a new header row 
+    removeOfficeAttribute(row_top)
     return (row_top, row_middle, row_bottom)
 
   def _updateColumnValue(self, row=None, listbox_column_list=[]):
