@@ -172,6 +172,7 @@ class ERP5TypeInformationMixIn( FactoryTypeInformation,
       'delivery', 'delivery_movement',
       'order', 'order_movement',
       'container', 'container_line',
+      'path',
       # Trade
       'discount', 'payment_condition', 'payment_node',
       'supply', 'supply_path', 'inventory_movement', 'tax_movement',
