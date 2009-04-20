@@ -317,7 +317,7 @@ class ODFStrategy(Implicit):
 
   def _replaceXmlByForm(self, element_tree=None, form=None, here=None,
                            extra_context=None, ooo_builder=None):
-    field_list = form.get_fields() 
+    field_list = form.get_fields(include_disabled=1) 
     REQUEST = get_request()
     for (count, field) in enumerate(field_list):
       if isinstance(field, ListBox):
@@ -325,11 +325,14 @@ class ODFStrategy(Implicit):
                                                   listbox=field,
                                                   REQUEST=REQUEST)
       elif isinstance(field, FormBox):
+        if not hasattr(here, field.get_value('formbox_target_id')):
+          continue
         sub_form = getattr(here, field.get_value('formbox_target_id'))
         content = self._replaceXmlByFormbox(element_tree=element_tree,
-                                            field_id=field.id,
-                                            form = sub_form,
-                                            REQUEST=REQUEST)
+                                            field=field,
+                                            form=sub_form,
+                                            extra_context=extra_context,
+                                            ooo_builder=ooo_builder)
       elif isinstance(field, ImageField):
         element_tree = self._replaceXmlByImageField(element_tree=element_tree,
                                                     image_field=field,
@@ -358,11 +361,15 @@ class ODFStrategy(Implicit):
     reference_xpath = '//text:reference-mark[@text:name="%s"]' % field_id
     reference_list = element_tree.xpath(reference_xpath, namespaces=element_tree.nsmap)
     if len(reference_list) > 0:
-      node = reference_list[0].getparent()
+      paragraph_node = reference_list[0].getparent()
+      parent_node = paragraph_node.getparent()
       # remove such a "bbb": <text:p>aaa<br/>bbb</text:p>
-      for child in node.getchildren():
-        child.tail = ''
-      node.text = value
+      if not isinstance(field_value, list):
+        for child in paragraph_node.getchildren():
+          child.tail = ''
+          paragraph_node.text = value
+      else:
+        self._appendParagraphsWithLineList(target_node=target_node, line_list=field_value)
     return element_tree
   
   def _replaceNodeViaRangeReference(self, element_tree=None, field=None):
@@ -378,15 +385,48 @@ class ODFStrategy(Implicit):
     if len(reference_list) is 0:
       return element_tree
     target_node = reference_list[0]
-    target_node.tail = value
-    for node in target_node.itersiblings():
-      end_tag_name = '{%s}reference-mark-end' % element_tree.nsmap['text']
-      name_attribute = '{%s}name' % element_tree.nsmap['text']
-      if node.tag == end_tag_name and node.get(name_attribute) == field.id:
-         break
-      node.tail = ''
+    if not isinstance(field_value, list):
+      target_node.tail = value
+      for node in target_node.itersiblings():
+        end_tag_name = '{%s}reference-mark-end' % element_tree.nsmap['text']
+        name_attribute = '{%s}name' % element_tree.nsmap['text']
+        if node.tag == end_tag_name and node.get(name_attribute) == field.id:
+          break
+        node.tail = ''
+    else:
+      self._appendParagraphsWithLineList(target_node=target_node, line_list=field_value)
     return element_tree
-  
+
+  def _appendParagraphsWithLineList(self, target_node=None, line_list=None):
+    """create paragraphs 
+    
+    example:
+    --
+    first line
+    second line
+    --
+    <p:text>
+    first line
+    </p:text>
+    <p:text>
+    second line
+    </p:text>
+    """
+    paragraph_node = target_node.getparent()
+    parent_node = paragraph_node.getparent()
+    paragraph_list = []
+    for line in line_list:
+      p = deepcopy(paragraph_node)
+      for child in p.getchildren():
+        child.tail = ''
+      value = self._toUnicodeString(line)
+      p.text = value
+      paragraph_list.append(p)
+    paragraph_node_index = parent_node.index(paragraph_node)
+    parent_node.remove(paragraph_node)
+    for (index, paragraph) in enumerate(paragraph_list):
+      parent_node.insert(paragraph_node_index + 1, paragraph)
+
   def _replaceXmlByReportSection(self, element_tree=None, extra_context=None, ooo_builder=None):
     if not extra_context.has_key('report_method') or extra_context['report_method'] is None:
       return element_tree
@@ -395,7 +435,6 @@ class ODFStrategy(Implicit):
     portal_object = self.getPortalObject()
     REQUEST = get_request()
     request = extra_context.get('REQUEST', REQUEST)
-    render_prefix = None
 
     report_section_frame_xpath = '//draw:frame[@draw:name="%s"]' % report_method.__name__
     frame_list = element_tree.xpath(report_section_frame_xpath, namespaces=element_tree.nsmap)
@@ -408,12 +447,10 @@ class ODFStrategy(Implicit):
     if len(report_section_list) is 0:
       office_body.remove(frame_paragraph)
       return element_tree
-    frame_paragraph_element_tree = deepcopy(frame_paragraph)
     frame_paragraph_index = office_body.index(frame_paragraph)
     temporary_element_tree = deepcopy(frame_paragraph)
     for (index, report_item) in enumerate(report_section_list):
-      render_prefix = 'x%s' % index
-      report_item.pushReport(portal_object, render_prefix = render_prefix)
+      report_item.pushReport(portal_object, render_prefix=None)
       here = report_item.getObject(portal_object)
       form_id = report_item.getFormId()
       form = getattr(here, form_id)
@@ -426,7 +463,6 @@ class ODFStrategy(Implicit):
                                         frame_paragraph_index=index,
                                         frame_paragraph_element_tree=frame_paragraph_element_tree)
 
-
       frame_paragraph_element_tree = self._replaceXmlByForm(element_tree=frame_paragraph_element_tree,
                                                             form=form,
                                                             here=here,
@@ -434,7 +470,7 @@ class ODFStrategy(Implicit):
                                                             ooo_builder=ooo_builder)
       office_body.insert(frame_paragraph_index, frame_paragraph_element_tree)
       frame_paragraph_index += 1
-      report_item.popReport(portal_object, render_prefix = render_prefix)
+      report_item.popReport(portal_object, render_prefix=None)
     return element_tree
 
   def _setReportSectionFrameName(self,
@@ -450,22 +486,29 @@ class ODFStrategy(Implicit):
       return
     report_section_frame[0].set(draw_name_attribute, report_section_frame_name)
   
-  def _replaceXmlByFormbox(self, element_tree=None, field_id=None, form=None, REQUEST=None):
+  def _replaceXmlByFormbox(self,
+                           element_tree=None,
+                           field=None,
+                           form=None,
+                           extra_context=None,
+                           ooo_builder=None):
+    field_id = field.id
+    enabled = field.get_value('enabled')
     draw_xpath = '//draw:frame[@draw:name="%s"]/draw:text-box/*' % field_id
     text_list = element_tree.xpath(draw_xpath, namespaces=element_tree.nsmap)
     if len(text_list) == 0:
       return element_tree
-    parent = text_list[0].getparent()
-    parent.clear()
-    # this form.__call__() possibly has a side effect,
-    # so must clear the 'here' context for listBox.get_value()
-    box = form(REQUEST=REQUEST);
-    REQUEST.set('here', None)
-    node = etree.XML(box)
-    # TODO style_copy
-    if node is not None:
-      for child in node.getchildren():
-        parent.append(child)
+    target_element = text_list[0]
+    frame_paragraph = target_element.getparent()
+    office_body = frame_paragraph.getparent()
+    if not enabled:
+      office_body.remove(frame_paragraph)
+      return element_tree
+    self._replaceXmlByForm(element_tree=frame_paragraph,
+                           form=form,
+                           here=extra_context['here'],
+                           extra_context=extra_context,
+                           ooo_builder=ooo_builder)
     return element_tree
 
   def _replaceXmlByImageField(self, element_tree=None, image_field=None, ooo_builder=None):

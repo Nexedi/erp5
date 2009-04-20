@@ -36,7 +36,7 @@ from lxml import etree
 import os
 
 class TestFormPrintout(ERP5TypeTestCase):
-  run_all_test = 1
+  run_all_test = 0
 
   def getTitle(self):
     """
@@ -52,12 +52,19 @@ class TestFormPrintout(ERP5TypeTestCase):
     foo_file_path = os.path.join(os.path.dirname(__file__),
                                 'test_document',
                                 'Foo_001.odt')
+    foo2_file_path = os.path.join(os.path.dirname(__file__),
+                                  'test_document',
+                                  'Foo_002.odt')   
     foo_file = open(foo_file_path, 'rb')
+    foo2_file = open(foo2_file_path, 'rb')
     custom = self.portal.portal_skins.custom
     addStyleSheet = custom.manage_addProduct['OFSP'].manage_addFile
     if custom._getOb('Foo_getODTStyleSheet', None) is None:
       addStyleSheet(id='Foo_getODTStyleSheet', file=foo_file, title='',
                     precondition='', content_type = 'application/vnd.oasis.opendocument.text')
+    if custom._getOb('Foo2_getODTStyleSheet', None) is None:
+      addStyleSheet(id='Foo2_getODTStyleSheet', file=foo2_file, title='',
+                    precondition='', content_type = 'application/vnd.oasis.opendocument.text')   
     erp5OOo = custom.manage_addProduct['ERP5OOo']
     addOOoTemplate = erp5OOo.addOOoTemplate
     if custom._getOb('Foo_viewAsOdt', None) is None:
@@ -565,37 +572,48 @@ class TestFormPrintout(ERP5TypeTestCase):
 
     erp5form.addERP5Form(id='Foo2_view', title='Foo2')
     foo2_view = custom.Foo2_view
-    foo2_view.manage_addField('listbox_report', 'listbox report', 'ListBox')
-    listbox_report = foo2_view.listbox_report
-    message = listbox_report.ListBox_setPropertyList(
-      field_list_method = 'objectValues',
+    foo2_view.manage_addField('listbox', 'listbox', 'ListBox')
+    listbox = foo2_view.listbox
+
+    createZODBPythonScript(
+      self.portal.portal_skins.custom,
+      'FooReport_getFooList',
+      'title,**kw',
+r"""
+foo_list = context.objectValues(portal_type='Foo Line')
+for foo in foo_list:
+  foo.setTitle(title)
+return foo_list
+"""
+      )
+    message = listbox.ListBox_setPropertyList(
+      field_list_method = 'FooReport_getFooList',
       field_portal_types = 'Foo Line | Foo Line',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
     self.failUnless('Set Successfully' in message)
     createZODBPythonScript(
-        self.portal.portal_skins.custom,
-        'FooReport_getReportSectionList',
-        '',
+      self.portal.portal_skins.custom,
+      'FooReport_getReportSectionList',
+      '',
 r"""
 from Products.ERP5Form.Report import ReportSection
 
 r1 = ReportSection(path=context.getPhysicalPath(),
                    form_id='Foo2_view',
-                   selection_report_list = [''])
+                   selection_params={'title':'foo_04_Iteration_1'})
 r2 = ReportSection(path=context.getPhysicalPath(),
                    form_id='Foo2_view',
-                   selection_report_list = [''])
+                   selection_params={'title':'foo_04_Iteration_2'})
 report_section_list = [r1, r2]
 return report_section_list
 """
         )
     test1 = self.portal.foo_module.test1
-    test1.foo_1.setTitle('foo_04_Iteration')
     foo_report_printout = test1.FooReport_viewAsPrintout
     foo_report_printout.doSettings(REQUEST=None,
                                    title='',
                                    form_name='FooReport_view',
-                                   template='Foo_getODTStyleSheet')
+                                   template='Foo2_getODTStyleSheet')
     odf_document = foo_report_printout()
 
     #test_output = open("/tmp/test_04_Iteratoin.odf", "w")
@@ -603,7 +621,7 @@ return report_section_list
     self.assertTrue(odf_document is not None)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
-    self.assertTrue(content_xml.find("foo_04_Iteration") > 0)
+    self.assertTrue(content_xml.find("foo_04_Iteration_1") > 0)
     content = etree.XML(content_xml)
     frame_xpath = '//draw:frame[@draw:name="FooReport_getReportSectionList"]'
     frame_list = content.xpath(frame_xpath, namespaces=content.nsmap)
