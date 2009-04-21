@@ -329,10 +329,38 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     module_type.filter_content_types = 1
     module_type.allowed_content_types = ('Geek Object',)
     module_type.hidden_content_type_list = ('Geek Object',)
+    module_type.base_category_list = ('destination',)
+    module_type.property_sheet_list = ('Version',)
     sequence.edit(module_ptype_id=module_type.getId(),
           module_ptype_filter_content_types=module_type.filter_content_types,
           module_ptype_allowed_content_types=module_type.allowed_content_types,
-          module_ptype_hidden_content_type_list=module_type.hidden_content_type_list)
+          module_ptype_hidden_content_type_list=module_type.hidden_content_type_list,
+          module_ptype_base_category_list=module_type.base_category_list,
+          module_ptype_property_sheet_list=module_type.property_sheet_list)
+
+  def stepModifyPortalTypeInBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Modify Portal Type
+    * remove Geek Object and add Geek Module in allowed_content_type
+    * empty hidden_content_type
+    * remove 'destination' and add 'source' in base_category_list
+    * empty property_sheet_list
+    """
+    pt = self.getTypeTool()
+    module_type = pt._getOb('Geek Module', None)
+    self.failUnless(module_type is not None)
+    module_type.allowed_content_types = list(module_type.allowed_content_types) + ['Geek Module']
+    module_type.base_category_list = list(module_type.base_category_list) + ['source']
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    bt.edit(template_portal_type_allowed_content_type=('Geek Module | Geek Module',),
+            template_portal_type_hidden_content_type=(),
+            template_portal_type_base_category=('Geek Module | source',),
+            template_portal_type_property_sheet=())
+    sequence.edit(module_ptype_allowed_content_types=('Geek Module',),
+                  module_ptype_hidden_content_type_list=(),
+                  module_ptype_base_category_list=('source',),
+                  module_ptype_property_sheet_list=())
 
   def stepAddPortalTypeToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
     """
@@ -397,6 +425,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         sequence.get('module_ptype_hidden_content_type_list'))
     self.assertEquals(module_type.filter_content_types,
         sequence.get('module_ptype_filter_content_types'))
+    self.assertEquals(module_type.base_category_list,
+        sequence.get('module_ptype_base_category_list'))
+    self.assertEquals(module_type.property_sheet_list,
+        sequence.get('module_ptype_property_sheet_list'))
     object_type = pt._getOb(object_id, None)
     self.failUnless(object_type is not None)
 
@@ -2386,7 +2418,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       prop_type = prop['type']
       pid = prop['id']
       if pid in ('id', 'uid', 'rid', 'sid', 'id_group', 'last_id',
-                'install_object_list_list', 'title', 'version', 'description'):
+                 'install_object_list_list', 'title', 'version', 'description',
+                 'template_portal_type_allowed_content_type_list',
+                 'template_portal_type_hidden_content_type_list',
+                 'template_portal_type_property_sheet_list',
+                 'template_portal_type_base_category_list'):
           continue
       if prop_type == 'text' or prop_type == 'string':
         prop_dict[pid] = ''
@@ -2538,6 +2574,32 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
                        CheckNoTrashBin \
+                       CheckSkinsLayers \
+                       CheckPortalTypeExists \
+                       CreateSecondBusinessTemplate \
+                       UseSecondBusinessTemplate \
+                       AddPortalTypeToBusinessTemplate \
+                       FillPortalTypesFields \
+                       ModifyPortalTypeInBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
                        CheckSkinsLayers \
                        CheckPortalTypeExists \
                        UninstallBusinessTemplate \

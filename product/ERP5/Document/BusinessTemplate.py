@@ -1660,6 +1660,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
   name = 'Allowed Content Type'
   xml_tag = 'allowed_content_type_list'
   class_property = 'allowed_content_types'
+  business_template_class_property = '_portal_type_allowed_content_type_item'
 
   def build(self, context, **kw):
     types_tool = self.getPortalObject().portal_types
@@ -1762,7 +1763,13 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
     pt = p.unrestrictedTraverse('portal_types')
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
-    for key in self._objects.keys():
+    installed_bt = kw.get('installed_bt')
+    if installed_bt is not None:
+      old_objects = getattr(installed_bt,
+                            self.business_template_class_property)._objects
+    else:
+      old_objects = {}
+    for key in set(self._objects.keys()).union(set(old_objects.keys())):
       if update_dict.has_key(key) or force:
         if not force:
           action = update_dict[key]
@@ -1774,13 +1781,18 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
         except AttributeError:
           LOG("portal types not found : ", 100, portal_id)
           continue
-        property_list = self._objects[key]
+        property_list = self._objects.get(key, [])
+        old_property_list = old_objects.get(key, ())
         object_property_list = getattr(portal_type, self.class_property, ())
         if len(object_property_list) > 0:
           # merge differences between portal types properties
-          # only add new, do not remove
+          # for example:
+          # * current value : [A,B,C]
+          # * in new BT : [A,D]
+          # * in old BT : [A,B]
+          # -> [A,D,C] i.e. C is merged but B is not merged
           for id in object_property_list:
-            if id not in property_list:
+            if id not in property_list and id not in old_property_list:
               property_list.append(id)
         setattr(portal_type, self.class_property, tuple(property_list))
 
@@ -1813,6 +1825,7 @@ class PortalTypeHiddenContentTypeTemplateItem(PortalTypeAllowedContentTypeTempla
   name = 'Hidden Content Type'
   xml_tag = 'hidden_content_type_list'
   class_property = 'hidden_content_type_list'
+  business_template_class_property = '_portal_type_hidden_content_type_item'
 
 
 class PortalTypePropertySheetTemplateItem(PortalTypeAllowedContentTypeTemplateItem):
@@ -1820,6 +1833,7 @@ class PortalTypePropertySheetTemplateItem(PortalTypeAllowedContentTypeTemplateIt
   name = 'Property Sheet'
   xml_tag = 'property_sheet_list'
   class_property = 'property_sheet_list'
+  business_template_class_property = '_portal_type_property_sheet_item'
 
 
 class PortalTypeBaseCategoryTemplateItem(PortalTypeAllowedContentTypeTemplateItem):
@@ -1827,6 +1841,7 @@ class PortalTypeBaseCategoryTemplateItem(PortalTypeAllowedContentTypeTemplateIte
   name = 'Base Category'
   xml_tag = 'base_category_list'
   class_property = 'base_category_list'
+  business_template_class_property = '_portal_type_base_category_item'
 
 
 class CatalogMethodTemplateItem(ObjectTemplateItem):
@@ -4777,7 +4792,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         for item_name in self._item_name_list:
           item = getattr(self, item_name, None)
           if item is not None:
-            item.install(self, force=force, object_to_update=object_to_update, trashbin=trashbin)
+            item.install(self, force=force, object_to_update=object_to_update, trashbin=trashbin, installed_bt=installed_bt)
 
       # update catalog if necessary
       if force and self.isCatalogUpdatable():
