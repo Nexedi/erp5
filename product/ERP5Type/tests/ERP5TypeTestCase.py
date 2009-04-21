@@ -837,12 +837,14 @@ class ERP5TypeTestCase(PortalTestCase):
         raise
 
     def stepPdb(self, sequence=None, sequence_list=None):
-      try:
-        import ipdb as pdb
+      """Invoke debugger"""
+      try: # try ipython if available
+        import IPython
+        IPython.Shell.IPShell(argv=[])
+        tracer = IPython.Debugger.Tracer()
       except ImportError:
-        import pdb
-      pdb.set_trace()
-      pass
+        from pdb import set_trace as tracer
+      tracer()
 
     def stepTic(self, **kw):
       """
