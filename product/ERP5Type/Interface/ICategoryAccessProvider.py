@@ -56,16 +56,23 @@ class ICategoryAccessProvider(Interface):
                                  keep_default=1, checked_permission=None, **kw):
     """
     Returns the membership for this category, without acquired membership.
+
     """
 
   def _getDefaultCategoryMembership(category, spec=(), filter=None, portal_type=(), base=0,
-                                    checked_permission=None, **kw):
+                                    default=None, checked_permission=None, **kw):
     """
     Returns the default membership for this category, without acquisition.
+
+      default -- an optional default value, if no membership is found
+
     """
 
   def _getDefaultAcquiredCategoryMembership(category, spec=(), filter=None, portal_type=(), base=0,
-                                    checked_permission=None, **kw):
+                                    default=None, checked_permission=None, **kw):
     """
     Returns the default membership for this category, with acquisition.
+
+      default -- an optional default value, if no membership is found
+
     """
