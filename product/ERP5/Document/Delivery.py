@@ -202,18 +202,19 @@ class Delivery(XMLObject, ImmobilisationDelivery):
     def _getMovementList(self, portal_type=None, **kw):
       """
         Return a list of movements.
+        First, we collect movements by movement type portal types, then
+        we filter the result by specified portal types.
       """
-      if portal_type is None:
-        portal_type = self.getPortalMovementTypeList()
+      movement_portal_type_list = self.getPortalMovementTypeList()
       movement_list = []
       add_movement = movement_list.append
       extend_movement = movement_list.extend
-      sub_object_list = self.objectValues(portal_type=portal_type)
+      sub_object_list = self.objectValues(portal_type=movement_portal_type_list)
       extend_sub_object = sub_object_list.extend
       append_sub_object = sub_object_list.append
       while sub_object_list:
         sub_object = sub_object_list.pop()
-        content_list = sub_object.objectValues(portal_type=portal_type)
+        content_list = sub_object.objectValues(portal_type=movement_portal_type_list)
         if sub_object.hasCellContent():
           cell_list = sub_object.getCellValueList()
           if len(cell_list) != len(content_list):
@@ -226,6 +227,12 @@ class Delivery(XMLObject, ImmobilisationDelivery):
           extend_sub_object(content_list)
         else:
           add_movement(sub_object)
+      if isinstance(portal_type, (list, tuple)):
+        return [x for x in movement_list \
+                if x.getPortalType() in portal_type]
+      elif portal_type is not None:
+        return [x for x in movement_list \
+                if x.getPortalType() == portal_type]
       return movement_list
     
     security.declareProtected(Permissions.AccessContentsInformation,
