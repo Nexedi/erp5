@@ -837,7 +837,11 @@ class ERP5TypeTestCase(PortalTestCase):
         raise
 
     def stepPdb(self, sequence=None, sequence_list=None):
-      import pdb; pdb.set_trace()
+      try:
+        import ipdb as pdb
+      except ImportError:
+        import pdb
+      pdb.set_trace()
       pass
 
     def stepTic(self, **kw):
