@@ -168,14 +168,10 @@ class DefaultGetter(BaseGetter):
     def __call__(self, instance, *args, **kw):
       if len(args) > 0:
         default = args[0]
+        kw['default'] = default
       else:
         default = None
-      return instance._getDefaultAcquiredCategoryMembership(self._key,
-                                                      spec=kw.get('spec',()),
-                                                      filter=kw.get('filter', None),
-                                                      portal_type=kw.get('portal_type',()),
-                                                      base=kw.get('base',0), default=default,
-                                                      checked_permission=kw.get('checked_permission', None))
+      return instance._getDefaultAcquiredCategoryMembership(self._key, **kw)
     psyco.bind(__call__)
 
 class ListGetter(BaseGetter):
