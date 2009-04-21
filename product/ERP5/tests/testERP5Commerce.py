@@ -39,45 +39,31 @@ SESSION_ID = "12345678"
 
 class TestCommerce(ERP5TypeTestCase):
   """
-  Script available in ERP5Commerce :
-  Already tested :
-  Resource_addToShoppingCart (Add resource to shopping cart)
-  SaleOrder_getShoppingCartItemList (Get shopping cart items)
-  SaleOrder_getShoppingCartTotalPrice (Calculate total price for items in shopping cart)
-  SaleOrder_getShoppingCart (Get shopping cart for customer)
-  Base_generateSessionID (Generate session ID)
-  Person_getApplicableDiscountList (Get applicable discount information)
-  Person_getApplicableTaxList (Get applicable tax information)
-  SaleOrder_confirmShopping (Redirect to appropriate form)
-  SaleOrder_deleteShoppingCartItem (Delete a shopping cart item)
-  SaleOrder_editShoppingCart (Update shopping cart)
-  SaleOrder_externalPaymentHandler (External online payment system handler)
-    
-  Not tested :
-    
-  
-  SaleOrder_finalizeShopping (Finalize order)
-  SaleOrder_getAvailableShippingResourceList (Get list of available shipping methods)
-  SaleOrder_getFormattedCreationDate (Format creation date)
-  SaleOrder_getFormattedTotalPrice (Format total price)
-  SaleOrder_getSelectedShippingResource (Get selected shipping method from shopping cart)
-  SaleOrder_getShoppingCartCustomer (Get shopping cart customer object)
-  SaleOrder_getShoppingCartDefaultCurrency (Get default currency for shop)
-  SaleOrder_getShoppingCartId (Get shopping cart id)
-  SaleOrder_isConsistent (Check shopping cart details for consistency)
-  SaleOrder_isShippingRequired (Is shipping required for current shopping cart?)
-  SaleOrder_isShoppingCartEmpty (Is shopping cart empty ?)
-
   Todo : 
-  Change name of all script, they are most of them never called on a SaleOrder
-  Test SaleOrder_getShoppingCartItemList With include_shipping=True
-  implement Person_getApplicableDiscountList (actually just return None)
-  implement Person_getApplicableTaxList (actually always return a tax of 20%)
-  Fix proxy for SaleOrder_confirmShopping, and anonym user cant call it !
-  SaleOrder_deleteShoppingCartItem doesnt use translation
-  SaleOrder_externalPaymentHandler is totally empty
-  SaleOrder_finalizeShopping doesnt check if the payment is successful or not
-  Fix proxy for SaleOrder_finalizeShopping anonym and normal user cant use it
+  > Change name of all script, they are most of them never called on a SaleOrder
+  > Test SaleOrder_getShoppingCartItemList With include_shipping=True
+  > implement Person_getApplicableDiscountList (actually just return None)
+  > implement Person_getApplicableTaxList (actually always return a tax of 20%)
+  > Fix proxy for SaleOrder_confirmShopping, and anonym user cant call it !
+  > SaleOrder_deleteShoppingCartItem doesnt use translation
+  > SaleOrder_externalPaymentHandler is totally empty
+  > SaleOrder_finalizeShopping doesnt check if the payment is successful or not
+  > Fix proxy for SaleOrder_finalizeShopping anonym and normal user cant use it
+  > SaleOrder_getAvailableShippingResourceList have hardcoded
+  > SaleOrder_getSelectedShippingResource want a shipping_method but there is not
+  > SaleOrder_getShoppingCartCustomer need to be refactor for fit clustering
+  > SaleOrder_getShoppingCartDefaultCurrency should depend of site configuration
+  > SaleOrder_isConsistent the usage must be more generic or rename it
+  > SaleOrder_isShippingRequired this script just return 1 ...
+
+  Not tested :
+  Person_getApplicableDiscountList
+  Person_getApplicableTaxList
+  SaleOrder_getAvailableShippingResourceList
+  SaleOrder_externalPaymentHandler
+  SaleOrder_finalizeShopping
+  SaleOrder_getSelectedShippingResource
+  SaleOrder_isShippingRequired
   """
 
   run_all_test = 1
@@ -162,14 +148,17 @@ class TestCommerce(ERP5TypeTestCase):
     
     # set 'session_id' to simulate browser (cookie) environment 
     request.set('session_id', SESSION_ID)
+    self.assertEquals(SESSION_ID, portal.SaleOrder_getShoppingCartId())
 
     # add product to shopping cart
+    self.assertTrue(portal.SaleOrder_isShoppingCartEmpty())
     portal.Resource_addToShoppingCart(default_product, 1)
     shoppping_cart_items =  portal.SaleOrder_getShoppingCartItemList()
     self.assertEquals(1, len(shoppping_cart_items))
     self.assertEquals(1, shoppping_cart_items[0].getQuantity())
     self.assertEquals(shoppping_cart_items[0].getResource(), \
                       default_product.getRelativeUrl())
+    self.assertFalse(portal.SaleOrder_isShoppingCartEmpty())
     
   def test_02_AddSameResourceToShoppingCart(self, quiet=0, run=run_all_test):
     """ 
@@ -331,7 +320,6 @@ class TestCommerce(ERP5TypeTestCase):
     default_product = self.getDefaultProduct()
     request.set('session_id', SESSION_ID)
 
-    default_product = self.getDefaultProduct()
     another_product = self.getDefaultProduct(id = '2')
     portal.Resource_addToShoppingCart(default_product, quantity=1)
     portal.Resource_addToShoppingCart(another_product, quantity=1)
@@ -409,7 +397,6 @@ class TestCommerce(ERP5TypeTestCase):
     default_product = self.getDefaultProduct()
     request.set('session_id', SESSION_ID)
 
-    default_product = self.getDefaultProduct()
     portal.Resource_addToShoppingCart(default_product, quantity=1)
     self.tic()
     transaction.commit()
@@ -443,7 +430,6 @@ class TestCommerce(ERP5TypeTestCase):
     default_product = self.getDefaultProduct()
     request.set('session_id', SESSION_ID)
 
-    default_product = self.getDefaultProduct()
     portal.Resource_addToShoppingCart(default_product, quantity=1)
     self.tic()
     transaction.commit()
@@ -489,14 +475,93 @@ class TestCommerce(ERP5TypeTestCase):
     default_product = self.getDefaultProduct()
     request.set('session_id', SESSION_ID)
 
-    default_product = self.getDefaultProduct()
     portal.Resource_addToShoppingCart(default_product, quantity=1)
     self.tic()
     transaction.commit()
     self.assertEquals(1, len(portal.SaleOrder_getShoppingCartItemList()))
     self.assertEquals(0, len(portal.sale_order_module.contentValues()))
 
-    # in works ...
+    # XXX : to finish
+    
+  def test_14_getAvailableShippingResourceList(self, quiet=0, run=run_all_test):
+    """
+      Test the SaleOrder_getAvailableShippingResourceList script
+    """
+    if not run:
+      return
+    if not quiet:
+      message = '\nTest to get the available shipping resource list'
+      ZopeTestCase._print(message)
+      LOG('Testing... ', 0, message)
+    portal = self.getPortal()
+    request = self.app.REQUEST
+    default_product = self.getDefaultProduct()
+    request.set('session_id', SESSION_ID)
+
+    # XXX : to finish
+
+  def test_15_getFormatedData(self, quiet=0, run=run_all_test):
+    """
+      Test the datas formating scripts
+    """
+    if not run:
+      return
+    if not quiet:
+      message = '\nTest to get the datas formating scripts'
+      ZopeTestCase._print(message)
+      LOG('Testing... ', 0, message)
+    portal = self.getPortal()
+
+    sale_order = portal.sale_order_module.newContent(portal_type="Sale Order",)
+    sale_order_line = sale_order.newContent(portal_type="Sale Order Line",
+                                            quantity="2",
+                                            price="10")
+
+    formated_date = sale_order.SaleOrder_getFormattedCreationDate()
+    formated_price = sale_order.SaleOrder_getFormattedTotalPrice()
+    self.assertEqual(sale_order.getCreationDate().strftime('%a, %b %Y %H:%M %p'), formated_date)
+    self.assertEqual('%s %s' %('20.0', sale_order.getPriceCurrencyTitle()), formated_price)
+
+  def test_16_getSelectedShippingResource(self, quiet=0, run=run_all_test):
+    """
+      Test the SaleOrder_getSelectedShippingResource script
+    """
+    if not run:
+      return
+    if not quiet:
+      message = '\nTest to get selected shipping method from shopping cart'
+      ZopeTestCase._print(message)
+      LOG('Testing... ', 0, message)
+    portal = self.getPortal()
+    request = self.app.REQUEST
+    request.set('session_id', SESSION_ID)
+    default_product = self.getDefaultProduct()
+
+    portal.Resource_addToShoppingCart(default_product, 1)
+    shopping_cart = portal.SaleOrder_getShoppingCart()
+    shipping_resource_list = portal.SaleOrder_getAvailableShippingResourceList()
+    # how to set shopping_cart.shipping_method ?
+
+    #self.assertEquals(shipping_resource_list[0],
+    #                  portal.SaleOrder_getSelectedShippingResource())
+
+  def test_17_getShoppingCartDefaultCurrency(self, quiet=0, run=run_all_test):
+    """
+      Test the SaleOrder_getShoppingCartDefaultCurrency script
+    """
+    if not run:
+      return
+    if not quiet:
+      message = '\nTest to get the default currency of a shopping cart'
+      ZopeTestCase._print(message)
+      LOG('Testing... ', 0, message)
+
+    portal = self.getPortal()
+    currency = portal.restrictedTraverse('currency_module/1')
+    self.assertEquals(currency, portal.SaleOrder_getShoppingCartDefaultCurrency())
+
+    
+
     
 import unittest
 def test_suite():
