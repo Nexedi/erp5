@@ -20,6 +20,7 @@ market_segment
 nationality
 natural_parent
 payment_mode
+predecessor
 price_currency
 region
 role
@@ -32,4 +33,5 @@ source_referral
 source_region
 specialise
 subordination
+successor
 use
