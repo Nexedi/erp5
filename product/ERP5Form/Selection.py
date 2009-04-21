@@ -205,22 +205,16 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
           del kw['sort_on'] # We should not sort if no sort was defined
         # We should always set selection_name with self.name
         kw['selection_name'] = self.name
-        if method is not None:
-          if callable(method):
-            if self.domain is not None and self.report is not None:
-              result = method(selection_domain = self.domain,
-                              selection_report = self.report, selection=self, **kw)
-            elif self.domain is not None:
-              result = method(selection_domain = self.domain, selection=self, **kw)
-            elif self.report is not None:
-              result = method(selection_report = self.report, selection=self, **kw)
-            else:
-              result = method(selection=self, **kw)
-            return result
-          else:
-            return []
+        kw['selection'] = self
+        if self.domain is not None:
+          kw['selection_domain'] = self.domain
+        if self.report is not None:
+          kw['selection_report'] = self.report
+        if callable(method):
+          result = method(**kw)
         else:
-          return []
+          result = []
+        return result
 
     def __getitem__(self, index, REQUEST=None):
         return self(REQUEST)[index]
