@@ -189,6 +189,8 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
         #LOG("Selection", 0, str(method))
         #LOG('Selection', 0, "self.invert_mode = %s" % repr(self.invert_mode))
         kw = self.params.copy()
+        # Always remove '-C'-named parameter.
+        kw.pop('-C', None)
         if self.invert_mode is not 0:
           kw['uid'] = self.uids
         if method is None or isinstance(method, str):
