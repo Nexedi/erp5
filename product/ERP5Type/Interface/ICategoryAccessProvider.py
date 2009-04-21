@@ -33,9 +33,12 @@ class ICategoryAccessProvider(Interface):
     This interface defines the methods which must be implemented
     by a class in order to support Category accessors.
   """
-  def _getCategoryMembershipList(category, spec=(), filter=None, portal_type=(), base=0, 
-                                 keep_default=1, checked_permission=None, **kw):
+
+  def _getAcquiredCategoryMembershipList(category, spec=(), filter=None,
+      portal_type=(), base=0, keep_default=1, checked_permission=None, **kw):
     """
+    Returns the membership for this category, with acquired membership.
+
       spec -- 
 
       filter --
@@ -49,7 +52,20 @@ class ICategoryAccessProvider(Interface):
       kw -- 
     """
 
+  def _getCategoryMembershipList(category, spec=(), filter=None, portal_type=(), base=0,
+                                 keep_default=1, checked_permission=None, **kw):
+    """
+    Returns the membership for this category, without acquired membership.
+    """
+
   def _getDefaultCategoryMembership(category, spec=(), filter=None, portal_type=(), base=0,
                                     checked_permission=None, **kw):
     """
+    Returns the default membership for this category, without acquisition.
+    """
+
+  def _getDefaultAcquiredCategoryMembership(category, spec=(), filter=None, portal_type=(), base=0,
+                                    checked_permission=None, **kw):
+    """
+    Returns the default membership for this category, with acquisition.
     """
