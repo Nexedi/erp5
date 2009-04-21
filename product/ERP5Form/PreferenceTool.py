@@ -126,7 +126,11 @@ class PreferenceMethod(Method):
   def __call__(self, instance, *args, **kw):
     def _getPreference(*args, **kw):
       value = None
-      for pref in instance._getSortedPreferenceList(*args, **kw):
+      # XXX: sql_catalog_id is passed when calling getPreferredArchive
+      # This is inconsistent with regular accessor API, and indicates that
+      # there is a design problem in current archive API.
+      sql_catalog_id = kw.pop('sql_catalog_id', None)
+      for pref in instance._getSortedPreferenceList(sql_catalog_id=sql_catalog_id):
         value = getattr(pref, self._preference_name, _marker)
         # XXX-JPS Why don't we use accessors here such as:
         # value = pref.getProperty(self._preference_name, _marker)
@@ -207,7 +211,7 @@ class PreferenceTool(BaseTool):
     """ set the preference on the active Preference object"""
     self.getActivePreference()._edit(**{pref_name:value})
 
-  def _getSortedPreferenceList(self, *args, **kw) :
+  def _getSortedPreferenceList(self, sql_catalog_id=None):
     """ return the most appropriate preferences objects,
         sorted so that the first in the list should be applied first
     """
@@ -217,7 +221,7 @@ class PreferenceTool(BaseTool):
     #                  or better solution
     user = getToolByName(self, 'portal_membership').getAuthenticatedMember()
     user_is_manager = 'Manager' in user.getRolesInContext(self)
-    for pref in self.searchFolder(portal_type='Preference', **kw) :
+    for pref in self.searchFolder(portal_type='Preference', sql_catalog_id=sql_catalog_id):
       pref = pref.getObject()
       if pref is not None and pref.getProperty('preference_state',
                                 'broken') in ('enabled', 'global'):
@@ -230,7 +234,7 @@ class PreferenceTool(BaseTool):
           prefs.append(pref)
     prefs.sort(key=lambda x: x.getPriority(), reverse=True)
     # add system preferences after user preferences
-    sys_prefs = [x.getObject() for x in self.searchFolder(portal_type='System Preference', **kw) \
+    sys_prefs = [x.getObject() for x in self.searchFolder(portal_type='System Preference', sql_catalog_id=sql_catalog_id) \
                  if x.getObject().getProperty('preference_state', 'broken') in ('enabled', 'global')]
     sys_prefs.sort(key=lambda x: x.getPriority(), reverse=True)
     return sys_prefs + prefs
