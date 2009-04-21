@@ -2077,11 +2077,11 @@ class Base( CopyContainer,
   getValueList = _getValueList
 
   def _getDefaultAcquiredValue(self, id, spec=(), filter=None, portal_type=(),
-                               evaluate=1, checked_permission=None):
+                               evaluate=1, checked_permission=None, **kw):
     path = self._getDefaultAcquiredCategoryMembership(id, spec=spec, filter=filter,
-                                                  portal_type=portal_type, base=1, 
-                                                  checked_permission=checked_permission)
-    # LOG("_getAcquiredDefaultValue",0,str(path))
+                                                  portal_type=portal_type, base=1,
+                                                  checked_permission=checked_permission,
+                                                  **kw)
     if path is None:
       return None
     else:
@@ -2316,7 +2316,7 @@ class Base( CopyContainer,
 
   def _getDefaultAcquiredCategoryMembership(self, category,
                                         spec=(), filter=None, portal_type=(), base=0, default=None,
-                                        checked_permission=None):
+                                        checked_permission=None, **kw):
     membership = self._getAcquiredCategoryMembershipList(category,
                 spec=spec, filter=filter, portal_type=portal_type, base=base,
                 checked_permission=checked_permission)
