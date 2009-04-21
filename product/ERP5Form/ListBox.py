@@ -84,7 +84,9 @@ class CatalogMethodWrapper(MethodWrapper):
      SQLCatalog API.
   """
   def __call__(self, *args, **kw):
-    for parameter_id in ('selection', 'selection_name'):
+    for parameter_id in ('selection', 'selection_name', 'select_columns',
+                         'reset', 'selection_index', 'list_selection_name',
+                         'list_start', 'list_lines'):
       kw.pop(parameter_id, None)
     return getattr(self.context, self.method_name)(*args, **kw)
 
