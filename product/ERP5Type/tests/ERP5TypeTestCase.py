@@ -840,6 +840,17 @@ class ERP5TypeTestCase(PortalTestCase):
       import pdb; pdb.set_trace()
       pass
 
+    def stepTic(self, **kw):
+      """
+      The is used to simulate the zope_tic_loop script
+      Each time this method is called, it simulates a call to tic
+      which invoke activities in the Activity Tool
+      """
+      if kw.get('sequence', None) is None:
+        # in case of using not in sequence commit transaction
+        get_transaction().commit()
+      self.tic()
+
     def publish(self, path, basic=None, env=None, extra=None,
                 request_method='GET', stdin=None, handle_errors=True):
         '''Publishes the object at 'path' returning a response object.'''
