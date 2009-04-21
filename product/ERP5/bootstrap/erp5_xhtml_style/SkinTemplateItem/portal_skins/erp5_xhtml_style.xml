@@ -20,7 +20,7 @@
                   </item>
                   <item>
                       <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
+                      <value> <string>tokens</string> </value>
                   </item>
                 </dictionary>
               </tuple>
@@ -34,7 +34,12 @@
         </item>
         <item>
             <key> <string>business_template_registered_skin_selections</string> </key>
-            <value> <string>View</string> </value>
+            <value>
+              <tuple>
+                <string>View</string>
+                <string>Mobile</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
