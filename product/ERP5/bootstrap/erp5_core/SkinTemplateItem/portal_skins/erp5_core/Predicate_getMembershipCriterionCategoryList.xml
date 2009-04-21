@@ -75,7 +75,11 @@ for item in mixed_list:\n
           for x in fallback_category.getCategoryChildCompactLogicalPathItemList(base=1) if x[0]])\n
         break\n
 \n
-  category_list.extend(item_list)\n
+  for i in item_list:\n
+    if i[0] != \'\':\n
+      category_list.append([\'%s/%s\' % (item, i[0]), i[1]])\n
+    else:\n
+      category_list.append(i)\n
 \n
 return category_list\n
 </string> </value>
@@ -131,6 +135,7 @@ return category_list\n
                             <string>append</string>
                             <string>$append0</string>
                             <string>x</string>
+                            <string>i</string>
                           </tuple>
                         </value>
                     </item>
