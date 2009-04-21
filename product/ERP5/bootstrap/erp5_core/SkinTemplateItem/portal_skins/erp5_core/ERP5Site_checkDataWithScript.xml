@@ -95,7 +95,7 @@ if depth == maximum_depth and id_list:\n
   if method_kw is None:\n
     method_kw = {}\n
   def recurse(document):\n
-    error_list.extend(getattr(document, method_id)(**method_kw))\n
+    error_list.extend(getattr(document, method_id)(**method_kw) or ())\n
     if recursive:\n
       for subdocument in document.objectValues():\n
         recurse(subdocument)\n
