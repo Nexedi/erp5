@@ -49,7 +49,7 @@ class SetSetter(BaseSetter):
 
     def __call__(self, instance, *args, **kw):
       if self._warning:
-        LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+        LOG("ERP5Type Deprecated Setter Id:",0, self._id)
       instance._setValue(self._key, args[0],
                                                 spec=kw.get('spec',()),
                                                 filter=kw.get('filter', None),
@@ -73,7 +73,7 @@ class ListSetter(SetSetter):
 
     def __call__(self, instance, *args, **kw):
       if self._warning:
-        LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+        LOG("ERP5Type Deprecated Setter Id:",0, self._id)
       instance._setValue(self._key, args[0],
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
@@ -99,7 +99,7 @@ class DefaultSetter(SetSetter):
 
     def __call__(self, instance, *args, **kw):
       if self._warning:
-        LOG("ERP5Type Deprecated Getter Id:",0, self._id)
+        LOG("ERP5Type Deprecated Setter Id:",0, self._id)
       instance._setDefaultValue(self._key, args[0],
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
