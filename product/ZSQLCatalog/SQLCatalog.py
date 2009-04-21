@@ -1998,6 +1998,9 @@ class Catalog(Folder,
     # column names with empty values. This is for backward compatibility. See
     # comment about empty values.
     implicit_table_list = []
+    # empty_value_dict: contains all keys whose value causes them to be
+    # discarded.
+    empty_value_dict = {}
     for key, value in kw.iteritems():
       result = None
       if isinstance(value, dict_type_list):
@@ -2019,7 +2022,7 @@ class Catalog(Folder,
         #   resulting where-expression)
         if '.' in key:
           implicit_table_list.append(key)
-        LOG('SQLCatalog', WARNING, 'Discarding empty value for key %r: %r' % (key, value))
+        empty_value_dict[key] = value
       else:
         script = self.getScriptableKeyScript(key)
         if isinstance(value, _Query):
@@ -2057,6 +2060,8 @@ class Catalog(Folder,
           unknown_column_dict[key] = value
         else:
           append(result)
+    if len(empty_value_dict):
+      LOG('SQLCatalog', WARNING, 'Discarding columns with empty values: %r' % (empty_value_dict, ))
     if len(unknown_column_dict):
       LOG('SQLCatalog', WARNING, 'Unknown columns %r, skipped.' % (unknown_column_dict.keys(), ))
     return ComplexQuery(query_list, logical_operator=operator, unknown_column_dict=unknown_column_dict, implicit_table_list=implicit_table_list)
