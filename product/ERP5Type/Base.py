@@ -2305,14 +2305,14 @@ class Base( CopyContainer,
     return [(x,getattr(x, method_id)()) for x in membership_list]
 
   def _getDefaultCategoryMembership(self, category, spec=(), filter=None, portal_type=(), base=0,
-                                                    checked_permission=None ):
-    membership = self._getCategoryTool().getCategoryMembershipList(self,
-                     category, spec=spec, filter=filter, portal_type=portal_type, base=base,
-                               checked_permission=checked_permission)
+                                                    default=None, checked_permission=None ):
+    membership = self._getCategoryMembershipList(category,
+                spec=spec, filter=filter, portal_type=portal_type, base=base,
+                checked_permission=checked_permission)
     if len(membership) > 0:
       return membership[0]
     else:
-      return None
+      return default
 
   def _getDefaultAcquiredCategoryMembership(self, category,
                                         spec=(), filter=None, portal_type=(), base=0, default=None,
