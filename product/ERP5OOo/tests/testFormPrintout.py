@@ -597,10 +597,8 @@ class TestFormPrintout(ERP5TypeTestCase):
 
     erp5form.addERP5Form(id='Foo2_view', title='Foo2')
     foo2_view = custom.Foo2_view
-    # Attention: Report.py popReport, pushReport
-    # only accepts named 'listbox' Listbox
-    foo2_view.manage_addField('listbox', 'listbox', 'ListBox')
-    listbox = foo2_view.listbox
+    foo2_view.manage_addField('listbox_report', 'listbox report', 'ListBox')
+    listbox = foo2_view.listbox_report
 
     createZODBPythonScript(
       self.portal.portal_skins.custom,
@@ -615,6 +613,7 @@ return foo_list
       )
     message = listbox.ListBox_setPropertyList(
       field_list_method = 'FooReport_getFooList',
+      field_selection_name = 'listbox_report_selection',
       field_portal_types = 'Foo Line | Foo Line',
       field_columns = 'id|ID\ntitle|Title\nquantity|Quantity\nstart_date|Date',)
     self.failUnless('Set Successfully' in message)
@@ -627,9 +626,11 @@ from Products.ERP5Form.Report import ReportSection
 
 r1 = ReportSection(path=context.getPhysicalPath(),
                    form_id='Foo2_view',
+                   selection_name='listbox_report_selection',
                    selection_params={'title':'foo_04_Iteration_1'})
 r2 = ReportSection(path=context.getPhysicalPath(),
                    form_id='Foo2_view',
+                   selection_name='listbox_report_selection',
                    selection_params={'title':'foo_04_Iteration_2'})
 report_section_list = [r1, r2]
 return report_section_list
