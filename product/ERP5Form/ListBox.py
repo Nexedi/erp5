@@ -86,7 +86,8 @@ class CatalogMethodWrapper(MethodWrapper):
   def __call__(self, *args, **kw):
     for parameter_id in ('selection', 'selection_name', 'select_columns',
       'reset', 'selection_index', 'list_selection_name', 'list_start',
-      'list_lines',
+      'list_lines', 'listbox_list_start', 'listbox_uid', 'listbox_nextPage',
+      'listbox_previousPage',
       # Also strip common HTML field names
       # XXX: I'm not sure if those values really belong to here
       'md5_object_uid_list', 'cancel_url', 'listbox_list_selection_name',
