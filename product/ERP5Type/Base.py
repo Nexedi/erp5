@@ -2259,8 +2259,8 @@ class Base( CopyContainer,
   security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMembershipList' )
   getCategoryMembershipList = _getCategoryMembershipList
 
-  def _getAcquiredCategoryMembershipList(self, category, base=0 , spec=(),
-                                              filter=None, **kw ):
+  def _getAcquiredCategoryMembershipList(self, category, spec=(), filter=None,
+      portal_type=(), base=0, keep_default=1, checked_permission=None, **kw):
     """
       Returns the list of acquired categories
     """
