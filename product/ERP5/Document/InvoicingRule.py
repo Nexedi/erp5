@@ -64,7 +64,7 @@ class InvoicingRule(Rule):
                             'isAccountable')
   def isAccountable(self, movement):
     """
-    Tells wether generated movement needs to be accounted or not.
+    Tells whether generated movement needs to be accounted or not.
 
     Invoice movement are never accountable, so simulation movement for
     invoice movements should not be accountable either.
@@ -77,7 +77,7 @@ class InvoicingRule(Rule):
     Generate a list of movements, that should be children of this rule,
     based on its context (parent movement, delivery, configuration ...)
 
-    These previsions are acrually returned as dictionaries.
+    These previsions are returned as dictionaries.
     """
     # XXX Isn't it better to share the code with expand method
     context_movement = applied_rule.getParentValue()
@@ -157,3 +157,4 @@ class InvoicingRule(Rule):
 
   def isDeliverable(self, movement):
     return movement.getResource() is not None
+
