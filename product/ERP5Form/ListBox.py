@@ -58,13 +58,17 @@ try:
 except NameError:
   from sets import Set as set
 
-class ListMethodWrapper:
-  """This class wraps list methods so that they behave like portal_catalog.
-  """
+class MethodWrapper:
   def __init__(self, context, method_name):
     self.context = context
     self.method_name = self.__name__ = method_name
 
+  def __call__(self, *args, **kw):
+    raise NotImplementedError
+
+class ListMethodWrapper(MethodWrapper):
+  """This class wraps list methods so that they behave like portal_catalog.
+  """
   def __call__(self, *args, **kw):
     brain_list = []
     for obj in getattr(self.context, self.method_name)(*args, **kw):
@@ -73,6 +77,16 @@ class ListMethodWrapper:
       brain.path = obj.getPath()
       brain_list.append(brain)
     return brain_list
+
+class CatalogMethodWrapper(MethodWrapper):
+  """This class wraps catalog list methods so that they discard a pre-defined
+     set of parameters which are part of the Selection API but not in
+     SQLCatalog API.
+  """
+  def __call__(self, *args, **kw):
+    for parameter_id in ('selection', 'selection_name'):
+      kw.pop(parameter_id, None)
+    return getattr(self.context, self.method_name)(*args, **kw)
 
 class ReportTree:
   """This class describes a report tree.
@@ -1064,6 +1078,8 @@ class ListBoxRenderer:
 
     if list_method_name in ('objectValues', 'contentValues'):
       list_method = ListMethodWrapper(self.getContext(), list_method_name)
+    elif list_method_name == 'searchFolder':
+      list_method = CatalogMethodWrapper(self.getContext(), list_method_name)
     elif list_method_name is not None:
       try:
         list_method = getattr(self.getContext(), list_method_name)
@@ -1084,8 +1100,10 @@ class ListBoxRenderer:
     if count_method_name == 'objectValues':
       # Get all objects anyway in this case.
       count_method = None
-    if count_method_name == 'portal_catalog':
-      count_method = self.getCatalogTool().countResults
+    elif count_method_name == 'portal_catalog':
+      count_method = CatalogMethodWrapper(self.getCatalogTool(), 'countResults')
+    elif count_method_name == 'countFolder':
+      count_method = CatalogMethodWrapper(self.getContext(), count_method_name)
     elif count_method_name is not None:
       try:
         count_method = getattr(self.getContext(), count_method_name)
@@ -1106,8 +1124,10 @@ class ListBoxRenderer:
     if stat_method_name == 'objectValues':
       # Nothing to do in this case.
       stat_method = None
-    if stat_method_name == 'portal_catalog':
-      stat_method = self.getCatalogTool().countResults
+    elif stat_method_name == 'portal_catalog':
+      stat_method = CatalogMethodWrapper(self.getCatalogTool(), 'countResults')
+    elif stat_method_name == 'countFolder':
+      stat_method = CatalogMethodWrapper(self.getContext(), stat_method_name)
     elif stat_method_name is not None:
       try:
         stat_method = getattr(self.getContext(), stat_method_name)
