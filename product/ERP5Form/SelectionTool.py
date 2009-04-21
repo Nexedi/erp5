@@ -674,9 +674,13 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(list_selection_name, REQUEST)
       if selection is not None:
         params = selection.getParams()
-        lines = params.get('list_lines', 0)
-        start = REQUEST.form.pop('list_start', 0)
-        params['list_start'] = int(start) + int(lines)
+        lines = int(params.get('list_lines', 0))
+        form = REQUEST.form
+        if form.has_key('page_start'):
+          list_start = (int(form.pop('page_start', 0)) - 1) * lines
+        else:
+          list_start = int(form.pop('list_start', 0))
+        params['list_start'] = list_start + lines
         selection.edit(params=params)
       self.uncheckAll(list_selection_name, listbox_uid)
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST)
@@ -690,9 +694,13 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(list_selection_name, REQUEST)
       if selection is not None:
         params = selection.getParams()
-        lines = params.get('list_lines', 0)
-        start = REQUEST.form.pop('list_start', 0)
-        params['list_start'] = max(int(start) - int(lines), 0)
+        lines = int(params.get('list_lines', 0))
+        form = REQUEST.form
+        if form.has_key('page_start'):
+          list_start = (int(form.pop('page_start', 0)) - 1) * lines
+        else:
+          list_start = int(form.pop('list_start', 0))
+        params['list_start'] = max(list_start - lines, 0)
         selection.edit(params=params)
       self.uncheckAll(list_selection_name, listbox_uid)
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST)
@@ -706,7 +714,13 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       selection = self.getSelectionFor(list_selection_name, REQUEST)
       if selection is not None:
         params = selection.getParams()
-        params['list_start'] = int(REQUEST.form.pop('list_start', 0))
+        lines = int(params.get('list_lines', 0))
+        form = REQUEST.form
+        if form.has_key('page_start'):
+          list_start = (int(form.pop('page_start', 0)) - 1) * lines
+        else:
+          list_start = int(form.pop('list_start', 0))
+        params['list_start'] = list_start
         selection.edit(params=params)
         self.uncheckAll(list_selection_name, listbox_uid)
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST, query_string=query_string)
