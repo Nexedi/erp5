@@ -85,9 +85,22 @@ class CatalogMethodWrapper(MethodWrapper):
   """
   def __call__(self, *args, **kw):
     for parameter_id in ('selection', 'selection_name', 'select_columns',
-                         'reset', 'selection_index', 'list_selection_name',
-                         'list_start', 'list_lines'):
+      'reset', 'selection_index', 'list_selection_name', 'list_start',
+      'list_lines',
+      # Also strip common HTML field names
+      # XXX: I'm not sure if those values really belong to here
+      'md5_object_uid_list', 'cancel_url', 'listbox_list_selection_name',
+      'form_id', 'select_language', 'select_favorite', 'select_module',
+      'select_jump', 'select_action', 'Base_doSelect'):
       kw.pop(parameter_id, None)
+    # Strip all entries which have an empty string as value (ie, an empty
+    # field).
+    # XXX: I'm not sure if this filtering really belongs to here.
+    # It is probably needed at a more generic level (Forms ? Selection ?), or
+    # even a more specific one (limited to HTML ?)...
+    for key, value in kw.items():
+      if value == '':
+        kw.pop(key)
     return getattr(self.context, self.method_name)(*args, **kw)
 
 class ReportTree:
