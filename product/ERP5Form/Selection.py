@@ -205,6 +205,8 @@ class Selection(Acquisition.Implicit, Traversable, Persistent):
           del kw['sort_on'] # We should not sort if no sort was defined
         # We should always set selection_name with self.name
         kw['selection_name'] = self.name
+        # XXX: Use of selection parameter is deprecated. Use selection_name
+        # instead, and access the selection via selection_tool.
         kw['selection'] = self
         if self.domain is not None:
           kw['selection_domain'] = self.domain
