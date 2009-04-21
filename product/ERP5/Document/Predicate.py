@@ -376,12 +376,22 @@ class Predicate(XMLObject, Folder):
                   is greater than max
 
     """
+    # XXX 'min' and 'max' are built-in functions.
     if getattr(aq_base(self), '_identity_criterion', None) is None:
       self._identity_criterion = {}
       self._range_criterion = {}
     if identity is not None :
       self._identity_criterion[property] = identity
-    if min != '' or max != '' :
+    if min == '':
+      min = None
+    if max == '':
+      max = None
+    if min is None and max is None:
+      try:
+        del self._range_criterion[property]
+      except KeyError:
+        pass
+    else:
       self._range_criterion[property] = (min, max)
     self.reindexObject()
 
