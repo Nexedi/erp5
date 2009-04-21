@@ -1565,6 +1565,7 @@ def createFolderMixInPageSelectionMethod(listbox_id):
       selection_name_property_id = "%s_list_selection_name" % listbox_id
       listbox_uid_property_id = "%s_uid" % listbox_id
       list_start_property_id = "%s_list_start" % listbox_id
+      page_start_property_id = "%s_page_start" % listbox_id
       # Rename request parameters
       if request.has_key(selection_name_property_id):
         request.form['list_selection_name'] = request[selection_name_property_id]
@@ -1572,6 +1573,8 @@ def createFolderMixInPageSelectionMethod(listbox_id):
         request.form['listbox_uid'] = request[listbox_uid_property_id]
       if request.has_key(list_start_property_id):
         request.form['list_start'] = request[list_start_property_id]
+      if request.has_key(page_start_property_id):
+        request.form['page_start'] = request[page_start_property_id]
       # Call the wrapper
       method = getattr(portal_selection, wrapper_property_id)
       return mapply(method, positional=args, keyword=request,
