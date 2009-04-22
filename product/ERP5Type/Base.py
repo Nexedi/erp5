@@ -2247,14 +2247,14 @@ class Base( CopyContainer,
                                        checked_permission=checked_permission)
     self.reindexObject()
 
-  def _getCategoryMembershipList(self, category, spec=(), filter=None, portal_type=(), base=0, 
-                                                 keep_default=1, checked_permission=None):
+  def _getCategoryMembershipList(self, category, spec=(), filter=None,
+      portal_type=(), base=0, keep_default=1, checked_permission=None, **kw):
     """
       This returns the list of categories for an object
     """
-    return self._getCategoryTool().getCategoryMembershipList(self, category, spec=spec,
-                                                   filter=filter, portal_type=portal_type, base=base,
-                                                   keep_default=keep_default, checked_permission=checked_permission)
+    return self._getCategoryTool().getCategoryMembershipList(self, category,
+        spec=spec, filter=filter, portal_type=portal_type, base=base,
+        keep_default=keep_default, checked_permission=checked_permission, **kw)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMembershipList' )
   getCategoryMembershipList = _getCategoryMembershipList
@@ -2307,22 +2307,22 @@ class Base( CopyContainer,
       return [(x, x) for x in membership_list]
     return [(x,getattr(x, method_id)()) for x in membership_list]
 
-  def _getDefaultCategoryMembership(self, category, spec=(), filter=None, portal_type=(), base=0,
-                                                    default=None, checked_permission=None ):
+  def _getDefaultCategoryMembership(self, category, spec=(), filter=None,
+      portal_type=(), base=0, default=None, checked_permission=None, **kw):
     membership = self._getCategoryMembershipList(category,
                 spec=spec, filter=filter, portal_type=portal_type, base=base,
-                checked_permission=checked_permission)
+                checked_permission=checked_permission, **kw)
     if len(membership) > 0:
       return membership[0]
     else:
       return default
 
-  def _getDefaultAcquiredCategoryMembership(self, category,
-                                        spec=(), filter=None, portal_type=(), base=0, default=None,
-                                        checked_permission=None, **kw):
+  def _getDefaultAcquiredCategoryMembership(self, category, spec=(),
+      filter=None, portal_type=(), base=0, default=None,
+      checked_permission=None, **kw):
     membership = self._getAcquiredCategoryMembershipList(category,
                 spec=spec, filter=filter, portal_type=portal_type, base=base,
-                checked_permission=checked_permission)
+                checked_permission=checked_permission, **kw)
     if len(membership) > 0:
       return membership[0]
     else:
