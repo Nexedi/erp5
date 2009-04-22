@@ -29,33 +29,16 @@
 from zope.interface import Interface
 
 class IArrow(Interface):
-  """
-    The Arrow lists the methods which are available to 
-    access all source and destination categories of
-    a movement or of a delivery.
+  """The Arrow lists the methods which are available to 
+  access all source and destination categories of
+  a movement or of a delivery.
   """
   def getSourceArrowBaseCategoryList():
-    """
-      Returns all categories which are used to define the source
-      of this Arrow
+    """Returns all categories which are used to define the source
+    of this Arrow
     """
 
   def getDestinationArrowBaseCategoryList():
-    """
-      Returns all categories which are used to define the destination
-      of this Arrow
-    """
-
-  def _getSourceArrowList(spec=(), filter=None, portal_type=(), base=0, 
-                          keep_default=1, checked_permission=None):
-    """
-      Returns all categories which define the source of the 
-      document (ex. source, source_section, etc.)
-    """
-
-  def _getDestinationArrowList(spec=(), filter=None, portal_type=(), base=0, 
-                               keep_default=1, checked_permission=None):
-    """
-      Returns all categories which define the destination of the 
-      document (ex. destination, destination_section, etc.)
+    """Returns all categories which are used to define the destination
+    of this Arrow
     """
