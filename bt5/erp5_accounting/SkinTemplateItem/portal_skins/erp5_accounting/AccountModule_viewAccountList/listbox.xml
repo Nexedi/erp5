@@ -650,12 +650,7 @@
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>preferred_gap_id</string>
-                          <string>ASC</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
