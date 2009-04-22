@@ -110,7 +110,10 @@ class WebSection(Domain, PermanentURLMixIn):
         # Fix common user mistake and transform '1' string to boolean
         for web_param in ['ignore_layout', 'editable_mode']:
           if hasattr(request, web_param):
-            if getattr(request, web_param, None) in ('1', 1, True):
+            param = getattr(request, web_param, None)
+            if isinstance(param, (list, tuple)):
+              param = param[0]
+            if param in ('1', 1, True):
               request.set(web_param, True)
             else:
               request.set(web_param, False)
