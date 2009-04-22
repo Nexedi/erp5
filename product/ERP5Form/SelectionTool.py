@@ -1160,6 +1160,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         kw[field.get_value('catalog_index')] = field_value
         kw['portal_status_message'] = portal_status_message
         kw['saved_form_data'] = saved_form_data
+        kw['ignore_layout'] = int(REQUEST.get('ignore_layout', 0))
 
         proxy_listbox_ids = field.get_value('proxy_listbox_ids')
         REQUEST.set('proxy_listbox_ids', proxy_listbox_ids)
