@@ -90,9 +90,10 @@ for k in request_form.keys():\n
   del request_form[k]\n
 \n
 request.form.update(old_request)\n
-return context.Base_edit(form_id,\n
-                         selection_index=old_request.get(\'selection_index\', 0),\n
-                         selection_name=old_request.get(\'selection_name\', \'\'))\n
+edit_method = getattr(context, request_form.get(\'form_action\', \'Base_edit\'))\n
+return edit_method(form_id,\n
+                   selection_index=old_request.get(\'selection_index\', 0),\n
+                   selection_name=old_request.get(\'selection_name\', \'\'))\n
 
 
 ]]></string> </value>
@@ -165,6 +166,7 @@ return context.Base_edit(form_id,\n
                             <string>request_form</string>
                             <string>_getiter_</string>
                             <string>k</string>
+                            <string>edit_method</string>
                           </tuple>
                         </value>
                     </item>
