@@ -3,6 +3,7 @@ import os
 import re
 import signal
 import sys
+import shutil
 import getopt
 from time import sleep
 import urllib2
@@ -192,11 +193,16 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
   pref_file.close()
 
 def runFirefox():
-  os.environ['MOZ_NO_REMOTE'] = '1'
-  if not debug:
-    os.environ['DISPLAY'] = ':123'
-  os.environ['HOME'] = profile_dir
   prepareFirefox()
+  if debug:
+    try:
+      shutil.copy2(os.path.expanduser('~/.Xauthority'), '%s/.Xauthority' % profile_dir)
+    except IOError:
+      pass
+  else:
+    os.environ['DISPLAY'] = ':123'
+  os.environ['MOZ_NO_REMOTE'] = '1'
+  os.environ['HOME'] = profile_dir
   # check if old zelenium or new zelenium
   try:
     urllib2.urlopen("%s/portal_tests/core/scripts/selenium-version.js" % portal_url)
