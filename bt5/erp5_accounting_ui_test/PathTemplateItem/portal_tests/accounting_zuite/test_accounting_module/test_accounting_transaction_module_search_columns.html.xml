@@ -504,6 +504,24 @@ as title is a search key -->\n
   <td>2200.00</td>\n
 </tr>\n
 \n
+<!-- unset search parameters, to make sure it\'s not kept -->\n
+<tr>\n
+  <td>type</td>\n
+  <td>//tr[@id=\'listbox_search_line\']/td[5]/span/input</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_doSelect:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>4 record(s)</td>\n
+</tr>\n
+\n
+\n
 <!-- try less than -->\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -562,6 +580,23 @@ as title is a search key -->\n
 </td>\n
   <td>20000.00</td>\n
 </tr>\n
+<!-- unset search parameters, to make sure it\'s not kept -->\n
+<tr>\n
+  <td>type</td>\n
+  <td>//tr[@id=\'listbox_search_line\']/td[5]/span/input</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_doSelect:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>4 record(s)</td>\n
+</tr>\n
+\n
 <!-- }}} --> \n
 \n
 <!-- TODO: filter on *Translated* Transaction Type\n
