@@ -1,1 +1,1 @@
-ZSQLCatalog 5.4.1
+ZSQLCatalog 5.4.2
