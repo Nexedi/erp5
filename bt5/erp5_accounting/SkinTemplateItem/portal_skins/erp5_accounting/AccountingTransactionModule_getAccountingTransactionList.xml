@@ -78,6 +78,8 @@ params[\'omit_input\'] = 0\n
 params[\'omit_output\'] = 0\n
 \n
 \n
+params[\'source_section_where_expression\'] = \'\'\n
+params[\'destination_section_where_expression\'] = \'\'\n
 \n
 if params.get(\'operation_date\', {}).get(\'query\'):\n
   buildSQLQuery = context.portal_catalog.buildSQLQuery\n

@@ -59,6 +59,10 @@
 kw[\'omit_input\'] = 0\n
 kw[\'omit_output\'] = 0\n
 \n
+\n
+kw[\'source_section_where_expression\'] = \'\'\n
+kw[\'destination_section_where_expression\'] = \'\'\n
+\n
 if kw.get(\'operation_date\', {}).get(\'query\'):\n
   buildSQLQuery = context.portal_catalog.buildSQLQuery\n
   kw[\'source_section_where_expression\'] = buildSQLQuery(\n
@@ -66,6 +70,7 @@ if kw.get(\'operation_date\', {}).get(\'query\'):\n
   kw[\'destination_section_where_expression\'] = buildSQLQuery(\n
                **{\'delivery.stop_date\': kw[\'operation_date\']})[\'where_expression\']\n
   del kw[\'operation_date\']\n
+\n
 \n
 return context.AccountingTransactionModule_zGetAccountingTransactionList( selection=None,\n
                                                                           selection_params=kw,\n
