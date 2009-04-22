@@ -1221,10 +1221,6 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
       return Base.getCategoryMembershipList(self, category,
           spec=spec, filter=filter, portal_type=portal_type, base=base)
 
-  # Alias - class inheritance resolution
-  security.declareProtected( Permissions.View, 'Title' )
-  Title = Base.Title
-
   security.declareProtected(Permissions.AccessContentsInformation,
                             'checkConsistency')
   def checkConsistency(self, fixit=0):
