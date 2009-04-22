@@ -1078,7 +1078,7 @@ msgid "Total Income"
 msgstr "Total gains"
 
 msgid "Trade and Other Receivables"
-msgstr "Créances client"
+msgstr "Créances clients et autres"
 
 msgid "Trainee"
 msgstr "Stagiaire"
