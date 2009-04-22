@@ -255,6 +255,9 @@ msgstr "Amortissement des immobilisations"
 msgid "Deprecation of Intangible Assets"
 msgstr "Amortissement des immobilisations incorporelles"
 
+msgid "Deprecation of Trade and Other Receivables"
+msgstr "Depreciation des créances clients et autres créances"
+
 msgid "Deprecation of inventories"
 msgstr "Depreciation du stock"
 
@@ -1078,7 +1081,7 @@ msgid "Total Income"
 msgstr "Total gains"
 
 msgid "Trade and Other Receivables"
-msgstr "Créances clients et autres"
+msgstr "Créances clients et autres créances"
 
 msgid "Trainee"
 msgstr "Stagiaire"
