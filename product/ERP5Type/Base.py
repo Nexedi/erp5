@@ -2265,7 +2265,10 @@ class Base( CopyContainer,
       Returns the list of acquired categories
     """
     return self._getCategoryTool().getAcquiredCategoryMembershipList(self,
-                             category, base=base, spec=spec, filter=filter, **kw )
+                             category, spec=spec, filter=filter,
+                             portal_type=portal_type, base=base,
+                             keep_default=keep_default,
+                             checked_permission=checked_permission, **kw )
 
   security.declareProtected( Permissions.AccessContentsInformation,
                                            'getAcquiredCategoryMembershipList' )
