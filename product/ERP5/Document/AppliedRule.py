@@ -207,8 +207,8 @@ class AppliedRule(XMLObject):
       return self.getParentValue().getRootAppliedRule()
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                             'getBusinessProcessModelValue')
-    def getBusinessProcessModelValue(self):
+                             'getBusinessProcessValue')
+    def getBusinessProcessValue(self):
       """Return the business process model that has been used in this
       simulation, or None if no business process has been used.
       """
@@ -222,7 +222,7 @@ class AppliedRule(XMLObject):
           business_process = findBusinessProcessModel(specialise)
           if business_process is not None:
             return business_process
-        
+
       if causality is not None and getattr(causality, 'getSpecialiseValueList',
                                             None) is not None:
         return findBusinessProcessModel(causality)
