@@ -206,6 +206,29 @@ class AppliedRule(XMLObject):
         return self
       return self.getParentValue().getRootAppliedRule()
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                             'getBusinessProcessModelValue')
+    def getBusinessProcessModelValue(self):
+      """Return the business process model that has been used in this
+      simulation, or None if no business process has been used.
+      """
+      root = self.getRootAppliedRule()
+      causality = root.getCausalityValue()
+
+      def findBusinessProcessModel(context):
+        if context.getPortalType() == 'Business Process':
+          return context
+        for specialise in context.getSpecialiseValueList():
+          business_process = findBusinessProcessModel(specialise)
+          if business_process is not None:
+            return business_process
+        
+      if causality is not None and getattr(causality, 'getSpecialiseValueList',
+                                            None) is not None:
+        return findBusinessProcessModel(causality)
+
+      return None
+
     security.declareProtected(Permissions.ModifyPortalContent,
                               'notifySimulationChange')
     def notifySimulationChange(self, notify_dict):
