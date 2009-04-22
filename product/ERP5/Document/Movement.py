@@ -501,6 +501,11 @@ class Movement(XMLObject, Amount):
     if self._baseIsFrozen() == 0:
       self._baseSetFrozen(None)
     return self._baseGetFrozen() or 0
+    # Future implementation - for information
+    path = self.getCausalityValue()
+    if path is not None:
+      return self.getSimulationState() in path.getCompletedSimulationStateList()
+    return False
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getExplanation')
