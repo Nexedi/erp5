@@ -102,12 +102,15 @@ stool.setSelectionFor(\'accounting_transaction_module_grouping_reference_fast_in
 stool.setSelectionFor(\'entity_transaction_selection\', None)\n
 stool.setSelectionFor(\'account_module_selection\', None)\n
 \n
+# set sort order on account module\n
+stool.setSelectionParamsFor(\'account_module_selection\', dict()) # (this recreates selection)\n
+stool.setSelectionSortOrder(\'account_module_selection\', sort_on=((\'preferred_gap_id\', \'ascending\'),))\n
+\n
 # delete the "dummy account" we create in test_account_gap_parallel_list_field\n
 dummy_account_list = portal.account_module.searchFolder(\n
                                         title=\'Dummy Account for UI Test\')\n
 if dummy_account_list:\n
   portal.account_module.manage_delObjects([dummy_account_list[0].getId()])\n
-\n
 \n
 return "Reset Successfully."\n
 </string> </value>
@@ -163,6 +166,7 @@ return "Reset Successfully."\n
                             <string>form</string>
                             <string>getattr</string>
                             <string>listbox</string>
+                            <string>dict</string>
                             <string>dummy_account_list</string>
                           </tuple>
                         </value>
