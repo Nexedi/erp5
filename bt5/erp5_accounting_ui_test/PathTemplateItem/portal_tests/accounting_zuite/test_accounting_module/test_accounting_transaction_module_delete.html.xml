@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html>\n
+<head><title>Test for Accounting module main listbox</title></head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="4">\n
+Test Accounting module listbox supports deleting\n
+</td></tr>\n
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0&transaction_state=draft">\n
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>\n
+\n
+<!-- Setup {{{ -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/AccountingZuite_markChanged</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_module</td>\n
+  <td>Accounting</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- 4 records in the list {{{ -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_show:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>4 record(s)</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- Delete {{{ -->\n
+<tr>\n
+  <td>click</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[1]/input</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_deleteObjectList:method</td>\n
+  <td></td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- Check content of delete confirmation dialog -->\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>1 record(s)</td>\n
+</tr>\n
+\n
+<!-- check amounts for lines -->\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[8]/a\n
+</td>\n
+  <td>20000.0</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_data_line_0\']/td[9]/a\n
+</td>\n
+  <td>20000.0</td>\n
+</tr>\n
+<!-- check amounts for stats -->\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_stat_line\']/td[8]\n
+</td>\n
+  <td>20000.00</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyFloat</td>\n
+  <td>\n
+//tr[@id=\'listbox_stat_line\']/td[9]\n
+</td>\n
+  <td>20000.00</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- Confirm deletion and check redirection -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>dialog_submit_button</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyPortalStatusMessage</td>\n
+  <td>Deleted.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- }}} -->\n
+\n
+</tbody></table>\n
+</body>\n
+</html> <!-- vim: syntax=html foldmethod=marker\n
+-->\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test_accounting_transaction_module_delete.html</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
