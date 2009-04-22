@@ -562,7 +562,7 @@ msgid "Live Plant and Animal Material, Accessories and Supplies"
 msgstr "Fournitures, accessoires et matériel pour plantes"
 
 msgid "Loans"
-msgstr "Dettes à long terme"
+msgstr "Emprunts"
 
 msgid "Long Term Assets"
 msgstr "Immobilisations"
