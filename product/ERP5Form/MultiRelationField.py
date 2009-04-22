@@ -352,6 +352,8 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
               (REQUEST.get('selection_name'), REQUEST.get('selection_index'))
       else:
         selection_name_html = ''
+      if REQUEST.get('ignore_layout') is not None:
+        selection_name_html += '&ignore_layout:int=%s' % int(REQUEST.get('ignore_layout', 0))
       # Generate plan link
       html_string += '<a href="%s/%s?field_id=%s&amp;form_id=%s%s">' \
                        '<img src="%s/images/jump.png" alt="jump" />' \
