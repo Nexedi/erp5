@@ -990,13 +990,10 @@ class ListBoxRenderer:
         if search_field is None:
           search_alias = '_'.join(search_id.split('.'))
           # If the search field could not be found, try to get an "editable" field on current form.
-          editable_field_id = '%s_%s' % (listbox_id, search_alias)
-          if listbox_form.has_field(editable_field_id, include_disabled=1): # We must include disabled fields at this
-                                                                            # stage since there is no way (yet)
-                                                                            # to evalue cell in TALES expressions
-            search_field = listbox_form.get_field(editable_field_id, include_disabled=1)
-          else:
+          search_field = self.getEditableField(search_alias)
+          if search_field is None:
             continue
+
         render_dict = search_field.render_dict(search_value)
         if render_dict is not None:
           params[search_id] = render_dict
