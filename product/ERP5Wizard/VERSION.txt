@@ -1,1 +1,1 @@
-ERP5Wizard 5.4
+ERP5Wizard 5.4.1
