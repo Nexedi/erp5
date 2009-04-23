@@ -40,6 +40,7 @@ try:
 except ImportError:
   pass
 
+
 class TestXMLMatrix(ERP5TypeTestCase):
   """
   Tests the Cell API
@@ -178,6 +179,11 @@ class TestXMLMatrix(ERP5TypeTestCase):
         self.assertNotEqual(cell, None)
         self.assertEqual(getattr(cell, 'test_id', None), value_list[i])
       i += 1
+
+    # now commit transaction to make sure there are no activities for cells
+    # that no longer exists.
+    get_transaction().commit()
+    self.tic()
 
   def checkSetCellRangeAndCatalog(self, active=1):
     """
