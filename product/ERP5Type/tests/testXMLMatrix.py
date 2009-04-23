@@ -264,15 +264,20 @@ class TestXMLMatrix(ERP5TypeTestCase):
       ZopeTestCase._print('\nTest Set Cell Range And Catalog With Activities ')
     self.checkSetCellRangeAndCatalog(active=1)
 
-  def test_03_SetCellRangeAndCatalogWithoutActivities(self, quiet=quiet):
+  
+
+  def test_9999_SetCellRangeAndCatalogWithoutActivities(self, quiet=quiet):
     """
     Tests if set Cell range do well catalog and uncatalog, not using
-    activities
+    activities.
+    WARNING this test removes activity tool from the test environment. All
+    tests after this one will have no activity tool.
     """
     if not quiet:
       ZopeTestCase._print('\nTest Set Cell Range And Catalog Without Activities ')
     self.checkSetCellRangeAndCatalog(active=0)
   
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestXMLMatrix))
