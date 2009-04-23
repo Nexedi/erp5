@@ -26,21 +26,20 @@
 #
 ##############################################################################
 
-from Interface import Interface
+from zope.interface import Interface
 
 class ISimulationMovement(Interface):
-  """
-    The SimulationMovement interface
-    introduces the possibility to define
-    quantity errors between the simulation
-    and the reality.
+  """Simulation Movement interface specification
+
+    The SimulationMovement interface introduces the option
+    to define quantity errors between the simulation
+    and the delivered reality.
 
     In short: parent applied rules use the Movement
-    API to define quantity.
-
-    Child applied rules use the Delivered API
-    to use appropriate values which include
-    the delivery_error.
+    API to define quantity. Child applied rules
+    should use the Delivered API to access appropriate
+    quantity values which are take into account the
+    delivery_error.
 
     DeliverySolver either solve divergence by
     setting the delivery_error (then no target
@@ -48,9 +47,13 @@ class ISimulationMovement(Interface):
     by changing the quantity (then TargetSolver
     is needed to backtrack the quantity).
 
-    quantity(SM) + delivery_error (SM) =
-      quantity(DL) * delivery_ratio(SM)
-  """
+    Equation:
+      quantity(SM) + delivery_error (SM) =
+        quantity(DL) * delivery_ratio(SM)
+ 
+    TODO:
+      1. unclear API remaining
+ """
 
   # Delivery API
   def getDeliveryRatio():
@@ -69,50 +72,45 @@ class ISimulationMovement(Interface):
 
   def getDeliveryQuantity():
     """
-      Returns quantity which was actually
-      shipped, taking into account the errors
-      of the simulation fixed by the delivery
+      Returns quantity which was actually shipped, taking
+      into account the errors of the simulation fixed by
+      the delivery
 
       quantity + delivery_error
     """
 
   def getDeliveryConvertedQuantity():
-    """
-      Returns delivery quantity converted by the resource
+    """XXX - unclear
     """
 
   # Divergence API
   def isConvergent():
-    """
-      Returns the simulation movement is convergent
-      or not, with related the delivery
+    """Tells whether the simulation movement is convergent
+      or not, with related delivery
     """
 
   def isDivergent():
-    """
-      Returns the simulation movement is divergent
-      or not, to related the delivery
+    """Tells whether the simulation movement is divergent
+      or not, with related delivery
     """
 
   def getDivergenceList():
-    """
-      Returns listed divergences which is made by tester
-      of parent applied rule
-      Each divergence has why the delivery was judged
+    """Returns a list of divergences 
+    XXX - unclear, please explan what the returned documents
+    or object are (type, class)
     """
 
   def isFrozen():
-    """
-      Returns status of the simulation movement, it is
-      frozen or not, once it is frozen, all operations
-      can not change anything of the simulation movement
+    """Tells whether the simulation movement is frozen.
+    By default, looks up the related Business Process Path
+    and tells if the simulation state is part of completed
+    states.
+
+    XXX - should this be renamed isCompleted ? are the
+    notions of isFrozen and isCompleted same or different ?
     """
 
   def isSimulated():
-    """
-      Returns the simulation movement is simulated or not
-      When the simulation movement is simulated, all operations
-      can not remove it, but can update, because related delivery
-      to be orphan, if can remove it
+    """XXX - unclear
     """
 

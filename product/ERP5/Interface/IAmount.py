@@ -26,15 +26,16 @@
 #
 ##############################################################################
 
-from Interface import Interface
+from zope.interface import Interface
 
 class IAmount(Interface):
-  """
+  """Amount interface specification
+
     An amount represents a quantity of a given resource
-    in a given quantity unit. Optional efficiency
-    or (exclusive) profit/loss quantity can be specified
-    in order to represent a profit or loss ratio to take
-    into account in calculations.
+    in a given quantity unit. Optional efficiency can be
+    specified in order to represent a loss ratio to take
+    into account in calculations. Loss ratio is normally
+    used only in Path.
 
     The Amount interface is useful each time
     we need to add or substract amounts of resources
@@ -45,11 +46,15 @@ class IAmount(Interface):
       net_quantity = quantity * efficiency
 
     TODO:
-      consider how to make Interface compatible
-      with accessor generation (ex. getResource)
-
-    Addition:
-      target_quantity is obsolete, it is never defined.
+      1. make sure getTotalPrice has or does not
+         have extra parameters (ex. rounding)
+      2. remove profit_quantity everywhere
+      3. remove target_quantity everywhere
+      4. consider how to make Interface compatible
+         with accessor generation (ex. getResource,
+         getQuantity, etc.)
+      5. consider creating an IPriceable interface
+         which is common to deliveries and amounts
   """
 
   # Core API
@@ -74,7 +79,7 @@ class IAmount(Interface):
   def isCancellationAmount():
     """
       A cancellation amount must be interpreted
-      reversely write to the sign of qauntity.
+      reversely wrt. to the sign of quantity.
 
       For example, a negative credit for a cancellation
       amount is a negative credit, not a positive
@@ -88,67 +93,62 @@ class IAmount(Interface):
   # Net Quantity API
   def getEfficiency():
     """
-      Returns a value which is rate affect to the net quantity
-      Only used for transformation for now.
+      Returns the ratio of loss for the given amount. This
+      is only used in Path such as Transformation. In other
+      words, efficiency of movements is always 100%.
     """
 
   def getNetQuantity():
     """
-      Returns affected quantity by some optional effects.
+      Returns the quantity multiplied by the ratio.
     """
 
   # Price API
-
   def getPrice():
     """
-      Returns price
+      Returns the unit price of the resource
     """
   
   def getTotalPrice():
     """
-      Returns total price for the number of items
+      Returns total price ie. the unit price of the resource
+      multiplied by the quantity.
     """
 
   # Conversion API
   def getConvertedQuantity():
     """
-      Returns the quantity converted by the resource
+      Returns the quantity of the resource converted in the
+      management unit of the resource
     """
 
   def getNetConvertedQuantity():
     """
-      Returns the net quantity converted by the resource
+      Returns the net quantity of the resource converted in the
+      management unit of the resource
     """
 
   # Make it possible to add amounts
   def __add__(value):
-    """
-      Add
+    """Add an amount to another amount
 
-      If the amount can understands argument as amount for addition,
-      returns calculated
+      'value' is an IAmount document
     """
 
   def __sub__(value):
-    """
-      Substract
+    """Substract an amount from another amount
 
-      If the amount can understands argument as amount for substraction,
-      returns calculated
+      'value' is an IAmount document
     """
 
   def __mul__(value):
-    """
-      Multiply
+    """Multiply an Amount by a float
 
-      If the amount can understands argument as efficiency for multiplication,
-      returns calculated
+      'value' is a float
     """
 
   def __div__(value):
-    """
-      Devide
+    """Divide an Amount by a float
 
-      If the amount can understands argument as efficiency for division,
-      returns calculated
+      'value' is a float
     """

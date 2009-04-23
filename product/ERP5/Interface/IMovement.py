@@ -26,228 +26,138 @@
 #
 ##############################################################################
 
-from Interface import Interface
+from zope.interface import Interface
 
 class IMovement(Interface):
-  """
-  A movement represents amount of resource how are changed
-  on the path. The movement should be ables to provide how 
-  amount is/was existed on node both source and destination.
-  Because of movement may be affected on path.
+  """Movement interface specification
 
-  The movement interface can be represents any kind of delivery.
-  It is useful to represent changed of between nodes.
+  A movement represents an amount of resources which 
+  is moved along an Arrow (source and destination).
 
   Equations:
-    destination_quantity = source_quantity * efficiency
-    (These values can be calculated by Amount)
-
-
     Production/Consumption
 
     (A -> B)
-    if source_quantity > 0 and destination_quantity > 0
-    production_quantity = destination_quantity
-    consumption_quantity = source_quantity
-
-    if source_quantity < 0 and destination_quantity < 0
-    production_quantity = - source_quantity
-    consumption_quantity = - destination_quantity
-
-    if source_quantity < 0 and destination_quantity > 0
-    or
-    source_quantity > 0 and destination_quantity < 0
-    raise 
-
+      production_quantity means nothing
+      consumption_quantity means nothing
 
     (A -> Nothing)
-    if source_quantity > 0
-    consumption_quantity = source_quantity
-    production_quantity = 0
+    if quantity > 0
+      consumption_quantity = quantity
+      production_quantity = 0
 
-    if source_quantity < 0
-    consumption_quantity = 0
-    production_quantity = - source_quantity
+    if quantity < 0
+      consumption_quantity = 0
+      production_quantity = - quantity
 
     (Nothing -> B)
-    if destination_quantity > 0
-    consumption_quantity = 0
-    production_quantity = destination_quantity
+    if quantity > 0
+      consumption_quantity = 0
+      production_quantity = quantity
 
-    if destination_quantity < 0
-    consumption_quantity = - destination_quantity 
-    production_quantity = 0
-
+    if quantity < 0
+      consumption_quantity = - quantity 
+      production_quantity = 0
 
     Credit/Debit
 
-    (A -> B)
-    if source_quantity > 0 and destination_quantity > 0
-    source_credit = - source_quantity
-    source_debit = source_quantity
-    destination_credit = destination_quantity
-    destination_debit = - destination_quantity
+    if quantity > 0
+      source_credit = - quantity
+      source_debit = quantity
+      destination_credit = quantity
+      destination_debit = - quantity
 
-    if source_quantity < 0 and destination_quantity < 0
-    source_credit = source_quantity
-    source_debit = - source_quantity
-    destination_credit = - destination_quantity
-    destination_debit = destination_quantity
+    if quantity < 0
+      source_credit = quantity
+      source_debit = - quantity
+      destination_credit = - quantity
+      destination_debit = quantity
 
-    if source_quantity < 0 and destination_quantity > 0
-    or
-    source_quantity > 0 and destination_quantity < 0
-    raise
-
-    (A -> Nothing)
-    if source_quantity > 0
-    source_credit = source_quantity
-    source_debit = - source_quantity
-    destination_credit = 0
-    destination_debit = 0
-
-    if source_quantity < 0
-    source_credit = - source_quantity
-    source_debit = source_quantity
-    destination_credit = 0 
-    destination_debit = 0
-
-    (Nothing -> B)
-    if destination_quantity > 0
-    source_credit = 0
-    source_debit = 0
-    destination_credit = destination_quantity
-    destination_debit = - destination_quantity
-
-    if destination_quantity < 0
-    source_credit = 0
-    source_debit = 0
-    destination_credit = - destination_quantity
-    destination_debit = destination_quantity
-
-    source_asset_price = price
-    destination_asset_price = price
+    TODO:
+      1. finish equations (for asset price)
+      2. clarify asset value application for multi
+         currency accunting
+      3. clarify the use of asset price in ERP5
+         (accounting and outside) since we no 
+         longer store asset price on non accounting
+         movements
   """
-
-  # Conversion API for cataloging
-  def getConvertedSourceQuantity():
-    """
-      Returns the quantity how are removed
-      from source by the movement
-    """
-
-  def getConvertedDestinationQuantity():
-    """
-      Returns the quantity how are reached
-      to destination by the movement
-    """
-
-  # Helper methods for Production
+  # Helper API for Production
   def getConsumptionQuantity():
-    """
-      Returns the quantity how are consumed
-      on the path by the movement
+    """Returns the consumed quantity during
+    production
     """
 
   def getProductionQuantity():
-    """
-      Returns the quantity how are produced
-      on the path by the movement
-    """
-
-  # Helper methods for Accounting
-  def getSourceDebit():
-    """
-      Returns the quantity how are debited
-      from source node by the movement
+    """Returns the produced quantity during
+    production
     """
 
-  def getSourceCredit():
-    """
-      Returns the quantity how are credited
-      from source node by the movement
-    """
-
-  def getDestinationDebit():
-    """
-      Returns the quantity how are debited
-      to destination node by the movement
-    """
-
-  def getDestinationCredit():
-    """
-      Returns the quantity how are credited
-      to destination node by the movement
-    """
-
+  # Helper methods for asset value calculation
   def getSourceAssetPrice():
-    """
-      Returns the price how are taken
-      from source by the movement
-    """
-
-  def getSourceInventoriatedTotalAssetPrice():
-    """
-      Returns a price which can be used
-      to calculate stock value (asset)
-    """
-
-  def getSourceInventoriatedTotalAssetDebit():
-    """
-      Returns the debit part of inventoriated
-      source total asset price.
-    """
-
-  def getSourceInventoriatedTotalAssetCredit():
-    """
-      Returns the credit part of inventoriated
-      source total asset price.
-    """
-
-  def getSourceAssetDebit():
-    """
-      Return the debit part of the source total
-      asset price.
-    """
-
-  def getSourceAssetCredit():
-    """
-      Return the credit part of the source total
-      asset price.
+    """Returns the asset price on the source, if defined
+    XXX - it is unclear if we still use this
     """
 
   def getDestinationAssetPrice():
+    """Returns the asset price on the destination, if defined
+    XXX - it is unclear if we still use this
     """
-      Returns the price how are given
-      to destination by the movement
+
+  def getSourceInventoriatedTotalAssetPrice():
+    """Returns the total asset price for the source, if defined
     """
 
   def getDestinationInventoriatedTotalAssetPrice():
-    """
-      Returns a price which can be used
-      to calculate stock value (asset)
+    """Returns the total asset price for the destination, if defined
     """
 
-  def getDestinationInventoriatedTotalAssetDebit():
-    """
-      Returns the debit part of inventoriated
-      destination total asset price.
+  # Helper methods for single currency Accounting (debit / credit)
+  def getSourceDebit():
+    """Returns the source debit in the transaction currency
     """
 
-  def getDestinationInventoriatedTotalAssetCredit():
+  def getSourceCredit():
+    """Returns the source credit in the transaction currency
     """
-      Returns the credit part of inventoriated
-      destination total asset price.
+
+  def getDestinationDebit():
+    """Returns the destination debit in the transaction currency
+    """
+
+  def getDestinationCredit():
+    """Returns the destination credit in the transaction currency
+    """
+
+  # Helper methods for multi currency Accounting (debit / credit)
+  def getSourceAssetDebit():
+    """Returns the source debit in the source management currency
+    """
+
+  def getSourceAssetCredit():
+    """Returns the source credit in the source management currency
     """
 
   def getDestinationAssetDebit():
-    """
-      Return the debit part of the destination total
-      asset price.
+    """Returns the destination debit in the destination management currency
     """
 
   def getDestinationAssetCredit():
+    """Returns the destination credit in the destination management currency
     """
-      Return the credit part of the destination total
-      asset price.
+
+  def getSourceInventoriatedTotalAssetDebit():
+    """Unclear - XXX
+    """
+
+  def getSourceInventoriatedTotalAssetCredit():
+    """Unclear - XXX
+    """
+
+  def getDestinationInventoriatedTotalAssetDebit():
+    """Unclear - XXX
+    """
+
+  def getDestinationInventoriatedTotalAssetCredit():
+    """Unclear - XXX
     """
