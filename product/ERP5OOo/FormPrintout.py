@@ -777,11 +777,6 @@ class ODFStrategy(Implicit):
       column.remove(child)
     if first_child is not None:
       column.append(first_child)
-      # explicit table contents style setting
-      if isinstance(value, PrintoutStyleCell) and value.getStyleName() is not None:
-        style_attribute, original_style = self._getStyleAttributeTuple(first_child)
-        if style_attribute is not None:
-          first_child.set(style_attribute, value.getStyleName())
     if column_value != '':
       value_attribute = self._getColumnValueAttribute(column)
       if value_attribute is not None:
@@ -810,17 +805,17 @@ class ODFStrategy(Implicit):
     column_children = column.getchildren()
     for child in column_children:
       # clear data except style
-      style_attribute, style_value = self._getStyleAttributeTuple(child)
+      style_attribute_tuple = self._getStyleAttributeTuple(child)
       child.clear()
-      if style_attribute is not None:
-        child.set(style_attribute, style_value)
+      if style_attribute_tuple is not None:
+        child.set(style_attribute_tuple[0], style_attribute_tuple[1])
 
   def _getStyleAttributeTuple(self, element):
     attrib = element.attrib
     for key in attrib.keys():
       if key.endswith('style-name'):
         return (key, attrib[key])
-    return (None, '')
+    return None
   
   def _getColumnValueAttribute(self, column):
     attrib = column.attrib
@@ -866,28 +861,3 @@ class ODFStrategy(Implicit):
 class ODTStrategy(ODFStrategy):
   """ODTStrategy create a ODT Document from a form and a ODT template"""
   pass
-
-class PrintoutStyleCell:
-  """setting a style name of a table-content explicitly
-  
-  Note: experimentally implementation
-  """
-  value = None
-  style_name = None
-  
-  def __init__(self, value=None, style_name=None):
-    self.value = value
-    self.style_name = style_name
-
-  def __call__(self):
-    return self
-
-  def __str__(self):
-    if self.value is None:  return ''
-    elif isinstance(self.value, unicode) or isinstance(self.value, str):
-      return self.value
-    return str(self.value)
-
-  def getStyleName(self):
-    return self.style_name
-

@@ -43,8 +43,6 @@ from AccessControl import ModuleSecurityInfo
 ModuleSecurityInfo('Products.ERP5OOo.OOoUtils').declarePublic('OOoParser',)
 ModuleSecurityInfo('Products.ERP5OOo.OOoUtils').declarePublic('newOOoParser',)
 
-ModuleSecurityInfo('Products.ERP5OOo.FormPrintout').declarePublic('PrintoutStyleCell',)
-
 # Define object classes and tools
 from OOoTemplate import OOoTemplate
 from FormPrintout import FormPrintout
