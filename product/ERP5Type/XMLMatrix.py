@@ -430,10 +430,10 @@ class XMLMatrix(Folder):
           cell = self.get(old_id)
           if cell is not None:
             new_id = old_id + appended_id
+            self._delObject(old_id)
             cell.isIndexable = 0
             cell.id = new_id
             self._setObject(new_id, aq_base(cell))
-            self._delObject(old_id)
             cell.isIndexable = 1
             cell.reindexObject()
             #cell.unindexObject(path='%s/%s' % (self.getUrl(), old_id))
@@ -444,10 +444,10 @@ class XMLMatrix(Folder):
           cell = self.get(old_id)
           if cell is not None:
             new_id = old_id[:-removed_id_len]
+            self._delObject(old_id)
             cell.isIndexable = 0
             cell.id = new_id
             self._setObject(new_id, aq_base(cell))
-            self._delObject(old_id)
             cell.isIndexable = 1
             cell.reindexObject()
             #cell.unindexObject(path='%s/%s' % (self.getUrl(), old_id))
