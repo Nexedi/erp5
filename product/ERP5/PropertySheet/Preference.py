@@ -98,8 +98,7 @@ class Preference:
     { 'id'              : 'preferred_criterion_property',
       'description'     : 'List of criterion properties used for predicate',
       'type'            : 'tokens',
-      'default'         : ['quantity', 'price', 'portal_type',
-                           'title', 'reference', 'language',],
+      'default'         : ['quantity', 'price', 'portal_type', 'title', 'reference',],
       'preference'      : 1,
       'mode'            : 'w'},
   )
