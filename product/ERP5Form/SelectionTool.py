@@ -40,7 +40,7 @@ from Products.ERP5Form import _dtmldir
 from Selection import Selection, DomainSelection
 from ZPublisher.HTTPRequest import FileUpload
 import md5
-import string
+import string, re
 from zLOG import LOG, INFO
 from Acquisition import aq_base
 from Products.ERP5Type.Message import translateString
@@ -1155,12 +1155,17 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
             kw[k] = v
         kw['reset'] = 0
         kw['base_category'] = field.get_value( 'base_category')
-        kw['cancel_url'] = REQUEST.get('HTTP_REFERER')
         kw['form_id'] = form_id
         kw[field.get_value('catalog_index')] = field_value
         kw['portal_status_message'] = portal_status_message
         kw['saved_form_data'] = saved_form_data
         kw['ignore_layout'] = int(REQUEST.get('ignore_layout', 0))
+        # remove ignore_layout parameter from cancel_url otherwise we
+        # will have two ignore_layout parameters after clicking cancel
+        # button.
+        kw['cancel_url'] = '&'.join([x for x in \
+                                     REQUEST.get('HTTP_REFERER').split('&') \
+                                     if not re.match('^ignore_layout[:=]', x)])
 
         proxy_listbox_ids = field.get_value('proxy_listbox_ids')
         REQUEST.set('proxy_listbox_ids', proxy_listbox_ids)
