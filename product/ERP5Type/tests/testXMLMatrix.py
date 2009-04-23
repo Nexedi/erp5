@@ -33,7 +33,6 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Utils import cartesianProduct
 from AccessControl.SecurityManagement import newSecurityManager
-from zLOG import LOG
 
 try:
   from transaction import get as get_transaction
@@ -228,7 +227,6 @@ class TestXMLMatrix(ERP5TypeTestCase):
     get_transaction().commit()
     self.assertEqual(matrix.getCellRange(**kwd), cell_range)
     next_cell_id_list = map(lambda x: x.getId(),matrix.objectValues())
-    LOG('checkSetCellRangeAndCatalog', 0, 'next_cell_id_list = %r, cell_range = %r' % (next_cell_id_list, cell_range))
     removed_id_list = filter(lambda x: x not in next_cell_id_list,initial_cell_id_list)
     self.tic()
     for id in next_cell_id_list:
