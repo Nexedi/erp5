@@ -30,7 +30,12 @@ import sys
 
 from Products.CMFCore.Expression import Expression
 from ZODB.POSException import ConflictError
-from Products.PageTemplates.TALES import CompilerError
+try:
+  # Zope 2.8
+  from Products.PageTemplates.TALES import CompilerError
+except ImportError:
+  # Zope 2.12
+  from zope.tales.tales import CompilerError
 from zLOG import LOG, PROBLEM
 
 from Constraint import Constraint
