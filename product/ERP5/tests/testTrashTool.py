@@ -90,6 +90,16 @@ class TestTrashTool(ERP5TypeTestCase):
       category_list.append(category.getId())
     sequence.edit(category_id_list=category_list)
 
+  def stepAddFolder(self, sequence=None, sequence_list=None, **kw):
+    """
+    add OFS Folder to backup
+    """
+    ps = self.getPortalObject().portal_skins
+    erp5_core = ps['erp5_core']
+    erp5_core.manage_addFolder(id="image")
+    image = erp5_core._getOb("image")
+    f = image.manage_addFile(id="file")
+
   def stepCheckTrashToolExists(self, sequence=None, sequence_list=None, **kw):
     """
     Check existence of trash tool
@@ -198,6 +208,43 @@ class TestTrashTool(ERP5TypeTestCase):
       self.failUnless(cat.isIndexable, 0)
       self.assertEqual(cat.getPortalType(), 'Category')
 
+  def stepCheckFolderObjectBackup(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check that skin folder has been well backup
+    """
+    trash_id = sequence.get('trash_id')
+    trash = self.getTrashTool()
+    trashbin = trash._getOb(trash_id, None)
+    self.failUnless(trashbin is not None)
+    bc_id = sequence.get('bc_id')
+    trashbin_objects_list = list(trashbin.objectValues())
+    self.failUnless(len(trashbin_objects_list) > 0)
+    self.assertEqual(len(trashbin_objects_list), 1)
+    obj = trashbin_objects_list[0]
+    self.assertEqual(obj.getId(), 'portal_skins_items')
+    self.assertEqual(obj.getPortalType(), 'Trash Folder')
+    self.assertEqual(obj.isIndexable, 0)
+    # get backup OFS Folder
+    skin_objects_list = list(obj.objectValues())
+    self.assertEqual(len(skin_objects_list), 1)
+    skin = skin_objects_list[0]
+    self.assertEqual(skin.id, 'erp5_core')
+    from OFS.Folder import Folder
+    self.failUnless(isinstance(skin, Folder))
+    # get image folder
+    skin_objects_list = list(skin.objectValues())
+    self.assertEqual(len(skin_objects_list), 1)
+    skin = skin_objects_list[0]
+    self.assertEqual(skin.id, 'image')
+    self.failUnless(skin.getPortalType(), "Trash Folder")
+    # get file
+    f_objects_list = list(skin.objectValues())
+    self.assertEqual(len(f_objects_list), 1)
+    f = f_objects_list[0]
+    self.assertEqual(f.getId(), 'file')
+    self.failUnless(f.getPortalType(), "Trash Folder")
+    
+
   def stepBackupObjectsWithSave(self, sequence=None, sequence_list=None, **kw):
     """
     Backup objects and check subobjects are return
@@ -215,6 +262,18 @@ class TestTrashTool(ERP5TypeTestCase):
     # check backup
     backup_subobjects_ids = trash.backupObject(trashbin, bc_path, bc_id, save=1)
     self.failUnless(backup_subobjects_ids.keys().sort() == list(subobjects_ids).sort())
+
+  def stepBackupFolderObjectsWithSave(self, sequence=None, sequence_list=None, **kw):
+    """
+    Backup objects and check subobjects are return
+    """
+    trash_id = sequence.get('trash_id')
+    trash = self.getTrashTool()
+    trashbin = trash._getOb(trash_id, None)
+    # backup the skin folder
+    trash.backupObject(trashbin, ["portal_skins",], "erp5_core", save=1)
+    # backup file
+    trash.backupObject(trashbin, ["portal_skins", "erp5_core", "image"], "file", save=1)
 
   def stepBackupObjectsWithoutSave(self, sequence=None, sequence_list=None, **kw):
     """
@@ -386,6 +445,28 @@ class TestTrashTool(ERP5TypeTestCase):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
+
+
+  def test_06_checkBackupofOFSFolderWithSave(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Check Backup Of OFS Folder With Save'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CheckTrashToolExists  \
+                       CreateTrashBin \
+                       CheckTrashBinIndexable \
+                       AddFolder \
+                       Tic \
+                       BackupFolderObjectsWithSave \
+                       Tic \
+                       CheckFolderObjectBackup \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
 
 
 def test_suite():
