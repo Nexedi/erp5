@@ -135,6 +135,10 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
   manage_editFormPrintout = PageTemplateFile('www/FormPrintout_manageEdit', globals(),
                                              __name__='manage_editFormPrintout')
   manage_editFormPrintout._owner = None
+
+  # alias definition to do 'add_and_edit'
+  security.declareProtected('View management screens', 'manage_main')
+  manage_main = manage_editFormPrintout
   
   # default attributes
   template = None
