@@ -19,6 +19,7 @@
                 <string>allow_creation</string>
                 <string>catalog_index</string>
                 <string>columns</string>
+                <string>proxy_listbox_ids</string>
               </list>
             </value>
         </item>
@@ -100,12 +101,24 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string>Transaction Type</string>
+                        </tuple>
+                        <tuple>
                           <string>source_section_title</string>
-                          <string>Source Section</string>
+                          <string>Supplier</string>
                         </tuple>
                         <tuple>
                           <string>destination_section_title</string>
-                          <string>Destination Section</string>
+                          <string>Client</string>
                         </tuple>
                         <tuple>
                           <string>AccountingTransactionLine_statSourceDebit</string>
@@ -145,6 +158,17 @@
                         <tuple>
                           <string>Accounting Transaction</string>
                           <string>Accounting Transaction</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>AccountingTransactionModule_viewAccountingTransactionList/listbox</string>
+                          <string>Accounting Transactions</string>
                         </tuple>
                       </list>
                     </value>
