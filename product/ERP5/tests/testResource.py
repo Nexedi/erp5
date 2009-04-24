@@ -999,6 +999,36 @@ class TestResource(ERP5TypeTestCase):
     resource.setBaseUnitQuantity(0.001)
     self.assertEquals(3, resource.getQuantityPrecision())
 
+  def test_defaultSupplyLineAfterClone(self):
+    """Check that default supply line is properly set up after clone"""
+    resource = self.portal.getDefaultModule(self.product_portal_type)\
+                .newContent(portal_type=self.product_portal_type)
+
+    resource.edit( purchase_supply_line_base_price=1.0,
+      sale_supply_line_base_price=1.0,
+    )
+
+    self.assertEqual( resource,
+        resource.getDefaultPurchaseSupplyLineValue().getResourceValue() )
+    self.assertEqual( resource,
+        resource.getDefaultSaleSupplyLineValue().getResourceValue() )
+
+    module = resource.getParentValue()
+
+    cb_data = module.manage_copyObjects(ids=[resource.getId()])
+    p_data = module.manage_pasteObjects(cb_data)
+
+    new_resource = module._getOb(p_data[0]['new_id'])
+
+    self.assertEqual(
+      new_resource,
+      new_resource.getDefaultPurchaseSupplyLineValue().getResourceValue()
+    )
+
+    self.assertEqual(
+      new_resource,
+      new_resource.getDefaultSaleSupplyLineValue().getResourceValue()
+    )
 
 def test_suite():
   suite = unittest.TestSuite()
