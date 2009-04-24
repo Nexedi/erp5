@@ -70,6 +70,11 @@ for field_path, field in context.ZopeFind(\n
 \n
   if not (field.get_value(\'proxy_listbox_ids\') or field.get_value(\'columns\')):\n
     print field_path\n
+    continue\n
+  \n
+  for path, name in field.get_value(\'proxy_listbox_ids\'):\n
+    if context.restrictedTraverse(path, None) is None:\n
+      print \'   PROBLEM: field %s uses an invalid form for %s: %s\' % (field_path, name, path)\n
 \n
 return printed\n
 </string> </value>
@@ -119,6 +124,8 @@ return printed\n
                             <string>template_field</string>
                             <string>None</string>
                             <string>form</string>
+                            <string>path</string>
+                            <string>name</string>
                           </tuple>
                         </value>
                     </item>
