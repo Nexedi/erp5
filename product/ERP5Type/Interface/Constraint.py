@@ -29,8 +29,7 @@
 """Constraint Interface.
 """
 
-from Interface import Interface
-from Interface import Attribute
+from zope.interface import Interface, Attribute
 
 class Constraint(Interface):
   """ERP5 Constraints are classes that are in charge of checking wether an
