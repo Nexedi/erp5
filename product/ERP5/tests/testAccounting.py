@@ -2409,6 +2409,108 @@ class TestTransactions(AccountingTestCase):
     self.failIf(invoice_line.getGroupingReference())
     self.failIf(payment_line.getGroupingReference())
 
+  def test_AccountingTransaction_getTotalDebitCredit(self):
+    # source view
+    transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.payable,
+                           destination_value=self.account_module.receivable,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.payable,
+                           source_credit=400)))
+    self.assertTrue(transaction.AccountingTransaction_isSourceView())
+    self.assertEquals(500, transaction.AccountingTransaction_getTotalDebit())
+    self.assertEquals(400, transaction.AccountingTransaction_getTotalCredit())
+
+    # destination view
+    transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               source_section_value=self.organisation_module.client_1,
+               destination_section_value=self.section,
+               lines=(dict(source_value=self.account_module.payable,
+                           destination_value=self.account_module.receivable,
+                           destination_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.payable,
+                           destination_credit=400)))
+    self.assertFalse(transaction.AccountingTransaction_isSourceView())
+    self.assertEquals(500, transaction.AccountingTransaction_getTotalDebit())
+    self.assertEquals(400, transaction.AccountingTransaction_getTotalCredit())
+
+    # source view, with conversion on our side
+    transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.payable,
+                           destination_value=self.account_module.receivable,
+                           source_asset_debit=50,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.payable,
+                           source_asset_credit=40,
+                           source_credit=400)))
+    self.assertTrue(transaction.AccountingTransaction_isSourceView())
+    self.assertEquals(50, transaction.AccountingTransaction_getTotalDebit())
+    self.assertEquals(40, transaction.AccountingTransaction_getTotalCredit())
+
+    # destination view, with conversion on our side
+    transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               source_section_value=self.organisation_module.client_1,
+               destination_section_value=self.section,
+               lines=(dict(source_value=self.account_module.payable,
+                           destination_value=self.account_module.receivable,
+                           destination_asset_debit=50,
+                           destination_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.payable,
+                           destination_asset_credit=40,
+                           destination_credit=400)))
+    self.assertFalse(transaction.AccountingTransaction_isSourceView())
+    self.assertEquals(50, transaction.AccountingTransaction_getTotalDebit())
+    self.assertEquals(40, transaction.AccountingTransaction_getTotalCredit())
+
+    # source view, with conversion on other side
+    transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.payable,
+                           destination_value=self.account_module.receivable,
+                           destination_asset_debit=50,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.payable,
+                           destination_asset_credit=40,
+                           source_credit=400)))
+    self.assertTrue(transaction.AccountingTransaction_isSourceView())
+    self.assertEquals(500, transaction.AccountingTransaction_getTotalDebit())
+    self.assertEquals(400, transaction.AccountingTransaction_getTotalCredit())
+    
+    # destination view, with conversion on other side
+    transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               source_section_value=self.organisation_module.client_1,
+               destination_section_value=self.section,
+               lines=(dict(source_value=self.account_module.payable,
+                           destination_value=self.account_module.receivable,
+                           source_asset_debit=50,
+                           destination_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.payable,
+                           source_asset_credit=40,
+                           destination_credit=400)))
+    self.assertFalse(transaction.AccountingTransaction_isSourceView())
+    self.assertEquals(500, transaction.AccountingTransaction_getTotalDebit())
+    self.assertEquals(400, transaction.AccountingTransaction_getTotalCredit())
+
 
 
 class TestAccountingWithSequences(AccountingTestCase):
