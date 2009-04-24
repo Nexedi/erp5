@@ -393,10 +393,11 @@ class ReportSection:
                        REQUEST,
                        self.saved_selections[selection_name]['display_mode'],
                        selection_name=selection_name)
+
+        # first make sure no parameters that have been pushed are kept 
+        portal_selections.setSelectionParamsFor(selection_name,
+                                                {}, REQUEST=REQUEST)
         if self.selection_params is not None:
-          # first make sure no parameters that have been pushed are erased 
-          portal_selections.setSelectionParamsFor(selection_name,
-                                                  {}, REQUEST=REQUEST)
           # then restore the original params
           portal_selections.setSelectionParamsFor(selection_name,
                       self.saved_selections[selection_name]['params'],
