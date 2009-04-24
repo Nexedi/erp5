@@ -2189,7 +2189,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                                     'AccountModule_viewGeneralLedgerReport')
     self.assertEquals(6, len(report_section_list))
 
-    self.assertEquals('40: Payable (Client 1)',
+    self.assertEquals('40 - Payable (Client 1)',
                       report_section_list[0].getTitle())
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
@@ -2244,7 +2244,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getMirrorSectionTitle=None,
           debit=200, credit=100, )
     
-    self.assertEquals('41: Receivable (Client 1)',
+    self.assertEquals('41 - Receivable (Client 1)',
                       report_section_list[1].getTitle())
     line_list = self.getListBoxLineList(report_section_list[1])
     data_line_list = [l for l in line_list if l.isDataLine()]
@@ -2305,7 +2305,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getMirrorSectionTitle=None,
           debit=1800, credit=200, )
 
-    self.assertEquals('41: Receivable (Client 2)',
+    self.assertEquals('41 - Receivable (Client 2)',
                       report_section_list[2].getTitle())
     line_list = self.getListBoxLineList(report_section_list[2])
     data_line_list = [l for l in line_list if l.isDataLine()]
@@ -2322,7 +2322,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.failUnless(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit=400, credit=0, )
 
-    self.assertEquals('41: Receivable (John Smith)',
+    self.assertEquals('41 - Receivable (John Smith)',
                       report_section_list[3].getTitle())
     line_list = self.getListBoxLineList(report_section_list[3])
     data_line_list = [l for l in line_list if l.isDataLine()]
@@ -2339,7 +2339,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.failUnless(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit=500, credit=0, )
 
-    self.assertEquals('5: Bank (Bank1)',
+    self.assertEquals('5 - Bank (Bank1)',
                       report_section_list[4].getTitle())
     line_list = self.getListBoxLineList(report_section_list[4])
     data_line_list = [l for l in line_list if l.isDataLine()]
