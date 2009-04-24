@@ -84,7 +84,6 @@ SetOwnProperties = permissions.SetOwnProperties
 # Default CMF Workflow Permissions
 RequestReview = permissions.RequestReview
 ReviewPortalContent = permissions.ReviewPortalContent
-AccessFuturePortalContent = permissions.AccessFuturePortalContent
 
 # ERP5 addition: delete content. It is still unclear
 # if this permission makes any sense since we may
