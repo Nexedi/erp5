@@ -1,3 +1,6 @@
+2009-04-24 jerome
+* Add a utility script to check that all relation field defines proxy listbox id or columns
+
 2009-02-20 yusei
 * Add a utility script to associate files in skin folder to cache manager.
 
