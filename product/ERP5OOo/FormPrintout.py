@@ -345,6 +345,11 @@ class ODFStrategy(Implicit):
     element_tree = self._replaceNodeViaPointReference(element_tree=element_tree, field=field)
     return element_tree
   
+  def _renderField(self, field):
+    # XXX It looks ugly to use render_pdf to extract text. Probably
+    # it should be renamed to render_text.
+    return field.render_pdf(field.get_value('default'))
+
   def _replaceNodeViaPointReference(self, element_tree=None, field=None, iteration_index=0):
     """replace via ODF point reference
     
@@ -352,7 +357,7 @@ class ODFStrategy(Implicit):
      <text:reference-mark text:name="invoice-date"/>
     """
     field_id = field.id
-    field_value = field.get_value('default')
+    field_value = self._renderField(field)
     value = self._toUnicodeString(field_value)
     # text:reference-mark text:name="invoice-date"
     reference_xpath = '//text:reference-mark[@text:name="%s"]' % field_id
@@ -380,7 +385,7 @@ class ODFStrategy(Implicit):
     range reference example:
     <text:reference-mark-start text:name="week"/>Monday<text:reference-mark-end text:name="week"/>
     """
-    field_value = field.get_value('default')
+    field_value = self._renderField(field)
     value = self._toUnicodeString(field_value)
     range_reference_xpath = '//text:reference-mark-start[@text:name="%s"]' % field.id
     reference_list = element_tree.xpath(range_reference_xpath, namespaces=element_tree.nsmap)
