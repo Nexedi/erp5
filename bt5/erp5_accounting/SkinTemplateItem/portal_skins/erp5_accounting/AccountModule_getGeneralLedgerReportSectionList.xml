@@ -71,12 +71,15 @@ section_uid = context.Base_getSectionUidListForSectionCategory(\n
 simulation_state    = request[\'simulation_state\']\n
 from_date           = request.get(\'from_date\', None)\n
 gap                 = request.get(\'gap\', None)\n
-omit_empty_accounts = request.get(\'omit_empty_accounts\', True)\n
+# XXX the field should maybe use base=1 on the category...\n
+if gap:\n
+  gap = \'gap/%s\' % gap\n
 display_categories  = request.get(\'display_categories\', False)\n
 period_start_date = context\\\n
     .Base_getAccountingPeriodStartDateForSectionCategory(\n
           section_category=section_category, date=from_date or at_date)\n
 gap_root = request.get(\'gap_root\')\n
+\n
 \n
 # currency precision\n
 currency = portal.Base_getCurrencyForSection(request[\'section_category\'])\n
@@ -93,11 +96,6 @@ params = dict(at_date=at_date,\n
               movement_portal_type=portal.getPortalAccountingMovementTypeList(),\n
               no_mirror_section_uid_cache=1,\n
               hide_grouping=request.get(\'omit_grouping_reference\', False))\n
-\n
-if from_date:\n
-  params[\'from_date\'] = from_date\n
-\n
-result = []\n
 \n
 if len(simulation_state) > 1:\n
   account_columns = (\n
@@ -123,136 +121,199 @@ else:\n
       (\'credit\', \'Credit\'),\n
       (\'running_total_price\', \'Net\'), )\n
 \n
-# XXX getting all gap is wrong approach, it represents more than 1000\n
-# objects\n
-if gap:\n
-  gap_value_list = cat_tool.gap.restrictedTraverse(gap)\\\n
-                       .getCategoryChildValueList(is_self_excluded=0)\n
-else:\n
-  cat = gap_root or (\'gap/%s\' % (\n
-    context.portal_preferences.getPreferredAccountingTransactionGap()))\n
+# utility functions\n
+traverse = portal.restrictedTraverse\n
+account_name_cache = {}\n
+def getAccountName(account_relative_url):\n
+  try:\n
+    return account_name_cache[account_relative_url]\n
+  except KeyError:\n
+    name = traverse(account_relative_url).Account_getFormattedTitle(gap_root=gap_root)\n
+    account_name_cache[account_relative_url] = name\n
+    return name\n
 \n
-  gap_value_list = cat_tool.resolveCategory(cat).getCategoryChildValueList()\n
+getObject = portal.portal_catalog.getObject\n
 \n
-# we don\'t want to display accounts that don\'t have any transactions\n
-# associated, so we use a cache to see if the account contains transaction or\n
-# not ( regardless of from_date )\n
-account_inventory_list_cache = {}\n
-account_inventory_list_cache_params = params.copy()\n
-if account_inventory_list_cache_params.has_key(\'from_date\'):\n
-  del account_inventory_list_cache_params[\'from_date\']\n
+title_for_uid_cache = {}\n
+def getTitleForUid(uid):\n
+  try:\n
+    return title_for_uid_cache[uid]\n
+  except KeyError:\n
+    name = \'\'\n
+    if uid:\n
+      document = getObject(uid)\n
+      if document is not None:\n
+        name = document.getTitle()\n
+    title_for_uid_cache[uid] = name\n
+    return name\n
 \n
-for c in gap_value_list:\n
-  # FIXME: this part is not working !\n
-  account_list = c.getGapRelatedValueList(portal_type="Account")\n
-  strict_account_list = c.getGapRelatedValueList(portal_type="Account",\n
-                                                 strict_membership=1)\n
+def getFullAccountName(account_info):\n
+  account_relative_url, mirror_section_uid, payment_uid = account_info\n
+  account_name = getAccountName(account_relative_url)\n
+  mirror_section_name = getTitleForUid(mirror_section_uid)\n
+  if mirror_section_name:\n
+    account_name = \'%s (%s)\' % (account_name, mirror_section_name)\n
+  payment_name = getTitleForUid(payment_uid)\n
+  if payment_name:\n
+    account_name = \'%s (%s)\' % (account_name, payment_name)\n
+  return account_name\n
 \n
-  skip_branch = 1\n
-  for account in account_list:\n
-    if account.getUid() not in account_inventory_list_cache:\n
-      account_inventory_list_cache[account.getUid()] = len(\n
-                      sim_tool.getMovementHistoryList(\n
-                          omit_simulation=1,\n
-                          node_uid=account.getUid(),\n
-                          **account_inventory_list_cache_params))\n
-    if account_inventory_list_cache[account.getUid()] != 0:\n
-      skip_branch = 0\n
 \n
-  if skip_branch:\n
-    continue\n
 \n
-  if display_categories and \\\n
-     len(account_list)  and \\\n
-     len(strict_account_list) != 1:\n
-    result.append(ReportSection( path    = c.getPhysicalPath()\n
-                               , title   = "%s: %s" % (c.getId(), c.getTitle())\n
-                               , level   = len(c.getPhysicalPath()) - 4\n
-                               , form_id = None\n
-                               ))\n
+# look at inventories to decide which sections will be shown\n
+account_type_to_group_by_node = [\n
+                  \'account_type/asset\',\n
+                  \'account_type/asset/cash\',\n
+                  \'account_type/asset/receivable/refundable_vat\',\n
+                  \'account_type/liability/payable/collected_vat\',\n
+                  \'account_type/equity\',\n
+                  \'account_type/liability\',]\n
 \n
-  if len(strict_account_list):\n
-    for account in strict_account_list:\n
-      if account.getAccountTypeId() in (\'payable\', \'receivable\'):\n
-        for third_party_brain in context.Account_zDistinctSectionList(\n
-                                      at_date=at_date,\n
-                                      simulation_state=simulation_state):\n
-          third_party_params = params.copy()\n
-          third_party_uid = third_party_brain.uid or " = NULL"\n
-          third_party_params[\'mirror_section_uid\'] = third_party_uid\n
-          title = "%s: %s (%s)" % ( c.getId()\n
-                                  , account.getTitle()\n
-                                  , third_party_brain.title\n
-                                  )\n
-          if len(sim_tool.getMovementHistoryList(\n
-                        mirror_section_uid=third_party_uid,\n
-                        node_uid=account.getUid(),\n
-                        **account_inventory_list_cache_params)):\n
-            result.append(ReportSection(\n
-                      path=account.getPhysicalPath(),\n
-                      title=title,\n
+profit_and_loss_account_type = [\n
+                  \'account_type/expense\',\n
+                  \'account_type/income\',]\n
+\n
+account_type_to_group_by_payment = [ \'account_type/asset/cash/bank\' ]\n
+\n
+account_type_to_group_by_mirror_section = [\n
+                  \'account_type/asset/receivable\',\n
+                  \'account_type/liability/payable\', ]\n
+\n
+\n
+if gap or gap_root:\n
+  params[\'node_category\'] = gap or gap_root\n
+\n
+report_section_list = []\n
+\n
+# group by node\n
+for inventory in portal.portal_simulation.getInventoryList(\n
+                            node_category_strict_membership=account_type_to_group_by_node,\n
+                            portal_type=portal.getPortalAccountingMovementTypeList(),\n
+                            from_date=from_date,\n
+                            group_by_node=1,\n
+                            group_by_section=0,\n
+                            group_by_mirror_section=0,\n
+                            group_by_resource=0,\n
+                            **params):\n
+  key = (inventory.node_relative_url, None, None)\n
+  \n
+  selection_params = params.copy()\n
+  selection_params[\'from_date\'] = from_date\n
+  selection_params[\'node_uid\'] = inventory.node_uid\n
+  selection_params[\'payment_uid\'] = None\n
+  selection_params[\'mirror_section_uid\'] = None\n
+  report_section_list.append(\n
+              ReportSection(\n
+                      path=inventory.node_relative_url,\n
+                      title=getFullAccountName(key),\n
                       form_id=\'Account_viewAccountingTransactionList\',\n
-                      selection_name=\'acount_preference_selection\',\n
-                      selection_params=third_party_params.copy(),\n
+                      selection_name=\'account_preference_selection\',\n
+                      selection_params=selection_params,\n
                       selection_columns=account_columns,\n
                       listbox_display_mode=\'FlatListMode\',\n
                       selection_sort_order=[(\'stock.date\',\n
                                              \'ascending\')]))\n
 \n
-      elif account.isMemberOf(\'account_type/asset/cash/bank\'):\n
-        # Bank Account\n
-        for bank_account_brain in account.Account_zGetDistinctPaymentList(\n
-                                      at_date=at_date,\n
-                                      simulation_state=simulation_state):\n
-          bank_params = params.copy()\n
-          if bank_account_brain.path is not None:\n
-            bank_account_uid = bank_account_brain.uid or " = NULL"\n
-            bank_params[\'payment_uid\'] = bank_account_uid\n
-            title = "%s: %s (%s)" % ( c.getId()\n
-                                    , account.getTitle()\n
-                                    , bank_account_brain.title\n
-                                    )\n
-          else :\n
-            bank_params[\'no_payment_uid\'] = 1\n
-            title = "%s: %s" % ( c.getId(), account.getTitle())\n
-          if len(sim_tool.getMovementHistoryList(\n
-                          payment_uid=bank_account_uid,\n
-                          node_uid=account.getUid(),\n
-                          **account_inventory_list_cache_params)):\n
-            result.append(ReportSection(\n
-                      path=account.getPhysicalPath(),\n
-                      title=title,\n
+\n
+# profit & loss -> same, but from date limited to the current period\n
+for inventory in portal.portal_simulation.getInventoryList(\n
+                            node_category_strict_membership=profit_and_loss_account_type,\n
+                            portal_type=portal.getPortalAccountingMovementTypeList(),\n
+                            from_date=max(from_date, period_start_date),\n
+                            group_by_node=1,\n
+                            group_by_section=0,\n
+                            group_by_mirror_section=0,\n
+                            group_by_resource=0,\n
+                            **params):\n
+  key = (inventory.node_relative_url, None, None)\n
+  selection_params = params.copy()\n
+  selection_params[\'from_date\'] = max(from_date, period_start_date)\n
+  selection_params[\'period_start_date\'] = max(from_date, period_start_date)\n
+  selection_params[\'node_uid\'] = inventory.node_uid\n
+  selection_params[\'payment_uid\'] = None\n
+  selection_params[\'mirror_section_uid\'] = None\n
+  report_section_list.append(\n
+              ReportSection(\n
+                      path=inventory.node_relative_url,\n
+                      title=getFullAccountName(key),\n
                       form_id=\'Account_viewAccountingTransactionList\',\n
-                      selection_name=\'accounting_report_selection\',\n
-                      selection_params=bank_params.copy(),\n
+                      selection_name=\'account_preference_selection\',\n
+                      selection_params=selection_params,\n
                       selection_columns=account_columns,\n
                       listbox_display_mode=\'FlatListMode\',\n
                       selection_sort_order=[(\'stock.date\',\n
                                              \'ascending\')]))\n
-      elif len(sim_tool.getMovementHistoryList(\n
-                                node_uid=account.getUid(),\n
-                                **account_inventory_list_cache_params)):\n
-          result.append(ReportSection(\n
-                        path=account.getPhysicalPath(),\n
-                        title="%s: %s" % (c.getId(), account.getTitle()),\n
-                        form_id=\'Account_viewAccountingTransactionList\',\n
-                        selection_name=\'accounting_report_selection\',\n
-                        selection_params=params,\n
-                        selection_columns=account_columns,\n
-                        listbox_display_mode=\'FlatListMode\',\n
-                        selection_sort_order=[(\'stock.date\',\n
-                                               \'ascending\')]))\n
+\n
+# group by mirror_section\n
+for inventory in portal.portal_simulation.getInventoryList(\n
+                            node_category_strict_membership=account_type_to_group_by_mirror_section,\n
+                            portal_type=portal.getPortalAccountingMovementTypeList(),\n
+                            from_date=from_date,\n
+                            group_by_node=1,\n
+                            group_by_section=0,\n
+                            group_by_mirror_section=1,\n
+                            group_by_resource=0,\n
+                            **params):\n
+  key = (inventory.node_relative_url, inventory.mirror_section_uid, None)\n
+\n
+  selection_params = params.copy()\n
+  selection_params[\'from_date\'] = from_date\n
+  selection_params[\'node_uid\'] = inventory.node_uid\n
+  selection_params[\'payment_uid\'] = None\n
+  selection_params[\'mirror_section_uid\'] = inventory.mirror_section_uid\n
+  report_section_list.append(\n
+              ReportSection(\n
+                      path=inventory.node_relative_url,\n
+                      title=getFullAccountName(key),\n
+                      form_id=\'Account_viewAccountingTransactionList\',\n
+                      selection_name=\'account_preference_selection\',\n
+                      selection_params=selection_params,\n
+                      selection_columns=account_columns,\n
+                      listbox_display_mode=\'FlatListMode\',\n
+                      selection_sort_order=[(\'stock.date\',\n
+                                             \'ascending\')]))\n
+\n
+\n
+# group by payment\n
+for inventory in portal.portal_simulation.getInventoryList(\n
+                            node_category_strict_membership=account_type_to_group_by_payment,\n
+                            portal_type=portal.getPortalAccountingMovementTypeList(),\n
+                            from_date=from_date,\n
+                            group_by_node=1,\n
+                            group_by_section=0,\n
+                            group_by_paymnent=1,\n
+                            group_by_resource=0,\n
+                            **params):\n
+  key = (inventory.node_relative_url, None, inventory.payment_uid)\n
+\n
+  selection_params = params.copy()\n
+  selection_params[\'from_date\'] = from_date\n
+  selection_params[\'node_uid\'] = inventory.node_uid\n
+  selection_params[\'payment_uid\'] = inventory.payment_uid\n
+  selection_params[\'mirror_section_uid\'] = None\n
+  report_section_list.append(\n
+              ReportSection(\n
+                      path=inventory.node_relative_url,\n
+                      title=getFullAccountName(key),\n
+                      form_id=\'Account_viewAccountingTransactionList\',\n
+                      selection_name=\'account_preference_selection\',\n
+                      selection_params=selection_params,\n
+                      selection_columns=account_columns,\n
+                      listbox_display_mode=\'FlatListMode\',\n
+                      selection_sort_order=[(\'stock.date\',\n
+                                             \'ascending\')]))\n
+\n
+report_section_list.sort(key=ReportSection.getTitle)\n
+\n
 total_params = params.copy()\n
-if gap:\n
-  total_params[\'node_category\'] = \'gap/%s\' % gap\n
-result.append(ReportSection(\n
+report_section_list.append(ReportSection(\n
               path=context.getPhysicalPath(),\n
               title=Base_translateString("Total"),\n
               form_id=\'AccountModule_viewGeneralLedgerSummary\',\n
               selection_name=\'accounting_report_selection\',\n
               selection_params=total_params))\n
 \n
-return result\n
+return report_section_list\n
 
 
 ]]></string> </value>
@@ -308,38 +369,36 @@ return result\n
                             <string>None</string>
                             <string>from_date</string>
                             <string>gap</string>
-                            <string>True</string>
-                            <string>omit_empty_accounts</string>
                             <string>False</string>
                             <string>display_categories</string>
                             <string>period_start_date</string>
                             <string>gap_root</string>
                             <string>currency</string>
                             <string>precision</string>
+                            <string>True</string>
                             <string>_write_</string>
                             <string>dict</string>
                             <string>params</string>
-                            <string>result</string>
                             <string>len</string>
                             <string>account_columns</string>
-                            <string>gap_value_list</string>
-                            <string>cat</string>
-                            <string>account_inventory_list_cache</string>
-                            <string>account_inventory_list_cache_params</string>
+                            <string>traverse</string>
+                            <string>account_name_cache</string>
+                            <string>getAccountName</string>
+                            <string>getObject</string>
+                            <string>title_for_uid_cache</string>
+                            <string>getTitleForUid</string>
+                            <string>getFullAccountName</string>
+                            <string>account_type_to_group_by_node</string>
+                            <string>profit_and_loss_account_type</string>
+                            <string>account_type_to_group_by_payment</string>
+                            <string>account_type_to_group_by_mirror_section</string>
+                            <string>report_section_list</string>
                             <string>_getiter_</string>
-                            <string>c</string>
-                            <string>account_list</string>
-                            <string>strict_account_list</string>
-                            <string>skip_branch</string>
-                            <string>account</string>
                             <string>_apply_</string>
-                            <string>third_party_brain</string>
-                            <string>third_party_params</string>
-                            <string>third_party_uid</string>
-                            <string>title</string>
-                            <string>bank_account_brain</string>
-                            <string>bank_params</string>
-                            <string>bank_account_uid</string>
+                            <string>inventory</string>
+                            <string>key</string>
+                            <string>selection_params</string>
+                            <string>max</string>
                             <string>total_params</string>
                           </tuple>
                         </value>
