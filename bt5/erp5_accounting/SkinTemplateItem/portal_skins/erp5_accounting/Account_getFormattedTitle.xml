@@ -56,7 +56,7 @@
             <value> <string>if account is None:\n
   account = context\n
 \n
-gap_id = account.Account_getGapId()\n
+gap_id = account.Account_getGapId(gap_root=gap_root)\n
 title  = account.getTitle()\n
 \n
 if gap_id:\n
@@ -73,7 +73,7 @@ return title\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>account=None</string> </value>
+            <value> <string>account=None, gap_root=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -93,13 +93,14 @@ return title\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>account</string>
+                            <string>gap_root</string>
                             <string>None</string>
                             <string>context</string>
                             <string>_getattr_</string>
@@ -117,6 +118,7 @@ return title\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
               </tuple>
             </value>
