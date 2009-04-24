@@ -54,15 +54,15 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>is_source = context.AccountingTransaction_isSourceView()\n
-total_debit = 0\n
+total_credit = 0\n
 for line in context.getMovementList(\n
       portal_type=context.getPortalAccountingMovementTypeList()):\n
   if is_source:\n
-    total_debit += line.getDestinationInventoriatedTotalAssetDebit()\n
+    total_credit += line.getSourceInventoriatedTotalAssetCredit()\n
   else:\n
-    total_debit += line.getSourceInventoriatedTotalAssetDebit()\n
+    total_credit += line.getDestinationInventoriatedTotalAssetCredit()\n
 \n
-return total_debit\n
+return total_credit\n
 </string> </value>
         </item>
         <item>
@@ -103,7 +103,7 @@ return total_debit\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>is_source</string>
-                            <string>total_debit</string>
+                            <string>total_credit</string>
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>_inplacevar_</string>
