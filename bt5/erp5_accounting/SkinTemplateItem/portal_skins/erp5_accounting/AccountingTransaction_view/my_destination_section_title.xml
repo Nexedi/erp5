@@ -13,7 +13,6 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>catalog_index</string>
                 <string>base_category</string>
               </list>
             </value>
@@ -80,14 +79,6 @@
                     <value> <string>destination_section</string> </value>
                 </item>
                 <item>
-                    <key> <string>catalog_index</string> </key>
-                    <value> <string>title</string> </value>
-                </item>
-                <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>The title of the third party</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_destination_section_title</string> </value>
                 </item>
@@ -98,10 +89,6 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Third Party</string> </value>
                 </item>
               </dictionary>
             </value>

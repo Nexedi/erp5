@@ -18,6 +18,7 @@
                 <string>base_category</string>
                 <string>portal_type</string>
                 <string>catalog_index</string>
+                <string>proxy_listbox_ids</string>
               </list>
             </value>
         </item>
@@ -76,10 +77,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>height</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>portal_type</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -129,6 +126,17 @@
                         <tuple>
                           <string>Account</string>
                           <string>Account</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>AccountModule_viewAccountList/listbox</string>
+                          <string>Accounts</string>
                         </tuple>
                       </list>
                     </value>

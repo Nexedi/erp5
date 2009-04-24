@@ -362,10 +362,25 @@
                       <list>
                         <tuple>
                           <string>Account</string>
-                          <string>account</string>
+                          <string>Account</string>
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>AccountModule_viewAccountList/listbox</string>
+                          <string>Accounts</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>relation_form_id</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>relation_setter_id</string> </key>
