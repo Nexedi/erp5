@@ -25,22 +25,19 @@
 # Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301,
 # USA.
 ##############################################################################
-from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.CMFCore.utils import _checkPermission
-from Products.PythonScripts.Utility import allow_class
 from Products.ERP5Type import PropertySheet, Permissions
 from Products.ERP5Form.ListBox import ListBox
 from Products.ERP5Form.FormBox import FormBox
 from Products.ERP5Form.ImageField import ImageField
 from Products.ERP5OOo.OOoUtils import OOoBuilder
-
+from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Acquisition import Implicit, aq_base
 from Globals import InitializeClass, DTMLFile, Persistent, get_request
 from AccessControl import ClassSecurityInfo
 from AccessControl.Role import RoleManager
-from OFS.SimpleItem import Item, SimpleItem
-from OFS.Image import File
+from OFS.SimpleItem import Item
 from urllib import quote, quote_plus
 from copy import deepcopy
 from lxml import etree
@@ -52,7 +49,6 @@ import re
 
 try:
   from webdav.Lockable import ResourceLockedError
-  from webdav.WriteLockInterface import WriteLockInterface
   SUPPORTS_WEBDAV_LOCKS = 1
 except ImportError:
   SUPPORTS_WEBDAV_LOCKS = 0
@@ -311,12 +307,6 @@ class ODFStrategy(Implicit):
     """
     replacing meta.xml file in a ODF document
     """
-    meta_xml = ooo_builder.extract('meta.xml')
-
-    if isinstance(doc_xml, unicode):
-      meta_xml = meta_xml.encode('utf-8')
-
-    ooo_builder.replace('meta.xml', meta_xml)
     return ooo_builder
 
   def _replaceXmlByForm(self, element_tree=None, form=None, here=None,
@@ -376,7 +366,7 @@ class ODFStrategy(Implicit):
           child.tail = ''
           paragraph_node.text = value
       else:
-        self._appendParagraphsWithLineList(target_node=target_node, line_list=field_value)
+        self._appendParagraphsWithLineList(target_node=paragraph_node, line_list=field_value)
     # set when using report section
     self._setUniqueElementName(base_name=field.id,
                                iteration_index=iteration_index,
