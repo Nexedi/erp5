@@ -65,9 +65,13 @@ class TrashTool(BaseTool):
         if 'portal' in path:
           path += '_items'
         if path not in backup_object_container.objectIds():
-          backup_object_container = backup_object_container.newContent(portal_type='Trash Folder', id=path,
-                                                                       is_indexable=0)
-          backup_object_container.edit(isHidden=1)
+          if not hasattr(aq_base(backup_object_container), "newContent"):
+            backup_object_container.manage_addFolder(id=path,)
+            backup_object_container = backup_object_container._getOb(path)
+          else:
+            backup_object_container = backup_object_container.newContent(portal_type='Trash Folder', id=path,
+                                                                         is_indexable=0)
+            backup_object_container.edit(isHidden=1)
         else:
           backup_object_container = backup_object_container._getOb(path)
       # backup the object
