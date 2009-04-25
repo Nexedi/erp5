@@ -75,6 +75,8 @@ class ImageFieldWidget(Widget.TextWidget):
         """Render image field as a link to the image
         """
         # Url is already defined in value
+        if value is None:
+          return ''
         image = value
         alt = field.get_value('description') or \
               field.get_value('title')
