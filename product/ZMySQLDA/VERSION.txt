@@ -1,1 +1,1 @@
-ZMySQLDA 5.4.2
+ZMySQLDA 5.4.3
