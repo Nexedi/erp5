@@ -813,5 +813,6 @@ class Arrow:
                     'source_account', 'destination_account',
                     # Virtual categories
                     'source_region', 'destination_region',
+                    'source_payment_region', 'destination_payment_region',
                     )
 
