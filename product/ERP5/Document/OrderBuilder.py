@@ -114,6 +114,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     # Select
     if len(movement_relative_url_list) == 0:
       movement_list = self.searchMovementList(
+                                      delivery_relative_url_list=delivery_relative_url_list,
                                       applied_rule_uid=applied_rule_uid,**kw)
     else:
       movement_list = [self.restrictedTraverse(relative_url) for relative_url \
