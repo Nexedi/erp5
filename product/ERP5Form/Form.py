@@ -860,8 +860,8 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
                 if isinstance(aq_base(value), (Method, TALESMethod)):
                     value = copyMethod(value)
                 elif value is not None and not isinstance(value,
-                        (str, unicode, int, long, bool, list, tuple, dict)):
-                    raise ValueError, repr(value)
+                        (str, unicode, int, long, float, bool, list, tuple, dict)):
+                    raise ValueError, '%s:%s' % (type(value), repr(value))
                 new_dict[key] = value
             return new_dict
 
@@ -982,8 +982,8 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
                 if isinstance(aq_base(value), (Method, TALESMethod)):
                     value = copyMethod(value)
                 elif value is not None and not isinstance(value,
-                        (str, unicode, int, long, bool, list, tuple, dict)):
-                    raise ValueError, repr(value)
+                        (str, unicode, int, long, float, bool, list, tuple, dict)):
+                    raise ValueError, '%s:%s' % (type(value), repr(value))
                 new_dict[key] = value
             return new_dict
 
