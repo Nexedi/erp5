@@ -9,6 +9,7 @@ destination_administration
 destination_decision
 destination_function
 destination_payment
+destination_payment_region
 destination_project
 destination_section
 destination_trade
@@ -26,6 +27,7 @@ source_administration
 source_decision
 source_function
 source_payment
+source_payment_region
 source_project
 source_section
 source_trade
