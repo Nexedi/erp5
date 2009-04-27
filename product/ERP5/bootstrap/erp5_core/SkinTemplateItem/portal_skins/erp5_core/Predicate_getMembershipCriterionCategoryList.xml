@@ -66,7 +66,7 @@ category_list = []\n
 ctool = context.portal_categories\n
 for item in mixed_list:\n
   base_category = ctool[item]\n
-  item_list = base_category.getCategoryChildCompactLogicalPathItemList(base=1)\n
+  item_list = base_category.getCategoryChildCompactLogicalPathItemList(base=1)[:]\n
   if item_list == [[\'\', \'\']]:\n
     for fallback_category in base_category.getFallbackBaseCategoryList():\n
       fallback_category = ctool.restrictedTraverse(fallback_category, None)\n
