@@ -398,6 +398,8 @@ class TestPredicates(TestPredicateMixIn):
     # When called on a predicate using a simple category (like region) as
     # membership criterion base category, it will show for values the content
     # of this category.
+    source_region_chile_list_before = self.portal.portal_categories.source_region.\
+                                      getCategoryChildCompactLogicalPathItemList(base=1)[:]
     pred = self.createPredicate(
         membership_criterion_base_category_list=['region'], )
     self.failUnless(('europe/western_europe', 'region/europe/western_europe') in
@@ -415,6 +417,9 @@ class TestPredicates(TestPredicateMixIn):
                      'source_region/region/europe/western_europe') in
         [tuple(x) for x in pred.Predicate_getMembershipCriterionCategoryList()],
         pred.Predicate_getMembershipCriterionCategoryList(),)
+    source_region_chile_list_after = self.portal.portal_categories.source_region.\
+                                     getCategoryChildCompactLogicalPathItemList(base=1)[:]
+    self.assertEquals(source_region_chile_list_before, source_region_chile_list_after)
 
 
   def test_PredicateFusion(self, quiet=QUIET, run=RUN_ALL_TESTS):
