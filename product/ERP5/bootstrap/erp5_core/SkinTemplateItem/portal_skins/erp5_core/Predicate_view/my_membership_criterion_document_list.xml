@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ParallelListField" module="Products.ERP5Form.ParallelListField"/>
+        <global name="LinesField" module="Products.Formulator.StandardFields"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_membership_criterion_category_list</string> </value>
+            <value> <string>my_membership_criterion_document_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -19,15 +19,23 @@
               <dictionary>
                 <item>
                     <key> <string>external_validator_failed</string> </key>
-                    <value> <string>The input failed the external validator.</string> </value>
+                    <value> <string>You specify an invalid base category or a non-existing document.</string> </value>
+                </item>
+                <item>
+                    <key> <string>line_too_long</string> </key>
+                    <value> <string>A line was too long.</string> </value>
                 </item>
                 <item>
                     <key> <string>required_not_found</string> </key>
                     <value> <string>Input is required but no input given.</string> </value>
                 </item>
                 <item>
-                    <key> <string>unknown_selection</string> </key>
-                    <value> <string>You selected an item that was not in the list.</string> </value>
+                    <key> <string>too_long</string> </key>
+                    <value> <string>You entered too many characters.</string> </value>
+                </item>
+                <item>
+                    <key> <string>too_many_lines</string> </key>
+                    <value> <string>You entered too many lines.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -69,15 +77,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>first_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>hash_script_id</string> </key>
+                    <key> <string>height</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -85,15 +85,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
+                    <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>size</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -106,6 +110,14 @@
                 </item>
                 <item>
                     <key> <string>view_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -150,15 +162,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>first_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>hash_script_id</string> </key>
+                    <key> <string>height</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -166,17 +170,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
+                    <key> <string>max_length</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>size</string> </key>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -189,6 +195,14 @@
                 </item>
                 <item>
                     <key> <string>view_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -226,45 +240,41 @@
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>extra</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>first_item</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>hash_script_id</string> </key>
-                    <value> <string>Predicate_hashCategoryList</string> </value>
+                    <key> <string>height</string> </key>
+                    <value> <int>5</int> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_linelength</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>max_lines</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>size</string> </key>
-                    <value> <int>5</int> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Membership Criterion Categories</string> </value>
+                    <value> <string>Membership Criterion Documents</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -277,6 +287,14 @@
 <br />
 
 ]]></string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
+                    <value> <int>40</int> </value>
                 </item>
               </dictionary>
             </value>
@@ -295,7 +313,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.getMembershipCriterionCategoryList(filter=\'category\')</string> </value>
+            <value> <string>python:here.getMembershipCriterionCategoryList(filter=\'document\')</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -303,15 +321,15 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
         <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:here.Predicate_getMembershipCriterionCategoryList()</string> </value>
+            <key> <string>method_name</string> </key>
+            <value> <string>Predicate_validateMembershipCriterionDocument</string> </value>
         </item>
       </dictionary>
     </pickle>

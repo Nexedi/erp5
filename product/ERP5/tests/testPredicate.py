@@ -413,7 +413,7 @@ class TestPredicates(TestPredicateMixIn):
     # note that the id of the actual base category is displayed in the first
     # item too, for making it clear in the UI that it's the content of a
     # category used for another base category.
-    self.failUnless(('source_region/europe/western_europe',
+    self.failUnless(('region/europe/western_europe',
                      'source_region/region/europe/western_europe') in
         [tuple(x) for x in pred.Predicate_getMembershipCriterionCategoryList()],
         pred.Predicate_getMembershipCriterionCategoryList(),)

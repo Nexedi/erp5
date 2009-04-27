@@ -558,3 +558,36 @@ class Predicate(XMLObject, Folder):
       TO BE IMPLEMENTED using portal_catalog(**kw)
     """
     pass
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getMembershipCriterionCategoryList')
+  def getMembershipCriterionCategoryList(self, filter=None, **kw):
+    """
+    If filter is specified, return category only or document only
+    in membership_criterion_category values.
+    """
+    all_list = self._baseGetMembershipCriterionCategoryList()
+    if filter in ('category', 'document'):
+      portal_categories = self.getPortalObject().portal_categories
+      result_dict = {'category':[], 'document':[]}
+      for x in all_list:
+        try:
+          if portal_categories.restrictedTraverse(x).getPortalType() == \
+             'Category':
+            result_dict['category'].append(x)
+          else:
+            result_dict['document'].append(x)
+        except KeyError:
+          result_dict['document'].append(x)
+      return result_dict[filter]
+    else:
+      return all_list
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'setMembershipCriterionDocumentList' )
+  def setMembershipCriterionDocumentList(self, document_list):
+    """
+    Appends to membership_criterion_category values.
+    """
+    return self.setMembershipCriterionCategoryList(
+      (self.getMembershipCriterionCategoryList() + document_list))

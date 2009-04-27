@@ -91,6 +91,7 @@
                     <value>
                       <list>
                         <string>my_membership_criterion_category_list</string>
+                        <string>my_membership_criterion_document_list</string>
                       </list>
                     </value>
                 </item>

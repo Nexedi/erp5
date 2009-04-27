@@ -53,31 +53,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>membership_base_list = context.getMembershipCriterionBaseCategoryList()\n
-multimembership_base_list = context.getMultimembershipCriterionBaseCategoryList()\n
-mixed_list = membership_base_list\n
+            <value> <string>category_list = context.getMembershipCriterionBaseCategoryList()\n
+category_list += [i for i in context.getMultimembershipCriterionBaseCategoryList() \\\n
+                  if i not in category_list]\n
+portal_categories = context.getPortalObject().portal_categories\n
 \n
-for item in multimembership_base_list :\n
-  if item not in mixed_list :\n
-    mixed_list.append(item)\n
-\n
-category_list = []\n
-\n
-ctool = context.portal_categories\n
-for item in mixed_list:\n
-  base_category = ctool[item]\n
-  item_list = base_category.getCategoryChildCompactLogicalPathItemList(base=1)[:]\n
-  if item_list == [[\'\', \'\']]:\n
-    for fallback_category_id in base_category.getFallbackBaseCategoryList():\n
-      fallback_category = ctool.restrictedTraverse(fallback_category_id, None)\n
-      if fallback_category is not None and fallback_category.objectIds():\n
-        item_list.extend([(\'%s/%s\' % (fallback_category_id, x[0]), \'%s/%s\' % (item, x[1])) \\\n
-          for x in fallback_category.getCategoryChildCompactLogicalPathItemList(base=1) if x[0]])\n
-        break\n
-\n
-  category_list.extend(item_list)\n
-\n
-return category_list\n
+for item in item_list:\n
+  base_category, relative_url = item.split(\'/\', 1)\n
+  if base_category not in category_list or \\\n
+      portal_categories.restrictedTraverse(relative_url, None) is None:\n
+    return 0\n
+return 1\n
 </string> </value>
         </item>
         <item>
@@ -88,7 +74,7 @@ return category_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>item_list, request</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -108,30 +94,27 @@ return category_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>item_list</string>
+                            <string>request</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>membership_base_list</string>
-                            <string>multimembership_base_list</string>
-                            <string>mixed_list</string>
-                            <string>_getiter_</string>
-                            <string>item</string>
                             <string>category_list</string>
-                            <string>ctool</string>
-                            <string>_getitem_</string>
-                            <string>base_category</string>
-                            <string>item_list</string>
-                            <string>fallback_category_id</string>
-                            <string>None</string>
-                            <string>fallback_category</string>
+                            <string>_inplacevar_</string>
                             <string>append</string>
                             <string>$append0</string>
-                            <string>x</string>
+                            <string>_getiter_</string>
+                            <string>i</string>
+                            <string>portal_categories</string>
+                            <string>item</string>
+                            <string>base_category</string>
+                            <string>relative_url</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -148,7 +131,7 @@ return category_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Predicate_getMembershipCriterionCategoryList</string> </value>
+            <value> <string>Predicate_validateMembershipCriterionDocument</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
