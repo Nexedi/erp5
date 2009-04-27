@@ -270,14 +270,11 @@
                           <span tal:replace="structure python: obj.Document_getPopupInfo(website)"/>\n
                       </div>\n
 \n
-                      <div class="search_result_portal_type">\n
-                        <a tal:content="obj/getTranslatedPortalType"\n
-                            tal:attributes="href string:${url}/view"/>\n
-                      </div>\n
-\n
-                      <div class="search_result_title">\n
-                        <a tal:content="python: obj.getTitle() or (hasattr(obj, \'getReference\') and obj.getReference()) or obj.getId()" \n
-                            tal:attributes="href string:${url}/view"/>\n
+                      <div>\n
+                        <a tal:attributes="href string:${url}/view">\n
+                          <span class="search_result_portal_type" tal:content="obj/getTranslatedPortalType" />\n
+                          <span class="search_result_title" tal:content="python: obj.getTitle() or (hasattr(obj, \'getReference\') and obj.getReference()) or obj.getId()" />\n
+                        </a>\n
                       </div>\n
 \n
                       <span class="searchDetails found" \n

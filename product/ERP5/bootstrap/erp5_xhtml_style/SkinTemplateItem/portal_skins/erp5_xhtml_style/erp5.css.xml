@@ -1208,6 +1208,7 @@ table.listbox {\n
   border-style: solid;\n
   border-width: 0 1px 1px 1px;\n
   border-color:<dtml-var document_border_color>;\n
+  padding: 0;\n
 }\n
 \n
 table.listbox .thead    {background: #e6e6e6}\n
@@ -1291,10 +1292,13 @@ div#main_content.list_mode{\n
   line-height:1.5em;\n
 }\n
 \n
-div.search.result .resultList {\n
-  padding: 1em;\n
-  width: 70%;\n
-  margin: 0 auto;\n
+div.search.result .resultList .listbox tr.DataA,\n
+div.search.result .resultList .listbox tr.DataB {\n
+  background-color: white;\n
+}\n
+\n
+div.search.result .resultList .listbox td {\n
+  padding: 0.5em 0;\n
 }\n
 \n
 div.search.result .resultList p {margin-bottom: 0}\n
@@ -1315,21 +1319,7 @@ div.search.result .resultList ul.pages li a:hover {\n
   background: #eee;\n
 }\n
 \n
-div.search.result .resultList table {\n
-  border-collapse: inherit;\n
-  border-spacing: .3em;\n
-}\n
-\n
-div.search.result .resultList .search_result_portal_type,\n
-div.search.result .resultList .search_result_title {\n
-  display: inline;\n
-}\n
-\n
-div.search.result .resultList .search_result_portal_type{\n
-  font-size: 80%;\n
-}\n
-\n
-div.search.result .resultList .search_result_title a{\n
+div.search.result .resultList a .search_result_title {\n
   font-weight: bold;\n
   font-size: 120%;\n
 }\n
