@@ -43,12 +43,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test Pager</title>\n
+<title>Test Pager in View Mode</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test Pager</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test Pager in View Mode</td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
@@ -87,7 +87,7 @@
 \t<td></td>\n
 </tr>\n
 <tal:block tal:define="prefix string:x0_listbox;\n
-                       list_start python:0">\n
+                       set_page python:1">\n
   <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
 </tal:block>\n
 <tal:block tal:repeat="prefix python:range(3)">\n
@@ -108,32 +108,37 @@
 \t<td></td>\n
 </tr>\n
 <tal:block tal:define="prefix string:x0_listbox;\n
-                       list_start python:1">\n
+                       set_page python:2">\n
   <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
 </tal:block>\n
 <tal:block tal:define="prefix string:x1_listbox;\n
-                       list_start python:0">\n
+                       set_page python:1">\n
   <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
 </tal:block>\n
 <tal:block tal:define="prefix string:x2_listbox;\n
-                       list_start python:0">\n
+                       set_page python:1">\n
   <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
 </tal:block>\n
 <tr>\n
-\t<td>selectAndWait</td>\n
-\t<td>name=x1_listbox_list_start</td>\n
-\t<td>5 of 10</td>\n
+\t<td>type</td>\n
+\t<td>id=x1_listbox_set_page</td>\n
+\t<td>5</td>\n
+</tr>\n
+<tr>\n
+\t<td>keyPressAndWait</td>\n
+\t<td>id=x1_listbox_set_page</td>\n
+\t<td>\\13</td>\n
 </tr>\n
 <tal:block tal:define="prefix string:x0_listbox;\n
-                       list_start python:1">\n
+                       set_page python:2">\n
   <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
 </tal:block>\n
 <tal:block tal:define="prefix string:x1_listbox;\n
-                       list_start python:4">\n
+                       set_page python:5">\n
   <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
 </tal:block>\n
 <tal:block tal:define="prefix string:x2_listbox;\n
-                       list_start python:0">\n
+                       set_page python:1">\n
   <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
 </tal:block>\n
 <tr>\n
@@ -142,15 +147,15 @@
 \t<td></td>\n
 </tr>\n
 <tal:block tal:define="prefix string:x0_listbox;\n
-                       list_start python:1">\n
+                       set_page python:2">\n
   <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
 </tal:block>\n
 <tal:block tal:define="prefix string:x1_listbox;\n
-                       list_start python:3">\n
+                       set_page python:4">\n
   <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
 </tal:block>\n
 <tal:block tal:define="prefix string:x2_listbox;\n
-                       list_start python:0">\n
+                       set_page python:1">\n
   <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
 </tal:block>\n
 </tbody></table>\n

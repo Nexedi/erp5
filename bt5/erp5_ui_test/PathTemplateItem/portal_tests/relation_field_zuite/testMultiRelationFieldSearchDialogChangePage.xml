@@ -43,7 +43,7 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Test Simple Relation Field Search Dialog Change Page</title>\n
+<title>Test Multiple Relation Field Search Dialog Change Page</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
@@ -120,8 +120,8 @@
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>//select[@name="listbox_list_start"]</td>\n
-  <td>10</td>\n
+  <td>//input[@id="listbox_set_page"]</td>\n
+  <td>2</td>\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
@@ -136,8 +136,8 @@
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>//select[@name="listbox_list_start"]</td>\n
-  <td>20</td>\n
+  <td>//input[@id="listbox_set_page"]</td>\n
+  <td>3</td>\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
@@ -152,19 +152,24 @@
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>//select[@name="listbox_list_start"]</td>\n
-  <td>10</td>\n
+  <td>//input[@id="listbox_set_page"]</td>\n
+  <td>2</td>\n
 </tr>\n
 \n
 <tr>\n
-  <td>selectAndWait</td>\n
-  <td>listbox_list_start</td>\n
-  <td>value=0</td>\n
+  <td>type</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
-  <td>assertValue</td>\n
-  <td>//select[@name="listbox_list_start"]</td>\n
-  <td>0</td>\n
+  <td>keyPressAndWait</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>\\13</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
@@ -173,14 +178,19 @@
 </tr>\n
 \n
 <tr>\n
-  <td>selectAndWait</td>\n
-  <td>listbox_list_start</td>\n
-  <td>value=20</td>\n
+  <td>type</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>3</td>\n
 </tr>\n
 <tr>\n
-  <td>assertValue</td>\n
-  <td>//select[@name="listbox_list_start"]</td>\n
-  <td>20</td>\n
+  <td>keyPressAndWait</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>\\13</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>3</td>\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n

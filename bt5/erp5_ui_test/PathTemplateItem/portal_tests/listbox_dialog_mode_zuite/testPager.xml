@@ -64,7 +64,7 @@
 </tr>\n
 <tr>\n
 \t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_page_selection</td>\n
+\t<td>id=listbox_set_page</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -135,9 +135,9 @@
 \t<td> - 0 item(s) selected</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifySelected</td>\n
-\t<td>id=listbox_page_selection</td>\n
-\t<td>1 of 4</td>\n
+\t<td>verifyValue</td>\n
+\t<td>id=listbox_set_page</td>\n
+\t<td>1</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyElementPresent</td>\n
@@ -197,9 +197,9 @@
 <!--tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/verify_dialog" /-->\n
 \n
 <tr>\n
-\t<td>verifySelected</td>\n
-\t<td>id=listbox_page_selection</td>\n
-\t<td>2 of 4</td>\n
+\t<td>verifyValue</td>\n
+\t<td>id=listbox_set_page</td>\n
+\t<td>2</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyElementPresent</td>\n
@@ -241,9 +241,9 @@
 </tr>\n
 <tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/verify_dialog" />\n
 <tr>\n
-\t<td>verifySelected</td>\n
-\t<td>id=listbox_page_selection</td>\n
-\t<td>1 of 4</td>\n
+\t<td>verifyValue</td>\n
+\t<td>id=listbox_set_page</td>\n
+\t<td>1</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyElementPresent</td>\n
@@ -278,9 +278,14 @@
 \n
 <!-- Select page -->\n
 <tr>\n
-\t<td>selectAndWait</td>\n
-\t<td>id=listbox_page_selection</td>\n
-\t<td>4 of 4</td>\n
+\t<td>type</td>\n
+\t<td>id=listbox_set_page</td>\n
+\t<td>4</td>\n
+</tr>\n
+<tr>\n
+\t<td>keyPressAndWait</td>\n
+\t<td>id=listbox_set_page</td>\n
+\t<td>\\13</td>\n
 </tr>\n
 <!--tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/verify_dialog" /-->\n
 <tr>\n
@@ -299,9 +304,9 @@
 \t<td> - 1 item(s) selected</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifySelected</td>\n
-\t<td>id=listbox_page_selection</td>\n
-\t<td>4 of 4</td>\n
+\t<td>verifyValue</td>\n
+\t<td>id=listbox_set_page</td>\n
+\t<td>4</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyElementNotPresent</td>\n
@@ -341,9 +346,9 @@
 \t<td> - 0 item(s) selected</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifySelected</td>\n
-\t<td>id=listbox_page_selection</td>\n
-\t<td>1 of 3</td>\n
+\t<td>verifyValue</td>\n
+\t<td>id=listbox_set_page</td>\n
+\t<td>1</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyElementPresent</td>\n

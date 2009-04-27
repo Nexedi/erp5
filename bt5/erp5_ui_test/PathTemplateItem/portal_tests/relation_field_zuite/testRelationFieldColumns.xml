@@ -116,8 +116,8 @@
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>//select[@name="listbox_list_start"]</td>\n
-  <td>10</td>\n
+  <td>//input[@id="listbox_set_page"]</td>\n
+  <td>2</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n

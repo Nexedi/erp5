@@ -107,9 +107,9 @@
 \t<td> - 0 item(s) selected</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifySelected</td>\n
-\t<td>id=listbox_page_selection</td>\n
-\t<td>1 of 4</td>\n
+\t<td>verifyValue</td>\n
+\t<td>id=listbox_set_page</td>\n
+\t<td>1</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyElementPresent</td>\n
@@ -203,9 +203,9 @@
 \t<td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifySelected</td>\n
-\t<td>id=listbox_page_selection</td>\n
-\t<td>2 of 4</td>\n
+\t<td>verifyValue</td>\n
+\t<td>id=listbox_set_page</td>\n
+\t<td>2</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyElementPresent</td>\n
@@ -299,9 +299,9 @@
 \t<td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifySelected</td>\n
-\t<td>id=listbox_page_selection</td>\n
-\t<td>2 of 4</td>\n
+\t<td>verifyValue</td>\n
+\t<td>id=listbox_set_page</td>\n
+\t<td>2</td>\n
 </tr>\n
 <tr>\n
 \t<td>verifyElementPresent</td>\n

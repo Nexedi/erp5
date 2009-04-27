@@ -145,9 +145,9 @@
   <td>10 record(s)</td>\n
 </tr>\n
 <tr>\n
-  <td>verifySelected</td>\n
-  <td>id=listbox_page_selection</td>\n
-  <td>1 of 4</td>\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
@@ -191,9 +191,9 @@
   <td>10 record(s)</td>\n
 </tr>\n
 <tr>\n
-  <td>verifySelected</td>\n
-  <td>id=listbox_page_selection</td>\n
-  <td>2 of 4</td>\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>2</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
@@ -221,9 +221,14 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>selectAndWait</td>\n
-  <td>id=listbox_page_selection</td>\n
-  <td>4 of 4</td>\n
+  <td>type</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>4</td>\n
+</tr>\n
+<tr>\n
+  <td>keyPressAndWait</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>\\13</td>\n
 </tr>\n
 <tr>\n
   <td>verifyAbsoluteLocation</td>\n
@@ -237,9 +242,9 @@
   <td>10 record(s)</td>\n
 </tr>\n
 <tr>\n
-  <td>verifySelected</td>\n
-  <td>id=listbox_page_selection</td>\n
-  <td>4 of 4</td>\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>4</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
@@ -273,9 +278,9 @@
   <td>10 record(s)</td>\n
 </tr>\n
 <tr>\n
-  <td>verifySelected</td>\n
-  <td>id=listbox_page_selection</td>\n
-  <td>3 of 4</td>\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>3</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
@@ -303,9 +308,14 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>selectAndWait</td>\n
-  <td>id=listbox_page_selection</td>\n
-  <td>1 of 4</td>\n
+  <td>type</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>1</td>\n
+</tr>\n
+<tr>\n
+  <td>keyPressAndWait</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>\\13</td>\n
 </tr>\n
 <tr>\n
   <td>verifyAbsoluteLocation</td>\n
@@ -318,9 +328,9 @@
   <td>10 record(s)</td>\n
 </tr>\n
 <tr>\n
-  <td>verifySelected</td>\n
-  <td>id=listbox_page_selection</td>\n
-  <td>1 of 4</td>\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n

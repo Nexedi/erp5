@@ -1125,15 +1125,6 @@ a.tree_closed {\n
   display: none;\n
 }\n
 \n
-.ListSummary .listbox_next_page,\n
-.ListSummary .listbox_previous_page {\n
-  display: block;\n
-  font-size: 0;\n
-  width: 22px;\n
-  height: 22px;\n
-  background-repeat: no-repeat;\n
-}\n
-\n
 .listbox {\n
   color: #000;\n
   background-color: <dtml-var document_background_color>;\n

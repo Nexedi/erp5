@@ -89,8 +89,8 @@
   <tal:block metal:define-macro="checkCurrentPage">\n
     <tr>\n
       <td>assertValue</td>\n
-      <td tal:content="python: \'name=%s_list_start\' % (prefix, )"></td>\n
-      <td tal:content="list_start"></td>\n
+      <td tal:content="python: \'id=%s_set_page\' % (prefix, )"></td>\n
+      <td tal:content="set_page"></td>\n
     </tr>\n
   </tal:block>\n
 </tal:block>\n
