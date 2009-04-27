@@ -88,6 +88,7 @@ ERP5Type_asSecurityGroupId can also return a list of users whenever a category p
 to a Person instance. This is useful to implement user based local role assignments\n
 instead of abstract security based local roles.\n
 """\n
+portal = context.getPortalObject()\n
 \n
 # sort the category list lexicographically\n
 # this prevents us to choose the exact order we want,\n
@@ -116,7 +117,7 @@ for base_category in category_order:\n
       else:\n
         is_child_category = 0\n
       category_path = \'%s/%s\' % (base_category, category)\n
-      category_object = context.portal_categories.getCategoryValue(category_path)\n
+      category_object = portal.portal_categories.getCategoryValue(category_path)\n
       if category_object in (None, \'\'):\n
         raise "SecurityRoleDefinitionError", "Category \'%s\' doesn\'t exist" % (category_path)\n
       portal_type = category_object.getPortalType()\n
@@ -126,12 +127,9 @@ for base_category in category_order:\n
         if user_name is not None: user_list.append(user_name)\n
       else:\n
         if portal_type == \'Category\':\n
-          category_code  = category_object.getCodification() or category_object.getId()\n
+          category_code = category_object.getCodification() or category_object.getId()\n
         else:\n
-          try:\n
-            category_code   = category_object.getReference() or category_object.getId()\n
-          except AttributeError:\n
-            category_code   = category_object.getId()\n
+          category_code = category_object.getProperty(\'reference\') or category_object.getId()\n
         if is_child_category: category_code += \'*\'\n
         associative_list.append(category_code)\n
     # Prevent making a cartesian product with an empty set\n
@@ -182,9 +180,11 @@ return [\'_\'.join(x) for x in cartesianProduct(list_of_list) if x]\n
                           <tuple>
                             <string>category_order</string>
                             <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
                             <string>None</string>
                             <string>list</string>
-                            <string>_getattr_</string>
                             <string>Products.ERP5Type.Utils</string>
                             <string>cartesianProduct</string>
                             <string>list_of_list</string>
@@ -198,12 +198,10 @@ return [\'_\'.join(x) for x in cartesianProduct(list_of_list) if x]\n
                             <string>category</string>
                             <string>is_child_category</string>
                             <string>category_path</string>
-                            <string>context</string>
                             <string>category_object</string>
                             <string>portal_type</string>
                             <string>user_name</string>
                             <string>category_code</string>
-                            <string>AttributeError</string>
                             <string>_inplacevar_</string>
                             <string>append</string>
                             <string>$append0</string>
