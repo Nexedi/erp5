@@ -45,6 +45,7 @@ from zLOG import LOG, DEBUG, INFO, WARNING
 from mimetypes import guess_extension
 from DateTime import DateTime
 from decimal import Decimal
+from xml.sax.saxutils import escape
 import re
 
 try:
@@ -363,15 +364,16 @@ class ODFStrategy(Implicit):
     reference_xpath = '//text:reference-mark[@text:name="%s"]' % field_id
     reference_list = element_tree.xpath(reference_xpath, namespaces=element_tree.nsmap)
     if len(reference_list) > 0:
+      target_node = reference_list[0]
       paragraph_node = reference_list[0].getparent()
       parent_node = paragraph_node.getparent()
-      # remove such a "bbb": <text:p>aaa<br/>bbb</text:p>
       if not isinstance(field_value, list):
+        # remove such a "bbb": <text:p>aaa<text:line-break/>bbb</text:p>
         for child in paragraph_node.getchildren():
           child.tail = ''
-          paragraph_node.text = value
+        paragraph_node.text = value
       else:
-        self._appendParagraphsWithLineList(target_node=paragraph_node, line_list=field_value)
+        self._appendParagraphsWithLineList(target_node=target_node, line_list=field_value)
     # set when using report section
     self._setUniqueElementName(base_name=field.id,
                                iteration_index=iteration_index,
@@ -394,6 +396,7 @@ class ODFStrategy(Implicit):
     target_node = reference_list[0]
     if not isinstance(field_value, list):
       target_node.tail = value
+      # clear text until 'reference-mark-end'
       for node in target_node.itersiblings():
         end_tag_name = '{%s}reference-mark-end' % element_tree.nsmap['text']
         name_attribute = '{%s}name' % element_tree.nsmap['text']
@@ -438,8 +441,9 @@ class ODFStrategy(Implicit):
     paragraph_node_index = parent_node.index(paragraph_node)
     parent_node.remove(paragraph_node)
     for (index, paragraph) in enumerate(paragraph_list):
-      parent_node.insert(paragraph_node_index + 1, paragraph)
-
+      parent_node.insert(paragraph_node_index, paragraph)
+      paragraph_node_index = paragraph_node_index + 1
+      
   def _replaceXmlByReportSection(self, element_tree=None, extra_context=None, ooo_builder=None):
     if not extra_context.has_key('report_method') or extra_context['report_method'] is None:
       return element_tree
@@ -762,25 +766,58 @@ class ODFStrategy(Implicit):
   def _setColumnValue(self, column, value):
     self._clearColumnValue(column)
     if value is None:
-      value = ''
       self._removeColumnValue(column)
-    if isinstance(value, DateTime):
-      value = value.strftime('%Y-%m-%d')
-    column_value = unicode(str(value),'utf-8')
-    column_children = column.getchildren()
-    first_child = None
-    if len(column_children) > 0:
-      first_child = deepcopy(column_children[0])
-      first_child.text = column_value
-    for child in column_children:
+    column_value, table_content = self._translateValueIntoColumnContent(value, column)
+    for child in column.getchildren():
       column.remove(child)
-    if first_child is not None:
-      column.append(first_child)
-    if column_value != '':
-      value_attribute = self._getColumnValueAttribute(column)
-      if value_attribute is not None:
-        column.set(value_attribute, column_value)
+    if table_content is not None:
+      column.append(table_content)
+    value_attribute = self._getColumnValueAttribute(column)
+    if value_attribute is not None and column_value is not None:
+       column.set(value_attribute, column_value)
 
+  def _translateValueIntoColumnContent(self, value, column):
+    """translate a value as a table content"""
+    table_content = None
+    column_children = column.getchildren()
+    if len(column_children) > 0:
+      table_content = deepcopy(column_children[0])
+    # create a tempolaly etree object to generate a content paragraph
+    fragment = self._valueAsOdfXmlElement(value=value, element_tree=column)
+    column_value = None
+    if table_content is not None:
+      table_content.text = fragment.text
+      for element in fragment.getchildren():
+        table_content.append(element)
+      column_value = " ".join([x for x in table_content.itertext()])
+    return (column_value, table_content)
+
+  def _valueAsOdfXmlElement(self, value=None, element_tree=None):
+    """values as ODF XML element
+    
+    replacing:
+      \t -> tabs
+      \n -> line-breaks
+      DateTime -> Y-m-d
+    """
+    if value is None:
+      value = ''
+    translated_value = str(value)
+    if isinstance(value, DateTime):
+      translated_value = value.strftime('%Y-%m-%d')
+    translated_value = escape(translated_value)
+    text_namespace = element_tree.nsmap['text']
+    tab_element_str = '<text:tab xmlns:text="%s"/>' % text_namespace
+    line_break_element_str ='<text:line-break xmlns:text="%s"/>' % text_namespace
+    translated_value = translated_value.replace('\t', tab_element_str)
+    translated_value = translated_value.replace('\r', '')
+    translated_value = translated_value.replace('\n', line_break_element_str)
+    translated_value = unicode(str(translated_value),'utf-8')
+    # create a paragraph
+    template = '<text:p xmlns:text="%s">%s</text:p>'
+    fragment_element_tree = etree.XML(template % (text_namespace, translated_value))
+    return fragment_element_tree
+  
   def _removeColumnValue(self, column):
     # to eliminate a default value, remove "office:*" attributes.
     # if remaining these attribetes, the column shows its default value,
