@@ -59,7 +59,7 @@ if depth == 0:\n
   task_uid_list  = context.portal_selections.getSelectionUidList(context=context, selection_name=\'task_report_module_selection\')\n
   person_result = context.portal_catalog(portal_type=["Person",],\n
                                          source_related_uid=task_uid_list,\n
-                                         select_expression=\'catalog.portal_type, catalog.relative_url, catalog.id, catalog.title\',\n
+                                         select_expression=\'portal_type, relative_url, id, title\',\n
                                          sort_on = ((\'title\',\'ascending\'),))\n
   person_dict = {}\n
   person_list = []\n
@@ -69,7 +69,7 @@ if depth == 0:\n
     if key not in person_dict:\n
       person_dict[key] = None\n
       category_dict = {\'relative_url\':person.relative_url, \n
-                       \'portal_type\':person.portal_type,\n
+                       \'portal_type\': "Person",\n
                        \'id\':person.id,\n
                        \'title\':person.title,\n
                        \'uid\':person.uid}\n

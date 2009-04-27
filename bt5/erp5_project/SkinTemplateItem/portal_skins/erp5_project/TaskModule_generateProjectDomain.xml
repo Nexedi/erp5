@@ -63,11 +63,11 @@ def Task_getRelatedSourceProject(depth, parent_relative_url=None):\n
     task_uid_list  = context.portal_selections.getSelectionUidList(context=context, selection_name=\'task_module_selection\')\n
     project_result = context.portal_catalog(portal_type=["Project", "Project Line"],\n
                                             source_project_related_uid=task_uid_list,\n
-                                            select_expression=\'catalog.portal_type, catalog.relative_url, catalog.id, catalog.title\',\n
+                                            select_expression=\'portal_type, relative_url, id, title\',\n
                                             sort_on = ((\'title\',\'ascending\'),))\n
   else:\n
     project_result = context.portal_catalog(portal_type=["Project Line", "Project Milestones"],\n
-                                            select_expression=\'catalog.portal_type, catalog.relative_url, catalog.id, catalog.title\',\n
+                                            select_expression=\'portal_type, relative_url, id, title\',\n
                                             parent_relative_url=parent_relative_url,\n
                                             sort_on = ((\'title\',\'ascending\'),))\n
   # use a dict to store catalog result\n
