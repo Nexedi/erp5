@@ -1,8 +1,10 @@
+# -*- coding: utf8 -*-
 ##############################################################################
 #
-# Copyright (c) 2002, 2004 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Romain Courteaud <romain@nexedi.com>
+#                    Łukasz Nowak <luke@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -31,14 +33,18 @@ from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5.Document.Transformation import Transformation
 from Products.ERP5.Document.Path import Path
+from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 
-class TradeCondition(Path):
+class TradeCondition(Path, Transformation):
     """
       Trade Conditions are used to store the conditions (payment, logistic,...)
       which should be applied (and used in the orders) when two companies make
       business together
     """
+    edited_property_list = ['price', 'causality','resource','quantity',
+        'base_application_list', 'base_contribution_list']
 
     meta_type = 'ERP5 Trade Condition'
     portal_type = 'Trade Condition'
@@ -60,3 +66,41 @@ class TradeCondition(Path):
                       , PropertySheet.Order
                       )
 
+    def updateAggregatedAmountList(self, context, destination_portal_type, **kw):
+      # XXX: Shall not create new, only update existing and return new
+      existing_object_list = context.objectValues(portal_type=destination_portal_type)
+      for o in self.getAggregatedAmountList(context = context, **kw):
+        update_kw = {}
+        create_new = 1
+        for p in self.edited_property_list:
+          update_kw[p] = o.getProperty(p)
+        for e in existing_object_list:
+          if e.getProperty('resource') == o.getProperty('resource'):
+            # we need to update existing
+            e.edit(**update_kw)
+            create_new = 0
+            break
+        if create_new:
+          context.newContent(
+            portal_type = destination_portal_type,
+            **update_kw
+          )
+
+    def getAggregatedAmountList(self, context, **kw):
+      result = AggregatedAmountList()
+
+      need_to_run = 1
+      movement_list = []
+      while need_to_run:
+        need_to_run = 0
+        for model in self.objectValues(portal_type='Trade Model Line'):
+          model_result = model.getAggregatedAmountList(context,
+            movement_list=movement_list, current_aggregated_amount_list = result,
+            **kw)
+          result.extend(model_result)
+        if len(result) != len(movement_list):
+          # something was added
+          need_to_run = 1
+        movement_list = result
+
+      return result
