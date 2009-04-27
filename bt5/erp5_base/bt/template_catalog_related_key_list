@@ -2,3 +2,4 @@ source_organisation_title | category,catalog/title/z_related_source_organisation
 source_person_title | category,catalog/title/z_related_source_person
 destination_person_title | category,catalog/title/z_related_destination_person
 default_email_text | catalog,email/url_string/z_related_default_email
+related_resource_use_uid | category,category,catalog,catalog/uid/z_related_resource_use
