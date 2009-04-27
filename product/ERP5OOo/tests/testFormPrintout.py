@@ -228,13 +228,54 @@ class TestFormPrintout(ERP5TypeTestCase):
     
     odf_document = foo_printout() 
     self.assertTrue(odf_document is not None)
-    #test_output = open("/tmp/test_01_07_Paragraph.odf", "w")
+    #test_output = open("/tmp/test_01_Paragraph_07_LinesField.odf", "w")
     #test_output.write(odf_document)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("line1") > 0)
     self.assertTrue(content_xml.find("line2") > 0)
     self.assertTrue(content_xml.find("line2") > content_xml.find("line1"))
+    self._validate(odf_document)
+
+  def test_01_Paragraph_08_Field_Format(self, run=run_all_test):
+    """test a field with format"""
+    if not run: return
+    
+    foo_printout = self.portal.foo_module.test1.Foo_viewAsPrintout
+    foo_form = self.portal.foo_module.test1.Foo_view
+    if foo_form._getOb("number", None) is None:
+      foo_form.manage_addField('number', 'number', 'FloatField')
+    number = foo_form.number
+    number.values['default'] = '543210'
+    # set a float field format 
+    number.values['input_style'] = '-1 234.5'
+    odf_document = foo_printout() 
+    self.assertTrue(odf_document is not None)
+    #test_output = open("/tmp/test_01_Paragraph_08_Filed_Format.odf", "w")
+    #test_output.write(odf_document)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    content = etree.XML(content_xml)
+    number_xpath = '//text:reference-mark[@text:name="number"]' 
+    number_reference = content.xpath(number_xpath, namespaces=content.nsmap)
+    self.assertTrue(len(number_reference) > 0)
+    number_paragraph = number_reference[0].getparent()
+    self.assertEqual(number_paragraph.text, "543 210.0")
+    self._validate(odf_document)
+    
+    # change format
+    number.values['input_style'] = '-1234.5'
+    odf_document = foo_printout() 
+    self.assertTrue(odf_document is not None)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    content = etree.XML(content_xml)
+    number_xpath = '//text:reference-mark[@text:name="number"]' 
+    number_reference = content.xpath(number_xpath, namespaces=content.nsmap)
+    self.assertTrue(len(number_reference) > 0)
+    number_paragraph = number_reference[0].getparent()
+    self.assertEqual(number_paragraph.text, "543210.0")
+    
     self._validate(odf_document)
     
   def test_02_Table_01_Normal(self, run=run_all_test):
