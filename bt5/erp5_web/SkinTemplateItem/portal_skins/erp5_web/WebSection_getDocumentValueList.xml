@@ -53,8 +53,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># In normal web sites pages, if nothing is specify, only in a selected language should be displayed.\n
-return context.WebSection_getDocumentValueListBase(all_languages=all_languages, **kw)\n
+            <value> <string># This script returns a list of document values\n
+return context.WebSection_getDocumentValueListBase(**kw)\n
 </string> </value>
         </item>
         <item>
@@ -65,7 +65,7 @@ return context.WebSection_getDocumentValueListBase(all_languages=all_languages, 
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>all_languages=False, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -85,13 +85,12 @@ return context.WebSection_getDocumentValueListBase(all_languages=all_languages, 
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>all_languages</string>
                             <string>kw</string>
                             <string>_apply_</string>
                             <string>_getattr_</string>
@@ -107,9 +106,7 @@ return context.WebSection_getDocumentValueListBase(all_languages=all_languages, 
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>0</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
