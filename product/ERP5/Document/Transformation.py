@@ -1,9 +1,11 @@
+# -*- coding: utf8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Coramy SAS and Contributors. All Rights Reserved.
 #                    Thierry_Faucher <Thierry_Faucher@coramy.com>
-# Copyright (c) 2004, 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2004-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Romain Courteaud <romain@nexedi.com>
+#                    Łukasz Nowak <luke@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -28,7 +30,6 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Interface
@@ -38,10 +39,8 @@ from Products.ERP5.Variated import Variated
 
 from Products.ERP5.Document.Predicate import Predicate
 
-from Products.PythonScripts.Utility import allow_class
-
 from Products.CMFCategory.Renderer import Renderer
-
+from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 
 class Transformation(XMLObject, Predicate, Variated):
     """
@@ -270,51 +269,3 @@ class Transformation(XMLObject, Predicate, Variated):
       if context_quantity:
         result.multiplyQuantity(context=context)
       return result
-
-# XXX subclassing directly list would be better, 
-# but does not work yet (error with class and security)
-from UserList import UserList
-class AggregatedAmountList(UserList):
-  """
-    Temporary object needed to aggregate Amount value
-    And to calculate some report or total value
-  """
-  meta_type = "AggregatedAmountList"
-  security = ClassSecurityInfo()
-#  security.declareObjectPublic()
-
-  security.declarePublic('getTotalPrice')
-  def getTotalPrice(self):
-    """
-      Return total bas price of the transformation
-    """
-    result = sum(filter(lambda y: y is not None,
-                        map(lambda x: x.getTotalPrice(), self)))
-    return result
-
-  security.declarePublic('getTotalDuration')
-  def getTotalDuration(self):
-    """
-      Return total duration of the transformation
-    """
-    result = sum(filter(lambda y: y is not None, 
-                        map(lambda x: x.getDuration(), self)))
-    return result
-
-  def multiplyQuantity(self,context=None):
-    """
-      Take into account the quantity of the 
-      context. Change the quantity of each element.
-    """
-    quantity = None
-    if context is not None:
-      if context.getQuantity() is not None:
-        quantity = context.getQuantity()
-    if quantity is not None:
-      for x in self:
-        previous_quantity = x.getQuantity()
-        if previous_quantity is not None:
-          x.edit(quantity=context.getQuantity()*previous_quantity)
-  
-InitializeClass(AggregatedAmountList)
-allow_class(AggregatedAmountList)
