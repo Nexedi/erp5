@@ -1,0 +1,7 @@
+Business Path | edit_workflow
+Business Process | edit_workflow
+Business Process | validation_workflow
+Business State | edit_workflow
+Trade Model Line | edit_workflow
+Trade Model Rule | edit_workflow
+Trade Model Rule | rule_validation_workflow

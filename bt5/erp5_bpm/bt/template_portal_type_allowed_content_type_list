@@ -1,0 +1,10 @@
+Business Process Module | Business Process
+Business Process | Business Path
+Business Process | Business State
+Purchase Trade Condition | Trade Model Line
+Rule Tool | Trade Model Rule
+Sale Trade Condition | Trade Model Line
+Trade Model Line | Trade Model Cell
+Trade Model Rule | Category Divergence Tester
+Trade Model Rule | Property Divergence Tester
+Trade Model Rule | Quantity Divergence Tester

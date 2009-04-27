@@ -1,0 +1,11 @@
+business_process_module/erp5_default_business_process
+business_process_module/erp5_default_business_process/**
+portal_categories/end_of
+portal_categories/end_of/**
+portal_categories/trade_phase
+portal_categories/trade_phase/default
+portal_categories/trade_phase/default/**
+portal_deliveries/purchase_invoice_builder/category_movement_group_on_line
+portal_deliveries/sale_invoice_builder/category_movement_group_on_line
+portal_rules/default_trade_model_rule
+portal_rules/default_trade_model_rule/**

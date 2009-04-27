@@ -1,0 +1,22 @@
+<workflow_chain>
+ <chain>
+  <type>Business Path</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Business Process</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Business State</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Trade Model Line</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Trade Model Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
+ </chain>
+</workflow_chain>

@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="BusinessPath" module="Products.ERP5Type.Document.BusinessPath"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_identity_criterion</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_range_criterion</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>trade_phase/default/invoicing</string>
+                <string>source_stage/business_process_module/erp5_default_business_process/2</string>
+                <string>destination_stage/business_process_module/erp5_default_business_process/3</string>
+                <string>delivery_builder/portal_deliveries/purchase_invoice_builder</string>
+                <string>delivery_builder/portal_deliveries/sale_invoice_builder</string>
+                <string>predecessor/business_process_module/erp5_default_business_process/2</string>
+                <string>successor/business_process_module/erp5_default_business_process/10</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>deliverable</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>destination_method_id</string> </key>
+            <value> <string>BusinessPath_getDefaultDestinationList</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>7</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Business Path</string> </value>
+        </item>
+        <item>
+            <key> <string>source_method_id</string> </key>
+            <value> <string>BusinessPath_getDefaultSourceList</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>invoice</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

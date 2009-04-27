@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="TradeModelRule" module="Products.ERP5Type.Document.TradeModelRule"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Delete_objects_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_identity_criterion</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>expandable_property_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_range_criterion</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>start_date</string> </key>
+                    <value>
+                      <tuple>
+                        <none/>
+                        <none/>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>default_trade_model_rule</string> </value>
+        </item>
+        <item>
+            <key> <string>expandable_property</string> </key>
+            <value>
+              <tuple>
+                <string>delivery_mode</string>
+                <string>incoterm</string>
+                <string>source</string>
+                <string>destination</string>
+                <string>source_section</string>
+                <string>destination_section</string>
+                <string>source_decision</string>
+                <string>destination_decision</string>
+                <string>source_administration</string>
+                <string>destination_administration</string>
+                <string>price_currency</string>
+                <string>resource</string>
+                <string>aggregate</string>
+                <string>source_function</string>
+                <string>destination_function</string>
+                <string>source_account</string>
+                <string>destination_account</string>
+                <string>description</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>default_trade_model_rule</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Trade Model Rule</string> </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple>
+                <string>SimulationMovement_testTradeModelRule</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Default Trade Model Rule</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>1</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
