@@ -36,6 +36,13 @@ class BusinessPath:
             'description' : 'If 1 it is related to root of simulation tree (root explanation)',
             'type'        : 'boolean',
             'mode'        : 'w' },
-
+        {   'id'          : 'source_method_id',
+            'description' : 'ID of method to get source list of categories',
+            'type'        : 'string',
+            'mode'        : 'w' },
+        {   'id'          : 'destination_method_id',
+            'description' : 'ID of method to get destination list of categories',
+            'type'        : 'string',
+            'mode'        : 'w' },
     )
     _categories = ( )
