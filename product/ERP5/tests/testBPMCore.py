@@ -58,6 +58,8 @@ class TestBPMMixin(ERP5TypeTestCase):
   modified_order_line_price_ratio = 2.0
   modified_order_line_quantity_ratio = 2.5
 
+  modified_packing_list_line_quantity_ratio = 0.4
+
   normal_resource_use_category_list = ['normal']
   invoicing_resource_use_category_list = ['discount', 'tax']
 
@@ -248,6 +250,34 @@ class TestBPMMixin(ERP5TypeTestCase):
     workflow_tool = getToolByName(self.portal, 'portal_workflow')
     workflow_tool.doActionFor(packing_list, 'deliver_action')
 
+  def stepCheckPackingListDiverged(self, sequence=None, **kw):
+    packing_list = sequence.get('packing_list')
+    self.assertEqual(
+      'diverged',
+      packing_list.getCausalityState()
+    )
+
+  def stepSplitAndDeferPackingList(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('packing_list')
+    kw = {'listbox':[
+      {'listbox_key':line.getRelativeUrl(),
+       'choice':'SplitAndDefer'} for line in packing_list.getMovementList() \
+      if line.isDivergent()]}
+    self.portal.portal_workflow.doActionFor(
+      packing_list,
+      'split_and_defer_action',
+      start_date=packing_list.getStartDate() + 15,
+      stop_date=packing_list.getStopDate() + 25,
+      **kw)
+
+  def stepDecreasePackingListLineListQuantity(self, sequence=None, **kw):
+    packing_list = sequence.get('packing_list')
+    for movement in packing_list.getMovementList():
+      movement.edit(
+        quantity = movement.getQuantity() * \
+            self.modified_packing_list_line_quantity_ratio
+      )
+
   def stepPackPackingList(self, sequence=None, **kw):
     packing_list = sequence.get('packing_list')
     if getattr(packing_list,'getContainerState', None) is None:
@@ -329,6 +359,23 @@ class TestBPMMixin(ERP5TypeTestCase):
     self.assertEqual(1, len(invoice_list)) # XXX 1 HC
     sequence.edit(invoice = invoice_list[0])
 
+  def stepSetNewPackingListAsPackingList(self, sequence=None, **kw):
+    packing_list = sequence.get('packing_list')
+    new_packing_list = sequence.get('new_packing_list')
+    sequence.edit(
+      packing_list = new_packing_list,
+      new_packing_list = None
+    )
+
+  def stepGetNewPackingList(self, sequence=None, **kw):
+    order = sequence.get('order')
+    packing_list = sequence.get('packing_list')
+    packing_list_list = order.getCausalityRelatedValueList(
+        portal_type=self.packing_list_portal_type)
+    self.assertEqual(2, len(packing_list_list)) # XXX 2 HC
+    new_packing_list = [q for q in packing_list_list if q != packing_list][0]
+    sequence.edit(new_packing_list = new_packing_list)
+
   def stepGetPackingList(self, sequence=None, **kw):
     order = sequence.get('order')
     packing_list_list = order.getCausalityRelatedValueList(
@@ -342,21 +389,23 @@ class TestBPMMixin(ERP5TypeTestCase):
     workflow_tool.doActionFor(order, 'confirm_action')
 
   def getTradeModelSimulationMovementList(self, order_line):
-    line_simulation_movement = order_line \
-        .getOrderRelatedValue(portal_type='Simulation Movement')
-    invoicing_applied_rule = [x for x in
-        line_simulation_movement.objectValues()
-        if x.getSpecialiseValue().getPortalType() == 'Invoicing Rule'][0]
-    invoicing_movement = invoicing_applied_rule.objectValues()[0]
-    trade_model_rule = [x for x in invoicing_movement.objectValues()
-        if x.getSpecialiseValue().getPortalType() == 'Trade Model Rule'][0]
-    return trade_model_rule.objectValues()
+    result_list = []
+    for line_simulation_movement in order_line.getOrderRelatedValueList(
+        portal_type='Simulation Movement'):
+      invoicing_applied_rule = [x for x in
+          line_simulation_movement.objectValues()
+          if x.getSpecialiseValue().getPortalType() == 'Invoicing Rule'][0]
+      invoicing_movement = invoicing_applied_rule.objectValues()[0]
+      trade_model_rule = [x for x in invoicing_movement.objectValues()
+          if x.getSpecialiseValue().getPortalType() == 'Trade Model Rule'][0]
+      result_list.append(trade_model_rule.objectValues())
+    return result_list
 
   def stepCheckOrderTaxNoSimulation(self, sequence=None, **kw):
     order_line_taxed = sequence.get('order_line_taxed')
-    trade_model_simulation_movement_list = \
-        self.getTradeModelSimulationMovementList(order_line_taxed)
-    self.assertEquals(0, len(trade_model_simulation_movement_list))
+    for trade_model_simulation_movement_list in \
+        self.getTradeModelSimulationMovementList(order_line_taxed):
+      self.assertEquals(0, len(trade_model_simulation_movement_list))
 
   # XXX: Merge: stepCheckOrderLineDiscountedSimulation stepCheckOrderLineTaxedSimulation stepCheckOrderLineDiscountedTaxedSimulation
 
@@ -365,11 +414,6 @@ class TestBPMMixin(ERP5TypeTestCase):
     business_path_discounting = sequence.get('business_path_discounting')
     business_path_taxing = sequence.get('business_path_taxing')
     price_currency = sequence.get('price_currency')
-    taxed_complex_resource_model_old_simulation_movement_relative_url = sequence.get(
-        'taxed_complex_resource_model_old_simulation_movement_relative_url')
-
-    discounted_complex_resource_model_old_simulation_movement_relative_url = sequence.get(
-        'discounted_complex_resource_model_old_simulation_movement_relative_url')
 
     service_tax = sequence.get('service_tax')
     service_discount = sequence.get('service_discount')
@@ -378,110 +422,90 @@ class TestBPMMixin(ERP5TypeTestCase):
     self.assertNotEqual(None, business_path_taxing)
     self.assertNotEqual(None, price_currency)
 
-    trade_model_simulation_movement_list = \
-        self.getTradeModelSimulationMovementList(order_line)
+    for trade_model_simulation_movement_list in \
+        self.getTradeModelSimulationMovementList(order_line):
 
-    self.assertEquals(2, len(trade_model_simulation_movement_list))
-    trade_model_simulation_movement_discount_complex = [q for q in \
-        trade_model_simulation_movement_list \
-        if q.getResourceValue() == service_discount][0]
+      self.assertEquals(2, len(trade_model_simulation_movement_list))
+      trade_model_simulation_movement_discount_complex = [q for q in \
+          trade_model_simulation_movement_list \
+          if q.getResourceValue() == service_discount][0]
 
-    trade_model_simulation_movement_tax_complex = [q for q in \
-        trade_model_simulation_movement_list \
-        if q.getResourceValue() == service_tax][0]
+      trade_model_simulation_movement_tax_complex = [q for q in \
+          trade_model_simulation_movement_list \
+          if q.getResourceValue() == service_tax][0]
 
-    # discount complex
-    if discounted_complex_resource_model_old_simulation_movement_relative_url is not None:
-      # check that there is not change...
+      # discount complex
       self.assertEqual(
-        discounted_complex_resource_model_old_simulation_movement_relative_url,
-        trade_model_simulation_movement_discount_complex.getRelativeUrl()
+        trade_model_simulation_movement_discount_complex.getParentValue() \
+            .getParentValue().getTotalPrice() * self.default_discount_ratio,
+        trade_model_simulation_movement_discount_complex.getTotalPrice()
       )
 
-    sequence.edit(discounted_complex_resource_model_old_simulation_movement_relative_url = \
-        trade_model_simulation_movement_discount_complex.getRelativeUrl())
-
-    self.assertEqual(
-      order_line.getTotalPrice() * self.default_discount_ratio,
-      trade_model_simulation_movement_discount_complex.getTotalPrice()
-    )
-
-    self.assertEqual(
-      business_path_discounting,
-      trade_model_simulation_movement_discount_complex.getCausalityValue()
-    )
-
-    self.assertEqual(
-      price_currency,
-      trade_model_simulation_movement_discount_complex.getPriceCurrencyValue()
-    )
-
-    self.assertSameSet(
-      ['base_amount/tax'],
-      trade_model_simulation_movement_discount_complex.getBaseContributionList()
-    )
-
-    self.assertSameSet(
-      ['base_amount/discount'],
-      trade_model_simulation_movement_discount_complex.getBaseApplicationList()
-    )
-
-    # TODO:
-    #  * trade_phase ???
-    #  * arrow
-    #  * dates
-
-    # tax complex
-    if taxed_complex_resource_model_old_simulation_movement_relative_url is not None:
-      # check that there is not change...
       self.assertEqual(
-        taxed_complex_resource_model_old_simulation_movement_relative_url,
-        trade_model_simulation_movement_tax_complex.getRelativeUrl()
+        business_path_discounting,
+        trade_model_simulation_movement_discount_complex.getCausalityValue()
       )
 
-    sequence.edit(taxed_complex_resource_model_old_simulation_movement_relative_url = \
-        trade_model_simulation_movement_tax_complex.getRelativeUrl())
+      self.assertEqual(
+        price_currency,
+        trade_model_simulation_movement_discount_complex.getPriceCurrencyValue()
+      )
 
-    self.assertEqual(
-      (order_line.getTotalPrice() + order_line.getTotalPrice() * self.default_discount_ratio) * self.default_tax_ratio,
-      trade_model_simulation_movement_tax_complex.getTotalPrice()
-    )
+      self.assertSameSet(
+        ['base_amount/tax'],
+        trade_model_simulation_movement_discount_complex.getBaseContributionList()
+      )
 
-    self.assertEqual(
-      business_path_taxing,
-      trade_model_simulation_movement_tax_complex.getCausalityValue()
-    )
+      self.assertSameSet(
+        ['base_amount/discount'],
+        trade_model_simulation_movement_discount_complex.getBaseApplicationList()
+      )
 
-    self.assertEqual(
-      price_currency,
-      trade_model_simulation_movement_tax_complex.getPriceCurrencyValue()
-    )
+      # TODO:
+      #  * trade_phase ???
+      #  * arrow
+      #  * dates
 
-    self.assertSameSet(
-      [],
-      trade_model_simulation_movement_tax_complex.getBaseContributionList()
-    )
+      # tax complex
+      self.assertEqual(
+        (trade_model_simulation_movement_tax_complex.getParentValue()\
+            .getParentValue().getTotalPrice() + \
+            trade_model_simulation_movement_tax_complex.getParentValue()\
+            .getParentValue().getTotalPrice() * self.default_discount_ratio) \
+            * self.default_tax_ratio,
+        trade_model_simulation_movement_tax_complex.getTotalPrice()
+      )
 
-    self.assertSameSet(
-      ['base_amount/tax'],
-      trade_model_simulation_movement_tax_complex.getBaseApplicationList()
-    )
+      self.assertEqual(
+        business_path_taxing,
+        trade_model_simulation_movement_tax_complex.getCausalityValue()
+      )
 
-    # TODO:
-    #  * trade_phase ???
-    #  * arrow
-    #  * dates
+      self.assertEqual(
+        price_currency,
+        trade_model_simulation_movement_tax_complex.getPriceCurrencyValue()
+      )
+
+      self.assertSameSet(
+        [],
+        trade_model_simulation_movement_tax_complex.getBaseContributionList()
+      )
+
+      self.assertSameSet(
+        ['base_amount/tax'],
+        trade_model_simulation_movement_tax_complex.getBaseApplicationList()
+      )
+
+      # TODO:
+      #  * trade_phase ???
+      #  * arrow
+      #  * dates
 
   def stepCheckOrderLineDiscountedSimulation(self, sequence=None, **kw):
     order_line = sequence.get('order_line_discounted')
     business_path_discounting = sequence.get('business_path_discounting')
     business_path_taxing = sequence.get('business_path_taxing')
     price_currency = sequence.get('price_currency')
-    taxed_only_resource_model_old_simulation_movement_relative_url = sequence.get(
-        'taxed_only_resource_model_old_simulation_movement_relative_url')
-
-    discounted_only_resource_model_old_simulation_movement_relative_url = sequence.get(
-        'discounted_only_resource_model_old_simulation_movement_relative_url')
 
     service_tax = sequence.get('service_tax')
     service_discount = sequence.get('service_discount')
@@ -490,152 +514,122 @@ class TestBPMMixin(ERP5TypeTestCase):
     self.assertNotEqual(None, business_path_taxing)
     self.assertNotEqual(None, price_currency)
 
-    trade_model_simulation_movement_list = \
-        self.getTradeModelSimulationMovementList(order_line)
+    for trade_model_simulation_movement_list in \
+        self.getTradeModelSimulationMovementList(order_line):
 
-    self.assertEquals(2, len(trade_model_simulation_movement_list))
-    trade_model_simulation_movement_discount_only = [q for q in \
-        trade_model_simulation_movement_list \
-        if q.getResourceValue() == service_discount][0]
+      self.assertEquals(2, len(trade_model_simulation_movement_list))
+      trade_model_simulation_movement_discount_only = [q for q in \
+          trade_model_simulation_movement_list \
+          if q.getResourceValue() == service_discount][0]
 
-    trade_model_simulation_movement_tax_only = [q for q in \
-        trade_model_simulation_movement_list \
-        if q.getResourceValue() == service_tax][0]
+      trade_model_simulation_movement_tax_only = [q for q in \
+          trade_model_simulation_movement_list \
+          if q.getResourceValue() == service_tax][0]
 
-    # discount only
-    if discounted_only_resource_model_old_simulation_movement_relative_url is not None:
-      # check that there is not change...
+      # discount only
       self.assertEqual(
-        discounted_only_resource_model_old_simulation_movement_relative_url,
-        trade_model_simulation_movement_discount_only.getRelativeUrl()
+        trade_model_simulation_movement_discount_only.getParentValue()\
+            .getParentValue().getTotalPrice() * self.default_discount_ratio,
+        trade_model_simulation_movement_discount_only.getTotalPrice()
       )
 
-    sequence.edit(discounted_only_resource_model_old_simulation_movement_relative_url = \
-        trade_model_simulation_movement_discount_only.getRelativeUrl())
-
-    self.assertEqual(
-      order_line.getTotalPrice() * self.default_discount_ratio,
-      trade_model_simulation_movement_discount_only.getTotalPrice()
-    )
-
-    self.assertEqual(
-      business_path_discounting,
-      trade_model_simulation_movement_discount_only.getCausalityValue()
-    )
-
-    self.assertEqual(
-      price_currency,
-      trade_model_simulation_movement_discount_only.getPriceCurrencyValue()
-    )
-
-    self.assertSameSet(
-      ['base_amount/tax'],
-      trade_model_simulation_movement_discount_only.getBaseContributionList()
-    )
-
-    self.assertSameSet(
-      ['base_amount/discount'],
-      trade_model_simulation_movement_discount_only.getBaseApplicationList()
-    )
-
-    # TODO:
-    #  * trade_phase ???
-    #  * arrow
-    #  * dates
-
-    # tax only
-    if taxed_only_resource_model_old_simulation_movement_relative_url is not None:
-      # check that there is not change...
       self.assertEqual(
-        taxed_only_resource_model_old_simulation_movement_relative_url,
-        trade_model_simulation_movement_tax_only.getRelativeUrl()
+        business_path_discounting,
+        trade_model_simulation_movement_discount_only.getCausalityValue()
       )
 
-    sequence.edit(taxed_only_resource_model_old_simulation_movement_relative_url = \
-        trade_model_simulation_movement_tax_only.getRelativeUrl())
+      self.assertEqual(
+        price_currency,
+        trade_model_simulation_movement_discount_only.getPriceCurrencyValue()
+      )
 
-    # below tax is applied only to discount part
-    self.assertEqual(trade_model_simulation_movement_discount_only. \
-        getTotalPrice() * self.default_tax_ratio,
-        trade_model_simulation_movement_tax_only.getTotalPrice())
+      self.assertSameSet(
+        ['base_amount/tax'],
+        trade_model_simulation_movement_discount_only.getBaseContributionList()
+      )
 
-    self.assertEqual(
-      business_path_taxing,
-      trade_model_simulation_movement_tax_only.getCausalityValue()
-    )
+      self.assertSameSet(
+        ['base_amount/discount'],
+        trade_model_simulation_movement_discount_only.getBaseApplicationList()
+      )
 
-    self.assertEqual(
-      price_currency,
-      trade_model_simulation_movement_tax_only.getPriceCurrencyValue()
-    )
+      # TODO:
+      #  * trade_phase ???
+      #  * arrow
+      #  * dates
 
-    self.assertSameSet(
-      [],
-      trade_model_simulation_movement_tax_only.getBaseContributionList()
-    )
+      # tax only
+      # below tax is applied only to discount part
+      self.assertEqual(trade_model_simulation_movement_discount_only. \
+          getTotalPrice() * self.default_tax_ratio,
+          trade_model_simulation_movement_tax_only.getTotalPrice())
 
-    self.assertSameSet(
-      ['base_amount/tax'],
-      trade_model_simulation_movement_tax_only.getBaseApplicationList()
-    )
+      self.assertEqual(
+        business_path_taxing,
+        trade_model_simulation_movement_tax_only.getCausalityValue()
+      )
 
-    # TODO:
-    #  * trade_phase ???
-    #  * arrow
-    #  * dates
+      self.assertEqual(
+        price_currency,
+        trade_model_simulation_movement_tax_only.getPriceCurrencyValue()
+      )
+
+      self.assertSameSet(
+        [],
+        trade_model_simulation_movement_tax_only.getBaseContributionList()
+      )
+
+      self.assertSameSet(
+        ['base_amount/tax'],
+        trade_model_simulation_movement_tax_only.getBaseApplicationList()
+      )
+
+      # TODO:
+      #  * trade_phase ???
+      #  * arrow
+      #  * dates
 
   def stepCheckOrderLineTaxedSimulation(self, sequence=None, **kw):
     order_line = sequence.get('order_line_taxed')
     business_path = sequence.get('business_path_taxing')
     price_currency = sequence.get('price_currency')
-    taxed_resource_model_old_simulation_movement_relative_url = sequence.get(
-        'taxed_resource_model_old_simulation_movement_relative_url')
     self.assertNotEqual(None, business_path)
     self.assertNotEqual(None, price_currency)
-    trade_model_simulation_movement_list = \
-        self.getTradeModelSimulationMovementList(order_line)
-    self.assertEquals(1, len(trade_model_simulation_movement_list))
-    trade_model_simulation_movement = trade_model_simulation_movement_list[0]
+    for trade_model_simulation_movement_list in \
+        self.getTradeModelSimulationMovementList(order_line):
+      self.assertEquals(1, len(trade_model_simulation_movement_list))
+      trade_model_simulation_movement = trade_model_simulation_movement_list[0]
 
-    if taxed_resource_model_old_simulation_movement_relative_url is not None:
-      # check that there is not change...
       self.assertEqual(
-        taxed_resource_model_old_simulation_movement_relative_url,
-        trade_model_simulation_movement.getRelativeUrl()
+        trade_model_simulation_movement.getParentValue().getParentValue() \
+            .getTotalPrice() * self.default_tax_ratio,
+        trade_model_simulation_movement.getTotalPrice()
       )
 
-    sequence.edit(taxed_resource_model_old_simulation_movement_relative_url = \
-        trade_model_simulation_movement.getRelativeUrl())
+      self.assertEqual(
+        business_path,
+        trade_model_simulation_movement.getCausalityValue()
+      )
 
-    self.assertEqual(
-      order_line.getTotalPrice() * self.default_tax_ratio,
-      trade_model_simulation_movement.getTotalPrice()
-    )
+      self.assertEqual(
+        price_currency,
+        trade_model_simulation_movement.getPriceCurrencyValue()
+      )
 
-    self.assertEqual(
-      business_path,
-      trade_model_simulation_movement.getCausalityValue()
-    )
+      self.assertSameSet(
+        [],
+        trade_model_simulation_movement.getBaseContributionList()
+      )
 
-    self.assertEqual(
-      price_currency,
-      trade_model_simulation_movement.getPriceCurrencyValue()
-    )
+      self.assertSameSet(
+        ['base_amount/tax'],
+        trade_model_simulation_movement.getBaseApplicationList()
+      )
 
-    self.assertSameSet(
-      [],
-      trade_model_simulation_movement.getBaseContributionList()
-    )
-
-    self.assertSameSet(
-      ['base_amount/tax'],
-      trade_model_simulation_movement.getBaseApplicationList()
-    )
-
-    # TODO:
-    #  * trade_phase ???
-    #  * arrow
-    #  * dates
+      # TODO:
+      #  * trade_phase ???
+      #  * arrow
+      #  * dates
 
   def stepFillOrder(self, sequence=None, **kw):
     order = sequence.get('order')
@@ -1131,7 +1125,50 @@ class TestBPMTestCases(TestBPMMixin):
 
   def test_TradeModelRuleSimulationPackingListSplitBuildInvoiceBuild(self):
     """Check building invoice after splitting packing list"""
-    raise NotImplementedError('TODO')
+    sequence_list = SequenceList()
+    sequence_string = self.trade_model_rule_simulation_common_string
+    sequence_string += """
+              ConfirmOrder
+              Tic
+    """ + self.aggregated_amount_simulation_check + """
+              GetPackingList
+              DecreasePackingListLineListQuantity
+              Tic
+    """ + self.aggregated_amount_simulation_check + """
+              CheckPackingListDiverged
+              SplitAndDeferPackingList
+              Tic
+    """ + self.aggregated_amount_simulation_check + """
+              GetNewPackingList
+              PackPackingList
+              Tic
+    """ + self.aggregated_amount_simulation_check + """
+              StartPackingList
+              StopPackingList
+              DeliverPackingList
+              Tic
+    """ + self.aggregated_amount_simulation_check + """
+              GetInvoice
+              CheckInvoiceCausalityStateSolved
+              CheckInvoiceNormalMovements
+              CheckInvoiceTradeModelRelatedMovements
+
+              SetNewPackingListAsPackingList
+              PackPackingList
+              Tic
+              StartPackingList
+    """ + self.aggregated_amount_simulation_check + """
+              StopPackingList
+              DeliverPackingList
+              Tic
+    """ + self.aggregated_amount_simulation_check + """
+              GetInvoice
+              CheckInvoiceCausalityStateSolved
+              CheckInvoiceNormalMovements
+              CheckInvoiceTradeModelRelatedMovements
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
 class TestBPMSale(TestBPMTestCases):
   invoice_portal_type = 'Sale Invoice Transaction'
