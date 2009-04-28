@@ -31,8 +31,6 @@ from Products.ERP5Type import Permissions, PropertySheet, Interface
 from Products.ERP5.Document.InvoiceLine import InvoiceLine
 from zLOG import LOG
 
-import zope.interface
-
 class PaySheetLine(InvoiceLine):
     """
       A PaySheetLine object allows to implement lines in
@@ -52,7 +50,7 @@ class PaySheetLine(InvoiceLine):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative interfaces
-    zope.interface.implements(Interface.Variated, )
+    __implements__ = ( Interface.Variated, )
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base

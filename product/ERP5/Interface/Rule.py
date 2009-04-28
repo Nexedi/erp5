@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from zope.interface import Interface
+fro Interface import Interface
 
 class Rule(Interface):
   """A Rule describes transformations of documents.

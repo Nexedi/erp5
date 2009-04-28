@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from zope.interface import Interface
+fro Interface import Interface
 
 class Variated(Interface):
   """
