@@ -45,11 +45,6 @@
   xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
 \n
   <!-- ListBox (table mode) starts here -->\n
-  <input type="hidden" name="list_selection_name" value="default" tal:attributes="value selection_name" />\n
-\n
-  <input tal:condition="md5_string" type="hidden" name="md5_object_uid_list" value="checksum" tal:attributes="value md5_string" />\n
-\n
-  <input tal:condition="python:form_id and is_gadget_mode" type="hidden" name="gadget_form_id" tal:attributes="value form_id" />\n
 \n
   <input tal:replace="nothing" type="hidden" name="form_id" tal:attributes="value form_id" tal:condition="form_id"/>\n
 \n
