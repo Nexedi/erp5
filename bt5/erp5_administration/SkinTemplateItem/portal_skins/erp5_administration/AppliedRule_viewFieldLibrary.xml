@@ -90,6 +90,7 @@
                         <string>my_portal_type</string>
                         <string>my_specialise</string>
                         <string>my_recursive_subobject_listbox</string>
+                        <string>my_categories_list</string>
                       </list>
                     </value>
                 </item>

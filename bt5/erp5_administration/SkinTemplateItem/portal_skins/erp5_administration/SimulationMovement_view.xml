@@ -78,7 +78,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_categories_list</string>
+                      </list>
                     </value>
                 </item>
                 <item>
