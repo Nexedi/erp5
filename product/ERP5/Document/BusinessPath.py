@@ -135,7 +135,7 @@ class BusinessPath(Path):
       Overriden in order to take into account dynamic arrow
       categories
     """
-    context = kw.get('context')
+    context = kw.pop('context', None)
     result = Path._getAcquiredCategoryMembershipList(self, category, **kw)
     if context is not None:
       dynamic_category_list = self._getDynamicCategoryList(context)
