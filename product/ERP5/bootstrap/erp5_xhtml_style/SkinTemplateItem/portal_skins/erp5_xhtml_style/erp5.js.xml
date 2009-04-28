@@ -185,6 +185,9 @@ function fixLeftRightHeightAndFocus(fix_height) {\n
 // and modify respective main form action\n
 function submitFormOnEnter(event, form, method_name){\n
   if(event.keyCode == 13){\n
+    if (form == \'main_form\') {\n
+      form = getElement(form); // backward compatibility\n
+    }\n
     form.action = method_name;\n
     form.submit();\n
   }\n
