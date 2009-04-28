@@ -90,11 +90,13 @@
                       <list>
                         <string>my_title</string>
                         <string>my_resource_title</string>
+                        <string>my_variation_category_list</string>
                         <string>my_reference</string>
                         <string>my_serial_number</string>
                         <string>my_current_owner</string>
                         <string>my_current_site</string>
                         <string>my_expiration_date</string>
+                        <string>my_fishing_zone</string>
                       </list>
                     </value>
                 </item>
@@ -102,7 +104,6 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_variation_category_list</string>
                         <string>my_translated_validation_state_title</string>
                         <string>my_quantity</string>
                         <string>my_quantity_unit</string>

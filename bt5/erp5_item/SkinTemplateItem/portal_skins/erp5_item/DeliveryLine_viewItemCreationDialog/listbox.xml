@@ -345,8 +345,8 @@
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>type</string>
-                          <string>Type</string>
+                          <string>variation_category_list</string>
+                          <string>Variation</string>
                         </tuple>
                       </list>
                     </value>
@@ -400,8 +400,8 @@
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>type</string>
-                          <string>Type</string>
+                          <string>variation_category_list</string>
+                          <string>Variation</string>
                         </tuple>
                       </list>
                     </value>
@@ -507,6 +507,12 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Items</string> </value>
+                </item>
+                <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>

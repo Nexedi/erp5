@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ParallelListField" module="Products.ERP5Form.ParallelListField"/>
+        <global name="ListField" module="Products.Formulator.StandardFields"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_variation_category_list</string> </value>
+            <value> <string>my_type</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -77,10 +77,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>hash_script_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -105,7 +101,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>view_separator</string> </key>
+                    <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -125,9 +121,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -158,17 +152,13 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>hash_script_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -188,7 +178,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>view_separator</string> </key>
+                    <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -208,9 +198,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -218,7 +206,7 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -241,10 +229,6 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>hash_script_id</string> </key>
-                    <value> <string>Base_getMultiListFieldPropertyDictList</string> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -260,23 +244,19 @@
                 </item>
                 <item>
                     <key> <string>size</string> </key>
-                    <value> <int>5</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Variation</string> </value>
+                    <value> <string>Type</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>view_separator</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<br />
-
-]]></string> </value>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
               </dictionary>
             </value>
@@ -295,23 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Item_getVariationOnMovement()</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: here.getAggregateRelatedValue().getVariationRangeCategoryItemList(display_base_category = 0)</string> </value>
+            <value> <string>python: here.getResource() and  [(x, x) for x in here.getResourceValue().getAggregatedPortalTypeList()] or [(\'\', \'\')]</string> </value>
         </item>
       </dictionary>
     </pickle>

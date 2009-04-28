@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -40,12 +34,6 @@
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -105,6 +93,7 @@
                     <value>
                       <list>
                         <string>listbox_date</string>
+                        <string>listbox_variation_category_list</string>
                       </list>
                     </value>
                 </item>

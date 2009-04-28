@@ -82,7 +82,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>columns</string> </key>
+                    <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -106,6 +106,10 @@
                           <string>Resource</string>
                         </tuple>
                         <tuple>
+                          <string>variation_category_list</string>
+                          <string>Variation</string>
+                        </tuple>
+                        <tuple>
                           <string>simulation_state</string>
                           <string>Explanation State</string>
                         </tuple>
@@ -113,7 +117,7 @@
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>editable_columns</string> </key>
+                    <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -132,21 +136,21 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>list_action</string> </key>
+                    <key> <string>list_action</string> </key>
                     <value> <string>Item_viewTrackingList</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>list_method</string> </key>
+                    <key> <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key>                 <string>selection_name</string> </key>
+                    <key> <string>selection_name</string> </key>
                     <value> <string>item_tracking_selection</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>sort</string> </key>
+                    <key> <string>sort</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -161,11 +165,11 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Item Tracking</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>url_columns</string> </key>
+                    <key> <string>url_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -177,19 +181,23 @@
                           <string>Brain_getItemExplanationUrl</string>
                         </tuple>
                         <tuple>
-                          <string>node_uid</string>
+                          <string>node_title</string>
                           <string>Brain_getItemExplanationUrl</string>
                         </tuple>
                         <tuple>
-                          <string>section_uid</string>
+                          <string>section_title</string>
                           <string>Brain_getItemExplanationUrl</string>
                         </tuple>
                         <tuple>
-                          <string>resource_uid</string>
+                          <string>resource_title</string>
                           <string>Brain_getItemExplanationUrl</string>
                         </tuple>
                         <tuple>
-                          <string>explanation</string>
+                          <string>variation_category_list</string>
+                          <string>Brain_getItemExplanationUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>simulation_state</string>
                           <string>Brain_getItemExplanationUrl</string>
                         </tuple>
                       </list>

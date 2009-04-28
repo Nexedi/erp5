@@ -192,7 +192,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string>1</string> </value>
+                    <value> <string>10</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>

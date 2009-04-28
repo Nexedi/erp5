@@ -53,23 +53,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>item_list = []\n
+            <value> <string>from DateTime import DateTime\n
 \n
-for line in kw.get(\'listbox\'):\n
-  if not (line[\'title\']):\n
-    continue\n
-  module = context.getDefaultModule("Item")\n
-  item = module.newContent(portal_type="Item",\n
-      title=line[\'title\'],\n
-      reference=line[\'reference\'],\n
-      quantity=line[\'quantity\'])\n
+#kw[\'at_date\'] = DateTime()\n
+kw[\'item\'] = context.getRelativeUrl()\n
 \n
-  item_list.append(item)\n
+last_affectation_list = context.portal_simulation.getTrackingList(**kw)\n
 \n
+if kw.get(\'src__\',0):\n
+  return last_affectation_list\n
+if len(last_affectation_list):\n
+  last_affectation = last_affectation_list[0]\n
+  if last_affectation.resource_uid is not None:\n
+    resource_value = context.portal_catalog.getObject(last_affectation.resource_uid)\n
+    mvt_aggregated = context.getAggregateRelatedValue()\n
+    variation_list = mvt_aggregated.getVariationCategoryList()\n
+    return variation_list\n
 \n
-context.setAggregateValueList(item_list + list(context.getAggregateValueList()))\n
-\n
-context.REQUEST.response.redirect(\'%s/view?portal_status_message=%s\' % (context.absolute_url(), \'Items created.\'.replace(\' \', \'%20\')))\n
+return None\n
 </string> </value>
         </item>
         <item>
@@ -80,7 +81,7 @@ context.REQUEST.response.redirect(\'%s/view?portal_status_message=%s\' % (contex
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -106,17 +107,20 @@ context.REQUEST.response.redirect(\'%s/view?portal_status_message=%s\' % (contex
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>args</string>
                             <string>kw</string>
-                            <string>item_list</string>
-                            <string>_getiter_</string>
+                            <string>DateTime</string>
                             <string>_getattr_</string>
-                            <string>line</string>
-                            <string>_getitem_</string>
                             <string>context</string>
-                            <string>module</string>
-                            <string>item</string>
-                            <string>list</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
+                            <string>last_affectation_list</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>last_affectation</string>
+                            <string>None</string>
+                            <string>resource_value</string>
+                            <string>mvt_aggregated</string>
+                            <string>variation_list</string>
                           </tuple>
                         </value>
                     </item>
@@ -133,7 +137,7 @@ context.REQUEST.response.redirect(\'%s/view?portal_status_message=%s\' % (contex
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DeliveryLine_createItemList</string> </value>
+            <value> <string>Item_getVariationOnMovement</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

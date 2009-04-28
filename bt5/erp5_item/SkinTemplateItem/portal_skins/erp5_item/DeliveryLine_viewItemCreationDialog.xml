@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -40,12 +34,6 @@
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -106,8 +94,8 @@
                       <list>
                         <string>listbox_title</string>
                         <string>listbox_reference</string>
-                        <string>listbox_type</string>
                         <string>listbox_quantity</string>
+                        <string>listbox_variation_category_list</string>
                       </list>
                     </value>
                 </item>
@@ -117,7 +105,9 @@
                       <list>
                         <string>my_resource_title</string>
                         <string>my_total_quantity</string>
+                        <string>my_quantity_unit</string>
                         <string>your_item_count</string>
+                        <string>my_type</string>
                       </list>
                     </value>
                 </item>

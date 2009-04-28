@@ -53,23 +53,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>item_list = []\n
-\n
-for line in kw.get(\'listbox\'):\n
-  if not (line[\'title\']):\n
-    continue\n
-  module = context.getDefaultModule("Item")\n
-  item = module.newContent(portal_type="Item",\n
-      title=line[\'title\'],\n
-      reference=line[\'reference\'],\n
-      quantity=line[\'quantity\'])\n
-\n
-  item_list.append(item)\n
-\n
-\n
-context.setAggregateValueList(item_list + list(context.getAggregateValueList()))\n
-\n
-context.REQUEST.response.redirect(\'%s/view?portal_status_message=%s\' % (context.absolute_url(), \'Items created.\'.replace(\' \', \'%20\')))\n
+            <value> <string>if (context.getResource() and context.getResourceValue().getAggregatedPortalTypeList()) or (context.getAggregate()) or (context.getResource() is None and context.getPortalItemTypeList()):\n
+  return 0\n
+else:\n
+  return 1\n
 </string> </value>
         </item>
         <item>
@@ -80,7 +67,7 @@ context.REQUEST.response.redirect(\'%s/view?portal_status_message=%s\' % (contex
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -106,17 +93,9 @@ context.REQUEST.response.redirect(\'%s/view?portal_status_message=%s\' % (contex
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>args</string>
-                            <string>kw</string>
-                            <string>item_list</string>
-                            <string>_getiter_</string>
                             <string>_getattr_</string>
-                            <string>line</string>
-                            <string>_getitem_</string>
                             <string>context</string>
-                            <string>module</string>
-                            <string>item</string>
-                            <string>list</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -133,7 +112,7 @@ context.REQUEST.response.redirect(\'%s/view?portal_status_message=%s\' % (contex
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DeliveryLine_createItemList</string> </value>
+            <value> <string>testItemDefinedOnResource</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
