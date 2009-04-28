@@ -58,6 +58,9 @@ class TestBPMMixin(ERP5TypeTestCase):
   modified_order_line_price_ratio = 2.0
   modified_order_line_quantity_ratio = 2.5
 
+  normal_resource_use_category_list = ['normal']
+  invoicing_resource_use_category_list = ['discount', 'tax']
+
   def setUpOnce(self):
     self.portal = self.getPortalObject()
     self.validateRules()
@@ -70,10 +73,13 @@ class TestBPMMixin(ERP5TypeTestCase):
 
   @reindex
   def createCategories(self):
-    category_tool = getToolByName(self.portal,'portal_categories')
-    self.createCategoriesInCategory(category_tool.base_amount,['discount', 'tax'])
-    self.createCategoriesInCategory(category_tool.use,['discount', 'tax'])
-    self.createCategoriesInCategory(category_tool.trade_phase,['default',])
+    category_tool = getToolByName(self.portal, 'portal_categories')
+    self.createCategoriesInCategory(category_tool.base_amount, ['discount',
+      'tax'])
+    self.createCategoriesInCategory(category_tool.use,
+        self.normal_resource_use_category_list + \
+            self.invoicing_resource_use_category_list)
+    self.createCategoriesInCategory(category_tool.trade_phase, ['default',])
     self.createCategoriesInCategory(category_tool.trade_phase.default,
         ['accounting', 'delivery', 'invoicing', 'discount', 'tax', 'payment'])
 
@@ -159,8 +165,32 @@ class TestBPMMixin(ERP5TypeTestCase):
     return applied_rule.newContent(portal_type='Simulation Movement')
 
   @reindex
+  def setSystemPreference(self):
+    preference_tool = getToolByName(self.portal, 'portal_preferences')
+    system_preference_list = preference_tool.contentValues(
+        portal_type='System Preference')
+    if len(system_preference_list) > 1:
+      raise AttributeError('More than one System Preference, cannot test')
+    if len(system_preference_list) == 0:
+      system_preference = preference_tool.newContent(portal_type='System Preference')
+    else:
+      system_preference = system_preference_list[0]
+    system_preference.edit(
+      preferred_invoicing_resource_use_category_list = \
+          self.invoicing_resource_use_category_list,
+      preferred_normal_resource_use_category_list = \
+          self.normal_resource_use_category_list,
+      priority = 1,
+
+    )
+
+    if system_preference.getPreferenceState() == 'disabled':
+      system_preference.enable()
+
+  @reindex
   def afterSetUp(self):
     self.createCategories()
+    self.setSystemPreference()
 
     # XXX for testing purpose only...
     # This builder is not supporting yet deeper simulation tree
@@ -630,18 +660,21 @@ class TestBPMMixin(ERP5TypeTestCase):
     sequence.edit(product_taxed = self.createResource('Product',
       title='Product Taxed',
       base_contribution=['base_amount/tax'],
+      use='normal',
     ))
 
   def stepCreateProductDiscounted(self, sequence=None, **kw):
     sequence.edit(product_discounted = self.createResource('Product',
       title='Product Discounted',
       base_contribution=['base_amount/discount'],
+      use='normal',
     ))
 
   def stepCreateProductDiscountedTaxed(self, sequence=None, **kw):
     sequence.edit(product_discounted_taxed = self.createResource('Product',
       title='Product Discounted & Taxed',
       base_contribution=['base_amount/discount', 'base_amount/tax'],
+      use='normal',
     ))
 
   def stepCreateServiceTax(self, sequence=None, **kw):

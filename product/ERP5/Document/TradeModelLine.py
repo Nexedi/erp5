@@ -34,6 +34,7 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Amount import Amount
 
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
+
 import zope.interface
 
 class TradeModelLine(Amount):
@@ -68,9 +69,13 @@ class TradeModelLine(Amount):
 
     def getAggregatedAmountList(self, context, movement_list = None,
         current_aggregated_amount_list = None, **kw):
-
       from Products.ERP5Type.Document import newTempMovement
 
+      normal_resource_use_category_list = self.\
+          portal_preferences.getPreferredNormalResourceUseCategoryList()
+      if normal_resource_use_category_list is None:
+        raise ValueError('preferred_normal_resource_use_category is not ' + \
+            'configured in System Preferences')
       if current_aggregated_amount_list is None:
         current_aggregated_amount_list = []
 
@@ -102,9 +107,9 @@ class TradeModelLine(Amount):
             for movement in context.getMovementList():
               movement_resource = movement.getResourceValue()
               if movement_resource is not None:
-                if movement_resource.getUse() not in ['', None]:
-                  continue
-              movement_list.append(movement)
+                if movement_resource.getUse() in \
+                    normal_resource_use_category_list:
+                  movement_list.append(movement)
       aggregated_amount_list = AggregatedAmountList()
       base_application_list = self.getBaseApplicationList()
 
