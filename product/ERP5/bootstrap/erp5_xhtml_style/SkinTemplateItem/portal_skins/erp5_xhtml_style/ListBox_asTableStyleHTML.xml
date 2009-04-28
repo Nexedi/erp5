@@ -285,7 +285,7 @@
                            size="8"\n
                            type="textarea" \n
                            tal:attributes=\'value python: selection.getParams().get(alias,"");\n
-                           onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,dom_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
+                           onkeyup python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,dom_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
 \n
                   </tal:block>\n
                 </td>\n
@@ -429,7 +429,7 @@
                tal:condition="python:not is_gadget_mode and show_search_line and here.getParamDict().has_key(\'advanced_search_text\')">\n
             <input name="advanced_search_text" size="40" value=""\n
                    type="text" tal:attributes="value python:here.getParamDict()[\'advanced_search_text\']"\n
-                   onkeypress="submitFormOnEnter(event,\n
+                   onkeyup="submitFormOnEnter(event,\n
                                     this.form,\n
                                     \'ERP5Site_processAdvancedSearch\');"/>\n
             <input class="button" value="Search" name="ERP5Site_processAdvancedSearch:method" type="submit" />\n

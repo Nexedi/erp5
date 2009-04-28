@@ -143,7 +143,7 @@
                                          name string:${field_id}_page_start;\n
                                          value python:here.current_page + 1;\n
                                          size python:len(str(here.total_pages));\n
-                                         onkeypress string:submitFormOnEnter(event, this.form, \'${field_id}_setPage\')" />\n
+                                         onkeyup string:submitFormOnEnter(event, this.form, \'${field_id}_setPage\')" />\n
                   / <tal:block content="here/total_pages" />\n
                 </td>\n
                 <td style="white-space: nowrap; vertical-align: middle; text-align: center">\n
@@ -325,7 +325,7 @@
                         tal:define ="params python: {alias:\'this.value\'};"\n
                         size="8" type="textarea" \n
                         tal:attributes=\'value python: selection.getParams().get(alias,"");\n
-                                        onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box_relative_url,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
+                                        onkeyup python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box_relative_url,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
                   </tal:block>\n
                   </span>\n
                 </td>\n

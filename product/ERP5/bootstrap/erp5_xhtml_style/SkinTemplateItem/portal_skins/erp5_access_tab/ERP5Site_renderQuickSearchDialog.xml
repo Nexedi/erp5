@@ -44,7 +44,7 @@
   tal:define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \n
                                                        \'text/html;; charset=utf-8\');">\n
   <div>\n
-    <input type="text" onkeypress="submitFormOnEnter(event, this.form, \'ERP5Site_processAdvancedSearch\');" class="input-text" name="top_your_search_text" size="40" accesskey="4"/>\n
+    <input type="text" onkeyup="submitFormOnEnter(event, this.form, \'ERP5Site_processAdvancedSearch\');" class="input-text" name="top_your_search_text" size="40" accesskey="4"/>\n
     <select size="1" class="input" name="top_your_search_portal_type">\n
       <option value="" selected="selected" i18n:translate="" i18n:domain="ui">Everything</option>\n
       <option value="all" i18n:translate="" i18n:domain="ui">All Documents</option>\n

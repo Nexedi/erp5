@@ -82,7 +82,7 @@
                    value="" \n
                    tal:condition="python:here.getParamDict().has_key(\'your_search_text\')"\n
                    type="text"\n
-                   onkeypress="submitFormOnEnter(event, \n
+                   onkeyup="submitFormOnEnter(event, \n
                                         this.form,\n
                                         \'ERP5Site_processAdvancedSearch\');"\n
                    tal:attributes="value python:here.getParamDict()[\'your_search_text\']"/>\n
@@ -92,7 +92,7 @@
                    value="" \n
                    tal:condition="python:not here.getParamDict().has_key(\'your_search_text\')"\n
                    type="text"\n
-                   onkeypress="submitFormOnEnter(event, \n
+                   onkeyup="submitFormOnEnter(event, \n
                                         this.form,\n
                                         \'ERP5Site_processAdvancedSearch\');">\n
 \n
@@ -356,7 +356,7 @@
                    value=""\n
                    tal:condition="python:here.getParamDict().has_key(\'your_search_text\')"\n
                    type="text" \n
-                   onkeypress="submitFormOnEnter(event, \n
+                   onkeyup="submitFormOnEnter(event, \n
                                         this.form,\n
                                         \'ERP5Site_processAdvancedSearchBottom\');"\n
                    tal:attributes="value python:here.getParamDict()[\'your_search_text\']"/>\n
@@ -366,7 +366,7 @@
                    value=""\n
                    tal:condition="python:not here.getParamDict().has_key(\'your_search_text\')"\n
                    type="text"\n
-                   onkeypress="submitFormOnEnter(event, \n
+                   onkeyup="submitFormOnEnter(event, \n
                                         this.form,\n
                                         \'ERP5Site_processAdvancedSearchBottom\');"/>\n
 \n
@@ -387,7 +387,7 @@
                    tal:condition="python: here.getParamDict().has_key(\'your_search_text\')"\n
                    type="text"\n
                    tal:attributes=\'value python:here.getParamDict()["your_search_text"];\n
-                                   onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
+                                   onkeyup python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
 \n
 \n
             <input tal:define ="params python: {\'ERP5Site_processAdvancedSearchBottom:method\':\'\',\'bottom_your_search_text\':\'this.value\'};"\n
@@ -396,7 +396,7 @@
                    value=""\n
                    tal:condition="python:not here.getParamDict().has_key(\'your_search_text\')"\n
                    type="text"\n
-                   tal:attributes=\'onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
+                   tal:attributes=\'onkeyup python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
 \n
           </div>\n
 \n
