@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-fro Interface import Interface
+from Interface import Interface
 
 class Coordinate(Interface):
   """
