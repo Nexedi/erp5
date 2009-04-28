@@ -53,7 +53,55 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.InvoiceTransaction_selectPackingListMovement(\'Sale Invoice Transaction\',**kw)\n
+            <value> <string>invoice_portal_type_mapping = {\n
+  \'Sale Invoice Transaction\': [\'Sale Order\', \'Sale Invoice Transaction\', \'Sale Packing List\'],\n
+  \'Purchase Invoice Transaction\': [\'Purchase Order\', \'Purchase Invoice Transaction\', \'Purchase Packing List\'],\n
+}\n
+src__ = kw.get(\'src__\',0)\n
+search_kw = kw.copy()\n
+\n
+search_kw[\'parent_specialise_portal_type\'] = \'Invoice Transaction Rule\'\n
+search_kw[\'explanation_portal_type\']       = invoice_portal_type_mapping[invoice_portal_type]\n
+search_kw[\'portal_type\']                   = \'Simulation Movement\'\n
+search_kw[\'grand_parent_simulation_state\'] = [\'started\']\n
+\n
+search_kw.update(context.portal_catalog.buildSQLQuery(**search_kw))\n
+result = context.InvoiceTransaction_zSelectMovement(**search_kw)\n
+if src__:\n
+  normal_movement_list = result\n
+else:\n
+  normal_movement_list = [q for q in result]\n
+\n
+search_kw = kw.copy()\n
+\n
+search_kw[\'grand_grand_parent_specialise_portal_type\'] = \'Trade Model Rule\'\n
+search_kw[\'parent_specialise_portal_type\'] = \'Invoice Transaction Rule\'\n
+search_kw[\'explanation_portal_type\']       = invoice_portal_type_mapping[invoice_portal_type]\n
+search_kw[\'portal_type\']                   = \'Simulation Movement\'\n
+search_kw[\'grand_grand_grand_parent_simulation_state\'] = [\'started\']\n
+\n
+search_kw.update(context.portal_catalog.buildSQLQuery(**search_kw))\n
+\n
+result = context.InvoiceTransaction_zSelectMovement(**search_kw)\n
+\n
+if src__:\n
+  trade_model_movement_list = result\n
+else:\n
+  trade_model_movement_list = [q for q in result]\n
+\n
+if src__:\n
+  return \'\\n\'.join((normal_movement_list, trade_model_movement_list))\n
+movement_list = []\n
+for movement in normal_movement_list + trade_model_movement_list:\n
+  movement = movement.getObject()\n
+  if movement.getDeliveryValue() is None :\n
+    if movement not in movement_list:\n
+      movement_list.append(movement)\n
+  else :\n
+    from Products.ERP5Type.Log import log\n
+    log(script.getId(), "simulation movement %s should not have been selected !" % movement.getPath())\n
+\n
+return movement_list\n
 </string> </value>
         </item>
         <item>
@@ -64,7 +112,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>invoice_portal_type, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -84,16 +132,35 @@
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>invoice_portal_type</string>
                             <string>kw</string>
-                            <string>_apply_</string>
+                            <string>invoice_portal_type_mapping</string>
                             <string>_getattr_</string>
+                            <string>src__</string>
+                            <string>search_kw</string>
+                            <string>_write_</string>
+                            <string>_getitem_</string>
+                            <string>_apply_</string>
                             <string>context</string>
+                            <string>result</string>
+                            <string>normal_movement_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>q</string>
+                            <string>trade_model_movement_list</string>
+                            <string>movement_list</string>
+                            <string>movement</string>
+                            <string>None</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
+                            <string>script</string>
                           </tuple>
                         </value>
                     </item>
@@ -110,7 +177,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleInvoiceTransaction_selectPackingListMovement</string> </value>
+            <value> <string>InvoiceTransaction_selectInvoiceMovement</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

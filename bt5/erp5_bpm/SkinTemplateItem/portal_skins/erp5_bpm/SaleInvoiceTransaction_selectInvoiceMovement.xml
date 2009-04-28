@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.InvoiceTransaction_selectPackingListMovement(\'Sale Invoice Transaction\',**kw)\n
+            <value> <string>return context.InvoiceTransaction_selectInvoiceMovement(\'Sale Invoice Transaction\',**kw)\n
 </string> </value>
         </item>
         <item>
@@ -110,7 +110,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleInvoiceTransaction_selectPackingListMovement</string> </value>
+            <value> <string>SaleInvoiceTransaction_selectInvoiceMovement</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
