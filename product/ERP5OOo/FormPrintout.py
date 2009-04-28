@@ -104,7 +104,8 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
   
   Fields -> Paragraphs:      supported
   ListBox -> Table:          supported
-  Report Section -> Frames:  experimentally supported
+  Report Section
+      -> Frames or Sections: supported
   FormBox -> Frame:          experimentally supported
   ImageField -> Photo:       supported
   styles.xml:                supported
@@ -453,45 +454,76 @@ class ODFStrategy(Implicit):
     REQUEST = get_request()
     request = extra_context.get('REQUEST', REQUEST)
 
-    report_section_frame_xpath = '//draw:frame[@draw:name="%s"]' % report_method.__name__
-    frame_list = element_tree.xpath(report_section_frame_xpath, namespaces=element_tree.nsmap)
-    if len(frame_list) is 0:
+    target_tuple = self._pickUpTargetSection(report_method_name=report_method.__name__,
+                                             report_section_list=report_section_list,
+                                             element_tree=element_tree)
+    if target_tuple is None:
       return element_tree
-    frame = frame_list[0]
-    frame_paragraph = frame.getparent()
-    office_body = frame_paragraph.getparent()
-    # remove if no report section
-    if len(report_section_list) is 0:
-      office_body.remove(frame_paragraph)
-      return element_tree
-    frame_paragraph_index = office_body.index(frame_paragraph)
-    temporary_element_tree = deepcopy(frame_paragraph)
+    target_xpath, original_target = target_tuple
+    office_body = original_target.getparent()
+    target_index = office_body.index(original_target)
+    temporary_element_tree = deepcopy(original_target)
     for (index, report_item) in enumerate(report_section_list):
       report_item.pushReport(portal_object, render_prefix=None)
       here = report_item.getObject(portal_object)
       form_id = report_item.getFormId()
       form = getattr(here, form_id)
       
-      frame_paragraph_element_tree = deepcopy(temporary_element_tree)
+      target_element_tree = deepcopy(temporary_element_tree)
+      # remove original target in the ODF template 
       if index is 0:
-        office_body.remove(frame_paragraph)
+        office_body.remove(original_target)
       else:
         self._setUniqueElementName(base_name=report_method.__name__,
                                    iteration_index=index,
-                                   xpath=report_section_frame_xpath,
-                                   element_tree=frame_paragraph_element_tree)
+                                   xpath=target_xpath,
+                                   element_tree=target_element_tree)
 
-      frame_paragraph_element_tree = self._replaceXmlByForm(element_tree=frame_paragraph_element_tree,
-                                                            form=form,
-                                                            here=here,
-                                                            extra_context=extra_context,
-                                                            ooo_builder=ooo_builder,
-                                                            iteration_index=index)
-      office_body.insert(frame_paragraph_index, frame_paragraph_element_tree)
-      frame_paragraph_index += 1
+      target_element_tree = self._replaceXmlByForm(element_tree=target_element_tree,
+                                                   form=form,
+                                                   here=here,
+                                                   extra_context=extra_context,
+                                                   ooo_builder=ooo_builder,
+                                                   iteration_index=index)
+      office_body.insert(target_index, target_element_tree)
+      target_index += 1
       report_item.popReport(portal_object, render_prefix=None)
     return element_tree
 
+  def _pickUpTargetSection(self, report_method_name='', report_section_list=[], element_tree=None):
+    """pick up a ODF target object to iterate ReportSection
+
+    report_method_name -- report method name
+    report_section_list -- ERP5Form ReportSection List which was created by a report method
+    element_tree -- XML ElementTree object
+    """
+    frame_xpath = '//draw:frame[@draw:name="%s"]' % report_method_name
+    frame_list = element_tree.xpath(frame_xpath, namespaces=element_tree.nsmap)
+    # <text:section text:style-name="Sect2" text:name="Section2">
+    section_xpath = '//text:section[@text:name="%s"]' % report_method_name
+    section_list = element_tree.xpath(section_xpath, namespaces=element_tree.nsmap)
+    
+    if len(frame_list) is 0 and len(section_list) is 0:
+      return None
+
+    office_body = None
+    original_target = None
+    target_xpath = ''
+    if len(frame_list) > 0:
+      frame = frame_list[0]
+      original_target = frame.getparent()
+      target_xpath = frame_xpath
+    elif len(section_list) > 0:
+      original_target = section_list[0]
+      target_xpath = section_xpath
+    office_body = original_target.getparent()
+    # remove if no report section
+    if len(report_section_list) is 0:
+      office_body.remove(original_target)
+      return None  
+   
+    return (target_xpath, original_target)
+  
   def _setUniqueElementName(self, base_name='', iteration_index=0, xpath='', element_tree=None):
     """create a unique element name and set it to the element tree
 
