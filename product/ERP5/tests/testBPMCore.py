@@ -37,6 +37,10 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.tests.utils import reindex
 
+# XXX TODO:
+#  * move test.* methods to other classes, group by testing area
+#  * subclass TestBPMMixin from TestInvoiceMixin and refactor methods and style
+
 class TestBPMMixin(ERP5TypeTestCase):
   """Skeletons for tests for ERP5 BPM"""
 
@@ -56,7 +60,7 @@ class TestBPMMixin(ERP5TypeTestCase):
   business_state_portal_type = 'Business State'
 
   modified_order_line_price_ratio = 2.0
-  modified_order_line_quantity_ratio = 2.5
+  modified_invoice_line_quantity_ratio = modified_order_line_quantity_ratio = 2.5
 
   modified_packing_list_line_quantity_ratio = 0.4
 
@@ -120,6 +124,27 @@ class TestBPMMixin(ERP5TypeTestCase):
       trade_phase = 'default/tax'
     )
     sequence.edit(business_path=None, business_path_taxing=business_path)
+
+  def _solveDivergence(self, obj, property, decision, group='line'):
+    kw = {'%s_group_listbox' % group:{}}
+    for divergence in obj.getDivergenceList():
+      if divergence.getProperty('tested_property') != property:
+        continue
+      sm_url = divergence.getProperty('simulation_movement').getRelativeUrl()
+      kw['line_group_listbox']['%s&%s' % (sm_url, property)] = {
+        'choice':decision}
+    self.portal.portal_workflow.doActionFor(
+      obj,
+      'solve_divergence_action',
+      **kw)
+
+  def stepAcceptDecisionQuantityInvoice(self,sequence=None, sequence_list=None):
+    invoice = sequence.get('invoice')
+    self._solveDivergence(invoice, 'quantity', 'accept')
+
+  def stepAdoptPrevisionQuantityInvoice(self,sequence=None, sequence_list=None, **kw):
+    invoice = sequence.get('invoice')
+    self._solveDivergence(invoice, 'quantity', 'adopt')
 
   def stepModifyBusinessPathDiscounting(self, sequence=None,
                                         sequence_string=None):
@@ -348,9 +373,17 @@ class TestBPMMixin(ERP5TypeTestCase):
       tax_amount.getTotalPrice()
     )
 
+  def stepAcceptDecisionInvoice(self, sequence=None, **kw):
+    invoice = sequence.get('invoice')
+    invoice.portal_workflow.doActionFor(invoice,'accept_decision_action')
+
   def stepCheckInvoiceCausalityStateSolved(self, sequence=None, **kw):
     invoice = sequence.get('invoice')
     self.assertEqual('solved', invoice.getCausalityState())
+
+  def stepCheckInvoiceCausalityStateDiverged(self, sequence=None, **kw):
+    invoice = sequence.get('invoice')
+    self.assertEqual('diverged', invoice.getCausalityState())
 
   def stepGetInvoice(self, sequence=None, **kw):
     packing_list = sequence.get('packing_list')
@@ -695,6 +728,48 @@ class TestBPMMixin(ERP5TypeTestCase):
     order = sequence.get('order')
     order_line = order.newContent(portal_type=self.order_line_portal_type)
     sequence.edit(order_line = order_line)
+
+  def stepGetInvoiceLineDiscounted(self, sequence=None, **kw):
+    invoice = sequence.get('invoice')
+    resource = sequence.get('product_discounted')
+    self.assertNotEqual(None, resource)
+    sequence.edit(invoice_line_discounted = [m for m in 
+      invoice.getMovementList() if m.getResourceValue() == resource][0])
+
+  def stepGetInvoiceLineDiscountedTaxed(self, sequence=None, **kw):
+    invoice = sequence.get('invoice')
+    resource = sequence.get('product_discounted_taxed')
+    self.assertNotEqual(None, resource)
+    sequence.edit(invoice_line_discounted_taxed = [m for m in 
+      invoice.getMovementList() if m.getResourceValue() == resource][0])
+
+  def stepGetInvoiceLineTaxed(self, sequence=None, **kw):
+    invoice = sequence.get('invoice')
+    resource = sequence.get('product_taxed')
+    self.assertNotEqual(None, resource)
+    sequence.edit(invoice_line_taxed = [m for m in 
+      invoice.getMovementList() if m.getResourceValue() == resource][0])
+
+  def stepModifyQuantityInvoiceLineTaxed(self, sequence=None, **kw):
+    invoice_line = sequence.get('invoice_line_taxed')
+    invoice_line.edit(
+      quantity=invoice_line.getQuantity() * \
+          self.modified_invoice_line_quantity_ratio,
+    )
+
+  def stepModifyQuantityInvoiceLineDiscounted(self, sequence=None, **kw):
+    invoice_line = sequence.get('invoice_line_discounted')
+    invoice_line.edit(
+      quantity=invoice_line.getQuantity() * \
+          self.modified_invoice_line_quantity_ratio,
+    )
+
+  def stepModifyQuantityInvoiceLineDiscountedTaxed(self, sequence=None, **kw):
+    invoice_line = sequence.get('invoice_line_discounted_taxed')
+    invoice_line.edit(
+      quantity=invoice_line.getQuantity() * \
+          self.modified_invoice_line_quantity_ratio,
+    )
 
   def stepModifyAgainOrderLineTaxed(self, sequence=None, **kw):
     order_line = sequence.get('order_line_taxed')
@@ -1115,9 +1190,52 @@ class TestBPMTestCases(TestBPMMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_TradeModelRuleSimulationBuildInvoiceUpdateAggregatedAmountListDivergencyAndSolving(self):
+  def test_TradeModelRuleSimulationBuildInvoiceNewTradeConditionDivergencyAndSolving(self):
     """Check that after changing trade model invoice is properly diverged and it is possible to solve"""
     raise NotImplementedError('TODO')
+
+  def test_TradeModelRuleSimulationBuildInvoiceInvoiceLineModifyDivergencyAndSolving(self):
+    """Check that after changing trade model invoice is properly diverged and it is possible to solve"""
+    sequence_list = SequenceList()
+    sequence_string = self.trade_model_rule_simulation_common_string
+    sequence_string += """
+              ConfirmOrder
+              Tic
+    """ + self.aggregated_amount_simulation_check + """
+              GetPackingList
+              PackPackingList
+              Tic
+    """ + self.aggregated_amount_simulation_check + """
+              StartPackingList
+              StopPackingList
+              DeliverPackingList
+              Tic
+    """ + self.aggregated_amount_simulation_check + """
+              GetInvoice
+              CheckInvoiceCausalityStateSolved
+              CheckInvoiceNormalMovements
+              CheckInvoiceTradeModelRelatedMovements
+
+              GetInvoiceLineDiscounted
+              GetInvoiceLineDiscountedTaxed
+              GetInvoiceLineTaxed
+
+              ModifyQuantityInvoiceLineDiscounted
+              ModifyQuantityInvoiceLineDiscountedTaxed
+              ModifyQuantityInvoiceLineTaxed
+              Tic
+              CheckInvoiceCausalityStateDiverged
+              AcceptDecisionQuantityInvoice
+              Tic
+              CheckInvoiceCausalityStateDiverged
+              AdoptPrevisionQuantityInvoice
+              Tic
+              CheckInvoiceCausalityStateSolved
+              CheckInvoiceNormalMovements
+              CheckInvoiceTradeModelRelatedMovements
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
   def test_TradeModelRuleSimulationBuildInvoiceBuildInvoiceTransactionLines(self):
     """Check that having properly configured invoice transaction rule it invoice transaction lines are nicely generated and have proper amounts"""
