@@ -49,7 +49,8 @@
               current_page_max   python: listbox_max_lines * current_page;\n
               current_page_start python: (listbox_max_lines * (current_page - 1)) + 1;\n
               current_page_stop  python: (total_line < current_page_max) and total_line or current_page_max;\n
-              box python: real_context.restrictedTraverse(box_relative_url);">\n
+              box                python: real_context.restrictedTraverse(box_relative_url);\n
+              your_search_text   python:here.getParamDict().get(\'your_search_text\', None)">\n
 \n
   <!-- ListBox (search mode) starts here.  -->\n
   <input type="hidden" \n
@@ -75,31 +76,11 @@
           <!-- Advanced Search header -->\n
           <div class="centeredInner searchBar" \n
                tal:condition="python:not is_gadget_mode and show_search_line">\n
-\n
-            <input name="top_your_search_text" \n
-                   size="40" \n
-                   value="" \n
-                   tal:condition="python:here.getParamDict().has_key(\'your_search_text\')"\n
-                   type="text"\n
-                   onkeyup="submitFormOnEnter(event, \n
-                                        this.form,\n
-                                        \'ERP5Site_processAdvancedSearch\');"\n
-                   tal:attributes="value python:here.getParamDict()[\'your_search_text\']"/>\n
-\n
-            <input name="top_your_search_text" \n
-                   size="40" \n
-                   value="" \n
-                   tal:condition="python:not here.getParamDict().has_key(\'your_search_text\')"\n
-                   type="text"\n
-                   onkeyup="submitFormOnEnter(event, \n
-                                        this.form,\n
-                                        \'ERP5Site_processAdvancedSearch\');">\n
-\n
-            <input class="button" \n
-                   i18n:domain="ui" i18n:attributes="value"\n
-                   value="Search" \n
-                   name="ERP5Site_processAdvancedSearch:method" \n
-                   type="submit" />\n
+            <input name="top_your_search_text" size="40" value="" type="text"\n
+                   onkeyup="submitFormOnEnter(event, this.form, \'ERP5Site_processAdvancedSearch\');"\n
+                   tal:attributes="value your_search_text" />\n
+            <input class="button" i18n:domain="ui" i18n:attributes="value"\n
+                   value="Search" name="ERP5Site_processAdvancedSearch:method" type="submit" />\n
           </div>\n
 \n
           <!-- Result Header -->\n
@@ -349,54 +330,19 @@
 \n
           <!-- Advanced Search footer -->\n
           <div class="centeredInner extendedSearchBar" tal:condition="python: not is_gadget_mode and show_search_line">\n
-\n
-            <input name="bottom_your_search_text" \n
-                   size="40" \n
-                   value=""\n
-                   tal:condition="python:here.getParamDict().has_key(\'your_search_text\')"\n
-                   type="text" \n
-                   onkeyup="submitFormOnEnter(event, \n
-                                        this.form,\n
-                                        \'ERP5Site_processAdvancedSearchBottom\');"\n
-                   tal:attributes="value python:here.getParamDict()[\'your_search_text\']"/>\n
-\n
-            <input name="bottom_your_search_text" \n
-                   size="40" \n
-                   value=""\n
-                   tal:condition="python:not here.getParamDict().has_key(\'your_search_text\')"\n
-                   type="text"\n
-                   onkeyup="submitFormOnEnter(event, \n
-                                        this.form,\n
-                                        \'ERP5Site_processAdvancedSearchBottom\');"/>\n
-\n
-            <input class="button" \n
-                   i18n:domain="ui" i18n:attributes="value"\n
-                   value="Search" \n
-                   name="ERP5Site_processAdvancedSearchBottom:method" \n
-                   type="submit" />\n
+            <input name="bottom_your_search_text" size="40" value="" type="text"\n
+                   onkeyup="submitFormOnEnter(event, this.form, \'ERP5Site_processAdvancedSearchBottom\');"\n
+                   tal:attributes="value your_search_text" />\n
+            <input class="button" i18n:domain="ui" i18n:attributes="value"\n
+                   value="Search" name="ERP5Site_processAdvancedSearchBottom:method" type="submit" />\n
           </div>\n
 \n
           <!-- Advanced Search footer for gadgets -->\n
           <div class="centeredInner extendedSearchBar" tal:condition="python: is_gadget_mode and show_search_line">\n
-\n
             <input tal:define ="params python: {\'ERP5Site_processAdvancedSearchBottom:method\':\'\',\'bottom_your_search_text\':\'this.value\'};"\n
-                   name="bottom_your_search_text" \n
-                   size="25" \n
-                   value=""\n
-                   tal:condition="python: here.getParamDict().has_key(\'your_search_text\')"\n
-                   type="text"\n
-                   tal:attributes=\'value python:here.getParamDict()["your_search_text"];\n
+                   name="bottom_your_search_text" size="25" value="" type="text"\n
+                   tal:attributes=\'value your_search_text;\n
                                    onkeyup python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
-\n
-\n
-            <input tal:define ="params python: {\'ERP5Site_processAdvancedSearchBottom:method\':\'\',\'bottom_your_search_text\':\'this.value\'};"\n
-                   name="bottom_your_search_text" \n
-                   size="25" \n
-                   value=""\n
-                   tal:condition="python:not here.getParamDict().has_key(\'your_search_text\')"\n
-                   type="text"\n
-                   tal:attributes=\'onkeyup python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
-\n
           </div>\n
 \n
         </div>\n
