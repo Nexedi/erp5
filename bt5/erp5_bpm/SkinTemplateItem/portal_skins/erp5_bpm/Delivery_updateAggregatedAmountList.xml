@@ -54,25 +54,15 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>delivery = context\n
-\n
-# XXX begin\n
-portal_type_movement_list_mapping = {\n
-  \'Purchase Invoice Transaction\' : \'Invoice Line\',\n
-  \'Purchase Order\' : \'Purchase Order Line\',\n
-  \'Sale Invoice Transaction\' : \'Invoice Line\',\n
-  \'Sale Order\' : \'Sale Order Line\',\n
-}\n
-destination_portal_type = portal_type_movement_list_mapping[\n
-    delivery.getPortalType()]\n
 trade_condition_portal_type_list = (\'Sale Trade Condition\',\n
     \'Purchase Trade Condition\')\n
-# XXX end\n
 \n
 trade_condition = delivery.getSpecialiseValue(portal_type=\n
-    trade_condition_portal_type_list )\n
+    trade_condition_portal_type_list)\n
 \n
 if trade_condition is not None:\n
-  trade_condition.updateAggregatedAmountList(delivery,destination_portal_type)\n
+  return trade_condition.updateAggregatedAmountList(delivery)\n
+return []\n
 </string> </value>
         </item>
         <item>
@@ -113,11 +103,8 @@ if trade_condition is not None:\n
                             <string>kwargs</string>
                             <string>context</string>
                             <string>delivery</string>
-                            <string>portal_type_movement_list_mapping</string>
-                            <string>_getitem_</string>
-                            <string>_getattr_</string>
-                            <string>destination_portal_type</string>
                             <string>trade_condition_portal_type_list</string>
+                            <string>_getattr_</string>
                             <string>trade_condition</string>
                             <string>None</string>
                           </tuple>
