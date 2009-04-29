@@ -67,7 +67,8 @@
              box_relative_url python: request.get(\'box_relative_url\', \'\');\n
              box python: real_context.restrictedTraverse(box_relative_url); \n
              box_id python: \'visual_\'+box.getId();\n
-             dom_id python: request.get(\'dom_id\',None) or box_id">\n
+             dom_id python: request.get(\'dom_id\',None) or box_id;\n
+             your_search_text python:here.getParamDict().get(\'your_search_text\', None)">\n
     <tal:block metal:use-macro="template/macros/ListBoxContainer">\n
       <tal:block metal:fill-slot="ListBoxBody">\n
 \n
@@ -419,16 +420,13 @@
 \n
           </table>\n
 \n
-          <!-- Advanced Search header -->\n
+          <!-- Advanced Search footer -->\n
           <div class="centeredInner extendedSearchBar"\n
-               tal:condition="python:not is_gadget_mode and show_search_line and here.getParamDict().has_key(\'advanced_search_text\')">\n
-            <input name="advanced_search_text" size="40" value=""\n
-                   type="text" tal:attributes="value python:here.getParamDict()[\'advanced_search_text\']"\n
-                   onkeyup="submitFormOnEnter(event,\n
-                                    this.form,\n
-                                    \'ERP5Site_processAdvancedSearch\');"/>\n
-            <input class="button" value="Search" name="ERP5Site_processAdvancedSearch:method" type="submit" />\n
-\n
+               tal:condition="python:not is_gadget_mode and show_search_line and your_search_text is not None">\n
+            <input name="bottom_your_search_text" size="40" value=""\n
+                   type="text" tal:attributes="value your_search_text"\n
+                   onkeyup="submitFormOnEnter(event, this.form, \'ERP5Site_processAdvancedSearchBottom\');"/>\n
+            <input class="button" value="Search" name="ERP5Site_processAdvancedSearchBottom:method" type="submit" />\n
           </div>\n
 \n
           <!-- Copy / Paste buttons -->\n
