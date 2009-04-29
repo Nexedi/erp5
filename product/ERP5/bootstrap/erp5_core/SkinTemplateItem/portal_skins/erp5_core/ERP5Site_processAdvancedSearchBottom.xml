@@ -53,13 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if bottom_your_search_text is not None:\n
-  your_search_text = bottom_your_search_text\n
-return context.Base_redirect(\'ERP5Site_viewSearchResult\',\n
-                            keep_items=dict(SearchableText=your_search_text, reset=1,\n
-                              your_search_text=your_search_text,\n
-                              list_style = \'search\',\n
-                              all_languages=all_languages))\n
+            <value> <string>return context.ERP5Site_viewQuickSearchResultList(\n
+    field_your_search_text=bottom_your_search_text,\n
+    all_languages=all_languages)\n
 </string> </value>
         </item>
         <item>
@@ -70,7 +66,7 @@ return context.Base_redirect(\'ERP5Site_viewSearchResult\',\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>your_search_text=None, bottom_your_search_text=None, all_languages=False</string> </value>
+            <value> <string>bottom_your_search_text=\'\', all_languages=False</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -90,19 +86,16 @@ return context.Base_redirect(\'ERP5Site_viewSearchResult\',\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>your_search_text</string>
                             <string>bottom_your_search_text</string>
                             <string>all_languages</string>
-                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -115,8 +108,7 @@ return context.Base_redirect(\'ERP5Site_viewSearchResult\',\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <none/>
-                <none/>
+                <string></string>
                 <int>0</int>
               </tuple>
             </value>

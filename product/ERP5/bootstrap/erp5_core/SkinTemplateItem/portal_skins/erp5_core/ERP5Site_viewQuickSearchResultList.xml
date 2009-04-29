@@ -53,31 +53,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>translateString = context.Base_translateString\n
-translated_type = \'\'\n
-\n
-if getattr(context, \'getWebSectionValue\', None) is not None:\n
-  context_search = context.getWebSectionValue()\n
-else:\n
-  context_search = context.getPortalObject()\n
+            <value> <string>kw = {\'reset\':1,\n
+      \'SearchableText\':field_your_search_text,\n
+      \'your_search_text\':field_your_search_text,\n
+      \'all_languages\':all_languages}\n
 \n
 if field_your_search_portal_type:\n
   if field_your_search_portal_type == \'all\':\n
-    return context_search.Base_redirect(\'ERP5Site_viewSearchResult\',\n
-                                  keep_items=dict(SearchableText=field_your_search_text, reset=1,\n
-                                  your_search_text=field_your_search_text,\n
-                                  portal_type=list(context.getPortalDocumentTypeList()),\n
-                                  list_style = \'search\',\n
-                                  all_languages=all_languages))\n
+    kw.update({\'portal_type\':list(context.getPortalDocumentTypeList())})\n
+  else:\n
+    kw.update({\'portal_type\':context.Base_translateString(field_your_search_portal_type)})\n
 \n
-  translated_type = translateString(field_your_search_portal_type)\n
+# use non-web quick search if ignore_layout is explicitly set.\n
+if bool(context.REQUEST.get(\'ignore_layout\', False)):\n
+  search_context = context.getPortalObject()\n
+else:\n
+  search_context = getattr(context, \'getWebSectionValue\', context.getPortalObject)() \n
 \n
-return context_search.Base_redirect(\'ERP5Site_viewSearchResult\',\n
-                              keep_items=dict(SearchableText=field_your_search_text, reset=1,\n
-                              your_search_text=field_your_search_text,\n
-                              translated_portal_type=translated_type,\n
-                              list_style = \'search\',\n
-                              all_languages=all_languages))\n
+return search_context.Base_redirect(\'ERP5Site_viewSearchResult\', keep_items=kw)\n
 </string> </value>
         </item>
         <item>
@@ -88,7 +81,7 @@ return context_search.Base_redirect(\'ERP5Site_viewSearchResult\',\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>field_your_search_text=\'\', field_your_search_portal_type=\'\', all_languages=False, **kw</string> </value>
+            <value> <string>field_your_search_text=\'\', field_your_search_portal_type=\'\', all_languages=False</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -119,14 +112,12 @@ return context_search.Base_redirect(\'ERP5Site_viewSearchResult\',\n
                             <string>all_languages</string>
                             <string>kw</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>translateString</string>
-                            <string>translated_type</string>
-                            <string>getattr</string>
-                            <string>None</string>
-                            <string>context_search</string>
-                            <string>dict</string>
                             <string>list</string>
+                            <string>context</string>
+                            <string>bool</string>
+                            <string>False</string>
+                            <string>search_context</string>
+                            <string>getattr</string>
                           </tuple>
                         </value>
                     </item>

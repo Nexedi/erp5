@@ -53,26 +53,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>translateString = context.Base_translateString\n
-translated_type = \'\'\n
-\n
-if top_your_search_portal_type:\n
-  if top_your_search_portal_type == \'all\':\n
-    return context.Base_redirect(\'ERP5Site_viewSearchResult\',\n
-                                  keep_items=dict(SearchableText=top_your_search_text, reset=1,\n
-                                  your_search_text=top_your_search_text,\n
-                                  portal_type=list(context.getPortalDocumentTypeList()),\n
-                                  list_style = \'search\',\n
-                                  all_languages=all_languages))\n
-\n
-  translated_type = translateString(top_your_search_portal_type)\n
-\n
-return context.Base_redirect(\'ERP5Site_viewSearchResult\',\n
-                              keep_items=dict(SearchableText=top_your_search_text, reset=1,\n
-                              your_search_text=top_your_search_text,\n
-                              translated_portal_type=translated_type,\n
-                              list_style = \'search\',\n
-                              all_languages=all_languages))\n
+            <value> <string>return context.ERP5Site_viewQuickSearchResultList(\n
+    field_your_search_text = top_your_search_text,\n
+    field_your_search_portal_type = top_your_search_portal_type,\n
+    all_languages=all_languages)\n
 </string> </value>
         </item>
         <item>
@@ -83,7 +67,7 @@ return context.Base_redirect(\'ERP5Site_viewSearchResult\',\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>your_search_text=None, top_your_search_text=None, top_your_search_portal_type, all_languages=False</string> </value>
+            <value> <string>top_your_search_text=\'\', top_your_search_portal_type, all_languages=False</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -103,22 +87,17 @@ return context.Base_redirect(\'ERP5Site_viewSearchResult\',\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>your_search_text</string>
                             <string>top_your_search_text</string>
                             <string>top_your_search_portal_type</string>
                             <string>all_languages</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>translateString</string>
-                            <string>translated_type</string>
-                            <string>dict</string>
-                            <string>list</string>
                           </tuple>
                         </value>
                     </item>
@@ -131,8 +110,7 @@ return context.Base_redirect(\'ERP5Site_viewSearchResult\',\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <none/>
-                <none/>
+                <string></string>
                 <none/>
                 <int>0</int>
               </tuple>
