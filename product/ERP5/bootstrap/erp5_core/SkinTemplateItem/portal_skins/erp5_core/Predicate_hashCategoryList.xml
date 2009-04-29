@@ -63,9 +63,11 @@ sub_field_list = []\n
 default_sub_field_property_dict.update({\'field_type\':\'MultiListField\'})\n
 \n
 z = 0\n
-category_list = context.getMembershipCriterionBaseCategoryList()\n
-category_list += [i for i in context.getMultimembershipCriterionBaseCategoryList() \\\n
-                  if i not in category_list]\n
+category_list = []\n
+for x in item_list:\n
+  base_category = x[1].split(\'/\', 1)[0]\n
+  if base_category and base_category not in category_list:\n
+    category_list.append(base_category)\n
 \n
 for category in category_list:\n
   new_dict = default_sub_field_property_dict.copy()\n
@@ -127,20 +129,20 @@ return sub_field_list\n
                             <string>sub_field_list</string>
                             <string>_getattr_</string>
                             <string>z</string>
-                            <string>context</string>
                             <string>category_list</string>
-                            <string>_inplacevar_</string>
-                            <string>append</string>
-                            <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>i</string>
+                            <string>x</string>
+                            <string>_getitem_</string>
+                            <string>base_category</string>
                             <string>category</string>
                             <string>new_dict</string>
-                            <string>x</string>
+                            <string>append</string>
+                            <string>$append0</string>
                             <string>_write_</string>
-                            <string>_getitem_</string>
                             <string>str</string>
                             <string>len</string>
+                            <string>_inplacevar_</string>
+                            <string>context</string>
                             <string>request</string>
                           </tuple>
                         </value>
