@@ -39,14 +39,15 @@ from Products.ERP5Type.tests.utils import reindex
 
 # XXX TODO:
 #  * move test.* methods to other classes, group by testing area
-#  * subclass TestBPMMixin from TestInvoiceMixin and refactor methods and style
+#  * subclass TestBPMMixin from TestInvoiceMixin and refactor methods and
+#    style
 
 class TestBPMMixin(ERP5TypeTestCase):
   """Skeletons for tests for ERP5 BPM"""
 
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-      'erp5_invoicing', 'erp5_mrp', 'erp5_bpm')
+      'erp5_invoicing', 'erp5_mrp', 'erp5_bpm', 'erp5_administration')
 
   default_discount_ratio = -0.05 # -5%
   default_tax_ratio = 0.196 # 19,6%
@@ -60,7 +61,8 @@ class TestBPMMixin(ERP5TypeTestCase):
   business_state_portal_type = 'Business State'
 
   modified_order_line_price_ratio = 2.0
-  modified_invoice_line_quantity_ratio = modified_order_line_quantity_ratio = 2.5
+  modified_invoice_line_quantity_ratio = modified_order_line_quantity_ratio \
+      = 2.5
 
   modified_packing_list_line_quantity_ratio = 0.4
 
@@ -95,7 +97,7 @@ class TestBPMMixin(ERP5TypeTestCase):
         portal_type=self.business_process_portal_type)
     return module.newContent(portal_type=self.business_process_portal_type)
 
-  def stepCreateBusinessProcess(self, sequence=None, sequence_string=None):
+  def stepCreateBusinessProcess(self, sequence=None, **kw):
     sequence.edit(business_process=self.createBusinessProcess())
 
   @reindex
@@ -107,11 +109,11 @@ class TestBPMMixin(ERP5TypeTestCase):
       portal_type=self.business_path_portal_type)
     return business_path
 
-  def stepCreateBusinessPath(self, sequence=None, sequence_string=None):
+  def stepCreateBusinessPath(self, sequence=None, **kw):
     business_process = sequence.get('business_process')
     sequence.edit(business_path=self.createBusinessPath(business_process))
 
-  def stepModifyBusinessPathTaxing(self, sequence=None, sequence_string=None):
+  def stepModifyBusinessPathTaxing(self, sequence=None, **kw):
     predecessor = sequence.get('business_state_invoiced')
     successor = sequence.get('business_state_taxed')
     business_path = sequence.get('business_path')
@@ -138,16 +140,15 @@ class TestBPMMixin(ERP5TypeTestCase):
       'solve_divergence_action',
       **kw)
 
-  def stepAcceptDecisionQuantityInvoice(self,sequence=None, sequence_list=None):
+  def stepAcceptDecisionQuantityInvoice(self, sequence=None, **kw):
     invoice = sequence.get('invoice')
     self._solveDivergence(invoice, 'quantity', 'accept')
 
-  def stepAdoptPrevisionQuantityInvoice(self,sequence=None, sequence_list=None, **kw):
+  def stepAdoptPrevisionQuantityInvoice(self, sequence=None, **kw):
     invoice = sequence.get('invoice')
     self._solveDivergence(invoice, 'quantity', 'adopt')
 
-  def stepModifyBusinessPathDiscounting(self, sequence=None,
-                                        sequence_string=None):
+  def stepModifyBusinessPathDiscounting(self, sequence=None, **kw):
     predecessor = sequence.get('business_state_invoiced')
     successor = sequence.get('business_state_taxed')
     business_path = sequence.get('business_path')
@@ -170,11 +171,11 @@ class TestBPMMixin(ERP5TypeTestCase):
         portal_type=self.business_state_portal_type)
     return business_path
 
-  def stepCreateBusinessState(self, sequence=None, sequence_string=None):
+  def stepCreateBusinessState(self, sequence=None, **kw):
     business_process = sequence.get('business_process')
     sequence.edit(business_state=self.createBusinessState(business_process))
 
-  def stepModifyBusinessStateTaxed(self, sequence=None, sequence_string=None):
+  def stepModifyBusinessStateTaxed(self, sequence=None, **kw):
     business_state = sequence.get('business_state')
     business_state.edit(reference='taxed')
     sequence.edit( business_state=None, business_state_taxed=business_state)
@@ -199,7 +200,8 @@ class TestBPMMixin(ERP5TypeTestCase):
     if len(system_preference_list) > 1:
       raise AttributeError('More than one System Preference, cannot test')
     if len(system_preference_list) == 0:
-      system_preference = preference_tool.newContent(portal_type='System Preference')
+      system_preference = preference_tool.newContent(
+          portal_type='System Preference')
     else:
       system_preference = system_preference_list[0]
     system_preference.edit(
@@ -215,9 +217,107 @@ class TestBPMMixin(ERP5TypeTestCase):
       system_preference.enable()
 
   @reindex
+  def createAndValidateAccount(self, account_id, account_type):
+    account_module = self.portal.account_module
+    account = account_module.newContent(portal_type='Account',
+          title=account_id,
+          account_type=account_type)
+    self.assertNotEqual(None, account.getAccountTypeValue())
+    account.validate()
+
+  def createInvoiceTransationRule(self):
+    self.receivable_account = self.createAndValidateAccount('receivable',
+        'asset/receivable')
+    self.payable_account = self.createAndValidateAccount('payable',
+        'liability/payable')
+    self.income_account = self.createAndValidateAccount('income', 'income')
+    self.expense_account = self.createAndValidateAccount('expense', 'expense')
+    self.collected_tax_account = self.createAndValidateAccount(
+        'collected_tax', 'liability/payable/collected_vat')
+    self.refundable_tax_account = self.createAndValidateAccount(
+        'refundable_tax',
+        'asset/receivable/refundable_vat')
+
+    itr = self.portal.portal_rules.newContent(
+                        portal_type='Invoice Transaction Rule',
+                        reference='default_invoice_transaction_rule',
+                        id='test_invoice_transaction_rule',
+                        title='Transaction Rule',
+                        test_method_id=
+                        'SimulationMovement_testInvoiceTransactionRule',
+                        version=100)
+    predicate = itr.newContent(portal_type='Predicate',)
+    predicate.edit(
+            string_index='use',
+            title='tax',
+            int_index=1,
+            membership_criterion_base_category='resource_use',
+            membership_criterion_category='resource_use/use/tax')
+    predicate = itr.newContent(portal_type='Predicate',)
+    predicate.edit(
+            string_index='use',
+            title='discount',
+            int_index=2,
+            membership_criterion_base_category='resource_use',
+            membership_criterion_category='resource_use/use/discount')
+    predicate = itr.newContent(portal_type='Predicate',)
+    predicate.edit(
+            string_index='use',
+            title='normal',
+            int_index=3,
+            membership_criterion_base_category='resource_use',
+            membership_criterion_category='resource_use/use/normal')
+    get_transaction().commit()
+    self.tic()
+    accounting_rule_cell_list = itr.contentValues(
+                            portal_type='Accounting Rule Cell')
+    self.assertEquals(3, len(accounting_rule_cell_list))
+    tax_rule_cell = itr._getOb("movement_0")
+    self.assertEquals(tax_rule_cell.getTitle(), 'tax')
+    tax_rule_cell.newContent(
+                         portal_type='Accounting Transaction Line',
+                         source_value=self.receivable_account,
+                         destination_value=self.payable_account,
+                         quantity=-1)
+    tax_rule_cell.newContent(
+                         portal_type='Accounting Transaction Line',
+                         source_value=self.collected_tax_account,
+                         destination_value=self.refundable_tax_account,
+                         quantity=1)
+
+    discount_rule_cell = itr._getOb("movement_1")
+    self.assertEquals(discount_rule_cell.getTitle(), 'discount')
+    discount_rule_cell.newContent(
+                         portal_type='Accounting Transaction Line',
+                         source_value=self.receivable_account,
+                         destination_value=self.payable_account,
+                         quantity=-1)
+    discount_rule_cell.newContent(
+                         portal_type='Accounting Transaction Line',
+                         source_value=self.income_account,
+                         destination_value=self.expense_account,
+                         quantity=1)
+
+    normal_rule_cell = itr._getOb("movement_2")
+    self.assertEquals(normal_rule_cell.getTitle(), 'normal')
+    normal_rule_cell.newContent(
+                         portal_type='Accounting Transaction Line',
+                         source_value=self.receivable_account,
+                         destination_value=self.payable_account,
+                         quantity=-1)
+    normal_rule_cell.newContent(
+                         portal_type='Accounting Transaction Line',
+                         source_value=self.income_account,
+                         destination_value=self.expense_account,
+                         quantity=1)
+   
+    itr.validate()
+
+  @reindex
   def afterSetUp(self):
     self.createCategories()
     self.setSystemPreference()
+    self.createInvoiceTransationRule()
 
     # XXX for testing purpose only...
     # This builder is not supporting yet deeper simulation tree
@@ -233,9 +333,10 @@ class TestBPMMixin(ERP5TypeTestCase):
     if getattr(purchase_invoice_builder, delete_id, None) is not None:
       purchase_invoice_builder.manage_delObjects(ids=[delete_id])
 
-    transaction.commit()
-    self.tic()
-
+  @reindex
+  def beforeTearDown(self):
+    self.portal.portal_rules.manage_delObjects(
+        ids=['test_invoice_transaction_rule'])
 
   def stepCreateSource(self, sequence=None, **kw):
     module = self.portal.getDefaultModule(portal_type=self.node_portal_type)
@@ -295,7 +396,7 @@ class TestBPMMixin(ERP5TypeTestCase):
       packing_list.getCausalityState()
     )
 
-  def stepSplitAndDeferPackingList(self, sequence=None, sequence_list=None, **kw):
+  def stepSplitAndDeferPackingList(self, sequence=None, **kw):
     packing_list = sequence.get('packing_list')
     kw = {'listbox':[
       {'listbox_key':line.getRelativeUrl(),
@@ -494,18 +595,24 @@ class TestBPMMixin(ERP5TypeTestCase):
 
       self.assertEqual(
         price_currency,
-        trade_model_simulation_movement_discount_complex.getPriceCurrencyValue()
+        trade_model_simulation_movement_discount_complex \
+            .getPriceCurrencyValue()
       )
 
       self.assertSameSet(
         ['base_amount/tax'],
-        trade_model_simulation_movement_discount_complex.getBaseContributionList()
+        trade_model_simulation_movement_discount_complex \
+            .getBaseContributionList()
       )
 
       self.assertSameSet(
         ['base_amount/discount'],
-        trade_model_simulation_movement_discount_complex.getBaseApplicationList()
+        trade_model_simulation_movement_discount_complex \
+            .getBaseApplicationList()
       )
+
+      self.checkInvoiceTransactionRule(
+          trade_model_simulation_movement_discount_complex)
 
       # TODO:
       #  * trade_phase ???
@@ -542,6 +649,7 @@ class TestBPMMixin(ERP5TypeTestCase):
         trade_model_simulation_movement_tax_complex.getBaseApplicationList()
       )
 
+      self.checkInvoiceTransactionRule(trade_model_simulation_movement_tax_complex)
       # TODO:
       #  * trade_phase ???
       #  * arrow
@@ -591,7 +699,8 @@ class TestBPMMixin(ERP5TypeTestCase):
 
       self.assertSameSet(
         ['base_amount/tax'],
-        trade_model_simulation_movement_discount_only.getBaseContributionList()
+        trade_model_simulation_movement_discount_only \
+            .getBaseContributionList()
       )
 
       self.assertSameSet(
@@ -599,6 +708,8 @@ class TestBPMMixin(ERP5TypeTestCase):
         trade_model_simulation_movement_discount_only.getBaseApplicationList()
       )
 
+      self.checkInvoiceTransactionRule(
+          trade_model_simulation_movement_discount_only)
       # TODO:
       #  * trade_phase ???
       #  * arrow
@@ -630,6 +741,9 @@ class TestBPMMixin(ERP5TypeTestCase):
         trade_model_simulation_movement_tax_only.getBaseApplicationList()
       )
 
+      self.checkInvoiceTransactionRule(
+          trade_model_simulation_movement_tax_only)
+
       # TODO:
       #  * trade_phase ???
       #  * arrow
@@ -644,7 +758,8 @@ class TestBPMMixin(ERP5TypeTestCase):
     for trade_model_simulation_movement_list in \
         self.getTradeModelSimulationMovementList(order_line):
       self.assertEquals(1, len(trade_model_simulation_movement_list))
-      trade_model_simulation_movement = trade_model_simulation_movement_list[0]
+      trade_model_simulation_movement = \
+          trade_model_simulation_movement_list[0]
 
       self.assertEqual(
         trade_model_simulation_movement.getParentValue().getParentValue() \
@@ -671,11 +786,29 @@ class TestBPMMixin(ERP5TypeTestCase):
         ['base_amount/tax'],
         trade_model_simulation_movement.getBaseApplicationList()
       )
+      self.checkInvoiceTransactionRule(trade_model_simulation_movement)
 
       # TODO:
       #  * trade_phase ???
       #  * arrow
       #  * dates
+
+  def checkInvoiceTransactionRule(self, trade_model_simulation_movement):
+    invoice_transaction_rule_list = trade_model_simulation_movement\
+        .objectValues()
+    self.assertEquals(1, len(invoice_transaction_rule_list))
+    invoice_transaction_rule = invoice_transaction_rule_list[0]
+    self.assertEqual('Invoice Transaction Rule',
+        invoice_transaction_rule.getSpecialiseValue().getPortalType())
+
+    invoice_transaction_simulation_movement_list = invoice_transaction_rule \
+        .objectValues()
+
+    self.assertEqual(2, len(invoice_transaction_simulation_movement_list))
+
+    for movement in invoice_transaction_simulation_movement_list:
+      self.assertEqual(abs(movement.getQuantity()),
+          abs(trade_model_simulation_movement.getTotalPrice()))
 
   def stepFillOrder(self, sequence=None, **kw):
     order = sequence.get('order')
@@ -702,7 +835,8 @@ class TestBPMMixin(ERP5TypeTestCase):
     return module.newContent(portal_type=portal_type, **kw)
 
   def stepCreatePriceCurrency(self, sequence=None, **kw):
-    sequence.edit(price_currency = self.createResource('Currency', title='Currency'))
+    sequence.edit(price_currency = self.createResource('Currency', \
+        title='Currency'))
 
   def stepCreateProductTaxed(self, sequence=None, **kw):
     sequence.edit(product_taxed = self.createResource('Product',
@@ -754,21 +888,21 @@ class TestBPMMixin(ERP5TypeTestCase):
     invoice = sequence.get('invoice')
     resource = sequence.get('product_discounted')
     self.assertNotEqual(None, resource)
-    sequence.edit(invoice_line_discounted = [m for m in 
+    sequence.edit(invoice_line_discounted = [m for m in
       invoice.getMovementList() if m.getResourceValue() == resource][0])
 
   def stepGetInvoiceLineDiscountedTaxed(self, sequence=None, **kw):
     invoice = sequence.get('invoice')
     resource = sequence.get('product_discounted_taxed')
     self.assertNotEqual(None, resource)
-    sequence.edit(invoice_line_discounted_taxed = [m for m in 
+    sequence.edit(invoice_line_discounted_taxed = [m for m in
       invoice.getMovementList() if m.getResourceValue() == resource][0])
 
   def stepGetInvoiceLineTaxed(self, sequence=None, **kw):
     invoice = sequence.get('invoice')
     resource = sequence.get('product_taxed')
     self.assertNotEqual(None, resource)
-    sequence.edit(invoice_line_taxed = [m for m in 
+    sequence.edit(invoice_line_taxed = [m for m in
       invoice.getMovementList() if m.getResourceValue() == resource][0])
 
   def stepModifyQuantityInvoiceLineTaxed(self, sequence=None, **kw):
@@ -919,14 +1053,15 @@ class TestBPMMixin(ERP5TypeTestCase):
 
     tax_amount = tax_amount_list[0]
 
-    self.assertSameSet(['base_amount/tax'], tax_amount.getBaseApplicationList())
+    self.assertSameSet(['base_amount/tax'],
+        tax_amount.getBaseApplicationList())
     self.assertSameSet([], tax_amount.getBaseContributionList())
 
     self.assertEqual(order_line.getTotalPrice() * self.default_tax_ratio,
         tax_amount.getTotalPrice())
 
-  def stepCheckOrderLineDiscountedTaxedAggregatedAmountList(self, sequence=None,
-      **kw):
+  def stepCheckOrderLineDiscountedTaxedAggregatedAmountList(self,
+      sequence=None, **kw):
     order_line = sequence.get('order_line_discounted_taxed')
     trade_condition = sequence.get('trade_condition')
     amount_list = trade_condition.getAggregatedAmountList(order_line)
@@ -959,7 +1094,8 @@ class TestBPMMixin(ERP5TypeTestCase):
         getTotalPrice()) * self.default_tax_ratio,
         tax_amount.getTotalPrice())
 
-  def stepCheckOrderLineDiscountedAggregatedAmountList(self, sequence=None, **kw):
+  def stepCheckOrderLineDiscountedAggregatedAmountList(self, sequence=None,
+      **kw):
     order_line = sequence.get('order_line_discounted')
     trade_condition = sequence.get('trade_condition')
     amount_list = trade_condition.getAggregatedAmountList(order_line)
