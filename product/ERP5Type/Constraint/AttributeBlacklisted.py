@@ -35,10 +35,10 @@ class AttributeBlacklisted(PropertyExistence):
     attribute unicity.
     Configuration example:
     { 'id'            : 'title',
-      'description'   : 'Title must be unique',
-      'type'          : 'AttributeUnicity',
-      'title': "python: {'portal_type': object.getPortalType(), 'title': object.getTitle(), 'validation_state': 'validated'}",
-      'condition' : 'object/getTitle',
+      'description'   : 'Title should not belong to blacklist words',
+      'type'          : 'AttributeBlacklisted',
+      'title'         : "python: {'portal_type': object.getPortalType(), 'title': ('Foo', 'Bar',)}",
+      'condition'     : 'object/getTitle',
     },
   """
 
