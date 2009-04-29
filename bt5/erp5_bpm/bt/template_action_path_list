@@ -14,6 +14,7 @@ Sale Invoice Transaction | view_trade_model
 Sale Order Line | view_trade_model
 Sale Order | view_trade_model
 Sale Trade Condition | view_trade_model_line_list
+System Preference | bpm_preference
 Trade Model Cell | view
 Trade Model Line | view
 Trade Model Rule | view
