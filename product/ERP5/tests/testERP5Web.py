@@ -58,8 +58,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
-    uf._doAddUser(self.manager_username, self.manager_password,
-['Manager','Owner'], [])
+    uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
     user = uf.getUserById(self.manager_username).__of__(uf)
     newSecurityManager(None, user)
 
@@ -68,7 +67,6 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     Return the list of required business templates.
     """
     return ('erp5_base',
-            'erp5_l10n_fr',
             'erp5_web',
             )
 
@@ -864,7 +862,6 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       ZopeTestCase._print(message)
 
     self.changeUser('admin')
-    
     site = self.portal.web_site_module.newContent(portal_type='Web Site',
                                                   id='site')
     section = site.newContent(portal_type='Web Section', id='section')
