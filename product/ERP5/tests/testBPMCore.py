@@ -1404,11 +1404,15 @@ class TestBPMTestCases(TestBPMMixin):
     sequence_list.play(self)
 
   def test_TradeModelRuleSimulationBuildInvoiceNewTradeConditionDivergencyAndSolving(self):
-    """Check that after changing trade model invoice is properly diverged and it is possible to solve"""
+    """Check that after changing trade condition invoice is properly diverged and it is possible to solve"""
+    raise NotImplementedError('TODO')
+
+  def test_TradeModelRuleSimulationBuildInvoiceNewInvoiceLineSupport(self):
+    """Check how is supported addition of invoice line to invoice build from order"""
     raise NotImplementedError('TODO')
 
   def test_TradeModelRuleSimulationBuildInvoiceInvoiceLineModifyDivergencyAndSolving(self):
-    """Check that after changing trade model invoice is properly diverged and it is possible to solve"""
+    """Check that after changing invoice line invoice is properly diverged and it is possible to solve"""
     sequence_list = SequenceList()
     sequence_string = self.trade_model_rule_simulation_common_string
     sequence_string += """
