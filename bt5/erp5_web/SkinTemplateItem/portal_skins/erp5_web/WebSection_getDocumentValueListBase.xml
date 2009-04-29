@@ -115,11 +115,12 @@ try:\n
   if validation_state is None:\n
     validation_state = (\'released\', \'released_alive\', \'published\', \'published_alive\', \\\n
                                       \'shared\', \'shared_alive\', \'public\', \'validated\')\n
-  \n
+\n
   return current_section.WebSection_zGetDocumentValueList(language=language,\n
                                                                                                  all_languages=all_languages,\n
                                                                                                  validation_state=validation_state,\n
                                                                                                  all_versions=all_versions,\n
+                                                                                                 src__=src__,\n
                                                                                                  kw=kw)\n
 \n
 except Unauthorized:\n
@@ -134,7 +135,7 @@ except Unauthorized:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>language=None, validation_state=None, all_languages=False, all_versions=None, **kw</string> </value>
+            <value> <string>language=None, validation_state=None, all_languages=False, all_versions=None, src__=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -154,7 +155,7 @@ except Unauthorized:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -164,6 +165,7 @@ except Unauthorized:\n
                             <string>validation_state</string>
                             <string>all_languages</string>
                             <string>all_versions</string>
+                            <string>src__</string>
                             <string>kw</string>
                             <string>zExceptions</string>
                             <string>Unauthorized</string>
@@ -189,6 +191,7 @@ except Unauthorized:\n
                 <none/>
                 <int>0</int>
                 <none/>
+                <int>0</int>
               </tuple>
             </value>
         </item>
