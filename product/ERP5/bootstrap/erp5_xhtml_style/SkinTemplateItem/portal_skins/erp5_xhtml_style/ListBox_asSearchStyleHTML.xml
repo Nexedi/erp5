@@ -76,7 +76,6 @@
           <div class="centeredInner searchBar" \n
                tal:condition="python:not is_gadget_mode and show_search_line">\n
 \n
-            <input type="hidden" name="all_languages" value="1" />\n
             <input name="top_your_search_text" \n
                    size="40" \n
                    value="" \n
