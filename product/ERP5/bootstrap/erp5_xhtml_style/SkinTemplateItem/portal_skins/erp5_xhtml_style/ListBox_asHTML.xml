@@ -142,10 +142,10 @@
   <tal:block tal:condition="python: list_style == \'search\'">\n
     <span metal:use-macro="real_context/ListBox_asSearchStyleHTML/macros/main"/>\n
   </tal:block>\n
-  <tal:block tal:condition="python: is_web_mode and list_style != \'table\'">\n
+  <tal:block tal:condition="python: list_style != \'search\' and is_web_mode">\n
     <span metal:use-macro="real_context/ListBox_asTableStyleHTML/macros/main"/>\n
   </tal:block>\n
-  <tal:block tal:condition="python: not is_web_mode and list_style != \'search\'">\n
+  <tal:block tal:condition="python: list_style != \'search\' and not is_web_mode">\n
     <span metal:use-macro="real_context/ListBox_asStandardHTML/macros/main"/>\n
   </tal:block>\n
 </tal:block>\n
