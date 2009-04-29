@@ -224,7 +224,7 @@ class TestBPMMixin(ERP5TypeTestCase):
     order = module.newContent(portal_type=self.order_portal_type)
     sequence.edit(order = order)
 
-  def stepSpecialiseOrderTradeDiscount(self, sequence=None, **kw):
+  def stepSpecialiseOrderTradeCondition(self, sequence=None, **kw):
     order = sequence.get('order')
     trade_condition = sequence.get('trade_condition')
 
@@ -979,7 +979,7 @@ class TestBPMTestCases(TestBPMMixin):
               ModifyTradeModelLineDiscount
               Tic
               CreateOrder
-              SpecialiseOrderTradeDiscount
+              SpecialiseOrderTradeCondition
               FillOrder
               Tic
               CreateOrderLine
@@ -1060,7 +1060,7 @@ class TestBPMTestCases(TestBPMMixin):
               ModifyTradeModelLineTax
               Tic
               CreateOrder
-              SpecialiseOrderTradeDiscount
+              SpecialiseOrderTradeCondition
               FillOrder
               Tic
               CreateOrderLine
