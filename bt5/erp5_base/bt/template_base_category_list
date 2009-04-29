@@ -23,6 +23,7 @@ payment_mode
 predecessor
 price_currency
 region
+resource_use
 role
 salary_level
 site
