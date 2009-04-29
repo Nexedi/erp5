@@ -113,15 +113,16 @@ try:\n
     language = portal.Localizer.get_selected_language()\n
 \n
   if validation_state is None:\n
-    validation_state = (\'released\', \'released_alive\', \'published\', \'published_alive\', \\\n
-                                      \'shared\', \'shared_alive\', \'public\', \'validated\')\n
+    validation_state = (\'released\', \'released_alive\', \'published\', \n
+                        \'published_alive\', \'shared\', \'shared_alive\', \n
+                        \'public\', \'validated\')\n
 \n
   return current_section.WebSection_zGetDocumentValueList(language=language,\n
-                                                                                                 all_languages=all_languages,\n
-                                                                                                 validation_state=validation_state,\n
-                                                                                                 all_versions=all_versions,\n
-                                                                                                 src__=src__,\n
-                                                                                                 kw=kw)\n
+                                                          all_languages=all_languages,\n
+                                                          validation_state=validation_state,\n
+                                                          all_versions=all_versions,\n
+                                                          src__=src__,\n
+                                                          kw=kw)\n
 \n
 except Unauthorized:\n
   return []\n
