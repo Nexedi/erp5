@@ -99,14 +99,14 @@
   <td>Title</td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
+  <td>assertElementPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[2]/img</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[2]/img</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
@@ -114,14 +114,14 @@
   <td>Sort Index</td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
+  <td>assertElementPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.int_index\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[3]/img</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[3]/img</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
@@ -129,20 +129,20 @@
   <td>Relative URL</td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
+  <td>assertElementPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.relative_url\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
+  <td></td>\n
 </tr>\n
 <!-- click the Title -->\n
 <tr>\n
-\t<td>clickAndWait</td>\n
+  <td>clickAndWait</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 \n
 <tr>\n
@@ -151,19 +151,19 @@
   <td>Title</td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
+  <td>assertElementPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Ascending Display"]</td>\n
-\t<td></td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Ascending Display"]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Descending Display"]</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Descending Display"]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
@@ -171,14 +171,14 @@
   <td>Sort Index</td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
+  <td>assertElementPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.int_index\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[3]/img</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[3]/img</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
@@ -186,20 +186,20 @@
   <td>Relative URL</td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
+  <td>assertElementPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.relative_url\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
+  <td></td>\n
 </tr>\n
 <!-- click the Title again-->\n
 <tr>\n
-\t<td>clickAndWait</td>\n
+  <td>clickAndWait</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 \n
 <tr>\n
@@ -208,19 +208,19 @@
   <td>Title</td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
+  <td>assertElementPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Ascending Display"]</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Ascending Display"]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Descending Display"]</td>\n
-\t<td></td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Descending Display"]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
@@ -228,14 +228,14 @@
   <td>Sort Index</td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
+  <td>assertElementPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.int_index\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[3]/img</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[3]/img</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
@@ -243,20 +243,20 @@
   <td>Relative URL</td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
+  <td>assertElementPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.relative_url\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
+  <td></td>\n
 </tr>\n
 <!-- click the Int index -->\n
 <tr>\n
-\t<td>clickAndWait</td>\n
+  <td>clickAndWait</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.int_index\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 \n
 <tr>\n
@@ -265,14 +265,14 @@
   <td>Title</td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
+  <td>assertElementPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[2]/img</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[2]/img</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
@@ -280,19 +280,19 @@
   <td>Sort Index</td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
+  <td>assertElementPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.int_index\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[3]/img[@alt="Ascending Display"]</td>\n
-\t<td></td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[3]/img[@alt="Ascending Display"]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[3]/img[@alt="Descending Display"]</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[3]/img[@alt="Descending Display"]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
@@ -300,20 +300,20 @@
   <td>Relative URL</td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
+  <td>assertElementPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.relative_url\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
+  <td></td>\n
 </tr>\n
 <!-- click the Int index again -->\n
 <tr>\n
-\t<td>clickAndWait</td>\n
+  <td>clickAndWait</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.int_index\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 \n
 <tr>\n
@@ -322,14 +322,14 @@
   <td>Title</td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
+  <td>assertElementPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[2]/img</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[2]/img</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
@@ -337,19 +337,19 @@
   <td>Sort Index</td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
+  <td>assertElementPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.int_index\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[3]/img[@alt="Ascending Display"]</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[3]/img[@alt="Ascending Display"]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[3]/img[@alt="Descending Display"]</td>\n
-\t<td></td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[3]/img[@alt="Descending Display"]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
@@ -357,14 +357,14 @@
   <td>Relative URL</td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
+  <td>assertElementPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.relative_url\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
+  <td></td>\n
 </tr>\n
 \n
 \n

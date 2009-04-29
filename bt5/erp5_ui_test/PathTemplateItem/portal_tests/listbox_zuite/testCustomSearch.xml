@@ -52,151 +52,151 @@
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/FooModule_createObjects</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Created Successfully.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Done.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/view</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyEditable</td>\n
-\t<td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
-\t<td></td>\n
+  <td>verifyEditable</td>\n
+  <td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyValue</td>\n
-\t<td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
-\t<td></td>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyEditable</td>\n
-\t<td>//tr[@id="listbox_search_line"]/td[3]//input</td>\n
-\t<td></td>\n
+  <td>verifyEditable</td>\n
+  <td>//tr[@id="listbox_search_line"]/td[3]//input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyValue</td>\n
-\t<td>//tr[@id="listbox_search_line"]/td[3]//input</td>\n
-\t<td></td>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@id="listbox_search_line"]/td[3]//input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
-\t<td>//tr[@id="listbox_search_line"]/td[4]</td>\n
-\t<td></td>\n
+  <td>verifyElementPresent</td>\n
+  <td>//tr[@id="listbox_search_line"]/td[4]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_search_line"]/td[4]//input</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//tr[@id="listbox_search_line"]/td[4]//input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_search_line"]/td[5]</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//tr[@id="listbox_search_line"]/td[5]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
-\t<td>0</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
-\t<td>1</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
-\t<td>2</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+  <td>2</td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>id=listbox_data_line_3</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>id=listbox_data_line_3</td>\n
+  <td></td>\n
 </tr>\n
 <!-- Go to the search dialog -->\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>//a[@title=\'Find\']</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>//a[@title=\'Find\']</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>type</td>\n
-\t<td>field_your_id</td>\n
-\t<td>0</td>\n
+  <td>type</td>\n
+  <td>field_your_id</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
-\t<td>type</td>\n
-\t<td>field_your_title</td>\n
-\t<td>%l%</td>\n
+  <td>type</td>\n
+  <td>field_your_title</td>\n
+  <td>%l%</td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>Base_callDialogMethod:method</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>Base_callDialogMethod:method</td>\n
+  <td></td>\n
 </tr>\n
 <!-- Check the result -->\n
 <tr>\n
-\t<td>verifyEditable</td>\n
-\t<td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
-\t<td></td>\n
+  <td>verifyEditable</td>\n
+  <td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyValue</td>\n
-\t<td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
-\t<td>0</td>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyEditable</td>\n
-\t<td>//tr[@id="listbox_search_line"]/td[3]//input</td>\n
-\t<td></td>\n
+  <td>verifyEditable</td>\n
+  <td>//tr[@id="listbox_search_line"]/td[3]//input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyValue</td>\n
-\t<td>//tr[@id="listbox_search_line"]/td[3]//input</td>\n
-\t<td>%l%</td>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@id="listbox_search_line"]/td[3]//input</td>\n
+  <td>%l%</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
-\t<td>//tr[@id="listbox_search_line"]/td[4]</td>\n
-\t<td></td>\n
+  <td>verifyElementPresent</td>\n
+  <td>//tr[@id="listbox_search_line"]/td[4]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_search_line"]/td[4]//input</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//tr[@id="listbox_search_line"]/td[4]//input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_search_line"]/td[5]</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//tr[@id="listbox_search_line"]/td[5]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
-\t<td>0</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>id=listbox_data_line_1</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>id=listbox_data_line_1</td>\n
+  <td></td>\n
 </tr>\n
 \n
 </tbody></table>\n

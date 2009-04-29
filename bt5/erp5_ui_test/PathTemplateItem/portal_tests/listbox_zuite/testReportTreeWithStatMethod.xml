@@ -52,424 +52,424 @@
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/FooModule_createObjects</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Created Successfully.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Done.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_stat_method=portal_catalog;field_report_tree=checked;field_report_root_list=foo_domain%7CFoo%20Domain</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_stat_method=portal_catalog;field_report_tree=checked;field_report_root_list=foo_domain%7CFoo%20Domain</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Set Successfully.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Set Successfully.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/view</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>report_root_url</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>report_root_url</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>id=listbox_report_tree_mode</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>id=listbox_report_tree_mode</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifySelected</td>\n
-\t<td>report_root_url</td>\n
-\t<td>Foo Domain</td>\n
+  <td>verifySelected</td>\n
+  <td>report_root_url</td>\n
+  <td>Foo Domain</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[1]</td>\n
-\t<td>Foo Domain</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[1]</td>\n
+  <td>Foo Domain</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[3]</td>\n
-\t<td>ID</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[3]</td>\n
+  <td>ID</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[4]</td>\n
-\t<td>Title</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[4]</td>\n
+  <td>Title</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[5]</td>\n
-\t<td>Quantity</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[5]</td>\n
+  <td>Quantity</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_search_line"]/td[1]</td>\n
-\t<td>0 1 2 3 4 5 - Hide</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_search_line"]/td[1]</td>\n
+  <td>0 1 2 3 4 5 - Hide</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[1]/a[@class="tree_closed"]</td>\n
-\t<td>a</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[1]/a[@class="tree_closed"]</td>\n
+  <td>a</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[3]</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[3]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[1]/a[@class="tree_closed"]</td>\n
-\t<td>b</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[1]/a[@class="tree_closed"]</td>\n
+  <td>b</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[3]</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[3]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_data_line_2</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_data_line_2</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>id=listbox_record_number</td>\n
-\t<td>2 record(s)</td>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_record_number</td>\n
+  <td>2 record(s)</td>\n
 </tr>\n
 <!-- Click on + a -->\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>link=a</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>link=a</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifySelected</td>\n
-\t<td>report_root_url</td>\n
-\t<td>Foo Domain</td>\n
+  <td>verifySelected</td>\n
+  <td>report_root_url</td>\n
+  <td>Foo Domain</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[1]/a[@class="tree_open"]</td>\n
-\t<td>a</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[1]/a[@class="tree_open"]</td>\n
+  <td>a</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[2]/input</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[2]/input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[3]</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[3]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[1]</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[1]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[2]/input</td>\n
-\t<td></td>\n
+  <td>verifyElementPresent</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[2]/input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[3]</td>\n
-\t<td>0</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[3]</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[1]</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[1]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[2]/input</td>\n
-\t<td></td>\n
+  <td>verifyElementPresent</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[2]/input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[3]</td>\n
-\t<td>4</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[3]</td>\n
+  <td>4</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_data_line_3</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_data_line_3</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>id=listbox_record_number</td>\n
-\t<td>7 record(s)</td>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_record_number</td>\n
+  <td>7 record(s)</td>\n
 </tr>\n
 <!-- Go to next page -->\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>id=listbox_next_page</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>id=listbox_next_page</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifySelected</td>\n
-\t<td>report_root_url</td>\n
-\t<td>Foo Domain</td>\n
+  <td>verifySelected</td>\n
+  <td>report_root_url</td>\n
+  <td>Foo Domain</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[1]</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[1]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[2]/input</td>\n
-\t<td></td>\n
+  <td>verifyElementPresent</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[2]/input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[3]</td>\n
-\t<td>8</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[3]</td>\n
+  <td>8</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[1]/a[@class="tree_closed"]</td>\n
-\t<td>a1</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[1]/a[@class="tree_closed"]</td>\n
+  <td>a1</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[2]/input</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[2]/input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[3]</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[3]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[1]/a[@class="tree_closed"]</td>\n
-\t<td>a2</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[1]/a[@class="tree_closed"]</td>\n
+  <td>a2</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[2]/input</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[2]/input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[3]</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[3]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_data_line_3</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_data_line_3</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>id=listbox_record_number</td>\n
-\t<td>7 record(s)</td>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_record_number</td>\n
+  <td>7 record(s)</td>\n
 </tr>\n
 <!-- Show all the 1st level -->\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>link=1</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>link=1</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifySelected</td>\n
-\t<td>report_root_url</td>\n
-\t<td>Foo Domain</td>\n
+  <td>verifySelected</td>\n
+  <td>report_root_url</td>\n
+  <td>Foo Domain</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[1]</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[1]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[2]/input</td>\n
-\t<td></td>\n
+  <td>verifyElementPresent</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[2]/input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[3]</td>\n
-\t<td>8</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[3]</td>\n
+  <td>8</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[1]/a[@class="tree_closed"]</td>\n
-\t<td>a1</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[1]/a[@class="tree_closed"]</td>\n
+  <td>a1</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[2]/input</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[2]/input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[3]</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[3]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[1]/a[@class="tree_closed"]</td>\n
-\t<td>a2</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[1]/a[@class="tree_closed"]</td>\n
+  <td>a2</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[2]/input</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[2]/input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[3]</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[3]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_data_line_3</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_data_line_3</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>id=listbox_record_number</td>\n
-\t<td>10 record(s)</td>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_record_number</td>\n
+  <td>10 record(s)</td>\n
 </tr>\n
 <!-- Go to next page -->\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>id=listbox_next_page</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>id=listbox_next_page</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifySelected</td>\n
-\t<td>report_root_url</td>\n
-\t<td>Foo Domain</td>\n
+  <td>verifySelected</td>\n
+  <td>report_root_url</td>\n
+  <td>Foo Domain</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[1]/a[@class="tree_open"]</td>\n
-\t<td>b</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[1]/a[@class="tree_open"]</td>\n
+  <td>b</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[2]/input</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[2]/input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[3]</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[3]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[1]</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[1]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[2]/input</td>\n
-\t<td></td>\n
+  <td>verifyElementPresent</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[2]/input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[3]</td>\n
-\t<td>1</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[3]</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[1]</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[1]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[2]/input</td>\n
-\t<td></td>\n
+  <td>verifyElementPresent</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[2]/input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[3]</td>\n
-\t<td>5</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[3]</td>\n
+  <td>5</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_data_line_3</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_data_line_3</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>id=listbox_record_number</td>\n
-\t<td>10 record(s)</td>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_record_number</td>\n
+  <td>10 record(s)</td>\n
 </tr>\n
 <!-- Hide documents -->\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>link=Hide</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>link=Hide</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifySelected</td>\n
-\t<td>report_root_url</td>\n
-\t<td>Foo Domain</td>\n
+  <td>verifySelected</td>\n
+  <td>report_root_url</td>\n
+  <td>Foo Domain</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_search_line"]/td[1]</td>\n
-\t<td>0 1 2 3 4 5 - Show</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_search_line"]/td[1]</td>\n
+  <td>0 1 2 3 4 5 - Show</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[1]/a[@class="tree_open"]</td>\n
-\t<td>b</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[1]/a[@class="tree_open"]</td>\n
+  <td>b</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[2]/input</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[2]/input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[3]</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[3]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_data_line_1</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_data_line_1</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>id=listbox_record_number</td>\n
-\t<td>4 record(s)</td>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_record_number</td>\n
+  <td>4 record(s)</td>\n
 </tr>\n
 <!-- Still very far from complete. Closing a tree should be tested, sorting should be tested. -->\n
 \n

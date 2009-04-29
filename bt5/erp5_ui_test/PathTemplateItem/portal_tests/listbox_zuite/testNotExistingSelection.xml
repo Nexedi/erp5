@@ -55,49 +55,49 @@
 <!-- XXX TODO: selection foo_line_selection has to be deleted at the beginning of this test.\n
 For now, selection too does not allow such deletion, so, this test is only valid once on a new site...-->\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Created Successfully.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Done.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/0/view</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>id=listbox_record_number</td>\n
-\t<td>0 record(s)</td>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_record_number</td>\n
+  <td>0 record(s)</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>id=listbox_item_number</td>\n
-\t<td> - 0 item(s) selected</td>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_item_number</td>\n
+  <td> - 0 item(s) selected</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_page_selection</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_page_selection</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>Base_edit:method</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>Base_edit:method</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertTextPresent</td>\n

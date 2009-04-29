@@ -52,50 +52,50 @@
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
-\t<td>id=listbox_title</td>\n
-\t<td></td>\n
+  <td>assertElementPresent</td>\n
+  <td>id=listbox_title</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>id=listbox_title</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>id=listbox_title</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertText</td>\n
-\t<td>id=listbox_title</td>\n
-\t<td>exact:Contents:</td>\n
+  <td>assertText</td>\n
+  <td>id=listbox_title</td>\n
+  <td>exact:Contents:</td>\n
 </tr>\n
 \n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_list_action=FooModule_viewFooList</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_list_action=FooModule_viewFooList</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Set Successfully.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Set Successfully.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/view</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
-\t<td>id=listbox_title</td>\n
-\t<td></td>\n
+  <td>assertElementPresent</td>\n
+  <td>id=listbox_title</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>id=listbox_title</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>id=listbox_title</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertText</td>\n
-\t<td>id=listbox_title</td>\n
-\t<td>exact:Foos:</td>\n
+  <td>assertText</td>\n
+  <td>id=listbox_title</td>\n
+  <td>exact:Foos:</td>\n
 </tr>\n
 \n
 </tbody></table>\n

@@ -53,49 +53,49 @@
 <tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/init" />\n
 \n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>id=listbox_record_number</td>\n
-\t<td>3 record(s)</td>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_record_number</td>\n
+  <td>3 record(s)</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>id=listbox_item_number</td>\n
-\t<td> - 0 item(s) selected</td>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_item_number</td>\n
+  <td> - 0 item(s) selected</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_set_page</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_next_page</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_next_page</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_previous_page</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_previous_page</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
-\t<td>0</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
-\t<td>1</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
-\t<td>2</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+  <td>2</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_data_line_3</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_data_line_3</td>\n
+  <td></td>\n
 </tr>\n
 \n
   <tr>\n
@@ -106,77 +106,77 @@
 \n
 \n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Created Successfully.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Done.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
 </tr>\n
 \n
 \n
 <tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/goto_dialog" />\n
 \n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>id=listbox_record_number</td>\n
-\t<td>10 record(s)</td>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_record_number</td>\n
+  <td>10 record(s)</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>id=listbox_item_number</td>\n
-\t<td> - 0 item(s) selected</td>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_item_number</td>\n
+  <td> - 0 item(s) selected</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyValue</td>\n
-\t<td>id=listbox_set_page</td>\n
-\t<td>1</td>\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
-\t<td>id=listbox_next_page</td>\n
-\t<td></td>\n
+  <td>verifyElementPresent</td>\n
+  <td>id=listbox_next_page</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_previous_page</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_previous_page</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
-\t<td>0</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
-\t<td>1</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
-\t<td>2</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+  <td>2</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_data_line_3</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_data_line_3</td>\n
+  <td></td>\n
 </tr>\n
 \n
 \n
 \n
 <!-- Click on next -->\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>id=listbox_next_page</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>id=listbox_next_page</td>\n
+  <td></td>\n
 </tr>\n
 \n
 <tr>\n
@@ -190,102 +190,102 @@
   <td>Hardcoded text value</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>id=listbox_item_number</td>\n
-\t<td> - 1 item(s) selected</td>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_item_number</td>\n
+  <td> - 1 item(s) selected</td>\n
 </tr>\n
 <!--tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/verify_dialog" /-->\n
 \n
 <tr>\n
-\t<td>verifyValue</td>\n
-\t<td>id=listbox_set_page</td>\n
-\t<td>2</td>\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>2</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
-\t<td>id=listbox_next_page</td>\n
-\t<td></td>\n
+  <td>verifyElementPresent</td>\n
+  <td>id=listbox_next_page</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
-\t<td>id=listbox_previous_page</td>\n
-\t<td></td>\n
+  <td>verifyElementPresent</td>\n
+  <td>id=listbox_previous_page</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
-\t<td>3</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>3</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
-\t<td>4</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>4</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
-\t<td>5</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+  <td>5</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_data_line_3</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_data_line_3</td>\n
+  <td></td>\n
 </tr>\n
 \n
 \n
 <!-- Click on previous -->\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>id=listbox_previous_page</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>id=listbox_previous_page</td>\n
+  <td></td>\n
 </tr>\n
 <tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/verify_dialog" />\n
 <tr>\n
-\t<td>verifyValue</td>\n
-\t<td>id=listbox_set_page</td>\n
-\t<td>1</td>\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
-\t<td>id=listbox_next_page</td>\n
-\t<td></td>\n
+  <td>verifyElementPresent</td>\n
+  <td>id=listbox_next_page</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_previous_page</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_previous_page</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
-\t<td>0</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
-\t<td>1</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
-\t<td>2</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+  <td>2</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_data_line_3</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_data_line_3</td>\n
+  <td></td>\n
 </tr>\n
 \n
 <!-- Select page -->\n
 <tr>\n
-\t<td>type</td>\n
-\t<td>id=listbox_set_page</td>\n
-\t<td>4</td>\n
+  <td>type</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>4</td>\n
 </tr>\n
 <tr>\n
-\t<td>keyPressAndWait</td>\n
-\t<td>id=listbox_set_page</td>\n
-\t<td>\\13</td>\n
+  <td>keyPressAndWait</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>\\13</td>\n
 </tr>\n
 <!--tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/verify_dialog" /-->\n
 <tr>\n
@@ -299,86 +299,86 @@
   <td>Hardcoded text value</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>id=listbox_item_number</td>\n
-\t<td> - 1 item(s) selected</td>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_item_number</td>\n
+  <td> - 1 item(s) selected</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyValue</td>\n
-\t<td>id=listbox_set_page</td>\n
-\t<td>4</td>\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>4</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_next_page</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_next_page</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
-\t<td>id=listbox_previous_page</td>\n
-\t<td></td>\n
+  <td>verifyElementPresent</td>\n
+  <td>id=listbox_previous_page</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
-\t<td>9</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>9</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_data_line_1</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_data_line_1</td>\n
+  <td></td>\n
 </tr>\n
 \n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/bar_module/manage_delObjects?ids=9</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/bar_module/manage_delObjects?ids=9</td>\n
+  <td></td>\n
 </tr>\n
 <tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/goto_dialog" />\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>id=listbox_record_number</td>\n
-\t<td>9 record(s)</td>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_record_number</td>\n
+  <td>9 record(s)</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>id=listbox_item_number</td>\n
-\t<td> - 0 item(s) selected</td>\n
+  <td>verifyText</td>\n
+  <td>id=listbox_item_number</td>\n
+  <td> - 0 item(s) selected</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyValue</td>\n
-\t<td>id=listbox_set_page</td>\n
-\t<td>1</td>\n
+  <td>verifyValue</td>\n
+  <td>id=listbox_set_page</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
-\t<td>id=listbox_next_page</td>\n
-\t<td></td>\n
+  <td>verifyElementPresent</td>\n
+  <td>id=listbox_next_page</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_previous_page</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_previous_page</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
-\t<td>0</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
-\t<td>1</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
-\t<td>2</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+  <td>2</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_data_line_3</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_data_line_3</td>\n
+  <td></td>\n
 </tr>\n
 \n
 \n

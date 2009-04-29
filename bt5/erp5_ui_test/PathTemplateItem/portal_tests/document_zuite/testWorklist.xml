@@ -77,14 +77,14 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>selectAndWait</td>\n
-\t<td>select_action</td>\n
-\t<td>Validate Action</td>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>Validate Action</td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>dialog_submit_button</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>dialog_submit_button</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
@@ -112,9 +112,9 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>selectAndWait</td>\n
-\t<td>select_favorite</td>\n
-\t<td>Draft To Validate (9)</td>\n
+  <td>selectAndWait</td>\n
+  <td>select_favorite</td>\n
+  <td>Draft To Validate (9)</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
@@ -127,9 +127,9 @@
   <td>1</td>\n
 </tr>\n
 <tr>\n
-\t<td>selectAndWait</td>\n
-\t<td>select_favorite</td>\n
-\t<td>Validated Foos (1)</td>\n
+  <td>selectAndWait</td>\n
+  <td>select_favorite</td>\n
+  <td>Validated Foos (1)</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n

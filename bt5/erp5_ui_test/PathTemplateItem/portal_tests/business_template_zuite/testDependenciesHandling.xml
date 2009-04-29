@@ -52,144 +52,144 @@
 </thead><tbody>\n
 <tal:block metal:use-macro="here/BTZuite_CommonTemplate/macros/init" />\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/portal_templates/TemplateTool_viewUpdateRepositoryBusinessTemplateListDialog?dialog_category=object_exchange&cancel_url=http%3A//127.0.0.1%3A9080/erp5/portal_templates/&selection_index:int=0&form_id=TemplateTool_viewBusinessTemplateList&selection_name=business_template_selection</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/portal_templates/TemplateTool_viewUpdateRepositoryBusinessTemplateListDialog?dialog_category=object_exchange&cancel_url=http%3A//127.0.0.1%3A9080/erp5/portal_templates/&selection_index:int=0&form_id=TemplateTool_viewBusinessTemplateList&selection_name=business_template_selection</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
+  <td>assertTextPresent</td>\n
         <td>Business templates updated successfully.</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>click</td>\n
+  <td>click</td>\n
   <td>//tr[@id=\'listbox_data_line_1\']//input[@type=\'checkbox\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>\'test_core\' added because \'test_accounting_fr\' depends on it.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>\'test_core\' added because \'test_accounting_fr\' depends on it.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>\'test_accounting\' added because \'test_accounting_fr\' depends on it.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>\'test_accounting\' added because \'test_accounting_fr\' depends on it.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Business Template test_core, test_accounting, test_accounting_fr installed</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Business Template test_core, test_accounting, test_accounting_fr installed</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>click</td>\n
+  <td>click</td>\n
   <td>//tr[@id=\'listbox_data_line_2\']//input[@type=\'checkbox\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>BusinessTemplateMissingDependency</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>BusinessTemplateMissingDependency</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>click</td>\n
+  <td>click</td>\n
   <td>//tr[@id=\'listbox_data_line_3\']//input[@type=\'checkbox\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Business Template test_accounting_pl installed</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Business Template test_accounting_pl installed</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>click</td>\n
+  <td>click</td>\n
   <td>//tr[@id=\'listbox_data_line_6\']//input[@type=\'checkbox\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>\'test_web\' requires you to select one of the following business templates: [\'test_html_style\', \'test_xhtml_style\']</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>\'test_web\' requires you to select one of the following business templates: [\'test_html_style\', \'test_xhtml_style\']</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>click</td>\n
+  <td>click</td>\n
   <td>//tr[@id=\'listbox_data_line_7\']//input[@type=\'checkbox\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Business Template test_xhtml_style, test_web installed</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Business Template test_xhtml_style, test_web installed</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>open</td>\n

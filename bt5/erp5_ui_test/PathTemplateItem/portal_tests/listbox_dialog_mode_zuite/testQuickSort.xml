@@ -52,93 +52,93 @@
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/init" />\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
+  <td>assertElementPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <!-- click the ID -->\n
 <tr>\n
-\t<td>clickAndWait</td>\n
+  <td>clickAndWait</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/verify_dialog" />\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
+  <td>assertElementPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Ascending Display"]</td>\n
-\t<td></td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Ascending Display"]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Descending Display"]</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Descending Display"]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
-\t<td>0</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
-\t<td>1</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
-\t<td>2</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+  <td>2</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_data_line_3</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_data_line_3</td>\n
+  <td></td>\n
 </tr>\n
 <!-- click the ID again -->\n
 <tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/verify_dialog" />\n
 <tr>\n
-\t<td>clickAndWait</td>\n
+  <td>clickAndWait</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
+  <td>assertElementPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Ascending Display"]</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Ascending Display"]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Descending Display"]</td>\n
-\t<td></td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Descending Display"]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
-\t<td>2</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>2</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
-\t<td>1</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
-\t<td>0</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_data_line_3</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_data_line_3</td>\n
+  <td></td>\n
 </tr>\n
 \n
 </tbody></table>\n

@@ -52,24 +52,24 @@
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_page_template=FooModule_renderListBox</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_page_template=FooModule_renderListBox</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Set Successfully.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Set Successfully.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/view</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>This is just a test</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>This is just a test</td>\n
+  <td></td>\n
 </tr>\n
 \n
 </tbody></table>\n

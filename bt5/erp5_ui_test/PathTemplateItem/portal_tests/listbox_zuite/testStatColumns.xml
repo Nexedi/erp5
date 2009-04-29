@@ -52,76 +52,76 @@
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/FooModule_createObjects</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Created Successfully.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Done.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_stat_columns=id%7CFooModule_statId%0Atitle%7CFooModule_statTitle;field_stat_method=portal_catalog</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_stat_columns=id%7CFooModule_statId%0Atitle%7CFooModule_statTitle;field_stat_method=portal_catalog</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Set Successfully.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Set Successfully.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/view</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_stat_line"]/td[2]</td>\n
-\t<td>foo_module</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_stat_line"]/td[2]</td>\n
+  <td>foo_module</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_stat_line"]/td[3]</td>\n
-\t<td>Foos</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_stat_line"]/td[3]</td>\n
+  <td>Foos</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_stat_line"]/td[4]</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_stat_line"]/td[4]</td>\n
+  <td></td>\n
 </tr>\n
 \n
 <!-- view mode with editable field -->\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/0/view</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_stat_line"]/td[2]</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_stat_line"]/td[2]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_stat_line"]/td[4]</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_stat_line"]/td[4]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_stat_line"]/td[3]</td>\n
-\t<td>1 234.5</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_stat_line"]/td[3]</td>\n
+  <td>1 234.5</td>\n
 </tr>\n
 \n
 </tbody></table>\n

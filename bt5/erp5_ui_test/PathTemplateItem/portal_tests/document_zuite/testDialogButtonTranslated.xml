@@ -61,9 +61,9 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>New Languages Added</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>New Languages Added</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
 \n
@@ -72,9 +72,9 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Translation of Search Foos updated</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Translation of Search Foos updated</td>\n
+  <td></td>\n
 </tr>\n
 \n
 <tr>\n
@@ -89,9 +89,9 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>select</td>\n
-\t<td>select_language</td>\n
-\t<td>label=English</td>\n
+  <td>select</td>\n
+  <td>select_language</td>\n
+  <td>label=English</td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
@@ -121,34 +121,34 @@
 \n
 \n
 <tr>\n
-\t<td>verifyValue</td>\n
-\t<td>dialog_submit_button</td>\n
-\t<td>Search Foos</td>\n
+  <td>verifyValue</td>\n
+  <td>dialog_submit_button</td>\n
+  <td>Search Foos</td>\n
 </tr>\n
 <tr>\n
-\t<td>selectAndWait</td>\n
-\t<td>select_language</td>\n
-\t<td>label=Wolof</td>\n
+  <td>selectAndWait</td>\n
+  <td>select_language</td>\n
+  <td>label=Wolof</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyValue</td>\n
-\t<td>dialog_submit_button</td>\n
-\t<td>Seet Foos</td>\n
+  <td>verifyValue</td>\n
+  <td>dialog_submit_button</td>\n
+  <td>Seet Foos</td>\n
 </tr>\n
 <tr>\n
-\t<td>selectAndWait</td>\n
-\t<td>select_language</td>\n
-\t<td>label=Xhosa</td>\n
+  <td>selectAndWait</td>\n
+  <td>select_language</td>\n
+  <td>label=Xhosa</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyValue</td>\n
-\t<td>dialog_submit_button</td>\n
-\t<td>Searching Foos</td>\n
+  <td>verifyValue</td>\n
+  <td>dialog_submit_button</td>\n
+  <td>Searching Foos</td>\n
 </tr>\n
 <tr>\n
-\t<td>select</td>\n
-\t<td>select_language</td>\n
-\t<td>label=English</td>\n
+  <td>select</td>\n
+  <td>select_language</td>\n
+  <td>label=English</td>\n
 </tr>\n
 \n
 \n

@@ -52,64 +52,64 @@
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Created Successfully.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Done.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/view</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>link=Title 0</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>link=Title 0</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTitle</td>\n
-\t<td>Foo - Title 0*</td>\n
-\t<td></td>\n
+  <td>assertTitle</td>\n
+  <td>Foo - Title 0*</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertValue</td>\n
-\t<td>field_my_id</td>\n
-\t<td>0</td>\n
+  <td>assertValue</td>\n
+  <td>field_my_id</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
-\t<td>type</td>\n
-\t<td>field_my_id</td>\n
-\t<td>a</td>\n
+  <td>type</td>\n
+  <td>field_my_id</td>\n
+  <td>a</td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>Base_edit:method</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>Base_edit:method</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTitle</td>\n
-\t<td>Foo - Title 0*</td>\n
-\t<td></td>\n
+  <td>assertTitle</td>\n
+  <td>Foo - Title 0*</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertValue</td>\n
-\t<td>field_my_id</td>\n
-\t<td>a</td>\n
+  <td>assertValue</td>\n
+  <td>field_my_id</td>\n
+  <td>a</td>\n
 </tr>\n
 \n
 </tbody></table>\n

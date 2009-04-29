@@ -52,114 +52,114 @@
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/FooModule_createObjects</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Created Successfully.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Done.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/view</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>Folder_cut:method</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_cut:method</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyTextPresent</td>\n
-\t<td>Please select one or more items to cut first.</td>\n
-\t<td></td>\n
+  <td>verifyTextPresent</td>\n
+  <td>Please select one or more items to cut first.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>click</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[1]/input</td>\n
-\t<td></td>\n
+  <td>click</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[1]/input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>Folder_cut:method</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_cut:method</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyTextPresent</td>\n
-\t<td>Item(s) cut.</td>\n
-\t<td></td>\n
+  <td>verifyTextPresent</td>\n
+  <td>Item(s) cut.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/bar_module/view</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/bar_module/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>Folder_paste:method</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_paste:method</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyTextPresent</td>\n
-\t<td>Item(s) pasted.</td>\n
-\t<td></td>\n
+  <td>verifyTextPresent</td>\n
+  <td>Item(s) pasted.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/bar_module/Zuite_waitForActivities</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/bar_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Done.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/bar_module/view</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/bar_module/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
-\t<td>0</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/view</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
-\t<td>1</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
-\t<td>2</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>2</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
-\t<td>3</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+  <td>3</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_data_line_3</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_data_line_3</td>\n
+  <td></td>\n
 </tr>\n
 \n
 </tbody></table>\n

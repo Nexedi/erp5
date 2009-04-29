@@ -52,79 +52,79 @@
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Created Successfully.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Done.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/view</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>link=Title 0</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>link=Title 0</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTitle</td>\n
-\t<td>*Foo - Title 0*</td> <!-- XXX not flexible -->\n
-\t<td></td>\n
+  <td>assertTitle</td>\n
+  <td>*Foo - Title 0*</td> <!-- XXX not flexible -->\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>//input[@name="field_my_frozen" and @checked]</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//input[@name="field_my_frozen" and @checked]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>click</td>\n
-\t<td>field_my_frozen</td>\n
-\t<td></td>\n
+  <td>click</td>\n
+  <td>field_my_frozen</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>Base_edit:method</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>Base_edit:method</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementPresent</td>\n
-\t<td>//input[@name="field_my_frozen" and @checked]</td>\n
-\t<td></td>\n
+  <td>assertElementPresent</td>\n
+  <td>//input[@name="field_my_frozen" and @checked]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>click</td>\n
-\t<td>field_my_frozen</td>\n
-\t<td></td>\n
+  <td>click</td>\n
+  <td>field_my_frozen</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>Base_edit:method</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>Base_edit:method</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyTitle</td>\n
-\t<td>*Foo - Title 0*</td> <!-- XXX not flexible -->\n
-\t<td></td>\n
+  <td>verifyTitle</td>\n
+  <td>*Foo - Title 0*</td> <!-- XXX not flexible -->\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertElementNotPresent</td>\n
-\t<td>//input[@name="field_my_frozen" and @checked]</td>\n
-\t<td></td>\n
+  <td>assertElementNotPresent</td>\n
+  <td>//input[@name="field_my_frozen" and @checked]</td>\n
+  <td></td>\n
 </tr>\n
 \n
 </tbody></table>\n

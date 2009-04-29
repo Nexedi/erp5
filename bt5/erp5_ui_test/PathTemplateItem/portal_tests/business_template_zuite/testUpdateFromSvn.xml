@@ -53,44 +53,44 @@
 </thead><tbody>\n
 <tal:block metal:use-macro="here/BTZuite_CommonTemplate/macros/init" />\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/portal_templates/TemplateTool_viewUpdateRepositoryBusinessTemplateListDialog</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/portal_templates/TemplateTool_viewUpdateRepositoryBusinessTemplateListDialog</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Business templates updated successfully.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Business templates updated successfully.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/portal_templates/TemplateTool_callViewInstallRepositoryBusinessTemplateListDialog</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>click</td>\n
+  <td>click</td>\n
   <td>//tr[@id=\'listbox_data_line_4\']//input[@type=\'checkbox\']</td>\n
-\t<td></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Business Template test_core installed</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Business Template test_core installed</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
@@ -103,34 +103,34 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/portal_templates/view</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/portal_templates/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>type</td>\n
-\t<td>title</td>\n
-\t<td>test_core</td>\n
+  <td>type</td>\n
+  <td>title</td>\n
+  <td>test_core</td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>hidden_button</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>hidden_button</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>link=Installed</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>link=Installed</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>selectAndWait</td>\n
-\t<td>select_action</td>\n
-\t<td>label=Revert & Update Business Template from SVN</td>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>label=Revert & Update Business Template from SVN</td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>dialog_submit_button</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>dialog_submit_button</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>open</td>\n

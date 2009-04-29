@@ -52,24 +52,24 @@
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/FooModule_createObjects?set_dates:int=1&amp;start:int=1&amp;num:int=3</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects?set_dates:int=1&amp;start:int=1&amp;num:int=3</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Created Successfully.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Done.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
@@ -77,9 +77,9 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>type</td>\n
-\t<td>field_your_search_text</td>\n
-\t<td>Title</td>\n
+  <td>type</td>\n
+  <td>field_your_search_text</td>\n
+  <td>Title</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -87,29 +87,29 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
-\t<td>//table[@class=\'listbox search\']</td>\n
-\t<td></td>\n
+  <td>verifyElementPresent</td>\n
+  <td>//table[@class=\'listbox search\']</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>style_toggle_icon</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>style_toggle_icon</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
-\t<td>//div[@class=\'listbox\']</td>\n
-\t<td></td>\n
+  <td>verifyElementPresent</td>\n
+  <td>//div[@class=\'listbox\']</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>//table[@class=\'listbox search\']</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//table[@class=\'listbox search\']</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>//table[@class=\'listbox table\']</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//table[@class=\'listbox table\']</td>\n
+  <td></td>\n
 </tr>\n
 \n
 </tbody></table>\n

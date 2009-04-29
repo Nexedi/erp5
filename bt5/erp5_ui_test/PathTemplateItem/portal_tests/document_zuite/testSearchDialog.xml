@@ -67,49 +67,49 @@
 \n
 \n
 <tr>\n
-\t<td>open</td>\n
-\t<td tal:content="string: ${here/portal_url}/foo_module/view"></td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/foo_module/view"></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>link=Foos</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>link=Foos</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>link=Find</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>link=Find</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>selectAndWait</td>\n
-\t<td>select_dialog</td>\n
-\t<td>generic_search</td>\n
+  <td>selectAndWait</td>\n
+  <td>select_dialog</td>\n
+  <td>generic_search</td>\n
 </tr>\n
 <tr>\n
-\t<td>type</td>\n
-\t<td>field_your_title</td>\n
-\t<td>title_value</td>\n
+  <td>type</td>\n
+  <td>field_your_title</td>\n
+  <td>title_value</td>\n
 </tr>\n
 <tr>\n
-\t<td>type</td>\n
-\t<td>field_your_id</td>\n
-\t<td>id_value</td>\n
+  <td>type</td>\n
+  <td>field_your_id</td>\n
+  <td>id_value</td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyValue</td>\n
-\t<td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
-\t<td>id_value</td>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
+  <td>id_value</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyValue</td>\n
-\t<td>//tr[@id="listbox_search_line"]/td[3]//input</td>\n
-\t<td>title_value</td>\n
+  <td>verifyValue</td>\n
+  <td>//tr[@id="listbox_search_line"]/td[3]//input</td>\n
+  <td>title_value</td>\n
 </tr>\n
 <tr>\n
   <td>open</td>\n

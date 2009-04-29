@@ -58,9 +58,9 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>type</td>\n
-\t<td>field_your_search_text</td>\n
-\t<td>Title portal_type:Foo</td>\n
+  <td>type</td>\n
+  <td>field_your_search_text</td>\n
+  <td>Title portal_type:Foo</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -68,14 +68,14 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//div[@class=\'searchResultHeader\']/span[@class=\'right\']</td>\n
-\t<td>Results 1 - 1 of 1.</td>\n
+  <td>verifyText</td>\n
+  <td>//div[@class=\'searchResultHeader\']/span[@class=\'right\']</td>\n
+  <td>Results 1 - 1 of 1.</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id=\'listbox_data_line_0\']//div[@class=\'search_result_title\']</td>\n
-\t<td>Title 1</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']//div[@class=\'search_result_title\']</td>\n
+  <td>Title 1</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -83,9 +83,9 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//div[@id=\'breadcrumb\']</td>\n
-\t<td>ERP5  / Foos  / Title 1  / </td>\n
+  <td>verifyText</td>\n
+  <td>//div[@id=\'breadcrumb\']</td>\n
+  <td>ERP5  / Foos  / Title 1  / </td>\n
 </tr>\n
 </tbody></table>\n
 </body>\n

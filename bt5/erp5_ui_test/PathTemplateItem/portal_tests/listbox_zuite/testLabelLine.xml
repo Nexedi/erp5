@@ -52,89 +52,89 @@
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
-\t<td>id=listbox_check_all</td>\n
-\t<td></td>\n
+  <td>verifyElementPresent</td>\n
+  <td>id=listbox_check_all</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
-\t<td>id=listbox_uncheck_all</td>\n
-\t<td></td>\n
+  <td>verifyElementPresent</td>\n
+  <td>id=listbox_uncheck_all</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]</td>\n
-\t<td></td>\n
+  <td>verifyElementPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[2]</td>\n
-\t<td>ID</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[2]</td>\n
+  <td>ID</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[3]</td>\n
-\t<td>Title</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[3]</td>\n
+  <td>Title</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[4]</td>\n
-\t<td>Quantity</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[4]</td>\n
+  <td>Quantity</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[5]</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[5]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_select=</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_select=</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Set Successfully.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Set Successfully.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/view</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_check_all</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_check_all</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_uncheck_all</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_uncheck_all</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]</td>\n
-\t<td></td>\n
+  <td>verifyElementPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[1]</td>\n
-\t<td>ID</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[1]</td>\n
+  <td>ID</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[2]</td>\n
-\t<td>Title</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[2]</td>\n
+  <td>Title</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[3]</td>\n
-\t<td>Quantity</td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[3]</td>\n
+  <td>Quantity</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>//tr[@id="listbox_label_line"]/td[4]</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//tr[@id="listbox_label_line"]/td[4]</td>\n
+  <td></td>\n
 </tr>\n
 \n
 </tbody></table>\n

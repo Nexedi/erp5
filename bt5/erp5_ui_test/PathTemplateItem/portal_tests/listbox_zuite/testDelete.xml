@@ -52,88 +52,24 @@
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/FooModule_createObjects</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Created Successfully.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Done.</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/view</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>Folder_deleteObjectList:method</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
-\t<td>verifyTextPresent</td>\n
-\t<td>Please select one or more items to delete first.</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
-\t<td>click</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[1]/input</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>Folder_deleteObjectList:method</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
-\t<td>verifyText</td>\n
-\t<td>listbox_record_number</td>\n
-\t<td>1 record(s)</td>\n
-</tr>\n
-<!-- The listbox used to confirm deletion is a proxy to the previous listbox.\n
-It contains the same columns\n
--->\n
-<tr>\n
-\t<td>assertText</td>\n
-\t<td>//tr[@id=\'listbox_label_line\']/td[1]</td>\n
-\t<td>ID</td>\n
-</tr>\n
-<tr>\n
-\t<td>assertText</td>\n
-\t<td>//tr[@id=\'listbox_label_line\']/td[2]</td>\n
-\t<td>Title</td>\n
-</tr>\n
-<tr>\n
-\t<td>assertText</td>\n
-\t<td>//tr[@id=\'listbox_label_line\']/td[3]</td>\n
-\t<td>Quantity</td>\n
-</tr>\n
-<!-- And an extra column to display the number of related objects. -->\n
-<tr>\n
-\t<td>assertText</td>\n
-\t<td>//tr[@id=\'listbox_label_line\']/td[4]</td>\n
-\t<td>Number of Related Objects</td>\n
-</tr>\n
-<tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>Base_callDialogMethod:method</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
-\t<td>verifyTextPresent</td>\n
-\t<td>Deleted.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>open</td>\n
@@ -141,55 +77,14 @@ It contains the same columns\n
   <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
-\t<td>0</td>\n
-  <td>We suppose here that the workflow is configured in such way that deleted items can still be viewed.</td>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_deleteObjectList:method</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
-\t<td>1</td>\n
-</tr>\n
-<tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
-\t<td>2</td>\n
-</tr>\n
-<tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td>id=listbox_data_line_3</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/0/getSimulationState</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>deleted</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Done.</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/view</td>\n
-\t<td></td>\n
-</tr>\n
-<tr>\n
-\t<td>verifyText</td>\n
-\t<td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
-\t<td>0</td>\n
+  <td>verifyTextPresent</td>\n
+  <td>Please select one or more items to delete first.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
@@ -197,109 +92,214 @@ It contains the same columns\n
   <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>Folder_deleteObjectList:method</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_deleteObjectList:method</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>Base_callDialogMethod:method</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>listbox_record_number</td>\n
+  <td>1 record(s)</td>\n
+</tr>\n
+<!-- The listbox used to confirm deletion is a proxy to the previous listbox.\n
+It contains the same columns\n
+-->\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//tr[@id=\'listbox_label_line\']/td[1]</td>\n
+  <td>ID</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyTextPresent</td>\n
-\t<td>Sorry, you can not delete 1 item.</td>\n
-\t<td></td>\n
+  <td>assertText</td>\n
+  <td>//tr[@id=\'listbox_label_line\']/td[2]</td>\n
+  <td>Title</td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>link=0</td>\n
-\t<td></td>\n
+  <td>assertText</td>\n
+  <td>//tr[@id=\'listbox_label_line\']/td[3]</td>\n
+  <td>Quantity</td>\n
+</tr>\n
+<!-- And an extra column to display the number of related objects. -->\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//tr[@id=\'listbox_label_line\']/td[4]</td>\n
+  <td>Number of Related Objects</td>\n
 </tr>\n
 <tr>\n
-\t<td>selectAndWait</td>\n
-\t<td>select_action</td>\n
-\t<td>Add Foo Line</td>\n
+  <td>clickAndWait</td>\n
+  <td>Base_callDialogMethod:method</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>link=Title 0</td>\n
-\t<td></td>\n
+  <td>verifyTextPresent</td>\n
+  <td>Deleted.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Done.</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>0</td>\n
+  <td>We suppose here that the workflow is configured in such way that deleted items can still be viewed.</td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/view</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>link=0</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+  <td>2</td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>link=Foo Lines:</td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>id=listbox_data_line_3</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>click</td>\n
-\t<td>uids:list</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/getSimulationState</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>Folder_deleteObjectList:method</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>deleted</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyTextPresent</td>\n
-\t<td>Deleted.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>link=Title 0</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/view</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
-\t<td></td>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Done.</td>\n
-\t<td></td>\n
+  <td>click</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[1]/input</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/view</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_deleteObjectList:method</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>link=0</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>Base_callDialogMethod:method</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>0 record</td>\n
-\t<td></td>\n
+  <td>verifyTextPresent</td>\n
+  <td>Sorry, you can not delete 1 item.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=0</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>Add Foo Line</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Title 0</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=0</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Foo Lines:</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>uids:list</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Folder_deleteObjectList:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Deleted.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Title 0</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=0</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>0 record</td>\n
+  <td></td>\n
 </tr>\n
 \n
 </tbody></table>\n

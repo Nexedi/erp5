@@ -52,39 +52,39 @@
 </thead><tbody>\n
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Created Successfully.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Done.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/ListBoxZuite_resetReportSelections</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/ListBoxZuite_resetReportSelections</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>assertTextPresent</td>\n
-\t<td>Done.</td>\n
-\t<td></td>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>open</td>\n
-\t<td>${base_url}/foo_module/0/Foo_viewListBoxInReportMode</td>\n
-\t<td></td>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/Foo_viewListBoxInReportMode</td>\n
+  <td></td>\n
 </tr>\n
 <tal:block tal:define="prefix string:x0_listbox;\n
                        set_page python:1">\n
@@ -92,20 +92,20 @@
 </tal:block>\n
 <tal:block tal:repeat="prefix python:range(3)">\n
 <tr>\n
-\t<td>verifyElementPresent</td>\n
-\t<td tal:content="python: \'id=x%s_listbox_next_page\' % (prefix, )"></td>\n
-\t<td></td>\n
+  <td>verifyElementPresent</td>\n
+  <td tal:content="python: \'id=x%s_listbox_next_page\' % (prefix, )"></td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyElementNotPresent</td>\n
-\t<td tal:content="python: \'id=x%s_listbox_previous_page\' % (prefix, )"></td>\n
-\t<td></td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td tal:content="python: \'id=x%s_listbox_previous_page\' % (prefix, )"></td>\n
+  <td></td>\n
 </tr>\n
 </tal:block>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>id=x0_listbox_next_page</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>id=x0_listbox_next_page</td>\n
+  <td></td>\n
 </tr>\n
 <tal:block tal:define="prefix string:x0_listbox;\n
                        set_page python:2">\n
@@ -120,14 +120,14 @@
   <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
 </tal:block>\n
 <tr>\n
-\t<td>type</td>\n
-\t<td>id=x1_listbox_set_page</td>\n
-\t<td>5</td>\n
+  <td>type</td>\n
+  <td>id=x1_listbox_set_page</td>\n
+  <td>5</td>\n
 </tr>\n
 <tr>\n
-\t<td>keyPressAndWait</td>\n
-\t<td>id=x1_listbox_set_page</td>\n
-\t<td>\\13</td>\n
+  <td>keyPressAndWait</td>\n
+  <td>id=x1_listbox_set_page</td>\n
+  <td>\\13</td>\n
 </tr>\n
 <tal:block tal:define="prefix string:x0_listbox;\n
                        set_page python:2">\n
@@ -142,9 +142,9 @@
   <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
 </tal:block>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>id=x1_listbox_previous_page</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>id=x1_listbox_previous_page</td>\n
+  <td></td>\n
 </tr>\n
 <tal:block tal:define="prefix string:x0_listbox;\n
                        set_page python:2">\n

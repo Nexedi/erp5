@@ -128,9 +128,9 @@
 </tr>\n
 \n
 <tr>\n
-\t<td>selectAndWait</td>\n
-\t<td>lane_path</td>\n
-\t<td>label=Week</td>\n
+  <td>selectAndWait</td>\n
+  <td>lane_path</td>\n
+  <td>label=Week</td>\n
 </tr>\n
 <tr>\n
   <td>assertTextNotPresent</td>\n
@@ -138,9 +138,9 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>selectAndWait</td>\n
-\t<td>lane_path</td>\n
-\t<td>label=Month</td>\n
+  <td>selectAndWait</td>\n
+  <td>lane_path</td>\n
+  <td>label=Month</td>\n
 </tr>\n
 <tr>\n
   <td>assertTextNotPresent</td>\n
@@ -148,9 +148,9 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>selectAndWait</td>\n
-\t<td>lane_path</td>\n
-\t<td>label=Year</td>\n
+  <td>selectAndWait</td>\n
+  <td>lane_path</td>\n
+  <td>label=Year</td>\n
 </tr>\n
 <tr>\n
   <td>assertTextNotPresent</td>\n
@@ -158,9 +158,9 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>selectAndWait</td>\n
-\t<td>lane_path</td>\n
-\t<td>label=Day</td>\n
+  <td>selectAndWait</td>\n
+  <td>lane_path</td>\n
+  <td>label=Day</td>\n
 </tr>\n
 <tr>\n
   <td>assertTextNotPresent</td>\n
