@@ -59,7 +59,7 @@
               show_select_column here/showSelectColumn;\n
               show_anchor_column here/showAnchorColumn;\n
               show_search_line here/showSearchLine;\n
-              list_style    python: request.get(\'list_style\') or selection.params.get(\'list_style\', \'table\');\n
+              list_style resuest/list_style | nothing;\n
               is_web_mode request/is_web_mode | nothing;\n
               is_gadget_mode request/is_gadget_mode | nothing;">\n
   <!-- ListBox starts here.  -->\n
@@ -142,13 +142,10 @@
   <tal:block tal:condition="python: list_style == \'search\'">\n
     <span metal:use-macro="real_context/ListBox_asSearchStyleHTML/macros/main"/>\n
   </tal:block>\n
-  <tal:block tal:condition="python: is_web_mode or is_gadget_mode">\n
-    <tal:block tal:condition="python: list_style == \'table\'">\n
-      <span metal:use-macro="real_context/ListBox_asTableStyleHTML/macros/main"/>\n
-    </tal:block>\n
+  <tal:block tal:condition="python: is_web_mode and list_style != \'table\'">\n
+    <span metal:use-macro="real_context/ListBox_asTableStyleHTML/macros/main"/>\n
   </tal:block>\n
-  <tal:block tal:condition="python: not is_web_mode and not is_gadget_mode and\n
-  not list_style == \'search\'">\n
+  <tal:block tal:condition="python: not is_web_mode and list_style != \'search\'">\n
     <span metal:use-macro="real_context/ListBox_asStandardHTML/macros/main"/>\n
   </tal:block>\n
 </tal:block>\n
