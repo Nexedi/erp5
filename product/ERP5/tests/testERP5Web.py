@@ -58,7 +58,8 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
-    uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
+    uf._doAddUser(self.manager_username, self.manager_password,
+['Manager','Owner'], [])
     user = uf.getUserById(self.manager_username).__of__(uf)
     newSecurityManager(None, user)
 
@@ -67,6 +68,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     Return the list of required business templates.
     """
     return ('erp5_base',
+            'erp5_l10n_fr',
             'erp5_web',
             )
 
@@ -862,6 +864,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       ZopeTestCase._print(message)
 
     self.changeUser('admin')
+    
     site = self.portal.web_site_module.newContent(portal_type='Web Site',
                                                   id='site')
     section = site.newContent(portal_type='Web Section', id='section')
@@ -1257,7 +1260,59 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     category_4_clone = category_3[category_3.manage_pasteObjects(
       category_4_copy)[0]['new_id']]
     self.assertEquals(category_4_clone.getPortalType(), 'Category')
+    
+    
+  def test_08_createAndrenameCategory(self, quiet=quiet, run=run_all_test):
+    """ Test to create or rename categories with many users """
+    if not run: return
+    if not quiet:
+      message = '\ntest_08_createAndrenameCategory'
+      ZopeTestCase._print(message)
+      
+    self.changeUser('admin')
+    portal_categories = self.portal.portal_categories
+    publication_section = portal_categories.publication_section
 
+    # test for admin
+    try:
+      new_base_category_1 = portal_categories.newContent(portal_type='Base Category', id='new_base_category_1')
+    except Unauthorized:
+      self.fail("Admin should be able to create a Base Category.")
+    try:
+      new_category_1 = publication_section.newContent(portal_type='Category', id='new_category_1')
+      new_category_2 = new_category_1.newContent(portal_type='Category',
+      id='new_category_2')      
+    except Unauthorized:
+      self.fail("Admin should be able to create a Category.")
+    get_transaction().commit()
+    self.tic()
+    try:
+      new_cat_1_renamed = new_category_1.edit(id='new_cat_1_renamed')    
+      new_cat_2_renamed = new_category_2.edit(id='new_cat_2_renamed')
+    except Unauthorized:
+      self.fail("Admin should be able to rename a Category.")
+    # test as a web user (assignor)
+    self.changeUser('webmaster') 
+    try:
+      base_category_2 = portal_categories.newContent(portal_type='Base Category', id='base_category_2')
+      self.fail("A webmaster should not be able to create a Base Category.")
+    except Unauthorized:
+      pass
+    try:
+      new_category_3 = publication_section.newContent(
+      portal_type='Category',id='new_category_3')
+      new_category_4 = new_category_3.newContent(portal_type='Category',
+          id='new_category_4')          
+    except Unauthorized:
+      self.fail("A webmaster should be able to create a Category.")
+    get_transaction().commit()
+    self.tic()
+    try:
+      new_cat_3_renamed = new_category_3.edit(id='new_cat_3_renamed')    
+      new_cat_4_renamed = new_category_4.edit(id='new_cat_4_renamed')
+    except Unauthorized:
+      self.fail("A webmaster should be able to rename a Category.")
+    
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Web))
