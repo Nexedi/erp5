@@ -17,6 +17,7 @@
                 <string>css_class</string>
                 <string>columns</string>
                 <string>list_method</string>
+                <string>count_method</string>
                 <string>selection_name</string>
                 <string>portal_types</string>
                 <string>default_params</string>
@@ -115,6 +116,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string>hidden_label</string> </value>
                 </item>
@@ -137,11 +142,11 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>listbox</string> </value>
+                    <value> <string>my_list_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>BankAccount_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
