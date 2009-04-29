@@ -116,10 +116,10 @@ try:\n
     validation_state = (\'released\', \'released_alive\', \'published\', \n
                         \'published_alive\', \'shared\', \'shared_alive\', \n
                         \'public\', \'validated\')\n
+  kw[\'validation_state\'] = validation_state\n
 \n
   return current_section.WebSection_zGetDocumentValueList(language=language,\n
                                                           all_languages=all_languages,\n
-                                                          validation_state=validation_state,\n
                                                           all_versions=all_versions,\n
                                                           src__=src__,\n
                                                           kw=kw)\n
@@ -176,6 +176,7 @@ except Unauthorized:\n
                             <string>context</string>
                             <string>current_section</string>
                             <string>None</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>

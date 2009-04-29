@@ -55,17 +55,6 @@
                                   <dictionary/>
                                 </value>
                             </item>
-                            <item>
-                                <key> <string>validation_state</string> </key>
-                                <value>
-                                  <dictionary>
-                                    <item>
-                                        <key> <string>type</string> </key>
-                                        <value> <string>list</string> </value>
-                                    </item>
-                                  </dictionary>
-                                </value>
-                            </item>
                           </dictionary>
                         </value>
                     </item>
@@ -76,7 +65,6 @@
                             <string>language</string>
                             <string>all_languages</string>
                             <string>all_versions</string>
-                            <string>validation_state</string>
                             <string>kw</string>
                           </list>
                         </value>
@@ -97,7 +85,6 @@
             <value> <string>language\r\n
 all_languages\r\n
 all_versions\r\n
-validation_state:list\r\n
 kw</string> </value>
         </item>
         <item>
@@ -138,8 +125,7 @@ kw</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<dtml-let query="buildSQLQuery(query=portal_catalog.getSecurityQuery(**kw),\n
-                               validation_state=validation_state, **kw)"\n
+<dtml-let query="buildSQLQuery(query=portal_catalog.getSecurityQuery(**kw), **kw)"\n
           is_translation_order_by="query[\'order_by_expression\'] is not None and\n
             \'translated_message\' in query[\'order_by_expression\']">\n
 \n
@@ -163,7 +149,6 @@ kw</string> </value>
     <dtml-if is_translation_order_by>\n
       , catalog.translated_message\n
     </dtml-if>\n
-\n
   FROM\n
     (\n
       SELECT\n
@@ -283,8 +268,7 @@ kw</string> </value>
                         <key> <string>raw</string> </key>
                         <value> <string encoding="cdata"><![CDATA[
 
-<dtml-let query="buildSQLQuery(query=portal_catalog.getSecurityQuery(**kw),\n
-                               validation_state=validation_state, **kw)"\n
+<dtml-let query="buildSQLQuery(query=portal_catalog.getSecurityQuery(**kw), **kw)"\n
           is_translation_order_by="query[\'order_by_expression\'] is not None and\n
             \'translated_message\' in query[\'order_by_expression\']">\n
 \n
@@ -308,7 +292,6 @@ kw</string> </value>
     <dtml-if is_translation_order_by>\n
       , catalog.translated_message\n
     </dtml-if>\n
-\n
   FROM\n
     (\n
       SELECT\n
