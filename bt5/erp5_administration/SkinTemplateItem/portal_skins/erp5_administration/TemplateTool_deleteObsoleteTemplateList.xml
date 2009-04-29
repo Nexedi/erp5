@@ -67,7 +67,7 @@ for bt in bt_list:\n
     if len([x for x in bt_list \\\n
      if x.getTitle() == bt.getTitle() and \\\n
         x.getInstallationState() == \'installed\' and \\\n
-        int(x.getRevision() or \'0\') > int(bt.getRevision())]):\n
+        int(x.getRevision() or \'0\') > int(bt.getRevision() or \'0\')]):\n
       delete_list.append(bt_id)\n
 \n
 print \'Deleted id list:%r\' % delete_list\n
