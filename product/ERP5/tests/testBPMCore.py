@@ -236,13 +236,26 @@ class TestBPMMixin(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
-    # XXX: move to sequence steps
+
+  def stepCreateSource(self, sequence=None, **kw):
     module = self.portal.getDefaultModule(portal_type=self.node_portal_type)
-    self.source = module.newContent(portal_type=self.node_portal_type)
-    self.destination = module.newContent(portal_type=self.node_portal_type)
-    self.source_section = module.newContent(portal_type=self.node_portal_type)
-    self.destination_section = module.newContent(
-                                  portal_type=self.node_portal_type)
+    node = module.newContent(portal_type=self.node_portal_type)
+    sequence.edit(source = node)
+
+  def stepCreateSourceSection(self, sequence=None, **kw):
+    module = self.portal.getDefaultModule(portal_type=self.node_portal_type)
+    node = module.newContent(portal_type=self.node_portal_type)
+    sequence.edit(source_section = node)
+
+  def stepCreateDestination(self, sequence=None, **kw):
+    module = self.portal.getDefaultModule(portal_type=self.node_portal_type)
+    node = module.newContent(portal_type=self.node_portal_type)
+    sequence.edit(destination = node)
+
+  def stepCreateDestinationSection(self, sequence=None, **kw):
+    module = self.portal.getDefaultModule(portal_type=self.node_portal_type)
+    node = module.newContent(portal_type=self.node_portal_type)
+    sequence.edit(destination_section = node)
 
   def stepCreateOrder(self, sequence=None, **kw):
     module = self.portal.getDefaultModule(portal_type=self.order_portal_type)
@@ -667,12 +680,20 @@ class TestBPMMixin(ERP5TypeTestCase):
   def stepFillOrder(self, sequence=None, **kw):
     order = sequence.get('order')
     price_currency = sequence.get('price_currency')
+    source = sequence.get('source')
+    destination = sequence.get('destination')
+    source_section = sequence.get('source_section')
+    destination_section = sequence.get('destination_section')
     self.assertNotEqual(None, price_currency)
+    self.assertNotEqual(None, source)
+    self.assertNotEqual(None, destination)
+    self.assertNotEqual(None, source_section)
+    self.assertNotEqual(None, destination_section)
     order.edit(
-        source_value=self.source,
-        destination_value=self.destination,
-        source_section_value=self.source_section,
-        destination_section_value=self.destination_section,
+        source_value=source,
+        destination_value=destination,
+        source_section_value=source_section,
+        destination_section_value=destination_section,
         start_date=self.order_date,
         price_currency_value = price_currency)
 
@@ -1018,13 +1039,17 @@ class TestBPMMixin(ERP5TypeTestCase):
     )
 
 class TestBPMTestCases(TestBPMMixin):
-  resource_creation_sequence_string = """
+  common_documents_creation = """
               CreateServiceTax
               CreateServiceDiscount
               CreatePriceCurrency
               CreateProductDiscounted
               CreateProductTaxed
               CreateProductDiscountedTaxed
+              CreateSource
+              CreateSourceSection
+              CreateDestination
+              CreateDestinationSection
               Tic
   """
 
@@ -1036,7 +1061,7 @@ class TestBPMTestCases(TestBPMMixin):
   """
 
   aggregated_amount_list_common_sequence_string = \
-      resource_creation_sequence_string + """
+      common_documents_creation + """
               CreateBusinessProcess
               CreateBusinessState
               ModifyBusinessStateTaxed
@@ -1129,7 +1154,7 @@ class TestBPMTestCases(TestBPMMixin):
   def test_TradeModelRuleSimulationWithoutBPM(self):
     """Tests tree of simulations from Trade Model Rule when there is no BPM"""
     sequence_list = SequenceList()
-    sequence_string = self.resource_creation_sequence_string + """
+    sequence_string = self.common_documents_creation + """
               CreateTradeCondition
               CreateTradeModelLine
               ModifyTradeModelLineTax
@@ -1151,7 +1176,7 @@ class TestBPMTestCases(TestBPMMixin):
   def test_TradeModelRuleSimulationWithoutTradeCondition(self):
     """Tests tree of simulations from Trade Model Rule when there is no Trade Condition"""
     sequence_list = SequenceList()
-    sequence_string = self.resource_creation_sequence_string + """
+    sequence_string = self.common_documents_creation + """
               CreateOrder
               FillOrder
               Tic
