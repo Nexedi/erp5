@@ -66,25 +66,21 @@ class TradeCondition(Path, Transformation):
                       , PropertySheet.Order
                       )
 
-    def updateAggregatedAmountList(self, context, destination_portal_type, **kw):
-      # XXX: Shall not create new, only update existing and return new
-      existing_object_list = context.objectValues(portal_type=destination_portal_type)
-      for o in self.getAggregatedAmountList(context = context, **kw):
+    def updateAggregatedAmountList(self, context, **kw):
+      existing_movement_list = context.contentValues()
+      aggregated_amount_list = self.getAggregatedAmountList(context = context,
+          **kw)
+      modified_resource_list = []
+      for amount in aggregated_amount_list:
         update_kw = {}
-        create_new = 1
         for p in self.edited_property_list:
-          update_kw[p] = o.getProperty(p)
-        for e in existing_object_list:
-          if e.getProperty('resource') == o.getProperty('resource'):
-            # we need to update existing
-            e.edit(**update_kw)
-            create_new = 0
-            break
-        if create_new:
-          context.newContent(
-            portal_type = destination_portal_type,
-            **update_kw
-          )
+          update_kw[p] = amount.getProperty(p)
+        for movement in existing_movement_list:
+          if movement.getProperty('resource') == update_kw['resource']:
+            movement.edit(**update_kw)
+            modified_resource_list.append(update_kw['resource'])
+      return [amount for amount in aggregated_amount_list if
+          amount.getResource() not in modified_resource_list]
 
     def getAggregatedAmountList(self, context, **kw):
       result = AggregatedAmountList()
