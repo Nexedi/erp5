@@ -59,7 +59,7 @@
               show_select_column here/showSelectColumn;\n
               show_anchor_column here/showAnchorColumn;\n
               show_search_line here/showSearchLine;\n
-              list_style resuest/list_style | nothing;\n
+              list_style request/list_style | nothing;\n
               is_web_mode request/is_web_mode | nothing;\n
               is_gadget_mode request/is_gadget_mode | nothing;">\n
   <!-- ListBox starts here.  -->\n
