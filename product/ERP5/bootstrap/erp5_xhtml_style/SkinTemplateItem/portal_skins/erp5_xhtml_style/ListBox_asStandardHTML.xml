@@ -136,8 +136,6 @@
                                     src string:${portal_url_string}/images/1leftarrowv.png"\n
                     i18n:domain="ui" i18n:attributes="title" />\n
                   </tal:block>\n
-                </td>\n
-                <td style="white-space: nowrap; vertical-align: middle; text-align: center">\n
                   <input id="listbox_set_page" name="page_start" onblur="this.value=this.defaultValue"\n
                          tal:attributes="id string:${field_id}_set_page;\n
                                          name string:${field_id}_page_start;\n
@@ -145,8 +143,6 @@
                                          size python:len(str(here.total_pages));\n
                                          onkeyup string:submitFormOnEnter(event, this.form, \'${field_id}_setPage\')" />\n
                   / <tal:block content="here/total_pages" />\n
-                </td>\n
-                <td style="white-space: nowrap; vertical-align: middle; text-align: center">\n
                   <tal:block tal:condition="python: here.current_page < here.total_pages - 1">\n
                   <input\n
                     id="listbox_next_page" type="image" src="1rightarrowv.png"\n
