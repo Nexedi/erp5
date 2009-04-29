@@ -66,6 +66,8 @@ class TestBPMMixin(ERP5TypeTestCase):
 
   modified_packing_list_line_quantity_ratio = 0.4
 
+  base_unit_quantity = 0.01
+
   normal_resource_use_category_list = ['normal']
   invoicing_resource_use_category_list = ['discount', 'tax']
 
@@ -224,6 +226,7 @@ class TestBPMMixin(ERP5TypeTestCase):
           account_type=account_type)
     self.assertNotEqual(None, account.getAccountTypeValue())
     account.validate()
+    return account
 
   def createInvoiceTransationRule(self):
     self.receivable_account = self.createAndValidateAccount('receivable',
@@ -374,6 +377,21 @@ class TestBPMMixin(ERP5TypeTestCase):
     workflow_tool = getToolByName(self.portal, 'portal_workflow')
     workflow_tool.doActionFor(order, 'plan_action')
 
+  def stepStartInvoice(self, sequence=None, **kw):
+    invoice = sequence.get('invoice')
+    workflow_tool = getToolByName(self.portal, 'portal_workflow')
+    workflow_tool.doActionFor(invoice, 'start_action')
+
+  def stepStopInvoice(self, sequence=None, **kw):
+    invoice = sequence.get('invoice')
+    workflow_tool = getToolByName(self.portal, 'portal_workflow')
+    workflow_tool.doActionFor(invoice, 'stop_action')
+
+  def stepDeliverInvoice(self, sequence=None, **kw):
+    invoice = sequence.get('invoice')
+    workflow_tool = getToolByName(self.portal, 'portal_workflow')
+    workflow_tool.doActionFor(invoice, 'deliver_action')
+
   def stepStartPackingList(self, sequence=None, **kw):
     packing_list = sequence.get('packing_list')
     workflow_tool = getToolByName(self.portal, 'portal_workflow')
@@ -441,6 +459,38 @@ class TestBPMMixin(ERP5TypeTestCase):
   def stepCheckInvoiceNormalMovements(self, sequence=None, **kw):
     self.logMessage('Assuming, that it is good...')
 
+  def stepCheckInvoiceAccountingMovements(self, sequence=None, **kw):
+    invoice = sequence.get('invoice')
+    currency = sequence.get('price_currency')
+    currency_precision = currency.getQuantityPrecision()
+    invoice_line_tax = sequence.get('invoice_line_tax')
+    invoice_line_discount = sequence.get('invoice_line_discount')
+
+    movement_list = invoice.getMovementList(
+        portal_type=invoice.getPortalAccountingMovementTypeList())
+    self.assertEqual(3, len(movement_list))
+    income_expense_line = [q for q in movement_list if
+        q.getSourceValue().getAccountType() in ['income', 'expense']][0]
+    payable_receivable_line = [q for q in movement_list if
+        q.getSourceValue().getAccountType() in ['asset/receivable',
+          'liability/payable']][0]
+    vat_line = [q for q in movement_list if q.getSourceValue() \
+        .getAccountType() in ['liability/payable/collected_vat',
+          'asset/receivable/refundable_vat']][0]
+
+    rounded_total_price = round(invoice.getTotalPrice(), currency_precision)
+    rounded_tax_price = round(invoice_line_tax.getTotalPrice(),
+        currency_precision)
+
+    self.assertEqual(abs(payable_receivable_line.getTotalPrice()),
+        rounded_total_price)
+
+    self.assertEqual(abs(vat_line.getTotalPrice()),
+        rounded_tax_price)
+
+    self.assertEquals(abs(income_expense_line.getTotalPrice()),
+        rounded_total_price - rounded_tax_price)
+
   def stepCheckInvoiceTradeModelRelatedMovements(self, sequence=None, **kw):
     # movement selection is done by hand, as no API is yet defined
     invoice = sequence.get('invoice')
@@ -452,6 +502,8 @@ class TestBPMMixin(ERP5TypeTestCase):
         q.getResourceValue().getUse() == 'tax' ][0]
     invoice_line_discount = [q for q in trade_model_invoice_line_list if
         q.getResourceValue().getUse() == 'discount' ][0]
+    sequence.edit(invoice_line_discount = invoice_line_discount)
+    sequence.edit(invoice_line_tax = invoice_line_tax)
     amount_list = trade_condition.getAggregatedAmountList(invoice)
     self.assertEquals(2, len(amount_list))
     discount_amount_list = [q for q in amount_list
@@ -836,7 +888,7 @@ class TestBPMMixin(ERP5TypeTestCase):
 
   def stepCreatePriceCurrency(self, sequence=None, **kw):
     sequence.edit(price_currency = self.createResource('Currency', \
-        title='Currency'))
+        title='Currency', base_unit_quantity=self.base_unit_quantity))
 
   def stepCreateProductTaxed(self, sequence=None, **kw):
     sequence.edit(product_taxed = self.createResource('Product',
@@ -1400,7 +1452,38 @@ class TestBPMTestCases(TestBPMMixin):
 
   def test_TradeModelRuleSimulationBuildInvoiceBuildInvoiceTransactionLines(self):
     """Check that having properly configured invoice transaction rule it invoice transaction lines are nicely generated and have proper amounts"""
-    raise NotImplementedError('TODO')
+    sequence_list = SequenceList()
+    sequence_string = self.trade_model_rule_simulation_common_string
+    sequence_string += """
+              ConfirmOrder
+              Tic
+    """ + self.aggregated_amount_simulation_check + """
+              GetPackingList
+              PackPackingList
+              Tic
+    """ + self.aggregated_amount_simulation_check + """
+              StartPackingList
+              StopPackingList
+              DeliverPackingList
+              Tic
+    """ + self.aggregated_amount_simulation_check + """
+              GetInvoice
+              CheckInvoiceCausalityStateSolved
+              CheckInvoiceNormalMovements
+              CheckInvoiceTradeModelRelatedMovements
+
+              StartInvoice
+              Tic
+              CheckInvoiceCausalityStateSolved
+              CheckInvoiceNormalMovements
+              CheckInvoiceTradeModelRelatedMovements
+              CheckInvoiceAccountingMovements
+              StopInvoice
+              DeliverInvoice
+              Tic
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
   def test_TradeModelRuleSimulationPackingListSplitBuildInvoiceBuild(self):
     """Check building invoice after splitting packing list"""
