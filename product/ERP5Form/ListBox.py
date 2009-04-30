@@ -250,6 +250,13 @@ class ListBoxWidget(Widget.Widget):
                                  required=0)
     property_names.append('stat_method')
 
+    row_css_method = fields.MethodField('row_css_method',
+                                 title='Row CSS Method',
+                                 description=('The method to set the css class name of a row'),
+                                 default='',
+                                 required=0)
+    property_names.append('row_css_method')
+
     selection_name = fields.StringField('selection_name',
                                  title='Selection Name',
                                  description=('The name of the selection to store'
@@ -741,6 +748,18 @@ class ListBoxRenderer:
 
   getStatMethodName = lazyMethod(getStatMethodName)
 
+  def getRowCSSMethodName(self):
+    """Return the name of the row CSS method. If not defined, return None.
+    """
+    row_css_method = self.field.get_value('row_css_method')
+    try:
+      name = getattr(row_css_method, 'method_name')
+    except AttributeError:
+      name = row_css_method
+    return name or None
+
+  getRowCSSMethodName = lazyMethod(getRowCSSMethodName)
+  
   def getSelectionName(self):
     """Return the selection name.
     """
@@ -1153,6 +1172,20 @@ class ListBoxRenderer:
 
   getStatMethod = lazyMethod(getStatMethod)
 
+  def getRowCSSMethod(self):
+    """Return the row css method object.
+    """
+    row_css_method_name = self.getRowCSSMethodName()
+    row_css_method = None
+    if row_css_method_name is not None:
+      try:
+        row_css_method = getattr(self.getContext(), row_css_method_name)
+      except AttributeError, KeyError:
+        row_css_method = None
+    return row_css_method
+
+  getRowCSSMethod = lazyMethod(getRowCSSMethod)
+  
   def getDomainSelection(self):
     """Return a DomainSelection object wrapped with the context.
     """
@@ -1433,7 +1466,7 @@ class ListBoxRenderer:
         value_list.append((None, None, None))
 
     return value_list
-
+  
   def getStatValueList(self):
     """Return a list of values, where each value is a tuple consisting of an original value and a processed value.
     A processed value is always an unicode object, and it may differ from the original value, for instance,
@@ -1507,6 +1540,14 @@ class ListBoxRenderer:
       value_list.append((original_value, processed_value))
 
     return value_list
+
+  def getRowCSSClassName(self, **kw):
+    """Return the css class name of a table row. If the method is not callable, returns None.
+    """
+    row_css_method = self.getRowCSSMethod()
+    if callable(row_css_method):
+      return row_css_method(**kw)
+    return None
 
   def getReportSectionList(self):
     """Return a list of report sections.
@@ -1818,6 +1859,11 @@ class ListBoxRenderer:
         else:
           index = i
         #LOG('ListBox', 0, 'current_section.__dict__ = %r' % (current_section.__dict__,))
+        new_param_dict = param_dict.copy()
+        new_param_dict['brain'] = current_section.object_list[offset]
+        new_param_dict['list_index'] = index
+        new_param_dict['total_size'] = self.total_size
+        row_css_class_name = self.getRowCSSClassName(**new_param_dict)
         line = line_class(renderer = self,
                           obj = current_section.object_list[offset],
                           index = index,
@@ -1826,7 +1872,8 @@ class ListBoxRenderer:
                           is_open = current_section.is_open,
                           selection_domain = current_section.selection_domain,
                           depth = current_section.depth,
-                          domain_title = current_section.domain_title)
+                          domain_title = current_section.domain_title,
+                          row_css_class_name = row_css_class_name)
         line_list.append(line)
     except IndexError:
       # If the report section list is empty, nothing to do.
@@ -1849,7 +1896,8 @@ class ListBoxRendererLine:
   """This class describes a line in a ListBox to assist ListBoxRenderer.
   """
   def __init__(self, renderer = None, obj = None, index = 0, is_summary = False, context = None,
-               is_open = False, selection_domain = None, depth = 0, domain_title=None, render_prefix=None):
+               is_open = False, selection_domain = None, depth = 0, domain_title=None, render_prefix=None,
+               row_css_class_name=None):
     """In reality, the object is a brain or a brain-like object.
     """
     self.renderer = renderer
@@ -1862,7 +1910,8 @@ class ListBoxRendererLine:
     self.depth = depth
     self.domain_title = domain_title
     self.render_prefix = render_prefix
-
+    self.row_css_class_name = row_css_class_name
+    
   def getBrain(self):
     """Return the brain. This can be identical to a real object.
     """
@@ -1932,6 +1981,11 @@ class ListBoxRendererLine:
     """
     return self.selection_domain
 
+  def getRowCSSClassName(self):
+    """Return the css class name of a row.
+    """
+    return self.row_css_class_name
+  
   def getValueList(self):
     """Return the list of values corresponding to selected columns.
 
@@ -2412,7 +2466,7 @@ class ListBoxListRenderer(ListBoxRenderer):
       listboxline = ListBoxLine()
       listboxline.markDataLine()
       listboxline.setSectionDepth(line.getDepth())
-
+      listboxline.setRowCSSClassName(line.getRowCSSClassName())
       if line.isSummary():
         listboxline.markSummaryLine()
         # XXX It was line.getDepth()+1 before, but
@@ -2718,7 +2772,8 @@ class ListBoxLine:
 
     self.column_dict = {}
     self.column_id_list = []
-
+    self.row_css_class_name = ''
+    
   security.declarePublic('__getitem__')
   def __getitem__(self, column_id):
     return self.getColumnProperty(column_id)
@@ -2962,6 +3017,18 @@ class ListBoxLine:
     """
     self.config_display_list = display_list
 
+  security.declarePublic('setRowCSSClassName')
+  def setRowCSSClassName(self, row_css_class_name):
+    """Set the CSS class name of a row
+    """
+    self.row_css_class_name = row_css_class_name
+
+  security.declarePublic('getRowCSSClassName')
+  def getRowCSSClassName(self):
+    """Return the CSS class name of a row
+    """
+    return self.row_css_class_name
+  
 InitializeClass(ListBoxLine)
 allow_class(ListBoxLine)
 
