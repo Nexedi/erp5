@@ -154,8 +154,8 @@ class BusinessPath(Path):
 
   # Dynamic context based categories
   def _getDynamicCategoryList(self, context):
-    return self._getDynamicSourceCategoryList(context) \
-         + self._getDynamicDestinationCategoryList(context)
+    return list(self._getDynamicSourceCategoryList(context)) \
+         + list(self._getDynamicDestinationCategoryList(context))
 
   def _getDynamicSourceCategoryList(self, context):
     method_id = self.getSourceMethodId()
