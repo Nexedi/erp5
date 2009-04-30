@@ -319,7 +319,8 @@
 \n
               <tal:block tal:repeat="p python: range(0, here.total_pages)">\n
                 <a tal:condition="is_gadget_mode"\n
-                   tal:define = "params python: {\'setPage:method\':\'\', \'list_start\': p*listbox_max_lines}"\n
+                   tal:define = "params python: {\'setPage:method\':\'\',\n
+                   \'list_start\': p*listbox_max_lines, \'list_style\':\'search\'}"\n
                    style="cursor:pointer;"\n
                    tal:content="python: p+1"\n
                    tal:attributes="class python: p == here.current_page and \'selected\' or nothing;\n

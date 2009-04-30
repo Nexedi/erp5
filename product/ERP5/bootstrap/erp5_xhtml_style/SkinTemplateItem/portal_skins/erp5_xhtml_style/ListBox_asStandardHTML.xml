@@ -118,50 +118,9 @@
 <tal:block tal:condition="python: here.total_pages > 1">\n
               <tal:block tal:condition="not: is_gadget_mode">\n
                 <td style="white-space: nowrap; vertical-align: middle; text-align: center;">\n
-                  <tal:block tal:condition="python: here.current_page > 0">\n
-                  <input\n
-                    id="listbox_first_page" type="image" src="2leftarrowv.png"\n
-                    title="First Page" name="firstPage:method"\n
-                    class="listbox_first_page"\n
-                    tal:attributes="id string:${field_id}_first_page;\n
-                                    name string:${field_id}_firstPage:method;\n
-                                    src string:${portal_url_string}/images/2leftarrowv.png"\n
-                    i18n:domain="ui" i18n:attributes="title" />\n
-                  <input\n
-                    id="listbox_previous_page" type="image" src="1leftarrowv.png"\n
-                    title="Previous Page" name="previousPage:method"\n
-                    class="listbox_previous_page"\n
-                    tal:attributes="id string:${field_id}_previous_page;\n
-                                    name string:${field_id}_previousPage:method;\n
-                                    src string:${portal_url_string}/images/1leftarrowv.png"\n
-                    i18n:domain="ui" i18n:attributes="title" />\n
-                  </tal:block>\n
-                  <input id="listbox_set_page" name="page_start" onblur="this.value=this.defaultValue"\n
-                         tal:attributes="id string:${field_id}_set_page;\n
-                                         name string:${field_id}_page_start;\n
-                                         value python:here.current_page + 1;\n
-                                         size python:len(str(here.total_pages));\n
-                                         onkeyup string:submitFormOnEnter(event, this.form, \'${field_id}_setPage\')" />\n
-                  / <tal:block content="here/total_pages" />\n
-                  <tal:block tal:condition="python: here.current_page < here.total_pages - 1">\n
-                  <input\n
-                    id="listbox_next_page" type="image" src="1rightarrowv.png"\n
-                    title="Next Page" name="nextPage:method" class="listbox_next_page"\n
-                    tal:attributes="id string:${field_id}_next_page;\n
-                                    name string:${field_id}_nextPage:method;\n
-                                    src string:${portal_url_string}/images/1rightarrowv.png"\n
-                    i18n:domain="ui" i18n:attributes="title" />\n
-                  <input\n
-                    id="listbox_last_page" type="image" src="2rightarrowv.png"\n
-                    title="Last Page" name="lastPage:method" class="listbox_last_page"\n
-                    tal:attributes="id string:${field_id}_last_page;\n
-                                    name string:${field_id}_lastPage:method;\n
-                                    src string:${portal_url_string}/images/2rightarrowv.png"\n
-                    i18n:domain="ui" i18n:attributes="title" />\n
-                  </tal:block>\n
+                  <tal:block metal:use-macro="real_context/page_navigation_render/macros/page_navigation" />\n
                 </td>\n
-              </tal:block> \n
-\n
+              </tal:block>\n
               <tal:block tal:condition="is_gadget_mode">\n
                 <td style="white-space: nowrap; vertical-align: middle; text-align: center;">\n
                   <img tal:condition="python: here.current_page > 0"\n
