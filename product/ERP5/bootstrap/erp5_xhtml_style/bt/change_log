@@ -1,3 +1,6 @@
+2009-04-30 Tatuya
+* append a condition to ListBox_asStandardHTML to set a CSS class name in a table row using 'Row CSS Method'.
+
 2009-04-18 Kazuhiko
 * Version 5.4.1
 

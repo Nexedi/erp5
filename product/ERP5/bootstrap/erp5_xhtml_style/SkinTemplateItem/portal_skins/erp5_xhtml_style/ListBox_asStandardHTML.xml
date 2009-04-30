@@ -330,7 +330,7 @@
 \n
             <tal:block tal:repeat="line line_list" tal:define="checked_uid_set here/getCheckedUidSet">\n
               <tr id="listbox_data_line_0" class="DataA"\n
-                tal:define="css python: test(repeat[\'line\'].index % 2, \'DataB\', \'DataA\');\n
+                tal:define="css python: line.getRowCSSClassName() or test(repeat[\'line\'].index % 2, \'DataB\', \'DataA\');\n
                             render_result line/render;"\n
                 tal:attributes="id string:${field_id}_data_line_${repeat/line/index}; class css">\n
                 <td tal:condition="is_report_tree_mode" class="DataA" align="left" valign="middle"\n
