@@ -884,3 +884,19 @@ class Delivery(XMLObject, ImmobilisationDelivery):
       else:
         raise 'SimulationError', '%s_getRuleReference script is missing.' \
               % self.getPortalType()
+
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getRootSpecialiseValue')
+    def getRootSpecialiseValue(self, portal_type_list):
+      """Returns first specialise value matching portal type"""
+      def findSpecialiseValue(context):
+        if context.getPortalType() in portal_type_list:
+          return context
+        if getattr(context, 'getSpecialiseValueList', None) is not None:
+          for specialise in context.getSpecialiseValueList():
+            specialise_value = findSpecialiseValue(specialise)
+            if specialise_value is not None:
+              return specialise_value
+        return None
+      return findSpecialiseValue(self)
+

@@ -206,28 +206,54 @@ class AppliedRule(XMLObject):
         return self
       return self.getParentValue().getRootAppliedRule()
 
+    def _getExplanationSpecialiseValue(self, portal_type_list):
+      """Returns first found specialise value of delivery or order
+      In case if self is root Applied Rule uses causality
+      Otherwise uses delivery, than order of parent movements
+      Recurses to parents"""
+      def findSpecialiseValueBySimulation(movement):
+        specialise_value = None
+        if movement.getPortalType() != 'Simulation Movement':
+          return None
+        delivery, order = movement.getDeliveryValue(), movement.getOrderValue()
+
+        if delivery is not None:
+          specialise_value = delivery.getExplanationValue() \
+              .getRootSpecialiseValue(portal_type_list)
+          if specialise_value is not None:
+            return specialise_value
+        if order is not None:
+          specialise_value = order.getExplanationValue() \
+              .getRootSpecialiseValue(portal_type_list)
+          if specialise_value is not None:
+            return specialise_value
+        return findSpecialiseValueBySimulation(movement.getParentValue() \
+            .getParentValue())
+
+      if self.getRootAppliedRule() == self:
+        return self.getCausalityValue() \
+            .getRootSpecialiseValue(portal_type_list)
+      movement = self.getParentValue()
+      return findSpecialiseValueBySimulation(movement)
+
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                             'getTradeConditionValue')
+    def getTradeConditionValue(self):
+      """Return the trade condition that has been used in this
+      simulation, or None if none has been used.
+      """
+      return self._getExplanationSpecialiseValue(
+          ('Purchase Trade Condition', 'Sale Trade Condition'))
+
     security.declareProtected(Permissions.AccessContentsInformation,
                              'getBusinessProcessValue')
     def getBusinessProcessValue(self):
       """Return the business process model that has been used in this
-      simulation, or None if no business process has been used.
+      simulation, or None if none  has been used.
       """
-      root = self.getRootAppliedRule()
-      causality = root.getCausalityValue()
-
-      def findBusinessProcessModel(context):
-        if context.getPortalType() == 'Business Process':
-          return context
-        for specialise in context.getSpecialiseValueList():
-          business_process = findBusinessProcessModel(specialise)
-          if business_process is not None:
-            return business_process
-
-      if causality is not None and getattr(causality, 'getSpecialiseValueList',
-                                            None) is not None:
-        return findBusinessProcessModel(causality)
-
-      return None
+      return self._getExplanationSpecialiseValue(
+          ('Business Process',))
 
     security.declareProtected(Permissions.ModifyPortalContent,
                               'notifySimulationChange')
