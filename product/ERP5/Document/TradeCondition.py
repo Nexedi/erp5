@@ -37,6 +37,8 @@ from Products.ERP5.Document.Transformation import Transformation
 from Products.ERP5.Document.Path import Path
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 
+class CircularException(Exception): pass
+
 class TradeCondition(Path, Transformation):
     """
       Trade Conditions are used to store the conditions (payment, logistic,...)
@@ -82,14 +84,50 @@ class TradeCondition(Path, Transformation):
       return [amount for amount in aggregated_amount_list if
           amount.getResource() not in modified_resource_list]
 
+    def getTradeModelLineComposedList(self, context=None):
+      """Returns list of Trade Model Lines using composition
+      Resource of Trade Model Line is used to hide other Trade Model Line
+      In chain first found Trade Model Line has precedence
+      Context's, if not None, Trade Model Lines have precedence"""
+      visited_trade_condition_list = []
+      def findSpecialiseValueList(context):
+        specialise_value_list = []
+        if context.getPortalType() in self.getPortalType():
+          specialise_value_list.append(context)
+        for specialise in context.getSpecialiseValueList():
+          if specialise in visited_trade_condition_list:
+            raise CircularException
+          visited_trade_condition_list.append(specialise)
+          specialise_value_list.extend(findSpecialiseValueList(specialise))
+        return specialise_value_list
+
+      resource_list = []
+      trade_model_line_composed_list = []
+      containting_object_list = []
+      if context is not None:
+        containting_object_list.append(context)
+      containting_object_list.extend(findSpecialiseValueList(self))
+
+      for specialise in containting_object_list:
+        for trade_model_line in specialise.contentValues(
+            portal_type='Trade Model Line'):
+          resource = trade_model_line.getResource()
+          if resource not in resource_list:
+            trade_model_line_composed_list.append(trade_model_line)
+            resource_list.append(resource)
+      return trade_model_line_composed_list
+
     def getAggregatedAmountList(self, context, **kw):
       result = AggregatedAmountList()
+
+      trade_model_line_composed_list = \
+          self.getTradeModelLineComposedList(context)
 
       need_to_run = 1
       movement_list = []
       while need_to_run:
         need_to_run = 0
-        for model in self.objectValues(portal_type='Trade Model Line'):
+        for model in trade_model_line_composed_list:
           model_result = model.getAggregatedAmountList(context,
             movement_list=movement_list, current_aggregated_amount_list = result,
             **kw)

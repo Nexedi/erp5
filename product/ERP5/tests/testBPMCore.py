@@ -365,10 +365,12 @@ class TestBPMMixin(ERP5TypeTestCase):
     node = module.newContent(portal_type=self.node_portal_type)
     sequence.edit(destination_section = node)
 
-  def stepCreateOrder(self, sequence=None, **kw):
+  def createOrder(self):
     module = self.portal.getDefaultModule(portal_type=self.order_portal_type)
-    order = module.newContent(portal_type=self.order_portal_type)
-    sequence.edit(order = order)
+    return module.newContent(portal_type=self.order_portal_type)
+
+  def stepCreateOrder(self, sequence=None, **kw):
+    sequence.edit(order = self.createOrder())
 
   def stepSpecialiseOrderTradeCondition(self, sequence=None, **kw):
     order = sequence.get('order')
@@ -971,13 +973,15 @@ class TestBPMMixin(ERP5TypeTestCase):
       use='discount',
     ))
 
-  def stepCreateTradeCondition(self, sequence=None, **kw):
+  def createTradeCondition(self):
     module = self.portal.getDefaultModule(
         portal_type=self.trade_condition_portal_type)
     trade_condition = module.newContent(
         portal_type=self.trade_condition_portal_type)
+    return trade_condition
 
-    sequence.edit(trade_condition = trade_condition)
+  def stepCreateTradeCondition(self, sequence=None, **kw):
+    sequence.edit(trade_condition = self.createTradeCondition())
 
   def stepCreateOrderLine(self, sequence=None, **kw):
     order = sequence.get('order')
@@ -1092,11 +1096,14 @@ class TestBPMMixin(ERP5TypeTestCase):
       order_line_discounted_taxed = order_line
     )
 
+  def createTradeModelLine(self, trade_condition, **kw):
+    return trade_condition.newContent(
+        portal_type='Trade Model Line',
+        **kw)
+
   def stepCreateTradeModelLine(self, sequence=None, **kw):
     trade_condition = sequence.get('trade_condition')
-    trade_model_line = trade_condition.newContent(
-        portal_type='Trade Model Line')
-    sequence.edit(trade_model_line = trade_model_line)
+    sequence.edit(trade_model_line = self.createTradeModelLine(trade_condition))
 
   def stepSpecialiseTradeConditionWithBusinessProcess(self, sequence=None,
       **kw):
@@ -1357,6 +1364,150 @@ class TestBPMTestCases(TestBPMMixin):
               ModifyOrderLineDiscountedTaxed
               Tic
   """ + aggregated_amount_list_check
+
+  def test_TradeConditionTradeModelLineCircularComposition(self):
+    """
+      If Trade Condition is specialised by another Trade Condition they
+      Trade Model Lines shall be merged.
+    """
+    trade_condition_1 = self.createTradeCondition()
+    trade_condition_2 = self.createTradeCondition()
+
+    trade_condition_1.setSpecialiseValue(trade_condition_2)
+    trade_condition_2.setSpecialiseValue(trade_condition_1)
+
+    from Products.ERP5Type.Document.TradeCondition import CircularException
+    self.assertRaises(
+      CircularException,
+      trade_condition_1.getTradeModelLineComposedList
+    )
+
+  def test_TradeConditionTradeModelLineBasicComposition(self):
+    """
+      If Trade Condition is specialised by another Trade Condition they
+      Trade Model Lines shall be merged.
+    """
+    service_1 = self.createResource('Service')
+    service_2 = self.createResource('Service')
+
+    trade_condition_1 = self.createTradeCondition()
+    trade_condition_2 = self.createTradeCondition()
+
+    trade_condition_1.setSpecialiseValue(trade_condition_2)
+
+    trade_condition_1_trade_model_line = self.createTradeModelLine(
+        trade_condition_1,
+        resource_value = service_1)
+
+    trade_condition_2_trade_model_line = self.createTradeModelLine(
+        trade_condition_2,
+        resource_value = service_2)
+
+    self.assertSameSet(
+      [trade_condition_1_trade_model_line, trade_condition_2_trade_model_line],
+      trade_condition_1.getTradeModelLineComposedList()
+    )
+
+  def test_TradeConditionTradeModelLineBasicCompositionWithOrder(self):
+    """
+      If Trade Condition is specialised by another Trade Condition they
+      Trade Model Lines shall be merged.
+    """
+    service_1 = self.createResource('Service')
+    service_2 = self.createResource('Service')
+    service_3 = self.createResource('Service')
+
+    trade_condition_1 = self.createTradeCondition()
+    trade_condition_2 = self.createTradeCondition()
+    order = self.createOrder()
+
+    trade_condition_1.setSpecialiseValue(trade_condition_2)
+    order.setSpecialiseValue(trade_condition_1)
+
+    trade_condition_1_trade_model_line = self.createTradeModelLine(
+        trade_condition_1,
+        resource_value = service_1)
+
+    trade_condition_2_trade_model_line = self.createTradeModelLine(
+        trade_condition_2,
+        resource_value = service_2)
+
+    order_trade_model_line = self.createTradeModelLine(
+        order,
+        resource_value = service_3)
+
+    self.assertSameSet(
+      [trade_condition_1_trade_model_line, trade_condition_2_trade_model_line],
+      trade_condition_1.getTradeModelLineComposedList()
+    )
+
+    self.assertSameSet(
+      [trade_condition_1_trade_model_line, trade_condition_2_trade_model_line,
+        order_trade_model_line],
+      trade_condition_1.getTradeModelLineComposedList(context=order)
+    )
+
+  def test_TradeConditionTradeModelLineResourceIsShadowingCompositionWithOrder(self):
+    """
+      If Trade Condition is specialised by another Trade Condition they
+      Trade Model Lines shall be merged.
+    """
+    service_1 = self.createResource('Service')
+    service_2 = self.createResource('Service')
+
+    trade_condition_1 = self.createTradeCondition()
+    trade_condition_2 = self.createTradeCondition()
+    order = self.createOrder()
+
+    trade_condition_1.setSpecialiseValue(trade_condition_2)
+    order.setSpecialiseValue(trade_condition_1)
+
+    trade_condition_1_trade_model_line = self.createTradeModelLine(
+        trade_condition_1,
+        resource_value = service_1)
+
+    trade_condition_2_trade_model_line = self.createTradeModelLine(
+        trade_condition_2,
+        resource_value = service_2)
+
+    order_trade_model_line = self.createTradeModelLine(
+        order,
+        resource_value = service_2)
+
+    self.assertSameSet(
+      [trade_condition_1_trade_model_line, trade_condition_2_trade_model_line],
+      trade_condition_1.getTradeModelLineComposedList()
+    )
+
+    self.assertSameSet(
+      [trade_condition_1_trade_model_line, order_trade_model_line],
+      trade_condition_1.getTradeModelLineComposedList(context=order)
+    )
+
+  def test_TradeConditionTradeModelLineResourceIsShadowingComposition(self):
+    """
+      If Trade Condition is specialised by another Trade Condition
+      and resource is repeated, only first Trade Model Line shall be returned.
+    """
+    service = self.createResource('Service')
+
+    trade_condition_1 = self.createTradeCondition()
+    trade_condition_2 = self.createTradeCondition()
+
+    trade_condition_1.setSpecialiseValue(trade_condition_2)
+
+    trade_condition_1_trade_model_line = self.createTradeModelLine(
+        trade_condition_1,
+        resource_value = service)
+
+    trade_condition_2_trade_model_line = self.createTradeModelLine(
+        trade_condition_2,
+        resource_value = service)
+
+    self.assertSameSet(
+      [trade_condition_1_trade_model_line],
+      trade_condition_1.getTradeModelLineComposedList()
+    )
 
   def test_getAggreagtedAmountList(self):
     """
