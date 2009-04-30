@@ -154,22 +154,22 @@ class BusinessPath(Path):
 
   # Dynamic context based categories
   def _getDynamicCategoryList(self, context):
-    return list(self._getDynamicSourceCategoryList(context)) \
-         + list(self._getDynamicDestinationCategoryList(context))
+    return self._getDynamicSourceCategoryList(context) \
+         + self._getDynamicDestinationCategoryList(context)
 
   def _getDynamicSourceCategoryList(self, context):
     method_id = self.getSourceMethodId()
     if method_id:
       method = getattr(self, method_id)
       return method(context)
-    return ()
+    return []
 
   def _getDynamicDestinationCategoryList(self, context):
     method_id = self.getDestinationMethodId()
     if method_id:
       method = getattr(self, method_id)
       return method(context)
-    return ()
+    return []
 
   # Core API
   def isBuildable(self, explanation):
