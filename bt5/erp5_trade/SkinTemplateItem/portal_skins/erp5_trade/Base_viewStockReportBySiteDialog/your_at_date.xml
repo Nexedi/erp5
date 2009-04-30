@@ -13,11 +13,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>required</string>
+                <string>description</string>
                 <string>title</string>
                 <string>default_now</string>
                 <string>date_only</string>
-                <string>timezone_style</string>
-                <string>required</string>
               </list>
             </value>
         </item>
@@ -87,12 +87,16 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The Date</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_date</string> </value>
+                    <value> <string>your_from_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -101,10 +105,6 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>timezone_style</string> </key>
-                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>

@@ -10,6 +10,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>my_translated_simulation_state_title</string> </value>
         </item>
@@ -68,11 +74,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_translated_simulation_state_title</string> </value>
+                    <value> <string>my_translated_workflow_state_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Inventory_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

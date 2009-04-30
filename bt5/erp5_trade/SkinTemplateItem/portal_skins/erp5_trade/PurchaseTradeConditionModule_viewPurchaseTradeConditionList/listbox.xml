@@ -12,7 +12,24 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>domain_root_list</string>
+                <string>select</string>
+                <string>title</string>
+                <string>report_root_list</string>
+                <string>search_columns</string>
+                <string>selection_name</string>
+                <string>columns</string>
+                <string>sort</string>
+                <string>count_method</string>
+                <string>all_columns</string>
+                <string>default_params</string>
+                <string>list_method</string>
+                <string>domain_tree</string>
+                <string>search</string>
+                <string>portal_types</string>
+                <string>lines</string>
+              </list>
             </value>
         </item>
         <item>
@@ -62,6 +79,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>lines</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -73,19 +96,282 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Purchase Trade Condition</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_destination_section_title</string>
+                          <string>Client</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_destination_title</string>
+                          <string>Recipient or Beneficiary</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_source_section_title</string>
+                          <string>Supplier</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_source_title</string>
+                          <string>Sender or Provider</string>
+                        </tuple>
+                        <tuple>
+                          <string>effective_date</string>
+                          <string>Effective Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>expiration_date</string>
+                          <string>Expiration Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>specialise_title</string>
+                          <string>Specialised Trade Conditions</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Purchase Trade Condition</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_destination_section_title</string>
+                          <string>Client</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_destination_title</string>
+                          <string>Recipient or Beneficiary</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_source_section_title</string>
+                          <string>Supplier</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_source_title</string>
+                          <string>Sender or Provider</string>
+                        </tuple>
+                        <tuple>
+                          <string>effective_date</string>
+                          <string>Effective Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>expiration_date</string>
+                          <string>Expiration Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>default_params</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>destination_section</string>
+                          <string>Destination Section</string>
+                        </tuple>
+                        <tuple>
+                          <string>incoterm</string>
+                          <string>Incoterm</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery_mode</string>
+                          <string>Delivery Mode</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>domain_tree</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_purchase_trade_condition_module_listbox</string> </value>
+                    <value> <string>my_view_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>PurchaseTradeCondition_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>list_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Purchase Trade Condition</string>
+                          <string>Purchase Trade Condition</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>report_root_list</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>destination_section</string>
+                          <string>Destination Section</string>
+                        </tuple>
+                        <tuple>
+                          <string>incoterm</string>
+                          <string>Incoterm</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery_mode</string>
+                          <string>Delivery Mode</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>search</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>search_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Purchase Trade Condition</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_destination_section_title</string>
+                          <string>Client</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_destination_title</string>
+                          <string>Recipient or Beneficiary</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_source_section_title</string>
+                          <string>Supplier</string>
+                        </tuple>
+                        <tuple>
+                          <string>default_source_title</string>
+                          <string>Sender or Provider</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>specialise_title</string>
+                          <string>Specialised Trade Conditions</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>select</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>purchase_trade_condition_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>ascending</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Purchase Trade Conditions</string> </value>
+                </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: preferences.getPreference(\'preferred_listbox_list_mode_line_count\', 30)</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>countFolder</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <tuple>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>

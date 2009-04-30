@@ -13,8 +13,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>default</string>
+                <string>description</string>
+                <string>title</string>
                 <string>editable</string>
+                <string>display_width</string>
               </list>
             </value>
         </item>
@@ -57,12 +59,10 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>display_width</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -84,8 +84,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>description</string> </key>
+                    <value> <string>Default Quantity of a resource in ERP5. It can be a product or it can be time quantity like hours or minutes for example. Quantity can be found in almost every business field of ERP5 and will always have this meaning, unless the term is different or precise, such as Priced Quantity for example.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -93,18 +93,38 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_quantity</string> </value>
+                    <value> <string>my_money_quantity</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Quantity</string> </value>
+                </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: preferences.getPreference(\'preferred_quantity_field_width\', 5)</string> </value>
         </item>
       </dictionary>
     </pickle>

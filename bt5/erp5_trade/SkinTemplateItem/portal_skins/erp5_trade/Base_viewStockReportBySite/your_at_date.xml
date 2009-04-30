@@ -13,7 +13,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>title</string>
+                <string>editable</string>
                 <string>date_only</string>
+                <string>default</string>
               </list>
             </value>
         </item>
@@ -56,8 +59,10 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>date_only</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>default</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -83,19 +88,43 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>your_at_date</string> </value>
+                    <value> <string>your_from_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewReportFieldLibrary</string> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>At Date</string> </value>
+                </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>request/at_date | nothing</string> </value>
         </item>
       </dictionary>
     </pickle>

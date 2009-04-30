@@ -13,8 +13,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>description</string>
                 <string>title</string>
-                <string>input_style</string>
               </list>
             </value>
         </item>
@@ -81,15 +81,11 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_float_index</string> </value>
+                    <value> <string>my_float_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Tax_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>input_style</string> </key>
-                    <value> <string>-1234.5</string> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

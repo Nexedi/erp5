@@ -10,6 +10,15 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list>
+                <string>title</string>
+                <string>portal_type</string>
+              </list>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>my_destination_title</string> </value>
         </item>
@@ -68,15 +77,30 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_destination_title</string> </value>
+                    <value> <string>my_relation_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Inventory_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Organisation</string>
+                          <string>Organisation</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Warehouse</string> </value>
                 </item>
               </dictionary>
             </value>

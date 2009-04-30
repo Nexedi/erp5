@@ -135,7 +135,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Default Field Library For Order Dialogs</string> </value>
+            <value> <string>[Deprecated]Default Field Library For Order Dialogs</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

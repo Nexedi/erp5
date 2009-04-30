@@ -13,7 +13,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>description</string>
+                <string>title</string>
                 <string>editable</string>
+                <string>display_width</string>
               </list>
             </value>
         </item>
@@ -79,16 +82,20 @@
                     <value> <string>script used to do localized calculs</string> </value>
                 </item>
                 <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
+                </item>
+                <item>
                     <key> <string>editable</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_calculation_script_id</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Tax_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

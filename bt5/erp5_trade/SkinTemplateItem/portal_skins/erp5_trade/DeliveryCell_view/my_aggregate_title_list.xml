@@ -12,7 +12,14 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>catalog_index</string>
+                <string>title</string>
+                <string>width</string>
+                <string>portal_type</string>
+                <string>view_separator</string>
+                <string>base_category</string>
+              </list>
             </value>
         </item>
         <item>
@@ -62,6 +69,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -73,19 +86,71 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>base_category</string> </key>
+                    <value> <string>aggregate</string> </value>
+                </item>
+                <item>
+                    <key> <string>catalog_index</string> </key>
+                    <value> <string>title</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_aggregate_title_list</string> </value>
+                    <value> <string>my_multi_relation_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>DeliveryCell_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Item</string>
+                          <string>Item</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Item</string> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<br />\n
+
+
+]]></string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
+                    <value> <int>20</int> </value>
+                </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [(x, x) for x in here.getPortalItemTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>

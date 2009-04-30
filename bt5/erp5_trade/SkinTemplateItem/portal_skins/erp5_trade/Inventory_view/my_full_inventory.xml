@@ -10,6 +10,14 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list>
+                <string>title</string>
+              </list>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>my_full_inventory</string> </value>
         </item>
@@ -67,16 +75,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>Defines whether the inventory is partial or full. If this is a full inventory, any items not in the inventory will be considered as missing.</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_full_inventory</string> </value>
+                    <value> <string>my_checkbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Inventory_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

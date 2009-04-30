@@ -13,6 +13,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>title</string>
                 <string>portal_type</string>
               </list>
             </value>
@@ -75,16 +76,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>The Order which caused this Packing List.</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_causality_title</string> </value>
+                    <value> <string>my_relation_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>SalePackingList_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>

@@ -13,6 +13,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>y_size_block</string>
                 <string>title</string>
                 <string>report_root_list</string>
                 <string>selection_name</string>
@@ -70,10 +71,6 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -87,7 +84,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -130,6 +127,10 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Sale Order Planning</string> </value>
+                </item>
+                <item>
+                    <key> <string>y_size_block</string> </key>
+                    <value> <string>quantity</string> </value>
                 </item>
               </dictionary>
             </value>

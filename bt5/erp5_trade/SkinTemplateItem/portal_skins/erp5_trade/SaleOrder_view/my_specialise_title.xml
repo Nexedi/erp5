@@ -12,7 +12,11 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>title</string>
+                <string>relation_setter_id</string>
+                <string>portal_type</string>
+              </list>
             </value>
         </item>
         <item>
@@ -74,15 +78,34 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_specialise_title</string> </value>
+                    <value> <string>my_relation_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>SaleOrder_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Sale Trade Condition</string>
+                          <string>Sale Trade Condition</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>relation_setter_id</string> </key>
+                    <value> <string>Order_setSpecialiseAndApplyTradeCondition</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Sale Trade Condition</string> </value>
                 </item>
               </dictionary>
             </value>
