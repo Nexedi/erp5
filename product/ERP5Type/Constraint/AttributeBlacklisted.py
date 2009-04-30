@@ -37,7 +37,7 @@ class AttributeBlacklisted(PropertyExistence):
     { 'id'            : 'title',
       'description'   : 'Title should not belong to blacklist words',
       'type'          : 'AttributeBlacklisted',
-      'title'         : "python: {'portal_type': object.getPortalType(), 'title': ('Foo', 'Bar',)}",
+      'title'         : "python: ('Foo', 'Bar',)",
       'condition'     : 'object/getTitle',
     },
   """
@@ -50,22 +50,21 @@ class AttributeBlacklisted(PropertyExistence):
   def checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
       We will make sure that each non None constraint_definition is 
-      satisfied (unicity)
-      This Constraint use portal_catalog
+      satisfied
     """
     if not self._checkConstraintCondition(obj):
       return []
     errors = PropertyExistence.checkConsistency(self, obj, fixit=fixit)
-    for attribute_name, expression_criterion_dict in self.constraint_definition.items():
+    for attribute_name, expression_blaklisted_list in self.constraint_definition.items():
       message_id = None
       mapping = dict(attribute_name=attribute_name)
       #Evaluate expression_criterion_dict
-      expression = Expression(expression_criterion_dict)
+      expression = Expression(expression_blaklisted_list)
       from Products.ERP5Type.Utils import createExpressionContext
       econtext = createExpressionContext(obj)
-      criterion_dict = expression(econtext)
-      result = obj.portal_catalog.countResults(**criterion_dict)[0][0]
-      if result:
+      blaklisted_list = expression(econtext)
+      value = obj.getProperty(attribute_name)
+      if value in blaklisted_list:
         message_id = 'message_invalid_attribute_blacklisted'
       # Generate error
       if message_id is not None:
