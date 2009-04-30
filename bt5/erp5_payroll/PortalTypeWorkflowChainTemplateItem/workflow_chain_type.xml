@@ -1,5 +1,9 @@
 <workflow_chain>
  <chain>
+  <type>Employment Contract</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Pay Sheet Cell</type>
   <workflow>edit_workflow, delivery_movement_simulation_interaction_workflow, delivery_movement_causality_interaction_workflow</workflow>
  </chain>
@@ -9,7 +13,7 @@
  </chain>
  <chain>
   <type>Pay Sheet Model</type>
-  <workflow>paysheet_model_interaction_workflow, validation_workflow, edit_workflow</workflow>
+  <workflow>edit_workflow, paysheet_model_interaction_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Pay Sheet Model Line</type>

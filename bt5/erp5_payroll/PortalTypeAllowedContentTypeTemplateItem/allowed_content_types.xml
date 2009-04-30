@@ -5,14 +5,17 @@
  <portal_type id="Annotation Line">
   <item>Annotation Line</item>
  </portal_type>
+ <portal_type id="Employment Contract Module">
+  <item>Employment Contract</item>
+ </portal_type>
  <portal_type id="Pay Sheet Line">
   <item>Pay Sheet Cell</item>
  </portal_type>
  <portal_type id="Pay Sheet Model">
   <item>Pay Sheet Model Ratio Line</item>
   <item>Annotation Line</item>
-  <item>Pay Sheet Model Slice</item>
   <item>Pay Sheet Model Line</item>
+  <item>Pay Sheet Model Slice</item>
   <item>Payment Condition</item>
  </portal_type>
  <portal_type id="Pay Sheet Model Line">
