@@ -1,8 +1,12 @@
 Business Process Module | Business Process
 Business Process | Business Path
 Business Process | Business State
+Purchase Invoice Transaction | Trade Model Line
+Purchase Order | Trade Model Line
 Purchase Trade Condition | Trade Model Line
 Rule Tool | Trade Model Rule
+Sale Invoice Transaction | Trade Model Line
+Sale Order | Trade Model Line
 Sale Trade Condition | Trade Model Line
 Trade Model Line | Trade Model Cell
 Trade Model Rule | Category Divergence Tester

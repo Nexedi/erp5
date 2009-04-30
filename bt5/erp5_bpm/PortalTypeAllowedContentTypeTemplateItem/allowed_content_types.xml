@@ -1,16 +1,28 @@
 <allowed_content_type_list>
  <portal_type id="Business Process">
-  <item>Business State</item>
   <item>Business Path</item>
+  <item>Business State</item>
  </portal_type>
  <portal_type id="Business Process Module">
   <item>Business Process</item>
+ </portal_type>
+ <portal_type id="Purchase Invoice Transaction">
+  <item>Trade Model Line</item>
+ </portal_type>
+ <portal_type id="Purchase Order">
+  <item>Trade Model Line</item>
  </portal_type>
  <portal_type id="Purchase Trade Condition">
   <item>Trade Model Line</item>
  </portal_type>
  <portal_type id="Rule Tool">
   <item>Trade Model Rule</item>
+ </portal_type>
+ <portal_type id="Sale Invoice Transaction">
+  <item>Trade Model Line</item>
+ </portal_type>
+ <portal_type id="Sale Order">
+  <item>Trade Model Line</item>
  </portal_type>
  <portal_type id="Sale Trade Condition">
   <item>Trade Model Line</item>

@@ -7,12 +7,16 @@ Business Process | view_supply_state_list
 Business State | view
 Invoice Line | view_trade_model
 Purchase Invoice Transaction | view_trade_model
+Purchase Invoice Transaction | view_trade_model_line_list
 Purchase Order Line | view_trade_model
 Purchase Order | view_trade_model
+Purchase Order | view_trade_model_line_list
 Purchase Trade Condition | view_trade_model_line_list
 Sale Invoice Transaction | view_trade_model
+Sale Invoice Transaction | view_trade_model_line_list
 Sale Order Line | view_trade_model
 Sale Order | view_trade_model
+Sale Order | view_trade_model_line_list
 Sale Trade Condition | view_trade_model_line_list
 System Preference | bpm_preference
 Trade Model Cell | view
