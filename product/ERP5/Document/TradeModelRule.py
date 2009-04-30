@@ -148,6 +148,8 @@ class TradeModelRule(TransformationRule):
     parent_movement = applied_rule.getParentValue()
     if parent_movement is not None:
       if not parent_movement.isFrozen():
+        # XXX This will change, as soon as frozen will no longer be an expand
+        # stopper
         add_list, modify_dict, \
           delete_list = self._getCompensatedMovementList(applied_rule,
               matching_property_list= ('resource',), **kw)
