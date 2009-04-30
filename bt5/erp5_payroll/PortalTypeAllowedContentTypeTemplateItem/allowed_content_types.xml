@@ -31,4 +31,7 @@
  <portal_type id="Payroll Service Module">
   <item>Payroll Service</item>
  </portal_type>
+ <portal_type id="Preference">
+  <item>Pay Sheet Transaction</item>
+ </portal_type>
 </allowed_content_type_list>
