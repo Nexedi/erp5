@@ -107,6 +107,8 @@ class TradeCondition(Path, Transformation):
       if context is not None:
         document = context
         if getattr(context, 'getExplanationValue', None) is not None:
+          # if context is movement it is needed to ask its explanation
+          # for contained Trade Model Lines
           document = context.getExplanationValue()
         containting_object_list.append(document)
       containting_object_list.extend(findSpecialiseValueList(self))
