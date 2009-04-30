@@ -105,7 +105,10 @@ class TradeCondition(Path, Transformation):
       trade_model_line_composed_list = []
       containting_object_list = []
       if context is not None:
-        containting_object_list.append(context)
+        document = context
+        if getattr(context, 'getExplanationValue', None) is not None:
+          document = context.getExplanationValue()
+        containting_object_list.append(document)
       containting_object_list.extend(findSpecialiseValueList(self))
 
       for specialise in containting_object_list:

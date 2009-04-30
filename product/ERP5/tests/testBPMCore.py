@@ -1096,10 +1096,14 @@ class TestBPMMixin(ERP5TypeTestCase):
       order_line_discounted_taxed = order_line
     )
 
-  def createTradeModelLine(self, trade_condition, **kw):
-    return trade_condition.newContent(
+  def createTradeModelLine(self, document, **kw):
+    return document.newContent(
         portal_type='Trade Model Line',
         **kw)
+
+  def stepOrderCreateTradeModelLine(self, sequence=None, **kw):
+    order = sequence.get('order')
+    sequence.edit(trade_model_line = self.createTradeModelLine(order))
 
   def stepCreateTradeModelLine(self, sequence=None, **kw):
     trade_condition = sequence.get('trade_condition')
@@ -1519,6 +1523,48 @@ class TestBPMTestCases(TestBPMMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  order_specialise_aggregated_amount_common_sequence_string = \
+      common_documents_creation + """
+              CreateBusinessProcess
+              CreateBusinessState
+              ModifyBusinessStateTaxed
+              CreateBusinessState
+              ModifyBusinessStateInvoiced
+              CreateBusinessPath
+              ModifyBusinessPathTaxing
+              CreateBusinessPath
+              ModifyBusinessPathDiscounting
+              CreateTradeCondition
+              SpecialiseTradeConditionWithBusinessProcess
+              CreateTradeModelLine
+              ModifyTradeModelLineTax
+              Tic
+              CreateOrder
+              OrderCreateTradeModelLine
+              ModifyTradeModelLineDiscount
+              SpecialiseOrderTradeCondition
+              FillOrder
+              Tic
+              CreateOrderLine
+              ModifyOrderLineTaxed
+              CreateOrderLine
+              ModifyOrderLineDiscounted
+              CreateOrderLine
+              ModifyOrderLineDiscountedTaxed
+              Tic
+    """ + aggregated_amount_list_check
+
+  def test_getAggreagtedAmountListOrderSpecialise(self):
+    """
+      Test for case, when discount contributes to tax, and order has mix of contributing lines and order itself defines Trade Model Line
+    """
+    sequence_list = SequenceList()
+    sequence_string = self\
+        .order_specialise_aggregated_amount_common_sequence_string
+
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
   def test_getAggreagtedAmountList_afterUpdateAggregatedAmountList(self):
     """
       Test for case, when discount contributes to tax, and order has mix of contributing lines
@@ -1561,6 +1607,34 @@ class TestBPMTestCases(TestBPMMixin):
     """Tests tree of simulations from Trade Model Rule with reexpanding"""
     sequence_list = SequenceList()
     sequence_string = self.trade_model_rule_simulation_common_string + """
+              ModifyAgainOrderLineTaxed
+              ModifyAgainOrderLineDiscounted
+              ModifyAgainOrderLineDiscountedTaxed
+              Tic
+    """ + self.aggregated_amount_simulation_check
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  trade_model_rule_simulation_common_order_specialised_string = \
+      order_specialise_aggregated_amount_common_sequence_string + """
+              Tic
+              PlanOrder
+              Tic
+  """ + aggregated_amount_simulation_check
+
+  def test_TradeModelRuleSimulationExpandOrderSpecialise(self):
+    """Tests tree of simulations from Trade Model Rule"""
+    sequence_list = SequenceList()
+    sequence_string = self \
+        .trade_model_rule_simulation_common_order_specialised_string
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_TradeModelRuleSimulationReexpandOrderSpecialise(self):
+    """Tests tree of simulations from Trade Model Rule with reexpanding"""
+    sequence_list = SequenceList()
+    sequence_string = self \
+        .trade_model_rule_simulation_common_order_specialised_string+ """
               ModifyAgainOrderLineTaxed
               ModifyAgainOrderLineDiscounted
               ModifyAgainOrderLineDiscountedTaxed
