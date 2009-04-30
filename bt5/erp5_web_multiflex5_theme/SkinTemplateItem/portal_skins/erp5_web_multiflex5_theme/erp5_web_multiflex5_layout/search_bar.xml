@@ -106,7 +106,7 @@
 
 <div class="searchform">\n
 <fieldset>\n
-<input name="field" class="field" value="" onkeyup="submitFormOnEnter(event, this.form, \'./ERP5Site_viewQuickSearchResultList\');" />\n
+<input name="field_your_search_text" class="field" value="" onkeyup="submitFormOnEnter(event, this.form, \'./ERP5Site_viewQuickSearchResultList\');" />\n
 <input type="submit" name="./ERP5Site_viewQuickSearchResultList:method" class="button" value="Search" />\n
 </fieldset>\n
 </div>
@@ -160,7 +160,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python:\'<div class="searchform"> <fieldset> <input name="field" class="field" value="" onkeyup="submitFormOnEnter(event, this.form, \\\'%(section_id)s/ERP5Site_viewQuickSearchResultList\\\');" /> <input type="submit" name="%(section_id)s/ERP5Site_viewQuickSearchResultList:method" class="button" value="Search" /> </fieldset> </div>\' % {\'section_id\':getattr(here, \'layout_search_area_section_id\', \'.\')}
+python:\'<div class="searchform"><fieldset><input name="field_your_search_text" class="field" value="" onkeyup="submitFormOnEnter(event, this.form, \\\'%(section_id)s/ERP5Site_viewQuickSearchResultList\\\');" /><input type="submit" name="%(section_id)s/ERP5Site_viewQuickSearchResultList:method" class="button" value="%(search)s" /></fieldset></div>\' % {\'section_id\':getattr(here, \'layout_search_area_section_id\', \'.\'), \'search\':here.Base_translateString(\'Search\')}
 
 ]]></string> </value>
         </item>

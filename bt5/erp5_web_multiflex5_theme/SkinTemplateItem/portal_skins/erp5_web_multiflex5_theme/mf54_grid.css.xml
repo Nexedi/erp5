@@ -147,7 +147,7 @@
 .header-bottom .searchform {float:right; width:430px;}\n
 .header-bottom .searchform form fieldset {float:right; border:none; padding-top:5px; padding-right:10px;}\n
 .header-bottom .searchform input.field {width:15.0em; height:1.2em; padding:1px !important /*Non-IE6*/; padding:2px /*IE6*/; border:solid 1px <tal:block tal:replace="primary_color"/>; background-color:rgb(255,255,255); font-size:110% !important /*Non-IE6*/; font-size:100% /*IE6*/;}\n
-.header-bottom .searchform input.button {width:4.5em; height:1.6em; background-color:rgb(240,240,240); border:solid 1px rgb(150,150,150); text-align:center; color:rgb(100,100,100); font-size:110% !important /*Non-IE6*/; font-size:100% /*IE6*/;}\n
+.header-bottom .searchform input.button {height:1.6em; background-color:rgb(240,240,240); border:solid 1px rgb(150,150,150); text-align:center; color:rgb(100,100,100); font-size:110% !important /*Non-IE6*/; font-size:100% /*IE6*/;}\n
 .header-bottom .searchform input.button:hover {cursor:pointer; border:solid 1px rgb(80,80,80); background-color:rgb(220,220,220); color:rgb(80,80,80);}\n
 \n
 /********************/\n
