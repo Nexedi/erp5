@@ -111,9 +111,9 @@ class TradeModelRule(TransformationRule):
     which is to add, modify or delete"""
     movement_list = []
     trade_condition = applied_rule.getTradeConditionValue()
-    bpm = applied_rule.getBusinessProcessValue()
+    business_process = applied_rule.getBusinessProcessValue()
 
-    if trade_condition is None or bpm is None:
+    if trade_condition is None or business_process is None:
       return movement_list
 
     for amount in trade_condition.getAggregatedAmountList(applied_rule):
@@ -124,7 +124,7 @@ class TradeModelRule(TransformationRule):
         movement_kw[prop] = context_movement.getProperty(prop)
 
       # business path specific
-      business_path_list = bpm.getPathValueList(
+      business_path_list = business_process.getPathValueList(
           trade_phase=amount.getTradePhaseList())
       movement_kw.update(**self._getMovementDictByBusinessPath(
         context_movement, business_path_list))
