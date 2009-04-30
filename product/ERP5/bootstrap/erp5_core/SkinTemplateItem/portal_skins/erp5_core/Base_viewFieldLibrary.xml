@@ -112,6 +112,14 @@
                         <string>my_text_content</string>
                         <string>my_text_format</string>
                         <string>my_lines_field</string>
+                        <string>my_file_field</string>
+                        <string>my_image_field</string>
+                        <string>my_list_field</string>
+                        <string>my_matrix_box</string>
+                        <string>my_parallel_list_field</string>
+                        <string>my_float_field</string>
+                        <string>my_label_field</string>
+                        <string>my_radio_field</string>
                       </list>
                     </value>
                 </item>
