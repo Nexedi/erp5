@@ -55,16 +55,16 @@ class AttributeBlacklisted(PropertyExistence):
     if not self._checkConstraintCondition(obj):
       return []
     errors = PropertyExistence.checkConsistency(self, obj, fixit=fixit)
-    for attribute_name, expression_blaklisted_list in self.constraint_definition.items():
+    for attribute_name, expression_blacklisted_list in self.constraint_definition.items():
       message_id = None
       mapping = dict(attribute_name=attribute_name)
       #Evaluate expression_criterion_dict
-      expression = Expression(expression_blaklisted_list)
+      expression = Expression(expression_blacklisted_list)
       from Products.ERP5Type.Utils import createExpressionContext
       econtext = createExpressionContext(obj)
-      blaklisted_list = expression(econtext)
+      blacklisted_list = expression(econtext)
       value = obj.getProperty(attribute_name)
-      if value in blaklisted_list:
+      if value in blacklisted_list:
         message_id = 'message_invalid_attribute_blacklisted'
       # Generate error
       if message_id is not None:
