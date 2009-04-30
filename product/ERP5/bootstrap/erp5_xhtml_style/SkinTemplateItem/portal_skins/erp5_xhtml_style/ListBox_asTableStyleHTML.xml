@@ -342,7 +342,6 @@
                   <tal:block tal:condition="python: current_page > 1">\n
                     <button tal:define ="params python: {field_id+\'_firstPage:method\':\'\', \'list_style\':\'table\'}"\n
                            title="First page: Page 1" name="firstPage"\n
-                           name = firstPage"\n
                            type = "button" \n
                            tal:attributes="id string:${field_id}_first_page;\n
                                            value string:|&lt;;\n
