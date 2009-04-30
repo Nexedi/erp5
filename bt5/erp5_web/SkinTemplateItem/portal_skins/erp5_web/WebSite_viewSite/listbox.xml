@@ -17,6 +17,7 @@
                 <string>lines</string>
                 <string>columns</string>
                 <string>sort</string>
+                <string>count_method</string>
                 <string>portal_types</string>
                 <string>editable_columns</string>
                 <string>list_action</string>
@@ -106,6 +107,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>editable_columns</string> </key>

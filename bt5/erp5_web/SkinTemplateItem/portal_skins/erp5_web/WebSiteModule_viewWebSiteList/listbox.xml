@@ -13,18 +13,18 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>lines</string>
                 <string>title</string>
-                <string>select</string>
-                <string>selection_name</string>
+                <string>lines</string>
                 <string>columns</string>
                 <string>sort</string>
-                <string>editable_columns</string>
-                <string>count_method</string>
-                <string>default_params</string>
                 <string>list_method</string>
-                <string>domain_tree</string>
+                <string>count_method</string>
+                <string>selection_name</string>
+                <string>default_params</string>
                 <string>search</string>
+                <string>select</string>
+                <string>editable_columns</string>
+                <string>domain_tree</string>
               </list>
             </value>
         </item>
