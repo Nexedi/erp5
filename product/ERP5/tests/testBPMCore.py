@@ -51,6 +51,10 @@ class TestBPMMixin(ERP5TypeTestCase):
 
   default_discount_ratio = -0.05 # -5%
   default_tax_ratio = 0.196 # 19,6%
+
+  new_discount_ratio = -0.04 # -4%
+  new_tax_ratio = 0.22 # 22%
+
   node_portal_type = 'Organisation'
   order_date = DateTime()
   default_business_process = \
@@ -372,6 +376,12 @@ class TestBPMMixin(ERP5TypeTestCase):
 
     order.edit(specialise_value = trade_condition)
 
+  def stepSpecialiseInvoiceTradeCondition(self, sequence=None, **kw):
+    invoice = sequence.get('invoice')
+    trade_condition = sequence.get('trade_condition')
+
+    invoice.edit(specialise_value = trade_condition)
+
   def stepPlanOrder(self, sequence=None, **kw):
     order = sequence.get('order')
     workflow_tool = getToolByName(self.portal, 'portal_workflow')
@@ -491,6 +501,44 @@ class TestBPMMixin(ERP5TypeTestCase):
     self.assertEquals(abs(income_expense_line.getTotalPrice()),
         rounded_total_price - rounded_tax_price)
 
+  def stepSetTradeConditionOld(self, sequence=None, **kw):
+    trade_condition = sequence.get('trade_condition')
+
+    self.assertNotEqual(None, trade_condition)
+
+    sequence.edit(
+      trade_condition = None,
+      old_trade_condition = trade_condition
+    )
+
+  def stepSetTradeConditionNew(self, sequence=None, **kw):
+    trade_condition = sequence.get('trade_condition')
+
+    self.assertNotEqual(None, trade_condition)
+
+    sequence.edit(
+      trade_condition = None,
+      new_trade_condition = trade_condition
+    )
+
+  def stepGetOldTradeCondition(self, sequence=None, **kw):
+    trade_condition = sequence.get('old_trade_condition')
+
+    self.assertNotEqual(None, trade_condition)
+
+    sequence.edit(
+      trade_condition = trade_condition,
+    )
+
+  def stepGetNewTradeCondition(self, sequence=None, **kw):
+    trade_condition = sequence.get('new_trade_condition')
+
+    self.assertNotEqual(None, trade_condition)
+
+    sequence.edit(
+      trade_condition = trade_condition,
+    )
+
   def stepCheckInvoiceTradeModelRelatedMovements(self, sequence=None, **kw):
     # movement selection is done by hand, as no API is yet defined
     invoice = sequence.get('invoice')
@@ -545,7 +593,7 @@ class TestBPMMixin(ERP5TypeTestCase):
 
   def stepCheckInvoiceCausalityStateSolved(self, sequence=None, **kw):
     invoice = sequence.get('invoice')
-    self.assertEqual('solved', invoice.getCausalityState())
+    self.assertEqual('solved', invoice.getCausalityState(), invoice.getDivergenceList())
 
   def stepCheckInvoiceCausalityStateDiverged(self, sequence=None, **kw):
     invoice = sequence.get('invoice')
@@ -1057,6 +1105,22 @@ class TestBPMMixin(ERP5TypeTestCase):
     self.assertNotEqual(None, business_process)
     trade_condition.setSpecialiseValue(business_process)
 
+  def stepModifyTradeModelLineNewDiscount(self, sequence=None, **kw):
+    trade_model_line = sequence.get('trade_model_line')
+    service_discount = sequence.get('service_discount')
+
+    trade_model_line.edit(
+      price=self.new_discount_ratio,
+      base_application='base_amount/discount',
+      base_contribution='base_amount/tax',
+      trade_phase='default/discount',
+      resource_value=service_discount,
+    )
+    sequence.edit(
+      trade_model_line = None,
+      trade_model_line_discount = trade_model_line
+    )
+
   def stepModifyTradeModelLineDiscount(self, sequence=None, **kw):
     trade_model_line = sequence.get('trade_model_line')
     service_discount = sequence.get('service_discount')
@@ -1071,6 +1135,21 @@ class TestBPMMixin(ERP5TypeTestCase):
     sequence.edit(
       trade_model_line = None,
       trade_model_line_discount = trade_model_line
+    )
+
+  def stepModifyTradeModelLineNewTax(self, sequence=None, **kw):
+    trade_model_line = sequence.get('trade_model_line')
+    service_tax = sequence.get('service_tax')
+
+    trade_model_line.edit(
+      price=self.new_tax_ratio,
+      base_application='base_amount/tax',
+      trade_phase='default/tax',
+      resource_value=service_tax,
+    )
+    sequence.edit(
+      trade_model_line = None,
+      trade_model_line_tax = trade_model_line
     )
 
   def stepModifyTradeModelLineTax(self, sequence=None, **kw):
@@ -1405,7 +1484,54 @@ class TestBPMTestCases(TestBPMMixin):
 
   def test_TradeModelRuleSimulationBuildInvoiceNewTradeConditionDivergencyAndSolving(self):
     """Check that after changing trade condition invoice is properly diverged and it is possible to solve"""
-    raise NotImplementedError('TODO')
+    sequence_list = SequenceList()
+    sequence_string = self.trade_model_rule_simulation_common_string
+    sequence_string += """
+              ConfirmOrder
+              Tic
+    """ + self.aggregated_amount_simulation_check + """
+              GetPackingList
+              PackPackingList
+              Tic
+    """ + self.aggregated_amount_simulation_check + """
+              StartPackingList
+              StopPackingList
+              DeliverPackingList
+              Tic
+    """ + self.aggregated_amount_simulation_check + """
+              GetInvoice
+              CheckInvoiceCausalityStateSolved
+              CheckInvoiceNormalMovements
+              CheckInvoiceTradeModelRelatedMovements
+
+              SetTradeConditionOld
+
+              CreateTradeCondition
+              SpecialiseTradeConditionWithBusinessProcess
+              CreateTradeModelLine
+              ModifyTradeModelLineNewTax
+              CreateTradeModelLine
+              ModifyTradeModelLineNewDiscount
+              Tic
+
+              SpecialiseInvoiceTradeCondition
+              Tic
+              SetTradeConditionNew
+              GetOldTradeCondition
+              CheckInvoiceCausalityStateDiverged
+              CheckInvoiceNormalMovements
+              CheckInvoiceTradeModelRelatedMovements
+
+              AdoptPrevisionQuantityInvoice
+              Tic
+
+              GetNewTradeCondition
+              CheckInvoiceCausalityStateSolved
+              CheckInvoiceNormalMovements
+              CheckInvoiceTradeModelRelatedMovements
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
   def test_TradeModelRuleSimulationBuildInvoiceNewInvoiceLineSupport(self):
     """Check how is supported addition of invoice line to invoice build from order"""
