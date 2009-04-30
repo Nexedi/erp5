@@ -14,16 +14,13 @@
             <value>
               <list>
                 <string>title</string>
-                <string>default</string>
-                <string>width</string>
-                <string>height</string>
-                <string>whitespace_preserve</string>
+                <string>display_width</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>search_bar</string> </value>
+            <value> <string>my_layout_search_area_section_id</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -60,12 +57,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -74,23 +65,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>height</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -101,29 +76,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<div class="searchform">\n
-<fieldset>\n
-<input name="field" class="field" value="" onkeyup="submitFormOnEnter(event, this.form, \'./ERP5Site_viewQuickSearchResultList\');" />\n
-<input type="submit" name="./ERP5Site_viewQuickSearchResultList:method" class="button" value="Search" />\n
-</fieldset>\n
-</div>
-
-]]></string> </value>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_text_content</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>height</string> </key>
-                    <value> <int>5</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -131,38 +93,10 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>bottom_header_bar</string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>40</int> </value>
+                    <value> <string>Search Area Section ID</string> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-python:\'<div class="searchform"> <fieldset> <input name="field" class="field" value="" onkeyup="submitFormOnEnter(event, this.form, \\\'%(section_id)s/ERP5Site_viewQuickSearchResultList\\\');" /> <input type="submit" name="%(section_id)s/ERP5Site_viewQuickSearchResultList:method" class="button" value="Search" /> </fieldset> </div>\' % {\'section_id\':getattr(here, \'layout_search_area_section_id\', \'.\')}
-
-]]></string> </value>
         </item>
       </dictionary>
     </pickle>
