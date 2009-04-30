@@ -113,16 +113,26 @@ try:\n
     language = portal.Localizer.get_selected_language()\n
 \n
   if validation_state is None:\n
+    # XXX hardcoded validation state list.\n
+    # Use predicate or layout property instead\n
     validation_state = (\'released\', \'released_alive\', \'published\', \n
                         \'published_alive\', \'shared\', \'shared_alive\', \n
                         \'public\', \'validated\')\n
   kw[\'validation_state\'] = validation_state\n
 \n
-  return current_section.WebSection_zGetDocumentValueList(language=language,\n
-                                                          all_languages=all_languages,\n
-                                                          all_versions=all_versions,\n
-                                                          src__=src__,\n
-                                                          kw=kw)\n
+  if \'sort_on\' not in kw:\n
+    # XXX Do not sort by default, as it increases query time\n
+    kw[\'sort_on\'] = [(\'int_index\', \'DESC\'), (\'reference\', \'DESC\')]\n
+\n
+  if not all_versions:\n
+    return current_section.WebSection_zGetDocumentValueList(language=language,\n
+                                                            all_languages=all_languages,\n
+                                                            src__=src__,\n
+                                                            kw=kw)\n
+  else:\n
+    if not all_languages:\n
+      kw[\'language\'] = language\n
+    return current_section.portal_catalog(src__=src__, **kw)\n
 \n
 except Unauthorized:\n
   return []\n
@@ -177,6 +187,7 @@ except Unauthorized:\n
                             <string>current_section</string>
                             <string>None</string>
                             <string>_write_</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
