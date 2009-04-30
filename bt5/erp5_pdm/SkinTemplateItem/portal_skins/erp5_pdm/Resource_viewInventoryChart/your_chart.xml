@@ -13,9 +13,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>listbox_id</string>
                 <string>chart_type</string>
+                <string>title</string>
                 <string>colour_column_list</string>
                 <string>grid_graph</string>
               </list>
@@ -60,27 +59,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>chart_type</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>colour_column_list</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>grid_graph</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>listbox_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -123,15 +106,11 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>grid_graph</string> </key>
                     <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>listbox_id</string> </key>
-                    <value> <string>your_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

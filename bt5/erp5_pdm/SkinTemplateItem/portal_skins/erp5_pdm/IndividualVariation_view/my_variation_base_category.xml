@@ -12,7 +12,11 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>title</string>
+                <string>items</string>
+                <string>enabled</string>
+              </list>
             </value>
         </item>
         <item>
@@ -54,12 +58,24 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>enabled</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -73,16 +89,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>A list of base categories which define possible discrete variations.</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_individual_variation_base_category</string> </value>
+                    <value> <string>my_list_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Resource_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -94,6 +106,38 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>here/Resource_getIndividualVariationBaseCategoryItemList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [(\'\', \'\')] + here.Resource_getIndividualVariationBaseCategoryItemList()</string> </value>
         </item>
       </dictionary>
     </pickle>

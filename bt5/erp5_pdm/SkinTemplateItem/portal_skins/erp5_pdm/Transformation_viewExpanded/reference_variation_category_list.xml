@@ -14,9 +14,9 @@
             <value>
               <list>
                 <string>title</string>
+                <string>editable</string>
                 <string>default</string>
                 <string>items</string>
-                <string>editable</string>
               </list>
             </value>
         </item>
@@ -90,12 +90,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -105,13 +99,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

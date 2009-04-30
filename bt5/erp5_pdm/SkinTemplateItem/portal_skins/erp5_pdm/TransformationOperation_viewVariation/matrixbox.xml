@@ -12,7 +12,15 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>cell_base_id</string>
+                <string>editable_attributes</string>
+                <string>title</string>
+                <string>global_attributes</string>
+                <string>tabs</string>
+                <string>lines</string>
+                <string>columns</string>
+              </list>
             </value>
         </item>
         <item>
@@ -54,12 +62,30 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>lines</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>tabs</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -73,19 +99,105 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>cell_base_id</string> </key>
+                    <value> <string>variation</string> </value>
+                </item>
+                <item>
+                    <key> <string>editable_attributes</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>category_list</string>
+                          <string>category_list</string>
+                        </tuple>
+                        <tuple>
+                          <string>membership_criterion_category_list</string>
+                          <string>membership_criterion_category_list</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_variation_matrixbox</string> </value>
+                    <value> <string>my_matrix_box</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>TransformationOperation_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>global_attributes</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>mapped_value_property_list</string>
+                          <string>mapped_value_property_list</string>
+                        </tuple>
+                        <tuple>
+                          <string>membership_criterion_base_category_list</string>
+                          <string>membership_criterion_base_category_list</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>matrixbox</string> </value>
+                </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:here.TransformedResource_asCellRange(\'variation\',matrixbox=1)[1]</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:here.TransformedResource_asCellRange(\'variation\',matrixbox=1)[0]</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:here.TransformedResource_asCellRange(\'variation\',matrixbox=1)[2]</string> </value>
         </item>
       </dictionary>
     </pickle>

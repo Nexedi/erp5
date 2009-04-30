@@ -13,10 +13,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>listbox_id</string>
                 <string>chart_stacked</string>
                 <string>series_source</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -67,10 +66,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>listbox_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -91,11 +86,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>listbox_id</string> </key>
-                    <value> <string>your_listbox</string> </value>
+                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>series_source</string> </key>

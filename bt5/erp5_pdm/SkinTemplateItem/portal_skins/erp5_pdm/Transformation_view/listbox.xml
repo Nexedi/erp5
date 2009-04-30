@@ -13,8 +13,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>domain_root_list</string>
+                <string>editable_columns</string>
+                <string>title</string>
+                <string>report_root_list</string>
+                <string>selection_name</string>
                 <string>columns</string>
+                <string>sort</string>
                 <string>all_columns</string>
+                <string>portal_types</string>
               </list>
             </value>
         </item>
@@ -170,16 +177,115 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>industrial_phase</string>
+                          <string>Industrial phase</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit</string>
+                          <string>Quantity unit</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>int_index</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit</string>
+                          <string>quantity_unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>efficiency</string>
+                          <string>efficiency</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_transformation_content_list_listbox</string> </value>
+                    <value> <string>my_view_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Transformation_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Transformation Operation</string>
+                          <string>Transformation Operation</string>
+                        </tuple>
+                        <tuple>
+                          <string>Transformation Transformed Resource</string>
+                          <string>Transformation Transformed Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>Transformation Optional Resource</string>
+                          <string>Transformation Optional Resource</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>report_root_list</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>industrial_phase</string>
+                          <string>Industrial phase</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit</string>
+                          <string>Quantity unit</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>transformation_view_selection_name</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string>ascending</string>
+                        </tuple>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>ascending</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Bill of Materials and Operations</string> </value>
                 </item>
               </dictionary>
             </value>

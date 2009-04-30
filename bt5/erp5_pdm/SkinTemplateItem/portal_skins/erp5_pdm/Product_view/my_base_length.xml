@@ -12,7 +12,9 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>title</string>
+              </list>
             </value>
         </item>
         <item>
@@ -35,15 +37,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>extra_context</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -54,15 +56,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>extra_context</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -73,22 +75,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>A typical per unit length of the resource</string> </value>
-                </item>
-                <item>
-                    <key> <string>extra_context</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_base_length</string> </value>
+                    <value> <string>my_quantity</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Resource_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>

@@ -14,8 +14,7 @@
             <value>
               <list>
                 <string>title</string>
-                <string>description</string>
-                <string>default</string>
+                <string>image_format</string>
               </list>
             </value>
         </item>
@@ -77,20 +76,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>description</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_thumbnail</string> </value>
+                    <value> <string>my_image_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>File_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>image_format</string> </key>
+                    <value> <string>png</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

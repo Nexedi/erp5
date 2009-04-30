@@ -12,7 +12,10 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>title</string>
+                <string>portal_type</string>
+              </list>
             </value>
         </item>
         <item>
@@ -73,20 +76,31 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default_module</string> </key>
-                    <value> <string>apparel_consumption_module</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_specialise_title_list</string> </value>
+                    <value> <string>my_multi_relation_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>TransformationTransformedResource_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Apparel Consumption</string>
+                          <string>Apparel Consumption</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Consumption</string> </value>
                 </item>
               </dictionary>
             </value>

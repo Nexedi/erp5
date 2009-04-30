@@ -12,7 +12,13 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>title</string>
+                <string>view_separator</string>
+                <string>size</string>
+                <string>items</string>
+                <string>enabled</string>
+              </list>
             </value>
         </item>
         <item>
@@ -54,12 +60,24 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>enabled</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -74,18 +92,66 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_p_variation_base_category_list</string> </value>
+                    <value> <string>my_multi_list_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Supply_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>size</string> </key>
+                    <value> <int>3</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Price Variation Axes</string> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<br/>
+
+]]></string> </value>
+                </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.getVariationBaseCategoryItemList(omit_option_base_category=1)</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.getVariationBaseCategoryItemList(omit_option_base_category=1)</string> </value>
         </item>
       </dictionary>
     </pickle>

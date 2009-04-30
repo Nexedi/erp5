@@ -13,8 +13,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>description</string>
                 <string>title</string>
                 <string>default</string>
+                <string>items</string>
               </list>
             </value>
         </item>
@@ -71,11 +73,13 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -86,18 +90,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <key> <string>description</string> </key>
+                    <value> <string>A list of base categories to display in resource variation base category list.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_portal_variation_base_category_list</string> </value>
+                    <value> <string>my_multi_list_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Resource_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -125,6 +127,22 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: here.getPreferredProductIndividualVariationBaseCategoryList() or preferences.getPreferredProductIndividualVariationBaseCategoryList()</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>here/getPortalVariationBaseCategoryList</string> </value>
         </item>
       </dictionary>
     </pickle>

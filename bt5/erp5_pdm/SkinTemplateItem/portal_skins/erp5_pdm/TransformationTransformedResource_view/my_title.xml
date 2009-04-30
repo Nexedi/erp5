@@ -12,7 +12,12 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>description</string>
+                <string>title</string>
+                <string>editable</string>
+                <string>display_width</string>
+              </list>
             </value>
         </item>
         <item>
@@ -54,6 +59,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>display_width</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -73,19 +84,51 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The name of a document in ERP5</string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>30</int> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_title</string> </value>
+                    <value> <string>my_translated_workflow_state_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>TransformationTransformedResource_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Title</string> </value>
+                </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: preferences.getPreference(\'preferred_string_field_width\', 30)</string> </value>
         </item>
       </dictionary>
     </pickle>

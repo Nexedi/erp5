@@ -13,13 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>stat_columns</string>
+                <string>stat_method</string>
                 <string>title</string>
+                <string>selection_name</string>
                 <string>columns</string>
                 <string>sort</string>
                 <string>list_method</string>
-                <string>stat_method</string>
-                <string>selection_name</string>
-                <string>stat_columns</string>
               </list>
             </value>
         </item>
@@ -81,12 +81,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_editable_columns</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
@@ -139,7 +133,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>

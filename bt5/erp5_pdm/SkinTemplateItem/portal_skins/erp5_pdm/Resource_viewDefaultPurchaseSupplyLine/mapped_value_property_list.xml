@@ -12,7 +12,12 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>title</string>
+                <string>default</string>
+                <string>view_separator</string>
+                <string>hidden</string>
+              </list>
             </value>
         </item>
         <item>
@@ -73,16 +78,40 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>default</string> </key>
+                    <value>
+                      <list>
+                        <string>base_price</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_mapped_value_property_list</string> </value>
+                    <value> <string>my_lines_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Supply_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Modified categories</string> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<br/>
+
+]]></string> </value>
                 </item>
               </dictionary>
             </value>

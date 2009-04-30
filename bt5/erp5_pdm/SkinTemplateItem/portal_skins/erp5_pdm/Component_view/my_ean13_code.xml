@@ -10,6 +10,15 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list>
+                <string>title</string>
+                <string>external_validator</string>
+              </list>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>my_ean13_code</string> </value>
         </item>
@@ -19,15 +28,7 @@
               <dictionary>
                 <item>
                     <key> <string>external_validator_failed</string> </key>
-                    <value> <string>foo</string> </value>
-                </item>
-                <item>
-                    <key> <string>required_not_found</string> </key>
-                    <value> <string>Input is required but no input given.</string> </value>
-                </item>
-                <item>
-                    <key> <string>too_long</string> </key>
-                    <value> <string>Too much input was given.</string> </value>
+                    <value> <string>The input failed the external validator.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -75,16 +76,18 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>The EAN 13 code of this document</string> </value>
+                    <key> <string>external_validator</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_ean13_code</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Resource_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -96,6 +99,22 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>Base_validateEan13Code</string> </value>
         </item>
       </dictionary>
     </pickle>

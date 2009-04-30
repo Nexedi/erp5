@@ -12,7 +12,9 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>title</string>
+              </list>
             </value>
         </item>
         <item>
@@ -35,15 +37,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>extra_context</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -54,15 +56,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>extra_context</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -73,18 +75,20 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>extra_context</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_start_date_range_max</string> </value>
+                    <value> <string>my_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>BaseTradeSale_FieldLibrary</string> </value>
+                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>End Date</string> </value>
                 </item>
               </dictionary>
             </value>
