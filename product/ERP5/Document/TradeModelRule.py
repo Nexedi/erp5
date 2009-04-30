@@ -60,17 +60,6 @@ class TradeModelRule(TransformationRule):
                     , PropertySheet.AppliedRule
                     )
 
-  def getSpecialiseList(self, simulation_movement):
-    """Returns (trade_condition, bpm)"""
-    bpm = simulation_movement.getRootAppliedRule().getBusinessProcessValue()
-    causality = simulation_movement.getRootAppliedRule().getCausalityValue()
-    trade_condition = None
-    if causality is not None and getattr(causality, 'getSpecialiseValueList',
-        None) is not None:
-      trade_condition = causality.getSpecialiseValue()
-
-    return trade_condition, bpm
-
   def _getMovementDictByBusinessPath(self, movement, business_path_list):
     """Sets Business Path's provided values"""
     if len(business_path_list) > 1:
@@ -121,7 +110,8 @@ class TradeModelRule(TransformationRule):
     """Generates list of movements (as dicts), and let parent class to decide
     which is to add, modify or delete"""
     movement_list = []
-    trade_condition, bpm = self.getSpecialiseList(applied_rule)
+    trade_condition = applied_rule.getTradeConditionValue()
+    bpm = applied_rule.getBusinessProcessValue()
 
     if trade_condition is None or bpm is None:
       return movement_list
