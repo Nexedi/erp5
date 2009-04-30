@@ -94,15 +94,7 @@ class TradeModelLine(Amount):
             # we need to create aggreageted amount on context itself
             movement_list = [context]
           else:
-            # we need to create aggregated amount on context's movements
-            # do not use resources, which use category use
-            # XXX This is not so good - on Invoice with movements having such
-            # resource we shall treat those lines as applying or not?
-            # it would be nice to use:
-            # context.getMovementList(related_resource_use_uid = \
-            #   context.portal_preferences.getPreferredNormalUseUidList())
-            # But getMovementList works with objectValues, do not support
-            # filtering.
+            # XXX: filtering shall be in getMovementList
             movement_list = []
             for movement in context.getMovementList():
               movement_resource = movement.getResourceValue()
