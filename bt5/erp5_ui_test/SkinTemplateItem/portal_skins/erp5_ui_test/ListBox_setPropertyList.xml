@@ -80,6 +80,7 @@ d = dict(\n
   field_list_method = \'searchFolder\',\n
   field_count_method = \'countFolder\',\n
   field_stat_method = \'\',\n
+  field_row_css_method = \'\',\n
   field_selection_name = \'foo_selection\',\n
   field_meta_types = \'\',\n
   field_portal_types = \'Foo\',\n

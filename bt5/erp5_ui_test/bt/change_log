@@ -1,3 +1,6 @@
+2009-04-30 Tatuya
+* add a field 'row_css_method' according as the Listbox.
+
 2009-03-24
 * add proxy role to Base_clearCache because worklist are cached.
 
