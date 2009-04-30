@@ -686,7 +686,8 @@ class ODFStrategy(Implicit):
     has_header_rows = len(table_header_rows_list) > 0
     (row_top, row_middle, row_bottom) = self._copyRowStyle(table_row_list,
                                                            has_header_rows=has_header_rows)
-
+    # create style-name and table-row dictionary if a reference name is set
+    style_name_row_dictionary = self._createStyleNameRowDictionary(table_row_list)
     # clear original table 
     parent_paragraph = target_table.getparent()
     target_index = parent_paragraph.index(target_table)
@@ -706,13 +707,17 @@ class ODFStrategy(Implicit):
     last_index = len(listboxline_list) - 1
     for (index, listboxline) in enumerate(listboxline_list):
       listbox_column_list = listboxline.getColumnItemList()
+      row_style_name = listboxline.getRowCSSClassName()
       if listboxline.isTitleLine() and not has_header_rows:
         row = deepcopy(row_top)
         row = self._updateColumnValue(row, listbox_column_list)
         newtable.append(row)
         is_top = False       
       elif listboxline.isDataLine() and is_top:
-        row = deepcopy(row_top)
+        if style_name_row_dictionary.has_key(row_style_name):
+          row = deepcopy(style_name_row_dictionary[row_style_name])
+        else:
+          row = deepcopy(row_top)
         row = self._updateColumnValue(row, listbox_column_list)
         newtable.append(row)
         is_top = False
@@ -721,7 +726,10 @@ class ODFStrategy(Implicit):
         row = self._updateColumnStatValue(row, listbox_column_list, row_middle)
         newtable.append(row)
       elif index > 0 and listboxline.isDataLine():
-        row = deepcopy(row_middle)
+        if style_name_row_dictionary.has_key(row_style_name):
+          row = deepcopy(style_name_row_dictionary[row_style_name])
+        else:
+          row = deepcopy(row_middle)
         row = self._updateColumnValue(row, listbox_column_list)
         newtable.append(row)
 
@@ -765,6 +773,17 @@ class ODFStrategy(Implicit):
     removeOfficeAttribute(row_top)
     return (row_top, row_middle, row_bottom)
 
+
+  def _createStyleNameRowDictionary(self, table_row_list=[]):
+    """create stylename and table row dictionary if a style name reference is set"""
+    style_name_row_dictionary = {}
+    for table_row in table_row_list:
+      reference_element = table_row.find('.//*[@{%s}name]' % table_row.nsmap['text'])
+      if reference_element is not None:
+        name = reference_element.attrib['{%s}name' % table_row.nsmap['text']]
+        style_name_row_dictionary[name] = deepcopy(table_row)
+    return style_name_row_dictionary
+    
   def _updateColumnValue(self, row=None, listbox_column_list=[]):
     odf_cell_list = row.findall("{%s}table-cell" % row.nsmap['table'])
     odf_cell_list_size = len(odf_cell_list)
