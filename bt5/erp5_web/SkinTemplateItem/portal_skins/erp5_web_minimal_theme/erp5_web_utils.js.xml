@@ -28,13 +28,9 @@
         <item>
             <key> <string>raw</string> </key>
             <value> <string>function showPopik(dom_id, what, delay){\n
-  if (delay == null){\n
-     delay = 500;\n
-  }\n
   obj = getElement(dom_id);\n
   if(what==true){\n
-    setTimeout(function() {obj.style.display=\'block\';}, delay)\n
-    }\n
+    obj.style.display=\'block\';}\n
   else{\n
     obj.style.display=\'none\';}\n
 }\n
