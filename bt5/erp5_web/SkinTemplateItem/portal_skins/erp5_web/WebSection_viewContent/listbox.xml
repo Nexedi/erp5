@@ -23,6 +23,7 @@
                 <string>search</string>
                 <string>select</string>
                 <string>editable_columns</string>
+                <string>list_action</string>
               </list>
             </value>
         </item>
@@ -148,6 +149,10 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key> <string>list_action</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -197,7 +202,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Section Content</string> </value>
+                    <value> <string>Section Contents</string> </value>
                 </item>
               </dictionary>
             </value>
