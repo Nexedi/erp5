@@ -184,6 +184,8 @@ class PasswordTool(BaseTool):
       msg = translateString("Bad login provided.")
     elif current_date > expiration_date:
       msg = translateString("Date has expire.")
+    elif not password:
+      msg = translateSTring("Password must be entered.")
     elif password != password_confirmation:
       msg = translateString("Passwords do not match.")
     if msg is not None:
@@ -198,7 +200,7 @@ class PasswordTool(BaseTool):
     self.password_request_dict.pop(password_key)
     persons = self.acl_users.erp5_users.getUserByLogin(user_login)              
     person = persons[0]
-    person._setPassword(password)
+    person._setPasswordByForce(password)
     person.reindexObject()
     if REQUEST is not None:
       msg = translateString("Password changed.")
