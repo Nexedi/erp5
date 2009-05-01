@@ -1,3 +1,6 @@
+2009-05-01 yusei
+* Fix broken Item_view form. Don't forget to commit form itself when you add a new field. Partial commit break business template.
+
 2007-09-18 Romain
 * Remove portal type actions that are now defined as global actions
 * Add Service Report module
