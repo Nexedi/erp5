@@ -203,9 +203,19 @@ class Person(XMLObject):
       self._setEncodedPassword(value, format=format)
       self.reindexObject()
 
-    def _setPassword(self, value):
+    # Because both _setPassword and setPassword are considered as
+    # public method(They are callable from user directly or through edit method)
+    # _setPasswordByForce is needed to reset password without security check
+    # by Password Tool.
+    def _setPasswordByForce(self, value):
       self.password = PersistentMapping()
       self._setEncodedPassword(pw_encrypt(value))
+
+    def _setPassword(self, value):
+      if not _checkPermission(Permissions.SetOwnPassword, self):
+        raise AccessControl_Unauthorized('setPassword')
+      else:
+        self._setPasswordByForce(value)
 
     security.declarePublic('setPassword')
     def setPassword(self, value) :
@@ -213,8 +223,6 @@ class Person(XMLObject):
         Set the password, only if the password is not empty.
       """
       if value is not None:
-        if not _checkPermission(Permissions.SetOwnPassword, self):
-          raise AccessControl_Unauthorized('setPassword')
         self._setPassword(value)
         self.reindexObject()
 
