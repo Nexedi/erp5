@@ -15,6 +15,8 @@
               <list>
                 <string>description</string>
                 <string>title</string>
+                <string>css_class</string>
+                <string>input_style</string>
               </list>
             </value>
         </item>
@@ -76,16 +78,24 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string>figure</string> </value>
+                </item>
+                <item>
                     <key> <string>description</string> </key>
                     <value> <string>The percentage of the total price.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_percent</string> </value>
+                    <value> <string>my_float_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewTradeFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>input_style</string> </key>
+                    <value> <string>-12.3%</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

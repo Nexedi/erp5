@@ -13,10 +13,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>y_size_block</string>
                 <string>title</string>
                 <string>report_root_list</string>
                 <string>selection_name</string>
+                <string>y_size_block</string>
                 <string>portal_types</string>
               </list>
             </value>

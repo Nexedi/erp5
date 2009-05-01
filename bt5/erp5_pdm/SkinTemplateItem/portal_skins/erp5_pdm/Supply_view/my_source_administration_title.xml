@@ -13,9 +13,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>catalog_index</string>
                 <string>title</string>
                 <string>description</string>
                 <string>portal_type</string>
+                <string>base_category</string>
               </list>
             </value>
         </item>
@@ -76,6 +78,14 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>base_category</string> </key>
+                    <value> <string>source_administration</string> </value>
+                </item>
+                <item>
+                    <key> <string>catalog_index</string> </key>
+                    <value> <string>title</string> </value>
+                </item>
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string>The person or organisation in charge of sending the invoice or handling administrative paperwork for the supplier.</string> </value>

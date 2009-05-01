@@ -13,8 +13,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>width</string>
                 <string>whitespace_preserve</string>
+                <string>width</string>
               </list>
             </value>
         </item>

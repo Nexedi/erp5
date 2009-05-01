@@ -13,11 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>catalog_index</string>
                 <string>title</string>
                 <string>display_width</string>
-                <string>proxy_listbox_ids</string>
                 <string>description</string>
                 <string>portal_type</string>
+                <string>base_category</string>
               </list>
             </value>
         </item>
@@ -79,6 +80,14 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>base_category</string> </key>
+                    <value> <string>causality</string> </value>
+                </item>
+                <item>
+                    <key> <string>catalog_index</string> </key>
+                    <value> <string>title</string> </value>
+                </item>
+                <item>
                     <key> <string>description</string> </key>
                     <value> <string>The Order which caused this Packing List.</string> </value>
                 </item>
@@ -103,12 +112,6 @@
                           <string>Sale Order</string>
                         </tuple>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>proxy_listbox_ids</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
                 <item>

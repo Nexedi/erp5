@@ -1,3 +1,6 @@
+2009-05-01 yusei
+* Fix some mistakes on previous field library conversion.
+
 2009-04-30 yusei
 * Simplify field libraries and proxy fields. Old field libraries are kept for backward compatibility.
 * Need recent version of erp5_core(newer than r1193).

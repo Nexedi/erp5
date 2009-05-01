@@ -14,21 +14,15 @@
             <value>
               <list>
                 <string>domain_root_list</string>
-                <string>select</string>
+                <string>all_columns</string>
                 <string>title</string>
                 <string>report_root_list</string>
-                <string>search_columns</string>
                 <string>selection_name</string>
                 <string>columns</string>
                 <string>sort</string>
-                <string>count_method</string>
-                <string>all_columns</string>
-                <string>default_params</string>
-                <string>list_method</string>
                 <string>domain_tree</string>
-                <string>search</string>
                 <string>portal_types</string>
-                <string>lines</string>
+                <string>search_columns</string>
               </list>
             </value>
         </item>
@@ -77,12 +71,6 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>lines</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -178,18 +166,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>count_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>default_params</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>domain_root_list</string> </key>
                     <value>
                       <list>
@@ -214,17 +190,11 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_list_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewTradeFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-                    </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -255,10 +225,6 @@
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>search</string> </key>
-                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>search_columns</string> </key>
@@ -296,10 +262,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>select</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>sale_trade_condition_selection</string> </value>
                 </item>
@@ -324,54 +286,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: preferences.getPreference(\'preferred_listbox_list_mode_line_count\', 30)</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>countFolder</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>

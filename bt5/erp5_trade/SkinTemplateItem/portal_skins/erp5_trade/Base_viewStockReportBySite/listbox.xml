@@ -13,13 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>lines</string>
                 <string>editable_columns</string>
                 <string>title</string>
                 <string>selection_name</string>
                 <string>sort_columns</string>
                 <string>columns</string>
                 <string>list_method</string>
+                <string>lines</string>
               </list>
             </value>
         </item>

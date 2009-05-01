@@ -13,10 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>catalog_index</string>
+                <string>allow_creation</string>
                 <string>title</string>
                 <string>description</string>
                 <string>portal_type</string>
-                <string>allow_creation</string>
+                <string>base_category</string>
               </list>
             </value>
         </item>
@@ -80,6 +82,14 @@
                 <item>
                     <key> <string>allow_creation</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>base_category</string> </key>
+                    <value> <string>source_section</string> </value>
+                </item>
+                <item>
+                    <key> <string>catalog_index</string> </key>
+                    <value> <string>title</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>

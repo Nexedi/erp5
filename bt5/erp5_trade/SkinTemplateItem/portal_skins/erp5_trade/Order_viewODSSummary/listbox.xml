@@ -16,10 +16,11 @@
                 <string>domain_root_list</string>
                 <string>lines</string>
                 <string>title</string>
+                <string>select</string>
                 <string>selection_name</string>
-                <string>default_params</string>
                 <string>list_method</string>
                 <string>domain_tree</string>
+                <string>search</string>
                 <string>untranslatable_columns</string>
                 <string>columns</string>
               </list>
@@ -95,12 +96,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default_params</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>domain_root_list</string> </key>
                     <value>
                       <list>
@@ -117,7 +112,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_list_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -132,6 +127,14 @@
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>search</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>select</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>

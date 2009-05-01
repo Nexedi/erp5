@@ -15,6 +15,8 @@
               <list>
                 <string>description</string>
                 <string>title</string>
+                <string>css_class</string>
+                <string>input_style</string>
                 <string>editable</string>
                 <string>precision</string>
               </list>
@@ -84,6 +86,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string>figure</string> </value>
+                </item>
+                <item>
                     <key> <string>description</string> </key>
                     <value> <string>Default Quantity of a resource in ERP5. It can be a product or it can be time quantity like hours or minutes for example. Quantity can be found in almost every business field of ERP5 and will always have this meaning, unless the term is different or precise, such as Priced Quantity for example.</string> </value>
                 </item>
@@ -93,11 +99,15 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_money_quantity</string> </value>
+                    <value> <string>my_float_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewTradeFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>input_style</string> </key>
+                    <value> <string>-1 234.5</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

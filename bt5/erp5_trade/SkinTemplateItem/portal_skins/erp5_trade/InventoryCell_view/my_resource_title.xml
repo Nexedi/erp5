@@ -14,13 +14,13 @@
             <value>
               <list>
                 <string>catalog_index</string>
+                <string>allow_creation</string>
                 <string>title</string>
                 <string>display_width</string>
                 <string>description</string>
                 <string>portal_type</string>
                 <string>editable</string>
                 <string>allow_jump</string>
-                <string>allow_creation</string>
                 <string>base_category</string>
                 <string>items</string>
               </list>

@@ -10,6 +10,27 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
@@ -65,7 +86,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_checkbox</string>
+                        <string>my_title</string>
+                        <string>my_quantity</string>
                         <string>my_integer_value</string>
                         <string>my_comment</string>
                         <string>my_view_mode_listbox</string>
@@ -76,11 +98,12 @@
                         <string>my_percent</string>
                         <string>my_category</string>
                         <string>my_text_area_field</string>
+                        <string>your_at_date</string>
                         <string>my_string_field</string>
                         <string>my_multi_list_field</string>
                         <string>my_multi_relation_field</string>
                         <string>my_description</string>
-                        <string>my_quantity</string>
+                        <string>my_checkbox</string>
                         <string>your_portal_skin</string>
                         <string>my_translated_workflow_state_title</string>
                         <string>your_format</string>
@@ -89,6 +112,8 @@
                         <string>my_relation_field</string>
                         <string>my_file_field</string>
                         <string>my_parallel_list_field</string>
+                        <string>your_from_date</string>
+                        <string>my_list_mode_listbox</string>
                         <string>my_money_quantity</string>
                         <string>my_date</string>
                       </list>

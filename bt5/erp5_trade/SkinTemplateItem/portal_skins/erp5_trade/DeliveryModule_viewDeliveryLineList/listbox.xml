@@ -16,10 +16,11 @@
                 <string>lines</string>
                 <string>editable_columns</string>
                 <string>title</string>
+                <string>select</string>
                 <string>selection_name</string>
                 <string>columns</string>
-                <string>default_params</string>
                 <string>list_method</string>
+                <string>search</string>
               </list>
             </value>
         </item>
@@ -224,12 +225,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>default_params</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
@@ -258,7 +253,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_list_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -273,6 +268,14 @@
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>search</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>select</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>

@@ -15,8 +15,9 @@
               <list>
                 <string>description</string>
                 <string>title</string>
-                <string>editable</string>
+                <string>css_class</string>
                 <string>input_style</string>
+                <string>editable</string>
               </list>
             </value>
         </item>
@@ -78,6 +79,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string>figure</string> </value>
+                </item>
+                <item>
                     <key> <string>description</string> </key>
                     <value> <string>The percentage of the total price.</string> </value>
                 </item>
@@ -87,7 +92,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_money_quantity</string> </value>
+                    <value> <string>my_float_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>

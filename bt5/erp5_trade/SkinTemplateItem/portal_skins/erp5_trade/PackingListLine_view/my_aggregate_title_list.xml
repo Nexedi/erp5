@@ -13,10 +13,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>proxy_listbox_ids</string>
-                <string>portal_type</string>
                 <string>catalog_index</string>
+                <string>title</string>
+                <string>portal_type</string>
+                <string>base_category</string>
                 <string>enabled</string>
               </list>
             </value>
@@ -97,6 +97,14 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>base_category</string> </key>
+                    <value> <string>aggregate</string> </value>
+                </item>
+                <item>
+                    <key> <string>catalog_index</string> </key>
+                    <value> <string>aggregate</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_multi_relation_field</string> </value>
                 </item>
@@ -113,12 +121,6 @@
                           <string>(tales)</string>
                         </tuple>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>proxy_listbox_ids</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
                 <item>

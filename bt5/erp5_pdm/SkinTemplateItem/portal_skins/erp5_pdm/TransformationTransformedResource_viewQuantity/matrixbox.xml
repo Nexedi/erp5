@@ -13,10 +13,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>cell_base_id</string>
                 <string>editable_attributes</string>
                 <string>title</string>
                 <string>global_attributes</string>
+                <string>cell_base_id</string>
                 <string>tabs</string>
                 <string>lines</string>
                 <string>columns</string>

@@ -14,13 +14,13 @@
             <value>
               <list>
                 <string>domain_root_list</string>
+                <string>all_columns</string>
                 <string>editable_columns</string>
                 <string>title</string>
                 <string>report_root_list</string>
                 <string>selection_name</string>
                 <string>columns</string>
                 <string>sort</string>
-                <string>all_columns</string>
                 <string>portal_types</string>
               </list>
             </value>

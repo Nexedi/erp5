@@ -14,8 +14,7 @@
             <value>
               <list>
                 <string>description</string>
-                <string>title</string>
-                <string>editable</string>
+                <string>display_width</string>
               </list>
             </value>
         </item>
@@ -81,12 +80,12 @@
                     <value> <string>A one line title which describes a product, an order, a supply, a trade condition. It may be used  in official documents.</string> </value>
                 </item>
                 <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_translated_workflow_state_title</string> </value>
+                    <value> <string>my_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -95,10 +94,6 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Title</string> </value>
                 </item>
               </dictionary>
             </value>

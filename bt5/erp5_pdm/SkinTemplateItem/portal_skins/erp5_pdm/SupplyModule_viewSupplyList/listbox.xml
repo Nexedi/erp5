@@ -14,16 +14,12 @@
             <value>
               <list>
                 <string>lines</string>
-                <string>select</string>
                 <string>title</string>
                 <string>all_columns</string>
                 <string>selection_name</string>
                 <string>sort_columns</string>
                 <string>columns</string>
                 <string>sort</string>
-                <string>default_params</string>
-                <string>list_method</string>
-                <string>search</string>
                 <string>portal_types</string>
                 <string>search_columns</string>
               </list>
@@ -117,14 +113,8 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>default_params</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_list_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -133,12 +123,6 @@
                 <item>
                     <key> <string>lines</string> </key>
                     <value> <int>30</int> </value>
-                </item>
-                <item>
-                    <key> <string>list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -150,10 +134,6 @@
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>search</string> </key>
-                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>search_columns</string> </key>
@@ -169,10 +149,6 @@
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>select</string> </key>
-                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
@@ -214,22 +190,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>
