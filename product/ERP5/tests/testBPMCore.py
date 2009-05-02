@@ -68,7 +68,7 @@ class TestBPMMixin(ERP5TypeTestCase):
   modified_invoice_line_quantity_ratio = modified_order_line_quantity_ratio \
       = 2.5
 
-  modified_packing_list_line_quantity_ratio = 0.4
+  modified_packing_list_line_quantity_ratio = 0.5
 
   base_unit_quantity = 0.01
 
@@ -1317,7 +1317,7 @@ class TestBPMMixin(ERP5TypeTestCase):
     )
 
 class TestBPMTestCases(TestBPMMixin):
-  common_documents_creation = """
+  COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING = """
               CreateServiceTax
               CreateServiceDiscount
               CreatePriceCurrency
@@ -1331,15 +1331,15 @@ class TestBPMTestCases(TestBPMMixin):
               Tic
   """
 
-  aggregated_amount_list_check = """
+  AGGREGATED_AMOUNT_LIST_CHECK_SEQUENCE_STRING = """
               CheckOrderComplexTradeConditionAggregatedAmountList
               CheckOrderLineTaxedAggregatedAmountList
               CheckOrderLineDiscountedTaxedAggregatedAmountList
               CheckOrderLineDiscountedAggregatedAmountList
   """
 
-  aggregated_amount_list_common_sequence_string = \
-      common_documents_creation + """
+  AGGREGATED_AMOUNT_LIST_COMMON_SEQUENCE_STRING = \
+      COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
               CreateBusinessProcess
               CreateBusinessState
               ModifyBusinessStateTaxed
@@ -1367,7 +1367,7 @@ class TestBPMTestCases(TestBPMMixin):
               CreateOrderLine
               ModifyOrderLineDiscountedTaxed
               Tic
-  """ + aggregated_amount_list_check
+  """ + AGGREGATED_AMOUNT_LIST_CHECK_SEQUENCE_STRING
 
   def test_TradeConditionTradeModelLineCircularComposition(self):
     """
@@ -1518,13 +1518,13 @@ class TestBPMTestCases(TestBPMMixin):
       Test for case, when discount contributes to tax, and order has mix of contributing lines
     """
     sequence_list = SequenceList()
-    sequence_string = self.aggregated_amount_list_common_sequence_string
+    sequence_string = self.AGGREGATED_AMOUNT_LIST_COMMON_SEQUENCE_STRING
 
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  order_specialise_aggregated_amount_common_sequence_string = \
-      common_documents_creation + """
+  ORDER_SPECIALISE_AGGREGATED_AMOUNT_COMMON_SEQUENCE_STRING = \
+      COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
               CreateBusinessProcess
               CreateBusinessState
               ModifyBusinessStateTaxed
@@ -1552,7 +1552,7 @@ class TestBPMTestCases(TestBPMMixin):
               CreateOrderLine
               ModifyOrderLineDiscountedTaxed
               Tic
-    """ + aggregated_amount_list_check
+    """ + AGGREGATED_AMOUNT_LIST_CHECK_SEQUENCE_STRING
 
   def test_getAggreagtedAmountListOrderSpecialise(self):
     """
@@ -1560,7 +1560,7 @@ class TestBPMTestCases(TestBPMMixin):
     """
     sequence_list = SequenceList()
     sequence_string = self\
-        .order_specialise_aggregated_amount_common_sequence_string
+        .ORDER_SPECIALISE_AGGREGATED_AMOUNT_COMMON_SEQUENCE_STRING
 
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -1576,57 +1576,57 @@ class TestBPMTestCases(TestBPMMixin):
             not be aggregated.
     """
     sequence_list = SequenceList()
-    sequence_string = self.aggregated_amount_list_common_sequence_string + """
+    sequence_string = self.AGGREGATED_AMOUNT_LIST_COMMON_SEQUENCE_STRING + """
               UpdateAggregatedAmountListOnOrder
               Tic
-    """ + self.aggregated_amount_list_check
+    """ + self.AGGREGATED_AMOUNT_LIST_CHECK_SEQUENCE_STRING
 
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  aggregated_amount_simulation_check = """
+  AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING = """
               CheckOrderLineTaxedSimulation
               CheckOrderLineDiscountedSimulation
               CheckOrderLineDiscountedTaxedSimulation
   """
-  trade_model_rule_simulation_common_string = \
-      aggregated_amount_list_common_sequence_string + """
+  TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING = \
+      AGGREGATED_AMOUNT_LIST_COMMON_SEQUENCE_STRING + """
               Tic
               PlanOrder
               Tic
-  """ + aggregated_amount_simulation_check
+  """ + AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING
 
   def test_TradeModelRuleSimulationExpand(self):
     """Tests tree of simulations from Trade Model Rule"""
     sequence_list = SequenceList()
-    sequence_string = self.trade_model_rule_simulation_common_string
+    sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
   def test_TradeModelRuleSimulationReexpand(self):
     """Tests tree of simulations from Trade Model Rule with reexpanding"""
     sequence_list = SequenceList()
-    sequence_string = self.trade_model_rule_simulation_common_string + """
+    sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING + """
               ModifyAgainOrderLineTaxed
               ModifyAgainOrderLineDiscounted
               ModifyAgainOrderLineDiscountedTaxed
               Tic
-    """ + self.aggregated_amount_simulation_check
+    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  trade_model_rule_simulation_common_order_specialised_string = \
-      order_specialise_aggregated_amount_common_sequence_string + """
+  TRADE_MODEL_RULE_SIMULATION_ORDER_SPECIALISED_SEQUENCE_STRING = \
+      ORDER_SPECIALISE_AGGREGATED_AMOUNT_COMMON_SEQUENCE_STRING + """
               Tic
               PlanOrder
               Tic
-  """ + aggregated_amount_simulation_check
+  """ + AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING
 
   def test_TradeModelRuleSimulationExpandOrderSpecialise(self):
     """Tests tree of simulations from Trade Model Rule"""
     sequence_list = SequenceList()
     sequence_string = self \
-        .trade_model_rule_simulation_common_order_specialised_string
+        .TRADE_MODEL_RULE_SIMULATION_ORDER_SPECIALISED_SEQUENCE_STRING
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
@@ -1634,19 +1634,19 @@ class TestBPMTestCases(TestBPMMixin):
     """Tests tree of simulations from Trade Model Rule with reexpanding"""
     sequence_list = SequenceList()
     sequence_string = self \
-        .trade_model_rule_simulation_common_order_specialised_string+ """
+        .TRADE_MODEL_RULE_SIMULATION_ORDER_SPECIALISED_SEQUENCE_STRING+ """
               ModifyAgainOrderLineTaxed
               ModifyAgainOrderLineDiscounted
               ModifyAgainOrderLineDiscountedTaxed
               Tic
-    """ + self.aggregated_amount_simulation_check
+    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
   def test_TradeModelRuleSimulationWithoutBPM(self):
     """Tests tree of simulations from Trade Model Rule when there is no BPM"""
     sequence_list = SequenceList()
-    sequence_string = self.common_documents_creation + """
+    sequence_string = self.COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
               CreateTradeCondition
               CreateTradeModelLine
               ModifyTradeModelLineTax
@@ -1668,7 +1668,7 @@ class TestBPMTestCases(TestBPMMixin):
   def test_TradeModelRuleSimulationWithoutTradeCondition(self):
     """Tests tree of simulations from Trade Model Rule when there is no Trade Condition"""
     sequence_list = SequenceList()
-    sequence_string = self.common_documents_creation + """
+    sequence_string = self.COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
               CreateOrder
               FillOrder
               Tic
@@ -1685,20 +1685,20 @@ class TestBPMTestCases(TestBPMMixin):
   def test_TradeModelRuleSimulationBuildInvoice(self):
     """Check that invoice lines on invoice are correctly set"""
     sequence_list = SequenceList()
-    sequence_string = self.trade_model_rule_simulation_common_string
+    sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING
     sequence_string += """
               ConfirmOrder
               Tic
-    """ + self.aggregated_amount_simulation_check + """
+    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
               GetPackingList
               PackPackingList
               Tic
-    """ + self.aggregated_amount_simulation_check + """
+    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
               StartPackingList
               StopPackingList
               DeliverPackingList
               Tic
-    """ + self.aggregated_amount_simulation_check + """
+    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
               GetInvoice
               CheckInvoiceCausalityStateSolved
               CheckInvoiceNormalMovements
@@ -1710,20 +1710,20 @@ class TestBPMTestCases(TestBPMMixin):
   def test_TradeModelRuleSimulationBuildInvoiceNewTradeConditionDivergencyAndSolving(self):
     """Check that after changing trade condition invoice is properly diverged and it is possible to solve"""
     sequence_list = SequenceList()
-    sequence_string = self.trade_model_rule_simulation_common_string
+    sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING
     sequence_string += """
               ConfirmOrder
               Tic
-    """ + self.aggregated_amount_simulation_check + """
+    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
               GetPackingList
               PackPackingList
               Tic
-    """ + self.aggregated_amount_simulation_check + """
+    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
               StartPackingList
               StopPackingList
               DeliverPackingList
               Tic
-    """ + self.aggregated_amount_simulation_check + """
+    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
               GetInvoice
               CheckInvoiceCausalityStateSolved
               CheckInvoiceNormalMovements
@@ -1765,20 +1765,20 @@ class TestBPMTestCases(TestBPMMixin):
   def test_TradeModelRuleSimulationBuildInvoiceInvoiceLineModifyDivergencyAndSolving(self):
     """Check that after changing invoice line invoice is properly diverged and it is possible to solve"""
     sequence_list = SequenceList()
-    sequence_string = self.trade_model_rule_simulation_common_string
+    sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING
     sequence_string += """
               ConfirmOrder
               Tic
-    """ + self.aggregated_amount_simulation_check + """
+    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
               GetPackingList
               PackPackingList
               Tic
-    """ + self.aggregated_amount_simulation_check + """
+    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
               StartPackingList
               StopPackingList
               DeliverPackingList
               Tic
-    """ + self.aggregated_amount_simulation_check + """
+    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
               GetInvoice
               CheckInvoiceCausalityStateSolved
               CheckInvoiceNormalMovements
@@ -1808,20 +1808,20 @@ class TestBPMTestCases(TestBPMMixin):
   def test_TradeModelRuleSimulationBuildInvoiceBuildInvoiceTransactionLines(self):
     """Check that having properly configured invoice transaction rule it invoice transaction lines are nicely generated and have proper amounts"""
     sequence_list = SequenceList()
-    sequence_string = self.trade_model_rule_simulation_common_string
+    sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING
     sequence_string += """
               ConfirmOrder
               Tic
-    """ + self.aggregated_amount_simulation_check + """
+    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
               GetPackingList
               PackPackingList
               Tic
-    """ + self.aggregated_amount_simulation_check + """
+    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
               StartPackingList
               StopPackingList
               DeliverPackingList
               Tic
-    """ + self.aggregated_amount_simulation_check + """
+    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
               GetInvoice
               CheckInvoiceCausalityStateSolved
               CheckInvoiceNormalMovements
@@ -1840,31 +1840,28 @@ class TestBPMTestCases(TestBPMMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_TradeModelRuleSimulationPackingListSplitBuildInvoiceBuild(self):
-    """Check building invoice after splitting packing list"""
-    sequence_list = SequenceList()
-    sequence_string = self.trade_model_rule_simulation_common_string
-    sequence_string += """
+  PACKING_LIST_SPLIT_INVOICE_BUILD_SEQUENCE_STRING = \
+      TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING + """
               ConfirmOrder
               Tic
-    """ + self.aggregated_amount_simulation_check + """
+    """ + AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
               GetPackingList
               DecreasePackingListLineListQuantity
               Tic
-    """ + self.aggregated_amount_simulation_check + """
+    """ + AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
               CheckPackingListDiverged
               SplitAndDeferPackingList
               Tic
-    """ + self.aggregated_amount_simulation_check + """
+    """ + AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
               GetNewPackingList
               PackPackingList
               Tic
-    """ + self.aggregated_amount_simulation_check + """
+    """ + AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
               StartPackingList
               StopPackingList
               DeliverPackingList
               Tic
-    """ + self.aggregated_amount_simulation_check + """
+    """ + AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
               GetInvoice
               CheckInvoiceCausalityStateSolved
               CheckInvoiceNormalMovements
@@ -1874,17 +1871,30 @@ class TestBPMTestCases(TestBPMMixin):
               PackPackingList
               Tic
               StartPackingList
-    """ + self.aggregated_amount_simulation_check + """
+    """ + AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
               StopPackingList
               DeliverPackingList
               Tic
-    """ + self.aggregated_amount_simulation_check + """
+    """ + AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
               GetInvoice
               CheckInvoiceCausalityStateSolved
               CheckInvoiceNormalMovements
               CheckInvoiceTradeModelRelatedMovements
     """
-    sequence_list.addSequenceString(sequence_string)
+
+  def test_TradeModelRuleSimulationPackingListSplitBuildInvoiceBuildDifferentRatio(self):
+    """Check building invoice after splitting packing list using different ratio"""
+    self.modified_packing_list_line_quantity_ratio = 0.4
+    sequence_list = SequenceList()
+    sequence_list.addSequenceString(
+        self.PACKING_LIST_SPLIT_INVOICE_BUILD_SEQUENCE_STRING)
+    sequence_list.play(self)
+
+  def test_TradeModelRuleSimulationPackingListSplitBuildInvoiceBuild(self):
+    """Check building invoice after splitting packing list"""
+    sequence_list = SequenceList()
+    sequence_list.addSequenceString(
+        self.PACKING_LIST_SPLIT_INVOICE_BUILD_SEQUENCE_STRING)
     sequence_list.play(self)
 
 class TestBPMSale(TestBPMTestCases):
