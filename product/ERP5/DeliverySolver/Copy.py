@@ -28,7 +28,6 @@
 ##############################################################################
 
 
-from Products.ERP5.Tool.SimulationTool import registerDeliverySolver
 from DeliverySolver import DeliverySolver
 
 class Copy(DeliverySolver):
@@ -47,5 +46,3 @@ class Copy(DeliverySolver):
       Solves a movement
     """
     movement.setQuantity(movement.getSimulationQuantity())
-
-registerDeliverySolver(Copy)
