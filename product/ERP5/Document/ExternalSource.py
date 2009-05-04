@@ -30,6 +30,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Url import UrlMixIn
+from Products.ERP5.Document.Document import UpdateMixIn
 
 import mimetypes
 import re
@@ -37,7 +38,7 @@ import urllib
 from htmlentitydefs import name2codepoint
 from DateTime import DateTime
 
-class ExternalSource(XMLObject, UrlMixIn):
+class ExternalSource(XMLObject, UrlMixIn, UpdateMixIn):
   """
   An External Source consists of single URL which defines the
   root of a collection of documents, each of which can be accessed
@@ -155,6 +156,14 @@ class ExternalSource(XMLObject, UrlMixIn):
     if method is None:
       return False
     return method(content)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'isExternalDocument')
+  def isExternalDocument(self):
+    """
+    Return true if this document was obtained from an external source
+    XXX - is this really the right place ?
+    """
+    return 1
 
   # Search API
   security.declareProtected(Permissions.SearchCatalog, 'searchResults')
