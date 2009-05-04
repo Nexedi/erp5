@@ -87,6 +87,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
 #    get_transaction().abort()
     self.clearModule(self.portal.web_site_module)
     self.clearModule(self.portal.web_page_module)
+    self.clearModule(self.portal.person_module)
 
   def setupWebSite(self, **kw):
     """
