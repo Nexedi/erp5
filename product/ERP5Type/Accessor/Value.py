@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import warnings
 
 from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Setter as BaseSetter, Getter as BaseGetter
 from zLOG import LOG
@@ -40,11 +39,10 @@ class SetSetter(BaseSetter):
 
     # This can not be called from the Web
 
-    def __init__(self, id, key, reindex=1, warning=0):
+    def __init__(self, id, key, warning=0):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._reindex = reindex
       self._warning = warning
 
     def __call__(self, instance, *args, **kw):
@@ -56,11 +54,6 @@ class SetSetter(BaseSetter):
                                                 portal_type=kw.get('portal_type',()),
                                                 keep_default=1,
                                                 checked_permission=kw.get('checked_permission', None))
-      if self._reindex:
-        warnings.warn("The reindexing accessors are deprecated.\n"
-                      "Please use Alias.Reindex instead.",
-                      DeprecationWarning)
-        instance.reindexObject()
       return (instance, )
 
     psyco.bind(__call__)
@@ -80,11 +73,6 @@ class ListSetter(SetSetter):
                                                  portal_type=kw.get('portal_type',()),
                                                  keep_default=0,
                                                  checked_permission=kw.get('checked_permission', None))
-      if self._reindex:
-        warnings.warn("The reindexing accessors are deprecated.\n"
-                      "Please use Alias.Reindex instead.",
-                      DeprecationWarning)
-        instance.reindexObject()
       return (instance, )
 
     psyco.bind(__call__)
@@ -105,11 +93,6 @@ class DefaultSetter(SetSetter):
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()),
                                                  checked_permission=kw.get('checked_permission', None))
-      if self._reindex:
-        warnings.warn("The reindexing accessors are deprecated.\n"
-                      "Please use Alias.Reindex instead.",
-                      DeprecationWarning)
-        instance.reindexObject()
       return (instance, )
 
     psyco.bind(__call__)
@@ -458,11 +441,10 @@ class UidSetSetter(BaseSetter):
 
     # This can not be called from the Web
 
-    def __init__(self, id, key, reindex=1, warning=0):
+    def __init__(self, id, key, warning=0):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._reindex = reindex
       self._warning = warning
 
     def __call__(self, instance, *args, **kw):
@@ -474,11 +456,6 @@ class UidSetSetter(BaseSetter):
                                                  portal_type=kw.get('portal_type',()),
                                                  keep_default=1,
                                                  checked_permission=kw.get('checked_permission', None))
-      if self._reindex:
-        warnings.warn("The reindexing accessors are deprecated.\n"
-                      "Please use Alias.Reindex instead.",
-                      DeprecationWarning)
-        instance.reindexObject()
 
 class UidListSetter(UidSetSetter):
     """
@@ -495,11 +472,6 @@ class UidListSetter(UidSetSetter):
                                                  portal_type=kw.get('portal_type',()),
                                                  keep_default=0,
                                                  checked_permission=kw.get('checked_permission', None))
-      if self._reindex:
-        warnings.warn("The reindexing accessors are deprecated.\n"
-                      "Please use Alias.Reindex instead.",
-                      DeprecationWarning)
-        instance.reindexObject()
       return (instance, )
 
 UidSetter = UidListSetter
@@ -518,11 +490,6 @@ class UidDefaultSetter(UidSetSetter):
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()),
                                                  checked_permission=kw.get('checked_permission', None))
-      if self._reindex:
-        warnings.warn("The reindexing accessors are deprecated.\n"
-                      "Please use Alias.Reindex instead.",
-                      DeprecationWarning)
-        instance.reindexObject()
       return (instance, )
 
 class DefaultIdGetter(BaseGetter):

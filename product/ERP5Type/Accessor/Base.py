@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import warnings
 
 from ZPublisher.HTTPRequest import FileUpload
 from TypeDefinition import type_definition, list_types, ATTRIBUTE_PREFIX
@@ -56,11 +55,10 @@ class Setter(Method):
     func_code.co_argcount = 2
     func_defaults = ()
 
-    def __init__(self, id, key, property_type, storage_id=None, reindex=1):
+    def __init__(self, id, key, property_type, storage_id=None):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._reindex = reindex
       self._property_type = property_type
       self._cast = type_definition[property_type]['cast']
       self._null = type_definition[property_type]['null']
@@ -71,41 +69,31 @@ class Setter(Method):
     def __call__(self, instance, *args, **kw):
       value = args[0]
       modified_object_list = []
-      if not self._reindex:
-        # Modify the property
-        if value in self._null:
-          setattr(instance, self._storage_id, None)
-        elif self._property_type == 'content':
-          # A file object should be provided
-          file_upload = args[0]
-          if isinstance(file_upload, FileUpload):
-            if file_upload:
-              try:
-                o = getattr(instance, self._storage_id)
-              except AttributeError:
-                # We create a default type
-                o = instance.PUT_factory(self._storage_id,
-                                        file_upload.headers.get('content-type', None), file_upload )
-                instance._setObject(self._storage_id, o)
-                o = getattr(instance, self._storage_id)
-              o.manage_upload(file = file_upload)
-              modified_object_list = [o]
-          else:
-            LOG('ERP5Type WARNING',0,'%s is not an instance of FileUpload' % str(file_upload))
+      # Modify the property
+      if value in self._null:
+        setattr(instance, self._storage_id, None)
+      elif self._property_type == 'content':
+        # A file object should be provided
+        file_upload = args[0]
+        if isinstance(file_upload, FileUpload):
+          if file_upload:
+            try:
+              o = getattr(instance, self._storage_id)
+            except AttributeError:
+              # We create a default type
+              o = instance.PUT_factory(self._storage_id,
+                file_upload.headers.get('content-type', None), file_upload)
+              instance._setObject(self._storage_id, o)
+              o = getattr(instance, self._storage_id)
+            o.manage_upload(file = file_upload)
+            modified_object_list = [o]
         else:
-          setattr(instance, self._storage_id, self._cast(args[0]))
-          modified_object_list.append(instance)
-        return modified_object_list
+          LOG('ERP5Type WARNING', 0, '%s is not an instance of FileUpload'
+              % str(file_upload))
       else:
-        # Call the private setter
-        warnings.warn("The reindexing accessors are deprecated.\n"
-                      "Please use Alias.Reindex instead.",
-                      DeprecationWarning)
-        method = getattr(instance, '_' + self._id)
-        method(*args, **kw)
-        instance.reindexObject() # XXX Should the Setter check
-                                                 # if the property value has changed
-                                                 # to decide reindexing, like edit() ?
+        setattr(instance, self._storage_id, self._cast(args[0]))
+        modified_object_list.append(instance)
+      return modified_object_list
 
 from Products.CMFCore.Expression import Expression
 def _evaluateTales(instance=None, value=None):

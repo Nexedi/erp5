@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import warnings
 
 from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Setter as BaseSetter, Getter as BaseGetter
 from zLOG import LOG
@@ -45,11 +44,10 @@ class ListSetter(BaseSetter):
     func_code.co_argcount = 2
     func_defaults = ()
 
-    def __init__(self, id, key, reindex=1):
+    def __init__(self, id, key):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._reindex = reindex
 
     def __call__(self, instance, *args, **kw):
       instance._setCategoryMembership(self._key, args[0],
@@ -59,11 +57,6 @@ class ListSetter(BaseSetter):
                                       base=kw.get('base', 0),
                                       keep_default=0,
                                       checked_permission=kw.get('checked_permission', None))
-      if self._reindex:
-        warnings.warn("The reindexing accessors are deprecated.\n"
-                      "Please use Alias.Reindex instead.",
-                      DeprecationWarning)
-        instance.reindexObject()
       return (instance, )
 
 Setter = ListSetter
@@ -81,11 +74,10 @@ class DefaultSetter(BaseSetter):
     func_code.co_argcount = 2
     func_defaults = ()
 
-    def __init__(self, id, key, reindex=1):
+    def __init__(self, id, key):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._reindex = reindex
 
     def __call__(self, instance, *args, **kw):
       instance._setDefaultCategoryMembership(self._key, args[0],
@@ -94,11 +86,6 @@ class DefaultSetter(BaseSetter):
                                                  portal_type=kw.get('portal_type',()),
                                                  base=kw.get('base', 0),
                                                  checked_permission=kw.get('checked_permission', None))
-      if self._reindex:
-        warnings.warn("The reindexing accessors are deprecated.\n"
-                      "Please use Alias.Reindex instead.",
-                      DeprecationWarning)
-        instance.reindexObject()
       return (instance, )
 
 class SetSetter(BaseSetter):
@@ -114,11 +101,10 @@ class SetSetter(BaseSetter):
     func_code.co_argcount = 2
     func_defaults = ()
 
-    def __init__(self, id, key, reindex=1):
+    def __init__(self, id, key):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._reindex = reindex
 
     def __call__(self, instance, *args, **kw):
       """
@@ -139,11 +125,6 @@ class SetSetter(BaseSetter):
                                       base=kw.get('base', 0),
                                       keep_default=1,
                                       checked_permission=kw.get('checked_permission', None))
-      if self._reindex:
-        warnings.warn("The reindexing accessors are deprecated.\n"
-                      "Please use Alias.Reindex instead.",
-                      DeprecationWarning)
-        instance.reindexObject()
       return (instance, )
 
 

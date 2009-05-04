@@ -590,9 +590,14 @@ class CategoryTool( UniqueObject, Folder, Base ):
       return membership
 
     security.declareProtected( Permissions.AccessContentsInformation, 'setCategoryMembership' )
-    def setCategoryMembership(self, context, base_category_list, category_list, base=0, keep_default=1,
-                                 spec=(), filter=None,
-                                 checked_permission=None, **kw ):
+    def setCategoryMembership(self, context, *args, **kw):
+      self._setCategoryMembership(context, *args, **kw)
+      context.reindexObject()
+
+    def _setCategoryMembership(self, context, base_category_list,
+                               category_list, base=0, keep_default=1,
+                               spec=(), filter=None, checked_permission=None,
+                               **kw):
       """
         Sets the membership of the context on the specified base_category
         list and for the specified portal_type spec
@@ -701,7 +706,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 #           'new_category_list: %s' % str(new_category_list))
 #       LOG("CategoryTool, setCategoryMembership", 0 ,
 #           'default_new_category_list: %s' % str(default_new_category_list))
-      self.setCategoryList(context, tuple(default_new_category_list + new_category_list))
+      self._setCategoryList(context, tuple(default_new_category_list + new_category_list))
 
 
     security.declareProtected( Permissions.AccessContentsInformation, 'setDefaultCategoryMembership' )

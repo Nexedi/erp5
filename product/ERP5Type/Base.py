@@ -2215,20 +2215,14 @@ class Base( CopyContainer,
     self.reindexObject()
 
   # Private accessors for the implementation of categories
-  def _setCategoryMembership(self, category, node_list, spec=(),
-                                             filter=None, portal_type=(), base=0, keep_default=1,
-                                             checked_permission=None):
-    self._getCategoryTool().setCategoryMembership(self, category, node_list,
-                       spec=spec, filter=filter, portal_type=portal_type, base=base, 
-                       keep_default=keep_default, checked_permission=checked_permission)
+  def _setCategoryMembership(self, *args, **kw):
+    self._getCategoryTool()._setCategoryMembership(self, *args, **kw)
     #self.activate().edit() # Do nothing except call workflow method
     # XXX This is a problem - it is used to circumvent a lack of edit
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setCategoryMembership' )
-  def setCategoryMembership(self, category, node_list, spec=(), portal_type=(), base=0, keep_default=1,
-                                                       checked_permission=None):
-    self._setCategoryMembership(category,
-                      node_list, spec=spec, filter=filter, portal_type=portal_type, base=base, keep_default=keep_default, checked_permission=checked_permission)
+  def setCategoryMembership(self, *args, **kw):
+    self._setCategoryMembership(*args, **kw)
     self.reindexObject()
 
   def _setDefaultCategoryMembership(self, category, node_list,

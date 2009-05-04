@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import warnings
 
 from Base import func_code, type_definition, ATTRIBUTE_PREFIX, Method
 import Base
@@ -188,7 +187,7 @@ class Setter(Base.Setter):
     func_defaults = ()
 
     def __init__(self, id, key, property_type, acquired_property,
-                 portal_type=None, storage_id=None, reindex=0):
+                 portal_type=None, storage_id=None):
       self._id = id
       self.__name__ = id
       self._key = key
@@ -203,7 +202,6 @@ class Setter(Base.Setter):
         portal_type = (portal_type,)
       self._portal_type = portal_type
       self._acquired_property = acquired_property
-      self._reindex = reindex
 
     def __call__(self, instance, *args, **kw):
       # We return the first available object in the list
@@ -214,26 +212,14 @@ class Setter(Base.Setter):
         o = instance._getOb(k, None)
         if o is None: available_id = k
         if o is not None and o.portal_type in self._portal_type:
-          if self._reindex:
-            warnings.warn("The reindexing accessors are deprecated.\n"
-                          "Please use Alias.Reindex instead.",
-                          DeprecationWarning)
-            o.setProperty(self._acquired_property, *args, **kw)
-          else:
-            o._setProperty(self._acquired_property, *args, **kw)
+          o._setProperty(self._acquired_property, *args, **kw)
           modified_object_list = (o, )
       if o is None and available_id is not None:
         from Products.ERP5Type.Utils import assertAttributePortalType
         assertAttributePortalType(instance, available_id, self._portal_type)
         o = instance.newContent(id=available_id,
                                 portal_type=self._portal_type[0])
-        if self._reindex:
-          warnings.warn("The reindexing accessors are deprecated.\n"
-                        "Please use Alias.Reindex instead.",
-                        DeprecationWarning)
-          o.setProperty(self._acquired_property, *args, **kw)
-        else:
-          o._setProperty(self._acquired_property, *args, **kw)
+        o._setProperty(self._acquired_property, *args, **kw)
         modified_object_list = (o, )
       return modified_object_list
 

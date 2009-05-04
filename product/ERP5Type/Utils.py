@@ -1784,7 +1784,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
     # Create setters for a list property (no reindexing)
     # The base accessor sets the list to a singleton
     # and allows simulates a simple property
-    accessor_args = (prop['type'], prop.get('storage_id'), 0)
+    accessor_args = (prop['type'], prop.get('storage_id'))
     # Create setters for a list property
     setter_name = '_set' + UpperCase(id)
     if not hasattr(property_holder, setter_name):
@@ -1838,7 +1838,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
     # Create setters for a list property (no reindexing)
     # The base accessor sets the list to a singleton
     # and allows simulates a simple property
-    accessor_args = (prop['type'], prop.get('storage_id'), 0)
+    accessor_args = (prop['type'], prop.get('storage_id'))
     # Create setters for an object property
     setter_name = '_set' + UpperCase(id)
     if not hasattr(property_holder, setter_name):
@@ -1865,7 +1865,7 @@ def createDefaultAccessors(property_holder, id, prop = None,
     if not hasattr(property_holder, setter_name):
       property_holder.registerAccessor(setter_name, id, Content.DefaultSetter, accessor_args)
   else:
-    accessor_args = (prop['type'], prop.get('storage_id'), 0)
+    accessor_args = (prop['type'], prop.get('storage_id'))
     # Create setters for a simple property
     setter_name = 'set' + UpperCase(id)
     if not hasattr(property_holder, setter_name):
@@ -2000,7 +2000,7 @@ def createCategoryAccessors(property_holder, id,
     property_holder.registerAccessor(setter_name, '_' + setter_name, Alias.Reindex, ())
     property_holder.declareProtected(write_permission, setter_name)
 
-  accessor_args = (0,)
+  accessor_args = ()
   setter_name = '_set' + UpperCase(id)
   if not hasattr(property_holder, setter_name):
     property_holder.registerAccessor(setter_name, id, Category.Setter, accessor_args)
@@ -2336,7 +2336,7 @@ def createValueAccessors(property_holder, id,
     property_holder.registerAccessor(setter_name, '_' + setter_name, Alias.Reindex, ())
     property_holder.declareProtected(write_permission, setter_name)
 
-  accessor_args = (0,)
+  accessor_args = ()
   setter_name = '_set' + UpperCase(id) + 'Value'
   if not hasattr(property_holder, setter_name):
     property_holder.registerAccessor(setter_name, id, Value.Setter, accessor_args)

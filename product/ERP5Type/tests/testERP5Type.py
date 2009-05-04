@@ -442,7 +442,16 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       checkRelationSet(self)
       person_object.setRegionValue(None)
       checkRelationUnset(self)
-      
+
+      # Test _setRegion doesn't reindex the object.
+      person_object._setRegion(category_id)
+      get_transaction().commit()
+      self.assertFalse(person_object.hasActivity())
+      person_object.setRegion(None)
+      get_transaction().commit()
+      self.assertTrue(person_object.hasActivity())
+      self.tic()
+
     def test_05_setProperty(self, quiet=quiet, run=run_all_test):
       """
         In this test we create a subobject (ie. a phone number)
@@ -805,15 +814,18 @@ class TestPropertySheet:
       person = module.newContent(portal_type='Person')
 
       # Do the same tests as in test_11_valueAccessor 
-      person.setSubject('alpha')
-      self.assertEquals(person.getSubject(), 'alpha')
+      person.setSubject('beta')
+      self.assertEquals(person.getSubject(), 'beta')
       person.setSubjectList(['alpha', 'alpha'])
       self.assertEquals(person.getSubjectList(), ['alpha', 'alpha'])
-      person.setSubjectSet(['alpha', 'alpha'])
       self.assertEquals(person.getSubjectSet(), ['alpha'])
-      person.setSubjectList(['alpha', 'beta', 'alpha'])
-      self.assertEquals(person.getSubjectList(), ['alpha', 'beta', 'alpha'])
+      person.setSubjectSet(['beta', 'beta'])
+      self.assertEquals(person.getSubjectList(), ['beta'])
+      self.assertEquals(person.getSubjectSet(), ['beta'])
+      person.setSubjectList(['beta', 'alpha', 'beta'])
+      self.assertEquals(person.getSubjectList(), ['beta', 'alpha', 'beta'])
       person.setSubjectSet(['alpha', 'beta', 'alpha'])
+      self.assertEquals(person.getSubjectList(), ['beta', 'alpha'])
       result = person.getSubjectSet()
       result.sort()
       self.assertEquals(result, ['alpha', 'beta'])

@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import warnings
 
 from Base import func_code, type_definition, list_types,\
                  ATTRIBUTE_PREFIX, Method, evaluateTales
@@ -52,11 +51,10 @@ class DefaultSetter(Base.Setter):
     func_code.co_argcount = 2
     func_defaults = ()
 
-    def __init__(self, id, key, property_type, storage_id=None, reindex=1):
+    def __init__(self, id, key, property_type, storage_id=None):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._reindex = reindex
       self._property_type = property_type
       if property_type in list_types: # classic list
         self._cast = type_definition[property_type]['cast']
@@ -73,56 +71,33 @@ class DefaultSetter(Base.Setter):
     def __call__(self, instance, *args, **kw):
       # Turn the value into a list
       value = args[0]
-      if not self._reindex:
-        # Modify the property
-        if self._is_tales_type:
-          setattr(instance, self._storage_id, str(value))
-        elif value in self._null:
-          # The value has no default property -> it is empty
-          setattr(instance, self._storage_id, ())
-        else:
-          if self._item_cast is not identity:
-            value = self._item_cast(value)
-          default_value = value
-          list_value = getattr(instance, self._storage_id, None)
-          if list_value is None: list_value = []
-          my_dict = dict([(x, 0) for x in list_value if x != default_value])
-          new_list_value = my_dict.keys()
-          new_list_value.insert(0, default_value)
-          value = new_list_value
-          setattr(instance, self._storage_id, tuple(value))
+      # Modify the property
+      if self._is_tales_type:
+        setattr(instance, self._storage_id, str(value))
+      elif value in self._null:
+        # The value has no default property -> it is empty
+        setattr(instance, self._storage_id, ())
       else:
-        # Call the private setter
-        warnings.warn("The reindexing accessors are deprecated.\n"
-                      "Please use Alias.Reindex instead.",
-                      DeprecationWarning)
-        method = getattr(instance, '_' + self._id)
-        method(*args, **kw)
-        instance.reindexObject()
+        if self._item_cast is not identity:
+          value = self._item_cast(value)
+        list_value = set(getattr(instance, self._storage_id, ()))
+        list_value.discard(value)
+        setattr(instance, self._storage_id, (value,) + tuple(list_value))
 
 class ListSetter(DefaultSetter):
 
     def __call__(self, instance, *args, **kw):
       value = args[0]
-      if not self._reindex:
-        # Modify the property
-        if value in self._null:
-          setattr(instance, self._storage_id, ())
-        elif self._is_tales_type:
-          setattr(instance, self._storage_id, str(value))
-        else:
-          value = self._cast(args[0])
-          if self._item_cast is not identity:
-            value = map(self._item_cast, value)
-          setattr(instance, self._storage_id, tuple(value))
+      # Modify the property
+      if value in self._null:
+        setattr(instance, self._storage_id, ())
+      elif self._is_tales_type:
+        setattr(instance, self._storage_id, str(value))
       else:
-        # Call the private setter
-        warnings.warn("The reindexing accessors are deprecated.\n"
-                      "Please use Alias.Reindex instead.",
-                      DeprecationWarning)
-        method = getattr(instance, '_' + self._id)
-        method(*args, **kw)
-        instance.reindexObject()
+        value = self._cast(args[0])
+        if self._item_cast is not identity:
+          value = map(self._item_cast, value)
+        setattr(instance, self._storage_id, tuple(value))
 
 Setter = ListSetter
 
@@ -140,11 +115,10 @@ class SetSetter(Base.Setter):
     func_code.co_argcount = 2
     func_defaults = ()
 
-    def __init__(self, id, key, property_type, storage_id=None, reindex=1):
+    def __init__(self, id, key, property_type, storage_id=None):
       self._id = id
       self.__name__ = id
       self._key = key
-      self._reindex = reindex
       self._property_type = property_type
       if property_type in list_types: # classic list
         self._cast = type_definition[property_type]['cast']
@@ -161,42 +135,27 @@ class SetSetter(Base.Setter):
     def __call__(self, instance, *args, **kw):
       # Turn the value into a list
       value = args[0]
-      if not self._reindex:
-        # Modify the property
-        if self._is_tales_type:
-          setattr(instance, self._storage_id, str(value))
-        elif value in self._null:
-          setattr(instance, self._storage_id, ())
-        else:
-          value = self._cast(args[0])
-          if self._item_cast is not identity:
-            value = map(self._item_cast, value)
-          if len(value) > 0:
-            list_value = getattr(instance, self._storage_id, None)
-            if list_value is None: list_value = []
-            if len(list_value) > 0:
-              default_value = list_value[0]
-              my_dict = dict([(x, 0) for x in value if x != default_value])
-              new_list_value = my_dict.keys()
+      # Modify the property
+      if self._is_tales_type:
+        setattr(instance, self._storage_id, str(value))
+      elif value in self._null:
+        setattr(instance, self._storage_id, ())
+      else:
+        value = self._cast(value)
+        if self._item_cast is not identity:
+          value = map(self._item_cast, value)
+        if value:
+          value = set(value)
+          list_value = getattr(instance, self._storage_id, None)
+          if list_value:
+            default_value = list_value[0]
+            if default_value in value:
               # If we change the set, 
               # the default value must be in the new set
-              if default_value in value:
-                new_list_value.insert(0, default_value)
-            else:
-              new_list_value = value
-          else:
-            # The list has no default property -> it is empty
-            new_list_value = []
-          setattr(instance, self._storage_id, tuple(new_list_value))
-        return (instance, )
-      else:
-        # Call the private setter
-        warnings.warn("The reindexing accessors are deprecated.\n"
-                      "Please use Alias.Reindex instead.",
-                      DeprecationWarning)
-        method = getattr(instance, '_' + self._id)
-        method(*args, **kw)
-        instance.reindexObject()
+              value.remove(default_value)
+              value = (default_value,) + tuple(value)
+        setattr(instance, self._storage_id, tuple(value))
+      return (instance, )
 
 class DefaultGetter(Base.Getter):
     """
@@ -311,7 +270,6 @@ class SetGetter(ListGetter):
     def __call__(self, instance, *args, **kw):
       result_list = ListGetter.__call__(self, instance, *args, **kw)
       if result_list is not None:
-        result_set = dict([(x, 0) for x in result_list]).keys()
-        return result_set
+        return list(set(result_list))
 
 Tester = Base.Tester

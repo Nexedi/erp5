@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import warnings
 
 from Base import func_code, type_definition, list_types, ATTRIBUTE_PREFIX, Getter as BaseGetter, Setter as BaseSetter
 from Products.ERP5Type.PsycoWrapper import psyco
@@ -134,7 +133,6 @@ class Setter(BaseSetter):
                         acquisition_object_id = None,
                         is_list_type = 0,
                         is_tales_type = 0,
-                        reindex = 0
                   ):
       if type(portal_type) == type('a'): portal_type = (portal_type, )
       self._id = id
@@ -157,7 +155,6 @@ class Setter(BaseSetter):
       self._acquisition_object_id = acquisition_object_id
       self._is_list_type = is_list_type
       self._is_tales_type = is_tales_type
-      self._reindex = reindex
 
     def __call__(self, instance, value, *args, **kw):
       from Products.ERP5Type.Utils import assertAttributePortalType
@@ -166,13 +163,7 @@ class Setter(BaseSetter):
       if o is None:
         o = instance.newContent(id=self._storage_id,
             portal_type=self._portal_type[0])
-      if self._reindex:
-        warnings.warn("The reindexing accessors are deprecated.\n"
-                      "Please use Alias.Reindex instead.",
-                      DeprecationWarning)
-        o.setProperty(self._acquired_property, value, *args, **kw)
-      else:
-        o._setProperty(self._acquired_property, value, *args, **kw)
+      o._setProperty(self._acquired_property, value, *args, **kw)
       return (o, )
 
 DefaultSetter = Setter
