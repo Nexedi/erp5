@@ -375,7 +375,61 @@ class PermanentURLMixIn(ExtensibleTraversableMixIn):
       document = document.__of__(self)
     return document
 
-class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin):
+class UpdateMixIn:
+  """
+    Provides an API to compute a date index based on the update
+    frequency of the document.
+  """
+
+  # Declarative security
+  security = ClassSecurityInfo()
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getFrequencyIndex')
+  def getFrequencyIndex(self):
+    """
+      Returns the document update frequency as an integer
+      which is used by alamrs to decide which documents
+      must be updates at which time. The index represents
+      a time slot (ex. all days in a month, all hours in a week).
+    """
+    try:
+      return self.getUpdateFrequencyValue().getIntIndex()
+    except AttributeError:
+      # Catch Attribute error or Key error - XXX not beautiful
+      return 0
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getCreationDateIndex')
+  def getCreationDateIndex(self, at_date = None):
+    """
+    Returns the document Creation Date Index which is the creation 
+    date converted into hours modulo the Frequency Index.
+    """
+    frequency_index = self.getFrequencyIndex()
+    if not frequency_index: return -1 # If not update frequency is provided, make sure we never update
+    hour = convertDateToHour(date=self.getCreationDate())
+    creation_date_index = hour % frequency_index
+    # in the case of bisextile year, we substract 24 hours from the creation date,
+    # otherwise updating documents (frequency=yearly update) created the last
+    # 24 hours of bissextile year will be launched once every 4 years.
+    if creation_date_index >= number_of_hours_in_year:
+      creation_date_index = creation_date_index - number_of_hours_in_day
+
+    return creation_date_index
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'isUpdatable')
+  def isUpdatable(self):
+    """
+      This method is used to decide which document can be updated
+      in the crawling process. This can depend for example on
+      workflow states (publication state,
+      validation state) or on roles on the document.
+    """
+    method = self._getTypeBasedMethod('isUpdatable', 
+        fallback_script_id = 'Document_isUpdatable')
+    return method()
+
+
+class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, SnapshotMixin, UpdateMixIn):
   """
       Document is an abstract class with all methods
       related to document management in ERP5. This includes
@@ -1497,47 +1551,3 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
         # but not in http://www.some.site/at
         base_url = '/'.join(base_url_list[:-1])
     return base_url
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getFrequencyIndex')
-  def getFrequencyIndex(self):
-    """
-      Returns the document update frequency as an integer
-      which is used by alamrs to decide which documents
-      must be updates at which time. The index represents
-      a time slot (ex. all days in a month, all hours in a week).
-    """
-    try:
-      return self.getUpdateFrequencyValue().getIntIndex()
-    except AttributeError:
-      # Catch Attribute error or Key error - XXX not beautiful
-      return 0
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCreationDateIndex')
-  def getCreationDateIndex(self, at_date = None):
-    """
-    Returns the document Creation Date Index which is the creation 
-    date converted into hours modulo the Frequency Index.
-    """
-    frequency_index = self.getFrequencyIndex()
-    if not frequency_index: return -1 # If not update frequency is provided, make sure we never update
-    hour = convertDateToHour(date=self.getCreationDate())
-    creation_date_index = hour % frequency_index
-    # in the case of bisextile year, we substract 24 hours from the creation date,
-    # otherwise updating documents (frequency=yearly update) created the last
-    # 24 hours of bissextile year will be launched once every 4 years.
-    if creation_date_index >= number_of_hours_in_year:
-      creation_date_index = creation_date_index - number_of_hours_in_day
-
-    return creation_date_index
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'isUpdatable')
-  def isUpdatable(self):
-    """
-      This method is used to decide which document can be updated
-      in the crawling process. This can depend for example on
-      workflow states (publication state,
-      validation state) or on roles on the document.
-    """
-    method = self._getTypeBasedMethod('isUpdatable', 
-        fallback_script_id = 'Document_isUpdatable')
-    return method()
