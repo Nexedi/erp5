@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
@@ -58,7 +59,7 @@ except ImportError:
   import_libxml2 = 0
 
 from email import message_from_string
-from email.Header import decode_header
+from email.Header import decode_header, HeaderParseError
 from email.Utils import parsedate_tz, mktime_tz
 
 DEFAULT_TEXT_FORMAT = 'text/html'
@@ -131,7 +132,14 @@ class EmailDocument(File, TextDocument):
     """
     result = {}
     for (name, value) in self._getMessage().items():
-      for text, encoding in decode_header(value):
+      try: 
+        decoded_header = decode_header(value)
+      except HeaderParseError, error_message:
+        decoded_header = ()
+        LOG('EmailDocument.getContentInformation', INFO,
+            'Failed to decode %s header of %s with error: %s' %
+            (name, self.getPath(), error_message))
+      for text, encoding in decoded_header:
         try:
           if encoding is not None:
             text = text.decode(encoding).encode('utf-8')
@@ -376,7 +384,8 @@ class EmailDocument(File, TextDocument):
               text_result = message_text.decode().encode('utf-8')
           except (UnicodeDecodeError, LookupError), error_message:
             LOG('EmailDocument.getTextContent', INFO, 
-                'Failed to decode %s TEXT message with error: %s' % (part_encoding, error_message))
+                'Failed to decode %s TEXT message of %s with error: %s' % 
+                (part_encoding, self.getPath(), error_message))
             codec = self._guessEncoding(message_text)
             if codec is not None:
               try:
@@ -416,6 +425,20 @@ class EmailDocument(File, TextDocument):
       if part.get_content_type() == 'text/html' and not part.is_multipart():
         return 'text/html'
     return 'text/plain'
+
+
+  email_parser = re.compile('[ ;,<>\'"]*([^<> ;,\'"]+?\@[^<> ;,\'"]+)[ ;,<>\'"]*',re.IGNORECASE)
+  security.declareProtected(Permissions.AccessContentsInformation, 'getContentURLList')
+  def getContentURLList(self):
+    """
+      Overriden to include emails as URLs
+    """
+    result = TextDocument.getContentURLList(self)
+    result.extend(re.findall(self.email_parser, self.getSender('')))
+    result.extend(re.findall(self.email_parser, self.getRecipient('')))
+    result.extend(re.findall(self.email_parser, self.getCcRecipient('')))
+    result.extend(re.findall(self.email_parser, self.getBccRecipient('')))
+    return result
 
   # Conversion API Implementation
   def _convertToBaseFormat(self):
@@ -539,11 +562,14 @@ class EmailDocument(File, TextDocument):
     # From
     if from_url is None:
       sender = self.getSourceValue()
-      if sender.getTitle():
-        from_url = '"%s" <%s>' % (sender.getTitle(),
-                                sender.getDefaultEmailText())
+      if sender is not None:
+        if sender.getTitle():
+          from_url = '"%s" <%s>' % (sender.getTitle(),
+                                  sender.getDefaultEmailText())
+        else:
+          from_url = sender.getDefaultEmailText()
       else:
-        from_url = sender.getDefaultEmailText()
+        from_url = self.getSender() # Access sender directly
 
     # Return-Path
     if reply_url is None:
@@ -564,6 +590,8 @@ class EmailDocument(File, TextDocument):
             to_url_list.append(email)
         else:
           raise ValueError, 'Recipient %s has no defined email' % recipient
+      if not to_url_list:
+        to_url_list.append(self.getRecipient())
     elif type(to_url) in types.StringTypes:
       to_url_list.append(to_url)
 
@@ -617,6 +645,7 @@ class EmailDocument(File, TextDocument):
                               'name':attachment.getReference()}
                              )
 
+    mail_message = None
     for to_url in to_url_list:
       mime_message = buildEmailMessage(from_url=from_url, to_url=to_url,
                                        msg=body, subject=subject,
@@ -626,7 +655,8 @@ class EmailDocument(File, TextDocument):
       self.activate(activity='SQLQueue').sendMailHostMessage(mail_message)
 
     # Save one of mail messages.
-    self.setData(mail_message)
+    if mail_message is not None:
+      self.setData(mail_message)
 
     # Only for debugging purpose
     if download:
