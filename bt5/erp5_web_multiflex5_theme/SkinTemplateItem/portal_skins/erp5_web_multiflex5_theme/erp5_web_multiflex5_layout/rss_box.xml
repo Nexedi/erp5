@@ -12,14 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>title</string>
-                <string>default</string>
-                <string>whitespace_preserve</string>
-                <string>enabled</string>
-                <string>height</string>
-                <string>width</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -80,48 +73,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<div class="navbutton">\n
-<ul>\n
-<li><a href="#" title="RSS"><img src="./mf54_image/icon_rss.gif" alt="RSS-Button" /></a></li>\n
-</ul>\n
-</div>
-
-]]></string> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_text_content</string> </value>
+                    <value> <string>rss_box</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>height</string> </key>
-                    <value> <int>5</int> </value>
+                    <value> <string>erp5_web_multiflex5_demo_layout</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>header_box</string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>40</int> </value>
                 </item>
               </dictionary>
             </value>
