@@ -45,6 +45,8 @@ import md5
 from Interface.IQueryCatalog import ISearchKeyCatalog
 from Interface.Verify import verifyClass
 
+from SearchText import isAdvancedSearchText
+
 PROFILING_ENABLED = False
 if PROFILING_ENABLED:
   from tiny_profiler import profiler_decorator, profiler_report, profiler_reset
@@ -2266,6 +2268,9 @@ class Catalog(Folder,
     # Get the search method
     method = getattr(self, self.sql_count_results)
     return self.queryResults(method, REQUEST=REQUEST, extra_column_list=self.getCatalogSearchResultKeys(), only_group_columns=True, **kw)
+
+  def isAdvancedSearchText(self, search_text):
+    return isAdvancedSearchText(search_text, self.isValidColumn)
 
   def recordObjectList(self, path_list, catalog=1):
     """

@@ -388,6 +388,12 @@ class TestSQLCatalog(unittest.TestCase):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a'), operator='and'),
                  {'fulltext': 'a'})
 
+  def test_isAdvancedSearchText(self):
+    self.assertFalse(self._catalog.isAdvancedSearchText('a')) # No operator, no explicit column
+    self.assertTrue(self._catalog.isAdvancedSearchText('a AND b')) # "AND" is an operator
+    self.assertTrue(self._catalog.isAdvancedSearchText('default:a')) # "default" exists as a column
+    self.assertFalse(self._catalog.isAdvancedSearchText('b:a')) # "b" doesn't exist as a column
+
 ##return catalog(title=Query(title='a', operator='not'))
 #return catalog(title={'query': 'a', 'operator': 'not'})
 #return catalog(title={'query': ['a', 'b'], 'operator': 'not'})

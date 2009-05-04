@@ -66,8 +66,12 @@ def getAdvancedSearchTextParser():
     return parser
 
 @profiler_decorator
+def isAdvancedSearchText(input, is_column):
+  return getAdvancedSearchTextDetector()(input, is_column)
+
+@profiler_decorator
 def _parse(input, is_column, *args, **kw):
-  if getAdvancedSearchTextDetector()(input, is_column):
+  if isAdvancedSearchText(input, is_column):
     result = getAdvancedSearchTextParser()(input, *args, **kw)
   else:
     result = None

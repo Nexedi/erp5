@@ -1,2 +1,2 @@
-from SearchTextParser import parse
+from SearchTextParser import parse, isAdvancedSearchText
 

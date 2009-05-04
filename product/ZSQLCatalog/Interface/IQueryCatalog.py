@@ -207,3 +207,10 @@ class ISearchKeyCatalog(Interface):
 
       4- Invoke sql_method
     """
+
+  def isAdvancedSearchText(search_text):
+    """
+      Returns True if given value follows Search Text "advanced" syntax,
+      False otherwise.
+    """
+
