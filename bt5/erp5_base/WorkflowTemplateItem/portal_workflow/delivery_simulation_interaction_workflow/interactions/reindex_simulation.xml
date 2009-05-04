@@ -36,6 +36,12 @@
             </value>
         </item>
         <item>
+            <key> <string>before_commit_script_name</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>reindex simulation after workflow state change, to keep consistency</string> </value>
         </item>
@@ -60,6 +66,7 @@
                 <string>start</string>
                 <string>stop</string>
                 <string>deliver</string>
+                <string>cancel</string>
               </list>
             </value>
         </item>
