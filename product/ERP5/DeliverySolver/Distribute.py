@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2008-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -31,14 +32,14 @@ from DeliverySolver import DeliverySolver
 
 class Distribute(DeliverySolver):
   """
-    Update new values equaly on Simulation Movements.
+    Update new values equally on Simulation Movements.
   """
 
   def solveDelivery(self, delivery):
     for movement in delivery.getMovementList():
       self.solve(movement)
 
-  def solve(self, movement):
+  def solveMovement(self, movement):
     """
       Solve a delivery by reducing / increasing each simulation movement
       it relates to

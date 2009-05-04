@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 200é-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -41,9 +42,9 @@ class Copy(DeliverySolver):
     No ASolver will be required afterwards
   """
 
-  def solve(self, movement):
+  def solveMovement(self, movement):
     """
-      Solve a delivery
+      Solves a movement
     """
     movement.setQuantity(movement.getSimulationQuantity())
 

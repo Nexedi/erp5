@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -39,14 +40,14 @@ class DeliverySolver:
     self.simulation_tool = simulation_tool
     self.__dict__.update(kw)
 
-  def solve(self, movement):
+  def solveMovement(self, movement):
     """
-      Solve a delivery movement
+      Solves a delivery movement
     """
 
   def solveDelivery(self, delivery):
     """
-      Solve the delivery itself
+      Solves the delivery itself
     """
     # Default method is to adopt target dates
     delivery.setStartDate(delivery.getTargetStartDate())
