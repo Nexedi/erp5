@@ -280,7 +280,7 @@
                         tal:define ="params python: {alias:\'this.value\'};"\n
                         size="8" type="textarea" \n
                         tal:attributes=\'value python: selection.getParams().get(alias,"");\n
-                                        onkeyup python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box_relative_url,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
+                                        onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box_relative_url,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
                   </tal:block>\n
                   </span>\n
                 </td>\n

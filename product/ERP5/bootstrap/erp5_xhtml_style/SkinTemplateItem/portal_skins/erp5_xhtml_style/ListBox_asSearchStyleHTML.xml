@@ -343,7 +343,7 @@
             <input tal:define ="params python: {\'ERP5Site_processAdvancedSearchBottom:method\':\'\',\'bottom_your_search_text\':\'this.value\'};"\n
                    name="bottom_your_search_text" size="25" value="" type="text"\n
                    tal:attributes=\'value your_search_text;\n
-                                   onkeyup python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
+                                   onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
           </div>\n
 \n
         </div>\n
