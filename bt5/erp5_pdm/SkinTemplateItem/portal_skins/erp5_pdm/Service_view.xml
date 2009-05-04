@@ -115,6 +115,7 @@
                         <string>my_optional_variation_base_category_list</string>
                         <string>my_individual_variation_base_category</string>
                         <string>my_base_contribution_list</string>
+                        <string>my_use_list</string>
                       </list>
                     </value>
                 </item>

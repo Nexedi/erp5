@@ -118,6 +118,7 @@
                         <string>my_default_image_absolute_url</string>
                         <string>my_default_image_file</string>
                         <string>my_base_contribution_list</string>
+                        <string>my_use_list</string>
                       </list>
                     </value>
                 </item>
