@@ -313,12 +313,6 @@
               </tr>\n
               <tr tal:condition="python: int(here.total_size) > int(here.getMaxLineNumber())"\n
                 class="tfoot">\n
-                <td style="white-space: nowrap; vertical-align: middle;"\n
-                  tal:condition = "not: is_gadget_mode"\n
-                  tal:attributes="colspan python: len(here.getSelectedColumnList()) + bool(show_select_column)">\n
-                  <tal:block metal:use-macro="real_context/page_navigation_render/macros/page_navigation" />\n
-                </td>\n
-                <!-- Page navigation for gadget mode -->\n
                 <td class="pageNavigation" style="white-space: nowrap; vertical-align: middle; text-align: right;"\n
                     tal:attributes="colspan python: len(here.getSelectedColumnList()) + bool(show_select_column)">\n
                   <tal:block metal:use-macro="real_context/page_navigation_render/macros/page_navigation" />\n

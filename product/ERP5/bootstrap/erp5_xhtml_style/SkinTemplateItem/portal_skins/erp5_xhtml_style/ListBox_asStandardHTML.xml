@@ -114,7 +114,8 @@
                     tal:attributes="id string:${field_id}_item_number"\n
                     i18n:translate="" i18n:domain="ui"> - <tal:block tal:replace="python: len(here.getCheckedUidList())" i18n:name="number">0</tal:block> item(s) selected</span>\n
               </td>\n
-              <td style="white-space: nowrap; vertical-align: middle; text-align: center;">\n
+\n
+              <td class="pageNavigation" style="white-space: nowrap; vertical-align: middle; text-align: center;">\n
                 <tal:block metal:use-macro="real_context/page_navigation_render/macros/page_navigation" />\n
               </td>\n
             </tr>\n

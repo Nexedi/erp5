@@ -598,6 +598,39 @@ div.index_html table {\n
   min-height: 2.5em;\n
 }\n
 \n
+.pageNavigation button{\n
+  display: inline;\n
+  border:0 none;\n
+  background-color:inherit;\n
+  vertical-align:middle;\n
+}\n
+\n
+.pageNavigation button.listbox_first_page .image,\n
+.pageNavigation button.listbox_previous_page .image,\n
+.pageNavigation button.listbox_next_page .image,\n
+.pageNavigation button.listbox_last_page .image{\n
+  width:22px;\n
+  height:22px;\n
+  display:block;\n
+  background-color:transparent;\n
+}\n
+\n
+.pageNavigation button.listbox_first_page .image{\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/2leftarrowv.png\');\n
+}\n
+\n
+.pageNavigation button.listbox_previous_page .image{\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/1leftarrowv.png\');\n
+}\n
+\n
+.pageNavigation button.listbox_next_page .image{\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/1rightarrowv.png\');\n
+}\n
+\n
+.pageNavigation button.listbox_last_page .image{\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/2rightarrowv.png\');\n
+}\n
+\n
 table.fake {\n
   width: 100%;\n
 }\n

@@ -105,8 +105,9 @@
                tal:attributes="id string:${field_id}_first_page;\n
                                value string:|&lt;;\n
                                onclick python:\n
-                               real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)">\n
-          <img src="images/2leftarrowv.png"/>\n
+                               real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)"\n
+                               i18n:domain="ui" i18n:attributes="title">\n
+          <span class="image"/>\n
         </button>\n
         <button tal:define ="params python: {field_id+\'_previousPage:method\':\'\',\'page_start\':here.current_page+1,\'list_style\':list_style}"\n
                title="Previous Page"\n
@@ -115,9 +116,10 @@
                class="listbox_previous_page"\n
                tal:attributes="id    string:${field_id}_previous_page;\n
                                value string:&lt;&lt;;\n
-                               onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)">\n
+                               onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)"\n
+                               i18n:domain="ui" i18n:attributes="title">\n
                              \n
-          <img src="images/1leftarrowv.png"/>\n
+          <span class="image"/>\n
         </button>\n
       </tal:block>\n
       <input id="listbox_set_page" name="page_start"\n
@@ -136,8 +138,9 @@
                type="button"\n
                class="listbox_next_page"\n
                tal:attributes="id    string:${field_id}_next_page;\n
-                               onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)">\n
-          <img src="images/1rightarrowv.png"/>\n
+                               onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)"\n
+                               i18n:domain="ui" i18n:attributes="title">\n
+          <span class="image"/>\n
         </button>\n
         <button tal:define ="params python: {field_id+\'_lastPage:method\':\'\',\'total_size\':int(here.total_size), \'list_style\':list_style}"\n
                title="Last Page"\n
@@ -145,8 +148,9 @@
                type="button"\n
                class="listbox_last_page"\n
                tal:attributes="id    string:${field_id}_last_page;\n
-                               onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)">\n
-          <img src="images/2rightarrowv.png"/>\n
+                               onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)"\n
+                               i18n:domain="ui" i18n:attributes="title">\n
+          <span class="image"/>\n
         </button>\n
       </tal:block>\n
     </tal:block>\n
