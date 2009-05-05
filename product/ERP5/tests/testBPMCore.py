@@ -1,4 +1,4 @@
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #          Łukasz Nowak <luke@nexedi.com>
