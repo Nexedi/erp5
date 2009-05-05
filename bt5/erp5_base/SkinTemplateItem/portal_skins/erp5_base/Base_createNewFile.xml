@@ -89,7 +89,7 @@ if file.filename not in [\'\', None]:\n
     is_authorized = 0\n
 \n
   if not is_authorized:\n
-    return context.Base_redirect(\n
+    return context.Base_redirect(form_id,\n
       keep_items={\'portal_status_message\':\n
                   translateString(\n
                      "You are not allowed to create this object.")})\n
@@ -103,7 +103,7 @@ if file.filename not in [\'\', None]:\n
     return document.Base_redirect(\'view\', \n
                                   keep_items=dict(portal_status_message=message))\n
   else:\n
-    return context.Base_redirect(\'view\', \n
+    return context.Base_redirect(form_id, \n
                                  keep_items=dict(portal_status_message=message))\n
 </string> </value>
         </item>
@@ -115,7 +115,7 @@ if file.filename not in [\'\', None]:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_type, title, reference, short_title, language, version, description, file, form_id=\'view\', **kw</string> </value>
+            <value> <string>form_id=\'view\', portal_type, title, reference, short_title, language, version, description, file, form_id=\'view\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -135,12 +135,13 @@ if file.filename not in [\'\', None]:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>9</int> </value>
+                        <value> <int>10</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>form_id</string>
                             <string>portal_type</string>
                             <string>title</string>
                             <string>reference</string>
@@ -184,6 +185,15 @@ if file.filename not in [\'\', None]:\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <string>view</string>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
                 <string>view</string>
               </tuple>
             </value>
