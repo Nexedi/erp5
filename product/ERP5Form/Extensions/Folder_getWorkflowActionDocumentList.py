@@ -52,10 +52,12 @@ def getDocumentGroupByWorkflowStateList(self, **kw):
   selection_tool = portal.portal_selections
   
   selection_name = request['selection_name']
-  # TODO this should be guessed somehow, but portal_catalog.schema() contains
-  # much more than what we need here.
-  possible_state_list = ['validation_state', 'simulation_state', 'payment_state',]
-  
+
+  # guess all column name from catalog schema
+  possible_state_list = [column_name for column_name in
+       self.getPortalObject().portal_catalog.getSQLCatalog().getColumnMap() if
+       column_name.endswith('state') and '.' not in column_name]
+
   # If there are checked uids, only use checked uids.
   selection_uid_list = selection_tool.getSelectionCheckedUidsFor(selection_name)
   
