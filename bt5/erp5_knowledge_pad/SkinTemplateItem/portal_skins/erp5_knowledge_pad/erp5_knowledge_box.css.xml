@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts41533283.92</string> </value>
+            <value> <string>ts41534126.0</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -496,20 +496,6 @@ div.block div.list_style ul li div#title{\n
   cursor:pointer;\n
 }\n
 \n
-\n
-div.block div.list_style div.pageNavigation {\n
-  margin-left:15px;\n
-  padding-bottom:8px;\n
-}\n
-\n
-div.block div.list_style div.pageNavigation select{\n
-  float:left;\n
-  background:white;\n
-  display:block;\n
-  margin-right:0.5em;\n
-  height:16px;\n
-}\n
-\n
 .pageNavigation button{\n
   display: inline;\n
   border:0 none;\n
@@ -593,7 +579,7 @@ div.block div.worklist_list ul li a:hover{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>9831</long> </value>
+            <value> <long>9596</long> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
