@@ -91,21 +91,24 @@ class AdvancedSearchTextDetector(lexer):
 
   def __call__(self, input, is_column):
     self.isColumn = is_column
-    self.found = False
-    check_grammar = False
-    self.token_list = token_list = []
-    append = token_list.append
-    self.input(input)
-    while not self.found:
-      token = self.real_token()
-      append(token)
-      if token is None:
-        break
-      if token.type == 'OPERATOR':
-        check_grammar = True
-    if not self.found and check_grammar:
-      self.found = self.parse()
-    return self.found
+    try:
+      self.found = False
+      check_grammar = False
+      self.token_list = token_list = []
+      append = token_list.append
+      self.input(input)
+      while not self.found:
+        token = self.real_token()
+        append(token)
+        if token is None:
+          break
+        if token.type == 'OPERATOR':
+          check_grammar = True
+      if not self.found and check_grammar:
+        self.found = self.parse()
+      return self.found
+    finally:
+      self.isColumn = None
 
 update_docstrings(AdvancedSearchTextDetector)
 
