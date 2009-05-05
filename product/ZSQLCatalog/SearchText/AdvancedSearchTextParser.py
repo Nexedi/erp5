@@ -148,6 +148,48 @@ verifyClass(IColumnNode, ColumnNode)
 
 class AdvancedSearchTextParser(lexer):
 
+  # IMPORTANT:
+  # In short: Don't remove any token definition below even if they look
+  # useless.
+  # In detail: The lex methods below are redefined here because of ply nice
+  # feature of prioritizing tokens using the *line* *number* at which they
+  # are defined. As we inherit those methods from another class from another
+  # file (which doesn't match this file's content, of course) we must redefine
+  # wrapper methods to enforce token priority. Kudos to ply for so much
+  # customisable behaviour. Not.
+
+  def t_LEFT_PARENTHESE(self, t):
+    return lexer.t_LEFT_PARENTHESE(self, t)
+
+  def t_RIGHT_PARENTHESE(self, t):
+    return lexer.t_RIGHT_PARENTHESE(self, t)
+
+  def t_OPERATOR(self, t):
+    return lexer.t_OPERATOR(self, t)
+
+  def t_STRING(self, t):
+    return lexer.t_STRING(self, t)
+
+  def t_COLUMN(self, t):
+    if self.isColumn(t.value[:-1]):
+      t = lexer.t_COLUMN(self, t)
+    else:
+      # t is a non-existing column, so it should be taken as a string prefix.
+      t.type = 'STRING_PREFIX'
+    return t
+
+  def t_OR(self, t):
+    return lexer.t_OR(self, t)
+
+  def t_AND(self, t):
+    return lexer.t_AND(self, t)
+
+  def t_NOT(self, t):
+    return lexer.t_NOT(self, t)
+
+  def t_WORD(self, t):
+    return lexer.t_WORD(self, t)
+
   def p_seach_text(self, p):
     '''search_text : and_expression
                    | and_expression OR search_text'''
@@ -225,8 +267,19 @@ class AdvancedSearchTextParser(lexer):
 
   def p_string(self, p):
     '''string : WORD
-              | STRING'''
-    p[0] = p[1]
+              | STRING
+              | STRING_PREFIX string'''
+    if len(p) == 3:
+      p[0] = p[1] + p[2]
+    else:
+      p[0] = p[1]
+
+  def __call__(self, input, is_column, *args, **kw):
+    self.isColumn = is_column
+    try:
+      return self.parse(input, *args, **kw)
+    finally:
+      self.isColumn = None
 
 update_docstrings(AdvancedSearchTextParser)
 

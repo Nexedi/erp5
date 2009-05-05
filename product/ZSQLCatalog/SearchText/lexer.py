@@ -82,6 +82,7 @@ class lexer(object):
     'NOT',
     'COLUMN',
     'STRING',
+    'STRING_PREFIX',
     'WORD',
     'OPERATOR',
     'LEFT_PARENTHESE',
@@ -146,7 +147,8 @@ class lexer(object):
     kw['lexer'] = self
     return self.parser.parse(*args, **kw)
 
-  __call__ = parse
+  def __call__(self, input, is_column, *args, **kw):
+    raise NotImplementedError
 
 def update_docstrings(klass):
   for property in dir(klass):

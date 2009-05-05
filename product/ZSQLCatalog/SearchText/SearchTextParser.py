@@ -72,7 +72,7 @@ def isAdvancedSearchText(input, is_column):
 @profiler_decorator
 def _parse(input, is_column, *args, **kw):
   if isAdvancedSearchText(input, is_column):
-    result = getAdvancedSearchTextParser()(input, *args, **kw)
+    result = getAdvancedSearchTextParser()(input, is_column, *args, **kw)
   else:
     result = None
   return result
@@ -222,7 +222,7 @@ if __name__ == '__main__':
     ('(a AND b) OR (c AND (d OR e))',
                                   ComplexQuery([ComplexQuery([Query(None, 'a'), Query(None, 'b')], operator='and'), ComplexQuery([Query(None, 'c'), ComplexQuery([Query(None, 'd'), Query(None, 'e')], operator='or')], operator='and')], operator='or')),
     ('(foo:"") (bar:baz)',        ComplexQuery([Query('foo', ''), Query('bar', 'baz')], operator='and')),
-    ('(foo:"") (OR:bar)',         ComplexQuery([Query('foo', ''), Query('OR', 'bar')], operator='and')),
+    ('(foo:"") (OR:bar)',         ComplexQuery([Query('foo', ''), Query(None, 'OR:bar')], operator='and')),
 #    ('foo: OR',                   ['foo', 'or']),
 #    ('foo: OR ',                  ['foo', 'or']),
 #    ('(foo:)',                    ['foo', '']),
@@ -328,12 +328,15 @@ if __name__ == '__main__':
         print '  Detector: %r' % (detector_result, )
       if detector_result:
         print '  LEX:'
-        lexer = getAdvancedSearchTextParser().lexer
+        advanced_parser = getAdvancedSearchTextParser()
+        lexer = advanced_parser.lexer
+        advanced_parser.isColumn = isColumn
         lexer.input(input)
         while 1:
           tok = lexer.token()
           if not tok: break      # No more input
           print '    %s' % (tok, )
+        advanced_parser.isColumn = None
         print '  YACC:'
         print '    %r' % (parse(input, debug=2), )
       else:
