@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts41529558.44</string> </value>
+            <value> <string>ts41533283.92</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -510,13 +510,38 @@ div.block div.list_style div.pageNavigation select{\n
   height:16px;\n
 }\n
 \n
-.listbox .pageNavigation button{\n
+.pageNavigation button{\n
   display: inline;\n
   border:0 none;\n
   background-color:inherit;\n
   vertical-align:middle;\n
 }\n
 \n
+.pageNavigation button.listbox_first_page .image,\n
+.pageNavigation button.listbox_previous_page .image,\n
+.pageNavigation button.listbox_next_page .image,\n
+.pageNavigation button.listbox_last_page .image{\n
+  width:22px;\n
+  height:22px;\n
+  display:block;\n
+  background-color:transparent;\n
+}\n
+\n
+.pageNavigation button.listbox_first_page .image{\n
+  background-image: url(\'images/2leftarrowv.png\');\n
+}\n
+\n
+.pageNavigation button.listbox_previous_page .image{\n
+  background-image: url(\'images/1leftarrowv.png\');\n
+}\n
+\n
+.pageNavigation button.listbox_next_page .image{\n
+  background-image: url(\'images/1rightarrowv.png\');\n
+}\n
+\n
+.pageNavigation button.listbox_last_page .image{\n
+  background-image: url(\'images/2rightarrowv.png\');\n
+}\n
 \n
 div.block div.list_style input {\n
   margin-left:15px;\n
@@ -568,7 +593,7 @@ div.block div.worklist_list ul li a:hover{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>9140</long> </value>
+            <value> <long>9831</long> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
