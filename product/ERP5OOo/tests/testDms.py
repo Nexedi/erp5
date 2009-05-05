@@ -125,7 +125,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
   def getBusinessTemplateList(self):
     return ('erp5_base',
             'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
-            'erp5_web', 'erp5_dms_mysql_innodb_catalog', 'erp5_dms')
+            'erp5_web', 'erp5_dms')
 
   def getNeededCategoryList(self):
     return ()
@@ -799,7 +799,7 @@ class TestDocumentWithSecurity(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return ('erp5_base',
             'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
-            'erp5_web', 'erp5_dms_mysql_innodb_catalog', 'erp5_dms')
+            'erp5_web', 'erp5_dms')
 
   def test_ShowPreviewAfterSubmitted(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
