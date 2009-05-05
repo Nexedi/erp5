@@ -47,6 +47,7 @@
                        selection_name here/getSelectionName;\n
                        line_start python: here.getLineStart();\n
                        real_context here/getContext;\n
+                       context_url real_context/absolute_url;\n
                        absolute_url real_context/absolute_url;\n
                        box_relative_url python: request.get(\'box_relative_url\', \'\');\n
                        line_list here/query;\n
@@ -57,6 +58,7 @@
                        rss_link python:request.get(\'rss_link\',None);\n
                        rss_logo python:request.get(\'rss_logo\',None);\n
                        search_text python: selection_params.get(\'search_text\', \'\');\n
+                       show_select_column       here/showSelectColumn;\n
                        show_search_line here/showSearchLine;\n
                        is_domain_tree_mode here/isDomainTreeMode;\n
                        listbox_max_lines  python: int(here.getMaxLineNumber());\n
@@ -72,6 +74,12 @@
                        box_relative_url python: request.get(\'box_relative_url\', \'\');\n
                        box python: real_context.restrictedTraverse(box_relative_url); \n
                        box_id python: \'visual_\'+box.getId();\n
+                       is_gadget_mode request/is_gadget_mode | nothing;\n
+                       box_relative_url python: request.get(\'box_relative_url\', \'\');\n
+                       box python: real_context.restrictedTraverse(box_relative_url); \n
+                       box_id python: \'visual_\'+box.getId();\n
+                       dom_id python: request.get(\'dom_id\',None) or box_id;\n
+                       list_style python:request.get(\'list_style\', None);\n
                        dummy python: context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \n
                                                                         \'text/html;; charset=utf-8\');"\n
            metal:define-macro="main">\n
@@ -176,59 +184,11 @@
           </ul>\n
 \n
           <!-- Page navigation -->\n
-\n
-          <div tal:condition="python: total_line > listbox_max_lines" \n
-                class="pageNavigation"> \n
-            <tal:block tal:condition="python: current_page > 1">\n
-\n
-              <button tal:define ="params python: {field_id+\'_firstPage:method\':\'\'}"\n
-                      title="First page: Page 1" name="firstPage"\n
-                      type = "button" \n
-                      tal:attributes="id string:${field_id}_first_page;\n
-                                      value string:|&lt;;\n
-                                      onclick python: real_context.KnowledgePad_generateAjaxCall(absolute_url+\'/\'+form_id,box,box_id,params)">|&lt;\n
-              </button>\n
-\n
-              <button tal:define ="params python: {field_id+\'_previousPage:method\':\'\'}"\n
-                      name="previous"\n
-                      type="button"\n
-                      tal:attributes="title python: \'Previous Page: page %s\' % previous_page;\n
-                                      id    string:${field_id}_previous_page;\n
-                                      value string:&lt;&lt;;\n
-                                      onclick python: real_context.KnowledgePad_generateAjaxCall(absolute_url+\'/\'+form_id,box,box_id,params)">&lt;&lt;\n
-              </button>\n
-            </tal:block>\n
-\n
-            <select tal:define ="params python: {field_id+\'_setPage:method\':\'\',\'list_start\':\'this.value\'}"\n
-                    title="Change Page" size="1"\n
-                    tal:attributes=\'id string:${field_id}_page_selection;\n
-                                    onChange python: real_context.KnowledgePad_generateAjaxCall(absolute_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")\'\n
-                                    i18n:domain="ui" i18n:attributes="title">\n
-              <option tal:repeat="p python: range(total_page)"\n
-                      tal:attributes="selected python: p == page_id;\n
-                                      value    python: p * listbox_max_lines"\n
-                      i18n:domain="ui" i18n:translate="">Page <tal:block tal:replace="python: p + 1" i18n:name="page">0</tal:block> of <tal:block tal:replace="total_page" i18n:name="total_pages">1</tal:block>\n
-              </option>\n
-            </select>\n
-\n
-            <tal:block tal:condition="python: current_page < total_page">\n
-              <button tal:define ="params python: {field_id+\'_nextPage:method\':\'\'}"\n
-                      name="next"\n
-                      type="button"\n
-                      tal:attributes="title python: \'Next Page: page %s\' % next_page;\n
-                                      id    string:${field_id}_next_page;\n
-                                      onclick python: real_context.KnowledgePad_generateAjaxCall(absolute_url+\'/\'+form_id,box,box_id,params)">&gt;&gt;\n
-              </button>\n
-\n
-              <button tal:define ="params python: {field_id+\'_lastPage:method\':\'\',\'total_size\':total_line}"\n
-                      name="lastPage"\n
-                      type="button"\n
-                      tal:attributes="title python: N_(\'Last page: Page ${total_page}\', mapping={\'total_page\': total_page});\n
-                                      id    string:${field_id}_last_page;\n
-                                      onclick python: real_context.KnowledgePad_generateAjaxCall(absolute_url+\'/\'+form_id,box,box_id,params)">&gt;|\n
-              </button>\n
-            </tal:block>\n
+          <div class="pageNavigation" style="white-space: nowrap; vertical-align: middle; text-align: right;"\n
+              tal:attributes="colspan python: len(here.getSelectedColumnList()) + bool(show_select_column)">\n
+            <tal:block metal:use-macro="real_context/page_navigation_render/macros/page_navigation" />\n
           </div>\n
+\n
           <br/>\n
           <img tal:condition="rss_logo" tal:attributes="src rss_logo" alt="" height="20" class="right"/>\n
 \n
