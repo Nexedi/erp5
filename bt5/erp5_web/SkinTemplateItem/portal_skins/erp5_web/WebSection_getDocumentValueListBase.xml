@@ -132,7 +132,7 @@ try:\n
   else:\n
     if not all_languages:\n
       kw[\'language\'] = language\n
-    return current_section.portal_catalog(src__=src__, **kw)\n
+    return current_section.searchResults(src__=src__, **kw)\n
 \n
 except Unauthorized:\n
   return []\n
