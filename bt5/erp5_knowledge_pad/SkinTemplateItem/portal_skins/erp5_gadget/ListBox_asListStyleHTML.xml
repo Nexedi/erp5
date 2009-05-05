@@ -48,7 +48,6 @@
                        line_start python: here.getLineStart();\n
                        real_context here/getContext;\n
                        context_url real_context/absolute_url;\n
-                       absolute_url real_context/absolute_url;\n
                        box_relative_url python: request.get(\'box_relative_url\', \'\');\n
                        line_list here/query;\n
                        selection_params python: here.getSelection().getParams();\n
@@ -74,11 +73,8 @@
                        box_relative_url python: request.get(\'box_relative_url\', \'\');\n
                        box python: real_context.restrictedTraverse(box_relative_url); \n
                        box_id python: \'visual_\'+box.getId();\n
-                       is_gadget_mode request/is_gadget_mode | nothing;\n
-                       box_relative_url python: request.get(\'box_relative_url\', \'\');\n
-                       box python: real_context.restrictedTraverse(box_relative_url); \n
-                       box_id python: \'visual_\'+box.getId();\n
                        dom_id python: request.get(\'dom_id\',None) or box_id;\n
+                       is_gadget_mode request/is_gadget_mode | nothing;\n
                        list_style python:request.get(\'list_style\', None);\n
                        dummy python: context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \n
                                                                         \'text/html;; charset=utf-8\');"\n
@@ -130,7 +126,7 @@
 \n
           <!-- Refresh -->\n
 \n
-            <a class="right" tal:attributes="onclick python:real_context.KnowledgePad_generateAjaxCall(absolute_url+\'/\'+form_id,box,box_id)"><img alt="" tal:attributes="onload python:\'if(\\\'\'+rss_title.replace(\'\\\'\',\'\')+\'\\\'==\\\'Please enter a valid Rss or Atom url in the edit form\\\'){showElement(\\\'edit_form_\'+box.getId()+\'\\\');;}\'" src="refresh.png"/></a>\n
+            <a class="right" tal:attributes="onclick python:real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,box_id)"><img alt="" tal:attributes="onload python:\'if(\\\'\'+rss_title.replace(\'\\\'\',\'\')+\'\\\'==\\\'Please enter a valid Rss or Atom url in the edit form\\\'){showElement(\\\'edit_form_\'+box.getId()+\'\\\');;}\'" src="refresh.png"/></a>\n
 \n
           <!-- Feed Title -->\n
 \n
@@ -156,7 +152,7 @@
                      tal:attributes="id python: (getattr(value,\'field_img\',None) and  \'title_img\') or \'title\';\n
                                      class python:value.field_md5 in read_item_list and \'read\' or \'\';\n
                                      title python:getattr(value,\'field_sender\',\'\');\n
-                                     onclick python:\'if(this.className!=\\\'read\\\'){MochiKit.Async.doSimpleXMLHttpRequest(\\\'Base_setRssItemReadInSelection\\\', {\\\'selection_name\\\':\\\'\'+selection_name+\'\\\',\\\'item\\\':\\\'\'+value.field_md5+\'\\\'});;this.className=\\\'read\\\';;\'+real_context.KnowledgePad_generateAjaxCall(absolute_url+\'/\'+\'Base_formatRssTitleWithUnreadItemCount\',box,\'rss_title_\'+box.getId(),{\'rss_title\':rss_title,\'total_line\':total_line,\'selection_name\':selection_name})+\'}toggle(\\\'description_\'+box.getId()+\'_\'+str(repeat[\'line\'].index)+\'\\\');;\'">\n
+                                     onclick python:\'if(this.className!=\\\'read\\\'){MochiKit.Async.doSimpleXMLHttpRequest(\\\'Base_setRssItemReadInSelection\\\', {\\\'selection_name\\\':\\\'\'+selection_name+\'\\\',\\\'item\\\':\\\'\'+value.field_md5+\'\\\'});;this.className=\\\'read\\\';;\'+real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+\'Base_formatRssTitleWithUnreadItemCount\',box,\'rss_title_\'+box.getId(),{\'rss_title\':rss_title,\'total_line\':total_line,\'selection_name\':selection_name})+\'}toggle(\\\'description_\'+box.getId()+\'_\'+str(repeat[\'line\'].index)+\'\\\');;\'">\n
                   <span tal:content="value/field_title">value</span>\n
                   <span tal:condition="python:getattr(value,\'field_date\',None)" class="transparent" tal:content="python: \' - \'+str(getattr(value,\'field_date\',\'\'))">value</span>\n
                 </div>\n
