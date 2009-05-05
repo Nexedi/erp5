@@ -382,7 +382,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                   </tal:block>\n
                   <tal:block tal:condition="python: (not (same_type(value,[]) or same_type(value,()) )) and (value != None)">\n
                     <tal:block tal:condition="python: field_type==\'EditorField\' and field.get_value(\'text_editor\')==\'fck_editor\'">\n
-                      <tal:block tal:content="structure python: field.render_pdf(value)" />\n
+                        <text:p text:style-name=\'field-content-center\' tal:content="structure python: str(field.render_pdf(field.portal_transforms.convertToData(\'text/plain\', value))).replace(\'&amp;\', \'&amp;amp;\').replace(\'&gt;\', \'&amp;gt;\').replace(\'&lt;\', \'&amp;lt;\').replace(\'\\n\', \'&lt;text:line-break/&gt;\')" />\n
                     </tal:block>\n
                     <tal:block tal:condition="python: field_type in (\'EditorField\',) and field.get_value(\'text_editor\')==\'text_area\'">\n
                       <text:p text:style-name=\'field-content-center\'\n
