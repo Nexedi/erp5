@@ -320,7 +320,7 @@ if __name__ == '__main__':
     print repr(input)
     try:
       try:
-        detector_result = getAdvancedSearchTextDetector()(input, fake_column_id_set)
+        detector_result = getAdvancedSearchTextDetector()(input, isColumn)
       except ParserOrLexerError, message:
         print '  Detector raise: %r' % (message, )
         detector_result = False
