@@ -93,10 +93,6 @@
          tal:attributes="value python: request.get(\'search_text\',\'\')" />\n
 \n
   <input type="hidden" \n
-         name="list_start" \n
-         tal:attributes="value here/getLineStart" />\n
-\n
-  <input type="hidden" \n
          name="gadget_form_id" \n
          tal:attributes="value form_id" />\n
 \n

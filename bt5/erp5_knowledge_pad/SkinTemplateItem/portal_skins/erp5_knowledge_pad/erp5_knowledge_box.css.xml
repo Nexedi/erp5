@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts39376843.32</string> </value>
+            <value> <string>ts41529558.44</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -376,18 +376,6 @@ div.block div.input{\n
   margin-left:0em!important;\n
 }\n
 \n
-div.block table.listbox td.pageNavigation select{\n
-  float:left;\n
-  display:block;\n
-  margin-right:0.5em;\n
-}\n
-\n
-div.block table.listbox td.pageNavigation button{\n
-  float:left;\n
-  margin-right:0.5em;\n
-  padding:0px;\n
-}\n
-\n
 div.rss-link div.input{\n
   text-align:right;\n
 }\n
@@ -522,16 +510,11 @@ div.block div.list_style div.pageNavigation select{\n
   height:16px;\n
 }\n
 \n
-div.block div.list_style div.pageNavigation button{\n
-  text-align:center;\n
+.listbox .pageNavigation button{\n
+  display: inline;\n
+  border:0 none;\n
+  background-color:inherit;\n
   vertical-align:middle;\n
-  float:left;\n
-  background:white;\n
-  height: 16px;\n
-  width: 25px;\n
-  font-size: 8px;\n
-  margin-right:0.5em;\n
-  padding:0px;\n
 }\n
 \n
 \n
@@ -585,7 +568,7 @@ div.block div.worklist_list ul li a:hover{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>9446</long> </value>
+            <value> <long>9140</long> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
