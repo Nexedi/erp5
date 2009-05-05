@@ -150,20 +150,20 @@ class AdvancedSearchTextParser(lexer):
 
   def p_seach_text(self, p):
     '''search_text : and_expression
-                   | and_expression OR search_text
-                   | and_expression search_text'''
+                   | and_expression OR search_text'''
     if len(p) == 2:
       p[0] = p[1]
-    elif len(p) == 3:
-      p[0] = p[1].push('and', p[2])
     else:
       p[0] = p[1].push('or', p[3])
 
   def p_and_expression(self, p):
     '''and_expression : boolean_expression
+                      | boolean_expression and_expression
                       | boolean_expression AND and_expression'''
     if len(p) == 2:
       p[0] = p[1]
+    elif len(p) == 3:
+      p[0] = p[1].push('and', p[2])
     else:
       p[0] = p[1].push('and', p[3])
 
