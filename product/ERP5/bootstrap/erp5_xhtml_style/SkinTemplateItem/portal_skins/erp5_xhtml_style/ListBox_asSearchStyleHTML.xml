@@ -296,37 +296,12 @@
                   </td>\n
                 </tr>\n
               </tal:block>\n
+              <tr>\n
+                <td class="pageNavigation" colspan="2" style="white-space: nowrap; vertical-align: middle; text-align: right;">\n
+                  <tal:block metal:use-macro="real_context/page_navigation_render/macros/page_navigation" />\n
+                </td>\n
+              </tr>\n
             </table>\n
-          </div>\n
-\n
-          <!-- result page -->\n
-          <div class="centeredInner searchPages" tal:condition="python: total_line > listbox_max_lines">\n
-            <p>Result Page:\n
-              <!-- Dirty Hack that will generate different setPage urls. This is a bug in selection_tool! -->\n
-              <a href="#"\n
-                 tal:condition="python: not is_gadget_mode and field_id.strip() != \'listbox\'"\n
-                 tal:repeat="p python: range(0, here.total_pages)"\n
-                 tal:content="python: p+1"\n
-                 tal:attributes="class python: p == here.current_page and \'selected\' or nothing;\n
-                                 href  python: \'%s_setPage?%s_list_start=%s&amp;listbox_uid:list=&amp;list_selection_name=&amp;list_style=search\' % (field_id, field_id, p*listbox_max_lines)"/>\n
-\n
-              <a href="#"\n
-                 tal:condition="python: not is_gadget_mode and field_id.strip()==\'listbox\'"\n
-                 tal:repeat="p python: range(0, here.total_pages)"\n
-                 tal:content="python: p+1"\n
-                 tal:attributes="class python: p == here.current_page and \'selected\' or nothing;\n
-                                 href  python: \'setPage?%s_page_selection=%s&amp;selection_name=%s&amp;form_id=%s&amp;listbox_uid:list=&amp;list_selection_name=%s&amp;list_start=%s&amp;reset=1\' % (field_id, p+1, selection_name, form_id, selection_name, p*listbox_max_lines)"/>\n
-\n
-              <tal:block tal:repeat="p python: range(0, here.total_pages)">\n
-                <a tal:condition="is_gadget_mode"\n
-                   tal:define = "params python: {\'setPage:method\':\'\',\n
-                   \'list_start\': p*listbox_max_lines, \'list_style\':\'search\'}"\n
-                   style="cursor:pointer;"\n
-                   tal:content="python: p+1"\n
-                   tal:attributes="class python: p == here.current_page and \'selected\' or nothing;\n
-                                   onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,box_id,params)"/>\n
-              </tal:block>\n
-            </p>\n
           </div>\n
 \n
           <!-- Advanced Search footer -->\n

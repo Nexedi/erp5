@@ -57,17 +57,8 @@
          title="Filter" alt="Filter" name="Base_doSelect:method"\n
          type="submit" style="display: none"/>\n
 \n
-  <input tal:condition="python:is_gadget_mode" \n
-         type="hidden" name="list_start" \n
-         tal:attributes="value here/getLineStart" />\n
-  \n
   <tal:block tal:define="expand python: 1;\n
              table_form_id request/current_form_id | form_id;\n
-             Base_translateString python: real_context.Base_translateString;\n
-             box_relative_url python: request.get(\'box_relative_url\', \'\');\n
-             box python: real_context.restrictedTraverse(box_relative_url); \n
-             box_id python: \'visual_\'+box.getId();\n
-             dom_id python: request.get(\'dom_id\',None) or box_id;\n
              your_search_text python:here.getParamDict().get(\'your_search_text\', None)">\n
     <tal:block metal:use-macro="template/macros/ListBoxContainer">\n
       <tal:block metal:fill-slot="ListBoxBody">\n
@@ -195,7 +186,7 @@
 \n
               <tr class ="thead">\n
                 <td tal:condition="python:not is_gadget_mode and show_select_column"\n
-                    class="Data" style="width: 50px; text-align: center; vertical-align: middle;">\n
+                    class="Data" style="width: 50px; text-align: center; vertical-align: middle;float:left;">\n
                   <input id="listbox_check_all" type="image"\n
                          name="checkAll:method" value="1"\n
                          src="checkall.png" alt="Check All" title="Check All"\n
@@ -328,61 +319,9 @@
                   <tal:block metal:use-macro="real_context/page_navigation_render/macros/page_navigation" />\n
                 </td>\n
                 <!-- Page navigation for gadget mode -->\n
-\n
-                <td class="pageNavigation"\n
-                    tal:condition = "is_gadget_mode"\n
-                tal:define="max_lines      python: here.getMaxLineNumber();\n
-                              total_page     python: here.total_pages;\n
-                              page_id        python: here.current_page;\n
-                              current_page   python: page_id + 1;\n
-                              previous_page  python: current_page - 1;\n
-                              next_page      python: current_page + 1;"\n
+                <td class="pageNavigation" style="white-space: nowrap; vertical-align: middle; text-align: right;"\n
                     tal:attributes="colspan python: len(here.getSelectedColumnList()) + bool(show_select_column)">\n
-\n
-                  <tal:block tal:condition="python: current_page > 1">\n
-                    <button tal:define ="params python: {field_id+\'_firstPage:method\':\'\', \'list_style\':\'table\'}"\n
-                           title="First page: Page 1" name="firstPage"\n
-                           type = "button" \n
-                           tal:attributes="id string:${field_id}_first_page;\n
-                                           value string:|&lt;;\n
-                                           onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)">|&lt;</button>\n
-                    <button tal:define ="params python: {field_id+\'_previousPage:method\':\'\', \'list_style\':\'table\'}"\n
-                           title="Previous"\n
-                           name="previous"\n
-                           type="button"\n
-                           tal:attributes="title python: \'Previous Page: page %s\' % previous_page;\n
-                                           id    string:${field_id}_previous_page;\n
-                                           value string:&lt;&lt;;\n
-                                           onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)">&lt;&lt;</button>\n
-                  </tal:block>\n
-                  <select tal:define ="params python: {field_id+\'_setPage:method\':\'\',\'list_start\':\'this.value\',\'list_style\':\'table\'}"\n
-                          title="Change Page" size="1"\n
-                          name="changePage"\n
-                          tal:attributes=\'id string:${field_id}_page_selection;\n
-                                          onChange python: real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,dom_id,params).replace("\\"this.value\\"","this.value")\'\n
-                                          i18n:domain="ui" i18n:attributes="title">\n
-                    <option\n
-                      tal:repeat="p python: range(total_page)"\n
-                      tal:attributes="selected python: p == page_id;\n
-                                      value    python: p * max_lines"\n
-                      i18n:domain="ui" i18n:translate="">Page <tal:block tal:replace="python: p + 1" i18n:name="page">0</tal:block> of <tal:block tal:replace="total_page" i18n:name="total_pages">1</tal:block></option>\n
-                  </select>\n
-                  <tal:block tal:condition="python: current_page < total_page">\n
-                    <button tal:define ="params python: {field_id+\'_nextPage:method\':\'\',\'list_style\':\'table\'}"\n
-                           title="Next"\n
-                           name="next"\n
-                           type="button"\n
-                           tal:attributes="title python: \'Next Page: page %s\' % next_page;\n
-                                           id    string:${field_id}_next_page;\n
-                                           onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)">&gt;&gt;</button>\n
-                    <button tal:define ="params python: {field_id+\'_lastPage:method\':\'\',\'total_size\':int(here.total_size), \'list_style\':\'table\'}"\n
-                           title="Last Page"\n
-                           name="lastPage"\n
-                           type="button"\n
-                           tal:attributes="title python: Base_translateString(\'Last page: Page ${total_page}\', mapping={\'total_page\': total_page});\n
-                                           id    string:${field_id}_last_page;\n
-                                           onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)">&gt;|</button>\n
-                  </tal:block>\n
+                  <tal:block metal:use-macro="real_context/page_navigation_render/macros/page_navigation" />\n
                 </td>\n
               </tr>\n
           </table>\n
