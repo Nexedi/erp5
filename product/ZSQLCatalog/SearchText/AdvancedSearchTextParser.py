@@ -216,14 +216,17 @@ class AdvancedSearchTextParser(lexer):
       p[0] = p[1].push('and', p[3])
 
   def p_value(self, p):
-    '''value : OPERATOR STRING
-             | OPERATOR WORD
-             | STRING
-             | WORD'''
+    '''value : OPERATOR string
+             | string'''
     if len(p) == 2:
       p[0] = ValueNode(p[1])
     else:
       p[0] = ValueNode(p[2], comparison_operator=p[1])
+
+  def p_string(self, p):
+    '''string : WORD
+              | STRING'''
+    p[0] = p[1]
 
 update_docstrings(AdvancedSearchTextParser)
 
