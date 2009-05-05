@@ -595,7 +595,8 @@ class TestBPMMixin(ERP5TypeTestCase):
 
   def stepCheckInvoiceCausalityStateSolved(self, sequence=None, **kw):
     invoice = sequence.get('invoice')
-    self.assertEqual('solved', invoice.getCausalityState(), invoice.getDivergenceList())
+    self.assertEqual('solved', invoice.getCausalityState(),
+      invoice.getDivergenceList())
 
   def stepCheckInvoiceCausalityStateDiverged(self, sequence=None, **kw):
     invoice = sequence.get('invoice')
@@ -751,7 +752,8 @@ class TestBPMMixin(ERP5TypeTestCase):
         trade_model_simulation_movement_tax_complex.getBaseApplicationList()
       )
 
-      self.checkInvoiceTransactionRule(trade_model_simulation_movement_tax_complex)
+      self.checkInvoiceTransactionRule(
+        trade_model_simulation_movement_tax_complex)
       # TODO:
       #  * trade_phase ???
       #  * arrow
@@ -1107,7 +1109,8 @@ class TestBPMMixin(ERP5TypeTestCase):
 
   def stepCreateTradeModelLine(self, sequence=None, **kw):
     trade_condition = sequence.get('trade_condition')
-    sequence.edit(trade_model_line = self.createTradeModelLine(trade_condition))
+    sequence.edit(
+      trade_model_line = self.createTradeModelLine(trade_condition))
 
   def stepSpecialiseTradeConditionWithBusinessProcess(self, sequence=None,
       **kw):
