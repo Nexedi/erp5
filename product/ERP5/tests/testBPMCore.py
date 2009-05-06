@@ -326,20 +326,6 @@ class TestBPMMixin(ERP5TypeTestCase):
     self.setSystemPreference()
     self.createInvoiceTransationRule()
 
-    # XXX for testing purpose only...
-    # This builder is not supporting yet deeper simulation tree
-    # New one shall be done (decision making with
-    # DeliveryCausalityAssignmentMovementGroup), but right now it is enough
-    # to support invoice building that way
-    sale_invoice_builder, purchase_invoice_builder = self.portal. \
-        portal_deliveries.sale_invoice_builder, \
-        self.portal.portal_deliveries.purchase_invoice_builder
-    delete_id = 'causality_movement_group_on_delivery'
-    if getattr(sale_invoice_builder, delete_id, None) is not None:
-      sale_invoice_builder.manage_delObjects(ids=[delete_id])
-    if getattr(purchase_invoice_builder, delete_id, None) is not None:
-      purchase_invoice_builder.manage_delObjects(ids=[delete_id])
-
   @reindex
   def beforeTearDown(self):
     self.portal.portal_rules.manage_delObjects(
@@ -475,8 +461,11 @@ class TestBPMMixin(ERP5TypeTestCase):
     invoice = sequence.get('invoice')
     currency = sequence.get('price_currency')
     currency_precision = currency.getQuantityPrecision()
-    invoice_line_tax = sequence.get('invoice_line_tax')
-    invoice_line_discount = sequence.get('invoice_line_discount')
+    aggregated_amount_list_list = [
+      (q.getResourceValue().getUse(), q)
+      for q in invoice.getSpecialiseValue().getAggregatedAmountList(invoice)]
+    invoice_line_tax = [q[1] for q in aggregated_amount_list_list if q[0] == 'tax'][0]
+    invoice_line_discount = [q[1] for q in aggregated_amount_list_list if q[0] == 'discount'][0]
 
     movement_list = invoice.getMovementList(
         portal_type=invoice.getPortalAccountingMovementTypeList())
@@ -493,15 +482,17 @@ class TestBPMMixin(ERP5TypeTestCase):
     rounded_total_price = round(invoice.getTotalPrice(), currency_precision)
     rounded_tax_price = round(invoice_line_tax.getTotalPrice(),
         currency_precision)
+    rounded_discount_price = round(invoice_line_discount.getTotalPrice(),
+        currency_precision)
 
     self.assertEqual(abs(payable_receivable_line.getTotalPrice()),
-        rounded_total_price)
+        rounded_total_price + rounded_tax_price + rounded_discount_price)
 
     self.assertEqual(abs(vat_line.getTotalPrice()),
         rounded_tax_price)
 
     self.assertEquals(abs(income_expense_line.getTotalPrice()),
-        rounded_total_price - rounded_tax_price)
+        rounded_total_price + rounded_discount_price)
 
   def stepSetTradeConditionOld(self, sequence=None, **kw):
     trade_condition = sequence.get('trade_condition')
@@ -539,54 +530,6 @@ class TestBPMMixin(ERP5TypeTestCase):
 
     sequence.edit(
       trade_condition = trade_condition,
-    )
-
-  def stepCheckInvoiceTradeModelRelatedMovements(self, sequence=None, **kw):
-    # movement selection is done by hand, as no API is yet defined
-    invoice = sequence.get('invoice')
-    trade_condition = sequence.get('trade_condition')
-    trade_model_invoice_line_list = [q for q in invoice.getMovementList()
-        if q.getResourceValue().getUse() in ('discount','tax')]
-    self.assertEqual(2, len(trade_model_invoice_line_list))
-    invoice_line_tax = [q for q in trade_model_invoice_line_list if
-        q.getResourceValue().getUse() == 'tax' ][0]
-    invoice_line_discount = [q for q in trade_model_invoice_line_list if
-        q.getResourceValue().getUse() == 'discount' ][0]
-    sequence.edit(invoice_line_discount = invoice_line_discount)
-    sequence.edit(invoice_line_tax = invoice_line_tax)
-    amount_list = trade_condition.getAggregatedAmountList(invoice)
-    self.assertEquals(2, len(amount_list))
-    discount_amount_list = [q for q in amount_list
-        if q.getBaseApplication() == 'base_amount/discount']
-    tax_amount_list = [q for q in amount_list
-        if q.getBaseApplication() == 'base_amount/tax']
-
-    self.assertEquals(1, len(discount_amount_list))
-    self.assertEquals(1, len(tax_amount_list))
-
-    discount_amount = discount_amount_list[0]
-    tax_amount = tax_amount_list[0]
-
-    self.assertSameSet(discount_amount.getBaseApplicationList(),
-        invoice_line_discount.getBaseApplicationList())
-
-    self.assertSameSet(discount_amount.getBaseContributionList(),
-        invoice_line_discount.getBaseContributionList())
-
-    self.assertSameSet(tax_amount.getBaseApplicationList(),
-        invoice_line_tax.getBaseApplicationList())
-
-    self.assertSameSet(tax_amount.getBaseContributionList(),
-        invoice_line_tax.getBaseContributionList())
-
-    self.assertEqual(
-      invoice_line_discount.getTotalPrice(),
-      discount_amount.getTotalPrice()
-    )
-
-    self.assertEqual(
-      invoice_line_tax.getTotalPrice(),
-      tax_amount.getTotalPrice()
     )
 
   def stepAcceptDecisionInvoice(self, sequence=None, **kw):
@@ -1705,13 +1648,12 @@ class TestBPMTestCases(TestBPMMixin):
               GetInvoice
               CheckInvoiceCausalityStateSolved
               CheckInvoiceNormalMovements
-              CheckInvoiceTradeModelRelatedMovements
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_TradeModelRuleSimulationBuildInvoiceNewTradeConditionDivergencyAndSolving(self):
-    """Check that after changing trade condition invoice is properly diverged and it is possible to solve"""
+  def test_TradeModelRuleSimulationBuildInvoiceNewTradeCondition(self):
+    """Check that after changing trade condition invoice is not diverged"""
     sequence_list = SequenceList()
     sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING
     sequence_string += """
@@ -1730,7 +1672,6 @@ class TestBPMTestCases(TestBPMMixin):
               GetInvoice
               CheckInvoiceCausalityStateSolved
               CheckInvoiceNormalMovements
-              CheckInvoiceTradeModelRelatedMovements
 
               SetTradeConditionOld
 
@@ -1744,19 +1685,7 @@ class TestBPMTestCases(TestBPMMixin):
 
               SpecialiseInvoiceTradeCondition
               Tic
-              SetTradeConditionNew
-              GetOldTradeCondition
-              CheckInvoiceCausalityStateDiverged
-              CheckInvoiceNormalMovements
-              CheckInvoiceTradeModelRelatedMovements
-
-              AdoptPrevisionQuantityInvoice
-              Tic
-
-              GetNewTradeCondition
               CheckInvoiceCausalityStateSolved
-              CheckInvoiceNormalMovements
-              CheckInvoiceTradeModelRelatedMovements
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -1785,11 +1714,6 @@ class TestBPMTestCases(TestBPMMixin):
               GetInvoice
               CheckInvoiceCausalityStateSolved
               CheckInvoiceNormalMovements
-              CheckInvoiceTradeModelRelatedMovements
-
-              GetInvoiceLineDiscounted
-              GetInvoiceLineDiscountedTaxed
-              GetInvoiceLineTaxed
 
               ModifyQuantityInvoiceLineDiscounted
               ModifyQuantityInvoiceLineDiscountedTaxed
@@ -1798,12 +1722,8 @@ class TestBPMTestCases(TestBPMMixin):
               CheckInvoiceCausalityStateDiverged
               AcceptDecisionQuantityInvoice
               Tic
-              CheckInvoiceCausalityStateDiverged
-              AdoptPrevisionQuantityInvoice
-              Tic
               CheckInvoiceCausalityStateSolved
               CheckInvoiceNormalMovements
-              CheckInvoiceTradeModelRelatedMovements
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -1828,13 +1748,14 @@ class TestBPMTestCases(TestBPMMixin):
               GetInvoice
               CheckInvoiceCausalityStateSolved
               CheckInvoiceNormalMovements
-              CheckInvoiceTradeModelRelatedMovements
 
               StartInvoice
               Tic
               CheckInvoiceCausalityStateSolved
               CheckInvoiceNormalMovements
-              CheckInvoiceTradeModelRelatedMovements
+              GetInvoiceLineDiscounted
+              GetInvoiceLineDiscountedTaxed
+              GetInvoiceLineTaxed
               CheckInvoiceAccountingMovements
               StopInvoice
               DeliverInvoice
@@ -1868,7 +1789,6 @@ class TestBPMTestCases(TestBPMMixin):
               GetInvoice
               CheckInvoiceCausalityStateSolved
               CheckInvoiceNormalMovements
-              CheckInvoiceTradeModelRelatedMovements
 
               SetNewPackingListAsPackingList
               PackPackingList
@@ -1882,7 +1802,6 @@ class TestBPMTestCases(TestBPMMixin):
               GetInvoice
               CheckInvoiceCausalityStateSolved
               CheckInvoiceNormalMovements
-              CheckInvoiceTradeModelRelatedMovements
     """
 
   def test_TradeModelRuleSimulationPackingListSplitBuildInvoiceBuildDifferentRatio(self):
