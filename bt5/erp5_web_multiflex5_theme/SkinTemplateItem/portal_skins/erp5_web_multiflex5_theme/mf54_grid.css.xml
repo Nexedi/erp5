@@ -192,8 +192,8 @@
 \n
 /* CONTAINER (NO BOXES) */\n
 .content-1col-nobox {width:<tal:block tal:replace="main_content_width"/>px; background-color:rgb(255,255,255);}\n
-.content-2col-nobox-leftcolumn {display:inline; float:left; width:337px; border-right:solid 1px rgb(215,215,215) /*Use this statement if left column is longer than the right column. Activate by removing "xx_" from property name*/; background-color:rgb(255,255,255);}\n
-.content-2col-nobox-rightcolumn {display:inline; float:right; width:337px; border-left:solid 1px rgb(215,215,215)/*Use this statement if right columnn is longer than the left column. De-activate by adding "xx_" to propery name*/; background-color:rgb(255,255,255);}\n
+.content-2col-nobox-leftcolumn {display:inline; float:left; width:<tal:block tal:replace="python:main_content_width/2-1"/>px; border-right:solid 1px rgb(215,215,215) /*Use this statement if left column is longer than the right column. Activate by removing "xx_" from property name*/; background-color:rgb(255,255,255);}\n
+.content-2col-nobox-rightcolumn {display:inline; float:right; width:<tal:block tal:replace="python:main_content_width/2-1"/>px; border-left:solid 1px rgb(215,215,215)/*Use this statement if right columnn is longer than the left column. De-activate by adding "xx_" to propery name*/; background-color:rgb(255,255,255);}\n
 \n
 /* CONTAINER (BOXES) */\n
 .content-1col-box {width:<tal:block tal:replace="main_content_width"/>px; background-color:transparent;}\n
@@ -246,7 +246,7 @@
 /**************/\n
 /* To avoid that some layouts may break during printing */\n
 /* we remove one vertical border-line for the columns  */                 \n
-@media print {.content-2col-nobox-rightcolumn {display:inline; float:right; width:337px; border-left:none; background-color:rgb(255,255,255);}}\n
+@media print {.content-2col-nobox-rightcolumn {display:inline; float:right; width:<tal:block tal:replace="python:main_content_width/2-1"/>px; border-left:none; background-color:rgb(255,255,255);}}\n
 \n
  /********************************************/\n
 /*  USED ONLY FOR DEMO PAGE FOR GRID SETUP  */\n
