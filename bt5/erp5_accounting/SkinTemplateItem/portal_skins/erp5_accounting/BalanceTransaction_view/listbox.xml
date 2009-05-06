@@ -15,6 +15,7 @@
               <list>
                 <string>columns</string>
                 <string>selection_name</string>
+                <string>editable_columns</string>
               </list>
             </value>
         </item>
@@ -106,6 +107,29 @@
                         <tuple>
                           <string>destination_credit</string>
                           <string>Credit</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>destination_debit</string>
+                          <string>Debit</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_credit</string>
+                          <string>Credit</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination</string>
+                          <string>Account</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource</string>
+                          <string>Currency</string>
                         </tuple>
                       </list>
                     </value>
