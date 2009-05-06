@@ -400,7 +400,7 @@ group_border_color = group_border_color,)">\n
 \n
 /* customize some styles of erp5_xhtml_style/erp5.css */\n
 body {\n
-  background: #81B2DC url(<dtml-var expr="portal_url()">/tiolive_image/bg.png) repeat-y;\n
+  background: #81B2DC url(<dtml-var expr="portal_url()">/tiolive_base_image/bg.png) repeat-y;\n
 }\n
 \n
 .ListSummary table {\n
@@ -473,7 +473,7 @@ body {\n
 \tborder:none;\n
 \tfont-size:1pt;\n
 \tcolor:#f6a801;\n
-\tbackground: url(<dtml-var expr="portal_url()">/tiolive_image/input-tiosearch.png) no-repeat transparent;\n
+\tbackground: url(<dtml-var expr="portal_url()">/tiolive_base_image/input-tiosearch.png) no-repeat transparent;\n
 \tbackground-position: 0 5px;\n
 \n
 }\n
@@ -481,7 +481,7 @@ body {\n
 #fieldset-tiosearch input.input-submit {\n
 \n
   border:none;\n
-  background: url(<dtml-var expr="portal_url()">/tiolive_image/input-tiosearch.png) no-repeat transparent;\n
+  background: url(<dtml-var expr="portal_url()">/tiolive_base_image/input-tiosearch.png) no-repeat transparent;\n
   background-position: 100px 0;\n
 \tcursor: pointer;\n
   \n

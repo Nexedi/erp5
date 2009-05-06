@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>tiolive_image</string> </value>
+            <value> <string>tiolive_base_image</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

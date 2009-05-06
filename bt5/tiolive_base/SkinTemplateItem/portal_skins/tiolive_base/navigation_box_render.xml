@@ -121,7 +121,7 @@
    tal:condition="not:here/portal_membership/isAnonymousUser"><a href="#" id="link-login"  \n
      tal:attributes="href string:${context_url}/logout"\n
      i18n:translate="" i18n:domain="ui">Logout</a>\n
-   <img tal:attributes="src string:${context_url}/tiolive_image/icon-login.png" id=\'user-img\' alt=\'user\' />\n
+   <img tal:attributes="src string:${context_url}/tiolive_base_image/icon-login.png" id=\'user-img\' alt=\'user\' />\n
    <tal:block tal:replace="user_name">jp</tal:block></p>        \n
 <fieldset id="fieldset-tiosearch">\n
     <input type="hidden" name="all_languages" value="1" />\n
