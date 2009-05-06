@@ -317,7 +317,7 @@ class TestBPMMixin(ERP5TypeTestCase):
                          source_value=self.income_account,
                          destination_value=self.expense_account,
                          quantity=1)
-   
+
     itr.validate()
 
   @reindex
@@ -464,8 +464,10 @@ class TestBPMMixin(ERP5TypeTestCase):
     aggregated_amount_list_list = [
       (q.getResourceValue().getUse(), q)
       for q in invoice.getSpecialiseValue().getAggregatedAmountList(invoice)]
-    invoice_line_tax = [q[1] for q in aggregated_amount_list_list if q[0] == 'tax'][0]
-    invoice_line_discount = [q[1] for q in aggregated_amount_list_list if q[0] == 'discount'][0]
+    invoice_line_tax = [q[1] for q in aggregated_amount_list_list
+        if q[0] == 'tax'][0]
+    invoice_line_discount = [q[1] for q in aggregated_amount_list_list
+        if q[0] == 'discount'][0]
 
     movement_list = invoice.getMovementList(
         portal_type=invoice.getPortalAccountingMovementTypeList())
@@ -1401,7 +1403,8 @@ class TestBPMTestCases(TestBPMMixin):
         resource_value = service_2)
 
     self.assertSameSet(
-      [trade_condition_1_trade_model_line, trade_condition_2_trade_model_line],
+      [trade_condition_1_trade_model_line,
+        trade_condition_2_trade_model_line],
       trade_condition_1.getTradeModelLineComposedList()
     )
 
@@ -1472,7 +1475,8 @@ class TestBPMTestCases(TestBPMMixin):
         resource_value = service_2)
 
     self.assertSameSet(
-      [trade_condition_1_trade_model_line, trade_condition_2_trade_model_line],
+      [trade_condition_1_trade_model_line,
+        trade_condition_2_trade_model_line],
       trade_condition_1.getTradeModelLineComposedList()
     )
 
