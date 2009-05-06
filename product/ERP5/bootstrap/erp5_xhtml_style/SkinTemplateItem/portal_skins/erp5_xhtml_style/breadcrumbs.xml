@@ -180,11 +180,11 @@ ptool = getToolByName(script, \'portal_properties\')\n
 utool = getToolByName(script, \'portal_url\')\n
 portal_url = utool()\n
 result = []\n
-\n
+param = int(context.REQUEST.get(\'ignore_layout\', 0)) and \'?ignore_layout:int=1\' or \'\'\n
 if include_root:\n
     result.append( { \'id\'      : \'root\'\n
                    , \'title\'   : ptool.title()\n
-                   , \'url\'     : \'%s/view\' % portal_url\n
+                   , \'url\'     : \'%s/view%s\' % (portal_url, param)\n
                    }\n
                  )\n
 \n
@@ -207,7 +207,7 @@ for name in relative:\n
     if not name == \'talkback\':\n
         result.append( { \'id\'      : name\n
                        , \'title\'   : title\n
-                       , \'url\'     : \'%s/%s/view\' % (portal_url, \'/\'.join(now))\n
+                       , \'url\'     : \'%s/%s/view%s\' % (portal_url, \'/\'.join(now), param)\n
                        }\n
                     )\n
     module = False\n
@@ -263,8 +263,10 @@ return result\n
                             <string>utool</string>
                             <string>portal_url</string>
                             <string>result</string>
+                            <string>int</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>param</string>
                             <string>relative</string>
                             <string>portal</string>
                             <string>obj</string>
