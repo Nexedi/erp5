@@ -6,6 +6,9 @@
  <portal_type id="Business Process Module">
   <item>Business Process</item>
  </portal_type>
+ <portal_type id="Delivery Builder">
+  <item>First Causality Movement Group</item>
+ </portal_type>
  <portal_type id="Purchase Invoice Transaction">
   <item>Trade Model Line</item>
  </portal_type>
