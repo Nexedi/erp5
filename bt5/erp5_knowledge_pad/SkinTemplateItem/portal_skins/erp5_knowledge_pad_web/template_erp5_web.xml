@@ -65,7 +65,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 </tal:block>\n
 \n
 <tal:block metal:define-macro="master">\n
-<tal:block tal:define="portal_path here/portal_url;\n
+<tal:block tal:define="portal_path python:here.getWebSiteValue().absolute_url();\n
                        editable request/editable_mode | python: 0; \n
                        global css_list_template python:[\'%s/erp5_web.css\' % portal_path,\n
                               \'%s/erp5_web_%scontent.css\' % (portal_path, editable and \'editable_\' or \'\'),\n
