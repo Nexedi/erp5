@@ -1802,6 +1802,10 @@ class TestBPMTestCases(TestBPMMixin):
               CheckInvoiceCausalityStateSolved
               CheckInvoiceNormalMovements
 
+              GetInvoiceLineDiscounted
+              GetInvoiceLineDiscountedTaxed
+              GetInvoiceLineTaxed
+
               ModifyQuantityInvoiceLineDiscounted
               ModifyQuantityInvoiceLineDiscountedTaxed
               ModifyQuantityInvoiceLineTaxed
