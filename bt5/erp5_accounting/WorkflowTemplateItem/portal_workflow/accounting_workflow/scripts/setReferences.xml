@@ -78,7 +78,7 @@ if not transaction.getSourceReference():\n
   if period is not None:\n
     period_code = period.getShortTitle() or period.getTitle() or \'\'\n
   if not period_code:\n
-    period_code = transaction.getStartDate().year()\n
+    period_code = str(transaction.getStartDate().year())\n
   source_id_group = (\'accounting\', \'section\', source_section, period_code)\n
   source_reference = transaction.generateNewId(id_group=source_id_group,\n
                                                default=1)\n
@@ -90,7 +90,7 @@ if not transaction.getDestinationReference():\n
   if period is not None:\n
     period_code = period.getShortTitle() or period.getTitle() or \'\'\n
   if not period_code:\n
-    period_code = transaction.getStopDate().year()\n
+    period_code = str(transaction.getStopDate().year())\n
   destination_id_group = (\'accounting\', \'section\', destination_section, period_code)\n
   destination_reference = transaction.generateNewId(\n
                               id_group=destination_id_group, default=1)\n
@@ -150,6 +150,7 @@ if not transaction.getDestinationReference():\n
                             <string>period</string>
                             <string>period_code</string>
                             <string>None</string>
+                            <string>str</string>
                             <string>source_id_group</string>
                             <string>source_reference</string>
                             <string>destination_id_group</string>
