@@ -48,7 +48,8 @@ dual_operator_dict = {
 }
 
 # List of operators searched for at value's begnining when it's a basestring.
-# Order is important: an operator whose left part would be matching another operator of lower index would never be used.
+# Order is important: an operator whose left part would be matching another
+# operator of lower index would never be used.
 operator_list = ('>=', '<=', '>', '<', '=', '!=')
 
 def preprocessLikeValue(value):
@@ -89,7 +90,8 @@ class SearchKey(object):
     return self.column
 
   @profiler_decorator
-  def buildSQLExpression(self, operator, value, column_map, only_group_columns, group):
+  def buildSQLExpression(self, operator, value, column_map, only_group_columns,
+                         group):
     column_name = self.getColumn()
     rendered_column = column_map.asSQLColumn(column_name, group=group)
     return operator.asSQLExpression(rendered_column, value, only_group_columns)
@@ -105,7 +107,8 @@ class SearchKey(object):
       operator (Operator)
         The operator used to render value.
     """
-    operator_value_deprocessor = operator_value_deprocessor_dict.get(operator.getOperator())
+    operator_value_deprocessor = operator_value_deprocessor_dict.get(
+      operator.getOperator())
     if operator_value_deprocessor is not None:
       value = operator_value_deprocessor(value)
     return operator.asSearchText(value)
@@ -121,7 +124,8 @@ class SearchKey(object):
       value = [self._renderValueAsSearchText(x, operator) for x in value]
       if self.default_comparison_operator != '=':
         value = ['=%s' % (x, ) for x in value]
-      # XXX: operator used to join value elements should be reused from parser data (?)
+      # XXX: operator used to join value elements should be reused from
+      # parser data (?)
       result = '(%s)' % (' OR '.join(value), )
     else:
       result = self._renderValueAsSearchText(value, operator)
@@ -133,14 +137,15 @@ class SearchKey(object):
 
   @profiler_decorator
   def registerColumnMap(self, column_map, group, simple_query):
-    column_map.registerColumn(self.getColumn(), group=group, simple_query=simple_query)
+    column_map.registerColumn(self.getColumn(), group=group,
+                              simple_query=simple_query)
     return group
 
   @profiler_decorator
   def _getComparisonOperator(self, value):
     """
-      From a basestring instance, return a contained operator and value without
-      that operator.
+      From a basestring instance, return a contained operator and value
+      without that operator.
 
       value (string)
       
@@ -173,13 +178,15 @@ class SearchKey(object):
 
   @profiler_decorator
   def _preprocessValue(self, value, operator):
-    operator_value_preprocessor = operator_value_preprocessor_dict.get(operator)
+    operator_value_preprocessor = operator_value_preprocessor_dict.get(
+      operator)
     if operator_value_preprocessor is not None:
       value = operator_value_preprocessor(value)
     return value
 
   @profiler_decorator
-  def _processSearchValue(self, search_value, default_logical_operator, comparison_operator):
+  def _processSearchValue(self, search_value, default_logical_operator,
+                          comparison_operator):
     """
       Change search_value into a list of values, one or more logical operators,
       and a comparison operator. If no default_logical_operator is given, 
@@ -220,7 +227,9 @@ class SearchKey(object):
       assert comparison_operator is None
       actual_value = search_value['query']
       if search_value.get('key') not in (None, self.__class__.__name__):
-        LOG(self.__class__.__name__, 100, '"key" dict entry does not match current class: %r' % (search_value, ))
+        LOG(self.__class__.__name__, 100,
+            '"key" dict entry does not match current class: %r' % \
+            (search_value, ))
       if 'type' in search_value:
         assert 'operator' not in search_value, search_value
         assert 'range' not in search_value, search_value
@@ -229,21 +238,28 @@ class SearchKey(object):
         value_range = search_value.get('range')
         if value_range is not None:
           if value_operator is not None:
-            LOG('SearchKey', 100, '"range" and "operator" are mutualy exclusive, ignoring operator: %r' % (search_value, ))
+            LOG('SearchKey', 100,
+                '"range" and "operator" are mutualy exclusive, ignoring '\
+                'operator: %r' % (search_value, ))
           if value_range in single_operator_dict:
             comparison_operator = single_operator_dict[value_range]
           elif value_range in dual_operator_dict:
             if not isinstance(actual_value, (tuple, list)):
-              raise TypeError, 'Operator %r requires value to be a tuple/list. (%r)' % (value_range, search_value)
+              raise TypeError, 'Operator %r requires value to be a '\
+                               'tuple/list. (%r)' % (value_range,
+                               search_value)
             if len(actual_value) != 2:
-              raise TypeError, 'Operator %r requires value to have a length of 2. len(%r) = %i (%r)' % (value_range, actual_value, len(actual_value), search_value)
+              raise TypeError, 'Operator %r requires value to have a length '\
+                               'of 2. len(%r) = %i (%r)' % (value_range,
+                               actual_value, len(actual_value), search_value)
             comparison_operator = dual_operator_dict[value_range]
             logical_operator = 'and'
           else:
             raise ValueError, 'Unknown "range" value in %r' % (search_value, )
         if value_operator is not None:
           if not isinstance(value_operator, basestring):
-            raise TypeError, 'Operator must be of a string type. Got a %r' % (type(value_operator), )
+            raise TypeError, 'Operator must be of a string type. Got a %r' % \
+                             (type(value_operator), )
           value_operator = value_operator.lower()
           if not isinstance(actual_value, (tuple, list)):
             raise TypeError, 'When specifying an operator, query must be a list.'
@@ -258,11 +274,13 @@ class SearchKey(object):
       # Check list content (not empty, homogenous)
       search_value_len = len(search_value)
       if search_value_len == 0:
-        raise ValueError, 'Value cannot be an empty list/tuple: %r' % (search_value, )
+        raise ValueError, 'Value cannot be an empty list/tuple: %r' % \
+                          (search_value, )
       reference_class = search_value[0].__class__
       for x in search_value[1:]:
         if x.__class__ != reference_class:
-          raise TypeError, 'List elements must be of the same class: %r' % (search_value, )
+          raise TypeError, 'List elements must be of the same class: %r' % \
+                           (search_value, )
     else:
       assert logical_operator is None
       if isinstance(search_value, dict):
@@ -275,7 +293,8 @@ class SearchKey(object):
     operator_value_dict = {}
     if None in search_value:
       if comparison_operator not in (None, 'is'):
-        LOG('KeywordKey', 100, 'None value requires an "is" comparison operator. Fixed.')
+        LOG('KeywordKey', 100,
+            'None value requires an "is" comparison operator. Fixed.')
       operator_value_dict['is'] = search_value
     elif comparison_operator is None:
       if issubclass(reference_class, basestring):
@@ -283,17 +302,20 @@ class SearchKey(object):
           parsed = True
           for value in search_value:
             if isinstance(value, dict):
-              operator, value['query'] = self._getComparisonOperator(value['query'])
+              operator, value['query'] = self._getComparisonOperator(
+                value['query'])
             else:
               operator, value = self._getComparisonOperator(value)
-            operator_value_dict.setdefault(operator, []).append(self._preprocessValue(value, operator))
+            operator_value_dict.setdefault(operator, []).append(
+              self._preprocessValue(value, operator))
         else:
           for value in search_value:
             if isinstance(value, dict):
               operator = self._guessComparisonOperator(value['query'])
             else:
               operator = self._guessComparisonOperator(value)
-            operator_value_dict.setdefault(operator, []).append(self._preprocessValue(value, operator))
+            operator_value_dict.setdefault(operator, []).append(
+              self._preprocessValue(value, operator))
       else:
         # XXX: comparison operator is hardcoded for non-strings.
         operator_value_dict['='] = search_value
@@ -324,17 +346,24 @@ class SearchKey(object):
     append = query_list.append
     if logical_operator == 'or' and '=' in operator_value_dict:
       # Special case for equality with an 'or' logical operator: use SQL 'in'.
-      append(SimpleQuery(search_key=self, comparison_operator='in', group=group, **{column: operator_value_dict.pop('=')}))
+      append(SimpleQuery(search_key=self, comparison_operator='in',
+                         group=group,
+                         **{column: operator_value_dict.pop('=')}))
     for comparison_operator, value_list in operator_value_dict.iteritems():
       for value in value_list:
-        append(SimpleQuery(search_key=self, comparison_operator=comparison_operator, group=group, **{column: value}))
+        append(SimpleQuery(search_key=self,
+                           comparison_operator=comparison_operator,
+                           group=group, **{column: value}))
     return query_list
 
   @profiler_decorator
-  def buildQuery(self, search_value, group=None, logical_operator=None, comparison_operator=None):
+  def buildQuery(self, search_value, group=None, logical_operator=None,
+                 comparison_operator=None):
     assert logical_operator in (None, 'and', 'or'), repr(logical_operator)
-    operator_value_dict, logical_operator, parsed = self._processSearchValue(search_value, logical_operator, comparison_operator)
-    query_list = self._buildQuery(operator_value_dict, logical_operator, parsed, group)
+    operator_value_dict, logical_operator, parsed = self._processSearchValue(
+      search_value, logical_operator, comparison_operator)
+    query_list = self._buildQuery(operator_value_dict, logical_operator,
+                                  parsed, group)
     if len(query_list) == 1:
       query = query_list[0]
     else:
