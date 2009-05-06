@@ -44,5 +44,15 @@ class BusinessPath:
             'description' : 'ID of method to get destination list of categories',
             'type'        : 'string',
             'mode'        : 'w' },
+        {   'id'          : 'lead_time',
+            'description' : 'How much time shall be spent on path',
+            'default'     : 0.0,
+            'type'        : 'float',
+            'mode'        : 'w' },
+        {   'id'          : 'wait_time',
+            'description' : 'How much time to wait before initiating path',
+            'default'     : 0.0,
+            'type'        : 'float',
+            'mode'        : 'w' },
     )
     _categories = ( )
