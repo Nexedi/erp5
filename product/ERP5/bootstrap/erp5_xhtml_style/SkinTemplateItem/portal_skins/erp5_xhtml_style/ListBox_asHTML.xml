@@ -62,11 +62,6 @@
               is_web_mode request/is_web_mode | nothing;\n
               list_style python:request.get(\'list_style\', is_web_mode and \'table\' or None);\n
               is_gadget_mode request/is_gadget_mode | nothing;\n
-              box_relative_url python: request.get(\'box_relative_url\', \'\');\n
-              box python: real_context.restrictedTraverse(box_relative_url); \n
-              box_id python: \'visual_\'+box.getId();\n
-              dom_id python: request.get(\'dom_id\',None) or box_id;\n
-              Base_translateString python: real_context.Base_translateString;\n
               ">\n
   <!-- ListBox starts here.  -->\n
   <input type="hidden" name="list_selection_name" value="default" tal:attributes="value selection_name" />\n
@@ -77,7 +72,9 @@
   \n
   <tal:block tal:condition="is_gadget_mode"\n
              tal:define="global box_relative_url python: request.get(\'box_relative_url\', \'\');\n
-                         global box_id python: \'visual_%s\' %box_relative_url.split(\'/\')[-1];">\n
+             global box python: real_context.restrictedTraverse(box_relative_url); \n
+             global box_id python: \'visual_%s\' %box_relative_url.split(\'/\')[-1];\n
+             global dom_id python: request.get(\'dom_id\',None) or box_id;">\n
     <input tal:condition="python:form_id" \n
           type="hidden" name="gadget_form_id"\n
           tal:attributes="value form_id" />\n
