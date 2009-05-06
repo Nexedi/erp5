@@ -928,6 +928,11 @@ class TestBPMMixin(ERP5TypeTestCase):
   def stepCreateTradeCondition(self, sequence=None, **kw):
     sequence.edit(trade_condition = self.createTradeCondition())
 
+  def stepCreateInvoiceLine(self, sequence=None, **kw):
+    invoice = sequence.get('invoice')
+    invoice_line = invoice.newContent(portal_type=self.invoice_line_portal_type)
+    sequence.edit(invoice_line = invoice_line)
+
   def stepCreateOrderLine(self, sequence=None, **kw):
     order = sequence.get('order')
     order_line = order.newContent(portal_type=self.order_line_portal_type)
@@ -1039,6 +1044,48 @@ class TestBPMMixin(ERP5TypeTestCase):
     sequence.edit(
       order_line = None,
       order_line_discounted_taxed = order_line
+    )
+
+  def stepModifyInvoiceLineTaxed(self, sequence=None, **kw):
+    invoice_line = sequence.get('invoice_line')
+    resource = sequence.get('product_taxed')
+    self.assertNotEqual(None, resource)
+    invoice_line.edit(
+      price=1.0,
+      quantity=2.0,
+      resource_value=resource
+    )
+    sequence.edit(
+      invoice_line = None,
+      invoice_line_taxed = invoice_line
+    )
+
+  def stepModifyInvoiceLineDiscounted(self, sequence=None, **kw):
+    invoice_line = sequence.get('invoice_line')
+    resource = sequence.get('product_discounted')
+    self.assertNotEqual(None, resource)
+    invoice_line.edit(
+      price=3.0,
+      quantity=4.0,
+      resource_value=resource
+    )
+    sequence.edit(
+      invoice_line = None,
+      invoice_line_discounted = invoice_line
+    )
+
+  def stepModifyInvoiceLineDiscountedTaxed(self, sequence=None, **kw):
+    invoice_line = sequence.get('invoice_line')
+    resource = sequence.get('product_discounted_taxed')
+    self.assertNotEqual(None, resource)
+    invoice_line.edit(
+      price=5.0,
+      quantity=6.0,
+      resource_value=resource
+    )
+    sequence.edit(
+      invoice_line = None,
+      invoice_line_discounted_taxed = invoice_line
     )
 
   def createTradeModelLine(self, document, **kw):
@@ -1692,7 +1739,47 @@ class TestBPMTestCases(TestBPMMixin):
 
   def test_TradeModelRuleSimulationBuildInvoiceNewInvoiceLineSupport(self):
     """Check how is supported addition of invoice line to invoice build from order"""
-    raise NotImplementedError('TODO')
+    sequence_list = SequenceList()
+    sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING
+    sequence_string += """
+              ConfirmOrder
+              Tic
+    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
+              GetPackingList
+              PackPackingList
+              Tic
+    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
+              StartPackingList
+              StopPackingList
+              DeliverPackingList
+              Tic
+    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
+              GetInvoice
+              CheckInvoiceCausalityStateSolved
+              CheckInvoiceNormalMovements
+
+              CreateInvoiceLine
+              ModifyInvoiceLineDiscounted
+              CreateInvoiceLine
+              ModifyInvoiceLineDiscountedTaxed
+              CreateInvoiceLine
+              ModifyInvoiceLineTaxed
+
+              Tic
+
+              CheckInvoiceCausalityStateSolved
+
+              StartInvoice
+              Tic
+              CheckInvoiceCausalityStateSolved
+              CheckInvoiceNormalMovements
+              CheckInvoiceAccountingMovements
+              StopInvoice
+              DeliverInvoice
+              Tic
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
   def test_TradeModelRuleSimulationBuildInvoiceInvoiceLineModifyDivergencyAndSolving(self):
     """Check that after changing invoice line invoice is properly diverged and it is possible to solve"""
@@ -1753,9 +1840,6 @@ class TestBPMTestCases(TestBPMMixin):
               Tic
               CheckInvoiceCausalityStateSolved
               CheckInvoiceNormalMovements
-              GetInvoiceLineDiscounted
-              GetInvoiceLineDiscountedTaxed
-              GetInvoiceLineTaxed
               CheckInvoiceAccountingMovements
               StopInvoice
               DeliverInvoice
