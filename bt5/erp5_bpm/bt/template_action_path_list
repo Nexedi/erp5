@@ -5,6 +5,7 @@ Business Process Module | view
 Business Process | view
 Business Process | view_supply_state_list
 Business State | view
+First Causality Movement Group | view
 Invoice Line | view_trade_model
 Purchase Invoice Transaction | view_trade_model
 Purchase Invoice Transaction | view_trade_model_line_list
