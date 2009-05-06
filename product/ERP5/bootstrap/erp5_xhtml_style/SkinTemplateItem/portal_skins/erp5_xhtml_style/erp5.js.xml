@@ -220,6 +220,14 @@ var indexAllCheckBoxesAtBTInstallationOnLoad = function() {\n
     for(i=0;i<=inputs.length-1;i++) { inputs[i].id = "checkbox" + i; }\n
 }\n
 \n
+function showPopik(dom_id, what, delay){\n
+  var obj = getElement(dom_id);\n
+  if(what==true){\n
+    obj.style.display=\'block\';}\n
+  else{\n
+    obj.style.display=\'none\';}\n
+}\n
+\n
 addLoadEvent(indexAllCheckBoxesAtBTInstallationOnLoad)
 
 ]]></string> </value>
