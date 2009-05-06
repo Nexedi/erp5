@@ -421,6 +421,39 @@ class TestTransactionValidation(AccountingTestCase):
     transaction.setStartDate(DateTime("2007/01/01"))
     self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
   
+  def test_AccountingTransactionValidationBeforePeriod(self):
+    # Check we cannot validate before the period
+    transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2003/12/31'),
+               destination_section_value=self.organisation_module.supplier,
+               payment_mode='default',
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=500)))
+    # validation is refused, because there are no open period for 2008
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        transaction, 'stop_action')
+  
+  def test_AccountingTransactionValidationAfterPeriod(self):
+    # Check we cannot validate after the period
+    transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2008/12/31'),
+               destination_section_value=self.organisation_module.supplier,
+               payment_mode='default',
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=500)))
+    # validation is refused, because there are no open period for 2008
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        transaction, 'stop_action')
+  
+
   def test_PaymentTransactionWithEmployee(self):
     # we have to set bank account if we use an asset/cash/bank account, but not
     # for our employees
