@@ -44,114 +44,116 @@
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
   <tal:block metal:define-macro="page_navigation">\n
-    <tal:block tal:condition="not: is_gadget_mode">\n
-      <tal:block tal:condition="python: here.current_page > 0">\n
-        <input\n
-          id="listbox_first_page" type="image" src="2leftarrowv.png"\n
-          title="First Page" name="firstPage:method"\n
-          class="listbox_first_page"\n
-          tal:attributes="id string:${field_id}_first_page;\n
-                          name string:${field_id}_firstPage:method;\n
-                          src string:${portal_url_string}/images/2leftarrowv.png"\n
-          i18n:domain="ui" i18n:attributes="title" />\n
-        <input\n
-          id="listbox_previous_page" type="image" src="1leftarrowv.png"\n
-          title="Previous Page" name="previousPage:method"\n
-          class="listbox_previous_page"\n
-          tal:attributes="id string:${field_id}_previous_page;\n
-                          name string:${field_id}_previousPage:method;\n
-                          src string:${portal_url_string}/images/1leftarrowv.png"\n
-          i18n:domain="ui" i18n:attributes="title" />\n
+    <tal:block tal:condition="python: here.total_pages > 1">\n
+      <tal:block tal:condition="not: is_gadget_mode">\n
+        <tal:block tal:condition="python: here.current_page > 0">\n
+          <input\n
+            id="listbox_first_page" type="image" src="2leftarrowv.png"\n
+            title="First Page" name="firstPage:method"\n
+            class="listbox_first_page"\n
+            tal:attributes="id string:${field_id}_first_page;\n
+                            name string:${field_id}_firstPage:method;\n
+                            src string:${portal_url_string}/images/2leftarrowv.png"\n
+            i18n:domain="ui" i18n:attributes="title" />\n
+          <input\n
+            id="listbox_previous_page" type="image" src="1leftarrowv.png"\n
+            title="Previous Page" name="previousPage:method"\n
+            class="listbox_previous_page"\n
+            tal:attributes="id string:${field_id}_previous_page;\n
+                            name string:${field_id}_previousPage:method;\n
+                            src string:${portal_url_string}/images/1leftarrowv.png"\n
+            i18n:domain="ui" i18n:attributes="title" />\n
+        </tal:block>\n
+        <input id="listbox_set_page" name="page_start" onblur="this.value=this.defaultValue"\n
+               tal:attributes="id string:${field_id}_set_page;\n
+                               name string:${field_id}_page_start;\n
+                               value python:here.current_page + 1;\n
+                               size python:len(str(here.total_pages));\n
+                               onkeyup string:submitFormOnEnter(event, this.form, \'${field_id}_setPage\')" />\n
+                               / \n
+        <tal:block content="here/total_pages" />\n
+        <tal:block tal:condition="python: here.current_page < here.total_pages - 1">\n
+          <input\n
+            id="listbox_next_page" type="image" src="1rightarrowv.png"\n
+            title="Next Page" name="nextPage:method" class="listbox_next_page"\n
+            tal:attributes="id string:${field_id}_next_page;\n
+                            name string:${field_id}_nextPage:method;\n
+                            src string:${portal_url_string}/images/1rightarrowv.png"\n
+            i18n:domain="ui" i18n:attributes="title" />\n
+          <input\n
+            id="listbox_last_page" type="image" src="2rightarrowv.png"\n
+            title="Last Page" name="lastPage:method" class="listbox_last_page"\n
+            tal:attributes="id string:${field_id}_last_page;\n
+                            name string:${field_id}_lastPage:method;\n
+                            src string:${portal_url_string}/images/2rightarrowv.png"\n
+            i18n:domain="ui" i18n:attributes="title" />\n
+        </tal:block>\n
       </tal:block>\n
-      <input id="listbox_set_page" name="page_start" onblur="this.value=this.defaultValue"\n
-             tal:attributes="id string:${field_id}_set_page;\n
-                             name string:${field_id}_page_start;\n
-                             value python:here.current_page + 1;\n
-                             size python:len(str(here.total_pages));\n
-                             onkeyup string:submitFormOnEnter(event, this.form, \'${field_id}_setPage\')" />\n
-                             / \n
-      <tal:block content="here/total_pages" />\n
-      <tal:block tal:condition="python: here.current_page < here.total_pages - 1">\n
-        <input\n
-          id="listbox_next_page" type="image" src="1rightarrowv.png"\n
-          title="Next Page" name="nextPage:method" class="listbox_next_page"\n
-          tal:attributes="id string:${field_id}_next_page;\n
-                          name string:${field_id}_nextPage:method;\n
-                          src string:${portal_url_string}/images/1rightarrowv.png"\n
-          i18n:domain="ui" i18n:attributes="title" />\n
-        <input\n
-          id="listbox_last_page" type="image" src="2rightarrowv.png"\n
-          title="Last Page" name="lastPage:method" class="listbox_last_page"\n
-          tal:attributes="id string:${field_id}_last_page;\n
-                          name string:${field_id}_lastPage:method;\n
-                          src string:${portal_url_string}/images/2rightarrowv.png"\n
-          i18n:domain="ui" i18n:attributes="title" />\n
-      </tal:block>\n
-    </tal:block>\n
-    \n
-    <tal:block tal:condition="is_gadget_mode"\n
-                    tal:define="max_lines      python: here.getMaxLineNumber();\n
-                              total_page     python: here.total_pages;\n
-                              page_id        python: here.current_page;\n
-                              current_page   python: page_id + 1;\n
-                              previous_page  python: current_page - 1;\n
-                              next_page      python: current_page + 1;">\n
-      <tal:block tal:condition="python: here.current_page > 0">\n
-        <button tal:define ="params python: {field_id+\'_firstPage:method\':\'\', \'list_style\':list_style}"\n
-               title="First Page" \n
-               name="firstPage"\n
-               type = "button" \n
-               class = "listbox_first_page"\n
-               tal:attributes="id string:${field_id}_first_page;\n
-                               value string:|&lt;;\n
-                               onclick python:\n
-                               real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)"\n
-                               i18n:domain="ui" i18n:attributes="title">\n
-          <span class="image"/>\n
-        </button>\n
-        <button tal:define ="params python: {field_id+\'_previousPage:method\':\'\',\'page_start\':here.current_page+1,\'list_style\':list_style}"\n
-               title="Previous Page"\n
-               name="previousPage"\n
-               type="button"\n
-               class="listbox_previous_page"\n
-               tal:attributes="id    string:${field_id}_previous_page;\n
-                               value string:&lt;&lt;;\n
-                               onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)"\n
-                               i18n:domain="ui" i18n:attributes="title">\n
-                             \n
-          <span class="image"/>\n
-        </button>\n
-      </tal:block>\n
-      <input id="listbox_set_page" name="page_start"\n
-             tal:define="params python: {field_id+\'_setPage:method\':\'\',field_id+\'_page_start\':\'this.value\',\'list_style\':list_style}"\n
-             tal:attributes=\'id string:${field_id}_set_page;\n
-                             name string:${field_id}_page_start;\n
-                             value python:here.current_page + 1;\n
-                             size python:len(str(here.total_pages));\n
-                             onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,dom_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
-                             / \n
-      <tal:block content="here/total_pages" />\n
-      <tal:block tal:condition="python: current_page < total_page">\n
-        <button tal:define ="params python: {field_id+\'_nextPage:method\':\'\',\'page_start\':here.current_page+1,\'list_style\':list_style}"\n
-               title="Next Page"\n
-               name="nextPage"\n
-               type="button"\n
-               class="listbox_next_page"\n
-               tal:attributes="id    string:${field_id}_next_page;\n
-                               onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)"\n
-                               i18n:domain="ui" i18n:attributes="title">\n
-          <span class="image"/>\n
-        </button>\n
-        <button tal:define ="params python: {field_id+\'_lastPage:method\':\'\',\'total_size\':int(here.total_size), \'list_style\':list_style}"\n
-               title="Last Page"\n
-               name="lastPage"\n
-               type="button"\n
-               class="listbox_last_page"\n
-               tal:attributes="id    string:${field_id}_last_page;\n
-                               onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)"\n
-                               i18n:domain="ui" i18n:attributes="title">\n
-          <span class="image"/>\n
-        </button>\n
+      \n
+      <tal:block tal:condition="is_gadget_mode"\n
+                      tal:define="max_lines      python: here.getMaxLineNumber();\n
+                                total_page     python: here.total_pages;\n
+                                page_id        python: here.current_page;\n
+                                current_page   python: page_id + 1;\n
+                                previous_page  python: current_page - 1;\n
+                                next_page      python: current_page + 1;">\n
+        <tal:block tal:condition="python: here.current_page > 0">\n
+          <button tal:define ="params python: {field_id+\'_firstPage:method\':\'\', \'list_style\':list_style}"\n
+                 title="First Page" \n
+                 name="firstPage"\n
+                 type = "button" \n
+                 class = "listbox_first_page"\n
+                 tal:attributes="id string:${field_id}_first_page;\n
+                                 value string:|&lt;;\n
+                                 onclick python:\n
+                                 real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)"\n
+                                 i18n:domain="ui" i18n:attributes="title">\n
+            <span class="image"/>\n
+          </button>\n
+          <button tal:define ="params python: {field_id+\'_previousPage:method\':\'\',\'page_start\':here.current_page+1,\'list_style\':list_style}"\n
+                 title="Previous Page"\n
+                 name="previousPage"\n
+                 type="button"\n
+                 class="listbox_previous_page"\n
+                 tal:attributes="id    string:${field_id}_previous_page;\n
+                                 value string:&lt;&lt;;\n
+                                 onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)"\n
+                                 i18n:domain="ui" i18n:attributes="title">\n
+                               \n
+            <span class="image"/>\n
+          </button>\n
+        </tal:block>\n
+        <input id="listbox_set_page" name="page_start"\n
+               tal:define="params python: {field_id+\'_setPage:method\':\'\',field_id+\'_page_start\':\'this.value\',\'list_style\':list_style}"\n
+               tal:attributes=\'id string:${field_id}_set_page;\n
+                               name string:${field_id}_page_start;\n
+                               value python:here.current_page + 1;\n
+                               size python:len(str(here.total_pages));\n
+                               onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,dom_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
+                               / \n
+        <tal:block content="here/total_pages" />\n
+        <tal:block tal:condition="python: current_page < total_page">\n
+          <button tal:define ="params python: {field_id+\'_nextPage:method\':\'\',\'page_start\':here.current_page+1,\'list_style\':list_style}"\n
+                 title="Next Page"\n
+                 name="nextPage"\n
+                 type="button"\n
+                 class="listbox_next_page"\n
+                 tal:attributes="id    string:${field_id}_next_page;\n
+                                 onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)"\n
+                                 i18n:domain="ui" i18n:attributes="title">\n
+            <span class="image"/>\n
+          </button>\n
+          <button tal:define ="params python: {field_id+\'_lastPage:method\':\'\',\'total_size\':int(here.total_size), \'list_style\':list_style}"\n
+                 title="Last Page"\n
+                 name="lastPage"\n
+                 type="button"\n
+                 class="listbox_last_page"\n
+                 tal:attributes="id    string:${field_id}_last_page;\n
+                                 onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)"\n
+                                 i18n:domain="ui" i18n:attributes="title">\n
+            <span class="image"/>\n
+          </button>\n
+        </tal:block>\n
       </tal:block>\n
     </tal:block>\n
   </tal:block>\n
