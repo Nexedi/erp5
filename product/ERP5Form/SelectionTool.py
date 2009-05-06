@@ -677,10 +677,13 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         lines = int(params.get('list_lines', 0))
         form = REQUEST.form
         if form.has_key('page_start'):
-          list_start = (int(form.pop('page_start', 0)) - 1) * lines
+          try:
+            list_start = (int(form.pop('page_start', 0)) - 1) * lines
+          except ValueError:
+            list_start = 0
         else:
           list_start = int(form.pop('list_start', 0))
-        params['list_start'] = list_start + lines
+        params['list_start'] = max(list_start + lines, 0)
         selection.edit(params=params)
       self.uncheckAll(list_selection_name, listbox_uid)
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST)
@@ -697,7 +700,10 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         lines = int(params.get('list_lines', 0))
         form = REQUEST.form
         if form.has_key('page_start'):
-          list_start = (int(form.pop('page_start', 0)) - 1) * lines
+          try:
+            list_start = (int(form.pop('page_start', 0)) - 1) * lines
+          except ValueError:
+            list_start = 0
         else:
           list_start = int(form.pop('list_start', 0))
         params['list_start'] = max(list_start - lines, 0)
@@ -717,10 +723,13 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         lines = int(params.get('list_lines', 0))
         form = REQUEST.form
         if form.has_key('page_start'):
-          list_start = (int(form.pop('page_start', 0)) - 1) * lines
+          try:
+            list_start = (int(form.pop('page_start', 0)) - 1) * lines
+          except ValueError:
+            list_start = 0
         else:
           list_start = int(form.pop('list_start', 0))
-        params['list_start'] = list_start
+        params['list_start'] = max(list_start, 0)
         selection.edit(params=params)
         self.uncheckAll(list_selection_name, listbox_uid)
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST, query_string=query_string)
