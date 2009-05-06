@@ -453,6 +453,40 @@ class TestTransactionValidation(AccountingTestCase):
         self.portal.portal_workflow.doActionFor,
         transaction, 'stop_action')
   
+  def test_AccountingTransactionValidationRecursivePeriod(self):
+    # Check we can/cannot validate when secondary period exists
+
+    accounting_period_2007 = self.section.accounting_period_2007
+    accounting_period_2007_1 = accounting_period_2007.newContent(
+                                portal_type='Accounting Period',
+                                start_date=DateTime('2007/01/01'),
+                                stop_date=DateTime('2007/01/31'),)
+    accounting_period_2007_1.start()
+    accounting_period_2007_1.stop()
+
+    accounting_period_2007_2 = accounting_period_2007.newContent(
+                                portal_type='Accounting Period',
+                                start_date=DateTime('2007/02/01'),
+                                stop_date=DateTime('2007/02/28'),)
+    accounting_period_2007_2.start()
+
+    transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               destination_section_value=self.organisation_module.supplier,
+               payment_mode='default',
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=500)))
+    # validation is refused, because there are no open period for 2007-01
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        transaction, 'stop_action')
+    # in 2007-02, it's OK
+    transaction.setStartDate(DateTime("2007/02/02"))
+    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+  
 
   def test_PaymentTransactionWithEmployee(self):
     # we have to set bank account if we use an asset/cash/bank account, but not
@@ -2010,6 +2044,25 @@ class TestTransactions(AccountingTestCase):
                                       accounting_transaction))
     accounting_transaction.stop()
     self.assertEquals('code-2001-1', accounting_transaction.getSourceReference())
+
+  def test_generate_sub_accounting_periods(self):
+    accounting_period_2007 = self.section.newContent(
+                                portal_type='Accounting Period',
+                                start_date=DateTime('2007/01/01'),
+                                stop_date=DateTime('2007/12/31'),)
+    accounting_period_2007.start()
+    
+    accounting_period_2007.AccountingPeriod_createSecondaryPeriod(
+          frequency='monthly', open_periods=1)
+    sub_period_list = sorted(accounting_period_2007.contentValues(),
+                              key=lambda x:x.getStartDate())
+    self.assertEquals(12, len(sub_period_list))
+    first_period = sub_period_list[0]
+    self.assertEquals(DateTime(2007, 1, 1), first_period.getStartDate())
+    self.assertEquals(DateTime(2007, 1, 31), first_period.getStopDate())
+    self.assertEquals('2007-01', first_period.getShortTitle())
+    self.assertEquals('January', first_period.getTitle())
+
 
   def test_SearchableText(self):
     transaction = self._makeOne(title='A new Transaction',
