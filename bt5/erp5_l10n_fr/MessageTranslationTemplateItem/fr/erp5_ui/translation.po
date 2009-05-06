@@ -2796,7 +2796,7 @@ msgstr "La date a expirée"
 msgid "Date is not in a started Accounting Period for source section."
 msgstr "La date n'est pas dans une période comptable ouverte pour la section source."
 
-msgid "Date is not in an started Accounting Period for destination section."
+msgid "Date is not in a started Accounting Period for destination section."
 msgstr "La date n'est pas dans une période comptable ouverte pour la section destination."
 
 msgid "Date must be defined"
