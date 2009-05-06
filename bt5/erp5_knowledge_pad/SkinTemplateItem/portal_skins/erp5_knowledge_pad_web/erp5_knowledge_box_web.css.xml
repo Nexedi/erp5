@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts36811573.54</string> </value>
+            <value> <string>ts41609429.21</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -65,6 +65,7 @@
 .box_inner_content {\n
  border: 1px solid #c3c3ee;\n
  border-top: none;\n
+ overflow: auto;\n
 }\n
 \n
 .edit-form {\n
@@ -174,7 +175,7 @@ div.block fieldset label{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2031</int> </value>
+            <value> <int>2048</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
