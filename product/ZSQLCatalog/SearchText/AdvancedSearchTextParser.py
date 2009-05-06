@@ -40,6 +40,7 @@ except ImportError:
 
 class Node(object):
 
+  __allow_access_to_unprotected_subobjects__ = 1
   __implements__ = INode
 
   def isLeaf(self):
