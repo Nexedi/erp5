@@ -1985,6 +1985,19 @@ class Catalog(Folder,
           search_value=result)
     return result
 
+  def _parseSearchText(self, search_key, search_text, is_valid=None):
+    if is_valid is None:
+      is_valid = self.isValidColumn
+    return search_key.parseSearchText(search_text, is_valid)
+
+  def parseSearchText(self, search_text, column=None, search_key=None,
+                      is_valid=None):
+    if column is None and search_key is None:
+      raise ValueError, 'One of column and search_key must be different '\
+                        'from None'
+    return self._parseSearchText(self.getSearchKey(
+      column, search_key=search_key), search_text, is_valid=is_valid)
+
   @profiler_decorator
   def buildQuery(self, kw, ignore_empty_string=True, operator='and'):
     query_list = []
@@ -2036,7 +2049,7 @@ class Catalog(Folder,
           # String: parse using key's default search key.
           search_key = self.getColumnDefaultSearchKey(key)
           if search_key is not None:
-            abstract_syntax_tree = search_key.parseSearchText(value, self.isValidColumn)
+            abstract_syntax_tree = self._parseSearchText(search_key, value)
             if abstract_syntax_tree is None:
               # Parsing failed, create a query from the bare string.
               result = self.buildSingleQuery(key, value)

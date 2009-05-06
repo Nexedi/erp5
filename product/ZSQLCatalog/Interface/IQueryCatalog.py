@@ -214,3 +214,22 @@ class ISearchKeyCatalog(Interface):
       False otherwise.
     """
 
+  def parseSearchText(search_text, column=None, search_key=None, is_valid=None):
+    """
+      Parses given SearchText expression using given column's parser
+      (determined by the SearchKey it is configured to use by default), or
+      given SearchKey name.
+
+      search_text (string)
+        SearchText to parse.
+      column (string)
+        Column to use to determine which SearchKey to use for parsing.
+        Either this parameter or search_key must be provided.
+      search_key (string)
+        Name of the SearchKey to use for parsing.
+        Either this parameter or column must be provided.
+      if_valid (callback)
+        Callback method to use to decide wether an encountered column-ish
+        identifier in SearchText is a valid column.
+        If not provided, catalog schema will be used.
+    """
