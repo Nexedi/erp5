@@ -29,9 +29,11 @@
 ##############################################################################
 
 from SearchKey import SearchKey
+from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.SearchText import parse
 from Products.ZSQLCatalog.Interface.ISearchKey import ISearchKey
 from Interface.Verify import verifyClass
+from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 
 class FullTextKey(SearchKey):
   """
@@ -42,6 +44,22 @@ class FullTextKey(SearchKey):
 
   def parseSearchText(self, value, is_column):
     return parse(value, is_column)
+
+  @profiler_decorator
+  def _buildQuery(self, operator_value_dict, logical_operator, parsed, group):
+    """
+      Special Query builder for FullText queries: merge all values having the
+      same operator into just one query, to save SQL server from the burden to
+      do multiple fulltext lookups when one would suit the purpose.
+    """
+    column = self.getColumn()
+    query_list = []
+    append = query_list.append
+    for comparison_operator, value_list in operator_value_dict.iteritems():
+      append(SimpleQuery(search_key=self,
+                         comparison_operator=comparison_operator,
+                         group=group, **{column: ' '.join(value_list)}))
+    return query_list
 
 verifyClass(ISearchKey, FullTextKey)
 

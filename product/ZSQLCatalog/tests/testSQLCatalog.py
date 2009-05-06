@@ -394,6 +394,18 @@ class TestSQLCatalog(unittest.TestCase):
     self.assertTrue(self._catalog.isAdvancedSearchText('default:a')) # "default" exists as a column
     self.assertFalse(self._catalog.isAdvancedSearchText('b:a')) # "b" doesn't exist as a column
 
+  def test_FullTextSearchMergesQueries(self):
+    """
+      FullText criterion on the same scope must be merged into one query.
+      Logical operator is ignored, as fulltext operators are expected instead.
+    """
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a b'), operator='and'),
+                 {'fulltext': 'a AND b'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a b'), operator='and'),
+                 {'fulltext': 'a OR b'})
+    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a b'), operator='not'), operator='and'),
+                 {'fulltext': 'NOT (a b)'})
+
 ##return catalog(title=Query(title='a', operator='not'))
 #return catalog(title={'query': 'a', 'operator': 'not'})
 #return catalog(title={'query': ['a', 'b'], 'operator': 'not'})
