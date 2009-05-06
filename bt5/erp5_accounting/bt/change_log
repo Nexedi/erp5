@@ -1,3 +1,6 @@
+2009-05-06 Jerome
+* Introduce recursive accounting periods, used for example for monthly intermediate periods. They do not create balance transaction, but prevent adding more transaction for this period.
+
 2009-04-18 Kazuhiko
 * Version 5.4.1
 

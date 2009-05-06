@@ -2,6 +2,9 @@
  <portal_type id="Account Module">
   <item>Account</item>
  </portal_type>
+ <portal_type id="Accounting Period">
+  <item>Accounting Period</item>
+ </portal_type>
  <portal_type id="Accounting Rule Cell">
   <item>Accounting Rule Cell Line</item>
   <item>Accounting Transaction Line</item>
@@ -56,8 +59,8 @@
   <item>Payment Rule</item>
  </portal_type>
  <portal_type id="Sale Invoice Transaction">
-  <item>File</item>
   <item>Sale Invoice Transaction Line</item>
+  <item>File</item>
   <item>Image</item>
  </portal_type>
 </allowed_content_type_list>

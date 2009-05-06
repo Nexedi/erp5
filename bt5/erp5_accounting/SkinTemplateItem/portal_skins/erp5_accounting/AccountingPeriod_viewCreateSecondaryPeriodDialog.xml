@@ -38,7 +38,17 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>AccountingPeriod_createSecondaryPeriod</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -56,6 +66,7 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -66,36 +77,34 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_period_list</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
-                        <string>my_start_date</string>
-                        <string>my_stop_date</string>
+                        <string>your_frequency</string>
+                        <string>your_open_periods</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_short_title</string>
-                        <string>my_translated_simulation_state_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -103,7 +112,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingPeriod_view</string> </value>
+            <value> <string>AccountingPeriod_viewCreateSecondaryPeriodDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -111,11 +120,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>AccountingPeriodDelimiter_view</string> </value>
+            <value> <string>AccountingPeriod_viewCreateSecondaryPeriodDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -127,7 +136,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Accounting Period</string> </value>
+            <value> <string>Create Secondary Periods</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

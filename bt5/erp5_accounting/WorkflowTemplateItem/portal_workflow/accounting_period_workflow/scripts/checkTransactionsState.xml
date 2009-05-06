@@ -65,8 +65,12 @@ all_state_list = [x[1] for x in\n
 invalid_simulation_state_list = [state for state in all_state_list\n
                                  if state not in valid_simulation_state_list]\n
 \n
+section = period.getParentValue()\n
+while section.getPortalType() == period.getPortalType():\n
+  section = section.getParentValue()\n
+\n
 movement_list = portal.portal_simulation.getMovementHistoryList(\n
-      section_uid=period.getParentUid(),\n
+      section_uid=section.getUid(),\n
       from_date=period.getStartDate().earliestTime(),\n
       at_date=period.getStopDate().latestTime(),\n
       simulation_state=invalid_simulation_state_list,\n
@@ -128,6 +132,7 @@ if movement_list:\n
                             <string>all_state_list</string>
                             <string>state</string>
                             <string>invalid_simulation_state_list</string>
+                            <string>section</string>
                             <string>movement_list</string>
                           </tuple>
                         </value>

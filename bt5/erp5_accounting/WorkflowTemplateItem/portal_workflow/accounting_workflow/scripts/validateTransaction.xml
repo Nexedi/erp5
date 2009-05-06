@@ -96,6 +96,23 @@ if transaction.getSourceSectionValue(portal_type=\'Category\') is not None or\\\
 transaction_line_list = transaction.getMovementList(\n
         portal_type=transaction.getPortalAccountingMovementTypeList())\n
 \n
+\n
+def checkAccountingPeriodRecusivly(accounting_period, transaction_date):\n
+  valid = accounting_period.getSimulationState() in (\'planned\', \'started\')\n
+  if not valid:\n
+    return False\n
+  for sub_accounting_period in accounting_period.contentValues():\n
+    if sub_accounting_period.getSimulationState() in (\n
+                                        \'deleted\', \'cancelled\'):\n
+      continue\n
+    if sub_accounting_period.getStartDate().earliestTime() <= \\\n
+            transaction_date <= \\\n
+            sub_accounting_period.getStopDate().latestTime():\n
+      if not checkAccountingPeriodRecusivly(sub_accounting_period,\n
+                                            transaction_date):\n
+        return False\n
+  return True\n
+\n
 if not skip_period_validation :\n
   # check the date is in an opened period\n
   if source_section is not None:\n
@@ -120,8 +137,10 @@ if not skip_period_validation :\n
       valid_date = True\n
     for apd in openned_accounting_period_list:\n
       apd = apd.getObject()\n
-      if apd.getStartDate().Date() <= transaction_date.Date() <= apd.getStopDate().Date():\n
-        valid_date = True\n
+      if apd.getStartDate().earliestTime() <= transaction_date <= \\\n
+                apd.getStopDate().latestTime():\n
+        valid_date = checkAccountingPeriodRecusivly(apd, transaction_date)\n
+\n
     if not valid_date:\n
       raise ValidationFailed(translateString("Date is not in a started Accounting Period "\n
                                              "for source section."))\n
@@ -144,10 +163,12 @@ if not skip_period_validation :\n
       valid_date = True\n
     for apd in openned_accounting_period_list:\n
       apd = apd.getObject()\n
-      if apd.getStartDate().Date() <= transaction_date.Date() <= apd.getStopDate().Date():\n
-        valid_date = True\n
+      if apd.getStartDate().earliestTime() <= transaction_date <= \\\n
+                  apd.getStopDate().latestTime():\n
+        valid_date = checkAccountingPeriodRecusivly(apd, transaction_date)\n
+\n
     if not valid_date:\n
-      raise ValidationFailed(translateString("Date is not in an started Accounting Period "\n
+      raise ValidationFailed(translateString("Date is not in a started Accounting Period "\n
                                              "for destination section."))\n
 
 
@@ -219,6 +240,7 @@ if not skip_period_validation :\n
                             <string>destination_section</string>
                             <string>None</string>
                             <string>transaction_line_list</string>
+                            <string>checkAccountingPeriodRecusivly</string>
                             <string>False</string>
                             <string>valid_date</string>
                             <string>True</string>

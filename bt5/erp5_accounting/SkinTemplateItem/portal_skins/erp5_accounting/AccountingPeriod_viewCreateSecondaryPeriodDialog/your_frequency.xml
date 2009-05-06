@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_profit_and_loss_account</string> </value>
+            <value> <string>your_frequency</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -133,9 +133,7 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -160,7 +158,7 @@
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -204,7 +202,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Frequency of the created periods</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -237,12 +235,21 @@
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>Monthly</string>
+                          <string>monthly</string>
+                        </tuple>
+                        <tuple>
+                          <string>Quarterly</string>
+                          <string>quarterly</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>size</string> </key>
@@ -250,7 +257,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Profit And Loss Account</string> </value>
+                    <value> <string>Frequency</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -277,23 +284,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.getParentValue().getPortalType() != context.getPortalType()</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/AccountingTransactionLine_getNodeItemList</string> </value>
+            <value> <string>python: [(context.Base_translateString(x[0]), x[1]) for x in field.get_orig_value(\'items\')]</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -53,21 +53,37 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Create a balance transaction\n
-"""\n
-accounting_period = sci[\'object\']\n
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.ERP5Type.DateUtils import addToDate\n
 \n
-# we only create a balance transaction for top level accounting periods\n
-if accounting_period.getParentValue().getPortalType() == accounting_period.getPortalType():\n
-  return\n
+month_added = 1\n
+if frequency == \'quarterly\':\n
+  month_added = 3\n
 \n
-portal = accounting_period.getPortalObject()\n
-profit_and_loss_account = portal.portal_workflow.getInfoFor(\n
-                            accounting_period, \'profit_and_loss_account\')\n
+date = context.getStartDate()\n
+while date < context.getStopDate():\n
+  end_date = addToDate(date, dict(month=month_added))\n
+  period = context.newContent(portal_type=\'Accounting Period\',\n
+                     start_date=date,\n
+                     stop_date=end_date - 1,)\n
 \n
-accounting_period.AccountingPeriod_createBalanceTransaction(\n
-                       profit_and_loss_account=profit_and_loss_account)\n
-</string> </value>
+  if frequency == \'quarterly\':\n
+    period.setShortTitle(\'%s-%s\' % (date.strftime(\'%Y %m\'), (end_date - 1).strftime(\'%m\')))\n
+  else:\n
+    period.setShortTitle(date.strftime(\'%Y-%m\'))\n
+    period.setTitle(date.strftime(\'%B\'))\n
+\n
+  if open_periods:\n
+    period.start()\n
+\n
+  date = end_date\n
+  \n
+return context.Base_redirect(form_id, \n
+     keep_items=dict(portal_status_message=\'Accounting periods created.\'))\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -77,7 +93,7 @@ accounting_period.AccountingPeriod_createBalanceTransaction(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>sci</string> </value>
+            <value> <string>frequency, open_periods=0, form_id=\'view\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -97,18 +113,24 @@ accounting_period.AccountingPeriod_createBalanceTransaction(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>sci</string>
-                            <string>_getitem_</string>
-                            <string>accounting_period</string>
+                            <string>frequency</string>
+                            <string>open_periods</string>
+                            <string>form_id</string>
+                            <string>Products.ERP5Type.DateUtils</string>
+                            <string>addToDate</string>
+                            <string>month_added</string>
                             <string>_getattr_</string>
-                            <string>portal</string>
-                            <string>profit_and_loss_account</string>
+                            <string>context</string>
+                            <string>date</string>
+                            <string>dict</string>
+                            <string>end_date</string>
+                            <string>period</string>
                           </tuple>
                         </value>
                     </item>
@@ -120,12 +142,15 @@ accounting_period.AccountingPeriod_createBalanceTransaction(\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+                <string>view</string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>createBalanceTransaction</string> </value>
+            <value> <string>AccountingPeriod_createSecondaryPeriod</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
