@@ -11,7 +11,15 @@
       <dictionary>
         <item>
             <key> <string>active_sense_method_id</string> </key>
-            <value> <string>Alarm_activeCheckCatalogTable</string> </value>
+            <value> <string>Alarm_checkCatalogTable</string> </value>
+        </item>
+        <item>
+            <key> <string>alarm_notification_mode</string> </key>
+            <value>
+              <tuple>
+                <string>problem</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -26,6 +34,25 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>check_catalog</string> </value>
+        </item>
+        <item>
+            <key> <string>periodicity_start_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1230768000.0</float>
+                    <string>GMT</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

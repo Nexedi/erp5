@@ -53,11 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.ERP5Site_checkCatalogTable(bundle_object_count=bundle_object_count,\n
-                                   bundle_offset=bundle_offset,\n
-                                   activity_count=1,\n
-                                   active_process=active_process,\n
-                                   tag=tag)\n
+            <value> <string>context.ERP5Site_checkCatalogTable(\n
+  active_process=context.newActiveProcess().getPath(),\n
+  **kw)\n
 </string> </value>
         </item>
         <item>
@@ -68,7 +66,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>bundle_object_count=100, bundle_offset=0, active_process=None, tag=\'\'</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -88,16 +86,14 @@
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>bundle_object_count</string>
-                            <string>bundle_offset</string>
-                            <string>active_process</string>
-                            <string>tag</string>
+                            <string>kw</string>
+                            <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
                           </tuple>
@@ -111,12 +107,7 @@
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>100</int>
-                <int>0</int>
-                <none/>
-                <string></string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
