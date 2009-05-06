@@ -29,7 +29,15 @@
         </item>
         <item>
             <key> <string>active_sense_method_id</string> </key>
-            <value> <string>Alarm_activateCheckStockTable</string> </value>
+            <value> <string>Alarm_checkStockTable</string> </value>
+        </item>
+        <item>
+            <key> <string>alarm_notification_mode</string> </key>
+            <value>
+              <tuple>
+                <string>problem</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>description</string> </key>

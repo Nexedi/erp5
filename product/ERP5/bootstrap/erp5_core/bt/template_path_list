@@ -1,4 +1,3 @@
-portal_alarms/check_stock
 portal_alarms/expired_password_alarm
 portal_caches/erp5_content_long
 portal_caches/erp5_content_long/default_ram_cache

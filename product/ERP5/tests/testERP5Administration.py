@@ -28,7 +28,7 @@
 ##############################################################################
 
 import unittest
-
+import transaction
 from Products.ERP5.tests.testInventoryAPI import InventoryAPITestCase
 
 class TestERP5Administration(InventoryAPITestCase):
@@ -49,21 +49,35 @@ class TestERP5Administration(InventoryAPITestCase):
     between the predicate table and zodb objects
     """
     portal = self.getPortal()
-    mvt = self._makeMovement(quantity=100)
-    get_transaction().commit()
-    self.tic()
+    sql_test = portal.erp5_sql_connection.manage_test
     alarm = portal.portal_alarms.check_stock
-    alarm.activeSense()
-    get_transaction().commit()
+
+    def checkActiveProcess(failed):
+      transaction.get().commit()
+      self.tic()
+      self.assertEqual(alarm.getLastActiveProcess().ActiveProcess_sense(),
+                       failed)
+    def checkStock(row_count):
+      alarm.activeSense()
+      checkActiveProcess(1)
+      alarm.solve()
+      checkActiveProcess(1)
+      alarm.activeSense()
+      checkActiveProcess(0)
+      self.assertEqual(row_count, sql_test("select count(*) from stock")[0][0])
+
+    alarm.setAlarmNotificationMode('never')
+    mvt = self._makeMovement(quantity=1.23)
+    transaction.get().commit()
     self.tic()
-    last_active_process = alarm.getLastActiveProcess()
-    self.assertFalse(last_active_process.ActiveProcess_sense())
-    portal.erp5_sql_connection.manage_test("update stock set quantity=5")
     alarm.activeSense()
-    get_transaction().commit()
-    self.tic()
-    last_active_process = alarm.getLastActiveProcess()
-    self.assertTrue(last_active_process.ActiveProcess_sense())
+    checkActiveProcess(0)
+
+    row_count = sql_test("select count(*) from stock")[0][0]
+    sql_test("update stock set quantity=5")
+    checkStock(row_count)   # alarm.solve will reindex 'mvt'
+    mvt.getParentValue()._delOb(mvt.getId())
+    checkStock(row_count-2) # alarm.solve will unindex 'mvt'
 
 def test_suite():
   suite = unittest.TestSuite()

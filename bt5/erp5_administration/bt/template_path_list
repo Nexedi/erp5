@@ -1,2 +1,3 @@
 portal_alarms/check_catalog
 portal_alarms/check_folder_handler
+portal_alarms/check_stock

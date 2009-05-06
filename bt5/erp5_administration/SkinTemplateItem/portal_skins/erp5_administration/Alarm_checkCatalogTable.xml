@@ -53,8 +53,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.ERP5Site_checkCatalogTable(\n
+            <value> <string>return context.ERP5Site_checkCatalogTable(\n
   active_process=context.newActiveProcess().getPath(),\n
+  activity_count=activity_count,\n
+  bundle_object_count=bundle_object_count,\n
   **kw)\n
 </string> </value>
         </item>
@@ -66,7 +68,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>activity_count=1, bundle_object_count=100, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -86,12 +88,14 @@
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>activity_count</string>
+                            <string>bundle_object_count</string>
                             <string>kw</string>
                             <string>_apply_</string>
                             <string>_getattr_</string>
@@ -107,7 +111,10 @@
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>1</int>
+                <int>100</int>
+              </tuple>
             </value>
         </item>
         <item>
