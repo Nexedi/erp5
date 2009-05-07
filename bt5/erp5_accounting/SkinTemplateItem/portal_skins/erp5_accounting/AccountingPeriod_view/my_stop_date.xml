@@ -13,9 +13,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>description</string>
                 <string>required</string>
+                <string>description</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -86,7 +86,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewAccountingFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>

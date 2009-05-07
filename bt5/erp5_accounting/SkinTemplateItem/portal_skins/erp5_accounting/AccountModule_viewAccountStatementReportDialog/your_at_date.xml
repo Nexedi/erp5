@@ -12,7 +12,11 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>required</string>
+                <string>title</string>
+                <string>default</string>
+              </list>
             </value>
         </item>
         <item>
@@ -80,15 +84,23 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>your_at_date</string> </value>
+                    <value> <string>my_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>AccountModule_viewDialogFieldLibrary</string> </value>
+                    <value> <string>Base_viewAccountingFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>At Date</string> </value>
                 </item>
               </dictionary>
             </value>

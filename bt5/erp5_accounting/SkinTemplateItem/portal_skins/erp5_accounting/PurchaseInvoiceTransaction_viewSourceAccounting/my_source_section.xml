@@ -82,38 +82,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>editable_permission</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>editable_role</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_source_section</string> </value>
+                    <value> <string>my_list_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>AccountingTransaction_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>not_viewable</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>read_only</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <string>Base_viewAccountingFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -122,18 +96,6 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Section</string> </value>
-                </item>
-                <item>
-                    <key> <string>viewable_permission</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>viewable_role</string> </key>
-                    <value>
-                      <list/>
-                    </value>
                 </item>
               </dictionary>
             </value>

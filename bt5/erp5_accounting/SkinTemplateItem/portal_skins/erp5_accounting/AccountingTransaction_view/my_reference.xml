@@ -75,16 +75,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_reference</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>AccountingTransaction_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewAccountingFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

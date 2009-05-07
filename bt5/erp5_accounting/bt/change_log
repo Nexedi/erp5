@@ -1,3 +1,7 @@
+2009-05-07 yusei
+* Simplify field libraries and proxy fields. Old field libraries are kept for backward compatibility.
+* Update dependencies. Now require erp5_core 5.4.3.
+
 2009-05-06 Jerome
 * Introduce recursive accounting periods, used for example for monthly intermediate periods. They do not create balance transaction, but prevent adding more transaction for this period.
 

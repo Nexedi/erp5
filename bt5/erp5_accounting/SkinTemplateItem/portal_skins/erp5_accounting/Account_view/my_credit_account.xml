@@ -12,7 +12,10 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>description</string>
+                <string>title</string>
+              </list>
             </value>
         </item>
         <item>
@@ -73,16 +76,24 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>This option helps define whether an account is normally Credit or Debit balanced. Any asset and expense account will have a normal debit balance, while any liability, equity, and revenue account will have a normal credit balance. Checking this box will define the account as being a Normal Credit Balance</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_credit_account</string> </value>
+                    <value> <string>my_checkbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Account_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewAccountingFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Normal Credit Balance</string> </value>
                 </item>
               </dictionary>
             </value>

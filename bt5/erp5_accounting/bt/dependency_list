@@ -1,2 +1,2 @@
 erp5_base >= 0.8.3
-erp5_core >= 1.0rc13
+erp5_core (>= 5.4.3)

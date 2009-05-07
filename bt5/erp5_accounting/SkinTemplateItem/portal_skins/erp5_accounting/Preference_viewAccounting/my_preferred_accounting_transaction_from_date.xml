@@ -13,8 +13,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>default</string>
-                <string>required</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -76,26 +75,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <none/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>The minimal date (inclusive) for transactions</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>your_from_date</string> </value>
+                    <value> <string>my_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>AccountModule_viewDialogFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <string>Base_viewAccountingFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
