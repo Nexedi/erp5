@@ -58,7 +58,9 @@
                 <item>
                     <key> <string>Access contents information</string> </key>
                     <value>
-                      <tuple/>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
