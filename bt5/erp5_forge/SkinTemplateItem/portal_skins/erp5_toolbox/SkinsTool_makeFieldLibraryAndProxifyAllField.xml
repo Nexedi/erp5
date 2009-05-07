@@ -1,0 +1,401 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+#\n
+# This script helps you to make a field library and make all fields in your skin folder proxify by field library.\n
+# But this cannot generate perfect field library. Please check the output and fix by hand.\n
+#\n
+# Parameters\n
+#\n
+#   skin_folder_id   : Target skin folder. This must be a copy of the original skin folder.\n
+#   field_library_id : Id of your new field library\n
+#   proxify          : If True, then add a field library and make all fields proxify, else only display information what fields will be.\n
+# \n
+# CAUTION\n
+#  1. Even proxify flag is False, this script unproxify all proxy fields in the skin folder you specified by skin_folder_id parameter.\n
+#\n
+#  2. Please add an external method(Base_getTALESMethodText). This is required to extract tales expression from TALESMethod instance.\n
+#     Due to security reason, this script is not provided by erp5_forge.\n
+#\n
+#     sample code:\n
+#\n
+#       def getTALESText(tales_method):\n
+#         return tales_method._text\n
+#\n
+\n
+if not skin_folder_id.startswith(\'copy_of_\'):\n
+  raise ValueError, "Please make a copy and apply to the copy. skin_folder_id must start with \'copy_of_\'."\n
+\n
+\n
+skin_folder = getattr(context.portal_skins, skin_folder_id)\n
+core_field_library = context.erp5_core.Base_viewFieldLibrary\n
+\n
+for form in skin_folder.objectValues():\n
+  if (form.meta_type==\'ERP5 Form\' or form.meta_type==\'ERP5 Report\') and not form.getId().endswith(\'FieldLibrary\'):\n
+    field_dict = dict([(field.getId(), None) for field in form.getUnProxyableFieldList()])\n
+    form.unProxifyField(field_dict)\n
+\n
+field_list = []\n
+for form in skin_folder.objectValues():\n
+  if form.meta_type==\'ERP5 Form\' and not form.getId().endswith(\'FieldLibrary\'):\n
+    field_list.extend(form.objectValues())\n
+\n
+form_field_list = []\n
+for dict_ in core_field_library.getFormFieldList():\n
+  if ((dict_[\'form_path\'].startswith(\'erp5_core.\') or dict_[\'form_path\'].startswith(\'erp5_base.\'))\n
+      and dict_[\'form_id\'].startswith(\'Base_view\')):\n
+    form_field_list.append(dict_)\n
+\n
+def getMatchedTemplateField(field):\n
+  proxyable_field_list_data = core_field_library.getProxyableFieldList(field, form_field_list)\n
+\n
+  proxyable_field_list_tmp = []\n
+  for id_ in proxyable_field_list_data[0]:\n
+    list_ = proxyable_field_list_data[1][id_]\n
+    for d in list_:\n
+      matched_rate = d[\'matched_rate\']\n
+      template_field = d[\'field_object\']\n
+      if matched_rate==0 and template_field.meta_type.lower()==\'\'.join(template_field.getId().split(\'_\')[1:]):\n
+        matched_rate = 0.1\n
+      proxyable_field_list_tmp.append(((matched_rate, field.id==template_field.id), template_field))\n
+\n
+  proxyable_field_list_tmp.sort()\n
+  proxyable_field_list_tmp.reverse()\n
+  proxyable_field_list = [i[1] for i in proxyable_field_list_tmp]\n
+\n
+  for template_field in proxyable_field_list:\n
+    if compare(field, template_field):\n
+      return template_field\n
+\n
+key_list_dict = {\n
+\'FloatField\':    (\'default\', \'input_style\', \'precision\'),\n
+\'ListField\':     (\'default\', \'items\'),\n
+\'IntegerField\':  (\'default\', ),\n
+\'MultiRelationStringField\':(\'base_category\', \'catalog_index\'),\n
+\'StringField\':   (\'default\',),\n
+\'TextAreaField\': (\'default\', \'width\', \'height\'),\n
+\'RelationStringField\':(\'base_category\', \'catalog_index\'),\n
+\'OOoChart\':      (\'default\',),\n
+\'DateTimeField\': (\'default\',),\n
+\'ParallelListField\':(\'default\', \'items\'),\n
+\'CheckBoxField\': (\'default\',),\n
+\'FileField\':     (\'default\',),\n
+\'MultiListField\':(\'default\',\'items\'),\n
+\'MatrixBox\':(),\n
+\'ListBox\':(\'list_action\',),\n
+\'LinesField\':(\'default\',),\n
+\'ImageField\':(\'default\',),\n
+  }\n
+\n
+def getPropertyValue(field, key):\n
+  value = field.get_tales(key)\n
+  if value:\n
+    return context.Base_getTALESMethodText(value)\n
+  else:\n
+    return field.get_value(key) or None\n
+\n
+def compare(field, template_field):\n
+  # check your and your.\n
+  if not field.getId().startswith(\'your_\') and template_field.getId().startswith(\'your_\'):\n
+    return False\n
+  # check property\n
+  key_list = key_list_dict.get(field.meta_type)\n
+  if not key_list:\n
+    return False\n
+  for key in key_list:\n
+    if getPropertyValue(field, key)!=getPropertyValue(template_field, key):\n
+      return False\n
+  return True\n
+\n
+\n
+\n
+\n
+\n
+field_proxy_mapping_list = []\n
+for field in field_list:\n
+  template_field = getMatchedTemplateField(field)\n
+  field_proxy_mapping_list.append((field.meta_type, field.getId(), template_field, field))\n
+\n
+field_proxy_mapping_list.sort()\n
+\n
+\n
+\n
+def getFieldLibraryDictAndFieldMappingList():\n
+  def findGenericFieldName(field):\n
+    # there are some generic fields in erp5_core\n
+    generic_field_dict = {\n
+      \'CheckBoxField\':\'my_checkbox\',\n
+      \'DateTimeField\':\'my_date\',\n
+      \'EmailField\':\'my_email\',\n
+      \'IntegerField\':\'my_integer_value\',\n
+      \'MultiRelationStringField\':\'my_multi_relation_field\',\n
+      \'PasswordField\':\'my_password\',\n
+      \'RelationStringField\':\'my_relation_field\',\n
+      \'EditorField\':\'my_text_content\',\n
+      \'PlanningBox\':\'planning_box\',\n
+      }\n
+    template_field_id = None\n
+\n
+    # Special case 1\n
+    if meta_type==\'FloatField\':\n
+      if field.id.endswith(\'price\'):\n
+        template_field_id = \'my_money_quantity\'\n
+      elif field.id.endswith(\'quantity\'):\n
+        template_field_id = \'my_quantity\'\n
+      elif field.id.endswith(\'ratio\'):\n
+        template_field_id = \'my_percent\'\n
+      else:\n
+        template_field_id = \'my_float_field\'\n
+    # Special case 2\n
+    if meta_type==\'ListBox\':\n
+      if field.get_value(\'list_action\')==\'list\':\n
+        template_field_id = \'my_list_mode_listbox\'\n
+      else:\n
+        template_field_id = \'my_view_mode_listbox\'\n
+    elif meta_type in generic_field_dict:\n
+      template_field_id = generic_field_dict.get(field.meta_type)\n
+    elif makeFieldNameFromMetaType(meta_type) in core_field_library.objectIds():\n
+      template_field_id = makeFieldNameFromMetaType(meta_type)\n
+    return template_field_id\n
+\n
+  def makeFieldNameFromMetaType(meta_type):\n
+    return \'my%s\' % \'\'.join([(i.isupper() and \'_%s\' % i.lower()) or i for i in meta_type])\n
+\n
+  field_library_dict = {}\n
+  mapping_list = []\n
+\n
+  for meta_type, id_, template_field, field in field_proxy_mapping_list:\n
+    template_field_id = None\n
+    if template_field is None:\n
+      template_field_id = findGenericFieldName(field) or makeFieldNameFromMetaType(meta_type)\n
+      template_form_id = core_field_library.getId()\n
+    else:\n
+      template_field_id = template_field.getId()\n
+      template_form_id = template_field.aq_parent.getId()\n
+    field_library_dict[template_field_id] = template_form_id\n
+    mapping_list.append((field, template_form_id, template_field_id))\n
+\n
+  return field_library_dict, mapping_list\n
+\n
+\n
+field_library_dict, mapping_list = getFieldLibraryDictAndFieldMappingList()\n
+\n
+\n
+def showResult():\n
+  result = []\n
+  def output(text):\n
+    result.append(text)\n
+  output(\'<html><body>\')\n
+  output(\'<h1>Field Library</h1><table border=1>\')\n
+  for field_id, form_id in field_library_dict.items():\n
+    form = getattr(context, form_id)\n
+    template_field = getattr(form, field_id)\n
+    template_field_name = \'%s.%s\' % (form_id, field_id)\n
+    template_field_url = template_field.absolute_url()+\'/manage_main\'\n
+    output(\'<tr><td>%s</td><td><a href="%s">%s</a></td></tr>\' % (field_id, template_field_url, template_field_name))\n
+  output(\'</table>\')\n
+\n
+  meta_type_field_list_dict = {}\n
+  for field, template_form_id, template_field_id in mapping_list:\n
+    if not field.meta_type in meta_type_field_list_dict:\n
+      meta_type_field_list_dict[field.meta_type] = []\n
+    meta_type_field_list_dict[field.meta_type].append((field, template_form_id, template_field_id))\n
+\n
+  for meta_type in meta_type_field_list_dict:\n
+    output(\'<h1>%s</h1><table border=1>\' % meta_type)\n
+    for field, template_form_id, template_field_id in meta_type_field_list_dict[meta_type]:\n
+      field_url = field.absolute_url()+\'/manage_main\'\n
+      field_name = \'%s.%s\' % (field.aq_parent.getId(), field.getId())\n
+      template_field_url = getattr(getattr(context, template_form_id), template_field_id).absolute_url()+\'/manage_main\'\n
+      template_field_name = \'%s.%s\' % (template_form_id, template_field_id)\n
+      output(\'<tr><td><a href="%s">%s</a></td><td><a href="%s">%s</a></td></tr>\' % (field_url, field_name, template_field_url, template_field_name))\n
+    output(\'</table>\')\n
+\n
+  output(\'</body></html>\')\n
+  return \'\'.join(result)\n
+\n
+\n
+print showResult()\n
+\n
+\n
+if proxify:\n
+\n
+  field_library_form = None\n
+  if field_library_id in skin_folder.objectIds():\n
+    field_library_form = getattr(skin_folder, field_library_id, None)\n
+  if field_library_form is None:\n
+    skin_folder.manage_addProduct[\'ERP5Form\'].addERP5Form(id=field_library_id, title=\'\')\n
+    field_library_form = getattr(skin_folder, field_library_id, None)\n
+  for field_id, form_id in field_library_dict.items():\n
+    field_library_form.manage_addProduct[\'Formulator\'].manage_addField(id=field_id, title=\'\', fieldname=\'ProxyField\')\n
+    field = getattr(field_library_form, field_id)\n
+    field.manage_edit_xmlrpc(dict(form_id=form_id, field_id=field_id))\n
+\n
+  for field, form_id, field_id in mapping_list:\n
+    form = field.aq_parent\n
+    form.proxifyField(field_dict={field.getId():\'%s.%s\' % (field_library_id, field_id)})\n
+\n
+\n
+return printed\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>skin_folder_id, field_library_id, proxify=False</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>skin_folder_id</string>
+                            <string>field_library_id</string>
+                            <string>proxify</string>
+                            <string>_print_</string>
+                            <string>_print</string>
+                            <string>_getattr_</string>
+                            <string>ValueError</string>
+                            <string>getattr</string>
+                            <string>context</string>
+                            <string>skin_folder</string>
+                            <string>core_field_library</string>
+                            <string>_getiter_</string>
+                            <string>form</string>
+                            <string>dict</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>field</string>
+                            <string>None</string>
+                            <string>field_dict</string>
+                            <string>field_list</string>
+                            <string>form_field_list</string>
+                            <string>dict_</string>
+                            <string>_getitem_</string>
+                            <string>compare</string>
+                            <string>getMatchedTemplateField</string>
+                            <string>key_list_dict</string>
+                            <string>getPropertyValue</string>
+                            <string>field_proxy_mapping_list</string>
+                            <string>template_field</string>
+                            <string>getFieldLibraryDictAndFieldMappingList</string>
+                            <string>field_library_dict</string>
+                            <string>mapping_list</string>
+                            <string>showResult</string>
+                            <string>field_library_form</string>
+                            <string>field_id</string>
+                            <string>form_id</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <int>0</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SkinsTool_makeFieldLibraryAndProxifyAllField</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Field Library Creation Helper</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
