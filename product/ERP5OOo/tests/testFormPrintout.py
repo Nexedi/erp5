@@ -33,6 +33,7 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from Products.ERP5OOo.tests.utils import Validator
+from Products.ERP5Type.tests.utils import FileUpload
 from zLOG import LOG , INFO
 from lxml import etree
 import os
@@ -47,7 +48,7 @@ class TestFormPrintout(ERP5TypeTestCase):
     return "FormPrintout"
 
   def getBusinessTemplateList(self):
-    return ('erp5_ui_test', 'erp5_odt_style')
+    return ('erp5_base', 'erp5_ui_test', 'erp5_odt_style')
 
   def afterSetUp(self):
     self.login()
@@ -875,11 +876,58 @@ return []
     """
     pass
 
-  def _test_07_Image(self, run=run_all_test):
+  def test_07_Image(self, run=run_all_test):
     """
     Image mapping not tested yet
     """
-    pass
+    if not run: return
+    current_dir = os.path.dirname(__file__)
+    parent_dir = os.path.dirname(current_dir)
+    image_path = os.path.join(parent_dir,
+                              'www',
+                              'form_printout_icon.png')
+    file_data = FileUpload(image_path, 'rb')
+    image = self.portal.newContent(portal_type='Image', id='test_image')
+    image.edit(file=file_data)
+
+    foo_printout = self.portal.foo_module.test1.Foo_viewAsPrintout
+    foo_form = self.portal.foo_module.test1.Foo_view
+    if foo_form._getOb("my_default_image_absolute_url", None) is None:
+      foo_form.manage_addField('my_default_image_absolute_url', 'logo', 'ImageField')
+    my_default_image_absolute_url = foo_form.my_default_image_absolute_url
+    my_default_image_absolute_url.values['default'] = image.absolute_url_path()
+
+    # 01: Normal
+    odf_document = foo_printout() 
+    self.assertTrue(odf_document is not None)
+    #test_output = open("/tmp/test_07_Image_01_Normal.odf", "w")
+    #test_output.write(odf_document)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    self.assertTrue(content_xml.find("test_image.png") > 0)
+    content = etree.XML(content_xml)
+    image_frame_xpath = '//draw:frame[@draw:name="my_default_image_absolute_url"]'
+    image_frame_list = content.xpath(image_frame_xpath, namespaces=content.nsmap)
+    self.assertTrue(len(image_frame_list) > 0)
+    image_frame = image_frame_list[0]
+    self.assertEqual(image_frame.attrib['{%s}height' % content.nsmap['svg']],
+                     '0.838cm')
+    self.assertEqual(image_frame.attrib['{%s}width' % content.nsmap['svg']],
+                     '0.838cm')
+    self._validate(odf_document)
+
+    # 02: no image data
+    my_default_image_absolute_url.values['default'] = ''
+    odf_document = foo_printout() 
+    self.assertTrue(odf_document is not None)
+    #test_output = open("/tmp/test_07_Image_02_NoData.odf", "w")
+    #test_output.write(odf_document)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    # confirming the image was removed 
+    self.assertTrue(content_xml.find('<draw:image xlink:href') < 0)
+    self._validate(odf_document)
+    
 
 def test_suite():
   suite = unittest.TestSuite()

@@ -596,17 +596,21 @@ class ODFStrategy(Implicit):
     if len(image_list) is 0:
       return element_tree
     path = image_field.get_value('default')
+    image_node = image_list[0]
+    image_frame = image_node.getparent()
     if path is not None:
       path = path.encode()
     picture = self.getPortalObject().restrictedTraverse(path)
     picture_data = getattr(aq_base(picture), 'data', None)
+    if picture_data is None:
+      image_frame = image_node.getparent()
+      image_frame.remove(image_node)
+      return element_tree
     picture_type = picture.getContentType()
     picture_path = self._createOdfUniqueFileName(path=path, picture_type=picture_type)
     ooo_builder.addFileEntry(picture_path, media_type=picture_type, content=picture_data)
-    image_node = image_list[0]
     picture_size = self._getPictureSize(picture, image_node)
     image_node.set('{%s}href' % element_tree.nsmap['xlink'], picture_path)
-    image_frame = image_node.getparent()
     image_frame.set('{%s}width' % element_tree.nsmap['svg'], picture_size[0])
     image_frame.set('{%s}height' % element_tree.nsmap['svg'], picture_size[1])
     # set when using report section
