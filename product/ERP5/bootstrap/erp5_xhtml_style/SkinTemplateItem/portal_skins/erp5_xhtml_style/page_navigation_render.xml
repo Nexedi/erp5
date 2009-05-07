@@ -69,7 +69,7 @@
                                name string:${field_id}_page_start;\n
                                value python:here.current_page + 1;\n
                                size python:len(str(here.total_pages));\n
-                               onkeyup string:submitFormOnEnter(event, this.form, \'${field_id}_setPage\')" />\n
+                               onkeypress string:submitFormOnEnter(event, this.form, \'${field_id}_setPage\')" />\n
                                / \n
         <tal:block content="here/total_pages" />\n
         <tal:block tal:condition="python: here.current_page < here.total_pages - 1">\n
