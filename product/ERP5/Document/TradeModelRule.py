@@ -106,6 +106,12 @@ class TradeModelRule(TransformationRule):
 
     return movement_dict
 
+  def _getStaticPropertyDict(self, context_movement):
+    movement_kw = {}
+    for prop in self.getExpandablePropertyList():
+      movement_kw[prop] = context_movement.getProperty(prop)
+    return movement_kw
+
   def _generatePrevisionList(self, applied_rule, **kw):
     """Generates list of movements (as dicts), and let parent class to decide
     which is to add, modify or delete"""
@@ -118,10 +124,8 @@ class TradeModelRule(TransformationRule):
 
     for amount in trade_condition.getAggregatedAmountList(applied_rule):
       context_movement = applied_rule.getParentValue()
-      movement_kw = {}
       # everything static
-      for prop in self.getExpandablePropertyList():
-        movement_kw[prop] = context_movement.getProperty(prop)
+      movement_kw = self._getStaticPropertyDict(context_movement)
 
       # business path specific
       business_path_list = business_process.getPathValueList(
