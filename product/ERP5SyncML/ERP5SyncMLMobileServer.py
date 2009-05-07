@@ -20,15 +20,15 @@ class OptionParser(OptionParser):
           self.error("%s option not supplied" % option)
 
 
-parser = OptionParser()
-parser.add_option("--host", help="address of this small server (typically, it's the ip of this computer)")
-parser.add_option("--publication", help="address of the publication (e.g. http://localhost:9080/erp5Serv)")
-parser.add_option("-p", "--port", type="int", help="port used by this server (default is 1234)", default=1234)
+cmd_parser = OptionParser()
+cmd_parser.add_option("--host", help="address of this small server (typically, it's the ip of this computer)")
+cmd_parser.add_option("--publication", help="address of the publication (e.g. http://localhost:9080/erp5Serv)")
+cmd_parser.add_option("-p", "--port", type="int", help="port used by this server (default is 1234)", default=1234)
 
-(options, args) = parser.parse_args()
+(options, args) = cmd_parser.parse_args()
 
-parser.check_required("--publication")
-parser.check_required("--host")
+cmd_parser.check_required("--publication")
+cmd_parser.check_required("--host")
 
 
 
@@ -54,6 +54,8 @@ syncml_server_url = 'http://%s:%s' % (Host, Port)
 
 #socket :
 sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # reuse the same socket
+                                                        # if already open
 
 #END CONFIGURATION SECTION
 
@@ -75,6 +77,9 @@ def xml2wbxml(xml):
   convert xml string to wbxml using a temporary file
   """
   import os
+
+  # XXX we must check at the begining if xml2wbxml is installed
+  # it seems that now there is a python biding for this : pywbxml
   f = open('/tmp/xml2wbxml', 'w')
   f.write(xml)
   f.close()
@@ -138,7 +143,10 @@ def getClientUrl(text):
   find the client url in the text and return it
   """
   document = etree.XML(text, parser=parser)
+  # XXX this xpath expression have to be rewrited in a generic way to handle
+  # namspace
   client_url = '%s' % document.xpath('string(//SyncHdr/Source/LocURI)')
+  # client_url = '%s' % document.xpath('string(//syncml:SyncHdr/syncml:Source/syncml:LocURI)', namespaces={'syncml':'SYNCML:SYNCML1.2'})
   return client_url 
 
 def sendResponse(text, to_url, client_url):
@@ -157,7 +165,7 @@ def sendResponse(text, to_url, client_url):
   text = text.replace(client_url, syncml_server_url)
 
   print "text = ",text
-  to_encode['text'] = text 
+  to_encode['text'] = text
   to_encode['sync_id'] = 'Person'
   headers = {'Content-type': 'application/vnd.syncml+xml'}
 
