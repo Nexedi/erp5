@@ -1,0 +1,101 @@
+Formulator Field - TALES
+
+  Description
+
+    Sometimes you'd like a field property to be dynamic instead of
+    just a value filled in in the 'Edit' tab of the field. To 
+    make your fields more dynamic, you can enter TALES expressions
+    in the TALES tab. Whenever you (or some code) asks for the value of
+    that field property next with 'get_value()', the TALES expression
+    will be evaluated and the result will be the value of that
+    property.
+
+    Properties which are overridden with a TALES expression are shown
+    between square brackets ([ and ]) in the main Edit tab, and the
+    value of the property in the edit tab will be ignored. To stop
+    using a TALES expression for a particular property, remove the
+    expression in the TALES tab.
+
+    A TALES expression should return an object of the same type as the
+    property field would return after validation. For instance, a
+    TALES expression for a StringField would return a simple string,
+    for an IntegerField it would return an integer, and for a
+    CheckBoxField it would return true or false (or something that
+    Python accepts as such).
+
+  More information about TALES
+
+    The specification:
+
+      http://dev.zope.org/Wikis/DevSite/Projects/ZPT/TALES%20Specification%201.3
+     
+  Predefined variables
+
+    Two predefined variables are in the expression namespace, 'form',
+    and 'field'. You can use them to call their methods (though one
+    should be careful with some, to avoid infinite recursion), and
+    also methods and scripts that are the form's (or field's)
+    acquisition context. You can also pass them to the methods you
+    call.
+
+  Relation to the Override tab
+
+    The TALES tab is meant to eventually obsolute the Override tab;
+    the use of the Override tab can therefore be considered
+    deprecated. Once Zope Page Templates (and thus TALES) become part
+    of the Zope core distribution, I plan to phase out the Override
+    tab altogether.
+
+    If an override tab says this:
+
+       foo
+
+    where foo is a Python Script that is acquired by the form, for
+    instance, you can now do:
+
+      python:form.foo()
+
+    This is longer, but the advantage is that you can now pass
+    parameters, for instance:
+
+      python:form.bar(1, 'hey')
+  
+  Example
+
+    A good example of the use of the TALES tab is the 'items' property
+    of a ListField; frequently you may want to get these items from
+    elsewhere, for instance from a database. In this case you would
+    fill in the name of the override method for 'items' that retrieves
+    the right data.
+
+    The 'right data' in this case is that which validation of the
+    builtin field ListTextArea would return. This is a list of tuples,
+    one tuple for each element. Each tuple consists of two strings;
+    the name that should be displayed to the user for that item, and
+    the actual value that will be submitted.
+
+    This for instance is a Python script 'random_numbers' that will
+    return 'n' random numbers as the elements, where 'n' is the (single)
+    parameter to the Python script::
+
+      # random_numbers
+      import random
+      result = []
+      for i in range(n):
+        number = random.randint(0, 100)
+        tuple = str(number), str(number)
+        result.append(tuple)
+      return result
+
+    You can call this script with the following expression for items,
+    which will give 10 random numbers.
+
+      python:form.random_numbers(10)
+ 
+    Caveat: in the current Formulator implementation it is very hard
+    to actually go through validation successfully, as exactly the
+    same random numbers need to be generated twice; once for the
+    display phase, and once during the validation phase. The
+    implementation currently assumes the list won't change through
+    multiple calls to calculate the 'items' property.
+

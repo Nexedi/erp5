@@ -1,0 +1,9 @@
+Formulator Field - Messages
+
+  Description
+
+    Each field has a set of messages that can be displayed in case
+    validation fails. Standard messages are provided, but you can
+    change these messages for the particular field in this view.  The
+    message text is the 'error_text' that will show up in case
+    validation fails.

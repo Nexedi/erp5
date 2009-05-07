@@ -1,0 +1,17 @@
+Formulator Form - XML
+
+  Description
+
+    In this view, you can see an XML serialization of the form. If you
+    are using FSForm along with FileSystemSite, you can use this XML
+    by putting it on the filesystem as a .form file. FileSystemSite
+    will then pick it up and reflect it into the ZODB. This way you
+    can develop and maintain Formulator Forms on the filesystem.
+
+    FileSystemSite can be found here:
+  
+      http://www.zope.org/Members/k_vertigo/Products/FileSystemSite
+
+    To enable Formulator support for FileSystemSite, do a 'from
+    Products.Formulator import FSForm' somewhere in your own code (for
+    instance in your product's '__init__.py').

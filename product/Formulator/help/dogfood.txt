@@ -1,0 +1,181 @@
+How Formulator Eats Its Own Dogfood
+
+  **NOTE**: You do not have to read this or understand this in order to
+  use or even extend Formulator. Your brain may explode. Have fun.
+
+  Formulator eats its own dogfood; fields have editable properties
+  also represented by fields. A field class may contain an instance of
+  itself in the end! This is accomplished by some hard to comprehend
+  code, which I've still tried to write down as clearly as
+  possible. Since at times I still can't figure it out myself, I've
+  included this textual description.
+
+The following files are in play (in 'Products/Formulator'):
+
+  'FieldRegistry.py'
+
+    All field classes are registered here (instead of with the
+    standard Zope addable product registry).
+
+  'Field.py'
+
+    The main Field classes.
+
+  'Form.py'
+
+    The main Form classes. BasicForm is used internally for Forms
+    without any web management UI. PythonForm is a form with a web UI
+    (derived from ObjectManager).
+
+  'StandardFields.py'
+ 
+    Contains a bunch of standard fields that can be used by Formulator,
+    such as StringField, IntegerField and TextArea field.
+
+  'DummyField.py'
+
+    Contains a dummy implementation of a field that can be used by
+    fields before the field classes have been fully defined.
+
+  'Widget.py'
+
+    Contains the code for displaying a field as HTML. A widget has a
+    'property_names' list associated with it, as well a number of
+    class attributes for the fields that help define the parameters of
+    the widget (dimensions, default value, etc). These are in fact not
+    real fields at widget creation time, but DummyField instances.
+
+  'Validator.py'
+
+    Contains the code for validating field input. Like a widget, it
+    contains a 'property_names' list and a number of
+    field-but-not-really (DummyField) class attributes.
+
+  '__init__.py'
+
+    Sets up the fields first, and then registers the Formulator
+    product (Formulator Form addable) with Zope itself. Somewhat more
+    complicated than the average Product __init__.py.
+
+  'FieldHelpTopic.py'
+ 
+    Used to make the Zope help system automatically generate help for
+    each field class.
+
+  'HelperFields.py'
+
+    Collects helper (internal) fields together for easy importing.
+
+  'MethodField.py'
+
+    Experimental MethodField. Right now only used internally by
+    ListFields.
+
+  'ListTextAreaField.py'
+
+    Used internally by ListFields.
+
+  'www' 
+ 
+    This directory contains dtml files and icons used in the
+    management screens of Formulator.
+
+  'help'
+
+    Help files.
+
+Startup Sequence
+
+  Before 'initialize()' in '__init__.py' is called:
+
+    * the widget and validator classes is initialized, using the
+      dummy FieldProperty objects as if they are fields as class
+      attributes.
+ 
+    * Singleton widget instance and validator instance objects are
+      created.
+
+    * The field classes is initialized, with widget and validator
+      class attributes.
+
+    * A singleton FieldRegistry object is created.
+
+  'initialize()' - fields are registered with FieldRegistry:
+ 
+    * A reference to the field class is stored in the FieldRegistry.
+
+    * A BasicForm instance is created for each field class. Then the
+      DummyFields associated with the field class' widget and validator
+      objects are added to the BasicForm (to the Widget and the Validator
+      groups).
+
+    * Each field class now has a BasicForm containing the (dummy) fields
+      that define its look and feel and behavior.
+     
+    * The appropriate field icons are also added to field classes. 
+
+    * the Form is registered with Zope
+
+    * finally, initializeFormulator in Form.py is called.
+
+  'initialize()' - help is registered:
+
+    * the .txt files in the help directory are registered with Zope.
+
+    * A special FieldHelpTopic is created for each registered field.
+ 
+  'initialize()' - final touches:
+
+    * initializeForm in Form.py registers each (non-internal) field in
+      the registry with Python Form, so that users can add the fields
+      to the form.
+
+    * initializeFields in the FieldRegistry makes the DummyFields that
+      stood in for Field properties into real fields, now that
+      everything else has been registered and set up.
+
+Default properties
+
+  It is (for me) hard to understand where default properties are
+  coming from and should come from. Therefore I've created this
+  description.
+
+  A field has a 'default' property field. This is defined in the field
+  *class* 'form' class attribute.
+
+  A field has a 'default' property value. This is defined on the field
+  *instance*, in the 'values' dictionary.
+
+  Field properties have a 'default' field property and value of their
+  own, as they are fields! Infinite regress? The *form* is shared by
+  all fields of the same type, as it's a class attribute. So while
+  there is infinite regress there, it does not cost infinite amounts
+  of memory.
+
+  A StringField has a 'default' property field that is itself a
+  StringField. It also has a 'default' property value that is the
+  empty string. On instantiation of a StringField, the 'default'
+  property value is either taken from a keyword argument 'default'
+  given to the __init__ function or, if none is present, from the
+  default value of the 'default' property field.
+
+  When a field is constructed using the Zope management interface this
+  will use the manage_addField() method, defined on the form.
+  manage_addField will create a field without any property values, so
+  the constructor of the field will use the defaults, which it will
+  take from the defaults of the property_fields.
+
+  The propery_fields *have* (indirectly through FieldDummy instances)
+  been constructed with default values given as keyword arguments.
+ 
+  So this is how it all works out in the end. I hope. My brain just
+  exploded; how's yours?
+
+  Practical advice; don't think too hard about it. If you want
+  particular property field defaults, pass them as keyword arguments
+  when you construct a DummyField for use in a Widget or Validator;
+  if instead you're fine with whatever default the field will come
+  up with, don't pass a keyword argument.
+   
+  Creating new types of fields is actually quite easy; trust me.
+

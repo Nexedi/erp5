@@ -1,0 +1,49 @@
+Formulator is an extensible framework that eases the creation and
+validation of web forms.
+
+Important links:
+
+  * Subscribe to the <a
+    href="http://lists.sourceforge.net/lists/listinfo/formulator-general">Formulator
+    mailing list</a>, for general discussions and questions on
+    Formulator usage.
+
+  * If you're interested in the further development of Formulator,
+    subscribe to the <a
+    href="http://lists.infrae.com/mailman/listinfo/formulator-dev">Formulator-dev
+    list</a>
+
+  * <a href="http://sourceforge.net/projects/formulator/">Formulator
+    SourceForge project page</a>
+
+  * <a href="http://cvs.infrae.com/Formulator/">Formulator CVS web</a>
+
+  * Check out Formulator from CVS anonymously like this::
+
+    cvs -z3 -d:pserver:anonymous@cvs.infrae.com:/cvs/infrae co Formulator
+
+Important hint:
+
+  *Don't ever* use *field_&lt;fieldname&gt;*; anything
+  prefixed with *field_* in REQUEST is a Formulator
+  implementation detail. Instead, don't forget to validate the form,
+  for instance using *validate_all_to_request()*. See the
+  Formulator API help and Howto for more information. Forgetting to
+  validate the form is the most frequently made Formulator mistake
+  that I've encountered.
+
+Documentation:
+
+  * <a href="formulator_howto">Formulator HOWTO</a>
+  
+  * <a href="http://www.jquade.de./formulator-slides-de">Very nice slides about Formulator by Jens Quade (in German)</a>
+
+  * <a href="http://www.zopelabs.com/cookbook/1032909599">A  Zopelabs recipe by Scott Burton on using Formulator with Zope Page Templates</a>
+
+  * <a href="http://www.zope.org/Members/beno/HowTo/HowTo/Formulator_With_ZPT">Howto  on using Formulator with Zope Page Templates by Beno</a>
+
+Some less important links:
+
+  * <a href="http://freshmeat.net/projects/formulator/">Formulator on Freshmeat</a>
+
+  * <a href="http://www.advogato.org/proj/Formulator/">Formulator project page on Advogato</a>

@@ -1,0 +1,42 @@
+Formulator Form - Settings
+
+  Description
+
+    You can set some basic settings of the form.
+
+  Number of groups in row (in order tab)
+
+    Change the amount of groups that should appear in a single row
+    in the 'order' view. The default is '4'.
+
+  Form action
+
+    The method the form should call when it is submitted. If you use
+    the 'header()' method of Form, it will use this as the 'action'
+    attribute of the HTML form.
+
+  Form method
+
+    The submit method of the form (not to be confused with a method in
+    Python of Zope). 'POST' is generally used for forms that change
+    underlying data, while 'GET' is generally used for forms that do a
+    query. In case of 'GET' the fields in the form will be encoded in
+    the URL (so you can for instance bookmark the URL). The 'header()'
+    method of the Form will use this as the 'method' attribute of the
+    HTML form.
+  
+  Form enctype
+
+    The encoding type of the form. If no encoding type is selected,
+    the default for HTML will be used, which is
+    'application/x-www-form-urlencoded'. No enctype is therefore
+    usually just fine. For forms that allow the uploading of a file,
+    use 'multipart/form-data'. The 'header()' method of the Form will
+    use this as the 'enctype' attribute of the HTML form.
+
+  Upgrade
+
+    The 'Upgrade' button in this section is really not useful yet.
+    It's used internally to upgrade unreleased development versions of
+    Formulator to the current version. Perhaps this will become more
+    useful in the future.

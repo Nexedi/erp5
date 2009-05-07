@@ -1,0 +1,24 @@
+Formulator Field - Test
+
+  Description
+
+    With the 'test' view, you can test the look and feel and
+    validation behavior of the field. Fill in the field and press the
+    'Test' button to test it.
+
+    You will now see the test form again. If your input was
+    successfully validated by the field, you will see a message 'Test
+    successful:' above the test form, followed by the result of the
+    validation processing (this may be empty text in case you filled
+    in nothing).
+
+    If the field could not be validated, you will see the message 'There was a
+    validation error:' instead, followed by a description of the error:
+
+      * 'field_id' gives the field name.
+
+      * 'error_key' is the name of the error message; you can find it
+         in the 'messages' tab.
+
+      * 'error_text' is the actual text associated with the
+        'error_key'; you can modify it in the 'messages' tab.

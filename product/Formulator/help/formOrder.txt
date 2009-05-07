@@ -1,0 +1,85 @@
+Formulator Form - Order
+
+  Description
+
+    The 'order' view allows you to change the order in which fields
+    should be displayed in the form. You can also group fields together;
+    this may be helpful when you create a complicated form.
+
+    Any field that gets added to the form ends up in the first  
+    group. This group always exists and cannot be removed.
+
+    You can click on the field id to go directly to the field management
+    screen.
+
+    Note that you *cannot* add or remove any fields in this form; you
+    have to use the main 'contents' view of the form for that.
+
+  How this information is used
+
+    The order and grouping information is used internally by the
+    'test' tab of the form, and you can also use it in your own
+    code. See the Formulator API Reference (to be written; for now
+    read the source!) for more information on how to do that.
+
+  Reordering fields inside a group
+
+    You can reorder fields in a group by moving them up and down in
+    the group. Select the field you want to move using the checkbox in
+    front of the field id. Then click on the 'Move Up' or 'Move Dn'
+    button, to move the field up or down respectively. You will see a
+    feedback message at the top of the screen. You can only move a
+    single field at a time this way, you select only the field you
+    want to move!
+
+  Creating a new group
+
+    The first group has a button called 'Create' at the bottom,
+    with an input box above it. Fill in the name of the new group that
+    you want to create there, and press the 'Create' button. The new group
+    will be added (as the last group visible).
+
+  How the groups are displayed
+
+    In order to show more information on a single screen, the groups
+    are ordered in columns from left to right, then in rows from top
+    to bottom. The 'settings' view allows you to modify how many
+    groups should appear in a single row (the default is 4
+    groups). Changing this has no impact on the functionality of the
+    form itself.
+ 
+    When you add a new group, it will be added to the right of the
+    current last group, if this still fits in a row. Otherwise a new
+    row will be created and the group will be displayed there.
+
+  Moving fields to a different group
+
+    When you create a new group, it remains empty. You can move
+    several fields into a group by using the 'Transfer' button of a
+    group. First select one ore more fields in an old group that you
+    want to move away. Then, use the 'Move to:' dropdown list to
+    select the group to which you want to move the selected fields.
+    Then, press the 'Transfer' button. The fields should now disappear
+    from the origin group and appear in the target group.
+
+  Reordering groups
+
+    You can change the order of the gropus by using the 'Move Up' and
+    'Move Dn' buttons in the 'Group' section of a group. This moves
+    the entire group in the group order. You cannot move the first 
+    group (and it therefore has no group movement buttons).
+
+  Renaming groups
+
+    You can rename a group by filling in the new name in the input
+    box above the 'Rename' button, and then pressing that button.
+  
+  Removing groups
+
+    You can remove a group by pressing the 'Remove' button in the 'Group'
+    section of the group. The entire group will disappear. Any fields that
+    were in the group will move to the bottom of the first group;
+    you cannot lose any fields this way.
+
+
+

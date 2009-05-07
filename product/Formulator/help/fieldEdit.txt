@@ -1,0 +1,62 @@
+Formulator Field - Edit
+
+  Description
+
+    A field has a number of properties that determine its look and
+    feel as well as its behavior. You can configure these properties
+    in this tab. You can also use the TALES tab and the Override tab
+    to associate dynamic behavior with field properties, though the
+    Override tab is eventually to be phased out in favor of the TALES
+    tab. Overridden fields will have their names be shown in square
+    brackets.
+
+    Which properties appear in this view depends on what kind of field
+    you are editing.
+
+    Each field has two sets of properties; widget properties and
+    validator properties.
+
+  Widget properties
+
+    The widget properties determine the look and feel of the field
+    that you see on the web page (which HTML code is generated for the
+    field); i.e. what GUI *widget* you see.
+
+    A very common widget property shared by all fields is called
+    'Title'; all fields have titles -- the name you will see when the
+    field is displayed on the screen.
+
+    Another very common widget property is the 'Default' value of the
+    widget. This is what will be filled in before the user changes
+    anything to the form, unless you pass a value to the 'render'
+    function; see the API reference for more information.
+
+    Many widgets also have size information; the StringField for
+    instance has a 'Display width' property which determines how large
+    the field should appear on the screen, as well as a 'Maximum
+    input' property that determines how much the user can enter
+    (though this is independent from actual server-side validation).
+
+    For some widget properties such as 'Maximum input' in StringField
+    you can set the value to '0'; in that the HTML widget won't care
+    how much the user inputs.
+      
+  Validator properties
+
+    This set of properties determines how the field validates the 
+    information that is submitted for this field.
+
+    A very common validator property is the 'required' property. If a
+    field is required, the field cannot be left empty by the user when
+    submitting a web page. Validation in that case will result in
+    failure.
+
+    In case of the 'StringField', one validation property is called
+    'Maximum length'; the field cannot contain more characters than
+    that.
+
+    For some validator properties such as 'Maximum length' in
+    StringField, you can set the value to '0'. The validator will then
+    not care how much the user entered -- there won't be any maximum.
+
+

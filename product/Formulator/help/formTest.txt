@@ -1,0 +1,27 @@
+Formulator Form - Test
+
+  Description
+
+    In this view, you can test your form. The fields in your form will
+    be rendered as a simple HTML form. The fields are grouped and come
+    in a certain order; this can be defined with the form's 'order'
+    tab.
+
+    You can fill in some values and click on the 'Test' button to
+    submit the form.
+
+    You will now see the test form again. If all of your input was
+    successfully validated by the fields in the form, you the message
+    'All fields were validated correctly' above your form.
+
+    If some of the fields could not be validated, you will instead see
+    the message 'Not all fields could be validated' appear, and a list
+    with the validation errors:
+
+      * 'field_id' indicates the field that gave this validation error.
+
+      * 'error_key' is the name of the error message; you can find it
+         on that field's 'messages' tab.
+
+      * 'error_text' is the actual text associated with that
+        'error_key'; you can modify it on the field's messages tab.

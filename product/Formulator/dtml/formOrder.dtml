@@ -1,0 +1,142 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+<p class="form-help">
+Change the display order and grouping of the fields in this form.
+</p>
+
+<table border="1" cellspacing="1" cellpadding="3">
+<dtml-let all_groups="get_groups(include_empty=1)" 
+          group_length="get_largest_group_length()"
+          first_group="all_groups and all_groups[0] or None">
+<dtml-in "get_group_rows()">
+<tr>
+<dtml-let groups=sequence-item>
+<dtml-in groups>
+<dtml-let group=sequence-item>
+  <td nowrap valign="top">
+  <table border="0" cellspacing="0" cellpadding="0">
+  <form action="." method="POST">
+  <input type="hidden" name="group" value="&dtml-group;">
+  <tr><td align="center" class="list-header">
+    <div class="list-nav">
+    <dtml-var group html_quote>
+    </div>
+    </td></tr>
+  
+  <tr><td align="left">
+    <dtml-let fields="get_fields_in_group(group)" fields_amount="_.len(fields)">
+    <table border="0" cellspacing="0" cellpadding="0">
+    <dtml-in fields>
+    <dtml-let field=sequence-item field_id="field.id">
+      <tr><td height="25">
+          <div class="list-item">
+          <input type="checkbox" name="&dtml-field_id;">&nbsp;<a href="&dtml-field_id;/manage_main"><img src="&dtml-BASEPATH1;/&dtml-icon;" alt="&dtml-meta_type;" title="&dtml-meta_type;" border="0"></a>&nbsp;<a href="&dtml-field_id;/manage_main"><dtml-var field_id></a>
+	  </div>
+	  </td></tr>
+    </dtml-let>
+    </dtml-in>
+    <dtml-in "_.range(group_length - fields_amount)">
+       <tr><td height="25"></td></tr>
+    </dtml-in>
+    </dtml-let>
+    </table>
+  </td></tr>
+     
+  <tr><td align="center">
+    <input class="form-element" type="submit" name="manage_move_field_up:method"
+           value="Move Up">
+  </td></tr>
+  
+  <tr><td align="center">
+    <input class="form-element" type="submit" name="manage_move_field_down:method" 
+           value="Move Dn"><br><br>
+  </td></tr>
+
+  <tr><td align="center">
+    <div class="form-element">
+    <select class="form-element" name="to_group" size="1">
+      <option>Move to:</option>
+      <dtml-in all_groups>
+        <option><dtml-var sequence-item html_quote></option>
+      </dtml-in>
+    </select>
+    </div>
+  </td></tr>
+ 
+  <tr><td align="center">
+    <input class="form-element" type="submit" name="manage_move_group:method"
+           value="Transfer">
+  </td></tr>
+
+
+  <dtml-if "group != first_group">
+  
+  <tr><td align="center" class="list-header">
+    <div class="list-item">
+    Group
+    </div>
+  </td></tr>
+
+  <tr><td align="center">
+    <input class="form-element" type="submit" name="manage_move_group_up:method"
+           value="Move Up">
+  </td></tr>
+
+  <tr><td align="center">
+    <input class="form-element" type="submit" name="manage_move_group_down:method" 
+           value="Move Dn"><br><br>
+  </td></tr>
+
+  <tr><td align="center">
+    <input type="text" name="new_name" value="" size="10">
+  </td></tr>
+
+  <tr><td align="center">
+    <input class="form-element" type="submit" name="manage_rename_group:method"
+           value="Rename"><br>
+  </td></tr>
+  <tr><td align="center">
+    <input class="form-element" type="submit" name="manage_remove_group:method"
+           value="Remove"><br>
+  </td></tr>
+
+  <dtml-else>
+
+  <tr><td align="center" class="list-header">
+    <div class="list-item">
+    Group
+    </div>
+  </td></tr>
+  
+  <tr><td align="center">
+    <input type="text" name="new_group" value="" size="10">
+  </td></tr>
+
+  <tr><td align="center">
+    <input type="submit" name="manage_add_group:method" value="Create"><br><br>
+  </td></tr>
+
+  <tr><td align="center">
+    <input type="text" name="new_name" value="" size="10">
+  </td></tr>
+
+  <tr><td align="center">
+    <input class="form-element" type="submit" name="manage_rename_group:method"
+           value="Rename"><br>
+  </td></tr>
+
+  </dtml-if>
+
+  </form>
+  </table>
+  </td>
+</dtml-let>
+</dtml-in>
+</dtml-let>
+</tr>
+</dtml-in>
+</dtml-let>
+</table>
+
+<dtml-var manage_page_footer>

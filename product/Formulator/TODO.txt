@@ -1,0 +1,20 @@
+Formulator TODO
+
+  - When using a BasicForm a field cannot get to the form's 
+    get_form_encoding method (where the ZMIForm uses acquisistion 
+    to achieve this).
+  
+  - Make composite fields work well as hidden fields.
+
+  - Add combobox field
+
+  - Add various button fields
+
+  - Investigate duration and time only field.
+
+  - internationalisation (or error messages first)
+
+  - HTML filtering field?
+
+  - Add more unit tests.
+

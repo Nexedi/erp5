@@ -1,0 +1,21 @@
+<dtml-var standard_html_header>
+<h3>Formulator Field - <dtml-var id></h3>
+<dtml-in get_groups>
+<dtml-let group=sequence-item fields="get_fields_in_group(group)">
+  <dtml-if fields>
+    <h4><i><dtml-var "_.string.capitalize(group)"> properties</i></h4>
+  <dtml-in fields>
+  <dtml-let field=sequence-item>
+   <b><dtml-var "field.get_value('title')"> (<dtml-var "field.id">)</b>
+   <p><dtml-var "field.get_value('description')"></p>
+  </dtml-let>
+  </dtml-in>
+  </dtml-if>
+</dtml-let>
+</dtml-in>
+
+<h4>More help</h4>
+
+<p><a href="fieldEdit.txt">Field edit screen help</a></p>
+
+<dtml-var standard_html_footer>

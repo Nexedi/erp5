@@ -1,0 +1,50 @@
+Formulator Field - Override
+
+  Description
+
+    Note: the Override tab is being phased out in favor of the TALES
+    tab.
+
+    Sometimes you'd like a field property to be dynamic instead of
+    just a value filled in in the 'Edit' tab of the field. If you fill
+    in the name of an 'override' method for a property in the Override
+    tab, that method will be called whenever you (or the code) asks
+    for the value of that property using get_value(). Properties which
+    are overridden are shown between square brackets ([ and ]) in the
+    main Edit tab, and the value of the property in the edit tab will
+    be ignored. To stop using an override for a particular property,
+    remove the method name in the override tab.
+
+    An override method should return an object of the same type as the
+    property field would return after validation. For instance, an
+    override method for a StringField would return a simple string,
+    for an IntegerField it would return an integer, and for a
+    CheckBoxField it would return true or false (or something that can
+    be interpreted that way).
+
+  Example
+
+    A good example of the use of the override tab is the 'items'
+    property of a ListField; frequently you may want to get these
+    items from elsewhere, for instance from a database. In this case
+    you would fill in the name of the override method for 'items' that
+    retrieves the right data.
+
+    The 'right data' in this case is that which validation of the
+    builtin field ListTextArea would return. This is a list of tuples,
+    one tuple for each element. Each tuple consists of two strings;
+    the name that should be displayed to the user for that item, and
+    the actual value that will be submitted.
+
+    This for instance is a Python script 'random_numbers' that will return
+    ten random numbers as the elements::
+
+      # random_numbers
+      import random
+      result = []
+      for i in range(10):
+        number = random.randint(0, 100)
+        tuple = str(number), str(number)
+        result.append(tuple)
+      return result
+

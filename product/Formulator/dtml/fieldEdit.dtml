@@ -1,0 +1,65 @@
+<dtml-var manage_page_header>
+<dtml-let help_product="'Formulator'" help_topic=meta_type>
+<dtml-var manage_tabs>
+</dtml-let>
+
+<p class="form-help">
+Edit <dtml-var meta_type> properties here.
+</p>
+
+<form action="manage_edit" method="POST">
+<table cellspacing="0" cellpadding="2" border="0">
+
+<dtml-in "form.get_groups()">
+<dtml-let group=sequence-item fields="form.get_fields_in_group(group)">
+
+<dtml-if fields>
+<tr>
+<td colspan="3" class="form-title">
+  <dtml-var "_.string.capitalize(group)"> properties
+</td>
+</tr>
+
+<dtml-var fieldListHeader>
+
+<dtml-let current_field="this()">
+<dtml-in fields>
+<dtml-let field=sequence-item field_id="field.id"
+          value="current_field.get_orig_value(field_id)"
+          override="current_field.get_override(field_id)"
+          tales="current_field.get_tales(field_id)">
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    <dtml-if "tales or override">[</dtml-if><dtml-var "field.title()"><dtml-if "field.has_value('required') and field.get_value('required')">*</dtml-if><dtml-if "tales or override">]</dtml-if>
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <dtml-var "field.render(value)">
+    </td>
+    <td><div class="form-element">
+    <dtml-var "field.meta_type">
+    </div></td>
+  </tr>
+</dtml-let>
+</dtml-in>
+</dtml-let>
+</dtml-if>
+</dtml-let>
+</dtml-in>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-element">
+    <input class="form-element" type="submit" name="submit" 
+     value="Save Changes" /> 
+    </div>
+    </td>
+  </tr>
+</table>
+</form>
+
+<dtml-var manage_page_footer>
+
+
+

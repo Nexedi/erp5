@@ -1,0 +1,271 @@
+Formulator HOWTO
+
+  Introduction
+
+    This HOWTO is intended to give an introduction to the use of
+    Formulator from the Zope Management Interface and from DTML,
+    although much of this applies to use from ZPT or Python as
+    well. Note that Formulator comes with online help for each tab as
+    well as API help, so be sure to check that as well. This document
+    will only give an overview of the possibilities and not all the
+    details.
+
+  Formulator Scope
+
+    Formulator is a tool to create and validate web forms in Zope.
+    Formulator takes care of the rendering of the fields in the form,
+    as well as the validation and processing of the data that is
+    submitted. Formulator's scope is limited to forms: "do web forms,
+    web forms only, and web forms well." Formulator does currently not
+    even take care of the precise layout of a form -- each form is
+    layouted differently and thus layout is left to the developer.
+    Formulator does allow for easy integration with external systems,
+    however.
+
+  Creating a Formulator Form and Fields
+
+    It is easy to create a Formulator Form, just pick it from the add
+    list and add it to a folder. I usually only have one form in a
+    folder and call it 'form' to make automatic layout handling
+    easier; I'll say more about the reason for this later.
+
+    The default view of the form looks just like a folder, except that
+    the only things that are addable are Formulator Fields. When you
+    add a field to a form, it'll show up in the Form, just like an
+    object shows up in a normal Zope Folder.
+    
+  Fields
+
+    When you click on a field, you see a list of its properties in the
+    field's 'Edit' screen. This is a good time to explain that
+    Formulator has an extensive help system, and that if you click on
+    'help' in the 'Edit' screen you'll see a list with a short
+    description of what each property does.
+
+    If you click on the 'Test' tab in the Field, you will see the
+    field displayed as it would appear in the form. If you fill in
+    some value in the field and click on the 'Test' button, you can
+    test its validation behavior. If everything could be validated and
+    processed all right, you'll see the resulting value. If it could
+    not be validated however, you see an error, showing the error_key
+    and error_text.
+
+    The best way to learn about what the different fields do and how
+    their properties work is to try them out. Just change some
+    properties and see what happens in the Test screen. And be sure to
+    look at the help.
+
+  Other Form tabs
+
+    The form 'Test' tab is not difficult to explain; it shows all the
+    fields you have added to the form. You can test the behavior of
+    the entire form here. 
+
+    In the 'Order' part you can group fields and order them inside
+    their groups. The order determines the order in which they appear
+    on the 'Test' screen, and can also can be used in your own
+    code. Initially there is only a single 'Default' group, but you
+    can add new groups and change their names.
+  
+    In the 'Settings' tab you can determine the form properties.  You
+    can set the form submit action and method here, which you can
+    later use with the 'header()' and 'footer()' methods of the form.
+
+  Other Field tabs
+
+    The field 'Override' screen allows you to make the field call an
+    override method (most commonly a Python Script) for a property.
+    Instead of using the property value in the 'Edit' screen, the
+    method with the name listed in the override tab will be called to
+    retrieve a value then. The returned value must be the same as the
+    one that property's field generates; for an IntegerField this is
+    an integer, for instance. The titles of overridden fields will be
+    displayed between square brackets ('[ ]') in the 'Edit' screen.
+
+    In the 'Messages' screen you can set the text of the error
+    messages that field can generate upon validation errors.
+
+  On the examples in this HOWTO
+
+    All the examples in this HOWTO are contained in the file
+    'formulator_howto_examples.zexp', which you can download from the
+    Formulator product page
+    (http://www.zope.org/Members/faassen/formulator) and import into
+    your Zope. In the examples, all the forms are called 'form'.
+
+  Rendering a form manually with DTML ('manual' folder)
+
+    First, I will show how to use DTML to manually layout a form. This
+    takes the most work, but also allows the most flexibility. In all
+    these examples I will assume the form is called 'form'.
+
+    The form contains three fields; a StringField 'animal', a
+    StringField 'color', and an IntegerField 'number'. 'index_html' is
+    the DTML Method that does the manual layout::
+   
+      <dtml-var standard_html_header>
+
+      <!-- show the header of the form, using 'Form action' and 
+	'Form method' form settings (<form action="..." method="...">)  
+	-->
+      <dtml-var "form.header()">
+
+      <!-- a simple table for layout purposes -->
+      <table border="0">
+
+      <!-- each field will be on a line by itself -->
+
+      <tr>
+      <!-- first display the title property of the animal field -->
+      <td><dtml-var "form.animal.get_value('title')"></td>
+      <!-- render the field -->
+      <td><dtml-var "form.animal.render()"></td>
+      </tr>
+
+      <!-- the same for the color field -->
+      <tr>
+      <td><dtml-var "form.color.get_value('title')"></td>
+      <td><dtml-var "form.color.render()"></td>
+      </tr>
+
+      <!-- and the number field -->
+      <tr>
+      <td><dtml-var "form.number.get_value('title')"></td>
+      <td><dtml-var "form.number.render()"></td>
+      </tr>
+
+      <!-- the submit button -->
+      <tr>
+      <td><input type="submit" value=" OK "></td>
+      </tr>
+
+      </table>
+
+      <!-- the form footer -->
+      <dtml-var "form.footer()">
+
+      <dtml-var standard_html_footer>
+
+    This shows a form with the three fields. You can easily rearrange
+    the layout just by changing the HTML.
+
+  Rendering a form automatically with DTML ('automatic' folder)
+
+    For many simple forms you don't need to do the layout yourself all
+    the time. We can use Formulator and acquisition to make layout a
+    lot easier. If we know each form is in a separate folder and is
+    called 'form', we can place DTML method in the root of the site
+    that can render any such form. In this example 'index_html' will
+    do the automated rendering directly. In real-world sites you'd
+    usually use another method (for instance called 'form_body') to
+    render because not all folders would contain forms. In that case
+    it'd be easier to put the form rendering code in another method
+    (for instance called 'form_body'), which you can then call from
+    your other code. Here's 'index_html'::
+
+      <dtml-var standard_html_header>
+
+      <!-- show the header of the form, using 'Form action' and 
+	'Form method' form settings (<form action="..." method="...">)  
+	-->
+      <dtml-var "form.header()">
+
+      <!-- a simple table for layout purposes -->
+      <table border="0">
+
+      <!-- get a list of all fields in the form -->
+      <dtml-in "form.get_fields()">
+      <!-- rename each sequence item to 'field' so they can
+	   be used more easily -->
+      <dtml-let field=sequence-item>
+
+      <!-- each field will be on a line by itself -->    
+      <tr>
+      <!-- display the title property of this field -->
+      <td><dtml-var "field.get_value('title')"></td>
+      <!-- render the field -->
+      <td><dtml-var "field.render()"></td>
+      </tr>
+
+      </dtml-let>
+      </dtml-in>
+
+      <!-- the submit button -->
+      <tr>
+      <td><input type="submit" value=" OK "></td>
+      </tr>
+
+      </table>
+
+      <!-- the form footer -->
+      <dtml-var "form.footer()">
+
+      <dtml-var standard_html_footer>
+
+    The nice thing about the automatic approach is that now you can
+    change the Formulator form as much as you like; this code will
+    always automatically display them. Even better, if you add
+    subfolders with forms in them, acquisition makes those forms
+    display automatically as well! If you have only simple forms on a
+    site, this could be the only DTML Method you need.
+
+  Form validation ('validation' folder)
+
+    I will use the same 'index_html' as in the automatic form
+    rendering example and the 'animal/color/number' form to
+    demonstrate form validation.
+
+    I've set the 'Form action' property of the form to 'feedback'.
+    When the form is submitted it, Zope will access the 'feedback'
+    DTML Method. The form data will be coming into 'feedback' in the
+    'REQUEST' object (more precisely the 'REQUEST.form' object).
+
+    The 'feedback' method should do a number of things:
+
+      * validate all fields (tell formulator to take care of this).
+  
+      * handle any validation errors.
+
+      * if there were no validation errors, do something with the
+        form results.
+
+    Here's 'feedback', with comments::
+
+      <dtml-var standard_html_header>
+      <dtml-try>
+	<!-- try the validation, results should be put in
+	     REQUEST (keyed under the field id) --> 
+	<dtml-call "form.validate_all_to_request(REQUEST)">  
+      <dtml-except FormValidationError>
+	<!-- if something went wrong with any field validation,
+	     a FormValidationError will be raised, which we
+	     will then catch here -->
+	<!-- we will display the errors here -->
+	<ul>
+	<dtml-in "error_value.errors">
+	  <li>
+	  <dtml-var "field.get_value('title')">:
+	  <dtml-var error_text>
+	  </li>
+	</dtml-in>
+	</ul>
+
+      <dtml-else>
+	<!-- if no FormValidationError was raised, we're done
+	     with validation and our results will now be in
+	     REQUEST (and in DTML namespace). -->
+
+	<!-- we could do anything with them, but we'll simply
+	     display them -->
+	Hah, you are a <dtml-var color> <dtml-var animal> with
+	<dtml-var number> legs.
+
+      </dtml-try>
+
+      <dtml-var standard_html_footer> 
+    
+    Note that often you can use acquisition with the validation page
+    as well, so you can reuse most of its functionality.
+  
+
+

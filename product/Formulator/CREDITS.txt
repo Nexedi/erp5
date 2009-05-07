@@ -1,0 +1,77 @@
+Formulator Credits
+
+  Martijn Faassen (faassen@vet.uu.nl) -- Main developer, design and
+                              implementation. 
+
+
+Many thanks go to:
+      
+  Kit Blake (kitblake at v2.nl) -- UI help and design help.
+
+  Yury Don (yura at vpcit.ru) -- contributed EmailField and FloatField,
+                              design and implementation help.
+
+  Stephan Richter (srichter at iuveno-net.de) -- contributed LinkField and
+                              FileField. Contributed PatternChecker
+                              module used by PatternField. Other 
+                              design and implementation help.
+
+  Nicola Larosa (nico at tekNico.net) -- feedback and bugfixes.
+
+  Magnus Heino (magus.heino at rivermen.se) -- feedback and bugfixes.
+
+  Joel Burton (jburton at scw.org) -- feedback and bugfixes.
+
+  Ulrich Eck (ueck at net-labs.de) -- much help and patience with the
+                                   TALES tab.
+  
+  Dirk Datzert (Dirk.Datzert at rasselstein-hoesch.de) -- feedback and bugfixes.
+
+  Max Petrich (petrich.max at kis-solution.de) -- feedback and bugfixes.
+
+  Matt Behrens (matt.behrens at kohler.com) -- feedback and bugfixes.
+
+  Nikolay Kim (fafhrd at datacom.kz) -- code inspiration for
+                                     XMLToForm/FormToXML.
+
+  Godefroid Chapelle (gotcha at swing.be) -- Bugfixes.
+
+  Alan Runyan (runyaga at runyaga.com) -- Fix to email regular expression.
+
+  Sascha Welter (welter at network-ag.com) -- Extensive help with email
+                                           regular expression.
+
+  Clemens Klein-Robbenhaar (robbenhaar at espresto.com) -- Many bugfixes
+                                                        and feature
+                                                        additions.
+              
+  Christian Zagrodnick (cz at gocept.com) -- Unicode awareness fixes and 
+                                          XML entry form.
+
+  Iutin Vyacheslav (iutin at whirix.com) -- am/pm feature for DateTime
+                                         fields.
+
+  Kapil Thangavelu (k_vertigo at objectrealms.net) -- Enabled ':record' rendering.
+
+  Pierre-Julien Grizel (grizel at ingeniweb.com) -- ProductForm.
+
+  Sébastien Robin (seb at nexedi.com) -- more consistent ordering in XML
+                                      serialization.
+
+  Guido Wesdorp (guido at infrae.com) -- Added extra_item attribute on
+                                      compound fields.
+
+  Yura Petrov (ypetrov at naumen.ru) -- Various FSForm related
+                                     improvements.
+
+  Vladimir Voznesensky (vovic at smtp.ru) -- Enabling/disabling of fields.
+            
+  Special thanks also goes to Rik Hoekstra.
+
+  Also a thank you to those few valiant souls who suffered through the
+  bugs of ZFormulator, the previous implementation. Let's hope this
+  one's better!
+
+
+
+
