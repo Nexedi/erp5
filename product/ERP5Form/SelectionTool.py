@@ -1043,7 +1043,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
     security.declareProtected(ERP5Permissions.View, 'getSelectionUidList')
     def getSelectionUidList(self, selection_name, REQUEST=None, selection_method=None, context=None):
       """
-        Get the list of values checked or selected for 'selection_name'
+        Get the list of uids checked or selected for 'selection_name'
       """
       return [x.getObject().getUid() for x in self.getSelectionValueList(selection_name, REQUEST=REQUEST, selection_method=selection_method, context=context)]
 
