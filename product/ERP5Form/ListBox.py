@@ -1113,10 +1113,7 @@ class ListBoxRenderer:
     elif list_method_name == 'searchFolder':
       list_method = CatalogMethodWrapper(self.getContext(), list_method_name)
     elif list_method_name is not None:
-      try:
-        list_method = getattr(self.getContext(), list_method_name)
-      except AttributeError, KeyError:
-        list_method = None
+      list_method = getattr(self.getContext(), list_method_name, None)
     else:
       list_method = None
 
@@ -1137,10 +1134,7 @@ class ListBoxRenderer:
     elif count_method_name == 'countFolder':
       count_method = CatalogMethodWrapper(self.getContext(), count_method_name)
     elif count_method_name is not None:
-      try:
-        count_method = getattr(self.getContext(), count_method_name)
-      except AttributeError, KeyError:
-        count_method = None
+      count_method = getattr(self.getContext(), count_method_name, None)
     else:
       count_method = None
 
@@ -1161,10 +1155,7 @@ class ListBoxRenderer:
     elif stat_method_name == 'countFolder':
       stat_method = CatalogMethodWrapper(self.getContext(), stat_method_name)
     elif stat_method_name is not None:
-      try:
-        stat_method = getattr(self.getContext(), stat_method_name)
-      except AttributeError, KeyError:
-        stat_method = None
+      stat_method = getattr(self.getContext(), stat_method_name, None)
     else:
       stat_method = None
 
@@ -1178,10 +1169,7 @@ class ListBoxRenderer:
     row_css_method_name = self.getRowCSSMethodName()
     row_css_method = None
     if row_css_method_name is not None:
-      try:
-        row_css_method = getattr(self.getContext(), row_css_method_name)
-      except AttributeError, KeyError:
-        row_css_method = None
+      row_css_method = getattr(self.getContext(), row_css_method_name, None)
     return row_css_method
 
   getRowCSSMethod = lazyMethod(getRowCSSMethod)
