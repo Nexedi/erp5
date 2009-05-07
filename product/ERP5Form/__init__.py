@@ -57,9 +57,6 @@ portal_tools = ( SelectionTool.SelectionTool, PreferenceTool.PreferenceTool )
 content_classes = ( )
 content_constructors = ()
 
-# Import patch
-import FormulatorPatch
-
 # Optimization
 from Products.ERP5Type.PsycoWrapper import psyco
 psyco.bind(ListBox.ListBoxWidget.render)
