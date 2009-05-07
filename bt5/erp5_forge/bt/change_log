@@ -1,5 +1,6 @@
 2009-05-07 yusei
 * Add SkinsTool_makeFieldLibraryAndProxifyAllField. This is a helper script to make a field library and proxify existing fields. But you still need to adjust by hand...
+* Add a utility script to find dead proxy fields.
 
 2009-04-24 jerome
 * Add a utility script to check that all relation field defines proxy listbox id or columns
