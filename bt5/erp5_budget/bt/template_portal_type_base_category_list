@@ -1,4 +1,7 @@
 Budget Line | budget_line_type
+Budget Model Module | business_application
+Budget Module | business_application
+Budget Transaction Module | business_application
 Budget Transaction | group
 Budget Transfer Line | group
 Budget | budget_type
