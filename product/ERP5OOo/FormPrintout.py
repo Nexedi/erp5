@@ -113,6 +113,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item):
   """
   
   meta_type = "ERP5 Form Printout"
+  icon = "www/form_printout_icon.png"
 
   # Declarative Security
   security = ClassSecurityInfo()

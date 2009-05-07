@@ -22,7 +22,7 @@
     </tr>
 
     <tr>
-      <td align="left" valign="top">
+      <td align="left" valign="top" colspan="2">
       <div class="form-element">
         <em tal:condition="here/wl_isLocked">Locked by WebDAV</em>
         <input tal:condition="not:here/wl_isLocked"
