@@ -31,7 +31,6 @@ from Products.Formulator.Field import ZMIField
 from Products.Formulator import StandardFields 
 from Products.Formulator.DummyField import fields
 from Products.PythonScripts.Utility import allow_class
-from Products.ERP5Form import FormulatorPatch
 
 from zLOG import LOG
 from AccessControl import ClassSecurityInfo
@@ -41,7 +40,7 @@ MINUTE_IN_SECOND = 60
 HOUR_IN_SECOND = 3600
 # DAY_IN_SECOND = 86400
 
-class DurationWidget(FormulatorPatch.IntegerWidget):
+class DurationWidget(Widget.IntegerWidget):
   """
   Duration Widget is used to enter time duration.
   It may be used in movement of Labour (in Task, Calendat Period, ...).
@@ -101,25 +100,20 @@ class DurationWidget(FormulatorPatch.IntegerWidget):
     """
     Render dynamically a subfield
     """
-    return FormulatorPatch.IntegerFieldWidgetInstance.render_view(field, value,
-                                                               REQUEST=REQUEST)
+    return self.render_view(field, value, REQUEST=REQUEST)
 
   def render_sub_field(self, field, key, value, REQUEST, keyword, render_prefix=None):
     """
     Render dynamically a subfield
     """
-    return FormulatorPatch.IntegerFieldWidgetInstance.render(
-              field,
-              field.generate_subfield_key(keyword,
-                                          key=key),
-              value,
-              REQUEST)
+    return Widget.IntegerWidget.render(self, field, field.generate_subfield_key(keyword, key=key),
+                        value, REQUEST)
 
 class DurationValidator(Validator.IntegerValidator):
   """
   Duration Validator
   """
-  def validate(self, field, key, REQUEST):    
+  def validate(self, field, key, REQUEST):
     second_value = None
     for sub_key, convertion in (('hour', HOUR_IN_SECOND),
                                 ('minute', MINUTE_IN_SECOND),
@@ -128,7 +122,7 @@ class DurationValidator(Validator.IntegerValidator):
           field, key, REQUEST, sub_key, convertion, second_value,
       )
     return second_value
-    
+
   def _validate_sub_field(self, field, key, REQUEST, sub_key, 
                           convertion, second_value):
     """

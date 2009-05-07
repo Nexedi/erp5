@@ -80,7 +80,7 @@ class TestRenderViewAPI(unittest.TestCase):
                         field.render_view.im_func.func_code.co_varnames)
       if field is not ProxyField.ProxyField:
         self.assertEquals(('self', 'field', 'value', 'REQUEST'),
-          field.widget.render_view.im_func.func_code.co_varnames[:4])
+          field.widget.render_view.im_func.func_code.co_varnames[:4], '%s %s' % (field.widget, field.widget.render_view.im_func.func_code.co_varnames[:4]))
 
 
 class TestFloatField(unittest.TestCase):
