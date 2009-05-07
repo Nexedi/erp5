@@ -57,4 +57,4 @@ class TransformedResource:
 #            'mode'        : 'w' },
     )
 
-    _categories = ('specialise', 'industrial_phase', 'option')
+    _categories = ('specialise', 'industrial_phase', 'option', 'trade_phase')

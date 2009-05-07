@@ -737,6 +737,33 @@ class ERP5Site(FolderMixIn, CMFSite):
            self._getPortalConfiguration('portal_supply_path_type_list')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalBusinessProcessTypeList')
+  def getPortalBusinessProcessTypeList(self):
+    """
+      Return business process types.
+    """
+    return self._getPortalGroupedTypeList('business_process') or \
+           self._getPortalConfiguration('portal_business_process_type_list')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalBusinessStateTypeList')
+  def getPortalBusinessStateTypeList(self):
+    """
+      Return business state types.
+    """
+    return self._getPortalGroupedTypeList('business_state') or \
+           self._getPortalConfiguration('portal_business_state_type_list')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalBusinessPathTypeList')
+  def getPortalBusinessPathTypeList(self):
+    """
+      Return business path types.
+    """
+    return self._getPortalGroupedTypeList('business_path') or \
+           self._getPortalConfiguration('portal_business_path_type_list')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalAcquisitionMovementTypeList')
   def getPortalAcquisitionMovementTypeList(self):
     """

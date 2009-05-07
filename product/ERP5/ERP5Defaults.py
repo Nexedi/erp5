@@ -180,6 +180,10 @@ portal_supply_type_list = ('Purchase Supply','Sale Supply')
 
 portal_supply_path_type_list = ('Supply Line','Supply Cell')
 
+portal_business_process_type_list = ('Business Process',)
+portal_business_state_type_list = ('Business State',)
+portal_business_path_type_list = ('Business Path',)
+
 # This transaction lines are special because destination must be None.
 portal_balance_transaction_line_type_list = ('Balance Transaction Line',)
 
@@ -208,3 +212,4 @@ portal_current_inventory_state_list = ('delivered', 'started', 'stopped', 'invoi
 # invoiced is Coramy specific and should be removed
 
 portal_updatable_amortisation_transaction_state_list = ('draft',)
+
