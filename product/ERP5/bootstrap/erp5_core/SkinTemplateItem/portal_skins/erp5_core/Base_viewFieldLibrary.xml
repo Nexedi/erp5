@@ -121,6 +121,8 @@
                         <string>my_label_field</string>
                         <string>my_radio_field</string>
                         <string>my_link_field</string>
+                        <string>my_multi_check_box_field</string>
+                        <string>my_input_button_field</string>
                       </list>
                     </value>
                 </item>
