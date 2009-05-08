@@ -12,7 +12,12 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>description</string>
+                <string>title</string>
+                <string>display_maxwidth</string>
+                <string>display_width</string>
+              </list>
             </value>
         </item>
         <item>
@@ -74,15 +79,23 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>language of the web page</string> </value>
+                    <value> <string>Language of the web page, it uses code like en, fr, ja...</string> </value>
+                </item>
+                <item>
+                    <key> <string>display_maxwidth</string> </key>
+                    <value> <int>5</int> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_language</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Document_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewDMSFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

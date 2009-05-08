@@ -1,3 +1,7 @@
+2009-05-08 yusei
+* Simplify field libraries and proxy fields. Old field libraries are kept for backward compatibility.
+* Update dependencies.
+
 2009-05-04 Vincent
 * Drop dependency on erp5_dms_catalog as the scriptable keys it provided are moved into erp5_catalog
 

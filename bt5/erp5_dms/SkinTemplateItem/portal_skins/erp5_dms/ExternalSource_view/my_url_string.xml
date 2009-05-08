@@ -76,10 +76,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>Url of the document</string> </value>
-                </item>
-                <item>
                     <key> <string>display_width</string> </key>
                     <value> <int>40</int> </value>
                 </item>
@@ -89,7 +85,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewDMSFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

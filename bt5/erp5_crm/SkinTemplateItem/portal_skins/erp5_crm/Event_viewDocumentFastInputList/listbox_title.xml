@@ -14,7 +14,7 @@
             <value>
               <list>
                 <string>title</string>
-                <string>display_width</string>
+                <string>description</string>
               </list>
             </value>
         </item>
@@ -76,8 +76,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
+                    <key> <string>description</string> </key>
+                    <value> <string>The name of a document in ERP5</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -85,7 +85,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewCRMFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
