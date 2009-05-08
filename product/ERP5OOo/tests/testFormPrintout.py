@@ -617,7 +617,7 @@ class TestFormPrintout(ERP5TypeTestCase):
     self._validate(odf_document)
 
   def test_02_Table_08_Nodata(self, run=run_all_test):
-    """7. Normal case: list box has no data"""
+    """8. Normal case: list box has no data"""
     if not run: return 
     # test target
     test1 = self.portal.foo_module.test1
@@ -649,7 +649,97 @@ class TestFormPrintout(ERP5TypeTestCase):
     # no rows
     self.assertEqual(len(odf_table_rows), 0)
     self._validate(odf_document)
+
+  def test_02_Table_09_StyleSetting(self, run=run_all_test):
+    """ 9. Normal case: setting the style of the row.
     
+     * Test Data format:
+     The table listbox4 has six rows which contains the reference of the row.
+    """
+    if not run: return 
+    # test target
+    test1 = self.portal.foo_module.test1
+    foo_printout = test1.Foo_viewAsPrintout
+    foo_form = test1.Foo_view
+    listbox = foo_form.listbox
+    request = self.app.REQUEST 
+    request['here'] = test1
+
+    for i in xrange(3, 7):
+      foo_id = "foo_%s" % i
+      if test1._getOb(foo_id, None) is None:
+        test1.newContent(foo_id, portal_type='Foo Line')
+
+    createZODBPythonScript(
+      self.portal.portal_skins.custom,
+      'Foo_getRowCssList',
+      '*args,**kw',
+r"""
+line_index = kw['list_index']
+line_number = line_index + 1
+for n in xrange(6, 0, -1):
+  if line_number % n is 0:
+    return "line" + str(n)
+"""
+      )
+
+    foo_form.manage_renameObject('listbox', 'listbox4', REQUEST=request)
+    listbox4 = foo_form.listbox4
+    test1.foo_1.setTitle('foo_title_9')
+    message = listbox4.ListBox_setPropertyList(
+      field_list_method = 'objectValues',
+      field_portal_types = 'Foo Line | Foo Line',
+      field_row_css_method = 'Foo_getRowCssList',
+      field_columns = 'id|ID\ntitle|Title\nquantity|Quantity',)
+    self.failUnless('Set Successfully' in message)
+    listboxline_list = listbox4.get_value('default', render_format = 'list',
+                                          REQUEST = request)
+    self.assertEqual(len(listboxline_list), 7)
+    self.assertTrue(listboxline_list[1].getColumnProperty('title') == "foo_title_9")
+
+    ## test
+    odf_document = foo_printout.index_html(REQUEST=request)
+    #test_output = open("/tmp/test_02_Table_09_StyleSetting.odf", "w")
+    #test_output.write(odf_document)
+    self.assertTrue(odf_document is not None)
+    builder = OOoBuilder(odf_document)
+    content_xml = builder.extract("content.xml")
+    self.assertTrue(content_xml.find("foo_title_9") > 0)
+    
+    content = etree.XML(content_xml)
+    table_row_xpath = '//table:table[@table:name="listbox4"]/table:table-row'
+    table_row_list = content.xpath(table_row_xpath, namespaces=content.nsmap)
+    self.assertEqual(len(table_row_list), 6)
+    
+    line2 = table_row_list[1]
+    line2_cell_list = line2.xpath('table:table-cell', namespaces=content.nsmap)
+    self.assertEqual(len(line2_cell_list), 2)
+    line2_cell2 = line2_cell_list[1]
+    span_attribute_name = '{%s}number-columns-spanned' % content.nsmap['table']
+    line2_cell2_span = line2_cell2.attrib[span_attribute_name]
+    self.assertEqual(line2_cell2_span, "2")
+
+    line3 = table_row_list[2]
+    line3_cell_list = line3.xpath('table:table-cell', namespaces=content.nsmap)
+    self.assertEqual(len(line3_cell_list), 1)
+    line3_cell1 = line3_cell_list[0]
+    line3_cell1_span = line3_cell1.attrib[span_attribute_name]
+    self.assertEqual(line3_cell1_span, "3")
+
+    line5 = table_row_list[4]
+    line5_cell_list = line5.xpath('table:table-cell', namespaces=content.nsmap)
+    self.assertEqual(len(line5_cell_list), 2)
+    line5_cell1 = line5_cell_list[0]
+    line5_cell1_span = line5_cell1.attrib[span_attribute_name]
+    self.assertEqual(line5_cell1_span, "2")
+        
+    self._validate(odf_document)
+    
+    # put back the field name
+    foo_form.manage_renameObject('listbox4', 'listbox', REQUEST=request)
+    # delete the test objects
+    test1.manage_delObjects(['foo_3','foo_4','foo_5','foo_6'])
+
   def _test_03_Frame(self, run=run_all_test):
     """
     Frame not tested yet
