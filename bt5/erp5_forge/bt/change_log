@@ -1,4 +1,8 @@
 2009-05-08 yusei
+* Remove SkinsTool_findDeadProxyFieldList. There was already SkinsTool_getDeadProxyFieldList which do the same thing.
+* Add a little bit user-friendly output to SkinsTool_makeFieldLibraryAndProxifyAllField.
+
+2009-05-08 yusei
 * Simplify field libraries and proxy fields. Old field libraries are kept for backward compatibility.
 * Update dependencies.
 

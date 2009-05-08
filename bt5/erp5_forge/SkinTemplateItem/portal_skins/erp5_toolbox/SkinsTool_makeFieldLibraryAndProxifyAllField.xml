@@ -240,7 +240,7 @@ def showResult():\n
   def output(text):\n
     result.append(text)\n
   output(\'<html><body>\')\n
-  output(\'<h1>Field Library</h1><table border=1>\')\n
+  output(\'<h1>Field Library</h1><table border=1><tr><td>Template Field To Be Added</td><td>Root Template Field</td></tr>\')\n
   for field_id, form_id in field_library_dict.items():\n
     form = getattr(context, form_id)\n
     template_field = getattr(form, field_id)\n
@@ -256,7 +256,7 @@ def showResult():\n
     meta_type_field_list_dict[field.meta_type].append((field, template_form_id, template_field_id))\n
 \n
   for meta_type in meta_type_field_list_dict:\n
-    output(\'<h1>%s</h1><table border=1>\' % meta_type)\n
+    output(\'<h1>%s</h1><table border=1><tr><td>Target Field</td><td>Root Template Field</td></tr>\' % meta_type)\n
     for field, template_form_id, template_field_id in meta_type_field_list_dict[meta_type]:\n
       field_url = field.absolute_url()+\'/manage_main\'\n
       field_name = \'%s.%s\' % (field.aq_parent.getId(), field.getId())\n
