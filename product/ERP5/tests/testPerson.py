@@ -145,6 +145,10 @@ class TestPerson(ERP5TypeTestCase):
     # specific permission.
     p.setPassword(None)
     self.assertFalse(p.getPassword())
+    # Make sure that edit method cannot call __setPasswordByForce and nothing
+    # changes.
+    p.edit(password_by_force='waaa')
+    self.assertFalse(p.getPassword())
 
     p.manage_permission(Permissions.SetOwnPassword, ['Anonymous'], 0)
     p.setPassword('secret')

@@ -207,7 +207,7 @@ class Person(XMLObject):
     # public method(They are callable from user directly or through edit method)
     # _setPasswordByForce is needed to reset password without security check
     # by Password Tool.
-    def _setPasswordByForce(self, value):
+    def __setPasswordByForce(self, value):
       self.password = PersistentMapping()
       self._setEncodedPassword(pw_encrypt(value))
 
@@ -215,7 +215,7 @@ class Person(XMLObject):
       if not _checkPermission(Permissions.SetOwnPassword, self):
         raise AccessControl_Unauthorized('setPassword')
       else:
-        self._setPasswordByForce(value)
+        self.__setPasswordByForce(value)
 
     security.declarePublic('setPassword')
     def setPassword(self, value) :
