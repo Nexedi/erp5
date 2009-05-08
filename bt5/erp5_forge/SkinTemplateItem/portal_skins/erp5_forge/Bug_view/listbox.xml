@@ -12,7 +12,15 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>editable_columns</string>
+                <string>title</string>
+                <string>selection_name</string>
+                <string>columns</string>
+                <string>sort</string>
+                <string>description</string>
+                <string>portal_types</string>
+              </list>
             </value>
         </item>
         <item>
@@ -73,16 +81,92 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Sender</string>
+                        </tuple>
+                        <tuple>
+                          <string>text_content</string>
+                          <string>Content</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>Messages</string> </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>text_content</string>
+                          <string>Content</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>listbox</string> </value>
+                    <value> <string>my_view_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Bug_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewForgeFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Bug Line</string>
+                          <string>Bug Line</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>bug_view_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>asc</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Messages</string> </value>
                 </item>
               </dictionary>
             </value>

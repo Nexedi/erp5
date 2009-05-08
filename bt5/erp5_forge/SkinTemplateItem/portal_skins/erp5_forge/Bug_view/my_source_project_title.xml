@@ -12,7 +12,12 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>catalog_index</string>
+                <string>title</string>
+                <string>portal_type</string>
+                <string>base_category</string>
+              </list>
             </value>
         </item>
         <item>
@@ -73,20 +78,47 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default_module</string> </key>
-                    <value> <string>organisation</string> </value>
+                    <key> <string>base_category</string> </key>
+                    <value> <string>source_project</string> </value>
+                </item>
+                <item>
+                    <key> <string>catalog_index</string> </key>
+                    <value> <string>title</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_source_project_title</string> </value>
+                    <value> <string>my_relation_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Bug_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewForgeFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Project</string>
+                          <string>Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>Project Line</string>
+                          <string>Project Line</string>
+                        </tuple>
+                        <tuple>
+                          <string>Project Milestone</string>
+                          <string>Project Milestone</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Handled Project</string> </value>
                 </item>
               </dictionary>
             </value>

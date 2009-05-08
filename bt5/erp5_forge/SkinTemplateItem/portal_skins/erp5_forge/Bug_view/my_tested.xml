@@ -76,11 +76,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_tested</string> </value>
+                    <value> <string>my_checkbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Bug_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewForgeFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

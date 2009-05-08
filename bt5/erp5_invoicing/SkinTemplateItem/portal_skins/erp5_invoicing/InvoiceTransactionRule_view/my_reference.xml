@@ -12,7 +12,10 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>description</string>
+                <string>title</string>
+              </list>
             </value>
         </item>
         <item>
@@ -73,16 +76,24 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>Reference of a document in ERP5, whatever the module considered. Exceptions to this rule can exist, and if so, terms will be described in the appropriate business field of this glossary. For example, the reference of a Payment Transaction has a specific name, as well as the Reference of Purchase and Sale Invoice Transactions. See the appropriate Glossary for further information.</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_reference</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Rule_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewInvoicingFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Reference</string> </value>
                 </item>
               </dictionary>
             </value>

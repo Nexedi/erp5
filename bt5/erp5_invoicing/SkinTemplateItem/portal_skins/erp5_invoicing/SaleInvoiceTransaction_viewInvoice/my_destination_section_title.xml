@@ -13,10 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>base_category</string>
-                <string>portal_type</string>
                 <string>catalog_index</string>
+                <string>title</string>
                 <string>columns</string>
+                <string>description</string>
+                <string>portal_type</string>
+                <string>base_category</string>
               </list>
             </value>
         </item>
@@ -110,15 +112,15 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Destination client of the invoice</string> </value>
+                    <value> <string>The invoiced person or organisation.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_destination_section_title</string> </value>
+                    <value> <string>my_relation_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>SaleTradeCondition_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewInvoicingFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>

@@ -14,8 +14,8 @@
             <value>
               <list>
                 <string>title</string>
+                <string>relation_setter_id</string>
                 <string>portal_type</string>
-                <string>proxy_listbox_ids</string>
               </list>
             </value>
         </item>
@@ -78,11 +78,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_specialise_title</string> </value>
+                    <value> <string>my_relation_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Invoice_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewInvoicingFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
@@ -96,15 +96,8 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>proxy_listbox_ids</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>PurchaseTradeConditionModule_viewPurchaseTradeConditionList/listbox</string>
-                          <string>Purchase Trade Conditions</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>relation_setter_id</string> </key>
+                    <value> <string>Order_setSpecialiseAndApplyTradeCondition</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

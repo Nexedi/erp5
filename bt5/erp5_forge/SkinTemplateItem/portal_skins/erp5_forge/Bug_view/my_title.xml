@@ -12,7 +12,9 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>display_width</string>
+              </list>
             </value>
         </item>
         <item>
@@ -73,12 +75,16 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>40</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Bug_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewForgeFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
