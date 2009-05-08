@@ -122,7 +122,7 @@ else:\n
           \'portal_simulation\',\n
           \'portal_templates\',\n
           \'portal_trash\',\n
-        ])\n
+])\n
     else:\n
       from DateTime import DateTime\n
       id_list = []\n
