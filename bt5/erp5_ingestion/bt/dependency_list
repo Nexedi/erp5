@@ -1,1 +1,2 @@
 erp5_ingestion_catalog
+erp5_core (>= 5.4.3)
