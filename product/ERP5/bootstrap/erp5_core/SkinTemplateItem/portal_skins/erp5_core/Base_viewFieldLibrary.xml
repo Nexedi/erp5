@@ -120,6 +120,7 @@
                         <string>my_float_field</string>
                         <string>my_label_field</string>
                         <string>my_radio_field</string>
+                        <string>my_link_field</string>
                       </list>
                     </value>
                 </item>

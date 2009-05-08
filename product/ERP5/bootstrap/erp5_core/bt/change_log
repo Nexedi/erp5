@@ -1,3 +1,6 @@
+2009-05-08 yusei
+* Add a template field for Link Field to Base_viewFieldLibrary.
+
 2009-04-30 yusei
 * Add generic fields to the default field library.
 
