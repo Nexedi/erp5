@@ -15,8 +15,8 @@
               <list>
                 <string>description</string>
                 <string>title</string>
-                <string>height</string>
                 <string>editable</string>
+                <string>height</string>
                 <string>text_editor</string>
                 <string>default</string>
               </list>
@@ -105,7 +105,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewWebFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>height</string> </key>

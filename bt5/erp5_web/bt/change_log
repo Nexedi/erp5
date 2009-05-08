@@ -1,3 +1,7 @@
+2009-05-08 yusei
+* Simplify field libraries and proxy fields. Old field libraries are kept for backward compatibility.
+* Update dependencies.
+
 2009-03-24 fabien
 * move some scripts from km to here. This scripts are usefull to display listbox search style.
 * some method need to be renamed after been moved so change the name everywhere

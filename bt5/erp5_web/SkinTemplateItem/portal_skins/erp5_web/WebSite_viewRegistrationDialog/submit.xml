@@ -12,7 +12,12 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>name</string>
+                <string>title</string>
+                <string>default</string>
+                <string>css_class</string>
+              </list>
             </value>
         </item>
         <item>
@@ -73,16 +78,32 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string>hiddenLabel</string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string>Register New User</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>submit</string> </value>
+                    <value> <string>my_input_button_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>WebSite_viewRegistrationFieldLibrary</string> </value>
+                    <value> <string>Base_viewWebFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>name</string> </key>
+                    <value> <string>WebSite_createWebSiteAccount:action</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Register</string> </value>
                 </item>
               </dictionary>
             </value>

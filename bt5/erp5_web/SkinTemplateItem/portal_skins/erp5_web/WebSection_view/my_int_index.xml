@@ -15,7 +15,6 @@
               <list>
                 <string>description</string>
                 <string>title</string>
-                <string>display_width</string>
               </list>
             </value>
         </item>
@@ -81,16 +80,12 @@
                     <value> <string>Index used to sort pages</string> </value>
                 </item>
                 <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>5</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_int_index</string> </value>
+                    <value> <string>my_integer_value</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Category_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewWebFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

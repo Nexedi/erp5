@@ -13,7 +13,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>height</string>
+                <string>whitespace_preserve</string>
               </list>
             </value>
         </item>
@@ -80,15 +80,15 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Category_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>height</string> </key>
-                    <value> <int>5</int> </value>
+                    <value> <string>Base_viewWebFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
               </dictionary>
             </value>

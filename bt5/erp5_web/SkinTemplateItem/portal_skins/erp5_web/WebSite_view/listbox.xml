@@ -14,13 +14,11 @@
             <value>
               <list>
                 <string>title</string>
-                <string>lines</string>
+                <string>selection_name</string>
                 <string>columns</string>
-                <string>sort</string>
-                <string>count_method</string>
-                <string>portal_types</string>
-                <string>editable_columns</string>
+                <string>lines</string>
                 <string>list_action</string>
+                <string>portal_types</string>
               </list>
             </value>
         </item>
@@ -109,22 +107,12 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>count_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable_columns</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>listbox</string> </value>
+                    <value> <string>my_view_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Category_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewWebFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
@@ -150,10 +138,8 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>sort</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>category_view_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

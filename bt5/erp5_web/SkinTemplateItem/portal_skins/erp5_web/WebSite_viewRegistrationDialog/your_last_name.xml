@@ -12,7 +12,13 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>description</string>
+                <string>title</string>
+                <string>css_class</string>
+                <string>required</string>
+                <string>display_width</string>
+              </list>
             </value>
         </item>
         <item>
@@ -73,16 +79,28 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string>visible_label</string> </value>
+                </item>
+                <item>
                     <key> <string>description</string> </key>
                     <value> <string>Last Name of the user wanting to register</string> </value>
                 </item>
                 <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>15</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>your_last_name</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>WebSite_viewRegistrationFieldLibrary</string> </value>
+                    <value> <string>Base_viewWebFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

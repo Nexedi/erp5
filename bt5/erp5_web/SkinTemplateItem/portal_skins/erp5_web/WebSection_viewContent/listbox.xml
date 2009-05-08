@@ -13,17 +13,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>editable_columns</string>
                 <string>title</string>
+                <string>select</string>
+                <string>selection_name</string>
                 <string>columns</string>
                 <string>sort</string>
                 <string>list_method</string>
-                <string>count_method</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
                 <string>search</string>
-                <string>select</string>
-                <string>editable_columns</string>
-                <string>list_action</string>
+                <string>portal_types</string>
               </list>
             </value>
         </item>
@@ -85,12 +83,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_editable_columns</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
@@ -122,10 +114,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>count_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
@@ -146,11 +134,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>list_action</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Base_viewWebFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>

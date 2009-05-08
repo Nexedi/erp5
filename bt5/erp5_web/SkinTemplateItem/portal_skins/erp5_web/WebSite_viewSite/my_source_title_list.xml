@@ -15,10 +15,9 @@
               <list>
                 <string>catalog_index</string>
                 <string>title</string>
-                <string>default_module</string>
                 <string>portal_type</string>
-                <string>base_category</string>
                 <string>height</string>
+                <string>base_category</string>
               </list>
             </value>
         </item>
@@ -88,16 +87,12 @@
                     <value> <string>title</string> </value>
                 </item>
                 <item>
-                    <key> <string>default_module</string> </key>
-                    <value> <string>web_page_module</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_multi_relation_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewWebFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>height</string> </key>
