@@ -174,6 +174,10 @@ kw</string> </value>
           AND my_versioning.language = <dtml-sqlvar language type="string">\n
         </dtml-if>\n
 \n
+        <dtml-if is_translation_order_by>\n
+          AND catalog.validation_state = related_translation_intermediate.original_message\n
+        </dtml-if>\n
+\n
       ORDER BY\n
         priority DESC\n
 \n
@@ -292,6 +296,10 @@ kw</string> </value>
         <dtml-if all_languages>\n
         <dtml-else>\n
           AND my_versioning.language = <dtml-sqlvar language type="string">\n
+        </dtml-if>\n
+\n
+        <dtml-if is_translation_order_by>\n
+          AND catalog.validation_state = related_translation_intermediate.original_message\n
         </dtml-if>\n
 \n
       ORDER BY\n
