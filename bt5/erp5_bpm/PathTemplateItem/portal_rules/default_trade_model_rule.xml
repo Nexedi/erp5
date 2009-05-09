@@ -116,6 +116,8 @@
                 <string>source_account</string>
                 <string>destination_account</string>
                 <string>description</string>
+                <string>destination_payment</string>
+                <string>source_payment</string>
               </tuple>
             </value>
         </item>
