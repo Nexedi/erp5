@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>specialise = context.getSpecialiseValue()\n
+            <value> <string>specialise = context.getSpecialiseValue(portal_type=(\'Purchase Trade Condition\',\'Sale Trade Condition\'))\n
 \n
 if specialise:\n
   return specialise.getAggregatedAmountList(context)\n
