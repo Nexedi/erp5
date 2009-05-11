@@ -1144,7 +1144,7 @@ class LabelWidget(Widget):
         width=20, height=3,
         required=0)
 
-    def render(self, field, value, REQUEST=None, render_prefix=None):
+    def render(self, field, key, value, REQUEST=None, render_prefix=None):
         return render_element("div",
                               css_class=field.get_value('css_class'),
                               contents=field.get_value('default'))
