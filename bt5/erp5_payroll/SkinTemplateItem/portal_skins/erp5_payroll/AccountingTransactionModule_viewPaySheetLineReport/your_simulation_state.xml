@@ -12,7 +12,12 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>required</string>
+                <string>editable</string>
+                <string>default</string>
+                <string>items</string>
+              </list>
             </value>
         </item>
         <item>
@@ -68,6 +73,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -79,12 +90,20 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>your_simulation_state</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>AccountModule_viewReportFieldLibrary</string> </value>
+                    <value> <string>Base_viewPayrollFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -107,7 +126,23 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[here.Localizer.erp5_ui.gettext(x).encode(\'utf8\') for x in request.get(\'simulation_state\')]</string> </value>
+            <value> <string>request/simulation_state | nothing</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:here.Base_getTranslatedWorkflowStateItemList(wf_id = \'accounting_workflow\')</string> </value>
         </item>
       </dictionary>
     </pickle>

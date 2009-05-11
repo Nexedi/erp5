@@ -13,8 +13,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>description</string>
+                <string>title</string>
+                <string>css_class</string>
+                <string>input_style</string>
+                <string>display_width</string>
               </list>
             </value>
         </item>
@@ -57,6 +60,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>display_width</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -76,16 +85,24 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string>figure</string> </value>
+                </item>
+                <item>
                     <key> <string>description</string> </key>
                     <value> <string>The price paid for the one unit of quantity</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_price</string> </value>
+                    <value> <string>my_float_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>PaySheetTransaction_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewPayrollFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>input_style</string> </key>
+                    <value> <string>-12.3%</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -97,6 +114,22 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: preferences.getPreference(\'preferred_quantity_field_width\', 5)</string> </value>
         </item>
       </dictionary>
     </pickle>

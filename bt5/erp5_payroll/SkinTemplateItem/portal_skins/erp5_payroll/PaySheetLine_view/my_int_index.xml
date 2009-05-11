@@ -14,6 +14,7 @@
             <value>
               <list>
                 <string>title</string>
+                <string>css_class</string>
               </list>
             </value>
         </item>
@@ -75,12 +76,16 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string>figure</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_int_index</string> </value>
+                    <value> <string>my_integer_value</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>OrderLine_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewPayrollFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

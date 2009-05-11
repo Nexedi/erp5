@@ -13,9 +13,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>catalog_index</string>
                 <string>title</string>
                 <string>description</string>
                 <string>portal_type</string>
+                <string>base_category</string>
               </list>
             </value>
         </item>
@@ -77,8 +79,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default_module</string> </key>
-                    <value> <string>organisation</string> </value>
+                    <key> <string>base_category</string> </key>
+                    <value> <string>source_section</string> </value>
+                </item>
+                <item>
+                    <key> <string>catalog_index</string> </key>
+                    <value> <string>title</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -87,11 +93,11 @@ This can be the tax authority for taxes, or the employee for wages.</string> </v
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_source_section_title</string> </value>
+                    <value> <string>my_relation_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>PaySheetTransaction_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewPayrollFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>

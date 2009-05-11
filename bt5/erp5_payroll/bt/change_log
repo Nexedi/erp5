@@ -1,3 +1,8 @@
+2009-05-11 yusei
+* Bump up the version.
+* Simplify field libraries and proxy fields. Old field libraries are kept for backward compatibility.
+* Update dependencies.
+
 2009-03-16 fabien
 * add a field version on Pay Sheet Model
 * use new methods from PaySheetModel class

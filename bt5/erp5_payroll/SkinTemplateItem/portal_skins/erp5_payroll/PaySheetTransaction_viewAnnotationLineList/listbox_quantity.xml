@@ -13,6 +13,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>title</string>
                 <string>editable</string>
               </list>
             </value>
@@ -84,11 +85,15 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>AnnotationLine_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewPayrollFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Annotation Value</string> </value>
                 </item>
               </dictionary>
             </value>
