@@ -696,13 +696,14 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
     def getFormFieldList(self):
         """
         find fields and forms which name ends with 'FieldLibrary' in
-        same skin folder.
+        the same business template or in erp5_core.
         """
         form_list = []
         def iterate(obj):
             for i in obj.objectValues():
                 if (i.meta_type=='ERP5 Form' and
-                    i.getId().endswith('FieldLibrary') and 
+                    i.id.startswith('Base_view') and
+                    i.id.endswith('FieldLibrary') and 
                     '_view' in i.getId()):
                     form_id = i.getId()
                     form_path = '%s.%s' % (obj.getId(), form_id)
@@ -719,7 +720,16 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
                                            'proxy_flag':proxy_flag})
                 if i.meta_type=='Folder':
                     iterate(i)
-        iterate(getToolByName(self, 'portal_skins'))
+
+        skins_tool = self.portal_skins
+        folder_id = self.aq_parent.id
+        # Find a business template which manages the context skin folder.
+        for template in self.portal_templates.getInstalledBusinessTemplateList():
+          if folder_id in template.getTemplateSkinIdList():
+            for skin_folder_id in template.getTemplateSkinIdList():
+              iterate(getattr(skins_tool, skin_folder_id))
+              break
+        iterate(skins_tool.erp5_core)
         return form_list
 
     security.declareProtected('View management screens', 'getProxyableFieldList')
@@ -744,7 +754,26 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
             field_id = field_object.getId()
             if id_.startswith('my_') and not field_id.startswith('my_'):
                 return 0
-            return check_keyword_list(field_id, extract_keyword(id_))
+            # XXX keyword match is not useful anymore.Need different approach.
+            keyword_match_rate = check_keyword_list(field_id, extract_keyword(id_))
+            if keyword_match_rate>0.5:
+                return keyword_match_rate
+            else:
+              def split(string):
+                result = []
+                temporary = []
+                for char in string:
+                  if char.isupper():
+                    if temporary:
+                      result.append(''.join(temporary))
+                    temporary = []
+                  temporary.append(char)
+                result.append(''.join(temporary))
+                return result
+              if ''.join(field_id.split('_')[1:]).startswith(
+                split(field.meta_type)[0].lower()):
+                # At least it seems a generic template field of the meta_type.
+                return 0.1
 
         def make_dict_list_append_function(dic, order_list):
             def append(key, item):
@@ -809,7 +838,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
             for data in i['field_list']:
                 tmp = []
                 matched_rate = match(data)
-                if matched_rate>=0.5:
+                if matched_rate>0:
                     form_path = i['form_path']
                     form_id = i['form_id']
                     field_type = data['field_type']
