@@ -8,6 +8,7 @@ from Errors import ValidationError
 from Products.Formulator.Widget import MultiItemsWidget
 from zLOG import LOG
 
+
 class Field:
     """Base class of all fields.
     A field is an object consisting of a widget and a validator.
@@ -365,6 +366,8 @@ class Field:
       self.generate_subfield_key(id, validation=1, key=key), REQUEST)
 
     def PrincipiaSearchSource(self):
+      from Products.Formulator import MethodField
+      from Products.Formulator import TALESField
       def getSearchSource(obj):
         obj_type = type(obj)
         if obj_type is MethodField.Method:
@@ -372,7 +375,9 @@ class Field:
         elif obj_type is TALESField.TALESMethod:
           return obj._text
         return str(obj)
-      return ''.join(map(getSearchSource,        (self.values.values()+self.tales.values()+self.overrides.values())))
+      return ''.join(map(getSearchSource,
+                         (self.values.values()+self.tales.values()+
+                          self.overrides.values())))
 
 Globals.InitializeClass(Field)
     
