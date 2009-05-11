@@ -759,21 +759,22 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
             if keyword_match_rate>0.5:
                 return keyword_match_rate
             else:
-              def split(string):
-                result = []
-                temporary = []
-                for char in string:
-                  if char.isupper():
-                    if temporary:
-                      result.append(''.join(temporary))
+                def split(string):
+                    result = []
                     temporary = []
-                  temporary.append(char)
-                result.append(''.join(temporary))
-                return result
-              if ''.join(field_id.split('_')[1:]).startswith(
-                split(field.meta_type)[0].lower()):
-                # At least it seems a generic template field of the meta_type.
-                return 0.1
+                    for char in string:
+                        if char.isupper():
+                            if temporary:
+                                result.append(''.join(temporary))
+                            temporary = []
+                        temporary.append(char)
+                    result.append(''.join(temporary))
+                    return result
+
+                if ''.join(field_id.split('_')[1:]).startswith(
+                    split(field.meta_type)[0].lower()):
+                    # At least it seems a generic template field of the meta_type.
+                    return 0.1
 
         def make_dict_list_append_function(dic, order_list):
             def append(key, item):
