@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
@@ -157,6 +158,28 @@ class TestXHTML(ERP5TypeTestCase):
           selection_name = field.get_value("selection_name")
           if selection_name in ("",None):
             error_list.append(form_path)
+    self.assertEquals(error_list, [])
+
+  def test_executableListMethodInListbox(self):
+    # check all list_method in listboxes
+    skins_tool = self.portal.portal_skins
+    error_list = []
+    for form_path, form in skins_tool.ZopeFind(
+              skins_tool, obj_metatypes=['ERP5 Form'], search_sub=1):
+      try:
+       fields = form.get_fields()
+      except AttributeError, e:
+        print "%s is broken: %s" % (form_path, e)
+      for field in fields:
+        if field.meta_type == 'ListBox':
+          list_method = field.get_value("list_method")
+          if list_method:
+            if isinstance(list_method, str):
+              method = getattr(self.portal, list_method)
+            else:
+              method = list_method
+            if not callable(method):
+              error_list.append(form_path)
     self.assertEquals(error_list, [])
 
 class W3Validator(object):
