@@ -298,7 +298,7 @@ class WebSection(Domain, PermanentURLMixIn):
       return result
 
     security.declareProtected(Permissions.View, 'getBreadcrumbItemList')
-    def getBreadcrumbItemList(self, document):
+    def getBreadcrumbItemList(self, document=None):
       """
         Return a section dependent breadcrumb in the form
         of a list of (title, document) tuples.
@@ -307,6 +307,8 @@ class WebSection(Domain, PermanentURLMixIn):
         portal type dependent script:
           WebSection_getBreadcrumbItemList
       """
+      if document is None:
+        document = self
       cache = getReadOnlyTransactionCache(self)
       if cache is not None:
         key = ('getBreadcrumbItemList', self, document.getPath())
