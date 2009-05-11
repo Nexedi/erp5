@@ -160,7 +160,7 @@ class TestXHTML(ERP5TypeTestCase):
             error_list.append(form_path)
     self.assertEquals(error_list, [])
 
-  def test_executableListMethodInListbox(self):
+  def test_callableListMethodInListbox(self):
     # check all list_method in listboxes
     skins_tool = self.portal.portal_skins
     error_list = []
