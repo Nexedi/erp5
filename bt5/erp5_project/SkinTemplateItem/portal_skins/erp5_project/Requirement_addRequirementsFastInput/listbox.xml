@@ -13,16 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>lines</string>
-                <string>all_editable_columns</string>
-                <string>title</string>
                 <string>all_columns</string>
+                <string>editable_columns</string>
+                <string>title</string>
                 <string>selection_name</string>
                 <string>columns</string>
-                <string>Base_viewSearchResultList</string>
                 <string>sort</string>
-                <string>editable_columns</string>
                 <string>list_method</string>
+                <string>lines</string>
               </list>
             </value>
         </item>
@@ -84,30 +82,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Base_viewSearchResultList</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
                     <key> <string>all_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>requirement_title</string>
-                          <string>Requirement Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>sub_requirement_title</string>
-                          <string>Sub-Requirement Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>sub_requirement_description</string>
-                          <string>Sub-Requirement Description</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>all_editable_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
@@ -169,7 +144,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewProjectFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
@@ -217,11 +192,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

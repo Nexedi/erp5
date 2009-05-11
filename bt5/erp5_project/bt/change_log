@@ -1,3 +1,8 @@
+2009-05-11 yusei
+* Bump up the version.
+* Simplify field libraries and proxy fields. Old field libraries are kept for backward compatibility.
+* Update dependencies.
+
 2009-03-06 yusei
 * Fix typo in notification message.
 

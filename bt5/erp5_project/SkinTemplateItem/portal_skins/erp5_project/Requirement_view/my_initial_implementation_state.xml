@@ -12,7 +12,10 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>title</string>
+                <string>items</string>
+              </list>
             </value>
         </item>
         <item>
@@ -74,15 +77,46 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_initial_implementation_state</string> </value>
+                    <value> <string>my_list_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Requirement_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewProjectFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>N/A</string>
+                          <string>na</string>
+                        </tuple>
+                        <tuple>
+                          <string>Standard</string>
+                          <string>standard</string>
+                        </tuple>
+                        <tuple>
+                          <string>Configuration</string>
+                          <string>configuration</string>
+                        </tuple>
+                        <tuple>
+                          <string>Customisation</string>
+                          <string>customisation</string>
+                        </tuple>
+                        <tuple>
+                          <string>Development</string>
+                          <string>development</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Implementation State</string> </value>
                 </item>
               </dictionary>
             </value>

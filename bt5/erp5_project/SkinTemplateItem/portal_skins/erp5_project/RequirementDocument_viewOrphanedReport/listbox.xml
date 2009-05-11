@@ -14,9 +14,9 @@
             <value>
               <list>
                 <string>title</string>
+                <string>selection_name</string>
                 <string>columns</string>
                 <string>list_method</string>
-                <string>selection_name</string>
               </list>
             </value>
         </item>
@@ -78,12 +78,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_editable_columns</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
@@ -108,7 +102,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewProjectFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>

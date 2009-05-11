@@ -13,12 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>round_script</string>
+                <string>list_method</string>
                 <string>title</string>
                 <string>report_root_list</string>
                 <string>selection_name</string>
+                <string>y_size_block</string>
                 <string>portal_types</string>
-                <string>list_method</string>
-                <string>round_script</string>
               </list>
             </value>
         </item>
@@ -72,10 +73,6 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -89,7 +86,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewProjectFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -142,6 +139,10 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Task Report Planning</string> </value>
+                </item>
+                <item>
+                    <key> <string>y_size_block</string> </key>
+                    <value> <string>quantity</string> </value>
                 </item>
               </dictionary>
             </value>
