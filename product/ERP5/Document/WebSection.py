@@ -64,7 +64,7 @@ class WebSection(Domain, PermanentURLMixIn):
 
       - WebSection_getDefaultDocumentValue
 
-      - WebSection_getSectionValue
+      - WebSection_getWebSectionValue
       - WebSection_getWebSiteValue
 
       It defines the following REQUEST global variables:
