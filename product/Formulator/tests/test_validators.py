@@ -1,8 +1,11 @@
+# -*- coding: utf-8 -*-
 import unittest
 import ZODB
 import OFS.Application
 from Products.Formulator import Validator
 from Products.Formulator.StandardFields import DateTimeField
+from Testing import ZopeTestCase
+ZopeTestCase.installProduct('Formulator')
 
 class TestField:
     def __init__(self, id, **kw):
@@ -20,12 +23,15 @@ class TestField:
         # XXX fake ... what if installed python does not support utf-8?
         return "utf-8"
 
+    def has_value(self, id):
+        return self.kw.has_key(id)
+
 class ValidatorTestCase(unittest.TestCase):
     def assertValidatorRaises(self, exception, error_key, f, *args, **kw):
         try:
             apply(f, args, kw)
-        except Validator.ValidationError, e:
-            if e.error_key != error_key:
+        except exception, e:
+            if hasattr(e, 'error_key') and e.error_key != error_key:
                 self.fail('Got wrong error. Expected %s received %s' %
                           (error_key, e))
             else:
@@ -93,7 +99,7 @@ class StringValidatorTestCase(ValidatorTestCase):
             'f', {'f': '   '})
         # not in dict
         self.assertValidatorRaises(
-            Validator.ValidationError, 'required_not_found',
+            Exception, 'required_not_found',
             self.v.validate,
             TestField('f', max_length=0, truncate=0, required=1, unicode=0),
             'f', {})
@@ -174,10 +180,6 @@ class BooleanValidatorTestCase(ValidatorTestCase):
         result = self.v.validate(
             TestField('f'),
             'f', {'f': 0})
-        self.assertEquals(0, result)
-        result = self.v.validate(
-            TestField('f'),
-            'f', {})
         self.assertEquals(0, result)
 
 class IntegerValidatorTestCase(ValidatorTestCase):
@@ -298,7 +300,7 @@ class IntegerValidatorTestCase(ValidatorTestCase):
             'f', {'f': '   '})
         # not in dict
         self.assertValidatorRaises(
-            Validator.ValidationError, 'required_not_found',
+            Exception, 'required_not_found',
             self.v.validate,
             TestField('f', max_length=0, truncate=0, required=1,
                       start="", end=""),
@@ -311,19 +313,19 @@ class FloatValidatorTestCase(ValidatorTestCase):
     def test_basic(self):
         result = self.v.validate(
             TestField('f', max_length=0, truncate=0,
-                      required=0),
+                      required=0, input_style="-1234.5"),
             'f', {'f': '15.5'})
         self.assertEqual(15.5, result)
 
         result = self.v.validate(
             TestField('f', max_length=0, truncate=0,
-                      required=0),
+                      required=0, input_style="-1234.5"),
             'f', {'f': '15.0'})
         self.assertEqual(15.0, result)
 
         result = self.v.validate(
             TestField('f', max_length=0, truncate=0,
-                      required=0),
+                      required=0, input_style="-1234.5"),
             'f', {'f': '15'})
         self.assertEqual(15.0, result)
 
@@ -331,7 +333,8 @@ class FloatValidatorTestCase(ValidatorTestCase):
         self.assertValidatorRaises(
            Validator.ValidationError, 'not_float',
            self.v.validate,
-           TestField('f', max_length=0, truncate=0, required=1),
+           TestField('f', max_length=0, truncate=0,
+                     required=1, input_style="-1234.5"),
            'f', {'f': '1f'})
 
 class DateTimeValidatorTestCase(ValidatorTestCase):
@@ -382,7 +385,7 @@ class DateTimeValidatorTestCase(ValidatorTestCase):
         self.assertEquals(30, result.minute())
         
         self.assertValidatorRaises(
-            Validator.ValidationError, 'not_datetime',
+            KeyError, 'not_datetime',
             self.v.validate,
             DateTimeField('f', ampm_time_style=1),
             'f', {'subfield_f_year': '2002',
@@ -418,7 +421,7 @@ class DateTimeValidatorTestCase(ValidatorTestCase):
 
     def test_allow_empty_time(self):
         result = self.v.validate(
-            DateTimeField('f', allow_empty_time=1),
+            DateTimeField('f', allow_empty_time=1, date_only=1),
             'f', {'subfield_f_year': '2002',
                   'subfield_f_month': '12',
                   'subfield_f_day': '1'})
@@ -441,11 +444,6 @@ class DateTimeValidatorTestCase(ValidatorTestCase):
         self.assertEquals(10, result.hour())
         self.assertEquals(30, result.minute())
 
-    def test_allow_empty_time2(self):
-        result = self.v.validate(
-            DateTimeField('f', allow_empty_time=1, required=0), 'f', {})
-        self.assertEquals(None, result)
-        
 def test_suite():
     suite = unittest.TestSuite()
 

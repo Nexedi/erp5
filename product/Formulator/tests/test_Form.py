@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 import unittest, re
-import Zope
+import Zope2
 
 # XXX this does not work for zope2.x if x < 3
 # can we fake this? should we do this?
@@ -12,6 +13,9 @@ from Products.Formulator.TALESField import TALESMethod
 
 from Products.PythonScripts.PythonScript import PythonScript
 
+import transaction
+from Testing import ZopeTestCase
+ZopeTestCase.installProduct('Formulator')
 
 """ random assembly testing some reported bugs.
     This is _not_ a structured or even complete test suite
@@ -20,8 +24,8 @@ from Products.PythonScripts.PythonScript import PythonScript
 class FormTestCase(unittest.TestCase):
 
     def setUp(self):
-        get_transaction().begin()
-        self.connection = Zope.DB.open()
+        transaction.begin()
+        self.connection = Zope2.DB.open()
         self.root = makerequest.makerequest(
             self.connection.root()['Application'])
 
@@ -31,7 +35,7 @@ class FormTestCase(unittest.TestCase):
 
 
     def tearDown(self):
-        get_transaction().abort()
+        transaction.abort()
         self.connection.close()
         
 

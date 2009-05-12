@@ -1,12 +1,13 @@
+# -*- coding: utf-8 -*-
 import unittest
-import Zope
 
 from Products.Formulator.Form import ZMIForm
 from Products.Formulator.XMLToForm import XMLToForm
 from Products.Formulator.FormToXML import formToXML
 
 from Products.Formulator.Errors import ValidationError, FormValidationError
-
+from Testing import ZopeTestCase
+ZopeTestCase.installProduct('Formulator')
 
 class FakeRequest:
     """ a fake request for testing.
@@ -25,7 +26,7 @@ class FakeRequest:
     def __setitem__(self, key, value):
         self.dict[key] = value
 
-    def get(self, key, default_value):
+    def get(self, key, default_value=None):
         return self.dict.get(key, default_value)
 
     def update(self, other_dict):
@@ -221,8 +222,6 @@ class SerializeTestCase(unittest.TestCase):
             text2 = e.errors[0].error_text
 
         self.assertEquals(text1, text2)
-        
-        
 
 
     def test_fieldValueTypes(self):
@@ -249,10 +248,9 @@ class SerializeTestCase(unittest.TestCase):
         multi_field = getattr(form, 'multi_field')
         link_field = getattr(form, 'link_field')
         empty_field = getattr(form, 'empty_field')
-   
+
         # XXX editing fields by messing with a fake request
         # -- any better way to do this?
-
         default_values = {'field_title': 'Test Title',
                           'field_display_width': '92',
                           'field_required':'checked',
@@ -260,27 +258,52 @@ class SerializeTestCase(unittest.TestCase):
                           }
         try:
             request = FakeRequest()
+            for key, sub_field in int_field.form.fields.iteritems():
+              request['field_%s' % key] = sub_field.render_pdf()
             request.update(default_values)
             request.update( {'field_default':'42',
                              'field_enabled':'checked'})
             int_field.manage_edit(REQUEST=request)
-            
+
             request.clear()
+            for key, sub_field in float_field.form.fields.iteritems():
+              request['field_%s' % key] = sub_field.render_pdf()
             request.update(default_values)
-            request.update( {'field_default':'1.7'})
+            request.update( {'field_default':'1.7',
+                             'field_input_style':'-1234.5'})
             float_field.manage_edit(REQUEST=request)
 
             # XXX cannot test "defaults to now", as this may fail randomly
             request.clear()
+            for key, sub_field in date_field.form.fields.iteritems():
+              request['field_%s' % key] = sub_field.render_pdf()
             request.update(default_values)
-            request.update( {'field_input_style':'list',
-                             'field_input_order':'mdy',
-                             'field_date_only':'',
-                             'field_css_class':'test_css',
-                             'field_time_separator':'$'})
+            request.update( {'field_input_style': 'list',
+                             'field_input_order': 'mdy',
+                             'field_date_only': '',
+                             'field_css_class': 'test_css',
+                             'field_time_separator': '$',
+                             'subfield_field_default_year': '',
+                             'subfield_field_default_month': '',
+                             'subfield_field_default_day': '',
+                             'subfield_field_default_hour': '',
+                             'subfield_field_default_minute': '',
+                             'subfield_field_start_datetime_year': '',
+                             'subfield_field_start_datetime_month': '',
+                             'subfield_field_start_datetime_day': '',
+                             'subfield_field_start_datetime_hour': '',
+                             'subfield_field_start_datetime_minute': '',
+                             'subfield_field_end_datetime_year': '',
+                             'subfield_field_end_datetime_month': '',
+                             'subfield_field_end_datetime_day': '',
+                             'subfield_field_end_datetime_hour': '',
+                             'subfield_field_end_datetime_minute': '',
+                          })
             date_field.manage_edit(REQUEST=request)
-            
+
             request.clear()
+            for key, sub_field in list_field.form.fields.iteritems():
+              request['field_%s' % key] = sub_field.render_pdf()
             request.update(default_values)
             request.update( {'field_default':'foo',
                              'field_size':'1',
@@ -288,6 +311,8 @@ class SerializeTestCase(unittest.TestCase):
             list_field.manage_edit(REQUEST=request)
 
             request.clear()
+            for key, sub_field in multi_field.form.fields.iteritems():
+              request['field_%s' % key] = sub_field.render_pdf()
             request.update(default_values)
             request.update( {'field_default':'foo',
                              'field_size':'3',
@@ -298,6 +323,8 @@ class SerializeTestCase(unittest.TestCase):
             multi_field.manage_edit(REQUEST=request)
 
             request.clear()
+            for key, sub_field in link_field.form.fields.iteritems():
+              request['field_%s' % key] = sub_field.render_pdf()
             request.update(default_values)
             request.update( {'field_default':'http://www.absurd.org',
                              'field_required':'1',
@@ -307,6 +334,8 @@ class SerializeTestCase(unittest.TestCase):
             link_field.manage_edit(REQUEST=request)
 
             request.clear()
+            for key, sub_field in empty_field.form.fields.iteritems():
+              request['field_%s' % key] = sub_field.render_pdf()
             request.update(default_values)
             request.update( {'field_default':'None',
                              'field_required':'',
@@ -316,9 +345,9 @@ class SerializeTestCase(unittest.TestCase):
         except ValidationError, e:
             self.fail('error when editing field %s; error message: %s' %
                        (e.field_id, e.error_text) )
-        
+
         form2 = ZMIForm('test2', 'ValueTest')
-        
+
         xml = formToXML(form)
         XMLToForm(xml, form2)
 
@@ -335,14 +364,16 @@ class SerializeTestCase(unittest.TestCase):
         request.clear()
         request['field_int_field'] = '42'
         request['field_float_field'] = '2.71828'
-        request['subfield_date_field_month'] = '11'
-        request['subfield_date_field_day'] = '11'
-        request['subfield_date_field_year'] = '2011'
-        request['subfield_date_field_hour'] = '09'
-        request['subfield_date_field_minute'] = '59'
+        request['subfield_field_date_field_month'] = '11'
+        request['subfield_field_date_field_day'] = '11'
+        request['subfield_field_date_field_year'] = '2011'
+        request['subfield_field_date_field_hour'] = '09'
+        request['subfield_field_date_field_minute'] = '59'
         request['field_list_field'] = 'bar'
         request['field_multi_field'] = ['bar', 'baz']
         request['field_link_field'] = 'http://www.zope.org'
+        request['default_field_multi_field'] = ''
+        request['field_empty_field'] = ''
         try:
             result1 = form.validate_all(request)
         except FormValidationError, e:
