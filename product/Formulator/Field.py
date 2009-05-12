@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import Globals
 import Acquisition
 from Globals import Persistent, DTMLFile
