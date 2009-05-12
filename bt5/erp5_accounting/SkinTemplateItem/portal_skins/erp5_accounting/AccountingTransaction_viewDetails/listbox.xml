@@ -246,7 +246,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>AccountingTransaction_getInvoiceTransactionLineList</string> </value>
+            <value> <string>AccountingTransaction_getAccountingTransactionLineList</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -262,7 +262,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>AccountingTransaction_getInvoiceTransactionLineList</string> </value>
+            <value> <string>AccountingTransaction_getAccountingTransactionLineList</string> </value>
         </item>
       </dictionary>
     </pickle>

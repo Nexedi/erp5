@@ -131,7 +131,7 @@ return object_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingTransaction_getInvoiceTransactionLineList</string> </value>
+            <value> <string>AccountingTransaction_getAccountingTransactionLineList</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

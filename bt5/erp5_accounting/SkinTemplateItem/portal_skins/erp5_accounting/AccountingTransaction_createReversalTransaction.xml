@@ -98,7 +98,7 @@ if context.getStopDate() != context.getStartDate():\n
 if context.getProperty(\'payment_mode\'):\n
   reversal.setProperty(\'payment_mode\', context.getProperty(\'payment_mode\'))\n
 \n
-line_list = context.AccountingTransaction_getInvoiceTransactionLineList(\n
+line_list = context.AccountingTransaction_getAccountingTransactionLineList(\n
                 portal_type=context.getPortalAccountingMovementTypeList())\n
 line_list.reverse()\n
 \n

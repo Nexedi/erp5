@@ -13,15 +13,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>stat_columns</string>
-                <string>editable_columns</string>
-                <string>stat_method</string>
                 <string>title</string>
-                <string>selection_name</string>
                 <string>columns</string>
                 <string>list_method</string>
-                <string>anchor</string>
+                <string>stat_method</string>
+                <string>selection_name</string>
                 <string>portal_types</string>
+                <string>anchor</string>
+                <string>editable_columns</string>
+                <string>stat_columns</string>
               </list>
             </value>
         </item>
@@ -159,6 +159,12 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>purchase_invoice_transaction_source_selection</string> </value>
                 </item>
@@ -248,7 +254,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>AccountingTransaction_getInvoiceTransactionLineList</string> </value>
+            <value> <string>AccountingTransaction_getAccountingTransactionLineList</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -264,7 +270,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>AccountingTransaction_getInvoiceTransactionLineList</string> </value>
+            <value> <string>AccountingTransaction_getAccountingTransactionLineList</string> </value>
         </item>
       </dictionary>
     </pickle>
