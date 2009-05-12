@@ -31,6 +31,7 @@
 
 import os
 
+import transaction
 import Products.ERP5Type
 from Products.MailHost.MailHost import MailHost
 from zLOG import LOG
@@ -235,7 +236,7 @@ class reindex(object):
   def __call__(self, *args, **kw):
     ret = self._func(self._instance, *args, **kw)
     if kw.get('reindex', 1):
-      get_transaction().commit()
+      transaction.commit()
       self._instance.tic()
     return ret
 
