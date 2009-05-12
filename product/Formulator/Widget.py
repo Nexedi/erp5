@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import string
 from DummyField import fields
 from DocumentTemplate.DT_Util import html_quote
@@ -6,6 +7,7 @@ from cgi import escape
 import types
 from DocumentTemplate.ustr import ustr
 from urlparse import urljoin
+from Globals import get_request
 
 class Widget:
   """A field widget that knows how to display itself as HTML.
@@ -1000,6 +1002,7 @@ class DateTimeWidget(Widget):
     use_timezone = field.get_value('timezone_style')
     # FIXME: backwards compatibility hack:
     if not hasattr(field, 'sub_form'):
+      from StandardFields import create_datetime_text_sub_form
       field.sub_form = create_datetime_text_sub_form()
         
     # Is it still usefull to test the None value,
