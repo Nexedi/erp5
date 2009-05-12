@@ -33,6 +33,7 @@ import re
 import unittest
 import random
 
+import transaction
 from AccessControl import Unauthorized
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
@@ -80,11 +81,10 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def clearModule(self, module):
     module.manage_delObjects(list(module.objectIds()))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
-#    get_transaction().abort()
     self.clearModule(self.portal.web_site_module)
     self.clearModule(self.portal.web_page_module)
     self.clearModule(self.portal.person_module)
@@ -107,7 +107,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     website = self.getPortal().web_site_module.newContent(portal_type = 'Web Site', 
                                                           id = self.website_id,
                                                           **kw)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     return website
     
@@ -128,7 +128,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
                             max='', 
                             min='')
                             
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     return websection
    
@@ -156,7 +156,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                 language=language,
                                                 **kw)
       webpage.publish()
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       self.assertEquals(language, webpage.getLanguage())
       self.assertEquals(reference, webpage.getReference())
@@ -224,7 +224,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     website = portal.web_site_module[self.website_id]
     website.WebSite_createWebSiteAccount('WebSite_viewRegistrationDialog')
     
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     # find person object by reference
@@ -341,12 +341,12 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                  reference='NXD-DDP', 
                                                  publication_section_list=publication_section_category_id_list[:1])    
     websection.setAggregateValue(web_page_en)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEqual(None, websection.getDefaultDocumentValue())
     # publish it
     web_page_en.publish()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEqual(web_page_en, websection.getDefaultDocumentValue())
     # and make sure that the base meta tag which is generated
@@ -384,12 +384,12 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                  reference='NXD-DDP-Site', 
                                                  publication_section_list=publication_section_category_id_list[:1])    
     website.setAggregateValue(web_page_en)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEqual(None, website.getDefaultDocumentValue())
     # publish it
     web_page_en.publish()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEqual(web_page_en, website.getDefaultDocumentValue())
     # and make sure that the base meta tag which is generated
@@ -463,11 +463,11 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
                                   publication_section_list=publication_section_category_id_list[:1])
   
         web_page.edit(**property_dict[key])
-        get_transaction().commit()
+        transaction.commit()
         self.tic()
         web_page_list.append(web_page)
   
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       # in draft state no documents should belong to this Web Section
       self.assertEqual(0, len(websection.getDocumentValueList()))
@@ -475,7 +475,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
       # when published all web pages should belong to it
       for web_page in web_page_list:
         web_page.publish()
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
 
       # Test for limit parameter
@@ -638,7 +638,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
       publication_section.newContent(portal_type='Category',
                                      id='my_test_category',
                                      title='Test')
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
 
     website = self.setupWebSite()
@@ -658,7 +658,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # We need a default document.
     websection.setAggregateValue(web_page_list[0])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     # Obtain documens in various ways.
@@ -694,7 +694,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # First, make sure that we use the default skin selection.
     portal.changeSkin(ps.getDefaultSkin())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # Make some skin stuff.
@@ -720,7 +720,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
             'WebSite_test_13_WebSiteSkinSelection',
             '', 'return "bar"')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     path = website.absolute_url_path() + '/WebSite_test_13_WebSiteSkinSelection'
@@ -732,7 +732,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # With the test skin.
     website.setSkinSelectionName('Test ERP5 Web')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     request['PARENTS'] = [self.app]
@@ -778,7 +778,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Commit transaction
     def _commit():
       portal.portal_caches.clearAllCache()
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
 
     # By default, as now Web Section is visible, nothing should be returned
@@ -844,12 +844,12 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.createUser('admin', ['Manager'])
     self.createUser('erp5user', ['Auditor', 'Author'])
     self.createUser('webmaster', ['Assignor'])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def clearModule(self, module):
     module.manage_delObjects(list(module.objectIds()))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
@@ -867,13 +867,13 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
                                                   id='site')
     section = site.newContent(portal_type='Web Section', id='section')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     section.setCriterionProperty('portal_type')
     section.setCriterion('portal_type', max='', identity=['Web Page'], min='')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.changeUser('erp5user')
@@ -884,12 +884,12 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
                  text_format='text/plain',
                  text_content='Hello, World!')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     page_en.publish()
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     page_ja = self.portal.web_page_module.newContent(portal_type='Web Page')
@@ -899,12 +899,12 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
                  text_format='text/plain',
                  text_content='こんにちは、世界！')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     page_ja.publish()
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # By Anonymous
@@ -940,7 +940,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     section_role_definition = section.newContent(portal_type = 'Role Definition', 
                                                  role_name = 'Associate', 
                                                  agent = person.getRelativeUrl())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # check if Role Definition have create local roles
     self.assertSameSet(('Assignee',),  
@@ -951,7 +951,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     # delete Role Definition and check again (local roles must be gone too)
     site.manage_delObjects(site_role_definition.getId())
     section.manage_delObjects(section_role_definition.getId())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertSameSet((),  
                        site.get_local_roles_for_userid(person_reference))
@@ -973,14 +973,14 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     section = site.newContent(portal_type='Web Section', 
                               id='section')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     section.setCriterionProperty('portal_type')
     section.setCriterion('portal_type', max='', 
                          identity=['Web Page'], min='')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.changeUser('erp5user')
@@ -1014,7 +1014,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
 
 
 
-    get_transaction().commit()
+    transaction.commit()
     self.changeUser('erp5user')
     self.tic()
     self.portal.Localizer.changeLanguage('en')
@@ -1023,7 +1023,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
 
     self.changeUser('erp5user')
     page_en_0.publish()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.portal.Localizer.changeLanguage('en')
@@ -1046,7 +1046,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     # Second Object
     self.changeUser('erp5user')
     page_en_1.publish()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.portal.Localizer.changeLanguage('en')
@@ -1066,7 +1066,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     # Trird Object
     self.changeUser('erp5user')
     page_en_2.publish()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.portal.Localizer.changeLanguage('en')
@@ -1084,7 +1084,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     # First Japanese Object
     self.changeUser('erp5user')
     page_jp_0.publish()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.portal.Localizer.changeLanguage('en')
@@ -1120,7 +1120,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     section_4 = site.newContent(portal_type='Web Section', id='section_4')
     section_5 = section_3.newContent(portal_type='Web Section', id='section_5')
     section_6 = section_4.newContent(portal_type='Web Section', id='section_6')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # test if a manager can expire them
@@ -1282,7 +1282,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       id='new_category_2')      
     except Unauthorized:
       self.fail("Admin should be able to create a Category.")
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     try:
       new_cat_1_renamed = new_category_1.edit(id='new_cat_1_renamed')    
@@ -1303,7 +1303,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
           id='new_category_4')          
     except Unauthorized:
       self.fail("A webmaster should be able to create a Category.")
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     try:
       new_cat_3_renamed = new_category_3.edit(id='new_cat_3_renamed')    

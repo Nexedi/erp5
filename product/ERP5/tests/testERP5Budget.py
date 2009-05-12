@@ -27,6 +27,7 @@
 
 import unittest
 
+import transaction
 from zLOG import LOG
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -146,7 +147,7 @@ class TestBudget(ERP5TypeTestCase):
     self.getAccountingModule().manage_addLocalRoles('maurice',
         ('Assignor','Assignee','Manager','Owner',))
     # flush activities
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # When using light install, only base categories are created
     if len(self.portal_categories.region.contentValues()) == 0 :
@@ -310,7 +311,7 @@ class TestBudget(ERP5TypeTestCase):
         stop_date='2005/05/01 18:06:26.388 GMT-4')
 
     # flush activities
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def getAccountModule(self):

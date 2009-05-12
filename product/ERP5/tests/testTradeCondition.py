@@ -33,11 +33,6 @@ from DateTime import DateTime
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
-
 class TradeConditionTestCase(ERP5TypeTestCase):
   """Tests for Trade Conditions and Tax
   """
@@ -82,7 +77,7 @@ class TradeConditionTestCase(ERP5TypeTestCase):
                             title='Order')
 
   def beforeTearDown(self):
-    get_transaction().abort()
+    transaction.abort()
     for module in (self.portal.tax_module,
                    self.portal.organisation_module,
                    self.portal.currency_module,
@@ -96,7 +91,7 @@ class TradeConditionTestCase(ERP5TypeTestCase):
                    self.portal.portal_categories.size,
       ):
       module.manage_delObjects(list(module.objectIds()))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
 
@@ -154,7 +149,7 @@ class AccountingBuildTestCase(TradeConditionTestCase):
             title='Resource Tax',
             int_index=2,
             test_method_id='SimulationMovement_isTaxMovement' )
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     accounting_rule_cell_list = itr.contentValues(
                             portal_type='Accounting Rule Cell')
@@ -185,13 +180,13 @@ class AccountingBuildTestCase(TradeConditionTestCase):
                          destination_value=self.refundable_tax_account,
                          quantity=1)
     itr.validate()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
     TradeConditionTestCase.beforeTearDown(self)
     self.portal.portal_rules.manage_delObjects('test_invoice_transaction_rule')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
 class TestApplyTradeCondition(TradeConditionTestCase):
@@ -1121,7 +1116,7 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
     order.plan()
     order.confirm()
     self.assertEquals('confirmed', order.getSimulationState())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     related_applied_rule_list = order.getCausalityRelatedValueList(
                                       portal_type='Applied Rule')
@@ -1206,7 +1201,7 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
     order.plan()
     order.confirm()
     self.assertEquals('confirmed', order.getSimulationState())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     related_applied_rule_list = order.getCausalityRelatedValueList(
                                       portal_type='Applied Rule')
@@ -1280,7 +1275,7 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
     order.plan()
     order.confirm()
     self.assertEquals('confirmed', order.getSimulationState())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     related_delivery = order.getCausalityRelatedValue(
                   portal_type=('Purchase Packing List', 'Sale Packing List'))
@@ -1290,7 +1285,7 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
     related_delivery.stop()
     related_delivery.deliver()
     self.assertEquals('delivered', related_delivery.getSimulationState())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     related_invoice = related_delivery.getCausalityRelatedValue(
@@ -1351,7 +1346,7 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
     order.plan()
     order.confirm()
     self.assertEquals('confirmed', order.getSimulationState())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     related_delivery = order.getCausalityRelatedValue(
                   portal_type=('Purchase Packing List', 'Sale Packing List'))
@@ -1361,7 +1356,7 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
     related_delivery.stop()
     related_delivery.deliver()
     self.assertEquals('delivered', related_delivery.getSimulationState())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     related_invoice = related_delivery.getCausalityRelatedValue(
@@ -1375,7 +1370,7 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
     self.assertEquals(0, len(accounting_line_list))
 
     related_invoice.start()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals('started', related_invoice.getSimulationState())
     self.assertEquals('solved', related_invoice.getCausalityState())
@@ -1457,7 +1452,7 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
     order.plan()
     order.confirm()
     self.assertEquals('confirmed', order.getSimulationState())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     related_delivery = order.getCausalityRelatedValue(
                   portal_type=('Purchase Packing List', 'Sale Packing List'))
@@ -1467,7 +1462,7 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
     related_delivery.stop()
     related_delivery.deliver()
     self.assertEquals('delivered', related_delivery.getSimulationState())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     related_invoice = related_delivery.getCausalityRelatedValue(
@@ -1519,7 +1514,7 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
     order.plan()
     order.confirm()
     self.assertEquals('confirmed', order.getSimulationState())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     related_delivery = order.getCausalityRelatedValue(
                   portal_type=('Purchase Packing List', 'Sale Packing List'))
@@ -1529,7 +1524,7 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
     related_delivery.stop()
     related_delivery.deliver()
     self.assertEquals('delivered', related_delivery.getSimulationState())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     related_invoice = related_delivery.getCausalityRelatedValue(
@@ -1554,7 +1549,7 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
     invoice_line = invoice_line_list[0]
     # change a total price on the invoice_line,
     invoice_line.setQuantity(3)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # it will be reflected on the tax line
     self.assertEquals(45, tax_line.getQuantity())
@@ -1599,7 +1594,7 @@ class TestTaxLineInvoiceSimulation(AccountingBuildTestCase):
     invoice.confirm()
     invoice.start()
     self.assertEquals('started', invoice.getSimulationState())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     related_applied_rule_list = invoice.getCausalityRelatedValueList(
                                       portal_type='Applied Rule')
@@ -1633,7 +1628,7 @@ class TestTaxLineInvoiceSimulation(AccountingBuildTestCase):
                       invoice_simulation_movement.getResourceValue())
     invoice.start()
     self.assertEquals('started', invoice.getSimulationState())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     accounting_line_list = invoice.getMovementList(
                             portal_type=('Sale Invoice Transaction Line',
@@ -1705,7 +1700,7 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
                                     base_price=123)
 
     self.order.setSpecialiseValue(self.trade_condition)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     line = self.order.newContent(portal_type=self.order_line_type,
@@ -1731,7 +1726,7 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
     self.order.setSpecialiseValue(self.trade_condition)
     self.order.setSourceSectionValue(self.vendor)
     self.order.setDestinationSectionValue(self.vendor)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     line = self.order.newContent(portal_type=self.order_line_type,
@@ -1765,7 +1760,7 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
 
     self.order.setSourceSectionValue(self.vendor)
     self.order.setDestinationSectionValue(self.client)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     line = self.order.newContent(portal_type=self.order_line_type,

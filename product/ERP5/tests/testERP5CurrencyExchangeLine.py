@@ -27,6 +27,7 @@
 ##############################################################################
 import unittest
 import os
+import transaction
 from DateTime import DateTime
 from zLOG import LOG
 from Products.CMFCore.utils import _checkPermission
@@ -61,7 +62,7 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
   """
   username = 'username'
   def beforeTearDown(self):
-    get_transaction().abort()
+    transaction.abort()
     # clear modules if necessary
     currency_list = ('euro', 'yen', 'usd')
     module = self.portal.currency_module
@@ -73,7 +74,7 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
         currency.manage_delObjects([x.getId() for x in
                 currency.objectValues(
                   portal_type='Currency Exchange Line')])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
  
   def login(self,name=username, quiet=0, run=run_all_test):
@@ -141,7 +142,7 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()#execute transaction
     self.organisation1.edit(
                     price_currency=new_currency.getRelativeUrl())
@@ -198,7 +199,7 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()#execute transaction
     self.organisation1.edit(
                    price_currency=new_currency.getRelativeUrl())
@@ -268,7 +269,7 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()#execute transaction
     self.organisation1.edit(
               price_currency=new_currency.getRelativeUrl())
@@ -322,7 +323,7 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()#execute transaction
     self.organisation1.edit(
                 price_currency=new_currency.getRelativeUrl())
@@ -365,7 +366,7 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()#execute transaction
     self.organisation1.edit(
                price_currency=new_currency.getRelativeUrl())
@@ -435,7 +436,7 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()#execute transaction
     self.organisation1.edit(
             price_currency=new_currency.getRelativeUrl())
@@ -491,7 +492,7 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()#execute transaction
     self.organisation1.edit(
                price_currency=new_currency.getRelativeUrl())

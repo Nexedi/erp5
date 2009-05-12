@@ -28,6 +28,8 @@
 
 import unittest
 
+import transaction
+
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -846,7 +848,7 @@ class TestPackingListMixin(TestOrderMixin):
     """
     if packing_list is None:
       packing_list = sequence.get('packing_list')
-    get_transaction().commit()
+    transaction.commit()
     self.assertEquals(1,packing_list.isPacked())
     self.assertEquals('packed',packing_list.getContainerState())
 
@@ -1338,7 +1340,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                             quantity=10,
                             price=3)
     packing_list.confirm()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     odt = packing_list.PackingList_viewAsODT()

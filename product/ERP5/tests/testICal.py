@@ -41,14 +41,11 @@
 
 import unittest
 
+import transaction
+
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Form.Form import ERP5Form
-
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
 
 
 class TestICal(ERP5TypeTestCase):
@@ -83,7 +80,7 @@ class TestICal(ERP5TypeTestCase):
     if hasattr(self.portal.person_module, 'one'):
       self.portal.person_module.manage_delObjects(['one'])
     one = self.portal.person_module.newContent(id="one", title="One", description="Person One")
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
   def parseICalFeed(self,  feed_string):
@@ -121,7 +118,7 @@ class TestICal(ERP5TypeTestCase):
     if not run: return    
     module = self.portal.event_module
     event = module.newContent(id='one', title='Event One', portal_type='Phone Call')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     feed_dict = self.getICalFeed(module)
@@ -147,7 +144,7 @@ class TestICal(ERP5TypeTestCase):
     event.receive()
     event.setStartDate('2007/08/15 10:30')
     event.setDescription('Event One description')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     feed_dict = self.getICalFeed(module)
@@ -161,7 +158,7 @@ class TestICal(ERP5TypeTestCase):
     # check categorization
     sale_op = self.portal.sale_opportunity_module.newContent(portal_type='Sale Opportunity', title='New Opportunity', reference='NEWSALEOP')
     event.setFollowUp(sale_op.getRelativeUrl())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     feed_dict = self.getICalFeed(module)
@@ -170,7 +167,7 @@ class TestICal(ERP5TypeTestCase):
     # set stop date and change workflow state - assigned
     event.assign()
     event.setStopDate('2007/08/15 15:30')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     feed_dict = self.getICalFeed(module)
@@ -179,7 +176,7 @@ class TestICal(ERP5TypeTestCase):
     
     # cancel event
     event.cancel()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     feed_dict = self.getICalFeed(module)
@@ -195,7 +192,7 @@ class TestICal(ERP5TypeTestCase):
     if not run: return    
     module = self.portal.task_module
     task = module.newContent(id='one', title='Task One', start_date='2007/08/15')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
    
    # current workflow state - draft
@@ -212,7 +209,7 @@ class TestICal(ERP5TypeTestCase):
                                                                           title='New Project', 
                                                                           reference='NEWPROJ')
     task.setSourceProjectValue(project)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     feed_dict = self.getICalFeed(module)
@@ -220,7 +217,7 @@ class TestICal(ERP5TypeTestCase):
     
     # change workflow state - planned
     task.plan()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     feed_dict = self.getICalFeed(module)
@@ -229,7 +226,7 @@ class TestICal(ERP5TypeTestCase):
     
     # change workflow state - ordered
     task.order()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     feed_dict = self.getICalFeed(module)
@@ -238,7 +235,7 @@ class TestICal(ERP5TypeTestCase):
     
     # change workflow state - confirmed
     task.confirm()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     feed_dict = self.getICalFeed(module)

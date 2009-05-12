@@ -30,6 +30,8 @@
 
 import unittest
 
+import transaction
+
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -85,7 +87,7 @@ class TestProductionOrderMixin(TestOrderMixin):
     )
 
     system_preference.enable()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def afterSetUp(self):

@@ -33,6 +33,7 @@
 import unittest
 import os
 
+import transaction
 from DateTime import DateTime
 from Products.CMFCore.utils import _checkPermission
 
@@ -191,7 +192,7 @@ class AccountingTestCase(ERP5TypeTestCase):
     self.validateRules()
 
     # and all this available to catalog
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
 
@@ -200,7 +201,7 @@ class AccountingTestCase(ERP5TypeTestCase):
     """
     if os.environ.get('erp5_save_data_fs'):
       return
-    get_transaction().abort()
+    transaction.abort()
     self.accounting_module.manage_delObjects(
                       list(self.accounting_module.objectIds()))
     organisation_list = ('my_organisation', 'client_1', 'client_2', 'supplier')
@@ -224,7 +225,7 @@ class AccountingTestCase(ERP5TypeTestCase):
           and x.getPriority() != Priority.SITE])
     self.portal.portal_simulation.manage_delObjects(list(
           self.portal.portal_simulation.objectIds()))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     ERP5TypeTestCase.tearDown(self)
 
@@ -299,7 +300,7 @@ class TestTransactionValidation(AccountingTestCase):
                                   start_date=DateTime('2007/01/01'),
                                   stop_date=DateTime('2007/12/31'))
       accounting_period_2007.start()
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
 
   def test_SaleInvoiceTransactionValidationDate(self):
@@ -806,12 +807,12 @@ class TestClosingPeriod(AccountingTestCase):
   """Various tests for closing the period.
   """
   def beforeTearDown(self):
-    get_transaction().abort()
+    transaction.abort()
     # we manually remove the content of stock table, because unindexObject
     # might not work correctly on Balance Transaction, and we don't want
     # leave something in stock table that will change the next test.
     self.portal.erp5_sql_connection.manage_test('truncate stock')
-    get_transaction().commit()
+    transaction.commit()
 
   def test_createBalanceOnNode(self):
     period = self.section.newContent(portal_type='Accounting Period')
@@ -995,7 +996,7 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEquals(None, pl_movement.getDestinationTotalAssetPrice())
     self.assertEquals(None, pl_movement.getSourceTotalAssetPrice())
     self.assertEquals(300., pl_movement.getDestinationDebit())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def test_createBalanceOnPayment(self):
@@ -1242,7 +1243,7 @@ class TestClosingPeriod(AccountingTestCase):
                   pl_movement.getDestinationDebit(),
                   accounting_currency_precision)
     
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # now check content of stock table
@@ -1312,7 +1313,7 @@ class TestClosingPeriod(AccountingTestCase):
                dict(source_value=self.account_module.receivable,
                     source_asset_credit=2.2,
                     source_credit=200)))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     period.AccountingPeriod_createBalanceTransaction(
@@ -1374,7 +1375,7 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEquals(None, dollar_movement.getSourceTotalAssetPrice())
     self.assertEquals(200, dollar_movement.getDestinationCredit())
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # now check content of stock table
@@ -1450,7 +1451,7 @@ class TestClosingPeriod(AccountingTestCase):
             period, 'deliver_action',
             profit_and_loss_account=pl_account.getRelativeUrl())
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals('delivered', period.getSimulationState())
     
@@ -1694,7 +1695,7 @@ class TestClosingPeriod(AccountingTestCase):
                 destination_value=self.account_module.stocks,
                 destination_credit=90,)
     balance.stop()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     stool = self.portal.portal_simulation
@@ -1733,7 +1734,7 @@ class TestClosingPeriod(AccountingTestCase):
                 destination_debit=30,)
 
     balance.stop()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     stool = self.portal.portal_simulation
@@ -1770,7 +1771,7 @@ class TestClosingPeriod(AccountingTestCase):
                 destination_value=self.account_module.payable,
                 destination_credit=100,)
     balance.stop()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     stool = self.portal.portal_simulation
@@ -1827,7 +1828,7 @@ class TestClosingPeriod(AccountingTestCase):
                 destination_credit=100,)
     balance.stop()
     balance.deliver()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     stool = self.portal.portal_simulation
@@ -1852,11 +1853,11 @@ class TestClosingPeriod(AccountingTestCase):
                     source_debit=50),
                dict(source_value=self.account_module.receivable,
                     source_credit=50)))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # let's try to reindex and check if values are still OK
     balance.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     self.assertEquals(-150, stool.getInventory(
@@ -1880,7 +1881,7 @@ class TestClosingPeriod(AccountingTestCase):
                 destination_value=self.account_module.receivable,
                 destination_debit=100,)
     balance.stop()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     stool = self.portal.portal_simulation
@@ -1918,7 +1919,7 @@ class TestClosingPeriod(AccountingTestCase):
                 destination_value=self.account_module.receivable,
                 destination_debit=100,)
     balance.stop()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     stool = self.portal.portal_simulation
@@ -2179,7 +2180,7 @@ class TestTransactions(AccountingTestCase):
     self.portal.portal_workflow.doActionFor(accounting_transaction,
                                            'stop_action')
     self.assertEquals('stopped', accounting_transaction.getSimulationState())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     payment = invoice.Invoice_createRelatedPaymentTransaction(
@@ -2210,7 +2211,7 @@ class TestTransactions(AccountingTestCase):
     self.portal.portal_workflow.doActionFor(accounting_transaction,
                                             'stop_action')
     self.assertEquals('stopped', accounting_transaction.getSimulationState())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     payment = invoice.Invoice_createRelatedPaymentTransaction(
@@ -2247,7 +2248,7 @@ class TestTransactions(AccountingTestCase):
                            source_debit=20),))
 
     other_accounting_transaction.cancel()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     payment = invoice.Invoice_createRelatedPaymentTransaction(
@@ -2383,7 +2384,7 @@ class TestTransactions(AccountingTestCase):
   
     # when restarting, grouping is removed
     invoice.restart()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.failIf(invoice_line.getGroupingReference())
     self.failIf(payment_line.getGroupingReference())
@@ -2490,7 +2491,7 @@ class TestTransactions(AccountingTestCase):
     self.failUnless(payment_line.getGroupingReference())
 
     invoice.cancel()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.failIf(invoice_line.getGroupingReference())
     self.failIf(payment_line.getGroupingReference())
@@ -2662,10 +2663,10 @@ class TestAccountingWithSequences(AccountingTestCase):
     """Cleanup for next test.
     All tests uses the same accounts and same entities, so we just cleanup
     accounting module and simulation. """
-    get_transaction().abort()
+    transaction.abort()
     for folder in (self.accounting_module, self.portal.portal_simulation):
       folder.manage_delObjects([i for i in folder.objectIds()])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def login(self) :
@@ -2727,7 +2728,7 @@ class TestAccountingWithSequences(AccountingTestCase):
     for entity in (self.client, self.vendor, self.other_vendor):
       entity.setRegion(self.default_region)
       self.getWorkflowTool().doActionFor(entity, 'validate_action')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
   def stepCreateEntities(self, sequence, **kw) :
@@ -2816,7 +2817,7 @@ class TestAccountingWithSequences(AccountingTestCase):
       self.YEN = currency_module.newContent(
           portal_type = self.currency_portal_type,
           reference = "YEN", id = "YEN" )
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
     else:
       self.EUR = currency_module.EUR
@@ -2883,7 +2884,7 @@ class TestAccountingWithSequences(AccountingTestCase):
       account.validate()
       self.failUnless('Site Error' not in account.view())
       self.assertEquals(account.getValidationState(), 'validated')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def stepCreateAccounts(self, sequence, **kw) :
@@ -3241,7 +3242,7 @@ class TestAccountingWithSequences(AccountingTestCase):
     self.failUnless(receivable.getSource() != None)
     self.failUnless(receivable.getDestination() != None)
     if reindex:
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
     if check_consistency:
       self.failUnless(len(transaction.checkConsistency()) == 0,
@@ -3791,7 +3792,7 @@ class TestAccountingTransactionTemplate(AccountingTestCase):
     preference.priority = Priority.USER
     preference.enable()
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     document = self.accounting_module.newContent(
@@ -3799,7 +3800,7 @@ class TestAccountingTransactionTemplate(AccountingTestCase):
     document.edit(title='My Accounting Transaction')
     document.Base_makeTemplateFromDocument(form_id=None)
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEqual(len(preference.objectIds()), 1)
@@ -3810,7 +3811,7 @@ class TestAccountingTransactionTemplate(AccountingTestCase):
 
     self.accounting_module.manage_delObjects(ids=[document.getId()])
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     template = preference.objectValues()[0]
@@ -3822,7 +3823,7 @@ class TestAccountingTransactionTemplate(AccountingTestCase):
     new_document = self.accounting_module[new_document_id]
     new_document.makeTemplateInstance()
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEqual(new_document.getTitle(), 'My Accounting Transaction')
@@ -3836,7 +3837,7 @@ class TestAccountingTransactionTemplate(AccountingTestCase):
     preference.priority = Priority.USER
     preference.enable()
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     document = self.accounting_module.newContent(

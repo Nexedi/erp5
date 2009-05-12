@@ -31,6 +31,7 @@ import re
 import unittest
 import random
 
+import transaction
 from AccessControl import Unauthorized
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
@@ -78,7 +79,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def clearModule(self, module):
     module.manage_delObjects(list(module.objectIds()))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
@@ -103,7 +104,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     website = self.getPortal().web_site_module.newContent(portal_type = 'Web Site',
                                                           id = self.website_id,
                                                           **kw)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     return website
 
@@ -124,7 +125,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                             max='',
                             min='')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     return websection
 
@@ -152,7 +153,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                 language=language,
                                                 **kw)
       webpage.publish()
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       self.assertEquals(language, webpage.getLanguage())
       self.assertEquals(reference, webpage.getReference())
@@ -196,7 +197,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                             language = 'en')
     en_02.publish()
     en_02.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # is old archived?
@@ -231,7 +232,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     document.release()
     website.setAuthorizationForced(0)
     websection.setAuthorizationForced(0)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # make sure that _getExtensibleContent will return the same document
@@ -273,7 +274,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     websection.edit(membership_criterion_base_category = ['publication_section'],
                             membership_criterion_category=['publication_section/%s'
                                                                               %publication_section_category_id_list[0]])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(0,  len(websection.getDocumentValueList()))
@@ -282,7 +283,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                  language = 'en',
                                                  publication_section_list=publication_section_category_id_list[:1])
     web_page_en.publish()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(1,  len(websection.getDocumentValueList(language='en')))
     self.assertEquals(web_page_en,  websection.getDocumentValueList(language='en')[0].getObject())
@@ -292,20 +293,20 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                  language = 'bg',
                                                  publication_section_list=publication_section_category_id_list[:1])
     web_page_bg.publish()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(1,  len(websection.getDocumentValueList(language='bg')))
     self.assertEquals(web_page_bg,  websection.getDocumentValueList(language='bg')[0].getObject())
 
     # reject page
     web_page_bg.reject()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(0,  len(websection.getDocumentValueList(language='bg')))
 
     # publish page and search without a language (by default system should return 'en' docs only)
     web_page_bg.publish()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(1,  len(websection.getDocumentValueList()))
     self.assertEquals(web_page_en,  websection.getDocumentValueList()[0].getObject())
@@ -331,7 +332,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     web_page_en.releaseAlive()
     websection.setAggregateValue(web_page_en)
     websection.setAuthorizationForced(1)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # make sure that getDefaultDocumentValue() will return the same document for logged in user
@@ -347,7 +348,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Anonymous User should not get Unauthorized when authorization_forced is not set
     self.login()
     websection.setAuthorizationForced(0)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.logout()
@@ -365,11 +366,11 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                             language = 'en',)
       web_page.publish()
       self.tic()
-      get_transaction().commit()
+      transaction.commit()
       web_page_list.append(web_page)
     websection.setAggregateValueList(web_page_list)
     self.tic()
-    get_transaction().commit()
+    transaction.commit()
     self.assertEqual(5, len(websection.getDocumentValueList(limit=5)))
 
   def test_05_deadProxyFields(self, quiet=quiet, run=run_all_test):

@@ -29,6 +29,7 @@
 
 
 import unittest
+import transaction
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -118,7 +119,7 @@ class TestBug(ERP5TypeTestCase):
                                      start_date='1980-01-01',
                                      stop_date='2099-12-31')
       assignment.open()
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       module_list = []
       portal_type_list = []
@@ -136,7 +137,7 @@ class TestBug(ERP5TypeTestCase):
                    '')
         ti.updateRoleMapping()
 
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       portal.portal_caches.clearAllCache()
 

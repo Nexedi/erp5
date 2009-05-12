@@ -28,6 +28,8 @@
 
 import unittest
 
+import transaction
+
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -87,7 +89,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     if (content_type_registry is not None and
         'any' in content_type_registry.predicate_ids):
       content_type_registry.removePredicate('any')
-      get_transaction().commit()
+      transaction.commit()
 
   def beforeTearDown(self):
     """Remove objects created tests."""
@@ -121,7 +123,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     for business_template in self.getTemplateTool().contentValues():
       if business_template.getTitle() == 'geek template':
         self.getTemplateTool().manage_delObjects([business_template.getId()])
-    get_transaction().commit()
+    transaction.commit()
     self._ignore_log_errors()
 
   def login(self):

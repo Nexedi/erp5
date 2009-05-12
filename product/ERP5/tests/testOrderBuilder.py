@@ -29,6 +29,7 @@
 
 import unittest
 
+import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from zLOG import LOG
@@ -312,7 +313,7 @@ class TestOrderBuilderMixin(TestOrderMixin):
         list(self.decrease_quantity_matrix.iterkeys())
     )
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     base_id = 'movement'

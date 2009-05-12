@@ -274,7 +274,7 @@ class TestBPMMixin(ERP5TypeTestCase):
             int_index=3,
             membership_criterion_base_category='resource_use',
             membership_criterion_category='resource_use/use/normal')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     accounting_rule_cell_list = itr.contentValues(
                             portal_type='Accounting Rule Cell')

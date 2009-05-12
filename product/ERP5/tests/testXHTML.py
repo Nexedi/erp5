@@ -40,11 +40,6 @@ from xml.dom import minidom
 
 from glob import glob
 
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
-
 #
 # Test Setting
 #

@@ -31,6 +31,7 @@
 
 import unittest
 
+import transaction
 from DateTime import DateTime
 
 from Products.ERP5.tests.testAccounting import AccountingTestCase
@@ -57,7 +58,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     # workaround the fact that Balance Transaction Line are not unindexed
     # correctly when removed
     self.portal.erp5_sql_connection.manage_test('TRUNCATE TABLE stock')
-    get_transaction().commit()
+    transaction.commit()
 
   def testJournal(self):
     # Journal report.
@@ -922,7 +923,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                           source_credit=400.0)))
     t4.stop()
     t4.deliver()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # set request variables and render                 

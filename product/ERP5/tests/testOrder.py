@@ -30,6 +30,7 @@
 import unittest
 import os
 
+import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 from AccessControl.SecurityManagement import newSecurityManager
@@ -2053,7 +2054,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
         resource_value=resource,
         price=2,
         quantity=3)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(order_line.isMovement(), True)
@@ -2079,7 +2080,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
         price=3, quantity=4,
         predicate_category_list=cell_key,
         variation_category_list=cell_key)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(order_line.isMovement(), False)
@@ -2101,7 +2102,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     # if cell has no price, the total price is None, but a default value can be
     # provided
     cell.setPrice(None)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(order_line.isMovement(), False)
@@ -2122,7 +2123,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 
     # restore the price on the line
     cell.setPrice(3)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # add sub_line to line, cell and line are not movements
@@ -2130,7 +2131,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
         portal_type=self.order_line_portal_type,
         price=4,
         quantity=5)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(order_line.isMovement(), False)
@@ -2157,7 +2158,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 
     # if this line has no price, getTotalPrice returns 0
     sub_order_line.setPrice(None)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(order_line.isMovement(), False)
     self.assertEquals(cell.isMovement(), False)
@@ -2183,7 +2184,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 
     # restore price on the sub line
     sub_order_line.setPrice(4)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
 
@@ -2198,7 +2199,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
         price=5, quantity=6,
         predicate_category_list=cell_key,
         variation_category_list=cell_key)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(order_line.isMovement(), False)
@@ -2229,7 +2230,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 
     # delete sub_line, cell is movement again
     order_line.manage_delObjects([sub_order_line.getId()])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(order_line.isMovement(), False)
@@ -2251,7 +2252,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     # delete cell, line is movement again
     order_line.manage_delObjects([cell.getId()])
     order_line.setVariationCategoryList([])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(order_line.isMovement(), True)
@@ -2447,7 +2448,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               portal_type='Payment Condition')))
 
     order.confirm()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     related_packing_list = order.getCausalityRelatedValue(
                                    portal_type=self.packing_list_portal_type)
@@ -2477,7 +2478,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                             quantity=10,
                             price=3)
     order.confirm()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     odt = order.Order_viewAsODT()
@@ -2509,7 +2510,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                             quantity=10,
                             price=3)
     order.confirm()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     odt = order.Order_viewAsODT()
@@ -2546,7 +2547,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                             quantity=10,
                             price=3)
     order.confirm()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     odt = order.Order_viewAsODT()
@@ -2586,7 +2587,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                             quantity=10,
                             price=3)
     order.confirm()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     odt = order.Order_viewAsODT()
@@ -2628,7 +2629,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                                 quantity=30,
                                 price=.26)
     order.confirm()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     odt = order.Order_viewAsODT()
@@ -2667,7 +2668,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                             quantity=10,
                             price=3)
     order.confirm()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     odt = order.Order_viewAsODT()

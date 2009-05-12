@@ -28,6 +28,7 @@
 
 import unittest
 
+import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
 from DateTime import DateTime
@@ -105,7 +106,7 @@ class TestSaleSupply(TestSupplyMixin, ERP5TypeTestCase):
                               start_date_range_max='2009/01/31')
 
     supply_line = self._makeSupplyLine(supply)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     res = self.domain_tool.searchPredicateList(movement,
@@ -118,7 +119,7 @@ class TestSaleSupply(TestSupplyMixin, ERP5TypeTestCase):
     supply.edit(start_date_range_min='2009/02/01',
                 start_date_range_max='2009/02/28')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     res = self.domain_tool.searchPredicateList(movement,
@@ -130,7 +131,7 @@ class TestSaleSupply(TestSupplyMixin, ERP5TypeTestCase):
     # movement is going back into timeframe...
     movement.edit(start_date='2009/02/15')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     res = self.domain_tool.searchPredicateList(movement,
@@ -166,7 +167,7 @@ class TestSaleSupply(TestSupplyMixin, ERP5TypeTestCase):
 
     # set new date on supply...
     supply.edit(start_date_range_min=new_date)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     # ...and check supply line

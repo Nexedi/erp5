@@ -27,6 +27,7 @@
 ##############################################################################
 
 import unittest
+import transaction
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -99,7 +100,7 @@ class TestAlarm(ERP5TypeTestCase):
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
     alarm = self.newAlarm()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     now = DateTime()
     date = addToDate(now,day=1)
@@ -119,7 +120,7 @@ class TestAlarm(ERP5TypeTestCase):
     date = addToDate(now,day=2)
     alarm.setPeriodicityStartDate(date)
     alarm.setPeriodicityHourFrequency(1)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     alarm.setNextAlarmDate(current_date=now)
     self.assertEquals(alarm.getAlarmDate(),date)
@@ -147,7 +148,7 @@ class TestAlarm(ERP5TypeTestCase):
     date = addToDate(now,day=2)
     alarm.setPeriodicityStartDate(date)
     alarm.setPeriodicityHourFrequency(3)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     alarm.setNextAlarmDate(current_date=now)
     self.assertEquals(alarm.getAlarmDate(),date)
@@ -178,7 +179,7 @@ class TestAlarm(ERP5TypeTestCase):
     hour_list = (6,10,15,21)
     alarm.setPeriodicityStartDate(now)
     alarm.setPeriodicityHourList(hour_list)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(alarm.getAlarmDate(),right_first_date)
     alarm.setNextAlarmDate(current_date=right_first_date)
@@ -203,7 +204,7 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setPeriodicityStartDate(now)
     alarm.setPeriodicityDayFrequency(1)
     alarm.setPeriodicityHourList((10,))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(alarm.getAlarmDate(),right_first_date)
     alarm.setNextAlarmDate(current_date=right_first_date)
@@ -227,7 +228,7 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setPeriodicityStartDate(right_first_date)
     alarm.setPeriodicityDayFrequency(3)
     alarm.setPeriodicityHourList((14,15,17))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(alarm.getAlarmDate(),right_first_date)
     alarm.setNextAlarmDate(current_date=right_first_date)
@@ -254,7 +255,7 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setPeriodicityStartDate(right_first_date)
     alarm.setPeriodicityDayFrequency(4)
     alarm.setPeriodicityHourList((14,15,17))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(alarm.getAlarmDate(),right_first_date)
     alarm.setNextAlarmDate(current_date=right_first_date)
@@ -280,7 +281,7 @@ class TestAlarm(ERP5TypeTestCase):
     right_fourth_date = DateTime(self.date_format  % (2006,10,2,6,00,00))
     right_fifth_date = DateTime(self.date_format  % (2006,10,2,15,00,00))
     alarm = self.newAlarm()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     alarm.setPeriodicityStartDate(right_first_date)
     alarm.setPeriodicityWeekDayList(('Monday','Friday'))
@@ -313,7 +314,7 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setPeriodicityStartDate(right_first_date)
     alarm.setPeriodicityMonthDayList((1,15))
     alarm.setPeriodicityHourList((12,14))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.checkDate(alarm, right_first_date, right_second_date, right_third_date, right_fourth_date)
 
@@ -333,7 +334,7 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setPeriodicityMonthDayList((1,))
     alarm.setPeriodicityMonthFrequency(2)
     alarm.setPeriodicityHourList((6,))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.checkDate(alarm, right_first_date, right_second_date, right_third_date)
 
@@ -352,7 +353,7 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.setPeriodicityStartDate(right_first_date)
     alarm.setPeriodicityHourList((6,))
     alarm.setPeriodicityWeekList((41,43))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.checkDate(alarm, right_first_date, right_second_date, right_third_date,right_fourth_date)
 
@@ -369,7 +370,7 @@ class TestAlarm(ERP5TypeTestCase):
     date = addToDate(now,day=2)
     alarm.setPeriodicityStartDate(date)
     alarm.setPeriodicityMinuteFrequency(5)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     alarm.setNextAlarmDate(current_date=now)
     self.assertEquals(alarm.getAlarmDate(),date)
@@ -395,7 +396,7 @@ class TestAlarm(ERP5TypeTestCase):
     date = addToDate(now,hour=2)
     alarm.setPeriodicityStartDate(now)
     alarm.setPeriodicityMinuteFrequency(1)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     alarm.setNextAlarmDate(current_date=date)
     self.assertEquals(alarm.getAlarmDate(),date)
@@ -410,7 +411,7 @@ class TestAlarm(ERP5TypeTestCase):
     active_process = alarm.newActiveProcess()
     self.assertEquals('Active Process', active_process.getPortalType())
     self.assertEquals(alarm, active_process.getCausalityValue())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(active_process, alarm.getLastActiveProcess())
 
@@ -429,13 +430,13 @@ class TestAlarm(ERP5TypeTestCase):
       skin_folder[sense_method_id].ZPythonScript_edit('*args,**kw', 'raise Exception')
       del skin_folder
       alarm = self.newAlarm()
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       now = DateTime()
       alarm.setActiveSenseMethodId(sense_method_id)
       self.assertEquals(alarm.isActive(), 0)
       alarm.activeSense()
-      get_transaction().commit()
+      transaction.commit()
       try:
         self.tic()
       except RuntimeError:
@@ -449,7 +450,7 @@ class TestAlarm(ERP5TypeTestCase):
       # Make the sense method succeed and leave a trace
       self.getPortal().portal_skins[skin_folder_id][sense_method_id].ZPythonScript_edit('*args,**kw', 'context.newActiveProcess()')
       alarm.activeSense()
-      get_transaction().commit()
+      transaction.commit()
       # Note: this call to tic will fail, because the previous message is still there
       # This behaviour is logical if we consider that we want to keep errors
       # in order to know that an error occured.
@@ -474,19 +475,19 @@ class TestAlarm(ERP5TypeTestCase):
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
     alarm = self.newAlarm()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     now = DateTime()
     date = addToDate(now, day=1)
     alarm.setPeriodicityStartDate(date)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(alarm.getAlarmDate(), date)
 
     # This should not do change the alarm date
     alarm.setNextAlarmDate(current_date=now)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(alarm.getAlarmDate(), date)
 
@@ -494,7 +495,7 @@ class TestAlarm(ERP5TypeTestCase):
     a_tool = self.getAlarmTool()
     alarm_uid = alarm.getUid()
     a_tool.manage_delObjects(uids=[alarm_uid])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # Check that related entry was removed
     sql_connection = self.getSQLConnection()
@@ -513,7 +514,7 @@ class TestAlarm(ERP5TypeTestCase):
       LOG('Testing... ', 0, message)
     alarm = self.newAlarm()
     alarm.setEnabled(True)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     sense_method_id = 'Alarm_testSenseMethodForTic'
@@ -526,7 +527,7 @@ class TestAlarm(ERP5TypeTestCase):
           'context.setDescription("a")')
     del skin_folder
     alarm.setActiveSenseMethodId(sense_method_id)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     alarm_tool = self.getPortal().portal_alarms
     # Nothing should happens yet
@@ -536,7 +537,7 @@ class TestAlarm(ERP5TypeTestCase):
     date = addToDate(now, day=1)
     alarm.setPeriodicityStartDate(date)
     alarm.setPeriodicityMinuteFrequency(1)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     alarm_tool.tic()
     self.assertEquals(alarm.getDescription(), 'a')
@@ -564,10 +565,10 @@ class TestAlarm(ERP5TypeTestCase):
     alarm.edit(alarm_notification_mode="always",
                active_sense_method_id=sense_method_id,
                enabled=True)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     alarm.activeSense()
-    get_transaction().commit()
+    transaction.commit()
     messages_list = self.getActivityTool().getMessageList()
     self.assertEquals(2, len(messages_list))
     # check tags after activeSense
@@ -580,7 +581,7 @@ class TestAlarm(ERP5TypeTestCase):
         raise AssertionError, m.method_id
     # execute alarm sense script and check tags
     self.getActivityTool().manageInvoke(alarm.getPhysicalPath(),sense_method_id)
-    get_transaction().commit()
+    transaction.commit()
     messages_list = self.getActivityTool().getMessageList()
     for m in messages_list:
       if m.method_id == 'notify':

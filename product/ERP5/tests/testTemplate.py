@@ -28,6 +28,7 @@
 """Tests Template functionality"""
 
 import unittest
+import transaction
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type import Permissions
@@ -67,19 +68,19 @@ class TestTemplate(ERP5TypeTestCase):
     preference.priority = Priority.USER
     preference.enable()
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     document = self.portal.foo_module.newContent(portal_type='Foo')
     document.edit(title='My Foo 1')
     document.newContent(portal_type='Foo Line')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     document.Base_makeTemplateFromDocument(form_id=None)
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEqual(len(preference.objectIds()), 1)
@@ -90,7 +91,7 @@ class TestTemplate(ERP5TypeTestCase):
 
     self.portal.foo_module.manage_delObjects(ids=[document.getId()])
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     template = preference.objectValues()[0]
@@ -101,7 +102,7 @@ class TestTemplate(ERP5TypeTestCase):
     new_document = self.portal.foo_module[new_document_id]
     new_document.makeTemplateInstance()
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEqual(new_document.getTitle(), 'My Foo 1')
@@ -116,11 +117,11 @@ class TestTemplate(ERP5TypeTestCase):
 
     preference_id_list = list(self.portal.portal_preferences.objectIds())
     document = self.portal.foo_module.newContent(portal_type='Foo')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     document.Base_makeTemplateFromDocument(form_id=None)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # a new preference is created
@@ -145,18 +146,18 @@ class TestTemplate(ERP5TypeTestCase):
     preference.priority = Priority.USER
     preference.enable()
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     document = self.portal.foo_module.newContent(portal_type='Foo')
     document.edit(title='My Foo 1')
     document.newContent(portal_type='Foo Line')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     document.Base_makeTemplateFromDocument(form_id=None)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertTrue(document.isIndexable)
     self.assertEqual(len(preference.objectIds()), 1)
@@ -166,7 +167,7 @@ class TestTemplate(ERP5TypeTestCase):
     # and this is still true if you create two templates from the same document
     # #929
     document.Base_makeTemplateFromDocument(form_id=None)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertTrue(document.isIndexable)

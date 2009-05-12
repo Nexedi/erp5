@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+import transaction
+
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
 from Products.ERP5Type.Base import _aq_reset
 from AccessControl.SecurityManagement import newSecurityManager, \
@@ -102,12 +104,12 @@ class TestCalendar(ERP5ReportTestCase):
     self._addPropertySheet('Group Presence Period', 'CalendarPeriodConstraint')
 
   def beforeTearDown(self):
-    get_transaction().abort()
+    transaction.abort()
     for module in (self.portal.group_calendar_module,
                    self.portal.leave_request_module,
                    self.portal.presence_request_module,):
       module.manage_delObjects(list(module.objectIds()))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def _addPropertySheet(self, type_info_name, property_sheet_name):
@@ -823,7 +825,7 @@ class TestCalendar(ERP5ReportTestCase):
     person = self.portal.person_module.newContent(portal_type='Person')
     assignment = person.newContent(portal_type='Assignment',
                                    calendar_value=group_calendar)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # there is 43200 seconds between self.start_date and self.stop_date
@@ -858,7 +860,7 @@ class TestCalendar(ERP5ReportTestCase):
     leave_request.setDestinationValue(person)
     leave_request.confirm()
     
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     self.assertEquals(0, person.getAvailableTime(
@@ -897,7 +899,7 @@ class TestCalendar(ERP5ReportTestCase):
     person = self.portal.person_module.newContent(portal_type='Person')
     assignment = person.newContent(portal_type='Assignment',
                                    calendar_value=group_calendar)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     self.assertEquals((18 - 14 + 12 - 8) * 60 * 60, person.getAvailableTime(
@@ -931,7 +933,7 @@ class TestCalendar(ERP5ReportTestCase):
     leave_request.setDestinationValue(person)
     leave_request.confirm()
     
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     self.assertEquals(0, person.getAvailableTime(
@@ -968,7 +970,7 @@ class TestCalendar(ERP5ReportTestCase):
     person = self.portal.person_module.newContent(portal_type='Person')
     assignment = person.newContent(portal_type='Assignment',
                                    calendar_value=group_calendar)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     # 2008/01/07 was a Monday
@@ -1003,7 +1005,7 @@ class TestCalendar(ERP5ReportTestCase):
     leave_request.setDestinationValue(person)
     leave_request.confirm()
     
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     self.assertEquals(0, person.getAvailableTime(
@@ -1034,7 +1036,7 @@ class TestCalendar(ERP5ReportTestCase):
     person = self.portal.person_module.newContent(portal_type='Person')
     assignment = person.newContent(portal_type='Assignment',
                                    calendar_value=group_calendar)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     self.assertEquals((18 - 8) * 60 * 60, person.getAvailableTime(
@@ -1067,7 +1069,7 @@ class TestCalendar(ERP5ReportTestCase):
     leave_request.setDestinationValue(person)
     leave_request.confirm()
     
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     self.assertEquals((9-8 + 18-17) * 60 * 60, person.getAvailableTime(
@@ -1106,7 +1108,7 @@ class TestCalendar(ERP5ReportTestCase):
     person = self.portal.person_module.newContent(portal_type='Person')
     assignment = person.newContent(portal_type='Assignment',
                                    calendar_value=group_calendar)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     leave_request = self.portal.leave_request_module.newContent(
                                   portal_type='Leave Request')
@@ -1119,7 +1121,7 @@ class TestCalendar(ERP5ReportTestCase):
     leave_request.setDestinationValue(person)
     leave_request.confirm()
     
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     self.assertEquals((18-9) * 60 * 60, person.getAvailableTime(
@@ -1155,7 +1157,7 @@ class TestCalendar(ERP5ReportTestCase):
     person = self.portal.person_module.newContent(portal_type='Person')
     assignment = person.newContent(portal_type='Assignment',
                                    calendar_value=group_calendar)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     leave_request = self.portal.leave_request_module.newContent(
                                   portal_type='Leave Request')
@@ -1168,7 +1170,7 @@ class TestCalendar(ERP5ReportTestCase):
     leave_request.setDestinationValue(person)
     leave_request.confirm()
     
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     self.assertEquals((17-8) * 60 * 60, person.getAvailableTime(
@@ -1204,7 +1206,7 @@ class TestCalendar(ERP5ReportTestCase):
     person = self.portal.person_module.newContent(portal_type='Person')
     assignment = person.newContent(portal_type='Assignment',
                                    calendar_value=group_calendar)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     leave_request = self.portal.leave_request_module.newContent(
                                   portal_type='Leave Request')
@@ -1223,7 +1225,7 @@ class TestCalendar(ERP5ReportTestCase):
     leave_request.setDestinationValue(person)
     leave_request.confirm()
     
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     self.assertEquals((18-13 + 12-10 + 9-8) * 60 * 60, person.getAvailableTime(
@@ -1263,7 +1265,7 @@ class TestCalendar(ERP5ReportTestCase):
     person = self.portal.person_module.newContent(portal_type='Person')
     assignment = person.newContent(portal_type='Assignment',
                                    calendar_value=group_calendar)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     leave_request = self.portal.leave_request_module.newContent(
                                   portal_type='Leave Request')
@@ -1282,7 +1284,7 @@ class TestCalendar(ERP5ReportTestCase):
     leave_request.setDestinationValue(person)
     leave_request.confirm()
     
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     self.assertEquals((18-11 + 9-8) * 60 * 60, person.getAvailableTime(
@@ -1320,7 +1322,7 @@ class TestCalendar(ERP5ReportTestCase):
     person = self.portal.person_module.newContent(portal_type='Person')
     assignment = person.newContent(portal_type='Assignment',
                                    calendar_value=group_calendar)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     leave_request = self.portal.leave_request_module.newContent(
                                   portal_type='Leave Request')
@@ -1339,7 +1341,7 @@ class TestCalendar(ERP5ReportTestCase):
     leave_request.setDestinationValue(person)
     leave_request.confirm()
     
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     self.assertEquals((18-11 + 9-8) * 60 * 60, person.getAvailableTime(
@@ -1423,7 +1425,7 @@ class TestCalendar(ERP5ReportTestCase):
           self.portal.portal_categories.calendar_period_type.type3)
     leave_request2.confirm()
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # set request variables and render                 

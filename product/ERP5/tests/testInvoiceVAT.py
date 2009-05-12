@@ -32,6 +32,7 @@ Warning: this tests an obsolete API; the test is disabled.
 """
 
 import unittest
+import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -63,7 +64,7 @@ class TestInvoiceVAT(ERP5TypeTestCase):
   def _safeTic(self):
     """Like tic, but swallowing errors, usefull for teardown"""
     try:
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
     except RuntimeError:
       pass
@@ -93,7 +94,7 @@ class TestInvoiceVAT(ERP5TypeTestCase):
       activity_tool.manageCancel(message.object_path, message.method_id)
       _print('\nCancelling active message %s.%s()\n'
              % (message.object_path, message.method_id) )
-    get_transaction().commit()
+    transaction.commit()
 
   def login(self, quiet=0, run=1):
     uf = self.getPortal().acl_users
@@ -148,7 +149,7 @@ class TestInvoiceVAT(ERP5TypeTestCase):
     account = self.getPortal().account_module.newContent(
           portal_type='Account',
           **kw)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     return account
 
@@ -157,7 +158,7 @@ class TestInvoiceVAT(ERP5TypeTestCase):
     org = self.getPortal().organisation_module.newContent(
           portal_type='Organisation',
           **kw)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     return org
 
@@ -166,7 +167,7 @@ class TestInvoiceVAT(ERP5TypeTestCase):
     spl = self.getPortal().sale_packing_list_module.newContent(
           portal_type='Sale Packing List',)
     spl.edit(**kw)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     return spl
   
@@ -176,7 +177,7 @@ class TestInvoiceVAT(ERP5TypeTestCase):
           portal_type='Sale Invoice Transaction',
           created_by_builder=created_by_builder)
     sit.edit(**kw)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     return sit
 
@@ -184,7 +185,7 @@ class TestInvoiceVAT(ERP5TypeTestCase):
     """Creates a currency."""
     currency = self.getCurrencyModule().newContent(
             portal_type = 'Currency', **kw)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     return currency
   
@@ -192,7 +193,7 @@ class TestInvoiceVAT(ERP5TypeTestCase):
     """Creates a resource."""
     resource = self.getPortal().product_module.newContent(
                       portal_type='Product', **kw)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     return resource
 
@@ -214,7 +215,7 @@ class TestInvoiceVAT(ERP5TypeTestCase):
     pred.setMembershipCriterionBaseCategoryList('resource')
     pred.setMembershipCriterionCategoryList(['resource/%s' %
                                              resource.getRelativeUrl()])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     itr.updateMatrix()
 
@@ -241,11 +242,11 @@ class TestInvoiceVAT(ERP5TypeTestCase):
     packing_list.confirm()
     packing_list.setReady()
     packing_list.start()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     packing_list.stop()
     self.assertEquals(packing_list.getSimulationState(), 'stopped')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
   def _makeOnePackingList(self):
@@ -344,7 +345,7 @@ class TestInvoiceVAT(ERP5TypeTestCase):
     
     # confirm the invoice, 
     invoice.confirm()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # this will generate accounting lines
     self.assertNotEquals(len(invoice.getMovementList(
@@ -373,7 +374,7 @@ class TestInvoiceVAT(ERP5TypeTestCase):
                 price=100,
                 resource_value=resource )
     invoice.plan()
-    get_transaction().commit();
+    transaction.commit();
     self.tic()
 
     # actual values on invoice line should be:
@@ -398,7 +399,7 @@ class TestInvoiceVAT(ERP5TypeTestCase):
                 price=100,
                 resource_value=resource )
     invoice.plan()
-    get_transaction().commit();
+    transaction.commit();
     self.tic()
     
     # actual values on invoice line should be:
@@ -433,7 +434,7 @@ class TestInvoiceVAT(ERP5TypeTestCase):
                 price=100,
                 resource_value=res )
     invoice.plan()
-    get_transaction().commit();
+    transaction.commit();
     self.tic()
 
     # actual values on invoice line should be:

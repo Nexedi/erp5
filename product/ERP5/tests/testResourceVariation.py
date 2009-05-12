@@ -32,6 +32,7 @@
 Tests Resource Variations
 """
 import unittest
+import transaction
 from Testing import ZopeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -222,13 +223,13 @@ class ResourceVariationTestCase(ERP5TypeTestCase):
                                             'option_colour',
                                             'individual_aspect']
                                             
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
     """Remove all documents.
     """
-    get_transaction().abort()
+    transaction.abort()
     self.product_module.manage_delObjects(
                       list(self.service_module.objectIds()))
     self.service_module.manage_delObjects(
@@ -238,7 +239,7 @@ class ResourceVariationTestCase(ERP5TypeTestCase):
     self.portal_categories.manage_delObjects((['required_size',
                                     'individual_aspect','option_colour']))
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def getBusinessTemplateList(self):

@@ -28,11 +28,7 @@
 
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-try:
-  from transaction import get_transaction
-except ImportError:
-  pass
-
+import transaction
 
 class TestContributionRegistryTool(ERP5TypeTestCase):
 
@@ -74,7 +70,7 @@ return predicate.getDestinationPortalType()
 """)
     self.portal.manage_addProduct['PythonScripts'].manage_addPythonScript(id='IngestionFile_testEvent')
     self.portal.IngestionFile_testEvent.write(python_script_src)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def setUpMimeType(self):
@@ -84,7 +80,7 @@ return predicate.getDestinationPortalType()
                                                id='mime_type')
       text = mime_type.newContent(portal_type='Category', id='text')
       text.newContent(portal_type='Category', id='html')
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
 
     if getattr(portal_categories, 'mime_type', None) is None:
@@ -92,7 +88,7 @@ return predicate.getDestinationPortalType()
                                                id='mime_type')
       message = mime_type.newContent(portal_type='Category', id='message')
       message.newContent(portal_type='Category', id='rfc822')
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
 
   def setUpPredicate(self):
@@ -104,7 +100,7 @@ return predicate.getDestinationPortalType()
       predicate._setMembershipCriterionCategoryList(['mime_type/text/html'])
       predicate._setMembershipCriterionBaseCategoryList(['mime_type'])
       predicate.setDestinationPortalType('Web Page')
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
 
     if getattr(portal_contribution_registry, 'my_predicate', None) is None:
@@ -116,7 +112,7 @@ return predicate.getDestinationPortalType()
       predicate.setCriterion('file_extension', identity=['eml'])
       predicate.setDestinationPortalType('Mail Message')
       predicate.setTestMethodId('IngestionFile_testEvent')
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
 
   def testFindPortalTypeName(self, quiet=0, run=run_all_test):

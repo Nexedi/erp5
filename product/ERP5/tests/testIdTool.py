@@ -27,6 +27,7 @@
 ##############################################################################
 
 import unittest
+import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
@@ -61,19 +62,19 @@ class TestIdTool(ERP5TypeTestCase):
     idtool = self.portal.portal_ids
     # test with value stored into zodb
     new_id = idtool.generateNewLengthId(id_group=4, store=1)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     last_id = idtool.getLastLengthGeneratedId(id_group=4)
     self.assertEqual(new_id, last_id)
     # same test without storing value into zodb
     new_id = idtool.generateNewLengthId(id_group=5, store=0)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     last_id = idtool.getLastLengthGeneratedId(id_group=5)
     self.assertEqual(new_id, last_id)
     # test with id_group as tuple
     new_id = idtool.generateNewLengthId(id_group=(6,), store=0)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     last_id = idtool.getLastLengthGeneratedId(id_group=(6,),)
     self.assertEqual(new_id, last_id)

@@ -28,6 +28,7 @@
 
 import unittest
 
+import transaction
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -134,16 +135,16 @@ class TestNotificationTool(ERP5TypeTestCase):
     portal._setObject('MailHost', DummyMailHost('MailHost'))
     portal.email_from_address = 'site@example.invalid'
     self.portal.portal_caches.clearAllCache()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.changeUser('erp5user')
 
   def beforeTearDown(self):
-    get_transaction().abort()
+    transaction.abort()
     # clear modules if necessary
     self.portal.person_module.manage_delObjects(
             list(self.portal.person_module.objectIds()))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def stepTic(self,**kw):
@@ -588,7 +589,7 @@ class TestNotificationToolWithCRM(TestNotificationTool):
     TestNotificationTool.beforeTearDown(self)
     self.portal.event_module.manage_delObjects(
             list(self.portal.event_module.objectIds()))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def test_store_as_event(self):
@@ -603,7 +604,7 @@ class TestNotificationToolWithCRM(TestNotificationTool):
                                   recipient=person,
                                   subject='Subject',
                                   message='Message')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)

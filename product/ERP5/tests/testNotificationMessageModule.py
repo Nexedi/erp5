@@ -28,6 +28,7 @@
 
 import unittest
 
+import transaction
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -75,17 +76,17 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     portal._setObject('MailHost', DummyMailHost('MailHost'))
     portal.email_from_address = 'site@example.invalid'
     self.portal.portal_caches.clearAllCache()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.changeUser('erp5user')
 
   def beforeTearDown(self):
-    get_transaction().abort()
+    transaction.abort()
     # clear modules if necessary
     module_list = (self.getNotificationMessageModule(),)
     for module in module_list:
       module.manage_delObjects(list(module.objectIds()))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def test_01_get_document(self, quiet=quiet, run=run_all_test):
@@ -102,7 +103,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
                                language='en',
                                version='01')
     n_m_en.validate()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     result = tool.getDocumentValue(reference='A')
     self.assertEqual(result.getRelativeUrl(), n_m_en.getRelativeUrl())
@@ -112,7 +113,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
                                language='fr',
                                version='01')
     n_m_fr.validate()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     result = tool.getDocumentValue(reference='A', language='fr')
     self.assertEqual(result.getRelativeUrl(), n_m_fr.getRelativeUrl())
@@ -122,7 +123,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
                                   language='fr',
                                   version='02')
     n_m_fr_02.validate()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     result = tool.getDocumentValue(reference='A', language='fr')
     self.assertEqual(result.getRelativeUrl(), n_m_fr_02.getRelativeUrl())

@@ -40,6 +40,8 @@
 
 
 import unittest
+import transaction
+
 from Products.ERP5Type.Utils import cartesianProduct
 from copy import copy
 
@@ -307,14 +309,14 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     workflow_tool = self.getPortal().portal_workflow
     workflow_tool.doActionFor(packing_list,
                       "confirm_action", "packing_list_workflow")
-    get_transaction().commit()
+    transaction.commit()
     # Apply tic so that the packing list is not in building state
     self.tic() # acceptable here because this is not the job
                # of the test to check if can do all transition
                # without processing messages
     workflow_tool.doActionFor(packing_list,
                       "set_ready_action", "packing_list_workflow")
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     workflow_tool.doActionFor(packing_list,
                       "start_action", "packing_list_workflow")
@@ -1194,7 +1196,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       LOG("Transiting '%s' on packing list %s" % (action, transition_step['id']), 0, '')
       workflow_tool.doActionFor(transited_pl, action, packing_list_workflow)
       transited_pl.recursiveImmediateReindexObject() # XXX
-      get_transaction().commit()
+      transaction.commit()
       self.stepTic()
       
       for omit_transit in (0,1):
@@ -1685,9 +1687,9 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
               )
       sequence.edit(packing_list_list = packing_list_list)
     
-    get_transaction().commit()
+    transaction.commit()
     self.stepTic()
-    get_transaction().commit()
+    transaction.commit()
     
     # Then test the next negative date
     next_date = simulation.getNextNegativeInventoryDate(

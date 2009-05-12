@@ -537,7 +537,7 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals(person.getCareerFunctionTitle(), function_title)
     self.assertEquals(person.getCareerFunctionValue(), function_object)
     # function must be acquired on person
-    person.reindexObject(); get_transaction().commit(); self.tic()
+    person.reindexObject(); transaction.commit(); self.tic()
     self.failUnless(person in function_object.getFunctionRelatedValueList())
 
     # Set & Check role
@@ -550,7 +550,7 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals(person.getCareerRoleTitle(), role_title)
     self.assertEquals(person.getCareerRoleValue(), role_object)
     # role must be acquired on person
-    person.reindexObject(); get_transaction().commit(); self.tic()
+    person.reindexObject(); transaction.commit(); self.tic()
     self.failUnless(person in role_object.getRoleRelatedValueList())
 
     # Set & Check grade
@@ -563,7 +563,7 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals(person.getCareerGradeTitle(), grade_title)
     self.assertEquals(person.getCareerGradeValue(), grade_object)
     # grade must be acquired on person 
-    person.reindexObject(); get_transaction().commit(); self.tic()
+    person.reindexObject(); transaction.commit(); self.tic()
     self.failUnless(person in grade_object.getGradeRelatedValueList())
 
     # Set & Check salary level
@@ -578,7 +578,7 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals(person.getCareerSalaryLevelTitle(), salary_level_title)
     self.assertEquals(person.getCareerSalaryLevelValue(), salary_level_object)
     # salary_level must be acquired on person 
-    person.reindexObject(); get_transaction().commit(); self.tic()
+    person.reindexObject(); transaction.commit(); self.tic()
     self.failUnless(person in
                    salary_level_object.getSalaryLevelRelatedValueList())
 
@@ -601,7 +601,7 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals(person.getCareerSkillTitle(), skill_title_list[0])
     self.assertEquals(person.getCareerSkillValue(), skill_object_list[0])
     # skill must be acquired on person 
-    person.reindexObject(); get_transaction().commit(); self.tic()
+    person.reindexObject(); transaction.commit(); self.tic()
     for skill_object in skill_object_list:
       self.failUnless(person in skill_object.getSkillRelatedValueList())
     self.assertEquals(person.getSkillValue(), skill_object_list[0])

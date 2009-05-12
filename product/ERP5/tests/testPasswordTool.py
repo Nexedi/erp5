@@ -60,16 +60,16 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.portal.portal_caches.clearAllCache()
 
   def beforeTearDown(self):
-    get_transaction().abort()
+    transaction.abort()
     # clear modules if necessary
     self.portal.person_module.manage_delObjects(list(self.portal.person_module.objectIds()))
     # reset password tool internal structure
     self.portal.portal_password.password_request_dict.clear()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def stepTic(self,**kw):
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def getUserFolder(self):

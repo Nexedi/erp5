@@ -27,6 +27,7 @@
 ##############################################################################
 
 import unittest
+import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Base import _aq_reset
 from AccessControl.SecurityManagement import newSecurityManager
@@ -139,7 +140,7 @@ class TestERP5Category(ERP5TypeTestCase):
     predicate.setCriterion('quantity', identity=None, min=None, max=None)
     self.predicate = predicate
 
-    get_transaction().commit() # If we don't commit, then we can't rename
+    transaction.commit() # If we don't commit, then we can't rename
     self.tic()
 
   def beforeTearDown(self):
@@ -168,7 +169,7 @@ class TestERP5Category(ERP5TypeTestCase):
   def commitAndTic(self):
     """Just to save one line.
     """
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def test_01_RenameCategory(self, quiet=quiet, run=run_all_test):
@@ -340,7 +341,7 @@ class TestERP5Category(ERP5TypeTestCase):
     self.assertEquals([], ctool.getAcquiredCategoryList(doc))
 
     # XXX this test's beforeTearDown commits transaction
-    get_transaction().abort()
+    transaction.abort()
 
 
 def test_suite():

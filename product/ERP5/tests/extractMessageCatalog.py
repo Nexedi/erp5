@@ -38,10 +38,7 @@ then erp5_content.pot and erp5_ui.pot will be made in the current directory.
 """
 
 import unittest
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
+import transaction
 
 # we reuse TestXHTML test.
 from Products.ERP5.tests.testXHTML import TestXHTML

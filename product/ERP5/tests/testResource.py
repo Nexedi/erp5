@@ -27,7 +27,7 @@
 ##############################################################################
 
 import unittest
-
+import transaction
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -79,7 +79,7 @@ class TestResource(ERP5TypeTestCase):
     self.createCategories()
 
   def beforeTearDown(self):
-    get_transaction().abort()
+    transaction.abort()
     for folder in (
           self.portal.getDefaultModule(self.resource_portal_type),
           self.portal.getDefaultModule(self.sale_supply_portal_type),
@@ -88,7 +88,7 @@ class TestResource(ERP5TypeTestCase):
           self.portal.getDefaultModule("Sale Order"),
           self.portal.getDefaultModule("Purchase Order"),):
       folder.manage_delObjects([i for i in folder.objectIds()])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def createCategories(self):
@@ -579,7 +579,7 @@ class TestResource(ERP5TypeTestCase):
               supply_line.setProperty(key, pricing_param)
       # Commit transaction
       self.logMessage("Commit transaction...", tab=1)
-      get_transaction().commit()
+      transaction.commit()
       # Tic
       self.logMessage("Tic...", tab=1)
       self.tic()
@@ -598,7 +598,7 @@ class TestResource(ERP5TypeTestCase):
     preference = self.portal.portal_preferences.default_site_preference
     preference.setPreferredProductOptionalVariationBaseCategoryList(['industrial_phase'])
     preference.enable()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # Create another product/supply, in order to be sure that the
     # nothing will be generated from this supply!
@@ -654,7 +654,7 @@ class TestResource(ERP5TypeTestCase):
     cell2.setMembershipCriterionCategory('industrial_phase/phase2')
     # Commit transaction
     self.logMessage("Commit transaction...", tab=1)
-    get_transaction().commit()
+    transaction.commit()
     # Tic
     self.logMessage("Tic...", tab=1)
     self.tic()
@@ -738,7 +738,7 @@ class TestResource(ERP5TypeTestCase):
       test_case_list.append((product, None, j))
     # Commit transaction
     self.logMessage("Commit transaction...", tab=1)
-    get_transaction().commit()
+    transaction.commit()
     # Tic
     self.logMessage("Tic...", tab=1)
     self.tic()
@@ -857,7 +857,7 @@ class TestResource(ERP5TypeTestCase):
 
     # Commit transaction
     self.logMessage("Commit transaction...", tab=1)
-    get_transaction().commit()
+    transaction.commit()
     # Tic
     self.logMessage("Tic...", tab=1)
     self.tic()
@@ -937,11 +937,11 @@ class TestResource(ERP5TypeTestCase):
     sale_order_line = sale_order.newContent(
         portal_type="Sale Order Line",
         resource_value=product)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(sale_order_line.getPrice(), 400.0)
     sale_order.setDestinationSectionValue(orga2)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     sale_order_line.setPrice(None)
     self.assertEquals(sale_order_line.getPrice(), 200.0)
@@ -953,11 +953,11 @@ class TestResource(ERP5TypeTestCase):
     purchase_order_line = purchase_order.newContent(
         portal_type="Purchase Order Line",
         resource_value=product)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(purchase_order_line.getPrice(), 40.0)
     purchase_order.setSourceSectionValue(orga2)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     purchase_order_line.setPrice(None)
     self.assertEquals(purchase_order_line.getPrice(), 20.0)
@@ -969,7 +969,7 @@ class TestResource(ERP5TypeTestCase):
     supply_line = resource.newContent(
                     portal_type=self.sale_supply_line_portal_type)
     supply_line.setBasePrice(1000)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     sale_order = self.portal.getDefaultModule("Sale Order").newContent(
                               portal_type='Sale Order',)

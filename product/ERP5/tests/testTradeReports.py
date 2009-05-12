@@ -29,6 +29,7 @@
 """Tests Standards ERP5 Trade Reports
 """
 import unittest
+import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
 from Products.ERP5Type.tests.utils import reindex
 from AccessControl.SecurityManagement import newSecurityManager
@@ -158,14 +159,14 @@ class TestTradeReports(ERP5ReportTestCase):
           )
 
     # and all this available to catalog
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.loginAsUser()
 
   def beforeTearDown(self):
     """Remove all documents.
     """
-    get_transaction().abort()
+    transaction.abort()
 
     self.organisation_module.manage_delObjects(
                       list(self.organisation_module.objectIds()))
@@ -180,7 +181,7 @@ class TestTradeReports(ERP5ReportTestCase):
     self.sale_order_module.manage_delObjects(
                       list(self.sale_order_module.objectIds()))
                       
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   @reindex  
@@ -273,7 +274,7 @@ class TestTradeReports(ERP5ReportTestCase):
               cancel=True
               )
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
 
@@ -688,7 +689,7 @@ class TestTradeReports(ERP5ReportTestCase):
               quantity=11,
               )
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     request = self.portal.REQUEST
@@ -847,7 +848,7 @@ class TestTradeReports(ERP5ReportTestCase):
               quantity=11,
               )
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     request = self.portal.REQUEST

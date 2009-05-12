@@ -28,6 +28,8 @@
 
 import unittest
 
+import transaction
+
 from Products.ERP5.tests.testPredicate import TestPredicateMixIn, REGION_FRANCE_PATH, REGION_GERMANY_PATH, GROUP_STOREVER_PATH, GROUP_OTHER_PATH
 from DateTime import DateTime
 from AccessControl.SecurityManagement import newSecurityManager
@@ -115,7 +117,7 @@ class TestDomainTool(TestPredicateMixIn):
       if not 'asia' in portal_categories[bc].objectIds():
         big_region = portal_categories[bc].newContent(id='asia',portal_type='Category')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def checkPredicate(self, test=None):
@@ -145,7 +147,7 @@ class TestDomainTool(TestPredicateMixIn):
 
     # Test with order line not none and predicate to none
     order_line.setQuantity(45)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,
         portal_type=rule_query)
@@ -155,13 +157,13 @@ class TestDomainTool(TestPredicateMixIn):
     order_line.setQuantity(45)
     kw = {'portal_type':'Mapped Value'}
     predicate.setCriterion('quantity',identity=45,min=None,max=None)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),1)
 
     order_line.setQuantity(40)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),0)
@@ -170,13 +172,13 @@ class TestDomainTool(TestPredicateMixIn):
     order_line.setQuantity(45)
     predicate = self.getPredicate()
     predicate.setCriterion('quantity',identity=None,min=30,max=None)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),1)
 
     order_line.setQuantity(10)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,
         portal_type=rule_query)
@@ -186,13 +188,13 @@ class TestDomainTool(TestPredicateMixIn):
     order_line.setQuantity(45)
     predicate = self.getPredicate()
     predicate.setCriterion('quantity',identity=None,min=None,max=50)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),1)
 
     order_line.setQuantity(60)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),0)
@@ -201,20 +203,20 @@ class TestDomainTool(TestPredicateMixIn):
     order_line.setQuantity(20)
     predicate = self.getPredicate()
     predicate.setCriterion('quantity',identity=None,min=30,max=50)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),0)
 
     order_line.setQuantity(60)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),0)
 
     order_line.setQuantity(45)
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(len(predicate_list),1)
 
@@ -222,25 +224,25 @@ class TestDomainTool(TestPredicateMixIn):
     # and also predicate to a category
     predicate.setMembershipCriterionBaseCategoryList(['region'])
     predicate.setMembershipCriterionCategoryList(['region/europe'])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),0)
 
     order_line.setCategoryList(['region/africa'])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),0)
 
     order_line.setCategoryList(['region/europe'])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),1)
 
     order_line.setQuantity(60)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),0)
@@ -259,14 +261,14 @@ class TestDomainTool(TestPredicateMixIn):
     self.supply_line.setStartDateRangeMax(date2)
     current_date = DateTime('2005/04/1 10:47:26.388 GMT-4')
     order_line.setStartDate(current_date)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),0)
 
     current_date = DateTime('2005/04/09 10:47:26.388 GMT-4')
     order_line.setStartDate(current_date)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
     self.assertEquals(len(predicate_list),1)
@@ -297,7 +299,7 @@ class TestDomainTool(TestPredicateMixIn):
     #self.supply_line.setMultimembershipCriterionBaseCategoryList(['resource'])
     self.supply_line.setMappedValuePropertyList(['base_price','priced_quantity'])
     #self.supply_line.setMembershipCriterionCategoryList(['resource/%s' % self.resource.getRelativeUrl()])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     domain_tool = self.getDomainTool()
     context = self.resource.asContext(categories=['resource/%s' % self.resource.getRelativeUrl()])
@@ -319,7 +321,7 @@ class TestDomainTool(TestPredicateMixIn):
     LOG('Test04, supply_line.getStartDateRangeMin',0,self.supply_line.getStartDateRangeMin())
     LOG('Test04, supply_line.getStartDateRangeMax',0,self.supply_line.getStartDateRangeMax())
     self.supply_line.setMappedValuePropertyList(['base_price','priced_quantity'])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     domain_tool = self.getDomainTool()
     order_line = self.getOrderLine()
@@ -380,7 +382,7 @@ class TestDomainTool(TestPredicateMixIn):
       hasCellContent = getattr(x, 'hasCellContent', None)
       return bool(hasCellContent and hasCellContent(base_id='path'))
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     domain_tool = self.getDomainTool()
     context = self.resource.asContext(
@@ -419,7 +421,7 @@ class TestDomainTool(TestPredicateMixIn):
         membership_criterion_category_list=[GROUP_STOREVER_PATH, REGION_GERMANY_PATH])
     document = self.createDocument(group='nexedi/storever',
                                    region='europe/western_europe/france')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     portal_domains = self.getPortalObject().portal_domains
     # Basic sanity checks

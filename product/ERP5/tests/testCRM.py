@@ -30,6 +30,8 @@ import os
 import email
 import email.Header
 
+import transaction
+
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.ERP5Type.tests.utils import DummyMailHost
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -65,7 +67,7 @@ class TestCRM(ERP5TypeTestCase):
 
       self.assertEqual(len(event.getCausalityRelatedValueList()), 0)
 
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
 
       portal_workflow.doActionFor(event, 'create_related_event_action',
@@ -73,7 +75,7 @@ class TestCRM(ERP5TypeTestCase):
                                   related_event_title='New Title',
                                   related_event_description='New Desc')
 
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
 
       self.assertEqual(len(event.getCausalityRelatedValueList()), 1)
@@ -145,7 +147,7 @@ class TestCRM(ERP5TypeTestCase):
                           'person_module_selection', [])
     self.portal.portal_selections.setSelectionParamsFor(
                           'person_module_selection', dict(title='Pers1'))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     person_module.PersonModule_newEvent(portal_type='Mail Message',
                                         title='The Event Title',
@@ -156,7 +158,7 @@ class TestCRM(ERP5TypeTestCase):
                                         text_content='Event Content',
                                         form_id='PersonModule_viewPersonList')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     related_event = pers1.getDestinationRelatedValue(
@@ -180,7 +182,7 @@ class TestCRM(ERP5TypeTestCase):
     self.portal.portal_selections.setSelectionCheckedUidsFor(
           'person_module_selection',
           [pers1.getUid(), pers2.getUid()])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     person_module.PersonModule_newEvent(portal_type='Mail Message',
                                         title='The Event Title',
@@ -191,7 +193,7 @@ class TestCRM(ERP5TypeTestCase):
                                         text_content='Event Content',
                                         form_id='PersonModule_viewPersonList')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     for person in (pers1, pers2):
@@ -262,12 +264,12 @@ class TestCRM(ERP5TypeTestCase):
       ticket_url = ticket.getRelativeUrl()
       event = self.portal.event_module.newContent(portal_type=portal_type,
                                                   follow_up=ticket_url)
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       self.assertEqual(len(event.getCausalityRelatedValueList()), 0)
       event.receive()
       portal_workflow.doActionFor(event, 'acknowledge_action', create_event=0)
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       self.assertEqual(len(event.getCausalityRelatedValueList()), 0)
       
@@ -278,12 +280,12 @@ class TestCRM(ERP5TypeTestCase):
       ticket_url = ticket.getRelativeUrl()
       event = self.portal.event_module.newContent(portal_type=portal_type,
                                                   follow_up=ticket_url)
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       self.assertEqual(len(event.getCausalityRelatedValueList()), 0)
       event.receive()
       portal_workflow.doActionFor(event, 'acknowledge_action', create_event=1)
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       self.assertEqual(len(event.getCausalityRelatedValueList()), 1)
       new_event = event.getCausalityRelatedValue()
@@ -300,14 +302,14 @@ class TestCRM(ERP5TypeTestCase):
                                                   title='Event Title',
                                                   text_content='Event Content',
                                                   text_format='text/plain')
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       self.assertEqual(len(event.getCausalityRelatedValueList()), 0)
       event.receive()
       portal_workflow.doActionFor(event, 'acknowledge_action',
                                   create_event=1,
                                   quote_original_message=1)
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       self.assertEqual(len(event.getCausalityRelatedValueList()), 1)
       new_event = event.getCausalityRelatedValue()
@@ -360,16 +362,16 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
               default_email_text='he@erp5.org')
 
     # make sure customers are available to catalog
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
-    get_transaction().abort()
+    transaction.abort()
     # clear modules if necessary
     for module in (self.portal.event_module,
                    self.portal.campaign_module):
       module.manage_delObjects(list(module.objectIds()))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def _readTestData(self, filename):
@@ -417,14 +419,14 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
     # source is found automatically, based on the From: header in the mail
     event = self._ingestMail('simple')
     # metadata discovery is done in an activity
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals('person_module/sender', event.getSource())
 
   def test_recipient(self):
     # destination is found automatically, based on the To: header in the mail
     event = self._ingestMail('simple')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     destination_list = event.getDestinationList()
     destination_list.sort()
@@ -437,10 +439,10 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
     # But, we don't want it to associate with the first campaign simply
     # because we searched against nothing
     self.portal.campaign_module.newContent(portal_type='Campaign')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     event = self._ingestMail('simple')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(None, event.getFollowUp())
 
@@ -515,7 +517,7 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
     """
     document = self._ingestMail(filename='forwarded')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEqual(document.getContentInformation().get('From'), 'Me <me@erp5.org>')
@@ -531,7 +533,7 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
     """
     document = self._ingestMail(filename='forwarded_attached')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEqual(document.getContentInformation().get('From'), 'Me <me@erp5.org>')
@@ -542,7 +544,7 @@ class TestCRMMailIngestion(ERP5TypeTestCase):
   def test_encoding(self):
     document = self._ingestMail(filename='encoded')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEqual(document.getContentInformation().get('To'),
@@ -615,16 +617,16 @@ class TestCRMMailSend(ERP5TypeTestCase):
       self.portal._setObject('MailHost', DummyMailHost('MailHost'))
 
     # make sure customers are available to catalog
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
-    get_transaction().abort()
+    transaction.abort()
     # clear modules if necessary
     for module in (self.portal.event_module,
                    self.portal.campaign_module,):
       module.manage_delObjects(list(module.objectIds()))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def test_MailFromMailMessageEvent(self):
@@ -637,7 +639,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     event.setTextContent('Mail Content')
     self.portal.portal_workflow.doActionFor(event, 'start_action',
                                             send_mail=1)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
@@ -666,7 +668,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     event.setTextContent('Mail Content')
     self.portal.portal_workflow.doActionFor(event, 'start_action',
                                             send_mail=1)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     last_message_1, last_message_2 = self.portal.MailHost._message_list[-2:]
     self.assertNotEquals((), last_message_1)
@@ -691,7 +693,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     event.setTextContent('Mail Content')
     self.portal.portal_workflow.doActionFor(event, 'start_action',
                                             send_mail=1)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # no mail sent
     last_message = self.portal.MailHost._last_message
@@ -708,7 +710,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
       self.portal.portal_workflow.doActionFor(event, 'start_action',
                                               send_mail=1)
 
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       # this means no message have been set
       self.assertEquals((), self.portal.MailHost._last_message)
@@ -724,7 +726,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
       self.portal.portal_workflow.doActionFor(event, 'receive_action')
       self.portal.portal_workflow.doActionFor(event, 'mark_started_action')
 
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       # this means no message have been set
       self.assertEquals((), self.portal.MailHost._last_message)
@@ -740,7 +742,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     event.setTextContent('Hello<br/>World')
     self.portal.portal_workflow.doActionFor(event, 'start_action',
                                             send_mail=1)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
@@ -765,7 +767,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     event.setTextContent('Hàhà')
     self.portal.portal_workflow.doActionFor(event, 'start_action',
                                             send_mail=1)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
@@ -799,7 +801,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     document_pdf = add_document('sample_attachment.pdf', '1',
                                 self.portal.document_module, 'PDF')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # Add a ticket
@@ -855,7 +857,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     document_odt = add_document('sample_attachment.odt', '2',
                                 self.portal.document_module, 'Text')
     
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # Add a ticket
@@ -911,7 +913,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     document_zip = add_document('sample_attachment.zip', '3',
                                 self.portal.document_module, 'File')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # Add a ticket
@@ -967,7 +969,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     document_gif = add_document('sample_attachment.gif', '4',
                                 self.portal.image_module, 'Image')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # Add a ticket
@@ -1018,7 +1020,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     document_html.edit(text_content='<html><body>Hello world!</body></html>',
                        reference='sample_attachment.html')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # Add a ticket
@@ -1119,7 +1121,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     document_txt = add_document('sample_attachment.txt', '2',
                                 self.portal.person_module['me'], 'File')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # Add a ticket
@@ -1177,7 +1179,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
     document_gif = add_document('sample_attachment.gif', '1',
                                 self.portal.person_module['me'], 'Image')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # Add a ticket

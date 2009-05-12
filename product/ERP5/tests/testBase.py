@@ -30,6 +30,8 @@
 import unittest
 import os
 
+import transaction
+
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -169,7 +171,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
       Check if there is a activity in activity queue.
     """
     portal = self.getPortal()
-    get_transaction().commit()
+    transaction.commit()
     message_list = portal.portal_activities.getMessageList()
     method_id_list = [x.method_id for x in message_list]
     # XXX FIXME: how many activities should be created normally ?
@@ -1046,7 +1048,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     self.getPortal().person_module.newContent(portal_type='Person',
                                          title='translate_table_test')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(1, len(self.getPortal().portal_catalog(
       portal_type='Person', title='translate_table_test')))

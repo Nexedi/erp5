@@ -28,6 +28,7 @@
 
 import unittest
 
+import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Base import _aq_reset
 from AccessControl.SecurityManagement import newSecurityManager
@@ -524,7 +525,7 @@ context.setDescription('%s,%s,%s' % (d, args, result))
     self.assertEquals(organisation.getDescription(), 'bad')
     organisation.getProperty('description', d='toto')
     self.assertEquals(organisation.getDescription(), 'bad')
-    get_transaction().commit()
+    transaction.commit()
     self.assertEquals(organisation.getDescription(), "toto,('description',),bad")
 
   def test_17_activity_interaction(self, quiet=0, run=run_all_test):
@@ -548,7 +549,7 @@ context.setTitle('Bar')
     organisation.setTitle('Foo')
     organisation.setGroupValue(organisation)
     self.assertEquals(organisation.getTitle(), 'Foo')
-    get_transaction().commit()
+    transaction.commit()
     self.assertEquals(organisation.getTitle(), 'Foo')
     self.tic()
     self.assertEquals(organisation.getTitle(), 'Bar')

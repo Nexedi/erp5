@@ -44,6 +44,8 @@ import unittest
 import os
 import random
 
+import transaction
+
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
 
@@ -208,7 +210,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     invoice_transaction_rule.deleteContent(
                 [x for x in invoice_transaction_rule.objectIds()])
     self.assertEquals(len(invoice_transaction_rule.objectValues()), 0)
-    get_transaction().commit()
+    transaction.commit()
 
     # and add new content, predicate product_line
     predicate_product_notebook = invoice_transaction_rule.newContent(

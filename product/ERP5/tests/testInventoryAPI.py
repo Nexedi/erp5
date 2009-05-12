@@ -36,6 +36,7 @@ import os
 import random
 import unittest
 
+import transaction
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
 from Testing import ZopeTestCase
@@ -127,7 +128,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
   def _safeTic(self):
     """Like tic, but swallowing errors, usefull for teardown"""
     try:
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
     except RuntimeError:
       pass
@@ -153,7 +154,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
       activity_tool.manageCancel(message.object_path, message.method_id)
       ZopeTestCase._print('\nCancelling active message %s.%s()\n'
                           % (message.object_path, message.method_id) )
-    get_transaction().commit()
+    transaction.commit()
 
   def login(self, quiet=0, run=1):
     uf = self.getPortal().acl_users
@@ -228,7 +229,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     """Creates a product."""
     product = self.getProductModule().newContent(
             portal_type = 'Product', **kw)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     return product
   _makeResource = _makeProduct
@@ -297,7 +298,7 @@ class TestInventory(InventoryAPITestCase):
     sim_mvt.setDeliveryValue(mvt)
     self.failIf(sim_mvt.isAccountable())
     # not accountable movement are not counted by getInventory
-    get_transaction().commit(); self.tic() # (after reindexing of course)
+    transaction.commit(); self.tic() # (after reindexing of course)
     self.assertEquals(100, getInventory(section_uid=self.section.getUid()))
   
   def test_OmitSimulation(self):
@@ -330,7 +331,7 @@ class TestInventory(InventoryAPITestCase):
     self.assertEquals(getInventory(
                 section_category_strict_membership=['group/level1']), 0)
     self.section.setGroup('level1')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(getInventory(
                 section_category_strict_membership=['group/level1']), 100)
@@ -363,7 +364,7 @@ class TestInventory(InventoryAPITestCase):
     self.assertEquals(getInventory(
               mirror_section_category_strict_membership=['group/level1']), 0)
     self.mirror_section.setGroup('level1')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(getInventory(
             mirror_section_category_strict_membership=['group/level1']), 100)
@@ -387,7 +388,7 @@ class TestInventory(InventoryAPITestCase):
     self.assertEquals(getInventory(
                 node_category_strict_membership=['group/level1']), 0)
     self.node.setGroup('level1')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(getInventory(
                 node_category_strict_membership=['group/level1']), 100)
@@ -405,7 +406,7 @@ class TestInventory(InventoryAPITestCase):
     self.assertEquals(getInventory(
                 resource_category_strict_membership=['product_line/level1']), 0)
     self.resource.setProductLine('level1')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(getInventory(
             resource_category_strict_membership=['product_line/level1']), 100)
@@ -426,7 +427,7 @@ class TestInventory(InventoryAPITestCase):
     self.assertEquals(getInventory(
                 payment_category_strict_membership=['product_line/level1']), 0)
     self.payment_node.setProductLine('level1')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(getInventory(
               payment_category_strict_membership=['product_line/level1']), 100)
@@ -2003,7 +2004,7 @@ class TestInventoryDocument(InventoryAPITestCase):
     # everything must be consistent after reindexation
     inventory_module = self.getPortal().getDefaultModule(portal_type='Inventory')
     inventory_module.recursiveReindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     inventory_kw={'node_uid': self.node_uid,
                   'at_date': self.INVENTORY_DATE_3}
@@ -2050,7 +2051,7 @@ class TestInventoryDocument(InventoryAPITestCase):
       self.workflow_tool.doActionFor(inventory, transition_id,
               wf_id=workflow_id)
       self.assertEquals('delivered', inventory.getSimulationState())
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       
       # We should detect the previous inventory and fails
@@ -2069,7 +2070,7 @@ class TestInventoryDocument(InventoryAPITestCase):
       self.workflow_tool.doActionFor(new_inventory, transition_id,
               wf_id=workflow_id)
       self.assertEquals('delivered', new_inventory.getSimulationState())
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
 
       new_inventory = new_inventory.Base_createCloneDocument(batch_mode=1)
@@ -2089,7 +2090,7 @@ class TestInventoryDocument(InventoryAPITestCase):
         if psheet in ps_list:
           ps_list.remove(psheet)
       ti.property_sheet_list = ps_list
-      get_transaction().commit()
+      transaction.commit()
       _aq_reset()
 
 

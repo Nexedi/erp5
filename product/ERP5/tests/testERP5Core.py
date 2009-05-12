@@ -30,6 +30,7 @@
 import unittest
 import md5
 
+import transaction
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
 from Products.PageTemplates.GlobalTranslationService import \
@@ -67,11 +68,11 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.auth = '%s:%s' % (self.manager_username, self.manager_password)
 
   def beforeTearDown(self):
-    get_transaction().abort()
+    transaction.abort()
     if 'test_folder' in self.portal.objectIds():
       self.portal.manage_delObjects(['test_folder'])
     self.portal.portal_selections.setSelectionFor('test_selection', None)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def test_01_ERP5Site_createModule(self, quiet=quiet, run=run_all_test):
@@ -284,12 +285,12 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Login as the above user
     newSecurityManager(None, user)
     self.auth = '%s:%s' % (login_name, password)
-    get_transaction().commit()
+    transaction.commit()
 
     # Create preference
     portal.portal_preferences.newContent('Preference', title='My Test Preference')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEqual(
@@ -306,14 +307,14 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     uid_list = [document_1.getUid(), document_2.getUid()]
     self.portal.portal_selections.setSelectionParamsFor(
           'test_selection', dict(uids=uid_list))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     md5_string = md5.new(str(sorted([str(x) for x in uid_list]))).hexdigest()
     redirect = module.Folder_delete(selection_name='test_selection',
                                     uids=uid_list,
                                     md5_object_uid_list=md5_string)
     self.assert_('Deleted.' in redirect, redirect)
-    get_transaction().commit(1)
+    transaction.commit(1)
     self.assertEquals(len(module.objectValues()), 0)
 
   def test_Folder_delete_related_object(self):
@@ -328,7 +329,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     uid_list = [document_1.getUid(), document_2.getUid()]
     self.portal.portal_selections.setSelectionParamsFor(
                           'test_selection', dict(uids=uid_list))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals([document_1],
         self.portal.portal_categories.getRelatedValueList(document_2))
@@ -337,7 +338,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                                     uids=uid_list,
                                     md5_object_uid_list=md5_string)
     self.assert_('Sorry, 1 item is in use.' in redirect, redirect)
-    get_transaction().commit(1)
+    transaction.commit(1)
     self.assertEquals(len(module.objectValues()), 2)
 
 
@@ -354,7 +355,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     uid_list = [document_2.getUid(), ]
     self.portal.portal_selections.setSelectionParamsFor(
                           'test_selection', dict(uids=uid_list))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals([document_1],
         self.portal.portal_categories.getRelatedValueList(document_2))
@@ -366,7 +367,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                                     uids=uid_list,
                                     md5_object_uid_list=md5_string)
     self.assert_('Sorry, 1 item is in use.' in redirect, redirect)
-    get_transaction().commit(1)
+    transaction.commit(1)
     self.assertEquals(len(module.objectValues()), 2)
 
 

@@ -27,6 +27,8 @@
 
 import unittest
 
+import transaction
+
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from zLOG import LOG
@@ -65,7 +67,7 @@ class TestRuleMixin(TestOrderMixin):
     self.getSimulationTool().manage_delObjects(
         ids=list(self.getSimulationTool().objectIds()))
     # commit
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
 
@@ -74,7 +76,7 @@ class TestRuleMixin(TestOrderMixin):
       container.manage_delObjects(ids=[id])
     self.getSimulationTool().manage_delObjects(
         ids=list(self.getSimulationTool().objectIds()))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def getTitle(self):
@@ -96,10 +98,10 @@ class TestRuleMixin(TestOrderMixin):
         source_section='group/a', destination_section='group/b')
     pl.newContent(portal_type=self.packing_list_line_portal_type, id='line')
     pl.setStartDate("2007-07-01")
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     pl.confirm()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     return pl
 
@@ -118,7 +120,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     delivery_rule = self.getRuleTool().searchFolder(
         reference='default_delivery_rule')[0]
     delivery_rule.validate()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(self.getRuleTool().countFolder(
@@ -138,7 +140,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
         reference='default_delivery_rule')[0]
     delivery_rule.setTestMethodId('wrong_script')
     delivery_rule.validate()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(self.getRuleTool().countFolder(
@@ -158,7 +160,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
         reference='default_delivery_rule')[0]
     delivery_rule.setTestMethodId('good_script')
     delivery_rule.validate()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(self.getRuleTool().countFolder(
@@ -180,7 +182,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     delivery_rule.setTestMethodId('good_script')
     delivery_rule.validate()
     delivery_rule.invalidate()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(self.getRuleTool().countFolder(
@@ -200,7 +202,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
         reference='default_delivery_rule')[0]
     delivery_rule.setTestMethodId('good_script')
     delivery_rule.validate()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(self.getRuleTool().countFolder(
@@ -223,7 +225,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     delivery_rule.setStartDateRangeMin('2007-06-01')
     delivery_rule.setStartDateRangeMax('2007-06-04')
     delivery_rule.validate()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(self.getRuleTool().countFolder(
@@ -246,7 +248,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     delivery_rule.setStartDateRangeMin('2007-06-01')
     delivery_rule.setStartDateRangeMax('2007-08-01')
     delivery_rule.validate()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(self.getRuleTool().countFolder(
@@ -282,12 +284,12 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
         version='2')
     delivery_rule_2.setTestMethodId('rule_script')
     delivery_rule_2.validate()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # delivery_rule_2 should be applied
     self.pl.updateAppliedRule('default_delivery_rule')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(self.pl.getCausalityRelatedValue().getSpecialise(),
         delivery_rule_2.getRelativeUrl())
@@ -297,12 +299,12 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
 
     # increase version of delivery_rule_1
     delivery_rule_1.setVersion("3")
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # delivery_rule_1 should be applied
     self.pl.updateAppliedRule('default_delivery_rule')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(self.pl.getCausalityRelatedValue().getSpecialise(),
         delivery_rule_1.getRelativeUrl())
@@ -344,11 +346,11 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     # clear simulation
     self.getSimulationTool().manage_delObjects(
         ids=list(self.getSimulationTool().objectIds()))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.pl.updateAppliedRule('default_delivery_rule')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # check that only one invoicing rule (higher version) was applied
@@ -367,11 +369,11 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     self.getSimulationTool().manage_delObjects(
         ids=[self.pl.getCausalityRelatedId()])
     invoicing_rule_1.setVersion('3')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.pl.updateAppliedRule('default_delivery_rule')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # check that only one invoicing rule (higher version) was applied
@@ -418,11 +420,11 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     # clear simulation
     self.getSimulationTool().manage_delObjects(
         ids=list(self.getSimulationTool().objectIds()))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.pl.updateAppliedRule('default_delivery_rule')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     root_applied_rule = self.pl.getCausalityRelatedValue()
 
@@ -436,7 +438,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     # change rule script so that it matches and test again
     invoicing_rule_1.setTestMethodId('invoice_rule_script')
     root_applied_rule.expand()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(root_applied_rule.getRelativeUrl(),
@@ -464,10 +466,10 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
         portal_type="Invoicing Rule", reference='default_invoicing_rule_2',
         version='2', test_method_id='invoice_rule_script')
     invoicing_rule_n.validate()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     root_applied_rule.expand()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(root_applied_rule.getRelativeUrl(),
@@ -516,11 +518,11 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     self.getSimulationTool().manage_delObjects(
         ids=list(self.getSimulationTool().objectIds()))
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.pl.updateAppliedRule('default_delivery_rule')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     root_applied_rule = self.pl.getCausalityRelatedValue()
 
@@ -536,11 +538,11 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
 
     # invalidate the rule and test that it is still there
     invoicing_rule_1.invalidate()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(invoicing_rule_1.getValidationState(), 'invalidated')
     root_applied_rule.expand()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(root_applied_rule.getRelativeUrl(),
@@ -558,7 +560,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     # removed
     invoicing_rule_1.setTestMethodId('delivery_rule_script')
     root_applied_rule.expand()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(root_applied_rule.getRelativeUrl(),
@@ -574,11 +576,11 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     # that the rule is still there
     invoicing_rule_1.setTestMethodId('invoice_rule_script')
     invoicing_rule_1.validate()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(invoicing_rule_1.getValidationState(), 'validated')
     root_applied_rule.expand()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(root_applied_rule.getRelativeUrl(),
@@ -598,7 +600,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
 
     invoicing_rule_1.setTestMethodId('delivery_rule_script')
     root_applied_rule.expand()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(root_applied_rule.getRelativeUrl(),
@@ -653,11 +655,11 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     self.getSimulationTool().manage_delObjects(
         ids=list(self.getSimulationTool().objectIds()))
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.pl.updateAppliedRule('default_delivery_rule')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     root_applied_rule = self.pl.getCausalityRelatedValue()
 
@@ -675,7 +677,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     # replaced by invoicing rule 1
     invoicing_rule_2.setTestMethodId('delivery_rule_script')
     root_applied_rule.expand()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(root_applied_rule.getRelativeUrl(),
@@ -695,7 +697,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     sub_movement = applied_rule.objectValues()[0]
     sub_movement.setDeliveryValue(self.pl.line)
     root_applied_rule.expand()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(root_applied_rule.getRelativeUrl(),
