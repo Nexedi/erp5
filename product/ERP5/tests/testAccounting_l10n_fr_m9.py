@@ -211,13 +211,6 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
     self.failUnless(account.getAccountType() in ('liability/payable',
                                                  'asset/receivable'))
 
-  def test_AccountTypeConstaintFixForPayable(self):
-    account = self._getAccount('payable_account',
-                               gap='fr/m9/4/40',
-                               account_type='equity')
-    self.assertEquals(1, len(account.checkConsistency(fixit=1)))
-    self.assertEquals('liability/payable', account.getAccountType())
-  
   # Members of gap/fr/m9/4/47 are very specific
   # for now, we do not fix 476 or 477
   def test_AccountTypeConstaintFixFor4718(self):
