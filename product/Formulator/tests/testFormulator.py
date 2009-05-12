@@ -12,13 +12,13 @@ except ImportError:
     # startup is only in Zope2.6
     pass
 
-from Products.Formulator.tests import test_Form, test_validators, test_serialize
+from Products.Formulator.tests import testForm, testFormValidator, testSerializeForm
 
 def test_suite():
     suite = unittest.TestSuite()
-    suite.addTest(test_Form.test_suite())
-    suite.addTest(test_validators.test_suite())
-    suite.addTest(test_serialize.test_suite())
+    suite.addTest(testForm.test_suite())
+    suite.addTest(testFormValidator.test_suite())
+    suite.addTest(testSerializeForm.test_suite())
     return suite
 
 def main():
