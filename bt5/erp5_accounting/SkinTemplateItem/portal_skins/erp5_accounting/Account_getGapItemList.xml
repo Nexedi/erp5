@@ -78,9 +78,9 @@ def getGapItemList(only_preferred_gap): \n
   ctool = context.getPortalObject().portal_categories\n
   if only_preferred_gap:\n
     gap_root = context.getPortalObject().portal_preferences\\\n
-                    .getPreferredAccountingTransactionGap() or\\\n
-                               context.getPortalDefaultGapRoot()\n
-    return ctool.resolveCategory(gap_root).getCategoryChildItemList(\n
+                    .getPreferredAccountingTransactionGap()\n
+    if gap_root:\n
+      return ctool.resolveCategory(gap_root).getCategoryChildItemList(\n
         base=0, is_self_excluded=1, display_method=display, sort_method=sort)\n
 \n
   result = []  \n
