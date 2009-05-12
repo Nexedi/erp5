@@ -135,9 +135,16 @@
 </tr>\n
 <!-- Asserts goes here -->\n
 <tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
   <td>assertText</td>\n
   <td>//div[@class="index_html"]/h2</td>\n
   <td>Welcome to ERP5</td>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+   <td>assertText</td>\n
+   <td>//div[@class="title_index"]/span</td>\n
+   <td>ERP5</td>\n
+</tal:block>\n
 </tr>\n
 <tr>\n
   <td>open</td>\n

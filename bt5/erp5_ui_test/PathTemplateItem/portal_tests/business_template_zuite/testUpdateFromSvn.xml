@@ -52,6 +52,8 @@
       must have checkout a copy of test_core in your svn dir)</td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/BTZuite_CommonTemplate/macros/init" />\n
+\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>open</td>\n
   <td>${base_url}/portal_templates/TemplateTool_viewUpdateRepositoryBusinessTemplateListDialog</td>\n
@@ -142,6 +144,7 @@
   <td>Reset Successfully.</td>\n
   <td></td>\n
 </tr>\n
+</tal:block>\n
 </body>\n
 </html>\n
 

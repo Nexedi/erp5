@@ -88,11 +88,30 @@
   <td tal:content="string: ${here/portal_url}/foo_module/FooModule_viewSearchDialog?dialog_category=object_search">/erp5/foo_module/foo_module/FooModule_viewSearchDialog?dialog_category=object_search</td>\n
   <td></td>\n
 </tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
+<tr>\n
+  <td>select</td>\n
+  <td>select_language</td>\n
+  <td>label=English</td>\n
+<tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/view">erp5/view</td>\n
+  <td></td>\n
+</tr>\n
 <tr>\n
   <td>select</td>\n
   <td>select_language</td>\n
   <td>label=English</td>\n
 </tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/foo_module/FooModule_viewSearchDialog?dialog_category=object_search">/erp5/foo_module/foo_module/FooModule_viewSearchDialog?dialog_category=object_search</td>\n
+  <td></td>\n
+</tr>\n
+</tal:block>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
   <td>//select[@id="dialog_selector"]</td>\n
@@ -125,6 +144,7 @@
   <td>dialog_submit_button</td>\n
   <td>Search Foos</td>\n
 </tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>selectAndWait</td>\n
   <td>select_language</td>\n
@@ -150,6 +170,58 @@
   <td>select_language</td>\n
   <td>label=English</td>\n
 </tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/view">erp5/view</td>\n
+  <td></td>\n
+</tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_language</td>\n
+  <td>label=Wolof</td>\n
+<tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/foo_module/FooModule_viewSearchDialog?dialog_category=object_search">/erp5/foo_module/foo_module/FooModule_viewSearchDialog?dialog_category=object_search</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>dialog_submit_button</td>\n
+  <td>Seet Foos</td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/view">erp5/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_language</td>\n
+  <td>label=Xhosa</td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/foo_module/FooModule_viewSearchDialog?dialog_category=object_search">/erp5/foo_module/foo_module/FooModule_viewSearchDialog?dialog_category=object_search</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>dialog_submit_button</td>\n
+  <td>Searching Foos</td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td tal:content="string: ${here/portal_url}/view">erp5/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>select_language</td>\n
+  <td>label=English</td>\n
+</tr>\n
+</tal:block>\n
 \n
 \n
 </body>\n

@@ -955,11 +955,13 @@ fieldset {\n
 #actions button .image{\n
   background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/exec16.png\');\n
   position: relative;\n
+  top: -10px;\n
   background-repeat: no-repeat;\n
 }\n
 #jump button .image {\n
   background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/jump.png\');\n
   position: relative;\n
+  top: -10px;\n
   background-repeat: no-repeat;\n
 }\n
 \n
@@ -1048,6 +1050,11 @@ fieldset {\n
 \n
 #context_bar .tool_buttons .sort .image {\n
   background-image: url(\'<dtml-var expr="portal_url.getPortalObject().absolute_url()">/images/sort.png\');\n
+}\n
+\n
+#navigation_buttons {\n
+text-align: right;\n
+float: right\n
 }\n
 \n
 #navigation_bar button .image,\n

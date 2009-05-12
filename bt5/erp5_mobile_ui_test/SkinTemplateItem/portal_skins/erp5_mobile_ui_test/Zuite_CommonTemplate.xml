@@ -70,6 +70,14 @@
       <td></td>\n
     </tr>\n
   </tal:block>\n
+\n
+  <tal:block metal:define-macro="goToFrontPage">\n
+   <tr>\n
+    <td>open</td>\n
+    <td>${base_url}/view</td>\n
+    <td></td>\n
+   </tr>\n
+  </tal:block>\n
 </tal:block>\n
 
 

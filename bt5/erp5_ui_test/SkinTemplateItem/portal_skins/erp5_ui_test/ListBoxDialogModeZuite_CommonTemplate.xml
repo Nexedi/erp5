@@ -116,17 +116,17 @@
     <tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/goto_dialog" />\n
     <tr>\n
       <td>verifyText</td>\n
-      <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+      <td>//*[@id="listbox_data_line_0"]//a[not(@title)][1]</td>\n
       <td>0</td>\n
     </tr>\n
     <tr>\n
       <td>verifyText</td>\n
-      <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+      <td>//*[@id="listbox_data_line_1"]//a[not(@title)][1]</td>\n
       <td>1</td>\n
     </tr>\n
     <tr>\n
       <td>verifyText</td>\n
-      <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+      <td>//*[@id="listbox_data_line_2"]//a[not(@title)][1]</td>\n
       <td>2</td>\n
     </tr>\n
     <tr>\n
@@ -169,7 +169,7 @@
 \n
   <tr>\n
     <td>click</td>\n
-    <td>//tr[@id=\'listbox_data_line_1\']/td[1]/input</td>\n
+    <td>//*[@id=\'listbox_data_line_1\']//input[@type="checkbox"]</td>\n
     <td></td>\n
   </tr>\n
     <tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/verify_dialog" />\n
@@ -190,9 +190,9 @@
   <td>Hardcoded text value</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyValue</td>\n
-\t<td>//tr[@id="listbox_data_line_1"]/td[1]//input</td>\n
-\t<td>on</td>\n
+  <td>verifyValue</td>\n
+  <td>//*[@id="listbox_data_line_1"]//input[@type="checkbox"]</td>\n
+  <td>on</td>\n
 </tr>\n
 \n
   </tal:block>\n

@@ -51,6 +51,7 @@
 <tr><td rowspan="1" colspan="3">Test Dependency Handling</td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/BTZuite_CommonTemplate/macros/init" />\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>open</td>\n
   <td>${base_url}/portal_templates/TemplateTool_viewUpdateRepositoryBusinessTemplateListDialog?dialog_category=object_exchange&cancel_url=http%3A//127.0.0.1%3A9080/erp5/portal_templates/&selection_index:int=0&form_id=TemplateTool_viewBusinessTemplateList&selection_name=business_template_selection</td>\n
@@ -201,6 +202,7 @@
   <td>Reset Successfully.</td>\n
   <td></td>\n
 </tr>\n
+</tal:block>\n
 </body>\n
 </html>\n
 

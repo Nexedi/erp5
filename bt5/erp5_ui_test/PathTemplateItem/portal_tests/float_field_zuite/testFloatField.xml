@@ -93,7 +93,7 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//fieldset[@id="fieldset_right"]/div[2]//div</td>\n
+  <td>//fieldset[@id="fieldset_right"]//div[@class="field"][2]//div</td>\n
   <td>10.0</td>\n
 </tr>\n
 <tr>\n
@@ -118,7 +118,7 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//fieldset[@id="fieldset_right"]/div[2]//div</td>\n
+  <td>//fieldset[@id="fieldset_right"]//div[@class="field"][2]//div</td>\n
   <td>1 000 000 000 000.0</td>\n
 </tr>\n
 </tbody></table>\n

@@ -93,7 +93,7 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//fieldset[@id="fieldset_left"]/div[2]//span</td>\n
+  <td>//fieldset[@id="fieldset_left"]//span[@class="foo"]</td>\n
   <td>10</td>\n
 </tr>\n
 \n

@@ -101,6 +101,7 @@
   <td>document.forms[0].elements[\'Base_callDialogMethod:method\'][1]</td>\n
   <td></td>\n
 </tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
@@ -111,6 +112,20 @@
   <td>//tr[@id="listbox_search_line"]/td[3]//input</td>\n
   <td>title_value</td>\n
 </tr>\n
+</tal:block>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//div[@id="0"]//input</td>\n
+  <td>id_value</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//div[@id="1"]//input</td>\n
+  <td>title_value</td>\n
+</tr>\n
+</tal:block>\n
+\n
 <tr>\n
   <td>open</td>\n
   <td tal:content="string: ${here/portal_url}/portal_types/Foo%20Module/PortalType_deleteAction?id=generic_search">Delete Folder_viewSearchDialog action if exists.</td>\n

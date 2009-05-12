@@ -50,6 +50,7 @@
 <thead>\n
 <tr><td rowspan="1" colspan="3">Check that the script used to reset the selection for install from repository dialog transmits correctly the dialog_category.</td></tr>\n
 </thead><tbody>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>open</td>\n
   <td tal:content="here/portal_url"></td>\n
@@ -80,6 +81,7 @@
   <td>//input[@name=\'dialog_category\' and @value=\'object_exchange\']</td>\n
   <td></td>\n
 </tr>\n
+</tal:block>\n
 </tbody></table>\n
 </body>\n
 </html>\n

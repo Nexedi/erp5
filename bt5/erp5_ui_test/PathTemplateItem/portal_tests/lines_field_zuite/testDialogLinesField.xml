@@ -62,11 +62,13 @@
   <td>foo\n
 bar</td>\n
 </tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>//button[@title=\'Title\']</td>\n
   <td></td>\n
 </tr>\n
+</tal:block>\n
 <tr>\n
   <td>assertValue</td>\n
   <td>//textarea[@name=\'field_my_lines_list\']</td>\n
@@ -94,11 +96,13 @@ bar</td>\n
   <td>//textarea[@name=\'field_my_lines_list\']</td>\n
   <td>foo bar</td>\n
 </tr>\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>//button[@title=\'Title\']</td>\n
   <td></td>\n
 </tr>\n
+</tal:block>\n
 <tr>\n
   <td>assertValue</td>\n
   <td>//textarea[@name=\'field_my_lines_list\']</td>\n

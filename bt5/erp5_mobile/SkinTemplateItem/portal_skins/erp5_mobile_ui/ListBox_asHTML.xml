@@ -135,6 +135,9 @@
 \t        <span id="listbox_record_number"\n
                   tal:attributes="id string:${field_id}_record_number"\n
                   i18n:translate="" i18n:domain="ui"><tal:block tal:replace="here/total_size" i18n:name="number">0</tal:block> record(s)</span>\n
+          <span id="listbox_item_number"\n
+                  tal:attributes="id string:${field_id}_item_number; class string:listbox_item_number"\n
+                  i18n:translate="" i18n:domain="ui"> - <tal:block tal:replace="python: len(here.getCheckedUidList())" i18n:name="number">0</tal:block> item(s) selected</span>\n
                  <input type="hidden" tal:attributes="id string:${field_id}_listMax; name string:${field_id}_listMax; value python: len(search_value_list)">\n
                  <input type="hidden" tal:attributes="id string:${field_id}_itemMax; name string:${field_id}_itemMax; value python: len(line_list)">\n
                  <br />\n
@@ -152,6 +155,25 @@
                                     value python: p * lines"\n
                     i18n:domain="ui" i18n:translate=""><tal:block tal:replace="python: p + 1" i18n:name="page">0</tal:block> of <tal:block tal:replace="here/total_pages" i18n:name="total_pages">1</tal:block></option>\n
                 </select>\n
+                <span style="float:right; text-align: right;"><!-- class="navigation_buttons" -->\n
+                  <input tal:condition="python: here.current_page > 0"\n
+                         id="listbox_previous_page" type="image" src="1leftarrowv.png"\n
+                         title="Previous Page" name="previousPage:method"\n
+                         tal:attributes="id string:${field_id}_previous_page;\n
+                         name string:${field_id}_previousPage:method;\n
+                         src string:${portal_url_string}/images/1leftarrowv.png;\n
+                         class string:listbox_previous_page"\n
+                         i18n:domain="ui" i18n:attributes="title" />\n
+\n
+                   <input tal:condition="python: here.current_page < here.total_pages - 1"\n
+                          id="listbox_next_page" type="image" src="1rightarrowv.png"\n
+                          title="Next Page" name="nextPage:method"\n
+                          tal:attributes="id string:${field_id}_next_page;\n
+                          name string:${field_id}_nextPage:method;\n
+                          src string:${portal_url_string}/images/1rightarrowv.png;\n
+                          class string:listbox_next_page"\n
+                          i18n:domain="ui" i18n:attributes="title" />&nbsp;&nbsp;\n
+                </span>\n
 \n
             </div>\n
           </div>\n
@@ -211,6 +233,7 @@
                     <input type="hidden" value="0" id="search_value_list_count"\n
                            tal:attributes="value python: len(search_value_list)" />\n
 \n
+                    <input id="listbox_select" class="listbox_select" type="image" name="Base_doSelect:method" alt="Action" title="Action" tal:attributes="src string:${portal_url_string}/images/exec16.png"/>\n
                   <tal:block tal:condition="show_search_line"\n
                              tal:repeat="value search_value_list">\n
                      <div tal:condition="python: value[0]"\n
@@ -223,7 +246,7 @@
                         <tal:block tal:condition="python: search_field is not None"\n
                                    tal:replace="structure python: search_field.render(value = param, key = alias)" />\n
                         <input style="width: 40%;" name="id" size="8" value=""\n
-                               tal:attributes="name alias; value param; id python: \'%s%s\' % (\'input\', foo)"/>\n
+                               tal:attributes="name alias; value param; id python: \'%s%s\' % (\'input\', foo)" type="text"/>\n
                        </span>\n
                     </div>\n
                   </tal:block>\n
@@ -267,7 +290,7 @@
                        <input tal:condition="python: not form_id==\'Base_viewWorkflowHistory\' and line.getObject() is not None"  type="checkbox" value="checked" id="listbox_cb_1" name="uids:list"\n
                               tal:attributes="checked python: line.getUid() in checked_uid_set;\n
                                               value line/getUid; id string:${field_id}_cb_${line/getUid}" />\n
-                       <a tal:condition="python: not form_id==\'Base_viewWorkflowHistory\'" href="#"  tal:attributes="href string:${object_url}?selection_index=${selection_index}&amp;selection_name=${selection_name}&amp;ignore_layout:int=0&amp;reset:int=1"><img src="document_icon.gif" tal:attributes="src string:${portal_url_string}/images/line_clickable.png; title python: line.getObject().getRelativeUrl()" title="document" i18n:translate="" i18n:domain="ui"/></a>\n
+                       <a tal:condition="python: not form_id==\'Base_viewWorkflowHistory\'" href="#"  tal:attributes="href string:${object_url}?selection_index=${selection_index}&amp;selection_name=${selection_name}&amp;ignore_layout:int=0&amp;reset:int=1; title python: line.getObject().getRelativeUrl()"><img src="document_icon.gif" tal:attributes="src string:${portal_url_string}/images/line_clickable.png" i18n:translate="" i18n:domain="ui"/></a>\n
                       <span tal:condition="original_value" tal:replace="structure html">value</span>\n
                   </div>\n
                    <div tal:attributes="id python: \'%s_%s%s%s\' % (field_id, foo2, \'data\', foo)">\n

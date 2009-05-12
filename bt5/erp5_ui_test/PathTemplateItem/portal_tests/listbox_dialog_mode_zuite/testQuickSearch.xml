@@ -53,16 +53,29 @@
 <tal:block metal:use-macro="here/ListBoxDialogModeZuite_CommonTemplate/macros/init" />\n
 <!-- Search by id -->\n
 <tr>\n
+ <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
   <td>type</td>\n
   <td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
   <td>1</td>\n
+ </tal:block>\n
+ <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+  <td>type</td>\n
+  <td>//div[@id="listbox_search_line"]//input[@id="input0"]</td>\n
+  <td>1</td>\n
+ </tal:block>\n
 </tr>\n
+<!--\n
 <tr>\n
-  <td>clickAndWait</td>\n
-  <td>Base_doSelect:method</td>\n
-  <td></td>\n
+  <td>type</td>\n
+  <td>//*[@id="listbox_search_line"]//input[@id="input0"]</td>\n
+  <td>1</td>\n
 </tr>\n
-\n
+-->\n
+<tr>\n
+ <td>clickAndWait</td>\n
+ <td>Base_doSelect:method</td>\n
+ <td></td>\n
+</tr>\n
 <tr>\n
   <td>assertTextPresent</td>\n
   <td>Useless Field In Bar Selection Dialog</td>\n
@@ -75,15 +88,27 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[1]//input</td>\n
+  <td>//*[@id=\'listbox_data_line_0\']//input[@type="checkbox"]</td>\n
   <td>on</td>\n
 </tr>\n
-\n
-\n
+<!--\n
 <tr>\n
+  <td>verifyValue</td>\n
+  <td>//*[@id="listbox_search_line"]//input[contains(style(),"inline")]</td>\n
+  <td>1</td>\n
+</tr>\n
+-->\n
+<tr>\n
+ <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
   <td>verifyValue</td>\n
   <td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
   <td>1</td>\n
+ </tal:block>\n
+ <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
+  <td>verifyValue</td>\n
+  <td>//div[@id="listbox_search_line"]//input[@id="input0"]</td>\n
+  <td>1</td>\n
+ </tal:block>\n
 </tr>\n
 \n
 <tr>\n
