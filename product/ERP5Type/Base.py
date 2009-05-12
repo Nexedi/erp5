@@ -199,8 +199,15 @@ class WorkflowMethod(Method):
     valid_transition_item_list = []
     for wf_id, transition_list in candidate_transition_item_list:
       candidate_workflow = wf[wf_id]
-      valid_list = [transition_id for transition_id in transition_list
-                      if candidate_workflow.isWorkflowMethodSupported(instance, transition_id)]
+      valid_list = []
+      for transition_id in transition_list:
+        if candidate_workflow.isWorkflowMethodSupported(instance, transition_id):
+          valid_list.append(transition_id)
+        else:
+          LOG("WorkflowMethod.__call__", ERROR,
+              "Transition %s/%s on %r is ignored. Current state is %r."
+              % (wf_id, transition_id, instance,
+                 candidate_workflow._getWorkflowStateOf(instance, id_only=1)))
       if valid_list:
         valid_transition_item_list.append((wf_id, valid_list))
 
