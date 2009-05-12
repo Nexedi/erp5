@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2003 Nexedi SARL and Contributors. All Rights Reserved.
@@ -305,7 +306,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
               # Execute Before Commit
               for script_name in tdef.before_commit_script_name:
                 script = self.scripts[script_name]
-                transaction.beforeCommitHook(script, sci)
+                transaction.get().beforeCommitHook(script, sci)
 
               # Execute "activity" scripts
               for script_name in tdef.activate_script_name:
