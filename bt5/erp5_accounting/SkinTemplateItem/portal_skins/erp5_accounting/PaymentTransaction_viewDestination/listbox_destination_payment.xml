@@ -15,6 +15,7 @@
               <list>
                 <string>title</string>
                 <string>items</string>
+                <string>enabled</string>
               </list>
             </value>
         </item>
@@ -57,6 +58,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>enabled</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -67,7 +74,7 @@
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -85,6 +92,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_list_field</string> </value>
@@ -114,6 +125,22 @@
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: \'destination_payment\' in [item[0] for item in context.AccountingTransaction_getListBoxColumnList(source=0)]</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <global name="TALESMethod" module="Products.Formulator.TALESField"/>
