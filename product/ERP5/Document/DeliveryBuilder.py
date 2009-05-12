@@ -122,7 +122,6 @@ class DeliveryBuilder(OrderBuilder):
     if self.getResourcePortalType() not in ('', None):
       kw['resourceType'] = self.getResourcePortalType()
     if self.simulation_select_method_id in ['', None]:
-      kw.update(self.portal_catalog.buildSQLQuery(**kw))
       movement_list = [x.getObject() for x in self.portal_catalog(**kw)]
     else:
       select_method = getattr(self.getPortalObject(), self.simulation_select_method_id)
