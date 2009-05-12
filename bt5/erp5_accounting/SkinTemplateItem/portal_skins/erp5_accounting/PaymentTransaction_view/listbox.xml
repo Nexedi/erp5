@@ -13,15 +13,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>stat_columns</string>
-                <string>editable_columns</string>
-                <string>stat_method</string>
                 <string>title</string>
-                <string>selection_name</string>
                 <string>columns</string>
                 <string>list_method</string>
-                <string>anchor</string>
+                <string>stat_method</string>
+                <string>selection_name</string>
                 <string>portal_types</string>
+                <string>anchor</string>
+                <string>editable_columns</string>
+                <string>stat_columns</string>
               </list>
             </value>
         </item>
@@ -141,6 +141,10 @@
                           <string>source</string>
                           <string>Account</string>
                         </tuple>
+                        <tuple>
+                          <string>source_payment</string>
+                          <string>Bank Account</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -156,6 +160,12 @@
                     <key> <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>

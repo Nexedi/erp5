@@ -61,9 +61,11 @@ If there is more than one mirror_section on lines, the listbox will have an\n
 extra column showing mirror_section_title.\n
 The same for apply for payment / payment_reference.\n
 """\n
+movement_type_list = context.getPortalAccountingMovementTypeList()\n
+\n
 section_dict = {None: 1}\n
 payment_dict = {None: 1}\n
-for line in context.getMovementList():\n
+for line in context.getMovementList(portal_type=movement_type_list):\n
   section_dict[line.getSourceSection()] = 1\n
   section_dict[line.getDestinationSection()] = 1\n
   payment_dict[line.getSourcePayment()] = 1\n
@@ -84,6 +86,23 @@ else:\n
 multiple_sections = len(section_dict) > min_section_count\n
 multiple_payment = len(payment_dict) > min_payment_count\n
 \n
+# we also show multiple payments if there is more than one "asset/cash/bank" account\n
+# used on this side.\n
+bank_type_account_count = 0\n
+if not multiple_payment and context.getPortalType() == \'Payment Transaction\':\n
+  for line in context.getMovementList(portal_type=movement_type_list):\n
+    if source:\n
+      account = line.getSourceValue(portal_type=\'Account\')\n
+    else:\n
+      account = line.getDestinationValue(portal_type=\'Account\')\n
+    if account is not None and \\\n
+          account.isMemberOf(\'account_type/asset/cash/bank\'):\n
+      bank_type_account_count += 1\n
+    if bank_type_account_count > 1:\n
+      multiple_payment = 1\n
+      break\n
+\n
+\n
 column_item_list = [(\'translated_id\', \'ID\')]\n
 a = column_item_list.append\n
 if source:\n
@@ -96,10 +115,17 @@ if multiple_sections:\n
   else:\n
     a((\'getSourceSectionTitle\', \'Third Party\'))\n
 if multiple_payment:\n
-  if source:\n
-    a((\'getSourcePaymentReference\', \'Bank Account\'))\n
+  if context.getPortalType() == \'Payment Transaction\':\n
+    if source:\n
+      a((\'source_payment\', \'Bank Account\'))\n
+    else:\n
+      a((\'destination_payment\', \'Bank Account\'))\n
   else:\n
-    a((\'getDestinationPaymentReference\', \'Bank Account\'))\n
+    if source:\n
+      a((\'getSourcePaymentReference\', \'Bank Account\'))\n
+    else:\n
+      a((\'getDestinationPaymentReference\', \'Bank Account\'))\n
+\n
 if source:\n
   a((\'source_debit\', \'Debit\'))\n
   a((\'source_credit\', \'Credit\'))\n
@@ -147,12 +173,13 @@ return column_item_list\n
                         <value>
                           <tuple>
                             <string>source</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>movement_type_list</string>
                             <string>None</string>
                             <string>section_dict</string>
                             <string>payment_dict</string>
                             <string>_getiter_</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>line</string>
                             <string>_write_</string>
                             <string>min_payment_count</string>
@@ -160,6 +187,9 @@ return column_item_list\n
                             <string>len</string>
                             <string>multiple_sections</string>
                             <string>multiple_payment</string>
+                            <string>bank_type_account_count</string>
+                            <string>account</string>
+                            <string>_inplacevar_</string>
                             <string>column_item_list</string>
                             <string>a</string>
                           </tuple>
