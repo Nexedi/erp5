@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import string, re
 import PatternChecker
 from DummyField import fields
@@ -476,7 +477,6 @@ class MultiSelectionValidator(Validator):
     
     def validate(self, field, key, REQUEST):
       if REQUEST.get('default_%s' % (key, )) is None:
-        LOG('MultiSelectionValidator_validate', 0, 'Field %s is not present in request object (marker field default_%s not found).' % (repr(field.id), key))
         raise KeyError, 'Field %s is not present in request object (marker field default_%s not found).' % (repr(field.id), key)
       values = REQUEST.get(key, [])
       # NOTE: a hack to deal with single item selections
