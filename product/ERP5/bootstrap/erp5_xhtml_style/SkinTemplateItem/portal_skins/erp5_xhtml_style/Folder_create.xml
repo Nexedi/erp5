@@ -62,7 +62,7 @@ if not allowed_type_list:\n
 # newContent will add the first allowed type when we do not specify portal_type=\n
 new_object = context.newContent(portal_type=allowed_type_list[0])\n
 \n
-return context.ERP5Site_redirect(\'%s/view\' % (new_object.absolute_url(), ), keep_items={\'portal_status_message\': Base_translateString("Object Created.")})\n
+return context.ERP5Site_redirect(\'%s/view\' % (new_object.absolute_url(), ), keep_items={\'portal_status_message\': Base_translateString("Object created.")})\n
 </string> </value>
         </item>
         <item>
