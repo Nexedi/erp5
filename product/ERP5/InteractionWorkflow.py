@@ -16,6 +16,7 @@
 #
 ##############################################################################
 
+import transaction
 import Globals
 import App
 from types import StringTypes
@@ -302,7 +303,6 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
                 script(sci)  # May throw an exception
 
               # Execute Before Commit
-              transaction = get_transaction()
               for script_name in tdef.before_commit_script_name:
                 script = self.scripts[script_name]
                 transaction.beforeCommitHook(script, sci)
