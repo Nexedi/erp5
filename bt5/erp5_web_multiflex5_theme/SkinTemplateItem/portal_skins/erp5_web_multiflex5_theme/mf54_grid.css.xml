@@ -330,12 +330,12 @@ div.subcontent-box.headbox1noicon h1.noicon {background:none;}\n
 div.subcontent-box.headbox1noicon h2.noicon {background:none;}\n
 \n
 /* FLAG BUTTON NAVIGATION -- new css for flag to separate flag from rss with keeping the same style */\n
-.navbuttonflag {width:400px; position:absolute; z-index:2; margin-top:26px; margin-left:517px !important /*Non-IE6*/; margin-left:520px /*IE6*/;}\n
+.navbuttonflag {width:400px; position:absolute; z-index:2; margin-top:43px; margin-left:517px !important /*Non-IE6*/; margin-left:520px /*IE6*/;}\n
 .navbuttonflag ul {float:right;}\n
 .navbuttonflag li {display:inline; list-style:none;}\n
 .navbuttonflag li a {padding-left:3px;}\n
 .navbuttonflag a:hover {text-decoration:none;}\n
-.navbuttonflag a img {height:32px;}\n
+.navbuttonflag a img {height:15px;}\n
 \n
 </tal:block>
 

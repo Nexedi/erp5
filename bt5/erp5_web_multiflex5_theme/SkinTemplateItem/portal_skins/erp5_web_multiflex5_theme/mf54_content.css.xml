@@ -150,7 +150,7 @@
 .main_content p.caption {clear:both; margin:0.5em 0 2.0em 0; text-align:left; color:rgb(80,80,80); font-size:120% !important /*Non-IE6*/; font-size:110% /*IE6*/;}\n
 \n
 /* CONTACT FORM (1-Column / 2-Column) */\n
-.contactform {width:636px; margin:1.0em 10px 0 20px;}\n
+.contactform {width:<tal:block tal:replace="python:main_content_width-40"/>px; margin:1.0em 10px 0 20px;}\n
 .contactform fieldset {padding:10px 0 10px 0 !important /*Non-IE6*/; padding:0 /*IE6*/; margin:0 0 20px 0; border:solid 1px rgb(220,220,220);}\n
 .contactform fieldset legend {margin:0 0 0 5px !important /*Non-IE*/; margin:0 0 20px 5px /*IE6*/; padding:0 2px 0 2px; color:rgb(80,80,80); font-weight:bold;  font-size:131%;}\n
 .contactform label.left {float:left; width:100px; margin:0 0 0 10px; padding:2px; font-size:100%;}\n
@@ -160,7 +160,7 @@
 .contactform input.button {float:left; width:9.0em; margin-left:115px !important /*Non-IE6*/; margin-left:118px /*IE6*/; padding:3px !important /*Non-IE6*/; padding:2px /*IE6*/; background:rgb(230,230,230); border:solid 1px rgb(150,150,150); text-align:center; color:rgb(150,150,150); font-size:100%;}\n
 .contactform input.button:hover {cursor:pointer; border:solid 1px rgb(80,80,80); background:rgb(220,220,220); color:rgb(80,80,80);}\n
 \n
-.content-2col-nobox-leftcolumn .contactform, .content-2col-nobox-rightcolumn .contactform, .content-2col-box-leftcolumn .contactform, .content-2col-box-rightcolumn .contactform  {width:297px; margin:1.0em 10px 0 20px;}\n
+.content-2col-nobox-leftcolumn .contactform, .content-2col-nobox-rightcolumn .contactform, .content-2col-box-leftcolumn .contactform, .content-2col-box-rightcolumn .contactform  {width:<tal:block tal:replace="python:main_content_width/2-41"/>px; margin:1.0em 10px 0 20px;}\n
 .content-2col-nobox-leftcolumn .contactform fieldset, .content-2col-nobox-rightcolumn .contactform fieldset, .content-2col-box-leftcolumn .contactform fieldset, .content-2col-box-rightcolumn .contactform fieldset {padding:10px 0 10px 0 !important /*Non-IE6*/; padding:0 /*IE6*/; margin:0 0 20px 0; border:solid 1px rgb(220,220,220);}\n
 .content-2col-nobox-leftcolumn .contactform fieldset legend, .content-2col-nobox-rightcolumn .contactform fieldset legend, .content-2col-box-leftcolumn .contactform fieldset legend, .content-2col-box-rightcolumn .contactform fieldset legend {margin:0 0 0 5px !important /*Non-IE*/; margin:0 0 20px 5px /*IE6*/; padding:0 2px 0 2px; color:rgb(80,80,80); font-weight:bold;  font-size:131%;}\n
 .content-2col-nobox-leftcolumn .contactform label.left, .content-2col-nobox-rightcolumn .contactform label.left, .content-2col-box-leftcolumn .contactform label.left, .content-2col-box-rightcolumn .contactform label.left {float:left; width:100px; margin:0; padding:2px; font-size:100%;}\n
@@ -171,8 +171,8 @@
 .content-2col-nobox-leftcolumn .contactform input.button:hover, .content-2col-nobox-rightcolumn .contactform input.button:hover, .content-2col-box-leftcolumn .contactform input.button:hover, .content-2col-box-rightcolumn .contactform input.button:hover {cursor:pointer; border:solid 1px rgb(80,80,80); background:rgb(220,220,220); color:rgb(80,80,80);}\n
 \n
 /* LOGIN FORM (1-Column / 2-Column)*/\n
-.main_content .loginform {width:636px; margin:1.0em 10px 0 20px;}\n
-.content-2col-nobox-leftcolumn .loginform, .content-2col-nobox-rightcolumn .loginform, .content-2col-box-leftcolumn .loginform, .content-2col-box-rightcolumn .loginform {width:297px; margin:1.0em 10px 0 20px;}\n
+.main_content .loginform {width:<tal:block tal:replace="python:main_content_width-40"/>px; margin:1.0em 10px 0 20px;}\n
+.content-2col-nobox-leftcolumn .loginform, .content-2col-nobox-rightcolumn .loginform, .content-2col-box-leftcolumn .loginform, .content-2col-box-rightcolumn .loginform {width:<tal:block tal:replace="python:main_content_width/2-41"/>px; margin:1.0em 10px 0 20px;}\n
 \n
 .main_content .loginform p {clear:both; margin:0; padding:0;}\n
 .main_content .loginform fieldset {width:160px; border:none;}\n
@@ -184,8 +184,8 @@
 .main_content .loginform input.button:hover {cursor:pointer; border:solid 1px rgb(80,80,80); background:rgb(220,220,220); color:rgb(80,80,80);}\n
 \n
 /* SEARCH FORM (1-Column / 2-Column)*/\n
-.main_content .searchform {width:636px; margin:1.0em 10px 0 20px;}\n
-.content-2col-nobox-leftcolumn .searchform, .content-2col-nobox-rightcolumn .searchform, .content-2col-box-leftcolumn .searchform, .content-2col-box-rightcolumn .searchform {width:297px; margin:1.0em 10px 0 20px;;}\n
+.main_content .searchform {width:<tal:block tal:replace="python:main_content_width-40"/>px; margin:1.0em 10px 0 20px;}\n
+.content-2col-nobox-leftcolumn .searchform, .content-2col-nobox-rightcolumn .searchform, .content-2col-box-leftcolumn .searchform, .content-2col-box-rightcolumn .searchform {width:<tal:block tal:replace="python:main_content_width/2-41"/>px; margin:1.0em 10px 0 20px;;}\n
 \n
 .main_content .searchform fieldset {border:none;}\n
 .main_content .searchform input.field {float:left; width:158px; padding:3px 0 3px 0; border:1px solid rgb(200,200,200); font-size:120%;}\n
@@ -248,7 +248,7 @@
 .subcontent p.caption {clear:both; margin:0.5em 0 2.0em 0; text-align:left; color:rgb(80,80,80); font-size:120% !important /*Non-IE6*/; font-size:110% /*IE6*/;}\n
 \n
 /* CONTACT FORM */\n
-.subcontent .contactform {width:230px; margin:1.0em 10px 0 20px;}\n
+.subcontent .contactform {width:<tal:block tal:replace="python:right_column_width-40"/>px; margin:1.0em 10px 0 20px;}\n
 .subcontent .contactform fieldset {padding:10px 0 10px 0 !important /*Non-IE6*/; padding:0 /*IE6*/; margin:0 0 20px 0; border:solid 1px rgb(220,220,220);}\n
 .subcontent .contactform fieldset legend {margin:0 0 0 5px !important /*Non-IE*/; margin:0 0 20px 5px /*IE6*/; color:rgb(80,80,80); font-weight:bold;  font-size:131%;}\n
 .subcontent .contactform label.left {float:left; width:85px; margin:0; padding:2px; font-size:100%;}\n
@@ -259,7 +259,7 @@
 .subcontent .contactform input.button:hover {cursor:pointer; border:solid 1px rgb(80,80,80); background:rgb(220,220,220); color:rgb(80,80,80);}\n
 \n
 /* LOGIN FORM */\n
-.subcontent .loginform {width:230px; margin:10px 20px 0 20px;}\n
+.subcontent .loginform {width:<tal:block tal:replace="python:right_column_width-40"/>px; margin:10px 20px 0 20px;}\n
 .subcontent .loginform p {clear:both; margin:0; padding:0;}\n
 .subcontent .loginform fieldset {width:160px; border:none;}\n
 .subcontent .loginform label.top {float:left; width:125px; margin:0 0 2px 0; font-size:110%;}\n
@@ -270,7 +270,7 @@
 .subcontent .loginform input.button:hover {cursor:pointer; border:solid 1px rgb(80,80,80); background:rgb(220,220,220); color:rgb(80,80,80);}\n
 \n
 /* SEARCH FORM */\n
-.subcontent .searchform {width:230px; margin:10px 20px 0 20px;}\n
+.subcontent .searchform {width:<tal:block tal:replace="python:right_column_width-40"/>px; margin:10px 20px 0 20px;}\n
 .subcontent .searchform fieldset {border:none;}\n
 .subcontent .searchform input.field {float:left; width:158px; padding:0.1em 0 0.2em 0 !important /*Non-IE6*/; padding:0.2em 0 0.3em 0 /*IE6*/; border:1px solid rgb(200,200,200); font-size:120%;}\n
 .subcontent .searchform input.button {clear:both; float:left; width:3.0em; margin-top:0.5em; padding:1px; background:rgb(230,230,230); border:solid 1px rgb(150,150,150); text-align:center; color:rgb(150,150,150); font-size:120%;}\n
