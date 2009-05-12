@@ -106,6 +106,7 @@
                     <value>
                       <list>
                         <string>my_stop_date</string>
+                        <string>my_destination_project_title</string>
                         <string>my_comment</string>
                         <string>my_translated_portal_type</string>
                         <string>my_translated_simulation_state_title</string>
