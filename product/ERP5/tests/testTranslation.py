@@ -27,9 +27,9 @@
 #
 ##############################################################################
 import os, sys
+import unittest
+
 import transaction
-if __name__ == '__main__':
-  execfile(os.path.join(sys.path[0], 'framework.py'))
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager, \
@@ -325,11 +325,7 @@ class TestTranslation(ERP5TypeTestCase):
                                      translated_portal_type='Personne')])
     transaction.abort()
 
-if __name__ == '__main__':
-  framework()
-else:
-  import unittest
-  def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestTranslation))
-    return suite
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestTranslation))
+  return suite
