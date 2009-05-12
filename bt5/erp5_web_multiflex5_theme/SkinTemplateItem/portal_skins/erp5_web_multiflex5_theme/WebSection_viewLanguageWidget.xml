@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block tal:define="current_web_site python:request.get(\'current_web_site\', here);\n
+                       portal_path python:request.get(\'current_web_site_url\', current_web_site.absolute_url());\n
+                       available_language_list current_web_site/getAvailableLanguageList;\n
+                       language_list current_web_site/Localizer/get_languages_map;"\n
+           tal:condition="python:len(language_list) > 1">\n
+  <div class="navbuttonflag">\n
+    <ul>\n
+      <li tal:repeat="language language_list">\n
+        <a href="./Base_doLanguage?select_language=en" title="English"\n
+           tal:attributes="href string:${portal_path}/Base_doLanguage?select_language=${language/id}">\n
+          <img src="./mf54_image/icon_flag_us.gif" alt="Flag"\n
+               tal:attributes="src string:${portal_path}/mf54_image/icon_flag_${language/id}.png;\n
+                               title language/title;\n
+                               alt language/title" />\n
+        </a>\n
+      </li>\n
+    </ul>\n
+  </div>\n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_viewLanguageWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
