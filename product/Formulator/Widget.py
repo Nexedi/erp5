@@ -5,6 +5,7 @@ from DateTime import DateTime
 from cgi import escape
 import types
 from DocumentTemplate.ustr import ustr
+from urlparse import urljoin
 
 class Widget:
   """A field widget that knows how to display itself as HTML.
