@@ -69,7 +69,7 @@ class TradeCondition(Path, Transformation):
                       )
 
     def updateAggregatedAmountList(self, context, **kw):
-      existing_movement_list = context.contentValues()
+      existing_movement_list = context.getMovementList()
       aggregated_amount_list = self.getAggregatedAmountList(context = context,
           **kw)
       modified_resource_list = []
