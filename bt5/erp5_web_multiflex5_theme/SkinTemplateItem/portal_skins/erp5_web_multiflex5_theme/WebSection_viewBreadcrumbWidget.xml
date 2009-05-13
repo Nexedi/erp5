@@ -60,20 +60,11 @@
 <ul>\n
   <li class="nobullet" \n
       i18n:translate=""\n
-      i18n:domain="ui"\n
-      i18n:attributes="title"\n
-      title="This breadcrumb help you to remind you where you are in the web site.">You are here</li><span>&nbsp;:&nbsp;</span>\n
+      i18n:domain="ui">You are here: </li>\n
   <li tal:repeat="breadcrumb breadcrumb_list">\n
-    <a href="#" tal:condition="not: repeat/breadcrumb/end"\n
-                i18n:domain="ui" i18n:attributes="title"\n
-                title="A previous emplacement in the web site."\n
+    <a href="#" i18n:domain="ui"\n
                 tal:attributes="href python:breadcrumb[1].absolute_url();"      \n
-                tal:content="python:breadcrumb[0]">Home</a>\n
-    <a href="#" tal:condition="repeat/breadcrumb/end"\n
-                i18n:domain="ui" i18n:attributes="title"\n
-                title="You are here."\n
-                tal:attributes="href python:breadcrumb[1].absolute_url();"      \n
-                tal:content="python:breadcrumb[0]">Home</a>\n
+                tal:content="python:breadcrumb[0]">Title</a>\n
   </li>\n
 </ul>\n
 </tal:block>
