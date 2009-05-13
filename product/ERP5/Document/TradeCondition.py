@@ -69,6 +69,9 @@ class TradeCondition(Path, Transformation):
                       )
 
     def updateAggregatedAmountList(self, context, **kw):
+      '''
+        updates exisiting movement and returns new if any
+      '''
       existing_movement_list = context.getMovementList()
       aggregated_amount_list = self.getAggregatedAmountList(context = context,
           **kw)
