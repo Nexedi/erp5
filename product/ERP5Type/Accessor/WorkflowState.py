@@ -114,10 +114,11 @@ class TranslatedTitleGetter(TitleGetter):
       state_title = wf._getWorkflowStateOf(instance).title
       msg_id = '%s [state in %s]' % (state_title, wf_id)
       result = localizer.erp5_ui.gettext(msg_id,
-             lang=selected_language,default='')      
+                                         lang=selected_language,
+                                         default='')
       if result == '':
         result = localizer.erp5_ui.gettext(state_title,
-                              lang=selected_language)
+                                           lang=selected_language)
       return result.encode('utf8')
 
     psyco.bind(__call__)
