@@ -11,7 +11,9 @@
       <dictionary>
         <item>
             <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>web_section_user_ram_cache</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
