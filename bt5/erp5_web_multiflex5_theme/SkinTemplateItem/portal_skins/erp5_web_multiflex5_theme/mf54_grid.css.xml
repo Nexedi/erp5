@@ -104,7 +104,7 @@
 .main {clear:both; width:<tal:block tal:replace="main_width"/>px; padding:10px <tal:block tal:replace="border_width"/>px 20px; background-color:<tal:block tal:replace="primary_color"/>; font-size:1.0em;}\n
 .main_content {display:inline; /*Fix IE floating margin bug*/; float:left; width:<tal:block tal:replace="main_content_width"/>px; background-color:<tal:block tal:replace="primary_color"/>; font-size:1.0em; overflow:visible !important /*Non-IE6*/; overflow:hidden /*IE6*/;}\n
 .subcontent {display:inline /*Fix IE floating margin bug*/; float:right; width:<tal:block tal:replace="right_column_width"/>px; background-color:<tal:block tal:replace="primary_color"/>; font-size:1.0em; overflow:visible !important /*Non-IE6*/; overflow:hidden /*IE6*/;}\n
-.footer {clear:both; width:<tal:block tal:replace="main_width"/>px; padding:1.0em 0 1.0em 0; padding:0 <tal:block tal:replace="border_width"/>px; background-color:<tal:block tal:replace="primary_color"/>; font-size:1.1em !important /*Non-IE6*/; font-size:1.0em /*IE6*/; overflow:visible !important /*Non-IE6*/; overflow:hidden /*IE6*/;}\n
+.footer {clear:both; width:<tal:block tal:replace="main_width"/>px; padding:1.0em <tal:block tal:replace="border_width"/>px; background-color:<tal:block tal:replace="primary_color"/>; font-size:1.1em !important /*Non-IE6*/; font-size:1.0em /*IE6*/; overflow:visible !important /*Non-IE6*/; overflow:hidden /*IE6*/;}\n
 .footer .wrapper {background-color:<tal:block tal:replace="secondary_color"/>;}\n
 \n
 /****************/\n
