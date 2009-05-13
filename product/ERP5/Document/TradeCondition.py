@@ -29,10 +29,9 @@
 #
 ##############################################################################
 
-from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Transformation import Transformation
 from Products.ERP5.Document.Path import Path
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
@@ -139,7 +138,8 @@ class TradeCondition(Path, Transformation):
         need_to_run = 0
         for model in trade_model_line_composed_list:
           model_result = model.getAggregatedAmountList(context,
-            movement_list=movement_list, current_aggregated_amount_list = result,
+            movement_list = movement_list,
+            current_aggregated_amount_list = result,
             **kw)
           result.extend(model_result)
         if len(result) != len(movement_list):
