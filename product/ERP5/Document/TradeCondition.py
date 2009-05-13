@@ -78,7 +78,9 @@ class TradeCondition(Path, Transformation):
         for p in self.edited_property_list:
           update_kw[p] = amount.getProperty(p)
         for movement in existing_movement_list:
-          if movement.getProperty('resource') == update_kw['resource']:
+          if movement.getProperty('resource') == update_kw['resource'] and\
+              movement.getVariationCategoryList() == \
+              amount.getVariationCategoryList():
             movement.edit(**update_kw)
             modified_resource_list.append(update_kw['resource'])
       return [amount for amount in aggregated_amount_list if
