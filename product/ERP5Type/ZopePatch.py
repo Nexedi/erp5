@@ -22,6 +22,7 @@
 # Load all monkey patches
 from Products.ERP5Type.patches import ObjectManager
 from Products.ERP5Type.patches import PropertyManager
+from Products.ERP5Type.patches import TM
 from Products.ERP5Type.patches import DA
 from Products.ERP5Type.patches import DCWorkflow
 from Products.ERP5Type.patches import BTreeFolder2
