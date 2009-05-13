@@ -41,6 +41,7 @@ from Selection import Selection, DomainSelection
 from ZPublisher.HTTPRequest import FileUpload
 import md5
 import string, re
+from urlparse import urlsplit, urlunsplit
 from zLOG import LOG, INFO
 from Acquisition import aq_base
 from Products.ERP5Type.Message import translateString
@@ -1172,9 +1173,11 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         # remove ignore_layout parameter from cancel_url otherwise we
         # will have two ignore_layout parameters after clicking cancel
         # button.
-        kw['cancel_url'] = '&'.join([x for x in \
-                                     REQUEST.get('HTTP_REFERER').split('&') \
+        split_referer = list(urlsplit(REQUEST.get('HTTP_REFERER')))
+        split_referer[3] = '&'.join([x for x in \
+                                     split_referer[3].split('&') \
                                      if not re.match('^ignore_layout[:=]', x)])
+        kw['cancel_url'] = urlunsplit(split_referer)
 
         proxy_listbox_ids = field.get_value('proxy_listbox_ids')
         REQUEST.set('proxy_listbox_ids', proxy_listbox_ids)
