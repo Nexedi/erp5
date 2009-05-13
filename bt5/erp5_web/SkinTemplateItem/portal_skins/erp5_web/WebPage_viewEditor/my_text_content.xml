@@ -136,7 +136,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: (lambda x: field.get_value(\'text_editor\') == \'fck_editor\' and x.replace(\'\\\\\', \'\\\\\\\\\') or x)(here.getTextContent())</string> </value>
+            <value> <string>python: (lambda x: field.get_value(\'text_editor\') == \'fck_editor\' and x.replace(\'\\\\\', \'\\\\\\\\\') or x)(here.getTextContent() or \'\')</string> </value>
         </item>
       </dictionary>
     </pickle>
