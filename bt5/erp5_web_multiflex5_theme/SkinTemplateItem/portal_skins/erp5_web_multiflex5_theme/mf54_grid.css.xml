@@ -66,16 +66,26 @@
   site_logo python:here.getLayoutProperty(\'layout_site_logo\', \n
                                           \'mf54_image/bg_logo.gif\');\n
   site_logo python:\'%s/%s\' % (site_url, site_logo);\n
+  page_top_background_image python:here.getLayoutProperty(\'layout_page_top_background_image\', \n
+                                                        \'mf54_image/bg_corner_page_top.gif\');\n
+  page_top_background_image python:\'%s/%s\' % (site_url, page_top_background_image);\n
+  page_bottom_background_image python:here.getLayoutProperty(\'layout_page_bottom_background_image\', \n
+                                                        \'mf54_image/bg_corner_page_bottom.gif\');\n
+  page_bottom_background_image python:\'%s/%s\' % (site_url, page_bottom_background_image);\n
   content_bottom_background_image python:here.getLayoutProperty(\'layout_content_bottom_background_image\', \n
             \'mf54_image/bg_corner_content_%s1col_bottom.gif\' % ((not has_right_column and \'nosidebar_\') or \'\'));\n
   content_bottom_background_image python:\'%s/%s\' % (site_url, content_bottom_background_image);\n
   content_top_background_image python:here.getLayoutProperty(\'layout_content_bottom_background_image\', \n
             \'mf54_image/bg_corner_content_%s1col_top.gif\' % ((not has_right_column and \'nosidebar_\') or \'\'));\n
   content_top_background_image python:\'%s/%s\' % (site_url, content_top_background_image);\n
-\n
+  subcontent_top_background_image python:here.getLayoutProperty(\'layout_subcontent_top_background_image\',\n
+                                                        \'mf54_image/bg_corner_subcontent_top.gif\');\n
+  subcontent_top_background_image python:\'%s/%s\' % (site_url, subcontent_top_background_image);\n
+  subcontent_bottom_background_image python:here.getLayoutProperty(\'layout_subcontent_bottom_background_image\',\n
+                                                        \'mf54_image/bg_corner_subcontent_bottom.gif\');\n
+  subcontent_bottom_background_image python:\'%s/%s\' % (site_url, subcontent_bottom_background_image);\n
 ">\n
                     \n
-\n
 /****************************************************************/\n
 /*   Design:   Multiflex-5.4                                    */\n
 /*   Type:     Design with sidebar                              */\n
@@ -96,16 +106,14 @@
 \n
  body {font-size:62.5%; background-color:<tal:block tal:replace="body_color"/>; font-family:arial,sans-serif;} /*Font-size: 1.0em = 10px when browser default size is 16px*/\n
 .container {width:<tal:block tal:replace="container_width"/>px; padding-top:10px; padding-bottom:20px; margin:0 auto; font-size:1.0em;}\n
-.header {width:<tal:block tal:replace="main_width"/>px; min-height:130px /*Non-IE6*/; height:auto !important /*Non-IE6*/; height:130px /*IE6*/; padding:0 <tal:block tal:replace="border_width"/>px; background:<tal:block tal:replace="primary_color"/> url(<tal:block tal:replace="header_background_image"/>) repeat-x /*Total header background image entered here. Height: 125px*/; font-size:1.0em;}\n
+.header {width:<tal:block tal:replace="main_width"/>px; min-height:130px /*Non-IE6*/; height:auto !important /*Non-IE6*/; height:130px /*IE6*/; border-left:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; border-right:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; background:<tal:block tal:replace="secondary_color"/> url(<tal:block tal:replace="header_background_image"/>) repeat-x /*Total header background image entered here. Height: 125px*/; font-size:1.0em;}\n
 .header-top {clear:both; width:<tal:block tal:replace="main_width"/>px; height:100px; background:<tal:block tal:replace="header_color"/> url(./mf54_image/bg_header_top.jpg) repeat-x /*Top header background image entered here. Height: 100px*/; font-size:1.0em;}\n
 .header-bottom {clear:both; width:<tal:block tal:replace="main_width"/>px; min-height:30px /*Non-IE6*/; height:auto !important /*Non-IE6*/; height:30px /*IE6*/; background:<tal:block tal:replace="secondary_color"/> url(./mf54_image/bg_header_bottom.jpg) repeat-x /*Bottom header background image entered here: Height: 25 px*/; font-size:1.0em;}\n
-.navbar {white-space:nowrap /*IE hack*/; float:left; width:<tal:block tal:replace="main_width"/>px; padding:0 <tal:block tal:replace="border_width"/>px; background-color:<tal:block tal:replace="primary_color"/>; font-family:tahoma,arial,sans-serif; font-size:130% !important /*Non-IE6*/; font-size:120% /*IE6*/;} /*Color navigation bar normal mode*/\n
-.navbar .wrapper {background-color:<tal:block tal:replace="secondary_color"/>;}\n
-.main {clear:both; width:<tal:block tal:replace="main_width"/>px; padding:10px <tal:block tal:replace="border_width"/>px 20px; background-color:<tal:block tal:replace="primary_color"/>; font-size:1.0em;}\n
+.navbar {white-space:nowrap /*IE hack*/; float:left; width:<tal:block tal:replace="main_width"/>px; border-left:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; border-right:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; background-color:<tal:block tal:replace="secondary_color"/>; font-family:tahoma,arial,sans-serif; font-size:130% !important /*Non-IE6*/; font-size:120% /*IE6*/;} /*Color navigation bar normal mode*/\n
+.main {clear:both; width:<tal:block tal:replace="main_width"/>px; padding:10px 0 20px 0; border-left:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; border-right:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; background-color:<tal:block tal:replace="primary_color"/>; font-size:1.0em;}\n
 .main_content {display:inline; /*Fix IE floating margin bug*/; float:left; width:<tal:block tal:replace="main_content_width"/>px; background-color:<tal:block tal:replace="primary_color"/>; font-size:1.0em; overflow:visible !important /*Non-IE6*/; overflow:hidden /*IE6*/;}\n
 .subcontent {display:inline /*Fix IE floating margin bug*/; float:right; width:<tal:block tal:replace="right_column_width"/>px; background-color:<tal:block tal:replace="primary_color"/>; font-size:1.0em; overflow:visible !important /*Non-IE6*/; overflow:hidden /*IE6*/;}\n
-.footer {clear:both; width:<tal:block tal:replace="main_width"/>px; padding:1.0em <tal:block tal:replace="border_width"/>px; background-color:<tal:block tal:replace="primary_color"/>; font-size:1.1em !important /*Non-IE6*/; font-size:1.0em /*IE6*/; overflow:visible !important /*Non-IE6*/; overflow:hidden /*IE6*/;}\n
-.footer .wrapper {background-color:<tal:block tal:replace="secondary_color"/>;}\n
+.footer {clear:both; width:<tal:block tal:replace="main_width"/>px; padding:1.0em 0 1.0em 0; border-left:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; border-right:solid <tal:block tal:replace="border_width"/>px <tal:block tal:replace="primary_color"/>; background-color:<tal:block tal:replace="secondary_color"/>; font-size:1.1em !important /*Non-IE6*/; font-size:1.0em /*IE6*/; overflow:visible !important /*Non-IE6*/; overflow:hidden /*IE6*/;}\n
 \n
 /****************/\n
 /*  HEADER-TOP  */\n
@@ -222,8 +230,8 @@
 /*********************/\n
 \n
 /* PAGE */\n
-.corner-page-top {width:<tal:block tal:replace="container_width"/>px; height:10px; background:transparent url(./mf54_image/bg_corner_page_top.gif) no-repeat; overflow:hidden;}\n
-.corner-page-bottom {width:<tal:block tal:replace="container_width"/>px; height:10px; padding-bottom:20px; background:transparent url(./mf54_image/bg_corner_page_bottom.gif) no-repeat; overflow:hidden;}\n
+.corner-page-top {width:<tal:block tal:replace="container_width"/>px; height:10px; background:transparent url(<tal:block tal:replace="page_top_background_image"/>) no-repeat; overflow:hidden;}\n
+.corner-page-bottom {width:<tal:block tal:replace="container_width"/>px; height:10px; padding-bottom:20px; background:transparent url(<tal:block tal:replace="page_bottom_background_image"/>) no-repeat; overflow:hidden;}\n
 \n
 /* CONTENT */\n
 .corner-content-1col-top {clear:both; width:<tal:block tal:replace="main_content_width"/>px; height:7px; background:white url(<tal:block tal:replace="content_top_background_image"/>) no-repeat; overflow:hidden;}\n
@@ -232,8 +240,8 @@
 .corner-content-2col-bottom {width:333px; height:7px; margin-bottom:10px; background:transparent url(./mf54_image/bg_corner_content_2col_bottom.gif) no-repeat; overflow:hidden;}\n
 \n
 /* SUBCONTENT */\n
-.corner-subcontent-top {clear:both; width:<tal:block tal:replace="right_column_width"/>px; height:7px; background:transparent url(./mf54_image/bg_corner_subcontent_top.gif) no-repeat; overflow:hidden;}\n
-.corner-subcontent-bottom {clear:both; width:<tal:block tal:replace="right_column_width"/>px; height:7px; margin-bottom:10px; background:transparent url(./mf54_image/bg_corner_subcontent_bottom.gif) no-repeat; overflow:hidden;}\n
+.corner-subcontent-top {clear:both; width:<tal:block tal:replace="right_column_width"/>px; height:7px; background:transparent url(<tal:block tal:replace="subcontent_top_background_image"/>) no-repeat; overflow:hidden;}\n
+.corner-subcontent-bottom {clear:both; width:<tal:block tal:replace="right_column_width"/>px; height:7px; margin-bottom:10px; background:transparent url(<tal:block tal:replace="subcontent_bottom_background_image"/>) no-repeat; overflow:hidden;}\n
 \n
 /******************/\n
 /*  CLEAR FLOATS  */\n

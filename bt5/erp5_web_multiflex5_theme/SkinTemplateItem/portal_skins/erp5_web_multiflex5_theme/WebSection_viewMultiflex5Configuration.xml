@@ -94,6 +94,7 @@
                         <string>my_layout_secondary_color</string>
                         <string>my_layout_header_color</string>
                         <string>my_layout_menu_color</string>
+                        <string>my_layout_additional_css</string>
                       </list>
                     </value>
                 </item>
@@ -113,8 +114,8 @@
                         <string>my_layout_header_background_image</string>
                         <string>my_layout_page_top_background_image</string>
                         <string>my_layout_page_bottom_background_image</string>
-                        <string>my_layout_content_bottom_background_image</string>
                         <string>my_layout_content_top_background_image</string>
+                        <string>my_layout_content_bottom_background_image</string>
                         <string>my_layout_subcontent_top_background_image</string>
                         <string>my_layout_subcontent_bottom_background_image</string>
                       </list>
