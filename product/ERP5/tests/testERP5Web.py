@@ -355,7 +355,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     from Products.ERP5.Document.Document import Document
     base_list = re.findall(Document.base_parser, str(html_page))
     base_url = base_list[0]
-    self.assertEqual(base_url, "%s/%s/" % (websection.absolute_url(), websection.getId()))
+    self.assertEqual(base_url, "%s/%s/" % (websection.absolute_url(), web_page_en.getReference()))
     
   def test_06b_DefaultDocumentForWebSite(self, quiet=quiet, run=run_all_test):
     """
@@ -398,7 +398,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
     from Products.ERP5.Document.Document import Document
     base_list = re.findall(Document.base_parser, str(html_page))
     base_url = base_list[0]
-    self.assertEqual(base_url, "%s/%s/" % (website.absolute_url(), website.getId()))
+    self.assertEqual(base_url, "%s/%s/" % (website.absolute_url(), web_page_en.getReference()))
 
   def test_07_WebSection_getDocumentValueList(self, quiet=quiet, run=run_all_test):
     """ Check getting getDocumentValueList from Web Section.

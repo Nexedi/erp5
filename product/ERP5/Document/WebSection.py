@@ -188,13 +188,13 @@ class WebSection(Domain, PermanentURLMixIn):
               if getDefaultDocumentValue() is not None:
                 # force user to login as specified in Web Section
                 raise Unauthorized
-          if document is not None:
+          if document is not None and document.getReference() is not None:
+            # we use web_site_module/site_id/section_id/page_reference
+            # as the url of the default document.
             self.REQUEST.set('current_web_document', document)
             self.REQUEST.set('is_web_section_default_document', 1)
             document = aq_base(document.asContext(
-                id=self.getId(), # A quick hack to force URL to point to self
-                  # XXX - A better solution here consists of using PermanentURL
-                  # to find out under which id the document should be published
+                id=document.getReference(),
                 original_container=document.getParentValue(),
                 original_id=document.getId(),
                 editable_absolute_url=document.absolute_url()))
