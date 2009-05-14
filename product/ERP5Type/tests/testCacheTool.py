@@ -65,7 +65,7 @@ class TestCacheTool(ERP5TypeTestCase):
 
   def test_01_CheckCacheTool(self):
     portal = self.getPortal()
-    self.assertNotEqual(None,getattr(portal,'portal_caches',None))
+    self.assertNotEqual(None, getattr(portal, 'portal_caches', None))
     transaction.commit()
 
   def test_02_CheckPortalTypes(self):
@@ -77,8 +77,8 @@ class TestCacheTool(ERP5TypeTestCase):
                       "SQL Cache",
                       )
     for typeinfo_name in typeinfo_names:
-      portal_type = getattr(portal_types,typeinfo_name,None)
-      self.assertNotEqual(None,portal_type)
+      portal_type = getattr(portal_types, typeinfo_name, None)
+      self.assertNotEqual(None, portal_type)
     transaction.commit()
 
   def test_03_CreateCacheFactories(self):
@@ -88,24 +88,24 @@ class TestCacheTool(ERP5TypeTestCase):
     # Cache plugins are organised into 'Cache factories' so we create
     # factories first ram_cache_factory (to test Ram Cache Plugin) 
     ram_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
-                                                id = 'ram_cache_factory',
-                                                container=portal_caches)
+                                                 id='ram_cache_factory',
+                                                 container=portal_caches)
     ram_cache_plugin = ram_cache_factory.newContent(portal_type="Ram Cache",
-                                                  container=ram_cache_factory)
+                                                    container=ram_cache_factory)
     ram_cache_plugin.setIntIndex(0)
 
 
     ## distributed_ram_cache_factory (to test Distributed Ram Cache Plugin) 
     dram_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
-                                        id = 'distributed_ram_cache_factory',
-                                        container=portal_caches)
+                                                  id='distributed_ram_cache_factory',
+                                                  container=portal_caches)
     dram_cache_plugin = dram_cache_factory.newContent(
             portal_type="Distributed Ram Cache", container=dram_cache_factory)
     dram_cache_plugin.setIntIndex(0)
 
     ## sql_cache_factory (to test SQL Cache Plugin) 
     sql_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
-                                                 id = 'sql_cache_factory',
+                                                 id='sql_cache_factory',
                                                  container=portal_caches)
     sql_cache_plugin = sql_cache_factory.newContent(
                     portal_type="SQL Cache", container=sql_cache_factory)
@@ -113,7 +113,7 @@ class TestCacheTool(ERP5TypeTestCase):
 
     ## erp5_user_factory (to test a combination of all cache plugins)
     erp5_user_factory = portal_caches.newContent(portal_type="Cache Factory",
-                                                 id = "erp5_user_factory",
+                                                 id="erp5_user_factory",
                                                  container=portal_caches)
 
     ram_cache_plugin = erp5_user_factory.newContent(
