@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -865,7 +866,8 @@ class ObjectTemplateItem(BaseTemplateItem):
               container._mapTransform(obj)
           elif obj.meta_type in ('ERP5 Ram Cache',
                                  'ERP5 Distributed Ram Cache',
-                                 'ERP5 SQL Cache'):
+                                 'ERP5 SQL Cache',
+                                 'ERP5 Zodb Cache',):
             assert container.meta_type == 'ERP5 Cache Factory'
             container.getParentValue().updateCache()
            
