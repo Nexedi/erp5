@@ -1,3 +1,6 @@
+2009-05-13 yusei
+* Fix Event_view.my_text_content due to the core field library issue.
+
 2009-05-08 yusei
 * Simplify field libraries and proxy fields. Old field libraries are kept for backward compatibility.
 * Update dependencies.
