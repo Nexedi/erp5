@@ -5,7 +5,7 @@ try:
     import Products.FileSystemSite
 except ImportError:
     # use CMF product
-    from Products.CMFCore.CMFCorePermissions import View
+    from Products.CMFCore.permissions import View
     from Products.CMFCore.FSObject import FSObject
     from Products.CMFCore.DirectoryView import registerFileExtension,\
                                                registerMetaType, expandpath
