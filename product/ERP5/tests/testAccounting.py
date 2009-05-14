@@ -305,7 +305,7 @@ class TestTransactionValidation(AccountingTestCase):
 
   def test_SaleInvoiceTransactionValidationDate(self):
     # Accounting Period Date matters for Sale Invoice Transaction
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Sale Invoice Transaction',
                start_date=DateTime('2006/03/03'),
                destination_section_value=self.organisation_module.supplier,
@@ -316,14 +316,14 @@ class TestTransactionValidation(AccountingTestCase):
     # validation is refused, because period is closed
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
-        transaction, 'stop_action')
+        accounting_transaction, 'stop_action')
     # in 2007, it's OK
-    transaction.setStartDate(DateTime("2007/03/03"))
-    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+    accounting_transaction.setStartDate(DateTime("2007/03/03"))
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
   
   def test_PurchaseInvoiceTransactionValidationDate(self):
     # Accounting Period Date matters for Purchase Invoice Transaction
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2006/03/03'),
                source_section_value=self.organisation_module.supplier,
@@ -334,14 +334,14 @@ class TestTransactionValidation(AccountingTestCase):
     # validation is refused, because period is closed
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
-        transaction, 'stop_action')
+        accounting_transaction, 'stop_action')
     # in 2007, it's OK
-    transaction.setStopDate(DateTime("2007/03/03"))
-    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+    accounting_transaction.setStopDate(DateTime("2007/03/03"))
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
 
   def test_PaymentTransactionValidationDate(self):
     # Accounting Period Date matters for Payment Transaction
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Payment Transaction',
                start_date=DateTime('2006/03/03'),
                destination_section_value=self.organisation_module.supplier,
@@ -353,14 +353,14 @@ class TestTransactionValidation(AccountingTestCase):
     # validation is refused, because period is closed
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
-        transaction, 'stop_action')
+        accounting_transaction, 'stop_action')
     # in 2007, it's OK
-    transaction.setStartDate(DateTime("2007/03/03"))
-    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+    accounting_transaction.setStartDate(DateTime("2007/03/03"))
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
 
   def test_DestinationPaymentTransactionValidationDate(self):
     # Accounting Period Date matters for Payment Transaction
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Payment Transaction',
                stop_date=DateTime('2006/03/03'),
                source_section_value=self.organisation_module.supplier,
@@ -373,15 +373,15 @@ class TestTransactionValidation(AccountingTestCase):
     # validation is refused, because period is closed
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
-        transaction, 'stop_action')
+        accounting_transaction, 'stop_action')
     # in 2007, it's OK
-    transaction.setStopDate(DateTime("2007/03/03"))
-    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+    accounting_transaction.setStopDate(DateTime("2007/03/03"))
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
 
   def test_UnusedSectionTransactionValidationDate(self):
     # If a section doesn't have any accounts on its side, we don't check the
     # accounting period dates
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2006/03/03'),
                source_section_value=self.organisation_module.supplier,
@@ -397,16 +397,16 @@ class TestTransactionValidation(AccountingTestCase):
     # 2006 is closed for destination_section
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
-        transaction, 'stop_action')
+        accounting_transaction, 'stop_action')
     # If we don't have accounts on destination side, validating transaction is
     # not refused
-    for line in transaction.getMovementList():
+    for line in accounting_transaction.getMovementList():
       line.setDestination(None)
-    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
 
   def test_AccountingTransactionValidationStartDate(self):
     # Check we can/cannot validate at date boundaries of the period
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2006/12/31'),
                destination_section_value=self.organisation_module.supplier,
@@ -418,13 +418,13 @@ class TestTransactionValidation(AccountingTestCase):
     # validation is refused, because period is closed
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
-        transaction, 'stop_action')
-    transaction.setStartDate(DateTime("2007/01/01"))
-    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+        accounting_transaction, 'stop_action')
+    accounting_transaction.setStartDate(DateTime("2007/01/01"))
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
   
   def test_AccountingTransactionValidationBeforePeriod(self):
     # Check we cannot validate before the period
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2003/12/31'),
                destination_section_value=self.organisation_module.supplier,
@@ -436,11 +436,11 @@ class TestTransactionValidation(AccountingTestCase):
     # validation is refused, because there are no open period for 2008
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
-        transaction, 'stop_action')
+        accounting_transaction, 'stop_action')
   
   def test_AccountingTransactionValidationAfterPeriod(self):
     # Check we cannot validate after the period
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2008/12/31'),
                destination_section_value=self.organisation_module.supplier,
@@ -452,7 +452,7 @@ class TestTransactionValidation(AccountingTestCase):
     # validation is refused, because there are no open period for 2008
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
-        transaction, 'stop_action')
+        accounting_transaction, 'stop_action')
   
   def test_AccountingTransactionValidationRecursivePeriod(self):
     # Check we can/cannot validate when secondary period exists
@@ -471,7 +471,7 @@ class TestTransactionValidation(AccountingTestCase):
                                 stop_date=DateTime('2007/02/28'),)
     accounting_period_2007_2.start()
 
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2007/01/02'),
                destination_section_value=self.organisation_module.supplier,
@@ -483,16 +483,16 @@ class TestTransactionValidation(AccountingTestCase):
     # validation is refused, because there are no open period for 2007-01
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
-        transaction, 'stop_action')
+        accounting_transaction, 'stop_action')
     # in 2007-02, it's OK
-    transaction.setStartDate(DateTime("2007/02/02"))
-    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+    accounting_transaction.setStartDate(DateTime("2007/02/02"))
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
   
 
   def test_PaymentTransactionWithEmployee(self):
     # we have to set bank account if we use an asset/cash/bank account, but not
     # for our employees
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2007/01/02'),
                destination_section_value=self.person_module.john_smith,
@@ -506,15 +506,15 @@ class TestTransactionValidation(AccountingTestCase):
     # refused because no bank account
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
-        transaction, 'stop_action')
+        accounting_transaction, 'stop_action')
     # with bank account, it's OK
     bank_account = self.section.newContent(portal_type='Bank Account')
-    transaction.setSourcePaymentValue(bank_account)
-    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+    accounting_transaction.setSourcePaymentValue(bank_account)
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
 
   def test_NonBalancedAccountingTransaction(self):
     # Accounting Transactions have to be balanced to be validated
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2007/01/02'),
                destination_section_value=self.organisation_module.client_1,
@@ -528,16 +528,16 @@ class TestTransactionValidation(AccountingTestCase):
     # refused because not balanced
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
-        transaction, 'stop_action')
-    for line in transaction.getMovementList():
+        accounting_transaction, 'stop_action')
+    for line in accounting_transaction.getMovementList():
       if line.getSourceId() == 'payable':
         line.setSourceAssetDebit(38.99)
-    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
 
   def test_NonBalancedDestinationAccountingTransaction(self):
     # Accounting Transactions have to be balanced to be validated,
     # also for destination
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2007/01/02'),
                destination_section_value=self.organisation_module.client_1,
@@ -553,16 +553,16 @@ class TestTransactionValidation(AccountingTestCase):
     # refused because not balanced
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
-        transaction, 'stop_action')
-    for line in transaction.getMovementList():
+        accounting_transaction, 'stop_action')
+    for line in accounting_transaction.getMovementList():
       if line.getDestinationId() == 'receivable':
         line.setDestinationAssetDebit(38.99)
-    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
 
   def test_NonBalancedDestinationAccountingTransactionNoAccount(self):
     # Accounting Transactions have to be balanced to be validated,
     # also for destination
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2007/01/02'),
                destination_section_value=self.organisation_module.client_1,
@@ -577,15 +577,15 @@ class TestTransactionValidation(AccountingTestCase):
     # This is not balanced but there are no accounts on destination
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
-        transaction, 'stop_action')
-    for line in transaction.getMovementList():
+        accounting_transaction, 'stop_action')
+    for line in accounting_transaction.getMovementList():
       if line.getDestinationId() == 'receivable':
         line.setDestination(None)
     # but if there are no accounts defined it's not a problem
-    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
 
   def test_NonBalancedAccountingTransactionSectionOnLines(self):
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2007/01/02'),
                resource='currency_module/yen',
@@ -599,15 +599,15 @@ class TestTransactionValidation(AccountingTestCase):
     # This is not balanced for client 1
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
-        transaction, 'stop_action')
+        accounting_transaction, 'stop_action')
 
-    for line in transaction.getMovementList():
+    for line in accounting_transaction.getMovementList():
       line.setDestinationSection(None)
-    self.assertEquals([], transaction.checkConsistency())
-    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+    self.assertEquals([], accounting_transaction.checkConsistency())
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
 
   def test_NonBalancedAccountingTransactionDifferentSectionOnLines(self):
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2007/01/02'),
                resource='currency_module/yen',
@@ -624,19 +624,19 @@ class TestTransactionValidation(AccountingTestCase):
     # it looks balanced.
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
-        transaction, 'stop_action')
-    self.assertEquals(1, len(transaction.checkConsistency()),
-                         transaction.checkConsistency())
+        accounting_transaction, 'stop_action')
+    self.assertEquals(1, len(accounting_transaction.checkConsistency()),
+                         accounting_transaction.checkConsistency())
 
-    for line in transaction.getMovementList():
+    for line in accounting_transaction.getMovementList():
       line.setDestinationSectionValue(
           self.organisation_module.client_2)
 
-    self.assertEquals([], transaction.checkConsistency())
-    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+    self.assertEquals([], accounting_transaction.checkConsistency())
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
 
   def test_NonBalancedAccountingTransactionSectionPersonOnLines(self):
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2007/01/02'),
                resource='currency_module/yen',
@@ -649,15 +649,15 @@ class TestTransactionValidation(AccountingTestCase):
 
     # This is not balanced for john smith, but as he is a person, it's not a
     # problem
-    self.assertEquals([], transaction.checkConsistency())
-    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+    self.assertEquals([], accounting_transaction.checkConsistency())
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
 
   def test_AccountingTransactionValidationRefusedWithCategoriesAsSections(self):
     # Validating a transaction with categories as sections is refused.
     # See http://wiki.erp5.org/Discussion/AccountingProblems
     category = self.section.getGroupValue()
     self.assertNotEquals(category, None)
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2007/01/02'),
                source_section_value=category,
@@ -670,18 +670,18 @@ class TestTransactionValidation(AccountingTestCase):
 
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
-        transaction, 'stop_action')
-    transaction.setSourceSectionValue(self.section)
-    transaction.setDestinationSectionValue(category)
+        accounting_transaction, 'stop_action')
+    accounting_transaction.setSourceSectionValue(self.section)
+    accounting_transaction.setDestinationSectionValue(category)
     self.assertRaises(ValidationFailed,
         self.portal.portal_workflow.doActionFor,
-        transaction, 'stop_action')
+        accounting_transaction, 'stop_action')
 
-    transaction.setDestinationSectionValue(self.organisation_module.client_1)
-    self.portal.portal_workflow.doActionFor(transaction, 'stop_action')
+    accounting_transaction.setDestinationSectionValue(self.organisation_module.client_1)
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
     
   def test_AccountingWorkflow(self):
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2007/01/02'),
                destination_section_value=self.organisation_module.client_1,
@@ -693,41 +693,49 @@ class TestTransactionValidation(AccountingTestCase):
                            source_credit=500)))
     
     doActionFor = self.portal.portal_workflow.doActionFor
-    self.assertEquals('draft', transaction.getSimulationState())
-    self.assertTrue(_checkPermission('Modify portal content', transaction))
+    self.assertEquals('draft', accounting_transaction.getSimulationState())
+    self.assertTrue(_checkPermission('Modify portal content',
+      accounting_transaction))
                     
-    doActionFor(transaction, 'plan_action')
-    self.assertEquals('planned', transaction.getSimulationState())
-    self.assertTrue(_checkPermission('Modify portal content', transaction))
+    doActionFor(accounting_transaction, 'plan_action')
+    self.assertEquals('planned', accounting_transaction.getSimulationState())
+    self.assertTrue(_checkPermission('Modify portal content',
+      accounting_transaction))
 
-    doActionFor(transaction, 'confirm_action')
-    self.assertEquals('confirmed', transaction.getSimulationState())
-    self.assertTrue(_checkPermission('Modify portal content', transaction))
+    doActionFor(accounting_transaction, 'confirm_action')
+    self.assertEquals('confirmed', accounting_transaction.getSimulationState())
+    self.assertTrue(_checkPermission('Modify portal content',
+      accounting_transaction))
 
-    doActionFor(transaction, 'start_action')
-    self.assertEquals('started', transaction.getSimulationState())
-    self.assertTrue(_checkPermission('Modify portal content', transaction))
+    doActionFor(accounting_transaction, 'start_action')
+    self.assertEquals('started', accounting_transaction.getSimulationState())
+    self.assertTrue(_checkPermission('Modify portal content',
+      accounting_transaction))
 
-    doActionFor(transaction, 'stop_action')
-    self.assertEquals('stopped', transaction.getSimulationState())
-    self.assertFalse(_checkPermission('Modify portal content', transaction))
+    doActionFor(accounting_transaction, 'stop_action')
+    self.assertEquals('stopped', accounting_transaction.getSimulationState())
+    self.assertFalse(_checkPermission('Modify portal content',
+      accounting_transaction))
     
-    doActionFor(transaction, 'restart_action')
-    self.assertEquals('started', transaction.getSimulationState())
-    self.assertTrue(_checkPermission('Modify portal content', transaction))
+    doActionFor(accounting_transaction, 'restart_action')
+    self.assertEquals('started', accounting_transaction.getSimulationState())
+    self.assertTrue(_checkPermission('Modify portal content',
+      accounting_transaction))
 
-    doActionFor(transaction, 'stop_action')
-    self.assertEquals('stopped', transaction.getSimulationState())
-    self.assertFalse(_checkPermission('Modify portal content', transaction))
+    doActionFor(accounting_transaction, 'stop_action')
+    self.assertEquals('stopped', accounting_transaction.getSimulationState())
+    self.assertFalse(_checkPermission('Modify portal content',
+      accounting_transaction))
 
-    doActionFor(transaction, 'deliver_action')
-    self.assertEquals('delivered', transaction.getSimulationState())
-    self.assertFalse(_checkPermission('Modify portal content', transaction))
+    doActionFor(accounting_transaction, 'deliver_action')
+    self.assertEquals('delivered', accounting_transaction.getSimulationState())
+    self.assertFalse(_checkPermission('Modify portal content',
+      accounting_transaction))
 
   def test_UneededSourceAssetPrice(self):
     # It is refunsed to validate an accounting transaction if lines have an
     # asset price but the resource is the same as the accounting resource
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2007/01/02'),
                destination_section_value=self.organisation_module.client_1,
@@ -738,35 +746,35 @@ class TestTransactionValidation(AccountingTestCase):
                            source_credit=500,
                            source_asset_credit=600)))
 
-    section = transaction.getSourceSectionValue()
+    section = accounting_transaction.getSourceSectionValue()
     self.assertEquals(section.getPriceCurrency(),
-                      transaction.getResource())
+                      accounting_transaction.getResource())
 
     # validation is refused
     doActionFor = self.portal.portal_workflow.doActionFor
-    self.assertRaises(ValidationFailed, doActionFor, transaction,
+    self.assertRaises(ValidationFailed, doActionFor, accounting_transaction,
                       'stop_action')
     # and the source conversion tab is visible
     self.failUnless(
-        transaction.AccountingTransaction_isSourceCurrencyConvertible())
+        accounting_transaction.AccountingTransaction_isSourceCurrencyConvertible())
 
     # if asset price is set to the same value as quantity, validation is
     # allowed
-    for line in transaction.getMovementList():
+    for line in accounting_transaction.getMovementList():
       if line.getSourceValue() == self.account_module.payable:
         line.setSourceAssetDebit(line.getSourceDebit())
       elif line.getSourceValue() == self.account_module.receivable:
         line.setSourceAssetCredit(line.getSourceCredit())
       else:
         self.fail('wrong line ?')
-    doActionFor(transaction, 'stop_action')
-    self.assertEquals('stopped', transaction.getSimulationState())
+    doActionFor(accounting_transaction, 'stop_action')
+    self.assertEquals('stopped', accounting_transaction.getSimulationState())
 
 
   def test_UneededDestinationAssetPrice(self):
     # It is refunsed to validate an accounting transaction if lines have an
     # asset price but the resource is the same as the accounting resource
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Purchase Invoice Transaction',
                start_date=DateTime('2007/01/02'),
                source_section_value=self.organisation_module.client_1,
@@ -777,21 +785,21 @@ class TestTransactionValidation(AccountingTestCase):
                            destination_credit=500,
                            destination_asset_credit=600)))
 
-    section = transaction.getDestinationSectionValue()
+    section = accounting_transaction.getDestinationSectionValue()
     self.assertEquals(section.getPriceCurrency(),
-                      transaction.getResource())
+                      accounting_transaction.getResource())
 
     # validation is refused
     doActionFor = self.portal.portal_workflow.doActionFor
-    self.assertRaises(ValidationFailed, doActionFor, transaction,
+    self.assertRaises(ValidationFailed, doActionFor, accounting_transaction,
                       'stop_action')
     # and the destination conversion tab is visible
     self.failUnless(
-        transaction.AccountingTransaction_isDestinationCurrencyConvertible())
+        accounting_transaction.AccountingTransaction_isDestinationCurrencyConvertible())
 
     # if asset price is set to the same value as quantity, validation is
     # allowed
-    for line in transaction.getMovementList():
+    for line in accounting_transaction.getMovementList():
       if line.getDestinationValue() == self.account_module.payable:
         line.setDestinationAssetDebit(line.getDestinationDebit())
       elif line.getDestinationValue() == self.account_module.receivable:
@@ -799,8 +807,8 @@ class TestTransactionValidation(AccountingTestCase):
       else:
         self.fail('wrong line ?')
 
-    doActionFor(transaction, 'stop_action')
-    self.assertEquals('stopped', transaction.getSimulationState())
+    doActionFor(accounting_transaction, 'stop_action')
+    self.assertEquals('stopped', accounting_transaction.getSimulationState())
 
 
 class TestClosingPeriod(AccountingTestCase):
@@ -1421,7 +1429,7 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEquals('started', period.getSimulationState())
 
     # create a simple transaction in the period
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
         start_date=DateTime(2006, 6, 30),
         portal_type='Sale Invoice Transaction',
         destination_section_value=self.organisation_module.client_1,
@@ -1944,10 +1952,10 @@ class TestAccountingExport(AccountingTestCase):
   """
   def test_export_transaction(self):
     # test we can export an accounting transaction as ODS
-    transaction = self._makeOne(lines=(
+    accounting_transaction = self._makeOne(lines=(
               dict(source_value=self.account_module.payable,
                    quantity=200),))
-    ods_data = transaction.Base_viewAsODS(
+    ods_data = accounting_transaction.Base_viewAsODS(
                     form_id='AccountingTransaction_view')
     from Products.ERP5OOo.OOoUtils import OOoParser
     parser = OOoParser()
@@ -2066,10 +2074,10 @@ class TestTransactions(AccountingTestCase):
 
 
   def test_SearchableText(self):
-    transaction = self._makeOne(title='A new Transaction',
+    accounting_transaction = self._makeOne(title='A new Transaction',
                                 description="A description",
                                 comment="Some comments")
-    searchable_text = transaction.SearchableText()
+    searchable_text = accounting_transaction.SearchableText()
     self.assertTrue('A new Transaction' in searchable_text)
     self.assertTrue('A description' in searchable_text)
     self.assertTrue('Some comments' in searchable_text)
@@ -2266,14 +2274,14 @@ class TestTransactions(AccountingTestCase):
         # Balance Transaction cannot be copy and pasted, because they are not
         # in visible allowed types.
         continue
-      transaction = accounting_module.newContent(
+      accounting_transaction = accounting_module.newContent(
                             portal_type=portal_type)
-      line = transaction.newContent(
+      line = accounting_transaction.newContent(
                   id = 'line_with_grouping_reference',
                   grouping_reference='A',
                   portal_type=transaction_to_line_mapping[portal_type])
 
-      cp = accounting_module.manage_copyObjects(ids=[transaction.getId()])
+      cp = accounting_module.manage_copyObjects(ids=[accounting_transaction.getId()])
       copy_id = accounting_module.manage_pasteObjects(cp)[0]['new_id']
       self.failIf(accounting_module[copy_id]\
           .line_with_grouping_reference.getGroupingReference())
@@ -2498,7 +2506,7 @@ class TestTransactions(AccountingTestCase):
 
   def test_AccountingTransaction_getTotalDebitCredit(self):
     # source view
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2007/01/02'),
                destination_section_value=self.organisation_module.client_1,
@@ -2508,12 +2516,12 @@ class TestTransactions(AccountingTestCase):
                       dict(source_value=self.account_module.receivable,
                            destination_value=self.account_module.payable,
                            source_credit=400)))
-    self.assertTrue(transaction.AccountingTransaction_isSourceView())
-    self.assertEquals(500, transaction.AccountingTransaction_getTotalDebit())
-    self.assertEquals(400, transaction.AccountingTransaction_getTotalCredit())
+    self.assertTrue(accounting_transaction.AccountingTransaction_isSourceView())
+    self.assertEquals(500, accounting_transaction.AccountingTransaction_getTotalDebit())
+    self.assertEquals(400, accounting_transaction.AccountingTransaction_getTotalCredit())
 
     # destination view
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2007/01/02'),
                source_section_value=self.organisation_module.client_1,
@@ -2524,12 +2532,12 @@ class TestTransactions(AccountingTestCase):
                       dict(source_value=self.account_module.receivable,
                            destination_value=self.account_module.payable,
                            destination_credit=400)))
-    self.assertFalse(transaction.AccountingTransaction_isSourceView())
-    self.assertEquals(500, transaction.AccountingTransaction_getTotalDebit())
-    self.assertEquals(400, transaction.AccountingTransaction_getTotalCredit())
+    self.assertFalse(accounting_transaction.AccountingTransaction_isSourceView())
+    self.assertEquals(500, accounting_transaction.AccountingTransaction_getTotalDebit())
+    self.assertEquals(400, accounting_transaction.AccountingTransaction_getTotalCredit())
 
     # source view, with conversion on our side
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2007/01/02'),
                destination_section_value=self.organisation_module.client_1,
@@ -2541,12 +2549,12 @@ class TestTransactions(AccountingTestCase):
                            destination_value=self.account_module.payable,
                            source_asset_credit=40,
                            source_credit=400)))
-    self.assertTrue(transaction.AccountingTransaction_isSourceView())
-    self.assertEquals(50, transaction.AccountingTransaction_getTotalDebit())
-    self.assertEquals(40, transaction.AccountingTransaction_getTotalCredit())
+    self.assertTrue(accounting_transaction.AccountingTransaction_isSourceView())
+    self.assertEquals(50, accounting_transaction.AccountingTransaction_getTotalDebit())
+    self.assertEquals(40, accounting_transaction.AccountingTransaction_getTotalCredit())
 
     # destination view, with conversion on our side
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2007/01/02'),
                source_section_value=self.organisation_module.client_1,
@@ -2559,12 +2567,12 @@ class TestTransactions(AccountingTestCase):
                            destination_value=self.account_module.payable,
                            destination_asset_credit=40,
                            destination_credit=400)))
-    self.assertFalse(transaction.AccountingTransaction_isSourceView())
-    self.assertEquals(50, transaction.AccountingTransaction_getTotalDebit())
-    self.assertEquals(40, transaction.AccountingTransaction_getTotalCredit())
+    self.assertFalse(accounting_transaction.AccountingTransaction_isSourceView())
+    self.assertEquals(50, accounting_transaction.AccountingTransaction_getTotalDebit())
+    self.assertEquals(40, accounting_transaction.AccountingTransaction_getTotalCredit())
 
     # source view, with conversion on other side
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2007/01/02'),
                destination_section_value=self.organisation_module.client_1,
@@ -2576,12 +2584,12 @@ class TestTransactions(AccountingTestCase):
                            destination_value=self.account_module.payable,
                            destination_asset_credit=40,
                            source_credit=400)))
-    self.assertTrue(transaction.AccountingTransaction_isSourceView())
-    self.assertEquals(500, transaction.AccountingTransaction_getTotalDebit())
-    self.assertEquals(400, transaction.AccountingTransaction_getTotalCredit())
+    self.assertTrue(accounting_transaction.AccountingTransaction_isSourceView())
+    self.assertEquals(500, accounting_transaction.AccountingTransaction_getTotalDebit())
+    self.assertEquals(400, accounting_transaction.AccountingTransaction_getTotalCredit())
     
     # destination view, with conversion on other side
-    transaction = self._makeOne(
+    accounting_transaction = self._makeOne(
                portal_type='Accounting Transaction',
                start_date=DateTime('2007/01/02'),
                source_section_value=self.organisation_module.client_1,
@@ -2594,9 +2602,9 @@ class TestTransactions(AccountingTestCase):
                            destination_value=self.account_module.payable,
                            source_asset_credit=40,
                            destination_credit=400)))
-    self.assertFalse(transaction.AccountingTransaction_isSourceView())
-    self.assertEquals(500, transaction.AccountingTransaction_getTotalDebit())
-    self.assertEquals(400, transaction.AccountingTransaction_getTotalCredit())
+    self.assertFalse(accounting_transaction.AccountingTransaction_isSourceView())
+    self.assertEquals(500, accounting_transaction.AccountingTransaction_getTotalDebit())
+    self.assertEquals(400, accounting_transaction.AccountingTransaction_getTotalCredit())
 
 
 
@@ -3211,7 +3219,7 @@ class TestAccountingWithSequences(AccountingTestCase):
       kw['stop_date'] = stop_date
 
     # create the transaction.
-    transaction = self.getAccountingModule().newContent(
+    accounting_transaction = self.getAccountingModule().newContent(
       portal_type=portal_type,
       start_date=kw['start_date'],
       stop_date=kw['stop_date'],
@@ -3221,7 +3229,7 @@ class TestAccountingWithSequences(AccountingTestCase):
       created_by_builder = 1 # prevent the init script from
                              # creating lines.
     )
-    income = transaction.newContent(
+    income = accounting_transaction.newContent(
                   id='income',
                   portal_type=line_portal_type,
                   quantity=-quantity,
@@ -3231,7 +3239,7 @@ class TestAccountingWithSequences(AccountingTestCase):
     self.failUnless(income.getSource() != None)
     self.failUnless(income.getDestination() != None)
     
-    receivable = transaction.newContent(
+    receivable = accounting_transaction.newContent(
                   id='receivable',
                   portal_type=line_portal_type,
                   quantity=quantity,
@@ -3245,29 +3253,29 @@ class TestAccountingWithSequences(AccountingTestCase):
       transaction.commit()
       self.tic()
     if check_consistency:
-      self.failUnless(len(transaction.checkConsistency()) == 0,
-         "Check consistency failed : %s" % transaction.checkConsistency())
-    return transaction
+      self.failUnless(len(accounting_transaction.checkConsistency()) == 0,
+         "Check consistency failed : %s" % accounting_transaction.checkConsistency())
+    return accounting_transaction
 
   def test_createAccountingTransaction(self):
     """Make sure acounting transactions created by createAccountingTransaction
     method are valid.
     """
-    transaction = self.createAccountingTransaction()
-    self.assertEquals(self.vendor, transaction.getSourceSectionValue())
-    self.assertEquals(self.client, transaction.getDestinationSectionValue())
-    self.assertEquals(self.EUR, transaction.getResourceValue())
-    self.failUnless(transaction.AccountingTransaction_isSourceView())
+    accounting_transaction = self.createAccountingTransaction()
+    self.assertEquals(self.vendor, accounting_transaction.getSourceSectionValue())
+    self.assertEquals(self.client, accounting_transaction.getDestinationSectionValue())
+    self.assertEquals(self.EUR, accounting_transaction.getResourceValue())
+    self.failUnless(accounting_transaction.AccountingTransaction_isSourceView())
     
-    self.workflow_tool.doActionFor(transaction, 'stop_action')
-    self.assertEquals('stopped', transaction.getSimulationState())
-    self.assertEquals([] , transaction.checkConsistency())
+    self.workflow_tool.doActionFor(accounting_transaction, 'stop_action')
+    self.assertEquals('stopped', accounting_transaction.getSimulationState())
+    self.assertEquals([] , accounting_transaction.checkConsistency())
 
   def stepCreateValidAccountingTransaction(self, sequence,
                                           sequence_list=None, **kw) :
     """Creates a valid accounting transaction and put it in
     the sequence as `transaction` key. """
-    transaction = self.createAccountingTransaction(
+    accounting_transaction = self.createAccountingTransaction(
                             resource_value=sequence.get('EUR'),
                             source_section_value=sequence.get('vendor'),
                             destination_section_value=sequence.get('client'),
@@ -3276,9 +3284,9 @@ class TestAccountingWithSequences(AccountingTestCase):
                             receivable_account=sequence.get('receivable_account'),
                             payable_account=sequence.get('payable_account'), )
     sequence.edit(
-      transaction = transaction,
-      income = transaction.income,
-      receivable = transaction.receivable
+      transaction = accounting_transaction,
+      income = accounting_transaction.income,
+      receivable = accounting_transaction.receivable
     )
     
   def stepValidateNoDate(self, sequence, sequence_list=None, **kw) :
@@ -3290,21 +3298,21 @@ class TestAccountingWithSequences(AccountingTestCase):
     missing. (ie. stop_date defaults automatically to start_date if not set and
     start_date is set to stop_date in the workflow script if not set.
     """
-    transaction = sequence.get('transaction')
-    old_stop_date = transaction.getStopDate()
-    old_start_date = transaction.getStartDate()
-    transaction.setStopDate(None)
-    if transaction.getStopDate() != None :
-      transaction.setStartDate(None)
-      transaction.setStopDate(None)
+    accounting_transaction = sequence.get('transaction')
+    old_stop_date = accounting_transaction.getStopDate()
+    old_start_date = accounting_transaction.getStartDate()
+    accounting_transaction.setStopDate(None)
+    if accounting_transaction.getStopDate() != None :
+      accounting_transaction.setStartDate(None)
+      accounting_transaction.setStopDate(None)
     self.assertRaises(ValidationFailed,
         self.getWorkflowTool().doActionFor,
-        transaction,
+        accounting_transaction,
         'stop_action')
-    transaction.setStartDate(old_start_date)
-    transaction.setStopDate(old_stop_date)
-    self.getWorkflowTool().doActionFor(transaction, 'stop_action')
-    self.assertEquals(transaction.getSimulationState(), 'stopped')
+    accounting_transaction.setStartDate(old_start_date)
+    accounting_transaction.setStopDate(old_stop_date)
+    self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
+    self.assertEquals(accounting_transaction.getSimulationState(), 'stopped')
   
   def stepValidateNoSection(self, sequence, sequence_list=None, **kw) :
     """Check validation behaviour related to section & mirror_section.
@@ -3315,29 +3323,29 @@ class TestAccountingWithSequences(AccountingTestCase):
       o if we do not use any payable or receivable accounts and we have
       a destination section, validation should be ok.
     """
-    transaction = sequence.get('transaction')
-    old_source_section = transaction.getSourceSection()
-    old_destination_section = transaction.getDestinationSection()
+    accounting_transaction = sequence.get('transaction')
+    old_source_section = accounting_transaction.getSourceSection()
+    old_destination_section = accounting_transaction.getDestinationSection()
     # default transaction uses payable accounts, so validating without
     # source section is refused.
-    transaction.setSourceSection(None)
+    accounting_transaction.setSourceSection(None)
     self.assertRaises(ValidationFailed,
         self.getWorkflowTool().doActionFor,
-        transaction,
+        accounting_transaction,
         'stop_action')
     # ... as well as validation without destination section
-    transaction.setSourceSection(old_source_section)
-    transaction.setDestinationSection(None)
+    accounting_transaction.setSourceSection(old_source_section)
+    accounting_transaction.setDestinationSection(None)
     self.assertRaises(ValidationFailed,
         self.getWorkflowTool().doActionFor,
-        transaction,
+        accounting_transaction,
         'stop_action')
     # mirror section can be set only on the line
-    for line in transaction.getMovementList() :
+    for line in accounting_transaction.getMovementList() :
       line.setDestinationSection(old_destination_section)
     try:
-      self.getWorkflowTool().doActionFor(transaction, 'stop_action')
-      self.assertEquals(transaction.getSimulationState(), 'stopped')
+      self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
+      self.assertEquals(accounting_transaction.getSimulationState(), 'stopped')
     except ValidationFailed, err :
       self.assert_(0, "Validation failed : %s" % err.msg)
     
@@ -3348,38 +3356,38 @@ class TestAccountingWithSequences(AccountingTestCase):
       # destination section only. We could theoritically support it.
 
       # get a new valid transaction
-      transaction = self.createAccountingTransaction()
+      accounting_transaction = self.createAccountingTransaction()
       expense_account = sequence.get('expense_account')
-      for line in transaction.getMovementList() :
+      for line in accounting_transaction.getMovementList() :
         line.edit( source_value = expense_account,
                    destination_value = expense_account )
       if side == SOURCE :
-        transaction.setDestinationSection(None)
+        accounting_transaction.setDestinationSection(None)
       else :
-        transaction.setSourceSection(None)
+        accounting_transaction.setSourceSection(None)
       try:
-        self.getWorkflowTool().doActionFor(transaction, 'stop_action')
-        self.assertEquals(transaction.getSimulationState(), 'stopped')
+        self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
+        self.assertEquals(accounting_transaction.getSimulationState(), 'stopped')
       except ValidationFailed, err :
         self.assert_(0, "Validation failed : %s" % err.msg)
         
   def stepValidateNoCurrency(self, sequence, sequence_list=None, **kw) :
     """Check validation behaviour related to currency.
     """
-    transaction = sequence.get('transaction')
-    old_resource = transaction.getResource()
-    transaction.setResource(None)
+    accounting_transaction = sequence.get('transaction')
+    old_resource = accounting_transaction.getResource()
+    accounting_transaction.setResource(None)
     self.assertRaises(ValidationFailed,
         self.getWorkflowTool().doActionFor,
-        transaction,
+        accounting_transaction,
         'stop_action')
     # setting a dummy relationship is not enough, resource must be a
     # currency
-    transaction.setResourceValue(
+    accounting_transaction.setResourceValue(
          self.portal.product_module.newContent(portal_type='Product'))
     self.assertRaises(ValidationFailed,
         self.getWorkflowTool().doActionFor,
-        transaction,
+        accounting_transaction,
         'stop_action')
     
   def stepValidateClosedAccount(self, sequence, sequence_list=None, **kw) :
@@ -3387,13 +3395,13 @@ class TestAccountingWithSequences(AccountingTestCase):
     If an account is blocked, then it's impossible to validate a
     transaction related to this account.
     """
-    transaction = sequence.get('transaction')
-    account = transaction.getMovementList()[0].getSourceValue()
+    accounting_transaction = sequence.get('transaction')
+    account = accounting_transaction.getMovementList()[0].getSourceValue()
     self.getWorkflowTool().doActionFor(account, 'invalidate_action')
     self.assertEquals(account.getValidationState(), 'invalidated')
     self.assertRaises(ValidationFailed,
         self.getWorkflowTool().doActionFor,
-        transaction,
+        accounting_transaction,
         'stop_action')
     # reopen the account for other tests
     account.validate()
@@ -3403,42 +3411,42 @@ class TestAccountingWithSequences(AccountingTestCase):
     """Simple check that the validation is refused when we do not have
     accounts correctly defined on lines.
     """
-    transaction = sequence.get('transaction')
+    accounting_transaction = sequence.get('transaction')
     # no account at all is refused
-    for line in transaction.getMovementList():
+    for line in accounting_transaction.getMovementList():
       line.setSource(None)
       line.setDestination(None)
     self.assertRaises(ValidationFailed,
         self.getWorkflowTool().doActionFor,
-        transaction,
+        accounting_transaction,
         'stop_action')
     
     # only one line without account and with a quantity is also refused
-    transaction = self.createAccountingTransaction()
-    transaction.getMovementList()[0].setSource(None)
-    transaction.getMovementList()[0].setDestination(None)
+    accounting_transaction = self.createAccountingTransaction()
+    accounting_transaction.getMovementList()[0].setSource(None)
+    accounting_transaction.getMovementList()[0].setDestination(None)
     self.assertRaises(ValidationFailed,
         self.getWorkflowTool().doActionFor,
-        transaction,
+        accounting_transaction,
         'stop_action')
     
     # but if we have a line with 0 quantity on both sides, we can
     # validate the transaction and delete this line.
-    transaction = self.createAccountingTransaction()
-    line_count = len(transaction.getMovementList())
-    transaction.newContent(
+    accounting_transaction = self.createAccountingTransaction()
+    line_count = len(accounting_transaction.getMovementList())
+    accounting_transaction.newContent(
         portal_type = self.accounting_transaction_line_portal_type)
-    self.getWorkflowTool().doActionFor(transaction, 'stop_action')
-    self.assertEquals(transaction.getSimulationState(), 'stopped')
-    self.assertEquals(line_count, len(transaction.getMovementList()))
+    self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
+    self.assertEquals(accounting_transaction.getSimulationState(), 'stopped')
+    self.assertEquals(line_count, len(accounting_transaction.getMovementList()))
     
     # 0 quantity, but a destination asset price => do not delete the
     # line
-    transaction = self.createAccountingTransaction()
-    new_line = transaction.newContent(
+    accounting_transaction = self.createAccountingTransaction()
+    new_line = accounting_transaction.newContent(
         portal_type = self.accounting_transaction_line_portal_type)
-    self.assertEquals(len(transaction.getMovementList()), 3)
-    line_list = transaction.getMovementList()
+    self.assertEquals(len(accounting_transaction.getMovementList()), 3)
+    line_list = accounting_transaction.getMovementList()
     line_list[0].setDestinationTotalAssetPrice(100)
     line_list[0]._setCategoryMembership(
           'destination', sequence.get('expense_account').getRelativeUrl())
@@ -3449,44 +3457,44 @@ class TestAccountingWithSequences(AccountingTestCase):
     line_list[2]._setCategoryMembership(
           'destination', sequence.get('expense_account').getRelativeUrl())
     try:
-      self.getWorkflowTool().doActionFor(transaction, 'stop_action')
-      self.assertEquals(transaction.getSimulationState(), 'stopped')
+      self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
+      self.assertEquals(accounting_transaction.getSimulationState(), 'stopped')
     except ValidationFailed, err :
       self.assert_(0, "Validation failed : %s" % err.msg)
   
   def stepValidateNotBalanced(self, sequence, sequence_list=None, **kw) :
     """Check validation behaviour when transaction is not balanced.
     """
-    transaction = sequence.get('transaction')
-    transaction.getMovementList()[0].setQuantity(4325)
+    accounting_transaction = sequence.get('transaction')
+    accounting_transaction.getMovementList()[0].setQuantity(4325)
     self.assertRaises(ValidationFailed,
         self.getWorkflowTool().doActionFor,
-        transaction,
+        accounting_transaction,
         'stop_action')
     
     # asset price have priority (ie. if asset price is not balanced,
     # refuses validation even if quantity is balanced)
-    transaction = self.createAccountingTransaction(resource_value=self.YEN)
-    line_list = transaction.getMovementList()
+    accounting_transaction = self.createAccountingTransaction(resource_value=self.YEN)
+    line_list = accounting_transaction.getMovementList()
     line_list[0].setDestinationTotalAssetPrice(10)
     line_list[1].setDestinationTotalAssetPrice(100)
     self.assertRaises(ValidationFailed,
         self.getWorkflowTool().doActionFor,
-        transaction,
+        accounting_transaction,
         'stop_action')
     
-    transaction = self.createAccountingTransaction(resource_value=self.YEN)
-    line_list = transaction.getMovementList()
+    accounting_transaction = self.createAccountingTransaction(resource_value=self.YEN)
+    line_list = accounting_transaction.getMovementList()
     line_list[0].setSourceTotalAssetPrice(10)
     line_list[1].setSourceTotalAssetPrice(100)
     self.assertRaises(ValidationFailed,
         self.getWorkflowTool().doActionFor,
-        transaction,
+        accounting_transaction,
         'stop_action')
     
     # only asset price needs to be balanced
-    transaction = self.createAccountingTransaction(resource_value=self.YEN)
-    line_list = transaction.getMovementList()
+    accounting_transaction = self.createAccountingTransaction(resource_value=self.YEN)
+    line_list = accounting_transaction.getMovementList()
     line_list[0].setSourceTotalAssetPrice(100)
     line_list[0].setDestinationTotalAssetPrice(100)
     line_list[0].setQuantity(432432)
@@ -3494,8 +3502,8 @@ class TestAccountingWithSequences(AccountingTestCase):
     line_list[1].setDestinationTotalAssetPrice(-100)
     line_list[1].setQuantity(32546787)
     try:
-      self.getWorkflowTool().doActionFor(transaction, 'stop_action')
-      self.assertEquals(transaction.getSimulationState(), 'stopped')
+      self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
+      self.assertEquals(accounting_transaction.getSimulationState(), 'stopped')
     except ValidationFailed, err :
       self.assert_(0, "Validation failed : %s" % err.msg)
   
@@ -3507,13 +3515,13 @@ class TestAccountingWithSequences(AccountingTestCase):
     `payment node` portal type group. It can be defined on transaction
     or line.
     """
-    def useBankAccount(transaction):
+    def useBankAccount(accounting_transaction):
       """Modify the transaction, so that a line will use an account member of
       account_type/cash/bank , which requires to use a payment category.
       """
       # get the default and replace income account by bank
       income_account_found = 0
-      for line in transaction.getMovementList() :
+      for line in accounting_transaction.getMovementList() :
         source_account = line.getSourceValue()
         if source_account.isMemberOf('account_type/income') :
           income_account_found = 1
@@ -3521,87 +3529,87 @@ class TestAccountingWithSequences(AccountingTestCase):
                      destination_value = sequence.get('bank_account') )
       self.failUnless(income_account_found)
     # XXX
-    transaction = sequence.get('transaction')
-    useBankAccount(transaction)
+    accounting_transaction = sequence.get('transaction')
+    useBankAccount(accounting_transaction)
     self.assertRaises(ValidationFailed,
         self.getWorkflowTool().doActionFor,
-        transaction,
+        accounting_transaction,
         'stop_action')
     
-    source_section_value = transaction.getSourceSectionValue()
-    destination_section_value = transaction.getDestinationSectionValue()
+    source_section_value = accounting_transaction.getSourceSectionValue()
+    destination_section_value = accounting_transaction.getDestinationSectionValue()
     for ptype in self.getPortal().getPortalPaymentNodeTypeList() :
       source_payment_value = source_section_value.newContent(
                                   portal_type = ptype, )
       destination_payment_value = destination_section_value.newContent(
                                   portal_type = ptype, )
-      transaction = self.createAccountingTransaction(
+      accounting_transaction = self.createAccountingTransaction(
                       destination_section_value=self.other_vendor)
-      useBankAccount(transaction)
+      useBankAccount(accounting_transaction)
 
       # payment node have to be set on both sides if both sides are member of
       # the same group.
-      transaction.setSourcePaymentValue(source_payment_value)
-      transaction.setDestinationPaymentValue(None)
+      accounting_transaction.setSourcePaymentValue(source_payment_value)
+      accounting_transaction.setDestinationPaymentValue(None)
       self.assertRaises(ValidationFailed,
           self.getWorkflowTool().doActionFor,
-          transaction,
+          accounting_transaction,
           'stop_action')
-      transaction.setSourcePaymentValue(None)
-      transaction.setDestinationPaymentValue(destination_payment_value)
+      accounting_transaction.setSourcePaymentValue(None)
+      accounting_transaction.setDestinationPaymentValue(destination_payment_value)
       self.assertRaises(ValidationFailed,
           self.getWorkflowTool().doActionFor,
-          transaction,
+          accounting_transaction,
           'stop_action')
-      transaction.setSourcePaymentValue(source_payment_value)
-      transaction.setDestinationPaymentValue(destination_payment_value)
+      accounting_transaction.setSourcePaymentValue(source_payment_value)
+      accounting_transaction.setDestinationPaymentValue(destination_payment_value)
       try:
-        self.getWorkflowTool().doActionFor(transaction, 'stop_action')
-        self.assertEquals(transaction.getSimulationState(), 'stopped')
+        self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
+        self.assertEquals(accounting_transaction.getSimulationState(), 'stopped')
       except ValidationFailed, err :
         self.fail("Validation failed : %s" % err.msg)
 
       # if we are not interested in the accounting for the third party, no need
       # to have a destination_payment
-      transaction = self.createAccountingTransaction()
-      useBankAccount(transaction)
+      accounting_transaction = self.createAccountingTransaction()
+      useBankAccount(accounting_transaction)
       # only set payment for source
-      transaction.setSourcePaymentValue(source_payment_value)
-      transaction.setDestinationPaymentValue(None)
+      accounting_transaction.setSourcePaymentValue(source_payment_value)
+      accounting_transaction.setDestinationPaymentValue(None)
       # then we should be able to validate.
       try:
-        self.getWorkflowTool().doActionFor(transaction, 'stop_action')
-        self.assertEquals(transaction.getSimulationState(), 'stopped')
+        self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
+        self.assertEquals(accounting_transaction.getSimulationState(), 'stopped')
       except ValidationFailed, err:
         self.fail("Validation failed : %s" % err.msg)
     
   def stepValidateRemoveEmptyLines(self, sequence, sequence_list=None, **kw):
     """Check validating a transaction remove empty lines. """
-    transaction = sequence.get('transaction')
-    lines_count = len(transaction.getMovementList())
+    accounting_transaction = sequence.get('transaction')
+    lines_count = len(accounting_transaction.getMovementList())
     empty_lines_count = 0
-    for line in transaction.getMovementList():
+    for line in accounting_transaction.getMovementList():
       if line.getSourceTotalAssetPrice() ==  \
          line.getDestinationTotalAssetPrice() == 0:
         empty_lines_count += 1
     if empty_lines_count == 0:
-      transaction.newContent(
+      accounting_transaction.newContent(
             portal_type=self.accounting_transaction_line_portal_type)
     
-    self.getWorkflowTool().doActionFor(transaction, 'stop_action')
-    self.assertEquals(len(transaction.getMovementList()),
+    self.getWorkflowTool().doActionFor(accounting_transaction, 'stop_action')
+    self.assertEquals(len(accounting_transaction.getMovementList()),
                       lines_count - empty_lines_count)
     
     # we don't remove empty lines if there is only empty lines
-    transaction = self.getAccountingModule().newContent(
+    accounting_transaction = self.getAccountingModule().newContent(
                       portal_type=self.accounting_transaction_portal_type,
                       created_by_builder=1)
     for i in range(3):
-      transaction.newContent(
+      accounting_transaction.newContent(
             portal_type=self.accounting_transaction_line_portal_type)
-    lines_count = len(transaction.getMovementList())
-    transaction.AccountingTransaction_deleteEmptyLines(redirect=0)
-    self.assertEquals(len(transaction.getMovementList()), lines_count)
+    lines_count = len(accounting_transaction.getMovementList())
+    accounting_transaction.AccountingTransaction_deleteEmptyLines(redirect=0)
+    self.assertEquals(len(accounting_transaction.getMovementList()), lines_count)
     
   ############################################################################
   ## Test Methods ############################################################

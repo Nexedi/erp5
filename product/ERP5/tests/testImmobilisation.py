@@ -571,11 +571,11 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     self.getAccountingModule().manage_delObjects(id_list)
     
   def stepValidateAccounting(self, sequence=None, sequence_list=None, **kw):
-    for transaction in self.getAccountingModule().contentValues():
-      transaction.stop()
+    for accounting_transaction in self.getAccountingModule().contentValues():
+      accounting_transaction.stop()
       transaction.commit()
       self.tic()
-      transaction.deliver()
+      accounting_transaction.deliver()
       transaction.commit()
       self.tic()
 

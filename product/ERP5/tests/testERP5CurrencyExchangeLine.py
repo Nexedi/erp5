@@ -163,7 +163,7 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     self.assertEquals(x_curr_ex_line.getValidationState(),
                            'validated')
     accounting_module = self.portal.accounting_module
-    transaction = self._makeOne(
+    invoice = self._makeOne(
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/08'),
             source_section_value=self.organisation_module.supplier,
@@ -172,8 +172,8 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
                            destination_debit=500),
               dict(destination_value=self.account_module.receivable,
                            destination_credit=500)))
-    transaction.AccountingTransaction_convertDestinationPrice(form_id='view')
-    line_list = transaction.contentValues(
+    invoice.AccountingTransaction_convertDestinationPrice(form_id='view')
+    line_list = invoice.contentValues(
            portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
 	self.assertEquals(line.getDestinationTotalAssetPrice(),
@@ -235,7 +235,7 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
                            portal_type='Currency Exchange Line')
     euro_line.validate()
     accounting_module = self.portal.accounting_module
-    transaction = self._makeOne(
+    invoice = self._makeOne(
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/08'),
            source_section_value=self.organisation_module.supplier,
@@ -244,9 +244,9 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
                            destination_debit=500),
               dict(destination_value=self.account_module.receivable,
                            destination_credit=500)))
-    transaction.AccountingTransaction_convertDestinationPrice(
+    invoice.AccountingTransaction_convertDestinationPrice(
                          form_id='view')
-    line_list = transaction.contentValues(
+    line_list = invoice.contentValues(
            portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
         self.assertEquals(line.getDestinationTotalAssetPrice(),
@@ -290,7 +290,7 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     self.assertEquals(x_curr_ex_line.getValidationState(),
                          'validated')
     accounting_module = self.portal.accounting_module
-    transaction = self._makeOne(
+    invoice = self._makeOne(
                portal_type='Sale Invoice Transaction',
                start_date=DateTime('2008/09/08'),
         destination_section_value=self.organisation_module.supplier,
@@ -298,9 +298,9 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
                            source_debit=500),
                    dict(source_value=self.account_module.receivable,
                            source_credit=500)))
-    transaction.AccountingTransaction_convertSourcePrice(
+    invoice.AccountingTransaction_convertSourcePrice(
                    form_id='view')
-    line_list = transaction.contentValues(
+    line_list = invoice.contentValues(
            portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
 	self.assertEquals(line.getSourceTotalAssetPrice(),
@@ -329,7 +329,7 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
                 price_currency=new_currency.getRelativeUrl())
     euro = self.portal.currency_module.euro
     accounting_module = self.portal.accounting_module
-    transaction = self._makeOne(
+    invoice = self._makeOne(
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/08'),
             source_section_value=self.organisation_module.supplier,
@@ -338,9 +338,9 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
                            destination_debit=500),
               dict(destination_value=self.account_module.receivable,
                            destination_credit=500)))
-    transaction.AccountingTransaction_convertDestinationPrice(
+    invoice.AccountingTransaction_convertDestinationPrice(
                         form_id='view')
-    line_list = transaction.contentValues(
+    line_list = invoice.contentValues(
            portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
 	self.assertEquals(line.getDestinationTotalAssetPrice(),None)
@@ -456,7 +456,7 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
                           'validated')
     
     accounting_module = self.portal.accounting_module
-    transaction = self._makeOne(
+    invoice = self._makeOne(
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/08'),
              source_section_value=self.organisation_module.supplier,
@@ -466,9 +466,9 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
               dict(destination_value=self.account_module.receivable,
                            destination_credit=500)))
     
-    transaction.AccountingTransaction_convertDestinationPrice(
+    invoice.AccountingTransaction_convertDestinationPrice(
                            form_id='view')
-    line_list = transaction.contentValues(
+    line_list = invoice.contentValues(
            portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
         self.assertEquals(line.getDestinationTotalAssetPrice(),
@@ -527,7 +527,7 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     self.assertEquals(euro_line2.getValidationState(),
                                  'validated')
     accounting_module = self.portal.accounting_module
-    transaction = self._makeOne(
+    invoice = self._makeOne(
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/08'),
             source_section_value=self.organisation_module.supplier,
@@ -536,9 +536,9 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
                            destination_debit=500),
               dict(destination_value=self.account_module.receivable,
                            destination_credit=500)))
-    transaction.AccountingTransaction_convertDestinationPrice(
+    invoice.AccountingTransaction_convertDestinationPrice(
                            form_id='view')
-    line_list = transaction.contentValues(
+    line_list = invoice.contentValues(
            portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
         self.assertEquals(line.getDestinationTotalAssetPrice(),
