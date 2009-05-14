@@ -63,7 +63,7 @@ class TestUserManagement(ERP5TypeTestCase):
     clearCache(cache_factory_list=('erp5_content_short', ))
     self.getPersonModule().manage_delObjects([x for x in
                              self.getPersonModule().objectIds()])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
   
   def login(self):
@@ -114,7 +114,7 @@ class TestUserManagement(ERP5TypeTestCase):
                                        stop_date=assignment_stop_date,)
     if open_assignment:
       assignment.open()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     return new_person
 
@@ -350,7 +350,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
                                   site='subcat',
                                   function='subcat' )
     assignment.open()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
   
   def beforeTearDown(self):
@@ -366,7 +366,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     for module in self.portal.objectValues(spec=('ERP5 Folder',)):
       module.manage_delObjects([x for x in module.objectIds()])
     # commit this
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # XXX Isn't it better to clear the cache when deleting a Person ?
     clearCache(cache_factory_list=('erp5_content_short', ))
@@ -475,21 +475,21 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
 
     # getUserByLogin accept login as a string
     self.portal.portal_caches.clearAllCache()
-    get_transaction().commit()
+    transaction.commit()
     person_list = self.portal.acl_users.erp5_users.getUserByLogin(self.username)
     self.assertEquals(1, len(person_list))
     self.assertEquals(self.username, person_list[0].getReference())
 
     # getUserByLogin accept login as a list
     self.portal.portal_caches.clearAllCache()
-    get_transaction().commit()
+    transaction.commit()
     person_list = self.portal.acl_users.erp5_users.getUserByLogin([self.username])
     self.assertEquals(1, len(person_list))
     self.assertEquals(self.username, person_list[0].getReference())
 
     # getUserByLogin accept login as a tuple
     self.portal.portal_caches.clearAllCache()
-    get_transaction().commit()
+    transaction.commit()
     person_list = self.portal.acl_users.erp5_users.getUserByLogin((self.username,))
     self.assertEquals(1, len(person_list))
     self.assertEquals(self.username, person_list[0].getReference())
@@ -497,7 +497,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     # PreferenceTool pass a user as parameter
     user = getSecurityManager().getUser()
     self.portal.portal_caches.clearAllCache()
-    get_transaction().commit()
+    transaction.commit()
     person_list = self.portal.acl_users.erp5_users.getUserByLogin(user)
     self.assertEquals(1, len(person_list))
     self.assertEquals(self.username, person_list[0].getReference())
@@ -517,7 +517,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     assignment = loginable_person.newContent(portal_type='Assignment',
                                              function='another_subcat')
     assignment.open()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     person_module_type_information = self.getTypesTool()['Person Module']
@@ -530,7 +530,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
       base_category_script='',
       base_category='')
     person_module_type_information.updateRoleMapping()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     person_module_path = self.getPersonModule().absolute_url(relative=1)
@@ -547,7 +547,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.getOrganisationModule().newContent(portal_type='Organisation',
                                             id='my_company',
                                             title='Nexedi')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     response = self.publish('/%s/my_company/getTitle' % self.getOrganisationModule().absolute_url(relative=1),
                             basic='guest:guest')

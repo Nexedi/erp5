@@ -29,6 +29,7 @@
 
 
 import unittest
+import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -85,12 +86,12 @@ class TestGUISecurity(ERP5TypeTestCase):
       asg.setStartDate(DateTime() - 100)
       asg.setStopDate(DateTime() + 100)
       asg.open()
-    get_transaction().commit()
+    transaction.commit()
 
   def stepCreateTestFoo(self, sequence = None, sequence_list = None, **kw):
     foo_module = self.getPortal().foo_module
     foo_module.newContent(portal_type='Foo', id='foo', foo_category='a')
-    get_transaction().commit()
+    transaction.commit()
 
   def stepAccessFoo(self, sequence = None, sequence_list = None, **kw):
     """
@@ -109,7 +110,7 @@ class TestGUISecurity(ERP5TypeTestCase):
     args = (('Manager',), 0)
     category.manage_permission('Access contents information', *args)
     category.manage_permission('View', *args)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def stepResetCategorySecurity(self, sequence = None, sequence_list = None, **kw):
@@ -120,7 +121,7 @@ class TestGUISecurity(ERP5TypeTestCase):
     args = ((), 1)
     category.manage_permission('Access contents information', *args)
     category.manage_permission('View', *args)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def test_01_relationFieldToInaccessibleObject(self, quiet=quiet, run=run_all_test):

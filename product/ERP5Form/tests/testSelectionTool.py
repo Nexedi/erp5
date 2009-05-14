@@ -30,6 +30,7 @@ import unittest
 from threading import Thread
 from thread import get_ident
 
+import transaction
 from Testing import ZODButil
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -243,7 +244,7 @@ class TestSelectionPersistence(unittest.TestCase):
     self.portal_selections = \
       self.cnx.root().portal_selections = SelectionTool()
     self.portal_selections.setSelectionFor('test_selection', Selection())
-    get_transaction().commit()
+    transaction.commit()
     
   def tearDown(self):
     # revert the patch from setUp
@@ -271,13 +272,13 @@ class TestSelectionPersistence(unittest.TestCase):
         portal_selections = cnx.root().portal_selections
         portal_selections.setSelectionParamsFor(
                               'test_selection', dict(a="c"))
-        get_transaction().commit()
+        transaction.commit()
       finally:
         cnx.close()
     self._runWithAnotherConnection(thread_func)
 
     # This would raise a ConflictError without conflict resolution code
-    get_transaction().commit()
+    transaction.commit()
     params = self.portal_selections.getSelectionParamsFor('test_selection')
     self.assertTrue(params.get('a'))
 
@@ -290,13 +291,13 @@ class TestSelectionPersistence(unittest.TestCase):
         portal_selections = cnx.root().portal_selections
         portal_selections.setSelectionParamsFor(
                        'test_selection1', dict(a="b"))
-        get_transaction().commit()
+        transaction.commit()
       finally:
         cnx.close()
     self._runWithAnotherConnection(thread_func)
 
     # This would raise a ConflictError without conflict resolution code
-    get_transaction().commit()
+    transaction.commit()
     params = self.portal_selections.getSelectionParamsFor('test_selection1')
     self.assertEquals(params.get('a'), 'b')
     params = self.portal_selections.getSelectionParamsFor('test_selection2')
@@ -313,7 +314,7 @@ class TestSelectionPersistence(unittest.TestCase):
     # So we make sure that selection container is initialized for this user
     self.portal_selections.setSelectionParamsFor(
                        'test_selection', dict(initialized="1"))
-    get_transaction().commit()
+    transaction.commit()
 
     self.portal_selections.setSelectionParamsFor(
                        'test_selection', dict(a="b"))
@@ -322,12 +323,12 @@ class TestSelectionPersistence(unittest.TestCase):
         portal_selections = cnx.root().portal_selections
         portal_selections.setSelectionParamsFor(
                        'test_selection', dict(a="b"))
-        get_transaction().commit()
+        transaction.commit()
       finally:
         cnx.close()
     self._runWithAnotherConnection(thread_func)
 
-    get_transaction().commit()
+    transaction.commit()
     # this check is quite low level.
     # we know that setUp stored one selection, and each of our 2 threads stored
     # one selection.
@@ -337,7 +338,7 @@ class TestSelectionPersistence(unittest.TestCase):
     # test that selection parameters are persistent
     self.portal_selections.setSelectionParamsFor(
                  'test_selection', dict(key="saved_value"))
-    get_transaction().commit()
+    transaction.commit()
     self.cnx.close()
 
     self.cnx = self.db.open()

@@ -28,6 +28,7 @@
 
 import unittest
 
+import transaction
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
@@ -57,7 +58,7 @@ class TestPreferences(ERP5TypeTestCase):
   def beforeTearDown(self):
     portal_preferences = self.getPreferenceTool()
     portal_preferences.manage_delObjects(list(portal_preferences.objectIds()))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def createPreferences(self) :
@@ -76,7 +77,7 @@ class TestPreferences(ERP5TypeTestCase):
     site.setPriority(Priority.SITE)
     
     # commit transaction
-    get_transaction().commit()
+    transaction.commit()
     self.getPreferenceTool().recursiveReindexObject()
     self.tic()
     
@@ -299,7 +300,7 @@ class TestPreferences(ERP5TypeTestCase):
         id='user_a_1', portal_type='Preference')
     user_a_2 = portal_preferences.newContent(
         id='user_a_2', portal_type='Preference')
-    get_transaction().commit(); self.tic()
+    transaction.commit(); self.tic()
 
     # enable a pref
     portal_workflow.doActionFor(
@@ -314,7 +315,7 @@ class TestPreferences(ERP5TypeTestCase):
     user_b_1 = portal_preferences.newContent(
         id='user_b_1', portal_type='Preference')
     user_b_1.setPreferredAccountingTransactionAtDate(DateTime(2002, 02, 02))
-    get_transaction().commit(); self.tic()
+    transaction.commit(); self.tic()
     
     # enable this preference
     portal_workflow.doActionFor(
@@ -338,7 +339,7 @@ class TestPreferences(ERP5TypeTestCase):
         id='manager_pref', portal_type='Preference')
     manager_pref.setPreferredAccountingTransactionAtDate(
                                 DateTime(2012, 12, 12))
-    get_transaction().commit(); self.tic()
+    transaction.commit(); self.tic()
     # enable this preference
     portal_workflow.doActionFor(
        manager_pref, 'enable_action', wf_id='preference_workflow')
@@ -357,7 +358,7 @@ class TestPreferences(ERP5TypeTestCase):
     self.getPortal().portal_workflow.doActionFor(
                   ptool.site, 'enable_action', wf_id='preference_workflow')
     self.assertEquals('global', ptool.site.getPreferenceState())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     noSecurityManager()
     self.assertEquals(['this_is_visible_by_anonymous'],
@@ -441,7 +442,7 @@ class TestPreferences(ERP5TypeTestCase):
     # enable it and check preference is returned
     self.portal.portal_workflow.doActionFor(site_pref, 'enable_action')
     self.assertEquals(site_pref.getPreferenceState(), 'global')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(['this_is_default'],
                       preference_tool.getPreferredAccountingTransactionSimulationStateList())
@@ -457,7 +458,7 @@ class TestPreferences(ERP5TypeTestCase):
     # check accessors works
     site_pref.setPreferredAccountingTransactionSimulationStateList(
       ['this_is_system'])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(['this_is_system'],
                       preference_tool.getPreferredAccountingTransactionSimulationStateList())
@@ -471,7 +472,7 @@ class TestPreferences(ERP5TypeTestCase):
       ['this_is_user'])
     self.portal.portal_workflow.doActionFor(user_pref, 'enable_action')
     self.assertEquals(user_pref.getPreferenceState(), 'enabled')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(['this_is_user'],
                       user_pref.getPreferredAccountingTransactionSimulationStateList())
@@ -481,7 +482,7 @@ class TestPreferences(ERP5TypeTestCase):
     # check a user can't edit preference which are marked for manager (only for zope2.8)
     try:
       from ZODB.Transaction import Transaction
-    except ImportError:      
+    except ImportError:
       self.assertRaises(Unauthorized, user_pref.edit, preferred_ooodoc_server_address="localhost")
 
     

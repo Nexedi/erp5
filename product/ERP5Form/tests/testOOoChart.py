@@ -26,6 +26,7 @@
 ##############################################################################
 
 import unittest
+import transaction
 from Products.ERP5Form.Form import ERP5Form
 from DocumentTemplate import String
 
@@ -99,7 +100,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
                                             wf_id='preference_workflow')
 
       self.validator = Validator()
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
 
     def createPersons(self):
