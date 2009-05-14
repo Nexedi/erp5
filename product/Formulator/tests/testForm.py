@@ -121,7 +121,7 @@ class FormTestCase(unittest.TestCase):
     def test_datetime_css_class_rendering(self):
         # test that a bug is fixed, which causing the css_class value
         # not to be rendered
-        
+        import pdb;pdb.set_trace()
         self.form.manage_addProduct['Formulator']\
                  .manage_addField('date_time','Test Field','DateTimeField')
         field = self.form.date_time
