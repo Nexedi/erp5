@@ -25,7 +25,7 @@
 #
 ##############################################################################
 
-from Order import Order
+from Products.ERP5.PropertySheet.Order import Order
 
 
 class PackingList(Order):
