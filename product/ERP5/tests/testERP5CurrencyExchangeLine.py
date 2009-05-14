@@ -26,39 +26,17 @@
 #
 ##############################################################################
 import unittest
-import os
+
 import transaction
 from DateTime import DateTime
-from zLOG import LOG
-from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import reindex
-from Testing import ZopeTestCase
-from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.DCWorkflow.DCWorkflow import Unauthorized, ValidationFailed
 from Products.ERP5.tests.testAccounting import AccountingTestCase
-from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-from AccessControl.SecurityManagement import getSecurityManager
-from Products.ERP5Form.Document.Preference import Priority
-
-QUIET = False
-run_all_test = True
 
 
-def printAndLog(msg):
+class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
   """
-  A utility function to print a message
-  to the standard output and to the LOG
-  at the same time
-  """
-  msg = str(msg)
-  ZopeTestCase._print('\n ' + msg)
-  LOG('Testing... ', 0, msg)
-
-class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
-  """
-  Mixin class for unit test of banking operations
+  Test Currency exchange lines.
   """
   username = 'username'
   def beforeTearDown(self):
@@ -77,7 +55,7 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     transaction.commit()
     self.tic()
  
-  def login(self,name=username, quiet=0, run=run_all_test):
+  def login(self, name=username):
     uf = self.getPortal().acl_users
     uf._doAddUser(self.username, '', ['Assignee', 'Assignor',
        'Author','Manager'], [])
@@ -97,12 +75,10 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
             'erp5_accounting_ui_test'
             )
 
-  def test_01_CreateCurrencies(self, quiet=0, run=run_all_test):
+  def test_CreateCurrencies(self):
     """
       Create currencies to be used for transactions
     """
-    if not run: return
-    if not quiet: printAndLog('test_01_CreateCurrencies')
     module = self.portal.currency_module
     currency1 = module.newContent(portal_type='Currency')
     currency1.setTitle('Euro')
@@ -126,15 +102,11 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     self.assertEquals(0, len(currency2.checkConsistency()))
 
 
-  def test_01_UseCurrencyExchangeLineForDestination(self, quiet=0,
-                                                  run=run_all_test):
+  def test_UseCurrencyExchangeLineForDestination(self):
     """
       Create a currency exchange line for a currency and then
       convert destination price using that currency exchange line
     """
-    if not run: return
-    if not quiet:
-      printAndLog('test_01_UseCurrencyExchangeLineForDestination')
     portal = self.getPortal()
     self.organisation_module = self.portal.organisation_module
     self.organisation1 = self.organisation_module.my_organisation
@@ -181,17 +153,12 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
              round(655.957*line.getQuantity()))
                                         
 
-  def test_01_CreateEmptyCurrencyExchangeLineForDestination(
-                self, quiet=0,run=run_all_test):
+  def test_CreateEmptyCurrencyExchangeLineForDestination(self):
     """
       Create empty currency exchange lines for currencies,
       and verify that only the one that matches the criteria will
       be selected for the conversion
     """
-    if not run: return
-    if not quiet:
-      printAndLog(
-            'test_01_CreateEmptyCurrencyExchangeLineForDestination')
     portal = self.getPortal()
     self.organisation_module = self.portal.organisation_module
     self.organisation1 = self.organisation_module.my_organisation
@@ -253,16 +220,12 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
       self.assertEquals(line.getDestinationTotalAssetPrice(),
                    round(655.957*line.getQuantity()))
 
-  def test_01_UseCurrencyExchangeLineForSource(self, quiet=0,
-                                                  run=run_all_test):
+  def test_UseCurrencyExchangeLineForSource(self):
     """
       Create a currency exchange line for a currency and then
       convert
       source price using that currency exchange line
     """
-    if not run: return
-    if not quiet:
-      printAndLog('test_01_UseCurrencyExchangeLineForSource')
     portal = self.getPortal()
     self.organisation_module = self.portal.organisation_module
     self.organisation1 = self.organisation_module.my_organisation
@@ -307,15 +270,11 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
       self.assertEquals(line.getSourceTotalAssetPrice(),
                          round(655.957*line.getQuantity()))
 
-  def test_01_NoCurrencyExchangeLineForResourceCurrency(self, quiet=0,
-                                                  run=run_all_test):
+  def test_NoCurrencyExchangeLineForResourceCurrency(self):
     """
       Test that the conversion is not done when there is no currency 
       exchange line defined for the date of the transaction
     """
-    if not run: return
-    if not quiet:
-      printAndLog('test_01_NoCurrencyExchangeLineForResource')
     portal = self.getPortal()
     self.organisation_module = self.portal.organisation_module
     self.organisation1 = self.organisation_module.my_organisation
@@ -347,8 +306,7 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
       self.assertEquals(line.getDestinationTotalAssetPrice(),None)
 
 
-  def test_01_DateOfCurrencyExchangeLineNotDateofTransaction(self, quiet=0,
-                                                  run=run_all_test):
+  def test_DateOfCurrencyExchangeLineNotDateofTransaction(self):
     """
       Test that the conversion is not done when there is the start date
       and the end date of a currency exchange line don't correspond to
@@ -356,10 +314,6 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
       falls into the validity period of the currency exchange line,the
       conversion is done
     """
-    if not run: return
-    if not quiet:
-       printAndLog(
-           'test_01_DateOfCurrencyExchangeLineNotDateofTransaction')
     portal = self.getPortal()
     self.organisation_module = self.portal.organisation_module
     self.organisation1 = self.organisation_module.my_organisation
@@ -421,15 +375,11 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
       self.assertEquals(line.getDestinationTotalAssetPrice(),
                     round(655.957*line.getQuantity()))
                                           
-  def test_01_CreateCELWithNoReferenceCurrency(
-              self, quiet=0,run=run_all_test):
+  def test_CreateCELWithNoReferenceCurrency(self):
     """
       Create a currency exchange line with no reference currency
       and verify that the CEL won't apply for the currency
     """
-    if not run: return
-    if not quiet:
-      printAndLog('test_01_CreateCELWithNoReferenceCurrency')
     portal = self.getPortal()
     self.organisation_module = self.portal.organisation_module
     self.organisation1 = self.organisation_module.my_organisation
@@ -477,15 +427,11 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
                  None)
   
    
-  def test_01_CreateCELWithNoBasePrice(
-              self, quiet=0,run=run_all_test):
+  def test_CreateCELWithNoBasePrice(self):
     """
       Create two currency exchange lines with no base and 
       verify that only one of the CEL will apply for the currency
     """
-    if not run: return
-    if not quiet:
-      printAndLog('test_01_CreateCELWithNoBasePrice')
     portal = self.getPortal()
     self.organisation_module = self.portal.organisation_module
     self.organisation1 = self.organisation_module.my_organisation
@@ -550,5 +496,5 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5CurrencyMixin))
+  suite.addTest(unittest.makeSuite(TestCurrencyExchangeLine))
   return suite
