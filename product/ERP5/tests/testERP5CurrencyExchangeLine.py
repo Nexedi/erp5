@@ -92,9 +92,9 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
       need to be installed to run the test on.
     """
     return ('erp5_base',
-             'erp5_pdm',
+            'erp5_pdm',
             'erp5_accounting',
-	    'erp5_accounting_ui_test'
+            'erp5_accounting_ui_test'
             )
 
   def test_01_CreateCurrencies(self, quiet=0, run=run_all_test):
@@ -124,7 +124,8 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     currency2.validate()
     self.assertEquals(currency2.getValidationState(),'validated')
     self.assertEquals(0, len(currency2.checkConsistency()))
-	
+
+
   def test_01_UseCurrencyExchangeLineForDestination(self, quiet=0,
                                                   run=run_all_test):
     """
@@ -148,8 +149,8 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
                     price_currency=new_currency.getRelativeUrl())
     euro = self.portal.currency_module.euro
     x_curr_ex_line = euro.newContent(
-	                  portal_type='Currency Exchange Line',
-                  price_currency=new_currency.getRelativeUrl())
+                        portal_type='Currency Exchange Line',
+                        price_currency=new_currency.getRelativeUrl())
     x_curr_ex_line.setTitle('Euro to Francs CFA')
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,9,8))
@@ -167,8 +168,8 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/08'),
             source_section_value=self.organisation_module.supplier,
-	       lines=(dict(
-	       destination_value=self.account_module.goods_purchase,
+               lines=(dict(
+               destination_value=self.account_module.goods_purchase,
                            destination_debit=500),
               dict(destination_value=self.account_module.receivable,
                            destination_credit=500)))
@@ -176,10 +177,10 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     line_list = invoice.contentValues(
            portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
-	self.assertEquals(line.getDestinationTotalAssetPrice(),
+      self.assertEquals(line.getDestinationTotalAssetPrice(),
              round(655.957*line.getQuantity()))
                                         
- 		
+
   def test_01_CreateEmptyCurrencyExchangeLineForDestination(
                 self, quiet=0,run=run_all_test):
     """
@@ -249,9 +250,9 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     line_list = invoice.contentValues(
            portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
-        self.assertEquals(line.getDestinationTotalAssetPrice(),
-                   round(655.957*line.getQuantity()))	
-                   	  
+      self.assertEquals(line.getDestinationTotalAssetPrice(),
+                   round(655.957*line.getQuantity()))
+
   def test_01_UseCurrencyExchangeLineForSource(self, quiet=0,
                                                   run=run_all_test):
     """
@@ -275,8 +276,8 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
               price_currency=new_currency.getRelativeUrl())
     euro = self.portal.currency_module.euro
     x_curr_ex_line = euro.newContent(
-	                    portal_type='Currency Exchange Line',
-		price_currency=new_currency.getRelativeUrl())
+                          portal_type='Currency Exchange Line',
+                          price_currency=new_currency.getRelativeUrl())
     x_curr_ex_line.setTitle('Euro to Francs CFA')
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,9,8))
@@ -303,9 +304,9 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     line_list = invoice.contentValues(
            portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
-	self.assertEquals(line.getSourceTotalAssetPrice(),
+      self.assertEquals(line.getSourceTotalAssetPrice(),
                          round(655.957*line.getQuantity()))
-					  
+
   def test_01_NoCurrencyExchangeLineForResourceCurrency(self, quiet=0,
                                                   run=run_all_test):
     """
@@ -333,8 +334,8 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/08'),
             source_section_value=self.organisation_module.supplier,
-	       lines=(dict(
-	       destination_value=self.account_module.goods_purchase,
+               lines=(dict(
+                 destination_value=self.account_module.goods_purchase,
                            destination_debit=500),
               dict(destination_value=self.account_module.receivable,
                            destination_credit=500)))
@@ -343,8 +344,9 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     line_list = invoice.contentValues(
            portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
-	self.assertEquals(line.getDestinationTotalAssetPrice(),None)
-	
+      self.assertEquals(line.getDestinationTotalAssetPrice(),None)
+
+
   def test_01_DateOfCurrencyExchangeLineNotDateofTransaction(self, quiet=0,
                                                   run=run_all_test):
     """
@@ -372,13 +374,13 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
                price_currency=new_currency.getRelativeUrl())
     euro = self.portal.currency_module.euro
     x_curr_ex_line = euro.newContent(
-	                    portal_type='Currency Exchange Line',
-	              price_currency=new_currency.getRelativeUrl())
+                      portal_type='Currency Exchange Line',
+                      price_currency=new_currency.getRelativeUrl())
     x_curr_ex_line.setTitle('Euro to Francs CFA')
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,9,6))
     x_curr_ex_line.setStopDate(DateTime(2008,9,7))
-    self.assertEquals(x_curr_ex_line.getTitle(), 
+    self.assertEquals(x_curr_ex_line.getTitle(),
               'Euro to Francs CFA')
     self.assertEquals(x_curr_ex_line.getPriceCurrencyTitle(),
                'Francs CFA')
@@ -391,8 +393,8 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/08'),
             source_section_value=self.organisation_module.supplier,
-	        lines=(dict(
-	       destination_value=self.account_module.goods_purchase,
+            lines=(dict(
+               destination_value=self.account_module.goods_purchase,
                            destination_debit=500),
               dict(destination_value=self.account_module.receivable,
                            destination_credit=500)))
@@ -401,13 +403,13 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     line_list = transaction1.contentValues(
            portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
-	self.assertEquals(line.getDestinationTotalAssetPrice(),None)
+      self.assertEquals(line.getDestinationTotalAssetPrice(),None)
     transaction2 = self._makeOne(
                portal_type='Purchase Invoice Transaction',
                stop_date=DateTime('2008/09/06'),
              source_section_value=self.organisation_module.supplier,
-	       lines=(dict(
-	       destination_value=self.account_module.goods_purchase,
+               lines=(dict(
+               destination_value=self.account_module.goods_purchase,
                            destination_debit=500),
               dict(destination_value=self.account_module.receivable,
                            destination_credit=500)))
@@ -416,7 +418,7 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     line_list = transaction2.contentValues(
            portal_type=portal.getPortalAccountingMovementTypeList())
     for line in line_list:
-	self.assertEquals(line.getDestinationTotalAssetPrice(),
+      self.assertEquals(line.getDestinationTotalAssetPrice(),
                     round(655.957*line.getQuantity()))
                                           
   def test_01_CreateCELWithNoReferenceCurrency(
@@ -447,7 +449,7 @@ class TestERP5CurrencyMixin(AccountingTestCase,ERP5TypeTestCase):
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,9,8))
     x_curr_ex_line.setStopDate(DateTime(2008,9,10))
-    self.assertEquals(x_curr_ex_line.getTitle(), 
+    self.assertEquals(x_curr_ex_line.getTitle(),
                      'Euro to Francs CFA')
     self.assertEquals(x_curr_ex_line.getPriceCurrency(),None)
     self.assertEquals(x_curr_ex_line.getBasePrice(),655.957)
