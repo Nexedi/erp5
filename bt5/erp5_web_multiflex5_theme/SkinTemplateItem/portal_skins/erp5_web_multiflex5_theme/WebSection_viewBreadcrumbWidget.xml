@@ -56,12 +56,13 @@
 \n
 <tal:block tal:define="current_web_section python:request.get(\'current_web_section\', here);\n
                        current_web_document python:request.get(\'current_web_document\', here);\n
+                       is_web_section_default_document python:request.get(\'is_web_section_default_document\',False);\n
                        breadcrumb_list python: current_web_section.getBreadcrumbItemList(current_web_document);">\n
 <ul>\n
   <li class="nobullet" \n
       i18n:translate=""\n
       i18n:domain="ui">You are here: </li>\n
-  <li tal:repeat="breadcrumb breadcrumb_list">\n
+  <li tal:repeat="breadcrumb python:breadcrumb_list[:(is_web_section_default_document and -1 or None)]">\n
     <a href="#" i18n:domain="ui"\n
                 tal:attributes="href python:breadcrumb[1].absolute_url();"      \n
                 tal:content="python:breadcrumb[0]">Title</a>\n

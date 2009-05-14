@@ -63,7 +63,7 @@
       <ul metal:define-macro="generateTree">\n
         <li tal:repeat="item menu_item/subsection">\n
           <a href="#" tal:attributes="href item/url" tal:content="item/translated_title">Menu subitem 1</a>\n
-          <tal:recurse define="menu_item item">\n
+          <tal:recurse define="menu_item item" tal:condition="nocall:item/subsection">\n
             <metal:call use-macro="here/WebSection_viewNavigationWidget/macros/generateTree" />\n
           </tal:recurse>\n
         </li>\n
