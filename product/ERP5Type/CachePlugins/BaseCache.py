@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -43,7 +44,7 @@ class CacheEntry(object):
   calculation_time
   TODO: Based on above data we can have a different invalidation policy
   """
-    
+
   def __init__(self, value, cache_duration=None, calculation_time=0):
     self.value = value
     if cache_duration in (None, 0):
@@ -56,11 +57,11 @@ class CacheEntry(object):
   def isExpired(self):
     """ check cache entry for expiration """
     return self.expires_at < time.time() or self.expires_at is None
-    
+
   def markCacheHit(self, delta=1):
     """ mark a read to this cache entry """
     self.cache_hits = self.cache_hits + delta 
-    
+
   def getValue(self):
     """ return cached value """ 
     return getattr(self, 'value', None)
@@ -68,16 +69,15 @@ class CacheEntry(object):
 
 class BaseCache(object):
   """ Base Cache class """
-    
-    
+
   ## Time interval (s) to check for expired objects
   cache_expire_check_interval = 60
-    
+
   def __init__(self, params={}):
     self._next_cache_expire_check_at = time.time()
     self._cache_hits = 0
     self._cache_misses = 0
-        
+
   def markCacheHit(self, delta=1):
     """ Mark a read operation from cache """
     self._cache_hits = self._cache_hits + delta
@@ -93,7 +93,7 @@ class BaseCache(object):
   def getCacheMisses(self):
     """ get cache missess """
     return self._cache_misses
-    
+
   def clearCache(self):
     """ Clear cache """
     self._cache_hits = 0
