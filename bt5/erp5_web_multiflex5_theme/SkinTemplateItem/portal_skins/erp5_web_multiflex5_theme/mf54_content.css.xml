@@ -141,8 +141,8 @@
 .main_content ol.indent {padding:0 20px 0 70px !important /*Non-IE6*/; padding:0 20px 0 80px /*IE6*/;}\n
 \n
 /* TABLE (1-Column / 2-Column) */\n
-.main_content table {clear:both; width:<tal:block tal:replace="python:main_content_width-40"/>px; margin:2.0em 0 0.2em 20px; table-layout:fixed; border-collapse:collapse; empty-cells:show; background-color:rgb(233,232,244);}\n
-.content-2col-nobox-leftcolumn table, .content-2col-nobox-rightcolumn table, .content-2col-box-leftcolumn table, .content-2col-box-rightcolumn table {clear:both; width:<tal:block tal:replace="python:main_content_width/2-41"/>px; margin:2.0em 0 0.2em 20px; table-layout:fixed; border-collapse:collapse; empty-cells:show; background-color:rgb(233,232,244);}\n
+.main_content table {clear:both; width:<tal:block tal:replace="python:main_content_width-40"/>px; margin:2.0em 0 0.2em 20px; border-collapse:collapse; empty-cells:show; background-color:rgb(233,232,244);}\n
+.content-2col-nobox-leftcolumn table, .content-2col-nobox-rightcolumn table, .content-2col-box-leftcolumn table, .content-2col-box-rightcolumn table {clear:both; width:<tal:block tal:replace="python:main_content_width/2-41"/>px; margin:2.0em 0 0.2em 20px; border-collapse:collapse; empty-cells:show; background-color:rgb(233,232,244);}\n
 \n
 .main_content table th.top {height:3.5em; padding:0 7px 0 7px; empty-cells:show; background-color:rgb(175,175,175); text-align:left; color:rgb(255,255,255); font-weight:bold; font-size:120% !important /*Non-IE6*/; font-size:110% /*IE6*/;}\n
 .main_content table th {height:3.0em; padding:2px 20px 2px 7px; border:solid 2px rgb(245,245,245); background-color:rgb(225,225,225); text-align:left; color:rgb(80,80,80); font-weight:bold; font-size:120% !important /*Non-IE6*/; font-size:110% /*IE6*/;}\n
@@ -241,7 +241,7 @@
 .subcontent ol.indent {padding:0 20px 0 70px !important /*Non-IE6*/; padding:0 20px 0 80px /*IE6*/;}\n
 \n
 /* TABLE */\n
-.subcontent table {clear:both; width:<tal:block tal:replace="python:right_column_width-40"/>px; margin:2.0em 0 0.2em 20px; table-layout: fixed; border-collapse:collapse; empty-cells:show; background-color:rgb(233,232,244);}\n
+.subcontent table {clear:both; width:<tal:block tal:replace="python:right_column_width-40"/>px; margin:2.0em 0 0.2em 20px; border-collapse:collapse; empty-cells:show; background-color:rgb(233,232,244);}\n
 .subcontent table th.top {height:3.5em; padding:0 7px 0 7px; empty-cells:show; background-color:rgb(175,175,175); text-align:left; color:rgb(255,255,255); font-weight:bold; font-size:120% !important /*Non-IE6*/; font-size:110% /*IE6*/;}\n
 .subcontent table th {height:3.0em; padding:2px 20px 2px 7px; border:solid 2px rgb(245,245,245); background-color:rgb(225,225,225); text-align:left; color:rgb(80,80,80); font-weight:bold; font-size:120% !important /*Non-IE6*/; font-size:110% /*IE6*/;}\n
 .subcontent table td {height:3.0em; padding:2px 7px 2px 7px; border:solid 2px rgb(245,245,245); background-color:rgb(225,225,225); text-align:left; font-weight:normal; color:rgb(80,80,80); font-size:120% !important /*Non-IE6*/; font-size:110% /*IE6*/;}\n
