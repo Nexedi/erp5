@@ -129,7 +129,7 @@ class WebSection(Domain, PermanentURLMixIn):
       section = aq_inner(self)
       while section.getPortalType() in ('Web Section', 'Web Site'):
         result = section.getProperty(key, MARKER)
-        if result is not MARKER and result:
+        if result not in (MARKER, None):
           return result
         section = section.aq_parent
       return default
