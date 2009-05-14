@@ -13,9 +13,10 @@
   <item>Domain Generator</item>
  </portal_type>
  <portal_type id="Cache Factory">
+  <item>Zodb Cache</item>
   <item>Ram Cache</item>
-  <item>Distributed Ram Cache</item>
   <item>SQL Cache</item>
+  <item>Distributed Ram Cache</item>
  </portal_type>
  <portal_type id="Cache Tool">
   <item>Cache Factory</item>
@@ -37,8 +38,8 @@
   <item>Base Domain</item>
  </portal_type>
  <portal_type id="Preference Tool">
-  <item>Preference</item>
   <item>System Preference</item>
+  <item>Preference</item>
  </portal_type>
  <portal_type id="Simulation Movement">
   <item>Applied Rule</item>

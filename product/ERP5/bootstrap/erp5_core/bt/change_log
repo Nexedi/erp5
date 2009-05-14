@@ -1,3 +1,6 @@
+2009-05-14 nicolas
+* add new Zodb Cache Portal Type
+
 2009-05-14 yusei
 * Remove default tales expression from my_text_content field in Base_viewFieldLibrary. That used a CRM specific script.
 
