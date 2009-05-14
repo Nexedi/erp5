@@ -75,6 +75,7 @@ class TestCacheTool(ERP5TypeTestCase):
                       "Ram Cache",
                       "Distributed Ram Cache",
                       "SQL Cache",
+                      "Zodb Cache",
                       )
     for typeinfo_name in typeinfo_names:
       portal_type = getattr(portal_types, typeinfo_name, None)
@@ -111,6 +112,14 @@ class TestCacheTool(ERP5TypeTestCase):
                     portal_type="SQL Cache", container=sql_cache_factory)
     sql_cache_plugin.setIntIndex(0)
 
+    ## zodb_cache_factory (to test ZODB Cache Plugin) 
+    zodb_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
+                                                  id='zodb_cache_factory',
+                                                  container=portal_caches)
+    zodb_cache_plugin = zodb_cache_factory.newContent(
+                    portal_type="Zodb Cache", container=zodb_cache_factory)
+    zodb_cache_plugin.setIntIndex(0)
+
     ## erp5_user_factory (to test a combination of all cache plugins)
     erp5_user_factory = portal_caches.newContent(portal_type="Cache Factory",
                                                  id="erp5_user_factory",
@@ -125,18 +134,24 @@ class TestCacheTool(ERP5TypeTestCase):
     sql_cache_plugin = erp5_user_factory.newContent(
             portal_type="SQL Cache", container=erp5_user_factory)
     sql_cache_plugin.setIntIndex(2)
+    zodb_cache_plugin = erp5_user_factory.newContent(
+            portal_type="Zodb Cache", container=erp5_user_factory)
+    zodb_cache_plugin.setIntIndex(3)
 
     ##
     transaction.commit()
 
     ## update Ram Cache structure
     portal_caches.updateCache()
+    ## commit PersistantMapping for zodb_cache
+    transaction.commit()
     from Products.ERP5Type.Cache import CachingMethod
 
     ## do we have the same structure we created above?
     self.assert_('ram_cache_factory' in CachingMethod.factories)
     self.assert_('distributed_ram_cache_factory' in CachingMethod.factories)
     self.assert_('sql_cache_factory' in CachingMethod.factories)
+    self.assert_('zodb_cache_factory' in CachingMethod.factories)
     self.assert_('erp5_user_factory' in CachingMethod.factories)
 
   def test_04_CreateCachedMethod(self):
@@ -172,7 +187,8 @@ return result
     py_script_obj = getattr(portal, py_script_id)
     for cf_name in ('ram_cache_factory',
                     'distributed_ram_cache_factory',
-                    'sql_cache_factory'):
+                    'sql_cache_factory',
+                    'zodb_cache_factory',):
       my_cache = CachingMethod(py_script_obj,
                                'py_script_obj',
                                cache_factory=cf_name)

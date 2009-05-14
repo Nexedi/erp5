@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -39,6 +40,7 @@ from Products.ERP5Type.Cache import DEFAULT_CACHE_FACTORY
 from Products.ERP5Type.CachePlugins.RamCache import RamCache
 from Products.ERP5Type.CachePlugins.DistributedRamCache import DistributedRamCache
 from Products.ERP5Type.CachePlugins.SQLCache import SQLCache
+from Products.ERP5Type.CachePlugins.ZODBCache import ZODBCache
 
 ## try to import needed modules for cache plugins
 try:
@@ -100,7 +102,9 @@ class CacheTool(BaseTool):
           kw = self.parseDBConnectionString(connection_string)
           kw['cache_table_name'] = cp.getCacheTableName()
           cache_obj = SQLCache(kw)
-        if cache_obj:
+        elif cp_meta_type == 'ERP5 Zodb Cache':
+          cache_obj = ZODBCache(dict(cache_tool=self))
+        if cache_obj is not None:
           ## set cache expire check interval
           cache_obj.cache_expire_check_interval = cp.getCacheExpireCheckInterval()
           rd[cache_scope]['cache_plugins'].append(cache_obj)

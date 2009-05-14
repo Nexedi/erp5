@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -47,6 +48,7 @@ class CacheFactory(XMLObject):
   allowed_types = ('ERP5 Ram Cache', 
                    'ERP5 Distributed Ram Cache', 
                    'ERP5 SQL Cache',
+                   'ERP5 Zodb Cache',
                   )
     
   security = ClassSecurityInfo()
