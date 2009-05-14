@@ -13,6 +13,7 @@
 ##############################################################################
 
 import re
+import transaction
 from Acquisition import aq_parent, aq_inner, aq_base
 from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
@@ -128,11 +129,11 @@ class TextContent:
       # XXX Can we get an error msg through?  Should we be raising an
       #     exception, to be handled in the FTP mechanism?  Inquiring
       #     minds...
-      get_transaction().abort()
+      transaction.abort()
       RESPONSE.setStatus(450)
       return RESPONSE
     except ResourceLockedError, msg:
-      get_transaction().abort()
+      transaction.abort()
       RESPONSE.setStatus(423)
       return RESPONSE
 

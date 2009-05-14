@@ -30,6 +30,7 @@ import unittest
 from time import time
 import gc
 
+import transaction
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
@@ -99,13 +100,13 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
     def beforeTearDown(self):
       # Re-enable gc at teardown.
       gc.enable()
-      get_transaction().abort()
+      transaction.abort()
       self.bar_module.manage_delObjects(list(self.bar_module.objectIds()))
       self.foo_module.manage_delObjects(list(self.foo_module.objectIds()))
       gender = self.getPortal().portal_categories['gender']
       gender.manage_delObjects(list(gender.objectIds()))
       gender = self.getPortal().portal_caches.clearAllCache()
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
 
     def checkViewBarObject(self, min, max, quiet=quiet, prefix=None):
@@ -123,7 +124,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
                                        title='Bar Test',
                                        quantity=10000,)
       bar.setReference(bar.getRelativeUrl())
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       # Check performance
       before_view = time()
@@ -181,7 +182,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       if not quiet:
         message = 'Test form to view Bar module'
         LOG('Testing... ', 0, message)
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       view_result = {}
       tic_result = {}
@@ -194,7 +195,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
                                            title='Bar Test',
                                            quantity="%4d" %(x,))
           after_add = time()
-          get_transaction().commit()
+          transaction.commit()
           before_tic = time()
           self.tic()
           after_tic = time()
@@ -261,7 +262,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
                      title='Line 1')
       foo.newContent(portal_type='Foo Line',
                      title='Line 2')
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       # Check performance
       before_view = time()
@@ -292,7 +293,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       for i in xrange(100):
           foo.newContent(portal_type='Foo Line',
                          title='Line %s' % i)
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       # Check performance
       before_view = time()

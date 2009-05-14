@@ -28,6 +28,7 @@
 ##############################################################################
 
 import unittest
+import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
@@ -104,7 +105,7 @@ class TestFormPrintout(ERP5TypeTestCase):
       test1.newContent("foo_1", portal_type='Foo Line')
     if test1._getOb("foo_2", None) is None:
       test1.newContent("foo_2", portal_type='Foo Line')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # XML validator
@@ -135,7 +136,7 @@ class TestFormPrintout(ERP5TypeTestCase):
       foo_module.newContent(id='test1', portal_type='Foo')
     test1 =  foo_module.test1
     test1.setTitle('Foo title!')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # test target

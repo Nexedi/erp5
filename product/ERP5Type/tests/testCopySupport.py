@@ -27,6 +27,7 @@
 ##############################################################################
 
 import unittest
+import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 #from AccessControl.SecurityManagement import newSecurityManager
@@ -58,20 +59,20 @@ class TestCopySupport(ERP5TypeTestCase):
                      portal_type='Organisation')
     person = self.person_module.newContent(portal_type='Person',
                career_subordination_value=organisation)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEqual(0, len(self.portal.portal_activities.getMessageList()))
     self.assertTrue(person.getCareerSubordination().startswith('organisation_module'))
     self.assertTrue(person.getCareerSubordinationValue().aq_base is organisation.aq_base)
     # Try to rename: must work
     self.organisation_module.setId('new_organisation_module')
-    get_transaction().commit()
+    transaction.commit()
     self.assertTrue(person.getCareerSubordination().startswith('organisation_module'))
     initial_activity_count = len(self.portal.portal_activities.getMessageList())
     self.assertNotEqual(0, initial_activity_count)
     # Try to rename again with pending activities: must raise
     self.assertRaises(ActivityPendingError, self.organisation_module.setId, 'organisation_module')
-    get_transaction().commit()
+    transaction.commit()
     # Activity count must not have changed
     self.assertEqual(initial_activity_count, len(self.portal.portal_activities.getMessageList()))
     self.tic()
@@ -80,7 +81,7 @@ class TestCopySupport(ERP5TypeTestCase):
     self.assertTrue(person.getCareerSubordinationValue().aq_base is organisation.aq_base)
     # Rename back to original name
     self.organisation_module.setId('organisation_module')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # Check that relation is back to what it was
     self.assertTrue(person.getCareerSubordination().startswith('organisation_module'))

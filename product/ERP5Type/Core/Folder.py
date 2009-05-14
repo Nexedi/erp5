@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import transaction
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base, aq_self
 from OFS.History import Historical
@@ -957,7 +958,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
         f = os.path.join(dir, '%s___%s.zexp' % (folder_id,id))
         ob = self._getOb(id)
         ob._p_jar.exportFile(ob._p_oid,f)
-      get_transaction().commit()
+      transaction.commit()
 
   security.declareProtected( Permissions.ModifyPortalContent, 'recursiveApply')
   def recursiveApply(self, filter=dummyFilter, method=None,
@@ -998,8 +999,8 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
           update_list += method_message
         update_list += test_after(o,REQUEST=REQUEST)
       # And commit subtransaction
-      #get_transaction().commit(1)
-      get_transaction().commit() # we may use commit(1) some day XXX
+      #transaction.commit(1)
+      transaction.commit() # we may use commit(1) some day XXX
       # Recursively call recursiveApply if o has a recursiveApply method (not acquired)
       obase = aq_base(o)
       if hasattr(obase, 'recursiveApply'):
@@ -1043,7 +1044,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
       #for object in o.objectValues():
         #LOG('Folder, updateAll ',0,"object.id: %s" % object.id)
       obase = aq_base(o)
-      get_transaction().commit()
+      transaction.commit()
       if hasattr(obase, 'updateAll'):
         update_list += o.updateAll(filter=filter, \
                               method=method, test_after=test_after,request=request,include=0,**kw)
@@ -1092,7 +1093,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
 
             self.manage_delObjects(id)
             LOG("upradeObjectClass: ",0,"add new object: %s" % str(newob.id))
-            get_transaction().commit() # XXX this commit should be after _setObject
+            transaction.commit() # XXX this commit should be after _setObject
             LOG("upradeObjectClass: ",0,"newob.__class__: %s" % str(newob.__class__))
             self._setObject(id, newob)
             object_to_test = self._getOb(id)
@@ -1234,7 +1235,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
       btree_ok = self._cleanup()
       if not btree_ok:
         # We must commit if we want to keep on recursing
-        get_transaction().commit(1)
+        transaction.commit(1)
         error_list += [(self.getRelativeUrl(), 'BTree Inconsistency',
                        199, '(fixed)')]
     # Call superclass
@@ -1242,7 +1243,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     # We must commit before listing folder contents
     # in case we erased some data
     if fixit:
-      get_transaction().commit(1)
+      transaction.commit(1)
     # Then check the consistency on all sub objects
     for obj in self.contentValues():
       if fixit:

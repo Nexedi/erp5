@@ -50,6 +50,7 @@
 import unittest
 import time
 
+import transaction
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
@@ -141,12 +142,12 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
       Remove everything after each run
     """
-    get_transaction().abort()
+    transaction.abort()
     self.tic()
     doc_module = self.getDocumentModule()
     ids = [i for i in doc_module.objectIds()]
     doc_module.manage_delObjects(ids)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   ## helper methods
@@ -216,22 +217,22 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file)
     document.immediateReindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     document_url = document.getRelativeUrl()
     def getTestDocument():
       return self.portal.restrictedTraverse(document_url)
     self.failUnless(getTestDocument().getRevision() == '0')
     getTestDocument().edit(file=file)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.failUnless(getTestDocument().getRevision() == '1')
     getTestDocument().edit(title='Hey Joe')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.failUnless(getTestDocument().getRevision() == '2')
     another_document = self.portal.portal_contributions.newContent(file=file)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.failUnless(getTestDocument().getRevision() == '3')
     self.failUnless(getTestDocument().getRevisionList() == ['0', '1', '2'] )
@@ -256,13 +257,13 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     docs[2] = self.createTestDocument(reference='TEST', version='002', language='en')
     docs[3] = self.createTestDocument(reference='TEST', version='004', language='en')
     docs[4] = self.createTestDocument(reference='ANOTHER', version='002', language='en')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.failIf(docs[1].isVersionUnique())
     self.failIf(docs[2].isVersionUnique())
     self.failUnless(docs[3].isVersionUnique())
     docs[2].setVersion('003')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.failUnless(docs[1].isVersionUnique())
     self.failUnless(docs[2].isVersionUnique())
@@ -312,7 +313,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     time.sleep(1)
     docs[5] = self.createTestDocument(reference='TEST', version='003', language='sp')
     time.sleep(1)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     doc = docs[2] # can be any
     self.failUnless(doc.getOriginalLanguage() == 'en')
@@ -326,7 +327,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.failUnless(doc.getLatestVersionValue() == docs[5]) # there are two latest - it chooses the one in user language
     docs[6] = document_module.newContent(reference='TEST', version='004', language='pl')
     docs[7] = document_module.newContent(reference='TEST', version='004', language='en')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.failUnless(doc.getLatestVersionValue() == docs[7]) # there are two latest, neither in user language - it chooses the one in original language
 
@@ -383,7 +384,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     document7.setSimilarValue([document9])
     document11.setSimilarValue(document7)
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     #if user language is 'en'
@@ -409,7 +410,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertSameSet([document6, document7], 
                        document13.getSimilarCloudValueList())
 
-    get_transaction().commit()
+    transaction.commit()
     
     # if user language is 'fr', test that latest documents are prefferable returned in user_language (if available)
     self.portal.Localizer.changeLanguage('fr')
@@ -425,7 +426,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertSameSet([document6, document8], 
                        document13.getSimilarCloudValueList())
     
-    get_transaction().commit()
+    transaction.commit()
     
     # if user language is "bg"
     self.portal.Localizer.changeLanguage('bg')
@@ -485,7 +486,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     file = makeFileUpload(filename)
     document8 = self.portal.portal_contributions.newContent(file=file)
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     printAndLog('\nTesting Implicit Predecessors')
     # the implicit predecessor will find documents by reference.
@@ -500,7 +501,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
       sqlresult_to_document_list(document1.getImplicitPredecessorValueList()))
 
     # clear transactional variable cache
-    get_transaction().commit()
+    transaction.commit()
 
     printAndLog('\nTesting Implicit Successors')
     # the implicit successors should be return document with appropriate
@@ -514,7 +515,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
       sqlresult_to_document_list(document5.getImplicitSuccessorValueList()))
 
     # clear transactional variable cache
-    get_transaction().commit()
+    transaction.commit()
 
     # if user language is 'fr'.
     self.portal.Localizer.changeLanguage('fr')
@@ -523,7 +524,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
       sqlresult_to_document_list(document5.getImplicitSuccessorValueList()))
 
     # clear transactional variable cache
-    get_transaction().commit()
+    transaction.commit()
 
     # if user language is 'ja'.
     self.portal.Localizer.changeLanguage('ja')
@@ -590,9 +591,9 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
                                   portal_type='Spreadsheet')
     doc.edit(file=makeFileUpload('import_data_list.ods'))
     doc.publish()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
-    get_transaction().commit()
+    transaction.commit()
 
     uf = self.portal.acl_users
     uf._doAddUser('member_user2', 'secret', ['Member'], [])
@@ -640,7 +641,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     document = self.portal.portal_contributions.newContent(file=file)
 
     self.assertEquals('converting', document.getExternalProcessingState())
-    get_transaction().commit()
+    transaction.commit()
     self.assertEquals('converting', document.getExternalProcessingState())
 
     # Clone a uploaded document
@@ -650,7 +651,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     new_document = container[paste_result[0]['new_id']]
 
     self.assertEquals('converting', new_document.getExternalProcessingState())
-    get_transaction().commit()
+    transaction.commit()
     self.assertEquals('converting', new_document.getExternalProcessingState())
 
     # Change workflow state to converted
@@ -665,7 +666,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     new_document = container[paste_result[0]['new_id']]
 
     self.assertEquals('converted', new_document.getExternalProcessingState())
-    get_transaction().commit()
+    transaction.commit()
     self.assertEquals('converted', new_document.getExternalProcessingState())
     self.tic()
     self.assertEquals('converted', new_document.getExternalProcessingState())
@@ -683,7 +684,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     sub_document = document.newContent(portal_type='Image')
     self.assertEquals('embedded', sub_document.getValidationState())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals('embedded', sub_document.getValidationState())
 
@@ -698,7 +699,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals(1, len(new_sub_document_list))
     new_sub_document = new_sub_document_list[0]
     self.assertEquals('embedded', new_sub_document.getValidationState())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals('embedded', new_sub_document.getValidationState())
 
@@ -712,7 +713,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file)
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals(0, len(document.contentValues(portal_type='Image')))
@@ -740,7 +741,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     document_2 = self.portal.document_module.newContent(portal_type='File')
     document_2.setDescription('This test make sure that scriptable key feature on ZSQLCatalog works.')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # Use scriptable key to search above documents.
@@ -784,7 +785,7 @@ class TestDocumentWithSecurity(ERP5TypeTestCase):
     default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
     default_pref.enable()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def login(self):
@@ -810,14 +811,14 @@ class TestDocumentWithSecurity(ERP5TypeTestCase):
     upload_file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=upload_file)
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     document.submit()
 
     preview_html = document.Document_getPreviewAsHTML().replace('\n', ' ')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assert_('I use reference to look up TEST' in preview_html)

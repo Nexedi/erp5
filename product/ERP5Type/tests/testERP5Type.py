@@ -66,7 +66,7 @@ class PropertySheetTestCase(ERP5TypeTestCase):
 
   def tearDown(self):
     """Clean up """
-    get_transaction().abort()
+    transaction.abort()
     ttool = self.getTypesTool()
     class_tool = self.getClassTool()
     # remove all property sheet we added to type informations
@@ -80,7 +80,7 @@ class PropertySheetTestCase(ERP5TypeTestCase):
           # could break next tests.
           removeLocalPropertySheet(psheet)
       ti.property_sheet_list = ps_list
-    get_transaction().commit()
+    transaction.commit()
     _aq_reset()
     ERP5TypeTestCase.tearDown(self)
     
@@ -111,9 +111,9 @@ class %(property_sheet_name)s:
     class_tool.newPropertySheet(property_sheet_name)
     # XXX need to commit the transaction at this point, because class tool
     # files are no longer available to the current transaction.
-    get_transaction().commit()
+    transaction.commit()
     class_tool.editPropertySheet(property_sheet_name, property_sheet_code)
-    get_transaction().commit()
+    transaction.commit()
     class_tool.importPropertySheet(property_sheet_name)
     
     # We set the property sheet on the portal type
@@ -151,7 +151,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.getTypesTool().getTypeInfo('Person').filter_content_types = 0
 
     def beforeTearDown(self):
-      get_transaction().abort()
+      transaction.abort()
       for module in [ self.getPersonModule(),
                       self.getOrganisationModule(),
                       self.getCategoryTool().region ]:
@@ -162,7 +162,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         self.getTypesTool().getTypeInfo('Person').acquire_local_roles = self.person_acquire_local_roles
         self.portal.portal_caches.clearAllCache()
 
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
 
     def loginWithNoRole(self, quiet=0, run=run_all_test):
@@ -392,7 +392,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       person_relative_url = person_object.getRelativeUrl()
 
       def checkRelationSet(self):
-        get_transaction().commit()
+        transaction.commit()
         person_object.reindexObject()
         category_object.reindexObject()
         self.tic()
@@ -410,7 +410,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         self.assertEquals( category_object.getRegionRelatedIdList(
                             portal_type = "Person"), [person_id] )
       def checkRelationUnset(self):
-        get_transaction().commit()
+        transaction.commit()
         person_object.reindexObject()
         category_object.reindexObject()
         self.tic()
@@ -445,10 +445,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
       # Test _setRegion doesn't reindex the object.
       person_object._setRegion(category_id)
-      get_transaction().commit()
+      transaction.commit()
       self.assertFalse(person_object.hasActivity())
       person_object.setRegion(None)
-      get_transaction().commit()
+      transaction.commit()
       self.assertTrue(person_object.hasActivity())
       self.tic()
 
@@ -579,7 +579,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         folder.newContent(portal_type='Organisation', id=id_)
       # commit a subtransaction, so that we can rename objecs (see
       # OFS.ObjectManager._getCopy)
-      get_transaction().commit(1)
+      transaction.commit(1)
 
       for obj in folder.objectValues():
         new_id = '%s_new' % obj.getId()
@@ -675,7 +675,7 @@ class TestPropertySheet:
       beta.reindexObject()
       zeta.reindexObject()
       nofunction.reindexObject()
-      get_transaction().commit()
+      transaction.commit()
       self.tic() # Make sure categories are reindexed
 
       # Create a new person
@@ -758,7 +758,7 @@ class TestPropertySheet:
       # Uid setters (list, set, default)
       person = module.newContent(portal_type='Person')
       person.reindexObject()
-      get_transaction().commit()
+      transaction.commit()
       self.tic() # Make sure person is reindexed
       person.setFunction('nofunction')  # Fill at least one other category
       person.setDefaultRegionUid(alpha.getUid())
@@ -1100,7 +1100,7 @@ class TestPropertySheet:
                         default_organisation.getTitle())
 
       # make sure this new organisation is indexed
-      get_transaction().commit()
+      transaction.commit()
       self.assertEquals(1, len([m for m in
         self.portal.portal_activities.getMessageList()
         if m.method_id == 'immediateReindexObject' 
@@ -1114,7 +1114,7 @@ class TestPropertySheet:
       person.setDefaultOrganisationTitle('New title')
       self.assertEquals('New title',
                         default_organisation.getTitle())
-      get_transaction().commit()
+      transaction.commit()
       self.assertEquals(1, len([m for m in
         self.portal.portal_activities.getMessageList()
         if m.method_id == 'immediateReindexObject' 
@@ -1130,7 +1130,7 @@ class TestPropertySheet:
                         default_organisation.getTitle())
       self.assertEquals(0, len([m for m in
                         self.portal.portal_activities.getMessageList()]))
-      get_transaction().commit()
+      transaction.commit()
       self.assertEquals(1, len([m for m in
         self.portal.portal_activities.getMessageList()
         if m.method_id == 'immediateReindexObject' 
@@ -1158,7 +1158,7 @@ class TestPropertySheet:
                         default_organisation.getReference())
 
       # make sure this new organisation is indexed
-      get_transaction().commit()
+      transaction.commit()
       self.assertEquals(1, len([m for m in
         self.portal.portal_activities.getMessageList()
         if m.method_id == 'immediateReindexObject' 
@@ -1172,7 +1172,7 @@ class TestPropertySheet:
       person.setDefaultOrganisationReference('New reference')
       self.assertEquals('New reference',
                         default_organisation.getReference())
-      get_transaction().commit()
+      transaction.commit()
       self.assertEquals(1, len([m for m in
         self.portal.portal_activities.getMessageList()
         if m.method_id == 'immediateReindexObject' 
@@ -1188,7 +1188,7 @@ class TestPropertySheet:
                         default_organisation.getReference())
       self.assertEquals(0, len([m for m in
                         self.portal.portal_activities.getMessageList()]))
-      get_transaction().commit()
+      transaction.commit()
       self.assertEquals(1, len([m for m in
         self.portal.portal_activities.getMessageList()
         if m.method_id == 'immediateReindexObject' 
@@ -1374,7 +1374,7 @@ class TestPropertySheet:
 #       self.assertEquals(gender.getCategoryRelativeUrl(), new_copy.getGender())
       new_copy = obj.asContext()
       new_copy.edit(gender=gender.getCategoryRelativeUrl())
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       self.assertEquals(gender.getCategoryRelativeUrl(), new_copy.getGender())
       self.assertEquals(None, obj.getGender())
@@ -1440,7 +1440,7 @@ class TestPropertySheet:
       person.manage_permission('View', roles=['Auditor'], acquire=0)
 
       # The user may not view the person object.
-      get_transaction().commit() ; self.tic()
+      transaction.commit() ; self.tic()
       self.assertTrue('Auditor' not in user.getRolesInContext(person))
       self.logout()
       newSecurityManager(None, user)
@@ -1455,7 +1455,7 @@ class TestPropertySheet:
       # reflect the security change, until the affected objects are
       # reindexed, and Jean-Paul believes that this should not be
       # automatic.
-      get_transaction().commit() ; self.tic()
+      transaction.commit() ; self.tic()
       self.assertTrue('Auditor' in user.getRolesInContext(person))
       self.logout()
       newSecurityManager(None, user)
@@ -1466,7 +1466,7 @@ class TestPropertySheet:
       # Now invoke the reindexing explicitly, so the catalog should be
       # synchronized.
       person_module.recursiveReindexObject()
-      get_transaction().commit() ; self.tic()
+      transaction.commit() ; self.tic()
       self.assertTrue('Auditor' in user.getRolesInContext(person))
       self.logout()
       newSecurityManager(None, user)
@@ -1527,7 +1527,7 @@ class TestPropertySheet:
       foo_path = foo.getRelativeUrl()
 
       # Make sure categories are reindexed
-      get_transaction().commit()
+      transaction.commit()
       self.tic() 
 
       # Related accessor
@@ -1703,7 +1703,7 @@ class TestPropertySheet:
       gamma_path = gamma.getCategoryRelativeUrl()
 
       # Make sure categories are reindexed
-      get_transaction().commit()
+      transaction.commit()
       self.tic() 
 
       self.assertEquals(beta.getRelativeUrl(), 'region/beta')
@@ -1955,7 +1955,7 @@ class TestPropertySheet:
       gamma_path = gamma.getCategoryRelativeUrl()
 
       # Make sure categories are reindexed
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
 
       beta.manage_permission('View', roles=[], acquire=0)
@@ -2015,7 +2015,7 @@ class TestPropertySheet:
       gamma_path = gamma.getCategoryRelativeUrl()
 
       # Make sure categories are reindexed
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
 
       beta.manage_permission('View', roles=[], acquire=0)
@@ -2102,7 +2102,7 @@ class TestPropertySheet:
       # gamma does not exist
 
       # Make sure categories are reindexed
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
 
       # Create a new person, and associate it to beta and gamma.
@@ -2283,11 +2283,11 @@ class TestPropertySheet:
       subdocument_id = 'sub'
       object = folder.newContent(portal_type='Organisation', id=initial_id)
       object.newContent(id=subdocument_id)
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       folder = self.getOrganisationModule()
       folder.manage_renameObjects([initial_id], [final_id])
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       folder = self.getOrganisationModule()
       subdocument = folder[final_id][subdocument_id]

@@ -27,6 +27,7 @@
 ##############################################################################
 
 import unittest
+import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -118,7 +119,7 @@ class TestCachedSkinsTool(ERP5TypeTestCase):
     tested_skin_folder.manage_addProduct['OFSP'].manage_addFolder(id=searched_object_id)
     # Commit transaction so that the created object gets a _p_jar, so it can be renamed.
     # See OFS.CopySupport:CopySource.cb_isMoveable()
-    get_transaction().commit(1)
+    transaction.commit(1)
     self.getSkinnableObject().changeSkin(skinname=None)
     # Access the object to make sure it is present in cache.
     self.assertTrue(getattr(skinnable_object,   searched_object_id, None) is not None)

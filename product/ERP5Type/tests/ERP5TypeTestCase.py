@@ -31,6 +31,7 @@ try:
 except ImportError:
   pass
 
+import transaction
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase, user_name
 from Products.ERP5Type.tests.utils import getMySQLArguments
@@ -46,11 +47,6 @@ from Products.ERP5Type.Utils import getLocalConstraintList, \
                                     importLocalConstraint
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from zLOG import LOG, DEBUG
-
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
 
 # Quiet messages when installing products
 install_product_quiet = 1
@@ -443,9 +439,9 @@ class ERP5TypeTestCase(PortalTestCase):
             ZopeTestCase._print('\nRecreating catalog ... ')
           portal.portal_activities.manageClearActivities()
           portal.portal_catalog.manage_catalogClear()
-          get_transaction().commit()
+          transaction.commit()
           portal.ERP5Site_reindexAll()
-          get_transaction().commit()
+          transaction.commit()
           self.tic()
           if not quiet:
             ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start,))
@@ -666,7 +662,7 @@ class ERP5TypeTestCase(PortalTestCase):
               if not quiet:
                 ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start))
               # Release locks
-              get_transaction().commit()
+              transaction.commit()
 
             if os.environ.get('erp5_load_data_fs'):
               # Import local PropertySheets, Documents
@@ -718,7 +714,7 @@ class ERP5TypeTestCase(PortalTestCase):
                          object_to_update=install_kw,
                          update_translation=1)
               # Release locks
-              get_transaction().commit()
+              transaction.commit()
               if not quiet:
                 ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
 
@@ -742,7 +738,7 @@ class ERP5TypeTestCase(PortalTestCase):
               setattr(app,'isIndexable', 1)
               portal.portal_catalog.manage_hotReindexAll()
 
-            get_transaction().commit()
+            transaction.commit()
 
             portal_activities = getattr(portal, 'portal_activities', None)
             if portal_activities is not None:
@@ -754,7 +750,7 @@ class ERP5TypeTestCase(PortalTestCase):
               while message_count > 0:
                 portal_activities.distribute()
                 portal_activities.tic()
-                get_transaction().commit()
+                transaction.commit()
                 new_message_count = len(portal_activities.getMessageList())
                 if new_message_count != message_count:
                   if not quiet:
@@ -778,7 +774,7 @@ class ERP5TypeTestCase(PortalTestCase):
               if not quiet:
                 ZopeTestCase._print('done (%.3fs)\n' % (time.time()-_start,))
                 ZopeTestCase._print('Data.fs created\n')
-              get_transaction().commit()
+              transaction.commit()
               ZopeTestCase.close(app)
               instance_home = os.environ['INSTANCE_HOME']
               command = 'mysqldump --skip-extended-insert %s > %s/dump.sql' \
@@ -805,10 +801,10 @@ class ERP5TypeTestCase(PortalTestCase):
               ZopeTestCase._print('done (%.3fs)\n' % (time.time()-_start,))
               ZopeTestCase._print('Ran Unit test of %s\n' % title)
           except:
-            get_transaction().abort()
+            transaction.abort()
             raise
           else:
-            get_transaction().commit()
+            transaction.commit()
             ZopeTestCase.close(app)
 
         if os.environ.get('erp5_load_data_fs'):
@@ -850,7 +846,7 @@ class ERP5TypeTestCase(PortalTestCase):
       """
       if kw.get('sequence', None) is None:
         # in case of using not in sequence commit transaction
-        get_transaction().commit()
+        transaction.commit()
       self.tic()
 
     def publish(self, path, basic=None, env=None, extra=None,
@@ -868,7 +864,7 @@ class ERP5TypeTestCase(PortalTestCase):
         sm = getSecurityManager()
 
         # Commit the sandbox for good measure
-        get_transaction().commit()
+        transaction.commit()
 
         if env is None:
             env = {}

@@ -26,14 +26,10 @@
 #
 ##############################################################################
 
+import transaction
 from Testing import ZopeTestCase
 from zLOG import LOG
 import random
-
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
 
 
 import traceback
@@ -112,7 +108,7 @@ class Sequence:
       for idx, step in enumerate(self._step_list):
         step.play(context, sequence=self, quiet=quiet)
         # commit transaction after each step
-        get_transaction().commit()
+        transaction.commit()
 
   def addStep(self,method_name,required=1,max_replay=1):
     new_step = Step(method_name=method_name,

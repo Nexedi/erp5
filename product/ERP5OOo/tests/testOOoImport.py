@@ -30,6 +30,7 @@
 import unittest
 import os
 
+import transaction
 from zLOG import LOG
 from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -751,7 +752,7 @@ class TestOOoImport(ERP5TypeTestCase):
     # tests CategoryTool_importCategoryFile with * in the paths columns
     self.portal.portal_categories.CategoryTool_importCategoryFile(
         import_file=makeFileUpload('import_region_category_path_stars.sxc'))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     region = self.portal.portal_categories.region
     self.assertEqual(2, len(region))
@@ -770,7 +771,7 @@ class TestOOoImport(ERP5TypeTestCase):
     self.portal.portal_categories.CategoryTool_importCategoryFile(
             import_file=makeFileUpload(
               'import_region_category_path_stars_non_ascii.sxc'))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     region = self.portal.portal_categories.region
     self.assertEqual(2, len(region))
@@ -789,7 +790,7 @@ class TestOOoImport(ERP5TypeTestCase):
     # bug)
     self.portal.portal_categories.CategoryTool_importCategoryFile(
         import_file=makeFileUpload('import_region_category_duplicate_ids.sxc'))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     region = self.portal.portal_categories.region
     self.assertEqual(1, len(region))

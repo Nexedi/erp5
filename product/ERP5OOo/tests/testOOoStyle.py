@@ -27,6 +27,7 @@
 ##############################################################################
 
 import unittest
+import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Form.Selection import Selection
 from Testing import ZopeTestCase
@@ -53,7 +54,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     person_module = self.portal.person_module
     if person_module._getOb('pers', None) is None:
       person_module.newContent(id='pers', portal_type='Person')
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
     person_module.pers.setFirstName('Bob')
     if person_module.pers._getOb('img', None) is None:

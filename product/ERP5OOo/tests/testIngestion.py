@@ -32,6 +32,7 @@
 import unittest
 import os, cStringIO, zipfile
 from xml.dom.minidom import parseString
+import transaction
 from Testing import ZopeTestCase
 from DateTime import DateTime
 from AccessControl.SecurityManagement import newSecurityManager
@@ -224,7 +225,7 @@ class TestIngestion(ERP5TypeTestCase):
               if hasattr(new_category, method_id):
                 method = getattr(new_category, method_id)
                 method(value.encode('UTF-8'))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def getCategoryList(self, base_category=None):
@@ -274,7 +275,7 @@ class TestIngestion(ERP5TypeTestCase):
       document_module.manage_delObjects([id,])
     document = document_module.newContent(portal_type=portal_type, id=id)
     document.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.checkIsObjectCatalogged(portal_type, id=id, parent_uid=document_module.getUid())
     self.assert_(hasattr(document_module, id))
@@ -304,7 +305,7 @@ class TestIngestion(ERP5TypeTestCase):
       context.edit(file=f)
       context.convertToBaseFormat()
       context.reindexObject()
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       self.failUnless(context.hasFile())
       if context.getPortalType() in ('Image', 'File', 'PDF'):
@@ -328,7 +329,7 @@ class TestIngestion(ERP5TypeTestCase):
     context.edit(file=f)
     context.convertToBaseFormat()
     context.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # We call clear cache to be sure that the target list is updated
     self.getPortal().portal_caches.clearCache()
@@ -373,7 +374,7 @@ class TestIngestion(ERP5TypeTestCase):
       # reindex
       ob.immediateReindexObject()
       created_documents.append(ob)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # inspect created objects
     count = 0
@@ -425,7 +426,7 @@ class TestIngestion(ERP5TypeTestCase):
     # pass to discovery file_name and user_login
     context.discoverMetadata(context.getSourceReference(), 'john_doe') 
     context.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def checkMetadataOrder(self, expected_metadata, document_id='one'):
@@ -471,7 +472,7 @@ class TestIngestion(ERP5TypeTestCase):
                                       )
     person.setDefaultEmailText('john@doe.com')
     person.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def stepCreateTextDocument(self, sequence=None, sequence_list=None, **kw):
@@ -568,7 +569,7 @@ class TestIngestion(ERP5TypeTestCase):
     # Revision is 1 after upload (revisions are strings)
     self.assertEquals(document.getRevision(), '1')
     document.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
 
   def stepUploadFromViewForm(self, sequence=None, sequence_list=None, **kw):
     """
@@ -580,7 +581,7 @@ class TestIngestion(ERP5TypeTestCase):
     context.edit(file=f)
     self.assertEquals(context.getRevision(), str(int(revision) + 1))
     context.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
 
   def stepUploadTextFromContributionTool(self, sequence=None, sequence_list=None, **kw):
     """
@@ -588,7 +589,7 @@ class TestIngestion(ERP5TypeTestCase):
     """
     f = makeFileUpload('TEST-en-002.doc')
     self.portal.portal_contributions.newContent(id='one', file=f)
-    get_transaction().commit()
+    transaction.commit()
 
   def stepReuploadTextFromContributionTool(self, sequence=None, sequence_list=None, **kw):
     """
@@ -604,16 +605,16 @@ class TestIngestion(ERP5TypeTestCase):
     f.filename = 'TEST-en-002.doc'
 
     self.portal.portal_contributions.newContent(file=f)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
-    get_transaction().commit()
+    transaction.commit()
     self.assertEquals(context.getRevision(), str(int(revision) + 1))
     self.assert_('This document is modified.' in context.asText())
     self.assertEquals(len(self.portal.document_module.objectIds()),
                       number_of_document)
 
     context.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
 
   def stepUploadAnotherTextFromContributionTool(self, sequence=None, sequence_list=None, **kw):
     """
@@ -622,9 +623,9 @@ class TestIngestion(ERP5TypeTestCase):
     f = makeFileUpload('ANOTHE-en-001.doc')
     self.portal.portal_contributions.newContent(id='two', file=f)
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
-    get_transaction().commit()
+    transaction.commit()
 
     context = self.getDocument('two')
     self.assert_('This is a another very interesting document.' in context.asText())
@@ -689,7 +690,7 @@ class TestIngestion(ERP5TypeTestCase):
     context = self.getDocument('one')
     f = makeFileUpload('TEST-en-002.doc')
     context.edit(file=f)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # Then make sure content discover works
     property_dict = context.getPropertyDictFromUserLogin()
@@ -712,7 +713,7 @@ class TestIngestion(ERP5TypeTestCase):
               subject='another subject',
               description='another description')
     context.edit(**kw)
-    context.reindexObject(); get_transaction().commit();
+    context.reindexObject(); transaction.commit();
     self.tic();
 
   def stepCheckChangedMetadata(self, sequence=None, sequence_list=None, **kw):
@@ -933,7 +934,7 @@ class TestIngestion(ERP5TypeTestCase):
     """
     f = open(makeFilePath('email_from.txt'))
     document = self.receiveEmail(data=f.read())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def stepReceiveEmailFromJohn(self, sequence=None, sequence_list=None, **kw):
@@ -942,7 +943,7 @@ class TestIngestion(ERP5TypeTestCase):
     """
     f = open(makeFilePath('email_from.txt'))
     document = self.receiveEmail(f.read())
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def stepVerifyEmailedDocuments(self, sequence=None, sequence_list=None, **kw):
@@ -1357,7 +1358,7 @@ class TestIngestion(ERP5TypeTestCase):
     f = makeFileUpload('TEST-en-002.doc', 'T&é@{T-en-002.doc')
     document = self.portal.portal_contributions.newContent(file=f)
     sequence.edit(document_id=document.getId())
-    get_transaction().commit()
+    transaction.commit()
 
   def stepDiscoverFromFilenameWithNonASCIIFilename(self, 
                                  sequence=None, sequence_list=None, **kw):

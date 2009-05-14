@@ -29,6 +29,7 @@
 import unittest
 import os
 
+import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.utils import installRealMemcachedTool
@@ -121,7 +122,7 @@ class TestMemcachedTool(ERP5TypeTestCase):
     # First, check that the local cache in memcachedTool works
     tested_dict[tested_key] = tested_value
     self.assertTrue(tested_dict[tested_key] is tested_value)
-    get_transaction().commit()
+    transaction.commit()
     # After a commit, check that the value is commited and grabbed from memcached
     # again. Its value must not change, but the instance is not the same anymore.
     self.assertTrue(tested_dict[tested_key] is not tested_value)
@@ -151,7 +152,7 @@ class TestMemcachedTool(ERP5TypeTestCase):
     tested_dict[tested_key] = tested_value
     self.assertTrue(tested_dict[tested_key] == tested_value)
     del tested_dict[tested_key]
-    get_transaction().commit()
+    transaction.commit()
     try:
       dummy = tested_dict[tested_key]
     except KeyError:

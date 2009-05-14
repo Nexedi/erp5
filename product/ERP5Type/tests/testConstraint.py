@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import transaction
 import unittest
 import os
 
@@ -64,10 +65,10 @@ class TestConstraint(PropertySheetTestCase):
     self.createCategories()
 
   def beforeTearDown(self):
-    get_transaction().abort()
+    transaction.abort()
     module = self.portal.organisation_module
     module.manage_delObjects(list(module.objectIds()))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def stepTic(self,**kw):
@@ -99,7 +100,7 @@ class TestConstraint(PropertySheetTestCase):
     """
     module = self.portal.getDefaultModule(self.object_portal_type)
     obj = module.newContent(portal_type=self.object_portal_type)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     return obj
 
@@ -1120,7 +1121,7 @@ class TestConstraint(PropertySheetTestCase):
     self.assertEquals(1, len(message_list))
     self.assertNotEquals('', message_list[0].getTranslatedMessage())
     related_obj.setGroupValue(obj)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(0, len(constraint.checkConsistency(obj)))
 

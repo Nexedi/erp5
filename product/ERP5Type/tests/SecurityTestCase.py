@@ -29,6 +29,7 @@
 """Base Class for security tests using ERP5Security and DCWorkflow
 """
 
+import transaction
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.SecurityManagement import setSecurityManager
@@ -122,7 +123,7 @@ class SecurityTestCase(ERP5TypeTestCase):
     """Clean up for next test.
     """
     self.tic()
-    get_transaction().abort()
+    transaction.abort()
     self.portal.portal_caches.clearAllCache()
     ERP5TypeTestCase.tearDown(self)
 
