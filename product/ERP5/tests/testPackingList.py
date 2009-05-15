@@ -1592,6 +1592,8 @@ class TestDeliveryRule(TestPackingListMixin, ERP5TypeTestCase):
   def test_delivery_rule_simulation_cancel(self):
     self.createDocuments()
     self.delivery.confirm()
+    self.assertEqual('confirmed', self.delivery.getSimulationState())
+    transaction.commit() ; self.tic()
     self.delivery.cancel()
     self.assertEqual('cancelled', self.delivery.getSimulationState())
 
