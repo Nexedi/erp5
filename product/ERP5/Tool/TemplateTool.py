@@ -50,6 +50,7 @@ import posixpath
 from base64 import b64encode, b64decode
 from Products.ERP5Type.Message import translateString
 from zLOG import LOG, INFO
+from base64 import decodestring
 
 
 WIN = os.name == 'nt'
@@ -380,6 +381,15 @@ class TemplateTool (BaseTool):
 
       bt.build(no_action=1)
       return bt
+
+    def importBase64EncodedText(self, file_data=None, id=None, REQUEST=None, 
+                                batch_mode=0, **kw):
+      """ 
+        Import Business Template from passed base64 encoded text.
+      """
+      import_file = StringIO(decodestring(file_data))
+      return self.importFile(import_file = import_file, id = id, REQUEST = REQUEST, 
+                             batch_mode = batch_mode, **kw)
 
     def importFile(self, import_file=None, id=None, REQUEST=None, 
                    batch_mode=0, **kw):
