@@ -185,7 +185,6 @@ def getFieldLibraryDictAndFieldMappingList():\n
       \'MultiRelationStringField\':\'my_multi_relation_field\',\n
       \'PasswordField\':\'my_password\',\n
       \'RelationStringField\':\'my_relation_field\',\n
-      \'EditorField\':\'my_text_content\',\n
       \'PlanningBox\':\'planning_box\',\n
       }\n
     template_field_id = None\n
