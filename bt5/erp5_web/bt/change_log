@@ -1,3 +1,6 @@
+2009-05-15 yusei
+* Add a template field for Editor Field to Base_viewWebFieldLibrary.
+
 2009-05-08 yusei
 * Simplify field libraries and proxy fields. Old field libraries are kept for backward compatibility.
 * Update dependencies.
