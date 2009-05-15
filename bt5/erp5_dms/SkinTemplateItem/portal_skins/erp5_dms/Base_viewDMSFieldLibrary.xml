@@ -110,6 +110,7 @@
                         <string>my_list_mode_listbox</string>
                         <string>my_date</string>
                         <string>my_radio_field</string>
+                        <string>my_editor_field</string>
                       </list>
                     </value>
                 </item>

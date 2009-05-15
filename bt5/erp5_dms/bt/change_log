@@ -1,3 +1,6 @@
+2009-05-15 yusei
+* Add my_editor_field to Base_viewDMSFieldLibrary.
+
 2009-05-08 yusei
 * Simplify field libraries and proxy fields. Old field libraries are kept for backward compatibility.
 * Update dependencies.

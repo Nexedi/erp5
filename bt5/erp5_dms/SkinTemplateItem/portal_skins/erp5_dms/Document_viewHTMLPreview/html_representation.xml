@@ -14,10 +14,12 @@
             <value>
               <list>
                 <string>title</string>
-                <string>height</string>
-                <string>width</string>
-                <string>whitespace_preserve</string>
                 <string>default</string>
+                <string>css_class</string>
+                <string>width</string>
+                <string>height</string>
+                <string>editable</string>
+                <string>whitespace_preserve</string>
               </list>
             </value>
         </item>
@@ -85,8 +87,20 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string>page</string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_text_content</string> </value>
+                    <value> <string>my_editor_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
