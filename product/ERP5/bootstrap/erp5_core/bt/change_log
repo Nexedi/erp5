@@ -1,3 +1,6 @@
+2009-05-15 yusei
+* Add a Editor Field template field to Base_viewFieldLibrary. my_text_content was not appropriate in general.
+
 2009-05-14 nicolas
 * add new Zodb Cache Portal Type
 
