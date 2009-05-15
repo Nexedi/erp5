@@ -41,7 +41,7 @@ from DateTime import DateTime
 from Acquisition import aq_parent
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from testPackingList import TestPackingListMixin
+from testPackingList import TestPackingListMixin, TestDeliveryRule
 from testAccountingRules import TestAccountingRulesMixin
 
 class TestInvoiceMixin(TestPackingListMixin,
@@ -2121,24 +2121,6 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
       self.assertEquals(self.default_quantity + last_delta,
           line.getQuantity())
 
-  def stepAddInvoiceLinesManyTransactions(self, sequence=None, sequence_list=[]):
-    """
-    add some invoice and accounting lines to the invoice
-    """
-    invoice = sequence.get('invoice')
-    invoice_line = invoice.newContent(portal_type='Invoice Line')
-    transaction_line_1 = invoice.newContent(portal_type='Sale Invoice Transaction Line')
-    transaction_line_2 = invoice.newContent(portal_type='Sale Invoice Transaction Line')
-    transaction.commit()
-    self.tic()
-    invoice_line.edit(resource_value=sequence.get('resource'), quantity=3,
-        price=555)
-    transaction_line_1.edit(id ='receivable', source='account_module/customer',
-        destination='account_module/supplier', quantity=-1665)
-    transaction_line_2.edit(
-        id='income', source='account_module/sale',
-        destination='account_module/purchase', quantity=1665)
-
   def stepAddInvoiceLines(self, sequence=None, sequence_list=[]):
     """
     add some invoice and accounting lines to the invoice
@@ -2668,6 +2650,58 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
       sequence_list.addSequenceString(sequence)
     sequence_list.play(self, quiet=quiet)
 
+  def stepAddInvoiceLinesManyTransactions(self, sequence=None, sequence_list=[]):
+    """
+    add some invoice and accounting lines to the invoice
+    """
+    invoice = sequence.get('invoice')
+    invoice_line = invoice.newContent(portal_type='Invoice Line')
+    transaction_line_1 = invoice.newContent(portal_type='Sale Invoice Transaction Line')
+    transaction_line_2 = invoice.newContent(portal_type='Sale Invoice Transaction Line')
+    transaction.commit()
+    self.tic()
+    invoice_line.edit(resource_value=sequence.get('resource'), quantity=3,
+        price=555)
+    transaction_line_1.edit(id ='receivable', source='account_module/customer',
+        destination='account_module/supplier', quantity=-1665)
+    transaction_line_2.edit(
+        id='income', source='account_module/sale',
+        destination='account_module/purchase', quantity=1665)
+
+
+  def test_16a_ManuallyAddedMovementsManyTransactions(self, quiet=quiet):
+    """
+    Checks that adding invoice lines and accounting lines to one invoice
+    generates correct simulation
+
+    In this case checks what is happening, where movements are added in
+    one transaction and edited in another
+    """
+    if not quiet:
+      self.logMessage('Invoice with Manually Added Movements in separate transactions')
+    sequence_list = SequenceList()
+    for base_sequence in (self.PACKING_LIST_DEFAULT_SEQUENCE, ) :
+      sequence_list.addSequenceString(
+          base_sequence +
+          """
+          stepSetReadyPackingList
+          stepTic
+          stepStartPackingList
+          stepCheckInvoicingRule
+          stepTic
+          stepCheckInvoiceBuilding
+          stepRebuildAndCheckNothingIsCreated
+          stepCheckInvoicesConsistency
+          stepAddInvoiceLinesManyTransactions
+          stepTic
+          stepCheckInvoiceIsSolved
+          stepStartInvoice
+          stepTic
+          stepCheckSimulationTrees
+          """)
+    sequence_list.play(self, quiet=quiet)
+
+
   def test_11_AcceptDecisionOnPackingListAndInvoice(self, quiet=quiet,
       run=RUN_ALL_TESTS):
     """
@@ -3059,38 +3093,6 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
           """)
     sequence_list.play(self, quiet=quiet)
 
-  def test_16a_ManuallyAddedMovementsManyTransactions(self, quiet=quiet):
-    """
-    Checks that adding invoice lines and accounting lines to one invoice
-    generates correct simulation
-
-    In this case checks what is happening, where movements are added in
-    one transaction and edited in another
-    """
-    if not quiet:
-      self.logMessage('Invoice with Manually Added Movements in separate transactions')
-    sequence_list = SequenceList()
-    for base_sequence in (self.PACKING_LIST_DEFAULT_SEQUENCE, ) :
-      sequence_list.addSequenceString(
-          base_sequence +
-          """
-          stepSetReadyPackingList
-          stepTic
-          stepStartPackingList
-          stepCheckInvoicingRule
-          stepTic
-          stepCheckInvoiceBuilding
-          stepRebuildAndCheckNothingIsCreated
-          stepCheckInvoicesConsistency
-          stepAddInvoiceLinesManyTransactions
-          stepTic
-          stepCheckInvoiceIsSolved
-          stepStartInvoice
-          stepTic
-          stepCheckSimulationTrees
-          """)
-    sequence_list.play(self, quiet=quiet)
-
   def test_17_ManuallyAddedWrongMovements(self, quiet=quiet, run=RUN_ALL_TESTS):
     """
     Checks that adding invoice lines and accounting lines to one invoice
@@ -3256,9 +3258,46 @@ class TestPurchaseInvoice(TestInvoice, ERP5TypeTestCase):
       stepTic
     """
 
+class TestInvoiceRule(TestDeliveryRule):
+  rule_portal_type = 'Invoice Rule'
+  delivery_line_portal_type = 'Invoice Line'
+
+  def test_delivery_rule_simulation_ready(self):
+    # not available on invoice
+    return
+
+  def test_delivery_rule_simulation_confirm(self):
+    self.createDocuments()
+    self.delivery.plan()
+    self.assertEqual('planned', self.delivery.getSimulationState())
+    transaction.commit() ; self.tic()
+
+    self.checkDeliverySimulation()
+
+    self.modifyDelivery()
+    
+    transaction.commit() ; self.tic()
+
+    self.checkDeliverySimulation()
+
+
+class TestInvoiceRuleSaleInvoiceTransaction(TestInvoiceRule):
+  delivery_portal_type = 'Sale Invoice Transaction'
+
+  def getTitle(self):
+    return "Sale Invoice Transaction Invoice Rule"
+
+class TestInvoiceRulePurchaseInvoiceTransaction(TestInvoiceRule):
+  delivery_portal_type = 'Purchase Invoice Transaction'
+
+  def getTitle(self):
+    return "Purchase Invoice Transaction Invoice Rule"
+
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestSaleInvoice))
   suite.addTest(unittest.makeSuite(TestPurchaseInvoice))
+  suite.addTest(unittest.makeSuite(TestInvoiceRuleSaleInvoiceTransaction))
+  suite.addTest(unittest.makeSuite(TestInvoiceRulePurchaseInvoiceTransaction))
   return suite
