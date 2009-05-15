@@ -50,6 +50,8 @@
                 <string>destination_decision</string>
                 <string>source_administration</string>
                 <string>destination_administration</string>
+                <string>source_project</string>
+                <string>destination_project</string>
                 <string>price_currency</string>
               </tuple>
             </value>
