@@ -101,6 +101,7 @@
                         <string>my_multi_relation_field</string>
                         <string>my_date</string>
                         <string>my_title</string>
+                        <string>my_editor_field</string>
                       </list>
                     </value>
                 </item>
