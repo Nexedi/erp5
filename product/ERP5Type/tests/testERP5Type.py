@@ -287,10 +287,11 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # check we can create temp object without specific roles/permissions
       self.logout()
       self.loginWithNoRole()
-      o = newTempOrganisation(portal,'b')
+      o = newTempOrganisation(portal.organisation_module,'b')
       self.assertEquals(o.isTempObject(), 1)
       a = o.newContent(portal_type = 'Telephone')
       self.assertEquals(a.isTempObject(), 1)
+      self.assertEquals(a, guarded_getattr(o, a.getId()))
       self.logout()
       self.login()
 

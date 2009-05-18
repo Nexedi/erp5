@@ -417,7 +417,7 @@ class TempDocumentConstructor(DocumentConstructor):
       # Create a new class to set permissions specific to temporary objects.
       class TempDocument(klass):
         isTempDocument = 1
-        pass
+        __roles__ = None
 
       # Replace some attributes.
       for name in ('isIndexable', 'reindexObject', 'recursiveReindexObject',
