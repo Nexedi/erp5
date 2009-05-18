@@ -278,7 +278,7 @@ class ProxyField(ZMIField):
     # now do actual update of values
     values.update(result)
     self.values = values
-    self.delegated_list = surcharge_list
+    self.delegated_list = sorted(surcharge_list)
 
     # finally notify field of all changed values if necessary
     for key in changed:
@@ -357,7 +357,7 @@ class ProxyField(ZMIField):
     # now do actual update of values
     tales.update(result)
     self.tales = tales
-    self.delegated_list = surcharge_list
+    self.delegated_list = sorted(surcharge_list)
     # Put a default value on not delegated parameter
     for key in result.keys():
       if not self.values.has_key(key):
@@ -382,7 +382,7 @@ class ProxyField(ZMIField):
         if message_key in messages:
           messages.pop(message_key)
     self.message_values = messages
-    self.delegated_message_list = surcharge_list
+    self.delegated_message_list = sorted(surcharge_list)
     if REQUEST:
       message="Content changed."
       return self.manage_messagesForm(self,REQUEST,
