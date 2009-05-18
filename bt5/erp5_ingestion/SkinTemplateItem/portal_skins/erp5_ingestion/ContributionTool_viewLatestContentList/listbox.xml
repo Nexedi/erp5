@@ -13,14 +13,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>all_columns</string>
-                <string>editable_columns</string>
                 <string>title</string>
-                <string>select</string>
-                <string>selection_name</string>
                 <string>columns</string>
-                <string>default_params</string>
+                <string>all_columns</string>
                 <string>list_method</string>
+                <string>count_method</string>
+                <string>selection_name</string>
+                <string>default_params</string>
+                <string>select</string>
+                <string>editable_columns</string>
               </list>
             </value>
         </item>
@@ -190,6 +191,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default_params</string> </key>

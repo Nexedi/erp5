@@ -1,3 +1,6 @@
+2009-05-18 yusei
+* Fix a proxy field. count_method should not be inherited from template field.
+
 2009-05-08 Yusei
 * Add field library and proxy fields.
 * Update dependencies.
