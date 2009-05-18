@@ -4052,7 +4052,7 @@ msgid "Event Type"
 msgstr "Type de l'évènement"
 
 msgid "Events"
-msgstr "Évènements"
+msgstr "Evènements"
 
 msgid "Events in this state are incoming events or carbon copies of outgoing events received through the email interface of ERP5 CRM."
 msgstr "Les évènements à l'état Nouveau sont prêts à être traités par un utilisateur."
