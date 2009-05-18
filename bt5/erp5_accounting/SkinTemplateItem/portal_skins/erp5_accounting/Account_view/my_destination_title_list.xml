@@ -13,11 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>catalog_index</string>
                 <string>title</string>
                 <string>description</string>
-                <string>portal_type</string>
                 <string>base_category</string>
+                <string>portal_type</string>
+                <string>catalog_index</string>
+                <string>proxy_listbox_ids</string>
               </list>
             </value>
         </item>
@@ -105,6 +106,17 @@
                         <tuple>
                           <string>Account</string>
                           <string>Account</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>AccountModule_viewAccountList/listbox</string>
+                          <string>Accounts</string>
                         </tuple>
                       </list>
                     </value>

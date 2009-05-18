@@ -13,14 +13,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>stat_columns</string>
-                <string>stat_method</string>
                 <string>title</string>
-                <string>select</string>
-                <string>selection_name</string>
                 <string>columns</string>
                 <string>list_method</string>
+                <string>count_method</string>
+                <string>stat_method</string>
+                <string>selection_name</string>
                 <string>search</string>
+                <string>select</string>
+                <string>stat_columns</string>
               </list>
             </value>
         </item>
@@ -91,6 +92,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
