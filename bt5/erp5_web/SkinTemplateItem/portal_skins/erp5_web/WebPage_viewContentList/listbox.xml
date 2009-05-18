@@ -13,15 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable_columns</string>
                 <string>title</string>
-                <string>selection_name</string>
-                <string>columns</string>
-                <string>default_params</string>
-                <string>list_method</string>
                 <string>lines</string>
-                <string>list_action</string>
+                <string>columns</string>
+                <string>selection_name</string>
                 <string>portal_types</string>
+                <string>editable_columns</string>
+                <string>list_action</string>
               </list>
             </value>
         </item>
@@ -110,12 +108,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>default_params</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
@@ -147,12 +139,6 @@
                     <value> <string>Folder_viewContentList</string> </value>
                 </item>
                 <item>
-                    <key> <string>list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
@@ -169,7 +155,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>category_view_selection</string> </value>
+                    <value> <string>page_content_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -181,22 +167,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>objectValues</string> </value>
         </item>
       </dictionary>
     </pickle>

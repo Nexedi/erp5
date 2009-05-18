@@ -14,11 +14,11 @@
             <value>
               <list>
                 <string>title</string>
-                <string>selection_name</string>
-                <string>columns</string>
                 <string>lines</string>
-                <string>list_action</string>
+                <string>columns</string>
+                <string>selection_name</string>
                 <string>portal_types</string>
+                <string>list_action</string>
               </list>
             </value>
         </item>
@@ -139,7 +139,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>category_view_selection</string> </value>
+                    <value> <string>site_content_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
