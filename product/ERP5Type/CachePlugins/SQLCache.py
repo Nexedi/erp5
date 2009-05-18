@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -35,6 +36,8 @@ import time
 import base64
 from zLOG import LOG
 from BaseCache import BaseCache, CacheEntry, CachedMethodError
+from Products.ERP5Type import Interface
+import zope.interface
 
 try:
   import cPickle as pickle
@@ -58,7 +61,11 @@ connection_pool = {}
   
 class SQLCache(BaseCache):
   """ SQL based cache plugin. """
-    
+
+  zope.interface.implements(
+        Interface.ICachePlugin
+    )
+
   cache_expire_check_interval = 3600
     
   create_table_sql = '''CREATE TABLE %s(cache_id VARBINARY(970) NOT NULL, 
@@ -115,7 +122,7 @@ class SQLCache(BaseCache):
                             
   find_table_by_name_sql = """SHOW TABLES LIKE '%s' """
   
-  def __init__(self, params):
+  def __init__(self, params={}):
     BaseCache.__init__(self)
     self._dbConn = None
     self._db_server = params.get('server', '')
@@ -139,12 +146,13 @@ class SQLCache(BaseCache):
       ## no such table create it
       self.execSQLQuery(self.create_table_sql %self._db_cache_table_name) 
   
-  def getCacheStorage(self, force_reconnect=False):
+  def getCacheStorage(self, **kw):
     """ 
     Return current DB connection or create a new one for this thread.
     See http://sourceforge.net/docman/display_doc.php?docid=32071&group_id=22307
     especially threadsafety part why we create for every thread a new MySQL db connection object.
     """
+    force_reconnect = kw.get('force_reconnect', False)
     global connection_pool
     thread_id = get_ident()
     

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -32,6 +33,8 @@ Local RAM based cache plugin.
 
 import time
 from BaseCache import BaseCache, CacheEntry
+from Products.ERP5Type import Interface
+import zope.interface
 
 def calcPythonObjectMemorySize(i):
   """ Recursive function that will 'walk' over complex python types and caclulate
@@ -48,7 +51,11 @@ def calcPythonObjectMemorySize(i):
 
 class RamCache(BaseCache):
   """ RAM based cache plugin."""
-   
+
+  zope.interface.implements(
+        Interface.ICachePlugin
+    )
+
   _cache_dict = {}
   cache_expire_check_interval = 300
     
@@ -60,7 +67,7 @@ class RamCache(BaseCache):
     ## cache storage is a RAM based dictionary
     pass
     
-  def getCacheStorage(self):
+  def getCacheStorage(self, **kw):
     return self._cache_dict
     
   def get(self, cache_id, scope, default=None):
@@ -110,18 +117,18 @@ class RamCache(BaseCache):
     for scope, cache_id in self.getCacheStorage().iterkeys():
       scope_set.add(scope)
     return list(scope_set)
-    
+
   def getScopeKeyList(self, scope):
     key_list = []
     for key in self.getCacheStorage().iterkeys():
       if scope == key[0]:
         key_list.append(key[1])
     return key_list
-    
+
   def clearCache(self):
     BaseCache.clearCache(self)
     self.getCacheStorage().clear()
-    
+
   def clearCacheForScope(self, scope):
     cache = self.getCacheStorage()
     for key in cache.keys():
@@ -131,7 +138,7 @@ class RamCache(BaseCache):
         except KeyError:
           # The key might have disappeared, due to multi-threading.
           pass
-      
+
   def getCachePluginTotalMemorySize(self):
     """ Calculate total RAM memory size of cache plugin. 
         This function depends on mxBase python module:

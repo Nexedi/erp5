@@ -33,11 +33,17 @@ ZODB Based cache plugin.
 import time
 from BaseCache import BaseCache, CacheEntry
 from BTrees.OOBTree import OOBTree
+from Products.ERP5Type import Interface
+import zope.interface
 
 PRIVATE_ATTRIBUTE_ZODB_CACHE_NAME = '_zodb_cache'
 
 class ZODBCache(BaseCache):
   """ ZODB based cache plugin."""
+
+  zope.interface.implements(
+        Interface.ICachePlugin
+    )
 
   cache_tool = None
   cache_expire_check_interval = 300
@@ -55,7 +61,7 @@ class ZODBCache(BaseCache):
     if getattr(self.cache_tool, PRIVATE_ATTRIBUTE_ZODB_CACHE_NAME, None) is None:
       self.cache_tool._zodb_cache = OOBTree()
 
-  def getCacheStorage(self):
+  def getCacheStorage(self, **kw):
     return getattr(self.cache_tool, PRIVATE_ATTRIBUTE_ZODB_CACHE_NAME)
 
   def get(self, cache_id, scope, default=None):

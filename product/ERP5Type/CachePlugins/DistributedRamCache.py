@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -33,6 +34,8 @@ from thread import get_ident
 from zLOG import LOG
 from BaseCache import BaseCache
 from BaseCache import CacheEntry
+from Products.ERP5Type import Interface
+import zope.interface
 
 try:
   import memcache
@@ -42,28 +45,32 @@ except ImportError:
 
 ## global ditionary containing connection objects
 connection_pool = {}
- 
+
 class DistributedRamCache(BaseCache):
   """ Memcached based cache plugin. """
 
-  def __init__(self, params):
+  zope.interface.implements(
+        Interface.ICachePlugin
+    )
+
+  def __init__(self, params={}):
     self._servers = params.get('server', '')
     self._debugLevel = params.get('debugLevel', 0)
     BaseCache.__init__(self)
-    
+
   def initCacheStorage(self):
     """ Init cache storage """
     ## cache storage is a memcached server and no need to init it
     pass
-        
-  def getCacheStorage(self):
+
+  def getCacheStorage(self, **kw):
     ## if we use one connection object this causes 
     ## "MemCached: while expecting 'STORED', got unexpected response 'END'"
     ## messages in log files and can sometimes can block the thread. 
     ## For the moment we create a new conn object for every thread.
     global connection_pool
     thread_id = get_ident()
-    
+
     memcache_conn = connection_pool.get(thread_id, None)
     if memcache_conn is None:
       ## we don't have memcache_conn for this thread
@@ -73,21 +80,21 @@ class DistributedRamCache(BaseCache):
     else:
       ## we have memcache_conn for this thread
       return memcache_conn
-       
+
   def checkAndFixCacheId(self, cache_id, scope):
     ## memcached doesn't support namespaces (cache scopes) so to "emmulate"
     ## such behaviour when constructing cache_id we add scope in front
     cache_id = "%s.%s" %(scope, cache_id) 
     ## memcached will fail to store cache_id longer than MEMCACHED_SERVER_MAX_KEY_LENGTH.
     return cache_id[:MEMCACHED_SERVER_MAX_KEY_LENGTH]
-    
+
   def get(self, cache_id, scope, default=None):
     cache_storage = self.getCacheStorage()
     cache_id = self.checkAndFixCacheId(cache_id, scope)
     cache_entry = cache_storage.get(cache_id)
-    #self.markCacheHit()
+    self.markCacheHit()
     return cache_entry
-       
+
   def set(self, cache_id, scope, value, cache_duration= None, calculation_time=0):
     cache_storage = self.getCacheStorage()
     cache_id = self.checkAndFixCacheId(cache_id, scope)
@@ -97,8 +104,8 @@ class DistributedRamCache(BaseCache):
       cache_duration = 86400
     cache_entry = CacheEntry(value, cache_duration, calculation_time)
     cache_storage.set(cache_id, cache_entry, cache_duration)
-    #self.markCacheMiss()
-   
+    self.markCacheMiss()
+
   def expireOldCacheEntries(self, forceCheck = False):
     """ Memcache has its own built in expire policy """
     ## we can not use one connection to memcached server for time being of DistributedRamCache
@@ -108,13 +115,13 @@ class DistributedRamCache(BaseCache):
     ## but that's too much overhead or create a new connection when cache is to be expired. 
     ## This way we can catch memcached server failures. BTW: This hack is forced by the lack functionality in python-memcached 
     #self._cache = memcache.Client(self._servers.split('\n'), debug=self._debugLevel) 
-    pass    
-        
+    pass
+
   def delete(self, cache_id, scope):
     cache_storage = self.getCacheStorage()
     cache_id = self.checkAndFixCacheId(cache_id, scope)
     cache_storage.delete(cache_id)
-        
+
   def has_key(self, cache_id, scope):
     if self.get(cache_id, scope):
       return True
@@ -124,7 +131,7 @@ class DistributedRamCache(BaseCache):
   def getScopeList(self):
     ## memcached doesn't support namespaces (cache scopes) neither getting cached key list 
     return []
-    
+
   def getScopeKeyList(self, scope):
     ## memcached doesn't support namespaces (cache scopes) neither getting cached key list 
     return []
@@ -133,12 +140,12 @@ class DistributedRamCache(BaseCache):
     BaseCache.clearCache(self)
     cache_storage = self.getCacheStorage()
     cache_storage.flush_all()
-    
+
   def clearCacheForScope(self, scope):
     ## memcached doesn't support namespaces (cache scopes) neither getting cached key list.
     ## Becasue we've explicitly called this function instead of clearing specific cache 
     ## scope we have no choice but clear whole cache.
-    self.clearCache()       
+    self.clearCache()
 
   def getCachePluginTotalMemorySize(self):
     """ Calculate total RAM memory size of cache plugin. """
