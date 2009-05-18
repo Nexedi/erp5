@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block replace="nothing">\n
+  <!--\n
+  This widget displays the login form.\n
+\n
+  TODO:\n
+    - implement \'Password forgottn?\' feature.\n
+    - why \'new-line\' between checkbox and \'Remember me\'?\n
+  -->\n
+</tal:block>\n
+\n
+<div class="loginform">\n
+<p><input type="hidden" name="rememberme" value="0" /></p>\n
+<fieldset>\n
+<p><label for="name" class="top" i18n:translate="" i18n:domain="ui">User:</label><br />\n
+<input type="text" name="__ac_name" id="name" class="field" value=""\n
+       tal:attributes="value python: request.get(\'__ac_name\') or \'\'" /></p>\n
+<p><label for="password" class="top" i18n:translate="" i18n:domain="ui">Password:</label><br />\n
+<input type="password" name="__ac_password" id="password" class="field" value="" /></p>\n
+<p><input type="checkbox" name="__ac_persistent" id="checkbox" class="cb_remember" value="1" checked="checked" /><label for="cb_remember" class="right" i18n:translate="" i18n:domain="ui">Remember me</label></p>\n
+<p><input type="submit" name="WebSite_login:method" class="button" value="LOGIN" i18n:attributes="value" i18n:domain="ui" /></p>\n
+<!-- <p><a href="#" id="forgotpsswd">Password forgotten?</a></p> -->\n
+</fieldset>\n
+</div>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_viewLoginWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

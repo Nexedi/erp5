@@ -78,7 +78,7 @@
                 <string>subcontent subcontent-box linkbox (4-06. Link)</string>
                 <string>subcontent subcontent-box tablebox (4-07. Table)</string>
                 <string>subcontent subcontent-box contactbox (4-08. Contact)</string>
-                <string>subcontent subcontent-box loginbox(4-09. Login)</string>
+                <string>subcontent subcontent-box loginbox (Login)</string>
                 <string>subcontent subcontent-box searchbox (4-10. Search)</string>
                 <string>subcontent subcontent-box videobox (4-11. Video)</string>
                 <string>subcontent subcontent-box audiobox (4-12. Audio)</string>
@@ -218,7 +218,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>subcontent subcontent-box loginbox(4-09. Login)</string> </key>
+                    <key> <string>subcontent subcontent-box loginbox (Login)</string> </key>
                     <value>
                       <list>
                         <string>login_box</string>

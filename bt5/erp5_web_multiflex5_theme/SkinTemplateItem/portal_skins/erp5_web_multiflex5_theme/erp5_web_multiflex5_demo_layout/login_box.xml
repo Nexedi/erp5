@@ -13,8 +13,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>default</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -57,6 +57,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>default</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -68,6 +74,10 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -77,24 +87,7 @@
               <dictionary>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<div class="loginform">\n
-<form method="post" action="index.html">\n
-<p><input type="hidden" name="rememberme" value="0" /></p>\n
-<fieldset>\n
-<p><label for="username_4" class="top">User:</label><br />\n
-<input type="text" name="username_4" id="username_4" tabindex="1" class="field" value="" /></p>\n
-<p><label for="password_4" class="top">Password:</label><br />\n
-<input type="password" name="password_4" id="password_4" tabindex="2" class="field" value="" /></p>\n
-<p><input type="checkbox" name="checkbox_4" id="checkbox_4" class="checkbox" tabindex="3" size="1" value="" /><label for="checkbox_4" class="right">Remember me</label></p>\n
-<p><input type="submit" name="cmdweblogin" class="button" value="LOGIN"  /></p>\n
-<p><a href="#" id="forgotpsswd_4">Password forgotten?</a></p>\n
-</fieldset>\n
-</form>\n
-</div>
-
-]]></string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -110,10 +103,26 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>subsection_box</string> </value>
+                    <value> <string>login_box</string> </value>
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>here/WebSection_viewLoginWidget</string> </value>
         </item>
       </dictionary>
     </pickle>

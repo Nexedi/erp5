@@ -294,29 +294,7 @@ div.subcontent-box fieldset.widget legend {\n
   display: none;        /* Do not display legends on the right side */\n
 }\n
 \n
-div.subcontent-box.sidemenu1 fieldset.widget div.field label,\n
-div.subcontent-box.sidemenu2 fieldset.widget div.field label,\n
-div.subcontent-box.sidemenu3 fieldset.widget div.field label,\n
-div.subcontent-box.headbox1 fieldset.widget div.field label,\n
-div.subcontent-box.headbox2 fieldset.widget div.field label,\n
-div.subcontent-box.imagebox fieldset.widget div.field label,\n
-div.subcontent-box.headbox1noicon fieldset.widget div.field label,\n
-div.subcontent-box.linkbox fieldset.widget div.field label,\n
-div.subcontent-box.tablebox fieldset.widget div.field label,\n
-div.subcontent-box.contactbox fieldset.widget div.field label,\n
-div.subcontent-box.loginbox fieldset.widget div.field label,\n
-div.subcontent-box.searchbox fieldset.widget div.field label,\n
-div.subcontent-box.videobox fieldset.widget div.field label,\n
-div.subcontent-box.audiobox fieldset.widget div.field label,\n
-div.subcontent-box.webtemplatebox fieldset.widget div.field label,\n
-div.subcontent-box.documentbox fieldset.widget div.field label,\n
-div.subcontent-box.blogbox fieldset.widget div.field label,\n
-div.subcontent-box.forumbox fieldset.widget div.field label,\n
-div.header-top fieldset.widget div.field label,\n
-div.header-bottom fieldset.widget div.field label,\n
-div.navbar-left fieldset.widget div.field label,\n
-div.headline fieldset.widget div.field label,\n
-div.footer fieldset.widget div.field label {\n
+fieldset.widget > div.field > label {\n
   display: none;        /* Do not display labels on the right side */\n
 }\n
 \n
