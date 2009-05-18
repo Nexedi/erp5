@@ -51,12 +51,6 @@ except ImportError:
     A dummy exception class which is used when MimetypesRegistry product is
     not installed yet.
     """
-try:
-  import libxml2
-  import libxslt
-  import_libxml2 = 1
-except ImportError:
-  import_libxml2 = 0
 
 from email import message_from_string
 from email.Header import decode_header, HeaderParseError
