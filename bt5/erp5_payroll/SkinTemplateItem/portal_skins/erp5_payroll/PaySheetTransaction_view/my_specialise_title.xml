@@ -13,12 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>catalog_index</string>
                 <string>title</string>
-                <string>relation_setter_id</string>
                 <string>description</string>
-                <string>portal_type</string>
                 <string>base_category</string>
+                <string>portal_type</string>
+                <string>catalog_index</string>
+                <string>relation_setter_id</string>
+                <string>proxy_listbox_ids</string>
               </list>
             </value>
         </item>
@@ -106,6 +107,17 @@
                         <tuple>
                           <string>Pay Sheet Model</string>
                           <string>Pay Sheet Model</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>PaySheetModelModule_viewPaySheetModelList/listbox</string>
+                          <string>Pay Sheet Models</string>
                         </tuple>
                       </list>
                     </value>

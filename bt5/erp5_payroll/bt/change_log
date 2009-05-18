@@ -1,3 +1,6 @@
+2009-05-18 yusei
+* Fix some proxy fields. count_method should not be inherited from template field and proxy_listbox_ids had to be copied to new proxified fields but it was not copied.
+
 2009-05-11 yusei
 * Bump up the version.
 * Simplify field libraries and proxy fields. Old field libraries are kept for backward compatibility.
