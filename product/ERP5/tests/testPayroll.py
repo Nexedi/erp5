@@ -433,7 +433,6 @@ class TestPayrollMixin(ERP5ReportTestCase):
     self.tic()
 
     # put values in Model Line cells
-    model_line.updateCellRange(base_id='movement')
     for slice in slice_list:
       for share in share_list:
         cell = model_line.newCell(\
@@ -1199,7 +1198,6 @@ class TestPayroll(TestPayrollMixin):
     line.setResourceValue(self.urssaf)
     line.setVariationCategoryList(['tax_category/employee_share',
                                    'tax_category/employer_share'])
-    line.updateCellRange(base_id='movement')
     cell0 = line.newCell('tax_category/employee_share',
                          portal_type='Pay Sheet Cell', base_id='movement')
     cell0.setMappedValuePropertyList(['quantity', 'price'])
@@ -1234,7 +1232,6 @@ class TestPayroll(TestPayrollMixin):
     # Note that it is required that the editable line contains at least one
     # cell, to know which tax_category is used (employee share or employer
     # share).
-    line.updateCellRange(base_id='movement')
     cell = line.newCell('tax_category/employee_share',
                         portal_type='Pay Sheet Cell',
                         base_id='movement')
@@ -1315,7 +1312,6 @@ class TestPayroll(TestPayrollMixin):
                                   'base_amount/gross_salary'],
           float_index=1,
           int_index=1)
-    line1.updateCellRange(base_id='movement')
     cell = line1.newCell('tax_category/employee_share',
                         portal_type='Pay Sheet Cell',
                         base_id='movement')
@@ -1336,7 +1332,6 @@ class TestPayroll(TestPayrollMixin):
           editable=1,
           float_index=2,
           int_index=2)
-    line2.updateCellRange(base_id='movement')
     cell = line2.newCell('tax_category/employee_share',
                         portal_type='Pay Sheet Cell',
                         base_id='movement')
@@ -1440,7 +1435,6 @@ class TestPayroll(TestPayrollMixin):
           resource_value=self.labour,
           variation_category_list=['tax_category/employee_share'],
           base_contribution_list=['base_amount/base_salary', 'base_amount/gross_salary'])
-    line.updateCellRange(base_id='movement')
     cell = line.newCell('tax_category/employee_share',
                         portal_type='Pay Sheet Cell',
                         base_id='movement')
@@ -1470,7 +1464,6 @@ class TestPayroll(TestPayrollMixin):
           resource_value=self.labour,
           variation_category_list=['tax_category/employee_share'],
           base_contribution_list=['base_amount/base_salary', 'base_amount/gross_salary'])
-    line.updateCellRange(base_id='movement')
     cell = line.newCell('tax_category/employee_share',
                         portal_type='Pay Sheet Cell',
                         base_id='movement')
@@ -1644,7 +1637,6 @@ class TestPayroll(TestPayrollMixin):
                     variation_category_list=['tax_category/employee_share'],
                     source_annotation_line_reference='tax1',
                     base_contribution_list = ['base_amount/deductible_tax',],)
-    model_line.updateCellRange(base_id='movement')
     cell = model_line.newCell('tax_category/employee_share',
                               portal_type='Pay Sheet Cell',
                               base_id='movement')
@@ -1717,7 +1709,6 @@ class TestPayroll(TestPayrollMixin):
                    destination_value=employee1,
                    variation_category_list=('tax_category/employee_share',
                                             'tax_category/employer_share'))
-    line.updateCellRange(base_id='movement')
     cell_employee = line.newCell('tax_category/employee_share',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
@@ -1744,7 +1735,6 @@ class TestPayroll(TestPayrollMixin):
                    destination_value=employee2,
                    variation_category_list=('tax_category/employee_share',
                                             'tax_category/employer_share'))
-    line.updateCellRange(base_id='movement')
     cell_employee = line.newCell('tax_category/employee_share',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
@@ -1764,7 +1754,6 @@ class TestPayroll(TestPayrollMixin):
                    source_section_value=other_provider,
                    variation_category_list=('tax_category/employee_share',
                                             'tax_category/employer_share'))
-    other_line.updateCellRange(base_id='movement')
     cell_employee = other_line.newCell('tax_category/employee_share',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
@@ -1883,7 +1872,6 @@ class TestPayroll(TestPayrollMixin):
                                             'tax_category/employer_share',
                                             'salary_range/france/tranche_a',
                                             'salary_range/france/tranche_b'))
-    line.updateCellRange(base_id='movement')
     cell_employee_a = line.newCell('tax_category/employee_share',
                                    'salary_range/france/tranche_a',
                                    portal_type='Pay Sheet Cell',
@@ -1938,7 +1926,6 @@ class TestPayroll(TestPayrollMixin):
                                             'tax_category/employer_share',
                                             'salary_range/france/tranche_a',
                                             'salary_range/france/tranche_b'))
-    line.updateCellRange(base_id='movement')
     cell_employee_a = line.newCell('tax_category/employee_share',
                                    'salary_range/france/tranche_a',
                                    portal_type='Pay Sheet Cell',
@@ -2104,7 +2091,6 @@ class TestPayroll(TestPayrollMixin):
                    base_contribution_list=['base_amount/net_salary',],
                    variation_category_list=('tax_category/employee_share',
                                             'tax_category/employer_share'))
-    line.updateCellRange(base_id='movement')
     cell_employee = line.newCell('tax_category/employee_share',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
@@ -2118,7 +2104,6 @@ class TestPayroll(TestPayrollMixin):
                    base_contribution_list=['base_amount/net_salary',],
                    variation_category_list=('tax_category/employee_share',
                                             'tax_category/employer_share'))
-    line.updateCellRange(base_id='movement')
     cell_employee = line.newCell('tax_category/employee_share',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
@@ -2146,7 +2131,6 @@ class TestPayroll(TestPayrollMixin):
                    base_contribution_list=['base_amount/net_salary',],
                    variation_category_list=('tax_category/employee_share',
                                             'tax_category/employer_share'))
-    line.updateCellRange(base_id='movement')
     cell_employee = line.newCell('tax_category/employee_share',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
@@ -2160,7 +2144,6 @@ class TestPayroll(TestPayrollMixin):
                    base_contribution_list=['base_amount/net_salary',],
                    variation_category_list=('tax_category/employee_share',
                                             'tax_category/employer_share'))
-    line.updateCellRange(base_id='movement')
     cell_employee = line.newCell('tax_category/employee_share',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
@@ -2371,7 +2354,6 @@ class TestPayroll(TestPayrollMixin):
                    destination_value=employee,
                    variation_category_list=('tax_category/employee_share',
                                             'tax_category/employer_share'))
-    line.updateCellRange(base_id='movement')
     cell_employee = line.newCell('tax_category/employee_share',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
@@ -2392,7 +2374,6 @@ class TestPayroll(TestPayrollMixin):
                    destination_value=employee,
                    variation_category_list=('tax_category/employee_share',
                                             'tax_category/employer_share'))
-    line.updateCellRange(base_id='movement')
     cell_employee = line.newCell('tax_category/employee_share',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
@@ -2413,7 +2394,6 @@ class TestPayroll(TestPayrollMixin):
                    destination_value=employee,
                    variation_category_list=('tax_category/employee_share',
                                             'tax_category/employer_share'))
-    line.updateCellRange(base_id='movement')
     cell_employee = line.newCell('tax_category/employee_share',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
@@ -2436,7 +2416,6 @@ class TestPayroll(TestPayrollMixin):
                    destination_value=employee,
                    variation_category_list=('tax_category/employee_share',
                                             'tax_category/employer_share'))
-    line.updateCellRange(base_id='movement')
     cell_employee = line.newCell('tax_category/employee_share',
                                 portal_type='Pay Sheet Cell',
                                 base_id='movement',
