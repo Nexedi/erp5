@@ -1562,7 +1562,7 @@ class TestBPMTestCases(TestBPMMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_getAggreagtedAmountList_afterUpdateAggregatedAmountList(self):
+  def test_getAggregatedAmountList_afterUpdateAggregatedAmountList(self):
     """
       Test for case, when discount contributes to tax, and order has mix of contributing lines
 
