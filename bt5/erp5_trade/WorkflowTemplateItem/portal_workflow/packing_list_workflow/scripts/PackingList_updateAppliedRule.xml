@@ -57,14 +57,14 @@
 \n
 activate_kw = {}\n
 related_order = packing_list.getCausalityValue()\n
-after_path_list = []\n
+after_tag_list = []\n
 if related_order is not None:\n
-  after_path_list.append(related_order.getPath() + \'_firstUpdateAppliedRule\')\n
-  after_path_list.append(related_order.getPath() + \'_expand\')\n
+  after_tag_list.append(related_order.getPath() + \'_firstUpdateAppliedRule\')\n
+  after_tag_list.append(related_order.getPath() + \'_expand\')\n
 tag = packing_list.getPath()+\'_expand\'\n
 activate_kw = {\'tag\':tag,\'priority\':3}\n
 \n
-packing_list.activate(after_path=after_path_list,\n
+packing_list.activate(after_tag=after_tag_list,\n
                       tag=tag,\n
                       priority=3).updateAppliedRule(rule_reference=\'default_delivery_rule\',\n
                                                     activate_kw=activate_kw)\n
@@ -73,7 +73,7 @@ packing_list.activate(after_path=after_path_list,\n
 # Make sure to reindex related simulation movement if we are already\n
 # simulated, call reindexObject, not immediateReindexObject so that\n
 # catalogObjectList will be called with many objects\n
-packing_list.activate(after_path=after_path_list,\n
+packing_list.activate(after_tag=after_tag_list,\n
                       tag=tag,\n
                       priority=3).applyToDeliveryRelatedMovement(method_id=\'reindexObject\')\n
 \n
@@ -124,7 +124,7 @@ packing_list.activate(\n
                             <string>activate_kw</string>
                             <string>_getattr_</string>
                             <string>related_order</string>
-                            <string>after_path_list</string>
+                            <string>after_tag_list</string>
                             <string>None</string>
                             <string>tag</string>
                           </tuple>
