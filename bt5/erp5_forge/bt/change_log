@@ -1,3 +1,6 @@
+2009-05-18 yusei
+* Fix some proxy fields. count_method should not be inherited from template field.
+
 2009-05-15 yusei
 * Remove my_text_content from generic field dict in SkinsTool_makeFieldLibraryAndProxifyAllField. It was not generic enough for many editor fields.
 * Add my_editor_field to Base_viewForgeFieldLibrary.

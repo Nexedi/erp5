@@ -14,11 +14,12 @@
             <value>
               <list>
                 <string>title</string>
-                <string>select</string>
-                <string>selection_name</string>
                 <string>columns</string>
                 <string>list_method</string>
+                <string>count_method</string>
+                <string>selection_name</string>
                 <string>search</string>
+                <string>select</string>
               </list>
             </value>
         </item>
@@ -91,6 +92,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_list_mode_listbox</string> </value>
                 </item>
@@ -141,7 +146,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <unicode>objectValues</unicode> </value>
+            <value> <string>objectValues</string> </value>
         </item>
       </dictionary>
     </pickle>
