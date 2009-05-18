@@ -55,6 +55,11 @@ class TestCacheTool(ERP5TypeTestCase):
 
   def afterSetUp(self):
     self.login()
+    self.checkCacheTool()
+    self.checkPortalTypes()
+    self.createCacheFactories()
+    self.createCachedMethod()
+    transaction.commit()
 
   def login(self):
     uf = self.getPortal().acl_users
@@ -63,12 +68,11 @@ class TestCacheTool(ERP5TypeTestCase):
     user = uf.getUserById('admin').__of__(uf)
     newSecurityManager(None, user)
 
-  def test_01_CheckCacheTool(self):
+  def checkCacheTool(self):
     portal = self.getPortal()
     self.assertNotEqual(None, getattr(portal, 'portal_caches', None))
-    transaction.commit()
 
-  def test_02_CheckPortalTypes(self):
+  def checkPortalTypes(self):
     portal = self.getPortal()
     portal_types = portal.portal_types
     typeinfo_names = ("Cache Factory",
@@ -80,71 +84,71 @@ class TestCacheTool(ERP5TypeTestCase):
     for typeinfo_name in typeinfo_names:
       portal_type = getattr(portal_types, typeinfo_name, None)
       self.assertNotEqual(None, portal_type)
-    transaction.commit()
 
-  def test_03_CreateCacheFactories(self):
+  def createCacheFactories(self):
     portal = self.getPortal()
     portal_caches = portal.portal_caches
 
     # Cache plugins are organised into 'Cache factories' so we create
     # factories first ram_cache_factory (to test Ram Cache Plugin) 
-    ram_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
-                                                 id='ram_cache_factory',
-                                                 container=portal_caches)
-    ram_cache_plugin = ram_cache_factory.newContent(portal_type="Ram Cache",
-                                                    container=ram_cache_factory)
-    ram_cache_plugin.setIntIndex(0)
+    if getattr(portal_caches, 'ram_cache_factory', None) is None:
+      ram_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
+                                                   id='ram_cache_factory',
+                                                   container=portal_caches)
+      ram_cache_plugin = ram_cache_factory.newContent(portal_type="Ram Cache",
+                                                      container=ram_cache_factory)
+      ram_cache_plugin.setIntIndex(0)
 
+    if getattr(portal_caches, 'distributed_ram_cache_factory', None) is None:
+      ## distributed_ram_cache_factory (to test Distributed Ram Cache Plugin) 
+      dram_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
+                                                    id='distributed_ram_cache_factory',
+                                                    container=portal_caches)
+      dram_cache_plugin = dram_cache_factory.newContent(
+              portal_type="Distributed Ram Cache", container=dram_cache_factory)
+      dram_cache_plugin.setIntIndex(0)
 
-    ## distributed_ram_cache_factory (to test Distributed Ram Cache Plugin) 
-    dram_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
-                                                  id='distributed_ram_cache_factory',
-                                                  container=portal_caches)
-    dram_cache_plugin = dram_cache_factory.newContent(
-            portal_type="Distributed Ram Cache", container=dram_cache_factory)
-    dram_cache_plugin.setIntIndex(0)
+    if getattr(portal_caches, 'sql_cache_factory', None) is None:
+      ## sql_cache_factory (to test SQL Cache Plugin) 
+      sql_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
+                                                   id='sql_cache_factory',
+                                                   container=portal_caches)
+      sql_cache_plugin = sql_cache_factory.newContent(
+                      portal_type="SQL Cache", container=sql_cache_factory)
+      sql_cache_plugin.setIntIndex(0)
 
-    ## sql_cache_factory (to test SQL Cache Plugin) 
-    sql_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
-                                                 id='sql_cache_factory',
-                                                 container=portal_caches)
-    sql_cache_plugin = sql_cache_factory.newContent(
-                    portal_type="SQL Cache", container=sql_cache_factory)
-    sql_cache_plugin.setIntIndex(0)
+    if getattr(portal_caches, 'zodb_cache_factory', None) is None:
+      ## zodb_cache_factory (to test ZODB Cache Plugin) 
+      zodb_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
+                                                    id='zodb_cache_factory',
+                                                    container=portal_caches)
+      zodb_cache_plugin = zodb_cache_factory.newContent(
+                      portal_type="Zodb Cache", container=zodb_cache_factory)
+      zodb_cache_plugin.setIntIndex(0)
 
-    ## zodb_cache_factory (to test ZODB Cache Plugin) 
-    zodb_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
-                                                  id='zodb_cache_factory',
-                                                  container=portal_caches)
-    zodb_cache_plugin = zodb_cache_factory.newContent(
-                    portal_type="Zodb Cache", container=zodb_cache_factory)
-    zodb_cache_plugin.setIntIndex(0)
+    if getattr(portal_caches, 'erp5_user_factory', None) is None:
 
-    ## erp5_user_factory (to test a combination of all cache plugins)
-    erp5_user_factory = portal_caches.newContent(portal_type="Cache Factory",
-                                                 id="erp5_user_factory",
-                                                 container=portal_caches)
+      ## erp5_user_factory (to test a combination of all cache plugins)
+      erp5_user_factory = portal_caches.newContent(portal_type="Cache Factory",
+                                                   id="erp5_user_factory",
+                                                   container=portal_caches)
 
-    ram_cache_plugin = erp5_user_factory.newContent(
-            portal_type="Ram Cache", container=erp5_user_factory)
-    ram_cache_plugin.setIntIndex(0)
-    dram_cache_plugin = erp5_user_factory.newContent(
-            portal_type="Distributed Ram Cache", container=erp5_user_factory)
-    dram_cache_plugin.setIntIndex(1)
-    sql_cache_plugin = erp5_user_factory.newContent(
-            portal_type="SQL Cache", container=erp5_user_factory)
-    sql_cache_plugin.setIntIndex(2)
-    zodb_cache_plugin = erp5_user_factory.newContent(
-            portal_type="Zodb Cache", container=erp5_user_factory)
-    zodb_cache_plugin.setIntIndex(3)
-
-    ##
-    transaction.commit()
+      ram_cache_plugin = erp5_user_factory.newContent(
+              portal_type="Ram Cache", container=erp5_user_factory)
+      ram_cache_plugin.setIntIndex(0)
+      dram_cache_plugin = erp5_user_factory.newContent(
+              portal_type="Distributed Ram Cache", container=erp5_user_factory)
+      dram_cache_plugin.setIntIndex(1)
+      sql_cache_plugin = erp5_user_factory.newContent(
+              portal_type="SQL Cache", container=erp5_user_factory)
+      sql_cache_plugin.setIntIndex(2)
+      zodb_cache_plugin = erp5_user_factory.newContent(
+              portal_type="Zodb Cache", container=erp5_user_factory)
+      zodb_cache_plugin.setIntIndex(3)
 
     ## update Ram Cache structure
     portal_caches.updateCache()
-    ## commit PersistantMapping for zodb_cache
-    transaction.commit()
+
     from Products.ERP5Type.Cache import CachingMethod
 
     ## do we have the same structure we created above?
@@ -154,9 +158,10 @@ class TestCacheTool(ERP5TypeTestCase):
     self.assert_('zodb_cache_factory' in CachingMethod.factories)
     self.assert_('erp5_user_factory' in CachingMethod.factories)
 
-  def test_04_CreateCachedMethod(self):
+  def createCachedMethod(self):
     portal = self.getPortal()
-
+    if getattr(portal, 'testCachedMethod', None) is not None:
+      return
     ## add test cached method
     py_script_id = "testCachedMethod"
     py_script_params = "value=10000, portal_path=('','erp5')"
@@ -177,9 +182,8 @@ return result
                                                 id=py_script_id)
     py_script_obj = getattr(portal, py_script_id)
     py_script_obj.ZPythonScript_edit(py_script_params, py_script_body)
-    transaction.commit()
 
-  def test_05_CacheFactoryOnePlugin(self):
+  def test_01_CacheFactoryOnePlugin(self):
     """ Test cache factory containing only one cache plugin. """
     portal = self.getPortal()
     from Products.ERP5Type.Cache import CachingMethod
@@ -194,7 +198,7 @@ return result
                                cache_factory=cf_name)
       self._cacheFactoryInstanceTest(my_cache, cf_name)
 
-  def test_06_CacheFactoryMultiPlugins(self):
+  def test_02_CacheFactoryMultiPlugins(self):
     """ Test a cache factory containing multiple cache plugins. """
     portal = self.getPortal()
     from Products.ERP5Type.Cache import CachingMethod
@@ -252,7 +256,7 @@ return result
     ## Cache  cleared shouldn't be previously cached
     self.assert_(1.0 < calculation_time)
 
-  def test_CachePersistentObjects(self):
+  def test_03_cachePersistentObjects(self):
     # storing persistent objects in cache is not allowed, but this check is
     # only performed in unit tests.
     from Products.ERP5Type.Cache import CachingMethod
@@ -267,6 +271,21 @@ return result
       return self.portal.getTitle
     cached_func = CachingMethod(func, 'cache_bound_method')
     self.assertRaises(TypeError, cached_func)
+
+  def test_04_CachePluginInterface(self):
+    """Test Class against Interface
+    """
+    from Products.ERP5Type.CachePlugins.DistributedRamCache import DistributedRamCache
+    from Products.ERP5Type.CachePlugins.RamCache import RamCache
+    from Products.ERP5Type.CachePlugins.SQLCache import SQLCache
+    from Products.ERP5Type.CachePlugins.ZODBCache import ZODBCache
+    from Products.ERP5Type.Interface.ICachePlugin import ICachePlugin
+    from Interface.Verify import verifyClass
+    verifyClass(ICachePlugin, ZODBCache)
+    verifyClass(ICachePlugin, DistributedRamCache)
+    verifyClass(ICachePlugin, RamCache)
+    verifyClass(ICachePlugin, SQLCache)
+
 
 def test_suite():
   suite = unittest.TestSuite()
