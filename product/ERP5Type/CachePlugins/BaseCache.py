@@ -51,7 +51,7 @@ class CacheEntry(object):
       self.expires_at = None
     else:
       self.expires_at = time.time() + cache_duration
-    self.cache_hits = 0
+    self._cache_hit_count = 0
     self.calculation_time = calculation_time
 
   def isExpired(self):
@@ -60,12 +60,13 @@ class CacheEntry(object):
 
   def markCacheHit(self, delta=1):
     """ mark a read to this cache entry """
-    self.cache_hits = self.cache_hits + delta 
+    self._cache_hit_count = self._cache_hit_count + delta 
 
   def getValue(self):
     """ return cached value """ 
     return getattr(self, 'value', None)
 
+ACTIVATE_TRACKING = False
 
 class BaseCache(object):
   """ Base Cache class """
@@ -75,26 +76,28 @@ class BaseCache(object):
 
   def __init__(self, params={}):
     self._next_cache_expire_check_at = time.time()
-    self._cache_hits = 0
-    self._cache_misses = 0
+    self._cache_hit_count = 0
+    self._cache_miss_count = 0
 
   def markCacheHit(self, delta=1):
     """ Mark a read operation from cache """
-    self._cache_hits = self._cache_hits + delta
+    if ACTIVATE_TRACKING:
+      self._cache_hit_count = self._cache_hit_count + delta
 
   def markCacheMiss(self, delta=1):
     """ Mark a write operation to cache """
-    self._cache_misses = self._cache_misses + delta
+    if ACTIVATE_TRACKING:
+      self._cache_miss_count = self._cache_miss_count + delta
 
-  def getCacheHits(self):
+  def getCacheHitCount(self):
     """ get cache hits """
-    return self._cache_hits
+    return self._cache_hit_count
 
-  def getCacheMisses(self):
+  def getCacheMissCount(self):
     """ get cache missess """
-    return self._cache_misses
+    return self._cache_miss_count
 
   def clearCache(self):
     """ Clear cache """
-    self._cache_hits = 0
-    self._cache_misses = 0
+    self._cache_hit_list = 0
+    self._cache_miss_count = 0
