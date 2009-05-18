@@ -5,27 +5,27 @@
  </chain>
  <chain>
   <type>Pay Sheet Cell</type>
-  <workflow>edit_workflow, delivery_movement_simulation_interaction_workflow, delivery_movement_causality_interaction_workflow</workflow>
+  <workflow>edit_workflow, delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Pay Sheet Line</type>
-  <workflow>delivery_movement_simulation_interaction_workflow, edit_workflow, delivery_movement_causality_interaction_workflow</workflow>
+  <workflow>edit_workflow, delivery_movement_simulation_interaction_workflow, trade_matrix_workflow, delivery_movement_causality_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Pay Sheet Model</type>
-  <workflow>edit_workflow, paysheet_model_interaction_workflow, validation_workflow</workflow>
+  <workflow>paysheet_model_interaction_workflow, validation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Pay Sheet Model Line</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>trade_matrix_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Pay Sheet Transaction</type>
-  <workflow>edit_workflow, delivery_causality_interaction_workflow, delivery_simulation_interaction_workflow, accounting_workflow, delivery_causality_workflow</workflow>
+  <workflow>delivery_causality_interaction_workflow, delivery_simulation_interaction_workflow, delivery_causality_workflow, edit_workflow, accounting_workflow</workflow>
  </chain>
  <chain>
   <type>Pay Sheet Transaction Line</type>
-  <workflow>delivery_movement_causality_interaction_workflow, edit_workflow, delivery_movement_simulation_interaction_workflow</workflow>
+  <workflow>delivery_movement_simulation_interaction_workflow, delivery_movement_causality_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Payroll Service</type>

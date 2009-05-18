@@ -13,14 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable_attributes</string>
                 <string>title</string>
-                <string>tabs</string>
-                <string>lines</string>
                 <string>cell_base_id</string>
                 <string>cell_portal_type</string>
-                <string>update_cell_range</string>
+                <string>lines</string>
                 <string>columns</string>
+                <string>tabs</string>
+                <string>editable_attributes</string>
               </list>
             </value>
         </item>
@@ -174,10 +173,6 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Cells</string> </value>
-                </item>
-                <item>
-                    <key> <string>update_cell_range</string> </key>
-                    <value> <int>1</int> </value>
                 </item>
               </dictionary>
             </value>

@@ -5,7 +5,9 @@ Pay Sheet Cell | edit_workflow
 Pay Sheet Line | delivery_movement_causality_interaction_workflow
 Pay Sheet Line | delivery_movement_simulation_interaction_workflow
 Pay Sheet Line | edit_workflow
+Pay Sheet Line | trade_matrix_workflow
 Pay Sheet Model Line | edit_workflow
+Pay Sheet Model Line | trade_matrix_workflow
 Pay Sheet Model | edit_workflow
 Pay Sheet Model | paysheet_model_interaction_workflow
 Pay Sheet Model | validation_workflow
