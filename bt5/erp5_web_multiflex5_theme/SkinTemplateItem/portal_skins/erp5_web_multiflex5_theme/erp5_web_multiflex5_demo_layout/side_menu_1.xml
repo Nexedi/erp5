@@ -15,9 +15,6 @@
               <list>
                 <string>title</string>
                 <string>default</string>
-                <string>whitespace_preserve</string>
-                <string>height</string>
-                <string>width</string>
               </list>
             </value>
         </item>
@@ -100,15 +97,11 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_text_content</string> </value>
+                    <value> <string>my_editor_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>height</string> </key>
-                    <value> <int>5</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -117,14 +110,6 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>subsection_box</string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>40</int> </value>
                 </item>
               </dictionary>
             </value>
