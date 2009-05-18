@@ -361,6 +361,8 @@ class TestNewPayroll(TestNewPayrollMixin):
     self.assertEqual(labour_line.getTotalPrice(), 3000.0)
 
     # check updateAggregatedMovement method return
+    # XXX updateAggregatedMovement have to be tested in a generic way (not on
+    # payroll but context independant). Currently, there is no test for that
     movement_dict = model.updateAggregatedAmountList(context=paysheet)
     movement_to_delete = movement_dict['movement_to_delete']
     movement_to_add = movement_dict['movement_to_add']
