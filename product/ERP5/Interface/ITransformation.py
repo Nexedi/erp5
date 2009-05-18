@@ -62,7 +62,8 @@ class ITransformation(Interface):
 
     **kw - contains implementations specific parameters
 
-    The method returns movements, which shall be added.
+    The method return a dict of list of movements : 'movement_to_add_list' and
+    'movement_to_delete_list'.
     """
     pass
 

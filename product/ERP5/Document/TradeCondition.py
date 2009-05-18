@@ -70,23 +70,47 @@ class TradeCondition(Path, Transformation):
     def updateAggregatedAmountList(self, context, **kw):
       '''
         updates exisiting movement and returns new if any
+        return a dict of list of movement 'movement_to_add_list' and
+        'movement_to_delete_list'
       '''
       existing_movement_list = context.getMovementList()
       aggregated_amount_list = self.getAggregatedAmountList(context = context,
           **kw)
       modified_resource_list = []
-      for amount in aggregated_amount_list:
-        update_kw = {}
-        for p in self.edited_property_list:
-          update_kw[p] = amount.getProperty(p)
+      normal_use_list = self.getPortalObject().portal_preferences\
+              .getPreferredNormalResourceUseCategoryList()
+      # check if the existing movements are in aggregated movments
+      movement_to_delete_list = []
+      if len(aggregated_amount_list):
         for movement in existing_movement_list:
-          if movement.getProperty('resource') == update_kw['resource'] and\
-              movement.getVariationCategoryList() == \
-              amount.getVariationCategoryList():
-            movement.edit(**update_kw)
-            modified_resource_list.append(update_kw['resource'])
-      return [amount for amount in aggregated_amount_list if
-          amount.getResource() not in modified_resource_list]
+          keep_movement = False
+          for amount in aggregated_amount_list:
+            # here we have to check if the movement is a generated one or
+            # entered by the user. If it has been entered by user, we have to
+            # keep it.
+            # if movement is generated and if not exist, append to delete list
+            # else, break
+            resource = movement.getResourceValue()
+            if resource is not None and \
+                len(set(normal_use_list).intersection(set(resource\
+                .getUseList()))):
+              keep_movement = True
+              break
+            update_kw = {}
+            for p in self.edited_property_list:
+              update_kw[p] = amount.getProperty(p)
+            if movement.getProperty('resource') == update_kw['resource'] and\
+                movement.getVariationCategoryList() == \
+                amount.getVariationCategoryList():
+              movement.edit(**update_kw)
+              modified_resource_list.append(update_kw['resource'])
+              keep_movement = True
+          if not keep_movement:
+            movement_to_delete_list.append(movement)
+        movement_to_add_list = [amount for amount in aggregated_amount_list if
+            amount.getResource() not in modified_resource_list]
+      return {'movement_to_delete_list' : movement_to_delete_list,
+              'movement_to_add_list': movement_to_add_list}
 
     def getTradeModelLineComposedList(self, context=None):
       """Returns list of Trade Model Lines using composition
