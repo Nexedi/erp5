@@ -14,8 +14,9 @@
             <value>
               <list>
                 <string>title</string>
-                <string>relation_setter_id</string>
                 <string>portal_type</string>
+                <string>relation_setter_id</string>
+                <string>proxy_listbox_ids</string>
               </list>
             </value>
         </item>
@@ -91,6 +92,17 @@
                         <tuple>
                           <string>Sale Trade Condition</string>
                           <string>Sale Trade Condition</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>SaleTradeConditionModule_viewSaleTradeConditionList/listbox</string>
+                          <string>Sale Trade Conditions</string>
                         </tuple>
                       </list>
                     </value>
