@@ -185,9 +185,9 @@ class TestNewPayrollMixin(ERP5ReportTestCase):
             'product_line/base_salary',
             'product_line/payroll_tax_1',
             'product_line/payroll_tax_2',
-            'use/payroll',
             'use/payroll/tax',
             'use/payroll/base_salary',
+            'trade_phase/payroll/france/urssaf',
            )
 
   def createCurrencies(self):
@@ -364,8 +364,8 @@ class TestNewPayroll(TestNewPayrollMixin):
     # XXX updateAggregatedMovement have to be tested in a generic way (not on
     # payroll but context independant). Currently, there is no test for that
     movement_dict = model.updateAggregatedAmountList(context=paysheet)
-    movement_to_delete = movement_dict['movement_to_delete']
-    movement_to_add = movement_dict['movement_to_add']
+    movement_to_delete = movement_dict['movement_to_delete_list']
+    movement_to_add = movement_dict['movement_to_add_list']
     self.assertEquals(len(movement_to_delete), 0)
     self.assertEquals(len(movement_to_add), 2)
 
@@ -398,8 +398,144 @@ class TestNewPayroll(TestNewPayrollMixin):
     # check that after the line creation, updateAggregatedAmountList return
     # nothing
     movement_dict = model.updateAggregatedAmountList(context=paysheet)
-    movement_to_delete = movement_dict['movement_to_delete']
-    movement_to_add = movement_dict['movement_to_add']
+    movement_to_delete = movement_dict['movement_to_delete_list']
+    movement_to_add = movement_dict['movement_to_add_list']
+    self.assertEquals(len(movement_to_delete), 0)
+    self.assertEquals(len(movement_to_add), 0)
+
+  def test_02_setSourceOnMovementUsingBusinessProcess(self):
+    '''
+      check that the sources and destinations of all sort (section, bank) are
+      provided by the business process and define on every line of the paysheet
+      transaction
+    '''
+    model = self.createModel('Homer Model', 'Homer Simpson', 'worker',
+        'Nexedi', [], self.price_currency)
+
+    # create Business Process
+    business_process_module = self.portal.getDefaultModule(portal_type=\
+        'Business Process')
+    business_process = business_process_module.newContent(portal_type=\
+        'Business Process')
+    path = business_process.newContent(portal_type='Business Path')
+    path.setTradePhaseList(['trade_phase/payroll/france/urssaf'])
+
+    organisation_module = self.portal.getDefaultModule(portal_type=\
+        'Organisation')
+    urssaf_roubaix = organisation_module.newContent(portal_type='Organisation',
+        title='Urssaf de Roubaix Tourcoing')
+
+    path.setSourceDecisionValue(urssaf_roubaix)
+
+    # set the business process on the specialise list of the model
+    model.setSpecialiseValueList(business_process)
+
+    share_list = ['tax_category/employee_share',
+                  'tax_category/employer_share']
+
+    # add a model line
+    model_line1 = model.newContent(portal_type='Pay Sheet Model Line',
+                     title='Urssaf',
+                     int_index=2,
+                     trade_phase='trade_phase/payroll/france/urssaf',
+                     resource_value=self.urssaf,
+                     variation_category_list=share_list,
+                     source_value=self.payroll_service_organisation,
+                     base_application_list=[ 'base_amount/base_salary'],
+                     base_contribution_list=['base_amount/deductible_tax'])
+    # if the line has cells with different tax categories, new properties are
+    # added to this line.
+    model_line1.setResourceValue(self.urssaf)
+    model_line1.setVariationCategoryList(['tax_category/employee_share',
+                                          'tax_category/employer_share'])
+    transaction.commit()
+    self.tic()
+
+    # create movement
+    cell1 = model_line1.newCell('tax_category/employee_share',
+        portal_type='Pay Sheet Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'),)
+    cell1.edit(price=0.1, tax_category='employee_share')
+
+    cell2 = model_line1.newCell('tax_category/employer_share',
+        portal_type='Pay Sheet Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'),)
+    cell2.edit(price=0.5, tax_category='employer_share')
+    transaction.commit()
+    self.tic()
+
+    # create paysheet
+    paysheet_module = self.portal.getDefaultModule(\
+                            portal_type='Pay Sheet Transaction')
+    paysheet = paysheet_module.newContent(\
+        portal_type='Pay Sheet Transaction',
+        title='test 1',
+        specialise_value=model,
+        source_section_value=model.getSourceSectionValue(),
+        destination_section_value=model.getDestinationSectionValue())
+    paysheet.setPriceCurrency('currency_module/EUR')
+    transaction.commit()
+    self.tic()
+
+    # add an input line (the salary) in the paysheet
+    labour_line = paysheet.newContent(portal_type='Pay Sheet Line',
+            resource_value=self.labour,
+            source_section_value=model.getSourceSectionValue(),
+            destination_section_value=model.getDestinationSectionValue(),
+            int_index=1,
+            price=20,
+            quantity=150,
+            base_application_list=[],
+            base_contribution_list=['base_amount/base_salary',
+                                    'base_amount/gross_salary'])
+    self.assertEqual(labour_line.getTotalPrice(), 3000.0)
+
+    # check updateAggregatedMovement method return
+    # XXX updateAggregatedMovement have to be tested in a generic way (not on
+    # payroll but context independant). Currently, there is no test for that
+    movement_dict = model.updateAggregatedAmountList(context=paysheet)
+    movement_to_delete = movement_dict['movement_to_delete_list']
+    movement_to_add = movement_dict['movement_to_add_list']
+    self.assertEquals(len(movement_to_delete), 0)
+    self.assertEquals(len(movement_to_add), 2)
+
+    # calculate the pay sheet
+    paysheet.applyTransformation()
+    transaction.commit()
+    self.tic()
+
+    # check lines were created
+    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
+    self.assertEqual(len(paysheet_line_list), 2)
+    self.assertEqual(len(paysheet.getMovementList(portal_type=\
+        'Pay Sheet Cell')), 2)
+
+    # check the amount in the cells of the created paysheet lines
+    for paysheet_line in paysheet_line_list:
+      service = paysheet_line.getResourceId()
+      if service == self.urssaf_id:
+        cell1 = paysheet_line.getCell('tax_category/employee_share')
+        self.assertEquals(cell1.getQuantity(), 3000)
+        self.assertEquals(cell1.getPrice(), 0.1)
+        # check source_section
+        self.assertEquals(cell1.getSourceSectionValue(), urssaf_roubaix)
+        cell2 = paysheet_line.getCell('tax_category/employer_share')
+        self.assertEquals(cell2.getQuantity(), 3000)
+        self.assertEquals(cell2.getPrice(), 0.5)
+        # check source_section
+        self.assertEquals(cell2.getSourceSectionValue(), urssaf_roubaix)
+      elif service == self.labour_id:
+        self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
+      else:
+        self.fail("Unknown service for line %s" % paysheet_line)
+    
+    # check that after the line creation, updateAggregatedAmountList return
+    # nothing
+    movement_dict = model.updateAggregatedAmountList(context=paysheet)
+    movement_to_delete = movement_dict['movement_to_delete_list']
+    movement_to_add = movement_dict['movement_to_add_list']
     self.assertEquals(len(movement_to_delete), 0)
     self.assertEquals(len(movement_to_add), 0)
 
