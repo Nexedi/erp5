@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block replace="nothing">\n
+  <!--\n
+  This widget displays the breadcrumbs of the current context.\n
+\n
+  TODO:\n
+    - make sure translation is possible or working\n
+  -->\n
+</tal:block>\n
+\n
+<tal:block tal:define="site_url python:here.getWebSiteValue().absolute_url();\n
+                       news_area_section_id python:here.getLayoutProperty(\'news_area_section_id\', \'\');">\n
+<div class="navbutton">\n
+<ul>\n
+<tal:block tal:condition="news_area_section_id">\n
+<li><a href="#" title="RSS"\n
+       tal:attributes="href string:${site_url}/${news_area_section_id}/WebSection_viewContentListAsRSS">\n
+  <img src="./mf54_image/icon_rss.png" alt="RSS-Button"\n
+       tal:attributes="src string:${site_url}/mf54_image/icon_rss.png" /></a></li>\n
+</tal:block>\n
+<tal:block tal:condition="not:news_area_section_id">\n
+<li><a href="#" title="RSS"\n
+       tal:attributes="href string:${site_url}/WebSection_viewContentListAsRSS">\n
+  <img src="./mf54_image/icon_rss.png" alt="RSS-Button"\n
+       tal:attributes="src string:${site_url}/mf54_image/icon_rss.png" /></a></li>\n
+</tal:block>\n
+</ul>\n
+</div>\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_viewRSSWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
