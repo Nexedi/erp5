@@ -13,8 +13,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>default</string>
+                <string>editable</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -85,6 +86,10 @@
 <p class="demo">Here comes the content</p>
 
 ]]></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

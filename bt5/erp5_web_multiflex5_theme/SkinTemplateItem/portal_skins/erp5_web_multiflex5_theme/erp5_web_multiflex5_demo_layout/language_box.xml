@@ -13,9 +13,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>default</string>
+                <string>editable</string>
                 <string>enabled</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -103,6 +104,10 @@
 </div>
 
 ]]></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>

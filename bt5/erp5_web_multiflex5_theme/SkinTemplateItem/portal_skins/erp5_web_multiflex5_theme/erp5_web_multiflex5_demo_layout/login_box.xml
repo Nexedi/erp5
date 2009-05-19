@@ -14,6 +14,7 @@
             <value>
               <list>
                 <string>default</string>
+                <string>editable</string>
                 <string>title</string>
               </list>
             </value>
@@ -88,6 +89,10 @@
                 <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
