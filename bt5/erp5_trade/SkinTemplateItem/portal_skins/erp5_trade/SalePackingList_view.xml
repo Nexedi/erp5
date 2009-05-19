@@ -90,6 +90,7 @@
                         <string>listbox_quantity_unit</string>
                         <string>listbox_price</string>
                         <string>listbox_variation_category_item_list</string>
+                        <string>listbox_aggregate_title_list</string>
                       </list>
                     </value>
                 </item>

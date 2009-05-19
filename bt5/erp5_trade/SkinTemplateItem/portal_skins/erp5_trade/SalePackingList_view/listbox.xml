@@ -13,14 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>all_columns</string>
-                <string>editable_columns</string>
                 <string>title</string>
-                <string>report_root_list</string>
-                <string>selection_name</string>
                 <string>columns</string>
+                <string>all_columns</string>
                 <string>sort</string>
                 <string>list_method</string>
+                <string>selection_name</string>
+                <string>editable_columns</string>
+                <string>report_root_list</string>
               </list>
             </value>
         </item>
@@ -122,6 +122,10 @@
                           <string>Total Price</string>
                         </tuple>
                         <tuple>
+                          <string>aggregate_title_list</string>
+                          <string>Items</string>
+                        </tuple>
+                        <tuple>
                           <string>stop_date</string>
                           <string>Delivery Date</string>
                         </tuple>
@@ -169,6 +173,10 @@
                           <string>Total Price</string>
                         </tuple>
                         <tuple>
+                          <string>aggregate_title_list</string>
+                          <string>Items</string>
+                        </tuple>
+                        <tuple>
                           <string>stop_date</string>
                           <string>Delivery Date</string>
                         </tuple>
@@ -198,6 +206,10 @@
                         <tuple>
                           <string>price</string>
                           <string>Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>aggregate_title_list</string>
+                          <string>Items</string>
                         </tuple>
                         <tuple>
                           <string>stop_date</string>
