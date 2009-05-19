@@ -72,7 +72,9 @@ class BusinessProcess(Path, XMLObject):
       **kw -- same parameters as for searchValues / contentValues
     """
     # Naive implementation to redo XXX using contentValues
-    if type(trade_phase) is type(''): # XXX - bad, use isinstance
+    if trade_phase is None:
+      trade_phase=[]
+    if not isinstance(trade_phase, (list, tuple)):
       trade_phase = (trade_phase,)
     result = []
     for document in self.contentValues(portal_type="Business Path"):
