@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\n
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">\n
+\n
+<!--  Version: Multiflex-5.4 / Overview                     -->\n
+<!--  Type:    Design with sidebar                          -->\n
+<!--  Date:    March 13, 2008                               -->\n
+<!--  Design:  www.1234.info                                -->\n
+<!--  License: Fully open source without restrictions.      -->\n
+<!--           Please keep footer credits with the words    -->\n
+<!--           "Design by 1234.info". Thank you!            -->\n
+\n
+<head>\n
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />\n
+  <meta http-equiv="cache-control" content="no-cache" />\n
+  <meta http-equiv="expires" content="3600" />\n
+  <meta name="revisit-after" content="2 days" />\n
+  <meta name="robots" content="index,follow" />\n
+  <meta name="publisher" content="Your publisher infos here" />\n
+  <meta name="copyright" content="Your copyright infos here" />\n
+  <meta name="author" content="Designed by www.1234.info / Modified: Your Name" />\n
+  <meta name="distribution" content="global" />\n
+  <meta name="description" content="Your container description here" />\n
+  <meta name="keywords" content="Your keywords, keywords, keywords, here" />\n
+  <link rel="stylesheet" type="text/css" media="screen,projection,print" href="mf54_reset.css" />\n
+  <link rel="stylesheet" type="text/css" media="screen,projection,print" href="mf54_grid.css" />\n
+  <link rel="stylesheet" type="text/css" media="screen,projection,print" href="mf54_content.css" />\n
+  <link rel="icon" type="image/x-icon" href="./mf54_image/favicon.ico" />\n
+  <title>Multiflex-5.4 | Content Toolbox |</title>\n
+</head>\n
+\n
+<!-- Global IE fix to avoid layout crash when single word size wider than column width -->\n
+<!-- Following line MUST remain as a comment to have the proper effect -->\n
+<!--[if IE]><style type="text/css"> body {word-wrap: break-word;}</style><![endif]-->\n
+\n
+<body>\n
+  <!-- ERP5 WEB INTEGRATION -->\n
+  <tal:block metal:define-macro="master">\n
+    <tal:block tal:define="website here/getWebSiteValue;\n
+                           enctype string:multipart/form-data;\n
+                           portal_path python:website.absolute_url();\n
+                           section here/getWebSectionValue;\n
+                           section_url section/absolute_url;\n
+                           current_main_section here/WebSite_getMainSection;\n
+                           editable request/editable_mode | python: 0;\n
+                           list_mode list_mode | nothing;\n
+                           dialog_mode dialog_mode | nothing;\n
+                           has_no_layout python: layout_form is None;\n
+                           dummy python: request.set(\'dialog_mode\', dialog_mode);\n
+                           dummy python: request.set(\'list_mode\', list_mode);\n
+                           aggregate python: has_no_layout or layout_form.Form_getGroupList(\n
+                                             [\'header\', \'navbar\', \'headline\', \'subcontent\', \'footer\']);\n
+                           aggregate python: ((aggregate is not has_no_layout) and dict(aggregate)) or {};\n
+                           header_area python:aggregate.get(\'header\', []);\n
+                           navbar_area python:aggregate.get(\'navbar\', []);\n
+                           headline_area python:aggregate.get(\'headline\', []);\n
+                           subcontent_area python:aggregate.get(\'subcontent\', []);\n
+                           footer_area python:aggregate.get(\'footer\', []);\n
+                           global css_list_template python:[\n
+                                  \'%s/mf54_reset.css\' % portal_path,\n
+                                  \'%s/mf54_grid.css\' % section_url,\n
+                                  \'%s/mf54_content.css\' % portal_path,\n
+] + (section.getLayoutProperty(\'layout_additional_css\', None) and [section.getLayoutProperty(\'layout_additional_css\')] or []);\n
+                           global js_list python:[\n
+                                  \'%s/erp5_tabber.js\' % portal_path,\n
+]">\n
+      <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">\n
+        <tal:block metal:fill-slot="layout">\n
+          <tal:block metal:use-macro="here/aggregate_render/macros/populate_request"/>\n
+\n
+  <!-- CONTAINER FOR ENTIRE PAGE -->\n
+  <div class="container">\n
+\n
+    <!-- HEADER -->         \n
+    <div class="corner-page-top"></div>        \n
+    <div class="header">\n
+        <!-- Layout form rendering -->\n
+        <tal:block tal:condition="python: layout_form is not None">\n
+          <tal:block tal:repeat="aggregate python: [(\'header\', header_area)]">\n
+              <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
+          </tal:block>\n
+        </tal:block>\n
+    </div>\n
+    <div class="corner-page-bottom"></div>    \n
+    \n
+    <!-- NAVIGATION BAR -->\n
+    <div class="corner-page-top"></div>        \n
+    <div class="navbar">\n
+      <!-- Layout form rendering -->\n
+      <tal:block tal:condition="python: layout_form is not None">\n
+        <tal:block tal:repeat="aggregate python: [(\'navbar\', navbar_area)]">\n
+           <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
+        </tal:block>\n
+      </tal:block>                 \n
+    </div>    \n
+  \n
+    <!-- MAIN SECTION -->      \n
+    <div class="main">\n
+      <div class="headline">\n
+      <!-- Layout form rendering -->\n
+      <tal:block tal:condition="python: layout_form is not None">\n
+        <tal:block tal:repeat="aggregate python: [(\'headlibe\', headline_area)]">\n
+           <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
+        </tal:block>\n
+      </tal:block> \n
+      </div>\n
+\n
+      <!-- SUBCONTENT -->\n
+      <div class="subcontent" tal:condition="python:section.getLayoutProperty(\'layout_right_column\', False)">\n
+\n
+        <!-- Layout form rendering -->\n
+        <tal:block tal:condition="python: layout_form is not None"\n
+                   tal:define="widget_renderer here/multiflex5_box_renderer/macros/widget">\n
+          <tal:block tal:repeat="aggregate python: [(\'subcontent\', subcontent_area)]">\n
+              <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
+          </tal:block>\n
+        </tal:block>\n
+    \n
+      </div> \n
+\n
+      <!-- CONTENT -->\n
+      <div class="main_content">\n
+        <div class="corner-content-1col-top"></div>                        \n
+        <div class="content-1col-nobox">\n
+          <tal:block metal:define-slot="main"/>\n
+        </div>\n
+        <div class="corner-content-1col-bottom"></div>                       \n
+      </div>              \n
+    </div>   \n
+      \n
+    <!-- FOOTER -->      \n
+    <div class="footer">\n
+        <!-- Layout form rendering -->\n
+        <tal:block tal:condition="python: layout_form is not None">\n
+          <tal:block tal:repeat="aggregate python: [(\'footer\', footer_area)]">\n
+              <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
+          </tal:block>\n
+        </tal:block>\n
+    </div>\n
+    <div class="corner-page-bottom"></div>        \n
+  </div> \n
+  \n
+    <!-- ERP5 WEB INTEGRATION -->\n
+        </tal:block>\n
+      </tal:block>\n
+    </tal:block>\n
+  </tal:block>\n
+</body>\n
+</html>\n
+\n
+\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>template_erp5_multiflex5_commerce</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Default Layout</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

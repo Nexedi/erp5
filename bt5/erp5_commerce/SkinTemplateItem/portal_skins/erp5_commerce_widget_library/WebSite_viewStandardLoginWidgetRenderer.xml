@@ -3,21 +3,12 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.PageTemplates.ZopePageTemplate</string>
-          <string>ZopePageTemplate</string>
-        </tuple>
-        <none/>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
         <item>
             <key> <string>_bind_names</string> </key>
             <value>
@@ -48,8 +39,6 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<p class="headlinkred">LOGIN STATUS</p>\n
-\n
 <tal:block tal:define="isAnon here/portal_membership/isAnonymousUser">\n
   <tal:block tal:condition="isAnon">\n
    <p class="article">\n
@@ -84,7 +73,7 @@
                          website here/getWebSiteValue">\n
 \n
     <p class="article">\n
-    <b><span tal:replace="python: here.Base_translateString(\'Hello\')"/>, <span tal:replace="customer/getTitle"/></b>\n
+    <span><span tal:replace="python: here.Base_translateString(\'You are logged as\')"/>  <span tal:replace="customer/getTitle"/></span>\n
     </p>\n
     <a class="articlelink" \n
       tal:attributes="href python: \'%s/SaleOrderModule_viewAsWebSaleOrderList\' %website.sale_order_module.absolute_url()">\n

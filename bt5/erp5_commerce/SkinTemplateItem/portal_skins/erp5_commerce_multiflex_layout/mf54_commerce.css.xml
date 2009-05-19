@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
+<tal:block define="\n
+  site_url python:here.getWebSiteValue().absolute_url();\n
+  has_right_column python:bool(here.getLayoutProperty(\'layout_right_column\', False));\n
+  body_color python:here.getLayoutProperty(\'layout_body_color\', \'rgb(240,240,240)\');\n
+  primary_color python:here.getLayoutProperty(\'layout_primary_color\', \'rgb(200,200,200)\');\n
+  secondary_color python:here.getLayoutProperty(\'layout_secondary_color\', \'rgb(225,225,225)\');\n
+  header_color python:here.getLayoutProperty(\'layout_header_color\', \'rgb(218,218,218)\');\n
+  menu_color python:here.getLayoutProperty(\'layout_menu_color\', \'rgb(235,235,235)\');\n
+  container_width python:here.getLayoutProperty(\'layout_container_width\', 978);\n
+  border_width python:here.getLayoutProperty(\'layout_border_width\', 10);\n
+  main_width python:container_width - 2 * border_width;\n
+  right_column python:here.getLayoutProperty(\'layout_right_column\', False);\n
+  right_column_width python:here.getLayoutProperty(\'layout_right_column_width\', 270);\n
+  right_column_padding python:here.getLayoutProperty(\'layout_right_column_padding\', 12);\n
+  main_content_width python:main_width - (right_column_padding + right_column_width) * ((has_right_column or 0) and 1);\n
+  sitename_width python:here.getLayoutProperty(\'layout_sitename_width\', 300);\n
+  header_background_image python:here.getLayoutProperty(\'layout_header_background_image\', \n
+                                                        \'mf54_image/bg_header.jpg\');\n
+  header_background_image python:\'%s/%s\' % (site_url, header_background_image);\n
+  site_logo python:here.getLayoutProperty(\'layout_site_logo\', \n
+                                          \'mf54_image/bg_logo.gif\');\n
+  site_logo python:\'%s/%s\' % (site_url, site_logo);\n
+  content_bottom_background_image python:here.getLayoutProperty(\'layout_content_bottom_background_image\', \n
+            \'mf54_image/bg_corner_content_%s1col_bottom.gif\' % ((not has_right_column and \'nosidebar_\') or \'\'));\n
+  content_bottom_background_image python:\'%s/%s\' % (site_url, content_bottom_background_image);\n
+  content_top_background_image python:here.getLayoutProperty(\'layout_content_bottom_background_image\', \n
+            \'mf54_image/bg_corner_content_%s1col_top.gif\' % ((not has_right_column and \'nosidebar_\') or \'\'));\n
+  content_top_background_image python:\'%s/%s\' % (site_url, content_top_background_image);\n
+\n
+">\n
+\n
+div.subcontent-box.cartbox fieldset.widget div.field label {display: none;}\n
+div.subcontent-box.cartbox h1.group_title {background: url(./mf54_image/icon_celltitle_cart.jpg) no-repeat; background-position:229px 5px;}\n
+div.subcontent-box.loginbox fieldset.widget div.field div p {font-weight: bold;color: #646464;}\n
+div.subcontent-box.loginbox fieldset.widget div.field div {text-align:center;}\n
+div.subcontent-box.loginbox fieldset.widget div.field div a {font-weight: bold;color: #646464; margin-left: 8px;}\n
+div.subcontent-box.cartbox fieldset.widget div.field table {background-color:green;}\n
+div.subcontent-box.cartbox fieldset.widget div.field table tr td {background-color:#FFFFFF; border:none;}\n
+div.subcontent-box.cartbox fieldset.widget div.field table tr td.cart_top {border-bottom: dashed 1px #cccccc;}\n
+div.subcontent-box.cartbox fieldset.widget div.field table tr td.cart_middle {border-bottom: solid 1px #dddddd;}\n
+div.subcontent-box.cartbox fieldset.widget div.field table tr td.cart_bottom {}\n
+div.subcontent-box.cartbox fieldset.widget div.field table tr {background-color:blue;}\n
+div.subcontent-box.cartbox fieldset.widget div.field table tr td div.cart_right {float:right; text-align:right;}\n
+div.subcontent-box.cartbox fieldset.widget div.field table tr td div.cart_left {float:left; text-align:left;}\n
+div.subcontent-box.cartbox fieldset.widget div.field table tr td.cart_bottom div.cart_left {float:left; text-align:left; margin:3px;}\n
+div.subcontent-box.cartbox fieldset.widget div.field table tr td.cart_bottom div.cart_left a {font-weight: bold; font-size:105%;}\n
+div.subcontent-box.cartbox fieldset.widget div.field table tr td.cart_bottom div.cart_right {float:right; text-align:right; padding:2px;}\n
+div.subcontent-box.cartbox fieldset.widget div.field table tr td.cart_bottom div.cart_right a {font-weight: bold; font-size:121%;}\n
+div.selected-product {height : 120px; width:<tal:block tal:replace="main_content_width"/>px; padding-left:25px; margin-bottom:10px;}\n
+div.selected-product div {float:left; width:100px; height:100px; text-align:center; padding-right: 25px;}\n
+div.selected-product img {padding:0px; margin:0px; margin-left:10px; margin-right:10px;}\n
+.cart_item_name {width:180px;}\n
+.headline     {float:left; width:<tal:block tal:replace="main_content_width"/>px;}\n
+.resource_left {float:left; width:<tal:block tal:replace="python: (main_content_width / 3) * 2"/>px;}\n
+.resource_right {float:right; background-color:red; width:<tal:block tal:replace="python: main_content_width / 3"/>px; background-color:<tal:block tal:replace="body_color"/>;}\n
+.resource_center {clear:both; background-color:<tal:block tal:replace="body_color"/>; padding:10px;}\n
+div.resource_image {float:left;}\n
+div.resource_image img {border:none; margin-left:5px;}\n
+fieldset.resource_left div.hiddenLabel label {display:none;}\n
+fieldset.resource_left div.hiddenLabel div.input {float:left; width:<tal:block tal:replace="python: main_content_width / 3"/>px}\n
+fieldset.resource_left div.hiddenLabel div.input span.hiddenLabel {font: 20px bold Verdana,sans-serif; padding-top:10px;}\n
+div.resource_image label {display:none;}\n
+.resource_right div.hidden label {display:none;}\n
+.resource_right div.field label a {display:none;}\n
+.resource_right div.field label {height:20px; width:100px; float:left;}\n
+.resource_right div.field div.input {height:20px; width:100px; float:right;}\n
+.resource_right div.field {margin:5px}\n
+.resource_center div.hiddenLabel div.input input {}\n
+.resource_center div.field label a {display:none;}\n
+.resource_center div.hiddenLabel label {margin-left:15px;}\n
+.product_description_header {margin: 5px; margin-left:15px;}\n
+.product_description {display:none;}\n
+.product_description_close {margin: 5px; margin-left:15px;}\n
+.content a[title="Edit this form"] {display:none;}\n
+.content {padding-top:10px;}\n
+</tal:block>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>mf54_commerce.css</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

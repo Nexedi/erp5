@@ -53,15 +53,20 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Return list of shopping cart items.\n
-  XXX : get order_line as tree not just on first level\n
-"""\n
-shopping_cart_order_lines = context.SaleOrder_getShoppingCart().contentValues()\n
-if include_shipping:\n
-  return shopping_cart_order_lines\n
-else:\n
-  return filter(lambda x: x.getId()!=\'shipping_method\', shopping_cart_order_lines)\n
+            <value> <string>portal = context.getPortalObject()\n
+\n
+#get cached description\n
+\n
+#get live description\n
+web_page = portal.portal_catalog(portal_type=\'Web Page\',\n
+                                 default_follow_up_uid=context.getUid(),\n
+                                 default_publication_section_uid=context.restrictedTraverse(\'portal_categories/publication_section/pamphlet/web/short\').getUid(),\n
+                                 #src__=1,\n
+                                 )\n
+#return web_page\n
+if web_page is None or len(web_page) == 0:\n
+  return context.Base_translateString("No more information for this product.")\n
+return "\\n".join([x.getObject().getTitle() for x in web_page])\n
 </string> </value>
         </item>
         <item>
@@ -72,7 +77,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>include_shipping = False</string> </value>
+            <value> <string>type=\'short\', cached=True</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -92,17 +97,24 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>include_shipping</string>
+                            <string>type</string>
+                            <string>cached</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>shopping_cart_order_lines</string>
-                            <string>filter</string>
+                            <string>portal</string>
+                            <string>web_page</string>
+                            <string>None</string>
+                            <string>len</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
                           </tuple>
                         </value>
                     </item>
@@ -115,17 +127,14 @@ else:\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <int>0</int>
+                <string>short</string>
+                <int>1</int>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SaleOrder_getShoppingCartItemList</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Get shopping cart items</string> </value>
+            <value> <string>Product_getRelatedDescription</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

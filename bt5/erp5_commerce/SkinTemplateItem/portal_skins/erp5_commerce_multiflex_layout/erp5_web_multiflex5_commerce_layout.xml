@@ -42,7 +42,13 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>This layout can be used to display sections or pages.</string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -56,10 +62,14 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left resource_left</string>
-                <string>right resource_right</string>
-                <string>center resource_center</string>
-                <string>bottom resource_bottom</string>
+                <string>header header-top</string>
+                <string>header header-bottom</string>
+                <string>navbar navbar-left</string>
+                <string>headline</string>
+                <string>footer</string>
+                <string>subcontent subcontent-box loginbox (My Account)</string>
+                <string>subcontent subcontent-box cartbox (My Cart)</string>
+                <string>subcontent subcontent-box sidemenu1 (Subsections)</string>
               </list>
             </value>
         </item>
@@ -68,36 +78,71 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom resource_bottom</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center resource_center</string> </key>
+                    <key> <string>footer</string> </key>
                     <value>
                       <list>
-                        <string>my_description</string>
-                        <string>related_description</string>
+                        <string>footer_box</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>left resource_left</string> </key>
+                    <key> <string>header header-bottom</string> </key>
                     <value>
                       <list>
-                        <string>my_default_image_absolute_url</string>
-                        <string>my_title</string>
+                        <string>breadcrumb_box</string>
+                        <string>search_bar</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>right resource_right</string> </key>
+                    <key> <string>header header-top</string> </key>
                     <value>
                       <list>
-                        <string>my_price</string>
-                        <string>your_buy_quantity</string>
-                        <string>submit</string>
+                        <string>site_title_box</string>
+                        <string>rss_box</string>
+                        <string>language_box</string>
+                        <string>global_navigation_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>headline</string> </key>
+                    <value>
+                      <list>
+                        <string>page_title_box</string>
+                        <string>selected_product_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>navbar navbar-left</string> </key>
+                    <value>
+                      <list>
+                        <string>navigation_bar</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box cartbox (My Cart)</string> </key>
+                    <value>
+                      <list>
+                        <string>cart_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box loginbox (My Account)</string> </key>
+                    <value>
+                      <list>
+                        <string>login_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box sidemenu1 (Subsections)</string> </key>
+                    <value>
+                      <list>
+                        <string>subsection_list</string>
                       </list>
                     </value>
                 </item>
@@ -106,7 +151,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Resource_viewAsShop</string> </value>
+            <value> <string>erp5_web_multiflex5_commerce_layout</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -114,11 +159,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Product_view</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view_editable</string> </value>
+            <value> <string>template_erp5_multiflex5_commerce</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -130,7 +175,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Resource</string> </value>
+            <value> <string>Multiflex5 Layout</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
