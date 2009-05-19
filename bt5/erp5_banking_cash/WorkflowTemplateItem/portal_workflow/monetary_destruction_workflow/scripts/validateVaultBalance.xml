@@ -122,7 +122,8 @@ elif "principale" not in vault: \n
   if site  in (None, ""):\n
     msg = Message(domain="ui", message="You must select a foreign agency.")\n
     raise ValidationFailed, (msg,)\n
-  source_country  = transaction.Baobab_getCountryForSite(transaction.getSource())\n
+  source_country_site = transaction.Baobab_getVaultSite(vault)\n
+  source_country  = transaction.Baobab_getCountryForSite(source_country_site)\n
   site_country = transaction.Baobab_getCountryForSite(site)\n
   if \'encaisse_des_externes\' in vault and \\\n
          site_country == source_country:\n
@@ -210,6 +211,7 @@ elif resource <> 0 :\n
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>site</string>
+                            <string>source_country_site</string>
                             <string>source_country</string>
                             <string>site_country</string>
                             <string>amount</string>

@@ -181,7 +181,7 @@ def split_head(CD_file_line_list):\n
   head_start_date_string = CD_file_line_list[7][35:43]\n
   head_resource_string  = CD_file_line_list[11][32:56]\n
   head_emission_letter = CD_file_line_list[14][25:26]\n
-  \n
+\n
   # find letter in the emission_letter category\n
   default_emissionLetter_list = [x[1] for x in context.portal_categories.emission_letter.getCategoryChildTitleItemList()[1:]]\n
   head_emission_letter = string.lower(head_emission_letter)\n
