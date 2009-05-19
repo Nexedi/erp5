@@ -69,12 +69,6 @@ class SimpleQuery(Query):
     # Backward compatibility code (those changes should not be needed when
     # this Query is instanciated by a SearchKey, as operator should be correct
     # already).
-    if len(kw) == 2 and 'operator' in kw:
-      operator = kw.pop('operator')
-      if comparison_operator not in (None, operator):
-        LOG('SimpleQuery', WARNING, 'Both "operator" and "comparison_operator" are provided, ignoring "operator".')
-      else:
-        comparison_operator = operator
     comparison_operator = comparison_operator.lower()
     if comparison_operator == 'in':
       if isinstance(value, (list, tuple)):
