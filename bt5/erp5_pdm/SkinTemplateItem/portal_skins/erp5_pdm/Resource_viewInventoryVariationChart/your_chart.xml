@@ -14,6 +14,7 @@
             <value>
               <list>
                 <string>chart_stacked</string>
+                <string>listbox_id</string>
                 <string>series_source</string>
                 <string>title</string>
               </list>
@@ -87,6 +88,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>listbox_id</string> </key>
+                    <value> <string>your_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>series_source</string> </key>

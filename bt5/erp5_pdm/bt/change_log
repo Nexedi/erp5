@@ -1,3 +1,6 @@
+2009-05-19 yusei
+* Fix some proxy fields. count_method and listbox_id should not be inherited from template field.
+
 2009-05-01 yusei
 * Fix some mistakes on previous field library conversion.
 

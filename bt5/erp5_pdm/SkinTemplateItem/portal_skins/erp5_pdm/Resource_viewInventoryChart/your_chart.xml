@@ -14,9 +14,10 @@
             <value>
               <list>
                 <string>chart_type</string>
-                <string>title</string>
                 <string>colour_column_list</string>
                 <string>grid_graph</string>
+                <string>listbox_id</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -111,6 +112,10 @@
                 <item>
                     <key> <string>grid_graph</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>listbox_id</string> </key>
+                    <value> <string>your_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
