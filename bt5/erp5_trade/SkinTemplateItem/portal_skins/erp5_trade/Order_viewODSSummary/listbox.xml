@@ -13,16 +13,17 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>columns</string>
+                <string>count_method</string>
                 <string>domain_root_list</string>
+                <string>domain_tree</string>
                 <string>lines</string>
-                <string>title</string>
+                <string>list_method</string>
+                <string>search</string>
                 <string>select</string>
                 <string>selection_name</string>
-                <string>list_method</string>
-                <string>domain_tree</string>
-                <string>search</string>
+                <string>title</string>
                 <string>untranslatable_columns</string>
-                <string>columns</string>
               </list>
             </value>
         </item>
@@ -95,6 +96,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
                 <item>
                     <key> <string>domain_root_list</string> </key>
                     <value>

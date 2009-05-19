@@ -13,11 +13,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
+                <string>portal_types</string>
                 <string>report_root_list</string>
                 <string>selection_name</string>
+                <string>title</string>
                 <string>y_size_block</string>
-                <string>portal_types</string>
               </list>
             </value>
         </item>
@@ -130,7 +130,7 @@
                 </item>
                 <item>
                     <key> <string>y_size_block</string> </key>
-                    <value> <string>quantity</string> </value>
+                    <value> <string></string> </value>
                 </item>
               </dictionary>
             </value>

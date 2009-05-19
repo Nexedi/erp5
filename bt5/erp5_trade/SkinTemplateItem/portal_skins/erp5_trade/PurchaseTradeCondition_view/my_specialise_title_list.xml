@@ -13,11 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>base_category</string>
                 <string>catalog_index</string>
-                <string>title</string>
                 <string>columns</string>
                 <string>portal_type</string>
-                <string>base_category</string>
+                <string>proxy_listbox_ids</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -128,6 +129,17 @@
                         <tuple>
                           <string>Purchase Trade Condition</string>
                           <string>Purchase Trade Condition</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>PurchaseTradeConditionModule_viewPurchaseTradeConditionList/listbox</string>
+                          <string>Purchase Trade Conditions</string>
                         </tuple>
                       </list>
                     </value>
