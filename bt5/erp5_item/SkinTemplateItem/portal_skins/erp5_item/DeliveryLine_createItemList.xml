@@ -57,7 +57,7 @@
 item_list = []\n
 request = context.REQUEST\n
 total_quantity = 0.0\n
-type = request.get("field_my_type")\n
+type = request.get("field_your_type")\n
 if context.getPortalType()==\'Purchase Packing List Line\':\n
   cell_portal_type = \'Purchase Packing List Cell\'\n
 elif context.getPortalType()==\'Purchase Order Line\' :\n
@@ -70,30 +70,32 @@ context.setVariationCategoryList([])\n
 context.setAggregateValueList([])\n
 base_id = \'movement\'\n
 for line in kw.get(\'listbox\'):\n
-  if not (line[\'title\']):\n
-    continue\n
-  module = context.getDefaultModule(\'Item\')\n
-  item = module.newContent(portal_type=\'Item\',\n
+  if line.has_key(\'listbox_key\') and line[\'quantity\'] in (\'\',None):\n
+    request.set(\'portal_status_message\', \n
+                 Base_translateString(\'Please Define Quantity for Item Defined On Line %s\'%line[\'listbox_key\']))\n
+  if line.has_key(\'listbox_key\') and (line[\'title\'] or line[\'reference\'] not in (\'\', None)):\n
+    module = context.getDefaultModule(type)\n
+    item = module.newContent(portal_type=type,\n
       title=line[\'title\'],\n
       reference=line[\'reference\'],\n
       quantity=line[\'quantity\'])\n
-  item.validate()\n
-  item_list.append(item)  \n
+    item.validate()\n
+    item_list.append(item)  \n
 \n
  \n
-  if line.has_key("variation_category_list") and line[\'variation_category_list\'] not in(\'\',[]) and [line[\'variation_category_list\'][i] not in context.getVariationCategoryList() for i in range(0,(len(line[\'variation_category_list\'])-1))][0]:\n
-    context.setVariationCategoryList(context.getVariationCategoryList() + list((line[\'variation_category_list\'])))\n
-  if line.has_key("variation_category_list") and line[\'variation_category_list\'] not in(\'\',None):\n
-    cell_key = list((line[\'variation_category_list\']))\n
-    quantity = line[\'quantity\']\n
-    cell = context.newCell(base_id=base_id, \\\n
+    if line.has_key("variation_category_list") and line[\'variation_category_list\'] not in(\'\',[]) and [line[\'variation_category_list\'][i] not in context.getVariationCategoryList() for i in range(0,(len(line[\'variation_category_list\'])-1))][0]:\n
+      context.setVariationCategoryList(context.getVariationCategoryList() + list((line[\'variation_category_list\'])))\n
+    if line.has_key("variation_category_list") and line[\'variation_category_list\'] not in(\'\',None):\n
+      cell_key = list((line[\'variation_category_list\']))\n
+      quantity = line[\'quantity\']\n
+      cell = context.newCell(base_id=base_id, \\\n
                                 portal_type=cell_portal_type,*cell_key)\n
-    cell.edit(mapped_value_property_list=[\'price\',\'quantity\'],\n
+      cell.edit(mapped_value_property_list=[\'price\',\'quantity\'],\n
                 price=cell.getPrice(), quantity=quantity,\n
                 predicate_category_list=cell_key,\n
                 variation_category_list=cell_key)\n
-    cell.setAggregateValue(item)\n
-  total_quantity+=line[\'quantity\']\n
+      cell.setAggregateValue(item)\n
+    total_quantity+=line[\'quantity\']\n
 \n
 if movement_cell_list ==[]:\n
   context.setQuantity(context.getQuantity()+total_quantity)\n
@@ -158,6 +160,8 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>_getitem_</string>
+                            <string>None</string>
+                            <string>Base_translateString</string>
                             <string>module</string>
                             <string>item</string>
                             <string>append</string>
@@ -166,7 +170,6 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>len</string>
                             <string>i</string>
                             <string>list</string>
-                            <string>None</string>
                             <string>cell_key</string>
                             <string>quantity</string>
                             <string>_apply_</string>
