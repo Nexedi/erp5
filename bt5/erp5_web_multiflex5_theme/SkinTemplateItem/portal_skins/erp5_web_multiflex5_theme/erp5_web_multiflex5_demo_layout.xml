@@ -86,6 +86,7 @@
                 <string>subcontent subcontent-box documentbox (4-13b. Document)</string>
                 <string>subcontent subcontent-box blogbox (4-13c. Blog)</string>
                 <string>subcontent subcontent-box forumbox (4.13d Forum)</string>
+                <string>subcontent subcontent-box adminToolbox (Toolbox)</string>
               </list>
             </value>
         </item>
@@ -134,6 +135,14 @@
                     <value>
                       <list>
                         <string>navigation_bar</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box adminToolbox (Toolbox)</string> </key>
+                    <value>
+                      <list>
+                        <string>tool_box</string>
                       </list>
                     </value>
                 </item>

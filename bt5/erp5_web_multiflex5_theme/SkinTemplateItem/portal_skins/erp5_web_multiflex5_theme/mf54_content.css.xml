@@ -343,6 +343,143 @@
 /* We will have to handle the different types in another way */\n
 /* .subcontent h1.group_title {background: url(./mf54_image/icon_celltitle_menu.gif) no-repeat; background-position:225px 5px;} */\n
 \n
+div.adminToolbox input, textarea{ /* This should be common XXX */\n
+  border: 1px solid #999;\n
+}\n
+\n
+div.adminToolbox select {\n
+  border: 1px solid #999;\n
+  max-width: 12em;\n
+}\n
+\n
+div.adminToolbox input, textarea {\n
+  padding: 1px;\n
+}\n
+\n
+div.adminToolbox.field label {\n
+  display: none!important;\n
+}\n
+\n
+div.adminToolbox div.adminSection label {\n
+  display: block!important;\n
+  width: 6em!important;\n
+}\n
+\n
+div.adminToolbox div.hiddenLabel label {\n
+  display: none!important;\n
+}\n
+\n
+/* Sub section title */\n
+div.adminToolbox h3 {\n
+  margin-left: 0em;\n
+  /* font-size: inherit; */ /* Does not seem compatible with IE */\n
+  font-size: 8pt;\n
+}\n
+\n
+/* Title */\n
+div.adminToolbox > div > h3 {\n
+  background: #f77;\n
+  padding: .5em;\n
+  margin: 0;\n
+  color: #fff;\n
+  cursor: pointer;\n
+}\n
+\n
+div.adminToolbox > div > h3:hover {background: #f00}\n
+\n
+div.adminToolbox > div.input > div.adminSection {\n
+  border-bottom: 1px dotted #777;\n
+  padding: .5em .5em .5em 0.5em;\n
+}\n
+\n
+div.adminToolbox > div.input > div.adminSection:last-child {border-bottom: none}\n
+\n
+div.adminToolbox ul {list-style: none}\n
+\n
+div.adminToolbox li {margin: 0}\n
+\n
+div.adminToolbox li > a {text-decoration: none}\n
+\n
+div.adminToolbox button,\n
+div.adminToolbox li > a {\n
+  margin: .1em 0;\n
+  padding: .2em;\n
+}\n
+\n
+div.adminToolbox button[type="submit"] {\n
+  display: none;\n
+}\n
+\n
+\n
+\n
+/* Reset default styling of fields in admin tool box\n
+** TODO: find a CSS trick to let forms and fieldset embedded in\n
+**       ".adminToolbox" behave like default one instead of using\n
+**       the one defined by default "div.wrapper div.field" rules.\n
+*/\n
+div.adminToolbox fieldset {               /* Should be the same as "fieldset" rule */\n
+  background: none;\n
+  border: inherit;\n
+  margin: 0;\n
+  border: 0;\n
+}\n
+div.adminToolbox fieldset > div.field {   /* Should be similar to "fieldset > div" rule */\n
+  padding: 0;\n
+  margin: .1em 0;\n
+  border: none;\n
+  width: 100%;\n
+}\n
+\n
+/* Those values differ from default "fieldset label" rule to reduce admin toolbox minimum width */\n
+div.adminToolbox div.field div.input {margin-left: 0em}\n
+\n
+/* Cut the cascading heritance if margin-left for input */\n
+div.adminToolbox > div.input {margin-left: inherit}\n
+div.adminToolbox fieldset div.field label:after {content: inherit}\n
+\n
+\n
+/* Admin toolbox edit buttons have the same style as actions buttons */\n
+div.adminToolbox li > a,\n
+button {\n
+  border: 1px #ddd solid;\n
+  color: #999;\n
+  background: #eee;\n
+  cursor: pointer;\n
+  display: block;\n
+}\n
+\n
+div.adminToolbox li > a:hover,\n
+button:hover {\n
+  color: #333;\n
+  background: #b0cfcb;\n
+  border-color: #9abdb7;\n
+}\n
+\n
+div.adminToolbox a img,\n
+div.adminToolbox a:hover img,\n
+div.adminToolbox button img {\n
+  border:0 none;\n
+  float:none;\n
+  margin:0;\n
+}\n
+\n
+div.adminToolbox h3 {\n
+  margin:0.5em 0 0.2em;\n
+}\n
+\n
+div.adminToolbox ul {\n
+  margin:0;\n
+}\n
+\n
+div.adminToolbox ul li {\n
+  font-size:100% !important;\n
+}\n
+\n
+div.adminToolbox div.adminSection > span,\n
+div.adminToolbox div.adminSection > fieldset > div.field {\n
+  padding:0 20px;\n
+}\n
+\n
 </tal:block>
 
 ]]></string> </value>

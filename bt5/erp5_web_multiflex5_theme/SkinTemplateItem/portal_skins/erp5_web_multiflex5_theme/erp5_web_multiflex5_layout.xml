@@ -68,6 +68,7 @@
                 <string>headline</string>
                 <string>footer</string>
                 <string>subcontent subcontent-box sidemenu1 (Subsections)</string>
+                <string>subcontent subcontent-box adminToolbox (Toolbox)</string>
               </list>
             </value>
         </item>
@@ -116,6 +117,14 @@
                     <value>
                       <list>
                         <string>navigation_bar</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box adminToolbox (Toolbox)</string> </key>
+                    <value>
+                      <list>
+                        <string>tool_box</string>
                       </list>
                     </value>
                 </item>
