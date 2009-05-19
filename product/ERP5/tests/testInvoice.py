@@ -3262,11 +3262,11 @@ class TestInvoiceRule(TestDeliveryRule):
   rule_portal_type = 'Invoice Rule'
   delivery_line_portal_type = 'Invoice Line'
 
-  def test_delivery_rule_simulation_ready(self):
+  def test_rule_simulation_ready(self):
     # not available on invoice
     return
 
-  def test_delivery_rule_simulation_confirm(self):
+  def test_rule_simulation_confirm(self):
     self.createDocuments()
     self.delivery.plan()
     self.assertEqual('planned', self.delivery.getSimulationState())
@@ -3275,11 +3275,10 @@ class TestInvoiceRule(TestDeliveryRule):
     self.checkDeliverySimulation()
 
     self.modifyDelivery()
-    
+
     transaction.commit() ; self.tic()
 
     self.checkDeliverySimulation()
-
 
 class TestInvoiceRuleSaleInvoiceTransaction(TestInvoiceRule):
   delivery_portal_type = 'Sale Invoice Transaction'

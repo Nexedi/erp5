@@ -1503,7 +1503,7 @@ class TestDeliveryRule(TestPackingListMixin, ERP5TypeTestCase):
     if change_expected:
       self.expected_quantity = new_quantity
 
-  def test_delivery_rule_simulation_confirm(self):
+  def test_rule_simulation_confirm(self):
     self.createDocuments()
     self.delivery.confirm()
     self.assertEqual('confirmed', self.delivery.getSimulationState())
@@ -1517,7 +1517,7 @@ class TestDeliveryRule(TestPackingListMixin, ERP5TypeTestCase):
 
     self.checkDeliverySimulation()
 
-  def test_delivery_rule_simulation_ready(self):
+  def test_rule_simulation_ready(self):
     self.createDocuments()
     self.delivery.confirm()
     self.delivery.setReady()
@@ -1533,7 +1533,7 @@ class TestDeliveryRule(TestPackingListMixin, ERP5TypeTestCase):
 
     self.checkDeliverySimulation()
 
-  def test_delivery_rule_simulation_start(self):
+  def test_rule_simulation_start(self):
     self.createDocuments()
     self.delivery.confirm()
     self.delivery.setReady()
@@ -1550,7 +1550,7 @@ class TestDeliveryRule(TestPackingListMixin, ERP5TypeTestCase):
 
     self.checkDeliverySimulation()
 
-  def test_delivery_rule_simulation_stop(self):
+  def test_rule_simulation_stop(self):
     self.createDocuments()
     self.delivery.confirm()
     self.delivery.setReady()
@@ -1569,7 +1569,7 @@ class TestDeliveryRule(TestPackingListMixin, ERP5TypeTestCase):
 
     self.checkDeliverySimulation()
 
-  def test_delivery_rule_simulation_deliver(self):
+  def test_rule_simulation_deliver(self):
     self.createDocuments()
     self.delivery.confirm()
     self.delivery.setReady()
@@ -1589,7 +1589,7 @@ class TestDeliveryRule(TestPackingListMixin, ERP5TypeTestCase):
 
     self.checkDeliverySimulation()
 
-  def test_delivery_rule_simulation_cancel(self):
+  def test_rule_simulation_cancel(self):
     self.createDocuments()
     self.delivery.confirm()
     self.assertEqual('confirmed', self.delivery.getSimulationState())
