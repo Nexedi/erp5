@@ -1,31 +1,7 @@
 <workflow_chain>
  <chain>
-  <type>Internal Packing List Line</type>
-  <workflow>aggregate_interaction_workflow</workflow>
- </chain>
- <chain>
   <type>Item</type>
   <workflow>edit_workflow, item_workflow</workflow>
- </chain>
- <chain>
-  <type>Purchase Order Line</type>
-  <workflow>aggregate_interaction_workflow</workflow>
- </chain>
- <chain>
-  <type>Purchase Packing List Line</type>
-  <workflow>aggregate_interaction_workflow</workflow>
- </chain>
- <chain>
-  <type>Returned Sale Packing List Line</type>
-  <workflow>aggregate_interaction_workflow</workflow>
- </chain>
- <chain>
-  <type>Sale Order Line</type>
-  <workflow>aggregate_interaction_workflow</workflow>
- </chain>
- <chain>
-  <type>Sale Packing List Line</type>
-  <workflow>aggregate_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Service Report</type>

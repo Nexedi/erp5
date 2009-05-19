@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Item_createRelatedAffectationValidate</string> </value>
+            <value> <string>SalePackingList_setItemForSelectFastInputList</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -56,7 +56,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>application/x-www-form-urlencoded</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -77,7 +77,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -90,8 +92,11 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>my_reference</string>
-                        <string>my_resource</string>
+                        <string>listbox_quantity</string>
+                        <string>listbox_reference</string>
+                        <string>listbox_title</string>
+                        <string>listbox_selection_check</string>
+                        <string>listbox_variation_category_list</string>
                       </list>
                     </value>
                 </item>
@@ -99,20 +104,17 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_title</string>
-                        <string>your_start_date</string>
-                        <string>your_stop_date</string>
+                        <string>my_resource_title</string>
+                        <string>my_total_quantity</string>
+                        <string>my_quantity_unit</string>
+                        <string>my_type</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_quantity</string>
-                        <string>my_quantity_unit</string>
-                        <string>your_portal_type</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -120,7 +122,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Item_createRelatedAffectationFormDialog</string> </value>
+            <value> <string>SalePackingList_viewSelectItemFastInputDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -128,11 +130,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Item_createAffectationFormDialog</string> </value>
+            <value> <string>SalePackingList_viewSelectItemFastInputDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view_dialog</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -144,7 +146,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Create Related Affectation</string> </value>
+            <value> <string>Select Items</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -152,7 +154,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>Item_createRelatedAffectationFormDialog</string> </value>
+            <value> <string>SalePackingList_updateSelectItemFastInputDialog</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -38,11 +38,17 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Item_createDeliveryLine</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -56,7 +62,11 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>Default</string>
+                <string>left</string>
+                <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -65,26 +75,41 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Default</string> </key>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>my_reference</string>
+                        <string>my_resource</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
+                    <value>
+                      <list>
+                        <string>your_title</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
                     <value>
                       <list>
                         <string>my_quantity</string>
-                        <string>my_variation_category_list</string>
-                        <string>my_description</string>
-                        <string>my_title</string>
-                        <string>my_comment</string>
-                        <string>my_resource_title</string>
                         <string>my_quantity_unit</string>
-                        <string>my_current_owner</string>
-                        <string>my_reference</string>
-                        <string>your_destination</string>
-                        <string>your_destination_section</string>
-                        <string>your_site_suggestion</string>
-                        <string>your_start_date</string>
-                        <string>your_stop_date</string>
-                        <string>your_title</string>
-                        <string>my_current_site</string>
-                        <string>your_resource</string>
+                        <string>your_portal_type</string>
                       </list>
                     </value>
                 </item>
@@ -93,7 +118,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Item_viewFieldLibrary</string> </value>
+            <value> <string>Item_viewDeliveryLineCreationDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -101,11 +126,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Item_viewFieldLibrary</string> </value>
+            <value> <string>Item_viewDeliveryLineCreationDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -117,7 +142,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Item Field Library</string> </value>
+            <value> <string>Create Related Affectation</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -125,7 +150,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Item_viewDeliveryLineCreationDialog</string> </value>
         </item>
       </dictionary>
     </pickle>

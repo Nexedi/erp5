@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>ItemModule_createRelatedAffectationValidate</string> </value>
+            <value> <string>ItemModule_createDeliveryLine</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -116,7 +116,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ItemModule_createRelatedAffectationFormDialog</string> </value>
+            <value> <string>ItemModule_viewDeliveryLineCreationDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -124,11 +124,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>ItemModule_createAffectationFormDialog</string> </value>
+            <value> <string>ItemModule_viewDeliveryLineCreationDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view_dialog</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -148,7 +148,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>ItemModule_createRelatedAffectationFormDialog</string> </value>
+            <value> <string>ItemModule_viewDeliveryLineCreationDialog</string> </value>
         </item>
       </dictionary>
     </pickle>

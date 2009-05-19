@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>item_list = []\n
+request = context.REQUEST\n
+total_quantity = 0.0 \n
+new_item_list =[]\n
+type = request.get("field_my_type")\n
+if context.getPortalType()==\'Sale Packing List Line\':\n
+  cell_portal_type = \'Sale Packing List Cell\'\n
+elif context.getPortalType()==\'Inventory Line\':\n
+  cell_portal_type = \'Inventory Cell\'\n
+elif context.getPortalType()==\'Internal Packing List Line\':\n
+  cell_portal_type = \'Internal Packing List Cell\'\n
+base_id = \'movement\'\n
+splc_list= context.contentValues(portal_type=cell_portal_type)\n
+for line in kw.get(\'listbox\'): \n
+  if line[\'selection_check\']:\n
+    item = context.portal_catalog.getResultValue(\n
+                                    relative_url=line["listbox_key"].split("erp5/")[-1])\n
+    item_list.append(item)\n
+\n
+for cell in splc_list:\n
+  for item in item_list:\n
+    if item.Item_getVariationOnMovement()==cell.getVariationCategoryList():\n
+       new_item_list=[]\n
+       new_item_list.append(item)       \n
+       cell.setAggregateValueList(cell.getAggregateValueList()+new_item_list)\n
+       item.setQuantity(item.getQuantity()-cell.getQuantity())\n
+\n
+\n
+context.REQUEST.response.redirect(\'%s/view?portal_status_message=%s\' % (context.absolute_url(), \'Items aggregated.\'.replace(\' \', \'%20\')))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>*args, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>args</string>
+                            <string>kw</string>
+                            <string>item_list</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>total_quantity</string>
+                            <string>new_item_list</string>
+                            <string>type</string>
+                            <string>cell_portal_type</string>
+                            <string>base_id</string>
+                            <string>splc_list</string>
+                            <string>_getiter_</string>
+                            <string>line</string>
+                            <string>_getitem_</string>
+                            <string>item</string>
+                            <string>cell</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SalePackingList_setItemForSelectFastInputList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -53,92 +53,53 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Creates one Order/Packing list per Different Source sections\n
-# Creates one Line per Resource\n
+            <value> <string># Check data validity\n
 from Products.ERP5Type.Message import translateString\n
-selection_name = "item_module_selection"\n
-cell_portal_type = \'%s Cell\' % portal_type\n
-portal = context.getPortalObject()\n
-stool = portal.portal_selections\n
-getObject = portal.portal_catalog.getObject\n
+source = context.Item_getCurrentSiteValue()\n
+source_section = context.Item_getCurrentOwnerTitle(with_title=0)\n
 \n
-\n
-stool.updateSelectionCheckedUidList(selection_name, listbox_uid, uids)\n
-selection_uid_list = stool.getSelectionCheckedUidsFor(selection_name)\n
-\n
-if selection_uid_list:\n
-  object_list = [getObject(uid) for uid in selection_uid_list]\n
-else:\n
-  object_list = stool.callSelectionFor(selection_name)\n
-\n
-source_section_list = [  item.Item_getCurrentOwnerTitle(with_title=0) for item in object_list ]\n
-\n
-property_dict = {\'title\':title,\n
+property_dict = {\'title\':title,                 \n
                  \'stop_date\' : stop_date,\n
                  \'start_date\' : start_date,\n
                  \'portal_type\' : portal_type, }\n
 \n
 module = context.getDefaultModule(portal_type=portal_type)\n
 line_portal_type = \'%s Line\' % portal_type\n
-\n
-pl_property_dict = {}\n
-for k,v in property_dict.items():\n
-  pl_property_dict[k]=v\n
+cell_portal_type = \'%s Cell\' % portal_type\n
 \n
 pl_dict = {}\n
+for k,v in property_dict.items():\n
+  pl_dict[k]=v\n
 \n
-for ss in source_section_list:\n
-  if ss is not None:\n
-    uid = str(ss.getUid())\n
-  else:\n
-    uid = \'UID\' \n
+pl_line_dict = {}\n
+pl_line_dict[\'portal_type\'] = line_portal_type\n
 \n
-  if not pl_dict.has_key(uid):\n
-    pl_dict[uid] = module.newContent(**pl_property_dict)\n
-    pl_dict[uid].setSourceSectionValue(ss) \n
+pl_line_dict[\'title\']= \'%s\' % (context.getReference())\n
+#pl_line_dict[\'aggregate_value_list\'] = [context]\n
+pl_line_dict[\'quantity\'] = quantity\n
+pl_line_dict[\'quantity_unit\'] = quantity_unit\n
+pl_value = module.newContent(**pl_dict)\n
 \n
-\n
-for item in object_list:\n
-  source_section = item.Item_getCurrentOwnerTitle(with_title=0)\n
-  if source_section is not None:\n
-    if source_section.getUid() is not None:\n
-      pl_value =  pl_dict[str(source_section.getUid())]\n
-  else:\n
-      pl_value =  pl_dict[\'UID\']\n
-\n
-  source = item.Item_getCurrentSiteValue() \n
-  resource = item.Item_getResourceValue()\n
-\n
-  pl_line_dict = {}\n
-  pl_line_dict[\'portal_type\'] = line_portal_type\n
-  \n
-  pl_line_dict[\'title\']= \'%s\' % (item.getReference())\n
-  #pl_line_dict[\'aggregate_value_list\'] = [item]\n
-  pl_line_dict[\'quantity\'] = quantity\n
-  #pl_line_dict[\'quantity_unit\'] = quantity_unit\n
-  pl_line_dict[\'resource_value\'] = resource\n
-  pl_line_dict[\'source_value\'] = source\n
-  pl_line_value = pl_value.newContent(**pl_line_dict)\n
-  if item.Item_getVariationOnMovement()==[]:\n
-    pl_line_value.setAggregateValue(item)\n
-  else:\n
-    pl_line_value.setVariationCategoryList(item.Item_getVariationOnMovement(current=1))\n
-    base_id = \'movement\'\n
-    cell_key_list = list(pl_line_value.getCellKeyList(base_id=base_id))\n
-    cell_key_list.sort()\n
-    for cell_key in cell_key_list: \n
-      cell = pl_line_value.newCell(base_id=base_id, \\\n
+pl_line_value = pl_value.newContent(**pl_line_dict)\n
+pl_line_value.setResourceValue(context.Item_getResourceValue())\n
+if context.Item_getVariationOnMovement()==[]:\n
+  pl_line_value.setAggregateValue(context)\n
+else:\n
+  pl_line_value.setVariationCategoryList(context.Item_getVariationOnMovement(current=1))\n
+  base_id = \'movement\'\n
+  cell_key_list = list(pl_line_value.getCellKeyList(base_id=base_id))\n
+  cell_key_list.sort()\n
+  for cell_key in cell_key_list: \n
+    cell = pl_line_value.newCell(base_id=base_id, \\\n
                                 portal_type=cell_portal_type,*cell_key)\n
-      cell.edit(mapped_value_property_list=[\'price\',\'quantity\'],\n
-                price=item.getPrice(), quantity=item.getQuantity(),\n
+    cell.edit(mapped_value_property_list=[\'price\',\'quantity\'],\n
+                price=context.getPrice(), quantity=context.getQuantity(),\n
                 predicate_category_list=cell_key,\n
                 variation_category_list=cell_key)\n
-      cell.setAggregateValue(item)\n
+    cell.setAggregateValue(context)\n
 \n
-form_id = \'/\'.join(pl_value.getPhysicalPath())\n
 return context.Base_redirect(form_id, keep_items=dict(\n
-       portal_status_message=translateString(\'Items affected\')))\n
-#context.REQUEST[\'RESPONSE\'].redirect(\'/\'.join(pl_value.getPhysicalPath()))\n
+       portal_status_message=translateString(\'Item affected\')))\n
 </string> </value>
         </item>
         <item>
@@ -149,7 +110,7 @@ return context.Base_redirect(form_id, keep_items=dict(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>uids=[], listbox_uid=[],destination=None,destination_section=None,portal_type=None,site_suggestion=None,source=None,source_section=None,start_date=None,quantity=None,stop_date=None,title=\'\',**kw</string> </value>
+            <value> <string>form_id=\'view\',destination_section=None,portal_type=None,site_suggestion=None,start_date=None,quantity=None,start_date=None,stop_date=None,title=\'\',quantity_unit=None,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -169,65 +130,47 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>12</int> </value>
+                        <value> <int>10</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>uids</string>
-                            <string>listbox_uid</string>
-                            <string>destination</string>
+                            <string>form_id</string>
                             <string>destination_section</string>
                             <string>portal_type</string>
                             <string>site_suggestion</string>
-                            <string>source</string>
-                            <string>source_section</string>
                             <string>start_date</string>
                             <string>quantity</string>
+                            <string>start_date</string>
                             <string>stop_date</string>
                             <string>title</string>
+                            <string>quantity_unit</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
-                            <string>selection_name</string>
-                            <string>cell_portal_type</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal</string>
-                            <string>stool</string>
-                            <string>getObject</string>
-                            <string>selection_uid_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>uid</string>
-                            <string>object_list</string>
-                            <string>item</string>
-                            <string>source_section_list</string>
+                            <string>source</string>
+                            <string>source_section</string>
                             <string>property_dict</string>
                             <string>module</string>
                             <string>line_portal_type</string>
-                            <string>pl_property_dict</string>
+                            <string>cell_portal_type</string>
+                            <string>pl_dict</string>
+                            <string>_getiter_</string>
                             <string>k</string>
                             <string>v</string>
                             <string>_write_</string>
-                            <string>pl_dict</string>
-                            <string>ss</string>
-                            <string>None</string>
-                            <string>str</string>
-                            <string>_apply_</string>
-                            <string>_getitem_</string>
-                            <string>pl_value</string>
-                            <string>resource</string>
                             <string>pl_line_dict</string>
+                            <string>_apply_</string>
+                            <string>pl_value</string>
                             <string>pl_line_value</string>
                             <string>base_id</string>
                             <string>list</string>
                             <string>cell_key_list</string>
                             <string>cell_key</string>
                             <string>cell</string>
-                            <string>form_id</string>
                             <string>dict</string>
                           </tuple>
                         </value>
@@ -241,10 +184,7 @@ return context.Base_redirect(form_id, keep_items=dict(\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <list/>
-                <list/>
-                <none/>
-                <none/>
+                <string>view</string>
                 <none/>
                 <none/>
                 <none/>
@@ -253,12 +193,13 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                 <none/>
                 <none/>
                 <string></string>
+                <none/>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ItemModule_createRelatedAffectationValidate</string> </value>
+            <value> <string>Item_createDeliveryLine</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
