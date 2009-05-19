@@ -57,10 +57,6 @@ class SimpleQuery(Query):
           column name
         item value
           one or more values
-
-      Deprecated:
-        operator (string)
-          Use comparison_operator instead.
     """
     self.search_key = search_key
     if len(kw) != 1:
