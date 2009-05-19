@@ -59,9 +59,11 @@
               <dictionary>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -88,7 +90,26 @@
               <dictionary>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<div class="loginform">\n
+<form method="post" action="index.html">\n
+<p><input type="hidden" name="rememberme" value="0" /></p>\n
+<fieldset>\n
+<p><label for="username_1" class="top">User:</label><br />\n
+<input type="text" name="username_1" id="username_1" tabindex="1" class="field" value="" /></p>\n
+\n
+<p><label for="password_1" class="top">Password:</label><br />\n
+<input type="password" name="password_1" id="password_1" tabindex="2" class="field" value="" /></p>\n
+<p><input type="checkbox" name="checkbox_1" id="checkbox_1" class="checkbox" tabindex="3" size="1" value="" /><label for="checkbox_1" class="right">Remember me</label></p>\n
+<p><input type="submit" name="cmdweblogin" class="button" value="LOGIN"  /></p>\n
+<p><a href="#" id="forgotpsswd_1">Password forgotten?</a></p>\n
+</fieldset>\n
+</form>\n
+\n
+</div>
+
+]]></string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -112,22 +133,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/WebSection_viewLoginWidget</string> </value>
         </item>
       </dictionary>
     </pickle>

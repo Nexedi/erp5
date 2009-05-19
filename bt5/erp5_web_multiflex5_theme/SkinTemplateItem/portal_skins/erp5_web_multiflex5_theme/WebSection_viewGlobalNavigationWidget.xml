@@ -10,6 +10,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -41,28 +47,29 @@
 
 <tal:block replace="nothing">\n
   <!--\n
-  This widget displays the login form.\n
+  This widget displays the breadcrumbs of the current context.\n
 \n
   TODO:\n
-    - implement \'Password forgottn?\' feature.\n
-    - why \'new-line\' between checkbox and \'Remember me\'?\n
+    - make sure translation is possible or working\n
   -->\n
 </tal:block>\n
 \n
-<div class="loginform">\n
-<p><input type="hidden" name="rememberme" value="0" /></p>\n
-<fieldset>\n
-<p><label for="name" class="top" i18n:translate="" i18n:domain="ui">User:</label><br />\n
-<input type="text" name="__ac_name" id="name" class="field" value=""\n
-       tal:attributes="value python: request.get(\'__ac_name\') or \'\'" /></p>\n
-<p><label for="password" class="top" i18n:translate="" i18n:domain="ui">Password:</label><br />\n
-<input type="password" name="__ac_password" id="password" class="field" value="" /></p>\n
-<p><input type="checkbox" name="__ac_persistent" id="checkbox" class="cb_remember" value="1" checked="checked" /><label for="cb_remember" class="right" i18n:translate="" i18n:domain="ui">Remember me</label></p>\n
-<p><input type="submit" name="WebSite_login:method" class="button" value="LOGIN" i18n:attributes="value" i18n:domain="ui" /></p>\n
-<!-- <p><a href="#" id="forgotpsswd">Password forgotten?</a></p> -->\n
-</fieldset>\n
+<tal:block tal:define="current_web_section python:request.get(\'current_web_section\', here);\n
+                       web_site_url python:current_web_section.getWebSiteValue().absolute_url();">\n
+<div class="navglobal">\n
+<ul>\n
+<tal:block tal:condition="here/portal_membership/isAnonymousUser">\n
+<li><a href="#" i18n:translate="" i18n:domain="ui"\n
+       tal:attributes="href python:\'%s/login_form\' % web_site_url">Login</a></li>\n
+</tal:block>\n
+<tal:block tal:condition="not:here/portal_membership/isAnonymousUser">\n
+<li><a tal:attributes="href python:\'%s/logout\' % web_site_url">\n
+    <tal:block i18n:translate="" i18n:domain="ui">Logout</tal:block>\n
+    (<tal:block tal:replace="python:here.portal_membership.getAuthenticatedMember().getUserName()" />)</a></li>\n
+</tal:block>\n
+</ul>\n
 </div>\n
-
+</tal:block>
 
 ]]></string> </value>
         </item>
@@ -76,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_viewLoginWidget</string> </value>
+            <value> <string>WebSection_viewGlobalNavigationWidget</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
