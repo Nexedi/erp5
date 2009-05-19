@@ -93,7 +93,7 @@
                     <value>
                       <list>
                         <string>listbox_date</string>
-                        <string>listbox_variation_category_list</string>
+                        <string>listbox_variation_category_item_list</string>
                       </list>
                     </value>
                 </item>
@@ -103,6 +103,7 @@
                       <list>
                         <string>my_title</string>
                         <string>my_reference</string>
+                        <string>listbox_variation_category_list</string>
                       </list>
                     </value>
                 </item>

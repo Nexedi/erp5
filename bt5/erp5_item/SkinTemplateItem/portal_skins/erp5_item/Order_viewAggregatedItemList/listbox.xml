@@ -33,11 +33,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>all_editable_columns</string> </key>
+                    <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>alternate_name</string> </key>
+                    <key> <string>anchor</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -50,10 +50,6 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -113,6 +109,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -158,6 +158,10 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>untranslatable_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -176,11 +180,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>all_editable_columns</string> </key>
+                    <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>alternate_name</string> </key>
+                    <key> <string>anchor</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -193,10 +197,6 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -241,11 +241,15 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -253,6 +257,10 @@
                 </item>
                 <item>
                     <key> <string>meta_types</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -304,6 +312,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>url_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -316,12 +328,6 @@
               <dictionary>
                 <item>
                     <key> <string>all_columns</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>all_editable_columns</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -344,19 +350,23 @@
                         </tuple>
                         <tuple>
                           <string>reference</string>
-                          <string>Inventory Number</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>Item_getResourceTitle</string>
-                          <string>Product</string>
+                          <string>Resource</string>
                         </tuple>
                         <tuple>
                           <string>quantity</string>
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
+                          <string>variation_category_item_list</string>
+                          <string>Variation</string>
+                        </tuple>
+                        <tuple>
                           <string>translated_validation_state_title</string>
-                          <string>Validation State</string>
+                          <string>Simulation State</string>
                         </tuple>
                         <tuple>
                           <string>history</string>
@@ -374,13 +384,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>default_params</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>checked_permission</string>
+                          <string>View</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -404,7 +415,16 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>variation_category_item_list</string>
+                          <string>Variation</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -427,7 +447,7 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
-                    <value> <int>10</int> </value>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
@@ -436,7 +456,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -507,7 +527,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Aggregated Items</string> </value>
+                    <value> <string>Item Tracking</string> </value>
                 </item>
                 <item>
                     <key> <string>untranslatable_columns</string> </key>
@@ -518,12 +538,7 @@
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>history</string>
-                          <string>Item_getTrackingFormUrl</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -533,6 +548,42 @@
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: preferences.getPreference(\'preferred_listbox_view_mode_line_count\', 15)</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+string:Base_viewListMode?proxy_form_id=${form/getId}&proxy_field_id=${field/getId}
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <tuple>
         <global name="Method" module="Products.Formulator.MethodField"/>

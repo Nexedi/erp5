@@ -13,13 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>items</string>
+                <string>editable</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_destination_section</string> </value>
+            <value> <string>my_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -64,10 +64,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -79,18 +75,16 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>your_destination_section</string> </value>
+                    <value> <string>my_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Item_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <value> <string>PurchasePackingList_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

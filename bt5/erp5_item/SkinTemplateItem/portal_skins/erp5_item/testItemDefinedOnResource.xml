@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if (context.getResource() and context.getResourceValue().getAggregatedPortalTypeList()) or (context.getAggregate()) or (context.getResource() is None and context.getPortalItemTypeList()):\n
+            <value> <string>if context.getPortalType() in [\'Purchase Packing List Line\',\'Inventory Line\'] and (context.getResource() and context.getResourceValue().getAggregatedPortalTypeList()) or (context.getAggregate()) or (context.getResource() is None and context.getPortalItemTypeList()):\n
   return 0\n
 else:\n
   return 1\n

@@ -304,6 +304,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>url_columns</string> </key>
                     <value> <string></string> </value>
                 </item>

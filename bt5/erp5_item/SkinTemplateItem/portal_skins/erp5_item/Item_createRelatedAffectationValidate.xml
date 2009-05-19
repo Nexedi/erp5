@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -69,15 +57,14 @@
 source = context.Item_getCurrentSiteValue()\n
 source_section = context.Item_getCurrentOwnerTitle(with_title=0)\n
 \n
-property_dict = {\'title\':title,\n
-                 \'destination_section\' : destination_section,\n
-                 \'destination\' : destination,                 \n
+property_dict = {\'title\':title,                 \n
                  \'stop_date\' : stop_date,\n
                  \'start_date\' : start_date,\n
                  \'portal_type\' : portal_type, }\n
 \n
 module = context.getDefaultModule(portal_type=portal_type)\n
 line_portal_type = \'%s Line\' % portal_type\n
+cell_portal_type = \'%s Cell\' % portal_type\n
 \n
 pl_dict = {}\n
 for k,v in property_dict.items():\n
@@ -87,32 +74,37 @@ pl_line_dict = {}\n
 pl_line_dict[\'portal_type\'] = line_portal_type\n
 \n
 pl_line_dict[\'title\']= \'%s\' % (context.getReference())\n
-pl_line_dict[\'aggregate_value_list\'] = [context]\n
+#pl_line_dict[\'aggregate_value_list\'] = [context]\n
 pl_line_dict[\'quantity\'] = quantity\n
 pl_line_dict[\'quantity_unit\'] = quantity_unit\n
-\n
 pl_value = module.newContent(**pl_dict)\n
-pl_value.setSourceValue(source)\n
-pl_value.setSourceSectionValue(source)\n
-pl_line_value = pl_value.newContent(**pl_line_dict)\n
 \n
-context.REQUEST[\'RESPONSE\'].redirect(\'/\'.join(pl_value.getPhysicalPath()))\n
+pl_line_value = pl_value.newContent(**pl_line_dict)\n
+pl_line_value.setResourceValue(context.Item_getResourceValue())\n
+context.log(context.Item_getVariationOnMovement())\n
+if context.Item_getVariationOnMovement()==[]:\n
+  pl_line_value.setAggregateValue(context)\n
+else:\n
+  pl_line_value.setVariationCategoryList(context.Item_getVariationOnMovement(current=1))\n
+  base_id = \'movement\'\n
+  cell_key_list = list(pl_line_value.getCellKeyList(base_id=base_id))\n
+  context.log(cell_key_list)\n
+  cell_key_list.sort()\n
+  for cell_key in cell_key_list: \n
+    cell = pl_line_value.newCell(base_id=base_id, \\\n
+                                portal_type=cell_portal_type,*cell_key)\n
+    cell.edit(mapped_value_property_list=[\'price\',\'quantity\'],\n
+                price=context.getPrice(), quantity=context.getQuantity(),\n
+                predicate_category_list=cell_key,\n
+                variation_category_list=cell_key)\n
+    cell.setAggregateValue(context)\n
+form_id = \'/\'.join(pl_value.getPhysicalPath())\n
+return context.Base_redirect(form_id, keep_items=dict(\n
+       portal_status_message=translateString(\'Item affected\')))\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -163,6 +155,7 @@ context.REQUEST[\'RESPONSE\'].redirect(\'/\'.join(pl_value.getPhysicalPath()))\n
                             <string>property_dict</string>
                             <string>module</string>
                             <string>line_portal_type</string>
+                            <string>cell_portal_type</string>
                             <string>pl_dict</string>
                             <string>_getiter_</string>
                             <string>k</string>
@@ -172,7 +165,14 @@ context.REQUEST[\'RESPONSE\'].redirect(\'/\'.join(pl_value.getPhysicalPath()))\n
                             <string>_apply_</string>
                             <string>pl_value</string>
                             <string>pl_line_value</string>
-                            <string>_getitem_</string>
+                            <string>base_id</string>
+                            <string>list</string>
+                            <string>cell_key_list</string>
+                            <string>cell_key</string>
+                            <string>cell</string>
+                            <string>form_id</string>
+                            <string>dict</string>
+                            <string>translateString</string>
                           </tuple>
                         </value>
                     </item>

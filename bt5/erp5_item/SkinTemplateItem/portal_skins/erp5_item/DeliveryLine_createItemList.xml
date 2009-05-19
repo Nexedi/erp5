@@ -53,23 +53,58 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>item_list = []\n
+            <value> <string>from Products.ERP5Type.Message import translateString\n
+item_list = []\n
+request = context.REQUEST\n
+total_quantity = 0.0\n
+type = request.get("field_my_type")\n
+if context.getPortalType()==\'Purchase Packing List Line\':\n
+  cell_portal_type = \'Purchase Packing List Cell\'\n
+elif context.getPortalType()==\'Purchase Order Line\' :\n
+  cell_portal_type = \'Purchase Order Cell\'\n
+elif context.getPortalType()==\'Sale Packing List Line\':\n
+  cell_portal_type = \'Sale Packing List Cell\'\n
 \n
+movement_cell_list = context.contentValues(portal_type=cell_portal_type)\n
+context.setVariationCategoryList([])\n
+context.setAggregateValueList([])\n
+base_id = \'movement\'\n
 for line in kw.get(\'listbox\'):\n
   if not (line[\'title\']):\n
     continue\n
-  module = context.getDefaultModule("Item")\n
-  item = module.newContent(portal_type="Item",\n
+  module = context.getDefaultModule(\'Item\')\n
+  item = module.newContent(portal_type=\'Item\',\n
       title=line[\'title\'],\n
       reference=line[\'reference\'],\n
       quantity=line[\'quantity\'])\n
+  item.validate()\n
+  item_list.append(item)  \n
 \n
-  item_list.append(item)\n
+ \n
+  if line.has_key("variation_category_list") and line[\'variation_category_list\'] not in(\'\',[]) and [line[\'variation_category_list\'][i] not in context.getVariationCategoryList() for i in range(0,(len(line[\'variation_category_list\'])-1))][0]:\n
+    context.setVariationCategoryList(context.getVariationCategoryList() + list((line[\'variation_category_list\'])))\n
+  if line.has_key("variation_category_list") and line[\'variation_category_list\'] not in(\'\',None):\n
+    cell_key = list((line[\'variation_category_list\']))\n
+    quantity = line[\'quantity\']\n
+    cell = context.newCell(base_id=base_id, \\\n
+                                portal_type=cell_portal_type,*cell_key)\n
+    cell.edit(mapped_value_property_list=[\'price\',\'quantity\'],\n
+                price=cell.getPrice(), quantity=quantity,\n
+                predicate_category_list=cell_key,\n
+                variation_category_list=cell_key)\n
+    cell.setAggregateValue(item)\n
+  total_quantity+=line[\'quantity\']\n
 \n
+if movement_cell_list ==[]:\n
+  context.setQuantity(context.getQuantity()+total_quantity)\n
+else:\n
+  context.setQuantity(total_quantity)\n
 \n
-context.setAggregateValueList(item_list + list(context.getAggregateValueList()))\n
+if context.getVariationCategoryList()==[]: \n
+  context.setAggregateValueList(item_list )\n
 \n
-context.REQUEST.response.redirect(\'%s/view?portal_status_message=%s\' % (context.absolute_url(), \'Items created.\'.replace(\' \', \'%20\')))\n
+return context.Base_redirect(form_id, keep_items=dict(\n
+       portal_status_message=translateString(\'Items created\')))\n
 </string> </value>
         </item>
         <item>
@@ -80,7 +115,7 @@ context.REQUEST.response.redirect(\'%s/view?portal_status_message=%s\' % (contex
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string>form_id=\'view\',*args, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -100,23 +135,44 @@ context.REQUEST.response.redirect(\'%s/view?portal_status_message=%s\' % (contex
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>form_id</string>
                             <string>args</string>
                             <string>kw</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>translateString</string>
                             <string>item_list</string>
-                            <string>_getiter_</string>
                             <string>_getattr_</string>
+                            <string>context</string>
+                            <string>request</string>
+                            <string>total_quantity</string>
+                            <string>type</string>
+                            <string>cell_portal_type</string>
+                            <string>movement_cell_list</string>
+                            <string>base_id</string>
+                            <string>_getiter_</string>
                             <string>line</string>
                             <string>_getitem_</string>
-                            <string>context</string>
                             <string>module</string>
                             <string>item</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>range</string>
+                            <string>len</string>
+                            <string>i</string>
                             <string>list</string>
+                            <string>None</string>
+                            <string>cell_key</string>
+                            <string>quantity</string>
+                            <string>_apply_</string>
+                            <string>cell</string>
+                            <string>_inplacevar_</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -128,7 +184,9 @@ context.REQUEST.response.redirect(\'%s/view?portal_status_message=%s\' % (contex
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string>view</string>
+              </tuple>
             </value>
         </item>
         <item>

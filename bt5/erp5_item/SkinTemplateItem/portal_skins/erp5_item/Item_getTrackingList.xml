@@ -71,10 +71,10 @@ simulation_state = context.getPortalCurrentInventoryStateList() \\\n
 kw[\'item.simulation_state\'] = simulation_state\n
 for res in method(aggregate_uid=uid, **kw):\n
   history = newTempBase(context, str(len(history_list)))\n
-  explanation = catalog(uid=res.delivery_uid).getExplanationValue()\n
+  explanation = catalog(uid=res.delivery_uid)\n
   node_value = catalog(uid=res.node_uid)\n
   section_value = catalog(uid=res.section_uid)\n
-  resource_value = catalog(uid=res.resource_uid)\n
+  resource_value = catalog(uid=res.resource_uid) \n
   history.edit(\n
       #uid = catalog(uid=res.uid).getTitle(),\n
       date=res.getDate(),\n
@@ -82,9 +82,13 @@ for res in method(aggregate_uid=uid, **kw):\n
       section_title=section_value is not None and section_value.getTitle() or None,\n
       resource_title=resource_value is not None and resource_value.getTitle() or None,\n
       explanation=explanation.getTitle(),\n
+      translated_portal_type = explanation.getTranslatedPortalType(),\n
+      quantity = explanation.getQuantity(),\n
       url=explanation.absolute_url(),\n
-      simulation_state=explanation.getTranslatedSimulationState(),\n
+      variation_category_item_list = [x[0] for x in explanation.getVariationCategoryItemList()],\n
+      simulation_state=explanation.getTranslatedSimulationStateTitle(),\n
   )\n
+ \n
   history_list.append(history)\n
   \n
 return history_list\n
@@ -148,6 +152,10 @@ return history_list\n
                             <string>section_value</string>
                             <string>resource_value</string>
                             <string>None</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>

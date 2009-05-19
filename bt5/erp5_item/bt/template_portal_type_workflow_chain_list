@@ -1,10 +1,4 @@
-Internal Packing List Line | aggregate_interaction_workflow
 Item | edit_workflow
 Item | item_workflow
-Purchase Order Line | aggregate_interaction_workflow
-Purchase Packing List Line | aggregate_interaction_workflow
-Returned Sale Packing List Line | aggregate_interaction_workflow
-Sale Order Line | aggregate_interaction_workflow
-Sale Packing List Line | aggregate_interaction_workflow
 Service Report | edit_workflow
 Service Report | item_workflow

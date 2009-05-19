@@ -64,7 +64,7 @@ except ValueError:\n
 result = []\n
 \n
 for i in range(count):\n
-  obj = newTempBase(portal, id="tmp_item_%s" % i, uid="tmp_item_%s" % i)\n
+  obj = newTempBase(portal, id="tmp_item_%s" % i, uid="new_item_%s" % i)\n
   result.append(obj)\n
 \n
 return result\n

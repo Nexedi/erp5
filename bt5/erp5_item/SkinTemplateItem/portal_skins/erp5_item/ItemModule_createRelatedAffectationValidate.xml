@@ -10,20 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -67,15 +55,16 @@
             <key> <string>_body</string> </key>
             <value> <string># Creates one Order/Packing list per Different Source sections\n
 # Creates one Line per Resource\n
+from Products.ERP5Type.Message import translateString\n
 selection_name = "item_module_selection"\n
-\n
+cell_portal_type = \'%s Cell\' % portal_type\n
 portal = context.getPortalObject()\n
 stool = portal.portal_selections\n
 getObject = portal.portal_catalog.getObject\n
 \n
+\n
 stool.updateSelectionCheckedUidList(selection_name, listbox_uid, uids)\n
-selection_uid_list = context.portal_selections.getSelectionCheckedUidsFor(\n
-                                                       selection_name)\n
+selection_uid_list = stool.getSelectionCheckedUidsFor(selection_name)\n
 \n
 if selection_uid_list:\n
   object_list = [getObject(uid) for uid in selection_uid_list]\n
@@ -85,8 +74,6 @@ else:\n
 source_section_list = [  item.Item_getCurrentOwnerTitle(with_title=0) for item in object_list ]\n
 \n
 property_dict = {\'title\':title,\n
-                 \'destination_section\' : destination_section,\n
-                 \'destination\' : destination,\n
                  \'stop_date\' : stop_date,\n
                  \'start_date\' : start_date,\n
                  \'portal_type\' : portal_type, }\n
@@ -126,31 +113,36 @@ for item in object_list:\n
   pl_line_dict[\'portal_type\'] = line_portal_type\n
   \n
   pl_line_dict[\'title\']= \'%s\' % (item.getReference())\n
-  pl_line_dict[\'aggregate_value_list\'] = [item]\n
+  #pl_line_dict[\'aggregate_value_list\'] = [item]\n
   pl_line_dict[\'quantity\'] = quantity\n
   #pl_line_dict[\'quantity_unit\'] = quantity_unit\n
   pl_line_dict[\'resource_value\'] = resource\n
   pl_line_dict[\'source_value\'] = source\n
-\n
   pl_line_value = pl_value.newContent(**pl_line_dict)\n
-  \n
-context.REQUEST[\'RESPONSE\'].redirect(\'/\'.join(pl_value.getPhysicalPath()))\n
+  if item.Item_getVariationOnMovement()==[]:\n
+    pl_line_value.setAggregateValue(item)\n
+  else:\n
+    pl_line_value.setVariationCategoryList(item.Item_getVariationOnMovement(current=1))\n
+    base_id = \'movement\'\n
+    cell_key_list = list(pl_line_value.getCellKeyList(base_id=base_id))\n
+    cell_key_list.sort()\n
+    for cell_key in cell_key_list: \n
+      cell = pl_line_value.newCell(base_id=base_id, \\\n
+                                portal_type=cell_portal_type,*cell_key)\n
+      cell.edit(mapped_value_property_list=[\'price\',\'quantity\'],\n
+                price=item.getPrice(), quantity=item.getQuantity(),\n
+                predicate_category_list=cell_key,\n
+                variation_category_list=cell_key)\n
+      cell.setAggregateValue(item)\n
+\n
+form_id = \'/\'.join(pl_value.getPhysicalPath())\n
+return context.Base_redirect(form_id, keep_items=dict(\n
+       portal_status_message=translateString(\'Items affected\')))\n
+#context.REQUEST[\'RESPONSE\'].redirect(\'/\'.join(pl_value.getPhysicalPath()))\n
 </string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
             <value>
               <none/>
             </value>
@@ -196,7 +188,10 @@ context.REQUEST[\'RESPONSE\'].redirect(\'/\'.join(pl_value.getPhysicalPath()))\n
                             <string>stop_date</string>
                             <string>title</string>
                             <string>kw</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>translateString</string>
                             <string>selection_name</string>
+                            <string>cell_portal_type</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
@@ -227,6 +222,13 @@ context.REQUEST[\'RESPONSE\'].redirect(\'/\'.join(pl_value.getPhysicalPath()))\n
                             <string>resource</string>
                             <string>pl_line_dict</string>
                             <string>pl_line_value</string>
+                            <string>base_id</string>
+                            <string>list</string>
+                            <string>cell_key_list</string>
+                            <string>cell_key</string>
+                            <string>cell</string>
+                            <string>form_id</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
