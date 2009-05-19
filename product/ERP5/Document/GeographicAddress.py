@@ -85,6 +85,10 @@ class GeographicAddress(Coordinate, Base):
         """
           Tries to recognize the coordinate_text to update
           this address
+          XXX fromText will be removed.
+          Instead, store text value as user filled in text attribute,
+          then display text value through a configurable output filter, suitable
+          for all addresses patterns.
         """
         lines = string.split(coordinate_text, '\n')
         self.setStreetAddress('')
