@@ -101,7 +101,7 @@ class GeographicAddress(Coordinate, Base):
         if zip_city:
           self.setZipCode(zip_city[0])
           if len(zip_city) > 1:
-            self.setCity(linesep.join(zip_city[1:]))
+            self.setCity(' '.join(zip_city[1:]))
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'standardTextFormat')
