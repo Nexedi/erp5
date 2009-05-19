@@ -53,17 +53,33 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Initialise some general variables\n
+            <value> <string>from Products.ERP5Type.Message import translateString\n
+from Products.ERP5Type.Document import newTempBase\n
+from Products.ERP5Type.DateUtils import getIntervalBetweenDates\n
+\n
+# Initialise some general variables\n
+import_file = context.REQUEST[\'import_file\']\n
+update_existing_property = context.REQUEST[\'update_existing_property\']\n
+detailed_report = context.REQUEST[\'detailed_report\']\n
+simulation_mode = context.REQUEST[\'simulation_mode\']\n
+displayed_report = context.REQUEST[\'displayed_report\']\n
+effective_date = context.REQUEST[\'effective_date\']\n
+expiration_date = context.REQUEST[\'expiration_date\']\n
+existing_category_list = context.REQUEST[\'existing_category_list\']\n
 detailed_report_result = []\n
 detailed_report_append = detailed_report_result.append\n
 base_category_id_list = []\n
 category_path_dict = {}\n
+simulation_new_category_id_list = []\n
 try:\n
   property_id_list = context.portal_classes.getPropertySheetPropertyIdList()\n
 except AttributeError:\n
   # Class tool is too old - use an empty list and warn used in detailed report\n
   property_id_list = []\n
-  detailed_report_append(\'WARNING: ERP5Type product needs to be upgraded so that portal_classes can supply getPropertySheetPropertyIdList\')\n
+  if \'warning\' in displayed_report:\n
+    report_line = newTempBase(context, \'item\')\n
+    report_line.edit(field_type = \'WARNING\', field_category = \'\', field_message = \'ERP5Type product needs to be upgraded so that portal_classes can supply getPropertySheetPropertyIdList\')    \n
+    detailed_report_append(report_line)\n
 \n
 def Object_hasRelation(obj):\n
   # Check if there is some related objets.\n
@@ -93,6 +109,7 @@ total_category_counter = 0\n
 invalid_category_id_counter = 0\n
 deleted_category_counter = 0\n
 kept_category_counter = 0\n
+expired_category_counter = 0\n
 \n
 filename = getattr(import_file, \'filename\', \'?\')\n
 \n
@@ -104,71 +121,124 @@ def invalid_category_spreadsheet_handler(message):\n
                          context.portal_categories.absolute_url(),\n
                          message)\n
 \n
-categories_spreadsheet_mapping = context.Base_getCategoriesSpreadSheetMapping(import_file,\n
-                                    invalid_spreadsheet_error_handler=invalid_category_spreadsheet_handler)\n
+category_list_spreadsheet_mapping = context.Base_getCategoriesSpreadSheetMapping(import_file,\n
+                                    invalid_spreadsheet_error_handler=invalid_category_spreadsheet_handler, simulation_mode=simulation_mode)\n
+if category_list_spreadsheet_mapping.has_key(\'error_list\'):\n
+  return category_list_spreadsheet_mapping[\'error_list\']\n
 \n
-\n
-for base_category, categories in \\\n
-            categories_spreadsheet_mapping.items():\n
+for base_category, category_list in \\\n
+            category_list_spreadsheet_mapping.items():\n
   base_category_id_list.append(base_category)\n
   # Create categories\n
-  total_category_counter += len(categories)\n
-  for category in categories:\n
+  total_category_counter += len(category_list)\n
+  for category in category_list:\n
     is_new_category = False\n
-    keys = category.keys()\n
-    if \'path\' in keys:\n
+    key_list = category.keys()\n
+    if \'path\' in key_list:\n
       base_path_obj = context.portal_categories\n
+      category_id_list = category[\'path\'].split(\'/\')\n
+      parent_path = category[\'path\'].split(\'/\')[0]+\'/\'\n
       is_base_category = True\n
       is_valid_category = True\n
-      for category_id in category[\'path\'].split(\'/\'):\n
+      for category_id in category_id_list:\n
         category_id = str(category_id)\n
         # The current category is not existing\n
-        if not base_path_obj.hasContent(category_id):\n
+        if not base_path_obj.hasContent(category_id) and (not {\'category\':category_id,\'path\':parent_path} in simulation_new_category_id_list):\n
           # Create the category\n
           if is_base_category:\n
             category_type = \'Base Category\'\n
           else:\n
             category_type = \'Category\'\n
           if isValidID(category_id):\n
-            base_path_obj.newContent( portal_type       = category_type\n
+            if simulation_mode:\n
+              simulation_new_category_id_list.append({\'category\':category_id,\'path\':parent_path})\n
+              if \'created\' in displayed_report:\n
+                report_line = newTempBase(context, \'item\')\n
+                report_line.edit(field_type = \'Creation\', field_category = context.portal_categories.getRelativeUrl()+\'/\'+category[\'path\'].split(category_id)[0]+category_id,  field_message = translateString("Will be created new ${type} with  URL ${url} ", mapping=dict(type=category_type, url=context.portal_categories.getRelativeUrl()+\'/\'+category[\'path\'].split(category_id)[0]+category_id)))                \n
+                detailed_report_append(report_line)\n
+            else:\n
+              base_path_obj.newContent( portal_type       = category_type\n
                                     , id                = category_id\n
+                                    , effective_date = effective_date\n
                                     )\n
-            detailed_report_append(\'Created new %s with  URL %s\' % (category_type,\n
-                                  base_path_obj[category_id].getRelativeUrl()))\n
+              if \'created\' in displayed_report:\n
+                report_line = newTempBase(context, \'item\')\n
+                report_line.edit(field_type = \'Creation\', field_category = base_path_obj[category_id].getRelativeUrl(), field_message = translateString("Created new ${type} with  URL ${url} ", mapping=dict(type=category_type, url=base_path_obj[category_id].getRelativeUrl())))    \n
+                detailed_report_append(report_line)\n
           else:\n
             # The ID is invalid, we must break the loop\n
             invalid_category_id_counter += 1\n
             is_valid_category = False\n
-            detailed_report_append(\'WARNING: found invalid ID %s\' % category_id)\n
+            if \'warning\' in displayed_report:\n
+              report_line = newTempBase(context, \'item\')\n
+              report_line.edit(field_type = \'WARNING\', field_category = \'\', field_message = translateString("found invalid ID ${id} ", mapping=dict(id=category_id)))    \n
+              detailed_report_append(report_line)\n
             break\n
           is_new_category = True\n
           new_category_counter += 1\n
-        base_path_obj = base_path_obj[category_id]\n
-        category_path_dict[base_path_obj.getRelativeUrl()] = None\n
+        if {\'category\':category_id,\'path\':parent_path} not in simulation_new_category_id_list:\n
+          base_path_obj = base_path_obj[category_id]\n
+          category_path_dict[base_path_obj.getRelativeUrl()] = None\n
         is_base_category = False\n
+        parent_path = category[\'path\'].split(category_id)[0] +category_id\n
       if is_valid_category:\n
         # Only try to update a valid category\n
         new_category = base_path_obj\n
         # Set the category properties\n
         category_update_dict = {}\n
-        for key in keys:\n
+        first_update_reported = True\n
+        for key in key_list:\n
           key = str(key)\n
           if key not in [\'path\', \'id\']:\n
             value = category[key]\n
-            if update_existing_property or is_new_category:\n
-              # Always update properties if update_existing_property is set or if this a new category\n
+            if is_new_category:\n
+              # Always update properties if this a new category\n
               category_update_dict[key] = value\n
-              if not is_new_category:\n
-                detailed_report_append(\'Updated %s on Category %s with value %s\' % (key,\n
-                                        new_category.getRelativeUrl(), value))\n
+            elif update_existing_property:\n
+              # Update if update existing property and the property is not the same\n
+              if new_category.hasProperty(key):\n
+                if new_category.getProperty(key) != value :\n
+                  category_update_dict[key] = value\n
+                  if not is_new_category and \'updated\' in displayed_report:\n
+                    if first_update_reported:\n
+                      report_line = newTempBase(context, \'item\')\n
+                      report_line.edit(field_type = \'Update\', field_category = new_category.getRelativeUrl(), field_message = translateString("Updated ${key} with value ${value} ", mapping=dict(key=key, value=value)))                \n
+                      detailed_report_append(report_line)\n
+                      first_update_reported = False\n
+                    else:\n
+                      report_line = newTempBase(context, \'item\')\n
+                      report_line.edit(field_type = \'\', field_category = \'\', field_message = translateString("Updated ${key} with value ${value} ", mapping=dict(key=key, value=value)))                \n
+                      detailed_report_append(report_line)\n
+              else:\n
+                if value not in (\'\', None) :\n
+                  category_update_dict[key] = value\n
+                  if not is_new_category and \'updated\' in displayed_report:\n
+                    if first_update_reported:\n
+                      report_line = newTempBase(context, \'item\')\n
+                      report_line.edit(field_type = \'Update\', field_category = new_category.getRelativeUrl(), field_message = translateString("Updated ${key} with value ${value} ", mapping=dict(key=key, value=value)))                \n
+                      detailed_report_append(report_line)\n
+                      first_update_reported = False\n
+                    else:\n
+                      report_line = newTempBase(context, \'item\')\n
+                      report_line.edit(field_type = \'\', field_category = \'\', field_message = translateString("Updated ${key} with value ${value} ", mapping=dict(key=key, value=value)))                \n
+                      detailed_report_append(report_line)\n
             elif value not in (\'\', None) and not new_category.hasProperty(key):\n
               # Only set properties which are not already defined\n
               category_update_dict[key] = value\n
-              detailed_report_append(\'Updated %s on Category %s with value %s\' % (key,\n
-                                      new_category.getRelativeUrl(), value))\n
+              if \'updated\' in displayed_report:\n
+                if first_update_reported:\n
+                  report_line = newTempBase(context, \'item\')\n
+                  report_line.edit(field_type = \'Update\', field_category = new_category.getRelativeUrl(), field_message = translateString("Updated ${key} with value ${value} ", mapping=dict(key=key, value=value)))                \n
+                  detailed_report_append(report_line)\n
+                  first_update_reported = False\n
+                else:\n
+                  report_line = newTempBase(context, \'item\')\n
+                  report_line.edit(field_type = \'\', field_category = \'\', field_message = translateString("Updated ${key} with value ${value} ", mapping=dict(key=key, value=value)))                \n
+                  detailed_report_append(report_line)\n
         if not is_new_category and category_update_dict:\n
           updated_category_counter += 1\n
-        new_category.edit(**category_update_dict)\n
+        if not simulation_mode:\n
+          new_category.edit(**category_update_dict)\n
     else:\n
       raise KeyError, \'path was not defined for a category, this should never happen.\'\n
 \n
@@ -178,37 +248,66 @@ for base_category_id in base_category_id_list:\n
   base_category = context.portal_categories[base_category_id]\n
   for category in base_category.getCategoryChildValueList(is_self_excluded=False):\n
     if not category_path_dict.has_key(category.getRelativeUrl()):\n
-      if keep_existing_category or Object_hasRelation(category):\n
+      if existing_category_list == \'keep\' or Object_hasRelation(category):\n
         if Object_hasRelation(category):\n
           # TODO: add a dialog parameter allowing to delete this path\n
-          detailed_report_append(\'WARNING: Category %s is used and can not be deleted\' % category.getRelativeUrl())\n
+          if \'warning\' in displayed_report:\n
+            report_line = newTempBase(context, \'item\')\n
+            report_line.edit(field_type = \'Warning\', field_category = category.getRelativeUrl(),  field_message = translateString("Category is used and can not be deleted or expired ", mapping=dict()))                \n
+            detailed_report_append(report_line)\n
         else:\n
-          detailed_report_append(\'Kept category %s\' % category.getRelativeUrl())\n
+          if existing_category_list == \'keep\' and \'kept\' in displayed_report:\n
+            report_line = newTempBase(context, \'item\')\n
+            report_line.edit(field_type = \'Keep\', field_category = category.getRelativeUrl(), field_message = translateString("Kept category", mapping=dict()))                \n
+            detailed_report_append(report_line)\n
         kept_category_counter += 1\n
       else:\n
-        detailed_report_append(\'Deleted category %s\' % category.getRelativeUrl())\n
-        deleted_category_counter += 1\n
+        if existing_category_list == \'delete\' and \'deleted\' in displayed_report:\n
+          report_line = newTempBase(context, \'item\')\n
+          report_line.edit(field_type = \'Delete\', field_category = category.getRelativeUrl(), field_message = translateString("Deleted category", mapping=dict()))                \n
+          detailed_report_append(report_line)\n
+          deleted_category_counter += 1\n
+        if existing_category_list == \'expire\' and \'expired\' in displayed_report:\n
+          report_line = newTempBase(context, \'item\')\n
+          report_line.edit(field_type = \'Expire\', field_category = category.getRelativeUrl(), field_message = translateString("Expired category", mapping=dict()))                \n
+          detailed_report_append(report_line)\n
+          expired_category_counter += 1\n
         category_to_delete_list.append(category.getRelativeUrl())\n
 \n
-# Delete unused categories\n
-if not keep_existing_category:\n
-  for category in category_to_delete_list:\n
-    category = context.portal_categories.resolveCategory(category)\n
-    if category is not None:\n
-      parent = category.getParentValue()\n
-      category_id = category.getId()\n
-      parent.deleteContent(category_id)\n
+if not simulation_mode:\n
+  \n
+  # Delete unused categories\n
+  if existing_category_list == \'delete\':\n
+    for category in category_to_delete_list:\n
+      category = context.portal_categories.resolveCategory(category)\n
+      if category is not None:\n
+        parent = category.getParentValue()\n
+        category_id = category.getId()\n
+        parent.deleteContent(category_id)\n
+  if existing_category_list == \'expire\':\n
+    if expiration_date:\n
+      for category in category_to_delete_list:\n
+        category = context.portal_categories.resolveCategory(category)\n
+        if category is not None:\n
+          category.edit(**{\'expiration_date\':expiration_date})\n
+    else:\n
+      for category in category_to_delete_list:\n
+        category = context.portal_categories.resolveCategory(category)\n
+        if category is not None:\n
+          category.expire()\n
 \n
-context.portal_caches.clearAllCache()\n
 \n
-if detailed_report:\n
+\n
+  context.portal_caches.clearAllCache()\n
+\n
+if (detailed_report or simulation_mode) and detailed_report_result:\n
   # Return a detailed report if requested\n
-  return \'\\n\'.join(detailed_report_result)\n
+  return detailed_report_result\n
 \n
 # Import is a success, go back to the portal_categories tool\n
 return context.REQUEST.RESPONSE.redirect(\n
     # TODO translate\n
-  "%s/view?portal_status_message=%s+categories+found+in+%s:+%s+created,+%s+updated,+%s+untouched,+%s+invalid+ID.+%s+existing+categories:+%s+deleted,+%s+kept."\n
+  "%s/view?portal_status_message=%s+categories+found+in+%s:+%s+created,+%s+updated,+%s+untouched,+%s+invalid+ID.+%s+existing+categories:+%s+deleted,+%s+expired,+%s+kept."\n
   % ( context.portal_categories.absolute_url()\n
     , total_category_counter\n
     , filename\n
@@ -216,8 +315,9 @@ return context.REQUEST.RESPONSE.redirect(\n
     , updated_category_counter\n
     , total_category_counter - new_category_counter - updated_category_counter\n
     , invalid_category_id_counter\n
-    , deleted_category_counter + kept_category_counter\n
+    , deleted_category_counter + kept_category_counter + expired_category_counter\n
     , deleted_category_counter\n
+    , expired_category_counter\n
     , kept_category_counter\n
     )\n
 )\n
@@ -231,7 +331,7 @@ return context.REQUEST.RESPONSE.redirect(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>import_file, update_existing_property=False, keep_existing_category=True, detailed_report=False, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -251,25 +351,38 @@ return context.REQUEST.RESPONSE.redirect(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>kw</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>translateString</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
+                            <string>Products.ERP5Type.DateUtils</string>
+                            <string>getIntervalBetweenDates</string>
+                            <string>_getitem_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
                             <string>import_file</string>
                             <string>update_existing_property</string>
-                            <string>keep_existing_category</string>
                             <string>detailed_report</string>
-                            <string>kw</string>
+                            <string>simulation_mode</string>
+                            <string>displayed_report</string>
+                            <string>effective_date</string>
+                            <string>expiration_date</string>
+                            <string>existing_category_list</string>
                             <string>detailed_report_result</string>
-                            <string>_getattr_</string>
                             <string>detailed_report_append</string>
                             <string>base_category_id_list</string>
                             <string>category_path_dict</string>
-                            <string>context</string>
+                            <string>simulation_new_category_id_list</string>
                             <string>property_id_list</string>
                             <string>AttributeError</string>
+                            <string>report_line</string>
                             <string>Object_hasRelation</string>
                             <string>isValidID</string>
                             <string>new_category_counter</string>
@@ -278,31 +391,35 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>invalid_category_id_counter</string>
                             <string>deleted_category_counter</string>
                             <string>kept_category_counter</string>
+                            <string>expired_category_counter</string>
                             <string>getattr</string>
                             <string>filename</string>
                             <string>invalid_category_spreadsheet_handler</string>
-                            <string>categories_spreadsheet_mapping</string>
+                            <string>category_list_spreadsheet_mapping</string>
                             <string>_getiter_</string>
                             <string>base_category</string>
-                            <string>categories</string>
+                            <string>category_list</string>
                             <string>_inplacevar_</string>
                             <string>len</string>
                             <string>category</string>
                             <string>False</string>
                             <string>is_new_category</string>
-                            <string>keys</string>
+                            <string>key_list</string>
                             <string>base_path_obj</string>
+                            <string>category_id_list</string>
+                            <string>parent_path</string>
                             <string>True</string>
                             <string>is_base_category</string>
                             <string>is_valid_category</string>
-                            <string>_getitem_</string>
                             <string>category_id</string>
                             <string>str</string>
                             <string>category_type</string>
+                            <string>dict</string>
                             <string>None</string>
                             <string>_write_</string>
                             <string>new_category</string>
                             <string>category_update_dict</string>
+                            <string>first_update_reported</string>
                             <string>key</string>
                             <string>value</string>
                             <string>_apply_</string>
@@ -321,11 +438,7 @@ return context.REQUEST.RESPONSE.redirect(\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>0</int>
-                <int>1</int>
-                <int>0</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>

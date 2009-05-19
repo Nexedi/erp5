@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="CheckBoxField" module="Products.Formulator.StandardFields"/>
+        <global name="MultiCheckBoxField" module="Products.Formulator.StandardFields"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_keep_existing_category</string> </value>
+            <value> <string>your_displayed_report</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -20,6 +20,14 @@
                 <item>
                     <key> <string>external_validator_failed</string> </key>
                     <value> <string>The input failed the external validator.</string> </value>
+                </item>
+                <item>
+                    <key> <string>required_not_found</string> </key>
+                    <value> <string>Input is required but no input given.</string> </value>
+                </item>
+                <item>
+                    <key> <string>unknown_selection</string> </key>
+                    <value> <string>You selected an item that was not in the list.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -57,7 +65,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra</string> </key>
+                    <key> <string>extra_item</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -65,7 +73,27 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>items</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>orientation</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -104,7 +132,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra</string> </key>
+                    <key> <string>extra_item</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -112,7 +140,27 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>items</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>orientation</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -132,11 +180,20 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <int>1</int> </value>
+                    <value>
+                      <list>
+                        <string>kept</string>
+                        <string>expired</string>
+                        <string>deleted</string>
+                        <string>created</string>
+                        <string>updated</string>
+                        <string>warning</string>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Check this box to keep existing categories even if they are not defined in the spreadsheet. Please note that base categories which are not defined in the spreadsheet will always be kept.</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -151,7 +208,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra</string> </key>
+                    <key> <string>extra_item</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -159,8 +216,59 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Kept categories</string>
+                          <string>kept</string>
+                        </tuple>
+                        <tuple>
+                          <string>Expired categories</string>
+                          <string>expired</string>
+                        </tuple>
+                        <tuple>
+                          <string>Deleted categories</string>
+                          <string>deleted</string>
+                        </tuple>
+                        <tuple>
+                          <string>Created categories</string>
+                          <string>created</string>
+                        </tuple>
+                        <tuple>
+                          <string>Updated categories</string>
+                          <string>updated</string>
+                        </tuple>
+                        <tuple>
+                          <string>Warning</string>
+                          <string>warning</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>orientation</string> </key>
+                    <value> <string>horizontal</string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Keep Existing Categories</string> </value>
+                    <value> <string>What do you want to see in your Report?</string> </value>
+                </item>
+                <item>
+                    <key> <string>unicode</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<br />
+
+]]></string> </value>
                 </item>
               </dictionary>
             </value>
