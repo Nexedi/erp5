@@ -477,7 +477,7 @@ div.adminToolbox ul li {\n
 \n
 div.adminToolbox div.adminSection > span,\n
 div.adminToolbox div.adminSection > fieldset > div.field {\n
-  padding:0 20px;\n
+  margin:0 20px;\n
 }\n
 \n
 </tal:block>
