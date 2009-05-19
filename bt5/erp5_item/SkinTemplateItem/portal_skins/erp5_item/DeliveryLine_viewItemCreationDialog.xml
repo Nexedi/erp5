@@ -95,6 +95,7 @@
                         <string>listbox_title</string>
                         <string>listbox_reference</string>
                         <string>listbox_quantity</string>
+                        <string>listbox_variation_category_list</string>
                       </list>
                     </value>
                 </item>
@@ -106,7 +107,6 @@
                         <string>my_total_quantity</string>
                         <string>your_item_count</string>
                         <string>your_type</string>
-                        <string>listbox_variation_category_list</string>
                         <string>my_quantity_unit</string>
                       </list>
                     </value>
