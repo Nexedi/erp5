@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -32,8 +33,7 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.Base import Base
 
 from Products.ERP5.Document.Coordinate import Coordinate
-
-import string
+from os import linesep
 
 class GeographicAddress(Coordinate, Base):
     """
@@ -86,21 +86,22 @@ class GeographicAddress(Coordinate, Base):
           Tries to recognize the coordinate_text to update
           this address
         """
-        lines = string.split(coordinate_text, '\n')
+
+        lines = coordinate_text.split(linesep)
         self.setStreetAddress('')
         self.setZipCode('')
         self.setCity('')
         zip_city = None
-        if len(lines ) > 1:
-          self.setStreetAddress(lines[0:-1])
-          zip_city = string.split(lines[-1])
-        elif len(lines ) > 0:
+        if len(lines) > 1:
+          self.setStreetAddress(linesep.join(lines[0:-1]))
+          zip_city = lines[-1].split()
+        elif lines:
           self.setStreetAddress('')
-          zip_city = string.split(lines[-1])
+          zip_city = lines[-1].split()
         if zip_city:
           self.setZipCode(zip_city[0])
           if len(zip_city) > 1:
-            self.setCity(string.join(zip_city[1:]))
+            self.setCity(linesep.join(zip_city[1:]))
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'standardTextFormat')
