@@ -1,3 +1,6 @@
+2009-05-19 yusei
+* Fix some proxy fields. count_method and y_size_block should not be inherited from template field.
+
 2009-05-11 yusei
 * Bump up the version.
 * Simplify field libraries and proxy fields. Old field libraries are kept for backward compatibility.

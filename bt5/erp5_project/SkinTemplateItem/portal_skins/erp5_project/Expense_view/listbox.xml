@@ -14,13 +14,14 @@
             <value>
               <list>
                 <string>all_columns</string>
-                <string>title</string>
-                <string>selection_name</string>
                 <string>columns</string>
+                <string>count_method</string>
                 <string>editable_columns</string>
-                <string>search</string>
                 <string>lines</string>
                 <string>portal_types</string>
+                <string>search</string>
+                <string>selection_name</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -134,6 +135,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>editable_columns</string> </key>
