@@ -406,6 +406,22 @@ class TestSQLCatalog(unittest.TestCase):
     self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a b'), operator='not'), operator='and'),
                  {'fulltext': 'NOT (a b)'})
 
+  def test_NoneValueToSimpleQuery(self):
+    """
+      When a SimpleQuery receives a python None value and an "=" comparison
+      operator (be it the default or explictely provided), it must change that
+      operator into an "is" operator.
+      If "is" compariton operator is explicitely provided with a non-None
+      value, raise.
+      If non-"=" compariton operator is provided with a None value, raise.
+    """
+    self.assertEqual(ReferenceQuery(operator='is', default=None),
+                     SimpleQuery(default=None))
+    self.assertEqual(ReferenceQuery(operator='is', default=None),
+                     SimpleQuery(default=None, comparison_operator='='))
+    self.assertRaises(ValueError, SimpleQuery, default=None, comparison_operator='>=')
+    self.assertRaises(ValueError, SimpleQuery, default=1, comparison_operator='is')
+
 ##return catalog(title=Query(title='a', operator='not'))
 #return catalog(title={'query': 'a', 'operator': 'not'})
 #return catalog(title={'query': ['a', 'b'], 'operator': 'not'})

@@ -62,7 +62,7 @@ class SimpleQuery(Query):
     if len(kw) != 1:
       raise ValueError, 'SimpleQuery can support one and one only column. Got %r.' % (kw, )
     self.column, value = kw.popitem()
-    # Backward compatibility code (those changes should not be needed when
+    # Usability improvement code (those changes should not be needed when
     # this Query is instanciated by a SearchKey, as operator should be correct
     # already).
     comparison_operator = comparison_operator.lower()
@@ -83,6 +83,13 @@ class SimpleQuery(Query):
           value = value[0]
         else:
           comparison_operator = 'in'
+    if value is None:
+      if comparison_operator == '=':
+        comparison_operator = 'is'
+      elif comparison_operator != 'is':
+        raise ValueError, 'None value with a non-"=" comparison_operator (%r). Not sure what to do.' % (comparison_operator, )
+    elif comparison_operator == 'is':
+      raise ValueError, 'Non-None value (%r) with "is" comparison_operator. Not sure what to do.' % (value, )
     self.value = value
     self.comparison_operator = comparison_operator
     self.group = group
