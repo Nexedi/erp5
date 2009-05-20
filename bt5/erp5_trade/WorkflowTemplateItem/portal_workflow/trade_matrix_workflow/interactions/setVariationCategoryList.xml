@@ -36,6 +36,12 @@
             </value>
         </item>
         <item>
+            <key> <string>before_commit_script_name</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
@@ -58,6 +64,10 @@
             </value>
         </item>
         <item>
+            <key> <string>once_per_transaction</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>portal_type_filter</string> </key>
             <value>
               <list>
@@ -65,6 +75,8 @@
                 <string>Internal Packing List Line</string>
                 <string>Inventory Line</string>
                 <string>Invoice Line</string>
+                <string>Pay Sheet Line</string>
+                <string>Pay Sheet Model Line</string>
                 <string>Purchase Order Line</string>
                 <string>Purchase Packing List Line</string>
                 <string>Sale Order Line</string>
