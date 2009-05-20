@@ -220,23 +220,23 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Kept categories</string>
+                          <string>Kept Categories</string>
                           <string>kept</string>
                         </tuple>
                         <tuple>
-                          <string>Expired categories</string>
+                          <string>Expired Categories</string>
                           <string>expired</string>
                         </tuple>
                         <tuple>
-                          <string>Deleted categories</string>
+                          <string>Deleted Categories</string>
                           <string>deleted</string>
                         </tuple>
                         <tuple>
-                          <string>Created categories</string>
+                          <string>Created Categories</string>
                           <string>created</string>
                         </tuple>
                         <tuple>
-                          <string>Updated categories</string>
+                          <string>Updated Categories</string>
                           <string>updated</string>
                         </tuple>
                         <tuple>
@@ -256,7 +256,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>What do you want to see in your Report?</string> </value>
+                    <value> <string>What Do You Want To See In Your Report?</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>

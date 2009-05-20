@@ -223,15 +223,15 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Keep categories</string>
+                          <string>Keep Categories</string>
                           <string>keep</string>
                         </tuple>
                         <tuple>
-                          <string>Expire categories</string>
+                          <string>Expire Categories</string>
                           <string>expire</string>
                         </tuple>
                         <tuple>
-                          <string>Delete categories</string>
+                          <string>Delete Categories</string>
                           <string>delete</string>
                         </tuple>
                       </list>
@@ -247,7 +247,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>What to do with existing categories?</string> </value>
+                    <value> <string>What To Do With Existing Categories?</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>

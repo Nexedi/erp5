@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>CategoryTool_viewImportReport</string> </value>
+            <value> <string>CategoryTool_importCategoryFile</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>

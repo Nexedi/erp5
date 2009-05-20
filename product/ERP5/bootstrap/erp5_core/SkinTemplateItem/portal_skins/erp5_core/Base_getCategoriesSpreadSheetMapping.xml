@@ -80,9 +80,10 @@ way that parent always precedes their children.\n
 """\n
 from Products.ERP5Type.Message import translateString\n
 from Products.ERP5OOo.OOoUtils import OOoParser\n
+from Products.ERP5Type.Document import newTempBase\n
 parser = OOoParser()\n
-categories_spreadsheet_mapping = dict()\n
-\n
+category_list_spreadsheet_mapping = dict()\n
+error_list = []\n
 \n
 def default_invalid_spreadsheet_error_handler(error_message):\n
   raise ValueError(error_message)\n
@@ -151,12 +152,12 @@ else:\n
 \n
 # Extract tables from the speadsheet file\n
 filename = parser.getFilename()\n
-spreadsheets = parser.getSpreadsheetsMapping(no_empty_lines=True)\n
+spreadsheet_list = parser.getSpreadsheetsMapping(no_empty_lines=True)\n
 \n
 \n
-for table_name in spreadsheets.keys():\n
+for table_name in spreadsheet_list.keys():\n
   # Get the header of the table\n
-  columns_header = spreadsheets[table_name][0]\n
+  columns_header = spreadsheet_list[table_name][0]\n
   # Get the mapping to help us know the property according a cell index\n
   property_map = {}\n
   column_index = 0\n
@@ -191,14 +192,19 @@ for table_name in spreadsheets.keys():\n
   # 1 table = 1 base category\n
   base_category_name = table_name\n
   base_category_id = getIDFromString(base_category_name)\n
-  categories = categories_spreadsheet_mapping.setdefault(base_category_id, [])\n
-  categories.append({ \'path\' : base_category_id\n
+  if same_type(base_category_name, u\'\'):\n
+    base_category_name = base_category_name.encode(\'utf8\')\n
+  if same_type(base_category_id, u\'\'):\n
+    base_category_id = base_category_id.encode(\'utf8\')\n
+  category_list = category_list_spreadsheet_mapping.setdefault(base_category_id, [])\n
+  category_list.append({ \'path\' : base_category_id\n
                     , \'title\': base_category_name\n
                     })\n
 \n
-  # This path_elements help us to reconstruct the absolute path\n
-  path_elements = []\n
-  for line in spreadsheets[table_name][1:]:\n
+  # This path_element_list help us to reconstruct the absolute path\n
+  path_element_list = []\n
+  line_index = 2\n
+  for line in spreadsheet_list[table_name][1:]:\n
 \n
     # Exclude empty lines\n
     if line.count(\'\') + line.count(None) == len(line):\n
@@ -214,7 +220,7 @@ for table_name in spreadsheets.keys():\n
       cell_index += 1\n
 \n
     # Analyse every cell of the line\n
-    category_properties = {}\n
+    category_property_list = {}\n
     cell_index = 0\n
     for (property_id, cell_data) in line_data.items():\n
 \n
@@ -239,7 +245,7 @@ for table_name in spreadsheets.keys():\n
         if not property_id.startswith(\'path_\'):\n
           if same_type(cell_data, u\'\'):\n
             cell_data = cell_data.encode(\'utf8\')\n
-          category_properties[property_id] = cell_data\n
+          category_property_list[property_id] = cell_data\n
         # Handle \'path\' property\n
         else:\n
           path_element_id = cell_id\n
@@ -250,7 +256,7 @@ for table_name in spreadsheets.keys():\n
           # Get a path element for each depth level to reach the 0-level\n
           for searched_depth in range(element_depth)[::-1]:\n
             # Get the first path element that correspond to the searched depth\n
-            for element in path_elements[::-1]:\n
+            for element in path_element_list[::-1]:\n
               if element[\'depth\'] == searched_depth:\n
                 # Element found, add it to the list\n
                 absolut_path_element_list.append(element[\'value\'])\n
@@ -259,35 +265,46 @@ for table_name in spreadsheets.keys():\n
           path = \'/\'.join([base_category_id,] + absolut_path_element_list[::-1])\n
           if same_type(path, u\'\'):\n
             path = path.encode(\'utf8\')\n
-          category_properties[\'path\'] = path\n
+          category_property_list[\'path\'] = path\n
 \n
           # Save the current raw path item value as title if no title column defined\n
-          if \'title\' not in category_properties.keys():\n
+          if \'title\' not in category_property_list.keys():\n
             clean_title = cell_data.strip()\n
             # Only set title if it look like a title\n
             # (i.e. its tranformation to ID is not the same as the original value)\n
             if clean_title != cell_id:\n
-              category_properties[\'title\'] = clean_title\n
+              category_property_list[\'title\'] = clean_title\n
 \n
           # Detect invalid IDs\n
           if path_element_id in property_id_list:\n
-            invalid_spreadsheet_error_handler(translateString(\n
-                "The ID ${id} is invalid, it\'s a reserved property name",\n
-                mapping=dict(id=path_element_id)))\n
+            if simulation_mode:\n
+              error = newTempBase(context, \'item\')\n
+              error.edit(field_type = \'Invalid ID\', field_category = path_element_id, field_message = translateString("The ID ${id} in ${table} at line ${line}  is invalid, it\'s a reserved property name",mapping=dict(id=path_element_id, table=table_name, line=line_index)))\n
+              error_list.append(error)\n
+            else:\n
+              return invalid_spreadsheet_error_handler(translateString("The ID ${id} in ${table} at line ${line}  is invalid, it\'s a reserved property name",mapping=dict(id=path_element_id, table=table_name, line=line_index)))\n
+\n
+\n
 \n
           # Detect duplicate IDs\n
-          for element in path_elements[::-1]:\n
+          for element in path_element_list[::-1]:\n
             if element[\'depth\'] != element_depth:\n
               break\n
             if element[\'value\'] == path_element_id:\n
-              invalid_spreadsheet_error_handler(\n
-                  translateString("Duplicate id found: ${id}",\n
-                      mapping=dict(id=element[\'value\'])))\n
+              if simulation_mode:\n
+                error = newTempBase(context, \'item\')\n
+                error.edit(field_type = \'Duplicate ID\', field_category = element[\'value\'], field_message = translateString("Duplicate ID ${id} found in ${table} at line ${line}  ", mapping=dict(id=element[\'value\'], table=table_name, line=line_index)))\n
+                error_list.append(error)\n
+              else:\n
+                return invalid_spreadsheet_error_handler( \n
+                    translateString("Duplicate id found in ${table} at line ${line} : ${id}",\n
+                        mapping=dict(id=element[\'value\'], table=table_name, line=line_index)))\n
+\n
 \n
           # Detect wrong hierarchy\n
-          if path_elements:\n
+          if path_element_list:\n
             current_depth = element_depth\n
-            for element in path_elements[::-1]:\n
+            for element in path_element_list[::-1]:\n
               if element[\'depth\'] > current_depth:\n
                 break # we are now on another branch\n
               if element[\'depth\'] == current_depth:\n
@@ -296,24 +313,33 @@ for table_name in spreadsheets.keys():\n
                 current_depth = element[\'depth\']\n
                 continue # we are on the direct parent (current level - 1)\n
               else:\n
-                invalid_spreadsheet_error_handler(\n
-                   translateString(\n
-                    "Wrong hierarchy found for ID ${id} and depth ${depth}",\n
-                        mapping=dict(id=path_element_id,\n
-                                     depth=element_depth)))\n
-            \n
+                if simulation_mode:\n
+                  error = newTempBase(context, \'item\')\n
+                  error.edit(field_type = \'Wrong hierarchy\', field_category = path_element_id, field_message = translateString("Wrong hierarchy found for ID ${id} and ${depth} in ${table} at line ${line} " ,mapping=dict(id=path_element_id,depth=element_depth, table=table_name, line=line_index)))\n
+                  error_list.append(error)         \n
+                else: \n
+                  return invalid_spreadsheet_error_handler(\n
+                        translateString(\n
+                           "Wrong hierarchy found for ID ${id} and depth ${depth} in ${table} at line ${line} ",\n
+                             mapping=dict(id=path_element_id,\n
+                                       depth=element_depth, table=table_name, line=line_index)))\n
+\n
+\n
+\n
           # Save the path element\n
-          path_elements.append({ \'depth\': element_depth\n
+          path_element_list.append({ \'depth\': element_depth\n
                                , \'value\': path_element_id\n
                                })\n
 \n
       # Proceed to next cell\n
       cell_index += 1\n
-\n
-    if len(category_properties) > 0 and \'path\' in category_properties.keys():\n
-      categories.append(category_properties)\n
-\n
-return categories_spreadsheet_mapping\n
+    line_index += 1\n
+    if len(category_property_list) > 0 and \'path\' in category_property_list.keys():\n
+      category_list.append(category_property_list)\n
+if error_list:\n
+  return {\'error_list\':error_list}\n
+else:\n
+  return category_list_spreadsheet_mapping\n
 
 
 ]]></string> </value>
@@ -326,7 +352,7 @@ return categories_spreadsheet_mapping\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>import_file, invalid_spreadsheet_error_handler=None</string> </value>
+            <value> <string>import_file, invalid_spreadsheet_error_handler=None, simulation_mode=False</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -346,7 +372,7 @@ return categories_spreadsheet_mapping\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -354,13 +380,17 @@ return categories_spreadsheet_mapping\n
                           <tuple>
                             <string>import_file</string>
                             <string>invalid_spreadsheet_error_handler</string>
+                            <string>simulation_mode</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
                             <string>Products.ERP5OOo.OOoUtils</string>
                             <string>OOoParser</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
                             <string>parser</string>
                             <string>dict</string>
-                            <string>categories_spreadsheet_mapping</string>
+                            <string>category_list_spreadsheet_mapping</string>
+                            <string>error_list</string>
                             <string>default_invalid_spreadsheet_error_handler</string>
                             <string>None</string>
                             <string>_getattr_</string>
@@ -370,7 +400,6 @@ return categories_spreadsheet_mapping\n
                             <string>getIDFromString</string>
                             <string>content_type</string>
                             <string>hasattr</string>
-                            <string>Products.ERP5Type.Document</string>
                             <string>newTempOOoDocument</string>
                             <string>tmp_ooo</string>
                             <string>_getiter_</string>
@@ -379,7 +408,7 @@ return categories_spreadsheet_mapping\n
                             <string>str</string>
                             <string>filename</string>
                             <string>True</string>
-                            <string>spreadsheets</string>
+                            <string>spreadsheet_list</string>
                             <string>table_name</string>
                             <string>_getitem_</string>
                             <string>columns_header</string>
@@ -393,19 +422,20 @@ return categories_spreadsheet_mapping\n
                             <string>_inplacevar_</string>
                             <string>base_category_name</string>
                             <string>base_category_id</string>
-                            <string>categories</string>
-                            <string>path_elements</string>
+                            <string>same_type</string>
+                            <string>category_list</string>
+                            <string>path_element_list</string>
+                            <string>line_index</string>
                             <string>line</string>
                             <string>len</string>
                             <string>cell_index</string>
                             <string>line_data</string>
                             <string>cell</string>
                             <string>property_id</string>
-                            <string>category_properties</string>
+                            <string>category_property_list</string>
                             <string>cell_data</string>
                             <string>cell_id</string>
                             <string>alt_id_source</string>
-                            <string>same_type</string>
                             <string>path_element_id</string>
                             <string>absolut_path_element_list</string>
                             <string>int</string>
@@ -415,6 +445,7 @@ return categories_spreadsheet_mapping\n
                             <string>element</string>
                             <string>path</string>
                             <string>clean_title</string>
+                            <string>error</string>
                             <string>current_depth</string>
                           </tuple>
                         </value>
@@ -429,6 +460,7 @@ return categories_spreadsheet_mapping\n
             <value>
               <tuple>
                 <none/>
+                <int>0</int>
               </tuple>
             </value>
         </item>

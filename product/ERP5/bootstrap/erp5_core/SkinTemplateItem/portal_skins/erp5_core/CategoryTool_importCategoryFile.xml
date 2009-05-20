@@ -55,17 +55,8 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Message import translateString\n
 from Products.ERP5Type.Document import newTempBase\n
-from Products.ERP5Type.DateUtils import getIntervalBetweenDates\n
 \n
 # Initialise some general variables\n
-import_file = context.REQUEST[\'import_file\']\n
-update_existing_property = context.REQUEST[\'update_existing_property\']\n
-detailed_report = context.REQUEST[\'detailed_report\']\n
-simulation_mode = context.REQUEST[\'simulation_mode\']\n
-displayed_report = context.REQUEST[\'displayed_report\']\n
-effective_date = context.REQUEST[\'effective_date\']\n
-expiration_date = context.REQUEST[\'expiration_date\']\n
-existing_category_list = context.REQUEST[\'existing_category_list\']\n
 detailed_report_result = []\n
 detailed_report_append = detailed_report_result.append\n
 base_category_id_list = []\n
@@ -123,8 +114,10 @@ def invalid_category_spreadsheet_handler(message):\n
 \n
 category_list_spreadsheet_mapping = context.Base_getCategoriesSpreadSheetMapping(import_file,\n
                                     invalid_spreadsheet_error_handler=invalid_category_spreadsheet_handler, simulation_mode=simulation_mode)\n
+\n
 if category_list_spreadsheet_mapping.has_key(\'error_list\'):\n
-  return category_list_spreadsheet_mapping[\'error_list\']\n
+  context.REQUEST.other[\'category_import_report\'] = category_list_spreadsheet_mapping[\'error_list\']\n
+  return context.CategoryTool_viewImportReport()\n
 \n
 for base_category, category_list in \\\n
             category_list_spreadsheet_mapping.items():\n
@@ -223,7 +216,9 @@ for base_category, category_list in \\\n
                       report_line.edit(field_type = \'\', field_category = \'\', field_message = translateString("Updated ${key} with value ${value} ", mapping=dict(key=key, value=value)))                \n
                       detailed_report_append(report_line)\n
             elif value not in (\'\', None) and not new_category.hasProperty(key):\n
+              context.log(new_category.getProperty(key))\n
               # Only set properties which are not already defined\n
+              context.log(new_category.hasProperty(key))\n
               category_update_dict[key] = value\n
               if \'updated\' in displayed_report:\n
                 if first_update_reported:\n
@@ -302,7 +297,8 @@ if not simulation_mode:\n
 \n
 if (detailed_report or simulation_mode) and detailed_report_result:\n
   # Return a detailed report if requested\n
-  return detailed_report_result\n
+  context.REQUEST.other[\'category_import_report\'] = detailed_report_result\n
+  return context.CategoryTool_viewImportReport()\n
 \n
 # Import is a success, go back to the portal_categories tool\n
 return context.REQUEST.RESPONSE.redirect(\n
@@ -331,7 +327,7 @@ return context.REQUEST.RESPONSE.redirect(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>import_file, update_existing_property=False, keep_existing_category=True, detailed_report=False, simulation_mode=False, displayed_report=[], effective_date, expiration_date, existing_category_list=\'keep\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -351,35 +347,33 @@ return context.REQUEST.RESPONSE.redirect(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>9</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>kw</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>translateString</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempBase</string>
-                            <string>Products.ERP5Type.DateUtils</string>
-                            <string>getIntervalBetweenDates</string>
-                            <string>_getitem_</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>import_file</string>
                             <string>update_existing_property</string>
+                            <string>keep_existing_category</string>
                             <string>detailed_report</string>
                             <string>simulation_mode</string>
                             <string>displayed_report</string>
                             <string>effective_date</string>
                             <string>expiration_date</string>
                             <string>existing_category_list</string>
+                            <string>kw</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>translateString</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
                             <string>detailed_report_result</string>
+                            <string>_getattr_</string>
                             <string>detailed_report_append</string>
                             <string>base_category_id_list</string>
                             <string>category_path_dict</string>
                             <string>simulation_new_category_id_list</string>
+                            <string>context</string>
                             <string>property_id_list</string>
                             <string>AttributeError</string>
                             <string>report_line</string>
@@ -396,6 +390,8 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>filename</string>
                             <string>invalid_category_spreadsheet_handler</string>
                             <string>category_list_spreadsheet_mapping</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
                             <string>_getiter_</string>
                             <string>base_category</string>
                             <string>category_list</string>
@@ -416,7 +412,6 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>category_type</string>
                             <string>dict</string>
                             <string>None</string>
-                            <string>_write_</string>
                             <string>new_category</string>
                             <string>category_update_dict</string>
                             <string>first_update_reported</string>
@@ -438,7 +433,16 @@ return context.REQUEST.RESPONSE.redirect(\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+                <int>1</int>
+                <int>0</int>
+                <int>0</int>
+                <list/>
+                <none/>
+                <none/>
+                <string>keep</string>
+              </tuple>
             </value>
         </item>
         <item>
