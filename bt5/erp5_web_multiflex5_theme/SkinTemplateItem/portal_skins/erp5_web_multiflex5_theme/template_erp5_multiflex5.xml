@@ -98,9 +98,10 @@
                            footer_area python:aggregate.get(\'footer\', []);\n
                            global css_list_template python:[\n
                                   \'%s/mf54_reset.css\' % portal_path,\n
-                                  \'%s/mf54_grid.css\' % section_url,\n
+                                  \'%s/mf54_grid.css\' % portal_path,\n
                                   \'%s/mf54_content.css\' % portal_path,\n
-] + (section.getLayoutProperty(\'layout_additional_css\', None) and [section.getLayoutProperty(\'layout_additional_css\')] or []);\n
+] + (section.getLayoutProperty(\'layout_additional_css\', None) and\n
+     [\'%s/%s\' % (portal_path, section.getLayoutProperty(\'layout_additional_css\'))] or []);\n
                            global js_list python:[\n
 ]">\n
       <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">\n

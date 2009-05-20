@@ -147,14 +147,14 @@
 /*******************/\n
 \n
 /* BREADCRUMB */\n
-.header-bottom ul {float:left; width:430px; list-style:none; padding:8px 0 3px 10px !important /*Non-IE6*/; padding:8px 0 3px 10px /*IE6*/;}\n
+.header-bottom ul {float:left; list-style:none; padding:8px 0 3px 10px !important /*Non-IE6*/; padding:8px 0 3px 10px /*IE6*/;}\n
 .header-bottom ul li {display:inline; padding:0 0 0 10px; background:transparent url(./mf54_image/bg_bullet_arrow.gif) no-repeat 0 50%; font-size:110% !important /*Non-IE6*/; font-size:100% /*IE6*/;}\n
 .header-bottom ul li.nobullet {display:inline; padding:0; background:none; color:rgb(75,75,75);}\n
 .header-bottom ul a {color:rgb(125,125,125); font-weight:bold; text-decoration:none;}\n
 .header-bottom ul a:hover {color:rgb(255,255,255);}\n
 \n
 /* SEARCH FORM */\n
-.header-bottom .searchform {float:right; width:430px;}\n
+.header-bottom .searchform {float:right;}\n
 .header-bottom .searchform form fieldset {float:right; border:none; padding-top:5px; padding-right:10px;}\n
 .header-bottom .searchform input.field {width:15.0em; height:1.2em; padding:1px !important /*Non-IE6*/; padding:2px /*IE6*/; border:solid 1px <tal:block tal:replace="primary_color"/>; background-color:rgb(255,255,255); font-size:110% !important /*Non-IE6*/; font-size:100% /*IE6*/;}\n
 .header-bottom .searchform input.button {height:1.6em; background-color:rgb(240,240,240); border:solid 1px rgb(150,150,150); text-align:center; color:rgb(100,100,100); font-size:110% !important /*Non-IE6*/; font-size:100% /*IE6*/;}\n
