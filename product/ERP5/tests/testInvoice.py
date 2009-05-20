@@ -41,7 +41,7 @@ from DateTime import DateTime
 from Acquisition import aq_parent
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from testPackingList import TestPackingListMixin, TestDeliveryRule
+from testPackingList import TestPackingListMixin
 from testAccountingRules import TestAccountingRulesMixin
 
 class TestInvoiceMixin(TestPackingListMixin,
@@ -3258,45 +3258,9 @@ class TestPurchaseInvoice(TestInvoice, ERP5TypeTestCase):
       stepTic
     """
 
-class TestInvoiceRule(TestDeliveryRule):
-  rule_portal_type = 'Invoice Rule'
-  delivery_line_portal_type = 'Invoice Line'
-
-  def test_rule_simulation_ready(self):
-    # not available on invoice
-    return
-
-  def test_rule_simulation_confirm(self):
-    self.createDocuments()
-    self.delivery.plan()
-    self.assertEqual('planned', self.delivery.getSimulationState())
-    transaction.commit() ; self.tic()
-
-    self.checkDeliverySimulation()
-
-    self.modifyDelivery()
-
-    transaction.commit() ; self.tic()
-
-    self.checkDeliverySimulation()
-
-class TestInvoiceRuleSaleInvoiceTransaction(TestInvoiceRule):
-  delivery_portal_type = 'Sale Invoice Transaction'
-
-  def getTitle(self):
-    return "Sale Invoice Transaction Invoice Rule"
-
-class TestInvoiceRulePurchaseInvoiceTransaction(TestInvoiceRule):
-  delivery_portal_type = 'Purchase Invoice Transaction'
-
-  def getTitle(self):
-    return "Purchase Invoice Transaction Invoice Rule"
-
 import unittest
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestSaleInvoice))
   suite.addTest(unittest.makeSuite(TestPurchaseInvoice))
-  suite.addTest(unittest.makeSuite(TestInvoiceRuleSaleInvoiceTransaction))
-  suite.addTest(unittest.makeSuite(TestInvoiceRulePurchaseInvoiceTransaction))
   return suite
