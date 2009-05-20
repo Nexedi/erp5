@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -333,6 +334,11 @@ try:
       return self.client.resolved(path=path)
     
     def info(self, path):
+      if not os.path.exists(path):
+        raise ValueError, "Repository %s does not exist" % path
+      # symlinks are not well supported by pysvn
+      if os.path.islink(path):
+        path = os.path.realpath(path)
       try:
         entry = self.client.info(path=path)
       except pysvn.ClientError, error:
@@ -341,6 +347,8 @@ try:
           raise excep
         else:
           raise error
+      if entry is None:
+        raise ValueError, "Could not open SVN repository %s" % path
       # transform entry to dict to make it more usable in zope
       members_tuple = ('url', 'uuid', 'revision', 'kind', \
       'commit_author', 'commit_revision', 'commit_time',)
