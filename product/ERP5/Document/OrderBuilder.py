@@ -96,7 +96,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
 
   security.declarePublic('build')
   def build(self, applied_rule_uid=None, movement_relative_url_list=None,
-            delivery_relative_url_list=None,**kw):
+            delivery_relative_url_list=None, movement_list=None, **kw):
     """
       Build deliveries from a list of movements
 
@@ -109,16 +109,19 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       movement_relative_url_list = []
     if delivery_relative_url_list is None:
       delivery_relative_url_list = []
+    if movement_list is None:
+      movement_list = []
     # Call a script before building
     self.callBeforeBuildingScript()
     # Select
-    if len(movement_relative_url_list) == 0:
-      movement_list = self.searchMovementList(
-                                      delivery_relative_url_list=delivery_relative_url_list,
-                                      applied_rule_uid=applied_rule_uid,**kw)
-    else:
-      movement_list = [self.restrictedTraverse(relative_url) for relative_url \
-                       in movement_relative_url_list]
+    if not len(movement_list):
+      if len(movement_relative_url_list) == 0:
+        movement_list = self.searchMovementList(
+                                        delivery_relative_url_list=delivery_relative_url_list,
+                                        applied_rule_uid=applied_rule_uid,**kw)
+      else:
+        movement_list = [self.restrictedTraverse(relative_url) for relative_url \
+                         in movement_relative_url_list]
     # Collect
     root_group_node = self.collectMovement(movement_list)
     # Build
