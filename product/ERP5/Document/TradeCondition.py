@@ -81,6 +81,7 @@ class TradeCondition(Path, Transformation):
               .getPreferredNormalResourceUseCategoryList()
       # check if the existing movements are in aggregated movments
       movement_to_delete_list = []
+      movement_to_add_list = []
       if len(aggregated_amount_list):
         for movement in existing_movement_list:
           keep_movement = False
