@@ -263,6 +263,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     business_path = sequence.get('business_path')
     business_path.setTradePhaseList(['trade_phase/payroll/france/urssaf'])
     business_path.setSourceDecisionValue(sequence.get('urssaf_roubaix'))
+    business_path.setDeliveryBuilderList(('portal_deliveries/pay_sheet_builder',))
     sequence.edit(business_path=business_path)
 
   def stepSpecialiseBusinessProcessOnModel(self, sequence=None, **kw):
@@ -309,19 +310,6 @@ class TestNewPayroll(TestNewPayrollMixin):
     '''
     sequence_list = SequenceList()
     sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
-               CheckUpdateAggregatedMovementReturn
-               PaysheetApplyTransformation
-               Tic
-               CheckPaysheetLineAreCreated
-               CheckPaysheetLineAmounts
-               CheckUpdateAggregatedAmountListReturnNothing
-    """
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
-
-  def test_02_setSourceOnMovementUsingBusinessProcess(self):
-    sequence_list = SequenceList()
-    sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
                CreateBusinessProcess
                CreateBusinessPath
                CreateUrssafRoubaixOrganisation
@@ -332,6 +320,9 @@ class TestNewPayroll(TestNewPayrollMixin):
                PaysheetApplyTransformation
                Tic
                CheckSourceSectionOnMovements
+               CheckPaysheetLineAreCreated
+               CheckPaysheetLineAmounts
+               CheckUpdateAggregatedAmountListReturnNothing
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
