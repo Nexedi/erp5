@@ -67,7 +67,6 @@ elif context.getPortalType()==\'Sale Packing List Line\':\n
 \n
 movement_cell_list = context.contentValues(portal_type=cell_portal_type)\n
 context.setVariationCategoryList([])\n
-context.setAggregateValueList([])\n
 base_id = \'movement\'\n
 for line in kw.get(\'listbox\'):\n
   if line.has_key(\'listbox_key\') and line[\'quantity\'] in (\'\',None):\n

@@ -53,10 +53,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>item_list = []\n
+            <value> <string>from Products.ERP5Type.Message import translateString\n
+item_list = []\n
 request = context.REQUEST\n
 total_quantity = 0.0 \n
 new_item_list =[]\n
+context.setAggregateValueList([])\n
 type = request.get("field_my_type")\n
 if context.getPortalType()==\'Sale Packing List Line\':\n
   cell_portal_type = \'Sale Packing List Cell\'\n
@@ -71,17 +73,24 @@ for line in kw.get(\'listbox\'): \n
     item = context.portal_catalog.getResultValue(\n
                                     relative_url=line["listbox_key"].split("erp5/")[-1])\n
     item_list.append(item)\n
-\n
+variation_dict = {}  \n
+for item in item_list:  \n
+  variation_list = item.Item_getVariationOnDefinedOnItem()\n
+  if variation_list not in variation_dict:\n
+    variation_dict[variation_list] = 0.0  \n
+  variation_dict[variation_list] = variation_dict[variation_list] + item.getQuantity()\n
 for cell in splc_list:\n
   for item in item_list:\n
     if item.Item_getVariationOnMovement()==cell.getVariationCategoryList():\n
        new_item_list=[]\n
        new_item_list.append(item)       \n
-       cell.setAggregateValueList(cell.getAggregateValueList()+new_item_list)\n
-       item.setQuantity(item.getQuantity()-cell.getQuantity())\n
+       cell.setAggregateValueList(context.getAggregateValueList()+ new_item_list)\n
+       variation_cell_list = \',\'.join([x[0] for x in cell.getVariationCategoryItemList()])\n
+       cell.setQuantity(variation_dict[variation_cell_list])\n
 \n
 \n
-context.REQUEST.response.redirect(\'%s/view?portal_status_message=%s\' % (context.absolute_url(), \'Items aggregated.\'.replace(\' \', \'%20\')))\n
+return context.Base_redirect(form_id, keep_items=dict(\n
+       portal_status_message=translateString(\'Items aggregated\')))\n
 </string> </value>
         </item>
         <item>
@@ -92,7 +101,7 @@ context.REQUEST.response.redirect(\'%s/view?portal_status_message=%s\' % (contex
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string>form_id=\'view\',*args, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -112,14 +121,17 @@ context.REQUEST.response.redirect(\'%s/view?portal_status_message=%s\' % (contex
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>form_id</string>
                             <string>args</string>
                             <string>kw</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>translateString</string>
                             <string>item_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -134,7 +146,15 @@ context.REQUEST.response.redirect(\'%s/view?portal_status_message=%s\' % (contex
                             <string>line</string>
                             <string>_getitem_</string>
                             <string>item</string>
+                            <string>variation_dict</string>
+                            <string>variation_list</string>
+                            <string>_write_</string>
                             <string>cell</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>variation_cell_list</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -146,7 +166,9 @@ context.REQUEST.response.redirect(\'%s/view?portal_status_message=%s\' % (contex
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string>view</string>
+              </tuple>
             </value>
         </item>
         <item>

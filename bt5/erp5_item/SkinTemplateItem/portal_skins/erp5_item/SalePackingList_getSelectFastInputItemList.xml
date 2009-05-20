@@ -66,6 +66,7 @@ result_list = []\n
 new_list = filter(\n
        lambda x :(x.Item_getResourceTitle()==context.getResourceTitle()),\n
                   result)\n
+\n
 splc_list= context.contentValues(portal_type=cell_portal_type)\n
 for splc in splc_list:\n
   item_list = filter(\n

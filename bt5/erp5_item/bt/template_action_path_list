@@ -14,6 +14,7 @@ Returned Sale Packing List | aggregate_item
 Sale Order Line | item_creation
 Sale Order | aggregate_item
 Sale Packing List Line | item_creation
+Sale Packing List Line | select_item_fast_input
 Sale Packing List | aggregate_item
 Service Report Module | view
 Service Report | delivery_jump
