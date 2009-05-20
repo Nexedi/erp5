@@ -13,10 +13,10 @@
  </chain>
  <chain>
   <type>Trade Model Line</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>edit_workflow, trade_model_line_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Trade Model Rule</type>
-  <workflow>edit_workflow, rule_validation_workflow</workflow>
+  <workflow>rule_validation_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>
