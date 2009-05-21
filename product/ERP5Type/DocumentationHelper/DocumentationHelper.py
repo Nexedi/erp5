@@ -131,7 +131,7 @@ class DocumentationHelper(Implicit):
     """
     Returns the id of the documentation helper
     """
-    return self.getDocumentedObject().id
+    return getattr(aq_base(self.getDocumentedObject()), 'id', '')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTempInstance')
   def getTempInstance(self, portal_type):
