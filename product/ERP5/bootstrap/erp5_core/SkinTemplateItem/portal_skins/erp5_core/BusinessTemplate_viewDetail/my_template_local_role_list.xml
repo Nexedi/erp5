@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_template_portal_type_roles_list</string> </value>
+            <value> <string>my_template_local_role_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -270,7 +270,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Portal Type Roles</string> </value>
+                    <value> <string>Local Roles</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
