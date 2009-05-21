@@ -56,9 +56,16 @@ class ERP5SiteDocumentationHelper(DocumentationHelper):
     return "ERP5 Site"
 
   def getBusinessTemplateValueList(self):
-    bt_list = getattr(self, 'REQUEST', {}).get("business_template_list")
-    return (bt for bt in self.getPortalObject().portal_templates.objectValues()
-               if bt_list is None or bt.getTitle() in bt_list)
+    documented_bt_list = getattr(self, 'REQUEST', {}).get("business_template_list")
+#    return (bt for bt in self.getPortalObject().portal_templates.objectValues()
+#               if bt_list is None or (bt.getTitle() in bt_list and bt.getInstallationSate()=='installed'))
+
+    bt_list = []
+    for bt in self.getDocumentedObject().portal_templates.objectValues():
+      if bt.getInstallationState() == 'installed' and (documented_bt_list is None or bt.getTitle() in documented_bt_list):
+        bt_list.append(bt)
+    return bt_list
+
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getBusinessTemplateItemList')
   def getBusinessTemplateItemList(self):
