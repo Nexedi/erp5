@@ -52,6 +52,7 @@ from Products.ERP5Type.Utils import readLocalExtension, \
 from Products.ERP5Type.Utils import readLocalTest, \
                                     writeLocalTest, \
                                     removeLocalTest
+from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.RoleInformation import RoleInformation
@@ -4538,7 +4539,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._action_item = \
           ActionTemplateItem(self.getTemplateActionPathList())
       self._portal_type_roles_item = \
-          PortalTypeRolesTemplateItem(self.getTemplatePortalTypeRolesList())
+          PortalTypeRolesTemplateItem(self.getTemplatePortalTypeRoleList())
       self._site_property_item = \
           SitePropertyTemplateItem(self.getTemplateSitePropertyIdList())
       self._module_item = \
@@ -4605,7 +4606,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
                self.getTemplateCatalogTopicKeyList())
       self._local_roles_item = \
           LocalRolesTemplateItem(
-               self.getTemplateLocalRolesList())
+               self.getTemplateLocalRoleList())
       self._tool_item = \
           ToolTemplateItem(
                self.getTemplateToolIdList())
@@ -4965,7 +4966,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         We have to set this method because we want an
         ordered list
       """
-      result = getattr(self, id, ())
+      method_id = '_baseGet%sList' % convertToUpperCase(id)
+      result = getattr(self, method_id)(())
       if result is None: result = ()
       if result != ():
         result = list(result)
@@ -5058,19 +5060,19 @@ Business Template is a set of definitions, such as skins, portal types and categ
       """
       return self._getOrderedList('template_action_path')
 
-    def getTemplatePortalTypeRolesList(self):
+    def getTemplatePortalTypeRoleList(self):
       """
       We have to set this method because we want an
       ordered list
       """
-      return self._getOrderedList('template_portal_type_roles')
+      return self._getOrderedList('template_portal_type_role')
 
-    def getTemplateLocalRolesList(self):
+    def getTemplateLocalRoleList(self):
       """
       We have to set this method because we want an
       ordered list
       """
-      return self._getOrderedList('template_local_roles')
+      return self._getOrderedList('template_local_role')
 
     def getTemplateSkinIdList(self):
       """
@@ -5228,7 +5230,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
                self.getTemplateCatalogTopicKeyList())
       self._local_roles_item = \
           LocalRolesTemplateItem(
-               self.getTemplateLocalRolesList())
+               self.getTemplateLocalRoleList())
       self._tool_item = \
           ToolTemplateItem(
                self.getTemplateToolIdList())
