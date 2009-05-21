@@ -211,12 +211,14 @@ class BusinessTemplate:
       'type'        : 'lines',
       'mode'        : 'w',
       'default'     : () },
-    { 'id'          : 'template_local_roles',
+    { 'id'          : 'template_local_role',
+      'storage_id'  : 'template_local_roles', # Kept for compatibility
       'description' : 'A list of local roles used by this template',
       'type'        : 'lines',
       'mode'        : 'w',
       'default'     : () },
-    { 'id'          : 'template_portal_type_roles',
+    { 'id'          : 'template_portal_type_role',
+      'storage_id'  : 'template_portal_type_roles', # Kept for compatibility
       'description' : 'A list of ERP5Types for which we want to add the roles in the template',
       'type'        : 'lines',
       'mode'        : 'w',
@@ -280,6 +282,17 @@ class BusinessTemplate:
       'type'        : 'boolean',
       'mode'        : 'w',
       'default'     : 0 },
+    # Kept for compatibility - will be removed some day
+    { 'id'          : 'template_local_roles',
+      'description' : 'A list of local roles used by this template',
+      'type'        : 'lines',
+      'mode'        : 'w',
+      'default'     : () },
+    { 'id'          : 'template_portal_type_roles',
+      'description' : 'A list of ERP5Types for which we want to add the roles in the template',
+      'type'        : 'lines',
+      'mode'        : 'w',
+      'default'     : () },
  )
 
   _categories = ( )
