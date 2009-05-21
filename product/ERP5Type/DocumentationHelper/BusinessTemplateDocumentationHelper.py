@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 ##############################################################################
 #
@@ -76,6 +77,11 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
       id='base_category',
       title='Base Category',
       class_name='BaseCategoryDocumentationHelper',
+    ),
+    dict(
+      id='template_role',
+      title='Role Definitions',
+      class_name='BusinessTemplateRoleDocumentationHelper',
     ),
   )
 
@@ -240,6 +246,20 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
     catalog_method_list = self.getCatalogMethodIdList()
     base_uri = '/'+self.uri.split('/')[1]+'/portal_catalog'
     return map(lambda x: ('%s/%s' % (base_uri, x)), catalog_method_list)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateRoleIdList')
+  def getTemplateRoleIdList(self):
+    """
+    """
+    return self.getDocumentedObject().getTemplatePortalTypeRoleList([])
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTemplateRoleUriList')
+  def getTemplateRoleUriList(self):
+    """
+    """
+    portal_type_list = self.getPortalTypeIdList()
+    base_uri = '/'+self.uri.split('/')[1]+'/portal_types'
+    return map(lambda x: ('%s/%s' % (base_uri, x)), portal_type_list)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTemplatePathList')
   def getTemplatePathList(self):
