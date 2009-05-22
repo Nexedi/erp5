@@ -311,7 +311,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.Item_getVariationOnMovement(current=0)</string> </value>
+            <value> <string>cell/Item_getVariationCategoryList</string> </value>
         </item>
       </dictionary>
     </pickle>
