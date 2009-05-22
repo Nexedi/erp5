@@ -99,15 +99,31 @@
                         </tuple>
                         <tuple>
                           <string>Item_getCurrentOwnerTitle</string>
-                          <string>Ower</string>
+                          <string>Owner</string>
                         </tuple>
                         <tuple>
                           <string>Item_getCurrentSiteTitle</string>
                           <string>Site</string>
                         </tuple>
                         <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit_title</string>
+                          <string>Quantity Unit</string>
+                        </tuple>
+                        <tuple>
                           <string>translated_validation_state_title</string>
                           <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -136,7 +152,7 @@
                         </tuple>
                         <tuple>
                           <string>Item_getCurrentOwnerTitle</string>
-                          <string>Ower</string>
+                          <string>Owner</string>
                         </tuple>
                         <tuple>
                           <string>Item_getCurrentSiteTitle</string>
@@ -185,20 +201,20 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>Item_getResourceTitle</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
-                          <string>Item_getCurrentOwnerTitle</string>
-                          <string>Ower</string>
-                        </tuple>
-                        <tuple>
-                          <string>Item_getCurrentSiteTitle</string>
-                          <string>Site</string>
-                        </tuple>
-                        <tuple>
                           <string>translated_validation_state_title</string>
                           <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity_unit_title</string>
+                          <string>Quantity Unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -231,16 +247,20 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>Item_getResourceTitle</string>
-                          <string>Resource</string>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>Item_getCurrentOwnerTitle</string>
-                          <string>Ower</string>
+                          <string>quantity_unit_title</string>
+                          <string>Quantity Unit</string>
                         </tuple>
                         <tuple>
-                          <string>Item_getCurrentSiteTitle</string>
-                          <string>Site</string>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
