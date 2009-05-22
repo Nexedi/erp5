@@ -58,7 +58,8 @@ for handler_id, module_id in handler_module_dict.iteritems():
       globals(), {}, [module_id])
   except ImportError:
     LOG('WebServiceTool', WARNING,
-        'Unable to import module %r.' % (module_id, ),
+        'Unable to import module %r. %r transport will not be available.' % \
+        (module_id, handler_id),
         error=sys.exc_info())
   else:
     registerConnectionPlugin(handler_id, getattr(module, module_id))
