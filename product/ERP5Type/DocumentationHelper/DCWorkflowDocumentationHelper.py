@@ -196,7 +196,7 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     worklists = getattr(self.getDocumentedObject(), "worklists", None)
     if worklists is not None:
       for wl in worklists.objectValues():
-        worklist_list.append(getattr(wl, "__name__", ''))
+        worklist_list.append(getattr(wl, "__name__"))
     return worklist_list
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getWorklistItemList')
@@ -245,7 +245,7 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     scripts = getattr(self.getDocumentedObject(), "scripts", None)
     if scripts is not None:
       for script in scripts.objectValues():
-        script_list.append(getattr(script, "__name__", ''))
+        script_list.append(getattr(script, "__name__"))
     return script_list
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getScriptItemList')
@@ -256,8 +256,8 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     scripts = getattr(self.getDocumentedObject(), "scripts", None)
     if scripts is not None:
       for script in scripts.objectValues():
-        script_list.append((getattr(script, "__name__", ''),
-                            getattr(script, "title", '')
+        script_list.append((getattr(script, "__name__"),
+                            getattr(script, "title")
                            ))
     return script_list
 
@@ -291,7 +291,7 @@ class DCWorkflowDocumentationHelper(DocumentationHelper):
     """
       Returns the graphic representation of the workflow as a PNG file
     """
-    return getGraph(self, wf_id=getattr(self.getDocumentedObject(), "__name__", ''), format=format)
+    return getGraph(self, wf_id=getattr(self.getDocumentedObject(), "__name__"), format=format)
 
 
 InitializeClass(DCWorkflowDocumentationHelper)

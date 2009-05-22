@@ -98,21 +98,21 @@ class BaseCategoryDocumentationHelper(DocumentationHelper):
     """
     Returns the acquisition base categories of the documented base category
     """
-    return getattr(self.getDocumentedObject(), 'acquisition_base_category', [])
+    return self.getDocumentedObject().getAcquisitionBaseCategoryList()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getAcquisitionObjectIds')
   def getAcquisitionObjectIds(self):
     """
     Returns the acquisitions ids of the documented base category
     """
-    return getattr(self.getDocumentedObject(), 'acquisition_object_id', [])
+    return self.getDocumentedObject().getAcquisitionObjectIdList()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getAcquisitionPortalType')
   def getAcquisitionPortalType(self):
     """
     Returns the acquisitions ids of the documented base category
     """
-    return getattr(self.getDocumentedObject(), 'acquisition_portal_type', '')
+    return self.getDocumentedObject().getAcquisitionPortalTypeList()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getAcquisitionCategoryType')
   def getAcquisitionCategoryType(self):

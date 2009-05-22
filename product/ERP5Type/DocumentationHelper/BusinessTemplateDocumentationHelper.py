@@ -97,14 +97,14 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
     """
     Returns the version of the business template
     """
-    return getattr(self.getDocumentedObject(), 'version', '')
+    self.getDocumentedObject().getVersion()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getRevisionNumber')
   def getRevisionNumber(self):
     """
     Returns the revision number of the documentation helper
     """
-    return getattr(self.getDocumentedObject(), 'revision', '')
+    return self.getDocumentedObject().getRevision()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getBuildingState')
   def getBuildingState(self):
@@ -125,21 +125,21 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
     """
     Returns the list of maintainers of the business template
     """
-    return  getattr(self.getDocumentedObject(), 'maintainer', '')
+    return  self.getDocumentedObject().getMaintainerList()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getDependencyList')
   def getDependencyList(self):
     """
     Returns the list of dependencies of the business template
     """
-    return getattr(self.getDocumentedObject(), 'dependency', '')
+    return self.getDocumentedObject().getDependencyList()
 
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPortalTypeIdList')
   def getPortalTypeIdList(self):
     """
     """
-    return getattr(self.getDocumentedObject(), 'template_portal_type_id', [])
+    return self.getDocumentedObject().getTemplatePortalTypeIdList()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPortalTypeUriList')
   def getPortalTypeUriList(self):
@@ -153,7 +153,7 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
   def getSkinFolderIdList(self):
     """
     """
-    return getattr(self.getDocumentedObject(), 'template_skin_id', [])
+    return self.getDocumentedObject().getTemplateSkinIdList()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getSkinFolderUriList')
   def getSkinFolderUriList(self):
@@ -168,9 +168,9 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
     """
     """
     dc_workflow_list = []
-    template_workflow_id_list = getattr(self.getDocumentedObject(), 'template_workflow_id', [])
+    template_workflow_id_list = self.getDocumentedObject().getTemplateWorkflowIdList()
     for wf in template_workflow_id_list:
-      url = '/' + self.getPortalObject().id + '/portal_workflow/' + wf
+      url = '/' + self.getPortalObject().getId() + '/portal_workflow/' + wf
       wf_object = self.getPortalObject().unrestrictedTraverse(url)
       if wf_object.__class__.__name__ == 'DCWorkflowDefinition':
         dc_workflow_list.append(wf)
@@ -189,9 +189,9 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
     """
     """
     workflow_list = []
-    template_workflow_id_list = getattr(self.getDocumentedObject(), 'template_workflow_id', [])
+    template_workflow_id_list = self.getDocumentedObject().getTemplateWorkflowIdList()
     for wf in template_workflow_id_list:
-      url = '/' + self.getPortalObject().id + '/portal_workflow/' + wf
+      url = '/' + self.getPortalObject().getId() + '/portal_workflow/' + wf
       wf_object = self.getPortalObject().unrestrictedTraverse(url)
       if wf_object.__class__.__name__ == 'InteractionWorkflowDefinition':
         workflow_list.append(wf)
@@ -209,7 +209,7 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
   def getBaseCategoryList(self):
     """
     """
-    return getattr(self.getDocumentedObject(), 'template_base_category', '')
+    return self.getDocumentedObject().getTemplateBaseCategoryList()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryUriList')
   def getBaseCategoryUriList(self):
@@ -223,7 +223,7 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
   def getModuleIdList(self):
     """
     """
-    return getattr(self.getDocumentedObject(), 'template_module_id', [])
+    return self.getDocumentedObject().getTemplateModuleIdList()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getModuleUriList')
   def getModuleUriList(self):
@@ -237,7 +237,7 @@ class BusinessTemplateDocumentationHelper(DocumentationHelper):
   def getCatalogMethodIdList(self):
     """
     """
-    return getattr(self.getDocumentedObject(), 'template_catalog_method_id', [])
+    return self.getDocumentedObject().getTemplateCatalogMethodIdList()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getCatalogMethodUriList')
   def getCatalogMethodUriList(self):
