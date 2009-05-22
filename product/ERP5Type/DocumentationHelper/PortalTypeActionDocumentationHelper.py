@@ -50,7 +50,7 @@ class PortalTypeActionDocumentationHelper(DocumentationHelper):
     """
     Returns the permissions of the documentation helper
     """
-    permissions = getattr(self.getDocumentedObject(), "permissions", [])
+    permissions = getattr(self.getDocumentedObject(), "permissions")
     return ', '.join(x for x in permissions)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getVisible')
@@ -66,6 +66,6 @@ class PortalTypeActionDocumentationHelper(DocumentationHelper):
     """
     Returns the category of the documentation helper
     """
-    return getattr(self.getDocumentedObject(), "category", '')
+    return getattr(self.getDocumentedObject(), "category")
 
 InitializeClass(PortalTypeActionDocumentationHelper)

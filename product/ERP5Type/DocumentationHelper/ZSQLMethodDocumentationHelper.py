@@ -51,7 +51,7 @@ class ZSQLMethodDocumentationHelper(DocumentationHelper):
     Returns the source code of the documentation helper
     """
     from zLOG import LOG, INFO
-    source_code = getattr(self.getDocumentedObject(), "src", '')
+    source_code = getattr(self.getDocumentedObject(), "src")
     portal_transforms = getattr(self, 'portal_transforms', None)
     if portal_transforms is not None:
       REQUEST = getattr(self, 'REQUEST', None)
@@ -72,34 +72,34 @@ class ZSQLMethodDocumentationHelper(DocumentationHelper):
     """
     Returns the title of the documentation helper
     """
-    return getattr(self.getDocumentedObject(), "connection_id", '')
+    return getattr(self.getDocumentedObject(), "connection_id")
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getArgumentList')
   def getArgumentList(self):
     """
     Returns the arguments of the documentation helper
     """
-    return getattr(self.getDocumentedObject(), "arguments_src", [])
+    return getattr(self.getDocumentedObject(), "arguments_src")
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getClassName')
   def getClassName(self):
     """
     Returns the class name of the documentation helper
     """
-    return getattr(self.getDocumentedObject(), "class_name_", '')
+    return getattr(self.getDocumentedObject(), "class_name_")
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getClassFile')
   def getClassFile(self):
     """
     Returns the class file of the documentation helper
     """
-    return getattr(self.getDocumentedObject(), "class_file_", '')
+    return getattr(self.getDocumentedObject(), "class_file_")
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getMaxRows')
   def getMaxRows(self):
     """
     Returns the  of the documentation helper
     """
-    return getattr(self.getDocumentedObject(), "max_rows_", '')
+    return getattr(self.getDocumentedObject(), "max_rows_")
 
 InitializeClass(ZSQLMethodDocumentationHelper)

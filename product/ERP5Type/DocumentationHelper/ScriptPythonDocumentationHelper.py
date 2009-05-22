@@ -50,7 +50,7 @@ class ScriptPythonDocumentationHelper(DocumentationHelper):
     """
     Returns the title of the documentation helper
     """
-    return getattr(self.getDocumentedObject(), "_params", '')
+    return getattr(self.getDocumentedObject(), "_params")
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getSourceCode')
   def getSourceCode(self):
@@ -58,7 +58,7 @@ class ScriptPythonDocumentationHelper(DocumentationHelper):
     Returns the source code the script python
     """
     from zLOG import LOG, INFO
-    source_code = getattr(self.getDocumentedObject(), "_body", '')
+    source_code = getattr(self.getDocumentedObject(), "_body")
     portal_transforms = getattr(self, 'portal_transforms', None)
     if portal_transforms is not None:
       REQUEST = getattr(self, 'REQUEST', None)

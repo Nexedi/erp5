@@ -130,7 +130,7 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     """
     Returns the list of allowed content type of the documentation helper
     """
-    return getattr(self.getDocumentedObject(), "allowed_content_types", [])
+    return getattr(self.getDocumentedObject(), "allowed_content_types")
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getAllowedContentTypeUriList')
   def getAllowedContentTypeUriList(self):
@@ -145,7 +145,7 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     """
     Returns the list of hidden content type of the documentation helper
     """
-    return getattr(self.getDocumentedObject(), "hidden_content_type_list", [])
+    return getattr(self.getDocumentedObject(), "hidden_content_type_list")
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getHiddenContentTypeUriList')
   def getHiddenContentTypeUriList(self):
@@ -160,14 +160,14 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     """
     Returns the list of base category of the documentation helper
     """
-    return getattr(self.getDocumentedObject(), "base_category_list", [])
+    return getattr(self.getDocumentedObject(), "base_category_list")
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getAcquireLocalRoles')
   def getAcquireLocalRoles(self):
     """
     Returns the list of allowed content type for the documentation helper
     """
-    local_roles = getattr(self.getDocumentedObject(), "acquire_local_roles", '')
+    local_roles = getattr(self.getDocumentedObject(), "acquire_local_roles")
     if local_roles:
       return 'Yes'
     else:
@@ -196,14 +196,14 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     """
     Returns the list of groups for the documentation helper
     """
-    return getattr(self.getDocumentedObject(), "group_list", [])
+    return getattr(self.getDocumentedObject(), "group_list")
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getActionIdList')
   def getActionIdList(self):
     """
     """
     action_list = []
-    actions = getattr(self.getDocumentedObject(), "_actions", [])
+    actions = getattr(self.getDocumentedObject(), "_actions")
     for action in actions:
       action_list.append(action.getId())
     return action_list
@@ -233,7 +233,7 @@ class PortalTypeDocumentationHelper(DocumentationHelper):
     """
     """
     role_list = []
-    roles = getattr(self.getDocumentedObject(), "_roles", '')
+    roles = getattr(self.getDocumentedObject(), "_roles")
     for role in roles:
       role_list.append(role.Title())
     return role_list

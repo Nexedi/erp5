@@ -50,13 +50,13 @@ class PortalTypeRoleDocumentationHelper(DocumentationHelper):
     """
     Returns the list of categories for the role
     """
-    return getattr(self.getDocumentedObject(), "category", '')
+    return getattr(self.getDocumentedObject(), "category")
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getBaseCategoryScript')
   def getBaseCategoryScript(self):
     """
     Returns the base category script of the role
     """
-    return getattr(self.getDocumentedObject(), "base_category_script", '')
+    return getattr(self.getDocumentedObject(), "base_category_script")
 
 InitializeClass(PortalTypeRoleDocumentationHelper)

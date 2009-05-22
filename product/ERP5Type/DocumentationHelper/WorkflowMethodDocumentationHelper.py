@@ -57,7 +57,7 @@ class WorkflowMethodDocumentationHelper(DocumentationHelper):
     Returns the title of the documentation helper
     """
     # XXX May return _doNothing
-    return getattr(self.getDocumentedObject(), "_transition_id", '')
+    return getattr(self.getDocumentedObject(), "_transition_id")
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getDefinition')
   def getDefinition(self):
