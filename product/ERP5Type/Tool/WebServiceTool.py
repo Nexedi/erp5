@@ -78,15 +78,18 @@ class WebServiceTool(BaseTool):
   security.declareProtected(Permissions.ManagePortal, 'manage_overview')
   manage_overview = DTMLFile('explainWebServiceTool', _dtmldir )
 
-  def connect(self, url, user_name=None, password=None, transport=None):
+  def connect(self, url, user_name=None, password=None, transport=None, transport_kw=None):
     """
     Connect to remote instances
     of any kind of web service (not only ERP5) with many
     different kinds of transport like 'xml-rpc' or 'soap'
     """
     # XXX: implement connection caching per zope thread
+    if transport_kw is None:
+      transport_kw = {}
     connection_handler_klass = connection_plugin_registry[transport]
-    connection_handler = connection_handler_klass(url, user_name, password)
+    connection_handler = connection_handler_klass(url, user_name, password,
+                                                  **transport_kw)
     return connection_handler.connect()
 
 InitializeClass(WebServiceTool)
