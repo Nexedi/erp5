@@ -50,6 +50,6 @@ class ERP5FormDocumentationHelper(DocumentationHelper):
     """
     Returns the encoding of the ERP5 Form
     """
-    return getattr(self.getDocumentedObject(), "encoding", '')
+    return getattr(self.getDocumentedObject(), "encoding")
 
 InitializeClass(ERP5FormDocumentationHelper)

@@ -51,7 +51,7 @@ class PageTemplateDocumentationHelper(DocumentationHelper):
     Returns the source code the script python
     """
     from zLOG import LOG, INFO
-    source_code = getattr(self.getDocumentedObject(), "_text", '')
+    source_code = getattr(self.getDocumentedObject(), "_text")
     portal_transforms = getattr(self, 'portal_transforms', None)
     if portal_transforms is not None:
       REQUEST = getattr(self, 'REQUEST', None)
