@@ -77,11 +77,6 @@
                         <string>my_quantity_unit</string>
                         <string>my_current_owner</string>
                         <string>my_reference</string>
-                        <string>your_destination</string>
-                        <string>your_destination_section</string>
-                        <string>your_site_suggestion</string>
-                        <string>your_start_date</string>
-                        <string>your_stop_date</string>
                         <string>your_title</string>
                         <string>my_current_site</string>
                         <string>your_resource</string>
