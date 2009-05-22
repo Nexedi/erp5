@@ -19,7 +19,7 @@
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/BaseWorkflow_viewWorkflowActionDialog?workflow_action=invalidate_action</string> </value>
+            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=invalidate_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Invalidate Action</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
