@@ -72,10 +72,10 @@ class ERP5SiteDocumentationHelper(DocumentationHelper):
     """
     """
     return [(bt.getId(),
-              getattr(bt, "title", ''),
-              getattr(bt, "description", ''),
-              getattr(bt, "version", ''),
-              getattr(bt, "revision", ''))
+             bt.getTitle(),
+             bt.getDescription(),
+             bt.getVersion(),
+             bt.getRevision())
             for bt in self.getBusinessTemplateValueList()]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getBusinessTemplateUriList')
