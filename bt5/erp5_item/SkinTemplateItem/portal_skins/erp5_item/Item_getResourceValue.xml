@@ -58,15 +58,15 @@
 #kw[\'at_date\'] = DateTime()\n
 kw[\'item\'] = context.getRelativeUrl()\n
 \n
-last_affectation_list = context.portal_simulation.getTrackingList(**kw)\n
+last_affectation_list = context.portal_simulation.getCurrentTrackingList(**kw)\n
 \n
 if kw.get(\'src__\',0):\n
   return last_affectation_list\n
+\n
 if len(last_affectation_list):\n
   last_affectation = last_affectation_list[0]\n
   if last_affectation.resource_uid is not None:\n
     resource_value = context.portal_catalog.getObject(last_affectation.resource_uid)\n
-   \n
     return resource_value\n
 \n
 return None\n

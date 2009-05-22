@@ -71,7 +71,7 @@ if selection_uid_list:\n
 else:\n
   object_list = stool.callSelectionFor(selection_name)\n
 \n
-source_section_list = [  item.Item_getCurrentOwnerTitle(with_title=0) for item in object_list ]\n
+source_section_list = [  item.Item_getCurrentOwnerValue() for item in object_list ]\n
 \n
 property_dict = {\'title\':title,\n
                  \'stop_date\' : stop_date,\n
@@ -99,7 +99,7 @@ for ss in source_section_list:\n
 \n
 \n
 for item in object_list:\n
-  source_section = item.Item_getCurrentOwnerTitle(with_title=0)\n
+  source_section = item.Item_getCurrentOwnerValue()\n
   if source_section is not None:\n
     if source_section.getUid() is not None:\n
       pl_value =  pl_dict[str(source_section.getUid())]\n

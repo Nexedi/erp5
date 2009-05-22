@@ -53,9 +53,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>resource = context.Item_getResourceValue()\n
-if resource is not None:\n
-  return resource.getTitle()\n
+            <value> <string>from DateTime import DateTime\n
+\n
+date = DateTime()\n
+last_affectation_list = context.portal_simulation.getCurrentTrackingList(item=context.getRelativeUrl(), at_date=date)\n
+\n
+if len(last_affectation_list) == 0:\n
+  return None\n
+\n
+if last_affectation_list[0].section_uid is not None:\n
+  return context.portal_catalog.getObject(last_affectation_list[0].section_uid)\n
+\n
 return None\n
 </string> </value>
         </item>
@@ -93,10 +101,14 @@ return None\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>DateTime</string>
+                            <string>date</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>resource</string>
+                            <string>last_affectation_list</string>
+                            <string>len</string>
                             <string>None</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -113,7 +125,7 @@ return None\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Item_getResourceTitle</string> </value>
+            <value> <string>Item_getCurrentOwnerValue</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

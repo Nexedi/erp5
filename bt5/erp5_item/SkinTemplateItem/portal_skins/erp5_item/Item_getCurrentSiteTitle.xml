@@ -53,8 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if context.Item_getCurrentSiteValue() not in (\'\',None):\n
-  return context.Item_getCurrentSiteValue().getTitle()\n
+            <value> <string>current_site = context.Item_getCurrentSiteValue()\n
+if current_site is not None:\n
+  return current_site.getTitle()\n
 return None\n
 </string> </value>
         </item>
@@ -94,6 +95,7 @@ return None\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>current_site</string>
                             <string>None</string>
                           </tuple>
                         </value>

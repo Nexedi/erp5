@@ -53,17 +53,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from DateTime import DateTime\n
-\n
-date = DateTime()\n
-last_affectation = context.portal_simulation.getCurrentTrackingList(item=context.getRelativeUrl(), at_date=date)\n
-\n
-if len(last_affectation) == 0:\n
-  return None\n
-owner = context.portal_catalog.getObject(last_affectation[0].section_uid)\n
-if with_title:\n
-  return owner.getTitle()\n
-return owner\n
+            <value> <string>current_owner = context.Item_getCurrentOwnerValue()\n
+if current_owner is not None:\n
+  return current_owner.getTitle()\n
+return None\n
 </string> </value>
         </item>
         <item>
@@ -74,7 +67,7 @@ return owner\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>with_title = 1</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -94,22 +87,16 @@ return owner\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>with_title</string>
-                            <string>DateTime</string>
-                            <string>date</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>last_affectation</string>
-                            <string>len</string>
+                            <string>current_owner</string>
                             <string>None</string>
-                            <string>_getitem_</string>
-                            <string>owner</string>
                           </tuple>
                         </value>
                     </item>
@@ -121,9 +108,7 @@ return owner\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>1</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>

@@ -57,13 +57,14 @@
 \n
 date = DateTime()\n
 last_affectation_list = context.portal_simulation.getCurrentTrackingList(item=context.getRelativeUrl(), at_date=date)\n
-#context.log(\'last_affectation_list\',len(last_affectation_list))\n
+\n
 if len(last_affectation_list) == 0:\n
   return None\n
+\n
 if last_affectation_list[0].node_uid is not None:\n
   site = context.portal_catalog.getObject(last_affectation_list[0].node_uid)\n
-  #context.log(\'site\',site)\n
   return site\n
+\n
 return None\n
 </string> </value>
         </item>

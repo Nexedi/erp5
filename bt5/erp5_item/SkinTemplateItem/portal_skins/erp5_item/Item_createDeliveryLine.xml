@@ -56,7 +56,7 @@
             <value> <string># Check data validity\n
 from Products.ERP5Type.Message import translateString\n
 source = context.Item_getCurrentSiteValue()\n
-source_section = context.Item_getCurrentOwnerTitle(with_title=0)\n
+source_section = context.Item_getCurrentOwnerValue()\n
 \n
 property_dict = {\'title\':title,                 \n
                  \'stop_date\' : stop_date,\n
