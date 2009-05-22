@@ -17,6 +17,5 @@ Sale Packing List Line | item_creation
 Sale Packing List Line | select_item_fast_input
 Sale Packing List | aggregate_item
 Service Report Module | view
-Service Report | delivery_jump
 Service Report | tracking_list
 Service Report | view
