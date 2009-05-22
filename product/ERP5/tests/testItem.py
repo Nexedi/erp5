@@ -28,7 +28,10 @@
 
 import unittest
 
+import transaction
+from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import reindex
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from testInvoice import TestSaleInvoiceMixin
@@ -178,9 +181,155 @@ class TestItem(TestItemMixin, ERP5TypeTestCase) :
     sequence_list.play(self, quiet=quiet)
 
 
-   
+class TestItemScripts(ERP5TypeTestCase):
+  """Test scripts from erp5_item.
+  """
+  def getBusinessTemplateList(self):
+    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_item',)
+
+  def afterSetUp(self):
+    self.validateRules()
+    size_category = self.portal.portal_categories.size
+    if 'big' not in size_category.objectIds():
+      size_category.newContent(portal_type='Category',
+                               id='big',
+                               title='Big')
+    if 'small' not in size_category.objectIds():
+      size_category.newContent(portal_type='Category',
+                               id='small',
+                               title='Small')
+
+    self.node = self.portal.organisation_module.newContent(
+                              portal_type='Organisation',
+                              title='Node')
+    self.section = self.portal.organisation_module.newContent(
+                              portal_type='Organisation',
+                              title='Section')
+    self.mirror_node = self.portal.organisation_module.newContent(
+                              portal_type='Organisation',
+                              title='Mirror Node')
+    self.mirror_section = self.portal.organisation_module.newContent(
+                              portal_type='Organisation',
+                              title='Mirror Section')
+    self.product = self.portal.product_module.newContent(
+                              portal_type='Product',
+                              title='Product')
+    self.variated_product = self.portal.product_module.newContent(
+                              portal_type='Product',
+                              title='Variated Product',
+                              variation_base_category_list=('size',),
+                              variation_category_list=('size/big',
+                                                       'size/small'))
+    self.item = self.portal.item_module.newContent(
+                              portal_type='Item',
+                              title='Item')
+    transaction.commit()
+    self.tic()
+  
+  def beforeTearDown(self):
+    transaction.abort()
+    for module in (self.portal.organisation_module,
+                   self.portal.item_module,
+                   self.portal.sale_packing_list_module,
+                   self.portal.purchase_packing_list_module,
+                   self.portal.product_module,
+                   self.portal.portal_simulation,):
+      module.manage_delObjects(list(module.objectIds()))
+    transaction.commit()
+    self.tic()
+
+  @reindex
+  def _makeSalePackingListLine(self):
+    packing_list = self.portal.sale_packing_list_module.newContent(
+                  portal_type='Sale Packing List',
+                  source_value=self.mirror_node,
+                  source_section_value=self.mirror_section,
+                  destination_value=self.node,
+                  destination_section_value=self.section,
+                  start_date=DateTime() - 1,)
+    line = packing_list.newContent(
+                  portal_type='Sale Packing List Line',
+                  quantity=1,
+                  resource_value=self.product,
+                  aggregate_value=self.item,)
+    packing_list.confirm()
+    packing_list.start()
+    packing_list.deliver()
+    return line
+
+  # with line
+  def test_Item_getResourceValue(self):
+    self.assertEquals(None, self.item.Item_getResourceValue())
+    line = self._makeSalePackingListLine()
+    self.assertEquals(self.product, self.item.Item_getResourceValue())
+
+  def test_Item_getResourceTitle(self):
+    self.assertEquals(None, self.item.Item_getResourceTitle())
+    line = self._makeSalePackingListLine()
+    self.assertEquals('Product', self.item.Item_getResourceTitle())
+
+  def test_Item_getCurrentOwnerValue(self):
+    self.assertEquals(None, self.item.Item_getCurrentOwnerValue())
+    line = self._makeSalePackingListLine()
+    self.assertEquals(self.section, self.item.Item_getCurrentOwnerValue())
+
+  def test_Item_getCurrentOwnerTitle(self):
+    self.assertEquals(None, self.item.Item_getCurrentOwnerTitle())
+    line = self._makeSalePackingListLine()
+    self.assertEquals('Section', self.item.Item_getCurrentOwnerTitle())
+
+  def test_Item_getCurrentSiteValue(self):
+    self.assertEquals(None, self.item.Item_getCurrentSiteValue())
+    line = self._makeSalePackingListLine()
+    self.assertEquals(self.node, self.item.Item_getCurrentSiteValue())
+
+  def test_Item_getCurrentSiteTitle(self):
+    self.assertEquals(None, self.item.Item_getCurrentSiteTitle())
+    line = self._makeSalePackingListLine()
+    self.assertEquals('Node', self.item.Item_getCurrentSiteTitle())
+
+  # with cells
+  @reindex
+  def _makeSalePackingListCellWithVariation(self):
+    packing_list = self.portal.sale_packing_list_module.newContent(
+                  portal_type='Sale Packing List',
+                  source_value=self.mirror_node,
+                  source_section_value=self.mirror_section,
+                  destination_value=self.node,
+                  destination_section_value=self.section,
+                  start_date=DateTime() - 1,)
+    line = packing_list.newContent(
+                  portal_type='Sale Packing List Line',
+                  resource_value=self.variated_product,)
+    line.setVariationCategoryList(['size/small'])
+    cell = line.newCell(portal_type='Sale Packing List Cell',
+                 base_id='movement', *('size/small',))
+    cell.edit(mapped_value_property_list=['price','quantity'],
+              quantity=1,
+              variation_category_list=['size/small'],
+              aggregate_value=self.item)
+    packing_list.confirm()
+    packing_list.start()
+    packing_list.deliver()
+    return cell
+
+  def test_Item_getVariationCategoryList(self):
+    self.assertEquals([], self.item.Item_getVariationCategoryList())
+    self._makeSalePackingListCellWithVariation()
+    self.assertEquals(['size/small'], self.item.Item_getVariationCategoryList())
+
+  def test_Item_getVariationRangeCategoryItemList(self):
+    self.assertEquals([], self.item.Item_getVariationRangeCategoryItemList())
+    self._makeSalePackingListCellWithVariation()
+    self.assertEquals([['Big', 'size/big'],
+                       ['Small', 'size/small']],
+        self.item.Item_getVariationRangeCategoryItemList())
+
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestItem))
+  suite.addTest(unittest.makeSuite(TestItemScripts))
   return suite
 
