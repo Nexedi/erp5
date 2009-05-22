@@ -87,11 +87,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key>                 <string>default</string> </key>
+                    <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key>                 <string>editable</string> </key>
+                    <key> <string>editable</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
@@ -109,7 +109,7 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key>                 <string>title</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string>Current Owner</string> </value>
                 </item>
               </dictionary>

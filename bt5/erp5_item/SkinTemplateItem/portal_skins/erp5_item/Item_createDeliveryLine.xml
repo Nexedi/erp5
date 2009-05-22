@@ -53,54 +53,51 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Check data validity\n
-from Products.ERP5Type.Message import translateString\n
+            <value> <string>from Products.ERP5Type.Message import translateString\n
+\n
 source = context.Item_getCurrentSiteValue()\n
 source_section = context.Item_getCurrentOwnerValue()\n
-\n
-property_dict = {\'title\':title,                 \n
-                 \'stop_date\' : stop_date,\n
-                 \'start_date\' : start_date,\n
-                 \'portal_type\' : portal_type, }\n
 \n
 module = context.getDefaultModule(portal_type=portal_type)\n
 line_portal_type = \'%s Line\' % portal_type\n
 cell_portal_type = \'%s Cell\' % portal_type\n
 \n
-pl_dict = {}\n
-for k,v in property_dict.items():\n
-  pl_dict[k]=v\n
+delivery = module.newContent(title=title,\n
+                             source_value=source,\n
+                             source_section_value=source_section,\n
+                             portal_type=portal_type)\n
+                          \n
+delivery_line = delivery.newContent(\n
+                    portal_type=line_portal_type,\n
+                    title=context.getReference(),\n
+                    quantity_unit=context.getQuantityUnit(),\n
+                    resource_value=context.Item_getResourceValue())\n
 \n
-pl_line_dict = {}\n
-pl_line_dict[\'portal_type\'] = line_portal_type\n
-\n
-pl_line_dict[\'title\']= \'%s\' % (context.getReference())\n
-#pl_line_dict[\'aggregate_value_list\'] = [context]\n
-pl_line_dict[\'quantity\'] = quantity\n
-pl_line_dict[\'quantity_unit\'] = quantity_unit\n
-pl_value = module.newContent(**pl_dict)\n
-\n
-pl_line_value = pl_value.newContent(**pl_line_dict)\n
-pl_line_value.setResourceValue(context.Item_getResourceValue())\n
 variation_category_list = context.Item_getVariationCategoryList()\n
-if not variation_category_list:\n
-  pl_line_value.setAggregateValue(context)\n
-else:\n
-  pl_line_value.setVariationCategoryList(variation_category_list)\n
-  base_id = \'movement\'\n
-  cell_key_list = list(pl_line_value.getCellKeyList(base_id=base_id))\n
-  cell_key_list.sort()\n
-  for cell_key in cell_key_list: \n
-    cell = pl_line_value.newCell(base_id=base_id, \\\n
-                                portal_type=cell_portal_type,*cell_key)\n
-    cell.edit(mapped_value_property_list=[\'price\',\'quantity\'],\n
-                price=context.getPrice(), quantity=context.getQuantity(),\n
-                predicate_category_list=cell_key,\n
-                variation_category_list=cell_key)\n
-    cell.setAggregateValue(context)\n
 \n
-return context.Base_redirect(form_id, keep_items=dict(\n
-       portal_status_message=translateString(\'Item affected\')))\n
+if not variation_category_list:\n
+  delivery_line.edit(\n
+              price=context.getPrice(),\n
+              quantity=context.getQuantity(),\n
+              aggregate_value=context)\n
+else:\n
+  delivery_line.setVariationCategoryList(variation_category_list)\n
+  base_id = \'movement\'\n
+  cell_key_list = list(delivery_line.getCellKeyList(base_id=base_id))\n
+  cell_key_list.sort()\n
+  for cell_key in cell_key_list:\n
+    cell = delivery_line.newCell(base_id=base_id,\n
+                                 portal_type=cell_portal_type,\n
+                                 *cell_key)\n
+    cell.edit(mapped_value_property_list=[\'price\',\'quantity\'],\n
+              price=context.getPrice(),\n
+              quantity=context.getQuantity(),\n
+              predicate_category_list=cell_key,\n
+              variation_category_list=cell_key,\n
+              aggregate_value=context)\n
+\n
+return delivery.Base_redirect(\'view\', keep_items=dict(\n
+                                 portal_status_message=translateString(\'Item affected\')))\n
 </string> </value>
         </item>
         <item>
@@ -111,7 +108,7 @@ return context.Base_redirect(form_id, keep_items=dict(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'view\',destination_section=None,portal_type=None,site_suggestion=None,start_date=None,quantity=None,start_date=None,stop_date=None,title=\'\',quantity_unit=None,**kw</string> </value>
+            <value> <string>form_id=\'view\', title=\'\', portal_type=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -131,22 +128,15 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>10</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>form_id</string>
-                            <string>destination_section</string>
-                            <string>portal_type</string>
-                            <string>site_suggestion</string>
-                            <string>start_date</string>
-                            <string>quantity</string>
-                            <string>start_date</string>
-                            <string>stop_date</string>
                             <string>title</string>
-                            <string>quantity_unit</string>
+                            <string>portal_type</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
@@ -154,24 +144,18 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>context</string>
                             <string>source</string>
                             <string>source_section</string>
-                            <string>property_dict</string>
                             <string>module</string>
                             <string>line_portal_type</string>
                             <string>cell_portal_type</string>
-                            <string>pl_dict</string>
-                            <string>_getiter_</string>
-                            <string>k</string>
-                            <string>v</string>
-                            <string>_write_</string>
-                            <string>pl_line_dict</string>
-                            <string>_apply_</string>
-                            <string>pl_value</string>
-                            <string>pl_line_value</string>
+                            <string>delivery</string>
+                            <string>delivery_line</string>
                             <string>variation_category_list</string>
                             <string>base_id</string>
                             <string>list</string>
                             <string>cell_key_list</string>
+                            <string>_getiter_</string>
                             <string>cell_key</string>
+                            <string>_apply_</string>
                             <string>cell</string>
                             <string>dict</string>
                           </tuple>
@@ -187,13 +171,6 @@ return context.Base_redirect(form_id, keep_items=dict(\n
             <value>
               <tuple>
                 <string>view</string>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
                 <string></string>
                 <none/>
               </tuple>

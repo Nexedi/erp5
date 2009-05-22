@@ -63,7 +63,6 @@ stool = portal.portal_selections\n
 getObject = portal.portal_catalog.getObject\n
 \n
 \n
-stool.updateSelectionCheckedUidList(selection_name, listbox_uid, uids)\n
 selection_uid_list = stool.getSelectionCheckedUidsFor(selection_name)\n
 \n
 if selection_uid_list:\n
@@ -74,8 +73,6 @@ else:\n
 source_section_list = [  item.Item_getCurrentOwnerValue() for item in object_list ]\n
 \n
 property_dict = {\'title\':title,\n
-                 \'stop_date\' : stop_date,\n
-                 \'start_date\' : start_date,\n
                  \'portal_type\' : portal_type, }\n
 \n
 module = context.getDefaultModule(portal_type=portal_type)\n
@@ -95,8 +92,9 @@ for ss in source_section_list:\n
 \n
   if not pl_dict.has_key(uid):\n
     pl_dict[uid] = module.newContent(**pl_property_dict)\n
-    pl_dict[uid].setSourceSectionValue(ss) \n
+    pl_dict[uid].setSourceSectionValue(ss)\n
 \n
+delivery_count = len(source_section_list)\n
 \n
 for item in object_list:\n
   source_section = item.Item_getCurrentOwnerValue()\n
@@ -104,7 +102,7 @@ for item in object_list:\n
     if source_section.getUid() is not None:\n
       pl_value =  pl_dict[str(source_section.getUid())]\n
   else:\n
-      pl_value =  pl_dict[\'UID\']\n
+    pl_value =  pl_dict[\'UID\']\n
 \n
   source = item.Item_getCurrentSiteValue() \n
   resource = item.Item_getResourceValue()\n
@@ -112,10 +110,9 @@ for item in object_list:\n
   pl_line_dict = {}\n
   pl_line_dict[\'portal_type\'] = line_portal_type\n
   \n
-  pl_line_dict[\'title\']= \'%s\' % (item.getReference())\n
-  #pl_line_dict[\'aggregate_value_list\'] = [item]\n
-  pl_line_dict[\'quantity\'] = quantity\n
-  #pl_line_dict[\'quantity_unit\'] = quantity_unit\n
+  pl_line_dict[\'title\']= item.getReference()\n
+  pl_line_dict[\'quantity\'] = item.getQuantity()\n
+  pl_line_dict[\'quantity_unit\'] = item.getQuantityUnit()\n
   pl_line_dict[\'resource_value\'] = resource\n
   pl_line_dict[\'source_value\'] = source\n
   pl_line_value = pl_value.newContent(**pl_line_dict)\n
@@ -127,7 +124,7 @@ for item in object_list:\n
     base_id = \'movement\'\n
     cell_key_list = list(pl_line_value.getCellKeyList(base_id=base_id))\n
     cell_key_list.sort()\n
-    for cell_key in cell_key_list: \n
+    for cell_key in cell_key_list:\n
       cell = pl_line_value.newCell(base_id=base_id, \\\n
                                 portal_type=cell_portal_type,*cell_key)\n
       cell.edit(mapped_value_property_list=[\'price\',\'quantity\'],\n
@@ -136,8 +133,15 @@ for item in object_list:\n
                 variation_category_list=cell_key)\n
       cell.setAggregateValue(item)\n
 \n
+if delivery_count == 1:\n
+  return pl_value.Base_redirect(\'view\', keep_items=dict(\n
+       portal_status_message=translateString(\n
+         \'Items affected\')))\n
+\n
 return context.Base_redirect(form_id, keep_items=dict(\n
-       portal_status_message=translateString(\'Items affected\')))\n
+       portal_status_message=translateString(\n
+         \'Items affected in ${delivery_count} deliveries.\',\n
+         mapping=dict(delivery_count=delivery_count))))\n
 </string> </value>
         </item>
         <item>
@@ -148,7 +152,7 @@ return context.Base_redirect(form_id, keep_items=dict(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>uids=[], listbox_uid=[],form_id=\'view\',destination_section=None,portal_type=None,site_suggestion=None,source=None,source_section=None,start_date=None,quantity=None,stop_date=None,title=\'\',**kw</string> </value>
+            <value> <string>form_id=\'view\', title=\'\', portal_type=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -168,24 +172,15 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>12</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>uids</string>
-                            <string>listbox_uid</string>
                             <string>form_id</string>
-                            <string>destination_section</string>
-                            <string>portal_type</string>
-                            <string>site_suggestion</string>
-                            <string>source</string>
-                            <string>source_section</string>
-                            <string>start_date</string>
-                            <string>quantity</string>
-                            <string>stop_date</string>
                             <string>title</string>
+                            <string>portal_type</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
@@ -217,7 +212,11 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>str</string>
                             <string>_apply_</string>
                             <string>_getitem_</string>
+                            <string>len</string>
+                            <string>delivery_count</string>
+                            <string>source_section</string>
                             <string>pl_value</string>
+                            <string>source</string>
                             <string>resource</string>
                             <string>pl_line_dict</string>
                             <string>pl_line_value</string>
@@ -240,18 +239,9 @@ return context.Base_redirect(form_id, keep_items=dict(\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <list/>
-                <list/>
                 <string>view</string>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
                 <string></string>
+                <none/>
               </tuple>
             </value>
         </item>

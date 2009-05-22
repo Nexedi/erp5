@@ -66,7 +66,6 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -87,19 +86,11 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list>
-                        <string>my_reference</string>
-                        <string>my_resource</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
                         <string>your_title</string>
+                        <string>your_portal_type</string>
                       </list>
                     </value>
                 </item>
@@ -109,7 +100,6 @@
                       <list>
                         <string>my_quantity</string>
                         <string>my_quantity_unit</string>
-                        <string>your_portal_type</string>
                       </list>
                     </value>
                 </item>
@@ -150,7 +140,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>Item_viewDeliveryLineCreationDialog</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

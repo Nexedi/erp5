@@ -71,7 +71,7 @@ base_id = \'movement\'\n
 for line in kw.get(\'listbox\'):\n
   if line.has_key(\'listbox_key\') and line[\'quantity\'] in (\'\',None):\n
     request.set(\'portal_status_message\', \n
-                 Base_translateString(\'Please Define Quantity for Item Defined On Line %s\'%line[\'listbox_key\']))\n
+                 translateString(\'Please Define Quantity for Item Defined On Line %s\'%line[\'listbox_key\']))\n
   if line.has_key(\'listbox_key\') and (line[\'title\'] or line[\'reference\'] not in (\'\', None)):\n
     module = context.getDefaultModule(type)\n
     item = module.newContent(portal_type=type,\n
@@ -160,7 +160,6 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>line</string>
                             <string>_getitem_</string>
                             <string>None</string>
-                            <string>Base_translateString</string>
                             <string>module</string>
                             <string>item</string>
                             <string>append</string>

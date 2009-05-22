@@ -96,19 +96,15 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_reference</string>
                         <string>your_title</string>
+                        <string>your_portal_type</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>your_portal_type</string>
-                        <string>your_start_date</string>
-                        <string>your_stop_date</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -148,7 +144,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>ItemModule_viewDeliveryLineCreationDialog</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
