@@ -131,7 +131,7 @@ class DocumentationHelper(Implicit):
     """
     Returns the id of the documentation helper
     """
-    return getattr(aq_base(self.getDocumentedObject()), 'id', '')
+    return getattr(aq_base(self.getDocumentedObject()), 'id')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTempInstance')
   def getTempInstance(self, portal_type):
@@ -222,7 +222,10 @@ class DocumentationHelper(Implicit):
     Returns the title of the documentation helper
     (ex. class name)
     """
-    return getattr(aq_base(self.getDocumentedObject()), 'title', '')
+    try:
+      return self.getDocumentedObject().getTitle()
+    except AttributeError:
+      return getattr(self.getDocumentedObject(), 'title', '')
 
   def getType(self):
     """
@@ -236,7 +239,10 @@ class DocumentationHelper(Implicit):
     """
     Returns the title of the documentation helper
     """
-    return getattr(aq_base(self.getDocumentedObject()), 'description', '')
+    try:
+      return self.getDocumentedObject().getDescription()
+    except AttributeError:
+      return getattr(self.getDocumentedObject(), 'description', '')
 
   def getSectionUriList(self, id, **kw):
     return getattr(self, 'get%sUriList' % convertToUpperCase(id))()
