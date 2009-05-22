@@ -85,8 +85,6 @@ class WebServiceTool(BaseTool):
     different kinds of transport like 'xml-rpc' or 'soap'
     """
     # XXX: implement connection caching per zope thread
-    if transport_kw is None:
-      transport_kw = {}
     connection_handler_klass = connection_plugin_registry[transport]
     connection_handler = connection_handler_klass(url, user_name, password)
     return connection_handler.connect()
