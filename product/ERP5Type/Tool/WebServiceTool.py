@@ -26,14 +26,41 @@
 #
 ##############################################################################
 
+import sys
+from zLOG import LOG, WARNING
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import _dtmldir
-from Products.ERP5Type.ConnectionPlugin.XMLRPCConnection import XMLRPCConnection
-from Products.ERP5Type.ConnectionPlugin.SOAPConnection import SOAPConnection
 
+connection_plugin_registry = {}
+
+def registerConnectionPlugin(name, klass):
+  assert name not in connection_plugin_registry, (name, connection_plugin_registry)
+  connection_plugin_registry[name] = klass
+
+# Import and register known connection plugins
+# Others should call registerConnectionPlugin directly to register themselves.
+handler_module_dict = {
+  'xml-rpc': 'XMLRPCConnection',
+  'soap': 'SOAPConnection',
+}
+for handler_id, module_id in handler_module_dict.iteritems():
+  # Ignore non-functionnal plugins.
+  # This is done to avoid adding strict dependencies.
+  # Code relying on the presence of a plugin will fail upon
+  # WebServiceTool.connect .
+  try:
+    module = __import__(
+      'Products.ERP5Type.ConnectionPlugin.%s' % (module_id, ),
+      globals(), {}, [module_id])
+  except ImportError:
+    LOG('WebServiceTool', WARNING,
+        'Unable to import module %r.' % (module_id, ),
+        error=sys.exc_info())
+  else:
+    registerConnectionPlugin(handler_id, getattr(module, module_id))
 
 class WebServiceTool(BaseTool):
   """
@@ -58,13 +85,10 @@ class WebServiceTool(BaseTool):
     different kinds of transport like 'xml-rpc' or 'soap'
     """
     # XXX: implement connection caching per zope thread
-    if transport == 'xml-rpc':
-      connection_handler = XMLRPCConnection(url, user_name, password)
-    elif transport == 'soap':
-      connection_handler = SOAPConnection(url, user_name, password)
-    else:
-      raise # XXX Which exception 
-    connection_handler = connection_handler.connect()
-    return connection_handler
+    if transport_kw is None:
+      transport_kw = {}
+    connection_handler_klass = connection_plugin_registry[transport]
+    connection_handler = connection_handler_klass(url, user_name, password)
+    return connection_handler.connect()
 
 InitializeClass(WebServiceTool)
