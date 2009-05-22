@@ -55,22 +55,20 @@
             <key> <string>_body</string> </key>
             <value> <string>from DateTime import DateTime\n
 \n
-#kw[\'at_date\'] = DateTime()\n
+kw[\'at_date\'] = DateTime()\n
 kw[\'item\'] = context.getRelativeUrl()\n
 \n
-last_affectation_list = context.portal_simulation.getTrackingList(**kw)\n
+last_affectation_list = context.portal_simulation.getCurrentTrackingList(**kw)\n
 \n
 if kw.get(\'src__\',0):\n
   return last_affectation_list\n
 if len(last_affectation_list):\n
   last_affectation = last_affectation_list[0]\n
-  if last_affectation.resource_uid is not None:\n
-    resource_value = context.portal_catalog.getObject(last_affectation.resource_uid)\n
-    mvt_aggregated = context.getAggregateRelatedValue()\n
-    variation_list = mvt_aggregated.getVariationCategoryList()\n
-    return variation_list\n
+  if last_affectation.delivery_uid is not None:\n
+    movement = context.portal_catalog.getObject(last_affectation.delivery_uid)\n
+    return movement.getVariationRangeCategoryItemList(display_base_category=0)\n
 \n
-return None\n
+return []\n
 </string> </value>
         </item>
         <item>
@@ -109,18 +107,16 @@ return None\n
                           <tuple>
                             <string>kw</string>
                             <string>DateTime</string>
+                            <string>_write_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>_write_</string>
                             <string>_apply_</string>
                             <string>last_affectation_list</string>
                             <string>len</string>
                             <string>_getitem_</string>
                             <string>last_affectation</string>
                             <string>None</string>
-                            <string>resource_value</string>
-                            <string>mvt_aggregated</string>
-                            <string>variation_list</string>
+                            <string>movement</string>
                           </tuple>
                         </value>
                     </item>
@@ -137,7 +133,7 @@ return None\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Item_getVariationOnMovement</string> </value>
+            <value> <string>Item_getVariationRangeCategoryItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

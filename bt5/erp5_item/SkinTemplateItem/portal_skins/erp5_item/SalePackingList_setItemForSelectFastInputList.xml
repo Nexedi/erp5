@@ -81,7 +81,7 @@ for item in item_list:  \n
   variation_dict[variation_list] = variation_dict[variation_list] + item.getQuantity()\n
 for cell in splc_list:\n
   for item in item_list:\n
-    if item.Item_getVariationOnMovement()==cell.getVariationCategoryList():\n
+    if item.Item_getVariationCategoryList() == cell.getVariationCategoryList():\n
        new_item_list=[]\n
        new_item_list.append(item)       \n
        cell.setAggregateValueList(context.getAggregateValueList()+ new_item_list)\n

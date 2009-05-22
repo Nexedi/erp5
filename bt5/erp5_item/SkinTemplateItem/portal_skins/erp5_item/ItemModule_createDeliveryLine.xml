@@ -119,10 +119,11 @@ for item in object_list:\n
   pl_line_dict[\'resource_value\'] = resource\n
   pl_line_dict[\'source_value\'] = source\n
   pl_line_value = pl_value.newContent(**pl_line_dict)\n
-  if item.Item_getVariationOnMovement()==[]:\n
+  variation_category_list = item.Item_getVariationCategoryList()\n
+  if not variation_category_list:\n
     pl_line_value.setAggregateValue(item)\n
   else:\n
-    pl_line_value.setVariationCategoryList(item.Item_getVariationOnMovement(current=1))\n
+    pl_line_value.setVariationCategoryList(variation_category_list)\n
     base_id = \'movement\'\n
     cell_key_list = list(pl_line_value.getCellKeyList(base_id=base_id))\n
     cell_key_list.sort()\n
@@ -220,6 +221,7 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>resource</string>
                             <string>pl_line_dict</string>
                             <string>pl_line_value</string>
+                            <string>variation_category_list</string>
                             <string>base_id</string>
                             <string>list</string>
                             <string>cell_key_list</string>

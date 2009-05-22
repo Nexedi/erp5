@@ -295,7 +295,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Item_getVariationOnMovement()</string> </value>
+            <value> <string>here/Item_getVariationCategoryList</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -311,7 +311,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getAggregateRelatedValue().getVariationRangeCategoryItemList(display_base_category = 0)</string> </value>
+            <value> <string>here/Item_getVariationRangeCategoryItemList</string> </value>
         </item>
       </dictionary>
     </pickle>

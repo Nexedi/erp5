@@ -53,47 +53,23 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempBase\n
-portal = context.getPortalObject()\n
-if context.getPortalType()==\'Sale Packing List Line\':\n
-  cell_portal_type = \'Sale Packing List Cell\'\n
-elif context.getPortalType()==\'Inventory Line\':\n
-  cell_portal_type = \'Inventory Cell\'\n
-elif context.getPortalType()==\'Internal Packing List Line\':\n
-  cell_portal_type = \'Internal Packing List Cell\'\n
-result = [x.getObject() for x in context.portal_catalog(portal_type=\'Item\')]\n
-result_list = []\n
-new_list = filter(\n
-       lambda x :(x.Item_getResourceTitle()==context.getResourceTitle()),\n
-                  result)\n
+            <value> <string>from DateTime import DateTime\n
 \n
-splc_list= context.contentValues(portal_type=cell_portal_type)\n
-if not splc_list:\n
-  return new_list\n
-for splc in splc_list:\n
-  item_list = filter(\n
-       lambda x :(x.Item_getVariationCategoryList()==splc.getVariationCategoryList()),\n
-                  new_list)\n
-  result_list.extend(item_list)\n
-len_res_list = len(result_list)\n
+kw[\'at_date\'] = DateTime()\n
+kw[\'item\'] = context.getRelativeUrl()\n
 \n
+last_affectation_list = context.portal_simulation.getCurrentTrackingList(**kw)\n
 \n
-result = []\n
+if kw.get(\'src__\',0):\n
+  return last_affectation_list\n
 \n
-return result_list\n
-for item in result_list:\n
-  variation_list = item.Item_getVariationCategoryList()\n
-  if variation_list !=[]:\n
-    obj = newTempBase(portal,id="tmp_item_%s" % item.getId(), uid="new_item_%s" % item.getId())\n
-    obj.edit(title=item.Item_getResourceTitle(),\n
-           reference=item.getReference(),\n
-           size=variation_list[1],\n
-           quantity=item.getQuantity(),\n
-           quality_grade=variation_list[0],\n
-           variation_category_list =variation_list)\n
-    result.append(obj)\n
+if len(last_affectation_list):\n
+  last_affectation = last_affectation_list[0]\n
+  if last_affectation.delivery_uid is not None:\n
+    movement = context.portal_catalog.getObject(last_affectation.delivery_uid)\n
+    return movement.getVariationCategoryList()\n
 \n
-return result\n
+return []\n
 </string> </value>
         </item>
         <item>
@@ -104,7 +80,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -130,31 +106,18 @@ return result\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>args</string>
                             <string>kw</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempBase</string>
+                            <string>DateTime</string>
+                            <string>_write_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal</string>
-                            <string>cell_portal_type</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>result</string>
-                            <string>result_list</string>
-                            <string>filter</string>
-                            <string>new_list</string>
-                            <string>splc_list</string>
-                            <string>splc</string>
-                            <string>item_list</string>
+                            <string>_apply_</string>
+                            <string>last_affectation_list</string>
                             <string>len</string>
-                            <string>len_res_list</string>
-                            <string>item</string>
-                            <string>variation_list</string>
-                            <string>obj</string>
                             <string>_getitem_</string>
+                            <string>last_affectation</string>
+                            <string>None</string>
+                            <string>movement</string>
                           </tuple>
                         </value>
                     </item>
@@ -171,7 +134,7 @@ return result\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SalePackingList_getSelectFastInputItemList</string> </value>
+            <value> <string>Item_getVariationCategoryList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
