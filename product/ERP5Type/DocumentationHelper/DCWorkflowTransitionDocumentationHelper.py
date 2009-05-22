@@ -50,8 +50,7 @@ class DCWorkflowTransitionDocumentationHelper(DocumentationHelper):
     """
     Returns the title of the documentation helper
     """
-    return DocumentationHelper.getTitle(self) \
-        or self.getDocumentedObject().actbox_name
+    return DocumentationHelper.getTitle(self) or getattr(self.getDocumentedObject(), 'actbox_name')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getNewState')
   def getNewState(self):
@@ -61,6 +60,7 @@ class DCWorkflowTransitionDocumentationHelper(DocumentationHelper):
     if new_state_id:
       uri = '%s/states/%s' % (self.uri.rsplit('/',2)[0], new_state_id)
       return self.getDocumentationHelper('DCWorkflowStateDocumentationHelper', uri)
+	
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTriggerType')
   def getTriggerType(self):
@@ -68,7 +68,7 @@ class DCWorkflowTransitionDocumentationHelper(DocumentationHelper):
     Returns the trigger type for de workflow transition
     """
     trigger_type_list = ['Automatic','Initiated by user action','Initiated by WorkflowMethod']
-    trigger_type_id = getattr(self.getDocumentedObject(), "trigger_type", '')
+    trigger_type_id = getattr(self.getDocumentedObject(), "trigger_type")
     return trigger_type_list[trigger_type_id]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getScriptName')
@@ -76,14 +76,14 @@ class DCWorkflowTransitionDocumentationHelper(DocumentationHelper):
     """
     Returns the name of the script for de workflow transition
     """
-    return getattr(self.getDocumentedObject(), "script_name", '')
+    return getattr(self.getDocumentedObject(), "script_name")
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getAfterScriptName')
   def getAfterScriptName(self):
     """
     Returns the name of the script for de workflow transition
     """
-    return getattr(self.getDocumentedObject(), "after_script_name", '')
+    return getattr(self.getDocumentedObject(), "after_script_name")
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getRoleColumnList')
   def getRoleColumnList(self):
