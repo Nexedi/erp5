@@ -474,10 +474,6 @@ class ColumnMap(object):
   def _addJoinQuery(self, query):
     self.join_query_list.append(query)
 
-  def addJoinQuery(self, query):
-    LOG('ColumnMap', INFO, 'addJoinQuery use is discouraged')
-    self._addJoinQuery(query)
-
   def iterJoinQueryList(self):
     return iter(self.join_query_list)
 

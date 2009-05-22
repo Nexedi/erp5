@@ -190,7 +190,10 @@ class RelatedKey(SearchKey):
     # Note that doing this has a side effect on result list, as objects
     # lacking a relation will never appear in the result.
     if BACKWARD_COMPATIBILITY:
-      column_map.addJoinQuery(SQLQuery(rendered_related_key))
+      # XXX: Calling a private-ish method on column_map.
+      # This should never happen. It should be removed as soon as an
+      # alternative exists.
+      column_map._addJoinQuery(SQLQuery(rendered_related_key))
       return None
     else:
       return SQLExpression(self, where_expression=rendered_related_key)

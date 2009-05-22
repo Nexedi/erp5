@@ -271,13 +271,6 @@ class IColumnMap(Interface):
         Group id of given table.
     """
 
-  def addJoinQuery(query):
-    """
-      Adds a query to a list of top-level queries.
-      This method is only made available at interface level for backward
-      compatibility.
-    """
-
   def iterJoinQueryList():
     """
       Get an iterator over queries internally generated when resolving column
