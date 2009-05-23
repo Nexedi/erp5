@@ -38,4 +38,4 @@ class Ticket:
       'mode'        : 'w' },
   )
 
-  _categories = ()
+  _categories = ('specialise', )
