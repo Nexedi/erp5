@@ -68,5 +68,6 @@ class TradeCondition:
   )
 
   _categories = ( 'group', 'activity', 'incoterm',
-                  'price_currency', 'delivery_mode', )
+                  'price_currency', 'delivery_mode',
+                  'trade_condition_type',  )
 
