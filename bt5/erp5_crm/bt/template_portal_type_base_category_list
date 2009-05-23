@@ -1,5 +1,9 @@
 Campaign Module | business_application
+Campaign | specialise
 Event Module | business_application
 Meeting Module | business_application
+Meeting | specialise
 Sale Opportunity Module | business_application
+Sale Opportunity | specialise
 Support Request Module | business_application
+Support Request | specialise

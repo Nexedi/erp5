@@ -100,6 +100,7 @@
                         <string>my_stop_date</string>
                         <string>my_price</string>
                         <string>my_reference</string>
+                        <string>my_specialise_title</string>
                       </list>
                     </value>
                 </item>

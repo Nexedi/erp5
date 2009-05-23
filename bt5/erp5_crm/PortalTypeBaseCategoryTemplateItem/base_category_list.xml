@@ -1,15 +1,27 @@
 <base_category_list>
+ <portal_type id="Campaign">
+  <item>specialise</item>
+ </portal_type>
  <portal_type id="Campaign Module">
   <item>business_application</item>
  </portal_type>
  <portal_type id="Event Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Meeting">
+  <item>specialise</item>
+ </portal_type>
  <portal_type id="Meeting Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Sale Opportunity">
+  <item>specialise</item>
+ </portal_type>
  <portal_type id="Sale Opportunity Module">
   <item>business_application</item>
+ </portal_type>
+ <portal_type id="Support Request">
+  <item>specialise</item>
  </portal_type>
  <portal_type id="Support Request Module">
   <item>business_application</item>
