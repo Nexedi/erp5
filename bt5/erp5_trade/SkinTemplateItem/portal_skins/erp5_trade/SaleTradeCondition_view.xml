@@ -108,6 +108,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
+                        <string>my_trade_condition_type</string>
                         <string>my_destination_section_title</string>
                         <string>my_destination_title</string>
                         <string>my_destination_decision_title</string>
