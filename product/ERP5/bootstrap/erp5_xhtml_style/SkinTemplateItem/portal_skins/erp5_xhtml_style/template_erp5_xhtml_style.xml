@@ -64,8 +64,9 @@ IDEAS:\n
           <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n
           <meta http-equiv="Content-Script-Type" content="text/javascript" />\n
           <meta http-equiv="Content-Style-Type" content="text/css" />\n
-          <title tal:define="title title | string:ERP5"\n
-                 tal:content="python: \'%s | %s\' % (title, here.getPortalObject().title_or_id())"></title>\n
+          <title tal:define="title title | string:ERP5;\n
+                             header_title header_title | nothing"\n
+                 tal:content="python:header_title or \'%s | %s\' % (title, here.getPortalObject().title_or_id())"></title>\n
           <tal:block tal:repeat="css css_list">\n
             <link tal:attributes="href css" type="text/css" rel="stylesheet" />\n
           </tal:block>\n
