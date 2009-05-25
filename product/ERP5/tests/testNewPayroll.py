@@ -95,6 +95,11 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
             'use/payroll/base_salary',
             'trade_phase/payroll/france/urssaf',
             'time/hours',
+            'salary_range/france',
+            'salary_range/france/slice_a',
+            'salary_range/france/slice_b',
+            'salary_range/france/slice_c',
+            'salary_range/france/forfait',
            )
 
   def getBusinessTemplateList(self):
@@ -345,6 +350,91 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     self.assertEquals(len(paysheet.contentValues(portal_type=\
         'Payment Condition')), 1)
 
+  def stepCreateModelTree(self, sequence=None, **kw):
+    model_employee = self.createModel()
+    model_employee.edit(variation_settings_category_list='salary_range/france')
+    model_company = self.createModel()
+    model_company.edit(variation_settings_category_list='salary_range/france')
+    model_company_alt = self.createModel()
+    model_company_alt.edit(variation_settings_category_list=\
+        'salary_range/france')
+    model_country = self.createModel()
+    model_country.edit(variation_settings_category_list='salary_range/france')
+    # add some cells in the models
+    slice1 = model_employee.newCell('salary_range/france/slice_a',
+                            portal_type='Pay Sheet Model Slice',
+                            base_id='cell')
+    slice1.setQuantityRangeMin(0)
+    slice1.setQuantityRangeMax(1)
+
+    slice2 = model_company.newCell('salary_range/france/slice_b',
+                            portal_type='Pay Sheet Model Slice',
+                            base_id='cell')
+    slice2.setQuantityRangeMin(2)
+    slice2.setQuantityRangeMax(3)
+
+    slice3 = model_company_alt.newCell('salary_range/france/forfait',
+                            portal_type='Pay Sheet Model Slice',
+                            base_id='cell')
+    slice3.setQuantityRangeMin(20)
+    slice3.setQuantityRangeMax(30)
+
+    slice4 = model_country.newCell('salary_range/france/slice_c',
+                            portal_type='Pay Sheet Model Slice',
+                            base_id='cell')
+    slice4.setQuantityRangeMin(4)
+    slice4.setQuantityRangeMax(5)
+
+    # inherite from each other
+    model_employee.setSpecialiseValueList((model_company, model_company_alt))
+    model_company.setSpecialiseValue(model_country)
+
+    sequence.edit(model_employee = model_employee,
+                  model_company = model_company,
+                  model_company_alt = model_company_alt,
+                  model_country = model_country)
+
+  def assertCell(self, model, salary_range, range_min, range_max):
+    cell = model.getCell(salary_range)
+    self.assertNotEqual(cell, None)
+    self.assertEqual(cell.getQuantityRangeMin(), range_min)
+    self.assertEqual(cell.getQuantityRangeMax(), range_max)
+
+  def assertCellIsNone(self, model, salary_range):
+    cell = model.getCell(salary_range)
+    self.assertEqual(cell, None)
+
+  def stepCheckgetCellResults(self, sequence=None, **kw):
+    model_employee = sequence.get('model_employee')
+    model_company = sequence.get('model_company')
+    model_company_alt = sequence.get('model_company_alt')
+    model_country = sequence.get('model_country')
+
+    # check model_employee could access all cells
+    self.assertCell(model_employee, 'salary_range/france/slice_a', 0, 1)
+    self.assertCell(model_employee, 'salary_range/france/slice_b', 2, 3)
+    self.assertCell(model_employee, 'salary_range/france/forfait', 20, 30)
+    self.assertCell(model_employee, 'salary_range/france/slice_c', 4, 5)
+
+    # check model_company could access just it's own cell
+    # and this of the country model
+    self.assertCellIsNone(model_company, 'salary_range/france/slice_a')
+    self.assertCell(model_company, 'salary_range/france/slice_b', 2, 3)
+    self.assertCellIsNone(model_company, 'salary_range/france/forfait')
+    self.assertCell(model_company, 'salary_range/france/slice_c', 4, 5)
+
+    # model_company_alt could access just it's own cell
+    self.assertCellIsNone(model_company_alt, 'salary_range/france/slice_a')
+    self.assertCellIsNone(model_company_alt, 'salary_range/france/slice_b')
+    self.assertCell(model_company_alt, 'salary_range/france/forfait', 20, 30)
+    self.assertCellIsNone(model_company_alt, 'salary_range/france/slice_c')
+
+    # check model_country could access just it's own cell
+    # model
+    self.assertCellIsNone(model_country, 'salary_range/france/slice_a')
+    self.assertCellIsNone(model_country, 'salary_range/france/slice_b')
+    self.assertCellIsNone(model_country, 'salary_range/france/forfait')
+    self.assertCell(model_country, 'salary_range/france/slice_c', 4, 5)
 
 class TestNewPayroll(TestNewPayrollMixin):
   COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING = """
@@ -359,6 +449,21 @@ class TestNewPayroll(TestNewPayrollMixin):
                PaysheetCreateLabourPaySheetLine
                Tic
   """
+
+  def test_modelGetCell(self):
+    '''
+      Model objects have a overload method called getCell. This method first
+      call the XMLMatrix.getCell and if the cell is not found, call
+      getCell method in all it's inherited model until the cell is found or
+      the cell have been searched on all inherited models.
+    '''
+    sequence_list = SequenceList()
+    sequence_string = """
+               CreateModelTree
+               CheckgetCellResults
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
   def test_applyModelSetCategories(self):
     '''
