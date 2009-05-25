@@ -53,18 +53,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>LOG = lambda msg:context.log("PaymentTransaction_selectMovement", msg)\n
-\n
-kw[\'parent_specialise_portal_type\'] = \'Payment Rule\'\n
+            <value> <string>kw[\'parent_specialise_portal_type\'] = \'Payment Rule\'\n
 kw[\'portal_type\'] = \'Simulation Movement\'\n
 kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
 kw[\'max_movement_date\'] = DateTime() + 30 # XXX this is an arbitrary value for experimentation\n
                                           # this could be an alarm configuration.\n
-\n
-LOG("SQL used = %s"%context.PaymentTransaction_zSelectMovement(src__=1, **kw))\n
 movement_list = [x.getObject() for x in context.PaymentTransaction_zSelectMovement(**kw)]\n
-\n
-LOG("movement_list = %s"%movement_list)\n
 return movement_list\n
 </string> </value>
         </item>
@@ -104,7 +98,6 @@ return movement_list\n
                           <tuple>
                             <string>src__</string>
                             <string>kw</string>
-                            <string>LOG</string>
                             <string>_write_</string>
                             <string>_getattr_</string>
                             <string>_apply_</string>
