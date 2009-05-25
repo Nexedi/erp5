@@ -13,10 +13,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>catalog_index</string>
                 <string>title</string>
-                <string>portal_type</string>
                 <string>base_category</string>
+                <string>portal_type</string>
+                <string>catalog_index</string>
                 <string>enabled</string>
               </list>
             </value>
@@ -60,6 +60,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>base_category</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>catalog_index</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -89,6 +93,10 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -103,6 +111,10 @@
                 <item>
                     <key> <string>catalog_index</string> </key>
                     <value> <string>aggregate</string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -164,7 +176,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: (here.getResource() and here.getResourceValue().getAggregatedPortalTypeList()) or (here.getAggregate()) or (here.getResource() is None and here.getPortalItemTypeList())</string> </value>
+            <value> <string>python: not here.getVariationCategoryList() and (here.getResource() and here.getResourceValue().getAggregatedPortalTypeList()) or (here.getAggregate()) or (here.getResource() is None and here.getPortalItemTypeList())</string> </value>
         </item>
       </dictionary>
     </pickle>
