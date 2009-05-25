@@ -169,6 +169,9 @@ class WebSection(Domain, PermanentURLMixIn):
         We use REQUEST parameters so that they are reset for every
         Web transaction and can be accessed from widgets. 
       """
+      # Register current web site physical path for later URL generation
+      if self.REQUEST.get(self.web_section_key, MARKER) is MARKER:
+        self.REQUEST[self.web_section_key] = self.getPhysicalPath()
       self.REQUEST.set('current_web_section', self)
       if not self.REQUEST.get('editable_mode') and not self.REQUEST.get('ignore_layout'):
         # Try to use a custom renderer if any
