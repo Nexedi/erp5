@@ -53,10 +53,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if context.getPortalType() in [\'Purchase Packing List Line\',\'Inventory Line\'] and (context.getResource() and context.getResourceValue().getAggregatedPortalTypeList()) or (context.getAggregate()) or (context.getResource() is None and context.getPortalItemTypeList()):\n
-  return 0\n
-else:\n
-  return 1\n
+            <value> <string>from DateTime import DateTime\n
+\n
+kw[\'at_date\'] = DateTime()\n
+kw[\'item\'] = context.getRelativeUrl()\n
+\n
+last_affectation_list = context.portal_simulation.getCurrentTrackingList(**kw)\n
+\n
+if kw.get(\'src__\',0):\n
+  return last_affectation_list\n
+if len(last_affectation_list):\n
+  last_affectation = last_affectation_list[0]\n
+  if last_affectation.delivery_uid is not None:\n
+    movement = context.portal_catalog.getObject(last_affectation.delivery_uid)\n
+    variation_list = [x[0] for x in movement.getVariationCategoryItemList()]\n
+    variation = \',\'.join(variation_list)\n
+    return variation\n
+\n
+return []\n
 </string> </value>
         </item>
         <item>
@@ -67,7 +81,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>current=1,**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -87,15 +101,31 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>current</string>
+                            <string>kw</string>
+                            <string>DateTime</string>
+                            <string>_write_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>_apply_</string>
+                            <string>last_affectation_list</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>last_affectation</string>
                             <string>None</string>
+                            <string>movement</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>variation_list</string>
+                            <string>variation</string>
                           </tuple>
                         </value>
                     </item>
@@ -107,12 +137,14 @@ else:\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>1</int>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testItemDefinedOnResource</string> </value>
+            <value> <string>Item_getVariationCategoryTitleList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

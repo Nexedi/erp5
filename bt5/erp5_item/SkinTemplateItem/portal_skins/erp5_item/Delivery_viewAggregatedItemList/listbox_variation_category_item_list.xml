@@ -311,7 +311,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>cell/Item_getVariationCategoryList</string> </value>
+            <value> <string>cell/Item_getVariationCategoryTitleList</string> </value>
         </item>
       </dictionary>
     </pickle>

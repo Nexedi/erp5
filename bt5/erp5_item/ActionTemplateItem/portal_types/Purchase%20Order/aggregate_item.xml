@@ -69,7 +69,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Order_viewAggregatedItemList</string> </value>
+            <value> <string>string:${object_url}/Delivery_viewAggregatedItemList</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -68,6 +68,7 @@ new_list = filter(\n
                   result)\n
 \n
 splc_list= context.contentValues(portal_type=cell_portal_type)\n
+\n
 if not splc_list:\n
   return new_list\n
 for splc in splc_list:\n
@@ -75,6 +76,7 @@ for splc in splc_list:\n
        lambda x :(x.Item_getVariationCategoryList()==splc.getVariationCategoryList()),\n
                   new_list)\n
   result_list.extend(item_list)\n
+\n
 len_res_list = len(result_list)\n
 \n
 \n

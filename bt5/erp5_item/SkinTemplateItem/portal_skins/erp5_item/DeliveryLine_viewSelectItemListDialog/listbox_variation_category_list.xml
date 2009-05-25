@@ -273,7 +273,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python : cell.Item_getVariationOnDefinedOnItem()</string> </value>
+            <value> <string>python: cell.Item_getVariationCategoryList()</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -289,7 +289,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getVariationRangeCategoryItemList(display_base_category = 0)</string> </value>
+            <value> <string>python: cell.getAggregateRelatedValue().getVariationRangeCategoryItemList(display_base_category = 0)</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -305,7 +305,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getVariationRangeCategoryItemList(display_base_category = 0)</string> </value>
+            <value> <string>python: cell.getAggregateRelatedValue().getVariationRangeCategoryItemList(display_base_category = 0)</string> </value>
         </item>
       </dictionary>
     </pickle>

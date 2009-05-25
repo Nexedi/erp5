@@ -67,7 +67,7 @@ elif context.getPortalType()==\'Inventory Line\':\n
   cell_portal_type = \'Inventory Cell\'\n
 elif context.getPortalType()==\'Internal Packing List Line\':\n
   cell_portal_type = \'Internal Packing List Cell\'\n
-context.Base_updateDialogForm(listbox=listbox)\n
+\n
 \n
 for line in listbox: \n
   if line["selection_check"]==1:\n
@@ -76,7 +76,7 @@ for line in listbox: \n
     item_list.append(item)\n
 variation_dict = {}  \n
 for item in item_list:  \n
-  variation_list = item.Item_getVariationOnDefinedOnItem()\n
+  variation_list = item.Item_getVariationCategoryTitleList()\n
   if variation_list not in variation_dict:\n
     variation_dict[variation_list] = 0.0  \n
   variation_dict[variation_list] = variation_dict[variation_list] + item.getQuantity()\n
@@ -87,16 +87,17 @@ for splc in splc_list:\n
   variation_cell_list = \',\'.join([x[0] for x in splc.getVariationCategoryItemList()])\n
   variation_cell_dict[variation_cell_list]= splc.getQuantity()\n
 final_variation_dict={}\n
-for key in variation_cell_dict:\n
-  final_variation_dict[key] = "%s/%s"%(variation_cell_dict[key],variation_dict[key])\n
 \n
-   \n
+for key in variation_dict:\n
+    final_variation_dict[key] = "%s/%s"%(variation_cell_dict[key],variation_dict[key])\n
+\n
 \n
 request.set(\'portal_status_message\',\n
           Base_translateString(\n
                \'Quantity Defined On Packing List %s\' %(final_variation_dict)))\n
 \n
-return context.SalePackingList_viewSelectItemFastInputDialog(**kw)\n
+context.Base_updateDialogForm(listbox=listbox)\n
+return context.DeliveryLine_viewSelectItemListDialog(**kw)\n
 </string> </value>
         </item>
         <item>

@@ -75,7 +75,7 @@ for line in kw.get(\'listbox\'): \n
     item_list.append(item)\n
 variation_dict = {}  \n
 for item in item_list:  \n
-  variation_list = item.Item_getVariationOnDefinedOnItem()\n
+  variation_list = item.Item_getVariationCategoryTitleList()\n
   if variation_list not in variation_dict:\n
     variation_dict[variation_list] = 0.0  \n
   variation_dict[variation_list] = variation_dict[variation_list] + item.getQuantity()\n

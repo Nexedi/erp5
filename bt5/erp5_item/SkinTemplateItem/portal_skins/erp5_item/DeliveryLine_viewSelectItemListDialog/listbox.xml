@@ -163,7 +163,7 @@
                           <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>Item_getVariationOnDefinedOnItem</string>
+                          <string>Item_getVariationCategoryTitleList</string>
                           <string>Variation</string>
                         </tuple>
                       </list>
@@ -184,7 +184,7 @@
                           <string>Select</string>
                         </tuple>
                         <tuple>
-                          <string>Item_getVariationOnDefinedOnItem</string>
+                          <string>Item_getVariationCategoryTitleList</string>
                           <string>Variation</string>
                         </tuple>
                       </list>
