@@ -177,7 +177,7 @@ return context.SalePackingList_viewSelectItemFastInputDialog(**kw)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SalePackingList_updateSelectItemFastInputDialog</string> </value>
+            <value> <string>DeliveryLine_updateSelectItemListDialog</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

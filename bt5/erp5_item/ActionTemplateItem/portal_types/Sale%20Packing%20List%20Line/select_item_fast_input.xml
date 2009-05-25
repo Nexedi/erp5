@@ -41,7 +41,7 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>View</string>
+                <string>Modify portal content</string>
               </tuple>
             </value>
         </item>
@@ -71,7 +71,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/SalePackingList_viewSelectItemFastInputDialog</string> </value>
+            <value> <string>string:${object_url}/DeliveryLine_viewSelectItemListDialog</string> </value>
         </item>
       </dictionary>
     </pickle>

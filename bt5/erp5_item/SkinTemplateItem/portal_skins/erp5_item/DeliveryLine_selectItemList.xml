@@ -173,7 +173,7 @@ return context.Base_redirect(form_id, keep_items=dict(\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SalePackingList_setItemForSelectFastInputList</string> </value>
+            <value> <string>DeliveryLine_selectItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

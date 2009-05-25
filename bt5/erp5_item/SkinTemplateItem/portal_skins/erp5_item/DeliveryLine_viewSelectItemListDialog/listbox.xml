@@ -249,7 +249,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>SalePackingList_getSelectFastInputItemList</string> </value>
+            <value> <string>DeliveryLine_getSelectableItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
