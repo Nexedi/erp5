@@ -86,6 +86,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
             'tax_category/employee_share',
             'base_amount/deductible_tax',
             'base_amount/base_salary',
+            'base_amount/net_salary',
             'grade/worker',
             'grade/engineer',
             'quantity_unit/time/month',
@@ -185,8 +186,6 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
     cell2.edit(price=0.5, tax_category='employer_share')
-    sequence.edit(urssaf_model_line_cell1 = cell1)
-    sequence.edit(urssaf_model_line_cell2 = cell2)
 
   def createPaysheet(self, sequence=None, **kw):
     module = self.portal.getDefaultModule(portal_type='Pay Sheet Transaction')
@@ -436,6 +435,94 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     self.assertCellIsNone(model_country, 'salary_range/france/forfait')
     self.assertCell(model_country, 'salary_range/france/slice_c', 4, 5)
 
+  def stepCreateIntermediateModelLine(self, sequence=None, **kw):
+    '''
+      create an intermediate_line wich contribute to tax and applied to
+      base_salary
+    '''
+    model = sequence.get('model')
+    model_line = self.createModelLine(model)
+    model_line.edit(title='intermediate line',
+                    int_index=2,
+                    trade_phase='trade_phase/payroll/france/urssaf',
+                    resource_value=sequence.get('urssaf_payroll_service'),
+                    variation_category_list=['tax_category/employee_share',
+                                             'tax_category/employer_share'],
+                    base_contribution_list=['base_amount/deductible_tax'],
+                    base_application_list=['base_amount/base_salary'],
+                    create_paysheet_line=False,)
+    sequence.edit(intermediate_model_line = model_line)
+
+  def stepCreateModelLineAppliedOnTax(self, sequence=None, **kw):
+    '''
+      create a model line applied on tax
+    '''
+    model = sequence.get('model')
+    model_line = self.createModelLine(model)
+    model_line.edit(title='line applied on intermediate line',
+                    int_index=3,
+                    trade_phase='trade_phase/payroll/france/urssaf',
+                    resource_value=sequence.get('urssaf_payroll_service'),
+                    variation_category_list=['tax_category/employee_share',
+                                             'tax_category/employer_share'],
+                    base_contribution_list=['base_amount/net_salary'],
+                    base_application_list=['base_amount/deductible_tax'])
+    sequence.edit(model_line_applied_on_tax = model_line)
+
+  def stepCreateMovementOnIntermediateModelLine(self, sequence=None,
+      **kw):
+    model_line = sequence.get('intermediate_model_line')
+    cell1 = model_line.newCell('tax_category/employee_share',
+        portal_type='Pay Sheet Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'))
+    cell1.edit(price=0.2, tax_category='employee_share')
+    cell2 = model_line.newCell('tax_category/employer_share',
+        portal_type='Pay Sheet Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'))
+    cell2.edit(price=0.2, tax_category='employer_share')
+
+  def stepCreateMovementOnModelLineAppliedOnTax(self, sequence=None, **kw):
+    model_line = sequence.get('model_line_applied_on_tax')
+    cell1 = model_line.newCell('tax_category/employee_share',
+        portal_type='Pay Sheet Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'))
+    cell1.edit(price=0.1, tax_category='employee_share')
+    cell2 = model_line.newCell('tax_category/employer_share',
+        portal_type='Pay Sheet Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'))
+    cell2.edit(price=0.5, tax_category='employer_share')
+
+  def stepCheckPaysheetIntermediateLines(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+
+    # paysheet should contain only two lines (labour and urssaf, but not
+    # intermediate ursaff
+    self.assertEquals(len(paysheet.contentValues(portal_type=\
+        'Pay Sheet Line')), 2)
+
+    # check amounts
+    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
+    for paysheet_line in paysheet_line_list:
+      service = paysheet_line.getResourceTitle()
+      if service == 'Urssaf':
+        cell1 = paysheet_line.getCell('tax_category/employee_share')
+        self.assertEquals(cell1.getQuantity(), 600) # here it's 600 of tax
+                                  # because of the intermediate line (3000*0.2)
+        self.assertEquals(cell1.getPrice(), 0.1)
+        cell2 = paysheet_line.getCell('tax_category/employer_share')
+        self.assertEquals(cell2.getQuantity(), 600) # here it's 600 of tax
+                                  # because of the intermediate line (3000*0.2)
+        self.assertEquals(cell2.getPrice(), 0.5)
+      elif service == 'Labour':
+        self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
+      else:
+        self.fail("Unknown service for line %s" % paysheet_line)
+
+
 class TestNewPayroll(TestNewPayrollMixin):
   COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING = """
                CreateUrssafPayrollService
@@ -532,6 +619,39 @@ class TestNewPayroll(TestNewPayrollMixin):
                CheckPaysheetLineAreCreated
                CheckPaysheetLineAmounts
                CheckUpdateAggregatedAmountListReturnNothing
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_intermediateLines(self):
+    '''
+      Intermediate lines are paysheet model lines usefull to calcul, but we
+      don't want to have on paysheet. So a checkbox on paysheet model lines
+      permit to create it or not (created by default)
+    '''
+    sequence_list = SequenceList()
+    sequence_string = """
+               CreateUrssafPayrollService
+               CreateLabourPayrollService
+               CreateEmployer
+               CreateEmployee
+               CreateBasicModel
+               CreateIntermediateModelLine
+               CreateMovementOnIntermediateModelLine
+               CreateModelLineAppliedOnTax
+               CreateMovementOnModelLineAppliedOnTax
+               CreateBasicPaysheet
+               PaysheetCreateLabourPaySheetLine
+               Tic
+               CreateBusinessProcess
+               CreateBusinessPath
+               CreateUrssafRoubaixOrganisation
+               ModifyBusinessPathTradePhase
+               SpecialiseBusinessProcessOnModel
+               Tic
+               PaysheetApplyTransformation
+               Tic
+               CheckPaysheetIntermediateLines
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
