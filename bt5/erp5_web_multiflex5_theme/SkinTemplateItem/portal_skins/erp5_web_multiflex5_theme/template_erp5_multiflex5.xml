@@ -96,6 +96,7 @@
                            headline_area python:aggregate.get(\'headline\', []);\n
                            subcontent_area python:aggregate.get(\'subcontent\', []);\n
                            footer_area python:aggregate.get(\'footer\', []);\n
+                           global header_title python:\'%s | %s\' % (here.getTitleOrId(), website.getTitleOrId());\n
                            global css_list_template python:[\n
                                   \'%s/mf54_reset.css\' % portal_path,\n
                                   \'%s/mf54_grid.css\' % portal_path,\n
