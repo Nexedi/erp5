@@ -34,7 +34,7 @@ class CategoryMembershipArity(Constraint):
     This constraint checks if an object respects the arity.
 
     For example we can check if every Order has at least one source.
-    Configuration exemple:
+    Configuration example:
     { 'id'            : 'source',
       'description'   : '',
       'type'          : 'CategoryMembershipArity',
