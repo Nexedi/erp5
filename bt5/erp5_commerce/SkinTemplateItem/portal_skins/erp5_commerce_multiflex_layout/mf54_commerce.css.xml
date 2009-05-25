@@ -119,6 +119,15 @@ div.resource_image label {display:none;}\n
 .product_description_close {margin: 5px; margin-left:15px;}\n
 .content a[title="Edit this form"] {display:none;}\n
 .content {padding-top:10px;}\n
+.product_list_left     {float:left;width:<tal:block tal:replace="python: main_content_width - 260"/>px;}\n
+.product_list_right     {float:right; width:240px; padding:10px;}\n
+.product_list_left a img {border:1px solid <tal:block tal:replace="secondary_color"/>; margin-left:10px;}\n
+.product_list_left a img:hover {border:1px solid <tal:block tal:replace="primary_color"/>; margin-left:10px;}\n
+.product_list {border-top: 1px solid #FFFFFF; border-bottom: 1px solid #FFFFFF;}\n
+.product_list_bis {background-color:<tal:block tal:replace="body_color"/>; border-top: 1px solid <tal:block tal:replace="body_color"/>;border-bottom: 1px solid <tal:block tal:replace="body_color"/>;}\n
+.product_list:hover {border-top: 1px solid <tal:block tal:replace="primary_color"/>; border-bottom: 1px solid <tal:block tal:replace="primary_color"/>; background-color:<tal:block tal:replace="secondary_color"/>;}\n
+.product_list_bis:hover {border-top: 1px solid <tal:block tal:replace="primary_color"/>;border-bottom: 1px solid <tal:block tal:replace="primary_color"/>; background-color:<tal:block tal:replace="secondary_color"/>;}\n
+\n
 </tal:block>
 
 ]]></string> </value>

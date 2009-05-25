@@ -165,7 +165,17 @@
           <tal:block metal:define-slot="main"/>\n
         </div>\n
         <div class="corner-content-1col-bottom"></div>                       \n
-      </div>              \n
+      </div>\n
+\n
+      <tal:block tal:condition="python: here.REQUEST.get(\'current_form_id\') == \'WebPage_viewAsWeb\' or here.REQUEST.get(\'current_form_id\') == \'WebSection_viewAsWeb\'">\n
+        <div class="main_content">\n
+          <div class="corner-content-1col-top"></div>                        \n
+          <div class="content-1col-nobox">\n
+            <tal:block tal:content="structure here/WebSection_viewProductList"/>\n
+          </div>\n
+          <div class="corner-content-1col-bottom"></div>                       \n
+        </div>\n
+      </tal:block>              \n
     </div>   \n
       \n
     <!-- FOOTER -->      \n

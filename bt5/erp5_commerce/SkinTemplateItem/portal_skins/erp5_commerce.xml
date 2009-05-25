@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>OFS.Folder</string>
-          <string>Folder</string>
-        </tuple>
-        <none/>
+        <global name="Folder" module="OFS.Folder"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -1490,12 +1487,6 @@
               <tuple>
                 <string>Manager</string>
               </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>

@@ -60,17 +60,22 @@
                  currency_symbole    python: context.getPortalObject().restrictedTraverse(shopping_cart.getPriceCurrency()).getShortTitle();"\n
      i18n:translate="" i18n:domain="ui" i18n:attributes="title"\n
      title="Sections accessible from here." class="selected-product">\n
-  <tal:block tal:repeat="product python: [x.getObject() for x in current_web_section.WebSection_getDocumentValueListBase(all_versions=1, all_languages=1)]">\n
-    <div tal:condition="python: product.getPortalType() == \'Product\'"\n
-         tal:define="product_href python: \'%s/product_module/%s/%s\' % (site_url, product.getId(), \'Resource_viewAsShop\')">\n
+  <tal:block tal:repeat="product python: here.WebSection_getProductList()">\n
+    <div tal:define="product_href python: \'%s/product_module/%s/%s\' % (site_url, product.getId(), \'Resource_viewAsShop\');\n
+                     price product/getPrice">\n
      <a href="#" tal:attributes="href product_href">\n
        <img tal:attributes="src python: product.getDefaultImageAbsoluteUrl() + \'?display=thumbnail\'" width="75" height="75"/>\n
      </a>\n
      <a href="#" tal:content="python: product.getTranslatedTitle()"\n
                  tal:attributes="href product_href">A product</a>\n
      <br />\n
-     <span  tal:content="python: \'%s %s\' % (product.getPrice(), currency_symbole)"></span>\n
-     </div>\n
+     <tal:block tal:condition="python: price is not None">\n
+       <span  tal:content="python: \'%s %s\' % (price, currency_symbole)"></span>\n
+     </tal:block>\n
+     <tal:block tal:condition="python: price is None">\n
+       <span>The price is not setted yet.</span>\n
+     </tal:block>\n
+   </div>\n
   </tal:block>\n
 </div>
 

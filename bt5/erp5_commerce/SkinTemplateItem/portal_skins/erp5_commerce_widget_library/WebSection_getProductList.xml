@@ -53,12 +53,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Generate random id which is generally used as a session ID.\n
-"""\n
-from random import choice\n
-import string\n
-return  \'\'.join([choice(string.letters) for i in range(max_long)])\n
+            <value> <string>#TODO : USE CACHE\n
+#the goal of this script is to get all the related product of this section\n
+\n
+current_web_section = context.REQUEST.get(\'current_web_section\')\n
+product_list = []\n
+if limit != 0:\n
+  product_list = current_web_section.WebSection_getDocumentValueListBase(all_versions=1,\n
+                                                                         all_languages=1,\n
+                                                                         limit=limit,\n
+                                                                         )\n
+else:\n
+  product_list = current_web_section.WebSection_getDocumentValueListBase(all_versions=1,\n
+                                                                         all_languages=1,\n
+                                                                         )  \n
+product_list = [x.getObject() for x in product_list if x.getPortalType() == \'Product\']\n
+\n
+# this step will be remove after have find a good way to improve WebSection_getDocumentValueListBase\n
+# or find another base script for get only product direclty\n
+\n
+return product_list\n
 </string> </value>
         </item>
         <item>
@@ -69,7 +83,7 @@ return  \'\'.join([choice(string.letters) for i in range(max_long)])\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>max_long = 10</string> </value>
+            <value> <string>limit=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -95,16 +109,15 @@ return  \'\'.join([choice(string.letters) for i in range(max_long)])\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>max_long</string>
-                            <string>random</string>
-                            <string>choice</string>
-                            <string>string</string>
+                            <string>limit</string>
                             <string>_getattr_</string>
+                            <string>context</string>
+                            <string>current_web_section</string>
+                            <string>product_list</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>range</string>
-                            <string>i</string>
+                            <string>x</string>
                           </tuple>
                         </value>
                     </item>
@@ -117,17 +130,13 @@ return  \'\'.join([choice(string.letters) for i in range(max_long)])\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <int>10</int>
+                <int>0</int>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_generateSessionID</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Generate session ID</string> </value>
+            <value> <string>WebSection_getProductList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
