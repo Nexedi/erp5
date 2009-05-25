@@ -71,8 +71,7 @@
   <input tal:condition="md5_string" type="hidden" name="md5_object_uid_list" value="checksum" tal:attributes="value md5_string" />\n
   \n
   <tal:block tal:condition="is_gadget_mode">\n
-    <tal:block tal:condition="is_gadget_mode"\n
-               tal:define="global box_relative_url python: request.get(\'box_relative_url\', \'\');\n
+    <tal:block tal:define="global box_relative_url python: request.get(\'box_relative_url\', \'\');\n
                global box python: real_context.restrictedTraverse(box_relative_url); \n
                global box_id python: \'visual_%s\' %box_relative_url.split(\'/\')[-1];\n
                global dom_id python: request.get(\'dom_id\',None) or box_id;">\n
