@@ -30,9 +30,9 @@ from Products.ERP5.tests.testBPMCore import TestBPMMixin
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import reindex
+from DateTime import DateTime
 
 class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
-  price_currency = 'currency_module/EUR'
   normal_resource_use_category_list = ['payroll/base_salary']
   invoicing_resource_use_category_list = ['payroll/tax']
 
@@ -94,6 +94,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
             'use/payroll/tax',
             'use/payroll/base_salary',
             'trade_phase/payroll/france/urssaf',
+            'time/hours',
            )
 
   def getBusinessTemplateList(self):
@@ -290,6 +291,61 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
       else:
         self.fail("Unknown service for line %s" % paysheet_line)
 
+  def stepModelSetCategories(self, sequence=None, **kw):
+    model = sequence.get('model')
+    currency = sequence.get('price_currency')
+    employer = sequence.get('employer')
+    employee = sequence.get('employee')
+    model.edit(\
+        price_currency_value=currency,
+        default_payment_condition_trade_date='custom',
+        default_payment_condition_payment_date=DateTime(2009/05/25),
+        work_time_annotation_line_quantity=151.67,
+        work_time_annotation_line_quantity_unit='time/hours',
+        )
+
+  def stepSetModelAndApplyIt(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    model = sequence.get('model')
+    paysheet.setSpecialiseValue(model)
+    paysheet.PaySheetTransaction_applyModel(force=1)
+   
+  def stepCheckCategoriesOnPaySheet(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    employer = sequence.get('employer')
+    employee = sequence.get('employee')
+    currency = sequence.get('price_currency')
+    self.assertEquals(paysheet.getSourceSectionValue(), employee)
+    self.assertEquals(paysheet.getDestinationSectionValue(), employer)
+    self.assertEquals(paysheet.getPriceCurrencyValue(), currency)
+    self.assertEquals(paysheet.getDefaultPaymentConditionTradeDate(), 'custom')
+    self.assertEquals(paysheet.getDefaultPaymentConditionPaymentDate(),
+        DateTime(2009/05/25))
+    self.assertEquals(paysheet.getWorkTimeAnnotationLineQuantity(), 151.67)
+    self.assertEquals(paysheet.getWorkTimeAnnotationLineQuantityUnit(),
+      'time/hours')
+
+  def stepCheckPaysheetContainNoAnnotationLine(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    self.assertEquals(len(paysheet.contentValues(portal_type=\
+        'Annotation Line')), 0)
+
+  def stepCheckPaysheetContainOneAnnotationLine(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    self.assertEquals(len(paysheet.contentValues(portal_type=\
+        'Annotation Line')), 1)
+
+  def stepCheckPaysheetContainNoPaymentCondition(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    self.assertEquals(len(paysheet.contentValues(portal_type=\
+        'Payment Condition')), 0)
+
+  def stepCheckPaysheetContainOnePaymentCondition(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    self.assertEquals(len(paysheet.contentValues(portal_type=\
+        'Payment Condition')), 1)
+
+
 class TestNewPayroll(TestNewPayrollMixin):
   COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING = """
                CreateUrssafPayrollService
@@ -304,7 +360,55 @@ class TestNewPayroll(TestNewPayrollMixin):
                Tic
   """
 
-  def test_01_basicPaySheetCalculation(self):
+  def test_applyModelSetCategories(self):
+    '''
+      check that when the model is set on the Pay Sheet Transaction, properties
+      like source, destination, currency, ... and sub-object like
+      annotation_line are copied from the model to the Pay Sheet Transaction
+    '''
+    sequence_list = SequenceList()
+    sequence_string = """
+               CreateUrssafPayrollService
+               CreateLabourPayrollService
+               CreateEmployer
+               CreateEmployee
+               CreateBasicModel
+               CreatePriceCurrency
+               ModelSetCategories
+               CreateBasicPaysheet
+               SetModelAndApplyIt
+               CheckCategoriesOnPaySheet
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_applyModelTwice(self):
+    '''
+      apply model twice does not copy subdocument twice
+    '''
+    sequence_list = SequenceList()
+    sequence_string = """
+               CreateUrssafPayrollService
+               CreateLabourPayrollService
+               CreateEmployer
+               CreateEmployee
+               CreateBasicModel
+               CreatePriceCurrency
+               ModelSetCategories
+               CreateBasicPaysheet
+               CheckPaysheetContainNoAnnotationLine
+               CheckPaysheetContainNoPaymentCondition
+               SetModelAndApplyIt
+               CheckPaysheetContainOneAnnotationLine
+               CheckPaysheetContainOnePaymentCondition
+               SetModelAndApplyIt
+               CheckPaysheetContainOneAnnotationLine
+               CheckPaysheetContainOnePaymentCondition
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_basicPaySheetCalculation(self):
     '''
       test applyTransformation method. It should create new movements
     '''
