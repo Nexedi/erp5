@@ -57,7 +57,7 @@
 item_list = []\n
 request = context.REQUEST\n
 total_quantity = 0.0\n
-type = request.get("field_your_type")\n
+type = request.get("field_your_type") or \'Item\'\n
 if context.getPortalType()==\'Purchase Packing List Line\':\n
   cell_portal_type = \'Purchase Packing List Cell\'\n
 elif context.getPortalType()==\'Purchase Order Line\' :\n
@@ -82,8 +82,9 @@ for line in kw.get(\'listbox\'):\n
     item_list.append(item)  \n
 \n
  \n
-    if line.has_key("variation_category_list") and line[\'variation_category_list\'] not in(\'\',[]) and [line[\'variation_category_list\'][i] not in context.getVariationCategoryList() for i in range(0,(len(line[\'variation_category_list\'])-1))][0]:\n
-      context.setVariationCategoryList(context.getVariationCategoryList() + list((line[\'variation_category_list\'])))\n
+    if line.has_key("variation_category_list") and line[\'variation_category_list\'] not in(\'\',[]):\n
+       new_list = filter(lambda x:(x not in context.getVariationCategoryList()),line["variation_category_list"])\n
+       context.setVariationCategoryList(context.getVariationCategoryList()+new_list)\n
     if line.has_key("variation_category_list") and line[\'variation_category_list\'] not in(\'\',None):\n
       cell_key = list((line[\'variation_category_list\']))\n
       quantity = line[\'quantity\']\n
@@ -162,11 +163,8 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>None</string>
                             <string>module</string>
                             <string>item</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>range</string>
-                            <string>len</string>
-                            <string>i</string>
+                            <string>filter</string>
+                            <string>new_list</string>
                             <string>list</string>
                             <string>cell_key</string>
                             <string>quantity</string>

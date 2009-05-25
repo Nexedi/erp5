@@ -136,7 +136,7 @@ return [context.portal_catalog.getObject(uid) for uid in selection_uid_list]\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Order_getAggregatedItemValueList</string> </value>
+            <value> <string>Delivery_getAggregatedItemValueList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
