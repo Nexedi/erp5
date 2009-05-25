@@ -112,7 +112,7 @@ else:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testItemDefinedOnResource</string> </value>
+            <value> <string>Movement_isQuantityEditable</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

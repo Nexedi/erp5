@@ -203,7 +203,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.testItemDefinedOnResource()</string> </value>
+            <value> <string>python: here.Movement_isQuantityEditable()</string> </value>
         </item>
       </dictionary>
     </pickle>

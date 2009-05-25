@@ -113,7 +113,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.testItemDefinedOnResource()</string> </value>
+            <value> <string>python: cell.Movement_isQuantityEditable()</string> </value>
         </item>
       </dictionary>
     </pickle>
