@@ -43,7 +43,7 @@
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
   <tal:block metal:define-macro="master">\n
-    <tal:block tal:define="form_action python: form.update_action or \'Base_callDialogMethod\';\n
+    <tal:block tal:define="form_action python: test(form.update_action, \'Base_showUpdateDialog\', \'Base_callDialogMethod\');\n
                dialog_id form/id | template/id;\n
                form_id request/form_id | string:view;\n
                dialog_method form/action | dialog_id;\n
