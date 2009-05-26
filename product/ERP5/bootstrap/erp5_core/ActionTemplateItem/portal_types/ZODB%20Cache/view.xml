@@ -69,7 +69,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/ZodbCache_view</string> </value>
+            <value> <string>string:${object_url}/ZODBCache_view</string> </value>
         </item>
       </dictionary>
     </pickle>
