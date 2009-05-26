@@ -50,7 +50,7 @@ except ImportError:
 
 class CacheTool(BaseTool):
   """ Caches tool wrapper for ERP5 """
-    
+
   id = "portal_caches"
   meta_type = "ERP5 Cache Tool"
   portal_type = "Cache Tool"
@@ -66,17 +66,17 @@ class CacheTool(BaseTool):
 
   security.declareProtected( Permissions.ManagePortal, 'cache_tool_configure')
   cache_tool_configure = DTMLFile('cache_tool_configure', _dtmldir)
-  
+
   security.declareProtected( Permissions.ManagePortal, 'cache_tool_statistics')
   cache_tool_statistics = DTMLFile('cache_tool_statistics', _dtmldir)
-  
+
   def __init__(self):
     BaseTool.__init__(self)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getCacheFactoryList')
   def getCacheFactoryList(self):
     """ Return available cache factories """
-    rd ={}
+    rd = {}
     for cf in self.objectValues('ERP5 Cache Factory'):
       cache_scope = cf.getId()
       rd[cache_scope] = {}
@@ -102,7 +102,7 @@ class CacheTool(BaseTool):
           kw = self.parseDBConnectionString(connection_string)
           kw['cache_table_name'] = cp.getCacheTableName()
           cache_obj = SQLCache(kw)
-        elif cp_meta_type == 'ERP5 Zodb Cache':
+        elif cp_meta_type == 'ERP5 ZODB Cache':
           cache_obj = ZODBCache(dict(cache_tool=self))
         if cache_obj is not None:
           ## set cache expire check interval
@@ -165,7 +165,7 @@ class CacheTool(BaseTool):
       return kwargs
     kwargs['unix_socket'], items = items[0], items[1:]
     return kwargs
-    
+
   ##
   ## RAM cache structure
   ##
@@ -182,8 +182,8 @@ class CacheTool(BaseTool):
         del cp
     CachingMethod.factories = {}
     ## read configuration from ZODB
-    for key,item in self.getCacheFactoryList().items():
-      if len(item['cache_plugins'])!=0:
+    for key, item in self.getCacheFactoryList().items():
+      if len(item['cache_plugins']):
         ## init cache backend storages
         for cp in item["cache_plugins"]:
           cp.initCacheStorage()
@@ -199,14 +199,14 @@ class CacheTool(BaseTool):
     for cf_key in ram_cache_root.keys():
       for cp in ram_cache_root[cf_key].getCachePluginList():
         cp.clearCache()
-  
+
   security.declareProtected(Permissions.ManagePortal, 'manage_clearAllCache')
   def manage_clearAllCache(self, REQUEST=None):
     """Clear all cache factories."""
     self.clearAllCache()
     if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=All cache factories cleared.')
-  
+
   security.declarePublic('clearCacheFactory')
   def clearCacheFactory(self, cache_factory_id):
     # Clear cache factory of given ID.
@@ -222,8 +222,7 @@ class CacheTool(BaseTool):
     self.clearCacheFactory(cache_factory_id)
     if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache factory %s cleared.' %cache_factory_id)
-    
-      
+
   security.declareProtected(Permissions.ModifyPortalContent, 'clearCache')
   def clearCache(self, cache_factory_list=(DEFAULT_CACHE_FACTORY,), REQUEST=None):
     """ Clear specified or default cache factory. """
@@ -243,10 +242,10 @@ class CacheTool(BaseTool):
       ram_cache_root[cache_factory_id].clearCacheForScope(scope)
     if REQUEST is not None:
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache factory scope %s cleared.' %cache_factory_id)
-  
+
   def getCacheTotalMemorySize(self, REQUEST=None):
     """ Calculate total size of memory used for cache.
-    
+
         Note: this method will calculate RAM memory usage for 'local'
         (RamCache) cache plugins and will not include 
         'shared' (DistributedRamCache and SQLCache) cache plugins."""
