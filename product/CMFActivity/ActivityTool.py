@@ -1050,7 +1050,7 @@ class ActivityTool (Folder, UniqueObject):
 
     def invoke(self, message):
       if self.activity_tracking:
-        activity_tracking_logger.info('invoking message: object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % ('/'.join(message.object_path), message.method_id, message.args, message.kw, message.activity_kw, message.user_name))
+        activity_tracking_logger.info('invoking message: object_path=%s, method_id=%s, args=%r, kw=%r, activity_kw=%r, user_name=%s' % ('/'.join(message.object_path), message.method_id, message.args, message.kw, message.activity_kw, message.user_name))
       old_localizer_context = False
       if getattr(self, 'aq_chain', None) is not None:
         # Grab existing acquisition chain and extrach base objects.

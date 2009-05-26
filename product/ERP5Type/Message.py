@@ -129,7 +129,6 @@ class Message(Persistent):
     if isinstance(message, unicode):
       message = message.encode('utf-8')
     return message
-  __repr__ = __str__
 
   def __unicode__(self):
     """
