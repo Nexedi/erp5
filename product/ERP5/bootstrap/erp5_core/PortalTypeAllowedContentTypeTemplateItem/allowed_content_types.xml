@@ -13,9 +13,9 @@
   <item>Domain Generator</item>
  </portal_type>
  <portal_type id="Cache Factory">
-  <item>Zodb Cache</item>
   <item>Ram Cache</item>
   <item>SQL Cache</item>
+  <item>ZODB Cache</item>
   <item>Distributed Ram Cache</item>
  </portal_type>
  <portal_type id="Cache Tool">

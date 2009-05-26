@@ -60,7 +60,7 @@ Trash Bin | jump_bt5
 Trash Bin | view
 Trash Folder | view
 Trash Tool | view
-Zodb Cache | view
+ZODB Cache | view
 portal_actions | bt_tool
 portal_actions | category_tool
 portal_actions | create_module
