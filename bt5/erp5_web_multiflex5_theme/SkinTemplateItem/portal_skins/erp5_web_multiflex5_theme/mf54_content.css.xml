@@ -343,17 +343,81 @@
 /* We will have to handle the different types in another way */\n
 /* .subcontent h1.group_title {background: url(./mf54_image/icon_celltitle_menu.gif) no-repeat; background-position:225px 5px;} */\n
 \n
-div.adminToolbox input, textarea{ /* This should be common XXX */\n
+.main a img, .main a:hover img {\n
+  border-width: 1px;\n
+}\n
+\n
+.container {\n
+  clear: both;\n
+}\n
+\n
+fieldset.editable legend {\n
+  padding: 10px 10px 0;\n
+  font-weight: bold;\n
+}\n
+\n
+fieldset.editable label {\n
+  padding: 5px 10px 0;\n
+}\n
+\n
+fieldset.editable div.input {\n
+  padding: 0 20px;\n
+}\n
+\n
+fieldset.editable.bottom div.input {\n
+  padding: 0;\n
+}\n
+\n
+/* Edit tabs styling.\n
+** Edit tabs are another part of admin stuffs and\n
+** should respect other admin design convention\n
+** (colors, etc...) to keep the UI consistent.\n
+------------------------------------------------------------------ */\n
+\n
+div.document div.actions {\n
+  font-size: 80%;\n
+}\n
+\n
+div.document div.actions ul {\n
+  list-style: none;\n
+  margin: 0;\n
+}\n
+\n
+div.document div.actions ul li  {\n
+  display: inline;\n
+  margin: 0;\n
+  padding: 0;\n
+}\n
+\n
+div.document div.actions ul a,\n
+div.document div.actions ul li.selected a {\n
+  display: block;\n
+  float: left;\n
+  padding: 4px 1em;\n
+  margin: 1px 2px 0 0;\n
+  text-align: center;\n
+  text-decoration: none;\n
+}\n
+\n
+div.document div.actions ul a {\n
+  background: #fff;\n
   border: 1px solid #999;\n
 }\n
 \n
+div.document div.actions ul li.selected a,\n
+div.document div.actions ul li.selected a:hover {\n
+  background: #ccc;\n
+}\n
+\n
+div.document div.actions ul a:hover {\n
+  border-color: #000;\n
+}\n
+\n
+div.input select, div.input textarea {\n
+  border: 1px solid #999;\n
+}\n
 div.adminToolbox select {\n
-  border: 1px solid #999;\n
-  max-width: 12em;\n
-}\n
-\n
-div.adminToolbox input, textarea {\n
-  padding: 1px;\n
+  max-width: 15em;\n
 }\n
 \n
 div.adminToolbox.field label {\n
@@ -409,8 +473,6 @@ div.adminToolbox li > a {\n
 div.adminToolbox button[type="submit"] {\n
   display: none;\n
 }\n
-\n
-\n
 \n
 /* Reset default styling of fields in admin tool box\n
 ** TODO: find a CSS trick to let forms and fieldset embedded in\n
