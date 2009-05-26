@@ -41,11 +41,12 @@
 
 <!-- Floating Panel -->\n
 \n
-<!-- header_definitions must be re-called and is_web_mode rededined because calling\n
+<!-- header_definitions must be re-called and is_web_mode redefined because calling\n
      the current page template through editor_field in the form layout seems to reset\n
      the context needed by action drop-down list.\n
 \n
-     TODO: Is this case should be handle by automaticcaly by erp5_xhtml_style ?\n
+     TODO: Is this case should be handle by automatically by erp5_xhtml_style ?\n
+           More translation is required.\n
 -->\n
 \n
 <tal:block\n
@@ -82,10 +83,13 @@
        the current object and which have no button equivalent\n
 \n
        We need to setup the actions variable from the request because\n
-       this template is called from outside the main rendering process-->\n
+       this template is called from outside the main rendering process\n
+\n
+       XXX - the location of context_box_render is hardcoded.\n
+  -->\n
   <div class="adminSection">\n
     <h3><tal:block tal:content="portal_type"/> Actions</h3>\n
-    <tal:block metal:use-macro="here/context_box_render/macros/action"/>\n
+    <tal:block metal:use-macro="here/portal_skins/erp5_xhtml_style/context_box_render/macros/action"/>\n
   </div>\n
 \n
   <!-- Document creation panel.\n
@@ -115,7 +119,7 @@
       <fieldset style="display:block;">\n
 \n
         <div class="field">\n
-          <label>Title</label>\n
+          <label i18n:translate="" i18n:domain="ui">Title</label>\n
           <div class="input">\n
             <input class="input" size="12" \n
                     type="text" name="clone_title"\n
@@ -124,7 +128,7 @@
         </div>\n
 \n
         <div class="field">\n
-          <label>Reference</label>\n
+          <label i18n:translate="" i18n:domain="ui">Reference</label>\n
           <div class="input">\n
             <input class="input" size="12" \n
                     type="text" name="clone_reference"\n
@@ -133,7 +137,7 @@
         </div>\n
 \n
         <div class="field">\n
-          <label>Version</label>\n
+          <label i18n:translate="" i18n:domain="ui">Version</label>\n
           <div class="input">\n
             <input class="input" size="5" \n
                     type="text" name="clone_version"\n
@@ -142,7 +146,7 @@
         </div>\n
 \n
         <div class="field">\n
-          <label>Language</label>\n
+          <label i18n:translate="" i18n:domain="ui">Language</label>\n
           <div class="input">\n
             <input class="input" size="5"  \n
                     type="text" name="clone_language"\n
@@ -150,16 +154,16 @@
           </div>\n
         </div>\n
 \n
-        <div class="field hiddenLabel">\n
-          <label>Type</label>\n
+        <div class="field">\n
+          <label i18n:translate="" i18n:domain="ui">Portal type</label>\n
           <div class="input">\n
             <select class="input" name="clone_portal_type" \n
                     size="1" onchange="setCreationMode(this)">\n
               <option value="None" selected>&mdash; Same as Current &mdash;</option>\n
-              <tal:block tal:repeat="portal_type python: here.getPortalWebDocumentTypeList()">\n
-                <option tal:content="portal_type"\n
-                        tal:attributes="value portal_type"/>\n
-              </tal:block>\n
+              <option tal:repeat="portal_type python: here.getPortalWebDocumentTypeList()"\n
+                      tal:content="portal_type"\n
+                      tal:attributes="value portal_type"\n
+                      i18n:translate="" i18n:domain="ui">portal_type</option>\n
             </select>\n
           </div>\n
         </div>\n
@@ -194,7 +198,7 @@
           var action_name = \'Clone &amp; Edit\';\n
           var icon        = \'admin_toolbox_clone_document.png\';\n
           var name        = \'Base_cloneContent:method\';\n
-          var clone_class = \'\';\n
+          var clone_display = \'inline\';\n
           var new_title   = \'\';\n
 \n
           // a portal type is given, so create a new document\n
@@ -204,13 +208,13 @@
             action_name = \'Create New &amp; Edit\';\n
             icon        = \'admin_toolbox_new_document.png\';\n
             name        = \'Base_newContent:method\';\n
-            clone_class = \'doNotDisplay\';\n
+            clone_display = \'none\';\n
             new_title   = \'Create New Document\';\n
           }\n
 \n
           // update action dependent values\n
           document.getElementById(\'create_new_document_title\').innerHTML = new_title;\n
-          document.getElementById(\'clone_document_title\'     ).className = clone_class;\n
+          document.getElementById(\'clone_document_title\'     ).style.display = clone_display;\n
           document.getElementById(\'duplicate_document_action\').innerHTML = action_name;\n
 \n
           // replace the action icon\n
