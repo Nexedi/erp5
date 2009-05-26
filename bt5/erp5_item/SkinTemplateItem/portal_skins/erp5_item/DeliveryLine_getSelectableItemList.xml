@@ -75,7 +75,7 @@ check_variation = bool(context.getVariationCategoryList())\n
 acceptable_variation_category_list = \\\n
       cartesianProduct(context.getCellRange(base_id=\'movement\'))\n
 \n
-result_set = dict()\n
+result_list = []\n
 for tracking_brain in portal.portal_simulation.getCurrentTrackingList(\n
                             **tracking_parameters):\n
   item = tracking_brain.getObject()\n
@@ -88,9 +88,9 @@ for tracking_brain in portal.portal_simulation.getCurrentTrackingList(\n
       acceptable_variation_category_list:\n
     continue\n
   \n
-  result_set[item] = 1\n
+  result_list.append(item)\n
 \n
-return result_set.keys()\n
+return result_list\n
 </string> </value>
         </item>
         <item>
@@ -142,13 +142,11 @@ return result_set.keys()\n
                             <string>bool</string>
                             <string>check_variation</string>
                             <string>acceptable_variation_category_list</string>
-                            <string>dict</string>
-                            <string>result_set</string>
+                            <string>result_list</string>
                             <string>_getiter_</string>
                             <string>_apply_</string>
                             <string>tracking_brain</string>
                             <string>item</string>
-                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>
