@@ -121,7 +121,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Item_getResourceValue() and here.Item_getResourceValue().getQuantityUnitList() and [(\'\', \'\')] + [(x.getTranslatedLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in here.Item_getResourceValue().getQuantityUnitValueList()] or [(\'\', \'\')]</string> </value>
+            <value> <string>python: here.Item_getQuantityUnit()</string> </value>
         </item>
       </dictionary>
     </pickle>
