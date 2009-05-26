@@ -174,7 +174,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                     base_contribution_list=['base_amount/deductible_tax'])
     sequence.edit(urssaf_model_line = model_line)
 
-  def stepCreateMovementOnUrssafModelLine(self, sequence=None, **kw):
+  def stepUrssafModelLineCreateMovements(self, sequence=None, **kw):
     model_line = sequence.get('urssaf_model_line')
     cell1 = model_line.newCell('tax_category/employee_share',
         portal_type='Pay Sheet Cell',
@@ -271,7 +271,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     business_path.setDeliveryBuilderList(('portal_deliveries/pay_sheet_builder',))
     sequence.edit(business_path=business_path)
 
-  def stepSpecialiseBusinessProcessOnModel(self, sequence=None, **kw):
+  def stepModelSpecialiseBusinessProcess(self, sequence=None, **kw):
     model = sequence.get('model')
     business_process = sequence.get('business_process')
     model.setSpecialiseValueList(business_process)
@@ -308,7 +308,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         work_time_annotation_line_quantity_unit='time/hours',
         )
 
-  def stepSetModelAndApplyIt(self, sequence=None, **kw):
+  def stepPaysheetSetModelAndApplyIt(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
     model = sequence.get('model')
     paysheet.setSpecialiseValue(model)
@@ -435,7 +435,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     self.assertCellIsNone(model_country, 'salary_range/france/forfait')
     self.assertCell(model_country, 'salary_range/france/slice_c', 4, 5)
 
-  def stepCreateIntermediateModelLine(self, sequence=None, **kw):
+  def stepModelCreateIntermediateModelLine(self, sequence=None, **kw):
     '''
       create an intermediate_line wich contribute to tax and applied to
       base_salary
@@ -453,7 +453,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                     create_paysheet_line=False,)
     sequence.edit(intermediate_model_line = model_line)
 
-  def stepCreateModelLineAppliedOnTax(self, sequence=None, **kw):
+  def stepModelCreateAppliedOnTaxModelLine(self, sequence=None, **kw):
     '''
       create a model line applied on tax
     '''
@@ -469,7 +469,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                     base_application_list=['base_amount/deductible_tax'])
     sequence.edit(model_line_applied_on_tax = model_line)
 
-  def stepCreateMovementOnIntermediateModelLine(self, sequence=None,
+  def stepIntermediateModelLineCreateMovements(self, sequence=None,
       **kw):
     model_line = sequence.get('intermediate_model_line')
     cell1 = model_line.newCell('tax_category/employee_share',
@@ -483,7 +483,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         mapped_value_property_list=('quantity', 'price'))
     cell2.edit(price=0.2, tax_category='employer_share')
 
-  def stepCreateMovementOnModelLineAppliedOnTax(self, sequence=None, **kw):
+  def stepAppliedOnTaxModelLineCreateMovements(self, sequence=None, **kw):
     model_line = sequence.get('model_line_applied_on_tax')
     cell1 = model_line.newCell('tax_category/employee_share',
         portal_type='Pay Sheet Cell',
@@ -531,7 +531,7 @@ class TestNewPayroll(TestNewPayrollMixin):
                CreateEmployee
                CreateBasicModel
                ModelCreateUrssafModelLine
-               CreateMovementOnUrssafModelLine
+               UrssafModelLineCreateMovements
                CreateBasicPaysheet
                PaysheetCreateLabourPaySheetLine
                Tic
@@ -568,7 +568,7 @@ class TestNewPayroll(TestNewPayrollMixin):
                CreatePriceCurrency
                ModelSetCategories
                CreateBasicPaysheet
-               SetModelAndApplyIt
+               PaysheetSetModelAndApplyIt
                CheckCategoriesOnPaySheet
     """
     sequence_list.addSequenceString(sequence_string)
@@ -590,10 +590,10 @@ class TestNewPayroll(TestNewPayrollMixin):
                CreateBasicPaysheet
                CheckPaysheetContainNoAnnotationLine
                CheckPaysheetContainNoPaymentCondition
-               SetModelAndApplyIt
+               PaysheetSetModelAndApplyIt
                CheckPaysheetContainOneAnnotationLine
                CheckPaysheetContainOnePaymentCondition
-               SetModelAndApplyIt
+               PaysheetSetModelAndApplyIt
                CheckPaysheetContainOneAnnotationLine
                CheckPaysheetContainOnePaymentCondition
     """
@@ -610,7 +610,7 @@ class TestNewPayroll(TestNewPayrollMixin):
                CreateBusinessPath
                CreateUrssafRoubaixOrganisation
                ModifyBusinessPathTradePhase
-               SpecialiseBusinessProcessOnModel
+               ModelSpecialiseBusinessProcess
                Tic
                CheckUpdateAggregatedMovementReturn
                PaysheetApplyTransformation
@@ -636,10 +636,10 @@ class TestNewPayroll(TestNewPayrollMixin):
                CreateEmployer
                CreateEmployee
                CreateBasicModel
-               CreateIntermediateModelLine
-               CreateMovementOnIntermediateModelLine
-               CreateModelLineAppliedOnTax
-               CreateMovementOnModelLineAppliedOnTax
+               ModelCreateIntermediateModelLine
+               ModelCreateAppliedOnTaxModelLine
+               IntermediateModelLineCreateMovements
+               AppliedOnTaxModelLineCreateMovements
                CreateBasicPaysheet
                PaysheetCreateLabourPaySheetLine
                Tic
@@ -647,7 +647,7 @@ class TestNewPayroll(TestNewPayrollMixin):
                CreateBusinessPath
                CreateUrssafRoubaixOrganisation
                ModifyBusinessPathTradePhase
-               SpecialiseBusinessProcessOnModel
+               ModelSpecialiseBusinessProcess
                Tic
                PaysheetApplyTransformation
                Tic
