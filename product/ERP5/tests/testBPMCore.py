@@ -2,6 +2,7 @@
 ##############################################################################
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #          Łukasz Nowak <luke@nexedi.com>
+#          Yusuke Muraoka <yusuke@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -1993,6 +1994,261 @@ class TestBPMImplementation(TestBPMMixin):
                       business_path.getSource(context=context_movement))
     self.assertEquals(node.getRelativeUrl(),
       business_path.getSource(context=context_movement, default='something'))
+
+  def test_BusinessState_getRemainingTradePhaseList(self):
+    """
+    This test case is described for what trade_phase is remaining after the state.
+    In this case, root explanation is path of between "b" and "d", and
+    path of between "a" and "b" has a condition which simulation state of
+    explanation must be "ordered" to pass the path. (*1)
+    But this test case will be passed the condition.
+
+                            (root explanation)
+       default/discount     default/invoicing     default/accounting
+    a ------------------ b ------------------- d -------------------- e
+       (cond="ordered")   \                   /
+                           \                 /
+          default/delivery  \               / default/payment
+                             \             /
+                              \           /
+                               \         /
+                                \       /
+                                 \     /
+                                  \   /
+                                   \ /
+                                    c
+    """
+    # define business process
+    business_process = self.createBusinessProcess()
+    business_path_a_b = self.createBusinessPath(business_process)
+    business_path_b_c = self.createBusinessPath(business_process)
+    business_path_b_d = self.createBusinessPath(business_process)
+    business_path_c_d = self.createBusinessPath(business_process)
+    business_path_d_e = self.createBusinessPath(business_process)
+    business_state_a = self.createBusinessState(business_process)
+    business_state_b = self.createBusinessState(business_process)
+    business_state_c = self.createBusinessState(business_process)
+    business_state_d = self.createBusinessState(business_process)
+    business_state_e = self.createBusinessState(business_process)
+    business_path_a_b.setPredecessorValue(business_state_a)
+    business_path_b_c.setPredecessorValue(business_state_b)
+    business_path_b_d.setPredecessorValue(business_state_b)
+    business_path_c_d.setPredecessorValue(business_state_c)
+    business_path_d_e.setPredecessorValue(business_state_d)
+    business_path_a_b.setSuccessorValue(business_state_b)
+    business_path_b_c.setSuccessorValue(business_state_c)
+    business_path_b_d.setSuccessorValue(business_state_d)
+    business_path_c_d.setSuccessorValue(business_state_d)
+    business_path_d_e.setSuccessorValue(business_state_e)
+
+    # set title for debug
+    business_path_a_b.edit(title="a_b")
+    business_path_b_c.edit(title="b_c")
+    business_path_b_d.edit(title="b_d")
+    business_path_c_d.edit(title="c_d")
+    business_path_d_e.edit(title="d_e")
+    business_state_a.edit(title="a")
+    business_state_b.edit(title="b")
+    business_state_c.edit(title="c")
+    business_state_d.edit(title="d")
+    business_state_e.edit(title="e")
+    
+    # set trade_phase
+    business_path_a_b.edit(trade_phase=['default/discount'],
+                           completed_state=['ordered']) # (*1)
+    business_path_b_c.edit(trade_phase=['default/delivery'])
+    business_path_b_d.edit(trade_phase=['default/invoicing'])
+    business_path_c_d.edit(trade_phase=['default/payment'])
+    business_path_d_e.edit(trade_phase=['default/accounting'])
+
+    # mock order
+    order = self.portal.sale_order_module.newContent(portal_type="Sale Order")
+    order_line = order.newContent(portal_type="Sale Order Line")
+
+    # make simulation
+    order.order()
+
+    self.stepTic()
+
+    applied_rule = order.getCausalityRelatedValue()
+    sm = applied_rule.contentValues(portal_type="Simulation Movement")[0]
+    sm.edit(causality_value=business_path_a_b)
+
+    # make other movements for each business path
+    applied_rule.newContent(portal_type="Simulation Movement",
+                            causality_value=business_path_b_c,
+                            order_value=order_line)
+    applied_rule.newContent(portal_type="Simulation Movement",
+                            causality_value=business_path_b_d,
+                            order_value=order_line)
+    applied_rule.newContent(portal_type="Simulation Movement",
+                            causality_value=business_path_c_d,
+                            order_value=order_line)
+    applied_rule.newContent(portal_type="Simulation Movement",
+                            causality_value=business_path_d_e,
+                            order_value=order_line)
+
+    self.stepTic()
+
+    trade_phase = self.portal.portal_categories.trade_phase.default
+
+    # assertion which getRemainingTradePhaseList must return category which will be passed
+    # discount is passed, business_path_a_b is already completed, because simulation state is "ordered"
+    self.assertEquals(set([trade_phase.delivery,
+                           trade_phase.invoicing,
+                           trade_phase.payment,
+                           trade_phase.accounting]),
+                      set(business_state_a.getRemainingTradePhaseList(order)))
+    self.assertEquals(set([trade_phase.delivery,
+                           trade_phase.invoicing,
+                           trade_phase.payment,
+                           trade_phase.accounting]),
+                      set(business_state_b.getRemainingTradePhaseList(order)))
+    self.assertEquals(set([trade_phase.payment,
+                           trade_phase.accounting]),
+                      set(business_state_c.getRemainingTradePhaseList(order)))
+    self.assertEquals(set([trade_phase.accounting]),
+                      set(business_state_d.getRemainingTradePhaseList(order)))
+
+    # when trade_phase_list is defined in arguments, the result is filtered by base category.
+    self.assertEquals(set([trade_phase.delivery,
+                           trade_phase.accounting]),
+                      set(business_state_a\
+                          .getRemainingTradePhaseList(order,
+                                                      trade_phase_list=['default/delivery',
+                                                                        'default/accounting'])))
+
+  def test_BusinessPath_calculateExpectedDate(self):
+    """
+    This test case is described for what start/stop date is expected on
+    each path by explanation.
+    In this case, root explanation is path of between "b" and "d", and
+    lead time and wait time is set on each path.
+    ("l" is lead time, "w" is wait_time)
+
+    Each path must calculate most early day from getting most longest
+    path in the simulation.
+
+    "referential_date" represents for which date have to get of explanation from reality.
+
+                  (root_explanation)
+        l:2, w:1         l:3, w:1       l:4, w:2
+    a ------------ b -------------- d -------------- e
+                    \             /
+                     \           /
+             l:2, w:1 \         / l:3, w:0
+                       \       /
+                        \     /
+                         \   /
+                          \ /
+                           c
+    """
+    # define business process
+    business_process = self.createBusinessProcess()
+    business_path_a_b = self.createBusinessPath(business_process)
+    business_path_b_c = self.createBusinessPath(business_process)
+    business_path_b_d = self.createBusinessPath(business_process)
+    business_path_c_d = self.createBusinessPath(business_process)
+    business_path_d_e = self.createBusinessPath(business_process)
+    business_state_a = self.createBusinessState(business_process)
+    business_state_b = self.createBusinessState(business_process)
+    business_state_c = self.createBusinessState(business_process)
+    business_state_d = self.createBusinessState(business_process)
+    business_state_e = self.createBusinessState(business_process)
+    business_path_a_b.setPredecessorValue(business_state_a)
+    business_path_b_c.setPredecessorValue(business_state_b)
+    business_path_b_d.setPredecessorValue(business_state_b)
+    business_path_c_d.setPredecessorValue(business_state_c)
+    business_path_d_e.setPredecessorValue(business_state_d)
+    business_path_a_b.setSuccessorValue(business_state_b)
+    business_path_b_c.setSuccessorValue(business_state_c)
+    business_path_b_d.setSuccessorValue(business_state_d)
+    business_path_c_d.setSuccessorValue(business_state_d)
+    business_path_d_e.setSuccessorValue(business_state_e)
+
+    business_process.edit(referential_date='stop_date')
+    business_state_a.edit(title='a')
+    business_state_b.edit(title='b')
+    business_state_c.edit(title='c')
+    business_state_d.edit(title='d')
+    business_state_e.edit(title='e')
+    business_path_a_b.edit(title='a_b', lead_time=2, wait_time=1)
+    business_path_b_c.edit(title='b_c', lead_time=2, wait_time=1)
+    business_path_b_d.edit(title='b_d', lead_time=3, wait_time=1)
+    business_path_c_d.edit(title='c_d', lead_time=3, wait_time=0)
+    business_path_d_e.edit(title='d_e', lead_time=4, wait_time=2)
+
+    # root explanation
+    business_path_b_d.edit(deliverable=True)
+    self.stepTic()
+
+    """
+    Basic test, lead time of reality and simulation are consistent.
+    """
+    class Mock:
+      def __init__(self, date):
+        self.date = date
+      def getStartDate(self):
+        return self.date
+      def getStopDate(self):
+        return self.date + 3 # lead time of reality
+
+    base_date = DateTime('2009/04/01 GMT+9')
+    mock = Mock(base_date)
+
+    # root explanation.
+    self.assertEquals(business_path_b_d.getExpectedStartDate(mock), DateTime('2009/04/01 GMT+9'))
+    self.assertEquals(business_path_b_d.getExpectedStopDate(mock), DateTime('2009/04/04 GMT+9'))
+
+    # assertion for each path without root explanation.
+    self.assertEquals(business_path_a_b.getExpectedStartDate(mock), DateTime('2009/03/27 GMT+9'))
+    self.assertEquals(business_path_a_b.getExpectedStopDate(mock), DateTime('2009/03/29 GMT+9'))
+    self.assertEquals(business_path_b_c.getExpectedStartDate(mock), DateTime('2009/03/30 GMT+9'))
+    self.assertEquals(business_path_b_c.getExpectedStopDate(mock), DateTime('2009/04/01 GMT+9'))
+    self.assertEquals(business_path_c_d.getExpectedStartDate(mock), DateTime('2009/04/01 GMT+9'))
+    self.assertEquals(business_path_c_d.getExpectedStopDate(mock), DateTime('2009/04/04 GMT+9'))
+    self.assertEquals(business_path_d_e.getExpectedStartDate(mock), DateTime('2009/04/06 GMT+9'))
+    self.assertEquals(business_path_d_e.getExpectedStopDate(mock), DateTime('2009/04/10 GMT+9'))
+
+    """
+    Test of illegal case, lead time of reality and simulation are inconsistent,
+    always reality is taken, but it depends on which date(e.g. start_date and stop_date) is referential.
+
+    How we know which is referential, currently implementation of it can be known by
+    BusinessProcess.isStartDateReferential and BusinessProcess.isStopDateReferential.
+
+    In this test case, stop_date on business_path_b_d is referential, because business_path_b_d is
+    root explanation and business_process refer to stop_date as referential.
+
+    calculation example(when referential date is 2009/04/06 GMT+9):
+    start_date of business_path_b_d = referential_date - 3(lead_time of business_path_b_d)
+                                    = 2009/04/06 GMT+9 - 3
+                                    = 2009/04/03 GMT+9
+    """
+    class Mock:
+      def __init__(self, date):
+        self.date = date
+      def getStartDate(self):
+        return self.date
+      def getStopDate(self):
+        return self.date + 5 # changed
+
+    base_date = DateTime('2009/04/01 GMT+9')
+    mock = Mock(base_date)
+
+    self.assertEquals(business_path_b_d.getExpectedStartDate(mock), DateTime('2009/04/03 GMT+9'))
+    # This is base in this context, because referential_date is 'stop_date'
+    self.assertEquals(business_path_b_d.getExpectedStopDate(mock), DateTime('2009/04/06 GMT+9'))
+
+    # assertion for each path without root explanation.
+    self.assertEquals(business_path_a_b.getExpectedStartDate(mock), DateTime('2009/03/29 GMT+9'))
+    self.assertEquals(business_path_a_b.getExpectedStopDate(mock), DateTime('2009/03/31 GMT+9'))
+    self.assertEquals(business_path_b_c.getExpectedStartDate(mock), DateTime('2009/04/01 GMT+9'))
+    self.assertEquals(business_path_b_c.getExpectedStopDate(mock), DateTime('2009/04/03 GMT+9'))
+    self.assertEquals(business_path_c_d.getExpectedStartDate(mock), DateTime('2009/04/03 GMT+9'))
+    self.assertEquals(business_path_c_d.getExpectedStopDate(mock), DateTime('2009/04/06 GMT+9'))
+    self.assertEquals(business_path_d_e.getExpectedStartDate(mock), DateTime('2009/04/08 GMT+9'))
+    self.assertEquals(business_path_d_e.getExpectedStopDate(mock), DateTime('2009/04/12 GMT+9'))
 
 def test_suite():
   suite = unittest.TestSuite()

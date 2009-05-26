@@ -2,6 +2,7 @@
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Yusuke Muraoka <yusuke@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -31,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Document.BusinessPath import BackTrack
 
 class BusinessState(XMLObject):
   """
@@ -77,14 +79,103 @@ class BusinessState(XMLObject):
     return True
 
   # Duration calculation
-  def getExpectedCompletionDate(self, explanation):
+  def getExpectedCompletionDate(self, explanation, *args, **kwargs):
     """
       Returns the expected completion date for this
       state based on the explanation.
+
+      explanation -- the document
     """
+    # Should be re-calculated?
+    if 'predecessor_date' in kwargs:
+      del kwargs['predecessor_date']
+    return min(self._getExpectedDateList(explanation,
+                                         self.getSuccessorRelatedValueList(),
+                                         self._getExpectedCompletionDate,
+                                         *args,
+                                         **kwargs))
+
+  def _getExpectedCompletionDate(self, path, *args, **kwargs):
+    return path.getExpectedStopDate(*args, **kwargs)
+
+  def getExpectedBeginningDate(self, explanation, *args, **kwargs):
+    """
+      Returns the expected beginning date for this
+      state based on the explanation.
+
+      explanation -- the document
+    """
+    # Should be re-calculated?
+    if 'predecessor_date' in kwargs:
+      del kwargs['predecessor_date']
+    return min(self._getExpectedDateList(explanation,
+                                         self.getPredecessorRelatedValueList(),
+                                         self._getExpectedBeginningDate,
+                                         *args,
+                                         **kwargs))
+
+  def _getExpectedBeginningDate(self, path, *args, **kwargs):
+    expected_date = path.getExpectedStartDate(*args, **kwargs)
+    if expected_date is not None:
+      return expected_date - path.getWaitTime()
+
+  def _getExpectedDateList(self, explanation, path_list, path_method,
+                           visited=None, *args, **kwargs):
+    """
+      getExpected(Beginning/Completion)Date are same structure
+      expected date of each path should be returned.
+
+      explanation -- the document
+      path_list -- list of target business path
+      path_method -- used to get expected date on each path
+      visited -- only used to prevent infinite recursion internally
+    """
+    if visited is None:
+      visited = []
+
+    expected_date_list = []
+    for path in path_list:
+      # filter paths without path of root explanation
+      if path not in visited or path.isDeliverable():
+        expected_date = path_method(path, explanation, visited=visited, *args, **kwargs)
+        if expected_date is not None:
+          expected_date_list.append(expected_date)
+
+    # if visiting leaf of tree
+    if len(expected_date_list) == 0:
+      raise BackTrack
+    else:
+      return expected_date_list
 
   def getExpectedCompletionDuration(self, explanation):
     """
       Returns the expected completion duration for this
       state.
     """
+
+  def getRemainingTradePhaseList(self, explanation, trade_phase_list=None):
+    """
+      Returns the list of remaining trade phase for this
+      state based on the explanation.
+
+      trade_phase_list -- if provide, the result is filtered by it after collected
+    """
+    remaining_trade_phase_list = []
+    for path in self.getPredecessorRelatedValueList():
+      if not (path.isCompleted(explanation) or
+              path.isPartiallyCompleted(explanation)):
+        remaining_trade_phase_list += path.getTradePhaseValueList()
+
+      # collect to successor direction recursively
+      state = path.getSuccessorValue()
+      if state is not None:
+        remaining_trade_phase_list.extend(
+          state.getRemainingTradePhaseList(explanation, None))
+
+    # filter just at once if given
+    if trade_phase_list is not None:
+      remaining_trade_phase_list = filter(
+        lambda x : x.getLogicalPath() in trade_phase_list,
+        remaining_trade_phase_list)
+
+    return remaining_trade_phase_list

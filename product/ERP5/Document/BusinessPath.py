@@ -2,6 +2,7 @@
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Yusuke Muraoka <yusuke@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -34,6 +35,11 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Path import Path
 
 import zope.interface
+
+class BackTrack(Exception):
+  """
+   This is a utility Exception for tree back tracking.
+  """
 
 class BusinessPath(Path):
   """
@@ -191,7 +197,7 @@ class BusinessPath(Path):
       Not sure if this will exist some day XXX
     """
 
-  def _getRelatedSimulationMovementList(explanation):
+  def _getRelatedSimulationMovementList(self, explanation):
     """
       
     """
@@ -203,7 +209,7 @@ class BusinessPath(Path):
       Looks at all simulation related movements
       and checks the simulation_state of the delivery
     """
-    acceptable_state_list = self.getCompletedStateIdList() # XXX Missing method / name
+    acceptable_state_list = self.getCompletedStateList()
     for movement in self._getRelatedSimulationMovementList(explanation):
       if movement.getSimulationState() not in acceptable_state_list:
         return False
@@ -214,7 +220,7 @@ class BusinessPath(Path):
       Looks at all simulation related movements
       and checks the simulation_state of the delivery
     """
-    acceptable_state_list = self.getCompletedStateList() # XXX Missing method / name
+    acceptable_state_list = self.getCompletedStateList()
     for movement in self._getRelatedSimulationMovementList(explanation):
       if movement.getSimulationState() in acceptable_state_list:
         return True
@@ -244,7 +250,7 @@ class BusinessPath(Path):
         self._getRelatedSimulationMovementList(explanation)) # Another way
 
   # Date calculation
-  def getExpectedStartDate(self, explanation, predecessor_date=None):
+  def getExpectedStartDate(self, explanation, predecessor_date=None, *args, **kwargs):
     """
       Returns the expected start date for this
       path based on the explanation.
@@ -252,11 +258,35 @@ class BusinessPath(Path):
       predecessor_date -- if provided, computes the date base on the
                           date value provided
     """
-    if predecessor_date is None:
-      predecessor_date = self.getPredecessorValue().getExpectedCompletionDate()
-    return predecessor_date + wait_time
+    return self._getExpectedDate(explanation,
+                                 self._getRootExplanationExpectedStartDate,
+                                 self._getPredecessorExpectedStartDate,
+                                 self._getSuccessorExpectedStartDate,
+                                 predecessor_date=predecessor_date,
+                                 *args, **kwargs)
 
-  def getExpectedStopDate(self, explanation, predecessor_date=None):
+  def _getRootExplanationExpectedStartDate(self, explanation, *args, **kwargs):
+    if self.getParentValue().isStartDateReferential():
+      return explanation.getStartDate()
+    else:
+      return self.getExpectedStopDate(explanation, *args, **kwargs)\
+             - self.getLeadTime()
+
+  def _getPredecessorExpectedStartDate(self, explanation, predecessor_date=None, *args, **kwargs):
+    if predecessor_date is None:
+      node = self.getPredecessorValue()
+      if node is not None:
+        predecessor_date = node.getExpectedCompletionDate(explanation, *args, **kwargs)
+    if predecessor_date is not None:
+      return predecessor_date + self.getWaitTime()
+
+  def _getSuccessorExpectedStartDate(self, explanation, *args, **kwargs):
+    node = self.getSuccessorValue()
+    if node is not None:
+      return node.getExpectedBeginningDate(explanation, *args, **kwargs)\
+             - self.getLeadTime()
+
+  def getExpectedStopDate(self, explanation, predecessor_date=None, *args, **kwargs):
     """
       Returns the expected stop date for this
       path based on the explanation.
@@ -264,4 +294,77 @@ class BusinessPath(Path):
       predecessor_date -- if provided, computes the date base on the
                           date value provided
     """
-    return context.getExpectedStartDate(explanation, predecessor_date=predecessor_date) + lead_time
+    return self._getExpectedDate(explanation,
+                                 self._getRootExplanationExpectedStopDate,
+                                 self._getPredecessorExpectedStopDate,
+                                 self._getSuccessorExpectedStopDate,
+                                 predecessor_date=predecessor_date,
+                                 *args, **kwargs)
+
+  def _getRootExplanationExpectedStopDate(self, explanation, *args, **kwargs):
+    if self.getParentValue().isStopDateReferential():
+      return explanation.getStopDate()
+    else:
+      return self.getExpectedStartDate(explanation, *args, **kwargs)\
+             + self.getLeadTime()
+
+  def _getPredecessorExpectedStopDate(self, explanation, *args, **kwargs):
+    node = self.getPredecessorValue()
+    if node is not None:
+      return node.getExpectedCompletionDate(explanation, *args, **kwargs)\
+             + self.getWaitTime() + self.getLeadTime()
+
+  def _getSuccessorExpectedStopDate(self, explanation, *args, **kwargs):
+    node = self.getSuccessorValue()
+    if node is not None:
+      return node.getExpectedBeginningDate(explanation, *args, **kwargs)
+
+  def _getExpectedDate(self, explanation, root_explanation_method,
+                       predecessor_method, successor_method,
+                       visited=None, *args, **kwargs):
+    """
+      Returns the expected stop date for this
+      path based on the explanation.
+
+      root_explanation_method -- used when the path is root explanation
+      predecessor_method --- used to get expected date of side of predecessor
+      successor_method --- used to get expected date of side of successor
+      visited -- only used to prevent infinite recursion internally
+    """
+    if visited is None:
+      visited = []
+
+    # mark the path as visited
+    if self not in visited:
+      visited.append(self)
+
+    if self.isDeliverable():
+      return root_explanation_method(
+        explanation, visited=visited, *args, **kwargs)
+
+    predecessor_expected_date = None
+    try:
+      predecessor_expected_date = predecessor_method(
+        explanation, visited=visited, *args, **kwargs)
+    except BackTrack:
+      pass
+
+    successor_expected_date = None
+    try:
+      successor_expected_date = successor_method(
+        explanation, visited=visited, *args, **kwargs)
+    except BackTrack:
+      pass
+
+    if successor_expected_date is not None or \
+       predecessor_expected_date is not None:
+      # return minimum expected date but it is not None
+      if successor_expected_date is None:
+        return predecessor_expected_date
+      elif predecessor_expected_date is None:
+        return successor_expected_date
+      else:
+        if predecessor_expected_date < successor_expected_date:
+          return predecessor_expected_date
+        else:
+          return successor_expected_date

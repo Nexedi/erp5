@@ -942,6 +942,28 @@ class ERP5Site(FolderMixIn, CMFSite):
         'portal_updatable_amortisation_transaction_state_list')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalGroupedSimulationStateList')
+  def getPortalGroupedSimulationStateList(self):
+    """
+      Return all states which is related to simulation state workflow and state type
+    """
+    def getStateList():
+      state_dict = {}
+      for wf in self.portal_workflow.objectValues():
+        if getattr(wf, 'variables', None) and \
+           wf.variables.getStateVar() == 'simulation_state':
+          if getattr(wf, 'states', None):
+            for state in wf.states.objectValues():
+              if getattr(state, 'type_list', None):
+                state_dict[state.getId()] = None
+      return tuple(sorted(state_dict.keys()))
+
+    getStateList = CachingMethod(getStateList,
+                                 id=('getPortalGroupedSimulationStateList'),
+                                 cache_factory='erp5_content_medium')
+    return getStateList()
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalColumnBaseCategoryList')
   def getPortalColumnBaseCategoryList(self):
     """

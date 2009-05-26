@@ -28,38 +28,14 @@
 #
 ##############################################################################
 
-class BusinessPath:
+class BusinessProcess:
     """
-      Business Path properties
+      Business Process properties
     """
     _properties = (
-        {   'id'          : 'deliverable', # XXX: same is in Simulation property sheet
-            'description' : 'If 1 it is related to root of simulation tree (root explanation)',
-            'type'        : 'boolean',
-            'mode'        : 'w' },
-        {   'id'          : 'source_method_id',
-            'description' : 'ID of method to get source list of categories',
+        {   'id'          : 'referential_date',
+            'description' : 'Which date(e.g. start_date, stop_date) is referential on the Business Process',
             'type'        : 'string',
-            'mode'        : 'w' },
-        {   'id'          : 'destination_method_id',
-            'description' : 'ID of method to get destination list of categories',
-            'type'        : 'string',
-            'mode'        : 'w' },
-        {   'id'          : 'lead_time',
-            'description' : 'How much time shall be spent on path',
-            'default'     : 0.0,
-            'type'        : 'float',
-            'mode'        : 'w' },
-        {   'id'          : 'wait_time',
-            'description' : 'How much time to wait before initiating path',
-            'default'     : 0.0,
-            'type'        : 'float',
-            'mode'        : 'w' },
-        {   'id'          : 'completed_state',
-            'description' : 'Which movement of simulation state can be passed on this path',
-            'type'        : 'lines',
-            'default'     : [],
-            'multivalued' : 1,
             'mode'        : 'w' },
     )
     _categories = ( )

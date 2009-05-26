@@ -62,3 +62,10 @@ class IBusinessCompletable(Interface):
     'task' is a document which follows the ITaskGetter interface
     (getStartDate, getStopDate)
     """
+
+  def getRemainingTradePhaseList(explanation, trade_phase_list=None):
+    """
+      Returns the list of remaining trade phase which to be done on the explanation.
+
+      trade_phase_list -- if provide, the result is filtered by it after collected
+    """

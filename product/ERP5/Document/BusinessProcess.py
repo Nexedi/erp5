@@ -2,6 +2,7 @@
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Yusuke Muraoka <yusuke@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -55,6 +56,7 @@ class BusinessProcess(Path, XMLObject):
                     , PropertySheet.Folder
                     , PropertySheet.Comment
                     , PropertySheet.Arrow
+                    , PropertySheet.BusinessProcess
                     )
 
   # Access to path and states of the business process
@@ -177,3 +179,9 @@ class BusinessProcess(Path, XMLObject):
     """
     for path in self.getBuildablePathValueList(explanation):
       path.build(explanation)
+
+  def isStartDateReferential(self):
+    return self.getReferentialDate() == 'start_date'
+
+  def isStopDateReferential(self):
+    return self.getReferentialDate() == 'stop_date'
