@@ -51,14 +51,11 @@
 \n
 <tal:block\n
   tal:define="is_web_mode  python: True;\n
-              portal_type  python: here.getPortalType();\n
               actions      request/actions | python:\n
                            here.Base_filterDuplicateActions(\n
                              here.portal_actions.listFilteredActionsFor(here));\n
               dummy        python:request.set(\'actions\', actions);\n
-              is_default_document_available \n
-                python: getattr(here,\'getDefaultDocumentValue\', None) is not None and\n
-                        here.getDefaultDocumentValue() is not None;">\n
+              portal_type  here/getPortalType">\n
 \n
   <!-- XXX is this really useful - called how many times ?? - tried to removed but failed -->\n
   <!-- <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/> -->\n
@@ -102,17 +99,12 @@
              Behaviour should be to create content in section / site\n
   -->\n
   <div class="adminSection"\n
-       tal:condition="python: is_default_document_available or here.isDocument"\n
-       tal:define="document python: test(is_default_document_available, \n
-                                         here.getDefaultDocumentValue(), \n
-                                         here);\n
-                   portal_type document/getPortalType;">\n
+       tal:condition="python: here.isDocument">\n
       <h3>\n
         <span id="create_new_document_title"></span>\n
         <span id="clone_document_title">\n
           <tal:block \n
-            tal:replace="python: \'Clone %s %s\' % \n
-            ((portal_type in [\'Web Site\', \'Web Section\'] and \'Default\') or \'Current\', portal_type)"/>\n
+            tal:replace="python: \'Clone %s\' % portal_type"/>\n
         </span>\n
       </h3>\n
 \n
@@ -123,7 +115,7 @@
           <div class="input">\n
             <input class="input" size="12" \n
                     type="text" name="clone_title"\n
-                    tal:attributes="value document/getTitle | nothing"/>\n
+                    tal:attributes="value here/getTitle | nothing"/>\n
           </div>\n
         </div>\n
 \n
@@ -132,7 +124,7 @@
           <div class="input">\n
             <input class="input" size="12" \n
                     type="text" name="clone_reference"\n
-                    tal:attributes="value document/getReference | nothing"/>\n
+                    tal:attributes="value here/getReference | nothing"/>\n
           </div>\n
         </div>\n
 \n
@@ -141,7 +133,7 @@
           <div class="input">\n
             <input class="input" size="5" \n
                     type="text" name="clone_version"\n
-                    tal:attributes="value document/getVersion | nothing"/>\n
+                    tal:attributes="value here/getVersion | nothing"/>\n
           </div>\n
         </div>\n
 \n
@@ -150,7 +142,7 @@
           <div class="input">\n
             <input class="input" size="5"  \n
                     type="text" name="clone_language"\n
-                    tal:attributes="value document/getLanguage | nothing"/>\n
+                    tal:attributes="value here/getLanguage | nothing"/>\n
           </div>\n
         </div>\n
 \n
