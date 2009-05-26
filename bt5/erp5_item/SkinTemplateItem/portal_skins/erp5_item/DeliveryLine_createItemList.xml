@@ -64,6 +64,8 @@ elif context.getPortalType()==\'Purchase Order Line\' :\n
   cell_portal_type = \'Purchase Order Cell\'\n
 elif context.getPortalType()==\'Sale Packing List Line\':\n
   cell_portal_type = \'Sale Packing List Cell\'\n
+elif context.getPortalType()== \'Internal Packing List Line\':\n
+  cell_portal_type = \'Internal Packing List Cell\'\n
 \n
 movement_cell_list = context.contentValues(portal_type=cell_portal_type)\n
 context.setVariationCategoryList([])\n
