@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ProxyField</string>
-          <string>ProxyField</string>
-        </tuple>
-        <none/>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -18,7 +15,6 @@
               <list>
                 <string>title</string>
                 <string>default</string>
-                <string>display_width</string>
                 <string>editable</string>
               </list>
             </value>
@@ -68,10 +64,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -103,10 +95,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -124,7 +112,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Resource</string> </value>
+                    <value> <string>Product or Service</string> </value>
                 </item>
               </dictionary>
             </value>
