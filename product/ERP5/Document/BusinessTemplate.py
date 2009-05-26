@@ -868,7 +868,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           elif obj.meta_type in ('ERP5 Ram Cache',
                                  'ERP5 Distributed Ram Cache',
                                  'ERP5 SQL Cache',
-                                 'ERP5 Zodb Cache',):
+                                 'ERP5 ZODB Cache',):
             assert container.meta_type == 'ERP5 Cache Factory'
             container.getParentValue().updateCache()
            
