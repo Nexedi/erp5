@@ -32,7 +32,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Document.BusinessPath import BackTrack
+from Products.ERP5Type.Document.BusinessProcess import BackTrack
 
 class BusinessState(XMLObject):
   """
