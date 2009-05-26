@@ -67,8 +67,9 @@ if clone:\n
 else:\n
   portal_type = form_data[\'clone_portal_type\']\n
 \n
-parent = context.getParentValue()\n
-allowed_type_list = parent.getVisibleAllowedContentTypeList()\n
+# We copy contents in place if possible\n
+directory = getattr(context, \'original_container\', None) or context.getParentValue()\n
+allowed_type_list = directory.getVisibleAllowedContentTypeList()\n
 if portal_type not in allowed_type_list:\n
   if batch_mode:\n
     return None\n
@@ -90,8 +91,6 @@ if web_mode:\n
 \n
 # Standard cloning method\n
 if clone:\n
-  # We copy contents in place if possible\n
-  directory = getattr(context, \'original_container\', None) or context.getParentValue()\n
   # Copy and paste the object\n
   original_id = getattr(context, \'original_id\', None) or context.getId()\n
   # This is required for objects acquired in Web Section\n
@@ -99,6 +98,9 @@ if clone:\n
   paste_result = directory.manage_pasteObjects(cb_copy_data=clipboard)\n
   new_object = directory[paste_result[0][\'new_id\']]\n
   message_kind = \'Clone\'\n
+else:\n
+  new_object = directory.newContent(portal_type=portal_type)\n
+  message_kind = \'New\'\n
 \n
 if web_mode:\n
   # Edit the objects with some properties\n
@@ -177,15 +179,14 @@ else:\n
                             <string>form_data</string>
                             <string>portal_type</string>
                             <string>_getitem_</string>
-                            <string>parent</string>
-                            <string>allowed_type_list</string>
-                            <string>None</string>
-                            <string>kw</string>
                             <string>getattr</string>
+                            <string>None</string>
+                            <string>directory</string>
+                            <string>allowed_type_list</string>
+                            <string>kw</string>
                             <string>script</string>
                             <string>_apply_</string>
                             <string>msg</string>
-                            <string>directory</string>
                             <string>original_id</string>
                             <string>clipboard</string>
                             <string>paste_result</string>
