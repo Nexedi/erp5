@@ -661,11 +661,13 @@ class MultiItemsWidget(ItemsWidget):
     # rendered_items.append(render_element('input', type='hidden', name="default_%s:int" % (key, ), value="0"))
     return rendered_items
 
-  def render_items_view(self, field, value):
+  def render_items_view(self, field, value, REQUEST):
       if type(value) is not type([]):
           value = [value]
 
-      items = field.get_value('items')
+      items = field.get_value('items',
+                              REQUEST=REQUEST,
+                              cell=getattr(REQUEST, 'cell', None))
       d = {}
       for item in items:
           try:
@@ -682,7 +684,7 @@ class MultiItemsWidget(ItemsWidget):
   def render_view(self, field, value, REQUEST=None, render_prefix=None):
       if value is None:
           return ''
-      return string.join(self.render_items_view(field, value),
+      return string.join(self.render_items_view(field, value, REQUEST),
                           field.get_value('view_separator'))
 
 class ListWidget(SingleItemsWidget):
