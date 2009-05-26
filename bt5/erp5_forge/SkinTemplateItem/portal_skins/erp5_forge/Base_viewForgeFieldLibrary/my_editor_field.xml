@@ -68,7 +68,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_editor_field</string> </value>
+                    <value> <string>my_text_content</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
