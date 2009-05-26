@@ -6816,7 +6816,7 @@ msgid "Portal Types"
 msgstr "Portal Types"
 
 msgid "Portal type"
-msgstr "portal type"
+msgstr "Portal type"
 
 msgid "Post"
 msgstr "Envoyer"
