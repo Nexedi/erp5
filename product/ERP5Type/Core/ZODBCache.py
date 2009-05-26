@@ -40,12 +40,12 @@ class ZODBCache(XMLObject):
   ZODBCache is a Zope (persistent) representation of 
   the ZODB based real cache plugin object.
   """
-  meta_type = 'ERP5 Zodb Cache'
-  portal_type = 'Zodb Cache'
+  meta_type = 'ERP5 ZODB Cache'
+  portal_type = 'ZODB Cache'
   isPortalContent = 1
   isRADContent = 1
   allowed_types = ()
-    
+
   security = ClassSecurityInfo()
   security.declareProtected(Permissions.ManagePortal,
                             'manage_editProperties',
