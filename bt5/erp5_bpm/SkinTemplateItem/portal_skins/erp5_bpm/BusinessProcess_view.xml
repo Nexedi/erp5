@@ -106,6 +106,7 @@
                         <string>my_title</string>
                         <string>my_version</string>
                         <string>my_specialise_title_list</string>
+                        <string>my_referential_date</string>
                       </list>
                     </value>
                 </item>
