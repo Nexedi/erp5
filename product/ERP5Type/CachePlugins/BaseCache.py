@@ -30,11 +30,12 @@
 """ 
 Base Cache plugin.
 """
-
 import time
 
 class CachedMethodError(Exception):
   pass
+
+ACTIVATE_TRACKING = False
 
 class CacheEntry(object):
   """ Cachable entry.  Used as a wrapper around real values stored in cache.
@@ -60,13 +61,35 @@ class CacheEntry(object):
 
   def markCacheHit(self, delta=1):
     """ mark a read to this cache entry """
-    self._cache_hit_count = self._cache_hit_count + delta 
+    if ACTIVATE_TRACKING:
+      self._cache_hit_count = self._cache_hit_count + delta 
 
   def getValue(self):
     """ return cached value """ 
     return getattr(self, 'value', None)
 
-ACTIVATE_TRACKING = False
+  def __len__(self):
+    """return value size
+    """
+    value = self.getValue()
+    def calculateSize(v):
+      size = 0
+      if isinstance(v, (tuple, list)):
+        for item in v:
+          size += calculateSize(item)
+      elif isinstance(v, str):
+        size += len(v)
+      else:
+        #try to convert into string
+        try:
+          size += calculateSize(str(v))
+        except UnicodeEncodeError: #Maybe other exceptions should be handled
+          pass
+      return size
+
+    if value is None:
+      return 0
+    return calculateSize(value)
 
 class BaseCache(object):
   """ Base Cache class """
