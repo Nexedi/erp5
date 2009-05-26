@@ -89,13 +89,12 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_reference</string>
                         <string>my_resource_title</string>
                         <string>my_variation_category_list</string>
-                        <string>my_reference</string>
                         <string>my_current_owner</string>
                         <string>my_current_site</string>
                         <string>my_expiration_date</string>
-                        <string>my_fishing_zone</string>
                       </list>
                     </value>
                 </item>
