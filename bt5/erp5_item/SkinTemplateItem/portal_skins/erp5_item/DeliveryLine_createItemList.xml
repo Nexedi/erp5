@@ -78,7 +78,7 @@ for line in kw.get(\'listbox\'):\n
       title=line[\'title\'],\n
       reference=line[\'reference\'],\n
       quantity=line[\'quantity\'],\n
-      quantity_unit=context.getResourceValue().getQuantityUnit())\n
+      quantity_unit=context.getQuantityUnit())\n
     item.validate()\n
     item_list.append(item)  \n
 \n
