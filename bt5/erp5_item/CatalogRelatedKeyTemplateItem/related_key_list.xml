@@ -1,0 +1,5 @@
+<key_list>
+ <key>item_catalog_portal_type | catalog/portal_type/z_related_item_catalog</key>
+ <key>item_catalog_reference | catalog/reference/z_related_item_catalog</key>
+ <key>item_catalog_title | catalog/title/z_related_item_catalog</key>
+</key_list>
