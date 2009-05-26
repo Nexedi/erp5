@@ -53,51 +53,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script just returns what the user entered in\n
-  the fast input form.\n
-"""\n
-request= context.REQUEST\n
-item_list=[]\n
+            <value> <string>request = context.REQUEST\n
 portal = context.getPortalObject()\n
-Base_translateString = portal.Base_translateString\n
-if context.getPortalType()==\'Sale Packing List Line\':\n
-  cell_portal_type = \'Sale Packing List Cell\'\n
-elif context.getPortalType()==\'Inventory Line\':\n
-  cell_portal_type = \'Inventory Cell\'\n
-elif context.getPortalType()==\'Internal Packing List Line\':\n
-  cell_portal_type = \'Internal Packing List Cell\'\n
 \n
+# FIXME: this is a workaround, because if listbox is present in request.form, \n
+#   editable fields will be empty when re-displaying the dialog.\n
+request.form.pop(\'listbox\', None)\n
+request.other.pop(\'listbox\', None)\n
 \n
-for line in listbox: \n
-  if line["selection_check"]==1:\n
-    item = context.portal_catalog.getResultValue(\n
-                                    relative_url=line["listbox_key"].split("erp5/")[-1])\n
-    item_list.append(item)\n
-variation_dict = {}  \n
-for item in item_list:  \n
-  variation_list = item.Item_getVariationCategoryTitleList()\n
-  if variation_list not in variation_dict:\n
-    variation_dict[variation_list] = 0.0  \n
-  variation_dict[variation_list] = variation_dict[variation_list] + item.getQuantity()\n
-\n
-splc_list= context.contentValues(portal_type=cell_portal_type)\n
-variation_cell_dict = {}\n
-for splc in splc_list:\n
-  variation_cell_list = \',\'.join([x[0] for x in splc.getVariationCategoryItemList()])\n
-  variation_cell_dict[variation_cell_list]= splc.getQuantity()\n
-final_variation_dict={}\n
-\n
-for key in variation_dict:\n
-    final_variation_dict[key] = "%s/%s"%(variation_cell_dict[key],variation_dict[key])\n
-\n
-\n
-request.set(\'portal_status_message\',\n
-          Base_translateString(\n
-               \'Quantity Defined On Packing List %s\' %(final_variation_dict)))\n
-\n
-context.Base_updateDialogForm(listbox=listbox)\n
-return context.DeliveryLine_viewSelectItemListDialog(**kw)\n
+return getattr(context, dialog_id)(**kw)\n
 </string> </value>
         </item>
         <item>
@@ -108,7 +72,7 @@ return context.DeliveryLine_viewSelectItemListDialog(**kw)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox=[],**kw</string> </value>
+            <value> <string>dialog_id, listbox=[], **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -128,38 +92,22 @@ return context.DeliveryLine_viewSelectItemListDialog(**kw)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>dialog_id</string>
                             <string>listbox</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
-                            <string>item_list</string>
                             <string>portal</string>
-                            <string>Base_translateString</string>
-                            <string>cell_portal_type</string>
-                            <string>_getiter_</string>
-                            <string>line</string>
-                            <string>_getitem_</string>
-                            <string>item</string>
-                            <string>variation_dict</string>
-                            <string>variation_list</string>
-                            <string>_write_</string>
-                            <string>splc_list</string>
-                            <string>variation_cell_dict</string>
-                            <string>splc</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
-                            <string>variation_cell_list</string>
-                            <string>final_variation_dict</string>
-                            <string>key</string>
+                            <string>None</string>
                             <string>_apply_</string>
+                            <string>getattr</string>
                           </tuple>
                         </value>
                     </item>

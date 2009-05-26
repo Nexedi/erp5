@@ -56,39 +56,65 @@
             <value> <string>from Products.ERP5Type.Message import translateString\n
 item_list = []\n
 request = context.REQUEST\n
-total_quantity = 0.0 \n
-new_item_list =[]\n
-context.setAggregateValueList([])\n
-type = request.get("field_my_type")\n
-if context.getPortalType()==\'Sale Packing List Line\':\n
+portal = context.getPortalObject()\n
+getObject = portal.portal_catalog.getObject\n
+selection_tool = portal.portal_selections\n
+\n
+line_portal_type = context.getPortalType()\n
+\n
+if line_portal_type == \'Sale Packing List Line\':\n
   cell_portal_type = \'Sale Packing List Cell\'\n
-elif context.getPortalType()==\'Inventory Line\':\n
+elif line_portal_type == \'Inventory Line\':\n
   cell_portal_type = \'Inventory Cell\'\n
-elif context.getPortalType()==\'Internal Packing List Line\':\n
+elif line_portal_type == \'Internal Packing List Line\':\n
   cell_portal_type = \'Internal Packing List Cell\'\n
-base_id = \'movement\'\n
-splc_list= context.contentValues(portal_type=cell_portal_type)\n
-for line in kw.get(\'listbox\'): \n
-  if line[\'selection_check\']:\n
-    item = context.portal_catalog.getResultValue(\n
-                                    relative_url=line["listbox_key"].split("erp5/")[-1])\n
-    item_list.append(item)\n
-variation_dict = {}  \n
-for item in item_list:  \n
-  variation_list = item.Item_getVariationCategoryTitleList()\n
-  if variation_list not in variation_dict:\n
-    variation_dict[variation_list] = 0.0  \n
-  variation_dict[variation_list] = variation_dict[variation_list] + item.getQuantity()\n
-for cell in splc_list:\n
-  for item in item_list:\n
-    if item.Item_getVariationCategoryList() == cell.getVariationCategoryList():\n
-       new_item_list=[]\n
-       new_item_list.append(item)       \n
-       cell.setAggregateValueList(context.getAggregateValueList()+ new_item_list)\n
-       variation_cell_list = \',\'.join([x[0] for x in cell.getVariationCategoryItemList()])\n
-       cell.setQuantity(variation_dict[variation_cell_list])\n
+else:\n
+  raise NotImplementedError(\'Unknown line type %s\' % line_portal_type)\n
 \n
 \n
+# update selected uids \n
+selection_tool.updateSelectionCheckedUidList(\n
+    list_selection_name, uids=uids, listbox_uid=listbox_uid, REQUEST=request)\n
+uids = selection_tool.getSelectionCheckedUidsFor(list_selection_name)\n
+\n
+# XXX do we need to update quantity for this one ?\n
+# for now, this is not defined, so we\'ll always update quantities when using\n
+# this dialog\n
+update_quantity = 1\n
+\n
+for item_uid in uids:\n
+  item = getObject(item_uid)\n
+  item_variation = item.Item_getVariationCategoryList()\n
+  # if we have variation, find matching cell to add this item to the cell\n
+  if item_variation:\n
+    cell_found = None\n
+    for cell in context.getCellValueList(base_id=\'movement\'):\n
+      if cell.getVariationCategoryList() == item_variation:\n
+        cell_found = cell\n
+        break\n
+    if cell_found is not None:\n
+      movement_to_update = cell_found\n
+    else:\n
+      # TODO: what if the item variation is not in range ?\n
+      movement_to_update = context.newCell(base_id=\'movement\',\n
+                                           portal_type=cell_portal_type,\n
+                                           *item_variation)\n
+  else:\n
+    # no variation, we\'ll update the line itself\n
+    movement_to_update = context\n
+\n
+  if item not in movement_to_update.getAggregateValueList():\n
+    movement_to_update.setAggregateValueSet(\n
+      movement_to_update.getAggregateValueList() + [item])\n
+    if update_quantity:\n
+      if item.getQuantityUnit() != movement_to_update.getQuantityUnit():\n
+        raise NotImplementedError(\n
+          \'Quantity unit from the movement differs from quantity\'\n
+          \' unit on the item\')\n
+      movement_to_update.setQuantity(\n
+          movement_to_update.getQuantity() + item.getQuantity())\n
+  \n
+  \n
 return context.Base_redirect(form_id, keep_items=dict(\n
        portal_status_message=translateString(\'Items aggregated\')))\n
 </string> </value>
@@ -101,7 +127,7 @@ return context.Base_redirect(form_id, keep_items=dict(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'view\',*args, **kw</string> </value>
+            <value> <string>form_id=\'view\', list_selection_name=\'\', uids=[], listbox=None, listbox_uid=[], *args, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -121,13 +147,17 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>form_id</string>
+                            <string>list_selection_name</string>
+                            <string>uids</string>
+                            <string>listbox</string>
+                            <string>listbox_uid</string>
                             <string>args</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
@@ -136,24 +166,22 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
-                            <string>total_quantity</string>
-                            <string>new_item_list</string>
-                            <string>type</string>
+                            <string>portal</string>
+                            <string>getObject</string>
+                            <string>selection_tool</string>
+                            <string>line_portal_type</string>
                             <string>cell_portal_type</string>
-                            <string>base_id</string>
-                            <string>splc_list</string>
+                            <string>NotImplementedError</string>
+                            <string>update_quantity</string>
                             <string>_getiter_</string>
-                            <string>line</string>
-                            <string>_getitem_</string>
+                            <string>item_uid</string>
                             <string>item</string>
-                            <string>variation_dict</string>
-                            <string>variation_list</string>
-                            <string>_write_</string>
+                            <string>item_variation</string>
+                            <string>None</string>
+                            <string>cell_found</string>
                             <string>cell</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
-                            <string>variation_cell_list</string>
+                            <string>movement_to_update</string>
+                            <string>_apply_</string>
                             <string>dict</string>
                           </tuple>
                         </value>
@@ -168,6 +196,10 @@ return context.Base_redirect(form_id, keep_items=dict(\n
             <value>
               <tuple>
                 <string>view</string>
+                <string></string>
+                <list/>
+                <none/>
+                <list/>
               </tuple>
             </value>
         </item>

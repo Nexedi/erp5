@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="MultiListField" module="Products.Formulator.StandardFields"/>
+        <global name="StringField" module="Products.Formulator.StandardFields"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_variation_category_list</string> </value>
+            <value> <string>your_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -26,8 +26,8 @@
                     <value> <string>Input is required but no input given.</string> </value>
                 </item>
                 <item>
-                    <key> <string>unknown_selection</string> </key>
-                    <value> <string>You selected an item that was not in the list.</string> </value>
+                    <key> <string>too_long</string> </key>
+                    <value> <string>Too much input was given.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -53,6 +53,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>display_maxwidth</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>editable</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -69,15 +77,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
+                    <key> <string>max_length</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -85,11 +89,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>size</string> </key>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
+                    <key> <string>truncate</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -97,7 +101,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>view_separator</string> </key>
+                    <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -117,12 +121,18 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_maxwidth</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -142,25 +152,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
+                    <key> <string>max_length</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>size</string> </key>
+                    <key> <string>required</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -168,11 +168,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>truncate</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>unicode</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>view_separator</string> </key>
+                    <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -192,17 +196,23 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>display_maxwidth</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
+                </item>
+                <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -217,77 +227,35 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <key> <string>max_length</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>size</string> </key>
-                    <value> <int>5</int> </value>
+                    <key> <string>title</string> </key>
+                    <value> <string>Item Title</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Variation</string> </value>
+                    <key> <string>truncate</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>view_separator</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<br />
-
-]]></string> </value>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>cell/Item_getVariationCategoryList</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>cell/Item_getVariationRangeCategoryItemList</string> </value>
         </item>
       </dictionary>
     </pickle>

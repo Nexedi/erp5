@@ -54,48 +54,44 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Document import newTempBase\n
+from Products.ERP5Type.Utils import cartesianProduct\n
 portal = context.getPortalObject()\n
-if context.getPortalType()==\'Sale Packing List Line\':\n
-  cell_portal_type = \'Sale Packing List Cell\'\n
-elif context.getPortalType()==\'Inventory Line\':\n
-  cell_portal_type = \'Inventory Cell\'\n
-elif context.getPortalType()==\'Internal Packing List Line\':\n
-  cell_portal_type = \'Internal Packing List Cell\'\n
-result = [x.getObject() for x in context.portal_catalog(portal_type=\'Item\')]\n
-result_list = []\n
-new_list = filter(\n
-       lambda x :(x.Item_getResourceTitle()==context.getResourceTitle()),\n
-                  result)\n
+request = portal.REQUEST\n
 \n
-splc_list= context.contentValues(portal_type=cell_portal_type)\n
+node = context.getSourceValue()\n
 \n
-if not splc_list:\n
-  return new_list\n
-for splc in splc_list:\n
-  item_list = filter(\n
-       lambda x :(x.Item_getVariationCategoryList()==splc.getVariationCategoryList()),\n
-                  new_list)\n
-  result_list.extend(item_list)\n
+tracking_parameters = {\n
+    \'node_uid\': node.getUid(),\n
+    \'resource_uid\': context.getResourceUid(),\n
 \n
-len_res_list = len(result_list)\n
+    \'item_catalog_title\': request.get(\'title\') or \'\',\n
+    \'item_catalog_reference\': request.get(\'reference\') or \'\',\n
+    \'item_catalog_portal_type\': request.get(\'portal_type\') or \'\',\n
+}\n
 \n
 \n
-result = []\n
+check_variation = bool(context.getVariationCategoryList())\n
+acceptable_variation_category_list = \\\n
+      cartesianProduct(context.getCellRange(base_id=\'movement\'))\n
 \n
-return result_list\n
-for item in result_list:\n
-  variation_list = item.Item_getVariationCategoryList()\n
-  if variation_list !=[]:\n
-    obj = newTempBase(portal,id="tmp_item_%s" % item.getId(), uid="new_item_%s" % item.getId())\n
-    obj.edit(title=item.Item_getResourceTitle(),\n
-           reference=item.getReference(),\n
-           size=variation_list[1],\n
-           quantity=item.getQuantity(),\n
-           quality_grade=variation_list[0],\n
-           variation_category_list =variation_list)\n
-    result.append(obj)\n
+result_set = dict()\n
+for tracking_brain in portal.portal_simulation.getCurrentTrackingList(\n
+                            **tracking_parameters):\n
+  item = tracking_brain.getObject()\n
+  \n
+  # XXX can this be done in SQL ?\n
+  if check_variation and \\\n
+      item.Item_getVariationCategoryList() not in\\\n
+      acceptable_variation_category_list:\n
+    continue\n
+  \n
+  # XXX can this be done in SQL ?\n
+  if item.Item_getCurrentSiteValue() != node:\n
+    continue\n
+    \n
+  result_set[item] = 1\n
 \n
-return result\n
+return result_set.keys()\n
 </string> </value>
         </item>
         <item>
@@ -136,27 +132,24 @@ return result\n
                             <string>kw</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
+                            <string>Products.ERP5Type.Utils</string>
+                            <string>cartesianProduct</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>cell_portal_type</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>request</string>
+                            <string>node</string>
+                            <string>tracking_parameters</string>
+                            <string>bool</string>
+                            <string>check_variation</string>
+                            <string>acceptable_variation_category_list</string>
+                            <string>dict</string>
+                            <string>result_set</string>
                             <string>_getiter_</string>
-                            <string>x</string>
-                            <string>result</string>
-                            <string>result_list</string>
-                            <string>filter</string>
-                            <string>new_list</string>
-                            <string>splc_list</string>
-                            <string>splc</string>
-                            <string>item_list</string>
-                            <string>len</string>
-                            <string>len_res_list</string>
+                            <string>_apply_</string>
+                            <string>tracking_brain</string>
                             <string>item</string>
-                            <string>variation_list</string>
-                            <string>obj</string>
-                            <string>_getitem_</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>
