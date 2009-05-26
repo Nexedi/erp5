@@ -48,7 +48,7 @@ class CacheFactory(XMLObject):
   allowed_types = ('ERP5 Ram Cache', 
                    'ERP5 Distributed Ram Cache', 
                    'ERP5 SQL Cache',
-                   'ERP5 Zodb Cache',
+                   'ERP5 ZODB Cache',
                   )
 
   security = ClassSecurityInfo()
@@ -70,7 +70,7 @@ class CacheFactory(XMLObject):
     cache_plugins = self.objectValues(self.allowed_types)
     cache_plugins = map(None, cache_plugins)
     cache_plugins.sort(key=lambda x: x.getIntIndex(0))
-    return  cache_plugins
+    return cache_plugins
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getRamCacheFactory')
   def getRamCacheFactory(self):
