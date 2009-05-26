@@ -194,7 +194,7 @@
             </tr>\n
 \n
             <tr tal:condition="python: show_search_line or is_report_tree_mode"\n
-              id="listbox_search_line"\n
+              id="listbox_search_line" class="listbox_search_line"\n
               tal:attributes="id python: show_search_line and (\'%s_search_line\' % field_id) or (\'%s_report_depth_line\' % field_id)">\n
               <tal:block tal:condition="is_report_tree_mode">\n
                 <td class="Data" style="width: 50px; text-align: left; vertical-align: middle" colspan="1"\n
