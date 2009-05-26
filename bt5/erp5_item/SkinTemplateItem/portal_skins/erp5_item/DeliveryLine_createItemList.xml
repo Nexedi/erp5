@@ -70,8 +70,9 @@ context.setVariationCategoryList([])\n
 base_id = \'movement\'\n
 for line in kw.get(\'listbox\'):\n
   if line.has_key(\'listbox_key\') and line[\'quantity\'] in (\'\',None):\n
-    request.set(\'portal_status_message\', \n
-                 translateString(\'Please Define Quantity for Item Defined On Line %s\'%line[\'listbox_key\']))\n
+    msg = translateString(\'Please Define Quantity for Item Defined On Line %s\'%line[\'listbox_key\'], mapping = kw)\n
+    return context.Base_redirect(form_id, keep_items=dict(\n
+       portal_status_message=msg))\n
   if line.has_key(\'listbox_key\') and (line[\'title\'] or line[\'reference\'] not in (\'\', None)):\n
     module = context.getDefaultModule(type)\n
     item = module.newContent(portal_type=type,\n
@@ -162,6 +163,8 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>line</string>
                             <string>_getitem_</string>
                             <string>None</string>
+                            <string>msg</string>
+                            <string>dict</string>
                             <string>module</string>
                             <string>item</string>
                             <string>filter</string>
@@ -172,7 +175,6 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>_apply_</string>
                             <string>cell</string>
                             <string>_inplacevar_</string>
-                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>

@@ -57,7 +57,7 @@
   result = context.Item_getResourceValue() and context.Item_getResourceValue().getQuantityUnitList() and [(\'\', \'\')] + [(x.getTranslatedLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in context.Item_getResourceValue().getQuantityUnitValueList()] or [(\'\', \'\')]\n
 \n
 else:\n
-  result = [(x.getTranslatedLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in context.AggregateValue().getQuantityUnitValueList()] or [(\'\', \'\')]\n
+  result = [(x.getTranslatedLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in context.getAggregateRelatedValue().getQuantityUnitValueList()] or [(\'\', \'\')]\n
 return result\n
 </string> </value>
         </item>

@@ -368,6 +368,10 @@
                           <string>translated_validation_state_title</string>
                           <string>Simulation State</string>
                         </tuple>
+                        <tuple>
+                          <string>history</string>
+                          <string>Show History</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -419,6 +423,10 @@
                         <tuple>
                           <string>variation_category_item_list</string>
                           <string>Variation</string>
+                        </tuple>
+                        <tuple>
+                          <string>history</string>
+                          <string>Show History</string>
                         </tuple>
                       </list>
                     </value>
@@ -482,6 +490,10 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>row_css_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>search</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -534,7 +546,12 @@
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>history</string>
+                          <string>Item_getTrackingFormUrl</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>
