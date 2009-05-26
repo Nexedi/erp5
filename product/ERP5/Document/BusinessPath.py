@@ -33,7 +33,7 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.PortalFolder import ContentFilter
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Path import Path
-from Products.ERP5Type.Document.BusinessProcess import BackTrack
+from Products.ERP5.Document.BusinessProcess import BackTrack
 
 import zope.interface
 
