@@ -63,6 +63,7 @@ node = context.getSourceValue()\n
 tracking_parameters = {\n
     \'node_uid\': node.getUid(),\n
     \'resource_uid\': context.getResourceUid(),\n
+    \'output\': 1,\n
 \n
     \'item_catalog_title\': request.get(\'title\') or \'\',\n
     \'item_catalog_reference\': request.get(\'reference\') or \'\',\n
@@ -80,15 +81,13 @@ for tracking_brain in portal.portal_simulation.getCurrentTrackingList(\n
   item = tracking_brain.getObject()\n
   \n
   # XXX can this be done in SQL ?\n
+  # it could, by computing all variation texts, but I don\'t think this is\n
+  # really necessary.\n
   if check_variation and \\\n
       item.Item_getVariationCategoryList() not in\\\n
       acceptable_variation_category_list:\n
     continue\n
   \n
-  # XXX can this be done in SQL ?\n
-  if item.Item_getCurrentSiteValue() != node:\n
-    continue\n
-    \n
   result_set[item] = 1\n
 \n
 return result_set.keys()\n
