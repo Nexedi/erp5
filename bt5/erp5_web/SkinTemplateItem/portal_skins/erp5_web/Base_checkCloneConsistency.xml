@@ -68,12 +68,9 @@ else:\n
 \n
 # prepare query params\n
 kw = {\'portal_type\' : portal_type}\n
-if form_data.get(\'clone_reference\'): \n
-  kw[\'reference\'] = form_data[\'clone_reference\']\n
-if form_data.get(\'clone_version\'): \n
-  kw[\'version\'] = form_data[\'clone_version\']\n
-if form_data.get(\'clone_language\'): \n
-  kw[\'language\'] = form_data[\'clone_language\']\n
+kw[\'reference\'] = form_data.get(\'clone_reference\') or \'\'\n
+kw[\'version\'] = form_data.get(\'clone_version\') or \'\'\n
+kw[\'language\'] = form_data.get(\'clone_language\') or \'\'\n
 \n
 # Count documents of same reference and prepare kw\n
 count = int(context.portal_catalog.countResults(**kw)[0][0])\n
