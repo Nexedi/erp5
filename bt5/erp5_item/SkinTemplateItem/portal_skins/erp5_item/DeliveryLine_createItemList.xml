@@ -77,7 +77,8 @@ for line in kw.get(\'listbox\'):\n
     item = module.newContent(portal_type=type,\n
       title=line[\'title\'],\n
       reference=line[\'reference\'],\n
-      quantity=line[\'quantity\'])\n
+      quantity=line[\'quantity\'],\n
+      quantity_unit=context.getResourceValue().getQuantityUnit())\n
     item.validate()\n
     item_list.append(item)  \n
 \n
