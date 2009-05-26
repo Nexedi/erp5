@@ -64,6 +64,10 @@ line_portal_type = context.getPortalType()\n
 \n
 if line_portal_type == \'Sale Packing List Line\':\n
   cell_portal_type = \'Sale Packing List Cell\'\n
+elif line_portal_type == \'Sale Order Line\':\n
+  cell_portal_type = \'Sale Order Cell\'\n
+elif line_portal_type == \'Purchase Packing List Line\':\n
+  cell_portal_type = \'Purchase Packing List Cell\'\n
 elif line_portal_type == \'Inventory Line\':\n
   cell_portal_type = \'Inventory Cell\'\n
 elif line_portal_type == \'Internal Packing List Line\':\n
@@ -77,10 +81,7 @@ selection_tool.updateSelectionCheckedUidList(\n
     list_selection_name, uids=uids, listbox_uid=listbox_uid, REQUEST=request)\n
 uids = selection_tool.getSelectionCheckedUidsFor(list_selection_name)\n
 \n
-# XXX do we need to update quantity for this one ?\n
-# for now, this is not defined, so we\'ll always update quantities when using\n
-# this dialog\n
-update_quantity = 1\n
+update_quantity = not context.Movement_isQuantityEditable()\n
 \n
 for item_uid in uids:\n
   item = getObject(item_uid)\n
@@ -95,7 +96,6 @@ for item_uid in uids:\n
     if cell_found is not None:\n
       movement_to_update = cell_found\n
     else:\n
-      # TODO: what if the item variation is not in range ?\n
       movement_to_update = context.newCell(base_id=\'movement\',\n
                                            portal_type=cell_portal_type,\n
                                            *item_variation)\n
