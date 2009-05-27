@@ -32,7 +32,6 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.Document.BusinessProcess import BackTrack
 
 class BusinessState(XMLObject):
   """
@@ -89,11 +88,13 @@ class BusinessState(XMLObject):
     # Should be re-calculated?
     if 'predecessor_date' in kwargs:
       del kwargs['predecessor_date']
-    return min(self._getExpectedDateList(explanation,
-                                         self.getSuccessorRelatedValueList(),
-                                         self._getExpectedCompletionDate,
-                                         *args,
-                                         **kwargs))
+    date_list = self._getExpectedDateList(explanation,
+                                          self.getSuccessorRelatedValueList(),
+                                          self._getExpectedCompletionDate,
+                                          *args,
+                                          **kwargs)
+    if len(date_list) > 0:
+      return min(date_list)
 
   def _getExpectedCompletionDate(self, path, *args, **kwargs):
     return path.getExpectedStopDate(*args, **kwargs)
@@ -108,11 +109,13 @@ class BusinessState(XMLObject):
     # Should be re-calculated?
     if 'predecessor_date' in kwargs:
       del kwargs['predecessor_date']
-    return min(self._getExpectedDateList(explanation,
-                                         self.getPredecessorRelatedValueList(),
-                                         self._getExpectedBeginningDate,
-                                         *args,
-                                         **kwargs))
+    date_list = self._getExpectedDateList(explanation,
+                                          self.getPredecessorRelatedValueList(),
+                                          self._getExpectedBeginningDate,
+                                          *args,
+                                          **kwargs)
+    if len(date_list) > 0:
+      return min(date_list)
 
   def _getExpectedBeginningDate(self, path, *args, **kwargs):
     expected_date = path.getExpectedStartDate(*args, **kwargs)
@@ -141,11 +144,7 @@ class BusinessState(XMLObject):
         if expected_date is not None:
           expected_date_list.append(expected_date)
 
-    # if visiting leaf of tree
-    if len(expected_date_list) == 0:
-      raise BackTrack
-    else:
-      return expected_date_list
+    return expected_date_list
 
   def getExpectedCompletionDuration(self, explanation):
     """

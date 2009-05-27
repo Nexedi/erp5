@@ -34,12 +34,6 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Path import Path
 
-class BackTrack(Exception):
-  # XXX this defined here until refactor 
-  """
-   This is a utility Exception for tree back tracking.
-  """
-
 class BusinessProcess(Path, XMLObject):
   """
     The BusinessProcess class is a container class which is used

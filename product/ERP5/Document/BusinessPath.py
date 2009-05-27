@@ -33,7 +33,6 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.PortalFolder import ContentFilter
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.Path import Path
-from Products.ERP5.Document.BusinessProcess import BackTrack
 
 import zope.interface
 
@@ -265,8 +264,9 @@ class BusinessPath(Path):
     if self.getParentValue().isStartDateReferential():
       return explanation.getStartDate()
     else:
-      return self.getExpectedStopDate(explanation, *args, **kwargs)\
-             - self.getLeadTime()
+      expected_date = self.getExpectedStopDate(explanation, *args, **kwargs)
+      if expected_date is not None:
+        return expected_date - self.getLeadTime()
 
   def _getPredecessorExpectedStartDate(self, explanation, predecessor_date=None, *args, **kwargs):
     if predecessor_date is None:
@@ -279,8 +279,9 @@ class BusinessPath(Path):
   def _getSuccessorExpectedStartDate(self, explanation, *args, **kwargs):
     node = self.getSuccessorValue()
     if node is not None:
-      return node.getExpectedBeginningDate(explanation, *args, **kwargs)\
-             - self.getLeadTime()
+      expected_date =  node.getExpectedBeginningDate(explanation, *args, **kwargs)
+      if expected_date is not None:
+        return expected_date - self.getLeadTime()
 
   def getExpectedStopDate(self, explanation, predecessor_date=None, *args, **kwargs):
     """
@@ -301,14 +302,16 @@ class BusinessPath(Path):
     if self.getParentValue().isStopDateReferential():
       return explanation.getStopDate()
     else:
-      return self.getExpectedStartDate(explanation, *args, **kwargs)\
-             + self.getLeadTime()
+      expected_date = self.getExpectedStartDate(explanation, *args, **kwargs)
+      if expected_date is not None:
+        return expected_date + self.getLeadTime()
 
   def _getPredecessorExpectedStopDate(self, explanation, *args, **kwargs):
     node = self.getPredecessorValue()
     if node is not None:
-      return node.getExpectedCompletionDate(explanation, *args, **kwargs)\
-             + self.getWaitTime() + self.getLeadTime()
+      expected_date = node.getExpectedCompletionDate(explanation, *args, **kwargs)
+      if expected_date is not None:
+        return expected_date + self.getWaitTime() + self.getLeadTime()
 
   def _getSuccessorExpectedStopDate(self, explanation, *args, **kwargs):
     node = self.getSuccessorValue()
@@ -338,19 +341,11 @@ class BusinessPath(Path):
       return root_explanation_method(
         explanation, visited=visited, *args, **kwargs)
 
-    predecessor_expected_date = None
-    try:
-      predecessor_expected_date = predecessor_method(
-        explanation, visited=visited, *args, **kwargs)
-    except BackTrack:
-      pass
+    predecessor_expected_date = predecessor_method(
+      explanation, visited=visited, *args, **kwargs)
 
-    successor_expected_date = None
-    try:
-      successor_expected_date = successor_method(
-        explanation, visited=visited, *args, **kwargs)
-    except BackTrack:
-      pass
+    successor_expected_date = successor_method(
+      explanation, visited=visited, *args, **kwargs)
 
     if successor_expected_date is not None or \
        predecessor_expected_date is not None:
