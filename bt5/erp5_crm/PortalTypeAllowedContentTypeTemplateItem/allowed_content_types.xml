@@ -8,6 +8,8 @@
   <item>Letter</item>
   <item>Note</item>
   <item>Phone Call</item>
+  <item>Acknowledgement</item>
+  <item>Site Message</item>
   <item>Mail Message</item>
   <item>Fax Message</item>
  </portal_type>

@@ -1,9 +1,11 @@
 Campaign Module | Campaign
+Event Module | Acknowledgement
 Event Module | Fax Message
 Event Module | Letter
 Event Module | Mail Message
 Event Module | Note
 Event Module | Phone Call
+Event Module | Site Message
 Event Module | Visit
 Event Module | Web Message
 Meeting Module | Meeting

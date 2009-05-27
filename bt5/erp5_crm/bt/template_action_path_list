@@ -1,3 +1,4 @@
+Acknowledgement | view
 Campaign Module | campaign_detailed_report
 Campaign Module | campaign_status
 Campaign Module | view
@@ -52,6 +53,10 @@ Sale Opportunity | create_new_file
 Sale Opportunity | document_list
 Sale Opportunity | new_event
 Sale Opportunity | view
+Site Message | assessment
+Site Message | preview
+Site Message | related_events
+Site Message | view
 Support Request Module | support_request_detailed_report
 Support Request Module | support_request_status
 Support Request Module | view

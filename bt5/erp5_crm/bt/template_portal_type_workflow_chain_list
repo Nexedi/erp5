@@ -1,3 +1,4 @@
+Acknowledgement | acknowledgement_workflow
 Campaign | edit_workflow
 Campaign | pricing_interaction_workflow
 Campaign | ticket_interaction_workflow
@@ -30,6 +31,9 @@ Sale Opportunity | edit_workflow
 Sale Opportunity | pricing_interaction_workflow
 Sale Opportunity | sale_opportunity_workflow
 Sale Opportunity | ticket_interaction_workflow
+Site Message | edit_workflow
+Site Message | event_interaction_workflow
+Site Message | event_workflow
 Support Request | edit_workflow
 Support Request | pricing_interaction_workflow
 Support Request | ticket_interaction_workflow
