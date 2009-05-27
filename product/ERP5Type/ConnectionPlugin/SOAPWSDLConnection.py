@@ -29,6 +29,7 @@
 import SOAPpy
 from Products.AGProjects.patches import SOAPpy_WSDL as WSDL
 from AccessControl.SecurityInfo import allow_class, allow_module
+import threading
 
 # Exception class.
 #  This allows restricted python to handle exceptions without allowing direct
@@ -158,6 +159,10 @@ class MethodWrapper(object):
     except SOAPpy.Types.faultType, exception:
       raise SOAPWSDLException(*exception())
 
+# SOAPpy says nothing about thread-safeness of parsed WSDL.
+# Be on the safe side by using threading.local as a storage for it.
+wsdl_cache = threading.local()
+
 class SOAPWSDLConnection:
   """
     Holds a SOAP connection described by a WSDL file.
@@ -191,8 +196,10 @@ class SOAPWSDLConnection:
     self._service = service
 
   def connect(self):
-    # TODO: caching of wsdl parsing
-    wsdl = SOAPpy.wstools.WSDLTools.WSDLReader().loadFromURL(self.url)
+    try:
+      wsdl = wsdl_cache.parsed
+    except AttributeError:
+      wsdl = wsdl_cache.parsed = SOAPpy.wstools.WSDLTools.WSDLReader().loadFromURL(self.url)
     # TODO: transport (http) level authentication using self._user_name and
     # self._password
     return WSDLConnection(wsdl, self._credentials, self._service)
