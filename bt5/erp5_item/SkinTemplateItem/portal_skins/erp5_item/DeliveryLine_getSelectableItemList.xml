@@ -58,10 +58,8 @@ from Products.ERP5Type.Utils import cartesianProduct\n
 portal = context.getPortalObject()\n
 request = portal.REQUEST\n
 \n
-node = context.getSourceValue()\n
-\n
 tracking_parameters = {\n
-    \'node_uid\': node.getUid(),\n
+    \'node_uid\': context.getSourceUid(),\n
     \'resource_uid\': context.getResourceUid(),\n
     \'output\': 1,\n
 \n
@@ -137,7 +135,6 @@ return result_list\n
                             <string>context</string>
                             <string>portal</string>
                             <string>request</string>
-                            <string>node</string>
                             <string>tracking_parameters</string>
                             <string>bool</string>
                             <string>check_variation</string>
