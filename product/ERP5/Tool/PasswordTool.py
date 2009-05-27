@@ -42,7 +42,7 @@ from Globals import PersistentMapping
 
 class PasswordTool(BaseTool):
   """
-    PasswoordTool is used to allow a user to change its password
+    PasswordTool is used to allow a user to change its password
   """
   title = 'Password Tool'
   id = 'portal_password'
@@ -65,7 +65,7 @@ class PasswordTool(BaseTool):
 
   def mailPasswordResetRequest(self, user_login=None, REQUEST=None):
     """
-    Create a ramdom string and expiration date for request
+    Create a random string and expiration date for request
     """
     if user_login is None:
       user_login = REQUEST["user_login"]
@@ -83,7 +83,7 @@ class PasswordTool(BaseTool):
         return msg
 
     user = user_list[0].getObject()
-    # generate a ramdom string
+    # generate a random string
     random_url = self._generateUUID()
     url = "%s/portal_password/resetPassword?reset_key=%s" %(self.getPortalObject().absolute_url() , random_url)
     # generate expiration date
@@ -185,7 +185,7 @@ class PasswordTool(BaseTool):
     elif current_date > expiration_date:
       msg = translateString("Date has expire.")
     elif not password:
-      msg = translateSTring("Password must be entered.")
+      msg = translateString("Password must be entered.")
     elif password != password_confirmation:
       msg = translateString("Passwords do not match.")
     if msg is not None:
