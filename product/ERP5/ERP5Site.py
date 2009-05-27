@@ -1338,6 +1338,8 @@ class ERP5Generator(PortalGenerator):
       addTool('ERP5 Test Tool', None)
     if not p.hasObject('portal_password'):
       addTool('ERP5 Password Tool', None)
+    if not p.hasObject('portal_acknowledgements'):
+      addTool('ERP5 Acknowledgement Tool', None)
 
     # Add ERP5Type Tool
     addTool = p.manage_addProduct['ERP5Type'].manage_addTool

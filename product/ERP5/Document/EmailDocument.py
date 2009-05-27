@@ -38,8 +38,9 @@ from Products.CMFDefault.utils import isHTMLSafe
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 from Products.ERP5.Document.TextDocument import TextDocument
 from Products.ERP5.Document.File import File
-from Products.ERP5.Document.Document import ConversionError
+from Products.ERP5.Document.Document import ConversionError, DocumentProxyMixin
 from Products.ERP5.Tool.NotificationTool import buildEmailMessage
+from MethodObject import Method
 
 from zLOG import LOG, INFO
 
@@ -61,6 +62,39 @@ COMMASPACE = ', '
 _MARKER = []
 
 file_name_regexp = 'name="([^"]*)"'
+
+
+class EmailDocumentProxyMixin(DocumentProxyMixin):
+  """
+  Provides access to documents referenced by the causality field
+  """
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+
+class ProxiedMethod(Method):
+  """
+  Accessort that retrieve methods directly on the proxy
+  """
+
+  def __init__(self, proxied_method_id):
+    self.proxied_method_id = proxied_method_id
+
+  def __call__(self, instance, *args, **kw):
+    proxied_document = instance.getProxiedDocument()
+    method = getattr(proxied_document, self.proxied_method_id)
+    return method(*args, **kw)
+
+# generate all proxy method on EmailDocumentProxyMixin
+for method_id in ('getTextContent', 'getTextFormat', 'hasFile', 
+                  'getContentInformation', 'getAttachmentData',
+                  'getAttachmentInformationList'):
+  EmailDocumentProxyMixin.security.declareProtected(
+       Permissions.AccessContentsInformation,
+       method_id)
+  setattr(EmailDocumentProxyMixin, method_id,
+      ProxiedMethod(method_id))
 
 class EmailDocument(File, TextDocument):
   """

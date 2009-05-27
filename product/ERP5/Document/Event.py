@@ -32,7 +32,62 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.EmailDocument import EmailDocument
 
-class Event(EmailDocument, Movement):
+class AcknowledgeableMixin:
+  """
+  Mixin class for all documents that we can acknowledge
+  """
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'acknowledge')
+  def acknowledge(self, **kw):
+    """
+      Define what we want to do with acknowledgment.
+
+      Possibilities :
+        - do nothing
+        - add an Acknowledge document every time someone read
+          an event corresponding to this ticket
+        - we could even think to move the workflow forward
+          when all event have been acknowledge
+
+      Is the name buildAcknowledgement better ???
+    """
+    method = self._getTypeBasedMethod('acknowledge')
+    if method is not None:
+      return method(**kw)
+    return None
+
+  def hasAcknowledgementActivity(self, user_name=None):
+    """
+    We will check if there is some current activities running or not
+    """
+    tag = "%s_%s" % (user_name, self.getRelativeUrl())
+    result = False
+    # First look at activities, we check if an acknowledgement document
+    # is under reindexing
+    if self.portal_activities.countMessageWithTag(tag):
+      result = True
+    return result
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'isAcknowledged')
+  def isAcknowledged(self, user_name=None):
+    """
+    Say if this ticket is already acknowledged or not by this user.
+    """
+    result = self.hasAcknowledgementActivity(user_name=user_name)
+    if not result:
+      # Check in the catalog if we can find an acknowledgement
+      person_value = self.ERP5Site_getAuthenticatedMemberPersonValue(
+                          user_name=user_name)
+      if len(self.portal_catalog(portal_type='Acknowledgement',
+                causality_relative_url=self.getRelativeUrl(),
+                destination_relative_url=person_value.getRelativeUrl())) > 0:
+        result = True
+    return result
+
+class Event(EmailDocument, Movement, AcknowledgeableMixin):
   """
     Event is the base class for all events in ERP5.
 

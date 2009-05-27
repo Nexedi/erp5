@@ -375,6 +375,31 @@ class PermanentURLMixIn(ExtensibleTraversableMixIn):
       document = document.__of__(self)
     return document
 
+class DocumentProxyMixin:
+  """
+  Provides access to documents referenced by the follow_up field
+  """
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'index_html' )
+  def index_html(self, REQUEST, RESPONSE, format=None, **kw):
+    """ Only a proxy method """
+    self.getProxiedDocument().index_html(REQUEST, RESPONSE, format, **kw)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getProxiedDocument' )
+  def getProxiedDocument(self):
+    """
+    Try to retrieve the original document
+    """
+    proxied_document = self.getDocumentProxyValue()
+    if proxied_document is None:
+      raise ValueError("Unable to find a proxied document")
+    return proxied_document
+
 class UpdateMixIn:
   """
     Provides an API to compute a date index based on the update
