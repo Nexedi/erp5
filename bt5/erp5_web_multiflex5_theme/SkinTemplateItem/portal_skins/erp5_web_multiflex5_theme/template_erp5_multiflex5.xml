@@ -150,6 +150,8 @@
       <div class="main_content">\n
         <div class="corner-content-1col-top"></div>                        \n
         <div class="content-1col-nobox">\n
+          <div id="transition_message" tal:condition="request/portal_status_message | nothing"\n
+               tal:content="request/portal_status_message" />\n
           <tal:block metal:define-slot="main"/>\n
         </div>\n
         <div class="corner-content-1col-bottom"></div>                       \n

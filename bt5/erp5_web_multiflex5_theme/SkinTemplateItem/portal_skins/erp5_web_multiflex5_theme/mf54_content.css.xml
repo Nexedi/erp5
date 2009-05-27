@@ -368,6 +368,14 @@ fieldset.editable.bottom div.input {\n
   padding: 0;\n
 }\n
 \n
+#transition_message {\n
+  font-size:120%;\n
+  padding:5px 10px;\n
+  color: #f40;\n
+  background-color: inherit;\n
+  font-weight: bold;\n
+}\n
+\n
 /* Edit tabs styling.\n
 ** Edit tabs are another part of admin stuffs and\n
 ** should respect other admin design convention\n
@@ -416,6 +424,27 @@ div.document div.actions ul a:hover {\n
 div.input select, div.input textarea {\n
   border: 1px solid #999;\n
 }\n
+\n
+div.bottom_actions button {\n
+  float: left;\n
+}\n
+\n
+div.bottom_actions button.saveView .image,\n
+div.bottom_actions button.saveEdit .image {\n
+  float: left;\n
+  display: block;\n
+  width: 22px;\n
+  height: 22px;\n
+}\n
+\n
+div.bottom_actions button.saveEdit span.image {\n
+  background-image: url(\'<tal:block tal:replace="site_url"/>/images/save.png\');\n
+}\n
+\n
+div.bottom_actions button.saveView span.image {\n
+  background-image: url(\'<tal:block tal:replace="site_url"/>/images/save-preview.png\');\n
+}\n
+\n
 div.adminToolbox select {\n
   max-width: 15em;\n
 }\n
@@ -541,7 +570,6 @@ div.adminToolbox div.adminSection > span,\n
 div.adminToolbox div.adminSection > fieldset > div.field {\n
   margin:0 20px;\n
 }\n
-\n
 </tal:block>
 
 ]]></string> </value>
