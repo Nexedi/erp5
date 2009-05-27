@@ -96,9 +96,20 @@ for item_uid in uids:\n
     if cell_found is not None:\n
       movement_to_update = cell_found\n
     else:\n
+      if not context.hasInRange(base_id=\'movement\', *item_variation):\n
+        # update line variation category list, if not already containing this one\n
+        variation_category_list = context.getVariationCategoryList()\n
+        for variation in item_variation:\n
+          if variation not in variation_category_list:\n
+            variation_category_list.append(variation)\n
+        context.setVariationCategoryList(variation_category_list)\n
+\n
       movement_to_update = context.newCell(base_id=\'movement\',\n
                                            portal_type=cell_portal_type,\n
                                            *item_variation)\n
+      movement_to_update.edit(mapped_value_property_list=(\'quantity\', \'price\'),\n
+                              variation_category_list=item_variation,)\n
+\n
   else:\n
     # no variation, we\'ll update the line itself\n
     movement_to_update = context\n
@@ -182,6 +193,8 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>cell</string>
                             <string>movement_to_update</string>
                             <string>_apply_</string>
+                            <string>variation_category_list</string>
+                            <string>variation</string>
                             <string>dict</string>
                           </tuple>
                         </value>
