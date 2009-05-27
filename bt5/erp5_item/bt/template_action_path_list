@@ -13,6 +13,7 @@ Purchase Packing List | aggregate_item
 Returned Sale Packing List Line | item_creation
 Returned Sale Packing List | aggregate_item
 Sale Order Line | item_creation
+Sale Order Line | select_item_fast_input
 Sale Order | aggregate_item
 Sale Packing List Line | item_creation
 Sale Packing List Line | select_item_fast_input
