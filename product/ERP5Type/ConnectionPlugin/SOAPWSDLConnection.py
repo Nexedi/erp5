@@ -30,6 +30,35 @@ import SOAPpy
 from Products.AGProjects.patches import SOAPpy_WSDL as WSDL
 from AccessControl.SecurityInfo import allow_class, allow_module
 
+# Exception class.
+#  This allows restricted python to handle exceptions without allowing direct
+#  import of SOAPpy module (because it should not have to be dependant from
+#  underlying interface API, only this file has to be).
+
+class SOAPWSDLException(Exception):
+
+  __allow_access_to_unprotected_subobjects__ = True
+
+  def __init__(self, code, name, info):
+    self.code = code
+    self.name = name
+    self.info = info
+
+  def getCode(self):
+    return self.code
+
+  def getName(self):
+    return self.name
+
+  def getInfo(self):
+    return self.info
+
+  def __str__(self):
+    return '<%s at 0x%x: %r %r %r>' % (self.__class__.__name__, id(self),
+       self.name, self.code, self.info)
+
+allow_class(SOAPWSDLException)
+
 # Authentication classes.
 #  These are SOAP authentication classes.
 #  They are supposed to be instanciated and then transmited to WebServiceTool
@@ -114,7 +143,20 @@ class PortWrapper(object):
     self._port = port
 
   def __getattr__(self, method_id):
-    return getattr(self._port, method_id)
+    return MethodWrapper(getattr(self._port, method_id))
+
+class MethodWrapper(object):
+
+  __allow_access_to_unprotected_subobjects__ = True
+
+  def __init__(self, method):
+    self._method = method
+
+  def __call__(self, *args, **kw):
+    try:
+      return self._method(*args, **kw)
+    except SOAPpy.Types.faultType, exception:
+      raise SOAPWSDLException(*exception())
 
 class SOAPWSDLConnection:
   """
