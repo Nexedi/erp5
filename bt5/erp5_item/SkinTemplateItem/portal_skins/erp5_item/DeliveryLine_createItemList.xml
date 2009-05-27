@@ -97,10 +97,10 @@ for line in kw.get(\'listbox\'):\n
       cell = context.newCell(base_id=base_id, \\\n
                                 portal_type=cell_portal_type,*cell_key)\n
       cell.edit(mapped_value_property_list=[\'price\',\'quantity\'],\n
-                price=cell.getPrice(), quantity=quantity,\n
+                price=cell.getPrice(), quantity=cell.getQuantity()+quantity,\n
                 predicate_category_list=cell_key,\n
                 variation_category_list=cell_key)\n
-      cell.setAggregateValue(item)\n
+      cell.setAggregateValueList(cell.getAggregateValueList()+[item])\n
     total_quantity+=line[\'quantity\']\n
 \n
 if movement_cell_list ==[]:\n
