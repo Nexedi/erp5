@@ -87,7 +87,6 @@ class WebServiceTool(BaseTool):
     of any kind of web service (not only ERP5) with many
     different kinds of transport like 'xml-rpc' or 'soap'
     """
-    # XXX: implement connection caching per zope thread
     if transport_kw is None:
       transport_kw = {}
     connection_handler_klass = connection_plugin_registry[transport]
