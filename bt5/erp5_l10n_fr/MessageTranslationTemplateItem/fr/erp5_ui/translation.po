@@ -24,6 +24,12 @@ msgstr "${date} est déjà comprise dans une période comptable ouverte."
 msgid "${day_name} ${date}"
 msgstr "${day_name} ${date}"
 
+msgid "${days} Days"
+msgstr "${days} jours"
+
+msgid "${days} Days End of Month"
+msgstr "${days} jours fin de mois"
+
 msgid "${delivery_portal_type} ${delivery_title}"
 msgstr "${delivery_portal_type} ${delivery_title}"
 
@@ -2793,11 +2799,11 @@ msgstr "Date à laquelle le document a été ingéré."
 msgid "Date has expire."
 msgstr "La date a expirée"
 
-msgid "Date is not in a started Accounting Period for source section."
-msgstr "La date n'est pas dans une période comptable ouverte pour la section source."
-
 msgid "Date is not in a started Accounting Period for destination section."
 msgstr "La date n'est pas dans une période comptable ouverte pour la section destination."
+
+msgid "Date is not in a started Accounting Period for source section."
+msgstr "La date n'est pas dans une période comptable ouverte pour la section source."
 
 msgid "Date must be defined"
 msgstr "La date doit être définie"
