@@ -2061,7 +2061,9 @@ class TestInventoryDocument(InventoryAPITestCase):
       workflow_history = self.workflow_tool.getInfoFor(ob=new_inventory, 
           name='history', wf_id=workflow_id)
       workflow_error_message = str(workflow_history[-1]['error_message'])
-      self.assertTrue(workflow_error_message.find('There is already an inventory')>=0)
+      self.assertTrue(
+          workflow_error_message.find('There is already an inventory')>=0,
+          workflow_error_message)
 
       # Add a case in order to check a bug when the other inventory at the
       # same date does not change stock values
@@ -2079,7 +2081,9 @@ class TestInventoryDocument(InventoryAPITestCase):
       workflow_history = self.workflow_tool.getInfoFor(ob=new_inventory, 
           name='history', wf_id=workflow_id)
       workflow_error_message = str(workflow_history[-1]['error_message'])
-      self.assertTrue(workflow_error_message.find('There is already an inventory')>=0)
+      self.assertTrue(
+          workflow_error_message.find('There is already an inventory')>=0,
+          workflow_error_message)
     finally:
       # remove all property sheet we added to type informations
       ttool = self.getTypesTool()
