@@ -115,11 +115,14 @@ def getOrderedDate(date):\n
   return date.strftime(pattern)\n
 \n
 def getPaymentConditionText(order):\n
-  if order.getPaymentConditionPaymentEndOfMonth():\n
-    return translateString("End of Month")\n
+  end_of_month = order.getPaymentConditionPaymentEndOfMonth()\n
   days = order.getPaymentConditionPaymentTerm()\n
   if days:\n
-    return \'%s %s\' % (days, translateString(\'Days\'))\n
+    if end_of_month:\n
+      return translateString("${days} Days End of Month", mapping=dict(days=days))\n
+    return translateString("${days} Days", mapping=dict(days=days))\n
+  elif end_of_month:\n
+    return translateString("End of Month") \n
   return \'\'\n
 \n
 def getTaxLineList(order):\n
