@@ -285,6 +285,23 @@ class TestUserManagement(ERP5TypeTestCase):
     assi.close()
     self._assertUserDoesNotExists('the_user', 'secret')
 
+  def test_PersonNotIndexedNotCached(self):
+    pers = self._makePerson(password='secret',)
+    pers.setReference('the_user')
+    # not indexed yet
+    self._assertUserDoesNotExists('the_user', 'secret')
+
+    transaction.commit()
+    self.tic()
+
+    self._assertUserExists('the_user', 'secret')
+
+  def test_PersonNotValidNotCached(self):
+    pers = self._makePerson(reference='the_user', password='other',)
+    self._assertUserDoesNotExists('the_user', 'secret')
+    pers.setPassword('secret')
+    self._assertUserExists('the_user', 'secret')
+
 
   def test_AssignmentWithDate(self):
     """Tests a person with an assignment with correct date is a valid user."""

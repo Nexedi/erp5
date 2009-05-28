@@ -57,6 +57,14 @@ def addERP5UserManager(dispatcher, id, title=None, REQUEST=None):
                                 'ERP5UserManager+added.'
                             % dispatcher.absolute_url())
 
+class _AuthenticationFailure(Exception):
+  """Raised when authentication failed, to prevent caching the fact that a user
+  does not exist (yet), which happens when someone try to login before the user
+  account is ready (like when the indexing not finished, an assignment not open
+  etc...)
+  """
+
+
 class ERP5UserManager(BasePlugin):
     """ PAS plugin for managing users in ERP5
     """
@@ -91,7 +99,7 @@ class ERP5UserManager(BasePlugin):
             user_list = self.getUserByLogin(login)
 
             if not user_list:
-                return None
+              raise _AuthenticationFailure()
 
             user = user_list[0]
 
@@ -118,16 +126,18 @@ class ERP5UserManager(BasePlugin):
                 return login, login # use same for user_id and login
             finally:
               setSecurityManager(sm)
-
-            return None
+            raise _AuthenticationFailure()
 
         _authenticateCredentials = CachingMethod(_authenticateCredentials,
                                                  id='ERP5UserManager_authenticateCredentials',
                                                  cache_factory='erp5_content_short')
-        return _authenticateCredentials(
+        try:
+          return _authenticateCredentials(
                       login=credentials.get('login'),
                       password=credentials.get('password'),
                       path=self.getPhysicalPath())
+        except _AuthenticationFailure:
+          return None
 
     #
     #   IUserEnumerationPlugin implementation
@@ -163,6 +173,7 @@ class ERP5UserManager(BasePlugin):
 
             return tuple(user_info)
 
+        # XXX is this cache usefull ???
         _enumerateUsers = CachingMethod(_enumerateUsers,
                                         id='ERP5UserManager_enumerateUsers',
                                         cache_factory='erp5_content_short')
@@ -249,12 +260,20 @@ class ERP5UserManager(BasePlugin):
           #  LIMIT 1000
           # "bar OR foo" because of ZSQLCatalog tokenizing searched sgtrings
           # by default (feature).
-          return [x.path for x in result if (not exact_match) or x['reference'] in login]
+          result = [x.path for x in result if (not exact_match)
+                          or x['reference'] in login]
+          if not result:
+            raise _AuthenticationFailure()
+          return result
+
         _getUserByLogin = CachingMethod(_getUserByLogin,
                                         id='ERP5UserManager_getUserByLogin',
                                         cache_factory='erp5_content_short')
-        result = _getUserByLogin(login, exact_match)
-        return [portal.unrestrictedTraverse(x) for x in result]
+        try:
+          return [portal.unrestrictedTraverse(x) for x in
+                              _getUserByLogin(login, exact_match)]
+        except _AuthenticationFailure:
+          return []
 
 classImplements( ERP5UserManager
                , IAuthenticationPlugin
