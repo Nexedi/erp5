@@ -189,8 +189,8 @@ for line in getSubLineList(context):\n
                       and line.getResourceValue().getReference() or \'\',\n
       \'description\': desc,\n
       \'total_quantity\': line.getTotalQuantity() or \'\',\n
-      \'quantity_unit\': line.getQuantityUnitTitle() or (\n
-        line.getResource() and line.getResourceValue().getQuantityUnitTitle()) or \'\',\n
+      \'quantity_unit\': line.getQuantityUnitTranslatedTitle() or (\n
+        line.getResource() and line.getResourceValue().getQuantityUnitTranslatedTitle()) or \'\',\n
       \'stop_date\': getOrderedDate(line.getStopDate()) or \'\',\n
       \'base_price\': line.getPrice() or \'\',\n
       \'total_price\': line.getTotalPrice() or \'\',\n
@@ -395,7 +395,7 @@ data_dict = {\n
   \'creation_date\': getOrderedDate(context.getCreationDate()) or \'\',\n
   \'currency\': context.getPriceCurrencyReference() or \'\',\n
   \'payment_condition\': getPaymentConditionText(context),\n
-  \'delivery_mode\': context.getDeliveryModeTitle() or \'\',\n
+  \'delivery_mode\': context.getDeliveryModeTranslatedTitle() or \'\',\n
   \'incoterm\': context.getIncoterm() and context.getIncotermValue().getCodification() or \'\',\n
 \n
   \'total_price_novat\': total_price,\n
