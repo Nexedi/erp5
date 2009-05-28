@@ -68,9 +68,9 @@ class VariatedProperty(XMLObject, XMLMatrix):
     __implements__ = ( Interface.Variated, )
 
     security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
-    def newCellContent(self, id, **kw):
+    def newCellContent(self, id, portal_type='Set Mapped Value', **kw):
       """
           This method can be overriden
       """
-      self.invokeFactory(type_name="Set Mapped Value", id=id)
+      self.invokeFactory(type_name=portal_type, id=id)
       return self.get(id)

@@ -74,11 +74,11 @@ class InvoiceLine(DeliveryLine):
     # Cell Related
     security.declareProtected( Permissions.ModifyPortalContent,
                                'newCellContent' )
-    def newCellContent(self, id,**kw):
+    def newCellContent(self, id, portal_type='Invoice Cell', **kw):
       """
           This method can be overriden
       """
-      self.invokeFactory(type_name="Invoice Cell",id=id)
+      self.invokeFactory(type_name=portal_type, id=id)
       return self.get(id)
 
     security.declareProtected( Permissions.AccessContentsInformation,

@@ -71,11 +71,11 @@ class ContainerLine(DeliveryLine):
 
     # Cell Related
     security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
-    def newCellContent(self, id,**kw):
+    def newCellContent(self, id, portal_type='Container Cell', **kw):
       """
           This method can be overriden
       """
-      self.invokeFactory(type_name="Container Cell",id=id)
+      self.invokeFactory(type_name=portal_type, id=id)
       return self.get(id)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')

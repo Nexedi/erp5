@@ -236,11 +236,11 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
   # Matrix related
   security.declareProtected( Permissions.ModifyPortalContent,
                               'newCellContent' )
-  def newCellContent(self, id, **kw):
+  def newCellContent(self, id, portal_type='Accounting Rule Cell', **kw):
     """
       Creates a new Cell.
     """
-    self.invokeFactory(type_name='Accounting Rule Cell', id=id)
+    self.invokeFactory(type_name=portal_type, id=id)
     new_cell = self.get(id)
     return new_cell
   

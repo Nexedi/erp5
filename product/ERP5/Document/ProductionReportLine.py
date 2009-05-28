@@ -61,9 +61,9 @@ class ProductionReportLine(DeliveryLine):
   __implements__ = ( )
 
   security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent')
-  def newCellContent(self, id,**kw):
+  def newCellContent(self, id, portal_type='Production Report Cell', **kw):
     """
         This method can be overriden
     """
-    self.invokeFactory(type_name="Production Report Cell",id=id)
+    self.invokeFactory(type_name=portal_type, id=id)
     return self.get(id)
