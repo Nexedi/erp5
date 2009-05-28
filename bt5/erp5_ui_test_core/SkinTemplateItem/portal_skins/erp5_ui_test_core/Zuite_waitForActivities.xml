@@ -56,15 +56,13 @@
             <value> <string encoding="cdata"><![CDATA[
 
 """\n
-We wait until all activities are finished\n
+  We wait until all activities are finished\n
 \n
-RuntimeError is raised in case there is no way\n
-to finish activities.\n
+  RuntimeError is raised in case there is no way\n
+  to finish activities.\n
 """\n
-\n
-\n
 from Products.ERP5Type.Utils import sleep\n
-count = 1000\n
+\n
 while len(context.portal_activities.getMessageList()) > 0:\n
   context.portal_activities.process_timer(0, 0)\n
   count -= 1\n
@@ -85,7 +83,7 @@ return \'Done.\'\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>count = 1000</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -105,15 +103,15 @@ return \'Done.\'\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>count</string>
                             <string>Products.ERP5Type.Utils</string>
                             <string>sleep</string>
-                            <string>count</string>
                             <string>len</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -130,7 +128,9 @@ return \'Done.\'\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>1000</int>
+              </tuple>
             </value>
         </item>
         <item>
