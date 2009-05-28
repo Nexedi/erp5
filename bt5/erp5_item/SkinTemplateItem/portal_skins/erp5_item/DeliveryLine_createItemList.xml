@@ -74,8 +74,8 @@ for line in kw.get(\'listbox\'):\n
   if line.has_key(\'listbox_key\') and line[\'quantity\'] in (\'\',None):\n
     msg = translateString("Please Define Quantity for Item Defined On Line ${line_id}",\n
                                                     mapping={\'line_id\': line[\'listbox_key\']})\n
-    return context.Base_redirect(form_id, keep_items=dict(\n
-       portal_status_message=msg))\n
+    raise NotImplementedError(\n
+          msg)\n
 \n
   if line.has_key(\'listbox_key\') and (line[\'title\'] or line[\'reference\'] not in (\'\', None)):\n
     module = context.getDefaultModule(type)\n
@@ -176,7 +176,7 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>_getitem_</string>
                             <string>None</string>
                             <string>msg</string>
-                            <string>dict</string>
+                            <string>NotImplementedError</string>
                             <string>module</string>
                             <string>item</string>
                             <string>cell_found</string>
@@ -184,6 +184,7 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>movement_to_update</string>
                             <string>variation_category_list</string>
                             <string>variation</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
