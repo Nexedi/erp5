@@ -103,8 +103,9 @@ if section_category:\n
   params[\'section_uid\'] = context.Base_getSectionUidListForSectionCategory(section_category)\n
   currency = context.Base_getCurrencyForSection(section_category)\n
   # getQuantityPrecisionFromResource is defined on Base, but the portal is not \n
-  # an instance of Base, so we call it on account_module.\n
-  params[\'precision\'] = context.account_module\\\n
+  # an instance of Base, so we call it on portal_simulation because it is\n
+  # accessible to everyone.\n
+  params[\'precision\'] = context.portal_simulation\\\n
                             .getQuantityPrecisionFromResource(currency)\n
 \n
   # calculate the period_start_date for this section\n
