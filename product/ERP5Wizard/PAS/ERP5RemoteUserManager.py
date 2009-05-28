@@ -25,7 +25,7 @@ from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlug
                                                              IUserEnumerationPlugin
 from Products.ERP5Type.Cache import CachingMethod
 from DateTime import DateTime
-from Products.ERP5Security.ERP5UserManager import ERP5UserManager, SUPER_USER
+from Products.ERP5Security.ERP5UserManager import ERP5UserManager, SUPER_USER, _AuthenticationFailure
 
 
 manage_addERP5RemoteUserManagerForm = PageTemplateFile(
@@ -75,7 +75,7 @@ class ERP5RemoteUserManager(ERP5UserManager):
             user_list = self.getUserByLogin(login)
 
             if not user_list:
-                return None
+              raise _AuthenticationFailure()
 
             user = user_list[0]
 
@@ -106,15 +106,18 @@ class ERP5RemoteUserManager(ERP5UserManager):
             finally:
               setSecurityManager(sm)
 
-            return None
+            raise _AuthenticationFailure()
 
         _authenticateCredentials = CachingMethod(_authenticateCredentials,
                                                  id='ERP5RemoteUserManager_authenticateCredentials',
                                                  cache_factory='erp5_content_short')
-        return _authenticateCredentials(
-                      login=credentials.get('login'),
-                      password=credentials.get('password'),
-                      path=self.getPhysicalPath())
+        try:
+          return _authenticateCredentials(
+                        login=credentials.get('login'),
+                        password=credentials.get('password'),
+                        path=self.getPhysicalPath())
+        except _AuthenticationFailure:
+          return None 
 
 classImplements( ERP5RemoteUserManager
                , IAuthenticationPlugin
