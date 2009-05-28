@@ -147,46 +147,38 @@ class ERP5UserManager(BasePlugin):
                        sort_by=None, max_results=None, **kw):
         """ See IUserEnumerationPlugin.
         """
-        def _enumerateUsers(id_tuple, exact_match, path):
-            user_info = []
-            plugin_id = self.getId()
-
-            id_list = []
-            for id in id_tuple:
-              if SUPER_USER == id:
-                info = { 'id' : SUPER_USER
-                        , 'login' : SUPER_USER
-                        , 'pluginid' : plugin_id
-                        }
-                user_info.append(info)
-              else:
-                id_list.append(id)
-
-            if id_list:
-              for user in self.getUserByLogin(tuple(id_list), exact_match=exact_match):
-                  info = { 'id' : user.getReference()
-                         , 'login' : user.getReference()
-                         , 'pluginid' : plugin_id
-                         }
-
-                  user_info.append(info)
-
-            return tuple(user_info)
-
-        # XXX is this cache usefull ???
-        _enumerateUsers = CachingMethod(_enumerateUsers,
-                                        id='ERP5UserManager_enumerateUsers',
-                                        cache_factory='erp5_content_short')
-
         if id is None:
           id = login
         if isinstance(id, str):
           id = (id,)
         if isinstance(id, list):
           id = tuple(id)
-        return _enumerateUsers(id_tuple=id,
-                               exact_match=exact_match,
-                               path=self.getPhysicalPath())
+
+        user_info = []
+        plugin_id = self.getId()
+
+        id_list = []
+        for user_id in id:
+          if SUPER_USER == user_id:
+            info = { 'id' : SUPER_USER
+                    , 'login' : SUPER_USER
+                    , 'pluginid' : plugin_id
+                    }
+            user_info.append(info)
+          else:
+            id_list.append(user_id)
+
+        if id_list:
+          for user in self.getUserByLogin(tuple(id_list), exact_match=exact_match):
+              info = { 'id' : user.getReference()
+                     , 'login' : user.getReference()
+                     , 'pluginid' : plugin_id
+                     }
+
+              user_info.append(info)
+
+        return tuple(user_info)
+
 
     def getUserByLogin(self, login, exact_match=True):
         # Search the Catalog for login and return a list of person objects
