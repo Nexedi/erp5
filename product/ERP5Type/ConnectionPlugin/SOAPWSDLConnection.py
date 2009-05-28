@@ -163,6 +163,19 @@ class MethodWrapper(object):
 # Be on the safe side by using threading.local as a storage for it.
 wsdl_cache = threading.local()
 
+# XXX: SOAPpy.wstools.WSDLTools.WSDL.__del__ calls unlink on an xml document
+# instance, which happens to fail (AttributeError: NoneType has no attribute
+# 'unlink') somewhere down in xml module. As that unlink is only acting on xml
+# nodes in memory, it's safe to ignore it.
+def WSDL___del__(self):
+  if self.document is not None:
+    unlink = self.document.unlink
+    try:
+      unlink()
+    except AttributeError:
+      pass
+SOAPpy.wstools.WSDLTools.WSDL.__del__ = WSDL___del__
+
 class SOAPWSDLConnection:
   """
     Holds a SOAP connection described by a WSDL file.
