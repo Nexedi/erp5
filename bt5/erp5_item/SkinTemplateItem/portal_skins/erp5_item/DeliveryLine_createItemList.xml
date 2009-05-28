@@ -68,7 +68,7 @@ elif context.getPortalType()== \'Internal Packing List Line\':\n
   cell_portal_type = \'Internal Packing List Cell\'\n
 \n
 movement_cell_list = context.contentValues(portal_type=cell_portal_type)\n
-context.setVariationCategoryList([])\n
+update_quantity = not context.Movement_isQuantityEditable()\n
 base_id = \'movement\'\n
 for line in kw.get(\'listbox\'):\n
   if line.has_key(\'listbox_key\') and line[\'quantity\'] in (\'\',None):\n
@@ -89,30 +89,44 @@ for line in kw.get(\'listbox\'):\n
 \n
  \n
     if line.has_key("variation_category_list") and line[\'variation_category_list\'] not in(\'\',[]):\n
-       new_list = filter(lambda x:(x not in context.getVariationCategoryList()),line["variation_category_list"])\n
-       context.setVariationCategoryList(context.getVariationCategoryList()+new_list)\n
-    if line.has_key("variation_category_list") and line[\'variation_category_list\'] not in(\'\',None):\n
-      cell_key = list((line[\'variation_category_list\']))\n
-      quantity = line[\'quantity\']\n
-      cell = context.newCell(base_id=base_id, \\\n
-                                portal_type=cell_portal_type,*cell_key)\n
-      cell.edit(mapped_value_property_list=[\'price\',\'quantity\'],\n
-                price=cell.getPrice(), quantity=cell.getQuantity()+quantity,\n
-                predicate_category_list=cell_key,\n
-                variation_category_list=cell_key)\n
-      cell.setAggregateValueList(cell.getAggregateValueList()+[item])\n
-    total_quantity+=line[\'quantity\']\n
+      cell_found = None\n
+      for cell in context.getCellValueList(base_id=\'movement\'):\n
+        if cell.getVariationCategoryList() == line["variation_category_list"]:\n
+          cell_found = cell\n
+          break\n
+      if cell_found is not None:\n
+        movement_to_update = cell_found\n
+      else:\n
+        if not context.hasInRange(base_id=\'movement\', *line["variation_category_list"]):\n
+          # update line variation category list, if not already containing this one\n
+          variation_category_list = context.getVariationCategoryList()\n
+          for variation in line["variation_category_list"]:\n
+            if variation not in variation_category_list:\n
+              variation_category_list.append(variation)\n
+          context.setVariationCategoryList(variation_category_list)\n
+        movement_to_update = context.newCell(base_id=\'movement\',\n
+                                           portal_type=cell_portal_type,\n
+                                           *line["variation_category_list"])\n
+        movement_to_update.edit(mapped_value_property_list=(\'quantity\', \'price\'),\n
+                              variation_category_list=line["variation_category_list"],)\n
+ \n
+    else:\n
+      # no variation, we\'ll update the line itself\n
+      movement_to_update = context\n
 \n
-if movement_cell_list ==[]:\n
-  context.setQuantity(context.getQuantity()+total_quantity)\n
-else:\n
-  context.setQuantity(total_quantity)\n
-\n
-if context.getVariationCategoryList()==[]: \n
-  context.setAggregateValueList(item_list )\n
+    if item not in movement_to_update.getAggregateValueList():\n
+      movement_to_update.setAggregateValueSet(\n
+        movement_to_update.getAggregateValueList() + [item])\n
+      if update_quantity:\n
+        if item.getQuantityUnit() != movement_to_update.getQuantityUnit():\n
+          raise NotImplementedError(\n
+            \'Quantity unit from the movement differs from quantity\'\n
+            \' unit on the item\')\n
+        movement_to_update.setQuantity(\n
+            movement_to_update.getQuantity() + item.getQuantity())\n
 \n
 return context.Base_redirect(form_id, keep_items=dict(\n
-       portal_status_message=translateString(\'Items created\')))\n
+      portal_status_message=translateString(\'Items created\')))\n
 </string> </value>
         </item>
         <item>
@@ -162,6 +176,7 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>type</string>
                             <string>cell_portal_type</string>
                             <string>movement_cell_list</string>
+                            <string>update_quantity</string>
                             <string>base_id</string>
                             <string>_getiter_</string>
                             <string>line</string>
@@ -171,14 +186,13 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>dict</string>
                             <string>module</string>
                             <string>item</string>
-                            <string>filter</string>
-                            <string>new_list</string>
-                            <string>list</string>
-                            <string>cell_key</string>
-                            <string>quantity</string>
-                            <string>_apply_</string>
+                            <string>cell_found</string>
                             <string>cell</string>
-                            <string>_inplacevar_</string>
+                            <string>movement_to_update</string>
+                            <string>_apply_</string>
+                            <string>variation_category_list</string>
+                            <string>variation</string>
+                            <string>NotImplementedError</string>
                           </tuple>
                         </value>
                     </item>
