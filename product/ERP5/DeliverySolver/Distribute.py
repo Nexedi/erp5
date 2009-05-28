@@ -37,7 +37,7 @@ class Distribute(DeliverySolver):
 
   def solveDelivery(self, delivery):
     for movement in delivery.getMovementList():
-      self.solve(movement)
+      self.solveMovement(movement)
 
   def solveMovement(self, movement):
     """
