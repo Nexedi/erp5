@@ -59,7 +59,9 @@ from Products.ERP5Type.Message import translateString\n
 item_list = []\n
 request = context.REQUEST\n
 total_quantity = 0.0\n
+\n
 item_portal_type = request[\'type\']\n
+\n
 if context.getPortalType()==\'Purchase Packing List Line\':\n
   cell_portal_type = \'Purchase Packing List Cell\'\n
 elif context.getPortalType()==\'Purchase Order Line\' :\n
@@ -68,6 +70,19 @@ elif context.getPortalType()==\'Sale Packing List Line\':\n
   cell_portal_type = \'Sale Packing List Cell\'\n
 elif context.getPortalType()== \'Internal Packing List Line\':\n
   cell_portal_type = \'Internal Packing List Cell\'\n
+\n
+item_property_dict = dict()\n
+\n
+# if the formbox for extra item properties is enabled, use it.\n
+dialog = getattr(context, dialog_id)\n
+if dialog.has_field(\'your_item_extra_property_list\'):\n
+  box = dialog.get_field(\'your_item_extra_property_list\')\n
+  form = getattr(context, box.get_value(\'formbox_target_id\'))\n
+  for field in form.get_fields():\n
+    field_id = field.getId()\n
+    if field_id.startswith(\'your_\'):\n
+      item_property_dict[field_id.replace(\'your_\', \'\', 1)] =\\\n
+                                    request.get(field_id)\n
 \n
 movement_cell_list = context.contentValues(portal_type=cell_portal_type)\n
 base_id = \'movement\'\n
@@ -81,7 +96,8 @@ for line in kw.get(\'listbox\'):\n
       title=line[\'title\'],\n
       reference=line[\'reference\'],\n
       quantity=line[\'quantity\'],\n
-      quantity_unit=context.getQuantityUnit())\n
+      quantity_unit=context.getQuantityUnit(),\n
+      **item_property_dict)\n
     item.validate()\n
     \n
     line_variation_category_list = []\n
@@ -154,7 +170,7 @@ return context.Base_redirect(form_id, keep_items=dict(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'view\',*args, **kw</string> </value>
+            <value> <string>form_id=\'view\', dialog_id=\'DeliveryLine_viewItemCreationDialog\', *args, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -174,13 +190,14 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>form_id</string>
+                            <string>dialog_id</string>
                             <string>args</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
@@ -193,16 +210,25 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>_getitem_</string>
                             <string>item_portal_type</string>
                             <string>cell_portal_type</string>
+                            <string>dict</string>
+                            <string>item_property_dict</string>
+                            <string>getattr</string>
+                            <string>dialog</string>
+                            <string>box</string>
+                            <string>form</string>
+                            <string>_getiter_</string>
+                            <string>field</string>
+                            <string>field_id</string>
+                            <string>_write_</string>
                             <string>movement_cell_list</string>
                             <string>base_id</string>
-                            <string>_getiter_</string>
                             <string>line</string>
                             <string>None</string>
                             <string>module</string>
+                            <string>_apply_</string>
                             <string>item</string>
                             <string>line_variation_category_list</string>
                             <string>variation</string>
-                            <string>_apply_</string>
                             <string>cell_found</string>
                             <string>movement_to_update</string>
                             <string>variation_category_list</string>
@@ -213,7 +239,6 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>len</string>
                             <string>NotImplementedError</string>
                             <string>_inplacevar_</string>
-                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -227,6 +252,7 @@ return context.Base_redirect(form_id, keep_items=dict(\n
             <value>
               <tuple>
                 <string>view</string>
+                <string>DeliveryLine_viewItemCreationDialog</string>
               </tuple>
             </value>
         </item>

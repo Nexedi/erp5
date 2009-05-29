@@ -121,6 +121,7 @@
                       <list>
                         <string>your_item_count</string>
                         <string>your_type</string>
+                        <string>your_item_extra_property_list</string>
                       </list>
                     </value>
                 </item>
