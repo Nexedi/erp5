@@ -31,12 +31,12 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
 
-from Products.ERP5.Document.Amount import Amount
+from Products.ERP5.Document.TradeModelLine import TradeModelLine
 from Products.ERP5.Document.MappedValue import MappedValue
 
 import zope.interface
 
-class TradeModelCell(Amount, MappedValue):
+class TradeModelCell(TradeModelLine, MappedValue):
     """Trade Model Line
     """
     meta_type = 'ERP5 Trade Model Cell'
@@ -78,4 +78,17 @@ class TradeModelCell(Amount, MappedValue):
         current_aggregated_amount_list = None, **kw):
       raise NotImplementedError('TODO')
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getPrice')
+    def getPrice(self):
+      return self._baseGetPrice()
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTotalPrice')
+    def getTotalPrice(self):
+      """
+        Returns the totals price for this line
+      """
+      quantity = self.getQuantity() or 0.0
+      price = self.getPrice() or 0.0
+      return quantity * price
