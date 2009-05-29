@@ -119,7 +119,9 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
               </dictionary>
             </value>
@@ -186,6 +188,22 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>context/Item_viewExtraPropertyDialog | nothing</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>string:</string> </value>
         </item>
       </dictionary>
     </pickle>
