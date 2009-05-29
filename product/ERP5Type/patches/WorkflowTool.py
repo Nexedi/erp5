@@ -585,7 +585,7 @@ def WorkflowTool_refreshWorklistCache(self):
     for wf_id in wf_ids:
       wf = self.getWorkflowById(wf_id)
       if wf is not None:
-        a = wf.getWorklistVariableMatchDict(info)
+        a = wf.getWorklistVariableMatchDict(info, check_guard=False)
         if a is not None:
           worklist_dict[wf_id] = a
     # End of duplicated code

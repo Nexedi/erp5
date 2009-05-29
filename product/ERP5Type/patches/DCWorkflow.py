@@ -206,7 +206,8 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
 DCWorkflowDefinition.listGlobalActions = DCWorkflowDefinition_listGlobalActions
 
 from Products.ERP5Type.patches.WorkflowTool import SECURITY_PARAMETER_ID, WORKLIST_METADATA_KEY
-def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info):
+def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info,
+                                                      check_guard=True):
   """
     Return a dict which has an entry per worklist definition
     (worklist id as key) and which value is a dict composed of
@@ -247,7 +248,8 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info):
       is_permitted_worklist = 0
       if guard is None:
         is_permitted_worklist = 1
-      elif Guard_checkWithoutRoles(guard, security_manager, self, portal):
+      elif (not check_guard) or \
+          Guard_checkWithoutRoles(guard, security_manager, self, portal):
         is_permitted_worklist = 1
         variable_match[SECURITY_PARAMETER_ID] = guard.roles
 
