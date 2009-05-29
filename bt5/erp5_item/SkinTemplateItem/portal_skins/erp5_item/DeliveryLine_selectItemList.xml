@@ -53,7 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import translateString\n
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.ERP5Type.Message import translateString\n
 item_list = []\n
 request = context.REQUEST\n
 portal = context.getPortalObject()\n
@@ -81,7 +83,6 @@ selection_tool.updateSelectionCheckedUidList(\n
     list_selection_name, uids=uids, listbox_uid=listbox_uid, REQUEST=request)\n
 uids = selection_tool.getSelectionCheckedUidsFor(list_selection_name)\n
 \n
-update_quantity = not context.Movement_isQuantityEditable()\n
 \n
 for item_uid in uids:\n
   item = getObject(item_uid)\n
@@ -109,26 +110,38 @@ for item_uid in uids:\n
                                            *item_variation)\n
       movement_to_update.edit(mapped_value_property_list=(\'quantity\', \'price\'),\n
                               variation_category_list=item_variation,)\n
-\n
   else:\n
     # no variation, we\'ll update the line itself\n
     movement_to_update = context\n
 \n
-  if item not in movement_to_update.getAggregateValueList():\n
-    movement_to_update.setAggregateValueSet(\n
+  movement_to_update.setAggregateValueSet(\n
       movement_to_update.getAggregateValueList() + [item])\n
-    if update_quantity:\n
-      if item.getQuantityUnit() != movement_to_update.getQuantityUnit():\n
-        raise NotImplementedError(\n
-          \'Quantity unit from the movement differs from quantity\'\n
-          \' unit on the item\')\n
-      movement_to_update.setQuantity(\n
-          movement_to_update.getQuantity() + item.getQuantity())\n
-  \n
+\n
+update_quantity = not context.Movement_isQuantityEditable()\n
+if update_quantity:\n
+  if context.isMovement():\n
+    movement_list = context,\n
+  else:\n
+    movement_list = context.getCellValueList(base_id=\'movement\')\n
+  for movement in movement_list:\n
+    quantity = 0\n
+    item_list = movement.getAggregateValueList()\n
+    for item in item_list:\n
+      if item.getQuantityUnit() != movement.getQuantityUnit():\n
+        if len(item_list) > 1:\n
+          raise NotImplementedError(\n
+            \'Quantity unit from the movement differs from quantity\'\n
+            \' unit on the item\')\n
+        else:\n
+          movement.setQuantityUnit(item.getQuantityUnit())\n
+      quantity += item.getQuantity()\n
+    movement.setQuantity(quantity)\n
   \n
 return context.Base_redirect(form_id, keep_items=dict(\n
        portal_status_message=translateString(\'Items aggregated\')))\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -183,7 +196,6 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>line_portal_type</string>
                             <string>cell_portal_type</string>
                             <string>NotImplementedError</string>
-                            <string>update_quantity</string>
                             <string>_getiter_</string>
                             <string>item_uid</string>
                             <string>item</string>
@@ -195,6 +207,12 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>_apply_</string>
                             <string>variation_category_list</string>
                             <string>variation</string>
+                            <string>update_quantity</string>
+                            <string>movement_list</string>
+                            <string>movement</string>
+                            <string>quantity</string>
+                            <string>len</string>
+                            <string>_inplacevar_</string>
                             <string>dict</string>
                           </tuple>
                         </value>

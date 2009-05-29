@@ -53,7 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import translateString\n
+            <value> <string encoding="cdata"><![CDATA[
+
+from Products.ERP5Type.Message import translateString\n
 item_list = []\n
 request = context.REQUEST\n
 total_quantity = 0.0\n
@@ -68,16 +70,17 @@ elif context.getPortalType()== \'Internal Packing List Line\':\n
   cell_portal_type = \'Internal Packing List Cell\'\n
 \n
 movement_cell_list = context.contentValues(portal_type=cell_portal_type)\n
-update_quantity = not context.Movement_isQuantityEditable()\n
 base_id = \'movement\'\n
+\n
 for line in kw.get(\'listbox\'):\n
-  if line.has_key(\'listbox_key\') and line[\'quantity\'] in (\'\',None):\n
-    msg = translateString("Please Define Quantity for Item Defined On Line ${line_id}",\n
-                                                    mapping={\'line_id\': line[\'listbox_key\']})\n
-    raise NotImplementedError(\n
-          msg)\n
 \n
   if line.has_key(\'listbox_key\') and (line[\'title\'] or line[\'reference\'] not in (\'\', None)):\n
+\n
+    if line[\'quantity\'] in (\'\',None):\n
+      msg = translateString("Please Define Quantity for Item Defined On Line ${line_id}",\n
+                                                    mapping={\'line_id\': line[\'listbox_key\']})\n
+      raise NotImplementedError(msg)\n
+\n
     module = context.getDefaultModule(type)\n
     item = module.newContent(portal_type=type,\n
       title=line[\'title\'],\n
@@ -114,13 +117,31 @@ for line in kw.get(\'listbox\'):\n
     if item not in movement_to_update.getAggregateValueList():\n
       movement_to_update.setAggregateValueSet(\n
         movement_to_update.getAggregateValueList() + [item])\n
-      if update_quantity:\n
-        movement_to_update.setQuantity(\n
-            movement_to_update.getQuantity() + item.getQuantity())\n
+\n
+\n
+update_quantity = not context.Movement_isQuantityEditable()\n
+if update_quantity:\n
+  if context.isMovement():\n
+    movement_list = context,\n
+  else:\n
+    movement_list = context.getCellValueList(base_id=\'movement\')\n
+  for movement in movement_list:\n
+    quantity = 0\n
+    item_list = movement.getAggregateValueList()\n
+    for item in item_list:\n
+      if item.getQuantityUnit() != movement.getQuantityUnit():\n
+        if len(item_list) > 1:\n
+          raise NotImplementedError(\n
+            \'Quantity unit from the movement differs from quantity\'\n
+            \' unit on the item\')\n
+      quantity += item.getQuantity()\n
+    movement.setQuantity(quantity)\n
 \n
 return context.Base_redirect(form_id, keep_items=dict(\n
       portal_status_message=translateString(\'Items created\')))\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -169,7 +190,6 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>type</string>
                             <string>cell_portal_type</string>
                             <string>movement_cell_list</string>
-                            <string>update_quantity</string>
                             <string>base_id</string>
                             <string>_getiter_</string>
                             <string>line</string>
@@ -184,6 +204,12 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>movement_to_update</string>
                             <string>variation_category_list</string>
                             <string>variation</string>
+                            <string>update_quantity</string>
+                            <string>movement_list</string>
+                            <string>movement</string>
+                            <string>quantity</string>
+                            <string>len</string>
+                            <string>_inplacevar_</string>
                             <string>dict</string>
                           </tuple>
                         </value>
