@@ -2572,7 +2572,7 @@ class ListBoxValidator(Validator.Validator):
                 error_result_key = my_field.id + '_%s' % o.uid
                 REQUEST.cell = o
                 try:
-                  value = my_field.validator.validate(my_field, key, REQUEST) # We need cell
+                  value = my_field._validate_helper(key, REQUEST) # We need cell
                   # Here we set the property
                   listbox[uid[4:]][sql] = value
                 except ValidationError, err:
@@ -2614,7 +2614,7 @@ class ListBoxValidator(Validator.Validator):
                   key = 'field_%s_%s' % (my_field.id, o.uid)
                   error_result_key = '%s_%s' % (my_field.id, o.uid)
                   try:
-                    value = my_field.validator.validate(my_field, key, REQUEST) # We need cell
+                    value = my_field._validate_helper(key, REQUEST) # We need cell
                     result[uid[4:]][sql] = value
                   except ValidationError, err:
                     #LOG("ListBox ValidationError",0,str(err))
