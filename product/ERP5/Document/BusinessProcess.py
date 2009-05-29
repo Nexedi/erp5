@@ -185,3 +185,11 @@ class BusinessProcess(Path, XMLObject):
 
   def isStopDateReferential(self):
     return self.getReferentialDate() == 'stop_date'
+
+  def getTradePhaseList(self):
+    """
+      Returns all trade_phase of this business process
+    """
+    path_list = self.objectValues(portal_type=self.getPortalBusinessPathTypeList())
+    return filter(None, [path.getTradePhase()
+                         for path in path_list])

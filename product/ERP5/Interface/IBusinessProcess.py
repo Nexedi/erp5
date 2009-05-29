@@ -85,3 +85,7 @@ class IBusinessProcess(IBusinessCompletable, IBusinessBuildable):
     'explanation' is the Order or Item or Document which is the
     cause of a root applied rule in the simulation
     """
+
+  def getTradePhaseList(self):
+    """Returns list of all trade_phase of this Business Process
+    """

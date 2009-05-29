@@ -161,8 +161,10 @@ class BusinessState(XMLObject):
     """
     remaining_trade_phase_list = []
     for path in self.getPredecessorRelatedValueList():
-      if not (path.isCompleted(explanation) or
-              path.isPartiallyCompleted(explanation)):
+      # XXX When no simulations related to path, what should path.isCompleted return?
+      #     if True we don't have way to add remaining trade phases to new movement
+      if not (path._getRelatedSimulationMovementList(explanation) and
+              path.isCompleted(explanation)):
         remaining_trade_phase_list += path.getTradePhaseValueList()
 
       # collect to successor direction recursively

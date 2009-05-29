@@ -42,6 +42,8 @@ from Products.ERP5.Document.Predicate import Predicate
 from Products.CMFCategory.Renderer import Renderer
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 
+from zLOG import LOG, WARNING
+
 class Transformation(XMLObject, Predicate, Variated):
     """
       Build of material - contains a list of transformed resources
@@ -223,7 +225,9 @@ class Transformation(XMLObject, Predicate, Variated):
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getAggregatedAmountList')
     def getAggregatedAmountList(self, context=None, REQUEST=None,
-                                ind_phase_url_list=None, 
+                                trade_phase_list=None,
+                                # obsolete, use trade_phase_list instead
+                                ind_phase_url_list=None,
                                 rejected_resource_uid_list=None, 
                                 context_quantity=0,**kw):
       """
@@ -247,8 +251,14 @@ class Transformation(XMLObject, Predicate, Variated):
       transformation_line_list = []
       for transformation in ([self]+template_transformation_list):
         transformation_line_list.extend(transformation.objectValues())
+      # Get only lines related to a precise trade_phase
+      if trade_phase_list is not None:
+        transformation_line_list = filter(
+            lambda line: line.getTradePhase() in trade_phase_list,
+            transformation_line_list)
       # Get only lines related to a precise industrial_phase
       if ind_phase_url_list is not None:
+        LOG("Transformation", WARNING, "ind_phase_list is obsolete")
         new_transf_line_list = []
         for line in transformation_line_list:
           ind_ph = line.getIndustrialPhaseValue()
