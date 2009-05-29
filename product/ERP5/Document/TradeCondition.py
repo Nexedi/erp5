@@ -161,12 +161,12 @@ class TradeCondition(Path, Transformation):
       movement_list = []
       while need_to_run:
         need_to_run = 0
-        for model in trade_model_line_composed_list:
-          model_result = model.getAggregatedAmountList(context,
+        for model_line in trade_model_line_composed_list:
+          model_line_result = model_line.getAggregatedAmountList(context,
             movement_list = movement_list,
             current_aggregated_amount_list = result,
             **kw)
-          result.extend(model_result)
+          result.extend(model_line_result)
         if len(result) != len(movement_list):
           # something was added
           need_to_run = 1
