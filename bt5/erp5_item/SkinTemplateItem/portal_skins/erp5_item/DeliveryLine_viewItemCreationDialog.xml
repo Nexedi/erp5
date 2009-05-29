@@ -85,7 +85,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>matrixbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -105,10 +107,9 @@
                     <value>
                       <list>
                         <string>my_resource_title</string>
+                        <string>my_quantity_unit</string>
                         <string>my_total_quantity</string>
                         <string>my_simulation_quantity</string>
-                        <string>matrixbox</string>
-                        <string>my_quantity_unit</string>
                       </list>
                     </value>
                 </item>
