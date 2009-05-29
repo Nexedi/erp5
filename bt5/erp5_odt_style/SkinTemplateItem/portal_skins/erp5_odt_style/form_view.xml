@@ -317,8 +317,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
                       tal:content="python: field.get_value(\'title\')"/>\n
 \n
               <text:p text:style-name=\'field-content-center\'\n
-                      tal:define="preferred_width python: preference_tool.getPreference(\'preferred_%s_image_width\' % (field.get_value(\'image_display\')));\n
-                      any python:here.log(preferred_width)">\n
+                      tal:define="preferred_width python: preference_tool.getPreference(\'preferred_%s_image_width\' % (field.get_value(\'image_display\')));">\n
                 <office:include_img style="inline-graphic"\n
                                     tal:attributes="width python: (preferred_width or 100) / 20.;\n
                                     path python: \'/\'.join(request.physicalPathFromURL(field.get_value(\'default\')));"/>\n
