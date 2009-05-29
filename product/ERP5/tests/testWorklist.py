@@ -383,6 +383,47 @@ class TestWorklist(ERP5TypeTestCase):
     self.checkWorklist(result, 'has_region', 2)
     self.checkWorklist(result, 'has_role', 1)
 
+  def test_03_worklist_guard(self, quiet=0, run=run_all_test):
+    """
+    Test worklist guard
+    """
+    if not run:
+      return
+
+    workflow_tool = self.getWorkflowTool()
+    self.createManagerAndLogin()
+    self.createUsers()
+
+    self.logMessage("Create worklists with guard expression")
+    self.createWorklist(self.checked_workflow, 'guard_expression_worklist', 
+                        'valid_guard_expression',
+                        portal_type=self.checked_portal_type,
+                        validation_state='validated',
+                        guard_roles="Associate",
+                        guard_expr='python: user.getId() == "bar"')
+
+    document = self.createDocument()
+    document.manage_addLocalRoles("bar", ["Associate"])
+    document.manage_addLocalRoles("foo", ["Associate"])
+    document.validate()
+    document.reindexObject()
+    transaction.commit()
+    self.tic()
+    self.clearCache()
+
+    self.logMessage("  Check that manager can not access worklist")
+    result = workflow_tool.listActions(object=document)
+    self.checkWorklist(result, 'valid_guard_expression', 0)
+
+    self.logMessage("  Check that user bar can access worklist")
+    self.login('bar')
+    result = workflow_tool.listActions(object=document)
+    self.checkWorklist(result, 'valid_guard_expression', 1)
+
+    self.logMessage("  Check that user foo can not access worklist")
+    self.login('foo')
+    result = workflow_tool.listActions(object=document)
+    self.checkWorklist(result, 'valid_guard_expression', 0)
 
 def test_suite():
   suite = unittest.TestSuite()
