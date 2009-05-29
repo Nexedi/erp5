@@ -59,7 +59,7 @@ from Products.ERP5Type.Message import translateString\n
 item_list = []\n
 request = context.REQUEST\n
 total_quantity = 0.0\n
-type = request.get("field_your_type") or \'Item\'\n
+item_portal_type = request[\'type\']\n
 if context.getPortalType()==\'Purchase Packing List Line\':\n
   cell_portal_type = \'Purchase Packing List Cell\'\n
 elif context.getPortalType()==\'Purchase Order Line\' :\n
@@ -81,15 +81,13 @@ for line in kw.get(\'listbox\'):\n
                                                     mapping={\'line_id\': line[\'listbox_key\']})\n
       raise NotImplementedError(msg)\n
 \n
-    module = context.getDefaultModule(type)\n
-    item = module.newContent(portal_type=type,\n
+    module = context.getDefaultModule(item_portal_type)\n
+    item = module.newContent(portal_type=item_portal_type,\n
       title=line[\'title\'],\n
       reference=line[\'reference\'],\n
       quantity=line[\'quantity\'],\n
       quantity_unit=context.getQuantityUnit())\n
     item.validate()\n
-    item_list.append(item)  \n
-\n
  \n
     if line.has_key("variation_category_list") and line[\'variation_category_list\'] not in(\'\',[]):\n
       cell_found = None\n
@@ -187,13 +185,13 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>context</string>
                             <string>request</string>
                             <string>total_quantity</string>
-                            <string>type</string>
+                            <string>_getitem_</string>
+                            <string>item_portal_type</string>
                             <string>cell_portal_type</string>
                             <string>movement_cell_list</string>
                             <string>base_id</string>
                             <string>_getiter_</string>
                             <string>line</string>
-                            <string>_getitem_</string>
                             <string>None</string>
                             <string>msg</string>
                             <string>NotImplementedError</string>
