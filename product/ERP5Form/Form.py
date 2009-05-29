@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -452,6 +453,10 @@ def create_settings_form():
                                 title='Form update action',
                                 required=0,
                                 default="")
+    update_action_title = fields.StringField('update_action_title',
+                               title="Update Action Title",
+                               required=0,
+                               default="")
     method = fields.ListField('method',
                               title='Form method',
                               items=[('POST', 'POST'),
@@ -485,8 +490,8 @@ def create_settings_form():
                                    title='Setters for these properties should be'
                                    '<br /> called by edit() in the defined order')
 
-    form.add_fields([title, description, row_length, name, pt, action, update_action, method,
-                     enctype, encoding, stored_encoding, unicode_mode, edit_order])
+    form.add_fields([title, description, row_length, name, pt, action, update_action, update_action_title,
+                     method, enctype, encoding, stored_encoding, unicode_mode, edit_order])
     return form
 
 class ERP5Form(ZMIForm, ZopePageTemplate):
@@ -529,6 +534,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
     # Default Attributes
     pt = 'form_view'
     update_action = ''
+    update_action_title = ''
     edit_order = []
 
     # Special Settings
