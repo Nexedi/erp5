@@ -126,6 +126,13 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         product_line='labour', use='payroll/base_salary')
     sequence.edit(labour_payroll_service = node)
 
+  def stepCreateOldAgeInsuranacePayrollService(self, sequence=None, **kw):
+    node = self.createPayrollService()
+    node.edit(title='Oldage Insurance', quantity_unit='time/month',
+        variation_base_category_list=['tax_category', 'salary_range'],
+        product_line='state_insurance', use='payroll/tax')
+    sequence.edit(oldage_insurance_payroll_service = node)
+
   def createModel(self):
     module = self.portal.getDefaultModule(portal_type='Pay Sheet Model')
     return module.newContent(portal_type='Pay Sheet Model')
@@ -177,12 +184,12 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
   def stepUrssafModelLineCreateMovements(self, sequence=None, **kw):
     model_line = sequence.get('urssaf_model_line')
     cell1 = model_line.newCell('tax_category/employee_share',
-        portal_type='Pay Sheet Cell',
+        portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
     cell1.edit(price=0.1, tax_category='employee_share')
     cell2 = model_line.newCell('tax_category/employer_share',
-        portal_type='Pay Sheet Cell',
+        portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
     cell2.edit(price=0.5, tax_category='employer_share')
@@ -213,14 +220,19 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                     base_contribution_list=[ 'base_amount/base_salary'])
     sequence.edit(labour_paysheet_line = paysheet_line)
 
-  def stepCheckUpdateAggregatedMovementReturn(self, sequence=None, **kw):
-    model = sequence.get('model')
-    paysheet = sequence.get('paysheet')
+  def checkUpdateAggregatedMovementReturn(self, model, paysheet,
+      expected_movement_to_delete_count, expected_movement_to_add_count):
     movement_dict = model.updateAggregatedAmountList(context=paysheet)
     movement_to_delete = movement_dict['movement_to_delete_list']
     movement_to_add = movement_dict['movement_to_add_list']
-    self.assertEquals(len(movement_to_delete), 0)
-    self.assertEquals(len(movement_to_add), 2)
+    self.assertEquals(len(movement_to_delete),
+        expected_movement_to_delete_count)
+    self.assertEquals(len(movement_to_add), expected_movement_to_add_count)
+
+  def stepCheckUpdateAggregatedMovementReturn(self, sequence=None, **kw):
+    model = sequence.get('model')
+    paysheet = sequence.get('paysheet')
+    self.checkUpdateAggregatedMovementReturn(model, paysheet, 0, 2)
 
   def stepPaysheetApplyTransformation(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
@@ -231,7 +243,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
     self.assertEqual(len(paysheet_line_list), 2)
     self.assertEqual(len(paysheet.getMovementList(portal_type=\
-        'Pay Sheet Cell')), 2)
+        'Pay Sheet Cell')), 2) # 2 because labour line contain no movement
 
   def stepCheckPaysheetLineAmounts(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
@@ -248,7 +260,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       else:
-        self.fail("Unknown service for line %s" % paysheet_line)
+        self.fail("Unknown service for line %s" % paysheet_line.getTitle())
 
   def stepCheckUpdateAggregatedAmountListReturnNothing(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
@@ -293,7 +305,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
       elif service == 'Labour':
         pass
       else:
-        self.fail("Unknown service for line %s" % paysheet_line)
+        self.fail("Unknown service for line %s" % paysheet_line.getTitle())
 
   def stepModelSetCategories(self, sequence=None, **kw):
     model = sequence.get('model')
@@ -473,12 +485,12 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
       **kw):
     model_line = sequence.get('intermediate_model_line')
     cell1 = model_line.newCell('tax_category/employee_share',
-        portal_type='Pay Sheet Cell',
+        portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
     cell1.edit(price=0.2, tax_category='employee_share')
     cell2 = model_line.newCell('tax_category/employer_share',
-        portal_type='Pay Sheet Cell',
+        portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
     cell2.edit(price=0.2, tax_category='employer_share')
@@ -486,12 +498,12 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
   def stepAppliedOnTaxModelLineCreateMovements(self, sequence=None, **kw):
     model_line = sequence.get('model_line_applied_on_tax')
     cell1 = model_line.newCell('tax_category/employee_share',
-        portal_type='Pay Sheet Cell',
+        portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
     cell1.edit(price=0.1, tax_category='employee_share')
     cell2 = model_line.newCell('tax_category/employer_share',
-        portal_type='Pay Sheet Cell',
+        portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
     cell2.edit(price=0.5, tax_category='employer_share')
@@ -520,10 +532,86 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       else:
-        self.fail("Unknown service for line %s" % paysheet_line)
+        self.fail("Unknown service for line %s" % paysheet_line.getTitle())
 
+  def stepPaysheetCreateModelLine(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    model_line = self.createModelLine(paysheet)
+    model_line.edit(title='model line in the paysheet',
+                    int_index=2,
+                    trade_phase='trade_phase/payroll/france/urssaf',
+                    resource_value=sequence.get('oldage_insurance_payroll_service'),
+                    variation_category_list=['tax_category/employee_share',
+                                             'tax_category/employer_share'],
+                    base_application_list=[ 'base_amount/base_salary'],
+                    base_contribution_list=['base_amount/deductible_tax'])
+    sequence.edit(model_line_on_paysheet = model_line)
+
+  def stepPaysheetModelLineCreateMovements(self, sequence=None, **kw):
+    model_line = sequence.get('model_line_on_paysheet')
+    cell1 = model_line.newCell('tax_category/employee_share',
+        portal_type='Pay Sheet Model Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'))
+    cell1.edit(price=0.5, tax_category='employee_share')
+    cell2 = model_line.newCell('tax_category/employer_share',
+        portal_type='Pay Sheet Model Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'))
+    cell2.edit(price=0.8, tax_category='employer_share')
+
+  def stepCheckUpdateAggregatedMovementReturnWithModelLineOnPaysheet(self,
+      sequence=None, **kw):
+    model = sequence.get('model')
+    paysheet = sequence.get('paysheet')
+    self.checkUpdateAggregatedMovementReturn(model, paysheet, 0, 4)
+
+  def stepCheckPaysheetLineAreCreatedWithModelLineOnPaysheet(self,
+      sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
+    self.assertEqual(len(paysheet_line_list), 3)
+    self.assertEqual(len(paysheet.getMovementList(portal_type=\
+        'Pay Sheet Cell')), 4) # 2 from the urssaf paysheet line
+                               # 2 from the line create with the paysheet model
+                               # line
+    self.assertEqual(len(paysheet.contentValues(portal_type=\
+        'Pay Sheet Model Line')), 1)
+
+  def stepCheckPaysheetLineFromModelLineAmounts(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
+    for paysheet_line in paysheet_line_list:
+      title = paysheet_line.getTitle()
+      if title == 'Urssaf':
+        cell1 = paysheet_line.getCell('tax_category/employee_share')
+        self.assertEquals(cell1.getQuantity(), 3000)
+        self.assertEquals(cell1.getPrice(), 0.1)
+        cell2 = paysheet_line.getCell('tax_category/employer_share')
+        self.assertEquals(cell2.getQuantity(), 3000)
+        self.assertEquals(cell2.getPrice(), 0.5)
+      elif title == 'Labour':
+        self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
+      elif title == 'model line in the paysheet':
+        cell1 = paysheet_line.getCell('tax_category/employee_share')
+        self.assertEquals(cell1.getQuantity(), 3000)
+        self.assertEquals(cell1.getPrice(), 0.5)
+        cell2 = paysheet_line.getCell('tax_category/employer_share')
+        self.assertEquals(cell2.getQuantity(), 3000)
+        self.assertEquals(cell2.getPrice(), 0.8)
+      else:
+        self.fail("Unknown service for line %s" % paysheet_line.getTitle())
 
 class TestNewPayroll(TestNewPayrollMixin):
+
+  BUSINESS_PATH_CREATION_SEQUENCE_STRING = """
+               CreateBusinessProcess
+               CreateBusinessPath
+               CreateUrssafRoubaixOrganisation
+               ModifyBusinessPathTradePhase
+               ModelSpecialiseBusinessProcess
+               Tic
+  """
   COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING = """
                CreateUrssafPayrollService
                CreateLabourPayrollService
@@ -535,7 +623,7 @@ class TestNewPayroll(TestNewPayrollMixin):
                CreateBasicPaysheet
                PaysheetCreateLabourPaySheetLine
                Tic
-  """
+  """ + BUSINESS_PATH_CREATION_SEQUENCE_STRING
 
   def test_modelGetCell(self):
     '''
@@ -606,12 +694,6 @@ class TestNewPayroll(TestNewPayrollMixin):
     '''
     sequence_list = SequenceList()
     sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
-               CreateBusinessProcess
-               CreateBusinessPath
-               CreateUrssafRoubaixOrganisation
-               ModifyBusinessPathTradePhase
-               ModelSpecialiseBusinessProcess
-               Tic
                CheckUpdateAggregatedMovementReturn
                PaysheetApplyTransformation
                Tic
@@ -642,16 +724,30 @@ class TestNewPayroll(TestNewPayrollMixin):
                AppliedOnTaxModelLineCreateMovements
                CreateBasicPaysheet
                PaysheetCreateLabourPaySheetLine
-               Tic
-               CreateBusinessProcess
-               CreateBusinessPath
-               CreateUrssafRoubaixOrganisation
-               ModifyBusinessPathTradePhase
-               ModelSpecialiseBusinessProcess
-               Tic
+  """ + self.BUSINESS_PATH_CREATION_SEQUENCE_STRING + """
                PaysheetApplyTransformation
                Tic
                CheckPaysheetIntermediateLines
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_modelLineInPaysheet(self):
+    '''
+      Put a Pay Sheet Model Line in Pay Sheet Transaction. This line will 
+      be like editable line
+    '''
+    sequence_list = SequenceList()
+    sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
+               CreateOldAgeInsuranacePayrollService 
+               PaysheetCreateModelLine
+               PaysheetModelLineCreateMovements
+               CheckUpdateAggregatedMovementReturnWithModelLineOnPaysheet
+               PaysheetApplyTransformation
+               Tic
+               CheckPaysheetLineAreCreatedWithModelLineOnPaysheet
+               CheckPaysheetLineFromModelLineAmounts
+               CheckUpdateAggregatedAmountListReturnNothing
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
