@@ -1,0 +1,277 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list>
+                <string>cell_base_id</string>
+                <string>cell_portal_type</string>
+                <string>columns</string>
+                <string>editable_attributes</string>
+                <string>enabled</string>
+                <string>lines</string>
+                <string>tabs</string>
+                <string>title</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>matrixbox</string> </value>
+        </item>
+        <item>
+            <key> <string>message_values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>external_validator_failed</string> </key>
+                    <value> <string>The input failed the external validator.</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>overrides</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>tales</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>cell_base_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>cell_portal_type</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_attributes</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>lines</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>tabs</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>cell_base_id</string> </key>
+                    <value> <string>movement</string> </value>
+                </item>
+                <item>
+                    <key> <string>cell_portal_type</string> </key>
+                    <value> <string>Mapped Value</string> </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_attributes</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>simulation_quantity</string>
+                          <string>Simulation Quantity</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string>my_matrix_box</string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>lines</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>tabs</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Quantities / Expected Quantities</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+python: [x.id for x in here.allowedContentTypes() if x.id.find(\'Cell\')>=0][0]
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:here.DeliveryLine_asCellRange(matrixbox=1)[1]</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>not:context/isMovement</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:here.DeliveryLine_asCellRange(matrixbox=1)[0]</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:here.DeliveryLine_asCellRange(matrixbox=1)[2]</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

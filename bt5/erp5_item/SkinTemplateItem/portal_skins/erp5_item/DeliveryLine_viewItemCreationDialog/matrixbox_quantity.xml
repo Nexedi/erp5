@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_resource_title</string> </value>
+            <value> <string>matrixbox_quantity</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -121,7 +121,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -240,7 +242,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Product or Service</string> </value>
+                    <value> <string>Quantity</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -256,6 +258,22 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: "%s / %s" % (form.my_total_quantity.render_pdf(cell.getQuantity()), form.my_total_quantity.render_pdf(cell.getSimulationQuantity() or 0))</string> </value>
         </item>
       </dictionary>
     </pickle>

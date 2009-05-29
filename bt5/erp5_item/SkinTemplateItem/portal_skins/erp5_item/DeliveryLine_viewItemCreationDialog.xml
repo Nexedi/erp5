@@ -96,6 +96,7 @@
                         <string>listbox_reference</string>
                         <string>listbox_quantity</string>
                         <string>listbox_variation_category_list</string>
+                        <string>matrixbox_quantity</string>
                       </list>
                     </value>
                 </item>
@@ -105,8 +106,8 @@
                       <list>
                         <string>my_resource_title</string>
                         <string>my_total_quantity</string>
-                        <string>your_item_count</string>
-                        <string>your_type</string>
+                        <string>my_simulation_quantity</string>
+                        <string>matrixbox</string>
                         <string>my_quantity_unit</string>
                       </list>
                     </value>
@@ -114,7 +115,10 @@
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_item_count</string>
+                        <string>your_type</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
