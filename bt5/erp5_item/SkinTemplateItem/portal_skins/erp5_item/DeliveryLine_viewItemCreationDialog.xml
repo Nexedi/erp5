@@ -97,8 +97,10 @@
                         <string>listbox_title</string>
                         <string>listbox_reference</string>
                         <string>listbox_quantity</string>
-                        <string>listbox_variation_category_list</string>
                         <string>matrixbox_quantity</string>
+                        <string>listbox_column_variation_category_list</string>
+                        <string>listbox_tab_variation_category_list</string>
+                        <string>listbox_line_variation_category_list</string>
                       </list>
                     </value>
                 </item>

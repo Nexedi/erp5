@@ -76,11 +76,6 @@ for line in kw.get(\'listbox\'):\n
 \n
   if line.has_key(\'listbox_key\') and (line[\'title\'] or line[\'reference\'] not in (\'\', None)):\n
 \n
-    if line[\'quantity\'] in (\'\',None):\n
-      msg = translateString("Please Define Quantity for Item Defined On Line ${line_id}",\n
-                                                    mapping={\'line_id\': line[\'listbox_key\']})\n
-      raise NotImplementedError(msg)\n
-\n
     module = context.getDefaultModule(item_portal_type)\n
     item = module.newContent(portal_type=item_portal_type,\n
       title=line[\'title\'],\n
@@ -88,25 +83,35 @@ for line in kw.get(\'listbox\'):\n
       quantity=line[\'quantity\'],\n
       quantity_unit=context.getQuantityUnit())\n
     item.validate()\n
- \n
-    if line.has_key("variation_category_list") and line[\'variation_category_list\'] not in(\'\',[]):\n
-      cell_found = None\n
-      cell_found = context.getCell(base_id=\'movement\', *line["variation_category_list"])\n
+    \n
+    line_variation_category_list = []\n
+    for variation in (\n
+          line.get(\'line_variation_category_list\'),\n
+          line.get(\'tab_variation_category_list\'),\n
+          line.get(\'column_variation_category_list\'),):\n
+      if variation:\n
+        line_variation_category_list.append(variation)\n
+\n
+\n
+    if line_variation_category_list:\n
+      cell_found = context.getCell(base_id=\'movement\',\n
+                                   *line_variation_category_list)\n
       if cell_found is not None:\n
         movement_to_update = cell_found\n
       else:\n
-        if not context.hasInRange(base_id=\'movement\', *line["variation_category_list"]):\n
+        if not context.hasInRange(base_id=\'movement\',\n
+                                  *line_variation_category_list):\n
           # update line variation category list, if not already containing this one\n
           variation_category_list = context.getVariationCategoryList()\n
-          for variation in line["variation_category_list"]:\n
+          for variation in line_variation_category_list:\n
             if variation not in variation_category_list:\n
               variation_category_list.append(variation)\n
           context.setVariationCategoryList(variation_category_list)\n
         movement_to_update = context.newCell(base_id=\'movement\',\n
-                                           portal_type=cell_portal_type,\n
-                                           *line["variation_category_list"])\n
+                                             portal_type=cell_portal_type,\n
+                                             *line_variation_category_list)\n
         movement_to_update.edit(mapped_value_property_list=(\'quantity\', \'price\'),\n
-                              variation_category_list=line["variation_category_list"],)\n
+                                variation_category_list=line_variation_category_list)\n
  \n
     else:\n
       # no variation, we\'ll update the line itself\n
@@ -193,20 +198,20 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>_getiter_</string>
                             <string>line</string>
                             <string>None</string>
-                            <string>msg</string>
-                            <string>NotImplementedError</string>
                             <string>module</string>
                             <string>item</string>
-                            <string>cell_found</string>
+                            <string>line_variation_category_list</string>
+                            <string>variation</string>
                             <string>_apply_</string>
+                            <string>cell_found</string>
                             <string>movement_to_update</string>
                             <string>variation_category_list</string>
-                            <string>variation</string>
                             <string>update_quantity</string>
                             <string>movement_list</string>
                             <string>movement</string>
                             <string>quantity</string>
                             <string>len</string>
+                            <string>NotImplementedError</string>
                             <string>_inplacevar_</string>
                             <string>dict</string>
                           </tuple>
