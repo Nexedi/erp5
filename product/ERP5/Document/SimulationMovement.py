@@ -438,15 +438,13 @@ class SimulationMovement(Movement):
                              'getCorrectedQuantity')
   def getCorrectedQuantity(self):
     """
-    Returns the quantity property deducted by the possible profit_quantity
+    Returns the quantity property deducted by the possible profit_quantity and
+    taking into account delivery error
     """
     quantity = self.getQuantity()
-    profit_quantity = self.getProfitQuantity()
-    if quantity is not None:
-      if profit_quantity:
-        return quantity - profit_quantity
-      return quantity
-    return None
+    profit_quantity = self.getProfitQuantity() or 0
+    delivery_error = self.getDeliveryError() or 0
+    return quantity - profit_quantity + delivery_error
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getRootSimulationMovement')

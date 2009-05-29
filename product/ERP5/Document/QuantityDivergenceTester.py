@@ -71,7 +71,6 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
 
     d_quantity = delivery.getQuantity()
     quantity = simulation_movement.getCorrectedQuantity()
-    d_error = simulation_movement.getDeliveryError()
 
     extra_parameters = dict()
     if abs(quantity - d_quantity) < 1:
@@ -98,8 +97,6 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
       return [message]
     if d_quantity is None:
       d_quantity = 0
-    if d_error is None:
-      d_error = 0
     delivery_ratio = simulation_movement.getDeliveryRatio()
     # if the delivery_ratio is None, make sure that we are
     # divergent even if the delivery quantity is 0
@@ -110,7 +107,7 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
       if delivery_ratio == 0 and quantity > 0:
         return [message]
 
-    if not self.compare(d_quantity, quantity+d_error):
+    if not self.compare(d_quantity, quantity):
       return [message]
     return []
 
