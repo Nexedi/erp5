@@ -38,7 +38,7 @@ from OFS.Image import File as OFSFile
 from OFS.content_types import guess_content_type
 from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
     _ViewEmulator
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5.Document.File import File

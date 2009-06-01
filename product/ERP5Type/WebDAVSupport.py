@@ -16,7 +16,7 @@ import re
 import transaction
 from Acquisition import aq_parent, aq_inner, aq_base
 from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint
 from Products.CMFCore.PortalContent import NoWL, ResourceLockedError
 from Products.CMFCore.utils import getToolByName
 from Products.CMFDefault.utils import parseHeadersBody

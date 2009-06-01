@@ -23,7 +23,7 @@ from ZPublisher import BeforeTraverse
 from AccessControl import ClassSecurityInfo
 from Products.CMFDefault.Portal import CMFSite, PortalGenerator
 from Products.CMFCore.utils import getToolByName, _getAuthenticatedUser
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint
 from Products.ERP5Type.Core.Folder import FolderMixIn
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 from Products.ERP5Type import allowClassTool

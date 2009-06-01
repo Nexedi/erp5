@@ -1,4 +1,4 @@
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #          Łukasz Nowak <luke@nexedi.com>
@@ -45,72 +45,72 @@ class TestERP5Interfaces(ERP5TypeTestCase):
 
   def test_TradeModelCell_implements_ITransformation(self):
     from Products.ERP5Type.Document.TradeModelCell import TradeModelCell
-    from Products.ERP5Type.Interface import ITransformation
+    from Products.ERP5Type.interfaces import ITransformation
     verifyClass(ITransformation, TradeModelCell)
 
   def test_TradeModelCell_implements_IVariated(self):
     from Products.ERP5Type.Document.TradeModelCell import TradeModelCell
-    from Products.ERP5Type.Interface import IVariated
+    from Products.ERP5Type.interfaces import IVariated
     verifyClass(IVariated, TradeModelCell)
 
   def test_TradeModelLine_implements_ITransformation(self):
     from Products.ERP5Type.Document.TradeModelLine import TradeModelLine
-    from Products.ERP5Type.Interface import ITransformation
+    from Products.ERP5Type.interfaces import ITransformation
     verifyClass(ITransformation, TradeModelLine)
 
   def test_TradeModelLine_implements_IVariated(self):
     from Products.ERP5Type.Document.TradeModelLine import TradeModelLine
-    from Products.ERP5Type.Interface import IVariated
+    from Products.ERP5Type.interfaces import IVariated
     verifyClass(IVariated, TradeModelLine)
 
   def test_Transformation_implements_ITransformation(self):
     from Products.ERP5Type.Document.Transformation import Transformation
-    from Products.ERP5Type.Interface import ITransformation
+    from Products.ERP5Type.interfaces import ITransformation
     verifyClass(ITransformation, Transformation)
 
   def test_Transformation_implements_IVariated(self):
     from Products.ERP5Type.Document.Transformation import Transformation
-    from Products.ERP5Type.Interface import IVariated
+    from Products.ERP5Type.interfaces import IVariated
     verifyClass(IVariated, Transformation)
 
   def test_BusinessPath_implements_IBusinessPath(self):
     from Products.ERP5Type.Document.BusinessPath import BusinessPath
-    from Products.ERP5Type.Interface import IBusinessPath
+    from Products.ERP5Type.interfaces import IBusinessPath
     verifyClass(IBusinessPath, BusinessPath)
 
   def test_BusinessPath_implements_IArrow(self):
     from Products.ERP5Type.Document.BusinessPath import BusinessPath
-    from Products.ERP5Type.Interface import IArrow
+    from Products.ERP5Type.interfaces import IArrow
     verifyClass(IArrow, BusinessPath)
 
   def test_BusinessPath_implements_ICategoryAccessProvider(self):
     from Products.ERP5Type.Document.BusinessPath import BusinessPath
-    from Products.ERP5Type.Interface import ICategoryAccessProvider
+    from Products.ERP5Type.interfaces import ICategoryAccessProvider
     verifyClass(ICategoryAccessProvider, BusinessPath)
 
   def test_TradeModelRule_implements_IRule(self):
     from Products.ERP5Type.Document.TradeModelRule import TradeModelRule
-    from Products.ERP5Type.Interface import IRule
+    from Products.ERP5Type.interfaces import IRule
     verifyClass(IRule, TradeModelRule)
 
   def test_TradeModelRule_implements_IPredicate(self):
     from Products.ERP5Type.Document.TradeModelRule import TradeModelRule
-    from Products.ERP5Type.Interface import IPredicate
+    from Products.ERP5Type.interfaces import IPredicate
     verifyClass(IPredicate, TradeModelRule)
 
   def test_TransformationRule_implements_IRule(self):
     from Products.ERP5Type.Document.TransformationRule import TransformationRule
-    from Products.ERP5Type.Interface import IRule
+    from Products.ERP5Type.interfaces import IRule
     verifyClass(IRule, TransformationRule)
 
   def test_TransformationRule_implements_IPredicate(self):
     from Products.ERP5Type.Document.TransformationRule import TransformationRule
-    from Products.ERP5Type.Interface import IPredicate
+    from Products.ERP5Type.interfaces import IPredicate
     verifyClass(IPredicate, TransformationRule)
 
   def test_TransformedResource_implements_IVariated(self):
     from Products.ERP5Type.Document.TransformedResource import TransformedResource
-    from Products.ERP5Type.Interface import IVariated
+    from Products.ERP5Type.interfaces import IVariated
     verifyClass(IVariated, TransformedResource)
 
 def test_suite():

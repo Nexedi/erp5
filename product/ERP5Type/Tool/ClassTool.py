@@ -328,7 +328,7 @@ if allowClassTool():
 
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 
 class %s(XMLObject):
@@ -743,7 +743,7 @@ class %s(Constraint):
           os.mkdir(base_path)
 
         # Make sub-directories if not present.
-        for d in ('Interface', 'Document', 'PropertySheet', 'Extensions', 'Tool', 'Constraint',
+        for d in ('interfaces', 'Document', 'PropertySheet', 'Extensions', 'Tool', 'Constraint',
                   'tests', 'help', 'skins', 'dtml', ):
           path = os.path.join(base_path, d)
           if not os.path.exists(path):
