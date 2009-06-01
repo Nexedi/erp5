@@ -26,11 +26,9 @@
 #
 ##############################################################################
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 
 from Products.ERP5.Document.Movement import Movement
-
-from zLOG import LOG
 
 class DummyMovement(Movement):
   """Dummy Movement for testing purposes."""
@@ -46,7 +44,7 @@ class DummyMovement(Movement):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = ( Interface.Variated, )
+  __implements__ = ( interfaces.IVariated, )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base
