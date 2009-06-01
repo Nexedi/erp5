@@ -13,21 +13,21 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>stat_columns</string>
+                <string>all_columns</string>
+                <string>columns</string>
+                <string>count_method</string>
+                <string>default_params</string>
                 <string>editable_columns</string>
-                <string>stat_method</string>
-                <string>title</string>
+                <string>list_method</string>
+                <string>portal_types</string>
                 <string>search_columns</string>
                 <string>selection_name</string>
-                <string>sort_columns</string>
-                <string>columns</string>
                 <string>sort</string>
-                <string>count_method</string>
-                <string>all_columns</string>
-                <string>list_method</string>
+                <string>sort_columns</string>
+                <string>stat_columns</string>
+                <string>stat_method</string>
+                <string>title</string>
                 <string>url_columns</string>
-                <string>portal_types</string>
-                <string>default_params</string>
               </list>
             </value>
         </item>
@@ -105,10 +105,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
@@ -164,6 +160,22 @@
                           <string>delivery_mirror_section_title_with_link</string>
                           <string>Third Party (with Link)</string>
                         </tuple>
+                        <tuple>
+                          <string>total_price</string>
+                          <string>Total Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>total_net_price</string>
+                          <string>Total Net Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>causality_title</string>
+                          <string>Packing List</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_causality_state_title</string>
+                          <string>Causality State</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -214,6 +226,12 @@
                     <key> <string>count_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>default_params</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -289,10 +307,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
@@ -320,6 +334,14 @@
                           <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
+                        <tuple>
+                          <string>causality_title</string>
+                          <string>Packing List</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_causality_state_title</string>
+                          <string>Causality State</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -343,10 +365,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
@@ -369,6 +387,14 @@
                         <tuple>
                           <string>translated_simulation_state_title</string>
                           <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>causality_title</string>
+                          <string>Packing List</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_causality_state_title</string>
+                          <string>Causality State</string>
                         </tuple>
                       </list>
                     </value>
