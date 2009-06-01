@@ -152,7 +152,7 @@ class TradeCondition(Path, Transformation):
         for trade_model_line in specialise.contentValues(
             portal_type=self.model_line_portal_type_list):
           reference = trade_model_line.getReference()
-          if reference not in reference_list:
+          if reference not in reference_list or reference is None:
             trade_model_line_composed_list.append(trade_model_line)
             reference_list.append(reference)
 
