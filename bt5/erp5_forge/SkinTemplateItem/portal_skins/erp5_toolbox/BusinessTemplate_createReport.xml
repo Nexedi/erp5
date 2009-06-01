@@ -78,6 +78,7 @@ dialog.manage_settings(\n
          field_description=dialog.description,\n
          field_action=report_form_name,\n
          field_update_action=dialog.update_action,\n
+         field_update_action_title=dialog.update_action_title,\n
          field_enctype=dialog.enctype,\n
          field_encoding=dialog.encoding,\n
          field_stored_encoding=dialog.stored_encoding,\n
@@ -167,6 +168,7 @@ report.manage_settings(\n
        field_description=report.description,\n
        field_action=report_form_name,\n
        field_update_action=report.update_action,\n
+       field_update_action_title=report.update_action_title,\n
        field_enctype=report.enctype,\n
        field_encoding=report.encoding,\n
        field_stored_encoding=report.stored_encoding,\n
@@ -186,6 +188,7 @@ report_section_form.manage_settings(\n
        field_description=report_section_form.description,\n
        field_action=\'\',\n
        field_update_action=report_section_form.update_action,\n
+       field_update_action_title=report_section_form.update_action_title,\n
        field_enctype=report_section_form.enctype,\n
        field_encoding=report_section_form.encoding,\n
        field_stored_encoding=report_section_form.stored_encoding,\n

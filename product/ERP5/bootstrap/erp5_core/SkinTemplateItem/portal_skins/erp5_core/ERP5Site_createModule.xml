@@ -124,6 +124,7 @@ form.manage_settings(\n
          field_description=form.description,\n
          field_action=\'Base_doSelect\',\n
          field_update_action=form.update_action,\n
+         field_update_action_title=form.update_action_title,\n
          field_enctype=form.enctype,\n
          field_encoding=form.encoding,\n
          field_stored_encoding=form.stored_encoding,\n
@@ -164,6 +165,7 @@ form.manage_settings(\n
          field_description=form.description,\n
          field_action=\'Base_edit\',\n
          field_update_action=form.update_action,\n
+         field_update_action_title=form.update_action_title,\n
          field_enctype=form.enctype,\n
          field_encoding=form.encoding,\n
          field_stored_encoding=form.stored_encoding,\n
