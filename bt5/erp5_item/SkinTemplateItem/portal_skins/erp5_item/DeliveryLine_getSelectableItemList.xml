@@ -61,6 +61,7 @@ request = portal.REQUEST\n
 tracking_parameters = {\n
     \'node_uid\': context.getSourceUid(),\n
     \'resource_uid\': context.getResourceUid(),\n
+    \'at_date\': context.getStartDate(),\n
     \'output\': 1,\n
 \n
     \'item_catalog_title\': request.get(\'title\') or \'\',\n
