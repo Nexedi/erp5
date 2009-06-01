@@ -697,31 +697,43 @@ class TestItemScripts(ERP5TypeTestCase):
     self.assertEquals(None, self.item.Item_getResourceValue())
     line = self._makeSalePackingListLine()
     self.assertEquals(self.product, self.item.Item_getResourceValue())
+    self.assertEquals(None, self.item.Item_getResourceValue(
+                                at_date=DateTime() - 2))
 
   def test_Item_getResourceTitle(self):
     self.assertEquals(None, self.item.Item_getResourceTitle())
     line = self._makeSalePackingListLine()
     self.assertEquals('Product', self.item.Item_getResourceTitle())
+    self.assertEquals(None, self.item.Item_getResourceTitle(
+                                at_date=DateTime() - 2))
 
   def test_Item_getCurrentOwnerValue(self):
     self.assertEquals(None, self.item.Item_getCurrentOwnerValue())
     line = self._makeSalePackingListLine()
     self.assertEquals(self.section, self.item.Item_getCurrentOwnerValue())
+    self.assertEquals(None,
+        self.item.Item_getCurrentOwnerValue(at_date=DateTime() - 2))
 
   def test_Item_getCurrentOwnerTitle(self):
     self.assertEquals(None, self.item.Item_getCurrentOwnerTitle())
     line = self._makeSalePackingListLine()
     self.assertEquals('Section', self.item.Item_getCurrentOwnerTitle())
+    self.assertEquals(None,
+        self.item.Item_getCurrentOwnerTitle(at_date=DateTime() - 2))
 
   def test_Item_getCurrentSiteValue(self):
     self.assertEquals(None, self.item.Item_getCurrentSiteValue())
     line = self._makeSalePackingListLine()
     self.assertEquals(self.node, self.item.Item_getCurrentSiteValue())
+    self.assertEquals(None, self.item.Item_getCurrentSiteValue(
+                                            at_date=DateTime() - 2))
 
   def test_Item_getCurrentSiteTitle(self):
     self.assertEquals(None, self.item.Item_getCurrentSiteTitle())
     line = self._makeSalePackingListLine()
     self.assertEquals('Node', self.item.Item_getCurrentSiteTitle())
+    self.assertEquals(None,
+          self.item.Item_getCurrentSiteTitle(at_date=DateTime() - 2))
 
   # with cells
   @reindex
@@ -752,6 +764,8 @@ class TestItemScripts(ERP5TypeTestCase):
     self.assertEquals([], self.item.Item_getVariationCategoryList())
     self._makeSalePackingListCellWithVariation()
     self.assertEquals(['size/small'], self.item.Item_getVariationCategoryList())
+    self.assertEquals([],
+        self.item.Item_getVariationCategoryList(at_date=DateTime() - 2))
 
   def test_Item_getVariationRangeCategoryItemList(self):
     self.assertEquals([], self.item.Item_getVariationRangeCategoryItemList())
@@ -759,6 +773,9 @@ class TestItemScripts(ERP5TypeTestCase):
     self.assertEquals([['Big', 'size/big'],
                        ['Small', 'size/small']],
         self.item.Item_getVariationRangeCategoryItemList())
+    self.assertEquals([],
+        self.item.Item_getVariationRangeCategoryItemList(
+                          at_date=DateTime() - 2))
 
     
 def test_suite():
