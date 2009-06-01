@@ -171,14 +171,15 @@ class TradeCondition(Path, Transformation):
       trade_model_line_composed_list.sort(sortByIntIndex)
       return trade_model_line_composed_list
 
-    def getAggregatedAmountList(self, context, **kw):
+    def getAggregatedAmountList(self, context, movement_list=None, **kw):
       result = AggregatedAmountList()
 
       trade_model_line_composed_list = \
           self.getTradeModelLineComposedList(context)
 
       need_to_run = 1
-      movement_list = []
+      if movement_list is None:
+        movement_list = []
       while need_to_run:
         need_to_run = 0
         for model_line in trade_model_line_composed_list:
