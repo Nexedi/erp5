@@ -49,6 +49,7 @@ class TradeCondition(Path, Transformation):
 
     meta_type = 'ERP5 Trade Condition'
     portal_type = 'Trade Condition'
+    model_line_portal_type_list = ('Trade Model Line',)
     isPredicate = 1
 
     # Declarative security
@@ -74,7 +75,7 @@ class TradeCondition(Path, Transformation):
         'movement_to_delete_list'
       '''
       existing_movement_list = context.getMovementList()
-      aggregated_amount_list = self.getAggregatedAmountList(context = context,
+      aggregated_amount_list = self.getAggregatedAmountList(context=context,
           **kw)
       modified_resource_list = []
       normal_use_list = self.getPortalObject().portal_preferences\
@@ -148,7 +149,7 @@ class TradeCondition(Path, Transformation):
 
       for specialise in containting_object_list:
         for trade_model_line in specialise.contentValues(
-            portal_type='Trade Model Line'):
+            portal_type=self.model_line_portal_type_list):
           resource = trade_model_line.getResource()
           if resource not in resource_list:
             trade_model_line_composed_list.append(trade_model_line)
