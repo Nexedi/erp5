@@ -117,8 +117,7 @@ class TradeCondition(Path, Transformation):
     def getTradeModelLineComposedList(self, context=None):
       """
       Returns list of Trade Model Lines using composition
-      Resource of Trade Model Line is used to hide other Trade Model Line
-        XXX - wrong - use reference to hide
+      Reference of Trade Model Line is used to hide other Trade Model Line
       In chain first found Trade Model Line has precedence
       Context's, if not None, Trade Model Lines have precedence
         XXX - the sorting is missing
@@ -135,7 +134,7 @@ class TradeCondition(Path, Transformation):
           specialise_value_list.extend(findSpecialiseValueList(specialise))
         return specialise_value_list
 
-      resource_list = []
+      reference_list = []
       trade_model_line_composed_list = []
       containting_object_list = []
       if context is not None:
@@ -150,10 +149,10 @@ class TradeCondition(Path, Transformation):
       for specialise in containting_object_list:
         for trade_model_line in specialise.contentValues(
             portal_type=self.model_line_portal_type_list):
-          resource = trade_model_line.getResource()
-          if resource not in resource_list:
+          reference = trade_model_line.getReference()
+          if reference not in reference_list:
             trade_model_line_composed_list.append(trade_model_line)
-            resource_list.append(resource)
+            reference_list.append(reference)
       return trade_model_line_composed_list
 
     def getAggregatedAmountList(self, context, **kw):
