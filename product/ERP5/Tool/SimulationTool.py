@@ -512,7 +512,7 @@ class SimulationTool(BaseTool):
       column_value_dict = DictMixIn()
 
       if omit_mirror_date:
-        date_dict = {'query':[], 'operator':'and'}
+        date_dict = {'query':[], }
         if from_date :
           date_dict['query'].append(from_date)
           date_dict['range'] = 'min'
