@@ -114,10 +114,14 @@ class TradeCondition(Path, Transformation):
               'movement_to_add_list': movement_to_add_list}
 
     def getTradeModelLineComposedList(self, context=None):
-      """Returns list of Trade Model Lines using composition
+      """
+      Returns list of Trade Model Lines using composition
       Resource of Trade Model Line is used to hide other Trade Model Line
+        XXX - wrong - use reference to hide
       In chain first found Trade Model Line has precedence
-      Context's, if not None, Trade Model Lines have precedence"""
+      Context's, if not None, Trade Model Lines have precedence
+        XXX - the sorting is missing
+      """
       visited_trade_condition_list = []
       def findSpecialiseValueList(context):
         specialise_value_list = []
@@ -163,8 +167,8 @@ class TradeCondition(Path, Transformation):
         need_to_run = 0
         for model_line in trade_model_line_composed_list:
           model_line_result = model_line.getAggregatedAmountList(context,
-            movement_list = movement_list,
-            current_aggregated_amount_list = result,
+            movement_list=movement_list,
+            current_aggregated_amount_list=result,
             **kw)
           result.extend(model_line_result)
         if len(result) != len(movement_list):
