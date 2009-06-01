@@ -120,7 +120,6 @@ class TradeCondition(Path, Transformation):
       Reference of Trade Model Line is used to hide other Trade Model Line
       In chain first found Trade Model Line has precedence
       Context's, if not None, Trade Model Lines have precedence
-        XXX - the sorting is missing
       """
       visited_trade_condition_list = []
       def findSpecialiseValueList(context):
@@ -133,6 +132,9 @@ class TradeCondition(Path, Transformation):
           visited_trade_condition_list.append(specialise)
           specialise_value_list.extend(findSpecialiseValueList(specialise))
         return specialise_value_list
+
+      def sortByIntIndex(a, b):
+        return cmp(a.getIntIndex(), b.getIntIndex())
 
       reference_list = []
       trade_model_line_composed_list = []
@@ -153,6 +155,8 @@ class TradeCondition(Path, Transformation):
           if reference not in reference_list:
             trade_model_line_composed_list.append(trade_model_line)
             reference_list.append(reference)
+
+      trade_model_line_composed_list.sort(sortByIntIndex)
       return trade_model_line_composed_list
 
     def getAggregatedAmountList(self, context, **kw):
