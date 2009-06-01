@@ -28,7 +28,7 @@
 ##############################################################################
 
 from zLOG import LOG, WARNING, INFO
-from Interface.IColumnMap import IColumnMap
+from interfaces.column_map import IColumnMap
 from Interface.Verify import verifyClass
 from SQLCatalog import profiler_decorator
 

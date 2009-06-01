@@ -31,7 +31,7 @@
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.ColumnMap import ColumnMap
 from zLOG import LOG
-from Products.ZSQLCatalog.Interface.IEntireQuery import IEntireQuery
+from Products.ZSQLCatalog.interfaces.entire_query import IEntireQuery
 from Interface.Verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 

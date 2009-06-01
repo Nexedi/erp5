@@ -42,7 +42,7 @@ from xml.sax.saxutils import escape, quoteattr
 import os
 import md5
 
-from Interface.IQueryCatalog import ISearchKeyCatalog
+from interfaces.query_catalog import ISearchKeyCatalog
 from Interface.Verify import verifyClass
 
 from SearchText import isAdvancedSearchText
@@ -1965,7 +1965,7 @@ class Catalog(Folder,
       key
         Default column (used when there is no explicit column in an AST leaf).
 
-      Expected node API is described in Interface/IAbstractSyntaxNode.py .
+      Expected node API is described in interfaces/abstract_syntax_node.py .
     """
     search_key, related_key_definition = self.getColumnSearchKey(key)
     if search_key is None:

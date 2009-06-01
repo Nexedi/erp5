@@ -30,7 +30,7 @@
 
 from OperatorBase import OperatorBase
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
-from Products.ZSQLCatalog.Interface.IOperator import IOperator
+from Products.ZSQLCatalog.interfaces.operator import IOperator
 from Interface.Verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 

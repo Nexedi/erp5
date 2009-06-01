@@ -28,7 +28,7 @@
 
 from lexer import lexer, update_docstrings
 try:
-  from Products.ZSQLCatalog.Interface.IAbstractSyntaxNode import INode, IValueNode, ILogicalNode, IColumnNode
+  from Products.ZSQLCatalog.interfaces.abstract_syntax_node import INode, IValueNode, ILogicalNode, IColumnNode
   from Interface.Verify import verifyClass
 except ImportError:
   INode = None

@@ -28,7 +28,7 @@
 #
 ##############################################################################
 
-from Products.ZSQLCatalog.Interface.IQuery import IQuery
+from Products.ZSQLCatalog.interfaces.query import IQuery
 from Interface.Verify import verifyClass
 
 class Query(object):

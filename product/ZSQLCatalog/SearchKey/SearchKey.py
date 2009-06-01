@@ -31,7 +31,7 @@
 from zLOG import LOG
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
-from Products.ZSQLCatalog.Interface.ISearchKey import ISearchKey
+from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from Interface.Verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 

@@ -30,7 +30,7 @@
 
 from Query import Query
 from zLOG import LOG
-from Products.ZSQLCatalog.Interface.IQuery import IQuery
+from Products.ZSQLCatalog.interfaces.query import IQuery
 from Interface.Verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 

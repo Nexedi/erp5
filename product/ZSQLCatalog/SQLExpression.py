@@ -28,7 +28,7 @@
 ##############################################################################
 
 from zLOG import LOG
-from Interface.ISQLExpression import ISQLExpression
+from interfaces.sql_expression import ISQLExpression
 from Interface.Verify import verifyClass
 from types import NoneType
 from SQLCatalog import profiler_decorator
