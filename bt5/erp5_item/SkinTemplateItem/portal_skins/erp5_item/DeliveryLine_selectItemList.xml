@@ -85,7 +85,8 @@ uids = selection_tool.getSelectionCheckedUidsFor(list_selection_name)\n
 \n
 for item_uid in uids:\n
   item = getObject(item_uid)\n
-  item_variation = item.Item_getVariationCategoryList()\n
+  item_variation = \\\n
+      item.Item_getVariationCategoryList(at_date=context.getStartDate())\n
   # if we have variation, find matching cell to add this item to the cell\n
   if item_variation:\n
     cell_found = None\n

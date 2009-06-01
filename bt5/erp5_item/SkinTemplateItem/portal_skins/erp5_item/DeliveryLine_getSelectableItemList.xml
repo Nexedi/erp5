@@ -82,8 +82,8 @@ for tracking_brain in portal.portal_simulation.getCurrentTrackingList(\n
   # it could, by computing all variation texts, but I don\'t think this is\n
   # really necessary.\n
   if check_variation and \\\n
-      item.Item_getVariationCategoryList() not in\\\n
-      acceptable_variation_category_list:\n
+      item.Item_getVariationCategoryList(at_date=context.getStartDate())\\\n
+      not in acceptable_variation_category_list:\n
     continue\n
   \n
   result_list.append(item)\n
