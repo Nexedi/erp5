@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 
 from Products.ERP5.Document.MetaResource import MetaResource
 from Products.ERP5.Document.MetaNode import MetaNode
@@ -82,7 +82,7 @@ class Domain(Predicate, MetaNode, MetaResource):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = ( Interface.Predicate, )
+  __implements__ = ( interfaces.IPredicate, )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

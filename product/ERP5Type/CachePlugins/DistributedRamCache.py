@@ -34,7 +34,7 @@ from thread import get_ident
 from zLOG import LOG
 from BaseCache import BaseCache
 from BaseCache import CacheEntry
-from Products.ERP5Type import Interface
+from Products.ERP5Type import interfaces
 import zope.interface
 
 try:
@@ -50,7 +50,7 @@ class DistributedRamCache(BaseCache):
   """ Memcached based cache plugin. """
 
   zope.interface.implements(
-        Interface.ICachePlugin
+        interfaces.ICachePlugin
     )
 
   def __init__(self, params={}):

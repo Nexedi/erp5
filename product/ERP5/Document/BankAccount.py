@@ -29,7 +29,7 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5.Document.Coordinate import Coordinate
 from Products.ERP5.Document.MetaNode import MetaNode
@@ -67,7 +67,7 @@ class BankAccount(Folder, Coordinate, MetaNode):
                       )
 
     # Declarative interfaces
-    __implements__ = ( Interface.Coordinate )
+    __implements__ = ( interfaces.ICoordinate )
 
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getReference')

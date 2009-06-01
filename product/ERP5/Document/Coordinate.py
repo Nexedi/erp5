@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Base import Base
 from Products.CMFDefault.utils import formatRFC822Headers
 import re
@@ -80,7 +80,7 @@ class Coordinate(Base):
     isRADContent = 1
     
     # Declarative interface
-    __implements__ = (Interface.Coordinate)
+    __implements__ = (interfaces.ICoordinate)
 
     # Declarative security (replaces __ac_permissions__)
     security = ClassSecurityInfo()

@@ -524,7 +524,6 @@ def registerBaseCategories(property_sheet):
     base_category_dict[bc] = 1
 
 def importLocalInterface(module_id, path = None):
-  import Products.ERP5Type.Interface
   if path is None:
     instance_home = getConfiguration().instancehome
     path = os.path.join(instance_home, "interfaces")

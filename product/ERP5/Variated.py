@@ -30,7 +30,7 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from Products.CMFCore.utils import getToolByName
 
-from Products.ERP5Type import Context, Interface, Permissions
+from Products.ERP5Type import Context, interfaces, Permissions
 from Products.ERP5Type.Base import Base
 from Products.CMFCategory.Renderer import Renderer
 
@@ -57,7 +57,7 @@ class Variated(Base):
   security = ClassSecurityInfo()
 
   # Declarative interfaces
-  __implements__ = (Interface.Variated, )
+  __implements__ = (interfaces.IVariated, )
 
   security.declareProtected(Permissions.AccessContentsInformation, 
                             'getVariationBaseCategoryList')

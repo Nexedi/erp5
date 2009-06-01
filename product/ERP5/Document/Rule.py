@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Predicate import Predicate
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
@@ -73,8 +73,8 @@ class Rule(Predicate, XMLObject):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
   
-  __implements__ = ( Interface.Predicate,
-                     Interface.Rule )
+  __implements__ = ( interfaces.IPredicate,
+                     interfaces.IRule )
 
   # Default Properties
   property_sheets = ( PropertySheet.Base

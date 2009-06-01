@@ -33,7 +33,7 @@ from DateTime.DateTime import DateTime
 from email.MIMEBase import MIMEBase
 from email import Encoders
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, Interface
+from Products.ERP5Type import Permissions, interfaces
 from Globals import PersistentMapping
 import pickle
 from cStringIO import StringIO
@@ -83,7 +83,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   """
 
   # Declarative interfaces
-  __implements__ = ( Interface.IConduit, )
+  __implements__ = ( interfaces.IConduit, )
 
   # Declarative security
   security = ClassSecurityInfo()

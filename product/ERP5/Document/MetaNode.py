@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 #from Products.ERP5.Core.MetaNode import MetaNode as CoreMetaNode
 from Products.ERP5.Document.Organisation import Organisation as Node
 #from Node import Node

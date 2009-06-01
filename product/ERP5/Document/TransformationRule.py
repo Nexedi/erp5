@@ -33,7 +33,7 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 from Products.CMFCore.utils import getToolByName
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.Rule import Rule
 from Products.ERP5.Document.SimulationMovement import SimulationMovement
 from Products.ERP5Type.Errors import TransformationRuleError
@@ -118,8 +118,8 @@ class TransformationRule(TransformationRuleMixin, Rule):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  __implements__ = ( Interface.Predicate,
-                     Interface.Rule )
+  __implements__ = ( interfaces.IPredicate,
+                     interfaces.IRule )
   # Default Properties
   property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject

@@ -32,7 +32,7 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Interface
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 
 from Products.ERP5.Variated import Variated
@@ -80,7 +80,7 @@ class Transformation(XMLObject, Predicate, Variated):
                       )
 
     # Declarative interfaces
-    __implements__ = ( Interface.Variated, )
+    __implements__ = ( interfaces.IVariated, )
 
 
     security.declareProtected(Permissions.AccessContentsInformation,

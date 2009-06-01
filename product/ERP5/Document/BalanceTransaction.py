@@ -29,7 +29,7 @@
 from UserDict import UserDict
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.Inventory import Inventory
 from Products.ERP5.Document.AccountingTransaction import AccountingTransaction
 
@@ -88,7 +88,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
   isRADContent = 1
   isDelivery = 1
     
-  #__implements__ = ( Interface.Inventory, )
+  #__implements__ = ( interfaces.Inventory, )
 
   # Declarative security
   security = ClassSecurityInfo()

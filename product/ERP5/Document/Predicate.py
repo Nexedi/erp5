@@ -33,7 +33,7 @@ from Acquisition import aq_base, aq_inner
 
 from Products.CMFCore.utils import getToolByName
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Document import newTempBase
 from Products.ERP5Type.XMLObject import XMLObject
@@ -80,7 +80,7 @@ class Predicate(XMLObject, Folder):
                     )
 
   # Declarative interfaces
-  __implements__ = ( Interface.Predicate )
+  __implements__ = ( interfaces.IPredicate )
 
   security.declareProtected( Permissions.AccessContentsInformation, 'test' )
   def test(self, context, tested_base_category_list=None, 

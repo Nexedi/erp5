@@ -37,7 +37,7 @@ from Acquisition import aq_base
 from Globals import PersistentMapping
 from Globals import get_request
 from Products.CMFCore.utils import getToolByName, _checkPermission
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.DateUtils import convertDateToHour, number_of_hours_in_day, number_of_hours_in_year
 from Products.ERP5Type.Utils import convertToUpperCase

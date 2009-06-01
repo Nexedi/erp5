@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 #from Products.ERP5.Core.MetaResource import MetaResource as CoreMetaResource
 from Products.ERP5.Document.Resource import Resource
 

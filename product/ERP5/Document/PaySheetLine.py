@@ -27,7 +27,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Interface
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.InvoiceLine import InvoiceLine
 from zLOG import LOG
 
@@ -50,7 +50,7 @@ class PaySheetLine(InvoiceLine):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative interfaces
-    __implements__ = ( Interface.Variated, )
+    __implements__ = ( interfaces.IVariated, )
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base

@@ -30,7 +30,7 @@ from Products.ERP5.Document.Supply import Supply
 from zLOG import LOG
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 
 

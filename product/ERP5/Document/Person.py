@@ -36,7 +36,7 @@ from Acquisition import aq_base
 
 #from Products.ERP5.Core.Node import Node
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Utils import assertAttributePortalType
 from Products.ERP5Type.XMLObject import XMLObject
 

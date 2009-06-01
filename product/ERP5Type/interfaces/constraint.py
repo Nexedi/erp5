@@ -31,7 +31,7 @@
 
 from zope.interface import Interface, Attribute
 
-class Constraint(Interface):
+class IConstraint(Interface):
   """ERP5 Constraints are classes that are in charge of checking wether an
   object is in consistent state or not.
 

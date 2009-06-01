@@ -29,7 +29,7 @@
 from warnings import warn
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Base import Base
 
 #from Products.ERP5.Core import MetaNode, MetaResource
@@ -183,7 +183,7 @@ class Movement(XMLObject, Amount):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = ( Interface.Variated, )
+  __implements__ = ( interfaces.IVariated, )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

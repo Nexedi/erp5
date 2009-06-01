@@ -31,7 +31,7 @@ import re
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Base import WorkflowMethod
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.Document import Document
 from Products.ERP5.Document.Document import ConversionCacheMixin

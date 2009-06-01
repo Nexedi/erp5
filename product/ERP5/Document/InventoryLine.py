@@ -29,7 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 
-from Products.ERP5Type import Permissions, PropertySheet, Interface
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
 from Products.ERP5.Document.Movement import Movement
 
@@ -52,7 +52,7 @@ class InventoryLine(DeliveryLine):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative interfaces
-    __implements__ = ( Interface.Variated, )
+    __implements__ = ( interfaces.IVariated, )
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base

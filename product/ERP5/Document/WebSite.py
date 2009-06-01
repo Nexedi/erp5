@@ -29,7 +29,7 @@ from Acquisition import ImplicitAcquisitionWrapper, aq_base, aq_inner
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5.Document.WebSection import WebSection, WEBSECTION_KEY
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface, Cache
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces, Cache
 from Products.ERP5Type.Cache import CachingMethod
 
 from Globals import get_request

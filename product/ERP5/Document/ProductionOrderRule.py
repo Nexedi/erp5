@@ -27,7 +27,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.Rule import Rule
 from Products.ERP5.Document.OrderRule import OrderRule
 from Products.ERP5.Document.TransformationRule import TransformationRuleMixin
@@ -48,8 +48,8 @@ class ProductionOrderRule(OrderRule):
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    __implements = ( Interface.Predicate,
-                     Interface.Rule )
+    __implements = ( interfaces.IPredicate,
+                     interfaces.IRule )
 
     # Default Properties
     property_sheets = ( PropertySheet.Base

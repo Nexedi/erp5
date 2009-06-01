@@ -27,7 +27,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.SupplyLine import SupplyLine
 
 from zLOG import LOG
@@ -49,8 +49,8 @@ class OpenOrderLine(SupplyLine):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative interfaces
-    __implements__ = ( Interface.Variated,
-                       Interface.Predicate )
+    __implements__ = ( interfaces.IVariated,
+                       interfaces.IPredicate )
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base

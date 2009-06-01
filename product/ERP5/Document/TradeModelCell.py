@@ -29,7 +29,7 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 
 from Products.ERP5.Document.TradeModelLine import TradeModelLine
 from Products.ERP5.Document.MappedValue import MappedValue
@@ -48,9 +48,9 @@ class TradeModelCell(TradeModelLine, MappedValue):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative interfaces
-    #    Interface.IVariated as soon as Interface.Variated will be zope3
+    #    interfaces.IVariated as soon as interfaces.IVariated will be zope3
     zope.interface.implements(
-        Interface.ITransformation
+        interfaces.ITransformation
     )
 
     # Declarative properties

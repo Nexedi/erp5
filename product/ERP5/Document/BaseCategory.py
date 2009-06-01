@@ -29,7 +29,7 @@
 from Products.CMFCategory.Category import BaseCategory as CMFBaseCategory
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Interface, Permissions, PropertySheet
+from Products.ERP5Type import interfaces, Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Base import _aq_reset
 

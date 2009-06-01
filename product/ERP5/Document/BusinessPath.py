@@ -31,7 +31,7 @@ from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
 from Products.CMFCore.PortalFolder import ContentFilter
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.Path import Path
 
 import zope.interface
@@ -94,8 +94,8 @@ class BusinessPath(Path):
                     )
 
   # Declarative interfaces
-  zope.interface.implements(Interface.ICategoryAccessProvider,
-                            Interface.IArrow)
+  zope.interface.implements(interfaces.ICategoryAccessProvider,
+                            interfaces.IArrow)
 
   # IBusinessPath Interface
   security.declareProtected(Permissions.AccessContentsInformation, 'getSourceBaseCategoryList')

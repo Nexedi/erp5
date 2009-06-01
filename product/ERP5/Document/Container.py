@@ -30,7 +30,7 @@
 from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.XMLObject import XMLObject
 
@@ -63,7 +63,7 @@ class Container(Movement, XMLObject):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative interfaces
-    __implements__ = ( Interface.Variated, )
+    __implements__ = ( interfaces.IVariated, )
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base

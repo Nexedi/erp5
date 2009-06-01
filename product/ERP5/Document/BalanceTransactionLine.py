@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Interface
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.AccountingTransactionLine import \
                       AccountingTransactionLine
 from Products.ERP5.Document.InventoryLine import InventoryLine

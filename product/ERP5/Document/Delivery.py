@@ -30,7 +30,7 @@
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Base import WorkflowMethod
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.ImmobilisationDelivery import ImmobilisationDelivery

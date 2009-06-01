@@ -31,7 +31,7 @@ from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Base import Base
 
 from Products.ERP5.Document.DeliveryCell import DeliveryCell
@@ -53,7 +53,7 @@ class OrderCell(DeliveryCell):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative interfaces
-    __implements__ = ( Interface.Variated, )
+    __implements__ = ( interfaces.IVariated, )
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base

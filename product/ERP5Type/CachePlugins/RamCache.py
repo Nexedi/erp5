@@ -33,7 +33,7 @@ Local RAM based cache plugin.
 
 import time
 from BaseCache import BaseCache, CacheEntry
-from Products.ERP5Type import Interface
+from Products.ERP5Type import interfaces
 import zope.interface
 
 def calcPythonObjectMemorySize(i):
@@ -53,7 +53,7 @@ class RamCache(BaseCache):
   """ RAM based cache plugin."""
 
   zope.interface.implements(
-        Interface.ICachePlugin
+        interfaces.ICachePlugin
     )
 
   _cache_dict = {}

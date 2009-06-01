@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.ERP5Type import Interface, Permissions
+from Products.ERP5Type import interfaces, Permissions
 from Products.ERP5Type.Context import Context
 from Products.ERP5Type.Base import Base
 from Globals import InitializeClass
@@ -47,7 +47,7 @@ class VariationValue(Context, Variated):
   """
 
   # Declarative interfaces
-  __implements__ = (Interface.Variated)
+  __implements__ = (interfaces.IVariated)
 
   def __init__(self, context=None, REQUEST=None, **kw):
     Context.__init__(self, context=context, REQUEST=REQUEST, **kw)

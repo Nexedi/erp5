@@ -33,7 +33,7 @@ from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
 from string import capitalize
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.DateUtils import addToDate, getClosestDate, getIntervalBetweenDates 
 from Products.ERP5Type.DateUtils import getMonthAndDaysBetween, getRoundedMonthBetween

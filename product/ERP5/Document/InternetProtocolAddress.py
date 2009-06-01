@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import convertToUpperCase
 
@@ -58,7 +58,7 @@ class InternetProtocolAddress(Base, Coordinate):
                       )
 
   # Declarative interfaces
-  __implements__ = ( Interface.Coordinate, )
+  __implements__ = ( interfaces.ICoordinate, )
 
   def asText(self):
     """

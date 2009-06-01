@@ -29,7 +29,7 @@
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Utils import UpperCase
 
 from Products.ERP5.Document.Predicate import Predicate
@@ -66,7 +66,7 @@ class MappedValue(Predicate, Amount):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = ( Interface.Predicate, Interface.Variated,)
+  __implements__ = ( interfaces.IPredicate, interfaces.IVariated,)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

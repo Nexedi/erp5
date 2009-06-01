@@ -31,7 +31,7 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.ERP5.Variated import Variated
 from Products.ERP5.VariationValue import VariationValue
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Base import TempBase
 from Products.CMFCategory.Renderer import Renderer
@@ -61,7 +61,7 @@ class Amount(Base, Variated):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = (Interface.Variated)
+  __implements__ = (interfaces.IVariated)
 
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem

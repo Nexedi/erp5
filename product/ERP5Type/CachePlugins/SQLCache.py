@@ -36,7 +36,7 @@ import time
 import base64
 from zLOG import LOG
 from BaseCache import BaseCache, CacheEntry, CachedMethodError
-from Products.ERP5Type import Interface
+from Products.ERP5Type import interfaces
 import zope.interface
 
 try:
@@ -63,7 +63,7 @@ class SQLCache(BaseCache):
   """ SQL based cache plugin. """
 
   zope.interface.implements(
-        Interface.ICachePlugin
+        interfaces.ICachePlugin
     )
 
   cache_expire_check_interval = 3600

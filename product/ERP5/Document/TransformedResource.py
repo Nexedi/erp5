@@ -30,7 +30,7 @@
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.Utils import cartesianProduct
@@ -77,7 +77,7 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
                       )
 
     # Declarative interfaces
-    __implements__ = ( Interface.Variated, )
+    __implements__ = ( interfaces.IVariated, )
 
 
 

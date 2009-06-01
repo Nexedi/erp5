@@ -29,7 +29,7 @@
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 #from Products.ERP5.Core import MetaNode, MetaResource
 
 from Products.ERP5.Document.MappedValue import MappedValue
@@ -58,7 +58,7 @@ class Path(MappedValue):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = ( Interface.Predicate )
+  __implements__ = ( interfaces.IPredicate )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

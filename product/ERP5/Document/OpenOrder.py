@@ -29,7 +29,7 @@
 from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.Delivery import Delivery
 
 class OpenOrder(Delivery):
@@ -45,7 +45,7 @@ class OpenOrder(Delivery):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = (Interface.Expandable, Interface.OpenOrderExpander)
+  __implements__ = (interfaces.IExpandable, interfaces.IOpenOrderExpander)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

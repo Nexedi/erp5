@@ -27,7 +27,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Interface
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5.Document.PaySheetLine import PaySheetLine
 
@@ -52,7 +52,7 @@ class PaySheetModelLine(PaySheetLine, Predicate):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = ( Interface.Variated, )
+  __implements__ = ( interfaces.IVariated, )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

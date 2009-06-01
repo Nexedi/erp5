@@ -29,7 +29,7 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type.DivergenceMessage import DivergenceMessage
-from Products.ERP5Type import Permissions, PropertySheet, Interface
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.PropertyDivergenceTester import \
                                                PropertyDivergenceTester
 
@@ -50,7 +50,7 @@ class CategoryDivergenceTester(PropertyDivergenceTester):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = ( Interface.DivergenceTester, )
+  __implements__ = ( interfaces.IDivergenceTester, )
 
   # Declarative properties
   property_sheets = (   PropertySheet.Base

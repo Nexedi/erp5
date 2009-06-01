@@ -33,7 +33,7 @@ ZODB Based cache plugin.
 import time
 from BaseCache import BaseCache, CacheEntry
 from BTrees.OOBTree import OOBTree
-from Products.ERP5Type import Interface
+from Products.ERP5Type import interfaces
 import zope.interface
 
 PRIVATE_ATTRIBUTE_ZODB_CACHE_NAME = '_zodb_cache'
@@ -42,7 +42,7 @@ class ZODBCache(BaseCache):
   """ ZODB based cache plugin."""
 
   zope.interface.implements(
-        Interface.ICachePlugin
+        interfaces.ICachePlugin
     )
 
   cache_tool = None

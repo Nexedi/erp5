@@ -28,7 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.Rule import Rule
 from Products.ERP5.Document.DeliveryRule import DeliveryRule
 
@@ -47,8 +47,8 @@ class InvoiceRule(DeliveryRule):
     isPortalContent = 1
     isRADContent = 1
     
-    __implements__ = ( Interface.Predicate,
-                       Interface.Rule )
+    __implements__ = ( interfaces.IPredicate,
+                       interfaces.IRule )
 
     # Declarative security
     security = ClassSecurityInfo()

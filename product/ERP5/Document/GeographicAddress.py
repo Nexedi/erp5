@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Base import Base
 
 from Products.ERP5.Document.Coordinate import Coordinate
@@ -64,7 +64,7 @@ class GeographicAddress(Coordinate, Base):
                       )
 
     # Declarative interfaces
-    __implements__ = ( Interface.Coordinate )
+    __implements__ = ( interfaces.ICoordinate )
 
     security.declareProtected(Permissions.AccessContentsInformation, 'asText')
     def asText(self):

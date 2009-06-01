@@ -29,7 +29,7 @@ from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type import Permissions, PropertySheet, Interface
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache, enableReadOnlyTransactionCache, disableReadOnlyTransactionCache
 
 
@@ -48,7 +48,7 @@ class ContributionPredicate(Predicate, XMLObject):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  __implements__ = (Interface.Predicate,)
+  __implements__ = (interfaces.IPredicate,)
 
   # Default Properties
   property_sheets = ( PropertySheet.Base

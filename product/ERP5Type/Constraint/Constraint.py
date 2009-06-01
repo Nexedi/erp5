@@ -29,7 +29,7 @@
 ##############################################################################
 
 from Products.CMFCore.Expression import Expression
-from Products.ERP5Type.Interface import Constraint as IConstraint
+from Products.ERP5Type.interfaces import IConstraint
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 
 class Constraint:

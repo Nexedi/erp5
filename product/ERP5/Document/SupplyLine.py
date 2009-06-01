@@ -28,7 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
 from Products.ERP5.Document.Path import Path
@@ -52,8 +52,8 @@ class SupplyLine(DeliveryLine, Path):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative interfaces
-    __implements__ = ( Interface.Variated,
-                       Interface.Predicate )
+    __implements__ = ( interfaces.IVariated,
+                       interfaces.IPredicate )
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base

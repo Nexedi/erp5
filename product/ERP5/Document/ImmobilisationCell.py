@@ -29,7 +29,7 @@
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Base, Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Base, Permissions, PropertySheet, Constraint, interfaces
 #from Products.ERP5.Core import MetaNode, MetaResource
 
 from Products.ERP5Type.XMLObject import XMLObject
@@ -56,7 +56,7 @@ class ImmobilisationCell(Movement, XMLObject, ImmobilisationMovement):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = ( Interface.Variated, )
+  __implements__ = ( interfaces.IVariated, )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

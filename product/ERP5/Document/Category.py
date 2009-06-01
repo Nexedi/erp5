@@ -31,7 +31,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5.Document.MetaNode import MetaNode
 from Products.ERP5.Document.MetaResource import MetaResource
-from Products.ERP5Type import Interface, Permissions, PropertySheet
+from Products.ERP5Type import interfaces, Permissions, PropertySheet
 from Products.ERP5Type.Base import Base
 from Products.ERP5.Document.Predicate import Predicate
 

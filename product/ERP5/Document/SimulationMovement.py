@@ -30,7 +30,7 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 from Products.ERP5.Document.Movement import Movement
@@ -101,7 +101,7 @@ class SimulationMovement(Movement):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = ( Interface.Variated, )
+  __implements__ = ( interfaces.IVariated, )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

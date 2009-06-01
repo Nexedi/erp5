@@ -28,7 +28,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.Rule import Rule
 from Products.ERP5.Document.DeliveryRule import DeliveryRule
 from zLOG import LOG, WARNING
@@ -48,8 +48,8 @@ class OrderRule(DeliveryRule):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
   
-  __implements__ = ( Interface.Predicate,
-                     Interface.Rule )
+  __implements__ = ( interfaces.IPredicate,
+                     interfaces.IRule )
 
   # Default Properties
   property_sheets = ( PropertySheet.Base
