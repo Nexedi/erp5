@@ -286,32 +286,41 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     resource = self.createVariatedResource()
+    # XXX this tests depends on the relative url of the resource
+    self.assertEquals('product_module/1', resource.getRelativeUrl())
+
     transaction.commit()
     self.tic()
     packing_list = self.createPackingList(resource=resource,organisation=organisation)
     packing_list_line= self.createPackingListLine(packing_list=packing_list,resource=resource)
     transaction.commit()
     self.tic()
+    
+    # make sure we can render the dialog
+    packing_list_line.DeliveryLine_viewItemCreationDialog()
+
     # create a listbox 
     listbox = ({ 'listbox_key': '000',
               'title': 'Lot A',
               'reference': '20_05_09_LA',
               'quantity': 20.0,
-              'variation_category_list':['size/product_module/1/3'],
+              'line_variation_category_list': 'size/product_module/1/3',
               },
               { 'listbox_key': '001',
               'title': 'Lot B',
               'reference': '20_05_09_LB',
               'quantity': 10.0,
-              'variation_category_list':['size/product_module/1/2'],
+              'line_variation_category_list': 'size/product_module/1/2',
               },
               { 'listbox_key': '002',
               'title': 'Lot C',
               'reference': '20_05_09_LC',
               'quantity': 15.0,
-              'variation_category_list':['size/product_module/1/1'],
+              'line_variation_category_list': 'size/product_module/1/1',
               },
               )
+
+    self.portal.REQUEST.set('type', 'Item')
     packing_list_line.DeliveryLine_createItemList(listbox=listbox)
     transaction.commit()
     self.tic()
@@ -321,17 +330,32 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
            len([x.getObject() for x in self.portal.portal_catalog(portal_type='Item',title='Lot B')]),1)
     self.assertEquals(
            len([x.getObject() for x in self.portal.portal_catalog(portal_type='Item',title='Lot C')]),1)
-    self.assertEquals(packing_list_line.getQuantity(),45.0)
-    self.assertEquals(packing_list_line.getVariationCategoryList(),
-      ['size/product_module/1/3', 'size/product_module/1/2', 'size/product_module/1/1'])
-    self.assertEquals(packing_list_line.getAggregateTitleList(),[])
+
+    self.assertEquals(packing_list_line.getTotalQuantity(), 45.0)
+    self.assertEquals(sorted(packing_list_line.getVariationCategoryList()),
+                      sorted(['size/product_module/1/3',
+                              'size/product_module/1/2',
+                              'size/product_module/1/1']))
+    self.assertEquals(packing_list_line.getAggregateTitleList(), [])
+
     movement_cell_list = packing_list_line.contentValues(
                                     portal_type='Purchase Packing List Cell')
-    for i in range(0,len(movement_cell_list)):
-      self.assertEquals(movement_cell_list[i].getQuantity(),
-                        listbox[i]['quantity'])
-      self.assertEquals(movement_cell_list[i].getAggregateTitle(),
-                        listbox[i]['title'])
+    self.assertEquals(3, len(movement_cell_list))
+
+    cell = packing_list_line.getCell(base_id='movement',
+                                     *('size/product_module/1/3', ))
+    self.assertEquals(cell.getQuantity(), 20)
+    self.assertEquals(['Lot A'], cell.getAggregateTitleList())
+
+    cell = packing_list_line.getCell(base_id='movement',
+                                     *('size/product_module/1/2', ))
+    self.assertEquals(cell.getQuantity(), 10)
+    self.assertEquals(['Lot B'], cell.getAggregateTitleList())
+
+    cell = packing_list_line.getCell(base_id='movement',
+                                     *('size/product_module/1/1', ))
+    self.assertEquals(cell.getQuantity(), 15)
+    self.assertEquals(['Lot C'], cell.getAggregateTitleList())
     
      
   def test_04_CreateItemsFromPackingListLineWithVariationDefined(
@@ -343,6 +367,9 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     resource = self.createVariatedResource()
+    # XXX this tests depends on the relative url of the resource
+    self.assertEquals('product_module/2', resource.getRelativeUrl())
+
     transaction.commit()
     self.tic()
     packing_list = self.createPackingList(resource=resource,organisation=organisation)
@@ -355,41 +382,60 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
               'title': 'Lot A2',
               'reference': '25_05_09_LA2',
               'quantity': 20.0,
-              'variation_category_list':['size/product_module/2/3'],
+              'line_variation_category_list': 'size/product_module/2/3',
               },
               )
+    self.portal.REQUEST.set('type', 'Item')
     packing_list_line.DeliveryLine_createItemList(listbox=listbox)
-    packing_list_line.getVariationCategoryList(['size/product_module/2/3'])
-    packing_list_line.getQuantity(20.0)
+    self.assertEquals(packing_list_line.getVariationCategoryList(),
+                      ['size/product_module/2/3'])
+    self.assertEquals(packing_list_line.getTotalQuantity(), 20)
+
     # create listbox a second time
-    # create a listbox 
     listbox = ({ 'listbox_key': '000',
               'title': 'Lot B2',
               'reference': '25_05_09_LB2',
               'quantity': 20.0,
-              'variation_category_list':['size/product_module/2/1'],
+              'line_variation_category_list': 'size/product_module/2/1',
               },
               { 'listbox_key': '001',
               'title': 'Lot C2',
               'reference': '25_05_09_LC2',
               'quantity': 15.0,
-              'variation_category_list':['size/product_module/2/2'],
+              'line_variation_category_list': 'size/product_module/2/2',
               },
               )
+    self.portal.REQUEST.set('type', 'Item')
     packing_list_line.DeliveryLine_createItemList(listbox=listbox)
     transaction.commit()
     self.tic()
-    self.assertEquals(packing_list_line.getQuantity(),35.0)
-    self.assertEquals(packing_list_line.getVariationCategoryList(),
-                  ['size/product_module/2/1','size/product_module/2/2'])
+
+    self.assertEquals(packing_list_line.getTotalQuantity(), 55.0)
+    self.assertEquals(sorted(packing_list_line.getVariationCategoryList()),
+                      sorted(['size/product_module/2/1',
+                              'size/product_module/2/2',
+                              'size/product_module/2/3']))
+
     movement_cell_list = packing_list_line.contentValues(
                                     portal_type='Purchase Packing List Cell')
-    for i in range(0, len(movement_cell_list)):
-      self.assertEquals(movement_cell_list[i].getQuantity(),
-                        listbox[i]['quantity'])
-      self.assertEquals(movement_cell_list[i].getAggregateTitle(),
-                        listbox[i]['title'])
+    self.assertEquals(3, len(movement_cell_list))
+
+    cell = packing_list_line.getCell(base_id='movement',
+                                     *('size/product_module/2/3', ))
+    self.assertEquals(cell.getQuantity(), 20)
+    self.assertEquals(['Lot A2'], cell.getAggregateTitleList())
+
+    cell = packing_list_line.getCell(base_id='movement',
+                                     *('size/product_module/2/1', ))
+    self.assertEquals(cell.getQuantity(), 20)
+    self.assertEquals(['Lot B2'], cell.getAggregateTitleList())
+
+    cell = packing_list_line.getCell(base_id='movement',
+                                     *('size/product_module/2/2', ))
+    self.assertEquals(cell.getQuantity(), 15)
+    self.assertEquals(['Lot C2'], cell.getAggregateTitleList())
  
+
   def test_05_CreateItemsFromPackingListLineWithNotVariatedResource(
           self,sequence=None,title=None,quiet=quiet, run=run_all_test):
     """
@@ -404,6 +450,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     packing_list = self.createPackingList(resource=resource,organisation=organisation)
    
     packing_list_line= self.createPackingListLine(packing_list=packing_list,resource=resource)
+    packing_list_line.setQuantity(32)
     transaction.commit()
     self.tic()
     # create a listbox 
@@ -423,6 +470,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
               'quantity': 15.0,
               },
               )
+    self.portal.REQUEST.set('type', 'Item')
     packing_list_line.DeliveryLine_createItemList(listbox=listbox)
     transaction.commit()
     self.tic()
