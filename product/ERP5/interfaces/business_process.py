@@ -26,8 +26,8 @@
 #
 ##############################################################################
 
-from Products.ERP5.Interface.IBusinessCompletable import IBusinessCompletable
-from Products.ERP5.Interface.IBusinessBuildable import IBusinessBuildable
+from Products.ERP5.interfaces.business_completable import IBusinessCompletable
+from Products.ERP5.interfaces.business_buildable import IBusinessBuildable
 
 class IBusinessProcess(IBusinessCompletable, IBusinessBuildable):
   """Business Process interface specification

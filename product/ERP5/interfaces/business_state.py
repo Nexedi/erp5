@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.Interface.IBusinessCompletable import IBusinessCompletable
+from Products.ERP5.interfaces.business_completable import IBusinessCompletable
 
 class IBusinessState(IBusinessCompletable):
   """Business State interface specification

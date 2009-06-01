@@ -28,7 +28,7 @@
 
 from Interface import Interface
 
-class Expandable(Interface):
+class IExpandable(Interface):
   """
     An Expandable class provides methods which trigger
     the generation of a root applied rule in the simulation

@@ -28,7 +28,7 @@
 
 from Interface import Interface
 
-class DivergenceTester(Interface):
+class IDivergenceTester(Interface):
   """
     ERP5 Divergence Tester
   """

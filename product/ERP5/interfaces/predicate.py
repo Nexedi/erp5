@@ -28,7 +28,7 @@
 
 from Interface import Interface
 
-class Predicate(Interface):
+class IPredicate(Interface):
   """
     A Predicate allows to make a statement about a document.
     A statement can be related to:

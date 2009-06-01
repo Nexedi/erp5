@@ -28,7 +28,7 @@
 
 from Interface import Interface
 
-class Variated(Interface):
+class IVariated(Interface):
   """
     Common Interface for all objects which can be
     variated.

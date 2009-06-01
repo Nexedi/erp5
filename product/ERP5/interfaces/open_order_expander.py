@@ -28,7 +28,7 @@
 
 from Interface import Interface
 
-class OpenOrderExpander(Interface):
+class IOpenOrderExpander(Interface):
   """
     Any class capable of expanding an Open Order Rule
     follows the OpenOrderExpander interface

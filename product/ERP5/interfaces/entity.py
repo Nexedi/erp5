@@ -28,7 +28,7 @@
 
 from Interface import Interface
 
-class Entity(Interface):
+class IEntity(Interface):
   """
     Common Interface for Entity objects
   """

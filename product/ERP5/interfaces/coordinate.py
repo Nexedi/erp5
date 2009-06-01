@@ -28,7 +28,7 @@
 
 from Interface import Interface
 
-class Coordinate(Interface):
+class ICoordinate(Interface):
   """
     Common Interface for all Coordinate objects
   """

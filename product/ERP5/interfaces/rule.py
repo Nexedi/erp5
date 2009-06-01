@@ -28,7 +28,7 @@
 
 from Interface import Interface
 
-class Rule(Interface):
+class IRule(Interface):
   """A Rule describes transformations of documents.
   """
 
