@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>current_owner = context.Item_getCurrentOwnerValue()\n
+            <value> <string>current_owner = context.Item_getCurrentOwnerValue(at_date=at_date)\n
 if current_owner is not None:\n
   return current_owner.getTitle()\n
 return None\n
@@ -67,7 +67,7 @@ return None\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>at_date=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -87,12 +87,13 @@ return None\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>at_date</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>current_owner</string>
@@ -108,7 +109,9 @@ return None\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

@@ -55,7 +55,11 @@
             <key> <string>_body</string> </key>
             <value> <string>from DateTime import DateTime\n
 \n
-kw[\'at_date\'] = DateTime()\n
+\n
+if at_date is None:\n
+  at_date = DateTime()\n
+kw[\'at_date\'] = at_date\n
+\n
 kw[\'item\'] = context.getRelativeUrl()\n
 \n
 last_affectation_list = context.portal_simulation.getCurrentTrackingList(**kw)\n
@@ -80,7 +84,7 @@ return []\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>at_date=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -100,14 +104,16 @@ return []\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>at_date</string>
                             <string>kw</string>
                             <string>DateTime</string>
+                            <string>None</string>
                             <string>_write_</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -116,7 +122,6 @@ return []\n
                             <string>len</string>
                             <string>_getitem_</string>
                             <string>last_affectation</string>
-                            <string>None</string>
                             <string>movement</string>
                           </tuple>
                         </value>
@@ -129,7 +134,9 @@ return []\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>
