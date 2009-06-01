@@ -54,7 +54,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>if context.getPortalType() == \'Organisation\':\n
-  kw[\'related_source_section_or_destination_section\'] = [context.getUid()]\n
+  kw[\'related_source_or_source_section_or_destination_or_destination_section\'] = [context.getUid()]\n
 else:\n
   kw[\'related_source_or_destination\'] = [context.getUid()]\n
 return context.portal_catalog(**kw)\n
