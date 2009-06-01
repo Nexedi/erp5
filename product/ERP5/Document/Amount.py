@@ -652,11 +652,11 @@ class Amount(Base, Variated):
 #     return result  
     
   # Profit and Loss
-  security.declareProtected(Permissions.ModifyPortalContent, 'getLostQuantity')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getLostQuantity')
   def getLostQuantity(self):
     return - self.getProfitQuantity()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'setLostQuantity')
+  security.declareProtected(Permissions.ModifyPortalContent, 'setLostQuantity')
   def setLostQuantity(self, value):
     return self.setProfitQuantity(- value)
 
