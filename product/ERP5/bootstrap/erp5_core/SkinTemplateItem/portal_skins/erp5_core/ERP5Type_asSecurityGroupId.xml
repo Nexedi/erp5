@@ -126,10 +126,9 @@ for base_category in category_order:\n
         user_name = category_object.getReference()\n
         if user_name is not None: user_list.append(user_name)\n
       else:\n
-        if portal_type == \'Category\':\n
-          category_code = category_object.getCodification() or category_object.getId()\n
-        else:\n
-          category_code = category_object.getProperty(\'reference\') or category_object.getId()\n
+        category_code = (category_object.getProperty(\'codification\') or\n
+                         category_object.getProperty(\'reference\') or\n
+                         category_object.getId())\n
         if is_child_category: category_code += \'*\'\n
         associative_list.append(category_code)\n
     # Prevent making a cartesian product with an empty set\n
