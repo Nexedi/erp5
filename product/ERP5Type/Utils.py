@@ -43,6 +43,8 @@ from Acquisition import aq_self
 
 from AccessControl import ModuleSecurityInfo
 from AccessControl.SecurityInfo import allow_class
+from AccessControl import getSecurityManager
+from AccessControl.SecurityManagement import newSecurityManager
 
 from Products.CMFCore import utils
 from Products.CMFCore.Expression import Expression
@@ -335,11 +337,11 @@ def updateGlobals(this_module, global_hook,
     this_module._dtmldir = os.path.join( product_path, 'dtml' )
 
     # Update PropertySheet Registry
-    for module_id in ('PropertySheet', 'Interface', 'Constraint', ):
+    for module_id in ('PropertySheet', 'interfaces', 'Constraint', ):
       path, module_id_list = getModuleIdList(product_path, module_id)
       if module_id == 'PropertySheet':
         import_method = importLocalPropertySheet
-      elif module_id == 'Interface':
+      elif module_id == 'interfaces':
         import_method = importLocalInterface
       elif module_id == 'Constraint':
         import_method = importLocalConstraint
@@ -521,16 +523,17 @@ def registerBaseCategories(property_sheet):
   for bc in category_list :
     base_category_dict[bc] = 1
 
-def importLocalInterface(class_id, path = None):
+def importLocalInterface(module_id, path = None):
   import Products.ERP5Type.Interface
   if path is None:
     instance_home = getConfiguration().instancehome
-    path = os.path.join(instance_home, "Interface")
-  path = os.path.join(path, "%s.py" % class_id)
+    path = os.path.join(instance_home, "interfaces")
+  path = os.path.join(path, "%s.py" % module_id)
   f = open(path)
   try:
     module = imp.load_source(class_id, path, f)
-    setattr(Products.ERP5Type.Interface, class_id, getattr(module, class_id))
+    class_id = "I" + convertToUpperCase(module_id)
+    setattr(Products.ERP5Type.interfaces, class_id, getattr(module, class_id))
   finally:
     f.close()
 
@@ -1976,9 +1979,10 @@ def createCategoryAccessors(property_holder, id,
     property_holder.registerAccessor(accessor_name, id, Category.DefaultGetter, ())
 
   accessor_name = 'has' + UpperCase(id)
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Category.Tester, ())
-    property_holder.declareProtected(read_permission, accessor_name)
+  if not hasattr(BaseClass, accessor_name):
+    tester = Category.Tester(accessor_name, id) # All testers should be created at once at startup
+    setattr(BaseClass, accessor_name, tester)
+    BaseClass.security.declareProtected(read_permission, accessor_name)
 
   setter_name = 'set' + UpperCase(id)
   if not hasattr(property_holder, setter_name):
