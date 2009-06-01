@@ -123,10 +123,8 @@ class TestItemMixin(TestSaleInvoiceMixin):
     pac_list = packing_list_module.newContent(portal_type=portal_type)
     pac_list.edit(
       title = "PPL%s" % pac_list.getId(),
-      # FIXME: this is temporary, because item scripts uses today's date (which
-      # is wrong)
-      start_date = self.datetime - 20,
-      stop_date = self.datetime - 10,
+      start_date = self.datetime + 20,
+      stop_date = self.datetime + 10,
     )
 
     if organisation is not None:
