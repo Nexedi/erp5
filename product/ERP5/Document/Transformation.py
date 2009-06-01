@@ -83,7 +83,7 @@ class Transformation(XMLObject, Predicate, Variated):
     __implements__ = ( Interface.Variated, )
 
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'updateVariationCategoryList')
     def updateVariationCategoryList(self):
       """
@@ -113,7 +113,7 @@ class Transformation(XMLObject, Predicate, Variated):
         result = self.getPortalVariationBaseCategoryList()
       return result
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getVariationRangeBaseCategoryItemList')
     def getVariationRangeBaseCategoryItemList(self, display_id='getTitleOrId', **kw):
         """
@@ -122,7 +122,7 @@ class Transformation(XMLObject, Predicate, Variated):
           useful in ERP5Form instances to generate selection
           menus.
         """
-        return self.portal_categories.getItemList( 
+        return self.portal_categories.getItemList(
                               self.getVariationRangeBaseCategoryList(),
                               display_id=display_id, **kw)
 
@@ -157,7 +157,7 @@ class Transformation(XMLObject, Predicate, Variated):
                          base_category_list, base=1, display_none_category=0)
         return result
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               '_setVariationBaseCategoryList')
     def _setVariationBaseCategoryList(self, value):
       """
@@ -173,7 +173,7 @@ class Transformation(XMLObject, Predicate, Variated):
       # create relations between resource variation and transformation
       self._setVariationCategoryList( self.getVariationRangeCategoryList() )
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'setVariationBaseCategoryList')
     def setVariationBaseCategoryList(self, value):
       """
@@ -182,10 +182,10 @@ class Transformation(XMLObject, Predicate, Variated):
       self._setVariationBaseCategoryList(value)
       self.reindexObject()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getVariationCategoryItemList')
-    def getVariationCategoryItemList(self, base_category_list=(), base=1, 
-                                     display_id='title', 
+    def getVariationCategoryItemList(self, base_category_list=(), base=1,
+                                     display_id='title',
                                      current_category=None,
                                      **kw):
       """
@@ -215,20 +215,20 @@ class Transformation(XMLObject, Predicate, Variated):
                          if x.getPortalType() != 'Category']
         variation_category_item_list.extend(Renderer(
                                is_right_display=0,
-                               base_category=base_category, 
+                               base_category=base_category,
                                display_none_category=0, base=base,
                                current_category=current_category,
                                display_id=display_id,**kw).\
                                                  render(object_list))
       return variation_category_item_list
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getAggregatedAmountList')
     def getAggregatedAmountList(self, context=None, REQUEST=None,
                                 trade_phase_list=None,
                                 # obsolete, use trade_phase_list instead
                                 ind_phase_url_list=None,
-                                rejected_resource_uid_list=None, 
+                                rejected_resource_uid_list=None,
                                 context_quantity=0,**kw):
       """
         getAggregatedAmountList returns a AggregatedAmountList which
