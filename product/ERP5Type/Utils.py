@@ -531,8 +531,8 @@ def importLocalInterface(module_id, path = None):
   path = os.path.join(path, "%s.py" % module_id)
   f = open(path)
   try:
-    module = imp.load_source(class_id, path, f)
     class_id = "I" + convertToUpperCase(module_id)
+    module = imp.load_source(class_id, path, f)
     setattr(Products.ERP5Type.interfaces, class_id, getattr(module, class_id))
   finally:
     f.close()
