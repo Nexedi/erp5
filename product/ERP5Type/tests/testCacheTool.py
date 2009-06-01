@@ -190,7 +190,7 @@ return result
     py_script_id = "testCachedMethod"
     py_script_obj = getattr(portal, py_script_id)
     for cf_name in ('ram_cache_factory',
-#                    'distributed_ram_cache_factory',
+                    'distributed_ram_cache_factory',
                     'sql_cache_factory',
                     'zodb_cache_factory',):
       my_cache = CachingMethod(py_script_obj,
@@ -229,8 +229,7 @@ return result
 
     ## 2nd call - should be cached now
     start = time.time()
-    for i in xrange(100):
-      cached =  my_cache(nb_iterations, portal_path=('', portal.getId()))
+    cached =  my_cache(nb_iterations, portal_path=('', portal.getId()))
     end = time.time()
     calculation_time = end-start
     print "\n\tCalculation time (2nd call)", calculation_time
