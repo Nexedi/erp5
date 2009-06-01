@@ -114,24 +114,36 @@ class TradeCondition(Path, Transformation):
       return {'movement_to_delete_list' : movement_to_delete_list,
               'movement_to_add_list': movement_to_add_list}
 
-    def getTradeModelLineComposedList(self, context=None):
+    security.declareProtected(Permissions.AccessContentsInformation,
+        'findSpecialiseValueList')
+    def findSpecialiseValueList(self, context, portal_type_list=None):
+      '''Return a list of object. The list will represent the inheritance tree.
+      It uses Breadth First Search.
+      '''
+      visited_trade_condition_list = []
+      specialise_value_list = []
+      if portal_type_list is None:
+        portal_type_list = [self.getPortalType()]
+      if context.getPortalType() in portal_type_list:
+        specialise_value_list.append(context)
+      for specialise in context.getSpecialiseValueList(portal_type=\
+          portal_type_list):
+        if specialise in visited_trade_condition_list:
+          raise CircularException
+        visited_trade_condition_list.append(specialise)
+        specialise_value_list.extend(self.findSpecialiseValueList(context=specialise,
+          portal_type_list=portal_type_list))
+      return specialise_value_list
+
+    def getTradeModelLineComposedList(self, context=None, portal_type_list=None):
       """
       Returns list of Trade Model Lines using composition
       Reference of Trade Model Line is used to hide other Trade Model Line
       In chain first found Trade Model Line has precedence
       Context's, if not None, Trade Model Lines have precedence
       """
-      visited_trade_condition_list = []
-      def findSpecialiseValueList(context):
-        specialise_value_list = []
-        if context.getPortalType() in self.getPortalType():
-          specialise_value_list.append(context)
-        for specialise in context.getSpecialiseValueList():
-          if specialise in visited_trade_condition_list:
-            raise CircularException
-          visited_trade_condition_list.append(specialise)
-          specialise_value_list.extend(findSpecialiseValueList(specialise))
-        return specialise_value_list
+      if portal_type_list is None:
+        portal_type_list = self.model_line_portal_type_list
 
       def sortByIntIndex(a, b):
         return cmp(a.getIntIndex(), b.getIntIndex())
@@ -146,11 +158,11 @@ class TradeCondition(Path, Transformation):
           # for contained Trade Model Lines
           document = context.getExplanationValue()
         containting_object_list.append(document)
-      containting_object_list.extend(findSpecialiseValueList(self))
+      containting_object_list.extend(self.findSpecialiseValueList(self))
 
       for specialise in containting_object_list:
         for trade_model_line in specialise.contentValues(
-            portal_type=self.model_line_portal_type_list):
+            portal_type=portal_type_list):
           reference = trade_model_line.getReference()
           if reference not in reference_list or reference is None:
             trade_model_line_composed_list.append(trade_model_line)
