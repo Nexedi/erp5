@@ -27,7 +27,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Banking.Document.BankingOperation import BankingOperation
 
 class CashDelivery(BankingOperation):
@@ -45,7 +45,7 @@ class CashDelivery(BankingOperation):
   security.declareObjectProtected(Permissions.View)
 
   # Declarative interfaces
-  __implements__ = ( Interface.Variated, )
+  __implements__ = ( interfaces.IVariated, )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

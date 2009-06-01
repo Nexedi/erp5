@@ -27,7 +27,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, Interface
+from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.DeliveryCell import DeliveryCell
 from Products.ERP5Banking.BaobabMixin import BaobabMixin
 
@@ -50,7 +50,7 @@ class CashDeliveryCell(BaobabMixin, DeliveryCell):
   security.declareObjectProtected(Permissions.View)
 
   # Declarative interfaces
-  __implements__ = ( Interface.Variated, )
+  __implements__ = ( interfaces.IVariated, )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base
