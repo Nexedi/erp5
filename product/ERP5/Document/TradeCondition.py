@@ -36,6 +36,9 @@ from Products.ERP5.Document.Transformation import Transformation
 from Products.ERP5.Document.Path import Path
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 
+# XXX TODO : getTradeModelLineComposedList and findSpecialiseValueList should
+# probably move to Transformation (better names sould be used)
+
 class CircularException(Exception): pass
 
 class TradeCondition(Path, Transformation):
