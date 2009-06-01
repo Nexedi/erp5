@@ -1019,7 +1019,7 @@ class SimulationTool(BaseTool):
               # get search key definitions from portal_catalog
               ctool = getToolByName(self, 'portal_catalog')
               portal_catalog = ctool.getSQLCatalog()
-              keyword_search_keys = list(portal_catalog.sql_catalog_keyword_search_keys)    
+              keyword_search_keys = list(portal_catalog.sql_catalog_keyword_search_keys)
               datetime_search_keys = list(portal_catalog.sql_catalog_datetime_search_keys)
               full_text_search_keys = list(portal_catalog.sql_catalog_full_text_search_keys)
               search_key_mapping = dict(key_alias_dict = None,
@@ -1670,9 +1670,9 @@ class SimulationTool(BaseTool):
 
       # Pass simulation state to request
       if kw.has_key('item.simulation_state'):
-          new_kw['simulation_state_list'] = kw['item.simulation_state']
+        new_kw['simulation_state_list'] = kw['item.simulation_state']
       else:
-          new_kw['simulation_state_list'] =  None
+        new_kw['simulation_state_list'] =  None
 
       return self.Resource_zGetTrackingList(src__=src__,
                                             selection_domain=selection_domain,
