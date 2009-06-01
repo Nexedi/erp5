@@ -381,7 +381,7 @@ class Delivery(XMLObject, ImmobilisationDelivery):
 
       deferred_simulation_movement_list = []
       # defer simulation movements
-      if start_date != None or stop_date != None:
+      if start_date is not None or stop_date is not None:
         for movement in movement_list:
           start_date = start_date or movement.getStartDate()
           stop_date = stop_date or movement.getStopDate()

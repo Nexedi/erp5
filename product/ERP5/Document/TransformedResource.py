@@ -187,7 +187,7 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
         error_string = ''
         # Add resource relation
         resource = self.getDefaultResourceValue()
-        if resource != None:
+        if resource is not None:
           tmp_amount.setResourceValue(resource)
         else:
           error_string += 'No resource defined on %s' % self.getRelativeUrl()
@@ -261,8 +261,8 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
         quantity = None
         # We will browse the mapped values and determine which apply
         cell_key_list = self.getCellKeyList(base_id='quantity')
-        if cell_key_list not in [(),[]]: 
-          if context == None:
+        if cell_key_list not in [(),[]]:
+          if context is None:
             raise KeyError, \
                   "No context defined on TransformedResource '%s'" % \
                       (self.getRelativeUrl(), )
@@ -296,8 +296,8 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
         variation_category_list = None
         # We will browse the mapped values and determine which apply
         cell_key_list = self.getCellKeyList( base_id = 'variation')
-        if cell_key_list not in [(),[]]: 
-          if context == None:
+        if cell_key_list not in [(),[]]:
+          if context is None:
             raise KeyError, \
                   "No context defined on TransformedResource '%s'" % \
                       (self.getRelativeUrl(), )

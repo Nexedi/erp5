@@ -145,7 +145,7 @@ class Transformation(XMLObject, Predicate, Variated):
           base_category_list = self.getVariationBaseCategoryList()
 
         resource = self.getResourceValue()
-        if resource != None:
+        if resource is not None:
           result = resource.getVariationCategoryItemList(
                         base_category_list=base_category_list,
                         omit_individual_variation=omit_individual_variation,

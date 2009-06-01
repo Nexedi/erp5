@@ -259,7 +259,7 @@ class Telephone(Coordinate, Base):
           number_match = possible_number_match
           number_dict = number_match.groupdict()
           break
-      if number_match == None:
+      if number_match is None:
         from zLOG import LOG, WARNING
         msg = "Doesn't exist a regex to handle this telephone: ", \
                                                                coordinate_text

@@ -222,7 +222,7 @@ class Amount(Base, Variated):
       menus.
     """
     resource = self.getResourceValue()
-    if resource != None:
+    if resource is not None:
       result = resource.getVariationCategoryItemList(
                                omit_individual_variation=0,**kw)
     else:

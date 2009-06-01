@@ -100,9 +100,9 @@ class MailMessage(Event, CMFMailInMessage):
       Sends a reply to this mail message.
     """
     # We assume by default that we are replying to the sender
-    if from_url == None:
+    if from_url is None:
       from_url = self.getUrlString()
-    if to_url == None:
+    if to_url is None:
       to_url = self.getSender()
     if msg is not None and subject is not None:
       header  = "From: %s\n"    % from_url
