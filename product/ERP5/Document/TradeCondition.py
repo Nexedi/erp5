@@ -190,6 +190,6 @@ class TradeCondition(Path, Transformation):
         if len(result) != len(movement_list):
           # something was added
           need_to_run = 1
-        movement_list = result
+          movement_list = result
 
       return result
