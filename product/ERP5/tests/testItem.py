@@ -156,7 +156,6 @@ class TestItemMixin(TestSaleInvoiceMixin):
     resource = sequence.get('resource')
     item = item_module.newContent(portal_type=self.item_portal_type)
 
-    item.setResourceValue(resource)
     sequence.edit(item_list=[item])
 
   def stepOrderLineSetAggregationList(self, sequence=None,
