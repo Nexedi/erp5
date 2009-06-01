@@ -114,21 +114,26 @@ class TestItemMixin(TestSaleInvoiceMixin):
 
     return resource
 
-  def createPackingList(self,resource=None,organisation=None):
-    portal = self.getPortal()
-    packing_list_module = portal.getDefaultModule(portal_type='Purchase Packing List')
-    pac_list = packing_list_module.newContent(portal_type='Purchase Packing List')
+  def createPackingList(self,
+                        resource=None,
+                        organisation=None,
+                        portal_type='Purchase Packing List'):
+    portal = self.portal
+    packing_list_module = portal.getDefaultModule(portal_type=portal_type)
+    pac_list = packing_list_module.newContent(portal_type=portal_type)
     pac_list.edit(
       title = "PPL%s" % pac_list.getId(),
-      start_date = self.datetime + 10,
-      stop_date = self.datetime + 20,
+      # FIXME: this is temporary, because item scripts uses today's date (which
+      # is wrong)
+      start_date = self.datetime - 20,
+      stop_date = self.datetime - 10,
     )
+
     if organisation is not None:
       pac_list.edit(source_value=organisation,
                  source_section_value=organisation,
                  destination_value=organisation,
                  destination_section_value=organisation,
-                 # Added for test Packing List Copy
                  source_decision_value=organisation,
                  destination_decision_value=organisation,
                  source_administration_value=organisation,
@@ -136,8 +141,11 @@ class TestItemMixin(TestSaleInvoiceMixin):
                  )
     return pac_list
 
-  def createPackingListLine(self,packing_list=None,resource=None):
-    packing_list_line = packing_list.newContent(portal_type='Purchase Packing List Line')
+  def createPackingListLine(self,
+                            packing_list=None,
+                            resource=None,
+                            portal_type='Purchase Packing List Line'):
+    packing_list_line = packing_list.newContent(portal_type=portal_type)
     packing_list_line.edit(
       title = "Packing List Line"
     )
@@ -488,6 +496,125 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
                                     portal_type='Purchase Packing List Cell')
     self.assertEquals(movement_cell_list,[])
     
+
+  def test_select_item_dialog_no_variation(self):
+    organisation = self.createOrganisation(title='Organisation III')
+    resource = self.createNotVariatedResource()
+    
+    # create one item that is in organisation
+    packing_list = self.createPackingList(resource=resource,
+                                          organisation=organisation)
+    packing_list.edit(source_section=None, source=None)
+    packing_list_line = self.createPackingListLine(packing_list=packing_list,
+                                                   resource=resource)
+    item = self.portal.item_module.newContent(
+                                    portal_type='Item',
+                                    title='Test Item',
+                                    reference='TI',
+                                    quantity=12)
+    packing_list_line.setAggregateValue(item)
+    packing_list.confirm()
+    packing_list.stop()
+    self.assertEquals('stopped', packing_list.getSimulationState())
+    transaction.commit()
+    self.tic()
+    
+
+    packing_list = self.createPackingList(resource=resource,
+                                          organisation=organisation,
+                                          portal_type='Internal Packing List')
+    packing_list_line = self.createPackingListLine(
+                              packing_list=packing_list,
+                              resource=resource,
+                              portal_type='Internal Packing List Line')
+    packing_list_line.setQuantity(32)
+    
+    # we can view the dialog
+    packing_list_line.DeliveryLine_viewSelectItemListDialog()
+
+    # the listbox contains the items physically in the source of the packing
+    # list
+    self.assertEquals([item],
+                      packing_list_line.DeliveryLine_getSelectableItemList())
+    
+    packing_list_line.DeliveryLine_selectItemList(
+              list_selection_name='select_item_fast_input_selection',
+              listbox_uid=(item.getUid(),),
+              uids=(item.getUid(),))
+
+    self.assertEquals([item], packing_list_line.getAggregateValueList())
+    self.assertEquals(12, packing_list_line.getQuantity())
+
+
+  def test_select_item_dialog_variation(self):
+    organisation = self.createOrganisation(title='Organisation IV')
+    resource = self.createVariatedResource()
+    variation_category_list = [ 'size/%s' % variation.getRelativeUrl()
+                                 for variation in resource.contentValues() ]
+    
+    # create one item that is in organisation
+    packing_list = self.createPackingList(resource=resource,
+                                          organisation=organisation)
+    packing_list.edit(source_section=None, source=None)
+    packing_list_line = self.createPackingListLine(packing_list=packing_list,
+                                                   resource=resource)
+    packing_list_line.setVariationCategoryList(variation_category_list)
+
+    variation = variation_category_list[0]
+    cell = packing_list_line.newCell(base_id='movement',
+                                     *(variation,))
+    cell.edit(mapped_value_property_list=('quantity,'),
+              quantity=1,
+              variation_category_list=[variation])
+
+    item = self.portal.item_module.newContent(
+                                      portal_type='Item',
+                                      title='Test Item %s' % variation,
+                                      reference='TI%s' % variation,
+                                      quantity=12)
+    cell.setAggregateValue(item)
+
+    packing_list.confirm()
+    packing_list.stop()
+    self.assertEquals('stopped', packing_list.getSimulationState())
+    transaction.commit()
+    self.tic()
+    
+
+    packing_list = self.createPackingList(resource=resource,
+                                          organisation=organisation,
+                                          portal_type='Internal Packing List')
+    packing_list_line = self.createPackingListLine(
+                              packing_list=packing_list,
+                              resource=resource,
+                              portal_type='Internal Packing List Line')
+    packing_list_line.setQuantity(32)
+    
+    # we can view the dialog
+    packing_list_line.DeliveryLine_viewSelectItemListDialog()
+
+    # the listbox contains the items physically in the source of the packing
+    # list, and have matching variations
+    self.assertEquals([item],
+                      packing_list_line.DeliveryLine_getSelectableItemList())
+    
+    packing_list_line.DeliveryLine_selectItemList(
+              list_selection_name='select_item_fast_input_selection',
+              listbox_uid=(item.getUid(),),
+              uids=(item.getUid(),))
+
+    self.assertEquals([variation],
+                      packing_list_line.getVariationCategoryList())
+    self.assertEquals(12, packing_list_line.getTotalQuantity())
+    self.assertEquals([], packing_list_line.getAggregateValueList())
+
+    self.assertEquals(1,
+        len(packing_list_line.getCellValueList(base_id='movement')))
+    
+    cell = packing_list_line.getCell(base_id='movement', *(variation, ))
+    self.assertEquals(12, cell.getQuantity())
+    self.assertEquals([item], cell.getAggregateValueList())
+
 
 class TestItemScripts(ERP5TypeTestCase):
   """Test scripts from erp5_item.
