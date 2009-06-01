@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2002-2009 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -37,12 +37,10 @@ class Rule(Interface):
 
     An applied rule is an instanciation of a Rule. The applied rule is
     linked to the Rule through the `specialise` relation.
-    XXX update params
     """
 
   def expand(applied_rule):
     """Expand this applied rule to create new documents inside the
     applied rule.
-    XXX update params
     """
 
