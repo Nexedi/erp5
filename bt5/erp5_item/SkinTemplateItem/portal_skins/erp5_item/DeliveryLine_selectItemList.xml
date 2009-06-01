@@ -57,7 +57,6 @@
 
 from Products.ERP5Type.Message import translateString\n
 item_list = []\n
-request = context.REQUEST\n
 portal = context.getPortalObject()\n
 getObject = portal.portal_catalog.getObject\n
 selection_tool = portal.portal_selections\n
@@ -80,7 +79,7 @@ else:\n
 \n
 # update selected uids \n
 selection_tool.updateSelectionCheckedUidList(\n
-    list_selection_name, uids=uids, listbox_uid=listbox_uid, REQUEST=request)\n
+    list_selection_name, uids=uids, listbox_uid=listbox_uid, REQUEST=None)\n
 uids = selection_tool.getSelectionCheckedUidsFor(list_selection_name)\n
 \n
 \n
@@ -189,18 +188,17 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>item_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>request</string>
                             <string>portal</string>
                             <string>getObject</string>
                             <string>selection_tool</string>
                             <string>line_portal_type</string>
                             <string>cell_portal_type</string>
                             <string>NotImplementedError</string>
+                            <string>None</string>
                             <string>_getiter_</string>
                             <string>item_uid</string>
                             <string>item</string>
                             <string>item_variation</string>
-                            <string>None</string>
                             <string>cell_found</string>
                             <string>cell</string>
                             <string>movement_to_update</string>
