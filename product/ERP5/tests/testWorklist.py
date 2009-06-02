@@ -66,6 +66,15 @@ class TestWorklist(ERP5TypeTestCase):
   def getTitle(self):
     return "Worklist"
 
+  def clearModule(self, module):
+    module.manage_delObjects(list(module.objectIds()))
+    transaction.commit()
+    self.tic()
+
+  def beforeTearDown(self):
+    self.clearModule(self.portal.person_module)
+    self.clearModule(self.portal.organisation_module)
+
   def getBusinessTemplateList(self):
     """
     Return list of bt5 to install
