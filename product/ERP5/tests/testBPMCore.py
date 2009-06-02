@@ -1511,7 +1511,7 @@ class TestBPMTestCases(TestBPMMixin):
       trade_condition_1.getTradeModelLineComposedList()
     )
 
-  def test_getAggreagtedAmountList(self):
+  def test_getAggregatedAmountList(self):
     """
       Test for case, when discount contributes to tax, and order has mix of contributing lines
     """
@@ -1552,7 +1552,7 @@ class TestBPMTestCases(TestBPMMixin):
               Tic
     """ + AGGREGATED_AMOUNT_LIST_CHECK_SEQUENCE_STRING
 
-  def test_getAggreagtedAmountListOrderSpecialise(self):
+  def test_getAggregatedAmountListOrderSpecialise(self):
     """
       Test for case, when discount contributes to tax, and order has mix of contributing lines and order itself defines Trade Model Line
     """
