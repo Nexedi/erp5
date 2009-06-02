@@ -1,1 +1,0 @@
-from Products.ERP5Type.Utils import cartesianProduct
