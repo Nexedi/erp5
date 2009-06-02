@@ -34,6 +34,9 @@ from Products.ZSQLCatalog.SearchText import parse
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from Interface.Verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
+import re
+
+FULLTEXT_BOLLEAN_DETECTOR = re.compile(r'.*[\+\-<>\(\)\~\*]')
 
 class FullTextKey(SearchKey):
   """
@@ -44,6 +47,29 @@ class FullTextKey(SearchKey):
 
   def parseSearchText(self, value, is_column):
     return parse(value, is_column)
+
+  @profiler_decorator
+  def _processSearchValue(self, search_value, logical_operator,
+                          comparison_operator):
+    """
+      Special SearchValue processor for FullText queries: if a searched value
+      from 'match' operator group contains an operator recognised in boolean
+      mode, make the operator for that value be 'match_boolean'.
+    """
+    operator_value_dict, logical_operator, parsed = \
+      SearchKey._processSearchValue(self, search_value, logical_operator,
+                                    comparison_operator)
+    new_value_list = []
+    append = new_value_list.append
+    for value in operator_value_dict.pop('match', []):
+      if isinstance(value, basestring) and \
+         FULLTEXT_BOLLEAN_DETECTOR.match(value) is not None:
+        operator_value_dict.setdefault('match_boolean', []).append(value)
+      else:
+        append(value)
+    if len(new_value_list):
+      operator_value_dict['match'] = new_value_list
+    return operator_value_dict, logical_operator, parsed
 
   @profiler_decorator
   def _buildQuery(self, operator_value_dict, logical_operator, parsed, group):

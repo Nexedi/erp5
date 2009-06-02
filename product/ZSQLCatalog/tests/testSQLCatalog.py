@@ -422,6 +422,14 @@ class TestSQLCatalog(unittest.TestCase):
     self.assertRaises(ValueError, SimpleQuery, default=None, comparison_operator='>=')
     self.assertRaises(ValueError, SimpleQuery, default=1, comparison_operator='is')
 
+  def test_FullTextBooleanMode(self):
+    """
+      Fulltext searches must switch automatically to boolean mode if boolean
+      operators are found in search value.
+    """
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match_boolean', fulltext='a+b'), operator='and'),
+                 {'fulltext': 'a+b'})
+
 ##return catalog(title=Query(title='a', operator='not'))
 #return catalog(title={'query': 'a', 'operator': 'not'})
 #return catalog(title={'query': ['a', 'b'], 'operator': 'not'})

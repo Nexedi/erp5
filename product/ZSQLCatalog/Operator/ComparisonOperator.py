@@ -100,7 +100,7 @@ verifyClass(IOperator, MultivaluedComparisonOperator)
 
 class MatchComparisonOperator(MonovaluedComparisonOperator):
   def __init__(self, operator, mode=''):
-    MonovaluedComparisonOperator.__init__(self, operator)
+    MonovaluedComparisonOperator.__init__(self, operator, '')
     self.where_expression_format_string = 'MATCH (%%(column)s) AGAINST (%%(value_list)s%s)' % (mode, )
 
   @profiler_decorator
