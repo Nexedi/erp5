@@ -3238,7 +3238,7 @@ msgid "Delivered [state in bug_event_workflow]"
 msgstr "Clos"
 
 msgid "Delivered [state in event_workflow]"
-msgstr "Posté"
+msgstr "Livré"
 
 msgid "Delivered [state in internal_packing_list_workflow]"
 msgstr "Livré"
