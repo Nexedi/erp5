@@ -360,7 +360,10 @@ class SQLQueue(RAMQueue, SQLBase):
   def hasActivity(self, activity_tool, object, method_id=None, only_valid=None, active_process_uid=None):
     hasMessage = getattr(activity_tool, 'SQLQueue_hasMessage', None)
     if hasMessage is not None:
-      my_object_path = '/'.join(object.getPhysicalPath())
+      if object is None:
+        my_object_path = None
+      else:
+        my_object_path = '/'.join(object.getPhysicalPath())
       result = hasMessage(path=my_object_path, method_id=method_id, only_valid=only_valid, active_process_uid=active_process_uid)
       if len(result) > 0:
         return result[0].message_count > 0

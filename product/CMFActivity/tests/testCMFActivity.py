@@ -3251,19 +3251,28 @@ class TestCMFActivity(ERP5TypeTestCase):
     finally:
       delattr(Organisation, 'waitingActivity')
       Queue.tic = original_queue_tic
-  
-  def test_active_object_hasActivity(self):
+
+  def test_hasActivity(self):
     active_object = self.portal.organisation_module.newContent(
                                             portal_type='Organisation')
+    active_process = self.portal.portal_activities.newActiveProcess()
     get_transaction().commit()
     self.tic()
+
     self.assertFalse(active_object.hasActivity())
-    for activity in ('SQLDict', 'SQLQueue'):
-      active_object.activate(activity=activity).getTitle()
-      get_transaction().commit()
-      self.assertTrue(active_object.hasActivity(), activity)
-      self.tic()
-      self.assertFalse(active_object.hasActivity(), activity)
+    self.assertFalse(active_process.hasActivity())
+
+    def test(obj, **kw):
+      for activity in ('SQLDict', 'SQLQueue'):
+        active_object.activate(activity=activity, **kw).getTitle()
+        get_transaction().commit()
+        self.assertTrue(obj.hasActivity(), activity)
+        self.tic()
+        self.assertFalse(obj.hasActivity(), activity)
+
+    test(active_object)
+    test(active_process, active_process=active_process)
+    test(active_process, active_process=active_process.getPath())
 
   def test_active_object_hasActivity_does_not_catch_exceptions(self):
     """

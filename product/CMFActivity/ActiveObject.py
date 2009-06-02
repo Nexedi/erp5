@@ -128,8 +128,12 @@ class ActiveObject(ExtensionClass.Base):
       raise ValueError, "Cannot defined a group_id with value None"
     elif kw.get('group_method_id') is None and kw.get('group_id') is not None:
       raise ValueError, "Cannot defined a group_id without group_method_id"
-    
-    activity_tool = getToolByName(self, 'portal_activities', None)
+
+    portal = self.getPortalObject()
+    if isinstance(active_process, basestring):
+      active_process = portal.unrestrictedTraverse(active_process)
+
+    activity_tool = getattr(portal, 'portal_activities', None)
     if activity_tool is None: return self # Do nothing if no portal_activities
     # activate returns an ActiveWrapper
     # a queue can be provided as well as extra parameters

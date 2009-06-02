@@ -13,8 +13,8 @@ active_process_uid
 only_valid</params>
 SELECT count(path) as message_count FROM
   message
-WHERE
-path = <dtml-sqlvar path type="string">
+WHERE 1 = 1
+<dtml-if expr="path is not None">AND path = <dtml-sqlvar path type="string"> </dtml-if>
 <dtml-if expr="method_id is not None">AND method_id = <dtml-sqlvar method_id type="string"></dtml-if>
 <dtml-if expr="only_valid">AND processing_node > -2</dtml-if>
 <dtml-if expr="active_process_uid is not None"> AND active_process_uid = <dtml-sqlvar active_process_uid type="int"> </dtml-if>

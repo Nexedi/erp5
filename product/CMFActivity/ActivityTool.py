@@ -159,6 +159,7 @@ class Message:
   Message instances are stored in an activity queue, inside the Activity Tool.
   """
 
+  active_process = None
   active_process_uid = None
 
   def __init__(self, obj, active_process, activity_kw, method_id, args, kw):
@@ -168,11 +169,7 @@ class Message:
     else:
       self.object_path = obj.getPhysicalPath()
       activity_creation_trace = obj.getPortalObject().portal_activities.activity_creation_trace
-    if type(active_process) is StringType:
-      self.active_process = active_process.split('/')
-    elif active_process is None:
-      self.active_process = None
-    else:
+    if active_process is not None:
       self.active_process = active_process.getPhysicalPath()
       self.active_process_uid = active_process.getUid()
     if activity_kw.get('serialization_tag', False) is None:
