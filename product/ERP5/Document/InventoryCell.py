@@ -68,18 +68,6 @@ class InventoryCell(DeliveryCell):
                       , PropertySheet.ItemAggregation
                       )
     
-    def _edit(self, REQUEST=None, force_update = 0, **kw):
-      DeliveryCell._edit(self, REQUEST=REQUEST, force_update = force_update, **kw)
-      # Calculate inventory
-      item_list = self.getAggregateValueList()
-      if item_list not in [None,[]]:
-        inventory = 0
-        for item in item_list:
-          if item.getQuantity() not in [None, '']:
-            inventory += item.getQuantity()
-        self.setInventory(inventory)
-      
-
     security.declareProtected(Permissions.AccessContentsInformation, 'getTotalInventory')
     def getTotalInventory(self):
       """
