@@ -13,15 +13,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>default</string>
                 <string>css_class</string>
-                <string>width</string>
-                <string>height</string>
-                <string>text_editor</string>
+                <string>default</string>
                 <string>editable</string>
+                <string>height</string>
                 <string>required</string>
+                <string>text_editor</string>
+                <string>title</string>
                 <string>whitespace_preserve</string>
+                <string>width</string>
               </list>
             </value>
         </item>
@@ -170,7 +170,7 @@
                 </item>
                 <item>
                     <key> <string>width</string> </key>
-                    <value> <int>800</int> </value>
+                    <value> <int>80</int> </value>
                 </item>
               </dictionary>
             </value>
@@ -189,7 +189,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:(here.hasFile() or here.getTextFormat() == \'text/html\' and \'page\') or \'\'</string> </value>
+            <value> <string>python:(here.hasFile() or here.getTextFormat() == \'text/html\') and \'page\' or \'\'</string> </value>
         </item>
       </dictionary>
     </pickle>
