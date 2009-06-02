@@ -208,14 +208,11 @@ class SQLQueue(RAMQueue, SQLBase):
     deletable_uid_list = []
     delay_uid_list = []
     final_error_uid_list = []
-    message_with_active_process_list = []
     notify_user_list = []
     non_executable_message_list = []
     for uid, m, priority in message_uid_priority_list:
       if m.getExecutionState() == MESSAGE_EXECUTED:
         deletable_uid_list.append(uid)
-        if m.active_process:
-          message_with_active_process_list.append(m)
       elif m.getExecutionState() == MESSAGE_NOT_EXECUTED:
         if type(m.exc_type) is ClassType and \
            issubclass(m.exc_type, ConflictError):
@@ -277,11 +274,6 @@ class SQLQueue(RAMQueue, SQLBase):
     try:
       for m in notify_user_list:
         m.notifyUser(activity_tool)
-      for m in message_with_active_process_list:
-        active_process = activity_tool.unrestrictedTraverse(m.active_process)
-        if not active_process.hasActivity():
-          # No more activity
-          m.notifyUser(activity_tool, message="Process Finished") # XXX commit bas ???
     except:
       # Notification failures must not cause this method to raise.
       LOG('SQLQueue', WARNING, 'Exception during notification phase of finalizeMessageExecution', error=sys.exc_info())

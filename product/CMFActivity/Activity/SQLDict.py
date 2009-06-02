@@ -338,7 +338,6 @@ class SQLDict(RAMDict, SQLBase):
     delay_uid_list = []
     final_error_uid_list = []
     make_available_uid_list = []
-    message_with_active_process_list = []
     notify_user_list = []
     non_executable_message_list = []
     something_failed = (len([x for x in message_uid_priority_list if x[1].getExecutionState() == MESSAGE_NOT_EXECUTED]) != 0)
@@ -350,10 +349,6 @@ class SQLDict(RAMDict, SQLBase):
         else:
           deletable_uid_list.append(uid)
           deletable_uid_list.extend(uid_to_duplicate_uid_list_dict.get(uid, []))
-          if m.active_process:
-            # XXX: Bug here: Even if a duplicate message has an active_process,
-            # it won't be called on the duplicate.
-            message_with_active_process_list.append(m)
       elif m.getExecutionState() == MESSAGE_NOT_EXECUTED:
         # Should duplicate messages follow strictly the original message, or
         # should they be just made available again ?
@@ -415,11 +410,6 @@ class SQLDict(RAMDict, SQLBase):
     try:
       for m in notify_user_list:
         m.notifyUser(activity_tool)
-      for m in message_with_active_process_list:
-        active_process = activity_tool.unrestrictedTraverse(m.active_process)
-        if not active_process.hasActivity():
-          # No more activity
-          m.notifyUser(activity_tool, message="Process Finished") # XXX commit bas ???
     except:
       # Notification failures must not cause this method to raise.
       LOG('SQLDict', WARNING, 'Exception during notification phase of finalizeMessageExecution', error=sys.exc_info())
