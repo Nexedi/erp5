@@ -90,7 +90,7 @@ class TestBPMMixin(ERP5TypeTestCase):
   def createCategories(self):
     category_tool = getToolByName(self.portal, 'portal_categories')
     self.createCategoriesInCategory(category_tool.base_amount, ['discount',
-      'tax'])
+      'tax', 'total_tax', 'total_discount'])
     self.createCategoriesInCategory(category_tool.use,
         self.normal_resource_use_category_list + \
             self.invoicing_resource_use_category_list)
@@ -915,9 +915,27 @@ class TestBPMMixin(ERP5TypeTestCase):
       use='tax',
     ))
 
+  def stepCreateServiceTax2(self, sequence=None, **kw):
+    sequence.edit(service_tax_2 = self.createResource('Service',
+      title='Tax 2',
+      use='tax',
+    ))
+
+  def stepCreateServiceTax3(self, sequence=None, **kw):
+    sequence.edit(service_tax_3 = self.createResource('Service',
+      title='Tax 3',
+      use='tax',
+    ))
+
   def stepCreateServiceDiscount(self, sequence=None, **kw):
     sequence.edit(service_discount = self.createResource('Service',
       title='Discount',
+      use='discount',
+    ))
+
+  def stepCreateServiceDiscount2(self, sequence=None, **kw):
+    sequence.edit(service_discount_2 = self.createResource('Service',
+      title='Discount 2',
       use='discount',
     ))
 
@@ -1144,6 +1162,38 @@ class TestBPMMixin(ERP5TypeTestCase):
       trade_model_line_discount = trade_model_line
     )
 
+  def stepModifyTradeModelLineTotalDiscount(self, sequence=None, **kw):
+    trade_model_line = sequence.get('trade_model_line')
+    service_discount = sequence.get('service_discount_2')
+
+    trade_model_line.edit(
+      price=0.8,
+      base_application='base_amount/total_discount',
+      trade_phase='default/discount',
+      resource_value=service_discount,
+    )
+    sequence.edit(
+      trade_model_line = None,
+      trade_model_line_discount = trade_model_line
+    )
+
+  def stepModifyTradeModelLineDiscountContributingToTotalDiscount(self,
+      sequence=None, **kw):
+    trade_model_line = sequence.get('trade_model_line')
+    service_discount = sequence.get('service_discount')
+
+    trade_model_line.edit(
+      price=0.32,
+      base_application='base_amount/discount',
+      base_contribution='base_amount/total_discount',
+      trade_phase='default/discount',
+      resource_value=service_discount,
+    )
+    sequence.edit(
+      trade_model_line = None,
+      trade_model_line_discount = trade_model_line
+    )
+
   def stepModifyTradeModelLineNewTax(self, sequence=None, **kw):
     trade_model_line = sequence.get('trade_model_line')
     service_tax = sequence.get('service_tax')
@@ -1166,6 +1216,56 @@ class TestBPMMixin(ERP5TypeTestCase):
     trade_model_line.edit(
       price=self.default_tax_ratio,
       base_application='base_amount/tax',
+      trade_phase='default/tax',
+      resource_value=service_tax,
+    )
+    sequence.edit(
+      trade_model_line = None,
+      trade_model_line_tax = trade_model_line
+    )
+
+  def stepModifyTradeModelLineTotalTax(self, sequence=None, **kw):
+    trade_model_line = sequence.get('trade_model_line')
+    service_tax = sequence.get('service_tax_3')
+
+    trade_model_line.edit(
+      price=0.12,
+      base_application='base_amount/total_tax',
+      base_contribution='base_amount/total_discount',
+      trade_phase='default/tax',
+      resource_value=service_tax,
+    )
+    sequence.edit(
+      trade_model_line = None,
+      trade_model_line_tax = trade_model_line
+    )
+
+  def stepModifyTradeModelLineTaxContributingToTotalTax(self,
+      sequence=None, **kw):
+    trade_model_line = sequence.get('trade_model_line')
+    service_tax = sequence.get('service_tax')
+
+    trade_model_line.edit(
+      price=0.2,
+      base_application='base_amount/tax',
+      base_contribution='base_amount/total_tax',
+      trade_phase='default/tax',
+      resource_value=service_tax,
+    )
+    sequence.edit(
+      trade_model_line = None,
+      trade_model_line_tax = trade_model_line
+    )
+
+  def stepModifyTradeModelLineTaxContributingToTotalTax2(self,
+      sequence=None, **kw):
+    trade_model_line = sequence.get('trade_model_line')
+    service_tax = sequence.get('service_tax_2')
+
+    trade_model_line.edit(
+      price=0.2,
+      base_application='base_amount/tax',
+      base_contribution='base_amount/total_tax',
       trade_phase='default/tax',
       resource_value=service_tax,
     )
@@ -1310,6 +1410,76 @@ class TestBPMMixin(ERP5TypeTestCase):
       (order_line_taxed.getTotalPrice()
         + order_line_discounted_taxed.getTotalPrice()
         + discount_amount.getTotalPrice()) * self.default_tax_ratio
+    )
+
+  def stepCheckAggregatedAmountListWithComplexBaseContributionBaseApplication(self,
+      sequence=None, **kw):
+    trade_condition = sequence.get('trade_condition')
+    order = sequence.get('order')
+    order_line_discounted = sequence.get('order_line_discounted')
+    order_line_discounted_taxed = sequence.get('order_line_discounted_taxed')
+    order_line_taxed = sequence.get('order_line_taxed')
+
+    amount_list = trade_condition.getAggregatedAmountList(order)
+    self.assertEquals(5, len(amount_list))
+    tax_amount_list = [q for q in amount_list
+        if q.getBaseApplication() == 'base_amount/tax']
+    total_tax_amount_list = [q for q in amount_list
+        if q.getBaseApplication() == 'base_amount/total_tax']
+    discount_amount_list = [q for q in amount_list
+        if q.getBaseApplication() == 'base_amount/discount']
+    total_discount_amount_list = [q for q in amount_list
+        if q.getBaseApplication() == 'base_amount/total_discount']
+
+    self.assertEquals(2, len(tax_amount_list))
+    self.assertEquals(1, len(total_tax_amount_list))
+    self.assertEquals(1, len(discount_amount_list))
+    self.assertEquals(1, len(total_discount_amount_list))
+
+    total_tax_amount = total_tax_amount_list[0]
+    discount_amount = discount_amount_list[0]
+    total_discount_amount = total_discount_amount_list[0]
+
+    self.assertSameSet(['base_amount/total_tax'], total_tax_amount. \
+        getBaseApplicationList())
+    self.assertSameSet(['base_amount/total_discount'], total_tax_amount. \
+        getBaseContributionList())
+
+    self.assertSameSet(['base_amount/discount'], discount_amount. \
+        getBaseApplicationList())
+    self.assertSameSet(['base_amount/total_discount'], discount_amount. \
+        getBaseContributionList())
+
+    self.assertSameSet(['base_amount/total_discount'], total_discount_amount. \
+        getBaseApplicationList())
+    self.assertSameSet([], total_discount_amount.getBaseContributionList())
+
+    for tax_amount in tax_amount_list:
+      self.assertSameSet(['base_amount/tax'], tax_amount. \
+          getBaseApplicationList())
+      self.assertSameSet(['base_amount/total_tax'], tax_amount. \
+          getBaseContributionList())
+
+    for tax_amount in tax_amount_list:
+      self.assertEqual(
+        tax_amount.getTotalPrice(),
+        order_line_taxed.getTotalPrice() * 0.2
+      )
+
+    self.assertEqual(
+      total_tax_amount.getTotalPrice(),
+      (order_line_taxed.getTotalPrice() * 0.2) * 2 * 0.12
+    )
+
+    self.assertEqual(
+      discount_amount.getTotalPrice(),
+      order_line_discounted.getTotalPrice() * 0.32
+    )
+
+    self.assertEqual(
+      total_discount_amount.getTotalPrice(),
+      ((order_line_taxed.getTotalPrice() * 0.2) * 2 * 0.12 + \
+      order_line_discounted.getTotalPrice() * 0.32) * 0.8
     )
 
 class TestBPMTestCases(TestBPMMixin):
@@ -1910,6 +2080,104 @@ class TestBPMTestCases(TestBPMMixin):
     sequence_list = SequenceList()
     sequence_list.addSequenceString(
         self.PACKING_LIST_SPLIT_INVOICE_BUILD_SEQUENCE_STRING)
+    sequence_list.play(self)
+
+  def test_getAggregatedAmountListWithComplexModelLinesCreateInGoodOrder(self):
+    """
+    Test the return of getAggregatedAmountList in the case of many model lines
+    depending each others. In this test, lines are created in the order of the
+    dependancies (it means that if a line A depend of a line B, line B is
+    created before A). This is the most easy case.
+    """
+    sequence_list = SequenceList()
+    sequence_string = self.COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
+              CreateServiceTax2
+              CreateServiceTax3
+              CreateServiceDiscount2
+              CreateBusinessProcess
+              CreateBusinessState
+              ModifyBusinessStateTaxed
+              CreateBusinessState
+              ModifyBusinessStateInvoiced
+              CreateBusinessPath
+              ModifyBusinessPathTaxing
+              CreateBusinessPath
+              ModifyBusinessPathDiscounting
+              CreateTradeCondition
+              SpecialiseTradeConditionWithBusinessProcess
+              CreateTradeModelLine
+              ModifyTradeModelLineTotalDiscount
+              CreateTradeModelLine
+              ModifyTradeModelLineTotalTax
+              CreateTradeModelLine
+              ModifyTradeModelLineTaxContributingToTotalTax2
+              CreateTradeModelLine
+              ModifyTradeModelLineDiscountContributingToTotalDiscount
+              CreateTradeModelLine
+              ModifyTradeModelLineTaxContributingToTotalTax
+              Tic
+              CreateOrder
+              SpecialiseOrderTradeCondition
+              FillOrder
+              Tic
+              CreateOrderLine
+              ModifyOrderLineTaxed
+              CreateOrderLine
+              ModifyOrderLineDiscounted
+              Tic
+              CheckAggregatedAmountListWithComplexBaseContributionBaseApplication
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_getAggregatedAmountListWithComplexModelLinesCreateInRandomOrder(self):
+    """
+    Test the return of getAggregatedAmountList in the case of many model lines
+    depending each others. In this test, lines are created in a random order,
+    not in the dependancies order (it means that if a line A depend of a 
+    line B, line A can be created before line B). getAggregatedAmountList
+    should be able to handle this case and redo calculation unill all
+    dependancies are satified
+    """
+    sequence_list = SequenceList()
+    sequence_string = self.COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
+              CreateServiceTax2
+              CreateServiceTax3
+              CreateServiceDiscount2
+              CreateBusinessProcess
+              CreateBusinessState
+              ModifyBusinessStateTaxed
+              CreateBusinessState
+              ModifyBusinessStateInvoiced
+              CreateBusinessPath
+              ModifyBusinessPathTaxing
+              CreateBusinessPath
+              ModifyBusinessPathDiscounting
+              CreateTradeCondition
+              SpecialiseTradeConditionWithBusinessProcess
+              CreateTradeModelLine
+              ModifyTradeModelLineTaxContributingToTotalTax
+              CreateTradeModelLine
+              ModifyTradeModelLineTaxContributingToTotalTax2
+              CreateTradeModelLine
+              ModifyTradeModelLineTotalTax
+              CreateTradeModelLine
+              ModifyTradeModelLineDiscountContributingToTotalDiscount
+              CreateTradeModelLine
+              ModifyTradeModelLineTotalDiscount
+              Tic
+              CreateOrder
+              SpecialiseOrderTradeCondition
+              FillOrder
+              Tic
+              CreateOrderLine
+              ModifyOrderLineTaxed
+              CreateOrderLine
+              ModifyOrderLineDiscounted
+              Tic
+              CheckAggregatedAmountListWithComplexBaseContributionBaseApplication
+    """
+    sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
 class TestBPMSale(TestBPMTestCases):
