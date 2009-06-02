@@ -220,7 +220,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                     base_contribution_list=[ 'base_amount/base_salary'])
     sequence.edit(labour_paysheet_line = paysheet_line)
 
-  def checkUpdateAggregatedMovementReturn(self, model, paysheet,
+  def checkUpdateAggregatedAmountListReturn(self, model, paysheet,
       expected_movement_to_delete_count, expected_movement_to_add_count):
     movement_dict = model.updateAggregatedAmountList(context=paysheet)
     movement_to_delete = movement_dict['movement_to_delete_list']
@@ -229,10 +229,10 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         expected_movement_to_delete_count)
     self.assertEquals(len(movement_to_add), expected_movement_to_add_count)
 
-  def stepCheckUpdateAggregatedMovementReturn(self, sequence=None, **kw):
+  def stepCheckUpdateAggregatedAmountListReturn(self, sequence=None, **kw):
     model = sequence.get('model')
     paysheet = sequence.get('paysheet')
-    self.checkUpdateAggregatedMovementReturn(model, paysheet, 0, 2)
+    self.checkUpdateAggregatedAmountListReturn(model, paysheet, 0, 2)
 
   def stepPaysheetApplyTransformation(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
@@ -560,11 +560,11 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         mapped_value_property_list=('quantity', 'price'))
     cell2.edit(price=0.8, tax_category='employer_share')
 
-  def stepCheckUpdateAggregatedMovementReturnWithModelLineOnPaysheet(self,
+  def stepCheckUpdateAggregatedAmountListReturnWithModelLineOnPaysheet(self,
       sequence=None, **kw):
     model = sequence.get('model')
     paysheet = sequence.get('paysheet')
-    self.checkUpdateAggregatedMovementReturn(model, paysheet, 0, 4)
+    self.checkUpdateAggregatedAmountListReturn(model, paysheet, 0, 4)
 
   def stepCheckPaysheetLineAreCreatedWithModelLineOnPaysheet(self,
       sequence=None, **kw):
@@ -599,6 +599,35 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         cell2 = paysheet_line.getCell('tax_category/employer_share')
         self.assertEquals(cell2.getQuantity(), 3000)
         self.assertEquals(cell2.getPrice(), 0.8)
+      else:
+        self.fail("Unknown service for line %s" % paysheet_line.getTitle())
+
+  def stepModelModifyUrssafModelLine(self, sequence=None, **kw):
+    model_line = sequence.get('urssaf_model_line')
+    # modify price on movements :
+    cell_1 = model_line.getCell('tax_category/employee_share',
+        base_id='movement')
+    self.assertNotEquals(cell_1, None)
+    cell_1.edit(price=0.2)
+    cell_2 = model_line.getCell('tax_category/employer_share',
+        base_id='movement')
+    self.assertNotEquals(cell_2, None)
+    cell_2.edit(price=0.6)
+
+  def stepCheckPaysheetLineNewAmountsAfterUpdate(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
+    for paysheet_line in paysheet_line_list:
+      service = paysheet_line.getResourceTitle()
+      if service == 'Urssaf':
+        cell1 = paysheet_line.getCell('tax_category/employee_share')
+        self.assertEquals(cell1.getQuantity(), 3000)
+        self.assertEquals(cell1.getPrice(), 0.2)
+        cell2 = paysheet_line.getCell('tax_category/employer_share')
+        self.assertEquals(cell2.getQuantity(), 3000)
+        self.assertEquals(cell2.getPrice(), 0.6)
+      elif service == 'Labour':
+        self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       else:
         self.fail("Unknown service for line %s" % paysheet_line.getTitle())
 
@@ -694,13 +723,14 @@ class TestNewPayroll(TestNewPayrollMixin):
     '''
     sequence_list = SequenceList()
     sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
-               CheckUpdateAggregatedMovementReturn
+               CheckUpdateAggregatedAmountListReturn
                PaysheetApplyTransformation
                Tic
                CheckSourceSectionOnMovements
                CheckPaysheetLineAreCreated
                CheckPaysheetLineAmounts
                CheckUpdateAggregatedAmountListReturnNothing
+               CheckPaysheetLineAmounts
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -742,7 +772,7 @@ class TestNewPayroll(TestNewPayrollMixin):
                CreateOldAgeInsuranacePayrollService 
                PaysheetCreateModelLine
                PaysheetModelLineCreateMovements
-               CheckUpdateAggregatedMovementReturnWithModelLineOnPaysheet
+               CheckUpdateAggregatedAmountListReturnWithModelLineOnPaysheet
                PaysheetApplyTransformation
                Tic
                CheckPaysheetLineAreCreatedWithModelLineOnPaysheet
@@ -751,6 +781,35 @@ class TestNewPayroll(TestNewPayrollMixin):
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+  def test_updateMovements(self):
+    '''
+      Calculate the paySheet using a model, modify one value in the model and
+      check that updateAggregatedAmount return nothing but modifed movements
+      that need to be modified
+    '''
+    sequence_list = SequenceList()
+    sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
+               CheckUpdateAggregatedAmountListReturn
+               PaysheetApplyTransformation
+               Tic
+               CheckSourceSectionOnMovements
+               CheckPaysheetLineAreCreated
+               CheckPaysheetLineAmounts
+               CheckUpdateAggregatedAmountListReturnNothing
+               ModelModifyUrssafModelLine
+               CheckUpdateAggregatedAmountListReturnNothing
+               PaysheetApplyTransformation
+               Tic
+               CheckSourceSectionOnMovements
+               CheckPaysheetLineAreCreated
+               CheckPaysheetLineNewAmountsAfterUpdate
+               CheckUpdateAggregatedAmountListReturnNothing
+               CheckPaysheetLineNewAmountsAfterUpdate
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 
 import unittest
 def test_suite():
