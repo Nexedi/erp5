@@ -397,6 +397,50 @@ class TestPasswordTool(ERP5TypeTestCase):
     self._assertUserExists('userB', 'newB')
 
 
+  def test_login_with_trailing_space(self):
+    person = self.portal.person_module.newContent(portal_type="Person",
+                                    reference="userZ ",
+                                    password="passwordZ",
+                                    default_email_text="userA@example.invalid")
+    assignment = person.newContent(portal_type='Assignment')
+    assignment.open()
+
+    transaction.commit()
+    self.tic()
+
+    self._assertUserExists('userZ ', 'passwordZ')
+    
+    self.assertEquals(0, len(self.portal.portal_password.password_request_dict))
+    # No reset should be send if trailing space is not entered
+    self.portal.portal_password.mailPasswordResetRequest(user_login="userZ")
+    self.assertEquals(0, len(self.portal.portal_password.password_request_dict))
+    self.portal.portal_password.mailPasswordResetRequest(user_login="userZ ")
+    self.assertEquals(1, len(self.portal.portal_password.password_request_dict))
+
+    key_a = self.portal.portal_password.password_request_dict.keys()[0]
+    transaction.commit()
+    self.tic()
+
+    self._assertUserExists('userZ ', 'passwordZ')
+
+    # Check that password is not changed if trailing space is not entered
+    self.portal.portal_password.changeUserPassword(user_login="userZ",
+                                                   password="newZ",
+                                                   password_confirmation="newZ",
+                                                   password_key=key_a)
+    transaction.commit()
+    self.tic()
+    self._assertUserExists('userZ ', 'passwordZ')
+
+    # Check that password is changed if trailing space is entered
+    self.portal.portal_password.changeUserPassword(user_login="userZ ",
+                                                   password="newZ2",
+                                                   password_confirmation="newZ2",
+                                                   password_key=key_a)
+    transaction.commit()
+    self.tic()
+    self._assertUserExists('userZ ', 'newZ2')
+
 class TestPasswordToolWithCRM(TestPasswordTool):
   """
   Test reset of password
