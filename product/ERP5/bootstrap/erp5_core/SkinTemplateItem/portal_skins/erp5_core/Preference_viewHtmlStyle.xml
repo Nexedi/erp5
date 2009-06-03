@@ -83,6 +83,7 @@
                         <string>my_preferred_html_style_contextual_help</string>
                         <string>my_preferred_html_style_translator_mode</string>
                         <string>my_preferred_html_style_access_tab</string>
+                        <string>my_preferred_html_style_acknowledgeable_message</string>
                         <string>my_preferred_html_style_documentation_base_url</string>
                         <string>my_preferred_category_child_item_list_method_id</string>
                         <string>my_preferred_listbox_view_mode_line_count</string>
