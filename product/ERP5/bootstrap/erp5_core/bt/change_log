@@ -1,3 +1,6 @@
+2009-06-03 nicolas
+*Delete SQLCache and ZODBCache as RamCache and DistributedRamCache will provide all needs.
+
 2009-05-15 yusei
 * Add a Editor Field template field to Base_viewFieldLibrary. my_text_content was not appropriate in general.
 

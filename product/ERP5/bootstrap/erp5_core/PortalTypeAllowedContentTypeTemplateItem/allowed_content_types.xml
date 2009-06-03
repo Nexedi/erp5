@@ -14,8 +14,6 @@
  </portal_type>
  <portal_type id="Cache Factory">
   <item>Ram Cache</item>
-  <item>SQL Cache</item>
-  <item>ZODB Cache</item>
   <item>Distributed Ram Cache</item>
  </portal_type>
  <portal_type id="Cache Tool">
@@ -38,8 +36,8 @@
   <item>Base Domain</item>
  </portal_type>
  <portal_type id="Preference Tool">
-  <item>System Preference</item>
   <item>Preference</item>
+  <item>System Preference</item>
  </portal_type>
  <portal_type id="Simulation Movement">
   <item>Applied Rule</item>

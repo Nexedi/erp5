@@ -43,7 +43,6 @@ Preference | view_template
 Ram Cache | statistics
 Ram Cache | view
 Rule Tool | view
-SQL Cache | view
 Simulation Movement | view
 Simulation Tool | view
 System Preference | view
@@ -60,7 +59,6 @@ Trash Bin | jump_bt5
 Trash Bin | view
 Trash Folder | view
 Trash Tool | view
-ZODB Cache | view
 portal_actions | bt_tool
 portal_actions | category_tool
 portal_actions | create_module

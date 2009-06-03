@@ -22,7 +22,6 @@ Preference
 Preference Tool
 Ram Cache
 Rule Tool
-SQL Cache
 Session Tool
 Simulation Movement
 Simulation Tool
@@ -31,4 +30,3 @@ Template Tool
 Trash Bin
 Trash Folder
 Trash Tool
-ZODB Cache

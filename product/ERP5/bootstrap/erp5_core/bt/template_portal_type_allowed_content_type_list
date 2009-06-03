@@ -5,8 +5,6 @@ Base Domain | Domain
 Base Domain | Domain Generator
 Cache Factory | Distributed Ram Cache
 Cache Factory | Ram Cache
-Cache Factory | SQL Cache
-Cache Factory | ZODB Cache
 Cache Tool | Cache Factory
 Category Tool | Base Category
 Category | Category
