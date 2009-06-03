@@ -53,7 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
 Implementation of a highly sophisticated security system. Context has a security classification\n
 like "personal/project", "collaborative/public" etc and we check if a given policy or a set of \n
 policies (defined with wildcard, like "personal/*" or "*/project") applies to the context.\n
@@ -68,7 +70,6 @@ this check can be skipped by setting membershiponly to True.\n
 klass = context.getClassification()\n
 if klass is None: return False\n
 kl = klass.split(\'/\')\n
-\n
 if len(kl) == 1:\n
   # personal = personal/restricted\n
   if kl[0] == \'personal\': kl.append(\'restricted\')\n
@@ -87,9 +88,14 @@ if not membershiponly:\n
     if context.getFollowUp() == None:\n
       return False\n
 \n
-# if all conditions are met, check if the policy is ok (wildcards are ok)\n
-return (pol[0] in (\'*\', kl[0])) and (pol[1] in (\'*\', kl[1]))\n
-</string> </value>
+if len(pol) >= 2 and len(kl) >= 2:\n
+  # if all conditions are met, check if the policy is ok (wildcards are ok)\n
+  return (pol[0] in (\'*\', kl[0])) and (pol[1] in (\'*\', kl[1]))\n
+\n
+return False\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
