@@ -47,8 +47,11 @@
       <div class="dialog_box">\n
         <div class="list_dialog">\n
           <tal:div content="structure item/text_content" />\n
+          <tal:block tal:repeat="aggregate_info item/aggregate_url_list | nothing">\n
+            <a tal:attributes="href python: aggregate_info[1]" tal:content="python: aggregate_info[0]">Some Document Title</a>\n
+          </tal:block>\n
         </div>\n
-        <a tal:attributes="href item/acknowledge_url"><button>DISMISS</button></a>\n
+        <a tal:attributes="href item/acknowledge_url"><button i18n:translate="" i18n:domain="ui">DISMISS</button></a>\n
       </div>\n
     </tal:block>\n
   </tal:block>\n
@@ -67,7 +70,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>bulletin_board</string> </value>
+            <value> <string>acknowledgeable_message_render</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

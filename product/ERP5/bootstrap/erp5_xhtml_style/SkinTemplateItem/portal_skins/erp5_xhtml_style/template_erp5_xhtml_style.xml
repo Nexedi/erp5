@@ -129,9 +129,11 @@ IDEAS:\n
                   </tal:block>\n
                 </div>\n
                 <p class="clear"></p>\n
-                <div id="bulletin_board">\n
-                  <div tal:content="structure here/bulletin_board"/>\n
-                </div>\n
+                <tal:block tal:condition="preferred_html_style_acknowledgeable_message">\n
+                  <div id="acknowledgeable_message_render">\n
+                    <div tal:content="structure here/acknowledgeable_message_render"/>\n
+                  </div>\n
+                </tal:block>\n
                 <div tal:content="request/portal_status_message | nothing" id="transition_message" />\n
                 <div id="information_area" tal:condition="request/field_errors | nothing"\n
                     i18n:translate="" i18n:domain="ui">\n
