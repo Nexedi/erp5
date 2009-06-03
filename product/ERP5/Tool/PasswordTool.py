@@ -71,7 +71,7 @@ class PasswordTool(BaseTool):
       user_login = REQUEST["user_login"]
 
     # check user exists
-    user_list = self.portal_catalog.unrestrictedSearchResults(portal_type="Person", reference=user_login)
+    user_list = self.acl_users.erp5_users.getUserByLogin(user_login)              
     if len(user_list) == 0:
       msg = translateString("User ${user} does not exist.",
                             mapping={'user':user_login})
