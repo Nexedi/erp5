@@ -29,11 +29,12 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 
 from Products.ERP5.Document.Amount import Amount
 from Products.ERP5.Variated import Variated
+from Products.ERP5Type.Utils import cartesianProduct
 
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 
@@ -70,8 +71,8 @@ class TradeModelLine(XMLMatrix, Amount, Variated):
       raise NotImplementedError('TODO')
 
     def getAggregatedAmountList(self, context, movement_list = None,
-        current_aggregated_amount_list = None, **kw):
-      from Products.ERP5Type.Document import newTempMovement
+        current_aggregated_amount_list = None, base_id='movement', **kw):
+      from Products.ERP5Type.Document import newTempSimulationMovement
 
       normal_resource_use_category_list = self.\
           portal_preferences.getPreferredNormalResourceUseCategoryList()
@@ -109,36 +110,69 @@ class TradeModelLine(XMLMatrix, Amount, Variated):
 
       self_id = self.getParentValue().getId() + '_' + self.getId()
 
-      tmp_movement = [q for q in current_aggregated_amount_list \
+      tmp_movement_list = [q for q in current_aggregated_amount_list \
           if q.getProperty('resource') == self.getResource() ]
-      if len(tmp_movement) > 0:
-        tmp_movement = tmp_movement[0]
+      if len(tmp_movement_list) > 0:
+        tmp_movement_list = tmp_movement_list[:1]
         update = 1
       else:
         update = 0
-        tmp_movement = newTempMovement(self.getPortalObject(), self_id )
-        tmp_movement.edit(
-          causality = self.getRelativeUrl(),
-          resource = self.getResource(),
-          base_application_list = base_application_list,
-          base_contribution_list = self.getBaseContributionList(),
-          price = self.getPrice(),
-          trade_phase_list = self.getTradePhaseList(),
-        )
+        base_category_list = self.getVariationBaseCategoryList()
+        category_list_list = []
+        for base_cat in base_category_list:
+          category_list = self.getVariationCategoryList(
+                                          base_category_list=base_cat)
+          category_list_list.append(category_list)
+        cartesian_product = cartesianProduct(category_list_list)
+        # if categories are used, we want to look for all cells
+        if len(category_list_list) > 0:
+          for cell_coordinates in cartesian_product:
+            cell = self.getCell(base_id=base_id, *cell_coordinates)
+            if cell is None:
+              raise ValueError("Can't find the cell corresponding to those "+\
+                  "cells coordinates : %s" % cell_coordinates)
+            tmp_movement = newTempSimulationMovement(self.getPortalObject(),
+                self_id )
+            tmp_movement.edit(
+                variation_base_category_list = cell.getVariationBaseCategoryList(),
+                variation_category_list = cell.getVariationCategoryList(),
+                causality = self.getRelativeUrl(),
+                resource = self.getResource(),
+                base_application_list = base_application_list,
+                base_contribution_list = self.getBaseContributionList(),
+                price = cell.getPrice(),
+                quantity = cell.getQuantity(0.0),
+                trade_phase_list = self.getTradePhaseList(),
+                )
+            tmp_movement_list.append(tmp_movement)
+        else:
+          tmp_movement = newTempSimulationMovement(self.getPortalObject(),
+              self_id )
+          tmp_movement.edit(
+            causality = self.getRelativeUrl(),
+            resource = self.getResource(),
+            base_application_list = base_application_list,
+            base_contribution_list = self.getBaseContributionList(),
+            price = self.getPrice(),
+            trade_phase_list = self.getTradePhaseList(),
+          )
+          tmp_movement_list.append(tmp_movement)
 
       modified = 0
-      for movement in movement_list:
-        if set(base_application_list)\
-            .intersection(set(movement.getBaseContributionList())):
-          quantity = tmp_movement.getQuantity(0.0)
-          modified = 1
-          tmp_movement.edit(
-            quantity = quantity + movement.getTotalPrice()
-          )
+      
+      for tmp_movement in tmp_movement_list:
+        for movement in movement_list:
+          if set(base_application_list)\
+              .intersection(set(movement.getBaseContributionList())):
+            quantity = tmp_movement.getQuantity(0.0)
+            modified = 1
+            tmp_movement.edit(
+              quantity = quantity + movement.getTotalPrice()
+            )
 
-      if not update:
-        if modified:
-          aggregated_amount_list.append(tmp_movement)
+        if not update:
+          if modified:
+            aggregated_amount_list.append(tmp_movement)
 
       return aggregated_amount_list
 
