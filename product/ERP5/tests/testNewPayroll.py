@@ -610,17 +610,17 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     paysheet = sequence.get('paysheet')
     paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
     for paysheet_line in paysheet_line_list:
-      title = paysheet_line.getTitle()
-      if title == 'Urssaf':
+      service = paysheet_line.getResourceTitle()
+      if service == 'Urssaf':
         cell1 = paysheet_line.getCell('tax_category/employee_share')
         self.assertEquals(cell1.getQuantity(), 3000)
         self.assertEquals(cell1.getPrice(), 0.1)
         cell2 = paysheet_line.getCell('tax_category/employer_share')
         self.assertEquals(cell2.getQuantity(), 3000)
         self.assertEquals(cell2.getPrice(), 0.5)
-      elif title == 'Labour':
+      elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
-      elif title == 'model line in the paysheet':
+      elif service == 'Oldage Insurance':
         cell1 = paysheet_line.getCell('tax_category/employee_share')
         self.assertEquals(cell1.getQuantity(), 3000)
         self.assertEquals(cell1.getPrice(), 0.5)
