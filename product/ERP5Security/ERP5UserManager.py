@@ -238,18 +238,6 @@ class ERP5UserManager(BasePlugin):
           #  | foo |
           #  +-----+
           #  1 row in set (0.01 sec)
-          # " foo", "foo " and other padding variations because of
-          # ZSQLCatalog (feature ?):
-          #  (Pdb) print portal.portal_catalog.unrestrictedSearchResults(\
-          #              portal_type="Person", reference='  foo  ', src__=1)
-          #  SELECT DISTINCT
-          #     catalog.path,   catalog.uid
-          #  FROM
-          #     catalog AS catalog
-          #  WHERE
-          #    1 = 1
-          #    AND (((((catalog.portal_type = 'Person'))))) AND (((((catalog.reference = 'foo')))))
-          #  LIMIT 1000
           # "bar OR foo" because of ZSQLCatalog tokenizing searched sgtrings
           # by default (feature).
           result = [x.path for x in result if (not exact_match)
