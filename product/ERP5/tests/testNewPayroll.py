@@ -173,6 +173,21 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model_line = self.createModelLine(model)
     model_line.edit(title='Urssaf',
                     int_index=2,
+                    reference='urssaf_model_line',
+                    trade_phase='trade_phase/payroll/france/urssaf',
+                    resource_value=sequence.get('urssaf_payroll_service'),
+                    variation_category_list=['tax_category/employee_share',
+                                             'tax_category/employer_share'],
+                    base_application_list=[ 'base_amount/base_salary'],
+                    base_contribution_list=['base_amount/deductible_tax'])
+    sequence.edit(urssaf_model_line = model_line)
+
+  def stepPaysheetCreateUrssafModelLine(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    model_line = self.createModelLine(paysheet)
+    model_line.edit(title='Urssaf',
+                    int_index=2,
+                    reference='urssaf_model_line',
                     trade_phase='trade_phase/payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_payroll_service'),
                     variation_category_list=['tax_category/employee_share',
@@ -193,6 +208,19 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
     cell2.edit(price=0.5, tax_category='employer_share')
+
+  def stepPaysheetUrssafModelLineCreateMovements(self, sequence=None, **kw):
+    model_line = sequence.get('urssaf_model_line')
+    cell1 = model_line.newCell('tax_category/employee_share',
+        portal_type='Pay Sheet Model Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'))
+    cell1.edit(price=0.3, tax_category='employee_share')
+    cell2 = model_line.newCell('tax_category/employer_share',
+        portal_type='Pay Sheet Model Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'))
+    cell2.edit(price=0.7, tax_category='employer_share')
 
   def createPaysheet(self, sequence=None, **kw):
     module = self.portal.getDefaultModule(portal_type='Pay Sheet Transaction')
@@ -512,7 +540,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     paysheet = sequence.get('paysheet')
 
     # paysheet should contain only two lines (labour and urssaf, but not
-    # intermediate ursaff
+    # intermediate urssaf
     self.assertEquals(len(paysheet.contentValues(portal_type=\
         'Pay Sheet Line')), 2)
 
@@ -626,6 +654,23 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         cell2 = paysheet_line.getCell('tax_category/employer_share')
         self.assertEquals(cell2.getQuantity(), 3000)
         self.assertEquals(cell2.getPrice(), 0.6)
+      elif service == 'Labour':
+        self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
+      else:
+        self.fail("Unknown service for line %s" % paysheet_line.getTitle())
+
+  def stepCheckPaysheetModelLineOverLoadAmounts(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
+    for paysheet_line in paysheet_line_list:
+      service = paysheet_line.getResourceTitle()
+      if service == 'Urssaf':
+        cell1 = paysheet_line.getCell('tax_category/employee_share')
+        self.assertEquals(cell1.getQuantity(), 3000)
+        self.assertEquals(cell1.getPrice(), 0.3)
+        cell2 = paysheet_line.getCell('tax_category/employer_share')
+        self.assertEquals(cell2.getQuantity(), 3000)
+        self.assertEquals(cell2.getPrice(), 0.7)
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       else:
@@ -809,6 +854,26 @@ class TestNewPayroll(TestNewPayrollMixin):
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+  def test_modelLineOverLoad(self):
+    '''
+      Check it's possible to overload a model line from the model tree by
+      having a model line with the same reference in the paysheet.
+    '''
+    sequence_list = SequenceList()
+    sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
+               PaysheetCreateUrssafModelLine
+               PaysheetUrssafModelLineCreateMovements
+               stepCheckUpdateAggregatedAmountListReturn
+               PaysheetApplyTransformation
+               Tic
+               CheckPaysheetLineAreCreated
+               CheckPaysheetModelLineOverLoadAmounts
+               CheckUpdateAggregatedAmountListReturnNothing
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+   
 
 
 import unittest
