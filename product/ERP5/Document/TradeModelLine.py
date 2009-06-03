@@ -74,6 +74,11 @@ class TradeModelLine(XMLMatrix, Amount, Variated):
         current_aggregated_amount_list = None, base_id='movement', **kw):
       from Products.ERP5Type.Document import newTempSimulationMovement
 
+      # test with predicate if this model line could be applied
+      if not self.test(context):
+        # This model_line should not be applied
+        return []
+
       normal_resource_use_category_list = self.\
           portal_preferences.getPreferredNormalResourceUseCategoryList()
       if normal_resource_use_category_list is None:
@@ -175,4 +180,3 @@ class TradeModelLine(XMLMatrix, Amount, Variated):
             aggregated_amount_list.append(tmp_movement)
 
       return aggregated_amount_list
-
