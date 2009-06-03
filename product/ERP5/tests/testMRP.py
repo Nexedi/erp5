@@ -222,18 +222,18 @@ class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
 
     # assertion
     expected_value_set = set([
-      ('business_process_module/1/p2', 'product_module/1', 'mrp/p3', -10),
-      ('business_process_module/1/p2', 'product_module/2', 'mrp/p2', 30),
-      ('business_process_module/1/p2', 'product_module/3', 'mrp/p2', 10),
-      ('business_process_module/1/p3', 'product_module/1', 'mrp/p3', 10),
-      ('business_process_module/1/p3', 'product_module/4', 'mrp/p3', 40),
-      ('business_process_module/1/p3', 'product_module/5', 'mrp/p3', 10),
-      (None, 'product_module/1', None, -10)])
+      (('business_process_module/1/p2',), 'product_module/1', 'mrp/p3', -10),
+      (('business_process_module/1/p2',), 'product_module/2', 'mrp/p2', 30),
+      (('business_process_module/1/p2',), 'product_module/3', 'mrp/p2', 10),
+      (('business_process_module/1/p3',), 'product_module/1', 'mrp/p3', 10),
+      (('business_process_module/1/p3',), 'product_module/4', 'mrp/p3', 40),
+      (('business_process_module/1/p3',), 'product_module/5', 'mrp/p3', 10),
+      (('business_process_module/1/p3',), 'product_module/1', None, -10)])
     movement_list = applied_rule.objectValues()
     self.assertEquals(len(expected_value_set), len(movement_list))
     movement_value_set = set([])
     for movement in movement_list:
-      movement_value_set |= set([(movement.getCausality(),
+      movement_value_set |= set([(tuple(movement.getCausalityList()),
                                   movement.getResource(),
                                   movement.getTradePhase(),
                                   movement.getQuantity())])
@@ -263,16 +263,16 @@ class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
 
     # assertion
     expected_value_set = set([
-      ('business_process_module/2/p2', 'product_module/2', 'mrp/p2', 30),
-      ('business_process_module/2/p2', 'product_module/3', 'mrp/p2', 10),
-      ('business_process_module/2/p3', 'product_module/4', 'mrp/p3', 40),
-      ('business_process_module/2/p3', 'product_module/5', 'mrp/p3', 10),
-      (None, 'product_module/1', None, -10)])
+      (('business_process_module/2/p2',), 'product_module/2', 'mrp/p2', 30),
+      (('business_process_module/2/p2',), 'product_module/3', 'mrp/p2', 10),
+      (('business_process_module/2/p3',), 'product_module/4', 'mrp/p3', 40),
+      (('business_process_module/2/p3',), 'product_module/5', 'mrp/p3', 10),
+      (('business_process_module/2/p2', 'business_process_module/2/p3'), 'product_module/1', None, -10)])
     movement_list = applied_rule.objectValues()
     self.assertEquals(len(expected_value_set), len(movement_list))
     movement_value_set = set([])
     for movement in movement_list:
-      movement_value_set |= set([(movement.getCausality(),
+      movement_value_set |= set([(tuple(movement.getCausalityList()),
                                   movement.getResource(),
                                   movement.getTradePhase(),
                                   movement.getQuantity())])

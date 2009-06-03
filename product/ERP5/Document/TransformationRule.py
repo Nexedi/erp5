@@ -38,6 +38,37 @@ from Products.ERP5.Document.Rule import Rule
 from Products.ERP5.Document.SimulationMovement import SimulationMovement
 from Products.ERP5Type.Errors import TransformationRuleError
 
+class TransformationMovementFactory:
+
+  referable_product_attr_name_list = ['resource',
+                                      'quantity', 'quantity_unit',
+                                      'variation_category_list',
+                                      'variation_property_dict']
+  def __init__(self):
+    self.product = None # base information to use for making movements
+    self.produced_list = list()
+    self.consumed_list = list()
+
+  def requestProduced(self, **produced):
+    self.produced_list.append(produced)
+
+  def requestConsumed(self, **consumed):
+    self.consumed_list.append(consumed)
+
+  def makeMovements(self, applied_rule):
+    """
+    make movements under the applied_rule by requests
+    """
+    request_list = ((self.produced_list, -1),
+                    ( self.consumed_list, 1))
+    for (request_list, rate) in request_list:
+      for request in request_list:
+        d = self.product.copy()
+        d.update(request)
+        d['quantity'] *= rate
+        movement = applied_rule.newContent(portal_type="Simulation Movement")
+        movement.edit(**d)
+
 class TransformationRuleMixin(Base):
   security = ClassSecurityInfo()
 
@@ -163,11 +194,13 @@ class TransformationRule(TransformationRuleMixin, Rule):
       _list += self._getHeadPathByTradePhaseList(next_path, trade_phase_set)
     return _list
 
+  def getFactory(self):
+    return TransformationMovementFactory()
+
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
   def expand(self, applied_rule, **kw):
     """
     """
-
     parent_movement = applied_rule.getParentValue()
 
     transformation = self.getTransformation(movement=parent_movement)
@@ -180,126 +213,143 @@ class TransformationRule(TransformationRuleMixin, Rule):
     # get head of production path from business process with trade_phase_list
     head_production_path_list = self.getHeadProductionPathList(transformation,
                                                                business_process)
+    factory = self.getFactory()
+    factory.product = dict(
+      resource=transformation.getResource(),
+      quantity=parent_movement.getNetQuantity(),
+      quantity_unit=parent_movement.getQuantityUnit(),
+      variation_category_list=parent_movement.getVariationCategoryList(),
+      variation_property_dict=parent_movement.getVariationPropertyDict(),)
 
-    product_resource = transformation.getResource()
-    product_quantity = parent_movement.getNetQuantity()
-    product_quantity_unit = parent_movement.getQuantityUnit()
-    product_variation_category_list = parent_movement.getVariationCategoryList()
-    product_variation_property_dict = parent_movement.getVariationPropertyDict()
-
+    # consumed amounts are sorted by phase, but not ordered.
     amount_dict = {}
-    # XXX Transformation.getAggregatedAmountList is useless, it can not have trade_phase, because Amout.
+    # XXX Transformation.getAggregatedAmountList is useless for this, it can not have trade_phase, because Amout.
     for amount in transformation.objectValues(portal_type='Transformation Transformed Resource'):
       phase = amount.getTradePhase()
-      amount_dict.setdefault(phase, [])
-      amount_dict[phase].append(amount)
 
-    product_destination = None
-    for (phase, amount_list) in amount_dict.items():
       if phase not in trade_phase_list:
         raise TransformationRuleError,\
               "Trade phase %r is not part of Business Process %r" % (phase, business_process)
 
+      amount_dict.setdefault(phase, [])
+      amount_dict[phase].append(amount)
+
+    last_phase_path_list = list() # to keep phase_path_list
+    last_prop_dict = dict()
+    for (phase, amount_list) in amount_dict.items():
       phase_path_list = business_process.getPathValueList(phase)
       """
       XXX: In this context, we assume quantity as ratio,
-      but this notion is consistent with transformation.
+      but this "quantity as ratio" is consistent with transformation.
       """
       if sum(map(lambda path: path.getQuantity(), phase_path_list)) != 1:
         raise TransformationRuleError,\
-              "sum ratio of Trade Phase %r of Business Process %r is not one" % (phase, business_process)
+              "sum ratio of Trade Phase %r of Business Process %r is not one"\
+              % (phase, business_process)
 
       for path in phase_path_list:
         start_date = path.getExpectedStartDate(explanation)
         stop_date = path.getExpectedStopDate(explanation)
         predecessor_remaining_phase_list = path.getPredecessorValue()\
-                                           .getRemainingTradePhaseList(explanation,
-                                                                       trade_phase_list=trade_phase_list)
+          .getRemainingTradePhaseList(explanation,
+                                      trade_phase_list=trade_phase_list)
         successor_remaining_phase_list = path.getSuccessorValue()\
-                                         .getRemainingTradePhaseList(explanation,
-                                                                     trade_phase_list=trade_phase_list)
-        if len(successor_remaining_trade_phase_list) == 0:
-          """
-            Destinations of last paths for transformation must be same,
-            because paths for transformation must be integrated finally,
+          .getRemainingTradePhaseList(explanation,
+                                      trade_phase_list=trade_phase_list)
+        destination = path.getDestination()
 
-            valid graph
-            a --
-                \--
-                   X- b
-                /--
-            c --
-
-            invalid graph
-            a ------- b
-
-            c ------- d
-          """
-          if product_destination is None:
-            product_destination = path.getDestination()
-          if product_destination != path.getDestination():
-            raise TransformationRuleError,\
-                  "Transformation %r is not integrated on Business Process %r" % (transformation, business_process)
+        # checking which is not last path of transformation
+        if len(successor_remaining_phase_list) != 0:
+          # partial produced movement
+          factory.requestProduced(
+            causality_value=path,
+            start_date=start_date,
+            stop_date=stop_date,
+            # when last path of transformation, path.getQuantity() will be return 1.
+            quantity=factory.product['quantity'] * path.getQuantity(),
+            destination=destination,
+            #destination_section=???,
+            trade_phase_value_list=successor_remaining_phase_list)
         else:
-          # partial product movement
-          movement = applied_rule.newContent(portal_type="Simulation Movement")
-          movement.edit(causality_value=path,
-                        start_date=path.getExpectedStartDate(explanation),
-                        stop_date=path.getExpectedStopDate(explanation),
-                        resource=product_resource,
-                        quantity=-(product_quantity * path.getQuantity()),
-                        quantity_unit=product_quantity_unit,
-                        variation_category_list=product_variation_category_list,
-                        variation_property_dict=product_variation_property_dict,
-                        destination=path.getDestination(),
-                        #destination_section=???,
-                        trade_phase_value_list=successor_remaining_trade_phase_list)
+          # for making movement of last product of the transformation
+          last_phase_path_list.append(path)
+
+          # path params must be same
+          if last_prop_dict.get('start_date', None) is None:
+            last_prop_dict['start_date'] = start_date
+          if last_prop_dict.get('stop_date', None) is None:
+            last_prop_dict['stop_date'] = stop_date
+          # trade phase of product is must be empty []
+          if last_prop_dict.get('trade_phase_value_list', None) is None:
+            last_prop_dict['trade_phase_value_list'] = successor_remaining_phase_list
+          if last_prop_dict.get('destination', None) is None:
+            last_prop_dict['destination'] = destination
+
+          if last_prop_dict['start_date'] != start_date or\
+             last_prop_dict['stop_date'] != stop_date or\
+             last_prop_dict['trade_phase_value_list'] != successor_remaining_phase_list or\
+             last_prop_dict['destination'] != destination:
+            raise TransformationRuleError,\
+              """Returned property is different on Transformation %r and Business Process %r"""\
+              % (transformation, business_process)
 
         # when the path is part of production but not first, consume previous partial product
         if path not in head_production_path_list:
-          # consumed partial product movement
-          movement = applied_rule.newContent(portal_type="Simulation Movement")
-          movement.edit(causality_value=path,
-                        start_date=start_date,
-                        stop_date=stop_date,
-                        resource=product_resource,
-                        quantity=product_quantity * path.getQuantity(),
-                        quantity_unit=product_quantity_unit,
-                        variation_category_list=product_variation_category_list,
-                        variation_property_dict=product_variation_property_dict,
-                        source=path.getSource(),
-                        #source_section=???,
-                        trade_phase_value_list=predecessor_remaining_trade_phase_list)
+          factory.requestConsumed(
+            causality_value=path,
+            start_date=start_date,
+            stop_date=stop_date,
+            quantity=factory.product['quantity'] * path.getQuantity(),
+            source=path.getSource(),
+            #source_section=???,
+            trade_phase_value_list=predecessor_remaining_phase_list)
 
-        # consumption movement
+        # consumed movement
         for amount in amount_list:
-          consumed_resource = amount.getResource()
-          consumed_quantity = product_quantity * amount.getQuantity() / amount.getEfficiency()
-          consumed_quantity_unit = amount.getQuantityUnit()
+          factory.requestConsumed(
+            causality_value=path,
+            start_date=start_date,
+            stop_date=stop_date,
+            resource=amount.getResource(),
+            quantity=factory.product['quantity'] * amount.getQuantity()\
+              / amount.getEfficiency() * path.getQuantity(),
+            quantity_unit=amount.getQuantityUnit(),
+            source=path.getSource(),
+            #source_section=???,
+            trade_phase=path.getTradePhase())
 
-          # consume resource
-          movement = applied_rule.newContent(portal_type="Simulation Movement")
-          movement.edit(causality_value=path,
-                        start_date=start_date,
-                        stop_date=stop_date,
-                        resource=consumed_resource,
-                        quantity=consumed_quantity * path.getQuantity(),
-                        quantity_unit=consumed_quantity_unit,
-                        source=path.getSource(),
-                        #source_section=???,
-                        trade_phase=path.getTradePhase())
+    """
+    valid graph for transformation
+    a --- b --- c
 
-    # product movement
-    movement = applied_rule.newContent(portal_type="Simulation Movement")
-    movement.edit(start_date=path.getExpectedStartDate(explanation),
-                  stop_date=path.getExpectedStopDate(explanation),
-                  resource=product_resource,
-                  quantity=-(product_quantity),
-                  quantity_unit=product_quantity_unit,
-                  variation_category_list=product_variation_category_list,
-                  variation_property_dict=product_variation_property_dict,
-                  destination=product_destination,
-                  #destination_section=???,
-                  )
+    a --
+        \
+         X b
+        /
+    c --
 
+    invalid graph
+    a ------- b
+    c ------- d
+
+        -- b
+       /
+    a X
+       \
+        -- c
+    """
+    # when empty
+    if last_phase_path_list is None or len(last_phase_path_list) == 0:
+      raise TransformationRuleError,\
+            """Could not make the product by Transformation %r and Business Process %r,
+which last_phase_path_list is empty.""" % (transformation, business_process)
+
+    factory.requestProduced(
+      causality_value_list=last_phase_path_list,
+      # when last path of transformation, path.getQuantity() will be return 1.
+      quantity=factory.product['quantity'] * path.getQuantity(),
+      #destination_section=???,
+      **last_prop_dict)
+
+    factory.makeMovements(applied_rule)
     Rule.expand(self, applied_rule, **kw)
