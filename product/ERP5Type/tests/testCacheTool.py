@@ -78,8 +78,6 @@ class TestCacheTool(ERP5TypeTestCase):
     typeinfo_names = ("Cache Factory",
                       "Ram Cache",
                       "Distributed Ram Cache",
-                      "SQL Cache",
-                      "Zodb Cache",
                       )
     for typeinfo_name in typeinfo_names:
       portal_type = getattr(portal_types, typeinfo_name, None)
@@ -108,24 +106,6 @@ class TestCacheTool(ERP5TypeTestCase):
               portal_type="Distributed Ram Cache", container=dram_cache_factory)
       dram_cache_plugin.setIntIndex(0)
 
-    if getattr(portal_caches, 'sql_cache_factory', None) is None:
-      ## sql_cache_factory (to test SQL Cache Plugin) 
-      sql_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
-                                                   id='sql_cache_factory',
-                                                   container=portal_caches)
-      sql_cache_plugin = sql_cache_factory.newContent(
-                      portal_type="SQL Cache", container=sql_cache_factory)
-      sql_cache_plugin.setIntIndex(0)
-
-    if getattr(portal_caches, 'zodb_cache_factory', None) is None:
-      ## zodb_cache_factory (to test ZODB Cache Plugin) 
-      zodb_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
-                                                    id='zodb_cache_factory',
-                                                    container=portal_caches)
-      zodb_cache_plugin = zodb_cache_factory.newContent(
-                      portal_type="Zodb Cache", container=zodb_cache_factory)
-      zodb_cache_plugin.setIntIndex(0)
-
     if getattr(portal_caches, 'erp5_user_factory', None) is None:
 
       ## erp5_user_factory (to test a combination of all cache plugins)
@@ -139,13 +119,6 @@ class TestCacheTool(ERP5TypeTestCase):
       dram_cache_plugin = erp5_user_factory.newContent(
               portal_type="Distributed Ram Cache", container=erp5_user_factory)
       dram_cache_plugin.setIntIndex(1)
-      sql_cache_plugin = erp5_user_factory.newContent(
-              portal_type="SQL Cache", container=erp5_user_factory)
-      sql_cache_plugin.setIntIndex(2)
-      zodb_cache_plugin = erp5_user_factory.newContent(
-              portal_type="Zodb Cache", container=erp5_user_factory)
-      zodb_cache_plugin.setIntIndex(3)
-
     ## update Ram Cache structure
     portal_caches.updateCache()
 
@@ -154,8 +127,6 @@ class TestCacheTool(ERP5TypeTestCase):
     ## do we have the same structure we created above?
     self.assert_('ram_cache_factory' in CachingMethod.factories)
     self.assert_('distributed_ram_cache_factory' in CachingMethod.factories)
-    self.assert_('sql_cache_factory' in CachingMethod.factories)
-    self.assert_('zodb_cache_factory' in CachingMethod.factories)
     self.assert_('erp5_user_factory' in CachingMethod.factories)
 
   def createCachedMethod(self):
@@ -191,8 +162,7 @@ return result
     py_script_obj = getattr(portal, py_script_id)
     for cf_name in ('ram_cache_factory',
                     'distributed_ram_cache_factory',
-                    'sql_cache_factory',
-                    'zodb_cache_factory',):
+                   ):
       my_cache = CachingMethod(py_script_obj,
                                'py_script_obj',
                                cache_factory=cf_name)
@@ -277,15 +247,10 @@ return result
     """
     from Products.ERP5Type.CachePlugins.DistributedRamCache import DistributedRamCache
     from Products.ERP5Type.CachePlugins.RamCache import RamCache
-    from Products.ERP5Type.CachePlugins.SQLCache import SQLCache
-    from Products.ERP5Type.CachePlugins.ZODBCache import ZODBCache
     from Products.ERP5Type.interfaces.cache_plugin import ICachePlugin
     from Interface.Verify import verifyClass
-    verifyClass(ICachePlugin, ZODBCache)
     verifyClass(ICachePlugin, DistributedRamCache)
     verifyClass(ICachePlugin, RamCache)
-    verifyClass(ICachePlugin, SQLCache)
-
 
 def test_suite():
   suite = unittest.TestSuite()

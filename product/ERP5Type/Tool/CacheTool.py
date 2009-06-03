@@ -39,8 +39,6 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Cache import DEFAULT_CACHE_FACTORY
 from Products.ERP5Type.CachePlugins.RamCache import RamCache
 from Products.ERP5Type.CachePlugins.DistributedRamCache import DistributedRamCache
-from Products.ERP5Type.CachePlugins.SQLCache import SQLCache
-from Products.ERP5Type.CachePlugins.ZODBCache import ZODBCache
 
 ## try to import needed modules for cache plugins
 try:
@@ -96,75 +94,12 @@ class CacheTool(BaseTool):
             ## we don't have memcache python module installed 
             ## thus we can't use DistributedRamCache plugin
             cache_obj = None
-        elif cp_meta_type == 'ERP5 SQL Cache':
-          ## use connection details from 'erp5_sql_transactionless_connection' ZMySLQDA object
-          connection_string = self.erp5_sql_transactionless_connection.connection_string
-          kw = self.parseDBConnectionString(connection_string)
-          kw['cache_table_name'] = cp.getCacheTableName()
-          cache_obj = SQLCache(kw)
-        elif cp_meta_type == 'ERP5 ZODB Cache':
-          cache_obj = ZODBCache(dict(cache_tool=self))
         if cache_obj is not None:
           ## set cache expire check interval
           cache_obj.cache_expire_check_interval = cp.getCacheExpireCheckInterval()
           rd[cache_scope]['cache_plugins'].append(cache_obj)
           rd[cache_scope]['cache_params']['cache_duration'] = cf.getCacheDuration()
     return rd
-
-  ##
-  ## DB structure
-  ##
-  security.declareProtected(Permissions.ModifyPortalContent, 'createDBCacheTable')
-  def createDBCacheTable(self, cache_table_name="cache", REQUEST=None):
-    """ create in MySQL DB cache table """
-    my_query = SQLCache.create_table_sql %cache_table_name
-    try:
-      self.erp5_sql_transactionless_connection.manage_test("DROP TABLE %s" %cache_table_name)
-    except:
-      pass
-    self.erp5_sql_transactionless_connection.manage_test(my_query)
-    if REQUEST is not None:
-      self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache table successfully created.')
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'parseDBConnectionString')
-  def parseDBConnectionString(self, connection_string):
-    """ Parse given connection string. Code "borrowed" from ZMySLQDA.db """
-    kwargs = {}
-    items = connection_string.split()
-    if not items:
-      return kwargs
-    compress = items[0]
-    if compress == "~":
-      kwargs['compress'] = True
-      items = items[1:]
-    lockreq, items = items[0], items[1:]
-    if lockreq[0] == "*":
-      db_host, items = items[0], items[1:]
-    else:
-      db_host = lockreq
-    if '@' in db_host:
-      db, host = db_host.split('@',1)
-      kwargs['db'] = db
-      if ':' in host:
-        host, port = host.split(':',1)
-        kwargs['port'] = int(port)
-      kwargs['host'] = host
-    else:
-      kwargs['db'] = db_host
-    if kwargs['db'] and kwargs['db'][0] in ('+', '-'):
-      kwargs['db'] = kwargs['db'][1:]
-    if not kwargs['db']:
-      del kwargs['db']
-    if not items:
-      return kwargs
-    kwargs['user'], items = items[0], items[1:]
-    if not items:
-      return kwargs
-    kwargs['passwd'], items = items[0], items[1:]
-    if not items:
-      return kwargs
-    kwargs['unix_socket'], items = items[0], items[1:]
-    return kwargs
 
   ##
   ## RAM cache structure
