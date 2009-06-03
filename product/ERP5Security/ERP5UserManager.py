@@ -238,8 +238,8 @@ class ERP5UserManager(BasePlugin):
           #  | foo |
           #  +-----+
           #  1 row in set (0.01 sec)
-          # "bar OR foo" because of ZSQLCatalog tokenizing searched sgtrings
-          # by default (feature).
+          # "bar OR foo" because of ZSQLCatalog tokenizing searched strings
+          #  by default (feature).
           result = [x.path for x in result if (not exact_match)
                           or x['reference'] in login]
           if not result:
