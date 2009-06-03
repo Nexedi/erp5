@@ -54,6 +54,11 @@ class HtmlStylePreference:
       'type'        : 'boolean',
       'preference'  : 1,
       'mode'        : 'w' },
+    { 'id'          : 'preferred_html_style_acknowledgeable_message',
+      'description' : 'When true, some messages will be displayed on any page',
+      'type'        : 'boolean',
+      'preference'  : 1,
+      'mode'        : 'w' },
     { 'id'          : 'preferred_html_style_documentation_base_url',
       'description' : 'Defines the base URL where portal type action '\
                       'documentation will be searched for.',
