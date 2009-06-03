@@ -53,7 +53,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>state_change[\'object\'].Delivery_updateSimulation()\n
+            <value> <string>delivery = context\n
+delivery_path = delivery.getPath()\n
+path_and_method_id = (delivery_path, (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))\n
+after_tag = delivery_path + \'_expand\'\n
+tag = delivery_path + \'_updateAppliedRule\'\n
+\n
+priority = 3\n
+\n
+activate_kw = { \n
+  \'tag\': tag,\n
+  \'priority\': priority,\n
+}\n
+delivery.activate(\n
+    after_path_and_method_id=path_and_method_id,\n
+    after_tag=after_tag,\n
+    tag=tag,\n
+    priority=priority,\n
+    ).Delivery_updateAppliedRule(activate_kw=activate_kw)\n
 </string> </value>
         </item>
         <item>
@@ -64,7 +81,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -84,15 +101,21 @@
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
+                            <string>context</string>
+                            <string>delivery</string>
                             <string>_getattr_</string>
-                            <string>_getitem_</string>
+                            <string>delivery_path</string>
+                            <string>path_and_method_id</string>
+                            <string>after_tag</string>
+                            <string>tag</string>
+                            <string>priority</string>
+                            <string>activate_kw</string>
                           </tuple>
                         </value>
                     </item>

@@ -53,25 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>delivery = state_change[\'object\'].getExplanationValue()\n
-\n
-delivery_path = delivery.getPath()\n
-path_and_method_id = (delivery_path, (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))\n
-afer_tag = delivery_path + \'_expand\'\n
-tag = delivery_path + \'_updateAppliedRule\'\n
-\n
-priority = 3\n
-\n
-activate_kw = { \n
-  \'tag\': expand_tag,\n
-  \'priority\': priority,\n
-}\n
-delivery.activate(\n
-    after_path_and_method_id=path_and_method_id,\n
-    after_tag=after_tag,\n
-    tag=tag,\n
-    priority=priority,\n
-    ).Delivery_updateAppliedRule(activate_kw=activate_kw)\n
+            <value> <string>state_change[\'object\'].getExplanationValue().Delivery_updateSimulation()\n
 </string> </value>
         </item>
         <item>
@@ -111,15 +93,6 @@ delivery.activate(\n
                             <string>state_change</string>
                             <string>_getattr_</string>
                             <string>_getitem_</string>
-                            <string>delivery</string>
-                            <string>delivery_path</string>
-                            <string>path_and_method_id</string>
-                            <string>afer_tag</string>
-                            <string>tag</string>
-                            <string>priority</string>
-                            <string>expand_tag</string>
-                            <string>activate_kw</string>
-                            <string>after_tag</string>
                           </tuple>
                         </value>
                     </item>
