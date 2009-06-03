@@ -278,6 +278,44 @@ class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
                                   movement.getQuantity())])
     self.assertEquals(expected_value_set, movement_value_set)
 
+    """
+    test case of difference when any movement are frozen
+    by using above result
+    """
+    # update relation
+    self.stepTic()
+
+    for movement in movement_list:
+      movement.edit(quantity=1)
+      # XXX change state isFrozen of movement to 1,
+      #     but I think this way might be wrong.
+      movement._baseSetFrozen(1)
+
+    # re-expand
+    rule.expand(applied_rule)
+
+    # assertion
+    expected_value_set = set([
+      (('business_process_module/2/p2',), 'product_module/2', 'mrp/p2', 1), # Frozen
+      (('business_process_module/2/p2',), 'product_module/2', 'mrp/p2', 29),
+      (('business_process_module/2/p2',), 'product_module/3', 'mrp/p2', 1), # Frozen
+      (('business_process_module/2/p2',), 'product_module/3', 'mrp/p2', 9),
+      (('business_process_module/2/p3',), 'product_module/4', 'mrp/p3', 1), # Frozen
+      (('business_process_module/2/p3',), 'product_module/4', 'mrp/p3', 39),
+      (('business_process_module/2/p3',), 'product_module/5', 'mrp/p3', 1), # Frozen
+      (('business_process_module/2/p3',), 'product_module/5', 'mrp/p3', 9),
+      (('business_process_module/2/p2', 'business_process_module/2/p3'), 'product_module/1', None, 1), # Frozen
+      (('business_process_module/2/p2', 'business_process_module/2/p3'), 'product_module/1', None, -11)])
+    movement_list = applied_rule.objectValues()
+    self.assertEquals(len(expected_value_set), len(movement_list))
+    movement_value_set = set([])
+    for movement in movement_list:
+      movement_value_set |= set([(tuple(movement.getCausalityList()),
+                                  movement.getResource(),
+                                  movement.getTradePhase(),
+                                  movement.getQuantity())])
+    self.assertEquals(expected_value_set, movement_value_set)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestMRPImplementation))

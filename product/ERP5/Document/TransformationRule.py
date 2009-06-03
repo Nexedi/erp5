@@ -39,11 +39,6 @@ from Products.ERP5.Document.SimulationMovement import SimulationMovement
 from Products.ERP5Type.Errors import TransformationRuleError
 
 class TransformationMovementFactory:
-
-  referable_product_attr_name_list = ['resource',
-                                      'quantity', 'quantity_unit',
-                                      'variation_category_list',
-                                      'variation_property_dict']
   def __init__(self):
     self.product = None # base information to use for making movements
     self.produced_list = list()
@@ -55,19 +50,71 @@ class TransformationMovementFactory:
   def requestConsumed(self, **consumed):
     self.consumed_list.append(consumed)
 
+  def _getCausalityList(self, causality=None, causality_value=None,
+                        causality_list=None, causality_value_list=None,
+                        **kw):
+    if causality is not None:
+      return [causality]
+    elif causality_value is not None:
+      return [causality_value.getRelativeUrl()]
+    elif causality_list is not None:
+      return causality_list
+    elif causality_value_list is not None:
+      return [causality_value.getRelativeUrl()
+              for causality_value in causality_value_list]
+
   def makeMovements(self, applied_rule):
     """
     make movements under the applied_rule by requests
     """
-    request_list = ((self.produced_list, -1),
-                    ( self.consumed_list, 1))
-    for (request_list, rate) in request_list:
+    movement_dict = {}
+    for movement in applied_rule.objectValues(
+        portal_type="Simulation Movement"):
+      key = tuple(sorted(movement.getCausalityList()))
+      movement_dict[key] = movement
+
+    """
+    produced quantity should be represented by minus quantity on movement.
+    because plus quantity is consumed.
+    """ 
+    for (request_list, sign) in ((self.produced_list, -1),
+                                 (self.consumed_list, 1)):
       for request in request_list:
         d = self.product.copy()
         d.update(request)
-        d['quantity'] *= rate
-        movement = applied_rule.newContent(portal_type="Simulation Movement")
-        movement.edit(**d)
+        d['quantity'] *= sign
+
+        # get movement by causality
+        key = tuple(sorted(self._getCausalityList(**request)))
+        movement = movement_dict.get(key, None)
+        # when no exist
+        if movement is None:
+          movement = applied_rule.newContent(portal_type="Simulation Movement")
+        # update
+        if movement.isFrozen():
+          self.makeDifferentMovement(movement, **d)
+        else:
+          movement.edit(**d)
+
+  def _requestNetQuantity(self, request):
+    quantity = request.get('quantity', None)
+    efficiency = request.get('efficiency', None)
+    if efficiency in (0, 0.0, None, ''):
+      efficiency = 1.0
+    return float(quantity) / efficiency
+
+  def makeDifferentMovement(self, movement, **request):
+    """
+    make different movement, which is based on original movement.
+    this implementation just focus about quantity.
+    """
+    applied_rule = movement.getParentValue()
+    request['quantity'] = self._requestNetQuantity(request)\
+                          - movement.getNetQuantity()
+    if request['quantity'] != 0:
+      diff_movement = applied_rule.newContent(portal_type="Simulation Movement")
+      diff_movement.edit(**request)
+
 
 class TransformationRuleMixin(Base):
   security = ClassSecurityInfo()
