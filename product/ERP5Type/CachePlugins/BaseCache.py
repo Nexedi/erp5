@@ -49,15 +49,18 @@ class CacheEntry(object):
   def __init__(self, value, cache_duration=None, calculation_time=0):
     self.value = value
     if cache_duration in (None, 0):
-      self.expires_at = None
+      self.expires_at = cache_duration
     else:
       self.expires_at = time.time() + cache_duration
     self._cache_hit_count = 0
     self.calculation_time = calculation_time
 
   def isExpired(self):
-    """ check cache entry for expiration """
-    return self.expires_at < time.time() or self.expires_at is None
+    """check cache entry for expiration
+      - None means allways expire
+      - 0 means never expire
+    """
+    return self.expires_at is None or self.expires_at != 0 and self.expires_at < time.time()
 
   def markCacheHit(self, delta=1):
     """ mark a read to this cache entry """
