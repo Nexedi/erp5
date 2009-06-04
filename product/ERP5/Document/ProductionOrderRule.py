@@ -34,7 +34,7 @@ from Products.ERP5.Document.TransformationRule import TransformationRuleMixin
 
 from zLOG import LOG, WARNING
 
-class ProductionOrderRule(OrderRule):
+class ProductionOrderRule(TransformationRuleMixin, OrderRule):
     """
       Prouction Order Rule object use a Supply Chain to expand a 
       Production Order.
@@ -106,6 +106,3 @@ class ProductionOrderRule(OrderRule):
         property_dict[prop] = movement.getProperty(prop)
     
       return property_dict
-
-from Products.ERP5Type.Utils import monkeyPatch
-monkeyPatch(TransformationRuleMixin, ProductionOrderRule)

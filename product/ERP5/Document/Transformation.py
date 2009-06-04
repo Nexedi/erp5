@@ -80,7 +80,9 @@ class Transformation(XMLObject, Predicate, Variated):
                       )
 
     # Declarative interfaces
-    __implements__ = ( interfaces.IVariated, )
+    __implements__ = ( interfaces.IVariated
+                     , interfaces.ITransformation
+    )
 
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -221,6 +223,9 @@ class Transformation(XMLObject, Predicate, Variated):
                                display_id=display_id,**kw).\
                                                  render(object_list))
       return variation_category_item_list
+
+    def updateAggregatedAmountList(self, context, **kw):
+      raise NotImplementedError, 'need?'
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getAggregatedAmountList')

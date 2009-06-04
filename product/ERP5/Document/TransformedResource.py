@@ -30,7 +30,7 @@
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.Utils import cartesianProduct
@@ -77,8 +77,9 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
                       )
 
     # Declarative interfaces
-    __implements__ = ( interfaces.IVariated, )
-
+    __implements__ = ( interfaces.IVariated
+                     , interfaces.ITransformation
+    )
 
 
     ### Variation matrix definition
@@ -163,6 +164,9 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
       self._setVVariationBaseCategoryList(value)
       self.reindexObject()
 
+    def updateAggregatedAmountList(self, context, **kw):
+      raise NotImplementedError('TODO')
+
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getAggregatedAmountList')
     def getAggregatedAmountList(self, context=None, REQUEST=None, **kw):
@@ -178,11 +182,11 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
         # If no predicate is defined on line, the result of the test 
         # must be true
         # Create temporary object to store amount
-        from Products.ERP5Type.Document import newTempAmount
+        from Products.ERP5Type.Document import newTempTransformedResource
         # XXX changed by TB getParentID()+getId() instead of getId()
         # This might not be enough if we have different transformation
         # with the same id (for example in several modules)
-        tmp_amount = newTempAmount(self.getPortalObject(), self.getParentId()+'_'+self.getId())
+        tmp_amount = newTempTransformedResource(self.getPortalObject(), self.getParentId()+'_'+self.getId())
         # Create error string
         error_string = ''
         # Add resource relation
@@ -320,17 +324,19 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
         else:
           variation_category_list = self._getVariationCategoryList()
           variation_category_list_defined_by = self.getRelativeUrl()
+        trade_phase = self.getTradePhase()
         # Store values in Amount
         tmp_amount._edit(
           # Properties define on transformation line
-          title =  self.getTitle(),
-          description =  self.getDescription(),
-          efficiency = efficiency,
-          quantity = quantity,
+          title=self.getTitle(),
+          description=self.getDescription(),
+          efficiency=efficiency,
+          quantity=quantity,
           # This fields only store some informations for debugging if necessary
-          quantity_defined_by  = quantity_defined_by,
-          variation_category_list_defined_by = variation_category_list_defined_by, 
-          error_string = error_string
+          quantity_defined_by=quantity_defined_by,
+          variation_category_list_defined_by=variation_category_list_defined_by,
+          trade_phase=trade_phase,
+          error_string=error_string
         )
         tmp_amount.setVariationCategoryList(variation_category_list)
         # Variation property dict
