@@ -45,6 +45,12 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -87,10 +93,10 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_source</string>
-                        <string>my_source_section</string>
+                        <string>my_source_title</string>
+                        <string>my_source_section_title</string>
                         <string>my_start_date</string>
-                        <string>my_resource</string>
+                        <string>my_resource_title</string>
                         <string>my_quantity</string>
                         <string>my_order_ratio</string>
                         <string>my_delivery_ratio</string>
@@ -104,8 +110,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_destination</string>
-                        <string>my_destination_section</string>
+                        <string>my_destination_title</string>
+                        <string>my_destination_section_title</string>
                         <string>my_stop_date</string>
                         <string>my_portal_type</string>
                         <string>my_deliverable</string>

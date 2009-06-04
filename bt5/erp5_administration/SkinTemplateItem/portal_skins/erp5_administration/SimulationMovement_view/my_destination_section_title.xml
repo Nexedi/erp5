@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_specialise</string> </value>
+            <value> <string>my_destination_section_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -74,11 +74,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_specialise</string> </value>
+                    <value> <string>my_destination_section</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>AppliedRule_viewFieldLibrary</string> </value>
+                    <value> <string>SimulationMovement_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

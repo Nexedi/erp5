@@ -87,8 +87,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_specialise</string>
-                        <string>my_causality</string>
+                        <string>my_specialise_title</string>
+                        <string>my_causality_title</string>
                       </list>
                     </value>
                 </item>
