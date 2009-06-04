@@ -75,6 +75,7 @@
            global preferred_html_style_developper_mode   portal_preferences/getPreferredHtmlStyleDevelopperMode;\n
            global preferred_html_style_translator_mode   portal_preferences/getPreferredHtmlStyleTranslatorMode;\n
            global preferred_html_style_contextual_help   portal_preferences/getPreferredHtmlStyleContextualHelp;\n
+           global preferred_html_style_acknowledgeable_message portal_preferences/getPreferredHtmlStyleAcknowledgeableMessage;\n
            global developper_shortcut_render             python: (preferred_html_style_developper_mode or preferred_html_style_translator_mode) and portal.developper_shortcut_render;\n
            global selected_language    portal/Localizer/get_selected_language;\n
            " />\n
