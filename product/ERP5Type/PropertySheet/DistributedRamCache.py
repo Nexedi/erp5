@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -30,7 +31,7 @@ class DistributedRamCache:
   """
   """
 
-  _properties = (        
+  _properties = (
         {'id'          : 'server',
          'description' : 'Memcached server address( you can specify multiple servers by separating them with ;)',
          'type'        : 'string',
