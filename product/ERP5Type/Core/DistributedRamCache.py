@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -30,7 +31,6 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type import Permissions
-from Products.ERP5.PropertySheet.SortIndex import SortIndex
 from Products.ERP5Type.PropertySheet.BaseCache import BaseCache
 from Products.ERP5Type.PropertySheet.DistributedRamCache import DistributedRamCache
 
@@ -39,14 +39,14 @@ class DistributedRamCache(XMLObject):
   DistributedRamCache is a Zope (persistent) representation of 
   the Distributed RAM Cache real cache plugin object.
   """
-  
+
   meta_type='ERP5 Distributed Ram Cache'
   portal_type='Distributed Ram Cache'
   isPortalContent = 1
   isRADContent = 1
-  
+
   allowed_types = ()
-    
+
   security = ClassSecurityInfo()
   security.declareProtected(Permissions.ManagePortal,
                             'manage_editProperties',
@@ -57,7 +57,7 @@ class DistributedRamCache(XMLObject):
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem
                     , PropertySheet.Folder
+                    , PropertySheet.SortIndex
                     , BaseCache
-                    , SortIndex
-                    , DistributedRamCache 
+                    , DistributedRamCache
                     )
