@@ -95,7 +95,7 @@ for line in line_list:\n
 #update the corresponding price and round it according to the precision of\n
 #the converted currency\n
    line.setDestinationTotalAssetPrice(\n
-       round(exchange_ratio*(line.getQuantity())),precision)\n
+       round(exchange_ratio*(line.getQuantity()), precision))\n
 \n
 \n
 msg = context.Base_translateString(\'Price converted.\')\n
