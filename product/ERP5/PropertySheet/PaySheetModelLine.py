@@ -33,19 +33,6 @@ class PaySheetModelLine:
     Properties for Pay Sheet Model Lines.
   """
   _properties = (
-    { 'id'          : 'editable',
-      'description' : 'If set to 1, the Pay Sheet Line values could be edited'
-                      ' at the Pay Sheet calculation step',
-      'type'        : 'boolean',
-      'mode'        : 'w' 
-    },
-    { 'id'          : 'create_paysheet_line',
-      'description' : 'A flag indicating if the corresponding paysheet line will'
-                      ' be created',
-      'type'        : 'boolean',
-      'mode'        : 'w',
-      'default'     : True,
-    },
     { 'id'          : 'calculation_script_id',
       'description' : 'If no script found on Pay Sheet Model Lines, this'
                       ' script is used to do localised calculs',
