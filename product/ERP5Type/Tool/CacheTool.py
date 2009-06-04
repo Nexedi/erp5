@@ -88,7 +88,7 @@ class CacheTool(BaseTool):
         elif cp_meta_type == 'ERP5 Distributed Ram Cache':
             ## even thougn we have such plugin in ZODB that doens't mean
             ## we have corresponding memcache module installed
-          if memcahe is not None:
+          if memcache is not None:
             cache_obj = DistributedRamCache({'server': cp.getServer()})
           else:
             ## we don't have memcache python module installed 
