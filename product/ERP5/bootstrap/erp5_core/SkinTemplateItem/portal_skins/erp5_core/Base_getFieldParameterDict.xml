@@ -57,27 +57,23 @@
   Get default relation string field parameters\n
   based on its id\n
 """\n
-field_id = context.getId()\n
-if not field_id.startswith(\'my_\'): return {} # this should not happen\n
+pieces = context.getId().split(\'_\')\n
+if pieces.pop(0) != \'my\':\n
+  return {} # this should not happen\n
 \n
-is_list = 0\n
-if field_id.endswith(\'_relative_url\'): idx = 2\n
-elif field_id.endswith(\'_title\'): idx = 1\n
-elif field_id.endswith(\'_title_list\'):\n
-  idx = 2\n
-  is_list = 1\n
-else: idx = 0\n
+if pieces[-1] == \'list\':\n
+  pieces.pop()\n
 \n
 # can it be translated title, or something else?\n
-\n
-pieces = field_id.split(\'_\')\n
-parameter_dict = dict()\n
-parameter_dict[\'base_category\'] = \'_\'.join(pieces[1:-idx])\n
-if is_list == 0:\n
-  parameter_dict[\'catalog_index\'] = \'_\'.join(pieces[-idx:])\n
+if pieces[-2:] == (\'relative\', \'url\'):\n
+  idx = -2\n
+elif pieces[-1] == \'title\':\n
+  idx = -1\n
 else:\n
-  parameter_dict[\'catalog_index\'] = \'_\'.join(pieces[-idx:-1])  \n
-return parameter_dict\n
+  idx = len(pieces)\n
+\n
+return {\'base_category\': \'_\'.join(pieces[:idx]),\n
+        \'catalog_index\': \'_\'.join(pieces[idx:])}\n
 </string> </value>
         </item>
         <item>
@@ -116,14 +112,10 @@ return parameter_dict\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>field_id</string>
-                            <string>is_list</string>
-                            <string>idx</string>
                             <string>pieces</string>
-                            <string>dict</string>
-                            <string>parameter_dict</string>
                             <string>_getitem_</string>
-                            <string>_write_</string>
+                            <string>idx</string>
+                            <string>len</string>
                           </tuple>
                         </value>
                     </item>
