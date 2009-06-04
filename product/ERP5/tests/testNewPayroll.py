@@ -118,6 +118,8 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         product_line='state_insurance', quantity_unit='time/month',
         variation_base_category_list=['tax_category', 'salary_range'],
         use='payroll/tax')
+    node.setVariationCategoryList(['tax_category/employee_share',
+                                   'tax_category/employer_share'])
     sequence.edit(urssaf_payroll_service = node)
 
   def stepCreateLabourPayrollService(self, sequence=None, **kw):
@@ -131,6 +133,8 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     node.edit(title='Oldage Insurance', quantity_unit='time/month',
         variation_base_category_list=['tax_category', 'salary_range'],
         product_line='state_insurance', use='payroll/tax')
+    node.setVariationCategoryList(['tax_category/employee_share',
+                                   'tax_category/employer_share'])
     sequence.edit(oldage_insurance_payroll_service = node)
 
   def createModel(self):
@@ -490,7 +494,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                                              'tax_category/employer_share'],
                     base_contribution_list=['base_amount/deductible_tax'],
                     base_application_list=['base_amount/base_salary'],
-                    create_paysheet_line=False,)
+                    create_line=False,)
     sequence.edit(intermediate_model_line = model_line)
 
   def stepModelCreateAppliedOnTaxModelLine(self, sequence=None, **kw):
@@ -771,7 +775,6 @@ class TestNewPayroll(TestNewPayrollMixin):
                CheckUpdateAggregatedAmountListReturn
                PaysheetApplyTransformation
                Tic
-               CheckSourceSectionOnMovements
                CheckPaysheetLineAreCreated
                CheckPaysheetLineAmounts
                CheckUpdateAggregatedAmountListReturnNothing
@@ -838,7 +841,6 @@ class TestNewPayroll(TestNewPayrollMixin):
                CheckUpdateAggregatedAmountListReturn
                PaysheetApplyTransformation
                Tic
-               CheckSourceSectionOnMovements
                CheckPaysheetLineAreCreated
                CheckPaysheetLineAmounts
                CheckUpdateAggregatedAmountListReturnNothing
@@ -846,7 +848,6 @@ class TestNewPayroll(TestNewPayrollMixin):
                CheckUpdateAggregatedAmountListReturnNothing
                PaysheetApplyTransformation
                Tic
-               CheckSourceSectionOnMovements
                CheckPaysheetLineAreCreated
                CheckPaysheetLineNewAmountsAfterUpdate
                CheckUpdateAggregatedAmountListReturnNothing
@@ -874,7 +875,19 @@ class TestNewPayroll(TestNewPayrollMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
    
-
+  def test_sourceSectionIsSetOnMovements(self):
+    '''
+      check that after apply transformation, source section is set on movment
+      (using Business Process)
+    '''
+    sequence_list = SequenceList()
+    sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
+               PaysheetApplyTransformation
+               Tic
+               CheckSourceSectionOnMovements
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
 import unittest
 def test_suite():
