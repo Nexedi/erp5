@@ -44,7 +44,7 @@ from Products.ERP5Type.CachePlugins.DistributedRamCache import DistributedRamCac
 try:
   import memcache
 except ImportError:
-  pass
+  memcache = None
 
 class CacheTool(BaseTool):
   """ Caches tool wrapper for ERP5 """
@@ -88,8 +88,8 @@ class CacheTool(BaseTool):
         elif cp_meta_type == 'ERP5 Distributed Ram Cache':
             ## even thougn we have such plugin in ZODB that doens't mean
             ## we have corresponding memcache module installed
-          if 'memcache' in globals().keys():
-            cache_obj = DistributedRamCache({'server':cp.getServer()})
+          if memcahe is not None:
+            cache_obj = DistributedRamCache({'server': cp.getServer()})
           else:
             ## we don't have memcache python module installed 
             ## thus we can't use DistributedRamCache plugin
