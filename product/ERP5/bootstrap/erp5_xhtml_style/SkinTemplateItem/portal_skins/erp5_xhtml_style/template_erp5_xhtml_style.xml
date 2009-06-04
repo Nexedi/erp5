@@ -129,7 +129,7 @@ IDEAS:\n
                   </tal:block>\n
                 </div>\n
                 <p class="clear"></p>\n
-                <tal:block tal:condition="preferred_html_style_acknowledgeable_message">\n
+                <tal:block tal:condition="preferred_html_style_acknowledgeable_message | nothing">\n
                   <div id="acknowledgeable_message_render">\n
                     <div tal:content="structure here/acknowledgeable_message_render"/>\n
                   </div>\n
