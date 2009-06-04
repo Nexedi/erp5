@@ -33,7 +33,16 @@ class TradeModelLine:
   """
     Properties which allow to define a generic Delivery Builder.
   """
-  _properties = ( )
+  _properties = (
+    { 'id'          : 'create_line',
+      'description' : 'A flag indicating if the corresponding line will'
+                      ' be created',
+      'type'        : 'boolean',
+      'mode'        : 'w',
+      'default'     : True,
+    },
+  )
+
   _categories = (
         'base_application', 'base_contribution', 'trade_phase',
       )
