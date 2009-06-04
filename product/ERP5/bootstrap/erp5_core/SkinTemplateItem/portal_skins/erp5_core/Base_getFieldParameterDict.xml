@@ -65,12 +65,11 @@ if pieces[-1] == \'list\':\n
   pieces.pop()\n
 \n
 # can it be translated title, or something else?\n
-if pieces[-2:] == (\'relative\', \'url\'):\n
-  idx = -2\n
-elif pieces[-1] == \'title\':\n
+if pieces[-1] == \'title\':\n
   idx = -1\n
 else:\n
-  idx = len(pieces)\n
+  idx = -2\n
+  pieces += \'relative\', \'url\'\n
 \n
 return {\'base_category\': \'_\'.join(pieces[:idx]),\n
         \'catalog_index\': \'_\'.join(pieces[idx:])}\n
@@ -115,7 +114,7 @@ return {\'base_category\': \'_\'.join(pieces[:idx]),\n
                             <string>pieces</string>
                             <string>_getitem_</string>
                             <string>idx</string>
-                            <string>len</string>
+                            <string>_inplacevar_</string>
                           </tuple>
                         </value>
                     </item>
