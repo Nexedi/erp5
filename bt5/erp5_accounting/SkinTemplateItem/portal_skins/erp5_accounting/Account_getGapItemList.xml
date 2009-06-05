@@ -65,10 +65,7 @@ display_cache = {}\n
 def display(x):\n
   if x not in display_cache:\n
     gap_id = x.getReference() or x.getId()\n
-    if gap_id.isdigit():\n
-      display_cache[x] = "%s - %s" % (gap_id, x.getTitle())\n
-    else:\n
-      display_cache[x] = x.getTitle()\n
+    display_cache[x] = \'%s - %s\' % (gap_id, x.getTitle())\n
   return display_cache[x]\n
 \n
 def sort(x,y):\n
