@@ -104,6 +104,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
             'salary_range/france/slice_0_to_200',
             'salary_range/france/slice_200_to_400',
             'salary_range/france/slice_400_to_5000',
+            'salary_range/france/slice_600_to_800',
            )
 
   def getBusinessTemplateList(self):
@@ -191,6 +192,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     self.addSlice(model, 'salary_range/france/slice_0_to_200', 0, 200)
     self.addSlice(model, 'salary_range/france/slice_200_to_400', 200, 400)
     self.addSlice(model, 'salary_range/france/slice_400_to_5000', 400, 5000)
+    self.addSlice(model, 'salary_range/france/slice_600_to_800', 600, 800)
     sequence.edit(model = model)
 
   def createModelLine(self, document, **kw):
@@ -223,6 +225,22 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                                        'salary_range/france/slice_0_to_200',
                                        'salary_range/france/slice_200_to_400',
                                        'salary_range/france/slice_400_to_5000'],
+                    base_application_list=[ 'base_amount/base_salary'],
+                    base_contribution_list=['base_amount/deductible_tax'])
+    sequence.edit(urssaf_model_line_with_slices = model_line)
+
+  def stepModelCreateUrssafModelLineWithComplexSlices(self, sequence=None, **kw):
+    model = sequence.get('model')
+    model_line = self.createModelLine(model)
+    model_line.edit(title='Urssaf',
+                    int_index=2,
+                    reference='urssaf_model_line',
+                    trade_phase='trade_phase/payroll/france/urssaf',
+                    resource_value=sequence.get('urssaf_payroll_service'),
+                    variation_category_list=['tax_category/employee_share',
+                                       'tax_category/employer_share',
+                                       'salary_range/france/slice_200_to_400',
+                                       'salary_range/france/slice_600_to_800'],
                     base_application_list=[ 'base_amount/base_salary'],
                     base_contribution_list=['base_amount/deductible_tax'])
     sequence.edit(urssaf_model_line_with_slices = model_line)
@@ -299,6 +317,38 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     cell6.edit(price=0.6, tax_category='employer_share',
         salary_range='france/slice_400_to_5000')
 
+  def stepUrssafModelLineWithComplexSlicesCreateMovements(self,
+      sequence=None, **kw):
+    model_line = sequence.get('urssaf_model_line_with_slices')
+    cell1 = model_line.newCell('tax_category/employee_share',
+        'salary_range/france/slice_200_to_400',
+        portal_type='Pay Sheet Model Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'))
+    cell1.edit(price=0.1, tax_category='employee_share',
+        salary_range='france/slice_200_to_400')
+    cell2 = model_line.newCell('tax_category/employer_share',
+        'salary_range/france/slice_200_to_400',
+        portal_type='Pay Sheet Model Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'))
+    cell2.edit(price=0.2, tax_category='employer_share',
+        salary_range='france/slice_200_to_400')
+    cell3 = model_line.newCell('tax_category/employee_share',
+        'salary_range/france/slice_600_to_800',
+        portal_type='Pay Sheet Model Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'))
+    cell3.edit(price=0.3, tax_category='employee_share',
+        salary_range='france/slice_600_to_800')
+    cell4 = model_line.newCell('tax_category/employer_share',
+        'salary_range/france/slice_600_to_800',
+        portal_type='Pay Sheet Model Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'))
+    cell4.edit(price=0.4, tax_category='employer_share',
+        salary_range='france/slice_600_to_800')
+
   def stepPaysheetUrssafModelLineCreateMovements(self, sequence=None, **kw):
     model_line = sequence.get('urssaf_model_line')
     cell1 = model_line.newCell('tax_category/employee_share',
@@ -358,6 +408,12 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     paysheet = sequence.get('paysheet')
     self.checkUpdateAggregatedAmountListReturn(model, paysheet, 0, 6)
 
+  def stepCheckUpdateAggregatedAmountListReturnUsingComplexSlices(self,
+      sequence=None, **kw):
+    model = sequence.get('model')
+    paysheet = sequence.get('paysheet')
+    self.checkUpdateAggregatedAmountListReturn(model, paysheet, 0, 4)
+
   def stepPaysheetApplyTransformation(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
     paysheet.applyTransformation()
@@ -376,6 +432,14 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     self.assertEqual(len(paysheet.getMovementList(portal_type=\
         'Pay Sheet Cell')), 6) # 6 because labour line contain no movement and 
                                # because of the 3 slice and 2 tax_categories
+
+  def stepCheckPaysheetLineAreCreatedUsingComplexSlices(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
+    self.assertEqual(len(paysheet_line_list), 2)
+    self.assertEqual(len(paysheet.getMovementList(portal_type=\
+        'Pay Sheet Cell')), 4) # 4 because labour line contain no movement and 
+                               # because of the 2 slice and 2 tax_categories
 
   def stepCheckPaysheetLineAmounts(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
@@ -424,6 +488,33 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
             'salary_range/france/slice_400_to_5000')
         self.assertEquals(cell6.getQuantity(), 2600)
         self.assertEquals(cell6.getPrice(), 0.6)
+      elif service == 'Labour':
+        self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
+      else:
+        self.fail("Unknown service for line %s" % paysheet_line.getTitle())
+
+  def stepCheckPaysheetLineAmountsUsingComplexSlices(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
+    for paysheet_line in paysheet_line_list:
+      service = paysheet_line.getResourceTitle()
+      if service == 'Urssaf':
+        cell1 = paysheet_line.getCell('tax_category/employee_share',
+            'salary_range/france/slice_200_to_400')
+        self.assertEquals(cell1.getQuantity(), 200)
+        self.assertEquals(cell1.getPrice(), 0.1)
+        cell2 = paysheet_line.getCell('tax_category/employer_share',
+            'salary_range/france/slice_200_to_400')
+        self.assertEquals(cell2.getQuantity(), 200)
+        self.assertEquals(cell2.getPrice(), 0.2)
+        cell3 = paysheet_line.getCell('tax_category/employee_share',
+            'salary_range/france/slice_600_to_800')
+        self.assertEquals(cell3.getQuantity(), 200)
+        self.assertEquals(cell3.getPrice(), 0.3)
+        cell4 = paysheet_line.getCell('tax_category/employer_share',
+            'salary_range/france/slice_600_to_800')
+        self.assertEquals(cell4.getQuantity(), 200)
+        self.assertEquals(cell4.getPrice(), 0.4)
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       else:
@@ -1050,6 +1141,36 @@ class TestNewPayroll(TestNewPayrollMixin):
                CheckPaysheetLineAmountsUsingSlices
                CheckUpdateAggregatedAmountListReturnNothing
                CheckPaysheetLineAmountsUsingSlices
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_complexSliceOnModelLine(self):
+    '''
+      Check if there is only slice_200_to_400 (without previous
+      slice_0_to_200), amount paid for this tax are correct.
+    '''
+    sequence_list = SequenceList()
+    sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
+               CreateUrssafPayrollService
+               CreateLabourPayrollService
+               CreateEmployer
+               CreateEmployee
+               CreateModelWithSlices
+               Tic
+               ModelCreateUrssafModelLineWithComplexSlices
+               Tic
+               UrssafModelLineWithComplexSlicesCreateMovements
+               CreateBasicPaysheet
+               PaysheetCreateLabourPaySheetLine
+  """ + self.BUSINESS_PATH_CREATION_SEQUENCE_STRING + """
+               CheckUpdateAggregatedAmountListReturnUsingComplexSlices
+               PaysheetApplyTransformation
+               Tic
+               CheckPaysheetLineAreCreatedUsingComplexSlices
+               CheckPaysheetLineAmountsUsingComplexSlices
+               CheckUpdateAggregatedAmountListReturnNothing
+               CheckPaysheetLineAmountsUsingComplexSlices
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
