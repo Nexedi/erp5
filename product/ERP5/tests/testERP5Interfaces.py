@@ -30,88 +30,49 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zope.interface.verify import verifyClass
 import unittest
 
+# this list can be generated automatically using introspection or can be set
+# manually and treated as reference to what implements what
+implements_tuple_list = [
+  ('TradeModelCell', 'ITransformation'),
+  ('TradeModelCell', 'IVariated'),
+  ('TradeModelLine', 'ITransformation'),
+  ('TradeModelLine', 'IVariated'),
+  ('Transformation', 'ITransformation'),
+  ('Transformation', 'IVariated'),
+  ('BusinessPath', 'IBusinessPath'),
+  ('BusinessPath', 'IArrow'),
+  ('BusinessPath', 'ICategoryAccessProvider'),
+  ('TradeModelRule', 'IRule'),
+  ('TradeModelRule', 'IPredicate'),
+  ('TransformationRule', 'IRule'),
+  ('TransformationRule', 'IPredicate'),
+  ('TransformedResource', 'IVariated'),
+]
 
 class TestERP5Interfaces(ERP5TypeTestCase):
   """Test that every class implements interfaces properly"""
 
-#  TODO: Do it automagic way, maybe introspection:
-#  Like in testXHTMLStyle add test methods
-#  for interface in interface_list:
-#    for class in class_list:
-#      if interface.implementedBy(class):
-#        self.createInterfaceTest(interface, class)
-#
-#  and then nice result of declared interfaces
+def makeTestMethod(document, interface):
+  def testMethod(self):
+    _temp = __import__('Products.ERP5Type.Document.%s' % document, globals(),
+        locals(), ['%s' % document])
+    Document = getattr(_temp, document)
+    _temp = __import__('Products.ERP5Type.interfaces', globals(), locals(),
+        ['%s' % interface])
+    Interface = getattr(_temp, interface)
 
-  def test_TradeModelCell_implements_ITransformation(self):
-    from Products.ERP5Type.Document.TradeModelCell import TradeModelCell
-    from Products.ERP5Type.interfaces import ITransformation
-    verifyClass(ITransformation, TradeModelCell)
+    verifyClass(Interface, Document)
 
-  def test_TradeModelCell_implements_IVariated(self):
-    from Products.ERP5Type.Document.TradeModelCell import TradeModelCell
-    from Products.ERP5Type.interfaces import IVariated
-    verifyClass(IVariated, TradeModelCell)
+  return testMethod
 
-  def test_TradeModelLine_implements_ITransformation(self):
-    from Products.ERP5Type.Document.TradeModelLine import TradeModelLine
-    from Products.ERP5Type.interfaces import ITransformation
-    verifyClass(ITransformation, TradeModelLine)
+def addTestMethodDynamically():
+  for document, interface in implements_tuple_list:
+    method_name = 'test_%s_implements_%s' % (document, interface)
+    method = makeTestMethod(document, interface)
+    setattr(TestERP5Interfaces, method_name, method)
 
-  def test_TradeModelLine_implements_IVariated(self):
-    from Products.ERP5Type.Document.TradeModelLine import TradeModelLine
-    from Products.ERP5Type.interfaces import IVariated
-    verifyClass(IVariated, TradeModelLine)
 
-  def test_Transformation_implements_ITransformation(self):
-    from Products.ERP5Type.Document.Transformation import Transformation
-    from Products.ERP5Type.interfaces import ITransformation
-    verifyClass(ITransformation, Transformation)
-
-  def test_Transformation_implements_IVariated(self):
-    from Products.ERP5Type.Document.Transformation import Transformation
-    from Products.ERP5Type.interfaces import IVariated
-    verifyClass(IVariated, Transformation)
-
-  def test_BusinessPath_implements_IBusinessPath(self):
-    from Products.ERP5Type.Document.BusinessPath import BusinessPath
-    from Products.ERP5Type.interfaces import IBusinessPath
-    verifyClass(IBusinessPath, BusinessPath)
-
-  def test_BusinessPath_implements_IArrow(self):
-    from Products.ERP5Type.Document.BusinessPath import BusinessPath
-    from Products.ERP5Type.interfaces import IArrow
-    verifyClass(IArrow, BusinessPath)
-
-  def test_BusinessPath_implements_ICategoryAccessProvider(self):
-    from Products.ERP5Type.Document.BusinessPath import BusinessPath
-    from Products.ERP5Type.interfaces import ICategoryAccessProvider
-    verifyClass(ICategoryAccessProvider, BusinessPath)
-
-  def test_TradeModelRule_implements_IRule(self):
-    from Products.ERP5Type.Document.TradeModelRule import TradeModelRule
-    from Products.ERP5Type.interfaces import IRule
-    verifyClass(IRule, TradeModelRule)
-
-  def test_TradeModelRule_implements_IPredicate(self):
-    from Products.ERP5Type.Document.TradeModelRule import TradeModelRule
-    from Products.ERP5Type.interfaces import IPredicate
-    verifyClass(IPredicate, TradeModelRule)
-
-  def test_TransformationRule_implements_IRule(self):
-    from Products.ERP5Type.Document.TransformationRule import TransformationRule
-    from Products.ERP5Type.interfaces import IRule
-    verifyClass(IRule, TransformationRule)
-
-  def test_TransformationRule_implements_IPredicate(self):
-    from Products.ERP5Type.Document.TransformationRule import TransformationRule
-    from Products.ERP5Type.interfaces import IPredicate
-    verifyClass(IPredicate, TransformationRule)
-
-  def test_TransformedResource_implements_IVariated(self):
-    from Products.ERP5Type.Document.TransformedResource import TransformedResource
-    from Products.ERP5Type.interfaces import IVariated
-    verifyClass(IVariated, TransformedResource)
+addTestMethodDynamically()
 
 def test_suite():
   suite = unittest.TestSuite()
