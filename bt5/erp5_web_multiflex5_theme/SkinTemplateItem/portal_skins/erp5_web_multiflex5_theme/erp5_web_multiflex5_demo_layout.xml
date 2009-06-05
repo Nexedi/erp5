@@ -67,9 +67,11 @@
                 <string>navbar navbar-left</string>
                 <string>headline</string>
                 <string>footer</string>
+                <string>subcontent subcontent-box sidemenu1 (Subsections)</string>
+                <string>subcontent subcontent-box sidemenu3 (News)</string>
+                <string>subcontent subcontent-box adminToolbox (Toolbox)</string>
                 <string>subcontent subcontent-box sidemenu1 (4-01a. Side menu 1)</string>
                 <string>subcontent subcontent-box sidemenu2 (4-01b. Side menu 2)</string>
-                <string>subcontent subcontent-box sidemenu1 (Subsections)</string>
                 <string>subcontent subcontent-box sidemenu3 (4-01c. Side menu 3)</string>
                 <string>subcontent subcontent-box headbox1 (4-02. Box head h1 (with icon))</string>
                 <string>subcontent subcontent-box headbox1noicon (4-03. Box head h1 (no icon))</string>
@@ -86,7 +88,6 @@
                 <string>subcontent subcontent-box documentbox (4-13b. Document)</string>
                 <string>subcontent subcontent-box blogbox (4-13c. Blog)</string>
                 <string>subcontent subcontent-box forumbox (4.13d Forum)</string>
-                <string>subcontent subcontent-box adminToolbox (Toolbox)</string>
               </list>
             </value>
         </item>
@@ -271,6 +272,14 @@
                     <value>
                       <list>
                         <string>side_menu_3</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box sidemenu3 (News)</string> </key>
+                    <value>
+                      <list>
+                        <string>news_box</string>
                       </list>
                     </value>
                 </item>

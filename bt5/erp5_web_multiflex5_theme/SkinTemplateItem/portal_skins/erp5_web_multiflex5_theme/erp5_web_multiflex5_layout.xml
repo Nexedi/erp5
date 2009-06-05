@@ -68,6 +68,7 @@
                 <string>headline</string>
                 <string>footer</string>
                 <string>subcontent subcontent-box sidemenu1 (Subsections)</string>
+                <string>subcontent subcontent-box sidemenu3 (News)</string>
                 <string>subcontent subcontent-box adminToolbox (Toolbox)</string>
               </list>
             </value>
@@ -133,6 +134,14 @@
                     <value>
                       <list>
                         <string>subsection_list</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>subcontent subcontent-box sidemenu3 (News)</string> </key>
+                    <value>
+                      <list>
+                        <string>news_box</string>
                       </list>
                     </value>
                 </item>

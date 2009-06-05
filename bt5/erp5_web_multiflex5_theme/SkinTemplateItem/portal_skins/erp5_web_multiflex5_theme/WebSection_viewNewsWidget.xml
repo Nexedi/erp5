@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>web_section_user_ram_cache</string> </value>
+            <value> <string>web_section_ram_cache</string> </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -45,25 +45,26 @@
 
 <tal:block replace="nothing">\n
   <!--\n
-  This widget displays the list of Sections contained in the current context.\n
-  \n
+  This widget displays the list of News.\n
+\n
   TODO:\n
-    - make sure translation is possible\n
-    - make sure URLs are correct\n
-    - use generic method (erp5_web) to retrieve the list of subsections\n
-    - make it hierarchic\n
+    - maximum number of items should be configurable.\n
+    - excerpt support is required?\n
   -->\n
 </tal:block>\n
 \n
-\n
-<ul tal:define="current_web_section python:request.get(\'current_web_section\', here)"\n
-    i18n:translate="" i18n:domain="ui" i18n:attributes="title"\n
-    title="Sections accessible from here.">\n
-  <li tal:repeat="subsection python:current_web_section.getSiteMapTree(depth=1)">\n
-    <a href="#" tal:content="subsection/translated_title"\n
-                tal:attributes="href subsection/url">Menu item</a>\n
-  </li>\n
-</ul>
+<tal:block tal:define="web_site python:here.getWebSiteValue();\n
+                       news_area_section_id python:here.getLayoutProperty(\'news_area_section_id\', \'\');\n
+                       news_area_section python:web_site.restrictedTraverse(news_area_section_id)">\n
+<ul>\n
+<tal:block tal:repeat="item python:news_area_section.getDocumentValueList(limit=10, sort_on=[(\'modification_date\',\'descending\')])">\n
+  <li><a href="#"\n
+       tal:attributes="href python:news_area_section.getPermanentURL(item)"\n
+       tal:content="item/getTitle" /> (<tal:block tal:replace="python:item.getModificationDate().Date()"/>)</li>\n
+</tal:block>\n
+</ul>\n
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>
@@ -77,7 +78,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_viewSubsectionWidget</string> </value>
+            <value> <string>WebSection_viewNewsWidget</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
