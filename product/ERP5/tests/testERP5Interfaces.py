@@ -33,19 +33,19 @@ import unittest
 # this list can be generated automatically using introspection or can be set
 # manually and treated as reference to what implements what
 implements_tuple_list = [
+  ('BusinessPath', 'IArrow'),
+  ('BusinessPath', 'IBusinessPath'),
+  ('BusinessPath', 'ICategoryAccessProvider'),
   ('TradeModelCell', 'ITransformation'),
   ('TradeModelCell', 'IVariated'),
   ('TradeModelLine', 'ITransformation'),
   ('TradeModelLine', 'IVariated'),
+  ('TradeModelRule', 'IPredicate'),
+  ('TradeModelRule', 'IRule'),
   ('Transformation', 'ITransformation'),
   ('Transformation', 'IVariated'),
-  ('BusinessPath', 'IBusinessPath'),
-  ('BusinessPath', 'IArrow'),
-  ('BusinessPath', 'ICategoryAccessProvider'),
-  ('TradeModelRule', 'IRule'),
-  ('TradeModelRule', 'IPredicate'),
-  ('TransformationRule', 'IRule'),
   ('TransformationRule', 'IPredicate'),
+  ('TransformationRule', 'IRule'),
   ('TransformedResource', 'IVariated'),
 ]
 
