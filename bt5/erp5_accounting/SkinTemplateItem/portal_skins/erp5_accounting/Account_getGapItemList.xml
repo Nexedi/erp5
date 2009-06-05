@@ -64,7 +64,7 @@ display_cache = {}\n
 \n
 def display(x):\n
   if x not in display_cache:\n
-    gap_id = x.getId()\n
+    gap_id = x.getReference() or x.getId()\n
     if gap_id.isdigit():\n
       display_cache[x] = "%s - %s" % (gap_id, x.getTitle())\n
     else:\n
