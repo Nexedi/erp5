@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #############################################################################
 #
 # Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
@@ -48,7 +49,7 @@ class ContributionRegistryTool(BaseTool):
 
     for predicate in self.objectValues(sort_on='int_index'):
       result = predicate.test(ingestion_file)
-      if not result in (None, False):
+      if result:
         return result
 
 InitializeClass(ContributionRegistryTool)
