@@ -53,11 +53,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-cancel_url = portal.absolute_url()\n
-return container.REQUEST.RESPONSE.redirect(\n
-         \'%s/ERP5Site_viewChangeAuthenticatedMemberPasswordDialog?cancel_url=%s\' \n
-           %(portal.ERP5Site_getTioLiveSiteRootUrl(), cancel_url))\n
+            <value> <string>"""\n
+  Get TioLive Site root URL.\n
+"""\n
+return context.REQUEST.get(\'BASE0\', \'https://www.tiolive.com\')\n
 </string> </value>
         </item>
         <item>
@@ -96,9 +95,6 @@ return container.REQUEST.RESPONSE.redirect(\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal</string>
-                            <string>cancel_url</string>
-                            <string>container</string>
                           </tuple>
                         </value>
                     </item>
@@ -115,7 +111,7 @@ return container.REQUEST.RESPONSE.redirect(\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_redirectToTioLiveChangePasswordDialog</string> </value>
+            <value> <string>ERP5Site_getTioLiveSiteRootUrl</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
