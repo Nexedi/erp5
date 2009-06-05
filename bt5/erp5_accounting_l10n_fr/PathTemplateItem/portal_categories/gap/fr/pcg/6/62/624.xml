@@ -10,6 +10,33 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_folders_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Copy_or_Move_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -38,6 +65,10 @@
                 <string>gap/fr/pcg/6/62/624</string>
               </tuple>
             </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>624</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

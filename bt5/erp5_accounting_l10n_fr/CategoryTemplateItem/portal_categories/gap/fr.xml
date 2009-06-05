@@ -10,6 +10,33 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_folders_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Copy_or_Move_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -281,7 +308,7 @@
         </item>
         <item>
             <key> <string>last_id</string> </key>
-            <value> <string>1</string> </value>
+            <value> <string>3</string> </value>
         </item>
         <item>
             <key> <string>length_quantity</string> </key>
