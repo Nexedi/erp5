@@ -371,7 +371,10 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     paysheet.edit(title='test 1',
                   specialise_value=sequence.get('model'),
                   source_section_value=sequence.get('employee'),
-                  destination_section_value=sequence.get('employer'))
+                  destination_section_value=sequence.get('employer'),
+                  resource_value=sequence.get('price_currency'),
+                  start_date=DateTime(),
+                  stop_date=DateTime()+1)
     sequence.edit(paysheet = paysheet)
 
   def createPaysheetLine(self, document, **kw):
@@ -906,6 +909,18 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
       else:
         self.fail("Unknown service for line %s" % paysheet_line.getTitle())
 
+  def stepCheckPaysheetConsistency(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    self.assertEquals([], paysheet.checkConsistency())
+
+  def stepCheckModelConsistency(self, sequence=None, **kw):
+    model = sequence.get('model')
+    self.assertEquals([], model.checkConsistency())
+
+  def stepCheckServiceConsistency(self, sequence=None, **kw):
+    service = sequence.get('urssaf_payroll_service')
+    self.assertEquals([], service.checkConsistency())
+
 class TestNewPayroll(TestNewPayrollMixin):
 
   BUSINESS_PATH_CREATION_SEQUENCE_STRING = """
@@ -921,6 +936,7 @@ class TestNewPayroll(TestNewPayrollMixin):
                CreateLabourPayrollService
                CreateEmployer
                CreateEmployee
+               CreatePriceCurrency
                CreateBasicModel
                ModelCreateUrssafModelLine
                UrssafModelLineCreateMovements
@@ -988,6 +1004,20 @@ class TestNewPayroll(TestNewPayrollMixin):
                PaysheetSetModelAndApplyIt
                CheckPaysheetContainOneAnnotationLine
                CheckPaysheetContainOnePaymentCondition
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_checkConsistency(self):
+    '''
+      minimal test for checkConsistency on a Pay Sheet Transaction and it's
+      subdocuments (may have to be updated when we'll add more constraints).
+    '''
+    sequence_list = SequenceList()
+    sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
+               CheckPaysheetConsistency
+               CheckModelConsistency
+               CheckServiceConsistency
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
