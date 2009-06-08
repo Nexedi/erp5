@@ -199,7 +199,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
 
         # check if slices are used
         salary_range_list = tmp_movement.getVariationCategoryList(\
-            base_category_list='salary_range')
+            base_category_list='salary_range') #XXX hardcoded values
         salary_range = len(salary_range_list) and salary_range_list[0] or None
         if salary_range is not None:
           # we use slice
