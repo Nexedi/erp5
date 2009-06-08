@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2007-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Fabien Morin <fabien@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -28,18 +28,17 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5.Document.Predicate import Predicate
-from Products.ERP5.Document.PaySheetLine import PaySheetLine
+from Products.ERP5.Document.TradeModelLine import TradeModelLine
 
-from zLOG import LOG
-
-class PaySheetModelLine(PaySheetLine, Predicate):
+class PaySheetModelLine(TradeModelLine):
   """
     A PaySheetModelLine object allows to implement lines in
     PaySheetModel.
     A PaySheetModelLine contain all parameters witch make it possible to
     calculate a service contribution.
   """
+  edited_property_list = ['price', 'causality','resource','quantity',
+              'title', 'base_application_list', 'base_contribution_list']
 
   meta_type = 'ERP5 Pay Sheet Model Line'
   portal_type = 'Pay Sheet Model Line'
@@ -67,4 +66,14 @@ class PaySheetModelLine(PaySheetLine, Predicate):
                     , PropertySheet.MappedValue
                     , PropertySheet.PaySheetModelLine
                     , PropertySheet.Predicate
+                    , PropertySheet.Reference
                     )
+  
+  security.declareProtected( Permissions.ModifyPortalContent,
+                             'newCellContent' )
+  def newCellContent(self, id, portal_type='Pay Sheet Model Cell', **kw):
+    """
+        This method can be overriden
+    """
+    self.invokeFactory(type_name=portal_type,id=id)
+    return self.get(id)
