@@ -915,27 +915,9 @@ class TestBPMMixin(ERP5TypeTestCase):
       use='tax',
     ))
 
-  def stepCreateServiceTax2(self, sequence=None, **kw):
-    sequence.edit(service_tax_2 = self.createResource('Service',
-      title='Tax 2',
-      use='tax',
-    ))
-
-  def stepCreateServiceTax3(self, sequence=None, **kw):
-    sequence.edit(service_tax_3 = self.createResource('Service',
-      title='Tax 3',
-      use='tax',
-    ))
-
   def stepCreateServiceDiscount(self, sequence=None, **kw):
     sequence.edit(service_discount = self.createResource('Service',
       title='Discount',
-      use='discount',
-    ))
-
-  def stepCreateServiceDiscount2(self, sequence=None, **kw):
-    sequence.edit(service_discount_2 = self.createResource('Service',
-      title='Discount 2',
       use='discount',
     ))
 
@@ -1166,7 +1148,7 @@ class TestBPMMixin(ERP5TypeTestCase):
 
   def stepModifyTradeModelLineTotalDiscount(self, sequence=None, **kw):
     trade_model_line = sequence.get('trade_model_line')
-    service_discount = sequence.get('service_discount_2')
+    service_discount = sequence.get('service_discount')
 
     trade_model_line.edit(
       price=0.8,
@@ -1232,7 +1214,7 @@ class TestBPMMixin(ERP5TypeTestCase):
 
   def stepModifyTradeModelLineTotalTax(self, sequence=None, **kw):
     trade_model_line = sequence.get('trade_model_line')
-    service_tax = sequence.get('service_tax_3')
+    service_tax = sequence.get('service_tax')
 
     trade_model_line.edit(
       price=0.12,
@@ -1268,7 +1250,7 @@ class TestBPMMixin(ERP5TypeTestCase):
   def stepModifyTradeModelLineTaxContributingToTotalTax2(self,
       sequence=None, **kw):
     trade_model_line = sequence.get('trade_model_line')
-    service_tax = sequence.get('service_tax_2')
+    service_tax = sequence.get('service_tax')
 
     trade_model_line.edit(
       price=0.2,
@@ -2123,9 +2105,6 @@ class TestBPMTestCases(TestBPMMixin):
     """
     sequence_list = SequenceList()
     sequence_string = self.COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
-              CreateServiceTax2
-              CreateServiceTax3
-              CreateServiceDiscount2
               CreateBusinessProcess
               CreateBusinessState
               ModifyBusinessStateTaxed
@@ -2173,9 +2152,6 @@ class TestBPMTestCases(TestBPMMixin):
     """
     sequence_list = SequenceList()
     sequence_string = self.COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
-              CreateServiceTax2
-              CreateServiceTax3
-              CreateServiceDiscount2
               CreateBusinessProcess
               CreateBusinessState
               ModifyBusinessStateTaxed
