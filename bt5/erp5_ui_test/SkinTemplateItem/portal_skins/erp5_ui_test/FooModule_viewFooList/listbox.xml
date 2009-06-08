@@ -350,6 +350,10 @@
                           <string>getQuantity</string>
                           <string>Quantity</string>
                         </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Start Date</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -466,6 +470,10 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>row_css_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>search</string> </key>
                     <value> <int>1</int> </value>
                 </item>
@@ -503,23 +511,12 @@
                 <item>
                     <key> <string>stat_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>FooModule_statId</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>FooModule_statTitle</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>stat_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -571,22 +568,6 @@
         <item>
             <key> <string>method_name</string> </key>
             <value> <string>searchFolder</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>portal_catalog</string> </value>
         </item>
       </dictionary>
     </pickle>
