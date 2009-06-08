@@ -5,6 +5,7 @@
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Romain Courteaud <romain@nexedi.com>
 #                    Łukasz Nowak <luke@nexedi.com>
+#                    Fabien Morin <fabien@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -119,11 +120,13 @@ class TradeCondition(Path, Transformation):
 
     security.declareProtected(Permissions.AccessContentsInformation,
         'findSpecialiseValueList')
-    def findSpecialiseValueList(self, context, portal_type_list=None):
+    def findSpecialiseValueList(self, context, portal_type_list=None,
+        visited_trade_condition_list=None):
       '''Return a list of object. The list will represent the inheritance tree.
       It uses Breadth First Search.
       '''
-      visited_trade_condition_list = []
+      if visited_trade_condition_list is None:
+        visited_trade_condition_list = []
       specialise_value_list = []
       if portal_type_list is None:
         portal_type_list = [self.getPortalType()]
@@ -135,7 +138,8 @@ class TradeCondition(Path, Transformation):
           raise CircularException
         visited_trade_condition_list.append(specialise)
         specialise_value_list.extend(self.findSpecialiseValueList(context=specialise,
-          portal_type_list=portal_type_list))
+          portal_type_list=portal_type_list,
+          visited_trade_condition_list=visited_trade_condition_list))
       return specialise_value_list
 
     def getTradeModelLineComposedList(self, context=None, portal_type_list=None):
