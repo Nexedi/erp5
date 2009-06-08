@@ -95,6 +95,7 @@
                     <value>
                       <list>
                         <string>listbox_price</string>
+                        <string>listbox_reference</string>
                       </list>
                     </value>
                 </item>

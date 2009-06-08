@@ -13,13 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
+                <string>anchor</string>
                 <string>columns</string>
-                <string>sort</string>
+                <string>editable_columns</string>
                 <string>list_method</string>
                 <string>selection_name</string>
-                <string>anchor</string>
-                <string>editable_columns</string>
+                <string>sort</string>
+                <string>title</string>
                 <string>untranslatable_columns</string>
               </list>
             </value>
@@ -89,6 +89,10 @@
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
                         <tuple>
                           <string>resource_title</string>
                           <string>Model</string>
