@@ -96,8 +96,8 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>delivery</string>
                 <string>accounting_transaction</string>
+                <string>delivery</string>
                 <string>invoice</string>
               </tuple>
             </value>

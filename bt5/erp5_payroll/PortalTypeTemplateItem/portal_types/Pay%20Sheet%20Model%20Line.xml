@@ -64,7 +64,7 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>accounting_transaction_line_icon.gif</string> </value>
+            <value> <string>file_icon.gif</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
@@ -86,8 +86,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>delivery_movement</string>
-                <string>invoice_movement</string>
+                <string>transformation</string>
               </tuple>
             </value>
         </item>
