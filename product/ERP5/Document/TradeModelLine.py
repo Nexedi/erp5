@@ -3,6 +3,7 @@
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Łukasz Nowak <luke@nexedi.com>
+#                    Fabien Morin <fabien@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -57,6 +58,7 @@ class TradeModelLine(XMLMatrix, Amount):
                     , PropertySheet.Amount
                     , PropertySheet.Price
                     , PropertySheet.TradeModelLine
+                    , PropertySheet.Reference
                     )
 
     def getPrice(self):
@@ -111,7 +113,7 @@ class TradeModelLine(XMLMatrix, Amount):
       self_id = self.getParentValue().getId() + '_' + self.getId()
 
       tmp_movement_list = [q for q in current_aggregated_amount_list \
-          if q.getProperty('resource') == self.getResource() ]
+          if q.getProperty('reference') == self.getReference() ]
       if len(tmp_movement_list) > 0:
         tmp_movement_list = tmp_movement_list[:1]
         update = 1
@@ -138,10 +140,12 @@ class TradeModelLine(XMLMatrix, Amount):
                 variation_category_list = cell.getVariationCategoryList(),
                 causality = self.getRelativeUrl(),
                 resource = self.getResource(),
+                reference = self.getReference(),
                 base_application_list = base_application_list,
                 base_contribution_list = self.getBaseContributionList(),
                 price = cell.getPrice(),
                 quantity = cell.getQuantity(0.0),
+                create_line = self.isCreateLine(),
                 trade_phase_list = self.getTradePhaseList(),
                 )
             tmp_movement_list.append(tmp_movement)
@@ -151,24 +155,69 @@ class TradeModelLine(XMLMatrix, Amount):
           tmp_movement.edit(
             causality = self.getRelativeUrl(),
             resource = self.getResource(),
+            reference = self.getReference(),
             base_application_list = base_application_list,
             base_contribution_list = self.getBaseContributionList(),
+            quantity = self.getQuantity(0.0),
             price = self.getPrice(),
+            create_line = self.isCreateLine(),
             trade_phase_list = self.getTradePhaseList(),
           )
           tmp_movement_list.append(tmp_movement)
-
       modified = 0
-      
       for tmp_movement in tmp_movement_list:
-        for movement in movement_list:
-          if set(base_application_list)\
-              .intersection(set(movement.getBaseContributionList())):
-            quantity = tmp_movement.getQuantity(0.0)
-            modified = 1
+        if len(self.getVariationCategoryList()) == 0 and \
+            self.getQuantity(None) is None or \
+            len(self.getVariationCategoryList()) and \
+            tmp_movement.getQuantity(None) is None:
+          # if the quantity is not defined, that mean we should search on 
+          # all movements with correponding base_amount (if we use cells, we
+          # have to look on cells, if we don't, look on self)
+          for movement in movement_list:
+            if set(base_application_list)\
+                .intersection(set(movement.getBaseContributionList())):
+              # if the movement have no variation category, it's the same as 
+              # if he have all variation categories
+              if len(movement.getVariationCategoryList()) == 0 or \
+                  set(movement.getVariationCategoryList()).intersection(\
+                  set(tmp_movement.getVariationCategoryList())):
+                  quantity = tmp_movement.getQuantity(0.0)
+                  modified = 1
+                  tmp_movement.edit(
+                    quantity = quantity + movement.getTotalPrice()
+                  )
+        else:
+          # if the quantity is defined, we use it
+          modified = 1
+          if tmp_movement.getPrice() in (0, None):
+            # if price is not defined, it the same as 100 %
             tmp_movement.edit(
-              quantity = quantity + movement.getTotalPrice()
+              price = 1
             )
+
+        # check if slices are used
+        salary_range_list = tmp_movement.getVariationCategoryList(\
+            base_category_list='salary_range')
+        salary_range = len(salary_range_list) and salary_range_list[0] or None
+        if salary_range is not None:
+          # we use slice
+          model = self.getParentValue()
+          cell = model.getCell(salary_range)
+          if cell is None:
+            raise ValueError("Can't find the cell corresponding to those "+\
+                "cells coordinates : %s" % salary_range)
+          model_slice_min = cell.getQuantityRangeMin()
+          model_slice_max = cell.getQuantityRangeMax()
+          base_application = tmp_movement.getQuantity(0.0)
+          if base_application-model_slice_min>0:
+            if base_application <= model_slice_max:
+              tmp_movement.edit(
+                quantity = base_application-model_slice_min
+              )
+            elif model_slice_max:
+              tmp_movement.edit(
+                quantity = model_slice_max-model_slice_min
+              )
 
         if not update:
           if modified:
