@@ -1,6 +1,12 @@
 <hidden_content_type_list>
+ <portal_type id="Pay Sheet Line">
+  <item>Pay Sheet Cell</item>
+ </portal_type>
  <portal_type id="Pay Sheet Model">
   <item>Pay Sheet Model Slice</item>
+ </portal_type>
+ <portal_type id="Pay Sheet Model Line">
+  <item>Pay Sheet Model Cell</item>
  </portal_type>
  <portal_type id="Preference">
   <item>Pay Sheet Transaction</item>
