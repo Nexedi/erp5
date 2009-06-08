@@ -19,7 +19,7 @@
   <item>Payment Condition</item>
  </portal_type>
  <portal_type id="Pay Sheet Model Line">
-  <item>Pay Sheet Cell</item>
+  <item>Pay Sheet Model Cell</item>
  </portal_type>
  <portal_type id="Pay Sheet Model Module">
   <item>Pay Sheet Model</item>
@@ -27,6 +27,7 @@
  <portal_type id="Pay Sheet Transaction">
   <item>Pay Sheet Transaction Line</item>
   <item>Pay Sheet Line</item>
+  <item>Pay Sheet Model Line</item>
   <item>Annotation Line</item>
   <item>Pay Sheet Model Ratio Line</item>
   <item>Payment Condition</item>

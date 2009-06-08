@@ -4,6 +4,9 @@ Pay Sheet Cell | tax_category
 Pay Sheet Line | base_amount
 Pay Sheet Line | salary_range
 Pay Sheet Line | tax_category
+Pay Sheet Model Cell | product_line
+Pay Sheet Model Cell | salary_range
+Pay Sheet Model Cell | tax_category
 Pay Sheet Model Module | business_application
 Pay Sheet Model Slice | product_line
 Pay Sheet Model Slice | salary_range
