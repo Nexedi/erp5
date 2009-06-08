@@ -38,17 +38,12 @@ from Products.ERP5.Document.Rule import Rule
 from Products.ERP5.Document.SimulationMovement import SimulationMovement
 from Products.ERP5Type.Errors import TransformationRuleError
 
-class TransformationMovementFactory:
-  def __init__(self):
-    self.default = None # base information to use for making movements
-    self.produced_list = list()
-    self.consumed_list = list()
-
-  def requestProduced(self, **produced):
-    self.produced_list.append(produced)
-
-  def requestConsumed(self, **consumed):
-    self.consumed_list.append(consumed)
+class MovementFactory:
+  def getRequestList(self):
+    """
+    return the list of a request which to be used to apply movements
+    """
+    raise NotImplementedError, 'Must be implemented'
 
   def _getCausalityList(self, causality=None, causality_value=None,
                         causality_list=None, causality_value_list=None,
@@ -63,17 +58,6 @@ class TransformationMovementFactory:
       return [causality_value.getRelativeUrl()
               for causality_value in causality_value_list]
 
-  def getRequestList(self):
-    _list = []
-    for (request_list, sign) in ((self.produced_list, -1),
-                            (self.consumed_list, 1)):
-      for request in request_list:
-        d = self.default.copy()
-        d.update(request)
-        d['quantity'] *= sign
-        _list.append(d)
-    return _list
-
   def makeMovements(self, applied_rule):
     """
     make movements under the applied_rule by requests
@@ -84,10 +68,6 @@ class TransformationMovementFactory:
       key = tuple(sorted(movement.getCausalityList()))
       movement_dict[key] = movement
 
-    """
-    produced quantity should be represented by minus quantity on movement.
-    because plus quantity is consumed.
-    """ 
     for request in self.getRequestList():
       # get movement by causality
       key = tuple(sorted(self._getCausalityList(**request)))
@@ -119,6 +99,37 @@ class TransformationMovementFactory:
     if request['quantity'] != 0:
       diff_movement = applied_rule.newContent(portal_type="Simulation Movement")
       diff_movement.edit(**request)
+
+
+class TransformationMovementFactory(MovementFactory):
+  def __init__(self):
+    self.product = None # base information to use for making movements
+    self.produced_list = list()
+    self.consumed_list = list()
+
+  def requestProduced(self, **produced):
+    self.produced_list.append(produced)
+
+  def requestConsumed(self, **consumed):
+    self.consumed_list.append(consumed)
+
+  def getRequestList(self):
+    """
+    return the list of a request which to be used to apply movements
+    """
+    _list = []
+    """
+    produced quantity should be represented by minus quantity on movement.
+    because plus quantity is consumed.
+    """ 
+    for (request_list, sign) in ((self.produced_list, -1),
+                                 (self.consumed_list, 1)):
+      for request in request_list:
+        d = self.product.copy()
+        d.update(request)
+        d['quantity'] *= sign
+        _list.append(d)
+    return _list
 
 
 class TransformationRuleMixin(Base):
@@ -266,7 +277,7 @@ class TransformationRule(TransformationRuleMixin, Rule):
     head_production_path_list = self.getHeadProductionPathList(transformation,
                                                                business_process)
     factory = self.getFactory()
-    factory.default = dict(
+    factory.product = dict(
       resource=transformation.getResource(),
       quantity=parent_movement.getNetQuantity(),
       quantity_unit=parent_movement.getQuantityUnit(),
@@ -299,6 +310,21 @@ class TransformationRule(TransformationRuleMixin, Rule):
               % (phase, business_process)
 
       for path in phase_path_list:
+        # source, source_section
+        source_section = path.getSourceSection() # only support a static access 
+        source_method_id = path.getSourceMethodId()
+        if source_method_id is None:
+          source = path.getSource()
+        else:
+          source = getattr(path, source_method_id)()
+        # destination, destination_section
+        destination_section = path.getDestinationSection() # only support a static access 
+        destination_method_id = path.getDestinationMethodId()
+        if destination_method_id is None:
+          destination = path.getDestination()
+        else:
+          destination = getattr(path, destination_method_id)()
+
         start_date = path.getExpectedStartDate(explanation)
         stop_date = path.getExpectedStopDate(explanation)
         predecessor_remaining_phase_list = path.getPredecessorValue()\
@@ -307,7 +333,6 @@ class TransformationRule(TransformationRuleMixin, Rule):
         successor_remaining_phase_list = path.getSuccessorValue()\
           .getRemainingTradePhaseList(explanation,
                                       trade_phase_list=trade_phase_list)
-        destination = path.getDestination()
 
         # checking which is not last path of transformation
         if len(successor_remaining_phase_list) != 0:
@@ -317,9 +342,10 @@ class TransformationRule(TransformationRuleMixin, Rule):
             start_date=start_date,
             stop_date=stop_date,
             # when last path of transformation, path.getQuantity() will be return 1.
-            quantity=factory.default['quantity'] * path.getQuantity(),
+            quantity=factory.product['quantity'] * path.getQuantity(),
+            source_section=source_section,
+            destination_section=destination_section,
             destination=destination,
-            #destination_section=???,
             trade_phase_value_list=successor_remaining_phase_list)
         else:
           # for making movement of last product of the transformation
@@ -333,12 +359,19 @@ class TransformationRule(TransformationRuleMixin, Rule):
           # trade phase of product is must be empty []
           if last_prop_dict.get('trade_phase_value_list', None) is None:
             last_prop_dict['trade_phase_value_list'] = successor_remaining_phase_list
+          if last_prop_dict.get('source_section', None) is None:
+            last_prop_dict['source_section'] = source_section
+          # for the source, it is not need, because the produced.
+          if last_prop_dict.get('destination_section', None) is None:
+            last_prop_dict['destination_section'] = destination_section
           if last_prop_dict.get('destination', None) is None:
             last_prop_dict['destination'] = destination
 
           if last_prop_dict['start_date'] != start_date or\
              last_prop_dict['stop_date'] != stop_date or\
              last_prop_dict['trade_phase_value_list'] != successor_remaining_phase_list or\
+             last_prop_dict['source_section'] != source_section or\
+             last_prop_dict['destination_section'] != destination_section or\
              last_prop_dict['destination'] != destination:
             raise TransformationRuleError,\
               """Returned property is different on Transformation %r and Business Process %r"""\
@@ -350,9 +383,10 @@ class TransformationRule(TransformationRuleMixin, Rule):
             causality_value=path,
             start_date=start_date,
             stop_date=stop_date,
-            quantity=factory.default['quantity'] * path.getQuantity(),
-            source=path.getSource(),
-            #source_section=???,
+            quantity=factory.product['quantity'] * path.getQuantity(),
+            source_section=source_section,
+            destination_section=destination_section,
+            source=source,
             trade_phase_value_list=predecessor_remaining_phase_list)
 
         # consumed movement
@@ -362,11 +396,12 @@ class TransformationRule(TransformationRuleMixin, Rule):
             start_date=start_date,
             stop_date=stop_date,
             resource=amount.getResource(),
-            quantity=factory.default['quantity'] * amount.getQuantity()\
+            quantity=factory.product['quantity'] * amount.getQuantity()\
               / amount.getEfficiency() * path.getQuantity(),
             quantity_unit=amount.getQuantityUnit(),
-            source=path.getSource(),
-            #source_section=???,
+            source_section=source_section,
+            destination_section=destination_section,
+            source=source,
             trade_phase=path.getTradePhase())
 
     """
@@ -398,8 +433,7 @@ which last_phase_path_list is empty.""" % (transformation, business_process)
     factory.requestProduced(
       causality_value_list=last_phase_path_list,
       # when last path of transformation, path.getQuantity() will be return 1.
-      quantity=factory.default['quantity'] * path.getQuantity(),
-      #destination_section=???,
+      quantity=factory.product['quantity'] * path.getQuantity(),
       **last_prop_dict)
 
     factory.makeMovements(applied_rule)
