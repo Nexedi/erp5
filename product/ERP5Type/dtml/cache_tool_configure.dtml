@@ -11,13 +11,5 @@
       <input type="submit" value="Clear <dtml-var sequence-item>"/>
     </form>
   </dtml-in>
-  
-<h3>SQLCache configuration</h3>
-<p>Create SQL cache table(Note: you need to adjust later each SQLCache plugin to use this cache table name manually. Generally it is a good idea to use default sql cache table name)</p>
-<form action="createDBCacheTable" method="POST">
-  <input name="cache_table_name" value="cache">
-  <br/>
-  <input type="submit" value="Create (Recreate) sql cache table"/>
-</form>
 
 <dtml-var manage_page_footer>
