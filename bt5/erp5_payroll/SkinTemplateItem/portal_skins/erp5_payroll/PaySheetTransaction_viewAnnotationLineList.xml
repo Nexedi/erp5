@@ -102,7 +102,6 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_social_insurance_annotation_line_source_title</string>
                         <string>my_overtime_annotation_line_quantity</string>
                         <string>my_overtime_annotation_line_quantity_unit</string>
                       </list>

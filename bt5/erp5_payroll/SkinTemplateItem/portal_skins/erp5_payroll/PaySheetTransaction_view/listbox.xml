@@ -13,13 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>selection_name</string>
                 <string>columns</string>
-                <string>sort</string>
+                <string>editable_columns</string>
                 <string>list_method</string>
                 <string>portal_types</string>
-                <string>editable_columns</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -120,6 +120,12 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_view_mode_listbox</string> </value>
                 </item>
@@ -140,6 +146,10 @@
                         <tuple>
                           <string>Pay Sheet Line</string>
                           <string>Pay Sheet Line</string>
+                        </tuple>
+                        <tuple>
+                          <string>Pay Sheet Model Line</string>
+                          <string>Pay Sheet Model Line</string>
                         </tuple>
                       </list>
                     </value>
