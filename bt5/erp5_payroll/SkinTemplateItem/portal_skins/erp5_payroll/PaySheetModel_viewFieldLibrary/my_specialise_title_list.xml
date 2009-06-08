@@ -107,6 +107,10 @@
                           <string>Pay Sheet Model</string>
                           <string>Pay Sheet Model</string>
                         </tuple>
+                        <tuple>
+                          <string>Business Process</string>
+                          <string>Business Process</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -117,6 +121,10 @@
                         <tuple>
                           <string>PaySheetModelModule_viewPaySheetModelList/listbox</string>
                           <string>Pay Sheet Models</string>
+                        </tuple>
+                        <tuple>
+                          <string>BusinessProcessModule_viewBusinessProcessList/listbox</string>
+                          <string>Business Process Models</string>
                         </tuple>
                       </list>
                     </value>
