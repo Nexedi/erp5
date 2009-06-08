@@ -38,7 +38,7 @@ from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 import zope.interface
 
 class TradeModelLine(Predicate, XMLMatrix, Amount):
-    """Trade Model Line
+    """Trade Model Line is a way to represent trade transformation for movements
     """
     meta_type = 'ERP5 Trade Model Line'
     portal_type = 'Trade Model Line'
@@ -115,7 +115,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
       self_id = self.getParentValue().getId() + '_' + self.getId()
 
       tmp_movement_list = [q for q in current_aggregated_amount_list \
-          if q.getProperty('reference') == self.getReference() ]
+          if q.getReference() == self.getReference() ]
       if len(tmp_movement_list) > 0:
         tmp_movement_list = tmp_movement_list[:1]
         update = 1
