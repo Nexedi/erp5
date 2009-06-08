@@ -57,7 +57,7 @@
         </item>
         <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python: list( portal.getPortalAcquisitionMovementTypeList() + portal.getPortalItemTypeList() + portal.getPortalDeliveryTypeList() + portal.getPortalOrderTypeList() + portal.getPortalInvoiceTypeList() + portal.getPortalSupplyTypeList() + portal.getPortalSupplyPathTypeList())</string> </value>
+            <value> <string>python: list( portal.getPortalAcquisitionMovementTypeList() + portal.getPortalItemTypeList() + portal.getPortalDeliveryTypeList() + portal.getPortalOrderTypeList() + portal.getPortalInvoiceTypeList() + portal.getPortalSupplyTypeList() + portal.getPortalSupplyPathTypeList() + portal.getPortalTransformationTypeList())</string> </value>
         </item>
         <item>
             <key> <string>acquisition_sync_value</string> </key>
@@ -83,7 +83,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>fallback_base_category</string> </key>
