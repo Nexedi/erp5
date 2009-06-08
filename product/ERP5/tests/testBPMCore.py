@@ -354,7 +354,8 @@ class TestBPMMixin(ERP5TypeTestCase):
 
   def createOrder(self):
     module = self.portal.getDefaultModule(portal_type=self.order_portal_type)
-    return module.newContent(portal_type=self.order_portal_type)
+    return module.newContent(portal_type=self.order_portal_type,
+        title=self.id())
 
   def stepCreateOrder(self, sequence=None, **kw):
     sequence.edit(order = self.createOrder())
@@ -925,7 +926,8 @@ class TestBPMMixin(ERP5TypeTestCase):
     module = self.portal.getDefaultModule(
         portal_type=self.trade_condition_portal_type)
     trade_condition = module.newContent(
-        portal_type=self.trade_condition_portal_type)
+        portal_type=self.trade_condition_portal_type,
+        title=self.id())
     return trade_condition
 
   def stepCreateTradeCondition(self, sequence=None, **kw):
