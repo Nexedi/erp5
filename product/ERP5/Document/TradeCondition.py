@@ -148,7 +148,8 @@ class TradeCondition(Path, Transformation):
       Reference of Trade Model Line is used to hide other Trade Model Line
       In chain first found Trade Model Line has precedence
       Context's, if not None, Trade Model Lines have precedence
-      XXX - the sorting is missing
+      Result is sorted in safe order to do one time pass - movements which
+      applies are before its possible contributions.
       """
       if portal_type_list is None:
         portal_type_list = self.model_line_portal_type_list
@@ -173,7 +174,9 @@ class TradeCondition(Path, Transformation):
             trade_model_line_composed_list.append(trade_model_line)
             reference_list.append(reference)
 
-      return trade_model_line_composed_list
+      return sorted(trade_model_line_composed_list,
+          cmp=lambda x,y: set(x.getBaseContributionList()).
+          intersection(set(y.getBaseApplicationList())) and -1 or 1)
 
     def getAggregatedAmountList(self, context, movement_list=None, **kw):
       result = AggregatedAmountList()
