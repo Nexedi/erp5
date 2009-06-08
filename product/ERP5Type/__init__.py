@@ -87,15 +87,15 @@ def initialize( context ):
                          portal_tools = portal_tools,
                          content_constructors = content_constructors,
                          content_classes = content_classes)
-  # We should register product classes at some point
-  from Products.ERP5Type.InitGenerator import initializeProductDocumentRegistry
-  initializeProductDocumentRegistry()
   # We should register local constraints at some point
   from Products.ERP5Type.Utils import initializeLocalConstraintRegistry
   initializeLocalConstraintRegistry()
   # We should register local property sheets at some point
   from Products.ERP5Type.Utils import initializeLocalPropertySheetRegistry
   initializeLocalPropertySheetRegistry()
+  # We should register product classes at some point
+  from Products.ERP5Type.InitGenerator import initializeProductDocumentRegistry
+  initializeProductDocumentRegistry()
   # We should register local classes at some point
   from Products.ERP5Type.Utils import initializeLocalDocumentRegistry
   initializeLocalDocumentRegistry()
