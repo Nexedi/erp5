@@ -93,6 +93,8 @@
                         <string>my_source_section_title</string>
                         <string>my_destination_section_title</string>
                         <string>my_int_index</string>
+                        <string>my_price</string>
+                        <string>my_quantity</string>
                       </list>
                     </value>
                 </item>
@@ -102,6 +104,7 @@
                       <list>
                         <string>my_variation_category_list</string>
                         <string>my_base_contribution_list</string>
+                        <string>my_base_application_list</string>
                       </list>
                     </value>
                 </item>
