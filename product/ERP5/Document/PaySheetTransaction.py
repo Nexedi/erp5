@@ -85,9 +85,9 @@ class PaySheetTransaction(Invoice):
     # if not find in the paysheet, look on dependence tree
     sub_object_list = self.getInheritedObjectValueList(portal_type_list)
     object_ratio_list = sub_object_list
-    for object in object_ratio_list:
-      if object.getReference() == ratio_reference:
-        return object.getQuantity()
+    for ob in object_ratio_list:
+      if ob.getReference() == ratio_reference:
+        return ob.getQuantity()
 
     return None 
 
