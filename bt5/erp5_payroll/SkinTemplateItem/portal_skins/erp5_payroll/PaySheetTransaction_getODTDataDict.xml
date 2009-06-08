@@ -59,7 +59,8 @@ request = context.REQUEST\n
 # display only title line instead of description\n
 use_line_title =  request.get(\'use_line_title\', 0)\n
 \n
-model = context.getSpecialiseValue().getEffectiveModel(context)\n
+model = context.getSpecialiseValue().getEffectiveModel(\\\n
+   start_date=context.getStartDate(), stop_date=context.getStopDate())\n
 \n
 def getFieldAsString(field):\n
   return \', \'.join(getFieldAsLineList(field))\n

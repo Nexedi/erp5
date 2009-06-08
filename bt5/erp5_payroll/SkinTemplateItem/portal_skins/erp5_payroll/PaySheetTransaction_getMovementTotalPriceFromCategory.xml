@@ -62,9 +62,15 @@
 total_price = 0\n
 movement_list = context.getMovementList(portal_type=(\'Pay Sheet Line\', \'Pay Sheet Cell\'))\n
 for movement in movement_list:\n
-  if base_contribution is not None and tax_category is not None and\\\n
-      movement.isMemberOf(tax_category) and movement.isMemberOf(base_contribution):\n
-    total_price += movement.getTotalPrice()\n
+  if base_contribution is not None and movement.isMemberOf(base_contribution):\n
+\n
+    # base_contribution is mandatory, but not tax_category. If tax_category is\n
+    # given, search with it, if not, care only about base_contribution\n
+    if tax_category is not None and movement.isMemberOf(tax_category):\n
+      total_price += movement.getTotalPrice()\n
+    elif tax_category is None or len(movement.getTaxCategoryList()) == 0:\n
+      total_price += movement.getTotalPrice()\n
+\n
 \n
 # Get Precision\n
 precision = context.getPriceCurrencyValue().getQuantityPrecision()\n
@@ -117,6 +123,7 @@ return amount\n
                             <string>movement</string>
                             <string>None</string>
                             <string>_inplacevar_</string>
+                            <string>len</string>
                             <string>precision</string>
                             <string>round</string>
                             <string>amount</string>

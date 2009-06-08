@@ -96,11 +96,11 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_section_category</string>
-                        <string>your_resource</string>
-                        <string>your_mirror_section</string>
-                        <string>your_from_date</string>
                         <string>your_at_date</string>
+                        <string>your_from_date</string>
+                        <string>your_mirror_section</string>
+                        <string>your_resource</string>
+                        <string>your_section_category</string>
                         <string>your_simulation_state</string>
                       </list>
                     </value>

@@ -84,6 +84,7 @@
                         <string>my_title</string>
                         <string>my_quantity_unit</string>
                         <string>my_product_line</string>
+                        <string>my_use_list</string>
                       </list>
                     </value>
                 </item>

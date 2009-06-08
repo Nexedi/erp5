@@ -79,7 +79,7 @@ property_list = [ \'slice\',\n
                   \'employee_share_quantity\',\n
                   \'causality\',\n
                 ]\n
-for line in line_list: \n
+for line in line_list:\n
   if line.getResourceId() == \'total_employee_contributions\':\n
     continue\n
   line_dict = {\n
@@ -95,7 +95,6 @@ for line in line_list: \n
 \n
   line_dict_list.append(line_dict)\n
 \n
-#return pprint.pformat(line_dict_list)\n
 return line_dict_list\n
 </string> </value>
         </item>

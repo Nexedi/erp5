@@ -77,7 +77,7 @@ base_amount = portal.portal_categories.base_amount\n
 for category in base_contribution_list:\n
   category_value = getattr(base_amount, category, None)\n
   if category_value is None:\n
-    raise ValueError, \'Category "%s/%s" not found.\' % (base_amount.getPath(), category)  \n
+    raise ValueError, \'Category "%s/%s" not found.\' % (base_amount.getPath(), category)\n
   base_contribution_uid_list = category_value.getUid()\n
 \n
 params = {\n

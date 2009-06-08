@@ -66,7 +66,7 @@ import pprint\n
 from Products.ERP5Type.Message import translateString\n
 \n
 portal = context.getPortalObject();\n
-paysheet_line_list = context.contentValues(portal_type=\'Pay Sheet Line\')\n
+paysheet_line_list = context.contentValues(portal_type=(\'Pay Sheet Line\', \'Pay Sheet Model Line\'))\n
 if context.getPriceCurrencyValue() is not None:\n
   precision = context.getPriceCurrencyValue().getQuantityPrecision()\n
 else:\n
@@ -100,18 +100,24 @@ for paysheet_line in paysheet_line_list:\n
 \n
   object_dict = {}\n
   if cartesian_product == [[]] or cartesian_product == []:\n
-    line_list.append(paysheet_line)\n
+    params = {\n
+                  \'base\':paysheet_line.getTotalPrice(),\n
+                  \'base_contribution_list\':base_contribution_list,\n
+                  \'base_application_list\': base_application_list,\n
+                  \'payroll_service\': payroll_service is not None and\\\n
+                                      payroll_service.getId() or \'\',\n
+                  \'causality\': causality,}\n
+    line_list.append(paysheet_line.asContext(**params))\n
     continue\n
 \n
-  for tuple in cartesian_product:\n
+  for product in cartesian_product:\n
     indice += 1\n
     share_dict = {}\n
-    cell = paysheet_line.getCell(*tuple)\n
+    cell = paysheet_line.getCell(base_id=\'movement\', *product)\n
     if cell is None:\n
       continue\n
 \n
-    quantity = cell.getQuantity()\n
-    base = quantity\n
+    base = cell.getQuantity()\n
 \n
     share_dict[cell.getTaxCategory()+\'_price\'] = cell.getPrice()\n
     share_dict[cell.getTaxCategory()+\'_quantity\'] = cell.getQuantity()\n
@@ -119,7 +125,7 @@ for paysheet_line in paysheet_line_list:\n
                     round(cell.getTotalPrice(), precision)\n
 \n
     tuple_dict = {}\n
-    for item in tuple:\n
+    for item in product:\n
       # the dict key is the base category and value is the category path\n
       tuple_dict[item.split(\'/\')[0]] = \\\n
         portal.portal_categories.restrictedTraverse(item).getShortTitle() or \\\n
@@ -127,7 +133,7 @@ for paysheet_line in paysheet_line_list:\n
       tuple_dict[item.split(\'/\')[0]+\'_relative_url\']=item\n
 \n
     # we want to display as lines as a paysheet line as slices\n
-    # this is esay to read\n
+    # this is easier to read\n
     slice = cell.getSalaryRange()\n
     if slice is None:\n
       slice = \'no_slice\'\n
@@ -141,7 +147,8 @@ for paysheet_line in paysheet_line_list:\n
                     \'base\':base,\n
                     \'base_contribution_list\':base_contribution_list,\n
                     \'base_application_list\': base_application_list,\n
-                    \'payroll_service\':payroll_service.getId(),\n
+                    \'payroll_service\': payroll_service is not None and\\\n
+                                        payroll_service.getId() or \'\',\n
                     \'causality\': causality,}\n
       object_dict[slice].update(share_dict)\n
     else:\n
@@ -260,12 +267,12 @@ return line_list\n
                             <string>previous_share</string>
                             <string>indice</string>
                             <string>object_dict</string>
-                            <string>tuple</string>
+                            <string>params</string>
+                            <string>_apply_</string>
+                            <string>product</string>
                             <string>_inplacevar_</string>
                             <string>share_dict</string>
-                            <string>_apply_</string>
                             <string>cell</string>
-                            <string>quantity</string>
                             <string>base</string>
                             <string>_write_</string>
                             <string>round</string>

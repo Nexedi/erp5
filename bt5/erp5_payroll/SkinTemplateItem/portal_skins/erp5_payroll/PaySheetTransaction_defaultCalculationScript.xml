@@ -94,7 +94,9 @@ else:\n
 model_slice_min = 0\n
 model_slice_max = 0\n
 if salary_range:\n
-  model = context.getSpecialiseValue().getEffectiveModel(context)\n
+  model = context.getSpecialiseValue().getEffectiveModel(\\\n
+      start_date=context.getStartDate(),\n
+      stop_date=context.getStopDate())\n
   cell = model.getCell(salary_range)\n
   if cell is None:\n
     context.log("Warning ! Can\'t find cell corresponding to : %s" %\n

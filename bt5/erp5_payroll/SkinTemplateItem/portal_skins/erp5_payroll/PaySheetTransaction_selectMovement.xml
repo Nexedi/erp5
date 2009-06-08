@@ -56,7 +56,7 @@
             <value> <string>DEBUG = 0\n
 LOG = lambda msg:context.log("PaySheetTransaction_selectMovement", msg)\n
 \n
-search_kw=dict( \n
+search_kw=dict(\n
     parent_specialise_portal_type=\'Invoice Transaction Rule\',\n
     explanation_portal_type=[\'Pay Sheet Transaction\'],\n
     portal_type=\'Simulation Movement\',\n
@@ -70,12 +70,12 @@ kw.update(context.portal_catalog.buildSQLQuery(**search_kw))\n
 if DEBUG :\n
   LOG("SQL used (for %s) = %s" % (kw, context.InvoiceTransaction_zSelectMovement(src__=1, **kw)))\n
 \n
-movement_list = [] \n
+movement_list = []\n
 for movement in context.InvoiceTransaction_zSelectMovement(**kw) :\n
   movement = movement.getObject()\n
   if movement.getDeliveryValue() is None :\n
     movement_list.append(movement)\n
-  else : \n
+  else :\n
     LOG("simulation movement %s should not have been selected !" % movement.getPath())\n
 \n
 if DEBUG :\n

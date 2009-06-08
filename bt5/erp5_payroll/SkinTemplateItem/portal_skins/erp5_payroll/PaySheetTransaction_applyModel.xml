@@ -65,7 +65,9 @@ category_list = [\n
 ]\n
 new_category_dict = {}\n
 \n
-model = paysheet.getSpecialiseValue().getEffectiveModel(paysheet)\n
+model = paysheet.getSpecialiseValue().getEffectiveModel(\\\n
+    start_date=paysheet.getStartDate(),\n
+    stop_date=paysheet.getStopDate())\n
 \n
 if model is None:\n
   return context.Base_redirect(form_id,\n
@@ -84,7 +86,8 @@ if price_currency:\n
 \n
 def copyPaymentCondition(paysheet, model):\n
   filter_dict = {\'portal_type\': \'Payment Condition\'}\n
-  effective_model_list = model.getInheritanceEffectiveModelTreeAsList(paysheet)\n
+  effective_model_list = model.findEffectiveSpecialiseValueList(\\\n
+      start_date=paysheet.getStartDate(), stop_date=paysheet.getStopDate())\n
   for effective_model in effective_model_list:\n
     to_copy = effective_model.contentIds(filter=filter_dict)\n
     if len(to_copy) > 0 :\n

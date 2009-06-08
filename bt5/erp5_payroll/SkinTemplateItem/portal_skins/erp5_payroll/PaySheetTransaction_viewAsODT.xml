@@ -420,7 +420,7 @@ AAA=</string> </value>
                 <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\' tal:content=\'python: here.Base_translateString("Gross Salary")\'>1</text:p>\n
               </table:table-cell>\n
               <table:table-cell table:style-name=\'Tableau1.A8\' office:value-type=\'string\'>\n
-                <text:p text:style-name=\'Table_20_Contents_20_Right\' tal:content=\'python:quantity_renderer(context.PaySheetTransaction_getMovementTotalPriceFromCategory(base_contribution="base_contribution/base_amount/gross_salary", tax_category="tax_category/employee_share"))\'>400 000</text:p>\n
+                <text:p text:style-name=\'Table_20_Contents_20_Right\' tal:content=\'python:quantity_renderer(context.PaySheetTransaction_getMovementTotalPriceFromCategory(base_contribution="base_contribution/base_amount/gross_salary"))\'>400 000</text:p>\n
               </table:table-cell>\n
               <table:table-cell table:style-name=\'Tableau1.A8\' office:value-type=\'string\'>\n
                  <text:p text:style-name=\'Table_20_Contents\'/>\n
