@@ -60,6 +60,11 @@
 \'\'\'\n
 translateString = context.Base_translateString\n
 \n
+# get the model the related model (usefull to get slice values). This script\n
+# can be called on paysheet model line or on paysheet.\n
+model = context.getParentValue().getPortalType()==\'Pay Sheet Model\' and\\\n
+          context.getParentValue() or context.getSpecialiseValue()\n
+\n
 def framing(cell, name):\n
   \'\'\'\n
     this function return a string corresponding to the framing of the slice \n
@@ -89,10 +94,10 @@ if matrixbox :\n
       for category_item in category_item_list:\n
         if base_category == \'salary_range\':\n
           category_cell_range.append((category_item[1],\\\n
-              framing(context.getParentValue().getCell(category_item[1]), \n
+              framing(model.getCell(category_item[1]),\n
                       category_item[0])))\n
         elif base_category == \'tax_category\':\n
-          category_cell_range.append((category_item[1], \n
+          category_cell_range.append((category_item[1],\n
             translateString(\'${tax_category_title} (Amount or Percent)\',\n
                             mapping=dict(tax_category_title=category_item[0]))))\n
         else:\n
@@ -155,6 +160,7 @@ return []\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>translateString</string>
+                            <string>model</string>
                             <string>framing</string>
                             <string>resource</string>
                             <string>cell_range</string>
