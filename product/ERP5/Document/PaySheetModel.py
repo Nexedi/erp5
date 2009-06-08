@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2007, Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2007-2009, Nexedi SA and Contributors. All Rights Reserved.
 #                    Fabien Morin <fabien@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -48,6 +48,7 @@ class PaySheetModel(TradeCondition, XMLMatrix, Delivery):
 
   meta_type = 'ERP5 Pay Sheet Model'
   portal_type = 'Pay Sheet Model'
+  model_line_portal_type_list = 'Pay Sheet Model Line'
   isPredicate = 1
 
   # Declarative security
@@ -74,16 +75,18 @@ class PaySheetModel(TradeCondition, XMLMatrix, Delivery):
   security.declareProtected( Permissions.AccessContentsInformation, 'getCell')
   def getCell(self, *kw , **kwd):
     '''
-    override of the function getCell to ba able to search a cell on the
-    inheritance model
+    Overload the function getCell to be able to search a cell on the
+    inheritance model tree
     '''
     cell = XMLMatrix.getCell(self, *kw, **kwd)
     # if cell not found, look on the inherited models
     if cell is None:
       if kwd.has_key('paysheet'):
-        model_list = self.getInheritanceEffectiveModelTreeAsList(kwd['paysheet'])
+        model_list = self.findEffectiveSpecialiseValueList(\
+            start_date=kwd['paysheet'].getStartDate(),
+            stop_date=kwd['paysheet'].getStopDate())
       else:
-        model_list = self.getInheritanceModelTreeAsList()
+        model_list = self.findSpecialiseValueList(context=self)
       if self in model_list:
         model_list.remove(self)
       for specialised_model in model_list:
@@ -102,7 +105,7 @@ class PaySheetModel(TradeCondition, XMLMatrix, Delivery):
     '''
     reference_dict = {}
     object_list = self.contentValues(portal_type=portal_type_list,
-                                     sort_on='id')
+        sort_on='id')
     for obj in object_list:
       keep = (len(property_list) == 0)
       for property_ in property_list:
@@ -110,83 +113,25 @@ class PaySheetModel(TradeCondition, XMLMatrix, Delivery):
           keep = 1
           break
       if keep:
-        reference_dict[obj.getProperty('reference',
-                                       obj.getId())] = obj.getId()
+        reference_dict[obj.getProperty('reference', obj.getId())] = obj.getId()
     return reference_dict
-
+  
   security.declareProtected(Permissions.AccessContentsInformation,
-      'getInheritanceModelTreeAsList')
-  def getInheritanceModelTreeAsList(self):
-    '''Return a list of models. It uses Breadth First Search. 
+      'findEffectiveSpecialiseValueList')
+  def findEffectiveSpecialiseValueList(self, start_date=None, stop_date=None):
+    '''Return a list of effective models
     '''
-    model = self
-    already_add_models = [model]
-    model_list = [model]
-    final_list = [model]
-    while len(model_list) != 0:
-      model = model_list.pop(0)
-      specialise_list = model.getSpecialiseValueList()
-      while len(specialise_list) !=0:
-        child = specialise_list.pop(0)
-        # this should avoid circular dependencies
-        if child not in already_add_models:
-          already_add_models.append(child)
-          model_list.append(child)
-          final_list.append(child)
-    return final_list
+    model_list = self.findSpecialiseValueList(self)
+    if start_date is None and stop_date is None:
+      return model_list
+
+    new_list = [model.getEffectiveModel(start_date, stop_date) for model in\
+        model_list]
+    return new_list
 
   security.declareProtected(Permissions.AccessContentsInformation,
-      'getInheritanceEffectiveModelTreeAsList')
-  def getInheritanceEffectiveModelTreeAsList(self, paysheet):
-    '''Return a list of effective models. It uses Breadth First Search. 
-    '''
-    model = self.getEffectiveModel(paysheet)
-    already_add_models = [model]
-    model_list = [model]
-    final_list = [model]
-    while len(model_list) != 0:
-      model = model_list.pop(0)
-      specialise_list = model.getSpecialiseValueList()
-      while len(specialise_list) !=0:
-        child = specialise_list.pop(0)
-        child = child.getEffectiveModel(paysheet)
-        # this should avoid circular dependencies
-        if child not in already_add_models:
-          already_add_models.append(child)
-          model_list.append(child)
-          final_list.append(child)
-    return final_list
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getInheritanceEffectiveModelReferenceDict')
-  def getInheritanceEffectiveModelReferenceDict(self, paysheet,
-      portal_type_list, property_list=()):
-    '''Returns a dict with the model url as key and a list of reference as
-    value. Normaly, a Reference appear only one time in the final output.
-    It uses Breadth First Search. 
-    If property_list is not empty, documents for which all properties in
-    property_list are false will be skipped.
-    '''
-    model_list = self.getInheritanceEffectiveModelTreeAsList(paysheet,
-                                                    portal_type_list,
-                                                    property_list)
-    reference_list = []
-    model_reference_dict = {}
-    for model in model_list:
-      id_list = []
-      model_reference_list = model.getReferenceDict(
-                           portal_type_list, property_list=property_list)
-      for reference in model_reference_list.keys():
-        if reference not in reference_list:
-          reference_list.append(reference)
-          id_list.append(model_reference_list[reference])
-      if id_list != []:
-        model_reference_dict[model.getRelativeUrl()]=id_list
-    return model_reference_dict
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getInheritanceModelReferenceDict')
-  def getInheritanceModelReferenceDict(self, portal_type_list,
+      'getInheritanceReferenceDict')
+  def getInheritanceReferenceDict(self, portal_type_list,
       property_list=()):
     '''Returns a dict with the model url as key and a list of reference as
     value. Normaly, a Reference appear only one time in the final output.
@@ -194,7 +139,7 @@ class PaySheetModel(TradeCondition, XMLMatrix, Delivery):
     If property_list is not empty, documents for which all properties in
     property_list are false will be skipped.
     '''
-    model_list = self.getInheritanceModelTreeAsList()
+    model_list = self.findSpecialiseValueList(context=self)
     reference_list = []
     model_reference_dict = {}
     for model in model_list:
@@ -213,9 +158,8 @@ class PaySheetModel(TradeCondition, XMLMatrix, Delivery):
 
   security.declareProtected(Permissions.AccessContentsInformation,
       'getEffectiveModel')
-  def getEffectiveModel(self, context):
-    '''
-    return the more appropriate model using effective_date, expiration_date 
+  def getEffectiveModel(self, start_date=None, stop_date=None):
+    '''return the more appropriate model using effective_date, expiration_date 
     and version number
     '''
     reference = self.getReference()
@@ -223,8 +167,6 @@ class PaySheetModel(TradeCondition, XMLMatrix, Delivery):
       return self
 
     effective_model_list = []
-    start_date = context.getStartDate()
-    stop_date = context.getStopDate()
     model_object_list = [result.getObject() for result in \
         self.portal_catalog(portal_type='Pay Sheet Model',
                             reference=reference,)]
@@ -261,8 +203,39 @@ class PaySheetModel(TradeCondition, XMLMatrix, Delivery):
     v = self.getProperty(property_name)
     if v:
       return v
-    model_list = self.getInheritanceEffectiveModelTreeAsList(paysheet)
+    model_list = self.findEffectiveSpecialiseValueList(\
+        start_date=paysheet.getStartDate(), stop_date=paysheet.getStopDate())
     for specialised_model in model_list:
       v = specialised_model.getProperty(property_name)
       if v:
         return v
+
+  def getAggregatedAmountList(self, context, **kw):
+    from Products.ERP5Type.Document import newTempSimulationMovement
+    movement_list = []
+    cell_list = context.getMovementList()
+    for cell in cell_list:
+      self_id = 'transaction_cell' + cell.getParentValue().getId() + '_' \
+          + cell.getId()
+      tmp_movement = newTempSimulationMovement(self.getPortalObject(), self_id )
+      tmp_movement.edit(
+          title=cell.getTitle(),
+          int_index=cell.getIntIndex(),
+          causality=cell.getRelativeUrl(),
+          resource=cell.getResource(),
+          description=cell.getDescription(),
+          base_application_list=cell.getBaseApplicationList(),
+          base_contribution_list=cell.getBaseContributionList(),
+          variation_category_list=cell.getVariationCategoryList(),
+          price = cell.getPrice(),
+          quantity = cell.getQuantity(0.0),)
+      movement_list.append(tmp_movement)
+
+    movement_list = TradeCondition.getAggregatedAmountList(self, context,
+        movement_list, **kw)
+    # remove movement that should not be created
+    final_list = []
+    for movement in movement_list:
+      if getattr(movement, 'create_line', True):
+        final_list.append(movement)
+    return final_list
