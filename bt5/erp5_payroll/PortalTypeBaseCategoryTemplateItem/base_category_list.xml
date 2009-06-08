@@ -9,6 +9,11 @@
   <item>base_amount</item>
   <item>tax_category</item>
  </portal_type>
+ <portal_type id="Pay Sheet Model Cell">
+  <item>product_line</item>
+  <item>tax_category</item>
+  <item>salary_range</item>
+ </portal_type>
  <portal_type id="Pay Sheet Model Module">
   <item>business_application</item>
  </portal_type>
