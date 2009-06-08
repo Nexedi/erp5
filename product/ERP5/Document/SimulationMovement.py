@@ -116,6 +116,7 @@ class SimulationMovement(Movement):
                     , PropertySheet.TransformedResource
                     , PropertySheet.AppliedRule
                     , PropertySheet.ItemAggregation
+                    , PropertySheet.Reference
                     )
 
   def tpValues(self) :
