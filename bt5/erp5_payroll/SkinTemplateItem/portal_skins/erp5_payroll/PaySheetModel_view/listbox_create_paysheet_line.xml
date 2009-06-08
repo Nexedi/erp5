@@ -13,20 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>default</string>
                 <string>title</string>
-                <string>description</string>
-                <string>allow_jump</string>
-                <string>base_category</string>
-                <string>portal_type</string>
-                <string>catalog_index</string>
-                <string>relation_setter_id</string>
-                <string>proxy_listbox_ids</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_social_insurance_annotation_line_source_title</string> </value>
+            <value> <string>listbox_create_paysheet_line</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -63,6 +57,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>default</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -72,6 +72,10 @@
                 </item>
                 <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -82,54 +86,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>allow_jump</string> </key>
+                    <key> <string>default</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>base_category</string> </key>
-                    <value> <string>source</string> </value>
-                </item>
-                <item>
-                    <key> <string>catalog_index</string> </key>
-                    <value> <string>title</string> </value>
-                </item>
-                <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>The Organisation that provides the Social Security.</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_relation_field</string> </value>
+                    <value> <string>my_checkbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewPayrollFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Organisation</string>
-                          <string>Organisation</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>proxy_listbox_ids</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>OrganisationModule_viewOrganisationList/listbox</string>
-                          <string>Organisations</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>relation_setter_id</string> </key>
-                    <value> <string>setSocialInsuranceAnnotationLineSourceUid</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -137,10 +103,26 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Social Security</string> </value>
+                    <value> <string>Create Pay Sheet Line</string> </value>
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>cell/isCreatePaysheetLine</string> </value>
         </item>
       </dictionary>
     </pickle>

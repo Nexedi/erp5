@@ -13,12 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable_columns</string>
-                <string>title</string>
-                <string>selection_name</string>
                 <string>columns</string>
-                <string>sort</string>
+                <string>editable_columns</string>
                 <string>portal_types</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -108,8 +108,8 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>editable</string>
-                          <string>Editable</string>
+                          <string>create_paysheet_line</string>
+                          <string>Create Pay Sheet Line</string>
                         </tuple>
                       </list>
                     </value>
@@ -119,8 +119,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>editable</string>
-                          <string>editable</string>
+                          <string>create_paysheet_line</string>
+                          <string>Create Pay Sheet Line</string>
                         </tuple>
                         <tuple>
                           <string>int_index</string>
