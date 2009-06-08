@@ -39,14 +39,14 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<tal:block tal:define="shopping_cart_items here/SaleOrder_getShoppingCartItemList;\n
-                       total_price python: here.SaleOrder_getShoppingCartTotalPrice(include_currency=True);\n
-                       empty_cart python: here.SaleOrder_isShoppingCartEmpty();\n
-                       confirm_mode python: bool(options.get(\'confirm_mode\', False))">\n
+<tal:block tal:define="shopping_cart        here/SaleOrder_getShoppingCart;\n
+                       shopping_cart_items  shopping_cart/SaleOrder_getShoppingCartItemList;\n
+                       total_price python:  shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_currency=True);\n
+                       empty_cart python:   shopping_cart.SaleOrder_isShoppingCartEmpty();\n
+                       confirm_mode python: bool(options.get(\'confirm_mode\', 0))">\n
   <h2>\n
     <span tal:replace="python: here.Base_translateString(\'My shopping cart\')"/>\n
   </h2>\n
-\n
   <tal:block tal:condition = "empty_cart"> \n
     <h3><span tal:replace="python: here.Base_translateString(\'You shopping cart is empty.\')"/></h3>\n
   </tal:block>\n
@@ -65,17 +65,22 @@
                       quantity python: int(order_line.getQuantity());\n
                       price    python: resource.getPrice();\n
                       order_line_id python: order_line.getId();\n
-                      currency python: here.restrictedTraverse(resource.getSupplyLinePriceCurrency()).getTitle()"> \n
+                      currency python: here.restrictedTraverse(shopping_cart.getPriceCurrency());\n
+                      currency_title python: currency.getTitle(); \n
+                      currency_symbole python: currency.getShortTitle();">\n
          <td>\n
-           <p> \n
-             <a href="" tal:attributes="href resource/absolute_url">\n
-               <span tal:replace="resource/getTitle"/>           \n
-             </a>\n
-             <a tal:condition="not: confirm_mode"\n
-                tal:attributes="href python: \'%s/SaleOrder_deleteShoppingCartItem?field_my_order_line_id=%s\' \n
-                                              %(here.absolute_url(), order_line_id)">\n
-                <img src="images/edittrash.png" title="Remove from shopping cart"/></a>\n
-           <p>\n
+             <div tal:attributes="class python: bool(confirm_mode) and \' \' or \'shopping_cart_renderer_title\'">\n
+               <a href="" tal:attributes="href resource/absolute_url">\n
+                 <span tal:replace="resource/getTitle"/>           \n
+               </a>\n
+             </div>\n
+             <div class="shopping_cart_renderer_remove">\n
+               <a tal:condition="not: confirm_mode"\n
+                  tal:attributes="href python: \'%s/SaleOrder_deleteShoppingCartItem?field_my_order_line_id=%s\' \n
+                                                %(here.absolute_url(), order_line_id)">\n
+                  <img src="images/icon_remove.gif" title="Remove from shopping cart"/>\n
+               </a>\n
+             </div>\n
          </td>\n
          <td>\n
            <select tal:condition="not: confirm_mode"\n
@@ -88,10 +93,10 @@
            <span tal:condition="confirm_mode" tal:content="quantity"/>\n
          </td>\n
          <td>\n
-           <span tal:replace="price"/> <span tal:replace="currency"/>\n
+           <span tal:replace="price"/> <span tal:replace="currency_title"/>\n
          </td>\n
          <td>\n
-           <span tal:replace="python: price*quantity"/> <span tal:replace="currency"/>\n
+           <span tal:replace="python: price*quantity"/> <span tal:replace="currency_title"/>\n
          </td>\n
       </tr>\n
     </tal:block>\n
@@ -99,7 +104,7 @@
         <td><br/><span tal:replace="python: here.Base_translateString(\'Sub Total\')"/></td>\n
         <td></td>\n
         <td></td>\n
-        <td><br/>\n
+        <td style="vertical-align=middle;">\n
           <b>\n
             <span tal:replace="total_price"/>\n
           </b>\n

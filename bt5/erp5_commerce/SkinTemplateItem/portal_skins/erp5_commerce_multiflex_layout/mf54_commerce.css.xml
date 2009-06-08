@@ -92,11 +92,16 @@ div.subcontent-box.cartbox fieldset.widget div.field table tr td.cart_bottom div
 div.subcontent-box.cartbox fieldset.widget div.field table tr td.cart_bottom div.cart_left a {font-weight: bold; font-size:105%;}\n
 div.subcontent-box.cartbox fieldset.widget div.field table tr td.cart_bottom div.cart_right {float:right; text-align:right; padding:2px;}\n
 div.subcontent-box.cartbox fieldset.widget div.field table tr td.cart_bottom div.cart_right a {font-weight: bold; font-size:121%;}\n
-div.selected-product {height : 120px; width:<tal:block tal:replace="main_content_width"/>px; padding-left:25px; margin-bottom:10px;}\n
+\n
+\n
+div.selected-product {height : 110px; width:<tal:block tal:replace="main_content_width"/>px; padding-left:25px; margin-bottom:10px;}\n
 div.selected-product div {float:left; width:100px; height:100px; text-align:center; padding-right: 25px;}\n
-div.selected-product img {padding:0px; margin:0px; margin-left:10px; margin-right:10px;}\n
+div.selected-product img {border:solid 1px #000; padding:0px; margin-left:10px; margin-right:10px; margin-top:5px; margin-bottom:2px;}\n
+div.selected-product img:hover {border:solid 1px #000; padding:0px; margin:0px; margin-left:10px; margin-right:10px;}\n
 .cart_item_name {width:180px;}\n
 .headline     {float:left; width:<tal:block tal:replace="main_content_width"/>px;}\n
+\n
+\n
 .resource_left {float:left; width:<tal:block tal:replace="python: (main_content_width / 3) * 2"/>px;}\n
 .resource_right {float:right; background-color:red; width:<tal:block tal:replace="python: main_content_width / 3"/>px; background-color:<tal:block tal:replace="body_color"/>;}\n
 .resource_center {clear:both; background-color:<tal:block tal:replace="body_color"/>; padding:10px;}\n
@@ -127,6 +132,21 @@ div.resource_image label {display:none;}\n
 .product_list_bis {background-color:<tal:block tal:replace="body_color"/>; border-top: 1px solid <tal:block tal:replace="body_color"/>;border-bottom: 1px solid <tal:block tal:replace="body_color"/>;}\n
 .product_list:hover {border-top: 1px solid <tal:block tal:replace="primary_color"/>; border-bottom: 1px solid <tal:block tal:replace="primary_color"/>; background-color:<tal:block tal:replace="secondary_color"/>;}\n
 .product_list_bis:hover {border-top: 1px solid <tal:block tal:replace="primary_color"/>;border-bottom: 1px solid <tal:block tal:replace="primary_color"/>; background-color:<tal:block tal:replace="secondary_color"/>;}\n
+\n
+.shopping_cart_renderer_title {float:left; margin-top:8px;}\n
+.shopping_cart_renderer_remove {float:right; margin-top:3px;}\n
+.shopping_cart_renderer_remove a img {border:none;}\n
+.shopping_cart_renderer_remove a img:hover {border:none;}\n
+\n
+.shopping_cart_renderer_shipping label a {display:none;}\n
+.shopping_cart_renderer_submit label a {display:none;}\n
+\n
+div.shopping_cart_renderer_shipping {width: <tal:block tal:replace="python: main_content_width - 40"/>px; height:20px; margin-bottom:20px; margin-top:20px; padding-left:20px; padding-right:20px; padding-top:3px;background-color:<tal:block tal:replace="body_color"/>;}\n
+.shopping_cart_renderer_shipping label {float:left; width: <tal:block tal:replace="python: main_content_width / 4"/>px; height:20px;}\n
+.shopping_cart_renderer_shipping div {float:right; height:20px;}\n
+div.shopping_cart_renderer_submit {width: <tal:block tal:replace="python: main_content_width - 40"/>px; height:20px; margin-bottom:20px; padding-left:20px; padding-right:20px; padding-top:3px; background-color:<tal:block tal:replace="body_color"/>;}\n
+.shopping_cart_renderer_submit label {float:left; width: <tal:block tal:replace="python: main_content_width / 8"/>px; height:20px;}\n
+.shopping_cart_renderer_submit div {float:right; height:20px;}\n
 \n
 </tal:block>
 

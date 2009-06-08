@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.EditorField</string>
-          <string>EditorField</string>
-        </tuple>
-        <none/>
+        <global name="EditorField" module="Products.ERP5Form.EditorField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -185,6 +182,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>text_editor</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -288,11 +289,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

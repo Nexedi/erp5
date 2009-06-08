@@ -143,6 +143,13 @@
            <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
         </tal:block>\n
       </tal:block> \n
+        <div class="main_content">\n
+          <div class="corner-content-1col-top"></div>                        \n
+          <div class="content-1col-nobox">\n
+            <tal:block tal:content="structure here/WebSection_viewSelectedProductWidget"/>\n
+          </div>\n
+          <div class="corner-content-1col-bottom"></div>                       \n
+        </div>\n
       </div>\n
 \n
       <!-- SUBCONTENT -->\n

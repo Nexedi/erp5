@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.StandardFields</string>
-          <string>ListField</string>
-        </tuple>
-        <none/>
+        <global name="ListField" module="Products.Formulator.StandardFields"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -201,7 +198,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>shopping_cart_renderer_shipping</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
