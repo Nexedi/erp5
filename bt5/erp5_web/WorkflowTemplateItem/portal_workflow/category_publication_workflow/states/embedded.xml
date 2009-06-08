@@ -98,13 +98,20 @@
                 <item>
                     <key> <string>Delete objects</string> </key>
                     <value>
-                      <list/>
+                      <tuple>
+                        <string>Assignor</string>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <list/>
+                      <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
