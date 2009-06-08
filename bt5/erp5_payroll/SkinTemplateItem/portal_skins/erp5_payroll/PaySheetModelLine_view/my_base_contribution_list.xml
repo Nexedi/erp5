@@ -14,8 +14,8 @@
             <value>
               <list>
                 <string>description</string>
-                <string>title</string>
                 <string>items</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -84,7 +84,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>This movement will contribute to the selected bases.</string> </value>
+                    <value> <string>This cell will contribute to the selected bases.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -93,6 +93,12 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewPayrollFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

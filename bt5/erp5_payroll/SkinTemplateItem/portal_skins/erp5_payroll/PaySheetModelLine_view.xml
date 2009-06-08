@@ -105,9 +105,10 @@
                         <string>my_int_index</string>
                         <string>my_reference</string>
                         <string>my_resource_title</string>
-                        <string>my_source_annotation_line_reference</string>
-                        <string>my_source_title</string>
                         <string>my_calculation_script_id</string>
+                        <string>my_price</string>
+                        <string>my_quantity</string>
+                        <string>my_trade_phase</string>
                       </list>
                     </value>
                 </item>
@@ -119,7 +120,6 @@
                         <string>my_base_contribution_list</string>
                         <string>my_base_application_list</string>
                         <string>my_create_paysheet_line</string>
-                        <string>my_editable</string>
                       </list>
                     </value>
                 </item>
