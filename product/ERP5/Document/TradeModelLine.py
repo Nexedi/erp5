@@ -28,19 +28,14 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLMatrix import XMLMatrix
-
 from Products.ERP5.Document.Amount import Amount
-from Products.ERP5.Variated import Variated
 from Products.ERP5Type.Utils import cartesianProduct
-
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
-
 import zope.interface
 
-class TradeModelLine(XMLMatrix, Amount, Variated):
+class TradeModelLine(XMLMatrix, Amount):
     """Trade Model Line
     """
     meta_type = 'ERP5 Trade Model Line'
