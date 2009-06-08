@@ -1291,6 +1291,7 @@ class TestBPMMixin(ERP5TypeTestCase):
   def stepCheckOrderLineTaxedAggregatedAmountList(self, sequence=None, **kw):
     order_line = sequence.get('order_line_taxed')
     trade_condition = sequence.get('trade_condition')
+    trade_model_line_tax = sequence.get('trade_model_line_tax')
     amount_list = trade_condition.getAggregatedAmountList(order_line)
 
     self.assertEquals(1, len(amount_list))
@@ -1300,6 +1301,8 @@ class TestBPMMixin(ERP5TypeTestCase):
 
     tax_amount = tax_amount_list[0]
 
+    self.assertEqual(tax_amount.getReference(),
+        trade_model_line_tax.getReference())
     self.assertSameSet(['base_amount/tax'],
         tax_amount.getBaseApplicationList())
     self.assertSameSet([], tax_amount.getBaseContributionList())
@@ -1311,6 +1314,8 @@ class TestBPMMixin(ERP5TypeTestCase):
       sequence=None, **kw):
     order_line = sequence.get('order_line_discounted_taxed')
     trade_condition = sequence.get('trade_condition')
+    trade_model_line_discount = sequence.get('trade_model_line_discount')
+    trade_model_line_tax = sequence.get('trade_model_line_tax')
     amount_list = trade_condition.getAggregatedAmountList(order_line)
 
     self.assertEquals(2, len(amount_list))
@@ -1325,10 +1330,14 @@ class TestBPMMixin(ERP5TypeTestCase):
 
     discount_amount = discount_amount_list[0]
 
+    self.assertEqual(tax_amount.getReference(),
+        trade_model_line_tax.getReference())
     self.assertSameSet(['base_amount/tax'], tax_amount. \
         getBaseApplicationList())
     self.assertSameSet([], tax_amount.getBaseContributionList())
 
+    self.assertEqual(discount_amount.getReference(),
+        trade_model_line_discount.getReference())
     self.assertSameSet(['base_amount/discount'], discount_amount. \
         getBaseApplicationList())
     self.assertSameSet(['base_amount/tax'], discount_amount. \
@@ -1345,6 +1354,7 @@ class TestBPMMixin(ERP5TypeTestCase):
       **kw):
     order_line = sequence.get('order_line_discounted')
     trade_condition = sequence.get('trade_condition')
+    trade_model_line_discount = sequence.get('trade_model_line_discount')
     amount_list = trade_condition.getAggregatedAmountList(order_line)
 
     self.assertEquals(2, len(amount_list))
@@ -1359,6 +1369,8 @@ class TestBPMMixin(ERP5TypeTestCase):
 
     discount_amount = discount_amount_list[0]
 
+    self.assertEqual(discount_amount.getReference(),
+        trade_model_line_discount.getReference())
     self.assertSameSet(['base_amount/tax'], tax_amount. \
         getBaseApplicationList())
     self.assertSameSet([], tax_amount.getBaseContributionList())
@@ -1382,6 +1394,8 @@ class TestBPMMixin(ERP5TypeTestCase):
     order_line_discounted = sequence.get('order_line_discounted')
     order_line_discounted_taxed = sequence.get('order_line_discounted_taxed')
     order_line_taxed = sequence.get('order_line_taxed')
+    trade_model_line_tax = sequence.get('trade_model_line_tax')
+    trade_model_line_discount = sequence.get('trade_model_line_discount')
 
     amount_list = trade_condition.getAggregatedAmountList(order)
     self.assertEquals(2, len(amount_list))
@@ -1396,6 +1410,8 @@ class TestBPMMixin(ERP5TypeTestCase):
     discount_amount = discount_amount_list[0]
     tax_amount = tax_amount_list[0]
 
+    self.assertEqual(discount_amount.getReference(),
+        trade_model_line_discount.getReference())
     self.assertSameSet(['base_amount/discount'], discount_amount. \
         getBaseApplicationList())
 
@@ -1406,6 +1422,8 @@ class TestBPMMixin(ERP5TypeTestCase):
         getBaseApplicationList())
 
     self.assertSameSet([], tax_amount.getBaseContributionList())
+    self.assertEqual(tax_amount.getReference(),
+        trade_model_line_tax.getReference())
 
     self.assertEqual(
       discount_amount.getTotalPrice(),
@@ -1644,15 +1662,18 @@ class TestBPMTestCases(TestBPMMixin):
 
     trade_condition_1_trade_model_line = self.createTradeModelLine(
         trade_condition_1,
-        resource_value = service_1)
+        resource_value = service_1,
+        reference = 'A')
 
     trade_condition_2_trade_model_line = self.createTradeModelLine(
         trade_condition_2,
-        resource_value = service_2)
+        resource_value = service_2,
+        reference = 'B')
 
     order_trade_model_line = self.createTradeModelLine(
         order,
-        resource_value = service_2)
+        resource_value = service_2,
+        reference = 'B')
 
     self.assertSameSet(
       [trade_condition_1_trade_model_line,
@@ -1679,11 +1700,13 @@ class TestBPMTestCases(TestBPMMixin):
 
     trade_condition_1_trade_model_line = self.createTradeModelLine(
         trade_condition_1,
-        resource_value = service)
+        resource_value = service,
+        reference = 'A')
 
     trade_condition_2_trade_model_line = self.createTradeModelLine(
         trade_condition_2,
-        resource_value = service)
+        resource_value = service,
+        reference = 'A')
 
     self.assertSameSet(
       [trade_condition_1_trade_model_line],
