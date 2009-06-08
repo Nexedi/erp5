@@ -1140,6 +1140,7 @@ class TestBPMMixin(ERP5TypeTestCase):
       base_contribution='base_amount/tax',
       trade_phase='default/discount',
       resource_value=service_discount,
+      reference='service_discount',
     )
     sequence.edit(
       trade_model_line = None,
@@ -1156,6 +1157,7 @@ class TestBPMMixin(ERP5TypeTestCase):
       base_contribution='base_amount/tax',
       trade_phase='default/discount',
       resource_value=service_discount,
+      reference='discount',
     )
     sequence.edit(
       trade_model_line = None,
@@ -1171,6 +1173,7 @@ class TestBPMMixin(ERP5TypeTestCase):
       base_application='base_amount/total_discount',
       trade_phase='default/discount',
       resource_value=service_discount,
+      reference='total_discount',
     )
     sequence.edit(
       trade_model_line = None,
@@ -1188,6 +1191,7 @@ class TestBPMMixin(ERP5TypeTestCase):
       base_contribution='base_amount/total_discount',
       trade_phase='default/discount',
       resource_value=service_discount,
+      reference='total_dicount_2',
     )
     sequence.edit(
       trade_model_line = None,
@@ -1203,6 +1207,7 @@ class TestBPMMixin(ERP5TypeTestCase):
       base_application='base_amount/tax',
       trade_phase='default/tax',
       resource_value=service_tax,
+      reference='tax_2',
     )
     sequence.edit(
       trade_model_line = None,
@@ -1218,6 +1223,7 @@ class TestBPMMixin(ERP5TypeTestCase):
       base_application='base_amount/tax',
       trade_phase='default/tax',
       resource_value=service_tax,
+      reference='tax',
     )
     sequence.edit(
       trade_model_line = None,
@@ -1234,6 +1240,7 @@ class TestBPMMixin(ERP5TypeTestCase):
       base_contribution='base_amount/total_discount',
       trade_phase='default/tax',
       resource_value=service_tax,
+      reference='tax_3',
     )
     sequence.edit(
       trade_model_line = None,
@@ -1251,6 +1258,7 @@ class TestBPMMixin(ERP5TypeTestCase):
       base_contribution='base_amount/total_tax',
       trade_phase='default/tax',
       resource_value=service_tax,
+      reference='service_tax',
     )
     sequence.edit(
       trade_model_line = None,
@@ -1268,6 +1276,7 @@ class TestBPMMixin(ERP5TypeTestCase):
       base_contribution='base_amount/total_tax',
       trade_phase='default/tax',
       resource_value=service_tax,
+      reference='service_tax_2',
     )
     sequence.edit(
       trade_model_line = None,
