@@ -32,11 +32,12 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Document.Amount import Amount
+from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5Type.Utils import cartesianProduct
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 import zope.interface
 
-class TradeModelLine(XMLMatrix, Amount):
+class TradeModelLine(Predicate, XMLMatrix, Amount):
     """Trade Model Line
     """
     meta_type = 'ERP5 Trade Model Line'
@@ -59,6 +60,7 @@ class TradeModelLine(XMLMatrix, Amount):
                     , PropertySheet.Price
                     , PropertySheet.TradeModelLine
                     , PropertySheet.Reference
+                    , PropertySheet.Predicate
                     )
 
     def getPrice(self):
