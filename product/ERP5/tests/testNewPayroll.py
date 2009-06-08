@@ -217,7 +217,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model_line = self.createModelLine(model)
     model_line.edit(title='Urssaf',
                     int_index=2,
-                    reference='urssaf_model_line',
+                    reference='urssaf_model_line_2',
                     trade_phase='trade_phase/payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_payroll_service'),
                     variation_category_list=['tax_category/employee_share',
@@ -234,7 +234,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model_line = self.createModelLine(model)
     model_line.edit(title='Urssaf',
                     int_index=2,
-                    reference='urssaf_model_line',
+                    reference='urssaf_model_line_3',
                     trade_phase='trade_phase/payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_payroll_service'),
                     variation_category_list=['tax_category/employee_share',
@@ -250,7 +250,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model_line = self.createModelLine(paysheet)
     model_line.edit(title='Urssaf',
                     int_index=2,
-                    reference='urssaf_model_line',
+                    reference='urssaf_model_line_4',
                     trade_phase='trade_phase/payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_payroll_service'),
                     variation_category_list=['tax_category/employee_share',
@@ -271,6 +271,19 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
     cell2.edit(price=0.5, tax_category='employer_share')
+
+  def stepUrssafModelLineCreateMovementsWithQuantityOnly(self, sequence=None, **kw):
+    model_line = sequence.get('urssaf_model_line')
+    cell1 = model_line.newCell('tax_category/employee_share',
+        portal_type='Pay Sheet Model Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'))
+    cell1.edit(quantity=-100, tax_category='employee_share')
+    cell2 = model_line.newCell('tax_category/employer_share',
+        portal_type='Pay Sheet Model Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'))
+    cell2.edit(quantity=-200, tax_category='employer_share')
 
   def stepUrssafModelLineWithSlicesCreateMovements(self, sequence=None, **kw):
     model_line = sequence.get('urssaf_model_line_with_slices')
@@ -372,9 +385,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                   specialise_value=sequence.get('model'),
                   source_section_value=sequence.get('employee'),
                   destination_section_value=sequence.get('employer'),
-                  resource_value=sequence.get('price_currency'),
-                  start_date=DateTime(),
-                  stop_date=DateTime()+1)
+                  resource_value=sequence.get('price_currency'))
     sequence.edit(paysheet = paysheet)
 
   def createPaysheetLine(self, document, **kw):
@@ -456,6 +467,23 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         cell2 = paysheet_line.getCell('tax_category/employer_share')
         self.assertEquals(cell2.getQuantity(), 3000)
         self.assertEquals(cell2.getPrice(), 0.5)
+      elif service == 'Labour':
+        self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
+      else:
+        self.fail("Unknown service for line %s" % paysheet_line.getTitle())
+
+  def stepCheckPaysheetLineAmountsWithQuantityOnly(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
+    for paysheet_line in paysheet_line_list:
+      service = paysheet_line.getResourceTitle()
+      if service == 'Urssaf':
+        cell1 = paysheet_line.getCell('tax_category/employee_share')
+        self.assertEquals(cell1.getQuantity(), -100)
+        self.assertEquals(cell1.getPrice(), 1)
+        cell2 = paysheet_line.getCell('tax_category/employer_share')
+        self.assertEquals(cell2.getQuantity(), -200)
+        self.assertEquals(cell2.getPrice(), 1)
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       else:
@@ -719,6 +747,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                     int_index=2,
                     trade_phase='trade_phase/payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_payroll_service'),
+                    reference='intermediate_line',
                     variation_category_list=['tax_category/employee_share',
                                              'tax_category/employer_share'],
                     base_contribution_list=['base_amount/deductible_tax'],
@@ -736,6 +765,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                     int_index=3,
                     trade_phase='trade_phase/payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_payroll_service'),
+                    reference='line_applied_on_intermediate_line',
                     variation_category_list=['tax_category/employee_share',
                                              'tax_category/employer_share'],
                     base_contribution_list=['base_amount/net_salary'],
@@ -802,6 +832,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                     int_index=2,
                     trade_phase='trade_phase/payroll/france/urssaf',
                     resource_value=sequence.get('oldage_insurance_payroll_service'),
+                    reference='model_line_in_the_payesheet',
                     variation_category_list=['tax_category/employee_share',
                                              'tax_category/employer_share'],
                     base_application_list=[ 'base_amount/base_salary'],
@@ -911,6 +942,8 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
 
   def stepCheckPaysheetConsistency(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
+    paysheet.edit(start_date=DateTime(),
+                  stop_date=DateTime()+1)
     self.assertEquals([], paysheet.checkConsistency())
 
   def stepCheckModelConsistency(self, sequence=None, **kw):
@@ -1204,6 +1237,36 @@ class TestNewPayroll(TestNewPayrollMixin):
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+  def test_modelLineWithNonePrice(self):
+    '''
+      test the creation of lines when the price is not set, but only the
+      quantity. This means that no ratio is applied on this line.
+    '''
+    sequence_list = SequenceList()
+    sequence_string = """
+               CreateUrssafPayrollService
+               CreateLabourPayrollService
+               CreateEmployer
+               CreateEmployee
+               CreatePriceCurrency
+               CreateBasicModel
+               ModelCreateUrssafModelLine
+               UrssafModelLineCreateMovementsWithQuantityOnly
+               CreateBasicPaysheet
+               PaysheetCreateLabourPaySheetLine
+  """ + self.BUSINESS_PATH_CREATION_SEQUENCE_STRING + """
+               CheckUpdateAggregatedAmountListReturn
+               PaysheetApplyTransformation
+               Tic
+               CheckPaysheetLineAreCreated
+               CheckPaysheetLineAmountsWithQuantityOnly
+               CheckUpdateAggregatedAmountListReturnNothing
+               CheckPaysheetLineAmountsWithQuantityOnly
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 
 import unittest
 def test_suite():
