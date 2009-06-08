@@ -55,28 +55,26 @@
             <key> <string>_body</string> </key>
             <value> <string>"""\n
   Check that all datas necessary to auto-calculate the pay sheet are set.\n
-  TODO: Translate portal status message.\n
 """\n
-paysheet      = context.getObject()\n
-paysheet_type = paysheet.getPortalType()\n
-employer      = paysheet.getDestinationSection()\n
-employee      = paysheet.getSourceSection()\n
-quantity_unit = paysheet.getWorkTimeAnnotationLineQuantityUnit()\n
+paysheet = context\n
+employer = paysheet.getDestinationSection()\n
+employee = paysheet.getSourceSection()\n
+quantity_unit = paysheet.getWorkTimeAnnotationLineQuantityUnit() # XXX - to refactor\n
 \n
 Base_translateString = context.Base_translateString\n
 \n
 def redirect(msg):\n
   return context.Base_redirect(form_id,\n
-      keep_items=dict(portal_status_message=Base_translateString(msg)))\n
+      keep_items = dict(portal_status_message=Base_translateString(msg)))\n
 \n
 if not paysheet.getPriceCurrency():\n
   return redirect(\'Currency must be defined\')\n
 \n
-if not paysheet.getStartDate():\n
-  return redirect(\'Work Period Start must be defined\')\n
-\n
-if not paysheet.getStopDate():\n
-  return redirect(\'Work Period End must be defined\')\n
+#if not paysheet.getStartDate():\n
+#  return redirect(\'Work Period Start must be defined\')\n
+#\n
+#if not paysheet.getStopDate():\n
+#  return redirect(\'Work Period End must be defined\')\n
 \n
 if not employee:\n
   return redirect(\'The employee must be defined\')\n
@@ -96,8 +94,10 @@ if not employee_obj.getCareerGrade():\n
 if not employee_obj.getMaritalStatusId():\n
   return redirect(\'The employee must have a marital status\')\n
 \n
-# parameters are OK, go to the pre-calculation form\n
-return context.PaySheetTransaction_viewPreview(container.REQUEST)\n
+context.applyTransformation()\n
+msg = Base_translateString(\'Lines created\')\n
+return context.Base_redirect(\'view\',\n
+                            keep_items=dict(portal_status_message=msg))\n
 </string> </value>
         </item>
         <item>
@@ -137,10 +137,9 @@ return context.PaySheetTransaction_viewPreview(container.REQUEST)\n
                             <string>form_id</string>
                             <string>cancel_url</string>
                             <string>kw</string>
-                            <string>_getattr_</string>
                             <string>context</string>
                             <string>paysheet</string>
-                            <string>paysheet_type</string>
+                            <string>_getattr_</string>
                             <string>employer</string>
                             <string>employee</string>
                             <string>quantity_unit</string>
@@ -148,7 +147,8 @@ return context.PaySheetTransaction_viewPreview(container.REQUEST)\n
                             <string>redirect</string>
                             <string>employer_obj</string>
                             <string>employee_obj</string>
-                            <string>container</string>
+                            <string>msg</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
