@@ -866,9 +866,7 @@ class ObjectTemplateItem(BaseTemplateItem):
             if obj.title != 'BROKEN':
               container._mapTransform(obj)
           elif obj.meta_type in ('ERP5 Ram Cache',
-                                 'ERP5 Distributed Ram Cache',
-                                 'ERP5 SQL Cache',
-                                 'ERP5 ZODB Cache',):
+                                 'ERP5 Distributed Ram Cache',):
             assert container.meta_type == 'ERP5 Cache Factory'
             container.getParentValue().updateCache()
            

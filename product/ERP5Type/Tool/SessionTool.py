@@ -111,7 +111,7 @@ class RamSession(Session):
 
 class DistributedSession(Session):
   """ Distributed Session dictionary.
-      It's use together with DistributedRamCache or SQLCache cache (storage) plugins."""
+      It uses DistributedRamCache plugins."""
 
   # session_id used to get respective dictionary from memcached
   session_id = None
@@ -159,7 +159,7 @@ class SessionTool(BaseTool):
       your own generated session_id. 
 
       This session object can be used anywhere in Zope / ERP5 environment. 
-      It can be local RAM based or Distributed (memcached or SQL (MySQL)). 
+      It can be local RAM based or Distributed (memcached). 
       Its type depends on the type of cache plugin used under Cache Factory defined
       as string in SESSION_CACHE_FACTORY and its first (and only) Cache Plugin. 
       You do not need to initialize it as this tool will initialize it as a plain dictionary for you.
@@ -184,7 +184,7 @@ class SessionTool(BaseTool):
        request they'll be returend wrapped. 
        - developer can store temporary RAM based objects like 'TempOrder' but ONLY
        when using Local RAM type of sessions. In a distributed environment one can use only 
-       pickable types ue to the nature of memcached server and MySQL storage.
+       pickable types ue to the nature of memcached server.
       """
 
   id = 'portal_sessions'
@@ -209,7 +209,7 @@ class SessionTool(BaseTool):
       storage_plugin_type = storage_plugin.__class__.__name__
       if storage_plugin_type in ("RamCache",):
         session = RamSession()
-      elif storage_plugin_type in ("DistributedRamCache", "SQLCache",):
+      elif storage_plugin_type in ("DistributedRamCache",):
         session = DistributedSession()
         session._updateSessionId(session_id)
       if session_duration is None:

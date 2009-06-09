@@ -34,7 +34,6 @@ import os
 from Products.ERP5Type.CachePlugins.RamCache import RamCache
 from Products.ERP5Type.CachePlugins.DistributedRamCache import\
                                               DistributedRamCache
-from Products.ERP5Type.CachePlugins.SQLCache import SQLCache
 from Products.ERP5Type.CachePlugins.BaseCache import CacheEntry
 from Products.ERP5Type.Tool.CacheTool import CacheTool
 
@@ -49,17 +48,9 @@ class TestRamCache(unittest.TestCase):
     return "Cache"
 
   def setUp(self):
-    # for SQLCache, get the connection string from runUnitTest.py parameters,
-    # and use parseDBConnectionString to make it usable by SQLCache
-    mysql_connection_string = os.environ.get(
-          'erp5_sql_connection_string', 'test test')
-    sql_cache_kw = CacheTool().parseDBConnectionString(mysql_connection_string)
-    sql_cache_kw['cache_table_name'] = 'cache'
-
     self.cache_plugins = (RamCache(),
                           DistributedRamCache({'server': '127.0.0.1:11211',
                                                  'debugLevel': 7,}),
-                          SQLCache( sql_cache_kw ),
                         )
 
   def testScope(self):

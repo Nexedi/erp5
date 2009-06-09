@@ -123,7 +123,7 @@ class TestSessionTool(ERP5TypeTestCase):
     del session['attr_2']
 
     # get again session object again and check that session value is updated
-    # (this makes sense for memcached/SQL)
+    # (this makes sense for memcached)
     session = portal_sessions[self.session_id]
     self.assert_(not 'attr_1' in session.keys())
     self.assert_(not 'attr_2' in session.keys())
@@ -273,29 +273,6 @@ class TestSessionTool(ERP5TypeTestCase):
 
     # create memcached plugin and test
     self._changeCachePlugin('Distributed Ram Cache')
-    sequence_list = SequenceList()
-    sequence_string =  'stepTestSetGet  \
-                        stepModifySession  \
-                        stepDeleteClearSession \
-                        stepTestSessionDictInterface \
-                        stepTestSessionGetattr  \
-                        stepTestSessionBulkStorage  \
-                        stepTestSessionExpire  \
-                   '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
-
-  def test_04_SQLDistributedSession(self, quiet=0, run=run_all_test):
-    """ Test DistributedSession which uses SQL based cache plugin. """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest Distributed Session (SQL).'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-    self.portal.portal_caches.clearAllCache()  
-    # create memcached plugin and test
-    self._changeCachePlugin('SQL Cache')
     sequence_list = SequenceList()
     sequence_string =  'stepTestSetGet  \
                         stepModifySession  \

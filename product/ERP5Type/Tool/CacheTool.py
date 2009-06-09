@@ -183,7 +183,7 @@ class CacheTool(BaseTool):
 
         Note: this method will calculate RAM memory usage for 'local'
         (RamCache) cache plugins and will not include 
-        'shared' (DistributedRamCache and SQLCache) cache plugins."""
+        'shared' (DistributedRamCache) cache plugins."""
     stats = {}
     total_size = 0
     ram_cache_root = self.getRamCacheRoot()
