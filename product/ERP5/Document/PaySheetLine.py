@@ -65,5 +65,16 @@ class PaySheetLine(InvoiceLine):
                       , PropertySheet.VariationRange
                       )
 
+    # Cell Related
+    security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
+    def newCellContent(self, id,**kw):
+      """
+      This method can be overriden
+      """
+      self.invokeFactory(type_name="Pay Sheet Cell",id=id)
+      return self.get(id)
+
+    security.declareProtected(Permissions.AccessContentsInformationi,
+                              'isAccountable')
     def isAccountable(self):
       return 1
