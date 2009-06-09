@@ -68,9 +68,9 @@ class PaySheetModelLine(TradeModelLine):
                     , PropertySheet.Predicate
                     , PropertySheet.Reference
                     )
-  
-  security.declareProtected( Permissions.ModifyPortalContent,
-                             'newCellContent' )
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'newCellContent' )
   def newCellContent(self, id, portal_type='Pay Sheet Model Cell', **kw):
     """
       Used to be able to create Pay Sheet Model Cell. (portal_type of cells is

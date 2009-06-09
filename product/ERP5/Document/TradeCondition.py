@@ -72,6 +72,8 @@ class TradeCondition(Path, Transformation):
                       , PropertySheet.Order
                       )
 
+    security.declareProtected(Permissions.ModifyPortalContent,
+                              'updateAggregatedAmountList')
     def updateAggregatedAmountList(self, context, **kw):
       '''
         updates exisiting movement and returns new if any
@@ -142,6 +144,8 @@ class TradeCondition(Path, Transformation):
           visited_trade_condition_list=visited_trade_condition_list))
       return specialise_value_list
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTradeModelLineComposedList')
     def getTradeModelLineComposedList(self, context=None, portal_type_list=None):
       """
       Returns list of Trade Model Lines using composition
@@ -178,6 +182,8 @@ class TradeCondition(Path, Transformation):
           cmp=lambda x,y: set(x.getBaseContributionList()).
           intersection(set(y.getBaseApplicationList())) and -1 or 1)
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getAggregatedAmountList')
     def getAggregatedAmountList(self, context, movement_list=None, **kw):
       result = AggregatedAmountList()
 

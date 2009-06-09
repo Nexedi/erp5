@@ -68,7 +68,7 @@ class PaySheetTransaction(Invoice):
   __implements__ = ( )
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                          'getRatioQuantityFromReference')
+                            'getRatioQuantityFromReference')
   def getRatioQuantityFromReference(self, ratio_reference=None):
     """
     return the ratio value correponding to the ratio_reference,
@@ -91,7 +91,7 @@ class PaySheetTransaction(Invoice):
     return None
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                          'getRatioQuantityList')
+                            'getRatioQuantityList')
   def getRatioQuantityList(self, ratio_reference_list):
     """
     Return a list of reference_ratio_list correponding values.
@@ -104,7 +104,7 @@ class PaySheetTransaction(Invoice):
         for reference in ratio_reference_list]
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                          'getAnnotationLineFromReference')
+                            'getAnnotationLineFromReference')
   def getAnnotationLineFromReference(self, reference=None):
     """Return the annotation line corresponding to the reference.
     Returns None if reference not found
@@ -122,10 +122,10 @@ class PaySheetTransaction(Invoice):
     return None
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                          'getAnnotationLineListList')
+                            'getAnnotationLineListList')
   def getAnnotationLineListList(self, reference_list):
     """Return a list of annotation lines corresponding to the reference_list
-    reference_list is a list of references to the Annotation Line we want 
+    reference_list is a list of references to the Annotation Line we want
     to get.
     """
     if not isinstance(reference_list, (list, tuple)):
@@ -133,6 +133,8 @@ class PaySheetTransaction(Invoice):
     return [self.getAnnotationLineFromReference(reference) \
         for reference in reference_list]
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getInheritedObjectValueList')
   def getInheritedObjectValueList(self, portal_type_list, property_list=()):
     '''Return a list of all subobjects of the herited model (incuding the
       dependencies).
@@ -152,6 +154,8 @@ class PaySheetTransaction(Invoice):
       sub_object_list.extend([model._getOb(x) for x in id_list])
     return sub_object_list
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'applyTransformation')
   def applyTransformation(self):
     '''use a delivery builder to create all the paysheet lines using 
       movements return by updateAggregatedAmountList

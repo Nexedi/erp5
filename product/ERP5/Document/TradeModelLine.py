@@ -63,12 +63,16 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
                     , PropertySheet.Predicate
                     )
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getPrice')
     def getPrice(self):
       return self._baseGetPrice()
 
     def updateAggregatedAmountList(self, context, **kw):
       raise NotImplementedError('TODO')
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getAggregatedAmountList')
     def getAggregatedAmountList(self, context, movement_list = None,
         current_aggregated_amount_list = None, base_id='movement', **kw):
       from Products.ERP5Type.Document import newTempSimulationMovement

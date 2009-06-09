@@ -74,7 +74,7 @@ class PaySheetLine(InvoiceLine):
       self.invokeFactory(type_name="Pay Sheet Cell",id=id)
       return self.get(id)
 
-    security.declareProtected(Permissions.AccessContentsInformationi,
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'isAccountable')
     def isAccountable(self):
       return 1

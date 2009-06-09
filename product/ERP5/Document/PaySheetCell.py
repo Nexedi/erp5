@@ -64,5 +64,7 @@ class PaySheetCell(InvoiceCell):
                       , PropertySheet.MappedValue
                       )
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'isAccountable')
     def isAccountable(self):
       return 1
