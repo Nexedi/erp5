@@ -151,7 +151,7 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
       activate_kw = {'tag':'%s_updateRelatedContent' % context.getPath()}
 
       # udpate category related objects
-      kw = {'category.category_uid':context.getUid()}
+      kw = {'category.category_uid': context.getUid(), 'limit': None}
       for related_object in portal_catalog(**kw):
         related_object = related_object.getObject()
         category_list = []
@@ -164,7 +164,7 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
                             activate_kw=activate_kw)
 
       # udpate all predicates membership
-      kw = {'predicate_category.category_uid':context.getUid()}
+      kw = {'predicate_category.category_uid': context.getUid(), 'limit': None}
       for predicate in portal_catalog(**kw):
         predicate = predicate.getObject()
         membership_list = []
