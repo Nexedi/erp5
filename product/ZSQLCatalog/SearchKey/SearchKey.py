@@ -39,7 +39,8 @@ single_operator_dict = {
   'min': '>=',
   'max': '<',
   'ngt': '<=',
-  'nlt': '>'
+  'nlt': '>',
+  'neq': '!='
 }
 
 dual_operator_dict = {
