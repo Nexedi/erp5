@@ -181,15 +181,9 @@ class PaySheetTransaction(Invoice):
         movement_list_trade_phase_dic[trade_phase].append(movement)
 
       for trade_phase in movement_list_trade_phase_dic.keys():
-        builder_list = []
         business_path_list = business_process.getPathValueList(trade_phase=\
             trade_phase)
-        if len(business_path_list) > 1:
-          raise NotImplementedError, 'For now, payroll can not support more '\
-              'than one business_path with same trade_phase. '\
-              '%s have same trade_phase' % repr(business_path_list)
-        if len(business_path_list) == 1:
-          business_path = business_path_list[0]
+        for business_path in business_path_list:
           builder_list = [portal.restrictedTraverse(url) for url in\
                           business_path.getDeliveryBuilderList()]
           for builder in builder_list:
