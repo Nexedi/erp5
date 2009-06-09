@@ -62,7 +62,7 @@
   to finish activities.\n
 """\n
 from Products.ERP5Type.Utils import sleep\n
-\n
+count = int(count)\n
 while len(context.portal_activities.getMessageList()) > 0:\n
   context.portal_activities.process_timer(0, 0)\n
   count -= 1\n
@@ -112,6 +112,7 @@ return \'Done.\'\n
                             <string>count</string>
                             <string>Products.ERP5Type.Utils</string>
                             <string>sleep</string>
+                            <string>int</string>
                             <string>len</string>
                             <string>_getattr_</string>
                             <string>context</string>
