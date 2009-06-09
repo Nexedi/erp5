@@ -32,10 +32,12 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Transformation import Transformation
 from Products.ERP5.Document.Path import Path
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
+
+import zope.interface
 
 # XXX TODO : getTradeModelLineComposedList and findSpecialiseValueList should
 # probably move to Transformation (better names sould be used)
@@ -71,6 +73,8 @@ class TradeCondition(Path, Transformation):
                       , PropertySheet.TradeCondition
                       , PropertySheet.Order
                       )
+
+    zope.interface.implements(interfaces.ITransformation)
 
     security.declareProtected(Permissions.ModifyPortalContent,
                               'updateAggregatedAmountList')
