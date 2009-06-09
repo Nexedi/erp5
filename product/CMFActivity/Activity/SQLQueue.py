@@ -426,17 +426,7 @@ class SQLQueue(RAMQueue, SQLBase):
       if len(result):
         activity_tool.SQLQueue_delMessage(uid = [line.uid for line in result])
 
-  def getMessageList(self, activity_tool, processing_node=None,**kw):
-    message_list = []
-    readMessageList = getattr(activity_tool, 'SQLQueue_readMessageList', None)
-    if readMessageList is not None:
-      result = readMessageList(path=None, method_id=None, processing_node=None, to_date=None, include_processing=0)
-      for line in result:
-        m = self.loadMessage(line.message)
-        m.processing_node = line.processing_node
-        m.priority = line.priority
-        message_list.append(m)
-    return message_list
+  getMessageList = SQLBase.getMessageList
 
   def countMessage(self, activity_tool, tag=None, path=None,
                    method_id=None, message_uid=None, **kw):

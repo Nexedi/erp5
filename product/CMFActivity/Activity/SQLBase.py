@@ -45,6 +45,25 @@ class SQLBase:
     assert len(result[0]) == 1
     return result[0][0]
 
+  def getMessageList(self, activity_tool, processing_node=None,
+                     include_processing=0, **kw):
+    # YO: reading all lines might cause a deadlock
+    readMessageList = getattr(activity_tool,
+                              self.__class__.__name__ + '_readMessageList',
+                              None)
+    if readMessageList is None:
+      return []
+    return [self.loadMessage(line.message,
+                             uid=line.uid,
+                             processing_node=line.processing_node,
+                             priority=line.priority,
+                             processing=line.processing)
+            for line in readMessageList(path=None,
+                                        method_id=None,
+                                        processing_node=processing_node,
+                                        to_date=None,
+                                        include_processing=include_processing)]
+
   def _getPriority(self, activity_tool, method, default):
     result = method()
     assert len(result) == 1

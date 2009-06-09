@@ -592,20 +592,7 @@ class SQLDict(RAMDict, SQLBase):
         if len(uid_list)>0:
           activity_tool.SQLDict_delMessage(uid = [x.uid for x in uid_list])
 
-  def getMessageList(self, activity_tool, processing_node=None, include_processing=0, **kw):
-    # YO: reading all lines might cause a deadlock
-    message_list = []
-    readMessageList = getattr(activity_tool, 'SQLDict_readMessageList', None)
-    if readMessageList is not None:
-      result = readMessageList(path=None, method_id=None, processing_node=None,
-                               to_date=None, include_processing=include_processing)
-      for line in result:
-        m = self.loadMessage(line.message, uid = line.uid)
-        m.processing_node = line.processing_node
-        m.priority = line.priority
-        m.processing = line.processing
-        message_list.append(m)
-    return message_list
+  getMessageList = SQLBase.getMessageList
 
   def dumpMessageList(self, activity_tool):
     # Dump all messages in the table.
