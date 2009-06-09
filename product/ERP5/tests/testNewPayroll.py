@@ -246,11 +246,14 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     sequence.edit(urssaf_model_line_with_slices = model_line)
 
   def stepPaysheetCreateUrssafModelLine(self, sequence=None, **kw):
+    '''The model line created here have the same reference than the model line
+    created in stepModelCreateUrssafModelLine. This is used for line
+    overloading tests'''
     paysheet = sequence.get('paysheet')
     model_line = self.createModelLine(paysheet)
     model_line.edit(title='Urssaf',
                     int_index=2,
-                    reference='urssaf_model_line_4',
+                    reference='urssaf_model_line',
                     trade_phase='trade_phase/payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_payroll_service'),
                     variation_category_list=['tax_category/employee_share',
