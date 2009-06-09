@@ -38,6 +38,7 @@ class BudgetModel(Predicate):
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.XMLObject
                     , PropertySheet.SimpleItem
+                    , PropertySheet.CategoryCore
                     , PropertySheet.Folder
                     , PropertySheet.Predicate
                     , PropertySheet.SortIndex

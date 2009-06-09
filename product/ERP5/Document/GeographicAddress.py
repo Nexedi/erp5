@@ -60,6 +60,7 @@ class GeographicAddress(Coordinate, Base):
     # Declarative properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.SimpleItem
+                      , PropertySheet.CategoryCore
                       , PropertySheet.GeographicAddress
                       )
 

@@ -42,6 +42,7 @@ class BudgetTransfer(Supply):
     # Default Properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject
+                      , PropertySheet.CategoryCore
                       , PropertySheet.Folder
                       , PropertySheet.Task
                       , PropertySheet.Arrow

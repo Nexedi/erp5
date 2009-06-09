@@ -46,6 +46,7 @@ class Budget(Predicate, Variated):
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject
                       , PropertySheet.SimpleItem
+                      , PropertySheet.CategoryCore
                       , PropertySheet.Folder
                       , PropertySheet.Predicate
                       , PropertySheet.SortIndex

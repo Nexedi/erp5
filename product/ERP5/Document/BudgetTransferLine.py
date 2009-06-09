@@ -44,6 +44,7 @@ class BudgetTransferLine(SupplyLine):
     # Default Properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject
+                      , PropertySheet.CategoryCore
                       , PropertySheet.Amount
                       , PropertySheet.Task
                       , PropertySheet.Arrow

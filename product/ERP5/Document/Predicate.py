@@ -76,6 +76,7 @@ class Predicate(XMLObject, Folder):
   # Declarative properties
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.Predicate
+                    , PropertySheet.CategoryCore
                     , PropertySheet.SortIndex
                     )
 

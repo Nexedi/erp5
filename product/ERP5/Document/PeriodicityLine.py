@@ -39,7 +39,8 @@ class PeriodicityLineMixin(PeriodicityMixin):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  property_sheets = (PropertySheet.PeriodicityTerm,)
+  property_sheets = ( PropertySheet.PeriodicityTerm,
+                      PropertySheet.CategoryCore, )
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPeriodicityTermStopDate')
   def getPeriodicityTermStopDate(self, start_date, default=None):

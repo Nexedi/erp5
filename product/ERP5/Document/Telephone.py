@@ -64,6 +64,7 @@ class Telephone(Coordinate, Base):
   # Declarative properties
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem
+                    , PropertySheet.CategoryCore
                     , PropertySheet.Telephone
                     )
   # This is a list of regex.

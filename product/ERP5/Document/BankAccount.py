@@ -60,6 +60,7 @@ class BankAccount(Folder, Coordinate, MetaNode):
     # Declarative properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.SimpleItem
+                      , PropertySheet.CategoryCore
                       , PropertySheet.Task
                       , PropertySheet.Resource
                       , PropertySheet.Reference

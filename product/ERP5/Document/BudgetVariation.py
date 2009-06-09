@@ -44,6 +44,7 @@ class BudgetVariation(Predicate):
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.XMLObject
                     , PropertySheet.SimpleItem
+                    , PropertySheet.CategoryCore
                     , PropertySheet.SortIndex
                     , PropertySheet.Path
                     , PropertySheet.Predicate

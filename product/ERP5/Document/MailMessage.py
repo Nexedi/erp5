@@ -67,6 +67,7 @@ class MailMessage(Event, CMFMailInMessage):
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.XMLObject
                     , PropertySheet.DublinCore
+                    , PropertySheet.CategoryCore
                     , PropertySheet.Task
                     , PropertySheet.Arrow
                     , PropertySheet.Movement

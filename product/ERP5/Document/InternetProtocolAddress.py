@@ -54,6 +54,7 @@ class InternetProtocolAddress(Base, Coordinate):
   # Declarative properties
   property_sheets = ( PropertySheet.Base
                       , PropertySheet.SimpleItem
+                      , PropertySheet.CategoryCore
                       , PropertySheet.InternetProtocolAddress
                       )
 

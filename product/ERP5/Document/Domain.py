@@ -89,6 +89,7 @@ class Domain(Predicate, MetaNode, MetaResource):
                     , PropertySheet.Predicate
                     , PropertySheet.Domain
                     , PropertySheet.SortIndex
+                    , PropertySheet.CategoryCore
                     )
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getRelativeUrl' )
