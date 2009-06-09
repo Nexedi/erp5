@@ -90,7 +90,7 @@ class TestBPMMixin(ERP5TypeTestCase):
   def createCategories(self):
     category_tool = getToolByName(self.portal, 'portal_categories')
     self.createCategoriesInCategory(category_tool.base_amount, ['discount',
-      'tax', 'total_tax', 'total_discount'])
+      'tax', 'total_tax', 'total_discount', 'total'])
     self.createCategoriesInCategory(category_tool.use,
         self.normal_resource_use_category_list + \
             self.invoicing_resource_use_category_list)
@@ -1696,6 +1696,60 @@ class TestBPMTestCases(TestBPMMixin):
       [trade_condition_1_trade_model_line],
       trade_condition_1.getTradeModelLineComposedList()
     )
+
+  def test_getTradeModelLineComposedList(self):
+    """Test that list of contribution/application relations is sorted to do easy traversal
+
+    Let assume such graph of contribution/application dependency:
+
+    D -----> B
+          /   \
+    E ---/     > A
+              /
+    F -----> C
+          /
+    G ---/
+
+    It shall return list which is sorted like:
+      * (DE) B (FG) C A
+        or
+      * (FG) C (DE) B A
+    where everything in parenthesis can be not sorted
+    """
+    trade_condition = self.createTradeCondition()
+
+    A = self.createTradeModelLine(trade_condition, reference='A',
+        base_application_list=['base_amount/total'])
+
+    B = self.createTradeModelLine(trade_condition, reference='B',
+        base_contribution_list=['base_amount/total'],
+        base_application_list=['base_amount/total_tax'])
+
+    C = self.createTradeModelLine(trade_condition, reference='C',
+        base_contribution_list=['base_amount/total'],
+        base_application_list=['base_amount/total_discount'])
+
+    D = self.createTradeModelLine(trade_condition, reference='D',
+        base_contribution_list=['base_amount/total_tax'],
+        base_application_list=['base_amount/tax'])
+
+    E = self.createTradeModelLine(trade_condition, reference='E',
+        base_contribution_list=['base_amount/total_tax'],
+        base_application_list=['base_amount/tax'])
+
+    F = self.createTradeModelLine(trade_condition, reference='F',
+        base_contribution_list=['base_amount/total_discount'],
+        base_application_list=['base_amount/discount'])
+
+    G = self.createTradeModelLine(trade_condition, reference='G',
+        base_contribution_list=['base_amount/total_discount'],
+        base_application_list=['base_amount/discount'])
+
+    trade_model_line_list = trade_condition.getTradeModelLineComposedList()
+
+    # XXX: This is only one good possible sorting
+    self.assertEquals(sorted([q.getRelativeUrl() for q in trade_model_line_list]),
+        sorted([q.getRelativeUrl() for q in [D, E, B, F, G, C, A]]))
 
   def test_getAggregatedAmountList(self):
     """

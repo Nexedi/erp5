@@ -175,12 +175,35 @@ class TradeCondition(Path, Transformation):
             portal_type=portal_type_list):
           reference = trade_model_line.getReference()
           if reference not in reference_list or reference is None:
-            trade_model_line_composed_list.append(trade_model_line)
             reference_list.append(reference)
+            base_contribution_list = trade_model_line \
+              .getBaseContributionList()
+            if len(base_contribution_list) == 0:
+              # when movement will not generate anything which contributes
+              # it is safe to be last on list
+              trade_model_line_composed_list.append(trade_model_line)
+            else:
+              # if movements contributes to anything it have to be placed
+              # just before to what it contributes
+              index = 0
+              inserted = False
+              for old_trade_model_line in trade_model_line_composed_list:
+                for base_application in old_trade_model_line \
+                  .getBaseApplicationList():
+                  if base_application in base_contribution_list:
+                    trade_model_line_composed_list.insert(index,
+                        trade_model_line)
+                    inserted = True
+                    break
+                if inserted:
+                  break
+                index += 1
+              if not inserted:
+                # last resort - nothing was found, it is safe to put movement
+                # in beginning of list
+                trade_model_line_composed_list.insert(0, trade_model_line)
 
-      return sorted(trade_model_line_composed_list,
-          cmp=lambda x,y: set(x.getBaseContributionList()).
-          intersection(set(y.getBaseApplicationList())) and -1 or 1)
+      return trade_model_line_composed_list
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getAggregatedAmountList')
