@@ -159,7 +159,7 @@ class PaySheetModel(TradeCondition, XMLMatrix, Delivery):
   security.declareProtected(Permissions.AccessContentsInformation,
       'getEffectiveModel')
   def getEffectiveModel(self, start_date=None, stop_date=None):
-    '''return the more appropriate model using effective_date, expiration_date 
+    '''return the more appropriate model using effective_date, expiration_date
     and version number
     '''
     reference = self.getReference()
@@ -209,33 +209,3 @@ class PaySheetModel(TradeCondition, XMLMatrix, Delivery):
       v = specialised_model.getProperty(property_name)
       if v:
         return v
-
-  def getAggregatedAmountList(self, context, **kw):
-    from Products.ERP5Type.Document import newTempSimulationMovement
-    movement_list = []
-    cell_list = context.getMovementList()
-    for cell in cell_list:
-      self_id = 'transaction_cell' + cell.getParentValue().getId() + '_' \
-          + cell.getId()
-      tmp_movement = newTempSimulationMovement(self.getPortalObject(), self_id )
-      tmp_movement.edit(
-          title=cell.getTitle(),
-          int_index=cell.getIntIndex(),
-          causality=cell.getRelativeUrl(),
-          resource=cell.getResource(),
-          description=cell.getDescription(),
-          base_application_list=cell.getBaseApplicationList(),
-          base_contribution_list=cell.getBaseContributionList(),
-          variation_category_list=cell.getVariationCategoryList(),
-          price = cell.getPrice(),
-          quantity = cell.getQuantity(0.0),)
-      movement_list.append(tmp_movement)
-
-    movement_list = TradeCondition.getAggregatedAmountList(self, context,
-        movement_list, **kw)
-    # remove movement that should not be created
-    final_list = []
-    for movement in movement_list:
-      if getattr(movement, 'create_line', True):
-        final_list.append(movement)
-    return final_list
