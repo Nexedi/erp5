@@ -75,7 +75,9 @@ def getCurrencyForSection(section_url):\n
     mapping = section.getMappingValue(portal_type=\'Organisation\')\n
     if mapping is not None and mapping.getPriceCurrency():\n
       return mapping.getPriceCurrency()\n
-\n
+    for member in member_list:\n
+      if member.getPriceCurrency():\n
+        return member.getPriceCurrency()\n
   # nothing found ... returns the currency from preferences.\n
   return portal.portal_preferences.getPreferredAccountingTransactionCurrency()\n
 \n
