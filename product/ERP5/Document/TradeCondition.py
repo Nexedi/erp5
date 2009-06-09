@@ -200,4 +200,9 @@ class TradeCondition(Path, Transformation):
           need_to_run = 1
           movement_list = result
 
-      return result
+      # remove movement that should not be created
+      final_list = []
+      for movement in result:
+        if getattr(movement, 'create_line', True):
+          final_list.append(movement)
+      return final_list
