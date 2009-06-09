@@ -102,6 +102,7 @@ class TestAcknowledgementTool(ERP5TypeTestCase):
     # transaction, this means that we look if the mechanism that looks at
     # activity tags is working or not
     event_acknowledgement_list = getEventAcknowlegementList()
+    self.assertEqual(0, len(event_acknowledgement_list))
     # We should not have any acknowledgements, tic is finished
     # the code should look directly for acnowledgement documents
     self.tic()
