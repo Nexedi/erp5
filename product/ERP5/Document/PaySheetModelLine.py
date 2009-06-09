@@ -73,7 +73,8 @@ class PaySheetModelLine(TradeModelLine):
                              'newCellContent' )
   def newCellContent(self, id, portal_type='Pay Sheet Model Cell', **kw):
     """
-        This method can be overriden
+      Used to be able to create Pay Sheet Model Cell. (portal_type of cells is
+      hardcoded in inheritated classes, so we have to overload this method)
     """
     self.invokeFactory(type_name=portal_type,id=id)
     return self.get(id)
