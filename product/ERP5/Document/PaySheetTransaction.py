@@ -88,8 +88,7 @@ class PaySheetTransaction(Invoice):
     for document in object_ratio_list:
       if document.getReference() == ratio_reference:
         return document.getQuantity()
-
-    return None 
+    return None
 
   security.declareProtected(Permissions.AccessContentsInformation,
                           'getRatioQuantityList')
@@ -116,13 +115,11 @@ class PaySheetTransaction(Invoice):
       for annotation_line in annotation_line_list:
         if (annotation_line.getReference() or annotation_line.getId()) == reference :
           return annotation_line
-
     # if not find in the paysheet, look on dependence tree
     for annotation_line in self.getInheritedObjectValueList(['Annotation Line']):
       if (annotation_line.getReference() or annotation_line.getId()) == reference:
         return annotation_line
-
-    return None 
+    return None
 
   security.declareProtected(Permissions.AccessContentsInformation,
                           'getAnnotationLineListList')
