@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>web_section_ram_cache</string> </value>
+            <value> <string>web_site_user_ram_cache</string> </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -53,8 +53,9 @@
   -->\n
 </tal:block>\n
 \n
-<tal:block tal:define="web_site python:here.getWebSiteValue();\n
-                       news_area_section_id python:here.getLayoutProperty(\'news_area_section_id\', \'\');\n
+<tal:block tal:define="current_web_section python:request.get(\'current_web_section\', here);\n
+                       web_site python:current_web_section.getWebSiteValue();\n
+                       news_area_section_id python:current_web_section.getLayoutProperty(\'layout_news_area_section_id\', \'\');\n
                        news_area_section python:web_site.restrictedTraverse(news_area_section_id)">\n
 <ul>\n
 <tal:block tal:repeat="item python:news_area_section.getDocumentValueList(limit=10, sort_on=[(\'modification_date\',\'descending\')])">\n

@@ -325,6 +325,11 @@ div.subcontent-box.headbox1noicon h2.noicon {background:none;}\n
 .navbuttonflag a:hover {text-decoration:none;}\n
 .navbuttonflag a img {height:15px;}\n
 \n
+/******************************************/\n
+/*  ERP5 Extensions                       */\n
+/******************************************/\n
+.navbar ul li.login {float:right}\n
+\n
 </tal:block>
 
 ]]></string> </value>

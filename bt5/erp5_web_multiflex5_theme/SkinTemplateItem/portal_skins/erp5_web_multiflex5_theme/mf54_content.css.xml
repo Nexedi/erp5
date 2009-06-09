@@ -337,7 +337,7 @@
 /******************************************/\n
 \n
 /******************************************/\n
-/*  ERP5 Extensions                */\n
+/*  ERP5 Extensions                       */\n
 /******************************************/\n
 \n
 /* We will have to handle the different types in another way */\n
@@ -456,6 +456,7 @@ div.adminToolbox.field label {\n
 div.adminToolbox div.adminSection label {\n
   display: block!important;\n
   width: 6em!important;\n
+  float: left;\n
 }\n
 \n
 div.adminToolbox div.hiddenLabel label {\n
@@ -464,15 +465,14 @@ div.adminToolbox div.hiddenLabel label {\n
 \n
 /* Sub section title */\n
 div.adminToolbox h3 {\n
-  margin-left: 0em;\n
-  /* font-size: inherit; */ /* Does not seem compatible with IE */\n
-  font-size: 8pt;\n
+  font-size:120% !important /*Non-IE6*/; font-size:100% /*IE6*/;\n
+  margin:0;\n
 }\n
 \n
 /* Title */\n
 div.adminToolbox > div > h3 {\n
   background: #f77;\n
-  padding: .5em;\n
+  padding: 0.5em 0;\n
   margin: 0;\n
   color: #fff;\n
   cursor: pointer;\n
@@ -480,16 +480,20 @@ div.adminToolbox > div > h3 {\n
 \n
 div.adminToolbox > div > h3:hover {background: #f00}\n
 \n
-div.adminToolbox > div.input > div.adminSection {\n
-  border-bottom: 1px dotted #777;\n
-  padding: .5em .5em .5em 0.5em;\n
+div.adminToolbox div.input > div.adminSection {\n
+  border-bottom: 1px solid #eee;\n
+  padding: 0.5em 0;\n
 }\n
 \n
-div.adminToolbox > div.input > div.adminSection:last-child {border-bottom: none}\n
+div.adminToolbox div.input > div.adminSection:last-child {border-bottom: none}\n
 \n
 div.adminToolbox ul {list-style: none}\n
 \n
-div.adminToolbox li {margin: 0}\n
+div.adminToolbox li {\n
+  margin: 0;\n
+  padding: 0;\n
+  background: none;\n
+}\n
 \n
 div.adminToolbox li > a {text-decoration: none}\n
 \n
@@ -552,10 +556,6 @@ div.adminToolbox button img {\n
   border:0 none;\n
   float:none;\n
   margin:0;\n
-}\n
-\n
-div.adminToolbox h3 {\n
-  margin:0.5em 0 0.2em;\n
 }\n
 \n
 div.adminToolbox ul {\n
