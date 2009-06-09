@@ -110,7 +110,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
   def getBusinessTemplateList(self):
     """ """
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-            'erp5_invoicing', 'erp5_payroll', 'erp5_mrp', 'erp5_bpm')
+            'erp5_invoicing', 'erp5_mrp', 'erp5_bpm', 'erp5_payroll')
 
   def createPayrollService(self):
     module = self.portal.getDefaultModule(portal_type='Payroll Service')
@@ -984,6 +984,12 @@ class TestNewPayroll(TestNewPayrollMixin):
       call the XMLMatrix.getCell and if the cell is not found, call
       getCell method in all it's inherited model until the cell is found or
       the cell have been searched on all inherited models.
+
+      TODO : Currently, the method use a Depth-First Search algorithm, it will
+      be better to use Breadth-First Search one.
+      more about this on :
+        - http://en.wikipedia.org/wiki/Breadth-first_search
+        - http://en.wikipedia.org/wiki/Depth-first_search
     '''
     sequence_list = SequenceList()
     sequence_string = """
