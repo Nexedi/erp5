@@ -61,7 +61,8 @@ if packing_list.getPortalType() == \'Sale Packing List\':\n
   explanation_uid = packing_list.getCausalityUid(portal_type=\'Sale Order\')\n
   if explanation_uid:\n
     explanation_uid = (explanation_uid, packing_list.getUid())\n
-\n
+  elif explanation_uid == None:\n
+    explanation_uid = packing_list.getUid()\n
   tag = \'build_invoice_%s\' % packing_list.getRelativeUrl()\n
   # WARNING: this tag is also used in InvoiceTransaction_postGeneration script\n
   tax_tag = \'build_invoice_tax_%s\' % packing_list.getRelativeUrl()\n
@@ -136,10 +137,10 @@ if packing_list.getPortalType() == \'Sale Packing List\':\n
                             <string>_getattr_</string>
                             <string>delivery_tool</string>
                             <string>explanation_uid</string>
+                            <string>None</string>
                             <string>tag</string>
                             <string>tax_tag</string>
                             <string>getattr</string>
-                            <string>None</string>
                             <string>invoice_line_builder</string>
                             <string>dict</string>
                             <string>invoice_tax_builder</string>

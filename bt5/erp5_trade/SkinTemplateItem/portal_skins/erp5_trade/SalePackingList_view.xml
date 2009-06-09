@@ -102,6 +102,7 @@
                         <string>my_source_section_title</string>
                         <string>my_source_title</string>
                         <string>my_source_administration_title</string>
+                        <string>my_price_currency</string>
                         <string>my_incoterm</string>
                         <string>my_delivery_mode</string>
                         <string>my_causality_title</string>
