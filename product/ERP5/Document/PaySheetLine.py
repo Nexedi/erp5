@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Fabien Morin <fabien@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -64,15 +65,5 @@ class PaySheetLine(InvoiceLine):
                       , PropertySheet.VariationRange
                       )
 
-
-    # Cell Related
-    security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
-    def newCellContent(self, id,**kw):
-      """
-      This method can be overriden
-      """
-      self.invokeFactory(type_name="Pay Sheet Cell",id=id)
-      return self.get(id)
-      
     def isAccountable(self):
       return 1
