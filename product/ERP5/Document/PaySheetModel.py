@@ -41,7 +41,7 @@ from zLOG import LOG
 class PaySheetModel(TradeCondition, XMLMatrix, Delivery):
   """A PaySheetModel defines calculation rules for paysheets.
 
-    PaySheetModel are used to define calculating rules specific to a 
+    PaySheetModel are used to define calculating rules specific to a
     date, a convention, a group of employees ...
     The class inherit from Delivery, because it contains movements.
   """
@@ -115,7 +115,7 @@ class PaySheetModel(TradeCondition, XMLMatrix, Delivery):
       if keep:
         reference_dict[obj.getProperty('reference', obj.getId())] = obj.getId()
     return reference_dict
-  
+
   security.declareProtected(Permissions.AccessContentsInformation,
       'findEffectiveSpecialiseValueList')
   def findEffectiveSpecialiseValueList(self, start_date=None, stop_date=None):
@@ -135,7 +135,7 @@ class PaySheetModel(TradeCondition, XMLMatrix, Delivery):
       property_list=()):
     '''Returns a dict with the model url as key and a list of reference as
     value. Normaly, a Reference appear only one time in the final output.
-    It uses Breadth First Search. 
+    It uses Breadth First Search.
     If property_list is not empty, documents for which all properties in
     property_list are false will be skipped.
     '''
