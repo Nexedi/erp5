@@ -54,7 +54,10 @@ class ITransformation(Interface):
     pass
 
   def updateAggregatedAmountList(context):
-    """Updates currently existing movements on delivery
+    """Updates existing movement and returns new or deleted if any.
+
+    Returns a dict of list of movement 'movement_to_add_list' and
+    'movement_to_delete_list'
 
     context - represents object on which update shall happen
 

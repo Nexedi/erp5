@@ -79,11 +79,6 @@ class TradeCondition(Path, Transformation):
     security.declareProtected(Permissions.ModifyPortalContent,
                               'updateAggregatedAmountList')
     def updateAggregatedAmountList(self, context, **kw):
-      '''
-        updates exisiting movement and returns new if any
-        return a dict of list of movement 'movement_to_add_list' and
-        'movement_to_delete_list'
-      '''
       existing_movement_list = context.getMovementList()
       aggregated_amount_list = self.getAggregatedAmountList(context=context,
           **kw)
@@ -128,9 +123,10 @@ class TradeCondition(Path, Transformation):
         'findSpecialiseValueList')
     def findSpecialiseValueList(self, context, portal_type_list=None,
         visited_trade_condition_list=None):
-      '''Return a list of object. The list will represent the inheritance tree.
-      It uses Breadth First Search.
-      '''
+      """Returns a list of specialised objects representing inheritance tree.
+
+         Uses Breadth First Search.
+      """
       if visited_trade_condition_list is None:
         visited_trade_condition_list = []
       specialise_value_list = []
@@ -151,8 +147,8 @@ class TradeCondition(Path, Transformation):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getTradeModelLineComposedList')
     def getTradeModelLineComposedList(self, context=None, portal_type_list=None):
-      """
-      Returns list of Trade Model Lines using composition
+      """Returns list of Trade Model Lines using composition.
+
       Reference of Trade Model Line is used to hide other Trade Model Line
       In chain first found Trade Model Line has precedence
       Context's, if not None, Trade Model Lines have precedence
