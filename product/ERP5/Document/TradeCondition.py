@@ -203,6 +203,6 @@ class TradeCondition(Path, Transformation):
       # remove movement that should not be created
       final_list = []
       for movement in result:
-        if movement.isCreateLine():
+        if movement.getCausalityValue().getCreateLine():
           final_list.append(movement)
       return final_list
