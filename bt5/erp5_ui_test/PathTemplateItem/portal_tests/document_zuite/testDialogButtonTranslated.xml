@@ -88,13 +88,7 @@
   <td tal:content="string: ${here/portal_url}/foo_module/FooModule_viewSearchDialog?dialog_category=object_search">/erp5/foo_module/foo_module/FooModule_viewSearchDialog?dialog_category=object_search</td>\n
   <td></td>\n
 </tr>\n
-<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
-<tr>\n
-  <td>select</td>\n
-  <td>select_language</td>\n
-  <td>label=English</td>\n
-<tr>\n
-</tal:block>\n
+\n
 <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
 <tr>\n
   <td>open</td>\n
