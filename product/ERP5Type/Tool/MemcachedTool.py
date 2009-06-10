@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -307,7 +308,10 @@ if memcache is not None:
         Get the list of memcached servers to use.
         Defaults to ['127.0.0.1:11211', ].
       """
-      return getattr(self, 'server_address_list', ['127.0.0.1:11211', ])
+      server_address_list = []
+      for memcached_plugin in self.contentValues(portal_type='Memcached Plugin', sort_on='int_index'):
+        server_address_list.append(memcached_plugin.getUrlString())
+      return server_address_list
 
     def setServerAddressList(self, value):
       """
