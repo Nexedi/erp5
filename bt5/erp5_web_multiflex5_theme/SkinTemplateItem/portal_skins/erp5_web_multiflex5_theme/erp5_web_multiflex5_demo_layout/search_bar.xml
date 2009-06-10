@@ -15,6 +15,7 @@
               <list>
                 <string>default</string>
                 <string>editable</string>
+                <string>enabled</string>
                 <string>title</string>
               </list>
             </value>
@@ -64,6 +65,16 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -104,6 +115,10 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_editor_field</string> </value>
                 </item>
@@ -136,11 +151,23 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-python:\'<div class="searchform"><fieldset><input name="field_your_search_text" class="field" value="" onkeyup="submitFormOnEnter(event, this.form, \\\'%(section_id)s/ERP5Site_viewQuickSearchResultList\\\');" /><input type="submit" name="%(section_id)s/ERP5Site_viewQuickSearchResultList:method" class="button" value="%(search)s" /></fieldset></div>\' % {\'section_id\':here.getLayoutProperty(\'layout_search_area_section_id\', \'.\'), \'search\':here.Base_translateString(\'Search\')}
-
-]]></string> </value>
+            <value> <string>here/WebSection_viewSearchBar</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:request.get(\'current_web_section\', here).getWebSiteValue().getLayoutProperty(\'layout_search_area_section_id\', \'\')</string> </value>
         </item>
       </dictionary>
     </pickle>

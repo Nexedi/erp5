@@ -1,3 +1,6 @@
+2009-06-10 kazuhiko
+* news widget and search bar are enabled by existence of those section id configuration.
+
 2009-03-02 vincentd
 * change the media player by flowplayer who is under GPL V3, now all the bt can be on GPL
 
