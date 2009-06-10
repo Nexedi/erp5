@@ -40,7 +40,7 @@ class PaySheetModelLine:
       'mode'        : 'w',
     },
     { 'id'          : 'source_annotation_line_reference',
-      'description' : 'The Payroll Service Provider will be the one defined in'
+      'description' : 'The Service Provider will be the one defined in'
                       ' the Annotation Line with this reference.',
       'type'        : 'string',
       'mode'        : 'w',
