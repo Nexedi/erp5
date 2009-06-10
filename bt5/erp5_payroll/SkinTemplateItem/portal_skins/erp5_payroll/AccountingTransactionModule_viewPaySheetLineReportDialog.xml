@@ -90,12 +90,12 @@
                     <value>
                       <list>
                         <string>your_section_category</string>
+                        <string>your_resource</string>
                         <string>your_mirror_section</string>
                         <string>your_from_date</string>
                         <string>your_at_date</string>
                         <string>your_format</string>
                         <string>your_portal_skin</string>
-                        <string>your_resource</string>
                       </list>
                     </value>
                 </item>
