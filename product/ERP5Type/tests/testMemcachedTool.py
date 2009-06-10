@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -51,6 +52,14 @@ class TestMemcachedTool(ERP5TypeTestCase):
   def setUp(self):
     ERP5TypeTestCase.setUp(self)
     installRealMemcachedTool(self.getPortal())
+    memcached_tool = self.getPortal().portal_memcached
+    #create Memcache Plugin
+    if getattr(memcached_tool, 'default_memcached_plugin', None) is None:
+      memcached_tool.newContent(portal_type='Memcached Plugin',
+                                int_index=0,
+                                url_string='127.0.0.1:11211')
+    transaction.commit()
+    self.tic()
 
   def afterSetUp(self):
     self.login()
@@ -96,7 +105,7 @@ class TestMemcachedTool(ERP5TypeTestCase):
                                 '__guarded_delitem__')
     for attribut_id in tested_attribute_id_list:
       self.assertTrue(getattr(tested_dict, attribut_id, None) is not None)
-    
+
   def test_02_insertValue(self):
     """
       Tests that inserting an item and reading it gets a consistent result.
