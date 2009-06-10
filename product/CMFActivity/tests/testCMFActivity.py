@@ -630,7 +630,7 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.tic()
     self.assertEquals(o.getTitle(), 'last')
 
-  def CheckClearActivities(self, activity):
+  def CheckClearActivities(self, activity, activity_count=1):
     """
       Check if active objects are held even after clearing the tables.
     """
@@ -643,13 +643,14 @@ class TestCMFActivity(ERP5TypeTestCase):
 
     def check(o):
       message_list = portal.portal_activities.getMessageList()
-      self.assertEquals(len(message_list), 1)
+      self.assertEquals(len(message_list), activity_count)
       m = message_list[0]
       self.assertEquals(m.object_path, o.getPhysicalPath())
       self.assertEquals(m.method_id, '_setTitle')
 
     o = portal.organisation._getOb(self.company_id)
-    o.activate(activity=activity)._setTitle('foo')
+    for i in range(activity_count):
+      o.activate(activity=activity)._setTitle('foo')
     get_transaction().commit()
     check(o)
 
@@ -1472,7 +1473,7 @@ class TestCMFActivity(ERP5TypeTestCase):
       message = '\nCheck Clearing Activities With SQL Queue'
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
-    self.CheckClearActivities('SQLQueue')
+    self.CheckClearActivities('SQLQueue', activity_count=2)
 
   def flushAllActivities(self, silent=0, loop_size=1000):
     """Executes all messages until the queue only contains failed

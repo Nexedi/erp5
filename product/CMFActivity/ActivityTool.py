@@ -36,6 +36,7 @@ import re
 from Products.CMFCore import CMFCorePermissions
 from Products.ERP5Type.Core.Folder import Folder
 from Products.CMFActivity.ActiveResult import ActiveResult
+from Products.CMFActivity.ActiveObject import DEFAULT_ACTIVITY
 from Products.PythonScripts.Utility import allow_class
 from AccessControl import ClassSecurityInfo, Permissions
 from AccessControl.SecurityManagement import newSecurityManager
@@ -347,7 +348,7 @@ Exception: %s %s
     except (socket.error, MailHostError), message:
       LOG('ActivityTool.notifyUser', WARNING, 'Mail containing failure information failed to be sent: %s. Exception was: %s %s\n%s' % (message, self.exc_type, self.exc_value, self.traceback))
 
-  def reactivate(self, activity_tool):
+  def reactivate(self, activity_tool, activity=DEFAULT_ACTIVITY):
     # Reactivate the original object.
     obj= self.getObject(activity_tool)
     # Change user if required (TO BE DONE)
@@ -355,7 +356,7 @@ Exception: %s %s
     current_user = str(_getAuthenticatedUser(self))
     user = self.changeUser(self.user_name, activity_tool)
     try:
-      active_obj = obj.activate(**self.activity_kw)
+      active_obj = obj.activate(activity=activity, **self.activity_kw)
       getattr(active_obj, self.method_id)(*self.args, **self.kw)
     finally:
       # Use again the previous user
@@ -1273,12 +1274,13 @@ class ActivityTool (Folder, UniqueObject):
       folder = getToolByName(self, 'portal_skins').activity
 
       # Obtain all pending messages.
-      message_list = []
+      message_list_dict = {}
       if keep:
         for activity in activity_dict.itervalues():
           if hasattr(activity, 'dumpMessageList'):
             try:
-              message_list.extend(activity.dumpMessageList(self))
+              message_list_dict[activity.__class__.__name__] =\
+                                    activity.dumpMessageList(self)
             except ConflictError:
               raise
             except:
@@ -1309,15 +1311,16 @@ class ActivityTool (Folder, UniqueObject):
         folder.SQLQueue_createMessageTable()
 
       # Reactivate the messages.
-      for m in message_list:
-        try:
-          m.reactivate(aq_inner(self))
-        except ConflictError:
-          raise
-        except:
-          LOG('ActivityTool', WARNING,
-              'could not reactivate the message %r, %r' %
-              (m.object_path, m.method_id), error=sys.exc_info())
+      for activity, message_list in message_list_dict.iteritems():
+        for m in message_list:
+          try:
+            m.reactivate(aq_inner(self), activity=activity)
+          except ConflictError:
+            raise
+          except:
+            LOG('ActivityTool', WARNING,
+                'could not reactivate the message %r, %r' %
+                (m.object_path, m.method_id), error=sys.exc_info())
 
       if REQUEST is not None:
         message = 'Activities%20Cleared'
