@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2008-2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jerome Perrin <jerome@nexedi.com>
+#                    Fabien Morin <fabien@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -30,9 +31,11 @@ class PayrollPreference:
   """Preferences for erp5_payroll.
   """
   _properties = (
-    { 'id'          : 'preferred_payroll_service_variation_base_category',
-      'description' : 'Defines base categories axes in payroll service variations',
+    { 'id'          : 'preferred_payroll_resource_use_category',
+      'description' : 'Defines which resources\' use categories has payroll usage in system',
       'type'        : 'lines',
       'preference'  : 1,
+      'default'     : [],
+      'write_permission': 'Manage properties',
       'mode'        : '' },
   )
