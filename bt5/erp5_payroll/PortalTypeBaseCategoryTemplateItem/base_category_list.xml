@@ -26,10 +26,7 @@
   <item>quantity_unit</item>
   <item>specialise</item>
  </portal_type>
- <portal_type id="Payroll Service">
+ <portal_type id="Service">
   <item>base_amount</item>
- </portal_type>
- <portal_type id="Payroll Service Module">
-  <item>business_application</item>
  </portal_type>
 </base_category_list>

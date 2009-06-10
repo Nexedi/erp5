@@ -66,7 +66,7 @@ editable_column_list = [(\'base\', \'Base\'),]\n
 \n
 not_editable_column_list = [(\'int_index\', \'PaySheet Order\'),\n
                             (\'title\', \'Title\'),\n
-                            (\'source_section_title\', \'Payroll Service Provider\'),\n
+                            (\'source_section_title\', \'Service Provider\'),\n
                             (\'slice\', \'Slice\'),]\n
 \n
 if not editable:\n

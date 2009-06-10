@@ -13,12 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>description</string>
                 <string>base_category</string>
-                <string>portal_type</string>
                 <string>catalog_index</string>
+                <string>description</string>
+                <string>portal_type</string>
                 <string>proxy_listbox_ids</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -151,7 +151,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Payroll Service Provider</string> </value>
+                    <value> <string>Service Provider</string> </value>
                 </item>
                 <item>
                     <key> <string>viewable_permission</string> </key>

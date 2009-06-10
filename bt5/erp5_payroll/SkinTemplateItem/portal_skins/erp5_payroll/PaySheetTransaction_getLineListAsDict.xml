@@ -86,7 +86,7 @@ for line in line_list:\n
       \'group\'  : line.getSourceSectionTitle(),\n
       \'source_section_title\': line.getSourceSectionTitle(),\n
       \'title\'  : line.getTitle(),\n
-      \'payroll_service\' : getattr(line, \'payroll_service\', None),\n
+      \'service\' : getattr(line, \'service\', None),\n
       \'employer_share_total_price\' : getattr(line, \'employer_share_total_price\', None),\n
       \'employee_share_total_price\' : getattr(line, \'employee_share_total_price\', None),\n
       }\n

@@ -29,5 +29,4 @@ Pay Sheet Transaction | view
 Pay Sheet Transaction | view_payment
 Pay Sheet Transaction | view_profile
 Pay Sheet Transaction | view_ratio_settings
-Payroll Service Module | view
-Payroll Service | view
+System Preference | payroll_preference

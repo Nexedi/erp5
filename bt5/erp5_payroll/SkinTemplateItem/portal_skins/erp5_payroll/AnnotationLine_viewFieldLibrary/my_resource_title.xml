@@ -12,11 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>title</string>
-                <string>allow_jump</string>
-                <string>portal_type</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -77,10 +73,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>allow_jump</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>default_module</string> </key>
                     <value> <string>service</string> </value>
                 </item>
@@ -102,22 +94,11 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>DeliveryCell_viewFieldLibrary</string> </value>
+                    <value> <string>PaySheetTransaction_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>not_viewable</string> </key>
                     <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Payroll Service</string>
-                          <string>Payroll Service</string>
-                        </tuple>
-                      </list>
-                    </value>
                 </item>
                 <item>
                     <key> <string>read_only</string> </key>
@@ -126,10 +107,6 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Resource</string> </value>
                 </item>
                 <item>
                     <key> <string>viewable_permission</string> </key>

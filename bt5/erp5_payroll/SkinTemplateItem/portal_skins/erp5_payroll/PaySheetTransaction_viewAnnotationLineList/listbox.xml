@@ -13,12 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable_columns</string>
-                <string>title</string>
-                <string>selection_name</string>
                 <string>columns</string>
                 <string>description</string>
+                <string>editable_columns</string>
                 <string>portal_types</string>
+                <string>selection_name</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -97,7 +97,7 @@
                         </tuple>
                         <tuple>
                           <string>source_title</string>
-                          <string>Payroll Service Provider</string>
+                          <string>Service Provider</string>
                         </tuple>
                         <tuple>
                           <string>quantity</string>

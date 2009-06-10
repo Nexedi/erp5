@@ -56,7 +56,7 @@
             <value> <string>\'\'\'\n
   This script return a Pay Sheet Line list with some new parameters on\n
   each Pay Sheet Line (like base, base_name, base_contribution_list,\n
-  payroll_service,...)\n
+  service,...)\n
   It\'s used in the PaySheetTransaction_view to display PaySheetLines\n
 \'\'\'\n
 \n
@@ -80,7 +80,7 @@ for paysheet_line in paysheet_line_list:\n
   base_application_list = paysheet_line.getBaseApplicationTitleList()\n
   translated_base_application_list = [str(translateString(x)) for x in base_application_list]\n
   base_application_list = \', \'.join(translated_base_application_list)\n
-  payroll_service = paysheet_line.getResourceValue(portal_type=\'Payroll Service\')\n
+  service = paysheet_line.getResourceValue(portal_type=\'Service\')\n
   base_contribution_list = paysheet_line.getBaseContributionList()\n
   causality = paysheet_line.getCausality()\n
 \n
@@ -104,8 +104,8 @@ for paysheet_line in paysheet_line_list:\n
                   \'base\':paysheet_line.getTotalPrice(),\n
                   \'base_contribution_list\':base_contribution_list,\n
                   \'base_application_list\': base_application_list,\n
-                  \'payroll_service\': payroll_service is not None and\\\n
-                                      payroll_service.getId() or \'\',\n
+                  \'service\': service is not None and\\\n
+                                      service.getId() or \'\',\n
                   \'causality\': causality,}\n
     line_list.append(paysheet_line.asContext(**params))\n
     continue\n
@@ -147,8 +147,8 @@ for paysheet_line in paysheet_line_list:\n
                     \'base\':base,\n
                     \'base_contribution_list\':base_contribution_list,\n
                     \'base_application_list\': base_application_list,\n
-                    \'payroll_service\': payroll_service is not None and\\\n
-                                        payroll_service.getId() or \'\',\n
+                    \'service\': service is not None and\\\n
+                                        service.getId() or \'\',\n
                     \'causality\': causality,}\n
       object_dict[slice].update(share_dict)\n
     else:\n
@@ -254,7 +254,7 @@ return line_list\n
                             <string>x</string>
                             <string>str</string>
                             <string>translated_base_application_list</string>
-                            <string>payroll_service</string>
+                            <string>service</string>
                             <string>base_contribution_list</string>
                             <string>causality</string>
                             <string>base_application</string>

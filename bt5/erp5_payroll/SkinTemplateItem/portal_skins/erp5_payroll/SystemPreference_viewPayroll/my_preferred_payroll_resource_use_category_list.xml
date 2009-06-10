@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_mirror_section</string> </value>
+            <value> <string>my_preferred_payroll_resource_use_category_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -74,6 +74,10 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -83,11 +87,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_list_field</string> </value>
+                    <value> <string>my_multi_list_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPayrollFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>items</string> </key>
@@ -101,7 +105,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Service Provider</string> </value>
+                    <value> <string>Payroll Resource Use Categories</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -120,7 +124,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/AccountingTransactionModule_getPaySheetMovementMirrorSectionItemList</string> </value>
+            <value> <string>python: getattr(here.portal_categories.use, preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))(local_sort_id=(\'int_index\', \'translated_title\'), checked_permission=\'View\', base=1)</string> </value>
         </item>
       </dictionary>
     </pickle>

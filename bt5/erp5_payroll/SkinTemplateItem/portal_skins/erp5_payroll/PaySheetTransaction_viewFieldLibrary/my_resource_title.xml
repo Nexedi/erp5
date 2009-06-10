@@ -13,12 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>description</string>
-                <string>base_category</string>
-                <string>portal_type</string>
                 <string>catalog_index</string>
+                <string>description</string>
+                <string>parameter_list</string>
+                <string>portal_type</string>
                 <string>proxy_listbox_ids</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -61,6 +61,14 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>catalog_index</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -69,7 +77,25 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>parameter_list</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -80,10 +106,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>base_category</string> </key>
-                    <value> <string>resource</string> </value>
-                </item>
-                <item>
                     <key> <string>catalog_index</string> </key>
                     <value> <string>title</string> </value>
                 </item>
@@ -93,7 +115,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The Payroll Service used.</string> </value>
+                    <value> <string>The Service used.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable_permission</string> </key>
@@ -120,12 +142,18 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>parameter_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>portal_type</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>Payroll Service</string>
-                          <string>Payroll Service</string>
+                          <string>Service</string>
+                          <string>Service</string>
                         </tuple>
                       </list>
                     </value>
@@ -135,8 +163,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>PayrollServiceModule_viewPayrollServiceList/listbox</string>
-                          <string>Payroll Services</string>
+                          <string>ServiceModule_viewServiceList/listbox</string>
+                          <string>Services</string>
                         </tuple>
                       </list>
                     </value>
@@ -151,7 +179,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Payroll Service</string> </value>
+                    <value> <string>Service</string> </value>
                 </item>
                 <item>
                     <key> <string>viewable_permission</string> </key>
@@ -167,6 +195,22 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [(\'use_uid\', [here.portal_categories.resolveCategory(x).getUid() for x in here.portal_preferences.getPreferredPayrollResourceUseCategoryList()])]</string> </value>
         </item>
       </dictionary>
     </pickle>

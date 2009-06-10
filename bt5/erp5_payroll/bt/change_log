@@ -1,3 +1,6 @@
+2009-06-10 fabien
+* Payroll Service is now replaced by Service
+
 2009-05-18 yusei
 * Fix some proxy fields. count_method should not be inherited from template field and proxy_listbox_ids had to be copied to new proxified fields but it was not copied.
 

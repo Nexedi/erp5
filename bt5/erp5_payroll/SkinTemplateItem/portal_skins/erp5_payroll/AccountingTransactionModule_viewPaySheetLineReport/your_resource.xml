@@ -13,11 +13,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>required</string>
-                <string>editable</string>
                 <string>default</string>
+                <string>editable</string>
                 <string>items</string>
+                <string>required</string>
               </list>
             </value>
         </item>
@@ -91,16 +90,26 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>editable</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_list_field</string> </value>
+                    <value> <string>my_resource_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPayrollFieldLibrary</string> </value>
+                    <value> <string>PaySheetTransaction_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -109,10 +118,6 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Payroll Service</string> </value>
                 </item>
               </dictionary>
             </value>

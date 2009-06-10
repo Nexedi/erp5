@@ -116,7 +116,7 @@ for model_line in model_line_list:\n
         model_line.getBaseApplicationTitleList()]\n
     base_name = \'+\'.join(base_list)\n
 \n
-    payroll_service = model_line.getResourceValue()\n
+    service = model_line.getResourceValue()\n
     base_contribution_list = model_line.getBaseContributionList()\n
 \n
     price = cell.getPrice()\n
@@ -158,7 +158,7 @@ for model_line in model_line_list:\n
                     \'model_line\': model_line.getRelativeUrl(),\n
                     \'base_contribution_list\':base_contribution_list,\n
                     \'base_application_list\': base_application_list,\n
-                    \'service_id\':payroll_service.getId()}\n
+                    \'service_id\':service.getId()}\n
       object_dict[salary_range].update(share_dict)\n
 \n
     # if the slice already exists, just update the share\n
@@ -289,7 +289,7 @@ return line_list\n
                             <string>base_application</string>
                             <string>base_list</string>
                             <string>base_name</string>
-                            <string>payroll_service</string>
+                            <string>service</string>
                             <string>base_contribution_list</string>
                             <string>price</string>
                             <string>_write_</string>
