@@ -81,7 +81,7 @@ class Predicate(XMLObject, Folder):
                     )
 
   # Declarative interfaces
-  __implements__ = ( interfaces.IPredicate )
+  __implements__ = ( interfaces.IPredicate, )
 
   security.declareProtected( Permissions.AccessContentsInformation, 'test' )
   def test(self, context, tested_base_category_list=None, 

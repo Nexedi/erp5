@@ -68,7 +68,7 @@ class BankAccount(Folder, Coordinate, MetaNode):
                       )
 
     # Declarative interfaces
-    __implements__ = ( interfaces.ICoordinate )
+    __implements__ = ( interfaces.ICoordinate, )
 
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getReference')

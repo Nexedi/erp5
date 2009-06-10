@@ -58,7 +58,7 @@ class Path(MappedValue):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = ( interfaces.IPredicate )
+  __implements__ = ( interfaces.IPredicate, )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

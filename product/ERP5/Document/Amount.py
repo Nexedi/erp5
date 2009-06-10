@@ -61,7 +61,7 @@ class Amount(Base, Variated):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = (interfaces.IVariated)
+  __implements__ = (interfaces.IVariated,)
 
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem

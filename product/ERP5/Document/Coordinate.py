@@ -80,7 +80,7 @@ class Coordinate(Base):
     isRADContent = 1
     
     # Declarative interface
-    __implements__ = (interfaces.ICoordinate)
+    __implements__ = (interfaces.ICoordinate, )
 
     # Declarative security (replaces __ac_permissions__)
     security = ClassSecurityInfo()

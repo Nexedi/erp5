@@ -65,7 +65,7 @@ class GeographicAddress(Coordinate, Base):
                       )
 
     # Declarative interfaces
-    __implements__ = ( interfaces.ICoordinate )
+    __implements__ = ( interfaces.ICoordinate, )
 
     security.declareProtected(Permissions.AccessContentsInformation, 'asText')
     def asText(self):
