@@ -1000,7 +1000,196 @@ class TestInvoice(TestInvoiceMixin):
     self.assertTrue('size/Child/32' in
                     cell_child_32.getVariationCategoryList())
     self.assertTrue(cell_child_32.isMemberOf('size/Child/32'))
+  
+  
+  
+  def test_invoice_created_from_packing_list_with_no_order(self):
+    # if the order has cells and an aggregate, the invoice built
+    #from that order must have
+    # cells too
+    resource = self.portal.getDefaultModule(
+        self.resource_portal_type).newContent(
+                    portal_type=self.resource_portal_type,
+                    title='Resource',
+                    variation_base_category_list=['size'])
+    currency = self.portal.currency_module.newContent(
+                                portal_type='Currency',
+                                title='Currency')
 
+    client = self.portal.organisation_module.newContent(
+                            portal_type='Organisation',
+                            title='Client')
+    vendor = self.portal.organisation_module.newContent(
+                            portal_type='Organisation',
+                            title='Vendor')
+    no_order_packing_list = \
+self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
+                              portal_type=self.packing_list_portal_type,
+                              source_value=vendor,
+                              source_section_value=vendor,
+                              destination_value=client,
+                              destination_section_value=client,
+                              start_date=DateTime(2008, 1, 1),
+                              price_currency_value=currency,
+                              title='Order')
+
+    packing_list_line = no_order_packing_list.newContent(
+                        portal_type=self.packing_list_line_portal_type,
+                                  resource_value=resource,)
+    packing_list_line.setVariationBaseCategoryList(('size', ))
+    packing_list_line.setVariationCategoryList(['size/Baby', 'size/Child/32'])
+    packing_list_line.updateCellRange()
+
+    cell_baby = packing_list_line.newCell('size/Baby', base_id='movement',
+                             portal_type=self.packing_list_cell_portal_type)
+    cell_baby.edit(quantity=10,
+                   price=4,
+                   variation_category_list=['size/Baby'],
+                   mapped_value_property_list=['quantity', 'price'],)
+
+    cell_child_32 = packing_list_line.newCell(
+                                'size/Child/32',base_id='movement',
+                                 portal_type=self.packing_list_cell_portal_type)
+    cell_child_32.edit(quantity=20,
+                       price=5,
+                       variation_category_list=['size/Child/32'],
+                       mapped_value_property_list=['quantity', 'price'],)
+    no_order_packing_list.confirm()
+    get_transaction().commit()
+    self.tic()
+    self.assertNotEquals(no_order_packing_list, None)
+
+    no_order_packing_list.start()
+    no_order_packing_list.stop()
+    get_transaction().commit()
+    self.tic()
+
+    related_invoice = no_order_packing_list.getCausalityRelatedValue(
+                                  portal_type=self.invoice_portal_type)
+    self.assertNotEquals(related_invoice, None)
+
+    line_list = related_invoice.contentValues(
+                     portal_type=self.invoice_line_portal_type)
+    self.assertEquals(1, len(line_list))
+    invoice_line = line_list[0]
+
+    self.assertEquals(resource, invoice_line.getResourceValue())
+    self.assertEquals(['size'], invoice_line.getVariationBaseCategoryList())
+    self.assertEquals(2,
+          len(invoice_line.getCellValueList(base_id='movement')))
+
+    cell_baby = invoice_line.getCell('size/Baby', base_id='movement')
+    self.assertNotEquals(cell_baby, None)
+    self.assertEquals(resource, cell_baby.getResourceValue())
+    self.assertEquals(10, cell_baby.getQuantity())
+    self.assertEquals(4, cell_baby.getPrice())
+    self.assertTrue('size/Baby' in
+                    cell_baby.getVariationCategoryList())
+    self.assertTrue(cell_baby.isMemberOf('size/Baby'))
+
+    cell_child_32 = invoice_line.getCell('size/Child/32', base_id='movement')
+    self.assertNotEquals(cell_child_32, None)
+    self.assertEquals(resource, cell_child_32.getResourceValue())
+    self.assertEquals(20, cell_child_32.getQuantity())
+    self.assertEquals(5, cell_child_32.getPrice())
+    self.assertTrue('size/Child/32' in
+                    cell_child_32.getVariationCategoryList())
+    self.assertTrue(cell_child_32.isMemberOf('size/Child/32'))
+    
+  def test_invoice_building_with_cells_and_aggregate(self):
+    # if the order has cells and an aggregate, the invoice built
+    #from that order must have
+    # cells too
+    resource = self.portal.getDefaultModule(
+        self.resource_portal_type).newContent(
+                    portal_type=self.resource_portal_type,
+                    title='Resource',
+                    variation_base_category_list=['size'])
+    currency = self.portal.currency_module.newContent(
+                                portal_type='Currency',
+                                title='Currency')
+
+    client = self.portal.organisation_module.newContent(
+                            portal_type='Organisation',
+                            title='Client')
+    vendor = self.portal.organisation_module.newContent(
+                            portal_type='Organisation',
+                            title='Vendor')
+    order = self.portal.getDefaultModule(self.order_portal_type).newContent(
+                              portal_type=self.order_portal_type,
+                              source_value=vendor,
+                              source_section_value=vendor,
+                              destination_value=client,
+                              destination_section_value=client,
+                              start_date=DateTime(2008, 1, 1),
+                              price_currency_value=currency,
+                              title='Order')
+
+    order_line = order.newContent(portal_type=self.order_line_portal_type,
+                                  resource_value=resource,)
+    order_line.setVariationBaseCategoryList(('size', ))
+    order_line.setVariationCategoryList(['size/Baby', 'size/Child/32'])
+    order_line.updateCellRange()
+
+    cell_baby = order_line.newCell('size/Baby', base_id='movement',
+                             portal_type=self.order_cell_portal_type)
+    cell_baby.edit(quantity=10,
+                   price=4,
+                   variation_category_list=['size/Baby'],
+                   mapped_value_property_list=['quantity', 'price'],)
+
+    cell_child_32 = order_line.newCell('size/Child/32', base_id='movement',
+                                 portal_type=self.order_cell_portal_type)
+    cell_child_32.edit(quantity=20,
+                       price=5,
+                       variation_category_list=['size/Child/32'],
+                       mapped_value_property_list=['quantity', 'price'],)
+    order.confirm()
+    get_transaction().commit()
+    self.tic()
+
+    related_packing_list = order.getCausalityRelatedValue(
+                                  portal_type=self.packing_list_portal_type)
+    self.assertNotEquals(related_packing_list, None)
+
+    related_packing_list.start()
+    related_packing_list.stop()
+    get_transaction().commit()
+    self.tic()
+
+    related_invoice = related_packing_list.getCausalityRelatedValue(
+                                  portal_type=self.invoice_portal_type)
+    self.assertNotEquals(related_invoice, None)
+
+    line_list = related_invoice.contentValues(
+                     portal_type=self.invoice_line_portal_type)
+    self.assertEquals(1, len(line_list))
+    invoice_line = line_list[0]
+
+    self.assertEquals(resource, invoice_line.getResourceValue())
+    self.assertEquals(['size'], invoice_line.getVariationBaseCategoryList())
+    self.assertEquals(2,
+          len(invoice_line.getCellValueList(base_id='movement')))
+
+    cell_baby = invoice_line.getCell('size/Baby', base_id='movement')
+    self.assertNotEquals(cell_baby, None)
+    self.assertEquals(resource, cell_baby.getResourceValue())
+    self.assertEquals(10, cell_baby.getQuantity())
+    self.assertEquals(4, cell_baby.getPrice())
+    self.assertTrue('size/Baby' in
+                    cell_baby.getVariationCategoryList())
+    self.assertTrue(cell_baby.isMemberOf('size/Baby'))
+
+    cell_child_32 = invoice_line.getCell('size/Child/32', base_id='movement')
+    self.assertNotEquals(cell_child_32, None)
+    self.assertEquals(resource, cell_child_32.getResourceValue())
+    self.assertEquals(20, cell_child_32.getQuantity())
+    self.assertEquals(5, cell_child_32.getPrice())
+    self.assertTrue('size/Child/32' in
+                    cell_child_32.getVariationCategoryList())
+    self.assertTrue(cell_child_32.isMemberOf('size/Child/32'))
+    
+   
   def test_description_copied_on_lines(self):
     # if the order lines have different descriptions, description must be
     # copied in the simulation and on created movements
