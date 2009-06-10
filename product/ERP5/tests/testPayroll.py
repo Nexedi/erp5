@@ -58,7 +58,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
   paysheet_model_line_portal_type   = 'Pay Sheet Model Line'
   paysheet_transaction_portal_type  = 'Pay Sheet Transaction'
   paysheet_line_portal_type         = 'Pay Sheet Line'
-  payroll_service_portal_type       = 'Payroll Service'
+  service_portal_type       = 'Service'
   currency_portal_type              = 'Currency'
   person_portal_type                = 'Person'
   organisation_portal_type          = 'Organisation'
@@ -99,7 +99,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
     self.portal = self.getPortal()
     self.organisation_module = self.portal.organisation_module
     self.person_module = self.portal.person_module
-    self.payroll_service_module = self.portal.payroll_service_module
+    self.service_module = self.portal.service_module
     self.paysheet_model_module = self.portal.paysheet_model_module
     self.validateRules()
     self.createCategories()
@@ -112,7 +112,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
 
     self.login()
 
-    # creation of payroll services
+    # creation of services
     self.urssaf_id = 'sickness_insurance'
     self.labour_id = 'labour'
 
@@ -127,16 +127,16 @@ class TestPayrollMixin(ERP5ReportTestCase):
     self.salary_share_list = ['tax_category/'+self.tax_category_employee_share,]
 
 
-    self.payroll_service_organisation = self.createOrganisation(
+    self.service_organisation = self.createOrganisation(
                                           id='urssaf', title='URSSAF')
-    self.urssaf = self.createPayrollService(id=self.urssaf_id,
+    self.urssaf = self.createService(id=self.urssaf_id,
         title='State Insurance',
         product_line='state_insurance',
         variation_base_category_list=['tax_category', 'salary_range'],
         variation_category_list=self.urssaf_slice_list + \
                                 self.urssaf_share_list)
 
-    self.labour = self.createPayrollService(id=self.labour_id,
+    self.labour = self.createService(id=self.labour_id,
         title='Labour',
         product_line='labour',
         variation_base_category_list=['tax_category', 'salary_range'],
@@ -157,7 +157,7 @@ class TestPayrollMixin(ERP5ReportTestCase):
     for module in [ 'organisation_module',
                     'person_module',
                     'currency_module',
-                    'payroll_service_module',
+                    'service_module',
                     'paysheet_model_module',
                     'accounting_module']:
       folder = getattr(self.getPortal(), module, None)
@@ -292,32 +292,32 @@ class TestPayrollMixin(ERP5ReportTestCase):
     self.tic()
     return organisation
 
-  def createPayrollService(self, id='', title='',
+  def createService(self, id='', title='',
       variation_base_category_list=None,
       variation_category_list=None, product_line=None, **kw):
 
-    payroll_service_portal_type = 'Payroll Service'
-    payroll_service_module = self.portal.getDefaultModule(\
-                                    portal_type=payroll_service_portal_type)
+    service_portal_type = 'Service'
+    service_module = self.portal.getDefaultModule(\
+                                    portal_type=service_portal_type)
 
     if variation_category_list == None:
       variation_category_list=[]
     if variation_base_category_list == None:
       variation_category_list=[]
-    if hasattr(payroll_service_module, id):
-      payroll_service_module.manage_delObjects([id])
+    if hasattr(service_module, id):
+      service_module.manage_delObjects([id])
 
-    payroll_service = payroll_service_module.newContent(
+    service = service_module.newContent(
                             title=title,
-                            portal_type=self.payroll_service_portal_type,
+                            portal_type=self.service_portal_type,
                             id=id,
                             quantity_unit='time/month',
                             product_line=product_line)
-    payroll_service.setVariationBaseCategoryList(variation_base_category_list)
-    payroll_service.setVariationCategoryList(variation_category_list)
+    service.setVariationBaseCategoryList(variation_base_category_list)
+    service.setVariationCategoryList(variation_category_list)
     transaction.commit()
     self.tic()
-    return payroll_service
+    return service
 
   def createModel(self, id, title='', person_id='',
       person_title='', person_career_grade='',
@@ -945,8 +945,8 @@ class TestPayroll(TestPayrollMixin):
 
   def test_PayrollTaxesReport(self):
     eur = self.portal.currency_module.EUR
-    payroll_service = self.portal.payroll_service_module.newContent(
-                      portal_type='Payroll Service',
+    service = self.portal.service_module.newContent(
+                      portal_type='Service',
                       title='PS1',
                       variation_base_category_list=('tax_category',),
                       variation_category_list=('tax_category/employee_share',
@@ -968,10 +968,10 @@ class TestPayroll(TestPayrollMixin):
                       career_subordination_value=employer)
     provider = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
-                      title='Payroll Service Provider')
+                      title='Service Provider')
     other_provider = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
-                      title='Another Payroll Service Provider')
+                      title='Another Service Provider')
     ps1 = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',
                       title='Employee 1',
@@ -979,7 +979,7 @@ class TestPayroll(TestPayrollMixin):
                       source_section_value=employee1,
                       start_date=DateTime(2006, 1, 1),)
     line = ps1.newContent(portal_type='Pay Sheet Line',
-                   resource_value=payroll_service,
+                   resource_value=service,
                    source_section_value=provider,
                 # (destination is set by PaySheetTransaction.createPaySheetLine)
                    destination_value=employee1,
@@ -1006,7 +1006,7 @@ class TestPayroll(TestPayrollMixin):
                       source_section_value=employee2,
                       start_date=DateTime(2006, 1, 1),)
     line = ps2.newContent(portal_type='Pay Sheet Line',
-                   resource_value=payroll_service,
+                   resource_value=service,
                    source_section_value=provider,
                    destination_value=employee2,
                    variation_category_list=('tax_category/employee_share',
@@ -1025,7 +1025,7 @@ class TestPayroll(TestPayrollMixin):
     cell_employer.edit(price=-.40, quantity=3000, tax_category='employer_share')
 
     other_line = ps2.newContent(portal_type='Pay Sheet Line',
-                   resource_value=payroll_service,
+                   resource_value=service,
                    destination_value=employee2,
                    source_section_value=other_provider,
                    variation_category_list=('tax_category/employee_share',
@@ -1060,7 +1060,7 @@ class TestPayroll(TestPayrollMixin):
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
     request_form['simulation_state'] = ['draft', 'planned']
-    request_form['resource'] = payroll_service.getRelativeUrl()
+    request_form['resource'] = service.getRelativeUrl()
     request_form['mirror_section'] = provider.getRelativeUrl()
 
     report_section_list = self.getReportSectionList(
@@ -1102,8 +1102,8 @@ class TestPayroll(TestPayrollMixin):
 
   def test_PayrollTaxesReportDifferentSalaryRange(self):
     eur = self.portal.currency_module.EUR
-    payroll_service = self.portal.payroll_service_module.newContent(
-                      portal_type='Payroll Service',
+    service = self.portal.service_module.newContent(
+                      portal_type='Service',
                       title='PS1',
                       variation_base_category_list=('tax_category',
                                                     'salary_range'),
@@ -1128,10 +1128,10 @@ class TestPayroll(TestPayrollMixin):
                       career_subordination_value=employer)
     provider = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
-                      title='Payroll Service Provider')
+                      title='Service Provider')
     other_provider = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
-                      title='Another Payroll Service Provider')
+                      title='Another Service Provider')
     ps1 = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',
                       title='Employee 1',
@@ -1139,7 +1139,7 @@ class TestPayroll(TestPayrollMixin):
                       source_section_value=employee1,
                       start_date=DateTime(2006, 1, 1),)
     line = ps1.newContent(portal_type='Pay Sheet Line',
-                   resource_value=payroll_service,
+                   resource_value=service,
                    source_section_value=provider,
                 # (destination is set by PaySheetTransaction.createPaySheetLine)
                    destination_value=employee1,
@@ -1194,7 +1194,7 @@ class TestPayroll(TestPayrollMixin):
                       source_section_value=employee2,
                       start_date=DateTime(2006, 1, 1),)
     line = ps2.newContent(portal_type='Pay Sheet Line',
-                   resource_value=payroll_service,
+                   resource_value=service,
                    source_section_value=provider,
                    destination_value=employee2,
                    variation_category_list=('tax_category/employee_share',
@@ -1246,7 +1246,7 @@ class TestPayroll(TestPayrollMixin):
     request_form['at_date'] = DateTime(2006, 2, 2)
     request_form['section_category'] = 'group/demo_group'
     request_form['simulation_state'] = ['draft', 'planned']
-    request_form['resource'] = payroll_service.getRelativeUrl()
+    request_form['resource'] = service.getRelativeUrl()
     request_form['mirror_section'] = provider.getRelativeUrl()
 
     report_section_list = self.getReportSectionList(
@@ -1316,14 +1316,14 @@ class TestPayroll(TestPayrollMixin):
 
   def test_NetSalaryReport(self):
     eur = self.portal.currency_module.EUR
-    salary_service = self.portal.payroll_service_module.newContent(
-                      portal_type='Payroll Service',
+    salary_service = self.portal.service_module.newContent(
+                      portal_type='Service',
                       title='Gross Salary',
                       variation_base_category_list=('tax_category',),
                       variation_category_list=('tax_category/employee_share',
                                                'tax_category/employer_share'))
-    payroll_service = self.portal.payroll_service_module.newContent(
-                      portal_type='Payroll Service',
+    service = self.portal.service_module.newContent(
+                      portal_type='Service',
                       title='PS1',
                       variation_base_category_list=('tax_category',),
                       variation_category_list=('tax_category/employee_share',
@@ -1349,10 +1349,10 @@ class TestPayroll(TestPayrollMixin):
                                         title='Bank 2')
     provider = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
-                      title='Payroll Service Provider')
+                      title='Service Provider')
     other_provider = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
-                      title='Another Payroll Service Provider')
+                      title='Another Service Provider')
     ps1 = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',
                       title='Employee 1',
@@ -1373,7 +1373,7 @@ class TestPayroll(TestPayrollMixin):
                                                             'quantity'),)
     cell_employee.edit(price=1, quantity=2000, tax_category='employee_share')
     line = ps1.newContent(portal_type='Pay Sheet Line',
-                   resource_value=payroll_service,
+                   resource_value=service,
                    source_section_value=provider,
                    destination_value=employee1,
                    base_contribution_list=['base_amount/net_salary',],
@@ -1413,7 +1413,7 @@ class TestPayroll(TestPayrollMixin):
                                                             'quantity'),)
     cell_employee.edit(price=1, quantity=3000, tax_category='employee_share')
     line = ps2.newContent(portal_type='Pay Sheet Line',
-                   resource_value=payroll_service,
+                   resource_value=service,
                    source_section_value=provider,
                    destination_value=employee2,
                    base_contribution_list=['base_amount/net_salary',],
@@ -1471,30 +1471,30 @@ class TestPayroll(TestPayrollMixin):
             total_price=3000 + 2000 - (2000 * .5) - (3000 * .5))
 
   def test_AccountingLineGeneration(self):
-    # create payroll services
-    base_salary = self.portal.payroll_service_module.newContent(
-                          portal_type='Payroll Service',
+    # create services
+    base_salary = self.portal.service_module.newContent(
+                          portal_type='Service',
                           title='Base Salary',
                           product_line='base_salary',
                           variation_base_category_list=('tax_category',),
                           variation_category_list=('tax_category/employee_share',
                                                    'tax_category/employer_share'))
-    bonus = self.portal.payroll_service_module.newContent(
-                          portal_type='Payroll Service',
+    bonus = self.portal.service_module.newContent(
+                          portal_type='Service',
                           title='Bonus',
                           product_line='base_salary',
                           variation_base_category_list=('tax_category',),
                           variation_category_list=('tax_category/employee_share',
                                                    'tax_category/employer_share'))
-    deductions = self.portal.payroll_service_module.newContent(
-                          portal_type='Payroll Service',
+    deductions = self.portal.service_module.newContent(
+                          portal_type='Service',
                           title='Deductions',
                           product_line='base_salary',
                           variation_base_category_list=('tax_category',),
                           variation_category_list=('tax_category/employee_share',
                                                    'tax_category/employer_share'))
-    tax1 = self.portal.payroll_service_module.newContent(
-                          portal_type='Payroll Service',
+    tax1 = self.portal.service_module.newContent(
+                          portal_type='Service',
                           title='Tax1',
                           product_line='payroll_tax_1',
                           variation_base_category_list=('tax_category',),
@@ -1541,13 +1541,13 @@ class TestPayroll(TestPayrollMixin):
 
     rule.newContent(portal_type='Predicate',
                     title='Base Salary',
-                    string_index='payroll_service',
+                    string_index='service',
                     int_index=1,
                     membership_criterion_base_category_list=('product_line',),
                     membership_criterion_category_list=('product_line/base_salary',))
     rule.newContent(portal_type='Predicate',
                     title='Payroll Tax 1',
-                    string_index='payroll_service',
+                    string_index='service',
                     int_index=2,
                     membership_criterion_base_category_list=('product_line',),
                     membership_criterion_category_list=('product_line/payroll_tax_1',))
@@ -1611,7 +1611,7 @@ class TestPayroll(TestPayrollMixin):
                       career_subordination_value=employer)
     provider = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
-                      title='Payroll Service Provider')
+                      title='Service Provider')
 
     ps = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',

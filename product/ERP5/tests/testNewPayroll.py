@@ -112,34 +112,34 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
             'erp5_invoicing', 'erp5_mrp', 'erp5_bpm', 'erp5_payroll')
 
-  def createPayrollService(self):
-    module = self.portal.getDefaultModule(portal_type='Payroll Service')
-    return module.newContent(portal_type='Payroll Service')
+  def createService(self):
+    module = self.portal.getDefaultModule(portal_type='Service')
+    return module.newContent(portal_type='Service')
 
-  def stepCreateUrssafPayrollService(self, sequence=None, **kw):
-    node = self.createPayrollService()
+  def stepCreateUrssafService(self, sequence=None, **kw):
+    node = self.createService()
     node.edit(title='Urssaf',
         product_line='state_insurance', quantity_unit='time/month',
         variation_base_category_list=['tax_category', 'salary_range'],
         use='payroll/tax')
     node.setVariationCategoryList(['tax_category/employee_share',
                                    'tax_category/employer_share'])
-    sequence.edit(urssaf_payroll_service = node)
+    sequence.edit(urssaf_service = node)
 
-  def stepCreateLabourPayrollService(self, sequence=None, **kw):
-    node = self.createPayrollService()
+  def stepCreateLabourService(self, sequence=None, **kw):
+    node = self.createService()
     node.edit(title='Labour', quantity_unit='time/month',
         product_line='labour', use='payroll/base_salary')
-    sequence.edit(labour_payroll_service = node)
+    sequence.edit(labour_service = node)
 
-  def stepCreateOldAgeInsuranacePayrollService(self, sequence=None, **kw):
-    node = self.createPayrollService()
+  def stepCreateOldAgeInsuranaceService(self, sequence=None, **kw):
+    node = self.createService()
     node.edit(title='Oldage Insurance', quantity_unit='time/month',
         variation_base_category_list=['tax_category', 'salary_range'],
         product_line='state_insurance', use='payroll/tax')
     node.setVariationCategoryList(['tax_category/employee_share',
                                    'tax_category/employer_share'])
-    sequence.edit(oldage_insurance_payroll_service = node)
+    sequence.edit(oldage_insurance_service = node)
 
   def createModel(self):
     module = self.portal.getDefaultModule(portal_type='Pay Sheet Model')
@@ -205,7 +205,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                     int_index=2,
                     reference='urssaf_model_line',
                     trade_phase='trade_phase/payroll/france/urssaf',
-                    resource_value=sequence.get('urssaf_payroll_service'),
+                    resource_value=sequence.get('urssaf_service'),
                     variation_category_list=['tax_category/employee_share',
                                              'tax_category/employer_share'],
                     base_application_list=[ 'base_amount/base_salary'],
@@ -219,7 +219,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                     int_index=2,
                     reference='urssaf_model_line_2',
                     trade_phase='trade_phase/payroll/france/urssaf',
-                    resource_value=sequence.get('urssaf_payroll_service'),
+                    resource_value=sequence.get('urssaf_service'),
                     variation_category_list=['tax_category/employee_share',
                                        'tax_category/employer_share',
                                        'salary_range/france/slice_0_to_200',
@@ -236,7 +236,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                     int_index=2,
                     reference='urssaf_model_line_3',
                     trade_phase='trade_phase/payroll/france/urssaf',
-                    resource_value=sequence.get('urssaf_payroll_service'),
+                    resource_value=sequence.get('urssaf_service'),
                     variation_category_list=['tax_category/employee_share',
                                        'tax_category/employer_share',
                                        'salary_range/france/slice_200_to_400',
@@ -255,7 +255,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                     int_index=2,
                     reference='urssaf_model_line',
                     trade_phase='trade_phase/payroll/france/urssaf',
-                    resource_value=sequence.get('urssaf_payroll_service'),
+                    resource_value=sequence.get('urssaf_service'),
                     variation_category_list=['tax_category/employee_share',
                                              'tax_category/employer_share'],
                     base_application_list=[ 'base_amount/base_salary'],
@@ -401,7 +401,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                     int_index=1,
                     price=20,
                     quantity=150,
-                    resource_value=sequence.get('labour_payroll_service'),
+                    resource_value=sequence.get('labour_service'),
                     base_contribution_list=[ 'base_amount/base_salary'])
     sequence.edit(labour_paysheet_line = paysheet_line)
 
@@ -749,7 +749,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model_line.edit(title='intermediate line',
                     int_index=2,
                     trade_phase='trade_phase/payroll/france/urssaf',
-                    resource_value=sequence.get('urssaf_payroll_service'),
+                    resource_value=sequence.get('urssaf_service'),
                     reference='intermediate_line',
                     variation_category_list=['tax_category/employee_share',
                                              'tax_category/employer_share'],
@@ -767,7 +767,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model_line.edit(title='line applied on intermediate line',
                     int_index=3,
                     trade_phase='trade_phase/payroll/france/urssaf',
-                    resource_value=sequence.get('urssaf_payroll_service'),
+                    resource_value=sequence.get('urssaf_service'),
                     reference='line_applied_on_intermediate_line',
                     variation_category_list=['tax_category/employee_share',
                                              'tax_category/employer_share'],
@@ -834,7 +834,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model_line.edit(title='model line in the paysheet',
                     int_index=2,
                     trade_phase='trade_phase/payroll/france/urssaf',
-                    resource_value=sequence.get('oldage_insurance_payroll_service'),
+                    resource_value=sequence.get('oldage_insurance_service'),
                     reference='model_line_in_the_payesheet',
                     variation_category_list=['tax_category/employee_share',
                                              'tax_category/employer_share'],
@@ -954,7 +954,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     self.assertEquals([], model.checkConsistency())
 
   def stepCheckServiceConsistency(self, sequence=None, **kw):
-    service = sequence.get('urssaf_payroll_service')
+    service = sequence.get('urssaf_service')
     self.assertEquals([], service.checkConsistency())
 
 class TestNewPayroll(TestNewPayrollMixin):
@@ -968,8 +968,8 @@ class TestNewPayroll(TestNewPayrollMixin):
                Tic
   """
   COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING = """
-               CreateUrssafPayrollService
-               CreateLabourPayrollService
+               CreateUrssafService
+               CreateLabourService
                CreateEmployer
                CreateEmployee
                CreatePriceCurrency
@@ -1010,8 +1010,8 @@ class TestNewPayroll(TestNewPayrollMixin):
     '''
     sequence_list = SequenceList()
     sequence_string = """
-               CreateUrssafPayrollService
-               CreateLabourPayrollService
+               CreateUrssafService
+               CreateLabourService
                CreateEmployer
                CreateEmployee
                CreateBasicModel
@@ -1030,8 +1030,8 @@ class TestNewPayroll(TestNewPayrollMixin):
     '''
     sequence_list = SequenceList()
     sequence_string = """
-               CreateUrssafPayrollService
-               CreateLabourPayrollService
+               CreateUrssafService
+               CreateLabourService
                CreateEmployer
                CreateEmployee
                CreateBasicModel
@@ -1089,8 +1089,8 @@ class TestNewPayroll(TestNewPayrollMixin):
     '''
     sequence_list = SequenceList()
     sequence_string = """
-               CreateUrssafPayrollService
-               CreateLabourPayrollService
+               CreateUrssafService
+               CreateLabourService
                CreateEmployer
                CreateEmployee
                CreateBasicModel
@@ -1115,7 +1115,7 @@ class TestNewPayroll(TestNewPayrollMixin):
     '''
     sequence_list = SequenceList()
     sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
-               CreateOldAgeInsuranacePayrollService 
+               CreateOldAgeInsuranaceService 
                PaysheetCreateModelLine
                PaysheetModelLineCreateMovements
                CheckUpdateAggregatedAmountListReturnWithModelLineOnPaysheet
@@ -1194,8 +1194,8 @@ class TestNewPayroll(TestNewPayrollMixin):
     '''
     sequence_list = SequenceList()
     sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
-               CreateUrssafPayrollService
-               CreateLabourPayrollService
+               CreateUrssafService
+               CreateLabourService
                CreateEmployer
                CreateEmployee
                CreateModelWithSlices
@@ -1224,8 +1224,8 @@ class TestNewPayroll(TestNewPayrollMixin):
     '''
     sequence_list = SequenceList()
     sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
-               CreateUrssafPayrollService
-               CreateLabourPayrollService
+               CreateUrssafService
+               CreateLabourService
                CreateEmployer
                CreateEmployee
                CreateModelWithSlices
@@ -1254,8 +1254,8 @@ class TestNewPayroll(TestNewPayrollMixin):
     '''
     sequence_list = SequenceList()
     sequence_string = """
-               CreateUrssafPayrollService
-               CreateLabourPayrollService
+               CreateUrssafService
+               CreateLabourService
                CreateEmployer
                CreateEmployee
                CreatePriceCurrency

@@ -92,7 +92,7 @@ class TestPayroll_l10n_fr(TestPayrollMixin):
         share_list=urssaf_share_list,
         slice_list=urssaf_slice_list,
         values=[[[None, 0.8]],],
-        source_value=self.payroll_service_organisation,
+        source_value=self.service_organisation,
         base_application_list=[ 'base_amount/base_salary',],
         base_contribution_list=['base_amount/net_salary',])
     model_line_2.setIntIndex(2)
@@ -104,7 +104,7 @@ class TestPayroll_l10n_fr(TestPayrollMixin):
         share_list=urssaf_share_list,
         slice_list=urssaf_slice_list,
         values=[[[None, -0.1]],],
-        source_value=self.payroll_service_organisation,
+        source_value=self.service_organisation,
         base_application_list=[ 'base_amount/net_salary',],
         base_contribution_list=['base_amount/deductible_tax',])
     model_line_3.setIntIndex(3)
