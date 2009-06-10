@@ -12,10 +12,6 @@ Programer can get an interface in his scripts using :
 <p>
 <i>something</i> : Must be a string uniquely identifying the usage of memcached, similar to <i>CachingMethod</i>'s id parameter. This allows multiple memcached users to share the same connection to the same memcached server without overwriting other's values.
 </p>
-<form action="setServerAddress" method="POST">
-  <input type="text" name="value" value="<dtml-var expr="context.getServerAddress()">">
-  <br/>
-  <input type="submit" value="Update server address"/>
-</form>
+
 
 <dtml-var manage_page_footer>
