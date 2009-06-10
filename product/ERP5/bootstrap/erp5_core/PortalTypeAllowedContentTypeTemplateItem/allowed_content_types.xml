@@ -35,6 +35,9 @@
  <portal_type id="Domain Tool">
   <item>Base Domain</item>
  </portal_type>
+ <portal_type id="Memcached Tool">
+  <item>Memcached Plugin</item>
+ </portal_type>
  <portal_type id="Preference Tool">
   <item>Preference</item>
   <item>System Preference</item>
