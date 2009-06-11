@@ -30,7 +30,6 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.InvoiceLine import InvoiceLine
-from zLOG import LOG
 
 class PaySheetLine(InvoiceLine):
     """

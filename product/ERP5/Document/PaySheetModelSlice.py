@@ -29,7 +29,6 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.DeliveryCell import DeliveryCell
-from zLOG import LOG
 
 class PaySheetModelSlice(DeliveryCell):
     """
