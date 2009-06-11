@@ -39,6 +39,11 @@ import zope.interface
 
 class TradeModelLine(Predicate, XMLMatrix, Amount):
     """Trade Model Line is a way to represent trade transformation for movements
+
+    TODO: 
+      - make this code readable 
+      - use comments 
+      - use docstrings 
     """
     meta_type = 'ERP5 Trade Model Line'
     portal_type = 'Trade Model Line'
@@ -94,6 +99,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
       if movement_list is None:
         movement_list = []
 
+      # XXX - really unreadable - more comments please
       if len(movement_list) == 0:
         if context.getPortalType() == 'Applied Rule':
           movement_list = [context.getParentValue()]
