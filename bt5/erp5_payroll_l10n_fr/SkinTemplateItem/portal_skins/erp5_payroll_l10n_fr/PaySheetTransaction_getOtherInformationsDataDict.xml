@@ -181,11 +181,9 @@ year_to_date_gross_salary = context.PaySheetTransaction_getYearToDateBaseContrib
 \n
 year_to_date_slice_a = context.PaySheetTransaction_getYearToDateSlice(\'salary_range/france/tranche_a\')\n
 \n
-worked_hour_count = context.getWorkTimeAnnotationLineQuantity() and\\\n
-    context.getWorkTimeAnnotationLineQuantity(0)\n
+worked_hour_count = context.getWorkTimeAnnotationLineQuantity(0)\n
 year_to_date_worked_hour_count = worked_hour_count + \\\n
     context.PaySheetTransaction_getYearToDateWorkTimeSalary() or 0\n
-    \n
 \n
 over_time_small_rate = context.getAnnotationLineFromReference(reference=\'overtime_small_rate\')\n
 over_time_big_rate = context.getAnnotationLineFromReference(reference=\'overtime_big_rate\')\n
