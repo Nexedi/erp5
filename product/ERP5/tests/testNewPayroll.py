@@ -105,6 +105,8 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
             'salary_range/france/slice_200_to_400',
             'salary_range/france/slice_400_to_5000',
             'salary_range/france/slice_600_to_800',
+            'marital_status/married',
+            'marital_status/single',
            )
 
   def getBusinessTemplateList(self):
@@ -134,12 +136,21 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
 
   def stepCreateOldAgeInsuranaceService(self, sequence=None, **kw):
     node = self.createService()
-    node.edit(title='Oldage Insurance', quantity_unit='time/month',
+    node.edit(title='Old Age Insurance', quantity_unit='time/month',
         variation_base_category_list=['tax_category', 'salary_range'],
         product_line='state_insurance', use='payroll/tax')
     node.setVariationCategoryList(['tax_category/employee_share',
                                    'tax_category/employer_share'])
-    sequence.edit(oldage_insurance_service = node)
+    sequence.edit(old_age_insurance_service = node)
+
+  def stepCreateSicknessInsuranceService(self, sequence=None, **kw):
+    node = self.createService()
+    node.edit(title='Sickness Insurance', quantity_unit='time/month',
+        variation_base_category_list=['tax_category', 'salary_range'],
+        product_line='state_insurance', use='payroll/tax')
+    node.setVariationCategoryList(['tax_category/employee_share',
+                                   'tax_category/employer_share'])
+    sequence.edit(sickness_insurance_service = node)
 
   def createModel(self):
     module = self.portal.getDefaultModule(portal_type='Pay Sheet Model')
@@ -431,6 +442,22 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     paysheet = sequence.get('paysheet')
     self.checkUpdateAggregatedAmountListReturn(model, paysheet, 0, 4)
 
+  def stepCheckUpdateAggregatedAmountListReturnUsingPredicate(self,
+      sequence=None, **kw):
+    model = sequence.get('model')
+    paysheet = sequence.get('paysheet')
+    self.checkUpdateAggregatedAmountListReturn(model, paysheet, 0, 4)
+
+  def stepCheckUpdateAggregatedAmountListReturnAfterChangePredicate(self,
+      sequence=None, **kw):
+    # the marital status of the employe is change in the way that sickness
+    # insurance model_line will not be applied but old age insurance yes.
+    # So two movements will be deleted (from sickness insurance) and two should
+    # be added (from old age insurance)
+    model = sequence.get('model')
+    paysheet = sequence.get('paysheet')
+    self.checkUpdateAggregatedAmountListReturn(model, paysheet, 2, 2)
+
   def stepPaysheetApplyTransformation(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
     paysheet.applyTransformation()
@@ -447,7 +474,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
     self.assertEqual(len(paysheet_line_list), 2)
     self.assertEqual(len(paysheet.getMovementList(portal_type=\
-        'Pay Sheet Cell')), 6) # 6 because labour line contain no movement and 
+        'Pay Sheet Cell')), 6) # 6 because labour line contain no movement and
                                # because of the 3 slice and 2 tax_categories
 
   def stepCheckPaysheetLineAreCreatedUsingComplexSlices(self, sequence=None, **kw):
@@ -455,8 +482,18 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
     self.assertEqual(len(paysheet_line_list), 2)
     self.assertEqual(len(paysheet.getMovementList(portal_type=\
-        'Pay Sheet Cell')), 4) # 4 because labour line contain no movement and 
+        'Pay Sheet Cell')), 4) # 4 because labour line contain no movement and
                                # because of the 2 slice and 2 tax_categories
+
+  def stepCheckPaysheetLineAreCreatedUsingPredicate(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
+    self.assertEqual(len(paysheet_line_list), 3)
+    self.assertEqual(len(paysheet.getMovementList(portal_type=\
+        'Pay Sheet Cell')), 4) # 4 because labour line contain no movement and
+                               # because of the two lines and 2 tax_categories
+                               # (urssaf and sickness insurance. old age
+                               # insurance does not match predicate)
 
   def stepCheckPaysheetLineAmounts(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
@@ -551,6 +588,54 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         self.assertEquals(cell4.getPrice(), 0.4)
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
+      else:
+        self.fail("Unknown service for line %s" % paysheet_line.getTitle())
+
+  def stepCheckPaysheetLineAmountsUsingPredicate(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
+    for paysheet_line in paysheet_line_list:
+      service = paysheet_line.getResourceTitle()
+      if service == 'Urssaf':
+        cell1 = paysheet_line.getCell('tax_category/employee_share')
+        self.assertEquals(cell1.getQuantity(), 3000)
+        self.assertEquals(cell1.getPrice(), 0.1)
+        cell2 = paysheet_line.getCell('tax_category/employer_share')
+        self.assertEquals(cell2.getQuantity(), 3000)
+        self.assertEquals(cell2.getPrice(), 0.5)
+      elif service == 'Labour':
+        self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
+      elif service == 'Sickness Insurance':
+        cell1 = paysheet_line.getCell('tax_category/employee_share')
+        self.assertEquals(cell1.getQuantity(), 3000)
+        self.assertEquals(cell1.getPrice(), 0.4)
+        cell2 = paysheet_line.getCell('tax_category/employer_share')
+        self.assertEquals(cell2.getQuantity(), 3000)
+        self.assertEquals(cell2.getPrice(), 0.3)
+      else:
+        self.fail("Unknown service for line %s" % paysheet_line.getTitle())
+
+  def stepCheckPaysheetLineAmountsUsingAfterChanginPredicate(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
+    for paysheet_line in paysheet_line_list:
+      service = paysheet_line.getResourceTitle()
+      if service == 'Urssaf':
+        cell1 = paysheet_line.getCell('tax_category/employee_share')
+        self.assertEquals(cell1.getQuantity(), 3000)
+        self.assertEquals(cell1.getPrice(), 0.1)
+        cell2 = paysheet_line.getCell('tax_category/employer_share')
+        self.assertEquals(cell2.getQuantity(), 3000)
+        self.assertEquals(cell2.getPrice(), 0.5)
+      elif service == 'Labour':
+        self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
+      elif service == 'Old Age Insurance':
+        cell1 = paysheet_line.getCell('tax_category/employee_share')
+        self.assertEquals(cell1.getQuantity(), 3000)
+        self.assertEquals(cell1.getPrice(), 0.5)
+        cell2 = paysheet_line.getCell('tax_category/employer_share')
+        self.assertEquals(cell2.getQuantity(), 3000)
+        self.assertEquals(cell2.getPrice(), 0.8)
       else:
         self.fail("Unknown service for line %s" % paysheet_line.getTitle())
 
@@ -802,6 +887,58 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         mapped_value_property_list=('quantity', 'price'))
     cell2.edit(price=0.5, tax_category='employer_share')
 
+  def stepModelCreateOldAgeInsuranceModelLine(self, sequence=None, **kw):
+    model = sequence.get('model')
+    model_line = self.createModelLine(model)
+    model_line.edit(title='Old Age Insurance',
+                    trade_phase='trade_phase/payroll/france/urssaf',
+                    resource_value=sequence.get('old_age_insurance_service'),
+                    reference='old_age_insurance',
+                    variation_category_list=['tax_category/employee_share',
+                                             'tax_category/employer_share'],
+                    base_application_list=[ 'base_amount/base_salary'],
+                    base_contribution_list=['base_amount/deductible_tax'])
+    sequence.edit(old_age_insurance = model_line)
+
+  def stepOldAgeInsuranceModelLineCreateMovements(self, sequence=None, **kw):
+    model_line = sequence.get('old_age_insurance')
+    cell1 = model_line.newCell('tax_category/employee_share',
+        portal_type='Pay Sheet Model Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'))
+    cell1.edit(price=0.5, tax_category='employee_share')
+    cell2 = model_line.newCell('tax_category/employer_share',
+        portal_type='Pay Sheet Model Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'))
+    cell2.edit(price=0.8, tax_category='employer_share')
+
+  def stepModelCreateSicknessInsuranceModelLine(self, sequence=None, **kw):
+    model = sequence.get('model')
+    model_line = self.createModelLine(model)
+    model_line.edit(title='Sickness Insurance',
+                    trade_phase='trade_phase/payroll/france/urssaf',
+                    resource_value=sequence.get('sickness_insurance_service'),
+                    reference='sickness_insurance',
+                    variation_category_list=['tax_category/employee_share',
+                                             'tax_category/employer_share'],
+                    base_application_list=[ 'base_amount/base_salary'],
+                    base_contribution_list=['base_amount/deductible_tax'])
+    sequence.edit(sickness_insurance = model_line)
+
+  def stepSicknessInsuranceModelLineCreateMovements(self, sequence=None, **kw):
+    model_line = sequence.get('sickness_insurance')
+    cell1 = model_line.newCell('tax_category/employee_share',
+        portal_type='Pay Sheet Model Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'))
+    cell1.edit(price=0.4, tax_category='employee_share')
+    cell2 = model_line.newCell('tax_category/employer_share',
+        portal_type='Pay Sheet Model Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'))
+    cell2.edit(price=0.3, tax_category='employer_share')
+
   def stepCheckPaysheetIntermediateLines(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
 
@@ -834,7 +971,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model_line.edit(title='model line in the paysheet',
                     int_index=2,
                     trade_phase='trade_phase/payroll/france/urssaf',
-                    resource_value=sequence.get('oldage_insurance_service'),
+                    resource_value=sequence.get('old_age_insurance_service'),
                     reference='model_line_in_the_payesheet',
                     variation_category_list=['tax_category/employee_share',
                                              'tax_category/employer_share'],
@@ -887,7 +1024,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         self.assertEquals(cell2.getPrice(), 0.5)
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
-      elif service == 'Oldage Insurance':
+      elif service == 'Old Age Insurance':
         cell1 = paysheet_line.getCell('tax_category/employee_share')
         self.assertEquals(cell1.getQuantity(), 3000)
         self.assertEquals(cell1.getPrice(), 0.5)
@@ -956,6 +1093,30 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
   def stepCheckServiceConsistency(self, sequence=None, **kw):
     service = sequence.get('urssaf_service')
     self.assertEquals([], service.checkConsistency())
+
+  def stepAddPredicateOnOldAgeInsuranceModelLineForSinglePerson(self,
+      sequence=None, **kw):
+    model_line = sequence.get('old_age_insurance')
+    model_line.setMembershipCriterionBaseCategoryList(\
+        ['source_marital_status'])
+    model_line.setMembershipCriterionCategoryList(\
+        ['source_marital_status/marital_status/single'])
+
+  def stepAddPredicateOnSicknessInsuranceModelLineForMarriedPerson(self,
+      sequence=None, **kw):
+    model_line = sequence.get('sickness_insurance')
+    model_line.setMembershipCriterionBaseCategoryList(\
+        ['source_marital_status'])
+    model_line.setMembershipCriterionCategoryList(\
+        ['source_marital_status/marital_status/married'])
+
+  def stepSetMaritalStatusMarriedOnEmployee(self, sequence=None, **kw):
+    employee = sequence.get('employee')
+    employee.setMaritalStatus('married')
+
+  def stepSetMaritalStatusSingleOnEmployee(self, sequence=None, **kw):
+    employee = sequence.get('employee')
+    employee.setMaritalStatus('single')
 
 class TestNewPayroll(TestNewPayrollMixin):
 
@@ -1110,12 +1271,12 @@ class TestNewPayroll(TestNewPayrollMixin):
 
   def test_modelLineInPaysheet(self):
     '''
-      Put a Pay Sheet Model Line in Pay Sheet Transaction. This line will 
+      Put a Pay Sheet Model Line in Pay Sheet Transaction. This line will
       be like editable line
     '''
     sequence_list = SequenceList()
     sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
-               CreateOldAgeInsuranaceService 
+               CreateOldAgeInsuranaceService
                PaysheetCreateModelLine
                PaysheetModelLineCreateMovements
                CheckUpdateAggregatedAmountListReturnWithModelLineOnPaysheet
@@ -1163,7 +1324,7 @@ class TestNewPayroll(TestNewPayrollMixin):
     sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
                PaysheetCreateUrssafModelLine
                PaysheetUrssafModelLineCreateMovements
-               stepCheckUpdateAggregatedAmountListReturn
+               CheckUpdateAggregatedAmountListReturn
                PaysheetApplyTransformation
                Tic
                CheckPaysheetLineAreCreated
@@ -1172,7 +1333,7 @@ class TestNewPayroll(TestNewPayrollMixin):
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
-   
+
   def test_sourceSectionIsSetOnMovements(self):
     '''
       check that after apply transformation, source section is set on movment
@@ -1276,6 +1437,44 @@ class TestNewPayroll(TestNewPayrollMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def test_predicateOnModelLine(self):
+    '''
+      Check predicates can be used on model lines to select a line or not.
+      1 - employee have married marital status so Sickness Insurance tax
+          should be applied, and Old age insurance should not be
+      2 - employee marital status is changed to single. So after re-apply 
+          the transformation, Sickness Insurance tax sould not be
+          applied (and it's movements should be removed) but Old age insurance
+          should be applied (and two movements should be created).
+    '''
+    sequence_list = SequenceList()
+    sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
+               CreateOldAgeInsuranaceService
+               ModelCreateOldAgeInsuranceModelLine
+               OldAgeInsuranceModelLineCreateMovements
+               AddPredicateOnOldAgeInsuranceModelLineForSinglePerson
+               CreateSicknessInsuranceService
+               ModelCreateSicknessInsuranceModelLine
+               SicknessInsuranceModelLineCreateMovements
+               AddPredicateOnSicknessInsuranceModelLineForMarriedPerson
+               SetMaritalStatusMarriedOnEmployee
+               CheckUpdateAggregatedAmountListReturnUsingPredicate
+               PaysheetApplyTransformation
+               Tic
+               CheckPaysheetLineAreCreatedUsingPredicate
+               CheckPaysheetLineAmountsUsingPredicate
+               CheckUpdateAggregatedAmountListReturnNothing
+               CheckPaysheetLineAmountsUsingPredicate
+               SetMaritalStatusSingleOnEmployee
+               CheckUpdateAggregatedAmountListReturnAfterChangePredicate
+               PaysheetApplyTransformation
+               Tic
+               CheckPaysheetLineAreCreatedUsingPredicate
+               CheckPaysheetLineAmountsUsingAfterChanginPredicate
+               CheckUpdateAggregatedAmountListReturnNothing
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
 import unittest
 def test_suite():
