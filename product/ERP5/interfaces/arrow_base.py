@@ -29,44 +29,18 @@
 
 from zope.interface import Interface
 
-class IBusinessBuildable(Interface):
-  """Business Buildable interface specification
+class IArrowBase(Interface):
+  """Arrow Base interface specification
 
-  TODO:
-    - is isFrozen useful ? is it the same as isCompleted ?
-    - why isFrozen is here and not in Completable
+  Defines methods to get the list of base categories
+  which define the source and destination of an Arrow
   """
-  def isBuildable(explanation):
-    """Returns True if any of the related Simulation Movement
-    is buildable and if the predecessor state is completed.
-
-    'explanation' is the Order or Item or Document which is the
-    cause of a root applied rule in the simulation
+  def getSourceArrowBaseCategoryList():
+    """Returns all categories which are used to define the source
+    of this Arrow
     """
 
-  def isPartiallyBuildable(explanation):
-    """Returns True if any of the related Simulation Movement
-    is buildable and if the predecessor state is partially completed.
-
-    'explanation' is the Order or Item or Document which is the
-    cause of a root applied rule in the simulation
-    """
-
-  def isFrozen(explanation):
-    """Returns True if all related movements in the simulation
-    are frozen
-
-    'explanation' is the Order or Item or Document which is the
-    cause of a root applied rule in the simulation
-
-    XXX - could be redundant with isBuildable
-    (isFrozen = not isBuildable ?)
-    """
-
-  def build(explanation):
-    """Builds all related movements in the simulation
-    using the builders of Business Path
-
-    'explanation' is the Order or Item or Document which is the
-    cause of a root applied rule in the simulation
+  def getDestinationArrowBaseCategoryList():
+    """Returns all categories which are used to define the destination
+    of this Arrow
     """

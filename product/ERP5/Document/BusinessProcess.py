@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -34,11 +35,16 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Path import Path
 
+import zope.interface
+
 class BusinessProcess(Path, XMLObject):
   """
     The BusinessProcess class is a container class which is used
     to describe business processes in the area of trade, payroll
     and production.
+
+    TODO:
+      - finish interface implementation
   """
   meta_type = 'ERP5 Business Process'
   portal_type = 'Business Process'
@@ -58,6 +64,10 @@ class BusinessProcess(Path, XMLObject):
                     , PropertySheet.Arrow
                     , PropertySheet.BusinessProcess
                     )
+
+  # Declarative interfaces
+  zope.interface.implements(interfaces.IBusinessProcess,
+                            interfaces.IArrowBase)
 
   # Access to path and states of the business process
   security.declareProtected(Permissions.AccessContentsInformation, 'getPathValueList')
@@ -180,10 +190,10 @@ class BusinessProcess(Path, XMLObject):
     for path in self.getBuildablePathValueList(explanation):
       path.build(explanation)
 
-  def isStartDateReferential(self):
+  def isStartDateReferential(self): # XXX - not in interface
     return self.getReferentialDate() == 'start_date'
 
-  def isStopDateReferential(self):
+  def isStopDateReferential(self): # XXX - not in interface
     return self.getReferentialDate() == 'stop_date'
 
   def getTradePhaseList(self):

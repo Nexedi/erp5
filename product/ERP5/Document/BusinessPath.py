@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -39,39 +40,27 @@ import zope.interface
 class BusinessPath(Path):
   """
     The BusinessPath class embeds all information related to 
-    lead times and parties involved at a give phase of a business
+    lead times and parties involved at a given phase of a business
     process.
 
-    BusinessPath are also used as helper to build buildable movements.
-    Here is the typical code of an alarm:
-   
-    Approach 1: explanation per explanation
-      builder = portal_deliveries.default_order_builder
-      for path in builder.getSpecialiseRelatedValueList() # or wharever category
-        for explanation in portal_catalog(buildable=1, portal_type='Order'):
-          path.build(explanation)
+    BusinessPath are also used as helper to build deliveries from
+    buildable movements. Here is the typical code of an alarm
+    in charge of the building process.
 
-      Pros: easy explanation based approach
-      Cons: buildable column added in delivery table
-            reexpand of a finished order might generate remaining buildable
+    The idea is to invoke isBuildable() on the collected simulation
+    movements (which are orphan) during build "after select" process
 
-    Approach 2: isBuildable is indexed for SimulationMovements
-      isBuildable() method is added to SimulationMovement
-
-      Pros: global select is possible
-      Cons: reindex of simulation is required
-            slow indexing
-
-    Approach 3: isBuildable is invoked during build "after select" process
       builder = portal_deliveries.default_order_builder
       for path in builder.getSpecialiseRelatedValueList() # or wharever category
         builder.build(causality_uid=path.getUid(),) # Select movemenents
 
-      Pros: global select is possible
-      Cons: global select retrieves long lists
-            slow build
+      Pros: global select is possible by not providing a causality_uid
+      Cons: global select retrieves long lists of orphan movements which 
+              are not yet buildable
+            the build process could be rather slow or require activities
 
-     Method 3 is best
+    TODO:
+      - finish build process implementation
   """
   meta_type = 'ERP5 Business Path'
   portal_type = 'Business Path'
@@ -95,16 +84,20 @@ class BusinessPath(Path):
 
   # Declarative interfaces
   zope.interface.implements(interfaces.ICategoryAccessProvider,
-                            interfaces.IArrow)
+                            interfaces.IArrowBase,
+                            interfaces.IBusinessPath,
+                            interfaces.IBusinessBuildable,
+                            interfaces.IBusinessCompletable
+                            )
 
-  # IBusinessPath Interface
+  # IArrowBase implementation
   security.declareProtected(Permissions.AccessContentsInformation, 'getSourceBaseCategoryList')
   def getSourceBaseCategoryList(self):
     """
       Returns all categories which are used to define the source
       of this Arrow
     """
-    # Naive implementation - we must use category groups instead
+    # Naive implementation - we must use category groups instead - XXX
     return ('source', 'source_section', 'source_payment', 'source_project', )
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getDestinationBaseCategoryList')
@@ -113,7 +106,7 @@ class BusinessPath(Path):
       Returns all categories which are used to define the destination
       of this Arrow
     """
-    # Naive implementation - we must use category groups instead
+    # Naive implementation - we must use category groups instead - XXX
     return ('destination', 'destination_section', 'destination_payment', 'destination_project', )
 
   # ICategoryAccessProvider overriden methods
@@ -172,7 +165,7 @@ class BusinessPath(Path):
       return method(context)
     return []
 
-  # Core API
+  # IBusinessBuildable implementation
   def isBuildable(self, explanation):
     """
     """
@@ -192,13 +185,24 @@ class BusinessPath(Path):
       Not sure if this will exist some day XXX
     """
 
-  def _getRelatedSimulationMovementList(self, explanation):
+  def build(self, explanation):
+    """
+      Build
+    """
+    builder_list = self.getBuilderList() # Missing method
+    for builder in builder_list:
+      builder.build(causality_uid=self.getUid()) # This is one way of doing
+      builder.build(movement_relative_url_list=
+        self._getRelatedSimulationMovementList(explanation)) # Another way
+
+  def _getRelatedSimulationMovementList(self, explanation): # XXX - What API ?
     """
       
     """
     return self.getCausalityRelatedValueList(portal_type='Simulation Movement',
                                              explanation_uid=explanation.getUid())
 
+  # IBusinessCompletable implementation
   def isCompleted(self, explanation):
     """
       Looks at all simulation related movements
@@ -234,17 +238,7 @@ class BusinessPath(Path):
         return False
     return True
 
-  def build(self, explanation):
-    """
-      Build
-    """
-    builder_list = self.getBuilderList() # Missing method
-    for builder in builder_list:
-      builder.build(causality_uid=self.getUid()) # This is one way of doing
-      builder.build(movement_relative_url_list=
-        self._getRelatedSimulationMovementList(explanation)) # Another way
-
-  # Date calculation
+  # IBusinessPath implementation
   def getExpectedStartDate(self, explanation, predecessor_date=None, *args, **kwargs):
     """
       Returns the expected start date for this

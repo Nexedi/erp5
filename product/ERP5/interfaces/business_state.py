@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -30,4 +31,7 @@ from Products.ERP5.interfaces.business_completable import IBusinessCompletable
 
 class IBusinessState(IBusinessCompletable):
   """Business State interface specification
+  
+  TODO:
+    - add methods if any or remove if nothing specific to Business State
   """

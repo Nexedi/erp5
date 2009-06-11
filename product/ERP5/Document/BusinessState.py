@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -33,11 +34,13 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 
+import zope.interface
+
 class BusinessState(XMLObject):
   """
-    The BusinessProcess class is a container class which is used
-    to describe business processes in the area of trade, payroll
-    and production.
+    The BusinessState class defines the various states in 
+    a Business Process. It defines the synchronisation milestones
+    between movements related to the trade phases of business.
   """
   meta_type = 'ERP5 Business State'
   portal_type = 'Business State'
@@ -55,7 +58,11 @@ class BusinessState(XMLObject):
                     , PropertySheet.Comment
                     )
 
-  # Core API
+  # Declarative interfaces
+  zope.interface.implements(interfaces.IBusinessState
+                            )
+
+  # IBusinessCompletable implementation
   def isCompleted(self, explanation):
     """
       If all path which reach this state are completed
@@ -77,7 +84,7 @@ class BusinessState(XMLObject):
         return False
     return True
 
-  # Duration calculation
+  # IBusinessCompletable - duration calculation
   def getExpectedCompletionDate(self, explanation, *args, **kwargs):
     """
       Returns the expected completion date for this
