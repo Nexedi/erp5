@@ -90,15 +90,23 @@ base_id = \'movement\'\n
 for line in kw.get(\'listbox\'):\n
 \n
   if line.has_key(\'listbox_key\') and (line[\'title\'] or line[\'reference\'] not in (\'\', None)):\n
-\n
-    module = context.getDefaultModule(item_portal_type)\n
-    item = module.newContent(portal_type=item_portal_type,\n
-      title=line[\'title\'],\n
-      reference=line[\'reference\'],\n
-      quantity=line[\'quantity\'],\n
-      quantity_unit=context.getQuantityUnit(),\n
-      **item_property_dict)\n
-    item.validate()\n
+    item = context.portal_catalog.getResultValue(\n
+                                    portal_type=\'Item\',\n
+                                    reference=line[\'reference\'])\n
+    if item is not None:\n
+      msg = translateString("Reference Defined On Line ${line_id} already exists",\n
+                                                    mapping={\'line_id\': line[\'listbox_key\']})\n
+      raise NotImplementedError(\n
+          msg)\n
+    else:\n
+      module = context.getDefaultModule(item_portal_type)\n
+      item = module.newContent(portal_type=item_portal_type,\n
+       title=line[\'title\'],\n
+       reference=line[\'reference\'],\n
+       quantity=line[\'quantity\'],\n
+       quantity_unit=context.getQuantityUnit(),\n
+       **item_property_dict)\n
+      item.validate()\n
     \n
     line_variation_category_list = []\n
     for variation in (\n
@@ -224,9 +232,11 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>base_id</string>
                             <string>line</string>
                             <string>None</string>
+                            <string>item</string>
+                            <string>msg</string>
+                            <string>NotImplementedError</string>
                             <string>module</string>
                             <string>_apply_</string>
-                            <string>item</string>
                             <string>line_variation_category_list</string>
                             <string>variation</string>
                             <string>cell_found</string>
@@ -237,7 +247,6 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>movement</string>
                             <string>quantity</string>
                             <string>len</string>
-                            <string>NotImplementedError</string>
                             <string>_inplacevar_</string>
                           </tuple>
                         </value>

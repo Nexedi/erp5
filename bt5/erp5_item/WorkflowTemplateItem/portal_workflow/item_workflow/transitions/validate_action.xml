@@ -45,7 +45,7 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>checkConsistency</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
