@@ -95,7 +95,7 @@ if not employee_obj.getMaritalStatusId():\n
   return redirect(\'The employee must have a marital status\')\n
 \n
 context.applyTransformation()\n
-msg = Base_translateString(\'Lines created\')\n
+msg = Base_translateString(\'Pay sheet lines created.\')\n
 return context.Base_redirect(\'view\',\n
                             keep_items=dict(portal_status_message=msg))\n
 </string> </value>

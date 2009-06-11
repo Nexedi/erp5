@@ -114,7 +114,7 @@ paysheet.edit(**new_category_dict)\n
 if not batch_mode:\n
   return context.Base_redirect(form_id,\n
                    keep_items=dict(portal_status_message=\\\n
-                       Base_translateString(\'Pay Sheet Transaction updated.\')))\n
+                       Base_translateString(\'Pay sheet transaction updated.\')))\n
 
 
 ]]></string> </value>
