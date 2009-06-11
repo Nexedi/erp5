@@ -1,4 +1,4 @@
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -31,10 +31,14 @@
 # simple interface which have to be implemented on TradeModelLine,
 # Transformation, Pay Sheet Model, etc
 from zope.interface import Interface
+
 class ITransformation(Interface):
   """
     Common Interface to implementing quering of Indirect Amount
     Models (TaxModelLine, InvoiceModelLine) shall be based on this interface
+
+    TODO:
+      - define parameters precisely for each method
   """
 
   def getAggregatedAmountList(context):

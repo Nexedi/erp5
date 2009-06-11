@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -26,7 +27,7 @@
 #
 ##############################################################################
 
-from Interface import Interface
+from zope.interface import Interface
 
 class IVariated(Interface):
   """
