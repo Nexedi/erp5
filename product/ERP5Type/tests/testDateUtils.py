@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
@@ -52,8 +53,7 @@ ZopeTestCase.installProduct('ERP5Type')
 
 
 from DateTime import DateTime
-from Products.ERP5Type.DateUtils import addToDate
-from Products.ERP5Type.DateUtils import getIntervalListBetweenDates
+from Products.ERP5Type.DateUtils import addToDate, getIntervalListBetweenDates, atTheEndOfPeriod
 
 class TestDateUtils(unittest.TestCase):
   """
@@ -159,6 +159,13 @@ class TestDateUtils(unittest.TestCase):
         self.assertEqual(date, '2008-11-02')
       elif index == 11:
         self.assertEqual(date, '2008-11-03')
+
+  def test_atTheEndOfPeriod(self):
+    date = DateTime('2008/01/01 00:00:00 UTC')
+    self.assertEqual(atTheEndOfPeriod(date, 'year').pCommonZ(), 'Jan. 1, 2009 12:00 am Universal')
+    self.assertEqual(atTheEndOfPeriod(date, 'month').pCommonZ(), 'Feb. 1, 2008 12:00 am Universal')
+    self.assertEqual(atTheEndOfPeriod(date, 'week').pCommonZ(), 'Jan. 7, 2008 12:00 am Universal')
+    self.assertEqual(atTheEndOfPeriod(date, 'day').pCommonZ(), 'Jan. 2, 2008 12:00 am Universal')
 
 def test_suite():
   suite = unittest.TestSuite()
