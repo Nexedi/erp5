@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -31,6 +32,7 @@ import warnings
 from AccessControl import ModuleSecurityInfo
 from DateTime import DateTime
 from datetime import datetime
+from string import zfill
 from zLOG import LOG
 
 security = ModuleSecurityInfo('Products.ERP5Type.DateUtils')
@@ -501,16 +503,20 @@ def atTheEndOfPeriod(date, period):
   2000/01/15, month => 2000/02/01
   2000/01/18, week => 2000/01/24
   2000/01/20, day => 2000/01/21
+  If timezone is Universal, strftime('%Z') return empty string
+  and TimeZone is replaced by local zone, 
+  so date formating is manualy rendered.
+  XXXSunday is hardcoded
   """
   if period == 'year':
-    end = addToDate(DateTime(date.strftime('%Y/01/01 00:00:00')), **{period:1})
+    end = addToDate(DateTime('%s/01/01 00:00:00 %s' % (date.year(), date.timezone())), **{period:1})
   elif period == 'month':
-    end = addToDate(DateTime(date.strftime('%Y/%m/01 00:00:00')), **{period:1})
+    end = addToDate(DateTime('%s/%s/01 00:00:00 %s' % (date.year(), zfill(date.month(), 2), date.timezone())), **{period:1})
   elif period == 'day':
-    end = addToDate(DateTime(date.strftime('%Y/%m/%d 00:00:00')), **{period:1})
+    end = addToDate(DateTime('%s/%s/%s 00:00:00 %s' % (date.year(), zfill(date.month(), 2), zfill(date.day(), 2), date.timezone())), **{period:1})
   elif period == 'week':
     day_of_week = date.strftime('%A')
-    end = DateTime(date.strftime('%Y/%m/%d 00:00:00'))
+    end = DateTime('%s/%s/%s 00:00:00 %s' % (date.year(), zfill(date.month(), 2), zfill(date.day(), 2), date.timezone()))
     while day_of_week != 'Sunday':
       end = addToDate(end, day=1)
       day_of_week = end.strftime('%A')
