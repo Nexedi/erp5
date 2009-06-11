@@ -27,7 +27,7 @@ from BTrees.Length import Length
 from Shared.DC.ZRDB.TM import TM
 
 from Acquisition import aq_parent, aq_inner, aq_base
-from zLOG import LOG, WARNING, INFO, TRACE
+from zLOG import LOG, WARNING, INFO, TRACE, ERROR
 from ZODB.POSException import ConflictError
 from Products.PythonScripts.Utility import allow_class
 
@@ -1321,7 +1321,7 @@ class Catalog(Folder,
         uid = object.uid
         if uid in assigned_uid_dict:
           object.uid = self.newUid()
-          LOG('SQLCatalog', WARNING,
+          LOG('SQLCatalog', ERROR,
               'uid of %r changed from %r to %r as old one is assigned to %r !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, object.uid, assigned_uid_dict[uid]))
           uid = object.uid
 
@@ -1336,7 +1336,7 @@ class Catalog(Folder,
             raise CatalogError, 'A negative uid %d is used for %s. Your catalog is broken. Recreate your catalog.' % (index, path)
           if uid != index or isinstance(uid, int):
             # We want to make sure that uid becomes long if it is an int
-            LOG('SQLCatalog', WARNING, 'uid of %r changed from %r (property) to %r (catalog, by path) !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, index))
+            LOG('SQLCatalog', ERROR, 'uid of %r changed from %r (property) to %r (catalog, by path) !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, index))
             uid = index
             object.uid = uid
         else:
@@ -1373,10 +1373,10 @@ class Catalog(Folder,
             # An uid conflict happened... Why?
             # can be due to path length
             if len(path) > MAX_PATH_LEN:
-              LOG('SQLCatalog', WARNING, 'path of object %r is too long for catalog. You should use a shorter path.' %(object,))
+              LOG('SQLCatalog', ERROR, 'path of object %r is too long for catalog. You should use a shorter path.' %(object,))
 
             object.uid = self.newUid()
-            LOG('SQLCatalog', WARNING,
+            LOG('SQLCatalog', ERROR,
                 'uid of %r changed from %r to %r as old one is assigned to %s in catalog !!! This can be fatal. You should reindex the whole site immediately.' % (object, uid, object.uid, catalog_path))
             uid = object.uid
 
