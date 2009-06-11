@@ -458,6 +458,12 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     paysheet = sequence.get('paysheet')
     self.checkUpdateAggregatedAmountListReturn(model, paysheet, 2, 2)
 
+  def stepCheckUpdateAggregatedAmountListReturnAfterRemoveLine(self,
+      sequence=None, **kw):
+    model = sequence.get('model')
+    paysheet = sequence.get('paysheet')
+    self.checkUpdateAggregatedAmountListReturn(model, paysheet, 2, 0)
+
   def stepPaysheetApplyTransformation(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
     paysheet.applyTransformation()
@@ -468,6 +474,13 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     self.assertEqual(len(paysheet_line_list), 2)
     self.assertEqual(len(paysheet.getMovementList(portal_type=\
         'Pay Sheet Cell')), 2) # 2 because labour line contain no movement
+
+  def stepCheckThereIsOnlyOnePaysheetLine(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
+    self.assertEqual(len(paysheet_line_list), 1)
+    self.assertEqual(len(paysheet.getMovementList(portal_type=\
+        'Pay Sheet Cell')), 0) # 0 because labour line contain no movement
 
   def stepCheckPaysheetLineAreCreatedUsingSlices(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
@@ -485,7 +498,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         'Pay Sheet Cell')), 4) # 4 because labour line contain no movement and
                                # because of the 2 slice and 2 tax_categories
 
-  def stepCheckPaysheetLineAreCreatedUsingPredicate(self, sequence=None, **kw):
+  def stepCheckPaysheetLineAreCreatedUsingWith3Lines(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
     paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
     self.assertEqual(len(paysheet_line_list), 3)
@@ -591,7 +604,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
       else:
         self.fail("Unknown service for line %s" % paysheet_line.getTitle())
 
-  def stepCheckPaysheetLineAmountsUsingPredicate(self, sequence=None, **kw):
+  def stepCheckPaysheetLineAmountsWithSicknessInsuranceAndUrssaf(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
     paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
     for paysheet_line in paysheet_line_list:
@@ -615,7 +628,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
       else:
         self.fail("Unknown service for line %s" % paysheet_line.getTitle())
 
-  def stepCheckPaysheetLineAmountsUsingAfterChanginPredicate(self, sequence=None, **kw):
+  def stepCheckPaysheetLineAmountsWithOldAgeInsuranceAndUrssaf(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
     paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
     for paysheet_line in paysheet_line_list:
@@ -1046,6 +1059,11 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     self.assertNotEquals(cell_2, None)
     cell_2.edit(price=0.6)
 
+  def stepModelDelUrssafModelLine(self, sequence=None, **kw):
+    model_line = sequence.get('urssaf_model_line')
+    model = sequence.get('model')
+    model.manage_delObjects(model_line.getId())
+
   def stepCheckPaysheetLineNewAmountsAfterUpdate(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
     paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
@@ -1059,6 +1077,16 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         self.assertEquals(cell2.getQuantity(), 3000)
         self.assertEquals(cell2.getPrice(), 0.6)
       elif service == 'Labour':
+        self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
+      else:
+        self.fail("Unknown service for line %s" % paysheet_line.getTitle())
+
+  def stepCheckPaysheetLineLabourAmountOnly(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
+    for paysheet_line in paysheet_line_list:
+      service = paysheet_line.getResourceTitle()
+      if service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       else:
         self.fail("Unknown service for line %s" % paysheet_line.getTitle())
@@ -1289,7 +1317,7 @@ class TestNewPayroll(TestNewPayrollMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_updateMovements(self):
+  def test_updateModifyMovements(self):
     '''
       Calculate the paySheet using a model, modify one value in the model and
       check that updateAggregatedAmount return nothing but modifed movements
@@ -1311,6 +1339,60 @@ class TestNewPayroll(TestNewPayrollMixin):
                CheckPaysheetLineNewAmountsAfterUpdate
                CheckUpdateAggregatedAmountListReturnNothing
                CheckPaysheetLineNewAmountsAfterUpdate
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_updateAddMovements(self):
+    '''
+      Calculate the paySheet using a model, add a model line in the model 
+      and check that updateAggregatedAmount add the movements corresponding
+      to this model_line
+    '''
+    sequence_list = SequenceList()
+    sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
+               CheckUpdateAggregatedAmountListReturn
+               PaysheetApplyTransformation
+               Tic
+               CheckPaysheetLineAreCreated
+               CheckPaysheetLineAmounts
+               CheckUpdateAggregatedAmountListReturnNothing
+               CreateSicknessInsuranceService
+               ModelCreateSicknessInsuranceModelLine
+               SicknessInsuranceModelLineCreateMovements
+               CheckUpdateAggregatedAmountListReturn
+               PaysheetApplyTransformation
+               Tic
+               CheckPaysheetLineAreCreatedUsingWith3Lines
+               CheckPaysheetLineAmountsWithSicknessInsuranceAndUrssaf
+               CheckUpdateAggregatedAmountListReturnNothing
+               CheckPaysheetLineAmountsWithSicknessInsuranceAndUrssaf
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_updateRemoveMovements(self):
+    '''
+      Calculate the paySheet using a model, delete a model line in the model 
+      and check that updateAggregatedAmount remove the movements corresponding
+      to this model_line
+    '''
+    sequence_list = SequenceList()
+    sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
+               CheckUpdateAggregatedAmountListReturn
+               PaysheetApplyTransformation
+               Tic
+               CheckPaysheetLineAreCreated
+               CheckPaysheetLineAmounts
+               CheckUpdateAggregatedAmountListReturnNothing
+               ModelDelUrssafModelLine
+               CheckUpdateAggregatedAmountListReturnAfterRemoveLine
+               PaysheetApplyTransformation
+               Tic
+               CheckThereIsOnlyOnePaysheetLine
+               CheckPaysheetLineLabourAmountOnly
+               CheckUpdateAggregatedAmountListReturnNothing
+               CheckPaysheetLineLabourAmountOnly
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -1461,16 +1543,16 @@ class TestNewPayroll(TestNewPayrollMixin):
                CheckUpdateAggregatedAmountListReturnUsingPredicate
                PaysheetApplyTransformation
                Tic
-               CheckPaysheetLineAreCreatedUsingPredicate
-               CheckPaysheetLineAmountsUsingPredicate
+               CheckPaysheetLineAreCreatedUsingWith3Lines
+               CheckPaysheetLineAmountsWithSicknessInsuranceAndUrssaf
                CheckUpdateAggregatedAmountListReturnNothing
-               CheckPaysheetLineAmountsUsingPredicate
+               CheckPaysheetLineAmountsWithSicknessInsuranceAndUrssaf
                SetMaritalStatusSingleOnEmployee
                CheckUpdateAggregatedAmountListReturnAfterChangePredicate
                PaysheetApplyTransformation
                Tic
-               CheckPaysheetLineAreCreatedUsingPredicate
-               CheckPaysheetLineAmountsUsingAfterChanginPredicate
+               CheckPaysheetLineAreCreatedUsingWith3Lines
+               CheckPaysheetLineAmountsWithOldAgeInsuranceAndUrssaf
                CheckUpdateAggregatedAmountListReturnNothing
     """
     sequence_list.addSequenceString(sequence_string)
