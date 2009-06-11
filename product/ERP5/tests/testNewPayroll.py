@@ -213,7 +213,6 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model = sequence.get('model')
     model_line = self.createModelLine(model)
     model_line.edit(title='Urssaf',
-                    int_index=2,
                     reference='urssaf_model_line',
                     trade_phase='trade_phase/payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_service'),
@@ -227,7 +226,6 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model = sequence.get('model')
     model_line = self.createModelLine(model)
     model_line.edit(title='Urssaf',
-                    int_index=2,
                     reference='urssaf_model_line_2',
                     trade_phase='trade_phase/payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_service'),
@@ -244,7 +242,6 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model = sequence.get('model')
     model_line = self.createModelLine(model)
     model_line.edit(title='Urssaf',
-                    int_index=2,
                     reference='urssaf_model_line_3',
                     trade_phase='trade_phase/payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_service'),
@@ -263,7 +260,6 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     paysheet = sequence.get('paysheet')
     model_line = self.createModelLine(paysheet)
     model_line.edit(title='Urssaf',
-                    int_index=2,
                     reference='urssaf_model_line',
                     trade_phase='trade_phase/payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_service'),
@@ -409,7 +405,6 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     paysheet = sequence.get('paysheet')
     paysheet_line = self.createPaysheetLine(paysheet)
     paysheet_line.edit(title='Labour',
-                    int_index=1,
                     price=20,
                     quantity=150,
                     resource_value=sequence.get('labour_service'),
@@ -845,7 +840,6 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model = sequence.get('model')
     model_line = self.createModelLine(model)
     model_line.edit(title='intermediate line',
-                    int_index=2,
                     trade_phase='trade_phase/payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_service'),
                     reference='intermediate_line',
@@ -863,7 +857,6 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model = sequence.get('model')
     model_line = self.createModelLine(model)
     model_line.edit(title='line applied on intermediate line',
-                    int_index=3,
                     trade_phase='trade_phase/payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_service'),
                     reference='line_applied_on_intermediate_line',
@@ -982,7 +975,6 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     paysheet = sequence.get('paysheet')
     model_line = self.createModelLine(paysheet)
     model_line.edit(title='model line in the paysheet',
-                    int_index=2,
                     trade_phase='trade_phase/payroll/france/urssaf',
                     resource_value=sequence.get('old_age_insurance_service'),
                     reference='model_line_in_the_payesheet',
