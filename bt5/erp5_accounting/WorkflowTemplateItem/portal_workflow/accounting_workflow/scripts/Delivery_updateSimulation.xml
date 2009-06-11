@@ -53,22 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>delivery = state_change[\'object\']\n
-\n
-path_and_method_id = (delivery.getPath(), (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))\n
-expand_tag = delivery.getPath() + \'_updateAppliedRule\'\n
-\n
-priority = 3\n
-\n
-activate_kw = { \n
-  \'tag\': expand_tag,\n
-  \'priority\': priority,\n
-}\n
-delivery.activate(\n
-    after_path_and_method_id=path_and_method_id,\n
-    tag=expand_tag,\n
-    priority=priority,\n
-    ).Delivery_updateAppliedRule(activate_kw=activate_kw)\n
+            <value> <string>state_change[\'object\'].Delivery_updateSimulation()\n
 </string> </value>
         </item>
         <item>
@@ -106,13 +91,8 @@ delivery.activate(\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>delivery</string>
                             <string>_getattr_</string>
-                            <string>path_and_method_id</string>
-                            <string>expand_tag</string>
-                            <string>priority</string>
-                            <string>activate_kw</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
