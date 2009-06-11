@@ -31,7 +31,6 @@ import unittest
 import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
 
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -2152,12 +2151,30 @@ class TestBPMTestCases(TestBPMMixin):
         self.PACKING_LIST_SPLIT_INVOICE_BUILD_SEQUENCE_STRING)
     sequence_list.play(self)
 
-  def test_getAggregatedAmountListWithComplexModelLinesCreateInGoodOrder(self):
+  def test_getAggregatedAmountListWithComplexModelLinesCreateInEasyOrder(self):
     """
     Test the return of getAggregatedAmountList in the case of many model lines
     depending each others. In this test, lines are created in the order of the
     dependancies (it means that if a line A depend of a line B, line B is
     created before A). This is the most easy case.
+
+    Dependance tree :
+    ModelLineTaxContributingToTotalTax : A
+    ModelLineDiscountContributingToTotalDiscount : B
+    ModelLineTaxContributingToTotalTax2 : C
+    ModelLineTotalTax : D
+    ModelLineTotalDiscount : E
+
+                              D       E
+                               \     /
+                                \   /
+                                 \ /
+                                  C      B
+                                   \    /
+                                    \  /
+                                     \/
+                                      A
+    Model line creation order : E, D, C, B, A
     """
     sequence_list = SequenceList()
     sequence_string = self.COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
@@ -2205,6 +2222,24 @@ class TestBPMTestCases(TestBPMMixin):
     line B, line A can be created before line B). getAggregatedAmountList
     should be able to handle this case and redo calculation unill all
     dependancies are satified
+
+    Dependance tree :
+    ModelLineTaxContributingToTotalTax : A
+    ModelLineDiscountContributingToTotalDiscount : B
+    ModelLineTaxContributingToTotalTax2 : C
+    ModelLineTotalTax : D
+    ModelLineTotalDiscount : E
+
+                              D       E
+                               \     /
+                                \   /
+                                 \ /
+                                  C      B
+                                   \    /
+                                    \  /
+                                     \/
+                                      A
+    Model line creation order : A, C, D, B, E
     """
     sequence_list = SequenceList()
     sequence_string = self.COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
