@@ -41,6 +41,7 @@ from Products.ERP5.Document.Predicate import Predicate
 
 from Products.CMFCategory.Renderer import Renderer
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
+import zope.interface
 
 from zLOG import LOG, WARNING
 
@@ -80,9 +81,10 @@ class Transformation(XMLObject, Predicate, Variated):
                       )
 
     # Declarative interfaces
-    __implements__ = ( interfaces.IVariated
-                     , interfaces.ITransformation
-    )
+    zope.interface.implements(interfaces.IVariated, 
+                              interfaces.ITransformation
+                              )
+
 
 
     security.declareProtected(Permissions.AccessContentsInformation,
