@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002-2003 Nexedi SARL and Contributors. All Rights Reserved.
@@ -49,6 +50,7 @@ from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD, TRIGGER_USE
 
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import PropertySheet
+from Products.ERP5Type import interfaces
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
@@ -83,6 +85,8 @@ import random
 
 import inspect
 from pprint import pformat
+
+import zope.interface
 
 from ZODB.POSException import ConflictError
 from zLOG import LOG, INFO, ERROR, WARNING
@@ -778,6 +782,11 @@ class Base( CopyContainer,
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base, )
+
+  # Declarative interfaces
+  zope.interface.implements(interfaces.ICategoryAccessProvider,
+                            interfaces.IValueAccessProvider,
+                            )
 
   # We want to use a default property view
   manage_propertiesForm = DTMLFile( 'dtml/properties', _dtmldir )
@@ -2411,7 +2420,7 @@ class Base( CopyContainer,
     return self.getId()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'Title' )
-  Title = getTitleOrId
+  Title = getTitleOrId # Why ???
 
   # CMF Compatibility
   security.declareProtected(Permissions.AccessContentsInformation, 'title_or_id' )
