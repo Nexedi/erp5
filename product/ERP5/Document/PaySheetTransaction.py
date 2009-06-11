@@ -29,8 +29,6 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Invoice import Invoice
-from Products.ERP5Type.Utils import cartesianProduct
-from zLOG import LOG, DEBUG, INFO
 
 #XXX TODO: review naming of new methods
 #XXX WARNING: current API naming may change although model should be stable.
@@ -157,7 +155,7 @@ class PaySheetTransaction(Invoice):
   security.declareProtected(Permissions.ModifyPortalContent,
                             'applyTransformation')
   def applyTransformation(self):
-    '''use a delivery builder to create all the paysheet lines using 
+    '''use a delivery builder to create all the paysheet lines using
       movements return by updateAggregatedAmountList
     '''
     portal = self.getPortalObject()
@@ -166,6 +164,9 @@ class PaySheetTransaction(Invoice):
     for movement in movement_dict['movement_to_delete_list']:
       parent = movement.getParentValue()
       parent.manage_delObjects(movement.getId())
+      if len(parent.contentValues(portal_type='Pay Sheet Cell')) == 0:
+        # the line contain no movements, remove it
+        self.manage_delObjects(parent.getId())
     business_process_list = paysheet_model.findSpecialiseValueList(\
         context=paysheet_model,
         portal_type_list=['Business Process'])
