@@ -227,7 +227,7 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
             start_date=new_mvmt.getStartDate()))
           if source_exchange_ratio is not None:
             new_mvmt.setSourceTotalAssetPrice(round(
-       (source_exchange_ratio*applied_rule.getParentValue().getTotalPrice()),
+       source_exchange_ratio*applied_rule.getParentValue().getTotalPrice(),
             precision))
       
     # Pass to base class
