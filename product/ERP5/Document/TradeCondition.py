@@ -241,7 +241,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
     def getCell(self, *kw , **kwd):
       '''
       Overload the function getCell to be able to search a cell on the
-      inheritance model tree
+      inheritance model tree if the cell is not found on current one.
       '''
       cell = XMLMatrix.getCell(self, *kw, **kwd)
       # if cell not found, look on the inherited models
@@ -263,10 +263,9 @@ class TradeCondition(Path, Transformation, XMLMatrix):
     security.declareProtected(Permissions.AccessContentsInformation,
         'getReferenceDict')
     def getReferenceDict(self, portal_type_list, property_list=None):
-      '''Return all objects reference and id of the model wich portal_type is in
-      the portal_type_list. If type does not have a reference, it's ID is used.
-      If property_list is provided, only objects for which at least one of
-      properties is true will be added.
+      '''Return a dict containing all id's of the objects contained in
+      this model and correponding to the given portal_type. The key of the dict
+      are the reference (or id if no reference)
       '''
       if property_list is None:
         property_list=[]
@@ -286,7 +285,10 @@ class TradeCondition(Path, Transformation, XMLMatrix):
     security.declareProtected(Permissions.AccessContentsInformation,
         'findEffectiveSpecialiseValueList')
     def findEffectiveSpecialiseValueList(self, start_date=None, stop_date=None):
-      '''Return a list of effective models
+      '''Returns a list of effective specialised objects representing 
+      inheritance tree.
+      An effective object is an object wich start and stop_date are equal (or
+      included) to the range of the given start and stop_date.
       '''
       model_list = self.findSpecialiseValueList(self)
       if start_date is None and stop_date is None:
@@ -300,10 +302,10 @@ class TradeCondition(Path, Transformation, XMLMatrix):
     def getInheritanceReferenceDict(self, portal_type_list,
         property_list=None):
       '''Returns a dict with the model url as key and a list of reference as
-      value. Normaly, a Reference appear only one time in the final output.
+      value. A Reference can appear only one time in the final output.
       It uses Breadth First Search.
-      If property_list is not empty, documents for which all properties in
-      property_list are false will be skipped.
+      If property_list is not empty, documents which don't have any of theses
+      properties will be skipped.
       '''
       if property_list is None:
         property_list=[]
@@ -318,7 +320,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
           if reference not in reference_list:
             reference_list.append(reference)
             id_list.append(model_reference_list[reference])
-        if id_list != []:
+        if len(id_list) != 0:
           model_reference_dict[model.getRelativeUrl()]=id_list
       return model_reference_dict
 
@@ -327,6 +329,9 @@ class TradeCondition(Path, Transformation, XMLMatrix):
     def getEffectiveModel(self, start_date=None, stop_date=None):
       '''return the more appropriate model using effective_date, expiration_date
       and version number
+      An effective model is a model wich start and stop_date are equal (or
+      included) to the range of the given start and stop_date and with the
+      higher version number (if there is more than one)
       '''
       reference = self.getReference()
       if not reference:
