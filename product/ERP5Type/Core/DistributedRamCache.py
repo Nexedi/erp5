@@ -41,8 +41,8 @@ class DistributedRamCache(XMLObject):
   the Distributed RAM Cache real cache plugin object.
   """
 
-  meta_type='ERP5 Distributed Ram Cache'
-  portal_type='Distributed Ram Cache'
+  meta_type = 'ERP5 Distributed Ram Cache'
+  portal_type = 'Distributed Ram Cache'
   isPortalContent = 1
   isRADContent = 1
 
