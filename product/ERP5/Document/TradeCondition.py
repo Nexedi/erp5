@@ -140,9 +140,9 @@ class TradeCondition(Path, Transformation, XMLMatrix):
         if specialise in visited_trade_condition_list:
           raise CircularException
         visited_trade_condition_list.append(specialise)
-        specialise_value_list.extend(self.findSpecialiseValueList(context=specialise,
-          portal_type_list=portal_type_list,
-          visited_trade_condition_list=visited_trade_condition_list))
+        specialise_value_list.extend(self.findSpecialiseValueList(\
+            context=specialise, portal_type_list=portal_type_list,
+            visited_trade_condition_list=visited_trade_condition_list))
       return specialise_value_list
 
     security.declareProtected(Permissions.AccessContentsInformation,
