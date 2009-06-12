@@ -131,6 +131,17 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         tmp_movement_list = tmp_movement_list[:1]
         update = 1
       else:
+        common_params = {
+                'causality':self.getRelativeUrl(),
+                'resource':self.getResource(),
+                'reference':self.getReference(),
+                'base_application_list':base_application_list,
+                'base_contribution_list':self.getBaseContributionList(),
+                'start_date':context.getStartDate(),
+                'stop_date':context.getStopDate(),
+                'create_line':self.isCreateLine(),
+                'trade_phase_list':self.getTradePhaseList(),
+            }
         update = 0
         base_category_list = self.getVariationBaseCategoryList()
         category_list_list = []
@@ -151,30 +162,18 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
             tmp_movement.edit(
                 variation_base_category_list = cell.getVariationBaseCategoryList(),
                 variation_category_list = cell.getVariationCategoryList(),
-                causality = self.getRelativeUrl(),
-                resource = self.getResource(),
-                reference = self.getReference(),
-                base_application_list = base_application_list,
-                base_contribution_list = self.getBaseContributionList(),
                 price = cell.getPrice(),
                 quantity = cell.getQuantity(0.0),
-                create_line = self.isCreateLine(),
-                trade_phase_list = self.getTradePhaseList(),
+                **common_params
                 )
             tmp_movement_list.append(tmp_movement)
         else:
           tmp_movement = newTempSimulationMovement(self.getPortalObject(),
               self_id )
           tmp_movement.edit(
-            causality = self.getRelativeUrl(),
-            resource = self.getResource(),
-            reference = self.getReference(),
-            base_application_list = base_application_list,
-            base_contribution_list = self.getBaseContributionList(),
             quantity = self.getQuantity(0.0),
             price = self.getPrice(),
-            create_line = self.isCreateLine(),
-            trade_phase_list = self.getTradePhaseList(),
+            **common_params
           )
           tmp_movement_list.append(tmp_movement)
       modified = 0
