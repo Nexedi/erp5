@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import zope.interface
 from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
@@ -62,8 +61,6 @@ class OrderLine(DeliveryLine):
                       , PropertySheet.ItemAggregation
                       )
 
-    # Declarative interfaces
-    zope.interface.implements( interfaces.IVariated, )
 
     def applyToOrderLineRelatedMovement(self, portal_type='Simulation Movement', 
                                         method_id = 'expand'):

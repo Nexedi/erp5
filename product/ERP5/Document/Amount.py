@@ -62,7 +62,8 @@ class Amount(Base, Variated):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IVariated,)
+  zope.interface.implements(interfaces.IVariated,
+                            interfaces.IAmount)
 
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem

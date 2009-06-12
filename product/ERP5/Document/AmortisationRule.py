@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import zope.interface
 from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
 from copy import deepcopy
@@ -58,9 +57,6 @@ class AmortisationRule(Rule):
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
     
-    zope.interface.implements( interfaces.IPredicate,
-                       interfaces.IRule )
-
     # Default Properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject

@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.TradeModelLine import TradeModelLine
@@ -50,9 +49,6 @@ class PaySheetModelLine(TradeModelLine):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements( interfaces.IVariated, )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

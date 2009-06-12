@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.Rule import Rule
@@ -52,9 +51,6 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  zope.interface.implements( interfaces.IPredicate,
-                     interfaces.IRule )
 
   # Default Properties
   property_sheets = ( PropertySheet.Base

@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import zope.interface
 import re, socket, sys
 from DateTime import DateTime
 from operator import add
@@ -651,9 +650,6 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
                     , PropertySheet.Periodicity
                     , PropertySheet.Snapshot
                     )
-
-  # Declarative interfaces
-  zope.interface.implements()
 
   searchable_property_list = ('asText', 'title', 'description', 'id', 'reference',
                               'version', 'short_title',

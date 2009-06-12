@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.XMLMatrix import XMLMatrix
@@ -51,10 +50,6 @@ class SupplyLine(DeliveryLine, Path):
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Declarative interfaces
-    zope.interface.implements( interfaces.IVariated,
-                       interfaces.IPredicate )
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base

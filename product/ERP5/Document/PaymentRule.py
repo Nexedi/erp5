@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import zope.interface
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 from Products.CMFCore.utils import getToolByName
@@ -51,9 +50,6 @@ class PaymentRule(Rule):
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    zope.interface.implements( interfaces.IPredicate,
-                       interfaces.IRule )
 
     # Default Properties
     property_sheets = ( PropertySheet.Base

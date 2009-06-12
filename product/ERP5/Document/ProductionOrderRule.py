@@ -48,9 +48,6 @@ class ProductionOrderRule(TransformationRuleMixin, OrderRule):
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    __implements = ( interfaces.IPredicate,
-                     interfaces.IRule )
-
     # Default Properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject

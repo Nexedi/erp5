@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.AccountingTransactionLine import AccountingTransactionLine
@@ -56,6 +55,4 @@ class PaySheetTransactionLine(AccountingTransactionLine):
                     , PropertySheet.Arrow
                     )
 
-  # Declarative interfaces
-  zope.interface.implements( )
 

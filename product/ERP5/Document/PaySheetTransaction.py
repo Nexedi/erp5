@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import zope.interface
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
@@ -64,8 +63,6 @@ class PaySheetTransaction(Invoice):
                     , PropertySheet.DefaultAnnotationLine
                     )
 
-  # Declarative Interface
-  zope.interface.implements( )
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getRatioQuantityFromReference')

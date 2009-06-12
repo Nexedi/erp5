@@ -78,10 +78,7 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
                       )
 
     # Declarative interfaces
-    zope.interface.implements( interfaces.IVariated
-                     , interfaces.ITransformation
-    )
-
+    zope.interface.implements( interfaces.ITransformation )
 
     ### Variation matrix definition
     #

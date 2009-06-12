@@ -27,8 +27,6 @@
 #
 ##############################################################################
 
-import zope.interface
-
 import re, types
 from DateTime import DateTime
 from Globals import get_request
@@ -135,9 +133,6 @@ class EmailDocument(File, TextDocument):
                     , PropertySheet.EmailHeader
                     , PropertySheet.Reference
                     )
-
-  # Declarative interfaces
-  zope.interface.implements()
 
   # Searchable Text - at least search the body message
   #                 - later: search attachments too

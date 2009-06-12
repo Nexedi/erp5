@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import zope.interface
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
@@ -43,9 +42,6 @@ class TaxLine(DeliveryLine):
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Declarative interfaces
-    zope.interface.implements( interfaces.IVariated, )
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base

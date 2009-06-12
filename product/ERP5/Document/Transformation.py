@@ -42,7 +42,6 @@ from Products.ERP5.Document.Predicate import Predicate
 
 from Products.CMFCategory.Renderer import Renderer
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
-import zope.interface
 
 from zLOG import LOG, WARNING
 

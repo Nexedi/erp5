@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import zope.interface
 from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
@@ -57,9 +56,6 @@ class ProductionReportLine(DeliveryLine):
                     , PropertySheet.VariationRange
                     , PropertySheet.ItemAggregation
                     )
-
-  # Declarative interfaces
-  zope.interface.implements( )
 
   security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent')
   def newCellContent(self, id, portal_type='Production Report Cell', **kw):

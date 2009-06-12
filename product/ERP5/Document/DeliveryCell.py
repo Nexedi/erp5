@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-import zope.interface
 from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
@@ -56,9 +55,6 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Declarative interfaces
-    zope.interface.implements( interfaces.IVariated, )
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base

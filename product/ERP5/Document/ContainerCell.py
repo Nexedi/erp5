@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-import zope.interface
 from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
@@ -50,9 +49,6 @@ class ContainerCell(DeliveryCell):
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Declarative interfaces
-    zope.interface.implements( interfaces.IVariated, )
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base

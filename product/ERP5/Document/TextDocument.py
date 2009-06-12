@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import zope.interface
 from AccessControl.ZopeGuards import guarded_getattr
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG, WARNING
@@ -91,9 +90,6 @@ class TextDocument(Document, TextContent):
                       , PropertySheet.Url
                       , PropertySheet.TextDocument
                       )
-
-    # Declarative interfaces
-    zope.interface.implements()
 
     # Explicit inheritance
     security.declareProtected(Permissions.ModifyPortalContent, 'PUT')

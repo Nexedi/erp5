@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import zope.interface
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
@@ -100,9 +99,6 @@ class SimulationMovement(Movement):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements( interfaces.IVariated, )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

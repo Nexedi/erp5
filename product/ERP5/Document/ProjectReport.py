@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 
@@ -65,7 +64,4 @@ class ProjectReport(Delivery):
                        PropertySheet.CategoryCore,
                        PropertySheet.Task,
                       )
-
-    # Declarative Interface
-    zope.interface.implements( )
 

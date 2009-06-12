@@ -26,8 +26,6 @@
 #
 ##############################################################################
 
-import zope.interface
-
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 
@@ -52,9 +50,6 @@ class InventoryLine(DeliveryLine):
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Declarative interfaces
-    zope.interface.implements( interfaces.IVariated, )
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base

@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import zope.interface
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
@@ -65,8 +64,6 @@ class GeographicAddress(Coordinate, Base):
                       , PropertySheet.GeographicAddress
                       )
 
-    # Declarative interfaces
-    zope.interface.implements( interfaces.ICoordinate, )
 
     security.declareProtected(Permissions.AccessContentsInformation, 'asText')
     def asText(self):

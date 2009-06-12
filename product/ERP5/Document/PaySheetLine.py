@@ -49,9 +49,6 @@ class PaySheetLine(InvoiceLine):
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative interfaces
-    __implements__ = ( interfaces.IVariated, )
-
     # Declarative properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject
