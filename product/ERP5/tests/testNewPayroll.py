@@ -395,7 +395,9 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                   specialise_value=sequence.get('model'),
                   source_section_value=sequence.get('employee'),
                   destination_section_value=sequence.get('employer'),
-                  resource_value=sequence.get('price_currency'))
+                  resource_value=sequence.get('price_currency'),
+                  start_date=DateTime(),
+                  stop_date=DateTime()+1)
     sequence.edit(paysheet = paysheet)
 
   def createPaysheetLine(self, document, **kw):
@@ -1102,8 +1104,6 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
 
   def stepCheckPaysheetConsistency(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
-    paysheet.edit(start_date=DateTime(),
-                  stop_date=DateTime()+1)
     self.assertEquals([], paysheet.checkConsistency())
 
   def stepCheckModelConsistency(self, sequence=None, **kw):
