@@ -69,6 +69,7 @@
                 <string>right (Layout)</string>
                 <string>center (Description)</string>
                 <string>bottom (Subsections)</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -89,6 +90,14 @@
                     <value>
                       <list>
                         <string>my_description</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_modification_date</string>
                       </list>
                     </value>
                 </item>

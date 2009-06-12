@@ -13,18 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>editable</string>
                 <string>title</string>
-                <string>lines</string>
-                <string>columns</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
-                <string>list_action</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>listbox_modification_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -80,66 +76,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>portal_type</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Modification Date</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewWebFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>lines</string> </key>
-                    <value> <int>10</int> </value>
-                </item>
-                <item>
-                    <key> <string>list_action</string> </key>
-                    <value> <string>Folder_viewContentList</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_types</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Web Section</string>
-                          <string>Web Section</string>
-                        </tuple>
-                        <tuple>
-                          <string>Web Container</string>
-                          <string>Web Container</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>site_content_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -147,7 +93,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Contents</string> </value>
+                    <value> <string>Modification Date</string> </value>
                 </item>
               </dictionary>
             </value>

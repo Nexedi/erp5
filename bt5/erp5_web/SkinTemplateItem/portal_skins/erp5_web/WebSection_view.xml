@@ -56,6 +56,7 @@
                 <string>right (Layout)</string>
                 <string>center (Description)</string>
                 <string>bottom (Subsections)</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -80,6 +81,14 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_modification_date</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>left (Content)</string> </key>
                     <value>
                       <list>
@@ -93,8 +102,6 @@
                         <string>my_authorization_forced</string>
                         <string>my_site_map_document_parent</string>
                         <string>my_site_map_section_parent</string>
-                        <string>listbox_creation_date</string>
-                        <string>listbox_modification_date</string>
                       </list>
                     </value>
                 </item>

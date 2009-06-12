@@ -13,12 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable_columns</string>
-                <string>title</string>
                 <string>columns</string>
-                <string>default_params</string>
+                <string>editable_columns</string>
                 <string>lines</string>
                 <string>list_action</string>
+                <string>portal_types</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -84,6 +86,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
+                        <tuple>
                           <string>id</string>
                           <string>ID</string>
                         </tuple>
@@ -92,24 +98,14 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>portal_type</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                        <tuple>
                           <string>modification_date</string>
                           <string>Modification Date</string>
                         </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>default_params</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
                 <item>
@@ -142,6 +138,32 @@
                 <item>
                     <key> <string>list_action</string> </key>
                     <value> <string>Folder_viewContentList</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Web Section</string>
+                          <string>Web Section</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>section_content_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

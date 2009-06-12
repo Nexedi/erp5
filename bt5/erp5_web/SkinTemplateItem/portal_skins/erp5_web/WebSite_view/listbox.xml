@@ -13,12 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>lines</string>
                 <string>columns</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
+                <string>editable_columns</string>
+                <string>lines</string>
                 <string>list_action</string>
+                <string>portal_types</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -84,6 +86,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
+                        <tuple>
                           <string>id</string>
                           <string>ID</string>
                         </tuple>
@@ -92,9 +98,20 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>portal_type</string>
-                          <string>Type</string>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
                         <tuple>
                           <string>creation_date</string>
                           <string>Creation Date</string>
@@ -140,6 +157,17 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>site_content_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
