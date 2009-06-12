@@ -134,6 +134,15 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         product_line='labour', use='payroll/base_salary')
     sequence.edit(labour_service = node)
 
+  def stepCreateBonusService(self, sequence=None, **kw):
+    node = self.createService()
+    node.edit(title='Bonus', quantity_unit='time/month',
+        variation_base_category_list=['tax_category'],
+        product_line='labour', use='payroll/base_salary')
+    node.setVariationCategoryList(['tax_category/employee_share',
+                                   'tax_category/employer_share'])
+    sequence.edit(bonus_service = node)
+
   def stepCreateOldAgeInsuranaceService(self, sequence=None, **kw):
     node = self.createService()
     node.edit(title='Old Age Insurance', quantity_unit='time/month',
@@ -413,6 +422,29 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                     base_contribution_list=[ 'base_amount/base_salary'])
     sequence.edit(labour_paysheet_line = paysheet_line)
 
+  def stepPaysheetCreateBonusPaySheetLine(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    paysheet_line = self.createPaysheetLine(paysheet)
+    paysheet_line.edit(title='Bonus',
+                    resource_value=sequence.get('bonus_service'),
+                    variation_category_list=['tax_category/employee_share',
+                                             'tax_category/employer_share'],
+                    base_contribution_list=[ 'base_amount/base_salary'])
+    sequence.edit(bonus_paysheet_line = paysheet_line)
+
+  def stepPaysheetCreateBonusPaySheetLineMovements(self, sequence=None, **kw):
+    paysheet_line = sequence.get('bonus_paysheet_line')
+    cell1 = paysheet_line.newCell('tax_category/employee_share',
+        portal_type='Pay Sheet Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'))
+    cell1.edit(quantity=1000, price=1, tax_category='employee_share')
+    cell2 = paysheet_line.newCell('tax_category/employer_share',
+        portal_type='Pay Sheet Cell',
+        base_id='movement',
+        mapped_value_property_list=('quantity', 'price'))
+    cell2.edit(quantity=1000, price=1, tax_category='employer_share')
+
   def checkUpdateAggregatedAmountListReturn(self, model, paysheet,
       expected_movement_to_delete_count, expected_movement_to_add_count):
     movement_dict = model.updateAggregatedAmountList(context=paysheet)
@@ -472,6 +504,14 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     self.assertEqual(len(paysheet.getMovementList(portal_type=\
         'Pay Sheet Cell')), 2) # 2 because labour line contain no movement
 
+  def stepCheckPaysheetLineAreCreatedUsingBonus(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
+    self.assertEqual(len(paysheet_line_list), 3)
+    self.assertEqual(len(paysheet.getMovementList(portal_type=\
+        'Pay Sheet Cell')), 4) # 4 because labour line contain no movement
+                               # 2 for bonus, and 2 for urssaf
+
   def stepCheckThereIsOnlyOnePaysheetLine(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
     paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
@@ -519,6 +559,28 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         self.assertEquals(cell2.getPrice(), 0.5)
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
+      else:
+        self.fail("Unknown service for line %s" % paysheet_line.getTitle())
+
+  def stepCheckPaysheetLineWithBonusAmounts(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
+    for paysheet_line in paysheet_line_list:
+      service = paysheet_line.getResourceTitle()
+      if service == 'Urssaf':
+        cell1 = paysheet_line.getCell('tax_category/employee_share')
+        self.assertEquals(cell1.getQuantity(), 4000)
+        self.assertEquals(cell1.getPrice(), 0.1)
+        cell2 = paysheet_line.getCell('tax_category/employer_share')
+        self.assertEquals(cell2.getQuantity(), 4000)
+        self.assertEquals(cell2.getPrice(), 0.5)
+      elif service == 'Labour':
+        self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
+      elif service == 'Bonus':
+        cell1 = paysheet_line.getCell('tax_category/employee_share')
+        self.assertEquals(cell1.getTotalPrice(), 1000)
+        cell2 = paysheet_line.getCell('tax_category/employer_share')
+        self.assertEquals(cell2.getTotalPrice(), 1000)
       else:
         self.fail("Unknown service for line %s" % paysheet_line.getTitle())
 
@@ -1546,6 +1608,29 @@ class TestNewPayroll(TestNewPayrollMixin):
                CheckPaysheetLineAreCreatedUsingWith3Lines
                CheckPaysheetLineAmountsWithOldAgeInsuranceAndUrssaf
                CheckUpdateAggregatedAmountListReturnNothing
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_paySheetCalculationWithBonus(self):
+    '''
+      add one more line in the paysheet that will not be hour count and rate
+      (like the salary) but just a normal amount. Check applyTransformation 
+      method result. It should create new movements applied on the slary + the
+      bonnus
+    '''
+    sequence_list = SequenceList()
+    sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
+               CreateBonusService
+               PaysheetCreateBonusPaySheetLine
+               PaysheetCreateBonusPaySheetLineMovements
+               CheckUpdateAggregatedAmountListReturn
+               PaysheetApplyTransformation
+               Tic
+               CheckPaysheetLineAreCreatedUsingBonus
+               CheckPaysheetLineWithBonusAmounts
+               CheckUpdateAggregatedAmountListReturnNothing
+               CheckPaysheetLineWithBonusAmounts
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
