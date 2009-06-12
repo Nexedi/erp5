@@ -13,8 +13,17 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>display_width</string>
+                <string>external_validator</string>
+                <string>title</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>delegated_message_list</string> </key>
+            <value>
+              <list>
+                <string>external_validator_failed</string>
               </list>
             </value>
         </item>
@@ -28,7 +37,7 @@
               <dictionary>
                 <item>
                     <key> <string>external_validator_failed</string> </key>
-                    <value> <string>The input failed the external validator.</string> </value>
+                    <value> <string>The input failed the external validator because the reference already exists</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -80,6 +89,12 @@
                     <value> <int>20</int> </value>
                 </item>
                 <item>
+                    <key> <string>external_validator</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_string_field</string> </value>
                 </item>
@@ -97,6 +112,22 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>DeliveryLine_validateItemCreationDialogReference</string> </value>
         </item>
       </dictionary>
     </pickle>
