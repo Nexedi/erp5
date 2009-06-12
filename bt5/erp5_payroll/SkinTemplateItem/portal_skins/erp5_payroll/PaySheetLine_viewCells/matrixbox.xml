@@ -13,13 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>cell_base_id</string>
                 <string>cell_portal_type</string>
-                <string>lines</string>
                 <string>columns</string>
-                <string>tabs</string>
                 <string>editable_attributes</string>
+                <string>lines</string>
+                <string>tabs</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -132,6 +132,10 @@
                         <tuple>
                           <string>total_price</string>
                           <string>Total Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>variation_category_list</string>
+                          <string>variation_category_list</string>
                         </tuple>
                       </list>
                     </value>
