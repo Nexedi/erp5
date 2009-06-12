@@ -70,11 +70,11 @@ def redirect(msg):\n
 if not paysheet.getPriceCurrency():\n
   return redirect(\'Currency must be defined\')\n
 \n
-#if not paysheet.getStartDate():\n
-#  return redirect(\'Work Period Start must be defined\')\n
-#\n
-#if not paysheet.getStopDate():\n
-#  return redirect(\'Work Period End must be defined\')\n
+if not paysheet.getStartDate():\n
+  return redirect(\'Work Period Start must be defined\')\n
+\n
+if not paysheet.getStopDate():\n
+  return redirect(\'Work Period End must be defined\')\n
 \n
 if not employee:\n
   return redirect(\'The employee must be defined\')\n
@@ -95,7 +95,7 @@ if not employee_obj.getMaritalStatusId():\n
   return redirect(\'The employee must have a marital status\')\n
 \n
 context.applyTransformation()\n
-msg = Base_translateString(\'Pay sheet lines created.\')\n
+msg = Base_translateString(\'Pay sheet lines updated.\')\n
 return context.Base_redirect(\'view\',\n
                             keep_items=dict(portal_status_message=msg))\n
 </string> </value>
