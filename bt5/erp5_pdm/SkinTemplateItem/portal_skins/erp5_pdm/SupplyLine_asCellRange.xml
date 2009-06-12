@@ -67,7 +67,7 @@ if option_variation==1:\n
   # Get option base category list\n
   add_predicate = 0\n
   no_option_base_category_list = context.getVariationRangeBaseCategoryList(\n
-                                                 omit_option_base_category=1)\n
+                                                 omit_optional_variation=1)\n
   base_category_list = context.getVariationRangeBaseCategoryList()\n
   option_base_category_list = [x for x in base_category_list \\\n
                                if x not in no_option_base_category_list]\n

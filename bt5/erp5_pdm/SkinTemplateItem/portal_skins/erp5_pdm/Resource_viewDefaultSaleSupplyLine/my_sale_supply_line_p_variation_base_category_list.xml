@@ -135,7 +135,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getVariationBaseCategoryItemList(omit_option_base_category=1)</string> </value>
+            <value> <string>python: here.getVariationBaseCategoryItemList(omit_optional_variation=1)</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -151,7 +151,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getVariationBaseCategoryItemList(omit_option_base_category=1)</string> </value>
+            <value> <string>python: here.getVariationBaseCategoryItemList(omit_optional_variation=1)</string> </value>
         </item>
       </dictionary>
     </pickle>

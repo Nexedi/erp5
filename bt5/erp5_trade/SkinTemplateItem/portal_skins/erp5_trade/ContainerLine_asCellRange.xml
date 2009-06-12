@@ -58,7 +58,7 @@
 resource = context.getResourceValue()\n
 cell_range = []\n
 if resource is not None:\n
-  base_category_list = resource.getVariationBaseCategoryList(omit_option_base_category=1)\n
+  base_category_list = resource.getVariationBaseCategoryList(omit_optional_variation=1)\n
 \n
   for base_category in base_category_list:\n
     if matrixbox == 1:\n

@@ -128,7 +128,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getVariationRangeBaseCategoryItemList(omit_option_base_category=1)</string> </value>
+            <value> <string>python: here.getVariationRangeBaseCategoryItemList(omit_optional_variation=1)</string> </value>
         </item>
       </dictionary>
     </pickle>
