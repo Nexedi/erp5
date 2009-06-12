@@ -60,7 +60,7 @@ class EmploymentContract(SubscriptionItem):
 
   def assertMovementExists(self, applied_rule, start_date):
     """
-      a movment exist if there is already a movement with the same 
+      a movment exist if there is already a movement with the same
       start_date and stop_date
     """
     movement_id = 'movement_%s_%s' % (start_date.year(), start_date.month())
@@ -69,7 +69,7 @@ class EmploymentContract(SubscriptionItem):
   def expandOpenOrderRule(self, applied_rule, force=0, **kw):
     """
       Expand tries to find all applicable supply path and all
-      applicable transformations. 
+      applicable transformations.
     """
     number_of_months_in_year = 12
 

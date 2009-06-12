@@ -40,10 +40,10 @@ import zope.interface
 class TradeModelLine(Predicate, XMLMatrix, Amount):
     """Trade Model Line is a way to represent trade transformation for movements
 
-    TODO: 
-      - make this code readable 
-      - use comments 
-      - use docstrings 
+    TODO:
+      - make this code readable
+      - use comments
+      - use docstrings
     """
     meta_type = 'ERP5 Trade Model Line'
     portal_type = 'Trade Model Line'
@@ -53,9 +53,9 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative interfaces
-    # interfaces.IVariated - as soon as interfaces.IVariated will be zope3
     zope.interface.implements(
-        interfaces.ITransformation
+        interfaces.ITransformation,
+        interfaces.IVariated
     )
 
     # Declarative properties
@@ -182,13 +182,13 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
             self.getQuantity(None) is None or \
             len(self.getVariationCategoryList()) and \
             tmp_movement.getQuantity(None) is None:
-          # if the quantity is not defined, that mean we should search on 
+          # if the quantity is not defined, that mean we should search on
           # all movements with correponding base_amount (if we use cells, we
           # have to look on cells, if we don't, look on self)
           for movement in movement_list:
             if set(base_application_list)\
                 .intersection(set(movement.getBaseContributionList())):
-              # if the movement have no variation category, it's the same as 
+              # if the movement have no variation category, it's the same as
               # if he have all variation categories
               if len(movement.getVariationCategoryList()) == 0 or \
                   set(movement.getVariationCategoryList()).intersection(\
