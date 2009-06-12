@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type.XMLObject import XMLObject
@@ -50,7 +51,7 @@ class PropertyDivergenceTester(XMLObject):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = ( interfaces.IDivergenceTester, )
+  zope.interface.implements( interfaces.IDivergenceTester, )
 
   # Declarative properties
   property_sheets = (   PropertySheet.Base

@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
@@ -59,7 +60,7 @@ class InternetProtocolAddress(Base, Coordinate):
                       )
 
   # Declarative interfaces
-  __implements__ = ( interfaces.ICoordinate, )
+  zope.interface.implements( interfaces.ICoordinate, )
 
   def asText(self):
     """

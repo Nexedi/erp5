@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from warnings import warn
 from AccessControl import ClassSecurityInfo
 
@@ -183,7 +184,7 @@ class Movement(XMLObject, Amount):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = ( interfaces.IVariated, )
+  zope.interface.implements( interfaces.IVariated, )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

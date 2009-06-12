@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type.DivergenceMessage import DivergenceMessage
@@ -50,7 +51,7 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = ( interfaces.IDivergenceTester, )
+  zope.interface.implements( interfaces.IDivergenceTester, )
 
 
   # Declarative properties

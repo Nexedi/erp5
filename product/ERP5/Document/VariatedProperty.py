@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
@@ -65,7 +66,7 @@ class VariatedProperty(XMLObject, XMLMatrix):
                       )
 
     # Declarative interfaces
-    __implements__ = ( interfaces.IVariated, )
+    zope.interface.implements( interfaces.IVariated, )
 
     security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
     def newCellContent(self, id, portal_type='Set Mapped Value', **kw):

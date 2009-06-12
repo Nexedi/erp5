@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+import zope.interface
+
 import mimetypes
 import re
 
@@ -106,7 +108,7 @@ class File(Document, CMFFile, ConversionCacheMixin):
                               'subject', 'source_reference', 'source_project_title',)
 
   # Declarative interfaces
-  #__implements__ = ( , )
+  #zope.interface.implements( , )
 
   ### Special edit method
   security.declarePrivate( '_edit' )

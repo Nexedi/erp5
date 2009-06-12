@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
@@ -68,7 +69,7 @@ class BankAccount(Folder, Coordinate, MetaNode):
                       )
 
     # Declarative interfaces
-    __implements__ = ( interfaces.ICoordinate, )
+    zope.interface.implements( interfaces.ICoordinate, )
 
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getReference')

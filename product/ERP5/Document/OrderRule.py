@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+import zope.interface
+
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.Rule import Rule
@@ -48,7 +50,7 @@ class OrderRule(DeliveryRule):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
   
-  __implements__ = ( interfaces.IPredicate,
+  zope.interface.implements( interfaces.IPredicate,
                      interfaces.IRule )
 
   # Default Properties

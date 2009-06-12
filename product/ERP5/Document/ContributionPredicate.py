@@ -25,6 +25,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+import zope.interface
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from Products.ERP5.Document.Predicate import Predicate
@@ -48,7 +49,7 @@ class ContributionPredicate(Predicate, XMLObject):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  __implements__ = (interfaces.IPredicate,)
+  zope.interface.implements(interfaces.IPredicate,)
 
   # Default Properties
   property_sheets = ( PropertySheet.Base

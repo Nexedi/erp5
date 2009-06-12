@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
@@ -131,7 +132,7 @@ class AssortedResource(TransformedResource):
                       )
 
     # Declarative interfaces
-    __implements__ = ( interfaces.IVariated, )
+    zope.interface.implements( interfaces.IVariated, )
 
     # Local property sheet
     _properties = (

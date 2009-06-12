@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
@@ -73,7 +74,7 @@ class Rule(Predicate, XMLObject):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
   
-  __implements__ = ( interfaces.IPredicate,
+  zope.interface.implements( interfaces.IPredicate,
                      interfaces.IRule )
 
   # Default Properties

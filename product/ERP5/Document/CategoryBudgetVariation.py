@@ -57,7 +57,7 @@ class CategoryBudgetVariation(BudgetVariation):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  # __implements__ = (BudgetVariation, )
+  # zope.interface.implements(BudgetVariation, )
 
   def asBudgetPredicate(self):
     """This budget variation in a predicate

@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from warnings import warn
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
@@ -81,7 +82,7 @@ class Predicate(XMLObject, Folder):
                     )
 
   # Declarative interfaces
-  __implements__ = ( interfaces.IPredicate, )
+  zope.interface.implements( interfaces.IPredicate, )
 
   security.declareProtected( Permissions.AccessContentsInformation, 'test' )
   def test(self, context, tested_base_category_list=None, 

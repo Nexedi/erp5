@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.SupplyLine import SupplyLine
@@ -49,7 +50,7 @@ class OpenOrderLine(SupplyLine):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative interfaces
-    __implements__ = ( interfaces.IVariated,
+    zope.interface.implements( interfaces.IVariated,
                        interfaces.IPredicate )
 
     # Declarative properties

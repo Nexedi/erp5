@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
@@ -45,7 +46,7 @@ class OpenOrder(Delivery):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = (interfaces.IExpandable, interfaces.IOpenOrderExpander)
+  zope.interface.implements(interfaces.IExpandable, interfaces.IOpenOrderExpander)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

@@ -88,7 +88,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
   isRADContent = 1
   isDelivery = 1
     
-  #__implements__ = ( interfaces.Inventory, )
+  #zope.interface.implements( interfaces.Inventory, )
 
   # Declarative security
   security = ClassSecurityInfo()

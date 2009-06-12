@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.ERP5.Variated import Variated
@@ -61,7 +62,7 @@ class Amount(Base, Variated):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = (interfaces.IVariated,)
+  zope.interface.implements(interfaces.IVariated,)
 
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem

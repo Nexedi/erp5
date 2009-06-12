@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
@@ -57,7 +58,7 @@ class ImmobilisationLine(Movement, XMLObject, ImmobilisationMovement, DeliveryLi
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = ( interfaces.IVariated, )
+  zope.interface.implements( interfaces.IVariated, )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

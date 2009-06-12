@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 

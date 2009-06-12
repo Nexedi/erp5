@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+import zope.interface
+
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
@@ -66,7 +68,7 @@ class MappedValue(Predicate, Amount):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = ( interfaces.IPredicate, interfaces.IVariated,)
+  zope.interface.implements( interfaces.IPredicate, interfaces.IVariated,)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

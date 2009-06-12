@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from Globals import InitializeClass, PersistentMapping
 from AccessControl import ClassSecurityInfo
 
@@ -63,7 +64,7 @@ class Container(Movement, XMLObject):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative interfaces
-    __implements__ = ( interfaces.IVariated, )
+    zope.interface.implements( interfaces.IVariated, )
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base

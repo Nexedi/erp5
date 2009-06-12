@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
@@ -58,7 +59,7 @@ class Path(MappedValue):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  __implements__ = ( interfaces.IPredicate, )
+  zope.interface.implements( interfaces.IPredicate, )
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

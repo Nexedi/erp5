@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
@@ -80,7 +81,7 @@ class Coordinate(Base):
     isRADContent = 1
     
     # Declarative interface
-    __implements__ = (interfaces.ICoordinate, )
+    zope.interface.implements(interfaces.ICoordinate, )
 
     # Declarative security (replaces __ac_permissions__)
     security = ClassSecurityInfo()

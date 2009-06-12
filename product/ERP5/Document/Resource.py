@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from math import log
 from warnings import warn
 
@@ -58,7 +59,7 @@ class Resource(XMLMatrix, Variated):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative interfaces
-    __implements__ = ( interfaces.IVariated, )
+    zope.interface.implements( interfaces.IVariated, )
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base

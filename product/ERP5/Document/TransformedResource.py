@@ -26,6 +26,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+import zope.interface
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
@@ -77,7 +78,7 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
                       )
 
     # Declarative interfaces
-    __implements__ = ( interfaces.IVariated
+    zope.interface.implements( interfaces.IVariated
                      , interfaces.ITransformation
     )
 

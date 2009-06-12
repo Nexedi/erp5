@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
@@ -61,7 +62,7 @@ class AccountingTransactionLine(DeliveryLine):
                     )
 
   # Declarative interfaces
-  __implements__ = ( )
+  zope.interface.implements( )
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getInventoriatedQuantity')
