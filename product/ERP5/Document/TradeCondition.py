@@ -122,29 +122,31 @@ class TradeCondition(Path, Transformation, XMLMatrix):
 
     security.declareProtected(Permissions.AccessContentsInformation,
         'findSpecialiseValueList')
-    def findSpecialiseValueList(self, context, portal_type_list=None,
-        visited_trade_condition_list=None):
+    def findSpecialiseValueList(self, context, portal_type_list=None):
       """Returns a list of specialised objects representing inheritance tree.
 
-         Uses Breadth First Search. XXX Wrong - currenty it uses Depth-first
-         search
+         Uses Breadth First Search.
       """
-      if visited_trade_condition_list is None:
-        visited_trade_condition_list = []
-      specialise_value_list = []
       if portal_type_list is None:
-        portal_type_list = [self.getPortalType()]
+        portal_type_list = [context.getPortalType()]
       if context.getPortalType() in portal_type_list:
-        specialise_value_list.append(context)
-      for specialise in context.getSpecialiseValueList(portal_type=\
-          portal_type_list):
-        if specialise in visited_trade_condition_list:
+        specialise_value_list = [context]
+        visited_trade_condition_list = [context]
+      else:
+        specialise_value_list = context.getSpecialiseValueList(\
+            portal_type=portal_type_list)
+        visited_trade_condition_list = context.getSpecialiseValueList(\
+            portal_type=portal_type_list)
+      while len(specialise_value_list) != 0:
+        specialise = specialise_value_list.pop(0)
+        children = specialise.getSpecialiseValueList(\
+            portal_type=portal_type_list)
+        specialise_value_list.extend(children)
+        if not set(children).intersection(visited_trade_condition_list):
+          visited_trade_condition_list.extend(children)
+        else:
           raise CircularException
-        visited_trade_condition_list.append(specialise)
-        specialise_value_list.extend(self.findSpecialiseValueList(\
-            context=specialise, portal_type_list=portal_type_list,
-            visited_trade_condition_list=visited_trade_condition_list))
-      return specialise_value_list
+      return visited_trade_condition_list
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getTradeModelLineComposedList')
@@ -286,7 +288,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
     security.declareProtected(Permissions.AccessContentsInformation,
         'findEffectiveSpecialiseValueList')
     def findEffectiveSpecialiseValueList(self, start_date=None, stop_date=None):
-      '''Returns a list of effective specialised objects representing 
+      '''Returns a list of effective specialised objects representing
       inheritance tree.
       An effective object is an object wich start and stop_date are equal (or
       included) to the range of the given start and stop_date.
@@ -304,7 +306,6 @@ class TradeCondition(Path, Transformation, XMLMatrix):
         property_list=None):
       '''Returns a dict with the model url as key and a list of reference as
       value. A Reference can appear only one time in the final output.
-      It uses Breadth First Search.
       If property_list is not empty, documents which don't have any of theses
       properties will be skipped.
       '''
