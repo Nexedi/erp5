@@ -231,10 +231,9 @@ class XMLMatrix(Folder):
       for object_id in object_id_list:
         new_name = 'temp_' + object_id
         obj = self._getOb(object_id)
-        obj.isIndexable = 0 # Disable reindexing while moving cells
+        self._delObject(object_id)
         obj.id = new_name
         self._setObject(new_name, aq_base(obj))
-        self._delObject(object_id)
 
       # Rename all cells to their final name.
       for object_id in object_id_list:
@@ -270,13 +269,13 @@ class XMLMatrix(Folder):
 
         if not to_delete and not (None in object_place):
           o = self._getOb('temp_' + object_id)
+          self._delObject('temp_' + object_id) # In all cases, we have
+                                               # to remove the temp object
           new_name = base_id + '_' + join(object_place,'_')
           o.id = new_name
           new_object_id_list.extend(new_name)
           self._setObject(new_name, aq_base(o))
-          self._delObject('temp_' + object_id) # In all cases, we have
-                                               # to remove the temp object
-          o.isIndexable = 1 # reindexing is possible again
+
           if new_name != object_id:
             # Theses two lines are very important, if the object is renamed
             # then we must uncatalog the previous one

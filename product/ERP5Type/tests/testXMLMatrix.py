@@ -31,8 +31,10 @@ import unittest
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.CMFCore.tests.base.testcase import LogInterceptor
 from Products.ERP5Type.Utils import cartesianProduct
 from AccessControl.SecurityManagement import newSecurityManager
+from zLOG import PROBLEM
 
 try:
   from transaction import get as get_transaction
@@ -40,7 +42,7 @@ except ImportError:
   pass
 
 
-class TestXMLMatrix(ERP5TypeTestCase):
+class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
   """
   Tests the Cell API
   """
@@ -70,6 +72,11 @@ class TestXMLMatrix(ERP5TypeTestCase):
     module = portal.purchase_order_module
     if '1' not in module.objectIds():
       order = module.newContent(id='1', portal_type='Purchase Order')
+    self._catch_log_errors(ignored_level=PROBLEM)
+
+  def beforeTearDown(self):
+    self._ignore_log_errors()
+
 
   def test_01_RenameCellRange(self, quiet=quiet):
     """
@@ -259,6 +266,59 @@ class TestXMLMatrix(ERP5TypeTestCase):
     for id in next2_cell_id_list:
       cell_path = url + '/' + id
       self.assertEquals(catalog.hasPath(cell_path),False)
+
+    # create some cells
+    cell1 = matrix.newCell(*['0', 'a'], **kwd)
+    cell1_path = cell1.getPath()
+    cell2 = matrix.newCell(*['1', 'a'], **kwd)
+    cell2_path = cell2.getPath()
+    get_transaction().commit()
+
+    # if we keep the same range, nothing happens
+    matrix.setCellRange(*cell_range, **kwd)
+    get_transaction().commit()
+    self.assertEqual(matrix.getCellRange(**kwd), cell_range)
+    self.assertEqual(len(matrix.getCellValueList(**kwd)), 2)
+    self.tic()
+
+    self.assertTrue(catalog.hasPath(matrix.getPath()))
+    self.assertTrue(catalog.hasPath(cell1_path))
+    self.assertTrue(catalog.hasPath(cell2_path))
+  
+    # now set other ranges
+    cell_range = [['0', '2'], ['a', ], ['Z']]
+    matrix.setCellRange(*cell_range, **kwd)
+    get_transaction().commit()
+    self.assertEqual(matrix.getCellRange(**kwd), cell_range)
+    self.tic()
+
+    # in this case, cells has been removed
+    self.assertEqual(matrix.getCellValueList(**kwd), [])
+
+    self.assertTrue(catalog.hasPath(matrix.getPath()))
+    self.assertFalse(catalog.hasPath(cell1_path))
+    self.assertFalse(catalog.hasPath(cell2_path))
+    
+    # create cells in this new range
+    cell1 = matrix.newCell(*['0', 'a', 'Z'], **kwd)
+    cell1_path = cell1.getPath()
+    cell2 = matrix.newCell(*['2', 'a', 'Z'], **kwd)
+    cell2_path = cell2.getPath()
+    get_transaction().commit()
+
+    cell_range = [['1', '2'], ['a', ], ['X']]
+    matrix.setCellRange(*cell_range, **kwd)
+    get_transaction().commit()
+    self.assertEqual(matrix.getCellRange(**kwd), cell_range)
+    self.tic()
+
+    # in this case, cells has been removed
+    self.assertEqual(matrix.getCellValueList(**kwd), [])
+
+    self.assertTrue(catalog.hasPath(matrix.getPath()))
+    self.assertFalse(catalog.hasPath(cell1_path))
+    self.assertFalse(catalog.hasPath(cell2_path))
+
 
   def test_02_SetCellRangeAndCatalogWithActivities(self, quiet=quiet):
     """
