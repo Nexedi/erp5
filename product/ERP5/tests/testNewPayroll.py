@@ -31,6 +31,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import reindex
 from DateTime import DateTime
+import transaction
 
 class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
   normal_resource_use_category_list = ['payroll/base_salary']
@@ -44,8 +45,19 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     self.createCategories()
     self.setSystemPreference()
 
+  @reindex
   def beforeTearDown(self):
-    pass
+    transaction.abort()
+    for module in (
+      self.portal.organisation_module,
+      self.portal.person_module,
+      self.portal.paysheet_model_module,
+      self.portal.accounting_module,
+      self.portal.business_process_module,
+      self.portal.service_module,
+      self.portal.portal_simulation,):
+      module.manage_delObjects(list(module.objectIds()))
+
 
   def login(self):
     uf = self.getPortal().acl_users
@@ -814,16 +826,32 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     '''
       Create three models inheriting from each other. Set slices values on a
       model.
+
+      the inheritance tree look like this :
+
+                                Employee Model
+                                 /        \
+                                /          \
+                               /            \
+                    Company Model         Second Company Alt
+                         /
+                        /
+                       /
+                Country Model
     '''
     model_employee = self.createModel()
-    model_employee.edit(variation_settings_category_list='salary_range/france')
+    model_employee.edit(title='Employee Model', reference='model_employee',
+        variation_settings_category_list='salary_range/france')
     model_company = self.createModel()
-    model_company.edit(variation_settings_category_list='salary_range/france')
+    model_company.edit(title='Company Model', reference='model_company',
+        variation_settings_category_list='salary_range/france')
     model_company_alt = self.createModel()
-    model_company_alt.edit(variation_settings_category_list=\
-        'salary_range/france')
+    model_company_alt.edit(title='Second Company Model',
+        reference='model_company_alt',
+        variation_settings_category_list='salary_range/france')
     model_country = self.createModel()
-    model_country.edit(variation_settings_category_list='salary_range/france')
+    model_country.edit(title='Country Model', reference='model_country',
+        variation_settings_category_list='salary_range/france')
     # add some cells in the models
     slice1 = model_employee.newCell('salary_range/france/slice_a',
                             portal_type='Pay Sheet Model Slice',
@@ -1202,6 +1230,77 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
   def stepSetMaritalStatusSingleOnEmployee(self, sequence=None, **kw):
     employee = sequence.get('employee')
     employee.setMaritalStatus('single')
+
+  def stepModelTreeAddAnnotationLines(self, sequence=None, **kw):
+    model_employee = sequence.get('model_employee')
+    model_employee.newContent(id='over_time_duration',
+                              title='Over time duration',
+                              portal_type='Annotation Line',
+                              reference='over_time_duration',
+                              quantity=1)
+    model_company = sequence.get('model_company')
+    model_company.newContent(id='worked_time_duration',
+                             title='Worked time duration',
+                             portal_type='Annotation Line',
+                             reference='worked_time_duration',
+                             quantity=2)
+    model_company_alt = sequence.get('model_company_alt')
+    model_company_alt.newContent(id='social_insurance',
+                                 title='Social insurance',
+                                 portal_type='Annotation Line',
+                                 reference='social_insurance',
+                                 quantity=3)
+    model_country = sequence.get('model_country')
+    model_country.newContent(id='social_insurance',
+                             title='Social insurance',
+                             portal_type='Annotation Line',
+                             reference='social_insurance',
+                             quantity=4)
+
+  def stepCheckInheritanceModelReferenceDict(self, sequence=None, **kw):
+    model_employee = sequence.get('model_employee')
+    model_employee_url = model_employee.getRelativeUrl()
+    model_company_url = sequence.get('model_company').getRelativeUrl()
+    model_company_alt_url = sequence.get('model_company_alt').getRelativeUrl()
+    model_country_url = sequence.get('model_country').getRelativeUrl()
+    
+    model_reference_dict = model_employee.getInheritanceReferenceDict(\
+        portal_type_list=('Annotation Line',))
+    self.assertEquals(len(model_reference_dict), 3) # there is 4 model but two
+                                                    # models have the same
+                                                    # reference.
+    self.assertEquals(model_reference_dict.has_key(model_employee_url), True)
+    self.assertEquals(model_reference_dict[model_employee_url],
+        ['over_time_duration'])
+    self.assertEquals(model_reference_dict.has_key(model_company_url), True)
+    self.assertEquals(model_reference_dict[model_company_url],
+        ['worked_time_duration'])
+    self.assertEquals(model_reference_dict.has_key(model_company_alt_url), True)
+    self.assertEquals(model_reference_dict[model_company_alt_url],
+        ['social_insurance'])
+    self.assertNotEquals(model_reference_dict.has_key(model_country_url), True)
+    
+    # check the object list :
+    paysheet = self.createPaysheet()
+    paysheet.setSpecialiseValue(model_employee)
+    object_list = paysheet.getInheritedObjectValueList(portal_type_list=\
+        ('Annotation Line',))
+    self.assertEquals(len(object_list), 3) # one line have the same reference
+                                           # than another, so each reference
+                                           # should be prensent only one time
+                                           # in the list
+    over_time_duration = paysheet.getAnnotationLineFromReference(\
+        'over_time_duration')
+    self.assertNotEquals(over_time_duration, None)
+    over_time_duration.getQuantity(1)
+    worked_time_duration = paysheet.getAnnotationLineFromReference(\
+        'worked_time_duration')
+    self.assertNotEquals(worked_time_duration, None)
+    worked_time_duration.getQuantity(2)
+    social_insurance = paysheet.getAnnotationLineFromReference(\
+        'social_insurance')
+    self.assertNotEquals(social_insurance, None)
+    social_insurance.getQuantity(3)
 
 class TestNewPayroll(TestNewPayrollMixin):
 
@@ -1634,6 +1733,29 @@ class TestNewPayroll(TestNewPayrollMixin):
                CheckPaysheetLineWithBonusAmounts
                CheckUpdateAggregatedAmountListReturnNothing
                CheckPaysheetLineWithBonusAmounts
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_modelSubObjectInheritance(self):
+    '''
+      check that a model can inherite some datas from another
+      the ineritance rules are the following :
+       - a DATA could be a model_line, annotation_line, ratio_line
+       - a model_line, annotation_line and a ratio_line have a REFERENCE
+       - a model can have some DATA's
+       - a model can inherite from another, that's mean :
+         o At the calculation step, each DATA of the parent model will be
+           checked : the DATA with a REFERENCE that's already in the child
+           model will not entered in the calcul. The other will.
+         o This will be repeated on each parent model and on each parent of
+           the parent model,... until there is no parent model to inherite
+    '''
+    sequence_list = SequenceList()
+    sequence_string = """
+               CreateModelTree
+               ModelTreeAddAnnotationLines
+               CheckInheritanceModelReferenceDict
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
