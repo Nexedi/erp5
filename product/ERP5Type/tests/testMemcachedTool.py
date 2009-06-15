@@ -55,7 +55,8 @@ class TestMemcachedTool(ERP5TypeTestCase):
     memcached_tool = self.getPortal().portal_memcached
     #create Memcache Plugin
     if getattr(memcached_tool, 'default_memcached_plugin', None) is None:
-      memcached_tool.newContent(portal_type='Memcached Plugin',
+      memcached_tool.newContent(id='default_memcached_plugin',
+                                portal_type='Memcached Plugin',
                                 int_index=0,
                                 url_string='127.0.0.1:11211')
     transaction.commit()
@@ -71,7 +72,8 @@ class TestMemcachedTool(ERP5TypeTestCase):
     newSecurityManager(None, user)
 
   def getMemcachedDict(self):
-    return self.getPortal().portal_memcached.getMemcachedDict(key_prefix='unit_test')
+    return self.getPortal().portal_memcached.getMemcachedDict(key_prefix='unit_test',
+                                                              plugin_path='portal_memcached/default_memcached_plugin')
 
   def test_00_MemcachedToolIsEnabled(self):
     """
@@ -87,11 +89,7 @@ class TestMemcachedTool(ERP5TypeTestCase):
       import memcache
     except ImportError:
       # MemcachedTool should be disabled
-      self.assertRaises(RuntimeError, memcached_tool.getServerAddressList)
-    else:
-      # MemcachedTool should be enabled
-      self.assertTrue(isinstance(memcached_tool.getServerAddressList(),
-                                 list))
+      self.assertRaises(RuntimeError, memcached_tool.getMemcachedDict)
 
   def test_01_dictionnaryIsUsable(self):
     """

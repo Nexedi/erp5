@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -50,8 +51,10 @@ class TestRamCache(unittest.TestCase):
   def setUp(self):
     self.cache_plugins = (RamCache(),
                           DistributedRamCache({'server': '127.0.0.1:11211',
-                                                 'debugLevel': 7,}),
-                        )
+                                               'debug_level': 7,
+                                               'server_max_key_length': 250,
+                                               'server_max_value_length': 1048576,}),
+                         )
 
   def testScope(self):
     """ test scope functions """
@@ -167,7 +170,7 @@ class TestRamCache(unittest.TestCase):
       ## check get()
       cache_entry = cache_plugin.get(cache_id, scope)
       if isinstance(value, Foo):
-        ## with memcached, we have a new object created for user
+        ## when memcached, we have a new object created for user
         ## just compare one field from it
         self.assertEqual(value.my_field, cache_entry.getValue().my_field)
       else:
