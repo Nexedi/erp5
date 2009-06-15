@@ -68,7 +68,7 @@ if person_value is None:\n
   return context.Base_redirect(\'view\', keep_items=dict(\n
               portal_status_message=N_("No person found for your user")))\n
 \n
-if person_value.getDefaultEmailText(\'\') not in (\'\', None):\n
+if person_value.getDefaultEmailText(\'\') in (\'\', None):\n
   portal.changeSkin(None)\n
   return context.Base_redirect(\'view\', keep_items=dict(\n
               portal_status_message=N_("You haven\'t defined your email address")))\n
