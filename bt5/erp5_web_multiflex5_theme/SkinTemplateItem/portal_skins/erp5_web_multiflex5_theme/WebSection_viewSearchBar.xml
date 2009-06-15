@@ -55,10 +55,10 @@
   <fieldset>\n
     <input name="field_your_search_text" class="field" value=""\n
            onkeyup="submitFormOnEnter(event, this.form, \'search_area/ERP5Site_viewQuickSearchResultList\');"\n
-           tal:attributes="onkeyup string:submitFormOnEnter(event, this.form, \'${section_id}/ERP5Site_viewQuickSearchResultList\');" />\n
+           tal:attributes="onkeyup string:submitFormOnEnter(event, this.form, \'${search_area_section_id}/ERP5Site_viewQuickSearchResultList\');" />\n
     <input type="submit" class="button" value="Search" name="search_area/ERP5Site_viewQuickSearchResultList:method"\n
-           tal:attributes="name string:${section_id}/ERP5Site_viewQuickSearchResultList:method"\n
-           i18n:attributes="title" i18n:domain="ui" />\n
+           tal:attributes="name string:${search_area_section_id}/ERP5Site_viewQuickSearchResultList:method"\n
+           i18n:attributes="value" i18n:domain="ui" />\n
   </fieldset>\n
 </div>\n
 </tal:block>\n

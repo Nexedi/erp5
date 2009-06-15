@@ -61,10 +61,9 @@
 <ul>\n
   <li class="nobullet" \n
       i18n:translate=""\n
-      i18n:domain="ui">You are here: </li>\n
+      i18n:domain="ui">You are here:</li>\n
   <li tal:repeat="breadcrumb python:breadcrumb_list[:(is_web_section_default_document and -1 or None)]">\n
-    <a href="#" i18n:domain="ui"\n
-                tal:attributes="href python:breadcrumb[1].absolute_url();"      \n
+    <a href="#" tal:attributes="href python:breadcrumb[1].absolute_url();"      \n
                 tal:content="python:breadcrumb[0]">Title</a>\n
   </li>\n
 </ul>\n
