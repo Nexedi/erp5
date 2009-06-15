@@ -53,6 +53,12 @@ class TestCacheTool(ERP5TypeTestCase):
   def getTitle(self):
     return "Cache Tool"
 
+  def getBusinessTemplateList(self):
+      """
+        Return the list of business templates.
+      """
+      return ('erp5_base',)
+
   def afterSetUp(self):
     self.login()
     self.checkCacheTool()
@@ -93,8 +99,7 @@ class TestCacheTool(ERP5TypeTestCase):
       ram_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
                                                    id='ram_cache_factory',
                                                    container=portal_caches)
-      ram_cache_plugin = ram_cache_factory.newContent(portal_type="Ram Cache",
-                                                      container=ram_cache_factory)
+      ram_cache_plugin = ram_cache_factory.newContent(portal_type="Ram Cache")
       ram_cache_plugin.setIntIndex(0)
 
     if getattr(portal_caches, 'distributed_ram_cache_factory', None) is None:
@@ -103,21 +108,19 @@ class TestCacheTool(ERP5TypeTestCase):
                                                     id='distributed_ram_cache_factory',
                                                     container=portal_caches)
       dram_cache_plugin = dram_cache_factory.newContent(
-              portal_type="Distributed Ram Cache", container=dram_cache_factory)
+              portal_type="Distributed Ram Cache", specialise='portal_memcached/default_memcached_plugin' )
       dram_cache_plugin.setIntIndex(0)
 
     if getattr(portal_caches, 'erp5_user_factory', None) is None:
 
       ## erp5_user_factory (to test a combination of all cache plugins)
       erp5_user_factory = portal_caches.newContent(portal_type="Cache Factory",
-                                                   id="erp5_user_factory",
-                                                   container=portal_caches)
+                                                   id="erp5_user_factory")
 
-      ram_cache_plugin = erp5_user_factory.newContent(
-              portal_type="Ram Cache", container=erp5_user_factory)
+      ram_cache_plugin = erp5_user_factory.newContent(portal_type="Ram Cache")
       ram_cache_plugin.setIntIndex(0)
-      dram_cache_plugin = erp5_user_factory.newContent(
-              portal_type="Distributed Ram Cache", container=erp5_user_factory)
+      dram_cache_plugin = erp5_user_factory.newContent(portal_type="Distributed Ram Cache",
+                                                       specialise='portal_memcached/default_memcached_plugin')
       dram_cache_plugin.setIntIndex(1)
     ## update Ram Cache structure
     portal_caches.updateCache()
