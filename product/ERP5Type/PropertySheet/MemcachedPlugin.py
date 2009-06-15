@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
-#                     Ivan Tyagov <ivan@nexedi.com>
+# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
+#                     Nicolas Delaby <nicolas@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
