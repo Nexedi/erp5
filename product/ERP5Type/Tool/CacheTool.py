@@ -89,7 +89,13 @@ class CacheTool(BaseTool):
             ## even thougn we have such plugin in ZODB that doens't mean
             ## we have corresponding memcache module installed
           if memcache is not None:
-            cache_obj = DistributedRamCache({'server': cp.getServer()})
+            try:
+              cache_obj = DistributedRamCache(
+                {'server':cp.getSpecialiseValue().getUrlString()})
+            except AttributeError:
+              # BACKWARD COMPATIBILITY
+              cache_obj = DistributedRamCache(
+                {'server':getattr(cp, 'server', '')})
           else:
             ## we don't have memcache python module installed 
             ## thus we can't use DistributedRamCache plugin
