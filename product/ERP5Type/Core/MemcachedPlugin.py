@@ -32,6 +32,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import PropertySheet
 from Products.ERP5.PropertySheet.SortIndex import SortIndex
 from Products.ERP5.PropertySheet.Url import Url
+from Products.ERP5Type.PropertySheet.MemcachedPlugin import MemcachedPlugin
 from Products.ERP5Type import Permissions
 
 class MemcachedPlugin(XMLObject):
@@ -55,6 +56,7 @@ class MemcachedPlugin(XMLObject):
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem
                     , PropertySheet.Folder
+                    , MemcachedPlugin
                     , SortIndex
                     , Url
                     )
