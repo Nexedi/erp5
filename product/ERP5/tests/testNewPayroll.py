@@ -811,6 +811,10 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         'Payment Condition')), 1)
 
   def stepCreateModelTree(self, sequence=None, **kw):
+    '''
+      Create three models inheriting from each other. Set slices values on a
+      model.
+    '''
     model_employee = self.createModel()
     model_employee.edit(variation_settings_category_list='salary_range/france')
     model_company = self.createModel()
@@ -890,7 +894,6 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     self.assertCellIsNone(model_company_alt, 'salary_range/france/slice_c')
 
     # check model_country could access just it's own cell
-    # model
     self.assertCellIsNone(model_country, 'salary_range/france/slice_a')
     self.assertCellIsNone(model_country, 'salary_range/france/slice_b')
     self.assertCellIsNone(model_country, 'salary_range/france/forfait')
