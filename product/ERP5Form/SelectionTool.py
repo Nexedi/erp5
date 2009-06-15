@@ -1425,9 +1425,9 @@ class TreeListLine:
 
 
 def makeTreeList(here, form, root_dict, report_path, base_category,
-		  depth, unfolded_list, form_id, selection_name,
-		  report_depth, is_report_opened=1, list_method=None,
-		  filtered_portal_types=[] ,sort_on = (('id', 'ASC'),)):
+                 depth, unfolded_list, form_id, selection_name,
+                 report_depth, is_report_opened=1, list_method=None,
+                 filtered_portal_types=[] ,sort_on = (('id', 'ASC'),)):
   """
     (object, is_pure_summary, depth, is_open, select_domain_dict)
 
