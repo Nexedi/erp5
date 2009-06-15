@@ -78,7 +78,8 @@ if memcache is not None:
         - make picklable ?
     """
   
-    def __init__(self, server_list=('127.0.0.1:11211', )):
+    def __init__(self, server_list=('127.0.0.1:11211',), server_max_key_length=None,
+                 server_max_value_length=None):
       """
         Initialise properties :
         memcached_connection
@@ -96,14 +97,19 @@ if memcache is not None:
       """
       self.local_cache = {}
       self.scheduled_action_dict = {}
-      self.memcached_connection = memcache.Client(server_list)
-  
+      init_dict = {}
+      if server_max_key_length:
+        init_dict['server_max_key_length'] = server_max_key_length
+      if server_max_value_length:
+        init_dict['server_max_value_length'] = server_max_value_length
+      self.memcached_connection = memcache.Client(server_list, **init_dict)
+
     def __del__(self):
       """
         Close connection before deleting object.
       """
       self.memcached_connection.disconnect_all()
-  
+
     def _finish(self, *ignored):
       """
         Actually modifies the values in memcached.
@@ -265,7 +271,7 @@ if memcache is not None:
 
     memcached_tool_configure = DTMLFile('memcached_tool_configure', _dtmldir)
 
-    def _getMemcachedDict(self, plugin_path=None):
+    def _getMemcachedDict(self, plugin_path):
       """
         Return used memcached dict.
         Create it if does not exist.
@@ -273,12 +279,17 @@ if memcache is not None:
       try:
         dictionary = memcached_dict_pool.memcached_dict
       except AttributeError:
-        dictionary = MemcachedDict(self.getServerAddressList(plugin_path=plugin_path))
+        memcached_plugin = self.restrictedTraverse(plugin_path, None)
+        if memcached_plugin is None:
+          raise ValueError, 'Memcached Plugin does not exists: %r' % (plugin_path,)
+        dictionary = MemcachedDict((memcached_plugin.getUrlString(),),
+                   server_max_key_length=memcached_plugin.getServerMaxKeyLength(),
+                   server_max_value_length=memcached_plugin.getServerMaxValueLength())
         memcached_dict_pool.memcached_dict = dictionary
       return dictionary
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getMemcachedDict')
-    def getMemcachedDict(self, key_prefix, plugin_path=None):
+    def getMemcachedDict(self, key_prefix, plugin_path):
       """
         Returns an object which can be used as a dict and which gets from/stores
         to memcached server.
@@ -290,42 +301,21 @@ if memcache is not None:
         plugin_path
           relative_url of dedicated Memcached Plugin
       """
-      return SharedDict(dictionary=self._getMemcachedDict(plugin_path=plugin_path), prefix=key_prefix)
+      return SharedDict(self._getMemcachedDict(plugin_path), prefix=key_prefix)
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'setServerAddress')
-    def setServerAddress(self, value):
-      """
-        Set a memcached server address.
-      """
-      self.setServerAddressList([value, ])
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getServerAddress')
-    def getServerAddress(self):
-      """
-        Return server address.
-      """
-      return self.getServerAddressList()[0]
-
-    def getServerAddressList(self, plugin_path=None):
-      """
-        Get the list of memcached servers to use.
-        Defaults to ['127.0.0.1:11211', ].
-      """
-      server_address_list = []
-      for memcached_plugin in self.contentValues(portal_type='Memcached Plugin', sort_on='int_index'):
-        if plugin_path and memcached_plugin.getRelativeUrl() != plugin_path:
-          continue
-        server_address_list.append(memcached_plugin.getUrlString())
-      return server_address_list
-
-
-    def manage_beforeDelete(self, document, container):
+    def manage_beforeDelete(self, *args, **kw):
       try:
         del(memcached_dict_pool.memcached_dict)
       except AttributeError:
         pass
-      BaseTool.manage_beforeDelete(self, document, container)
+      BaseTool.manage_beforeDelete(self, *args, **kw)
 
+    def manage_afterAdd(self, *args, **kw):
+      try:
+        del(memcached_dict_pool.memcached_dict)
+      except AttributeError:
+        pass
+      BaseTool.manage_afterAdd(self, *args, **kw)
 else:
   # Placeholder memcache tool
   class MemcachedTool(BaseTool):
@@ -350,9 +340,6 @@ else:
       raise RuntimeError, 'MemcachedTool is disabled. You should ask the'\
         ' server administrator to enable it by installing python-memcached.'
 
-    setServerAddress = failingMethod
-    getServerAddress = failingMethod
-    getServerAddressList = failingMethod
     manage_beforeDelete = failingMethod
     memcached_tool_configure = failingMethod
     getMemcachedDict = failingMethod
