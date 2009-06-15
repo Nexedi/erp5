@@ -37,5 +37,12 @@ class MemcachedPlugin:
          'type'        : 'int',
          'default'     :  250,
          'mode'        : 'w' ,
-        },)
+        },
+        {'id'          : 'server_max_value_length',
+         'description' : 'Max value len authorised by Server. 0 means no limit',
+         'type'        : 'int',
+         'default'     :  1048576,
+         'mode'        : 'w' ,
+        },
+        )
 
