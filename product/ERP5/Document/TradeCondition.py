@@ -126,7 +126,8 @@ class TradeCondition(Path, Transformation, XMLMatrix):
         visited_trade_condition_list=None):
       """Returns a list of specialised objects representing inheritance tree.
 
-         Uses Breadth First Search.
+         Uses Breadth First Search. XXX Wrong - currenty it uses Depth-first
+         search
       """
       if visited_trade_condition_list is None:
         visited_trade_condition_list = []
