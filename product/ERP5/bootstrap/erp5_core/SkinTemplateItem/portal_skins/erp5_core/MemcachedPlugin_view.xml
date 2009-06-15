@@ -98,6 +98,7 @@
                       <list>
                         <string>my_title</string>
                         <string>my_url_string</string>
+                        <string>my_server_max_key_length</string>
                         <string>my_int_index</string>
                       </list>
                     </value>
