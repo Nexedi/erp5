@@ -1,3 +1,6 @@
+2009-06-15 nicolas
+* Add default_memcached_plugin object for initial setup
+
 2009-06-03 nicolas
 *Delete SQLCache and ZODBCache as RamCache and DistributedRamCache will provide all needs.
 

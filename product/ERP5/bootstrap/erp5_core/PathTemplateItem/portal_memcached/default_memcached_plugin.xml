@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="MemcachedPlugin" module="Products.ERP5Type.Document.MemcachedPlugin"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>url_string</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>default_memcached_plugin</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Memcached Plugin</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Ram Based Memcached</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value> <string>127.0.0.1:11211</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

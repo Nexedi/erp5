@@ -27,5 +27,6 @@ portal_domains/base_month_domain
 portal_domains/base_week_domain
 portal_domains/base_year_domain
 portal_domains/parent_domain
+portal_memcached/default_memcached_plugin
 portal_preferences/default_site_preference
 portal_transforms/**
