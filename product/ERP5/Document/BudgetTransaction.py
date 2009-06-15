@@ -70,10 +70,3 @@ class BudgetTransaction(DeliveryLine):
       """
       return 1
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
-                              'getSimulationState')
-    def getSimulationState(self):
-      """
-      Supersedes the DeliveryLine definition
-      """
-      return self.portal_workflow.getInfoFor(self, 'simulation_state')
