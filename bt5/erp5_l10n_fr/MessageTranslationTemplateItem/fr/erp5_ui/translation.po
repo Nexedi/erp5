@@ -11493,6 +11493,9 @@ msgstr "Année"
 msgid "Year / Month / Day"
 msgstr "Année / Mois / Jour"
 
+msgid "You are here:"
+msgstr "Vous êtes ici:"
+
 msgid "You are not allowed to add ${portal_type} in this context."
 msgstr "Vous n'êtes pas autorisé à ajouter un/une ${portal_type} dans ce contexte."
 
