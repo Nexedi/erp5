@@ -1,7 +1,6 @@
-# -*- coding:utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2002-2009 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Romain Courteaud <romain@nexedi.com>
 #
@@ -28,411 +27,298 @@
 #
 ##############################################################################
 
-from ExtensionClass import Base
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.Rule import Rule
-from Products.ERP5.Document.SimulationMovement import SimulationMovement
 from Products.ERP5Type.Errors import TransformationRuleError
+from Products.ERP5.Document.TransformationSourcingRule import\
+                                            TransformationSourcingRuleMixin
 
-class MovementFactory:
-  def getRequestList(self):
+from zLOG import LOG
+
+class TransformationRule(TransformationSourcingRuleMixin, Rule):
     """
-    return the list of a request which to be used to apply movements
+      Order Rule object make sure an Order in the similation
+      is consistent with the real order
     """
-    raise NotImplementedError, 'Must be implemented'
-
-  def _getCausalityList(self, causality=None, causality_value=None,
-                        causality_list=None, causality_value_list=None,
-                        **kw):
-    if causality is not None:
-      return [causality]
-    elif causality_value is not None:
-      return [causality_value.getRelativeUrl()]
-    elif causality_list is not None:
-      return causality_list
-    elif causality_value_list is not None:
-      return [causality_value.getRelativeUrl()
-              for causality_value in causality_value_list]
-
-  def makeMovements(self, applied_rule):
-    """
-    make movements under the applied_rule by requests
-    """
-    movement_dict = {}
-    for movement in applied_rule.objectValues(
-        portal_type="Simulation Movement"):
-      key = tuple(sorted(movement.getCausalityList()))
-      movement_dict[key] = movement
-
-    for request in self.getRequestList():
-      # get movement by causality
-      key = tuple(sorted(self._getCausalityList(**request)))
-      movement = movement_dict.get(key, None)
-      # when no exist
-      if movement is None:
-        movement = applied_rule.newContent(portal_type="Simulation Movement")
-      # update
-      if movement.isFrozen():
-        self.makeDifferentMovement(movement, **request)
-      else:
-        movement.edit(**request)
-
-  def _requestNetQuantity(self, request):
-    quantity = request.get('quantity', None)
-    efficiency = request.get('efficiency', None)
-    if efficiency in (0, 0.0, None, ''):
-      efficiency = 1.0
-    return float(quantity) / efficiency
-
-  def makeDifferentMovement(self, movement, **request):
-    """
-    make different movement, which is based on original movement.
-    this implementation just focus about quantity.
-    """
-    applied_rule = movement.getParentValue()
-    request['quantity'] = self._requestNetQuantity(request)\
-                          - movement.getNetQuantity()
-    if request['quantity'] != 0:
-      diff_movement = applied_rule.newContent(portal_type="Simulation Movement")
-      diff_movement.edit(**request)
-
-
-class TransformationMovementFactory(MovementFactory):
-  def __init__(self):
-    self.product = None # base information to use for making movements
-    self.produced_list = list()
-    self.consumed_list = list()
-
-  def requestProduced(self, **produced):
-    self.produced_list.append(produced)
-
-  def requestConsumed(self, **consumed):
-    self.consumed_list.append(consumed)
-
-  def getRequestList(self):
-    """
-    return the list of a request which to be used to apply movements
-    """
-    _list = []
-    """
-    produced quantity should be represented by minus quantity on movement.
-    because plus quantity is consumed.
-    """ 
-    for (request_list, sign) in ((self.produced_list, -1),
-                                 (self.consumed_list, 1)):
-      for request in request_list:
-        d = self.product.copy()
-        d.update(request)
-        d['quantity'] *= sign
-        _list.append(d)
-    return _list
-
-
-class TransformationRuleMixin(Base):
-  security = ClassSecurityInfo()
-
-  security.declareProtected(Permissions.View, 'getTransformation')
-  def getTransformation(self, movement=None, applied_rule=None):
-    """
-    Return transformation related to used by the applied rule.
-    """
-    if movement is None and applied_rule is not None:
-      movement = applied_rule.getParentValue()
-
-    order_movement = movement.getRootSimulationMovement().getOrderValue()
-    explanation = self.getExplanation(movement=movement,
-                                      applied_rule=applied_rule)
-    # find line recursively
-    order_line = order_movement
-    while order_line.getParentValue() != explanation:
-      order_line = order_line.getParentValue()
-
-    script = order_line._getTypeBasedMethod('_getTransformation')
-    if script is not None:
-      transformation = script()
-    else:
-      line_transformation = order_line.objectValues(
-        portal_type=self.getPortalTransformationTypeList())
-      if len(line_transformation) == 1:
-        transformation = line_transformation[0]
-      else:
-        transformation = order_line.getSpecialiseValue(
-          portal_type=self.getPortalTransformationTypeList())
-
-    if transformation.getResource() == movement.getResource():
-      return transformation
-
-  security.declareProtected(Permissions.View, 'getBusinessProcess')
-  def getBusinessProcess(self, **kwargs):
-    """
-    Return business process related to root causality.
-    """
-    explanation = self.getExplanation(**kwargs)
-    if explanation is not None:
-      specialise = explanation.getSpecialiseValue()
-      business_process_type_list = self.getPortalBusinessProcessTypeList()
-      # because trade condition can be specialised
-      while specialise is not None and \
-            specialise.getPortalType() not in business_process_type_list:
-        specialise = specialise.getSpecialiseValue()
-      return specialise
-
-  security.declareProtected(Permissions.View, 'getRootExplanation')
-  def getRootExplanation(self, business_process):
-    """
-    the method of ProductionOrderRule returns most tail path of business process
-    """
-    if business_process is not None:
-      for business_path in business_process.contentValues(
-        portal_type=self.getPortalBusinessPathTypeList()):
-        if business_path.isDeliverable():
-          return business_path
-
-  security.declareProtected(Permissions.View, 'getExplanation')
-  def getExplanation(self, movement=None, applied_rule=None):
-    if applied_rule is not None:
-      return applied_rule.getRootAppliedRule().getCausalityValue()
-    else:
-      return movement.getRootSimulationMovement()\
-             .getOrderValue().getExplanationValue()
-
-
-class TransformationRule(TransformationRuleMixin, Rule):
-  """
-  """
-
-  # CMF Type Definition
-  meta_type = 'ERP5 Transformation Rule'
-  portal_type = 'Transformation Rule'
-  # Declarative security
-  security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Default Properties
-  property_sheets = ( PropertySheet.Base
+    # CMF Type Definition
+    meta_type = 'ERP5 Transformation Rule'
+    portal_type = 'Transformation Rule'
+    # Declarative security
+    security = ClassSecurityInfo()
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
+    __implements__ = ( interfaces.IPredicate,
+                       interfaces.IRule )
+    # Default Properties
+    property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       , PropertySheet.Task
                       )
+    # Class variable 
+    simulation_movement_portal_type = "Simulation Movement"
 
-  def getHeadProductionPathList(self, transformation, business_process):
-    """
-    Return list of path which is head of transformation trade_phases
-
-    this method assumes trade_phase of head paths is only one
-    """
-    production_trade_phase_set = set([amount.getTradePhase()
-                                      for amount in transformation\
-                                      .getAggregatedAmountList()])
-    head_path_list = []
-    for state in business_process.objectValues(
-      portal_type=self.getPortalBusinessStateTypeList()):
-      if len(state.getSuccessorRelatedValueList()) == 0:
-        head_path_list.extend(state.getPredecessorRelatedValueList())
-
-    result_list = []
-    for path in head_path_list:
-      result_list += self._getHeadPathByTradePhaseList(path, production_trade_phase_set)
-
-    return map(lambda t: t[0], filter(lambda t: t != (None, None), result_list))
-
-  def _getHeadPathByTradePhaseList(self, path, trade_phase_set):
-    _set = set(path.getTradePhaseList())
-    if _set & trade_phase_set:
-      return [(path, _set & trade_phase_set)]
-
-    successor_node = path.getSuccessorValue()
-    if successor_node is None:
-      return [(None, None)]
-
-    _list = []
-    for next_path in successor_node.getPredecessorRelatedValueList():
-      _list += self._getHeadPathByTradePhaseList(next_path, trade_phase_set)
-    return _list
-
-  def getFactory(self):
-    return TransformationMovementFactory()
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-  def expand(self, applied_rule, **kw):
-    """
-    """
-    parent_movement = applied_rule.getParentValue()
-
-    transformation = self.getTransformation(movement=parent_movement)
-    business_process = self.getBusinessProcess(movement=parent_movement)
-    explanation = self.getExplanation(movement=parent_movement)
-
-    # get all trade_phase of the Business Process
-    trade_phase_list = business_process.getTradePhaseList()
-
-    # get head of production path from business process with trade_phase_list
-    head_production_path_list = self.getHeadProductionPathList(transformation,
-                                                               business_process)
-    factory = self.getFactory()
-    factory.product = dict(
-      resource=transformation.getResource(),
-      quantity=parent_movement.getNetQuantity(),
-      quantity_unit=parent_movement.getQuantityUnit(),
-      variation_category_list=parent_movement.getVariationCategoryList(),
-      variation_property_dict=parent_movement.getVariationPropertyDict(),)
-
-    # consumed amounts are sorted by phase, but not ordered.
-    amount_dict = {}
-    for amount in transformation.getAggregatedAmountList():
-      phase = amount.getTradePhase()
-
-      if phase not in trade_phase_list:
-        raise TransformationRuleError,\
-              "Trade phase %r is not part of Business Process %r" % (phase, business_process)
-
-      amount_dict.setdefault(phase, [])
-      amount_dict[phase].append(amount)
-
-    last_phase_path_list = list() # to keep phase_path_list
-    last_prop_dict = dict()
-    for (phase, amount_list) in amount_dict.items():
-      phase_path_list = business_process.getPathValueList(phase)
+    # Simulation workflow
+    security.declareProtected(Permissions.ModifyPortalContent, 'expand')
+    def expand(self, applied_rule, **kw):
       """
-      XXX: In this context, we assume quantity as ratio,
-      but this "quantity as ratio" is consistent with transformation.
+        Expands the current movement downward.
+        -> new status -> expanded
+        An applied rule can be expanded only if its parent movement
+        is expanded.
       """
-      if sum(map(lambda path: path.getQuantity(), phase_path_list)) != 1:
+      parent_movement = applied_rule.getParentValue()
+      # Get production node and production section
+      production = parent_movement.getSource()
+      production_section = parent_movement.getSourceSection()
+      # Get the current supply link used to calculate consumed resource
+      # The current supply link is calculated from the parent AppliedRule.
+      supply_chain = self.getSupplyChain(parent_movement.getParentValue())
+      parent_supply_link = self.getCurrentSupplyLink(parent_movement)
+      current_supply_link_list = supply_chain.\
+                     getPreviousProductionSupplyLinkList(parent_supply_link)
+      if len(current_supply_link_list) != 1:
+        # We shall no pass here.
+        # The test method returned a wrong value !
         raise TransformationRuleError,\
-              "sum ratio of Trade Phase %r of Business Process %r is not one"\
-              % (phase, business_process)
+              "Expand must not be called on %r" %\
+                  applied_rule.getRelativeUrl()
+      else:
+        current_supply_link = current_supply_link_list[0]
+        # Generate produced movement
+        movement_dict = self._expandProducedResource(applied_rule,
+                                                     production,
+                                                     production_section,
+                                                     current_supply_link)
+        # Generate consumed movement
+        consumed_mvt_dict = self._expandConsumedResource(applied_rule,
+                                                         production,
+                                                         production_section,
+                                                         current_supply_link)
+        movement_dict.update(consumed_mvt_dict)
+        # Finally, build movement
+        self._buildMovementList(applied_rule, movement_dict, **kw)
+      # Expand each movement created
+      Rule.expand(self, applied_rule, **kw)
 
-      for path in phase_path_list:
-        # source, source_section
-        source_section = path.getSourceSection() # only support a static access 
-        source_method_id = path.getSourceMethodId()
-        if source_method_id is None:
-          source = path.getSource()
-        else:
-          source = getattr(path, source_method_id)()
-        # destination, destination_section
-        destination_section = path.getDestinationSection() # only support a static access 
-        destination_method_id = path.getDestinationMethodId()
-        if destination_method_id is None:
-          destination = path.getDestination()
-        else:
-          destination = getattr(path, destination_method_id)()
+    def _expandProducedResource(self, applied_rule, production,
+                                production_section, current_supply_link):
+      """
+        Produced resource.
+        Create a movement for the resource produced by the transformation.
+        Only one produced movement can be created.
+      """
+      parent_movement = applied_rule.getParentValue()
+      stop_date = parent_movement.getStartDate()
+      produced_movement_dict = {
+        'pr': {
+          "resource": parent_movement.getResource(),
+          # XXX what is lost quantity ?
+          "quantity": parent_movement.getQuantity(),# + lost_quantity,
+          "quantity_unit": parent_movement.getQuantityUnit(),
+          "variation_category_list":\
+                        parent_movement.getVariationCategoryList(),
+          "variation_property_dict": \
+                        parent_movement.getVariationPropertyDict(),
+          "source_list": (),
+          "source_section_list": (),
+          "destination": production,
+          "destination_section": production_section,
+          "deliverable": 1,
+          'start_date': current_supply_link.calculateStartDate(stop_date),
+          'stop_date': stop_date,
+          'causality_value': current_supply_link,
+        }
+      }
+      return produced_movement_dict
 
-        start_date = path.getExpectedStartDate(explanation)
-        stop_date = path.getExpectedStopDate(explanation)
-        predecessor_remaining_phase_list = path.getPredecessorValue()\
-          .getRemainingTradePhaseList(explanation,
-                                      trade_phase_list=trade_phase_list)
-        successor_remaining_phase_list = path.getSuccessorValue()\
-          .getRemainingTradePhaseList(explanation,
-                                      trade_phase_list=trade_phase_list)
+    def _expandConsumedResource(self, applied_rule, production,
+                                production_section, current_supply_link):
+      """
+        Consumed resource.
+        Create a movement for each resource consumed by the transformation,
+        and for the previous variation of the produced resource.
+      """
+      # Calculate all consumed resource
+      # Store each value in a dictionnary before created them.
+      # { movement_id: {property_name: property_value,} ,}
+      consumed_movement_dict = {}
+      parent_movement = applied_rule.getParentValue()
+      supply_chain = self.getSupplyChain(parent_movement.getParentValue())
+      # Consumed previous variation
+      previous_variation_dict = self._expandConsumedPreviousVariation(
+                                                        applied_rule, 
+                                                        production, 
+                                                        production_section,
+                                                        supply_chain,
+                                                        current_supply_link)
+      consumed_movement_dict.update(previous_variation_dict)
+      # Consumed raw materials
+      raw_material_dict = self._expandConsumedRawMaterials(
+                                                        applied_rule, 
+                                                        production, 
+                                                        production_section,
+                                                        supply_chain,
+                                                        current_supply_link)
+      consumed_movement_dict.update(raw_material_dict)
+      return consumed_movement_dict
 
-        # checking which is not last path of transformation
-        if len(successor_remaining_phase_list) != 0:
-          # partial produced movement
-          factory.requestProduced(
-            causality_value=path,
-            start_date=start_date,
-            stop_date=stop_date,
-            # when last path of transformation, path.getQuantity() will be return 1.
-            quantity=factory.product['quantity'] * path.getQuantity(),
-            source_section=source_section,
-            destination_section=destination_section,
-            destination=destination,
-            trade_phase_value_list=successor_remaining_phase_list)
-        else:
-          # for making movement of last product of the transformation
-          last_phase_path_list.append(path)
+    def _expandConsumedPreviousVariation(self, applied_rule, production,
+                                         production_section, supply_chain,
+                                         current_supply_link):
+      """
+        Create a movement for the previous variation of the produced resource.
+      """
+      id_count = 1
+      consumed_movement_dict = {}
+      parent_movement = applied_rule.getParentValue()
+      # Calculate the variation category list of parent movement
+      base_category_list = parent_movement.getVariationBaseCategoryList()
+      if "industrial_phase" in base_category_list:
+        # We do not want to get the industrial phase variation
+        base_category_list.remove("industrial_phase")
+      category_list = parent_movement.getVariationCategoryList(
+                                  base_category_list=base_category_list)
+      # Calculate the previous variation
+      for previous_supply_link in supply_chain.\
+            getPreviousSupplyLinkList(current_supply_link):
+        previous_ind_phase_list = supply_chain.\
+            getPreviousProductionIndustrialPhaseList(previous_supply_link,
+                                                     all=1)
+        if previous_ind_phase_list != []:
+          # Industrial phase is a category
+          ind_phase_list = [x.getRelativeUrl() for x in \
+                            previous_ind_phase_list]
+          consumed_mvt_id = "%s_%s" % ("mr", id_count)
+          id_count += 1
+          stop_date = parent_movement.getStartDate()
+          consumed_movement_dict[consumed_mvt_id] = {
+            'start_date': current_supply_link.calculateStartDate(stop_date),
+            'stop_date': stop_date,
+            "resource": parent_movement.getResource(),
+            # XXX Is the quantity value correct ?
+            "quantity": parent_movement.getNetQuantity(), # getNetQuantity to support efficency from transformation
+            "quantity_unit": parent_movement.getQuantityUnit(),
+            "destination_list": (),
+            "destination_section_list": (),
+            "source": production,
+            "source_section": production_section,
+            "deliverable": 1,
+            "variation_category_list": category_list+ind_phase_list,
+            "variation_property_dict": \
+                        parent_movement.getVariationPropertyDict(),
+            'causality_value': current_supply_link,
+            }
+      return consumed_movement_dict
 
-          # path params must be same
-          if last_prop_dict.get('start_date', None) is None:
-            last_prop_dict['start_date'] = start_date
-          if last_prop_dict.get('stop_date', None) is None:
-            last_prop_dict['stop_date'] = stop_date
-          # trade phase of product is must be empty []
-          if last_prop_dict.get('trade_phase_value_list', None) is None:
-            last_prop_dict['trade_phase_value_list'] = successor_remaining_phase_list
-          if last_prop_dict.get('source_section', None) is None:
-            last_prop_dict['source_section'] = source_section
-          # for the source, it is not need, because the produced.
-          if last_prop_dict.get('destination_section', None) is None:
-            last_prop_dict['destination_section'] = destination_section
-          if last_prop_dict.get('destination', None) is None:
-            last_prop_dict['destination'] = destination
+    def _expandConsumedRawMaterials(self, applied_rule, production,
+                                    production_section, supply_chain,
+                                    current_supply_link):
+      """
+        Create a movement for each resource consumed by the transformation,
+      """
+      parent_movement = applied_rule.getParentValue()
+      # Calculate the context for getAggregatedAmountList
+      base_category_list = parent_movement.getVariationBaseCategoryList()
+      if "industrial_phase" in base_category_list:
+        # We do not want to get the industrial phase variation
+        base_category_list.remove("industrial_phase")
+      category_list = parent_movement.getVariationCategoryList(
+                                  base_category_list=base_category_list)
+      # Get the transformation to use
+      transformation = self.getTransformation(applied_rule)
+      # Generate the fake context 
+      tmp_context = parent_movement.asContext(
+                   context=parent_movement, 
+                   REQUEST={'categories':category_list})
+      # Calculate the industrial phase list
+      previous_ind_phase_list = supply_chain.\
+          getPreviousPackingListIndustrialPhaseList(current_supply_link)
+      ind_phase_id_list = [x.getRelativeUrl() for x in previous_ind_phase_list]
+      # Call getAggregatedAmountList
+      # XXX expand failed if transformation is not defined.
+      # Do we need to catch the exception ?
+      amount_list = transformation.getAggregatedAmountList(
+                   tmp_context,
+                   ind_phase_url_list=ind_phase_id_list)
+      # Add entries in the consumed_movement_dict
+      consumed_movement_dict = {}
+      for amount in amount_list:
+        consumed_mvt_id = "%s_%s" % ("cr", amount.getId())
+        stop_date = parent_movement.getStartDate()
+        resource_price = amount.getResourcePrice()
+        price = None
+        if resource_price is not None:
+          price = amount.getNetQuantity() * resource_price # getNetQuantity to support efficency from transformation
+        consumed_movement_dict[consumed_mvt_id] = {
+          'start_date': current_supply_link.calculateStartDate(stop_date),
+          'stop_date': stop_date,
+          "resource": amount.getResource(),
+          "variation_category_list":\
+                        amount.getVariationCategoryList(),
+          "variation_property_dict": \
+                        amount.getVariationPropertyDict(),
+          "quantity": amount.getNetQuantity() * parent_movement.getQuantity(), # getNetQuantity to support efficency from transformation
+          "price": price,
+          "quantity_unit": amount.getQuantityUnit(),
+          "destination_list": (),
+          "destination_section_list": (),
+          "source": production,
+          "source_section": production_section,
+          "deliverable": 1,
+          'causality_value': current_supply_link,
+        }
+      return consumed_movement_dict
 
-          if last_prop_dict['start_date'] != start_date or\
-             last_prop_dict['stop_date'] != stop_date or\
-             last_prop_dict['trade_phase_value_list'] != successor_remaining_phase_list or\
-             last_prop_dict['source_section'] != source_section or\
-             last_prop_dict['destination_section'] != destination_section or\
-             last_prop_dict['destination'] != destination:
-            raise TransformationRuleError,\
-              """Returned property is different on Transformation %r and Business Process %r"""\
-              % (transformation, business_process)
+    security.declareProtected(Permissions.ModifyPortalContent, 'solve')
+    def solve(self, applied_rule, solution_list):
+      """
+        Solve inconsistency according to a certain number of solutions
+        templates. This updates the
 
-        # when the path is part of production but not first, consume previous partial product
-        if path not in head_production_path_list:
-          factory.requestConsumed(
-            causality_value=path,
-            start_date=start_date,
-            stop_date=stop_date,
-            quantity=factory.product['quantity'] * path.getQuantity(),
-            source_section=source_section,
-            destination_section=destination_section,
-            source=source,
-            trade_phase_value_list=predecessor_remaining_phase_list)
+        -> new status -> solved
 
-        # consumed movement
-        for amount in amount_list:
-          factory.requestConsumed(
-            causality_value=path,
-            start_date=start_date,
-            stop_date=stop_date,
-            resource=amount.getResource(),
-            quantity=factory.product['quantity'] * amount.getQuantity()\
-              / amount.getEfficiency() * path.getQuantity(),
-            quantity_unit=amount.getQuantityUnit(),
-            source_section=source_section,
-            destination_section=destination_section,
-            source=source,
-            trade_phase=path.getTradePhase())
+        This applies a solution to an applied rule. Once
+        the solution is applied, the parent movement is checked.
+        If it does not diverge, the rule is reexpanded. If not,
+        diverge is called on the parent movement.
+      """
 
-    """
-    valid graph for transformation
-    a --- b --- c
+    security.declareProtected(Permissions.ModifyPortalContent, 'diverge')
+    def diverge(self, applied_rule):
+      """
+        -> new status -> diverged
 
-    a --
-        \
-         X b
-        /
-    c --
+        This basically sets the rule to "diverged"
+        and blocks expansion process
+      """
 
-    invalid graph
-    a ------- b
-    c ------- d
+#    # Solvers
+#    security.declareProtected(Permissions.View, 'isDivergent')
+#    def isDivergent(self, applied_rule):
+#      """
+#        Returns 1 if divergent rule
+#      """
+#
+#    security.declareProtected(Permissions.View, 'getDivergenceList')
+#    def getDivergenceList(self, applied_rule):
+#      """
+#        Returns a list Divergence descriptors
+#      """
+#
+#    security.declareProtected(Permissions.View, 'getSolverList')
+#    def getSolverList(self, applied_rule):
+#      """
+#        Returns a list Divergence solvers
+#      """
 
-        -- b
-       /
-    a X
-       \
-        -- c
-    """
-    # when empty
-    if last_phase_path_list is None or len(last_phase_path_list) == 0:
-      raise TransformationRuleError,\
-            """Could not make the product by Transformation %r and Business Process %r,
-which last_phase_path_list is empty.""" % (transformation, business_process)
+    # Deliverability / orderability
+    def isDeliverable(self, m):
+      return 1
+    def isOrderable(self, m):
+      return 0
 
-    factory.requestProduced(
-      causality_value_list=last_phase_path_list,
-      # when last path of transformation, path.getQuantity() will be return 1.
-      quantity=factory.product['quantity'] * path.getQuantity(),
-      **last_prop_dict)
-
-    factory.makeMovements(applied_rule)
-    Rule.expand(self, applied_rule, **kw)

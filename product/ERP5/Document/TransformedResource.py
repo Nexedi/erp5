@@ -322,7 +322,11 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
         else:
           variation_category_list = self._getVariationCategoryList()
           variation_category_list_defined_by = self.getRelativeUrl()
-        trade_phase = self.getTradePhase()
+        if hasattr(self,"getTradePhase"):
+          # After installing BPM, trade_phase category to be exists
+          trade_phase = self.getTradePhase()
+        else:
+          trade_phase = None
         # Store values in Amount
         tmp_amount._edit(
           # Properties define on transformation line

@@ -30,11 +30,12 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.Rule import Rule
 from Products.ERP5.Document.OrderRule import OrderRule
-from Products.ERP5.Document.TransformationRule import TransformationRuleMixin
+from Products.ERP5.Document.TransformationSourcingRule import\
+                                            TransformationSourcingRuleMixin
 
 from zLOG import LOG, WARNING
 
-class ProductionOrderRule(TransformationRuleMixin, OrderRule):
+class ProductionOrderRule(OrderRule):
     """
       Prouction Order Rule object use a Supply Chain to expand a 
       Production Order.
@@ -47,6 +48,9 @@ class ProductionOrderRule(TransformationRuleMixin, OrderRule):
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+    __implements = ( interfaces.IPredicate,
+                     interfaces.IRule )
 
     # Default Properties
     property_sheets = ( PropertySheet.Base
@@ -89,17 +93,25 @@ class ProductionOrderRule(TransformationRuleMixin, OrderRule):
           'quantity_unit', 
         )
     
-      root_explanation = self.getRootExplanation(
-          self.getBusinessProcess(applied_rule=applied_rule))
-      property_dict['source_section'] = root_explanation.getSourceSection()
-      source_method_id = root_explanation.getSourceMethodId()
-      if source_method_id is None:
-        property_dict['source'] = root_explanation.getSource()
-      else:
-        property_dict['source'] = getattr(root_explanation, source_method_id)()
-      property_dict['causality'] = root_explanation.getRelativeUrl()
-
+      supply_chain = self.getSupplyChain(applied_rule)
+      # We got a supply chain
+      # Try to get the last SupplyLink
+      last_link = supply_chain.getLastLink()
+      # We got a valid industrial_phase
+      # Now, we have to generate Simulation Movement, in order to
+      # create a ProductionPackingList.
+      destination_node = last_link.getDestinationValue()
+      source_value = destination_node.getDestination()
+      source_section_value = last_link.getDestinationSection()
+      if source_value is not None:
+        property_dict["source"] = source_value
+      if source_section_value is not None:
+        property_dict["source_section"] = source_section_value
+    
       for prop in default_property_list:
         property_dict[prop] = movement.getProperty(prop)
     
       return property_dict
+
+from Products.ERP5Type.Utils import monkeyPatch
+monkeyPatch(TransformationSourcingRuleMixin, ProductionOrderRule)
