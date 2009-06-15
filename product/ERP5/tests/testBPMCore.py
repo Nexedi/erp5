@@ -1589,6 +1589,41 @@ class TestBPMTestCases(TestBPMMixin):
       trade_condition_1.getTradeModelLineComposedList()
     )
 
+  def test_findSpecialiseValueList(self):
+    '''
+      check that findSpecialiseValueList is able to return all the inheritance
+      model tree using Depth-first search
+
+                                  trade_condition_1
+                                    /           \
+                                   /             \
+                                  /               \
+                       trade_condition_2       trade_condition_3
+                               |
+                               |
+                               |
+                        trade_condition_4
+
+       according to Depth-first search algorihm, result of this graph should be
+       [trade_condition_1, trade_condition_2, trade_condition_3,
+       trade_condition_4]
+    '''
+    trade_condition_1 = self.createTradeCondition()
+    trade_condition_2 = self.createTradeCondition()
+    trade_condition_3 = self.createTradeCondition()
+    trade_condition_4 = self.createTradeCondition()
+
+    trade_condition_1.setSpecialiseValueList((trade_condition_2,
+      trade_condition_3))
+    trade_condition_2.setSpecialiseValue(trade_condition_4)
+
+    speciliase_value_list = trade_condition_1.findSpecialiseValueList(context=\
+        trade_condition_1)
+    self.assertEquals(len(speciliase_value_list), 4)
+    self.assertEquals(
+      [trade_condition_1, trade_condition_2, trade_condition_3,
+       trade_condition_4], speciliase_value_list)
+
   def test_TradeConditionTradeModelLineBasicCompositionWithOrder(self):
     """
       If Trade Condition is specialised by another Trade Condition they
