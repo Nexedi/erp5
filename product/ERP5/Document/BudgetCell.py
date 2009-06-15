@@ -87,10 +87,10 @@ class BudgetCell(Predicate, MetaNode):
       """
       Returns current inventory
       """
-      kw['node'] = self.getRelativeUrl()
+      kw['node_uid'] = self.getUid()
       resource = self.getResourceValue()
       if resource is not None:
-        kw['resource'] = resource.getRelativeUrl()
+        kw['resource_uid'] = resource.getUid()
       return self.portal_simulation.getCurrentInventory(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentBalance')
