@@ -33,7 +33,7 @@ class MemcachedPlugin:
 
   _properties = (
         {'id'          : 'server_max_key_length',
-         'description' : 'Mew key len authorise by Server. 0 means no limit',
+         'description' : 'Max key len authorised by Server. 0 means no limit',
          'type'        : 'int',
          'default'     :  250,
          'mode'        : 'w' ,
