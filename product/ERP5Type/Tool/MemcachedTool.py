@@ -262,10 +262,10 @@ if memcache is not None:
     manage_options = ({'label': 'Configure',
                        'action': 'memcached_tool_configure',
                       },) + BaseTool.manage_options
-  
+
     memcached_tool_configure = DTMLFile('memcached_tool_configure', _dtmldir)
-  
-    def _getMemcachedDict(self):
+
+    def _getMemcachedDict(self, plugin_path=None):
       """
         Return used memcached dict.
         Create it if does not exist.
@@ -273,65 +273,60 @@ if memcache is not None:
       try:
         dictionary = memcached_dict_pool.memcached_dict
       except AttributeError:
-        dictionary = MemcachedDict(self.getServerAddressList())
+        dictionary = MemcachedDict(self.getServerAddressList(plugin_path=plugin_path))
         memcached_dict_pool.memcached_dict = dictionary
       return dictionary
-  
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getMemcachedDict')
-    def getMemcachedDict(self, key_prefix):
+    def getMemcachedDict(self, key_prefix, plugin_path=None):
       """
         Returns an object which can be used as a dict and which gets from/stores
         to memcached server.
-        
+
         key_prefix
           Mendatory argument allowing different tool users from sharing the same
           dictionary key namespace.
+
+        plugin_path
+          relative_url of dedicated Memcached Plugin
       """
-      return SharedDict(dictionary=self._getMemcachedDict(), prefix=key_prefix)
-  
+      return SharedDict(dictionary=self._getMemcachedDict(plugin_path=plugin_path), prefix=key_prefix)
+
     security.declareProtected(Permissions.ModifyPortalContent, 'setServerAddress')
     def setServerAddress(self, value):
       """
         Set a memcached server address.
       """
       self.setServerAddressList([value, ])
-  
+
     security.declareProtected(Permissions.AccessContentsInformation, 'getServerAddress')
     def getServerAddress(self):
       """
         Return server address.
       """
       return self.getServerAddressList()[0]
-    
-    def getServerAddressList(self):
+
+    def getServerAddressList(self, plugin_path=None):
       """
         Get the list of memcached servers to use.
         Defaults to ['127.0.0.1:11211', ].
       """
       server_address_list = []
       for memcached_plugin in self.contentValues(portal_type='Memcached Plugin', sort_on='int_index'):
+        if plugin_path and memcached_plugin.getRelativeUrl() != plugin_path:
+          continue
         server_address_list.append(memcached_plugin.getUrlString())
       return server_address_list
 
-    def setServerAddressList(self, value):
-      """
-        Set the list of memcached servers to use.
 
-        Upon server address change, force next access to memcached dict to
-        reconnect to new ip.
-
-        This is safe in multi zope environment, since we modify self which is
-        persistent. Then all zopes will have to reload this tool instance, and
-        loose their volatile properties in the process, which will force them
-        to reconnect to memcached.
-      """
-      self.server_address_list = value
+    def manage_beforeDelete(self, document, container):
       try:
         del(memcached_dict_pool.memcached_dict)
       except AttributeError:
         pass
+      BaseTool.manage_beforeDelete(self, document, container)
 
-else:  
+else:
   # Placeholder memcache tool
   class MemcachedTool(BaseTool):
     """
@@ -358,6 +353,6 @@ else:
     setServerAddress = failingMethod
     getServerAddress = failingMethod
     getServerAddressList = failingMethod
-    setServerAddressList = failingMethod
+    manage_beforeDelete = failingMethod
     memcached_tool_configure = failingMethod
     getMemcachedDict = failingMethod
