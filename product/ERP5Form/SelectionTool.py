@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002,2007 Nexedi SARL and Contributors. All Rights Reserved.
@@ -113,14 +114,24 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
                 (self.absolute_url(), 'manage_viewSelections'))
 
     # storages of SelectionTool
-    storage_list = ('Persistent Mapping', 'Memcached Tool')
+    security.declareProtected(ERP5Permissions.ManagePortal
+                              , 'getStorageItemList')
+    def getStorageItemList(self):
+      """Return the list of available storages
+      """
+      #storage_item_list = [('Persistent Mapping', 'selection_data',)]
+      #list of tuple may fail dtml code: zope/documenttemplate/dt_in.py +578
+      storage_item_list = [['Persistent Mapping', 'selection_data']]
+      memcached_plugin_list = self.portal_memcached.contentValues(portal_type='Memcached Plugin', sort_on='int_index')
+      storage_item_list.extend([['/'.join((mp.getParentValue().getTitle(), mp.getTitle(),)), mp.getRelativeUrl()] for mp in memcached_plugin_list])
+      return storage_item_list
 
     security.declareProtected( ERP5Permissions.ManagePortal, 'setStorage')
     def setStorage(self, value, RESPONSE=None):
       """
         Set the storage of Selection Tool.
       """
-      if value in self.storage_list:
+      if value in [item[1] for item in self.getStorageItemList()]:
         self.storage = value
       else:
         raise ValueError, 'Given storage type (%s) is now supported.' % (value,)
@@ -128,15 +139,22 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         RESPONSE.redirect('%s/manage_configure' % (self.absolute_url()))
 
     def getStorage(self, default=None):
+      """return the selected storage
+      """
       if default is None:
-        default = self.storage_list[0]
+        default = self.getStorageItemList()[0][1]
       storage = getattr(aq_base(self), 'storage', default)
-      if storage is not default and storage not in self.storage_list:
-        storage = self.storage_list[0]
+      if storage is not default and storage not in [item[1] for item in self.getStorageItemList()]:
+        #Backward compatibility
+        if storage == 'Persistent Mapping':
+          storage = 'selection_data'
+        elif storage == 'Memcached Tool':
+          memcached_plugin_list = self.portal_memcached.contentValues(portal_type='Memcached Plugin', sort_on='int_index')
+          storage = memcached_plugin_list[0].getRelativeUrl()
       return storage
 
     def isMemcachedUsed(self):
-      return self.getStorage() == 'Memcached Tool'
+      return 'portal_memcached' in self.getStorage()
 
     def _redirectToOriginalForm(self, REQUEST=None, form_id=None, dialog_id=None,
                                 query_string=None,
@@ -1340,7 +1358,10 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
     def _getMemcachedContainer(self):
       value = getattr(aq_base(self), '_v_selection_data', None)
       if value is None:
-        value = self.getPortalObject().portal_memcached.getMemcachedDict(key_prefix='selection_tool')
+        plugin_path = self.getStorage()
+        value = self.getPortalObject().\
+                portal_memcached.getMemcachedDict(key_prefix='selection_tool',
+                                                  plugin_path=plugin_path)
         setattr(self, '_v_selection_data', value)
       return value
 

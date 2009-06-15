@@ -6,16 +6,30 @@
   Selection Tool supports Memcached Tool and Persistent Mapping for its storage.
 </p>
 <div>
-  Current setting: <dtml-var getStorage html_quote>
+  <dtml-let storage_item_list="getStorageItemList()">
+    <dtml-in prefix="store" name="storage_item_list">
+      <dtml-let storage="store_item[1]"
+                  storage_title="store_item[0]"
+                  selected="storage == getStorage()">
+        <dtml-if selected>
+          Current setting: <dtml-var storage_title html_quote>
+        </dtml-if>
+      </dtml-let>
+    </dtml-in>
+  </dtml-let>
 </div>
 
 <form action="setStorage" method="post">
   <select name="value">
-    <dtml-in "storage_list">
-      <dtml-let selected="_['sequence-item'] == getStorage() and ' selected' or ''">
-        <option value="&dtml-sequence-item;"&dtml-selected;>&dtml-sequence-item;</option>
-      </dtml-let>
-    </dtml-in>
+    <dtml-let storage_item_list="getStorageItemList()">
+      <dtml-in prefix="store" name="storage_item_list">
+        <dtml-let storage="store_item[1]"
+                  storage_title="store_item[0]"
+                  selected="storage == getStorage() and 'selected' or ''">
+          <option value="&dtml-storage;" &dtml-selected;>&dtml-storage_title;</option>
+        </dtml-let>
+      </dtml-in>
+    </dtml-let>
   </select>
   <input type="submit" value="Change"/>
 </form>
