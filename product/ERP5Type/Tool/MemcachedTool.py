@@ -341,5 +341,6 @@ else:
         ' server administrator to enable it by installing python-memcached.'
 
     manage_beforeDelete = failingMethod
+    manage_afterAdd = failingMethod
     memcached_tool_configure = failingMethod
     getMemcachedDict = failingMethod
