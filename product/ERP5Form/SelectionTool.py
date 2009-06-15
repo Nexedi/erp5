@@ -138,6 +138,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
       if RESPONSE is not None:
         RESPONSE.redirect('%s/manage_configure' % (self.absolute_url()))
 
+    security.declareProtected( ERP5Permissions.ManagePortal, 'getStorage')
     def getStorage(self, default=None):
       """return the selected storage
       """
