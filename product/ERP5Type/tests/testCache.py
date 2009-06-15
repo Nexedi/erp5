@@ -170,7 +170,7 @@ class TestRamCache(unittest.TestCase):
       ## check get()
       cache_entry = cache_plugin.get(cache_id, scope)
       if isinstance(value, Foo):
-        ## when memcached, we have a new object created for user
+        ## with memcached, we have a new object created for user
         ## just compare one field from it
         self.assertEqual(value.my_field, cache_entry.getValue().my_field)
       else:
