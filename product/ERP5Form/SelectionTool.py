@@ -139,13 +139,11 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         RESPONSE.redirect('%s/manage_configure' % (self.absolute_url()))
 
     security.declareProtected( ERP5Permissions.ManagePortal, 'getStorage')
-    def getStorage(self, default=None):
+    def getStorage(self, default='selection_data'):
       """return the selected storage
       """
-      if default is None:
-        default = self.getStorageItemList()[0][1]
       storage = getattr(aq_base(self), 'storage', default)
-      if storage is not default and storage not in [item[1] for item in self.getStorageItemList()]:
+      if storage is not default:
         #Backward compatibility
         if storage == 'Persistent Mapping':
           storage = 'selection_data'
