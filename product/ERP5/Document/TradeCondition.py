@@ -81,14 +81,14 @@ class TradeCondition(Path, Transformation, XMLMatrix):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'updateAggregatedAmountList')
-    def updateAggregatedAmountList(self, context, **kw):
+    def updateAggregatedAmountList(self, context, movement_list=None, rounding=None, **kw):
       existing_movement_list = context.getMovementList()
       aggregated_amount_list = self.getAggregatedAmountList(context=context,
-          **kw)
+          movement_list=movement_list, **kw)
       modified_resource_list = []
       normal_use_list = self.getPortalObject().portal_preferences\
               .getPreferredNormalResourceUseCategoryList()
-      # check if the existing movements are in aggregated movments
+      # check if the existing movements are in aggregated movements
       movement_to_delete_list = []
       movement_to_add_list = []
       for movement in existing_movement_list:
