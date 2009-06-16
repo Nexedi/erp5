@@ -79,7 +79,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
 
     zope.interface.implements(interfaces.ITransformation)
 
-    security.declareProtected(Permissions.ModifyPortalContent,
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'updateAggregatedAmountList')
     def updateAggregatedAmountList(self, context, **kw):
       existing_movement_list = context.getMovementList()
@@ -212,14 +212,14 @@ class TradeCondition(Path, Transformation, XMLMatrix):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getAggregatedAmountList')
     def getAggregatedAmountList(self, context, movement_list=None, **kw):
+      if movement_list is None:
+        movement_list = []
       result = AggregatedAmountList()
 
       trade_model_line_composed_list = \
           self.getTradeModelLineComposedList(context)
 
       need_to_run = 1
-      if movement_list is None:
-        movement_list = []
       while need_to_run:
         need_to_run = 0
         for model_line in trade_model_line_composed_list:
@@ -234,11 +234,8 @@ class TradeCondition(Path, Transformation, XMLMatrix):
           movement_list = result
 
       # remove movement that should not be created
-      final_list = []
-      for movement in result:
-        if movement.getCausalityValue().getCreateLine():
-          final_list.append(movement)
-      return final_list
+      result = [movement for movement in result if movement.getCausalityValue().getCreateLine()]
+      return result
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCell')
     def getCell(self, *kw , **kwd):
