@@ -1015,12 +1015,12 @@ def initializeProduct( context,
   help = context.getProductHelp()
   lastRegistered = help.lastRegistered
   context.registerHelp(directory='help', clear=1)
-  context.registerHelp(directory='Interface', clear=1)
+  context.registerHelp(directory='interfaces', clear=1)
   if help.lastRegistered != lastRegistered:
     help.lastRegistered = None
     context.registerHelp(directory='help', clear=1)
     help.lastRegistered = None
-    context.registerHelp(directory='Interface', clear=0)
+    context.registerHelp(directory='interfaces', clear=0)
 
   context.registerHelpTitle('%s Help' % product_name)
 
