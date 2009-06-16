@@ -506,6 +506,7 @@ class ActivityTool (Folder, UniqueObject):
     activity_creation_trace = False
     activity_tracking = False
     activity_timing_log = False
+    cancel_and_invoke_links_hidden = False
 
     def SQLDict_setPriority(self, **kw):
       real_SQLDict_setPriority = getattr(self.aq_parent, 'SQLDict_setPriority')
@@ -653,6 +654,30 @@ class ActivityTool (Folder, UniqueObject):
         if RESPONSE is not None:
           url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
           url += urllib.quote('Activity creation trace disabled')
+          RESPONSE.redirect(url)
+
+    security.declareProtected(Permissions.manage_properties, 'isCancelAndInvokeLinksHidden')
+    def isCancelAndInvokeLinksHidden(self):
+      return self.cancel_and_invoke_links_hidden
+
+    security.declareProtected(Permissions.manage_properties, 'manage_hideCancelAndInvokeLinks')
+    def manage_hideCancelAndInvokeLinks(self, REQUEST=None, RESPONSE=None):
+        """
+        """
+        self.cancel_and_invoke_links_hidden = True
+        if RESPONSE is not None:
+          url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
+          url += urllib.quote('Cancel and invoke links hidden')
+          RESPONSE.redirect(url)
+
+    security.declareProtected(Permissions.manage_properties, 'manage_showCancelAndInvokeLinks')
+    def manage_showCancelAndInvokeLinks(self, REQUEST=None, RESPONSE=None):
+        """
+        """
+        self.cancel_and_invoke_links_hidden = False
+        if RESPONSE is not None:
+          url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
+          url += urllib.quote('Cancel and invoke links visible')
           RESPONSE.redirect(url)
 
     def manage_beforeDelete(self, item, container):

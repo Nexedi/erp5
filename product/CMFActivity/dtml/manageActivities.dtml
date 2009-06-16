@@ -30,8 +30,18 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 <dtml-var manage_tabs>
 
 <h3>Queued Activities</h3>
+
+<dtml-let show_cancel_and_invoke_links="not isCancelAndInvokeLinksHidden()">
+<dtml-if show_cancel_and_invoke_links>
+  <p>Warning: Invoking or canceling activities will invoke/cancel all activities with both the same path and the same method_id.</p>
+  <p>Warning: Invoking an activity will <b>not</b> run any dependency check.</p>
+</dtml-if>
+
 <table cellspacing="0" cellpadding="2" border="1">
   <tr>
+    <dtml-if show_cancel_and_invoke_links>
+      <th align="left" valign="top"></th>
+    </dtml-if>
     <th align="left" valign="top">Uid</th>
     <th align="left" valign="top">Object</th>
     <th align="left" valign="top">Method Id</th>
@@ -44,9 +54,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
     <th align="left" valign="top">Call traceback</th>
   </tr>
   <dtml-in expr="getMessageList(include_processing=1)">
+    <dtml-let path="'/'.join(object_path)">
       <tr>
+        <dtml-if show_cancel_and_invoke_links>
+          <td align="left" valign="top">
+            <a href="manageCancel?object_path=&dtml-path;&amp;method_id=&dtml-method_id;">Cancel</a>
+            <a href="manageInvoke?object_path=&dtml-path;&amp;method_id=&dtml-method_id;">Invoke</a>
+          </td>
+        </dtml-if>
         <td align="left" valign="top"><dtml-var uid></td>
-        <td align="left" valign="top"><a href="<dtml-var "'/'.join(object_path)">"><dtml-var "'/'.join(object_path)"></a></td>
+        <td align="left" valign="top"><a href="&dtml-path;"><dtml-var path></a></td>
         <td align="left" valign="top"><dtml-var method_id></td>
         <td align="left" valign="top">
           <dtml-if activity_kw><dtml-var expr="_.repr(activity_kw)[1:-1]" html_quote>
@@ -76,8 +93,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
           </dtml-if>
         </td>
       </tr>
+    </dtml-let>
   </dtml-in>
 </table>
-
+</dtml-let>
 
 <dtml-var manage_page_footer>
