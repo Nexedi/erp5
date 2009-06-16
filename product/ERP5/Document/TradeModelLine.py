@@ -51,7 +51,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
     TODO:
       - make this code readable
       - use comments
-      - use docstrings
+      - use doctrings
     """
     meta_type = 'ERP5 Trade Model Line'
     portal_type = 'Trade Model Line'
@@ -135,8 +135,8 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
       tmp_movement_list = [q for q in current_aggregated_amount_list \
           if q.getReference() == self.getReference() ]
       if len(tmp_movement_list) > 0:
-        tmp_movement_list = tmp_movement_list[:1] # we need a list in case we
-                                                  # have cells
+        tmp_movement_list = tmp_movement_list[:1] # list is needed in case of
+                                                  # having cells
         update = 1
       else:
         common_params = {
@@ -158,7 +158,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
                                           base_category_list=base_cat)
           category_list_list.append(category_list)
         cartesian_product = cartesianProduct(category_list_list)
-        # if categories are used, we want to look for all cells
+        # look for cells if categories are used
         if len(category_list_list) > 0:
           for cell_coordinates in cartesian_product:
             cell = self.getCell(base_id=base_id, *cell_coordinates)
@@ -188,9 +188,8 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
             self.getQuantity(None) is None or \
             len(self.getVariationCategoryList()) and \
             tmp_movement.getQuantity(None) is None:
-          # if the quantity is not defined, that mean we should search on
-          # all movements with corresponding base_amount (if we use cells, we
-          # have to look on cells, if we don't, look on self)
+          # if the quantity is not defined, take it by searching all movements
+          # that used this base_amount
           for movement in movement_list:
             if set(base_application_list)\
                 .intersection(set(movement.getBaseContributionList())) and \
@@ -204,7 +203,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
               modified = 1
               tmp_movement.setQuantity(quantity + movement.getTotalPrice())
         else:
-          # if the quantity is defined, we use it
+          # if the quantity is defined, use it
           modified = 1
           if tmp_movement.getPrice() in (0, None):
             # if price is not defined, it the same as 100 %
@@ -215,7 +214,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
             base_category_list='salary_range') #XXX hardcoded values
         salary_range = len(salary_range_list) and salary_range_list[0] or None
         if salary_range is not None:
-          # we use slice
+          # slice are used
           model = self.getParentValue()
           cell = model.getCell(salary_range)
           if cell is None:

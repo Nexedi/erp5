@@ -41,7 +41,7 @@ from Products.ERP5Type.XMLMatrix import XMLMatrix
 import zope.interface
 
 # XXX TODO : getTradeModelLineComposedList and findSpecialiseValueList should
-# probably move to Transformation (better names sould be used)
+# probably move to Transformation (better names should be used)
 # XXX TODO: review naming of new methods
 # XXX WARNING: current API naming may change although model should be stable.
 
@@ -93,9 +93,8 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       movement_to_add_list = []
       for movement in existing_movement_list:
         keep_movement = False
-        # here we have to check if the movement is a generated one or
-        # entered by the user. If it has been entered by user, we have to
-        # keep it.
+        # check if the movement is a generated one or entered by the user.
+        # If it has been entered by user, keep it.
         resource = movement.getResourceValue()
         if resource is not None and \
             len(set(normal_use_list).intersection(set(resource\
@@ -172,7 +171,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
           # for contained Trade Model Lines
           document = context.getExplanationValue()
         containting_object_list.append(document)
-      containting_object_list.extend(self.findSpecialiseValueList(self))
+      containting_object_list.extend(self.findSpecialiseValueList(context=self))
 
       for specialise in containting_object_list:
         for trade_model_line in specialise.contentValues(
@@ -239,21 +238,18 @@ class TradeCondition(Path, Transformation, XMLMatrix):
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCell')
     def getCell(self, *kw , **kwd):
-      '''
-      Overload the function getCell to be able to search a cell on the
+      '''Overload the function getCell to be able to search a cell on the
       inheritance model tree if the cell is not found on current one.
       '''
       cell = XMLMatrix.getCell(self, *kw, **kwd)
-      # if cell not found, look on the inherited models
       if cell is None:
-        if kwd.has_key('paysheet'):
-          model_list = self.findEffectiveSpecialiseValueList(\
-              start_date=kwd['paysheet'].getStartDate(),
-              stop_date=kwd['paysheet'].getStopDate())
-        else:
-          model_list = self.findSpecialiseValueList(context=self)
-        if self in model_list:
-          model_list.remove(self)
+        # if cell not found, look on the inherited models
+        start_date = kwd.has_key('paysheet') and \
+            kwd['paysheet'].getStartDate() or None
+        stop_date = kwd.has_key('paysheet') and \
+            kwd['paysheet'].getStopDate() or None
+        model_list = self.findEffectiveSpecialiseValueList(\
+            context=self, start_date=start_date, stop_date=stop_date)
         for specialised_model in model_list:
           cell = XMLMatrix.getCell(specialised_model, *kw, **kwd)
           if cell is not None:
@@ -264,7 +260,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
         'getReferenceDict')
     def getReferenceDict(self, portal_type_list, property_list=None):
       '''Return a dict containing all id's of the objects contained in
-      this model and correponding to the given portal_type. The key of the dict
+      this model and corresponding to the given portal_type. The key of the dict
       are the reference (or id if no reference)
       '''
       if property_list is None:
@@ -284,13 +280,16 @@ class TradeCondition(Path, Transformation, XMLMatrix):
 
     security.declareProtected(Permissions.AccessContentsInformation,
         'findEffectiveSpecialiseValueList')
-    def findEffectiveSpecialiseValueList(self, start_date=None, stop_date=None):
+    def findEffectiveSpecialiseValueList(self, context, start_date=None,
+        stop_date=None):
       '''Returns a list of effective specialised objects representing
       inheritance tree.
-      An effective object is an object wich start and stop_date are equal (or
+      An effective object is an object which start and stop_date are equal (or
       included) to the range of the given start and stop_date.
+      If no start date and stop date are provided, findSpecialiseValueList is
+      returned
       '''
-      model_list = self.findSpecialiseValueList(self)
+      model_list = self.findSpecialiseValueList(context=context)
       if start_date is None and stop_date is None:
         return model_list
       new_list = [model.getEffectiveModel(start_date, stop_date) for model in\
@@ -328,7 +327,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
     def getEffectiveModel(self, start_date=None, stop_date=None):
       '''return the more appropriate model using effective_date, expiration_date
       and version number
-      An effective model is a model wich start and stop_date are equal (or
+      An effective model is a model which start and stop_date are equal (or
       included) to the range of the given start and stop_date and with the
       higher version number (if there is more than one)
       '''
@@ -353,7 +352,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       if len(effective_model_list):
         return effective_model_list[0]
 
-      # else, if there is model wich has effective period containing 
+      # else, if there is model which has effective period containing 
       # the start_date and the stop date of the paysheet, return it
       for current_model in model_object_list:
         if start_date >= current_model.getEffectiveDate() and \
@@ -373,6 +372,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       if v:
         return v
       model_list = self.findEffectiveSpecialiseValueList(\
+          context=self,
           start_date=paysheet.getStartDate(), stop_date=paysheet.getStopDate())
       for specialised_model in model_list:
         v = specialised_model.getProperty(property_name)
