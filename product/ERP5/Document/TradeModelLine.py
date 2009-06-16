@@ -37,6 +37,14 @@ from Products.ERP5Type.Utils import cartesianProduct
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 import zope.interface
 
+def isMovement(document):
+  """Hides isMovement method or variable complexity"""
+  if callable(document.isMovement):
+    is_movement = document.isMovement()
+  else:
+    is_movement = document.isMovement
+  return is_movement
+
 class TradeModelLine(Predicate, XMLMatrix, Amount):
     """Trade Model Line is a way to represent trade transformation for movements
 
@@ -101,28 +109,23 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
       # if temp_movements are passed as parameters, we want to use it,
       # otherwise, we will search for simulation movements
       if len(movement_list) == 0:
-        if context.getPortalType() == 'Applied Rule':
-          movement_list = [context.getParentValue()]
+        # no movements passed, need to find some
+        if isMovement(context):
+          # create movement lists from context
+          movement_list = [context]
         else:
-          if callable(context.isMovement):
-            is_movement = context.isMovement()
-          else:
-            is_movement = context.isMovement
-          if is_movement:
-            # we need to create aggreageted amount on context itself
-            movement_list = [context]
-          else:
+          # create movement list for delivery's movements
+          movement_list = []
+          for movement in context.getMovementList():
             # XXX: filtering shall be in getMovementList
-            movement_list = []
-            for movement in context.getMovementList():
-              # add only movement wich are input (i.e. resource use category
-              # is in the normal resource use preference list). Output will
-              # be recalculated
-              movement_resource = movement.getResourceValue()
-              if movement_resource is not None:
-                if movement_resource.getUse() in \
-                    normal_resource_use_category_list:
-                  movement_list.append(movement)
+            # add only movement which are input (i.e. resource use category
+            # is in the normal resource use preference list). Output will
+            # be recalculated
+            movement_resource = movement.getResourceValue()
+            if movement_resource is not None:
+              if movement_resource.getUse() in \
+                  normal_resource_use_category_list:
+                movement_list.append(movement)
       aggregated_amount_list = AggregatedAmountList()
       base_application_list = self.getBaseApplicationList()
 

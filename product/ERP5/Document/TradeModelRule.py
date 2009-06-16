@@ -119,8 +119,8 @@ class TradeModelRule(TransformationRule):
     if trade_condition is None or business_process is None:
       return movement_list
 
-    for amount in trade_condition.getAggregatedAmountList(applied_rule):
-      context_movement = applied_rule.getParentValue()
+    context_movement = applied_rule.getParentValue()
+    for amount in trade_condition.getAggregatedAmountList(context_movement):
       # everything static
       movement_kw = self._getStaticPropertyDict(context_movement)
 
