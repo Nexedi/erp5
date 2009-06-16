@@ -192,15 +192,16 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
           # have to look on cells, if we don't, look on self)
           for movement in movement_list:
             if set(base_application_list)\
-                .intersection(set(movement.getBaseContributionList())):
-              if len(movement.getVariationCategoryList()) == 0 or \
-                  set(movement.getVariationCategoryList()).intersection(\
-                  set(tmp_movement.getVariationCategoryList())):
-                # if the movement have no variation category, it's the same as
-                # if he have all variation categories
-                quantity = tmp_movement.getQuantity(0.0)
-                modified = 1
-                tmp_movement.setQuantity(quantity + movement.getTotalPrice())
+                .intersection(set(movement.getBaseContributionList())) and \
+                len(movement.getVariationCategoryList()) == 0 or \
+                set(movement.getVariationCategoryList()).intersection( \
+                set(tmp_movement.getVariationCategoryList())):
+              # at least one base application is in base contributions and
+              # if the movement have no variation category, it's the same as
+              # if he have all variation categories
+              quantity = tmp_movement.getQuantity(0.0)
+              modified = 1
+              tmp_movement.setQuantity(quantity + movement.getTotalPrice())
         else:
           # if the quantity is defined, we use it
           modified = 1
@@ -228,8 +229,8 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
             elif model_slice_max:
               tmp_movement.setQuantity(model_slice_max-model_slice_min)
 
-        if not update:
-          if modified:
-            aggregated_amount_list.append(tmp_movement)
+        if not update and modified:
+          # no movements were updated, but something was modified, so new movement appeared
+          aggregated_amount_list.append(tmp_movement)
 
       return aggregated_amount_list
