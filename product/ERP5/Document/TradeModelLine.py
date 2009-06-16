@@ -87,19 +87,19 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
       if not self.test(context):
         # This model_line should not be applied
         return []
+      if movement_list is None:
+        movement_list = []
+      if current_aggregated_amount_list is None:
+        current_aggregated_amount_list = []
 
       normal_resource_use_category_list = self.\
           portal_preferences.getPreferredNormalResourceUseCategoryList()
       if normal_resource_use_category_list is None:
         raise ValueError('preferred_normal_resource_use_category is not ' + \
             'configured in System Preferences')
-      if current_aggregated_amount_list is None:
-        current_aggregated_amount_list = []
 
-      if movement_list is None:
-        movement_list = []
-
-      # XXX - really unreadable - more comments please
+      # if temp_movements are passed as parameters, we want to use it,
+      # otherwise, we will search for simulation movements
       if len(movement_list) == 0:
         if context.getPortalType() == 'Applied Rule':
           movement_list = [context.getParentValue()]
@@ -115,6 +115,9 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
             # XXX: filtering shall be in getMovementList
             movement_list = []
             for movement in context.getMovementList():
+              # add only movement wich are input (i.e. resource use category
+              # is in the normal resource use preference list). Output will
+              # be recalculated
               movement_resource = movement.getResourceValue()
               if movement_resource is not None:
                 if movement_resource.getUse() in \
@@ -193,19 +196,15 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
               if len(movement.getVariationCategoryList()) == 0 or \
                   set(movement.getVariationCategoryList()).intersection(\
                   set(tmp_movement.getVariationCategoryList())):
-                  quantity = tmp_movement.getQuantity(0.0)
-                  modified = 1
-                  tmp_movement.edit(
-                    quantity = quantity + movement.getTotalPrice()
-                  )
+                quantity = tmp_movement.getQuantity(0.0)
+                modified = 1
+                tmp_movement.setQuantity(quantity + movement.getTotalPrice())
         else:
           # if the quantity is defined, we use it
           modified = 1
           if tmp_movement.getPrice() in (0, None):
             # if price is not defined, it the same as 100 %
-            tmp_movement.edit(
-              price = 1
-            )
+            tmp_movement.setPrice(1)
 
         # check if slices are used
         salary_range_list = tmp_movement.getVariationCategoryList(\
@@ -223,13 +222,9 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
           base_application = tmp_movement.getQuantity(0.0)
           if base_application-model_slice_min>0:
             if base_application <= model_slice_max:
-              tmp_movement.edit(
-                quantity = base_application-model_slice_min
-              )
+              tmp_movement.setQuantity(base_application-model_slice_min)
             elif model_slice_max:
-              tmp_movement.edit(
-                quantity = model_slice_max-model_slice_min
-              )
+              tmp_movement.setQuantity(model_slice_max-model_slice_min)
 
         if not update:
           if modified:
