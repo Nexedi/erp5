@@ -106,8 +106,8 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         raise ValueError('preferred_normal_resource_use_category is not ' + \
             'configured in System Preferences')
 
-      # if temp_movements are passed as parameters, we want to use it,
-      # otherwise, we will search for simulation movements
+      # if movement_list is passed as parameter, it shall be used,
+      # otherwise it is needed to look up for movements
       if len(movement_list) == 0:
         # no movements passed, need to find some
         if isMovement(context):
@@ -126,6 +126,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
               if movement_resource.getUse() in \
                   normal_resource_use_category_list:
                 movement_list.append(movement)
+
       aggregated_amount_list = AggregatedAmountList()
       base_application_list = self.getBaseApplicationList()
 
@@ -138,16 +139,16 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         update = 1
       else:
         common_params = {
-                'causality':self.getRelativeUrl(),
-                'resource':self.getResource(),
-                'reference':self.getReference(),
-                'base_application_list':base_application_list,
-                'base_contribution_list':self.getBaseContributionList(),
-                'start_date':context.getStartDate(),
-                'stop_date':context.getStopDate(),
-                'create_line':self.isCreateLine(),
-                'trade_phase_list':self.getTradePhaseList(),
-            }
+          'causality': self.getRelativeUrl(),
+          'resource': self.getResource(),
+          'reference': self.getReference(),
+          'base_application_list': base_application_list,
+          'base_contribution_list': self.getBaseContributionList(),
+          'start_date': context.getStartDate(),
+          'stop_date': context.getStopDate(),
+          'create_line': self.isCreateLine(),
+          'trade_phase_list': self.getTradePhaseList(),
+        }
         update = 0
         base_category_list = self.getVariationBaseCategoryList()
         category_list_list = []
@@ -164,8 +165,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
               raise ValueError("Can't find the cell corresponding to those "+\
                   "cells coordinates : %s" % cell_coordinates)
             tmp_movement = newTempSimulationMovement(self.getPortalObject(),
-                self_id )
-            tmp_movement.edit(
+                self_id,
                 variation_base_category_list = cell.getVariationBaseCategoryList(),
                 variation_category_list = cell.getVariationCategoryList(),
                 price = cell.getPrice(),
@@ -175,8 +175,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
             tmp_movement_list.append(tmp_movement)
         else:
           tmp_movement = newTempSimulationMovement(self.getPortalObject(),
-              self_id )
-          tmp_movement.edit(
+            self_id,
             quantity = self.getQuantity(0.0),
             price = self.getPrice(),
             **common_params
