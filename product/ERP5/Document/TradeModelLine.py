@@ -166,7 +166,8 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
               raise ValueError("Can't find the cell corresponding to those "+\
                   "cells coordinates : %s" % cell_coordinates)
             tmp_movement = newTempSimulationMovement(self.getPortalObject(),
-                self_id,
+                self_id)
+            tmp_movement.edit(
                 variation_base_category_list = cell.getVariationBaseCategoryList(),
                 variation_category_list = cell.getVariationCategoryList(),
                 price = cell.getPrice(),
