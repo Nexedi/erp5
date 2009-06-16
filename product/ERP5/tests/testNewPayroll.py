@@ -1302,6 +1302,45 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     self.assertNotEquals(social_insurance, None)
     social_insurance.getQuantity(3)
 
+  def stepCheckPaySheetTransaction_getMovementListReturn(self,
+      sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    # when pay sheet has no line, the script returns an empty list
+    self.assertEquals(len(paysheet.PaySheetTransaction_getMovementList()), 0)
+
+    # we add a line, then it is returned in the list
+    line = paysheet.newContent(portal_type='Pay Sheet Line')
+    self.assertEquals(len(paysheet.PaySheetTransaction_getMovementList()), 1)
+
+    # if the line has cells with different tax categories, new properties are
+    # added to this line.
+    urssaf_service = sequence.get('urssaf_service')
+    line.setResourceValue(urssaf_service)
+    line.setVariationCategoryList(['tax_category/employee_share',
+                                   'tax_category/employer_share'])
+    cell0 = line.newCell('tax_category/employee_share',
+                         portal_type='Pay Sheet Cell', base_id='movement')
+    cell0.setMappedValuePropertyList(['quantity', 'price'])
+    cell0.setVariationCategoryList(('tax_category/employee_share',))
+    cell0.setPrice(2)
+    cell0.setQuantity(3)
+    cell1 = line.newCell('tax_category/employer_share',
+                         portal_type='Pay Sheet Cell', base_id='movement')
+    cell1.setMappedValuePropertyList(['quantity', 'price'])
+    cell1.setVariationCategoryList(('tax_category/employer_share',))
+    cell1.setPrice(4)
+    cell1.setQuantity(5)
+
+    movement_list = paysheet.PaySheetTransaction_getMovementList()
+    self.assertEquals(1, len(movement_list))
+    movement = movement_list[0]
+    self.assertEquals(2, movement.employee_share_price)
+    self.assertEquals(3, movement.employee_share_quantity)
+    self.assertEquals(2*3, movement.employee_share_total_price)
+    self.assertEquals(4, movement.employer_share_price)
+    self.assertEquals(5, movement.employer_share_quantity)
+    self.assertEquals(4*5, movement.employer_share_total_price)
+
 class TestNewPayroll(TestNewPayrollMixin):
 
   BUSINESS_PATH_CREATION_SEQUENCE_STRING = """
@@ -1756,6 +1795,21 @@ class TestNewPayroll(TestNewPayrollMixin):
                CreateModelTree
                ModelTreeAddAnnotationLines
                CheckInheritanceModelReferenceDict
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_PaySheetTransaction_getMovementList(self):
+    '''
+      PaySheetTransaction_getMovementList is a script used by the listbox to
+      display information about lines in the Paysheet. Just test the return of
+      it.
+    '''
+    sequence_list = SequenceList()
+    sequence_string = """
+               CreateUrssafService
+               CreateBasicPaysheet
+               CheckPaySheetTransaction_getMovementListReturn
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
