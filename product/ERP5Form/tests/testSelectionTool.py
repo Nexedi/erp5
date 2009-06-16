@@ -357,10 +357,11 @@ class TestSelectionToolMemcachedStorage(TestSelectionTool):
     # create a Memcached Plugin
     memcached_tool = self.getPortal().portal_memcached
     if getattr(memcached_tool, 'default_memcached_plugin', None) is None:
-      memcached_tool.newContent(portal_type='Memcached Plugin',
+      memcached_tool.newContent(id='default_memcached_plugin',
+                                portal_type='Memcached Plugin',
                                 int_index=0,
                                 url_string='127.0.0.1:11211')
-    self.portal.portal_selections.setStorage('Memcached Tool')
+    self.portal.portal_selections.setStorage('portal_memcached/default_memcached_plugin')
     TestSelectionTool.afterSetUp(self)
 
   def testGetSelectionContainer(self, quiet=quiet, run=run_all_test):
