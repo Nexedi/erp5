@@ -147,7 +147,7 @@ for base_category, category_list in \\\n
               simulation_new_category_id_list.append({\'category\':category_id,\'path\':parent_path})\n
               if \'created\' in displayed_report:\n
                 report_line = newTempBase(context, \'item\')\n
-                report_line.edit(field_type = \'Creation\', field_category = context.portal_categories.getRelativeUrl()+\'/\'+category[\'path\'].split(category_id)[0]+category_id,  field_message = translateString("Will be created new ${type} with  URL ${url} ", mapping=dict(type=category_type, url=context.portal_categories.getRelativeUrl()+\'/\'+category[\'path\'].split(category_id)[0]+category_id)))                \n
+                report_line.edit(field_type = \'Creation\', field_category = category[\'path\'].split(category_id)[0]+category_id,  field_message = translateString("Will be created new ${type}", mapping=dict(type=category_type)))                \n
                 detailed_report_append(report_line)\n
             else:\n
               base_path_obj.newContent( portal_type       = category_type\n
@@ -156,7 +156,7 @@ for base_category, category_list in \\\n
                                     )\n
               if \'created\' in displayed_report:\n
                 report_line = newTempBase(context, \'item\')\n
-                report_line.edit(field_type = \'Creation\', field_category = base_path_obj[category_id].getRelativeUrl(), field_message = translateString("Created new ${type} with  URL ${url} ", mapping=dict(type=category_type, url=base_path_obj[category_id].getRelativeUrl())))    \n
+                report_line.edit(field_type = \'Creation\', field_category = base_path_obj[category_id].getRelativeUrl(), field_message = translateString("Created new ${type}", mapping=dict(type=category_type)))    \n
                 detailed_report_append(report_line)\n
           else:\n
             # The ID is invalid, we must break the loop\n
@@ -190,50 +190,53 @@ for base_category, category_list in \\\n
             elif update_existing_property:\n
               # Update if update existing property and the property is not the same\n
               if new_category.hasProperty(key):\n
-                if new_category.getProperty(key) != value :\n
+                if str(new_category.getProperty(key)) != value :\n
                   category_update_dict[key] = value\n
                   if not is_new_category and \'updated\' in displayed_report:\n
                     if first_update_reported:\n
-                      report_line = newTempBase(context, \'item\')\n
-                      report_line.edit(field_type = \'Update\', field_category = new_category.getRelativeUrl(), field_message = translateString("Updated ${key} with value ${value} ", mapping=dict(key=key, value=value)))                \n
-                      detailed_report_append(report_line)\n
+                      field_type = \'Update\'\n
+                      field_category = new_category.getRelativeUrl()\n
                       first_update_reported = False\n
                     else:\n
-                      report_line = newTempBase(context, \'item\')\n
-                      report_line.edit(field_type = \'\', field_category = \'\', field_message = translateString("Updated ${key} with value ${value} ", mapping=dict(key=key, value=value)))                \n
-                      detailed_report_append(report_line)\n
+                      field_type = \'\'\n
+                      field_category = \'\'\n
+                    report_line = newTempBase(context, \'item\')\n
+                    report_line.edit(field_type=field_type, field_category=field_category, field_message=translateString("Updated ${key} with value ${value} ", mapping=dict(key=key, value=value)))\n
+                    detailed_report_append(report_line)\n
               else:\n
                 if value not in (\'\', None) :\n
                   category_update_dict[key] = value\n
                   if not is_new_category and \'updated\' in displayed_report:\n
                     if first_update_reported:\n
-                      report_line = newTempBase(context, \'item\')\n
-                      report_line.edit(field_type = \'Update\', field_category = new_category.getRelativeUrl(), field_message = translateString("Updated ${key} with value ${value} ", mapping=dict(key=key, value=value)))                \n
-                      detailed_report_append(report_line)\n
+                      field_type = \'Update\'\n
+                      field_category = new_category.getRelativeUrl()\n
                       first_update_reported = False\n
                     else:\n
-                      report_line = newTempBase(context, \'item\')\n
-                      report_line.edit(field_type = \'\', field_category = \'\', field_message = translateString("Updated ${key} with value ${value} ", mapping=dict(key=key, value=value)))                \n
-                      detailed_report_append(report_line)\n
+                      field_type = \'\'\n
+                      field_category = \'\'\n
+                    report_line = newTempBase(context, \'item\')\n
+                    report_line.edit(field_type=field_type, field_category=field_category, field_message=translateString("Updated ${key} with value ${value} ", mapping=dict(key=key, value=value)))\n
+                    detailed_report_append(report_line)\n
             elif value not in (\'\', None) and not new_category.hasProperty(key):\n
-              context.log(new_category.getProperty(key))\n
               # Only set properties which are not already defined\n
-              context.log(new_category.hasProperty(key))\n
               category_update_dict[key] = value\n
               if \'updated\' in displayed_report:\n
                 if first_update_reported:\n
-                  report_line = newTempBase(context, \'item\')\n
-                  report_line.edit(field_type = \'Update\', field_category = new_category.getRelativeUrl(), field_message = translateString("Updated ${key} with value ${value} ", mapping=dict(key=key, value=value)))                \n
-                  detailed_report_append(report_line)\n
+                  field_type = \'Update\'\n
+                  field_category = new_category.getRelativeUrl()\n
                   first_update_reported = False\n
                 else:\n
-                  report_line = newTempBase(context, \'item\')\n
-                  report_line.edit(field_type = \'\', field_category = \'\', field_message = translateString("Updated ${key} with value ${value} ", mapping=dict(key=key, value=value)))                \n
-                  detailed_report_append(report_line)\n
+                  field_type = \'\'\n
+                  field_category = \'\'\n
+                report_line = newTempBase(context, \'item\')\n
+                report_line.edit(field_type=field_type, field_category=field_category, field_message=translateString("Updated ${key} with value ${value} ", mapping=dict(key=key, value=value)))\n
+                detailed_report_append(report_line)\n
         if not is_new_category and category_update_dict:\n
           updated_category_counter += 1\n
         if not simulation_mode:\n
-          new_category.edit(**category_update_dict)\n
+          # force_update=1 is required here because\n
+          # edit(short_title=\'foo\', title=\'foo\') only stores short_title property.\n
+          new_category.edit(force_update=1, **category_update_dict)\n
     else:\n
       raise KeyError, \'path was not defined for a category, this should never happen.\'\n
 \n
@@ -417,6 +420,8 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>first_update_reported</string>
                             <string>key</string>
                             <string>value</string>
+                            <string>field_type</string>
+                            <string>field_category</string>
                             <string>_apply_</string>
                             <string>KeyError</string>
                             <string>category_to_delete_list</string>
