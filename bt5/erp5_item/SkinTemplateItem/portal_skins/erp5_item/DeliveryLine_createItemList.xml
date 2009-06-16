@@ -56,10 +56,11 @@
             <value> <string encoding="cdata"><![CDATA[
 
 from Products.ERP5Type.Message import translateString\n
+from DateTime import DateTime\n
 item_list = []\n
 request = context.REQUEST\n
 total_quantity = 0.0\n
-\n
+now = DateTime().strftime(\'%d%m%y\')\n
 item_portal_type = request[\'type\']\n
 \n
 if context.getPortalType()==\'Purchase Packing List Line\':\n
@@ -93,7 +94,7 @@ for line in kw.get(\'listbox\'):\n
     module = context.getDefaultModule(item_portal_type)\n
     item = module.newContent(portal_type=item_portal_type,\n
      title=line[\'title\'],\n
-     reference=line[\'reference\'],\n
+     reference ="1%s%s" % (now, line["reference"].zfill(6)),\n
      quantity=line[\'quantity\'],\n
      quantity_unit=context.getQuantityUnit(),\n
      **item_property_dict)\n
@@ -201,11 +202,13 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
+                            <string>DateTime</string>
                             <string>item_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
                             <string>total_quantity</string>
+                            <string>now</string>
                             <string>_getitem_</string>
                             <string>item_portal_type</string>
                             <string>cell_portal_type</string>
