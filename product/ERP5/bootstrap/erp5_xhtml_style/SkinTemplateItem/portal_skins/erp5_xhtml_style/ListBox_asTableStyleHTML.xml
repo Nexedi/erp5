@@ -186,7 +186,7 @@
 \n
               <tr class ="thead">\n
                 <td tal:condition="python:not is_gadget_mode and show_select_column"\n
-                    class="Data" style="width: 50px; text-align: center; vertical-align: middle;float:left;">\n
+                    class="Data" style="width: 50px; text-align: center; vertical-align: middle; white-space: nowrap;">\n
                   <input id="listbox_check_all" type="image"\n
                          name="checkAll:method" value="1"\n
                          src="checkall.png" alt="Check All" title="Check All"\n
