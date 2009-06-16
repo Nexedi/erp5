@@ -60,6 +60,14 @@ class TestSessionTool(ERP5TypeTestCase):
     return "Session Tool"
 
   def afterSetUp(self):
+    # create a Memcached Plugin
+    memcached_tool = self.getPortal().portal_memcached
+    #create Memcache Plugin
+    if getattr(memcached_tool, 'default_memcached_plugin', None) is None:
+      memcached_tool.newContent(id='default_memcached_plugin',
+                                portal_type='Memcached Plugin',
+                                int_index=0,
+                                url_string='127.0.0.1:11211')
     self.login()
 
   def login(self, quiet=0, run=run_all_test):
@@ -78,6 +86,8 @@ class TestSessionTool(ERP5TypeTestCase):
     cache_plugin = session_cache_factory.newContent(portal_type=portal_type) 	 
     cache_plugin.setCacheDuration(storage_duration) 	 
     cache_plugin.setIntIndex(0)
+    if portal_type == 'Distributed Ram Cache':
+      cache_plugin.edit(specialise='portal_memcached/default_memcached_plugin')
     get_transaction().commit()    
     portal_caches.updateCache()
 
