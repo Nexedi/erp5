@@ -87,6 +87,7 @@ if price_currency:\n
 def copyPaymentCondition(paysheet, model):\n
   filter_dict = {\'portal_type\': \'Payment Condition\'}\n
   effective_model_list = model.findEffectiveSpecialiseValueList(\\\n
+      context=model,\n
       start_date=paysheet.getStartDate(), stop_date=paysheet.getStopDate())\n
   for effective_model in effective_model_list:\n
     to_copy = effective_model.contentIds(filter=filter_dict)\n
