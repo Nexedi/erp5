@@ -55,7 +55,6 @@
   container_width python:here.getLayoutProperty(\'layout_container_width\', 978);\n
   border_width python:here.getLayoutProperty(\'layout_border_width\', 10);\n
   main_width python:container_width - 2 * border_width;\n
-  right_column python:here.getLayoutProperty(\'layout_right_column\', False);\n
   right_column_width python:here.getLayoutProperty(\'layout_right_column_width\', 270);\n
   right_column_padding python:here.getLayoutProperty(\'layout_right_column_padding\', 12);\n
   main_content_width python:main_width - (right_column_padding + right_column_width) * ((has_right_column or 0) and 1);\n

@@ -52,6 +52,7 @@
 \n
 <tal:block define="\n
   site_url python:here.getWebSiteValue().absolute_url();\n
+  has_right_column python:bool(here.getLayoutProperty(\'layout_right_column\', False));\n
   body_color python:here.getLayoutProperty(\'layout_body_color\', \'rgb(240,240,240)\');\n
   primary_color python:here.getLayoutProperty(\'layout_primary_color\', \'rgb(200,200,200)\');\n
   secondary_color python:here.getLayoutProperty(\'layout_secondary_color\', \'rgb(225,225,225)\');\n
@@ -63,11 +64,10 @@
   header_background_image python:here.getLayoutProperty(\'layout_header_background_image\', \n
                                                         \'mf54_image/bg_header.jpg\');\n
   header_background_image python:\'%s/%s\' % (site_url, header_background_image);\n
-  right_column python:here.getLayoutProperty(\'layout_right_column\', False);\n
   right_column_width python:here.getLayoutProperty(\'layout_right_column_width\', 270);\n
   right_column_padding python:here.getLayoutProperty(\'layout_right_column_padding\', 12);\n
-  main_content_width python:main_width - right_column_padding - right_column_width;\n
-  content_icon_width python:(not right_column) * (right_column_width + right_column_padding);\n
+  main_content_width python:main_width - (right_column_padding + right_column_width) * ((has_right_column or 0) and 1);\n
+  content_icon_width python:(not has_right_column) * (right_column_width + right_column_padding);\n
 ">\n
 \n
 /****************************************************************/\n
@@ -376,6 +376,22 @@ fieldset.editable.bottom div.input {\n
   font-weight: bold;\n
 }\n
 \n
+button.sort_button {\n
+  background-color: inherit;\n
+  color: inherit;\n
+  border-width: 0;\n
+  cursor: pointer;\n
+  margin: 0;\n
+  padding: 0;\n
+}\n
+\n
+button.sort_button span {\n
+  color: inherit;\n
+  text-decoration: underline;\n
+  font-size: 62.5% !important;\n
+  font-weight: bold;\n
+}\n
+\n
 /* Edit tabs styling.\n
 ** Edit tabs are another part of admin stuffs and\n
 ** should respect other admin design convention\n
@@ -423,6 +439,10 @@ div.document div.actions ul a:hover {\n
 \n
 div.input select, div.input textarea {\n
   border: 1px solid #999;\n
+}\n
+\n
+#fieldset_bottom > div.field > div.input > textarea {\n
+  width:<tal:block tal:replace="python:main_content_width-2"/>px;\n
 }\n
 \n
 div.bottom_actions button {\n
