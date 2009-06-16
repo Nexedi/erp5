@@ -183,7 +183,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
             len(self.getVariationCategoryList()) and \
             tmp_movement.getQuantity(None) is None:
           # if the quantity is not defined, that mean we should search on
-          # all movements with correponding base_amount (if we use cells, we
+          # all movements with corresponding base_amount (if we use cells, we
           # have to look on cells, if we don't, look on self)
           for movement in movement_list:
             if set(base_application_list)\
