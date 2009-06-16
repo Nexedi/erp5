@@ -193,11 +193,11 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
           for movement in movement_list:
             if set(base_application_list)\
                 .intersection(set(movement.getBaseContributionList())):
-              # if the movement have no variation category, it's the same as
-              # if he have all variation categories
               if len(movement.getVariationCategoryList()) == 0 or \
                   set(movement.getVariationCategoryList()).intersection(\
                   set(tmp_movement.getVariationCategoryList())):
+                # if the movement have no variation category, it's the same as
+                # if he have all variation categories
                 quantity = tmp_movement.getQuantity(0.0)
                 modified = 1
                 tmp_movement.setQuantity(quantity + movement.getTotalPrice())
