@@ -135,7 +135,8 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
       tmp_movement_list = [q for q in current_aggregated_amount_list \
           if q.getReference() == self.getReference() ]
       if len(tmp_movement_list) > 0:
-        tmp_movement_list = tmp_movement_list[:1]
+        tmp_movement_list = tmp_movement_list[:1] # we need a list in case we
+                                                  # have cells
         update = 1
       else:
         common_params = {
@@ -230,7 +231,8 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
               tmp_movement.setQuantity(model_slice_max-model_slice_min)
 
         if not update and modified:
-          # no movements were updated, but something was modified, so new movement appeared
+          # no movements were updated, but something was modified, so new
+          # movement appeared
           aggregated_amount_list.append(tmp_movement)
 
       return aggregated_amount_list
