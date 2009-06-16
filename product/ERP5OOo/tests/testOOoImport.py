@@ -727,6 +727,7 @@ class TestOOoImport(ERP5TypeTestCase):
     self.assertTrue('france' in region.europe.objectIds())
     france = region.europe.france
     self.assertEquals('France', france.getTitle())
+    self.assertTrue(france.hasProperty('title'))
     self.assertEquals('A Country', france.getDescription())
     self.assertEquals('FR', france.getCodification())
     self.assertEquals(1, france.getIntIndex())
