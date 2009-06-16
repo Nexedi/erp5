@@ -21,7 +21,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-accounting_module/view?reset:int=1&local_roles:list=Assignee&local_roles:list=Assignor&local_roles:list=Associate&portal_type=Sale+Invoice+Transaction&causality_state=diverged
+accounting_module/view?reset:int=1&local_roles=%(local_roles)s&portal_type=%(portal_type)s&causality_state=diverged
 
 ]]></string> </value>
         </item>

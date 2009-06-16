@@ -21,7 +21,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-accounting_module/view?reset:int=1&local_roles=Assignee&simulation_state=started&portal_type=%(portal_type)s
+accounting_module/view?reset:int=1&local_roles=%(local_roles)s&simulation_state=started&portal_type=%(portal_type)s
 
 ]]></string> </value>
         </item>
