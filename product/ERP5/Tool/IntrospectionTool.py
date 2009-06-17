@@ -35,13 +35,14 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from AccessControl.SecurityManagement import setSecurityManager
 from Products.ERP5 import _dtmldir
+from Products.ERP5.Tool.LogMixin import LogMixin
 from Products.ERP5Type.Utils import _setSuperSecurityManager
 from App.config import getConfiguration
 import tarfile
 
 _MARKER = []
 
-class IntrospectionTool(BaseTool):
+class IntrospectionTool(LogMixin, BaseTool):
   """
     This tool provides both local and remote introspection.
   """
@@ -50,7 +51,6 @@ class IntrospectionTool(BaseTool):
   title = 'Introspection Tool'
   meta_type = 'ERP5 Introspection Tool'
   portal_type = 'Introspection Tool'
-  allowed_content_types = ('Anonymized Introspection Report', 'User Introspection Report',) # XXX User Portal Type please
 
   security = ClassSecurityInfo()
 
