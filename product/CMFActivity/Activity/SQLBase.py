@@ -48,12 +48,14 @@ class SQLBase:
   def getMessageList(self, activity_tool, processing_node=None,
                      include_processing=0, **kw):
     # YO: reading all lines might cause a deadlock
+    class_name = self.__class__.__name__
     readMessageList = getattr(activity_tool,
-                              self.__class__.__name__ + '_readMessageList',
+                              class_name + '_readMessageList',
                               None)
     if readMessageList is None:
       return []
     return [self.loadMessage(line.message,
+                             activity=class_name,
                              uid=line.uid,
                              processing_node=line.processing_node,
                              priority=line.priority,

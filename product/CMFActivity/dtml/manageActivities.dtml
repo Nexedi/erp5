@@ -62,7 +62,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
             <a href="manageInvoke?object_path=&dtml-path;&amp;method_id=&dtml-method_id;">Invoke</a>
           </td>
         </dtml-if>
-        <td align="left" valign="top"><dtml-var uid></td>
+        <td align="left" valign="top"><dtml-var uid>
+          <dtml-var expr="{'SQLDict':'(dict)','SQLQueue':'(queue)'}[activity]">
+        </td>
         <td align="left" valign="top"><a href="&dtml-path;"><dtml-var path></a></td>
         <td align="left" valign="top"><dtml-var method_id></td>
         <td align="left" valign="top">
