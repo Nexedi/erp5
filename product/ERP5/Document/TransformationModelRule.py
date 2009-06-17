@@ -29,6 +29,7 @@
 ##############################################################################
 
 from ExtensionClass import Base
+import zope.interface
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base, aq_parent, aq_inner, aq_acquire
 from Products.CMFCore.utils import getToolByName
@@ -214,8 +215,8 @@ class TransformationModelRule(TransformationModelRuleMixin, Rule):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  __implements__ = ( interfaces.IPredicate,
-                     interfaces.IRule )
+  zope.interface.implements(interfaces.IPredicate,
+                            interfaces.IRule )
   # Default Properties
   property_sheets = ( PropertySheet.Base
                       , PropertySheet.XMLObject
