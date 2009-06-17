@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #Code based on python-memcached-1.44
+import types
 try:
   import cPickle as pickle
 except ImportError:
@@ -66,7 +67,7 @@ if memcache is not None:
     except TypeError:
         self.picklerIsKeyword = False
 
-  def Client_check_key(key, key_extra_len=0):
+  def memcache_check_key(key, key_extra_len=0):
     """Checks sanity of key.  Fails if:
         Key length is > SERVER_MAX_KEY_LENGTH (Raises MemcachedKeyLength).
         Contains control characters  (Raises MemcachedKeyCharacterError).
@@ -86,10 +87,12 @@ if memcache is not None:
       raise Client.MemcachedKeyTypeError, ("Key must be str()'s")
 
     if isinstance(key, basestring):
-      if self.server_max_key_length != 0 and len(key) + key_extra_len > self.server_max_key_length:
-         raise Client.MemcachedKeyLengthError, ("Key length is > %s"
-                   % self.server_max_key_length)
       for char in key:
+        #Patch: skip key length check because we have no information
+        #about key length in memcache class level.
+        if 0 and len(key) + key_extra_len > SERVER_MAX_KEY_LENGTH:
+             raise Client.MemcachedKeyLengthError, ("Key length is > %s"
+                     % SERVER_MAX_KEY_LENGTH)
         if ord(char) < 32 or ord(char) == 127:
             raise Client.MemcachedKeyCharacterError, "Control characters not allowed"
 
@@ -141,6 +144,6 @@ if memcache is not None:
     return (flags, len(val), val)
 
   Client.__init__ = Client__init__
-  Client.check_key = Client_check_key
   Client._val_to_store_info = Client__val_to_store_info
-  memcache.Client = Client
+  memcache.check_key = memcache_check_key
+  del Client__init__, Client__val_to_store_info, memcache_check_key
