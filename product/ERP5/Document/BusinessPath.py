@@ -144,15 +144,14 @@ class BusinessPath(Path):
       XXX - implementation missing
       TBD - look at CategoryTool._buildFilter for inspiration
     """
-    filtered_category_list = []
-    for local_category in category_list:
-      # basic filtering, dirty way:
-      #  - remove categories, which are not defined in category parameter
-      #  - support base parameter
-      base_category, base_value = local_category.split('/', 1)
-      if base_category == category:
-        filtered_category_list.append(base == 1 and local_category or base_value)
-    return filtered_category_list
+    # basic filtering:
+    #  * remove categories which base name is not category
+    #  * respect base parameter
+    prefix = category + '/'
+    start_index = not base and len(prefix) or 0
+    return [category[start_index:]
+            for category in category_list
+            if category.startswith(prefix)]
 
   # Dynamic context based categories
   def _getDynamicCategoryList(self, context):
