@@ -243,27 +243,23 @@ class Person(XMLObject):
           Default: 'default'
       """
       marker = []
+      if len(args):
+        default_password = args[0]
+      else:
+        default_password = None
       password = getattr(aq_base(self), 'password', marker)
       if password is marker:
-        if len(args):
-          password = args[0]
-        else:
-          password = None
+        password = default_password
       else:
         format = kw.get('format', 'default')
         # Backward compatibility: if it's not a PersistentMapping instance,
         # assume it's a monovalued string, which corresponds to default
         # password encoding.
         if isinstance(password, PersistentMapping):
-          password = password.get(format, marker)
-          if password is marker:
-            if len(args):
-              password = args[0]
-            else:
-              password = None
+          password = password.get(format, default_password)
         else:
           if format != 'default':
-            password = None
+            password = default_password
       return password
 
     # Time management
