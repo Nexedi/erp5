@@ -870,12 +870,14 @@ class TestOOoImport(ERP5TypeTestCase):
                            title='region'),
                       region[0])
     self.assertEquals(dict(path='region/europe',
+                           short_title='Europe',
                            title='Europe'),
                       region[1])
     self.assertEquals(dict(codification='FR',
                            description='A Country',
                            int_index='1',
                            path='region/europe/france',
+                           short_title='France',
                            title='France'),
                       region[2])
     # strings are encoded in UTF8
