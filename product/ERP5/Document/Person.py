@@ -234,7 +234,7 @@ class Person(XMLObject):
         getPassword([default], [format='default'])
 
         default (anything)
-          Value to return if no passord is set on context.
+          Value to return if no password is set on context.
           Default: None
         format (string)
           String defining the format in which the password is expected.
