@@ -2381,6 +2381,13 @@ class TestBPMImplementation(TestBPMMixin):
     self.assertEquals(node.getRelativeUrl(),
         business_path.getSource(default='something'))
 
+  def test_EmptyBusinessPathStandardCategoryAccessProvider(self):
+    business_path = self.createBusinessPath()
+    self.assertEquals(None, business_path.getSourceValue())
+    self.assertEquals(None, business_path.getSource())
+    self.assertEquals('something',
+        business_path.getSource(default='something'))
+
   def test_BuinessPathDynamicCategoryAccessProvider(self):
     node = self.portal.organisation_module.newContent(
                     portal_type='Organisation')
@@ -2395,6 +2402,19 @@ class TestBPMImplementation(TestBPMMixin):
     self.assertEquals(node.getRelativeUrl(),
                       business_path.getSource(context=context_movement))
     self.assertEquals(node.getRelativeUrl(),
+      business_path.getSource(context=context_movement, default='something'))
+
+  def test_BuinessPathDynamicCategoryAccessProviderEmptyMovement(self):
+    business_path = self.createBusinessPath()
+    business_path.setSourceMethodId('BusinessPath_getDefaultSourceList')
+
+    context_movement = self.createMovement()
+    self.assertEquals(None, business_path.getSourceValue())
+    self.assertEquals(None,
+                      business_path.getSourceValue(context=context_movement))
+    self.assertEquals(None,
+                      business_path.getSource(context=context_movement))
+    self.assertEquals('something',
       business_path.getSource(context=context_movement, default='something'))
 
   def test_BusinessState_getRemainingTradePhaseList(self):
