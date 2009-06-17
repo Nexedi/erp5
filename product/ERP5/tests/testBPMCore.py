@@ -2407,7 +2407,7 @@ class TestBPMImplementation(TestBPMMixin):
                       business_path.getSourceValueList(context=context_movement))
     self.assertEquals([source_node.getRelativeUrl()],
                       business_path.getSourceList(context=context_movement))
-    self.assertEquals(node.getRelativeUrl(),
+    self.assertEquals(source_node.getRelativeUrl(),
       business_path.getSource(context=context_movement, default='something'))
 
   def test_BuinessPathDynamicCategoryAccessProviderEmptyMovement(self):
