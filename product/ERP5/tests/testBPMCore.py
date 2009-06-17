@@ -2372,13 +2372,16 @@ class TestBPMImplementation(TestBPMMixin):
     )
 
   def test_BusinessPathStandardCategoryAccessProvider(self):
-    node = self.portal.organisation_module.newContent(
+    source_node = self.portal.organisation_module.newContent(
+                    portal_type='Organisation')
+    source_section_node = self.portal.organisation_module.newContent(
                     portal_type='Organisation')
     business_path = self.createBusinessPath()
-    business_path.setSourceValue(node)
-    self.assertEquals(node, business_path.getSourceValue())
-    self.assertEquals(node.getRelativeUrl(), business_path.getSource())
-    self.assertEquals(node.getRelativeUrl(),
+    business_path.setSourceValue(source_node)
+    business_path.setSourceSectionValue(source_section_node)
+    self.assertEquals([source_node], business_path.getSourceValueList())
+    self.assertEquals([source_node.getRelativeUrl()], business_path.getSourceList())
+    self.assertEquals(source_node.getRelativeUrl(),
         business_path.getSource(default='something'))
 
   def test_EmptyBusinessPathStandardCategoryAccessProvider(self):
@@ -2389,18 +2392,21 @@ class TestBPMImplementation(TestBPMMixin):
         business_path.getSource(default='something'))
 
   def test_BuinessPathDynamicCategoryAccessProvider(self):
-    node = self.portal.organisation_module.newContent(
+    source_node = self.portal.organisation_module.newContent(
+                    portal_type='Organisation')
+    source_section_node = self.portal.organisation_module.newContent(
                     portal_type='Organisation')
     business_path = self.createBusinessPath()
     business_path.setSourceMethodId('BusinessPath_getDefaultSourceList')
 
     context_movement = self.createMovement()
-    context_movement.setSourceValue(node)
+    context_movement.setSourceValue(source_node)
+    context_movement.setSourceSectionValue(source_section_node)
     self.assertEquals(None, business_path.getSourceValue())
-    self.assertEquals(node,
-                      business_path.getSourceValue(context=context_movement))
-    self.assertEquals(node.getRelativeUrl(),
-                      business_path.getSource(context=context_movement))
+    self.assertEquals([source_node],
+                      business_path.getSourceValueList(context=context_movement))
+    self.assertEquals([source_node.getRelativeUrl()],
+                      business_path.getSourceList(context=context_movement))
     self.assertEquals(node.getRelativeUrl(),
       business_path.getSource(context=context_movement, default='something'))
 
