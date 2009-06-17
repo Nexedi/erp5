@@ -52,6 +52,7 @@
   secondary_color python:here.getLayoutProperty(\'layout_secondary_color\', \'rgb(225,225,225)\');\n
   header_color python:here.getLayoutProperty(\'layout_header_color\', \'rgb(218,218,218)\');\n
   menu_color python:here.getLayoutProperty(\'layout_menu_color\', \'rgb(235,235,235)\');\n
+  font_list python:here.getLayoutProperty(\'layout_font_list\', \'Century Gothic, verdana, arial, sans-serif\');\n
   container_width python:here.getLayoutProperty(\'layout_container_width\', 978);\n
   border_width python:here.getLayoutProperty(\'layout_border_width\', 10);\n
   main_width python:container_width - 2 * border_width;\n
@@ -96,10 +97,10 @@ div.subcontent-box.cartbox fieldset.widget div.field table tr td.cart_bottom div
 \n
 div.selected-product {height : 110px; width:<tal:block tal:replace="main_content_width"/>px; padding-left:25px; margin-bottom:10px;}\n
 div.selected-product div {float:left; width:100px; height:100px; text-align:center; padding-right: 25px;}\n
-div.selected-product img {border:solid 1px #000; padding:0px; margin-left:10px; margin-right:10px; margin-top:5px; margin-bottom:2px;}\n
-div.selected-product img:hover {border:solid 1px #000; padding:0px; margin:0px; margin-left:10px; margin-right:10px;}\n
+div.selected-product img {border:solid 1px <tal:block tal:replace="primary_color"/>; padding:0px; margin-left:10px; margin-right:10px; margin-top:5px; margin-bottom:2px;}\n
+div.selected-product img:hover {border:solid 2px <tal:block tal:replace="primary_color"/>; padding:0px; margin-top:4px; margin-left:9px; margin-right:9px; margin-bottom:1px;}\n
 .cart_item_name {width:180px;}\n
-.headline     {float:left; width:<tal:block tal:replace="main_content_width"/>px;}\n
+.headline     {float:left; width:<tal:block tal:replace="main_width"/>px;}\n
 \n
 \n
 .resource_left {float:left; width:<tal:block tal:replace="python: (main_content_width / 3) * 2"/>px;}\n
@@ -108,17 +109,17 @@ div.selected-product img:hover {border:solid 1px #000; padding:0px; margin:0px; 
 div.resource_image {float:left;}\n
 div.resource_image img {border:none; margin-left:5px;}\n
 fieldset.resource_left div.hiddenLabel label {display:none;}\n
-fieldset.resource_left div.hiddenLabel div.input {float:left; width:<tal:block tal:replace="python: main_content_width / 3"/>px}\n
+fieldset.resource_left div.hiddenLabel div.input {float:left; width:<tal:block tal:replace="python: main_content_width / 3"/>px; padding:0px}\n
 fieldset.resource_left div.hiddenLabel div.input span.hiddenLabel {font: 20px bold Verdana,sans-serif; padding-top:10px;}\n
 div.resource_image label {display:none;}\n
 .resource_right div.hidden label {display:none;}\n
 .resource_right div.field label a {display:none;}\n
-.resource_right div.field label {height:20px; width:100px; float:left;}\n
-.resource_right div.field div.input {height:20px; width:100px; float:right;}\n
+.resource_right div.field label {height:20px; width:100px; float:left; padding:0px;}\n
+.resource_right div.field div.input {height:20px; width:100px; float:right; padding:0px}\n
 .resource_right div.field {margin:5px}\n
 .resource_center div.hiddenLabel div.input input {}\n
 .resource_center div.field label a {display:none;}\n
-.resource_center div.hiddenLabel label {margin-left:15px;}\n
+.resource_center div.hiddenLabel label {margin-left:15px;padding:0px;}\n
 .product_description_header {margin: 5px; margin-left:15px;}\n
 .product_description {display:none;}\n
 .product_description_close {margin: 5px; margin-left:15px;}\n
@@ -133,6 +134,8 @@ div.resource_image label {display:none;}\n
 .product_list:hover {border-top: 1px solid <tal:block tal:replace="primary_color"/>; border-bottom: 1px solid <tal:block tal:replace="primary_color"/>; background-color:<tal:block tal:replace="secondary_color"/>;}\n
 .product_list_bis:hover {border-top: 1px solid <tal:block tal:replace="primary_color"/>;border-bottom: 1px solid <tal:block tal:replace="primary_color"/>; background-color:<tal:block tal:replace="secondary_color"/>;}\n
 \n
+div.shopping_cart_renderer div.input {padding:0px;}\n
+\n
 .shopping_cart_renderer_title {float:left; margin-top:8px;}\n
 .shopping_cart_renderer_remove {float:right; margin-top:3px;}\n
 .shopping_cart_renderer_remove a img {border:none;}\n
@@ -141,13 +144,34 @@ div.resource_image label {display:none;}\n
 .shopping_cart_renderer_shipping label a {display:none;}\n
 .shopping_cart_renderer_submit label a {display:none;}\n
 \n
-div.shopping_cart_renderer_shipping {width: <tal:block tal:replace="python: main_content_width - 40"/>px; height:20px; margin-bottom:20px; margin-top:20px; padding-left:20px; padding-right:20px; padding-top:3px;background-color:<tal:block tal:replace="body_color"/>;}\n
-.shopping_cart_renderer_shipping label {float:left; width: <tal:block tal:replace="python: main_content_width / 4"/>px; height:20px;}\n
-.shopping_cart_renderer_shipping div {float:right; height:20px;}\n
-div.shopping_cart_renderer_submit {width: <tal:block tal:replace="python: main_content_width - 40"/>px; height:20px; margin-bottom:20px; padding-left:20px; padding-right:20px; padding-top:3px; background-color:<tal:block tal:replace="body_color"/>;}\n
-.shopping_cart_renderer_submit label {float:left; width: <tal:block tal:replace="python: main_content_width / 8"/>px; height:20px;}\n
-.shopping_cart_renderer_submit div {float:right; height:20px;}\n
+div.shopping_cart_renderer_shipping {width: <tal:block tal:replace="python: main_content_width - 40"/>px; height:20px; margin-bottom:20px; margin-top:20px; padding-left:20px; padding-right:20px; padding-top:3px; padding-bottom:3px; background-color:<tal:block tal:replace="body_color"/>;}\n
+.shopping_cart_renderer_shipping label {float:left; width: <tal:block tal:replace="python: main_content_width / 4"/>px; height:20px;padding:0px;}\n
+.shopping_cart_renderer_shipping div {float:right; height:20px; padding:0px}\n
+div.shopping_cart_renderer_submit {width: <tal:block tal:replace="python: main_content_width - 40"/>px; height:20px; margin-bottom:20px; padding-left:20px; padding-right:20px; padding-top:3px;  padding-bottom:3px; background-color:<tal:block tal:replace="body_color"/>;}\n
+.shopping_cart_renderer_submit label {float:left; width: <tal:block tal:replace="python: main_content_width / 8"/>px; height:20px;padding:0px;}\n
+.shopping_cart_renderer_submit div {float:right; height:20px; padding:0px}\n
 \n
+.mf_commerce_text {font: 12px <tal:block tal:replace="python: \',\'.join(font_list)"/>}\n
+.mf_commerce_text_bold {font: bold 12px <tal:block tal:replace="python: \',\'.join(font_list)"/>;}\n
+.mf_commerce_text_small {font: 8px <tal:block tal:replace="python: \',\'.join(font_list)"/>;}\n
+.mf_commerce_text_description {font: 10px <tal:block tal:replace="python: \',\'.join(font_list)"/>;}\n
+\n
+div.hiddenLabel label {display:none;}\n
+fieldset.editable div.input {padding:0px;}\n
+\n
+.main_content table {border-top: solid 1px <tal:block tal:replace="primary_color"/>;}\n
+.main_content table th {border:none; background-color:<tal:block tal:replace="body_color"/>;}\n
+.main_content table tr {border:none; border-bottom:dashed 1px <tal:block tal:replace="menu_color"/>; background-color:#FFF;}\n
+.main_content table td {border:none; background-color:#FFF;}\n
+.main_content table tr.thead_bottom {border:none; background-color:<tal:block tal:replace="menu_color"/>;}\n
+.main_content table tr.thead_top {border:none; background-color:<tal:block tal:replace="secondary_color"/>;}\n
+.main_content table tr.thead_bottom td {border: solid 1px <tal:block tal:replace="primary_color"/>;border-width: 1px 0px 1px 0px;}\n
+.main_content table tr.tfoot {border:none;}\n
+.main_content table caption {margin-top:10px; text-align:center; padding-bottom:10px;}\n
+.main_content button.sort_button {float:left;}\n
+.main_content th img {clear:none; border:none; margin-left:5px;}\n
+.main_content .pageNavigation input {vertical-align:middle;}\n
+.main_content table td.td_check_all {background-color:<tal:block tal:replace="body_color"/>;}\n
 </tal:block>
 
 ]]></string> </value>

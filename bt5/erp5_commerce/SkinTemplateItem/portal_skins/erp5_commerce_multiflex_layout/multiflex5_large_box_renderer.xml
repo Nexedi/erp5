@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block metal:define-macro="large_widget">\n
+        <a id="anchor-sidemenu-4" tal:attributes="id gid"></a>\n
+        <div class="corner-content-1col-top" tal:condition="python:len(field_list)"></div>\n
+        <div tal:attributes="class python: gid.lstrip(aggregate_name) + \' content-1col-nobox\';"\n
+             tal:condition="python:len(field_list)">\n
+          <h1 class="group_title" i18n:translate="" i18n:domain="ui" tal:content="python: gtitle">4-01a. Side menu 1</h1>\n
+          <fieldset class="widget">\n
+            <!-- <legend i18n:translate="" i18n:domain="ui" tal:content="python: gtitle" class="group_title"/> -->\n
+            <tal:block tal:repeat="field field_list">\n
+              <tal:block metal:use-macro="here/field_render/macros/field_render"/>\n
+            </tal:block>\n
+          </fieldset>\n
+        </div>\n
+        <div class="corner-content-1col-bottom" tal:condition="python:len(field_list)"></div>\n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>multiflex5_large_box_renderer</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

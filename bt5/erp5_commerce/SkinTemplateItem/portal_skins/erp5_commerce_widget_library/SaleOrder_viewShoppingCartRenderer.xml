@@ -65,7 +65,7 @@
                       quantity python: int(order_line.getQuantity());\n
                       price    python: resource.getPrice();\n
                       order_line_id python: order_line.getId();\n
-                      currency python: here.restrictedTraverse(shopping_cart.getPriceCurrency());\n
+                      currency python: here.SaleOrder_getShoppingCartDefaultCurrency();\n
                       currency_title python: currency.getTitle(); \n
                       currency_symbole python: currency.getShortTitle();">\n
          <td>\n

@@ -69,7 +69,8 @@
    </tal:block>\n
 \n
   <tal:block tal:condition="not: isAnon"\n
-             tal:define="customer here/SaleOrder_getShoppingCartCustomer;\n
+             tal:define="shopping_cart here/SaleOrder_getShoppingCart;\n
+                         customer shopping_cart/SaleOrder_getShoppingCartCustomer;\n
                          website here/getWebSiteValue">\n
 \n
     <p class="article">\n

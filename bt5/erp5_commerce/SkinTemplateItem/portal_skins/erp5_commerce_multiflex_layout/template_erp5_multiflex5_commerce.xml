@@ -89,12 +89,13 @@
                            dummy python: request.set(\'dialog_mode\', dialog_mode);\n
                            dummy python: request.set(\'list_mode\', list_mode);\n
                            aggregate python: has_no_layout or layout_form.Form_getGroupList(\n
-                                             [\'header\', \'navbar\', \'headline\', \'subcontent\', \'footer\']);\n
+                                             [\'header\', \'navbar\', \'headline\', \'subcontent\', \'product_list\', \'footer\']);\n
                            aggregate python: ((aggregate is not has_no_layout) and dict(aggregate)) or {};\n
                            header_area python:aggregate.get(\'header\', []);\n
                            navbar_area python:aggregate.get(\'navbar\', []);\n
                            headline_area python:aggregate.get(\'headline\', []);\n
                            subcontent_area python:aggregate.get(\'subcontent\', []);\n
+                           product_list_area python:aggregate.get(\'product_list\', []);\n
                            footer_area python:aggregate.get(\'footer\', []);\n
                            global css_list_template python:[\n
                                   \'%s/mf54_reset.css\' % portal_path,\n
@@ -139,17 +140,10 @@
       <div class="headline">\n
       <!-- Layout form rendering -->\n
       <tal:block tal:condition="python: layout_form is not None">\n
-        <tal:block tal:repeat="aggregate python: [(\'headlibe\', headline_area)]">\n
+        <tal:block tal:repeat="aggregate python: [(\'headline\', headline_area)]">\n
            <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
         </tal:block>\n
-      </tal:block> \n
-        <div class="main_content">\n
-          <div class="corner-content-1col-top"></div>                        \n
-          <div class="content-1col-nobox">\n
-            <tal:block tal:content="structure here/WebSection_viewSelectedProductWidget"/>\n
-          </div>\n
-          <div class="corner-content-1col-bottom"></div>                       \n
-        </div>\n
+      </tal:block>\n
       </div>\n
 \n
       <!-- SUBCONTENT -->\n
@@ -167,22 +161,32 @@
 \n
       <!-- CONTENT -->\n
       <div class="main_content">\n
+        <div class="main_content">\n
+          <div class="corner-content-1col-top"></div>                        \n
+          <div class="content-1col-nobox">\n
+            <tal:block tal:content="structure here/WebSection_viewSelectedProductWidget"/>\n
+          </div>\n
+          <div class="corner-content-1col-bottom"></div>                       \n
+        </div>\n
+      <tal:block tal:condition="python: here.REQUEST.get(\'current_form_id\') != \'WebPage_viewAsWeb\' and here.REQUEST.get(\'current_form_id\') != \'WebSection_viewAsWeb\'">\n
+        <div class="main_content">\n
         <div class="corner-content-1col-top"></div>                        \n
         <div class="content-1col-nobox">\n
           <tal:block metal:define-slot="main"/>\n
         </div>\n
-        <div class="corner-content-1col-bottom"></div>                       \n
-      </div>\n
-\n
+        <div class="corner-content-1col-bottom"></div>\n
+      </tal:block>\n
       <tal:block tal:condition="python: here.REQUEST.get(\'current_form_id\') == \'WebPage_viewAsWeb\' or here.REQUEST.get(\'current_form_id\') == \'WebSection_viewAsWeb\'">\n
         <div class="main_content">\n
-          <div class="corner-content-1col-top"></div>                        \n
-          <div class="content-1col-nobox">\n
-            <tal:block tal:content="structure here/WebSection_viewProductList"/>\n
-          </div>\n
-          <div class="corner-content-1col-bottom"></div>                       \n
+          <tal:block tal:condition="python: layout_form is not None"\n
+                     tal:define="widget_renderer here/multiflex5_large_box_renderer/macros/large_widget">\n
+            <tal:block tal:repeat="aggregate python: [(\'product_list\', product_list_area)]">\n
+              <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
+            </tal:block>\n
+          </tal:block>                     \n
         </div>\n
-      </tal:block>              \n
+      </tal:block>                       \n
+      </div>            \n
     </div>   \n
       \n
     <!-- FOOTER -->      \n

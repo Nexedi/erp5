@@ -66,10 +66,12 @@
                 <string>header header-bottom</string>
                 <string>navbar navbar-left</string>
                 <string>headline</string>
+                <string>product_list (Product List)</string>
                 <string>footer</string>
                 <string>subcontent subcontent-box loginbox (My Account)</string>
                 <string>subcontent subcontent-box cartbox (My Cart)</string>
                 <string>subcontent subcontent-box sidemenu1 (Subsections)</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -110,7 +112,15 @@
                     <value>
                       <list>
                         <string>page_title_box</string>
-                        <string>selected_product_box</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>product_list_thumbnail</string>
+                        <string>product_list_decoratedPrice</string>
                       </list>
                     </value>
                 </item>
@@ -119,6 +129,14 @@
                     <value>
                       <list>
                         <string>navigation_bar</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>product_list (Product List)</string> </key>
+                    <value>
+                      <list>
+                        <string>product_list</string>
                       </list>
                     </value>
                 </item>

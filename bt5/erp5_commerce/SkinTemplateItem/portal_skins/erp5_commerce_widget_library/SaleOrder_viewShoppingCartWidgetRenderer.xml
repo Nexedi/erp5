@@ -51,7 +51,7 @@
     <td tal:define="resource python: website.restrictedTraverse(order_line.getResource());\n
                     quantity python: int(order_line.getQuantity());\n
                     price    python: resource.getPrice();\n
-                    currency python: shopping_cart.getPriceCurrencyTitle();\n
+                    currency python: shopping_cart.SaleOrder_getShoppingCartDefaultCurrency();\n
                     currency_symbole python: context.getPortalObject().restrictedTraverse(shopping_cart.getPriceCurrency()).getShortTitle();"\n
                     class="cart_top"> \n
 \n

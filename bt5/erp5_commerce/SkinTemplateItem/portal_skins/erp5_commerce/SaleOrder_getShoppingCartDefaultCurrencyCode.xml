@@ -53,28 +53,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>#TODO : USE CACHE\n
-#the goal of this script is to get all the related product of this section\n
-\n
-if (context.getPortalType() != \'Web Section\'):\n
-  current_web_section = context.REQUEST.get(\'current_web_section\')\n
-else:\n
-  current_web_section = context\n
-product_list = []\n
-kw[\'portal_type\'] = \'Product\'\n
-kw[\'limit\'] = limit\n
-product_list = current_web_section.WebSection_getDocumentValueListBase(all_versions=1,\n
-                                                                       all_languages=1,\n
-                                                                       **kw\n
-                                                                      )\n
-  \n
-#raise \'\'.join([x.getObject() for x in product_list])\n
-product_list = [x.getObject() for x in product_list if x.getPortalType() == \'Product\']\n
-\n
-# this step will be remove after have find a good way to improve WebSection_getDocumentValueListBase\n
-# or find another base script for get only product direclty\n
-\n
-return product_list\n
+            <value> <string>""" \n
+  Return default currency used in shopping_cart.\n
+  Please update accordingly relative path. \n
+  XXX: there must be an way to do this better?\n
+"""\n
+return context.getPortalObject().SaleOrder_getShoppingCartDefaultCurrency().getReference()\n
 </string> </value>
         </item>
         <item>
@@ -85,22 +69,13 @@ return product_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>limit=1000, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Authenticated</string>
-                <string>Author</string>
                 <string>Manager</string>
-                <string>Member</string>
-                <string>Owner</string>
-                <string>Reviewer</string>
               </tuple>
             </value>
         </item>
@@ -122,24 +97,14 @@ return product_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>limit</string>
-                            <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>current_web_section</string>
-                            <string>product_list</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
                           </tuple>
                         </value>
                     </item>
@@ -151,14 +116,16 @@ return product_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <int>1000</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_getProductList</string> </value>
+            <value> <string>SaleOrder_getShoppingCartDefaultCurrencyCode</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get default currency symbole for shop</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
