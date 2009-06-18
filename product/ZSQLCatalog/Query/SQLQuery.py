@@ -49,7 +49,7 @@ class SQLQuery(Query):
     assert len(payload)
     self.payload = '(' + payload + ')'
 
-  def asSearchText(self, sql_catalog):
+  def asSearchTextExpression(self, sql_catalog):
     return None
 
   def asSQLExpression(self, sql_catalog, column_map, only_group_columns):
