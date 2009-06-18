@@ -2422,6 +2422,8 @@ class TestBPMImplementation(TestBPMMixin):
     context_movement = self.createMovement()
     context_movement.setSourceValue(movement_node)
     self.assertEquals(path_node, business_path.getSourceValue())
+    self.assertEquals(path_node,
+                      business_path.getSourceValue(context=context_movement))
     self.assertEquals([path_node],
                       business_path.getSourceValueList(context=context_movement))
 

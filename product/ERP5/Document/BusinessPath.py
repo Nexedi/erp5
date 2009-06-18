@@ -112,30 +112,32 @@ class BusinessPath(Path):
   # ICategoryAccessProvider overriden methods
   def _getCategoryMembershipList(self, category, **kw):
     """
-      Overriden in order to take into account dynamic arrow
-      categories
+      Overridden in order to take into account dynamic arrow categories in case if no static
+      categories are set on Business Path
     """
-    context = kw.get('context')
+    context = kw.pop('context')
     result = Path._getCategoryMembershipList(self, category, **kw)
+    if len(result) > 0:
+      return result
     if context is not None:
       dynamic_category_list = self._getDynamicCategoryList(context)
-      dynamic_category_list= self._filterCategoryList(dynamic_category_list, category, **kw)
-      # TODO: static categories should have priority over dynamic categories
-      result = dynamic_category_list + result
+      dynamic_category_list = self._filterCategoryList(dynamic_category_list, category, **kw)
+      result = dynamic_category_list
     return result
 
   def _getAcquiredCategoryMembershipList(self, category, **kw):
     """
-      Overriden in order to take into account dynamic arrow
-      categories
+      Overridden in order to take into account dynamic arrow categories in case if no static
+      categories are set on Business Path
     """
     context = kw.pop('context', None)
     result = Path._getAcquiredCategoryMembershipList(self, category, **kw)
+    if len(result) > 0:
+      return result
     if context is not None:
       dynamic_category_list = self._getDynamicCategoryList(context)
-      dynamic_category_list= self._filterCategoryList(dynamic_category_list, category, **kw)
-      # TODO: static categories should have priority over dynamic categories
-      result = dynamic_category_list + result
+      dynamic_category_list = self._filterCategoryList(dynamic_category_list, category, **kw)
+      result = dynamic_category_list
     return result
 
   def _filterCategoryList(self, category_list, category, spec=(), filter=None, portal_type=(), base=0, 
