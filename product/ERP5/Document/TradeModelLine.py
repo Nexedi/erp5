@@ -127,7 +127,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
     self_id = self.getParentValue().getId() + '_' + self.getId()
 
     tmp_movement_list = [q for q in current_aggregated_amount_list \
-        if q.getReference() == self.getReference() ]
+        if q.getReference() == self.getReference()]
     if len(tmp_movement_list) > 0:
       tmp_movement_list = tmp_movement_list[:1] # list is needed in case of
                                                 # having cells
@@ -200,7 +200,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
       else:
         # if the quantity is defined, use it
         modified = 1
-        if tmp_movement.getPrice() in (0, None):
+        if tmp_movement.getPrice() is None:
           # if price is not defined, it the same as 100 %
           tmp_movement.setPrice(1)
 
