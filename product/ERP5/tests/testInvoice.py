@@ -1343,11 +1343,11 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                          order.getIncoterm())
                          
                          
-  def test_01_quantity_unit_copied_on_packing_list(self):
+  def test_01_quantity_unit_copied(self):
     """
     tests that when a resource uses different quantity unit that the
-    quantity units are copied on the packing list line using the delivery
-    builer
+    quantity units are copied on the packing list line and then the invoice
+    line using the delivery builers
     """           
     resource = self.portal.product_module.newContent(
                     portal_type='Product',
@@ -1392,6 +1392,11 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                              quantity_unit=self.mass_quantity_unit,
                                   quantity=1.5,
                                   price=2)
+    self.assertEquals(first_order_line.getQuantityUnit(),
+                      self.unit_piece_quantity_unit)
+    self.assertEquals(second_order_line.getQuantityUnit(),
+                      self.mass_quantity_unit)
+
     order.confirm()
     transaction.commit()
     self.tic()
@@ -1400,10 +1405,32 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     self.assertNotEquals(related_packing_list, None)
     movement_list = related_packing_list.getMovementList()
     self.assertEquals(len(movement_list),2)
+    movement_list = sorted(movement_list, key=lambda x: x.getQuantity())
     self.assertEquals(movement_list[0].getQuantityUnit(),
-                         first_order_line.getQuantityUnit())
+                      self.mass_quantity_unit)
+    self.assertEquals(movement_list[0].getQuantity(), 1.5)
     self.assertEquals(movement_list[1].getQuantityUnit(),
-                         second_order_line.getQuantityUnit())
+                      self.unit_piece_quantity_unit)
+    self.assertEquals(movement_list[1].getQuantity(), 5)
+
+    related_packing_list.start()
+    related_packing_list.stop()
+    related_packing_list.deliver()
+    transaction.commit()
+    self.tic()
+    related_invoice = related_packing_list.getCausalityRelatedValue(
+                                portal_type=self.invoice_portal_type)
+    self.assertNotEquals(related_invoice, None)
+    movement_list = related_invoice.getMovementList()
+    self.assertEquals(len(movement_list),2)
+    movement_list = sorted(movement_list, key=lambda x: x.getQuantity())
+    self.assertEquals(movement_list[0].getQuantityUnit(),
+                      self.mass_quantity_unit)
+    self.assertEquals(movement_list[0].getQuantity(), 1.5)
+    self.assertEquals(movement_list[1].getQuantityUnit(),
+                      self.unit_piece_quantity_unit)
+    self.assertEquals(movement_list[1].getQuantity(), 5)
+
  
 
   def test_accept_quantity_divergence_on_invoice_with_stopped_packing_list(
@@ -3281,6 +3308,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
           stepCheckSimulationTrees
           """)
     sequence_list.play(self, quiet=quiet)
+    boom
 
   def test_17_ManuallyAddedWrongMovements(self, quiet=quiet, run=RUN_ALL_TESTS):
     """
