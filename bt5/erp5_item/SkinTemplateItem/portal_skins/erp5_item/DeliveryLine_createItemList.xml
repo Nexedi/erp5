@@ -94,7 +94,7 @@ for line in kw.get(\'listbox\'):\n
     module = context.getDefaultModule(item_portal_type)\n
     item = module.newContent(portal_type=item_portal_type,\n
      title=line[\'title\'],\n
-     reference ="1%s%s" % (now, line["reference"].zfill(6)),\n
+     reference = line["reference"],\n
      quantity=line[\'quantity\'],\n
      quantity_unit=context.getQuantityUnit(),\n
      **item_property_dict)\n

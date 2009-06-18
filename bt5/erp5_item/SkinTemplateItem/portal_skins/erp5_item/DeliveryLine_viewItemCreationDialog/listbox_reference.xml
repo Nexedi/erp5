@@ -87,7 +87,7 @@
               <dictionary>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
-                    <value> <int>6</int> </value>
+                    <value> <int>13</int> </value>
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>

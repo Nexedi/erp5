@@ -53,22 +53,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-if editor and len(request.get("field_listbox_reference_%s" % request.cell.uid))<=13:\n
-  reference = "%s%s" % (request.get("field_your_prefix_reference"), request.get(\'field_listbox_reference_%s\' % request.cell.uid).zfill(6))  \n
-  test_result = request.cell.Base_validateEan13Code(reference,request)\n
-  if test_result ==True:\n
-    request.form["field_listbox_reference_%s" % request.cell.uid] = reference\n
-    result = [x.getObject() for x in context.portal_catalog(portal_type = request.get("field_your_type"),\n
-              reference= reference)]\n
-    if (result !=[] or test_result ==False ):\n
-      return False\n
+            <value> <string>from Products.ERP5Type.Message import translateString\n
+from DateTime import DateTime\n
 \n
-return True\n
-
-
-]]></string> </value>
+prefix_reference = DateTime().strftime(\'1%d%m%y\')\n
+return prefix_reference\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -78,7 +68,7 @@ return True\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>editor, request</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -98,27 +88,17 @@ return True\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>editor</string>
-                            <string>request</string>
-                            <string>len</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>translateString</string>
+                            <string>DateTime</string>
                             <string>_getattr_</string>
-                            <string>reference</string>
-                            <string>test_result</string>
-                            <string>True</string>
-                            <string>_write_</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>context</string>
-                            <string>x</string>
-                            <string>result</string>
-                            <string>False</string>
+                            <string>prefix_reference</string>
                           </tuple>
                         </value>
                     </item>
@@ -135,7 +115,7 @@ return True\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DeliveryLine_validateItemCreationDialogReference</string> </value>
+            <value> <string>DeliveryLine_calculateReferencePrefix</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
