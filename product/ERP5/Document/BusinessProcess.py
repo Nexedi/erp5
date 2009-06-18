@@ -203,3 +203,53 @@ class BusinessProcess(Path, XMLObject):
     path_list = self.objectValues(portal_type=self.getPortalBusinessPathTypeList())
     return filter(None, [path.getTradePhase()
                          for path in path_list])
+
+  def getRootExplanationPathValue(self):
+    """
+      Returns a root path of this business process
+    """
+    path_list = self.objectValues(portal_type=self.getPortalBusinessPathTypeList())
+    path_list = filter(lambda x: x.isDeliverable(), path_list)
+    
+    if len(path_list) > 1:
+      raise Exception, "this business process has multi root paths"
+
+    if len(path_list) == 1:
+      return path_list[0]
+
+  def getHeadPathValueList(self, trade_phase_list=None):
+    """
+      Returns a list of head path(s) of this business process
+
+      trade_phase_list -- used to filterring, means that discovering
+                          a list of head path with the trade_phase_list
+    """
+    head_path_list = list()
+    for state in self.getStateValueList():
+      if len(state.getSuccessorRelatedValueList()) == 0:
+        head_path_list += state.getPredecessorRelatedValueList()
+
+    if trade_phase_list is not None:
+      _set = set(trade_phase_list)
+      _list = list()
+      # start to discover a head path with the trade_phase_list from head path(s) of whole
+      for path in head_path_list:
+        _list += self._getHeadPathValueList(path, _set)
+      head_path_list = map(lambda t: t[0], filter(lambda t: t != (None, None), _list))
+
+    return head_path_list
+
+  def _getHeadPathValueList(self, path, trade_phase_set):
+    # if the path has target trade_phase, it is a head path.
+    _set = set(path.getTradePhaseList())
+    if _set & trade_phase_set:
+      return [(path, _set & trade_phase_set)]
+
+    node = path.getSuccessorValue()
+    if node is None:
+      return [(None, None)]
+
+    _list = list()
+    for next_path in node.getPredecessorRelatedValueList():
+      _list += self._getHeadPathValueList(next_path, trade_phase_set)
+    return _list

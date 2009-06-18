@@ -254,7 +254,7 @@ class TestMRPMixin(TestBPMMixin):
 class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
   """the test for implementation"""
   def test_TransformationRule_getHeadProductionPathList(self):
-    rule = self.portal.portal_rules.default_transformation_rule
+    rule = self.portal.portal_rules.default_transformation_model_rule
 
     transformation = self.createDefaultTransformation()
 
@@ -303,7 +303,7 @@ class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
     # test mock
     applied_rule = movement.newContent(potal_type='Applied Rule')
 
-    rule = self.portal.portal_rules.default_transformation_rule
+    rule = self.portal.portal_rules.default_transformation_model_rule
     rule.expand(applied_rule)
 
     # assertion
@@ -367,7 +367,7 @@ class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
     # test mock
     applied_rule = movement.newContent(potal_type='Applied Rule')
 
-    rule = self.portal.portal_rules.default_transformation_rule
+    rule = self.portal.portal_rules.default_transformation_model_rule
     rule.expand(applied_rule)
 
     # assertion
@@ -428,7 +428,7 @@ class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
       movement._baseSetFrozen(1)
 
     # re-expand
-    rule = self.portal.portal_rules.default_transformation_rule
+    rule = self.portal.portal_rules.default_transformation_model_rule
     rule.expand(applied_rule)
 
     # assertion
@@ -506,7 +506,7 @@ class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
     # test mock
     applied_rule = movement.newContent(potal_type='Applied Rule')
 
-    rule = self.portal.portal_rules.default_transformation_sourcing_rule
+    rule = self.portal.portal_rules.default_transformation_sourcing_model_rule
     rule.expand(applied_rule)
 
     # assertion
