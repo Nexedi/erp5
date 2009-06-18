@@ -59,7 +59,9 @@ class DefaultKey(SearchKey):
     if operator_text == 'like':
       assert isinstance(value, basestring)
       assert '%' in value
-      result = '%s:%s' % (column, value)
+      result = value
+      if len(column):
+        result = '%s:%s' % (column, result)
     else:
       result = SearchKey.buildSearchTextExpression(self, operator, value, column=column)
     return result
