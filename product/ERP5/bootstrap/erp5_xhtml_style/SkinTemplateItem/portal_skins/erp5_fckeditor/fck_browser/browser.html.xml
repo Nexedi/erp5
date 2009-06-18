@@ -144,7 +144,7 @@ oIcons.GetIcon = function( fileName )\n
 \t\t</frameset>\n
 \t\t<frameset rows="0,*,50" framespacing="0">\n
 \t\t\t<frame name="frmActualFolder" src="editor/filemanager/browser/zope/frmactualfolder.html" scrolling="no" frameborder="no" />\n
-\t\t\t<frame name="frmResourcesList" src="editor/filemanager/browser/zope/frmresourceslist.html" scrolling="auto" frameborder="yes" />\n
+\t\t\t<frame name="frmResourcesList" src="frmresourceslist.html" scrolling="auto" frameborder="yes" />\n
 \t\t\t<frameset cols="0,*,0" framespacing="0" frameborder="no">\n
 \t\t\t\t<frame name="frmCreateFolder" src="editor/filemanager/browser/zope/frmcreatefolder.html" scrolling="no" frameborder="no" />\n
 \t\t\t\t<frame name="frmUpload" src="editor/filemanager/browser/zope/frmupload.html" scrolling="no" frameborder="no" />\n
