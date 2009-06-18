@@ -11,9 +11,7 @@
       <dictionary>
         <item>
             <key> <string>_Cacheable__manager_id</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>web_site_user_ram_cache</string> </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -72,15 +70,6 @@
       <!--[if lte IE 6]></td></tr></table></a><![endif]-->\n
       </tal:block>\n
     </li>\n
-    <tal:block tal:condition="here/portal_membership/isAnonymousUser">\n
-    <li class="login"><a href="#" i18n:translate="" i18n:domain="ui"\n
-           tal:attributes="href python:\'%s/login_form\' % web_site_url">Login</a></li>\n
-    </tal:block>\n
-    <tal:block tal:condition="not:here/portal_membership/isAnonymousUser">\n
-    <li class="login"><a tal:attributes="href python:\'%s/logout\' % web_site_url">\n
-        <tal:block i18n:translate="" i18n:domain="ui">Logout</tal:block>\n
-        (<tal:block tal:replace="python:here.portal_membership.getAuthenticatedMember().getUserName()" />)</a></li>\n
-    </tal:block>\n
   </ul>\n
 </tal:block>\n
 

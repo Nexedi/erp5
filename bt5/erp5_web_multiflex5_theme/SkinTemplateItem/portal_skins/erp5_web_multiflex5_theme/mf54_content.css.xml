@@ -343,10 +343,6 @@
 /* We will have to handle the different types in another way */\n
 /* .subcontent h1.group_title {background: url(./mf54_image/icon_celltitle_menu.gif) no-repeat; background-position:225px 5px;} */\n
 \n
-.main a img, .main a:hover img {\n
-  border-width: 1px;\n
-}\n
-\n
 .container {\n
   clear: both;\n
 }\n
@@ -366,6 +362,13 @@ fieldset.editable div.input {\n
 \n
 fieldset.editable.bottom div.input {\n
   padding: 0;\n
+}\n
+\n
+div.editable > a > img,\n
+fieldset.editable div.input > a > img,\n
+fieldset.editable div.field > label > a > img {\n
+  float:none;\n
+  margin:0;\n
 }\n
 \n
 #transition_message {\n
@@ -390,6 +393,31 @@ button.sort_button span {\n
   text-decoration: underline;\n
   font-size: 62.5% !important;\n
   font-weight: bold;\n
+}\n
+\n
+/* Popup info window style */\n
+div.search_popup {\n
+  background-color: #c3e3df;\n
+  display: none;\n
+  position:fixed;\n
+  left:500px;\n
+  width:150px;\n
+  top:130px;\n
+  padding:10px;\n
+  border:1px solid black;\n
+  z-index:100;\n
+}\n
+\n
+div.popup_row{\n
+  clear:right;\n
+}\n
+\n
+div.popup_row span.popup_label{\n
+  font-weight: bold;\n
+}\n
+\n
+div.popup_row a{\n
+  color: green!important;\n
 }\n
 \n
 /* Edit tabs styling.\n
