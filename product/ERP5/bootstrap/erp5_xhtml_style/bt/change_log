@@ -1,3 +1,6 @@
+2009-06-18 Kazuhiko
+* add a simple file browser for fckeditor, that allows to upload only in the current document.
+
 2009-04-30 Tatuya
 * append a condition to ListBox_asStandardHTML to set a CSS class name in a table row using 'Row CSS Method'.
 

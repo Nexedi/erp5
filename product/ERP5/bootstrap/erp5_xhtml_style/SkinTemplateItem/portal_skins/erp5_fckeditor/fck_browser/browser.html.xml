@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>browser.html</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!--\n
+ * FCKeditor - The text editor for internet\n
+ * Copyright (C) 2003-2004 Frederico Caldeira Knabben\n
+ * \n
+ * Licensed under the terms of the GNU Lesser General Public License:\n
+ * \t\thttp://www.opensource.org/licenses/lgpl-license.php\n
+ * \n
+ * For further information visit:\n
+ * \t\thttp://www.fckeditor.net/\n
+ * \n
+ * File Name: browser.html\n
+ * \tThis page compose the File Browser dialog frameset.\n
+ * \n
+ * Version:  2.0 FC\n
+ * Modified: 2005-05-16 \n
+ * \n
+ * File Authors:\n
+ * \t\tFrederico Caldeira Knabben (fredck@fckeditor.net)\n
+ * Browser and Connector adapted for Zope objects by jean-mat@macadames.com\n
+ * New attributes for xml nodes (title, description, image size for Zphotoslide albums ...)\n
+ * \n
+-->\n
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\n
+<html>\n
+\t<head>\n
+\t\t<title>FCKeditor - Resources Browser</title>\n
+\t\t<link href="editor/filemanager/browser/zope/Browser.css" type="text/css" rel="stylesheet">\n
+\t\t<script type="text/javascript" src="editor/filemanager/browser/zope/js/fckxml.js"></script>\n
+\t\t<script language="javascript">\n
+\n
+function GetUrlParam( paramName )\n
+{\n
+\tvar oRegex = new RegExp( \'[\\?&]\' + paramName + \'=([^&]+)\', \'i\' ) ;\n
+\tvar oMatch = oRegex.exec( window.top.location.search ) ;\n
+\t\n
+\tif ( oMatch && oMatch.length > 1 )\n
+\t\treturn oMatch[1] ;\n
+\telse\n
+\t\treturn \'\' ;\n
+}\n
+\n
+var oConnector = new Object() ;\n
+\n
+var sCurrentPath = escape(GetUrlParam( \'CurrentPath\' )) ;\n
+\n
+if (sCurrentPath ==\'\')  sCurrentPath = \'/\' ;\n
+\n
+var sConnUrl = GetUrlParam( \'Connector\' ) ;\n
+\n
+// Gecko has some problems when using relative URLs (not starting with slash).\n
+if ( sConnUrl.substr(0,1) != \'/\' && sConnUrl.indexOf( \'://\' ) < 0 )\n
+\tsConnUrl = window.location.href.replace( /browser.html.*$/, \'\' ) + sConnUrl ;\n
+\n
+oConnector.ConnectorUrl\t\t= sConnUrl + \'?\' ;\n
+\n
+var sServerPath = GetUrlParam( \'ServerPath\' ) ;\n
+if ( sServerPath.length > 0 )\n
+\toConnector.ConnectorUrl += \'ServerPath=\' + escape( sServerPath ) + \'&\' ;\n
+\n
+oConnector.ResourceType\t\t= GetUrlParam( \'Type\' ) ;\n
+oConnector.ShowAllTypes\t\t= ( oConnector.ResourceType.length == 0 ) ;\n
+\n
+if ( oConnector.ShowAllTypes )\n
+\toConnector.ResourceType = \'File\' ;\n
+\n
+oConnector.SendCommand = function( command, params, callBackFunction )\n
+{\n
+\tvar sUrl = this.ConnectorUrl + \'Command=\' + command ;\n
+\tsUrl += \'&Type=\' + this.ResourceType ;\n
+\tsUrl += \'&CurrentFolder=\' + escape( this.CurrentFolder ) ;\n
+\t\n
+\tif ( params ) sUrl += \'&\' + params ;\n
+\n
+\tvar oXML = new FCKXml() ;\n
+\t\n
+\tif ( callBackFunction )\n
+\t\toXML.LoadUrl( sUrl, callBackFunction ) ;\t// Asynchronous load.\n
+\telse\n
+\t\treturn oXML.LoadUrl( sUrl ) ;\n
+}\n
+\n
+var oIcons = new Object() ;\n
+\n
+oIcons.AvailableIconsArray = [ \n
+\t\'ai\',\'avi\',\'bmp\',\'cs\',\'dll\',\'doc\',\'exe\',\'fla\',\'gif\',\'gz\',\'htm\',\'html\',\'jpg\',\'js\',\n
+\t\'mdb\',\'mp3\',\'pdf\',\'png\',\'ppt\',\'rdp\',\'swf\',\'swt\',\'tar\',\'tgz\',\'txt\',\'vsd\',\'xls\',\'xml\',\'zip\' ] ;\n
+\t\n
+oIcons.AvailableIcons = new Object() ;\n
+\n
+for ( var i = 0 ; i < oIcons.AvailableIconsArray.length ; i++ )\n
+\toIcons.AvailableIcons[ oIcons.AvailableIconsArray[i] ] = true ;\n
+\n
+oIcons.GetIcon = function( fileName )\n
+{\n
+\tvar sExtension = fileName.substr( fileName.lastIndexOf(\'.\') + 1 ).toLowerCase() ;\n
+\n
+\tif ( this.AvailableIcons[ sExtension ] == true )\n
+\t\treturn sExtension ;\n
+\telse\n
+\t\treturn \'default.icon\' ;\n
+}\n
+\n
+\n
+\n
+\t\t</script>\n
+\t</head>\n
+\n
+\t<frameset cols="0,*" class="Frame" framespacing="3" bordercolor="#f1f1e3" frameborder="no">\n
+\t\t<frameset rows="0,*" framespacing="0">\n
+\t\t\t<frame src="editor/filemanager/browser/zope/frmresourcetype.html" scrolling="no" frameborder="no" />\n
+\t\t\t<frame name="frmFolders" src="editor/filemanager/browser/zope/frmfolders.html?ServerPath=<dtml-var "REQUEST.form[\'ServerPath\']">&CurrentPath=<dtml-var "REQUEST.form[\'CurrentPath\']">" scrolling="auto" frameborder="yes" />\n
+\n
+\t\t</frameset>\n
+\t\t<frameset rows="0,*,50" framespacing="0">\n
+\t\t\t<frame name="frmActualFolder" src="editor/filemanager/browser/zope/frmactualfolder.html" scrolling="no" frameborder="no" />\n
+\t\t\t<frame name="frmResourcesList" src="editor/filemanager/browser/zope/frmresourceslist.html" scrolling="auto" frameborder="yes" />\n
+\t\t\t<frameset cols="0,*,0" framespacing="0" frameborder="no">\n
+\t\t\t\t<frame name="frmCreateFolder" src="editor/filemanager/browser/zope/frmcreatefolder.html" scrolling="no" frameborder="no" />\n
+\t\t\t\t<frame name="frmUpload" src="editor/filemanager/browser/zope/frmupload.html" scrolling="no" frameborder="no" />\n
+\t\t\t\t<frame name="frmUploadWorker" src="" scrolling="no" frameborder="no" />\n
+\t\t\t</frameset>\n
+\t\t</frameset>\n
+\t</frameset>\n
+\n
+\n
+</html>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

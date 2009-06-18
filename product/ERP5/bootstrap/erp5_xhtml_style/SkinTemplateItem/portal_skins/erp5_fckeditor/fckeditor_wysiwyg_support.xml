@@ -80,7 +80,7 @@ oFCKeditor.Width      = \'100%\';\n
 oFCKeditor.Height     = ${editor_height};\n
 \n
 // browsing for links\n
-oFCKeditor.Config[\'LinkBrowserURL\'] = \'${portal_path}editor/filemanager/browser/zope/browser.html?Connector=connectors/connectorERP5&ServerPath=/&CurrentPath=\' + pathUser ;\n
+oFCKeditor.Config[\'LinkBrowserURL\'] = \'${portal_path}fck_browser/browser.html?Connector=connectors/connectorERP5&ServerPath=/&CurrentPath=\' + pathUser ;\n
 \n
 // rapid upload activation for links\n
 //oFCKeditor.Config[\'LinkUpload\'] = true ;\n
@@ -88,14 +88,14 @@ oFCKeditor.Config[\'LinkBrowserURL\'] = \'${portal_path}editor/filemanager/brows
 //oFCKeditor.Config[\'LinkUploadURL\'] = \'${portal_url}/\' + pathUser ;\n
 \n
 // browsing for images\n
-oFCKeditor.Config[\'ImageBrowserURL\'] = \'${portal_path}editor/filemanager/browser/zope/browser.html?Type=Image&Connector=connectors/connectorERP5&ServerPath=/&CurrentPath=\' + pathUser ;\n
+oFCKeditor.Config[\'ImageBrowserURL\'] = \'${portal_path}fck_browser/browser.html?Type=Image&Connector=connectors/connectorERP5&ServerPath=/&CurrentPath=\' + pathUser ;\n
 \n
 // rapid upload activation for images\n
 //oFCKeditor.Config[\'ImageUpload\'] = true ;\n
 //oFCKeditor.Config[\'ImageUploadURL\'] = \'${portal_path}editor/filemanager/upload/zope/uploadPlone?CurrentPath=\' + pathUser ;\n
 \n
 // browsing for flash\n
-//oFCKeditor.Config[\'FlashBrowserURL\'] = \'${portal_path}editor/filemanager/browser/zope/browser.html?Type=Flash&Connector=connectors/connectorPlone&ServerPath=/&CurrentPath=\' + pathUser ;\n
+//oFCKeditor.Config[\'FlashBrowserURL\'] = \'${portal_path}fck_browser/browser.html?Type=Flash&Connector=connectors/connectorPlone&ServerPath=/&CurrentPath=\' + pathUser ;\n
 \n
 // rapid upload activation for flash\n
 //oFCKeditor.Config[\'FlashUpload\'] = true ;\n
