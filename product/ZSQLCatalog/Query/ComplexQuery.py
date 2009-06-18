@@ -93,29 +93,48 @@ class ComplexQuery(Query):
     self.query_list = new_query_list
 
   @profiler_decorator
-  def asSearchTextExpression(self, sql_catalog, column=None):
+  def _asSearchTextExpression(self, sql_catalog, column=None):
     if column in (None, ''):
       query_column = column
     else:
       query_column = ''
-    search_text_list = [y for y in [x.asSearchTextExpression(sql_catalog, column=query_column) for x in self.query_list] if y is not None]
+    search_text_list = []
+    composition_list = []
+    for query in self.query_list:
+      is_composed, search_text = query._asSearchTextExpression(sql_catalog, column=query_column)
+      if search_text is not None:
+        search_text_list.append(search_text)
+        composition_list.append(is_composed)
+    self_is_composed = False
     if len(search_text_list) == 0:
       result = ''
     else:
       if self.logical_operator in logical_operator_search_text_dict:
         if len(search_text_list) == 1:
           result = search_text_list[0]
+          self_is_composed = composition_list[0]
         else:
+          self_is_composed = True
           logical_operator = ' %s ' % (logical_operator_search_text_dict[self.logical_operator], )
-          result = '(%s)' % (logical_operator.join(search_text_list), )
+          parenthesed_search_text_list = []
+          append = parenthesed_search_text_list.append
+          for is_composed, search_text in zip(composition_list, search_text_list):
+            if is_composed:
+              append('(%s)' % (search_text, ))
+            else:
+              append(search_text)
+          result = logical_operator.join(parenthesed_search_text_list)
       elif self.logical_operator == 'not':
         assert len(search_text_list) == 1
-        result = '(NOT %s)' % (search_text_list[0], )
+        result = 'NOT %s' % (search_text_list[0], )
       else:
         raise ValueError, 'Unknown operator %r' % (self.logical_operator, )
       if column not in (None, ''):
+        if self_is_composed:
+          result = '(%s)' % (result, )
+          self_is_composed = False
         result = '%s:%s' % (column, result)
-    return result
+    return self_is_composed, result
 
   @profiler_decorator
   def asSQLExpression(self, sql_catalog, column_map, only_group_columns):

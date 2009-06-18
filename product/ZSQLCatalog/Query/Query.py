@@ -46,11 +46,14 @@ class Query(object):
     """
     raise TypeError, 'A %s cannot be rendered as an SQL expression.' % (self.__class__.__name__, )
 
-  def asSearchTextExpression(self, sql_catalog, column=None):
+  def _asSearchTextExpression(self, sql_catalog, column=None):
     """
       To enable Search Text rendering, overload this method in a subclass.
     """
     raise TypeError, 'A %s cannot be rendered as a SearchText expression.' % (self.__class__.__name__, )
+
+  def asSearchTextExpression(self, sql_catalog, column=None):
+    return self._asSearchTextExpression(sql_catalog, column=column)[1]
 
   def registerColumnMap(self, sql_catalog, column_map):
     """

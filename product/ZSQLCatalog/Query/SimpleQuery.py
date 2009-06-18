@@ -95,8 +95,8 @@ class SimpleQuery(Query):
     self.group = group
 
   @profiler_decorator
-  def asSearchTextExpression(self, sql_catalog, column=None):
-    return self.getSearchKey(sql_catalog).buildSearchTextExpression(self.getOperator(sql_catalog), self.getValue(), column=column)
+  def _asSearchTextExpression(self, sql_catalog, column=None):
+    return False, self.getSearchKey(sql_catalog).buildSearchTextExpression(self.getOperator(sql_catalog), self.getValue(), column=column)
 
   @profiler_decorator
   def asSQLExpression(self, sql_catalog, column_map, only_group_columns):

@@ -47,6 +47,15 @@ class IQuery(Interface):
     format.
   """
 
+  def _asSearchTextExpression(sql_catalog, column=None):
+    """
+      Same as asSearchTextExpression, but also returns a boolean telling
+      caller if returned value must be parenthesed.
+      Returns a 2-tuple:
+      - a boolean (True if returned string must be parenthesed)
+      - a string (a SearchText expression)
+    """
+
   def asSearchTextExpression(sql_catalog, column=None):
     """
       Render a query in a user-oriented SearchText.

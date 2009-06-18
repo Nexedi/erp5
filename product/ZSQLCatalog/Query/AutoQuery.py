@@ -111,6 +111,12 @@ class AutoQuery(Query):
     self.wrapped_query = query
 
   @profiler_decorator
+  def _asSearchTextExpression(self, sql_catalog, column=None):
+    if self.wrapped_query is None:
+      self._createWrappedQuery(sql_catalog)
+    return self.wrapped_query._asSearchTextExpression(sql_catalog, column=column)
+
+  @profiler_decorator
   def asSearchTextExpression(self, sql_catalog, column=None):
     if self.wrapped_query is None:
       self._createWrappedQuery(sql_catalog)

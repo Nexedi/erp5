@@ -65,14 +65,14 @@ class RelatedQuery(Query):
     self.table_alias_list = table_alias_list
 
   @profiler_decorator
-  def asSearchTextExpression(self, sql_catalog, column=None):
+  def _asSearchTextExpression(self, sql_catalog, column=None):
     assert column is None
     join_condition = self.join_condition
     if join_condition is None:
       result = None
     else:
       result = join_condition.asSearchTextExpression(sql_catalog, column=self.search_key.getColumn())
-    return result
+    return False, result
 
   @profiler_decorator
   def asSQLExpression(self, sql_catalog, column_map, only_group_columns):
