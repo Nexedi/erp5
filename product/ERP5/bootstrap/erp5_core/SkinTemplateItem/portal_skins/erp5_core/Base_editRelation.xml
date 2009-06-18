@@ -92,7 +92,7 @@ for k in request_form.keys():\n
 request.form.update(old_request)\n
 edit_method = getattr(context, request_form.get(\'form_action\', \'Base_edit\'))\n
 return edit_method(form_id,\n
-                   ignore_layout=old_request.get(\'ignore_layout\', True),\n
+                   ignore_layout=request.get(\'ignore_layout\', True),\n
                    selection_index=old_request.get(\'selection_index\', 0),\n
                    selection_name=old_request.get(\'selection_name\', \'\'))\n
 

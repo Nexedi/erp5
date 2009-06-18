@@ -261,6 +261,12 @@ spp.insert(0,s_url)\n
 #calculate direct the url instead of using absolute_url\n
 new_url = \'/\'.join(spp)\n
 \n
+# for web mode, we should use \'view\' instead of \'WebSite_view\',\n
+# \'WebSection_view\' or \'WebPage_view\'.\n
+if context.REQUEST.get(\'is_web_mode\', False) and \\\n
+    form_id in (\'WebSite_view\', \'WebSection_view\', \'WebPage_view\'):\n
+  form_id = \'view\'\n
+\n
 if not selection_index:\n
   redirect_url = \'%s/%s?ignore_layout:int=%s&editable_mode:int=%s&portal_status_message=%s\' % (\n
                                   context.absolute_url(),\n
@@ -374,6 +380,7 @@ return result\n
                             <string>list</string>
                             <string>s_url</string>
                             <string>new_url</string>
+                            <string>False</string>
                             <string>result</string>
                           </tuple>
                         </value>
