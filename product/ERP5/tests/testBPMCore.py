@@ -2410,6 +2410,21 @@ class TestBPMImplementation(TestBPMMixin):
     self.assertEquals(source_node.getRelativeUrl(),
       business_path.getSource(context=context_movement, default='something'))
 
+  def test_BuinessPathDynamicCategoryAccessProviderBusinessPathPrecedence(self):
+    movement_node = self.portal.organisation_module.newContent(
+                    portal_type='Organisation')
+    path_node = self.portal.organisation_module.newContent(
+                    portal_type='Organisation')
+    business_path = self.createBusinessPath()
+    business_path.setSourceMethodId('BusinessPath_getDefaultSourceList')
+    business_path.setSourceValue(path_node)
+
+    context_movement = self.createMovement()
+    context_movement.setSourceValue(movement_node)
+    self.assertEquals(path_node, business_path.getSourceValue())
+    self.assertEquals([path_node],
+                      business_path.getSourceValueList(context=context_movement))
+
   def test_BuinessPathDynamicCategoryAccessProviderEmptyMovement(self):
     business_path = self.createBusinessPath()
     business_path.setSourceMethodId('BusinessPath_getDefaultSourceList')
