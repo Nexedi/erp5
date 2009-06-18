@@ -2,6 +2,7 @@ Production Order Cell | view
 Production Order Line | price_view
 Production Order Line | quantity_view
 Production Order Line | view
+Production Order Model Rule | view
 Production Order Module | production_order_module_planning
 Production Order Module | view
 Production Order Rule | view
@@ -39,5 +40,7 @@ Supply Chain | view
 Supply Chain | view_supply_node
 Supply Link | view
 Supply Node | view
+Transformation Model Rule | view
 Transformation Rule | view
+Transformation Sourcing Model Rule | view
 Transformation Sourcing Rule | view

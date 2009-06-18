@@ -12,6 +12,10 @@
   <workflow>transformation_interaction_workflow, order_movement_simulation_interaction_workflow, production_matrix_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Production Order Model Rule</type>
+  <workflow>rule_validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Production Order Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
@@ -25,7 +29,7 @@
  </chain>
  <chain>
   <type>Production Packing List Line</type>
-  <workflow>delivery_movement_causality_interaction_workflow, edit_workflow, delivery_movement_simulation_interaction_workflow, production_matrix_workflow</workflow>
+  <workflow>delivery_movement_causality_interaction_workflow, production_matrix_workflow, edit_workflow, delivery_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Production Report</type>
@@ -52,11 +56,19 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Transformation Model Rule</type>
+  <workflow>rule_validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Transformation Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Transformation Sourcing Rule</type>
+  <type>Transformation Sourcing Model Rule</type>
   <workflow>rule_validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Transformation Sourcing Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
 </workflow_chain>

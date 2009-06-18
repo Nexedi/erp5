@@ -53,20 +53,23 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>order = state_change[\'object\']\n
-business_process =  order.getSpecialiseValue()\n
+            <value> <string>movement = context\n
 \n
-# When a business process is selected as specialise, ProductionOrderModelRule can be used.\n
-# But another one is selected, ProductionOrderRule is still used.\n
-if (business_process is not None and\n
-    business_process.getPortalType() in context.getPortalBusinessProcessTypeList()):\n
-  rule_reference=\'default_production_order_model_rule\'\n
-else:\n
-  rule_reference=\'default_production_order_rule\'\n
+try:\n
+  root_applied_rule = movement.getRootAppliedRule()\n
+except AttributeError:\n
+  return False\n
+root_rule = root_applied_rule.getSpecialiseValue()\n
+order = root_applied_rule.getCausalityValue()\n
 \n
-tag = order.getPath() + \'_firstUpdateAppliedRule\'\n
-activate_kw = {\'tag\':tag,\'priority\':3}\n
-order.activate(tag=tag).updateAppliedRule(rule_reference=rule_reference, activate_kw=activate_kw)\n
+# Test movement\n
+if (root_rule is None or\n
+    root_rule.getPortalType() != "Production Order Model Rule" or\n
+    order is None or\n
+    movement.getSource() is None):\n
+  return False\n
+\n
+return rule.getTransformationValue(movement=movement) is not None\n
 </string> </value>
         </item>
         <item>
@@ -77,7 +80,7 @@ order.activate(tag=tag).updateAppliedRule(rule_reference=rule_reference, activat
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change, **kw</string> </value>
+            <value> <string>rule</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -103,17 +106,16 @@ order.activate(tag=tag).updateAppliedRule(rule_reference=rule_reference, activat
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>kw</string>
-                            <string>_getitem_</string>
-                            <string>order</string>
-                            <string>_getattr_</string>
-                            <string>business_process</string>
-                            <string>None</string>
+                            <string>rule</string>
                             <string>context</string>
-                            <string>rule_reference</string>
-                            <string>tag</string>
-                            <string>activate_kw</string>
+                            <string>movement</string>
+                            <string>_getattr_</string>
+                            <string>root_applied_rule</string>
+                            <string>AttributeError</string>
+                            <string>False</string>
+                            <string>root_rule</string>
+                            <string>order</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -130,7 +132,7 @@ order.activate(tag=tag).updateAppliedRule(rule_reference=rule_reference, activat
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Order_createOrderRule</string> </value>
+            <value> <string>SimulationMovement_testTransformationModelRule</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

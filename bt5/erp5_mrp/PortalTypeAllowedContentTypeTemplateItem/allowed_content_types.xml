@@ -7,6 +7,11 @@
  <portal_type id="Production Order Line">
   <item>Production Order Cell</item>
  </portal_type>
+ <portal_type id="Production Order Model Rule">
+  <item>Category Divergence Tester</item>
+  <item>Quantity Divergence Tester</item>
+  <item>Property Divergence Tester</item>
+ </portal_type>
  <portal_type id="Production Order Module">
   <item>Production Order</item>
  </portal_type>
@@ -35,20 +40,33 @@
  </portal_type>
  <portal_type id="Rule Tool">
   <item>Production Order Rule</item>
+  <item>Transformation Model Rule</item>
+  <item>Transformation Sourcing Model Rule</item>
   <item>Transformation Sourcing Rule</item>
+  <item>Production Order Model Rule</item>
   <item>Transformation Rule</item>
  </portal_type>
  <portal_type id="Supply Chain">
-  <item>Supply Node</item>
   <item>Supply Link</item>
+  <item>Supply Node</item>
  </portal_type>
  <portal_type id="Supply Chain Module">
   <item>Supply Chain</item>
+ </portal_type>
+ <portal_type id="Transformation Model Rule">
+  <item>Category Divergence Tester</item>
+  <item>Property Divergence Tester</item>
+  <item>Quantity Divergence Tester</item>
  </portal_type>
  <portal_type id="Transformation Rule">
   <item>Category Divergence Tester</item>
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
+ </portal_type>
+ <portal_type id="Transformation Sourcing Model Rule">
+  <item>Quantity Divergence Tester</item>
+  <item>Property Divergence Tester</item>
+  <item>Category Divergence Tester</item>
  </portal_type>
  <portal_type id="Transformation Sourcing Rule">
   <item>Property Divergence Tester</item>

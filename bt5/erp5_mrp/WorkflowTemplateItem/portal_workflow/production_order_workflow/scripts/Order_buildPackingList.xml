@@ -54,20 +54,34 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>order = state_change[\'object\']\n
+business_process =  order.getSpecialiseValue()\n
+\n
+# When a business process is selected as specialise, ProductionOrderModelRule can be used.\n
+# But another one is selected, ProductionOrderRule is still used.\n
+if (business_process is not None and\n
+    business_process.getPortalType() in context.getPortalBusinessProcessTypeList()):\n
+  rule_reference=\'default_production_order_model_rule\'\n
+  builder_list = []\n
+  for path in business_process.getBuildablePathValueList(order):\n
+    builder_list.extend(path.getDeliveryBuilderValueList())\n
+else:\n
+  rule_reference=\'default_production_order_rule\'\n
+  builder_list = [\n
+    order.portal_deliveries.production_report_builder,\n
+    order.portal_deliveries.production_packing_list_builder\n
+  ]\n
 \n
 previous_tag = order.getPath() + \'_firstUpdateAppliedRule\'\n
 expand_tag = order.getPath() + \'_expand\'\n
-activate_kw = {\'tag\':expand_tag,\'priority\':3}\n
-order.activate(tag=expand_tag,after_tag=previous_tag).updateAppliedRule(rule_reference = \'default_production_order_rule\',activate_kw=activate_kw)\n
+activate_kw = {\'tag\':expand_tag, \'priority\':3}\n
+order.activate(tag=expand_tag, after_tag=previous_tag).updateAppliedRule(rule_reuference=rule_reference, activate_kw=activate_kw)\n
 \n
-\n
-delivery_builder_list = [\n
-    order.portal_deliveries.production_report_builder,\n
-    order.portal_deliveries.production_packing_list_builder\n
-]\n
-\n
-for delivery_builder in delivery_builder_list:\n
-  delivery_builder.activate(activity=\'SQLQueue\',after_tag=expand_tag,priority=3).build(explanation_uid=order.getUid(),activate_kw=activate_kw)\n
+for builder in builder_list:\n
+    builder.activate(\n
+      activity=\'SQLQueue\',\n
+      after_tag=expand_tag,\n
+      priority=3).build(explanation_uid=order.getUid(),\n
+                        activate_kw=activate_kw)\n
 </string> </value>
         </item>
         <item>
@@ -108,12 +122,17 @@ for delivery_builder in delivery_builder_list:\n
                             <string>_getitem_</string>
                             <string>order</string>
                             <string>_getattr_</string>
+                            <string>business_process</string>
+                            <string>None</string>
+                            <string>context</string>
+                            <string>rule_reference</string>
+                            <string>builder_list</string>
+                            <string>_getiter_</string>
+                            <string>path</string>
                             <string>previous_tag</string>
                             <string>expand_tag</string>
                             <string>activate_kw</string>
-                            <string>delivery_builder_list</string>
-                            <string>_getiter_</string>
-                            <string>delivery_builder</string>
+                            <string>builder</string>
                           </tuple>
                         </value>
                     </item>

@@ -1,6 +1,7 @@
 Production Order
 Production Order Cell
 Production Order Line
+Production Order Model Rule
 Production Order Module
 Production Order Rule
 Production Packing List
@@ -15,5 +16,7 @@ Supply Chain
 Supply Chain Module
 Supply Link
 Supply Node
+Transformation Model Rule
 Transformation Rule
+Transformation Sourcing Model Rule
 Transformation Sourcing Rule

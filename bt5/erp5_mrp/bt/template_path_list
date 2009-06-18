@@ -3,9 +3,15 @@ portal_deliveries/production_packing_list_builder/**
 portal_deliveries/production_report_builder
 portal_deliveries/production_report_builder/**
 portal_domains/production_order_module_specialise_domain
+portal_rules/default_production_order_model_rule
+portal_rules/default_production_order_model_rule/**
 portal_rules/default_production_order_rule
 portal_rules/default_production_order_rule/**
+portal_rules/default_transformation_model_rule
+portal_rules/default_transformation_model_rule/**
 portal_rules/default_transformation_rule
 portal_rules/default_transformation_rule/**
+portal_rules/default_transformation_sourcing_model_rule
+portal_rules/default_transformation_sourcing_model_rule/**
 portal_rules/default_transformation_sourcing_rule
 portal_rules/default_transformation_sourcing_rule/**
