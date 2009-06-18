@@ -87,9 +87,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
       preferred_payroll_resource_use_category_list = \
           ['use/payroll'],
       priority = 1,
-
     )
-
     if system_preference.getPreferenceState() == 'disabled':
       system_preference.enable()
 
@@ -554,6 +552,13 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     self.assertEqual(len(paysheet_line_list), 2)
     self.assertEqual(len(paysheet.getMovementList(portal_type=\
         'Pay Sheet Cell')), 2) # 2 because labour line contain no movement
+
+  def stepCheckNoPaysheetLineAreCreated(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
+    self.assertEqual(len(paysheet_line_list), 0)
+    self.assertEqual(len(paysheet.getMovementList(portal_type=\
+        'Pay Sheet Cell')), 0) # 2 because labour line contain no movement
 
   def stepCheckPaysheetLineAreCreatedUsingBonus(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
@@ -1605,6 +1610,188 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         stop_date=paysheet.getStopDate())
     self.assertEquals(effective_value_list, [model_2])
 
+  def stepCreateModelLineZeroPrice(self, sequence=None, **kw):
+    '''Test the creation of lines when the price is set to zero: the line should
+    not be created.'''
+    model = sequence.get('model')
+    labour = sequence.get('labour_service_output')
+    line = model.newContent(
+          id='line',
+          portal_type='Pay Sheet Model Line',
+          resource_value=labour,
+          base_contribution_list=['base_amount/base_salary',
+            'base_amount/gross_salary'],
+          quantity=5,
+          price=0)
+
+  def stepComplexModelInheritanceScheme(self, sequence=None, **kw):
+    '''
+    check inheritance and effective model with a more complexe inheritance tree
+
+    # the inheritance tree look like this :
+
+                                    model_employee
+(model_1, 01/01/09, 28/02/09) ; (model_2, 01/07/09, 31/12/09) ; (model_3, 01/07/09, 31/12/09)
+                                           |
+                                           |
+                                           |
+                                     model_company
+             (model_4, 01/07/09, 31/12/09), (model_5, 01/07/09, 31/12/09)
+                                           |
+                                           |
+                                           |
+                                     model_company
+             (model_6, 01/07/09, 31/12/09), (model_7, 01/07/09, 31/12/09)
+    '''
+
+    eur = sequence.get('currency')
+    labour = sequence.get('labour_service_output')
+    paysheet_model_module = self.getPortalObject().paysheet_model_module
+
+    # define a non effective model
+    model_1 = paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        specialise_value=sequence.get('business_process'),
+        reference='fabien_model_2009',
+        effective_date=DateTime(2009, 01, 1),
+        expiration_date=DateTime(2009, 02, 28))
+    model_line_1 = self.createModelLine(model_1)
+    model_line_1.edit(
+        resource_value=labour,
+        base_contribution_list=['base_amount/base_salary',
+          'base_amount/gross_salary'],
+        quantity=10000)
+
+    # define two models with same references and same dates
+    # but different version number
+    model_2 = paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        specialise_value=sequence.get('business_process'),
+        reference='fabien_model_2009',
+        effective_date=DateTime(2009, 07, 1),
+        expiration_date=DateTime(2009, 12, 31),
+        version='002')
+    model_line_2 = self.createModelLine(model_2)
+    model_line_2.edit(
+        resource_value=labour,
+        base_contribution_list=['base_amount/base_salary',
+          'base_amount/gross_salary'],
+        quantity=20000)
+
+    model_3 = paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        specialise_value=sequence.get('business_process'),
+        reference='fabien_model_2009',
+        effective_date=DateTime(2009, 07, 1),
+        expiration_date=DateTime(2009, 12, 31),
+        version='001')
+    model_line_3 = self.createModelLine(model_3)
+    model_line_3.edit(
+        resource_value=labour,
+        base_contribution_list=['base_amount/base_salary',
+          'base_amount/gross_salary'],
+        quantity=30000)
+
+    # define two models with same references and same dates
+    # but different version number
+    model_4 = paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        specialise_value=sequence.get('business_process'),
+        reference='fabien_model_level_2_2009',
+        effective_date=DateTime(2009, 01, 1),
+        expiration_date=DateTime(2009, 06, 30),
+        version='002')
+    model_line_4 = self.createModelLine(model_4)
+    model_line_4.edit(
+        resource_value=labour,
+        base_contribution_list=['base_amount/base_salary',
+          'base_amount/gross_salary'],
+        quantity=40000)
+
+    model_5 = paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        specialise_value=sequence.get('business_process'),
+        reference='fabien_model_level_2_2009',
+        effective_date=DateTime(2009, 07, 1),
+        expiration_date=DateTime(2009, 12, 31),
+        version='001')
+    model_line_5 = self.createModelLine(model_5)
+    model_line_5.edit(
+        resource_value=labour,
+        base_contribution_list=['base_amount/base_salary',
+          'base_amount/gross_salary'],
+        quantity=50000)
+
+    # third level : define two models with same references and same dates
+    # but different version number
+    model_6 = paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        specialise_value=sequence.get('business_process'),
+        reference='fabien_model_level_3_2009',
+        effective_date=DateTime(2009, 01, 1),
+        expiration_date=DateTime(2009, 06, 30),
+        version='002')
+    model_line_6 = self.createModelLine(model_6)
+    model_line_6.edit(
+        resource_value=labour,
+        base_contribution_list=['base_amount/base_salary',
+          'base_amount/gross_salary'],
+        quantity=60000)
+
+    model_7 = paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        specialise_value=sequence.get('business_process'),
+        reference='fabien_model_level_3_2009',
+        effective_date=DateTime(2009, 07, 1),
+        expiration_date=DateTime(2009, 12, 31),
+        version='001')
+    model_line_7 = self.createModelLine(model_7)
+    model_line_7.edit(
+        resource_value=labour,
+        base_contribution_list=['base_amount/base_salary',
+          'base_amount/gross_salary'],
+        quantity=70000)
+
+    self.stepTic()
+
+    # create the paysheet
+    paysheet = self.portal.accounting_module.newContent(
+                              portal_type='Pay Sheet Transaction',
+                              specialise_value=model_1,
+                              start_date=DateTime(2009, 07, 1),
+                              stop_date=DateTime(2009, 07, 31),
+                              price_currency_value=eur)
+    specialise_value = paysheet.getSpecialiseValue()
+
+    # design some heritance trees, and check them:
+    model_1.setSpecialiseValue(model_4)
+    model_4.setSpecialiseValue(model_6)
+    paysheet.PaySheetTransaction_applyModel()
+    self.assertEquals(specialise_value.findSpecialiseValueList(context=paysheet),
+        [model_1, model_4, model_6])
+    self.assertEquals(specialise_value.findEffectiveSpecialiseValueList(\
+        context=paysheet, start_date=paysheet.getStartDate(),
+        stop_date=paysheet.getStopDate()), [model_2,])
+
+    model_1.setSpecialiseValue(None)
+    model_2.setSpecialiseValue(model_5)
+    model_5.setSpecialiseValue(model_6)
+    paysheet.PaySheetTransaction_applyModel()
+    self.assertEquals(specialise_value.findSpecialiseValueList(context=paysheet),
+        [model_1,])
+    self.assertEquals(specialise_value.findEffectiveSpecialiseValueList(\
+        context=paysheet, start_date=paysheet.getStartDate(),
+        stop_date=paysheet.getStopDate()), [model_2, model_5, model_7])
+
+    model_3.setSpecialiseValue(model_5)
+    model_5.setSpecialiseValue(model_6)
+    paysheet.PaySheetTransaction_applyModel()
+    self.assertEquals(specialise_value.findSpecialiseValueList(context=paysheet),
+        [model_1,])
+    self.assertEquals(specialise_value.findEffectiveSpecialiseValueList(\
+        context=paysheet, start_date=paysheet.getStartDate(),
+        stop_date=paysheet.getStopDate()), [model_2, model_5, model_7])
+
 class TestNewPayroll(TestNewPayrollMixin):
 
   BUSINESS_PATH_CREATION_SEQUENCE_STRING = """
@@ -1974,6 +2161,26 @@ class TestNewPayroll(TestNewPayrollMixin):
                CheckPaysheetLineAmountsWithQuantityOnly
                CheckUpdateAggregatedAmountListReturnNothing
                CheckPaysheetLineAmountsWithQuantityOnly
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_modelLineWithZeroPrice(self):
+    '''Test the creation of lines when the price is set to zero: the line should
+    not be created.'''
+    sequence_list = SequenceList()
+    sequence_string = """
+               CreateLabourOutputService
+               CreateEmployer
+               CreateEmployee
+               CreatePriceCurrency
+               CreateBasicModel
+               CreateModelLineZeroPrice
+               CreateBasicPaysheet
+  """ + self.BUSINESS_PATH_CREATION_SEQUENCE_STRING + """
+               PaysheetApplyTransformation
+               Tic
+               CheckNoPaysheetLineAreCreated
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -2961,6 +3168,63 @@ class TestNewPayroll(TestNewPayrollMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def test_modelSliceInheritance(self):
+    '''Check the slice inheritance'''
+    base_id = 'cell'
+    paysheet_model_module = self.getPortalObject().paysheet_model_module
+    model_1 = paysheet_model_module.newContent(
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=
+              ('salary_range/france',))
+
+    model_2 = paysheet_model_module.newContent(
+        portal_type='Pay Sheet Model',
+        specialise_value=model_1,)
+
+    cell = model_1.newCell('salary_range/france/slice_a',
+        portal_type='Pay Sheet Model Slice',
+        base_id='cell')
+    cell.setQuantityRangeMin(1)
+    cell.setQuantityRangeMax(2)
+
+    # model 2 gets cell values from model 1 (see test_07_model_getCell)
+    self.assertEquals(1,
+        model_2.getCell('salary_range/france/slice_a').getQuantityRangeMin())
+    self.assertEquals(2,
+        model_2.getCell('salary_range/france/slice_a').getQuantityRangeMax())
+
+    # model 2 can override values
+    model_2.edit(variation_settings_category_list=('salary_range/france',))
+    cell = model_2.newCell('salary_range/france/slice_a',
+                    portal_type='Pay Sheet Model Slice',
+                    base_id='cell')
+    cell.setQuantityRangeMin(3)
+    cell.setQuantityRangeMax(4)
+    self.assertEquals(3,
+        model_2.getCell('salary_range/france/slice_a').getQuantityRangeMin())
+    self.assertEquals(4,
+        model_2.getCell('salary_range/france/slice_a').getQuantityRangeMax())
+
+    # when unsetting variation settings category on this model will acquire
+    # again values from specialised model
+    model_2.edit(variation_settings_category_list=())
+    self.assertEquals(1,
+        model_2.getCell('salary_range/france/slice_a').getQuantityRangeMin())
+    self.assertEquals(2,
+        model_2.getCell('salary_range/france/slice_a').getQuantityRangeMax())
+
+  def test_complexModelInheritanceScheme(self):
+    '''check inheritance and effective model with a more complexe 
+    inheritance tree'''
+    sequence_list = SequenceList()
+    sequence_string = """
+               CreatePriceCurrency
+               CreateLabourOutputService
+               Tic
+               ComplexModelInheritanceScheme
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
 import unittest
 def test_suite():
