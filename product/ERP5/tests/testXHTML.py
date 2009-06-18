@@ -48,53 +48,6 @@ bt5_base_path = os.environ.get('erp5_tests_bt5_path',
                                os.path.join(INSTANCE_HOME, 'bt5'))
 bootstrap_base_path = os.path.join(INSTANCE_HOME, 'Products', 'ERP5', 'bootstrap')
 
-# dependency order
-target_business_templates = (
-  'erp5_base',
-  'erp5_trade',
-
-  'erp5_pdf_editor',
-  'erp5_pdf_style',
-  'erp5_pdm',
-  'erp5_accounting',
-  'erp5_invoicing',
-
-  'erp5_apparel',
-
-##   'erp5_banking_core',
-##   'erp5_banking_cash',
-##   'erp5_banking_check',
-##   'erp5_banking_inventory',
-
-  'erp5_budget',
-  'erp5_public_accounting_budget',
-
-  'erp5_commerce',
-
-  'erp5_consulting',
-
-  'erp5_ingestion',
-  'erp5_ingestion_mysql_innodb_catalog',
-  'erp5_crm',
-
-  'erp5_web',
-  'erp5_dms',
-
-  'erp5_forge',
-
-  'erp5_immobilisation',
-
-  'erp5_item',
-
-  'erp5_mrp',
-
-  'erp5_payroll',
-
-  'erp5_project',
-
-  'erp5_calendar',
-)
-
 
 class TestXHTML(ERP5TypeTestCase):
 
@@ -103,9 +56,54 @@ class TestXHTML(ERP5TypeTestCase):
   def getTitle(self):
     return "XHTML Test"
 
-  def getBusinessTemplateList(self):
+  @staticmethod
+  def getBusinessTemplateList():
     """  """
-    return target_business_templates
+    return ( # dependency order
+      'erp5_base',
+      'erp5_trade',
+
+      'erp5_pdf_editor',
+      'erp5_pdf_style',
+      'erp5_pdm',
+      'erp5_accounting',
+      'erp5_invoicing',
+
+      'erp5_apparel',
+
+##    'erp5_banking_core',
+##    'erp5_banking_cash',
+##    'erp5_banking_check',
+##    'erp5_banking_inventory',
+
+      'erp5_budget',
+      'erp5_public_accounting_budget',
+
+      'erp5_commerce',
+
+      'erp5_consulting',
+
+      'erp5_ingestion',
+      'erp5_ingestion_mysql_innodb_catalog',
+      'erp5_crm',
+
+      'erp5_web',
+      'erp5_dms',
+
+      'erp5_forge',
+
+      'erp5_immobilisation',
+
+      'erp5_item',
+
+      'erp5_mrp',
+
+      'erp5_payroll',
+
+      'erp5_project',
+
+      'erp5_calendar',
+    )
 
   def afterSetUp(self):
     self.portal = self.getPortal()
@@ -396,14 +394,12 @@ def testPortalTypeViewRecursivly(validator, module_id, business_template_info,
                        tested_portal_type_list=tested_portal_type_list)
 
 
-def addTestMethodDynamically(validator):
+def addTestMethodDynamically(validator, target_business_templates):
   from Products.ERP5.tests.utils import BusinessTemplateInfoTar
   from Products.ERP5.tests.utils import BusinessTemplateInfoDir
   business_template_info_list = []
 
-  # add erp5_core to the list here but not in the target_business_templates 
-  # list to not return it on getBusinessTemplateList call 
-  for i in ('erp5_core',) + target_business_templates:
+  for i in target_business_templates:
     business_template = os.path.join(bt5_base_path, i)
 
     # Look for business templates, they can be:
@@ -472,11 +468,13 @@ elif validator_to_use == 'tidy':
   else:
     validator = TidyValidator(validator_path, show_warnings)
 
-# add the tests
-if validator is not None:
-  addTestMethodDynamically(validator)
-
 def test_suite():
+  # add the tests
+  if validator is not None:
+    # add erp5_core to the list here to not return it
+    # on getBusinessTemplateList call
+    addTestMethodDynamically(validator,
+      ('erp5_core',) + TestXHTML.getBusinessTemplateList())
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestXHTML))
   return suite
