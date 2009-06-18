@@ -30,6 +30,7 @@ from Products.ERP5.tests.testBPMCore import TestBPMMixin
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import reindex
+from Products.CMFCore.utils import getToolByName
 from DateTime import DateTime
 import transaction
 
@@ -65,6 +66,32 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                                'Associate', 'Auditor', 'Author'], [])
     user = uf.getUserById('admin').__of__(uf)
     newSecurityManager(None, user)
+
+  @reindex
+  def setSystemPreference(self):
+    preference_tool = getToolByName(self.portal, 'portal_preferences')
+    system_preference_list = preference_tool.contentValues(
+        portal_type='System Preference')
+    if len(system_preference_list) > 1:
+      raise AttributeError('More than one System Preference, cannot test')
+    if len(system_preference_list) == 0:
+      system_preference = preference_tool.newContent(
+          portal_type='System Preference')
+    else:
+      system_preference = system_preference_list[0]
+    system_preference.edit(
+      preferred_invoicing_resource_use_category_list = \
+          self.invoicing_resource_use_category_list,
+      preferred_normal_resource_use_category_list = \
+          self.normal_resource_use_category_list,
+      preferred_payroll_resource_use_category_list = \
+          ['use/payroll'],
+      priority = 1,
+
+    )
+
+    if system_preference.getPreferenceState() == 'disabled':
+      system_preference.enable()
 
   @reindex
   def createCategories(self):
@@ -106,7 +133,9 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
             'product_line/state_insurance',
             'use/payroll/tax',
             'use/payroll/base_salary',
+            'use/payroll/output',
             'trade_phase/payroll/france/urssaf',
+            'trade_phase/payroll/france/labour',
             'time/hours',
             'salary_range/france',
             'salary_range/france/slice_a',
@@ -145,6 +174,15 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     node = self.createService()
     node.edit(title='Labour', quantity_unit='time/month',
         product_line='labour', use='payroll/base_salary')
+    sequence.edit(labour_service = node)
+
+  def stepCreateLabourOutputService(self, sequence=None, **kw):
+    '''In case we want to have the labour line in the model, the use category
+    should not be base_salary (=input) because in this case the line will be
+    added on each calculation'''
+    node = self.createService()
+    node.edit(title='Labour', quantity_unit='time/month',
+        product_line='labour', use='payroll/output')
     sequence.edit(labour_service = node)
 
   def stepCreateBonusService(self, sequence=None, **kw):
@@ -236,7 +274,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model_line = self.createModelLine(model)
     model_line.edit(title='Urssaf',
                     reference='urssaf_model_line',
-                    trade_phase='trade_phase/payroll/france/urssaf',
+                    trade_phase='payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_service'),
                     variation_category_list=['tax_category/employee_share',
                                              'tax_category/employer_share'],
@@ -249,7 +287,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model_line = self.createModelLine(model)
     model_line.edit(title='Urssaf',
                     reference='urssaf_model_line_2',
-                    trade_phase='trade_phase/payroll/france/urssaf',
+                    trade_phase='payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_service'),
                     variation_category_list=['tax_category/employee_share',
                                        'tax_category/employer_share',
@@ -265,7 +303,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model_line = self.createModelLine(model)
     model_line.edit(title='Urssaf',
                     reference='urssaf_model_line_3',
-                    trade_phase='trade_phase/payroll/france/urssaf',
+                    trade_phase='payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_service'),
                     variation_category_list=['tax_category/employee_share',
                                        'tax_category/employer_share',
@@ -283,7 +321,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model_line = self.createModelLine(paysheet)
     model_line.edit(title='Urssaf',
                     reference='urssaf_model_line',
-                    trade_phase='trade_phase/payroll/france/urssaf',
+                    trade_phase='payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_service'),
                     variation_category_list=['tax_category/employee_share',
                                              'tax_category/employer_share'],
@@ -740,7 +778,8 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
 
   def stepModifyBusinessPathTradePhase(self, sequence=None, **kw):
     business_path = sequence.get('business_path')
-    business_path.setTradePhaseList(['trade_phase/payroll/france/urssaf'])
+    business_path.setTradePhaseList(['payroll/france/urssaf',
+                                     'payroll/france/labour'])
     business_path.setSourceDecisionValue(sequence.get('urssaf_roubaix'))
     business_path.setDeliveryBuilderList(('portal_deliveries/pay_sheet_builder',))
     sequence.edit(business_path=business_path)
@@ -936,7 +975,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model = sequence.get('model')
     model_line = self.createModelLine(model)
     model_line.edit(title='intermediate line',
-                    trade_phase='trade_phase/payroll/france/urssaf',
+                    trade_phase='payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_service'),
                     reference='intermediate_line',
                     variation_category_list=['tax_category/employee_share',
@@ -953,7 +992,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model = sequence.get('model')
     model_line = self.createModelLine(model)
     model_line.edit(title='line applied on intermediate line',
-                    trade_phase='trade_phase/payroll/france/urssaf',
+                    trade_phase='payroll/france/urssaf',
                     resource_value=sequence.get('urssaf_service'),
                     reference='line_applied_on_intermediate_line',
                     variation_category_list=['tax_category/employee_share',
@@ -993,7 +1032,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model = sequence.get('model')
     model_line = self.createModelLine(model)
     model_line.edit(title='Old Age Insurance',
-                    trade_phase='trade_phase/payroll/france/urssaf',
+                    trade_phase='payroll/france/urssaf',
                     resource_value=sequence.get('old_age_insurance_service'),
                     reference='old_age_insurance',
                     variation_category_list=['tax_category/employee_share',
@@ -1019,7 +1058,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model = sequence.get('model')
     model_line = self.createModelLine(model)
     model_line.edit(title='Sickness Insurance',
-                    trade_phase='trade_phase/payroll/france/urssaf',
+                    trade_phase='payroll/france/urssaf',
                     resource_value=sequence.get('sickness_insurance_service'),
                     reference='sickness_insurance',
                     variation_category_list=['tax_category/employee_share',
@@ -1071,7 +1110,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     paysheet = sequence.get('paysheet')
     model_line = self.createModelLine(paysheet)
     model_line.edit(title='model line in the paysheet',
-                    trade_phase='trade_phase/payroll/france/urssaf',
+                    trade_phase='payroll/france/urssaf',
                     resource_value=sequence.get('old_age_insurance_service'),
                     reference='model_line_in_the_payesheet',
                     variation_category_list=['tax_category/employee_share',
@@ -1310,7 +1349,7 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     self.assertEquals(len(paysheet.PaySheetTransaction_getMovementList()), 0)
 
     # we add a line, then it is returned in the list
-    line = paysheet.newContent(portal_type='Pay Sheet Line')
+    line = self.createPaysheetLine(paysheet)
     self.assertEquals(len(paysheet.PaySheetTransaction_getMovementList()), 1)
 
     # if the line has cells with different tax categories, new properties are
@@ -1341,6 +1380,230 @@ class TestNewPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     self.assertEquals(4, movement.employer_share_price)
     self.assertEquals(5, movement.employer_share_quantity)
     self.assertEquals(4*5, movement.employer_share_total_price)
+
+  def stepCheckModelWithoutRefValidity(self, sequence=None, **kw):
+    '''
+    If no reference are defined on a model, the behavior is that this model is
+    always valid. So check a Pay Sheet Transaction Line is created after
+    calling the calculation script
+    '''
+    eur = sequence.get('currency')
+    labour = sequence.get('labour_service_output')
+
+    model_without_ref = self.getPortalObject().paysheet_model_module.newContent( \
+        specialise_value=sequence.get('business_process'),
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=['salary_range/france',],
+        effective_date=DateTime(2009, 1, 1),
+        expiration_date=DateTime(2009, 12, 31))
+    model_without_ref.setPriceCurrencyValue(eur)
+
+
+    model_line_1 = self.createModelLine(model_without_ref)
+    model_line_1.edit(
+        trade_phase='payroll/france/labour',
+        reference='model_without_ref',
+        resource_value=labour,
+        base_contribution_list=['base_amount/base_salary',
+          'base_amount/gross_salary'],
+        quantity=10000)
+    
+    # create the paysheet
+    paysheet = self.createPaysheet()
+    paysheet.edit(specialise_value=model_without_ref,
+                  start_date=DateTime(2008, 1, 1),
+                  stop_date=DateTime(2008, 1, 31),
+                  price_currency_value=eur)
+    paysheet.PaySheetTransaction_applyModel()
+    self.stepTic()
+
+    portal_type_list = ['Pay Sheet Model Line',]
+
+    # if no reference, we don't care about dates
+    sub_object_list = paysheet.getInheritedObjectValueList(portal_type_list)
+    
+    self.assertEquals(len(paysheet.contentValues(\
+        portal_type='Pay Sheet Line')), 0)
+    # calculate the pay sheet
+    paysheet.applyTransformation()
+    self.stepTic()
+    self.assertEquals(len(paysheet.contentValues(
+        portal_type='Pay Sheet Line')), 1)
+    # check values on the paysheet
+    self.assertEquals(paysheet.contentValues()[0].getTotalPrice(), 10000)
+
+  def stepCheckModelWithoutDateValidity(self, sequence=None, **kw):
+    '''
+    If no date are defined on a model, the behavior is that this model
+    is always valid. (XXX check if it's what we want)
+    So check that a line is created after calling calculation script, even if
+    there is no start_date or stop_date
+    '''
+    eur = sequence.get('currency')
+    labour = sequence.get('labour_service_output')
+
+    model_without_date = self.getPortalObject().paysheet_model_module.newContent( \
+        specialise_value=sequence.get('business_process'),
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=['salary_range/france',],
+        reference='fabien_model_without_date')
+
+    model_line_2 = self.createModelLine(model_without_date)
+    model_line_2.edit(
+        trade_phase='payroll/france/labour',
+        reference='model_without_date',
+        resource_value=labour,
+        base_contribution_list=['base_amount/base_salary',
+          'base_amount/gross_salary'],
+        quantity=10000)
+
+    # create the paysheet
+    paysheet = self.createPaysheet()
+    paysheet.edit(specialise_value=model_without_date,
+                  start_date=DateTime(2008, 1, 1),
+                  stop_date=DateTime(2008, 1, 31),
+                  price_currency_value=eur)
+    paysheet.PaySheetTransaction_applyModel()
+    self.stepTic()
+
+    portal_type_list = ['Pay Sheet Model Line',]
+
+    # if no dates, we don't care about dates
+    sub_object_list = paysheet.getInheritedObjectValueList(portal_type_list)
+    
+    self.assertEquals(len(paysheet.contentValues(\
+        portal_type='Pay Sheet Line')), 0)
+    # calculate the pay sheet
+    paysheet.applyTransformation()
+    self.stepTic()
+    self.assertEquals(len(paysheet.contentValues(\
+        portal_type='Pay Sheet Line')), 1)
+    # check values on the paysheet
+    self.assertEquals(paysheet.contentValues()[0].getTotalPrice(), 10000)
+
+  def stepCheckModelDateValidity(self, sequence=None, **kw):
+    '''
+    check that model effective_date and expiration_date are take into account.
+    '''
+    eur = sequence.get('currency')
+    labour = sequence.get('labour_service_output')
+
+    model_1 = self.getPortalObject().paysheet_model_module.newContent( \
+        specialise_value=sequence.get('business_process'),
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=['salary_range/france',],
+        reference='fabien_model_2009',
+        effective_date=DateTime(2009, 1, 1),
+        expiration_date=DateTime(2009, 06, 30))
+    
+    model_2 = self.getPortalObject().paysheet_model_module.newContent( \
+        specialise_value=sequence.get('business_process'),
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=['salary_range/france',],
+        reference='fabien_model_2009',
+        effective_date=DateTime(2009, 07, 1),
+        expiration_date=DateTime(2009, 12, 31))
+
+    model_line_3 = self.createModelLine(model_1)
+    model_line_3.edit(
+        trade_phase='payroll/france/labour',
+        reference='check_model_date_validity_1',
+        resource_value=labour,
+        base_contribution_list=['base_amount/base_salary',
+          'base_amount/gross_salary'],
+        quantity=20000,
+        price=1)
+
+    model_line_4 = self.createModelLine(model_2)
+    model_line_4.edit(
+        trade_phase='payroll/france/labour',
+        reference='check_model_date_validity_2',
+        resource_value=labour,
+        base_contribution_list=['base_amount/base_salary',
+          'base_amount/gross_salary'],
+        quantity=30000,
+        price=1)
+    self.stepTic()
+
+    # create the paysheet
+    paysheet = self.portal.accounting_module.newContent(
+                              portal_type='Pay Sheet Transaction',
+                              specialise_value=model_1,
+                              start_date=DateTime(2009, 07, 1),
+                              stop_date=DateTime(2009, 07, 31),
+                              price_currency_value=eur)
+    paysheet.PaySheetTransaction_applyModel()
+    self.stepTic()
+
+    self.assertEquals(len(paysheet.contentValues(\
+        portal_type='Pay Sheet Line')), 0)
+    # calculate the pay sheet
+    paysheet.applyTransformation()
+    self.stepTic()
+    self.assertEquals(len(paysheet.contentValues(\
+        portal_type='Pay Sheet Line')), 1)
+    # check values on the paysheet, if it's model_2, the total_price 
+    # should be 30000.
+    self.assertEquals(paysheet.contentValues()[0].getTotalPrice(), 30000)
+
+  def stepCheckModelVersioning(self, sequence=None, **kw):
+    '''
+    check that latest version is used in case of more thant one model is matching
+    using dates
+    '''
+    eur = sequence.get('currency')
+
+    # define a non effective model
+    model_1 = self.getPortalObject().paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=['salary_range/france',],
+        reference='fabien_model_2009',
+        effective_date=DateTime(2009, 01, 1),
+        expiration_date=DateTime(2009, 02, 28),
+        specialise_value=sequence.get('business_process'))
+
+    # define two models with same references and same dates
+    # but different version number
+    model_2 = self.getPortalObject().paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=['salary_range/france',],
+        reference='fabien_model_2009',
+        effective_date=DateTime(2009, 07, 1),
+        expiration_date=DateTime(2009, 12, 31),
+        version='002',
+        specialise_value=sequence.get('business_process'))
+
+    model_3 = self.getPortalObject().paysheet_model_module.newContent( \
+        portal_type='Pay Sheet Model',
+        variation_settings_category_list=['salary_range/france',],
+        reference='fabien_model_2009',
+        effective_date=DateTime(2009, 07, 1),
+        expiration_date=DateTime(2009, 12, 31),
+        version='001',
+        specialise_value=sequence.get('business_process'))
+    self.stepTic()
+
+    # create the paysheet
+    paysheet = self.portal.accounting_module.newContent(
+                              portal_type='Pay Sheet Transaction',
+                              specialise_value=model_1,
+                              start_date=DateTime(2009, 07, 1),
+                              stop_date=DateTime(2009, 07, 31),
+                              price_currency_value=eur)
+    paysheet.PaySheetTransaction_applyModel()
+    self.stepTic()
+
+    # the effective model should be model_2 because of the effective date and
+    # version number
+    specialise_value = paysheet.getSpecialiseValue()
+    self.assertEquals(specialise_value.getEffectiveModel(paysheet), model_2)
+
+    # check the effective model tree list
+    effective_value_list = specialise_value.findEffectiveSpecialiseValueList(\
+        context=specialise_value,
+        start_date=paysheet.getStartDate(),
+        stop_date=paysheet.getStopDate())
+    self.assertEquals(effective_value_list, [model_2])
 
 class TestNewPayroll(TestNewPayrollMixin):
 
@@ -1919,9 +2182,7 @@ class TestNewPayroll(TestNewPayrollMixin):
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
     cell_employer.edit(price=-.42, quantity=2998, tax_category='employer_share')
-
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     # AccountingTransactionModule_getPaySheetMovementMirrorSectionItemList is
     # used in the report dialog to display possible organisations.
@@ -2120,8 +2381,7 @@ class TestNewPayroll(TestNewPayrollMixin):
     cell_employer_b.edit(price=-.32, quantity=3000,
                          salary_range='france/slice_b',
                          tax_category='employer_share')
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     # set request variables and render
     request_form = self.portal.REQUEST
@@ -2318,9 +2578,7 @@ class TestNewPayroll(TestNewPayrollMixin):
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
     cell_employer.edit(price=-.40, quantity=3000, tax_category='employer_share')
-
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     # set request variables and render
     request_form = self.portal.REQUEST
@@ -2356,6 +2614,353 @@ class TestNewPayroll(TestNewPayrollMixin):
     self.checkLineProperties(
             line_list[-1],
             total_price=3000 + 2000 - (2000 * .5) - (3000 * .5))
+
+  def test_AccountingLineGeneration(self):
+    currency_module = self.getCurrencyModule()
+    if not hasattr(currency_module, 'EUR'):
+      currency_module.newContent(
+          portal_type = 'Currency',
+          reference = "EUR", id = "EUR", base_unit_quantity=0.001 )
+    # create services
+    base_salary = self.portal.service_module.newContent(
+      portal_type='Service',
+      title='Base Salary',
+      product_line='base_salary',
+      variation_base_category_list=('tax_category',),
+      variation_category_list=('tax_category/employee_share',
+                               'tax_category/employer_share'))
+    bonus = self.portal.service_module.newContent(
+      portal_type='Service',
+      title='Bonus',
+      product_line='base_salary',
+      variation_base_category_list=('tax_category',),
+      variation_category_list=('tax_category/employee_share',
+                               'tax_category/employer_share'))
+    deductions = self.portal.service_module.newContent(
+      portal_type='Service',
+      title='Deductions',
+      product_line='base_salary',
+      variation_base_category_list=('tax_category',),
+      variation_category_list=('tax_category/employee_share',
+                               'tax_category/employer_share'))
+    tax1 = self.portal.service_module.newContent(
+      portal_type='Service',
+      title='Tax1',
+      product_line='payroll_tax_1',
+      variation_base_category_list=('tax_category',),
+      variation_category_list=('tax_category/employee_share',
+                               'tax_category/employer_share'))
+
+    # create accounts
+    account_payroll_wages_expense = self.portal.account_module.newContent(
+                          portal_type='Account',
+                          title='Payroll Wages (expense)',
+                          account_type='expense',)
+    account_payroll_taxes_expense = self.portal.account_module.newContent(
+                          portal_type='Account',
+                          title='Payroll Taxes (expense)',
+                          account_type='expense',)
+    account_net_wages = self.portal.account_module.newContent(
+                          portal_type='Account',
+                          title='Net Wages',
+                          account_type='liability/payable',)
+    account_payroll_taxes = self.portal.account_module.newContent(
+                          portal_type='Account',
+                          title='Payroll Taxes',
+                          account_type='liability/payable',)
+
+    # create an invoice transaction rule for pay sheets.
+    rule = self.portal.portal_rules.newContent(
+      portal_type='Invoice Transaction Rule',
+      title='Rule for PaySheet Accounting',
+      reference='paysheet_transaction_rule',
+      test_method_id='SimulationMovement_testInvoiceTransactionRule')
+    rule.newContent(portal_type='Predicate',
+      title='Employee Share',
+      string_index='tax_category',
+      int_index=1,
+      membership_criterion_base_category_list=('tax_category',),
+      membership_criterion_category_list=('tax_category/employee_share',))
+    rule.newContent(portal_type='Predicate',
+      title='Employer Share',
+      string_index='tax_category',
+      int_index=2,
+      membership_criterion_base_category_list=('tax_category',),
+      membership_criterion_category_list=('tax_category/employer_share',))
+
+    rule.newContent(portal_type='Predicate',
+      title='Base Salary',
+      string_index='service',
+      int_index=1,
+      membership_criterion_base_category_list=('product_line',),
+      membership_criterion_category_list=('product_line/base_salary',))
+    rule.newContent(portal_type='Predicate',
+      title='Payroll Tax 1',
+      string_index='service',
+      int_index=2,
+      membership_criterion_base_category_list=('product_line',),
+      membership_criterion_category_list=('product_line/payroll_tax_1',))
+    self.stepTic()
+
+    cell_list = rule.contentValues(portal_type='Accounting Rule Cell')
+    self.assertEquals(4, len(cell_list))
+
+    employee_base_salary = rule._getOb('movement_0_0')
+    self.assertEquals('Employee Share * Base Salary',
+                      employee_base_salary.getTitle())
+    employee_base_salary.newContent(
+                      portal_type='Accounting Rule Cell Line',
+                      destination_debit=1,
+                      destination_value=account_payroll_wages_expense)
+    employee_base_salary.newContent(
+                      portal_type='Accounting Rule Cell Line',
+                      destination_credit=1,
+                      destination_value=account_net_wages)
+
+    employer_tax = rule._getOb('movement_1_1')
+    self.assertEquals('Employer Share * Payroll Tax 1',
+                      employer_tax.getTitle())
+    employer_tax.newContent(
+                      portal_type='Accounting Rule Cell Line',
+                      destination_debit=1,
+                      destination_value=account_payroll_taxes)
+    employer_tax.newContent(
+                      portal_type='Accounting Rule Cell Line',
+                      destination_credit=1,
+                      destination_value=account_payroll_taxes_expense)
+
+    employee_tax = rule._getOb('movement_0_1')
+    self.assertEquals('Employee Share * Payroll Tax 1',
+                      employee_tax.getTitle())
+    employee_tax.newContent(
+                      portal_type='Accounting Rule Cell Line',
+                      destination_debit=1,
+                      destination_value=account_payroll_taxes)
+    employee_tax.newContent(
+                      portal_type='Accounting Rule Cell Line',
+                      destination_credit=1,
+                      generate_prevision_script_id=\
+      'SimulationMovement_generatePrevisionForEmployeeSharePaySheetMovement',
+                      destination_value=account_net_wages)
+    rule.validate()
+
+    # create a pay sheet
+    eur = self.portal.currency_module.EUR
+    employer = self.portal.organisation_module.newContent(
+                      portal_type='Organisation',
+                      title='Employer',
+                      price_currency_value=eur,
+                      group_value=self.portal.portal_categories.group.demo_group)
+    employee = self.portal.person_module.newContent(
+                      portal_type='Person',
+                      title='Employee',
+                      career_reference='E1',
+                      career_subordination_value=employer)
+    provider = self.portal.organisation_module.newContent(
+                      portal_type='Organisation',
+                      title='Service Provider')
+
+    ps = self.portal.accounting_module.newContent(
+                      portal_type='Pay Sheet Transaction',
+                      price_currency_value=eur,
+                      resource_value=eur,
+                      title='Employee 1',
+                      destination_section_value=employer,
+                      source_section_value=employee,
+                      start_date=DateTime(2006, 1, 1),)
+
+    # base salary = 2000
+    line = ps.newContent(portal_type='Pay Sheet Line',
+                   title='Base salary',
+                   resource_value=base_salary,
+                   destination_value=employee,
+                   variation_category_list=('tax_category/employee_share',
+                                            'tax_category/employer_share'))
+    cell_employee = line.newCell('tax_category/employee_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employee.edit(price=1, quantity=2000, tax_category='employee_share')
+    cell_employer = line.newCell('tax_category/employer_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employer.edit(price=1, quantity=2000, tax_category='employer_share')
+
+    # base_salary += 100 (bonus)
+    line = ps.newContent(portal_type='Pay Sheet Line',
+                   title='Bonus',
+                   resource_value=bonus,
+                   destination_value=employee,
+                   variation_category_list=('tax_category/employee_share',
+                                            'tax_category/employer_share'))
+    cell_employee = line.newCell('tax_category/employee_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employee.edit(price=1, quantity=100, tax_category='employee_share')
+    cell_employer = line.newCell('tax_category/employer_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employer.edit(price=1, quantity=100, tax_category='employer_share')
+
+    # base_salary -= 50 (deductions)   => base_salary == 2050
+    line = ps.newContent(portal_type='Pay Sheet Line',
+                   title='Deduction',
+                   resource_value=deductions,
+                   destination_value=employee,
+                   variation_category_list=('tax_category/employee_share',
+                                            'tax_category/employer_share'))
+    cell_employee = line.newCell('tax_category/employee_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employee.edit(price=-1, quantity=50, tax_category='employee_share')
+    cell_employer = line.newCell('tax_category/employer_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employer.edit(price=-1, quantity=50, tax_category='employer_share')
+
+    # tax1 = 10% for employee ( 205 )
+    #        20% for employer ( 410 )
+    line = ps.newContent(portal_type='Pay Sheet Line',
+                   title='Tax 1',
+                   resource_value=tax1,
+                   source_section_value=provider,
+                   destination_value=employee,
+                   variation_category_list=('tax_category/employee_share',
+                                            'tax_category/employer_share'))
+    cell_employee = line.newCell('tax_category/employee_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employee.edit(price=-.1, quantity=2050, tax_category='employee_share')
+    cell_employer = line.newCell('tax_category/employer_share',
+                                portal_type='Pay Sheet Cell',
+                                base_id='movement',
+                                mapped_value_property_list=('price',
+                                                            'quantity'),)
+    cell_employer.edit(price=-.2, quantity=2050, tax_category='employer_share')
+    ps.plan()
+    self.stepTic()
+
+    related_applied_rule = ps.getCausalityRelatedValue(
+                                portal_type='Applied Rule')
+    self.assertNotEquals(related_applied_rule, None)
+
+    # build accounting lines
+    ps.confirm()
+    ps.start()
+    self.stepTic()
+    accounting_line_list = ps.contentValues(
+        portal_type='Pay Sheet Transaction Line')
+    self.assertEquals(len(accounting_line_list), 4)
+
+    line = [l for l in accounting_line_list
+            if l.getDestinationValue() == account_payroll_wages_expense][0]
+    self.assertEquals(2050, line.getDestinationDebit())
+    self.assertEquals(employer, line.getDestinationSectionValue())
+
+    line = [l for l in accounting_line_list
+            if l.getDestinationValue() == account_net_wages][0]
+    self.assertEquals(2050 - 205, line.getDestinationCredit())
+    self.assertEquals(employer, line.getDestinationSectionValue())
+    self.assertEquals(employee, line.getSourceSectionValue())
+
+    line = [l for l in accounting_line_list
+            if l.getDestinationValue() == account_payroll_taxes_expense][0]
+    self.assertEquals(410, line.getDestinationDebit())
+    self.assertEquals(employer, line.getDestinationSectionValue())
+
+    line = [l for l in accounting_line_list
+            if l.getDestinationValue() == account_payroll_taxes][0]
+    self.assertEquals(410 + 205, line.getDestinationCredit())
+    self.assertEquals(employer, line.getDestinationSectionValue())
+    self.assertEquals(provider, line.getSourceSectionValue())
+
+  def test_modelWithoutReferenceValidity(self):
+    ''' Check that if no REFERENCE are defined on a model, the behavior is
+    that this model is always valid. So check a Pay Sheet Transaction Line 
+    is created after calling the calculation script
+    '''
+    sequence_list = SequenceList()
+    sequence_string = """
+               CreatePriceCurrency
+               CreateLabourOutputService
+               CreateBusinessProcess
+               CreateBusinessPath
+               CreateUrssafRoubaixOrganisation
+               ModifyBusinessPathTradePhase
+               Tic
+               CheckModelWithoutRefValidity
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_modelWithoutDateValidity(self):
+    ''' Check that if no DATE are defined on a model, the behavior is that 
+    this model is always valid. (XXX check if it's what we want)
+    So check that a line is created after calling calculation script, even if
+    there is no start_date or stop_date
+    '''
+    sequence_list = SequenceList()
+    sequence_string = """
+               CreatePriceCurrency
+               CreateLabourOutputService
+               CreateBusinessProcess
+               CreateBusinessPath
+               CreateUrssafRoubaixOrganisation
+               ModifyBusinessPathTradePhase
+               Tic
+               CheckModelWithoutDateValidity
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_modelDateValidity(self):
+    ''' check that model effective_date and expiration_date are take into
+    account.
+    '''
+    sequence_list = SequenceList()
+    sequence_string = """
+               CreatePriceCurrency
+               CreateLabourOutputService
+               CreateBusinessProcess
+               CreateBusinessPath
+               CreateUrssafRoubaixOrganisation
+               ModifyBusinessPathTradePhase
+               Tic
+               CheckModelDateValidity
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_modelVersioning(self):
+    '''check that latest version is used in case of more thant one model is
+    matching using dates 
+    '''
+    sequence_list = SequenceList()
+    sequence_string = """
+               CreatePriceCurrency
+               CreateBusinessProcess
+               CreateBusinessPath
+               CreateUrssafRoubaixOrganisation
+               ModifyBusinessPathTradePhase
+               Tic
+               CheckModelVersioning
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 
 import unittest
 def test_suite():
