@@ -127,7 +127,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
          Uses Breadth First Search.
       """
       if portal_type_list is None:
-        portal_type_list = [context.getPortalType()]
+        portal_type_list = [self.getPortalType()]
       if context.getPortalType() in portal_type_list:
         specialise_value_list = [context]
         visited_trade_condition_list = [context]
@@ -282,7 +282,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
     security.declareProtected(Permissions.AccessContentsInformation,
         'findEffectiveSpecialiseValueList')
     def findEffectiveSpecialiseValueList(self, context, start_date=None,
-        stop_date=None):
+        stop_date=None, portal_type_list=None, effecive_model_list=None):
       '''Returns a list of effective specialised objects representing
       inheritance tree.
       An effective object is an object which start and stop_date are equal (or
@@ -290,12 +290,24 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       If no start date and stop date are provided, findSpecialiseValueList is
       returned
       '''
-      model_list = self.findSpecialiseValueList(context=context)
       if start_date is None and stop_date is None:
-        return model_list
-      new_list = [model.getEffectiveModel(start_date, stop_date) for model in\
-          model_list]
-      return new_list
+        # if dates are not defined, return the specalise_value_list
+        return self.findSpecialiseValueList(context=context)
+      if effecive_model_list is None:
+        effecive_model_list=[]
+      if portal_type_list is None:
+        portal_type_list = [self.getPortalType()]
+
+      new_model = self.getEffectiveModel(start_date, stop_date)
+      model_list = new_model.getSpecialiseValueList(portal_type=\
+          portal_type_list)
+      effecive_model_list.append(new_model)
+      for model in model_list:
+        model.findEffectiveSpecialiseValueList(context=context,
+            start_date=start_date, stop_date=stop_date,
+            portal_type_list=portal_type_list,
+            effecive_model_list=effecive_model_list)
+      return effecive_model_list
 
     security.declareProtected(Permissions.AccessContentsInformation,
         'getInheritanceReferenceDict')
