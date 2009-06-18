@@ -95,12 +95,10 @@ class ProductionOrderModelRule(TransformationModelRuleMixin, OrderRule):
     for prop in default_property_list:
       property_dict[prop] = movement.getProperty(prop)
 
-    explanation = self.getExplanation(applied_rule=applied_rule)
-    path = self.getSpecialise(applied_rule=applied_rule).getRootExplanationValue()
-    property_dict['source_section'] = path.getDestinationSection(explanation)
-    property_dict['source'] = path.getDestination(explanation)
+    path = self.getBusinessProcessValue(applied_rule=applied_rule).getRootExplanationPathValue()
+    property_dict['source_section'] = path.getDestinationSection(context=movement)
+    property_dict['source'] = path.getDestination(context=movement)
 
-    import pdb; pdb.set_trace()
     successor = path.getSuccessorValue()
     if successor is not None:
       property_dict['causality_list'] = successor.getPredecessorRelatedList()

@@ -82,7 +82,8 @@ class TransformationSourcingModelRule(TransformationModelRuleMixin, Rule):
     is expanded.
     """
     parent_movement = applied_rule.getParentValue()
-    explanation = self.getExplanation(movement=parent_movement)
+
+    explanation = self.getExplanationValue(applied_rule=applied_rule)
     state = parent_movement.getCausalityValue().getPredecessorValue()
     path_list = state.getSuccessorRelatedValueList()
 
@@ -95,10 +96,10 @@ class TransformationSourcingModelRule(TransformationModelRuleMixin, Rule):
 
     path = path_list[0]
 
-    source_section = self.getSourceSection(path, applied_rule=applied_rule)
-    destination_section = self.getDestinationSection(path, applied_rule=applied_rule)
-    source = self.getSource(path, applied_rule=applied_rule)
-    destination = self.getDestination(path, applied_rule=applied_rule)
+    source_section = path.getSourceSection(context=parent_movement)
+    destination_section = path.getDestinationSection(context=parent_movement)
+    source = path.getSource(context=parent_movement)
+    destination = path.getDestination(context=parent_movement)
 
     start_date = path.getExpectedStartDate(explanation)
     stop_date = path.getExpectedStopDate(explanation)

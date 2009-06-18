@@ -136,8 +136,8 @@ class TransformationModelMovementFactory(MovementFactory):
 class TransformationModelRuleMixin(Base):
   security = ClassSecurityInfo()
 
-  security.declareProtected(Permissions.View, 'getTransformation')
-  def getTransformation(self, movement=None, applied_rule=None):
+  security.declareProtected(Permissions.View, 'getTransformationValue')
+  def getTransformationValue(self, movement=None, applied_rule=None):
     """
     Return transformation related to used by the applied rule.
     """
@@ -145,8 +145,8 @@ class TransformationModelRuleMixin(Base):
       movement = applied_rule.getParentValue()
 
     order_movement = movement.getRootSimulationMovement().getOrderValue()
-    explanation = self.getExplanation(movement=movement,
-                                      applied_rule=applied_rule)
+    explanation = self.getExplanationValue(movement=movement,
+                                           applied_rule=applied_rule)
     # find the line of order recursively
     order_line = order_movement
     while order_line.getParentValue() != explanation:
@@ -167,16 +167,16 @@ class TransformationModelRuleMixin(Base):
     if transformation.getResource() == movement.getResource():
       return transformation
 
-  security.declareProtected(Permissions.View, 'getSpecialise')
-  def getSpecialise(self, movement=None, applied_rule=None, portal_type_list=None):
+  security.declareProtected(Permissions.View, 'getBusinessProcessValue')
+  def getBusinessProcessValue(self, movement=None, applied_rule=None, portal_type_list=None):
     """
     Return a business process related to the root causality.
     """
     if portal_type_list is None:
       portal_type_list = self.getPortalBusinessProcessTypeList()
 
-    explanation = self.getExplanation(movement=movement,
-                                      applied_rule=applied_rule)
+    explanation = self.getExplanationValue(movement=movement,
+                                           applied_rule=applied_rule)
     if explanation is not None:
       specialise = explanation.getSpecialiseValue()
       business_process_type_list = self.getPortalBusinessProcessTypeList()
@@ -187,8 +187,11 @@ class TransformationModelRuleMixin(Base):
         specialise = specialise.getSpecialiseValue()
       return specialise
 
-  security.declareProtected(Permissions.View, 'getExplanation')
-  def getExplanation(self, movement=None, applied_rule=None):
+  security.declareProtected(Permissions.View, 'getExplanationValue')
+  def getExplanationValue(self, movement=None, applied_rule=None):
+    """
+    Return the explanation with the movement or the applied_rule.
+    """
     if applied_rule is not None:
       return applied_rule.getRootAppliedRule().getCausalityValue()
     else:
@@ -234,9 +237,9 @@ class TransformationModelRule(TransformationModelRuleMixin, Rule):
     """
     parent_movement = applied_rule.getParentValue()
 
-    transformation = self.getTransformation(movement=parent_movement)
-    business_process = self.getSpecialise(movement=parent_movement)
-    explanation = self.getExplanation(movement=parent_movement)
+    transformation = self.getTransformationValue(movement=parent_movement)
+    business_process = self.getBusinessProcessValue(movement=parent_movement)
+    explanation = self.getExplanationValue(movement=parent_movement)
 
     # get all trade_phase of the Business Process
     trade_phase_list = business_process.getTradePhaseList()
@@ -263,6 +266,8 @@ class TransformationModelRule(TransformationModelRuleMixin, Rule):
       amount_dict.setdefault(phase, [])
       amount_dict[phase].append(amount)
 
+    transformation_phase_list = amount_dict.keys()
+
     last_phase_path_list = list() # to keep phase_path_list
     last_prop_dict = dict()
     for (phase, amount_list) in amount_dict.items():
@@ -285,18 +290,18 @@ class TransformationModelRule(TransformationModelRuleMixin, Rule):
         quantity = factory.product['quantity'] * path.getQuantity()
 
         # nodes at the path
-        source_section = path.getSourceSection(explanation)
-        destination_section = path.getDestinationSection(explanation)
-        source = path.getSource(explanation)
-        destination = path.getDestination(explanation)
+        source_section = path.getSourceSection(context=parent_movement)
+        destination_section = path.getDestinationSection(context=parent_movement)
+        source = path.getSource(context=parent_movement)
+        destination = path.getDestination(context=parent_movement)
 
         # the remaining at the start and the end on the path
         predecessor_remaining_phase_list = path.getPredecessorValue()\
           .getRemainingTradePhaseList(explanation,
-                                      trade_phase_list=trade_phase_list)
+                                      trade_phase_list=transformation_phase_list)
         successor_remaining_phase_list = path.getSuccessorValue()\
           .getRemainingTradePhaseList(explanation,
-                                      trade_phase_list=trade_phase_list)
+                                      trade_phase_list=transformation_phase_list)
  
         consumed_common_dict = dict(source_section=source_section,
                                     destination_section=destination_section,
