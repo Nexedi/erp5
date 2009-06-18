@@ -171,7 +171,10 @@ class TradeCondition(Path, Transformation, XMLMatrix):
           # for contained Trade Model Lines
           document = context.getExplanationValue()
         containting_object_list.append(document)
-      containting_object_list.extend(self.findSpecialiseValueList(context=self))
+      start_date = getattr(context, 'start_date', None)
+      stop_date = getattr(context, 'stop_date', None)
+      containting_object_list.extend(self.findEffectiveSpecialiseValueList(context=self,
+        start_date=start_date, stop_date=start_date))
 
       for specialise in containting_object_list:
         for trade_model_line in specialise.contentValues(
@@ -325,10 +328,10 @@ class TradeCondition(Path, Transformation, XMLMatrix):
     security.declareProtected(Permissions.AccessContentsInformation,
         'getEffectiveModel')
     def getEffectiveModel(self, start_date=None, stop_date=None):
-      '''return the more appropriate model using effective_date, expiration_date
-      and version number
+      '''Return the more appropriate model using effective_date, expiration_date
+      and version number.
       An effective model is a model which start and stop_date are equal (or
-      included) to the range of the given start and stop_date and with the
+      excluded) to the range of the given start and stop_date and with the
       higher version number (if there is more than one)
       '''
       reference = self.getReference()
@@ -344,19 +347,11 @@ class TradeCondition(Path, Transformation, XMLMatrix):
         return cmp(b.getVersion(), a.getVersion())
       model_object_list.sort(sortByVersion)
 
-      for current_model in model_object_list:
-        # if there is a model with exact dates, return it
-        if start_date == current_model.getEffectiveDate() and \
-            stop_date == current_model.getExpirationDate():
-          effective_model_list.append(current_model)
-      if len(effective_model_list):
-        return effective_model_list[0]
-
-      # else, if there is model which has effective period containing 
+      # if there is model which has effective period containing
       # the start_date and the stop date of the paysheet, return it
       for current_model in model_object_list:
-        if start_date >= current_model.getEffectiveDate() and \
-            stop_date <= current_model.getExpirationDate():
+        if current_model.getEffectiveDate() <= start_date and \
+            current_model.getExpirationDate() >= stop_date:
           effective_model_list.append(current_model)
       if len(effective_model_list):
         return effective_model_list[0]
@@ -371,8 +366,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       v = self.getProperty(property_name)
       if v:
         return v
-      model_list = self.findEffectiveSpecialiseValueList(\
-          context=self,
+      model_list = self.findEffectiveSpecialiseValueList(context=self,
           start_date=paysheet.getStartDate(), stop_date=paysheet.getStopDate())
       for specialised_model in model_list:
         v = specialised_model.getProperty(property_name)
