@@ -771,3 +771,14 @@ WorkflowTool.setStatusOf = WorkflowTool_setStatusOf
 
 WorkflowTool.getFutureStateSetFor = lambda self, wf_id, *args, **kw: \
   self[wf_id].getFutureStateSet(*args, **kw)
+
+def WorkflowTool_isTransitionPossible(self, ob, transition_id, wf_id=None):
+    """Test if the given transition exist from the current state.
+    """
+    for workflow in (wf_id and (self[wf_id],) or self.getWorkflowsFor(ob)):
+      state = workflow._getWorkflowStateOf(ob)
+      if state and transition_id in state.transitions:
+        return 1
+    return 0
+
+WorkflowTool.isTransitionPossible = WorkflowTool_isTransitionPossible
