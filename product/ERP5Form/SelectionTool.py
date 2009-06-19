@@ -1145,10 +1145,9 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
           kw ={}
           kw[field.get_value('catalog_index')] = field_value
           self.setSelectionParamsFor(selection_name,
-                                                       kw.copy())
-          self.setSelectionCheckedUidsFor(
-                                             selection_name,
-                                             current_uid_list)
+                                     kw.copy())
+          self.setSelectionCheckedUidsFor(selection_name,
+                                          current_uid_list)
           field_value = str(field_value).splitlines()
           # Prevent displaying useless empty list or list with only one element
           if not field_value:
