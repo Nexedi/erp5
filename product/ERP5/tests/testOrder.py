@@ -77,8 +77,9 @@ class TestOrderMixin:
     self.validateRules()
 
   def createCurrency(self):
-    portal = self.getPortal()
-    portal.currency_module.newContent(id='euro', reference='EUR', title='EURO')
+    currency_module = self.getPortal().currency_module
+    if currency_module._getOb('euro', None) is None:
+      currency_module.newContent(id='euro', reference='EUR', title='EURO')
 
   def createCategories(self):
     """

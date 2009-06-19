@@ -74,8 +74,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     """Business Templates required for this test.
     """
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_apparel',
-            'erp5_accounting', 'erp5_invoicing')
+    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_apparel')
 
   def afterSetUp(self, quiet=1, run=run_all_test):
     self.login()
@@ -157,8 +156,10 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     aggregate_value_list = [item_list[0], item_list[2]]
     inventory_line = inventory.newContent(portal_type = self.inventory_line_portal_type)
     inventory_line.edit(resource_value = resource,
-                        inventory = 12., # Arbitrary inventory ; it should be never accessed while aggregating items
                         aggregate_value_list = aggregate_value_list)
+    # Now, quantity is not defined any more automatically. 
+    inventory_line.edit(quantity=sum([x.getQuantity() for x in \
+        aggregate_value_list]))
     inventory.deliver()
     inventory_list.append(inventory)
     sequence.edit(inventory_list = inventory_list)
@@ -1796,8 +1797,10 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     inventory = sequence.get('inventory_list')[0]
     inventory_line = inventory['1']
     item_list = sequence.get('item_list')
+    aggregate_value_list = [item_list[0],item_list[1], item_list[4]]
     inventory_line.edit(
-        aggregate_value_list = [item_list[0],item_list[1], item_list[4]])
+        aggregate_value_list=aggregate_value_list,
+        quantity=sum([x.getQuantity() for x in aggregate_value_list]))
                   
                 
   def test_01_getInventory(self, quiet=0, run=run_all_test):
