@@ -103,14 +103,14 @@ for line in accounting_transaction_line_value_list:\n
   if accounting_transaction.AccountingTransaction_isSourceView():\n
     lines_per_node.setdefault(\n
                   (line.getSource(portal_type=\'Account\'),\n
-                   line.getSourceSection(),\n
+                   line.getSourceSection(portal_type=\'Organisation\'),\n
                    line.getDestinationSection(), ), []).append(\n
       dict(total_price=line.getSourceInventoriatedTotalAssetPrice() or 0,\n
            path=line.getRelativeUrl()))\n
   else:\n
     lines_per_node.setdefault(\n
               (line.getDestination(portal_type=\'Account\'),\n
-               line.getDestinationSection(),\n
+               line.getDestinationSection(portal_type=\'Organisation\'),\n
                line.getSourceSection(), ), []).append(\n
     dict(total_price=line.getDestinationInventoriatedTotalAssetPrice() or 0,\n
          path=line.getRelativeUrl()))\n
