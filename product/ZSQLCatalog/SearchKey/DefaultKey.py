@@ -52,6 +52,9 @@ class DefaultKey(SearchKey):
       operator = SearchKey._guessComparisonOperator(self, value)
     return operator
 
+  def _renderValueAsSearchText(self, value, operator):
+    return operator.asSearchText(value)
+
   def buildSearchTextExpression(self, operator, value, column=None):
     operator_text = operator.getOperator()
     if column is None:
