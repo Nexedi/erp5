@@ -232,14 +232,21 @@ class TradeCondition(Path, Transformation, XMLMatrix):
             movement_list=movement_list,
             current_aggregated_amount_list=result,
             **kw)
-          if model_line.getCreateLine():
-            # remove movement that should not be created
-            result.extend(model_line_result)
+          result.extend(model_line_result)
         if len(result) != len(movement_list):
           # something was added
           need_to_run = 1
           movement_list = result
-      return result
+
+      # remove movement that should not be created
+      movement_list = []
+      for movement in result:
+        movement_ref = movement.getReference()
+        for model_line in trade_model_line_composed_list:
+          if model_line.getReference() == movement_ref and\
+              model_line.isCreateLine():
+            movement_list.append(movement)
+      return movement_list
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCell')
     def getCell(self, *kw , **kwd):
