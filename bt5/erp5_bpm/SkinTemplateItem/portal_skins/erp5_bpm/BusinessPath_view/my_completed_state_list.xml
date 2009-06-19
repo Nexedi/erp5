@@ -13,8 +13,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>items</string>
+                <string>title</string>
               </list>
             </value>
         </item>
