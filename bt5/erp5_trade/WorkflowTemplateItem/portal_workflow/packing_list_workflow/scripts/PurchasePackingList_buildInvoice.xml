@@ -67,7 +67,13 @@ if packing_list.getPortalType() == \'Purchase Packing List\':\n
   # WARNING: this tag is also used in InvoiceTransaction_postGeneration script\n
   tax_tag = \'build_invoice_tax_%s\' % packing_list.getRelativeUrl()\n
 \n
-  invoice_line_builder = getattr(delivery_tool, \'purchase_invoice_builder\', None)\n
+  invoice_builder_name = \'purchase_invoice_builder\'\n
+  invoice_tax_builder_name = \'purchase_invoice_tax_builder\'\n
+  if \'Purchase Invoice Module\' in context.getPortalModuleTypeList():\n
+    invoice_builder_name = \'advanced_purchase_invoice_builder\'\n
+    invoice_tax_builder_name = \'advanced_purchase_invoice_tax_builder\'\n
+\n
+  invoice_line_builder = getattr(delivery_tool,  invoice_builder_name , None)\n
   if invoice_line_builder is not None:\n
     invoice_line_builder.activate(\n
           activity=\'SQLQueue\',\n
@@ -80,7 +86,7 @@ if packing_list.getPortalType() == \'Purchase Packing List\':\n
   else:\n
     log(\'no purchase_invoice_builder found\')\n
 \n
-  invoice_tax_builder = getattr(delivery_tool, \'purchase_invoice_tax_builder\', None)\n
+  invoice_tax_builder = getattr(delivery_tool, invoice_tax_builder_name, None)\n
   if invoice_tax_builder is not None:\n
     invoice_tax_builder.activate(\n
           activity=\'SQLQueue\',\n
@@ -140,6 +146,9 @@ if packing_list.getPortalType() == \'Purchase Packing List\':\n
                             <string>None</string>
                             <string>tag</string>
                             <string>tax_tag</string>
+                            <string>invoice_builder_name</string>
+                            <string>invoice_tax_builder_name</string>
+                            <string>context</string>
                             <string>getattr</string>
                             <string>invoice_line_builder</string>
                             <string>dict</string>

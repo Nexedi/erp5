@@ -1,3 +1,6 @@
+2009-06-19 tatuya
+* Fix workflow scripts to enable to create  Sale Invoices and Purchase Invoices when using erp5_advanced_invoicing
+
 2009-05-19 yusei
 * Fix some proxy fields. count_method should not be inherited from template field and proxy_listbox_ids had to be copied to new proxified fields but it was not copied.
 
