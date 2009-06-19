@@ -57,7 +57,7 @@
   # return a predicate that will never apply\n
   return context.generatePredicate(criterion_property_list=(\'uid\',))\n
 \n
-base_category_tuple = (\'resource\',)\n
+base_category_tuple = (\'resource\', \'price_currency\')\n
 \n
 if context.getSourceSection():\n
   base_category_tuple += (\'source_section\',)\n
