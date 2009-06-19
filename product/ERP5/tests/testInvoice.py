@@ -3308,7 +3308,6 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
           stepCheckSimulationTrees
           """)
     sequence_list.play(self, quiet=quiet)
-    boom
 
   def test_17_ManuallyAddedWrongMovements(self, quiet=quiet, run=RUN_ALL_TESTS):
     """
