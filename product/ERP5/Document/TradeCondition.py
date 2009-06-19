@@ -164,6 +164,8 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       reference_list = []
       trade_model_line_composed_list = []
       containting_object_list = []
+      start_date = None
+      stop_date = None
       if context is not None:
         document = context
         if getattr(context, 'getExplanationValue', None) is not None:
@@ -171,8 +173,11 @@ class TradeCondition(Path, Transformation, XMLMatrix):
           # for contained Trade Model Lines
           document = context.getExplanationValue()
         containting_object_list.append(document)
-      containting_object_list.extend(self.findEffectiveSpecialiseValueList(context=self,
-        start_date=context.getStartDate(), stop_date=context.getStopDate()))
+        start_date = document.getStartDate()
+        stop_date = document.getStartDate()
+      containting_object_list.extend(\
+          self.findEffectiveSpecialiseValueList(context=self,
+            start_date=start_date, stop_date=stop_date))
 
       for specialise in containting_object_list:
         for trade_model_line in specialise.contentValues(
