@@ -785,7 +785,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     business_path = sequence.get('business_path')
     business_path.setTradePhaseList(['payroll/france/urssaf',
                                      'payroll/france/labour'])
-    business_path.setSourceDecisionValue(sequence.get('urssaf_roubaix'))
+    business_path.setSourceValue(sequence.get('urssaf_roubaix'))
+    business_path.setSourceSectionValue(sequence.get('urssaf_roubaix'))
     business_path.setDeliveryBuilderList(('portal_deliveries/pay_sheet_builder',))
     sequence.edit(business_path=business_path)
 
