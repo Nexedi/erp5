@@ -1,85 +1,78 @@
-from StringIO import StringIO
+# -*- coding: utf-8 -*-
 from cgi import escape
-import types
+from lxml import etree
+from lxml.etree import Element, SubElement, CDATA
+from lxml.builder import E
 
-#def write(s):
-#    if type(s) == type(u''):
-#        print "Unicode:", repr(s)
-    
 def formToXML(form, prologue=1):
     """Takes a formulator form and serializes it to an XML representation.
     """
-    f = StringIO()
-    write = f.write
-
-    if prologue:
-        write('<?xml version="1.0"?>\n\n')
-    write('<form>\n')
+    form_as_xml = Element('form')
     # export form settings
     for field in form.settings_form.get_fields(include_disabled=1):
-        id = field.id
-        value = getattr(form, id)
-        if id == 'title':
-            value = escape(value)
-        if id == 'unicode_mode':
-            if value:
-                value = 'true'
-            else:
-                value = 'false'
-        write('  <%s>%s</%s>\n' % (id, value, id))
+      id = field.id
+      value = getattr(form, id)
+      if id == 'unicode_mode':
+        if value:
+          value = 'true'
+        else:
+          value = 'false'
+      sub_element = SubElement(form_as_xml, id)
+      sub_element.text = escape(str(value))
+    groups = SubElement(form_as_xml, 'groups')
     # export form groups
-    write('  <groups>\n')
     for group in form.get_groups(include_empty=1):
-        write('    <group>\n')
-        write('      <title>%s</title>\n' % escape(group))
-        write('      <fields>\n\n')
-        for field in form.get_fields_in_group(group, include_disabled=1):
-            write('      <field><id>%s</id> <type>%s</type>\n' % (field.id, field.meta_type))
-            write('        <values>\n')
-            items = field.values.items()
-            items.sort()
-            for key, value in items:
-                if value is None:
-                    continue
-                if value==True: # XXX Patch
-                    value = 1 # XXX Patch
-                if value==False: # XXX Patch
-                    value = 0 # XXX Patch
-                if callable(value): # XXX Patch
-                    write('          <%s type="method">%s</%s>\n' % # XXX Patch
-                        (key, escape(str(value.method_name)), key)) # XXX Patch
-                elif type(value) == type(1.1):
-                    write('          <%s type="float">%s</%s>\n' % (key, escape(str(value)), key))
-                elif type(value) == type(1):
-                    write('          <%s type="int">%s</%s>\n' % (key, escape(str(value)), key))
-                elif type(value) == type([]):
-                    write('          <%s type="list">%s</%s>\n' % (key, escape(str(value)), key))
-                else:
-                    if type(value) not in (types.StringType, types.UnicodeType):
-                        value = str(value)
-                    write('          <%s>%s</%s>\n' % (key, escape(value), key))
-            write('        </values>\n')
+      group_element = SubElement(groups, 'group')
+      group_element.append(E.title(group))
 
-            write('        <tales>\n')
-            items = field.tales.items()
-            items.sort()
-            for key, value in items:
-                if value:
-                    write('          <%s>%s</%s>\n' % (key, escape(str(value._text)), key))
-            write('        </tales>\n')
+      fields = SubElement(group_element, 'fields')
+      for field in form.get_fields_in_group(group, include_disabled=1):
+        field_element = E.field(
+                                  E.id(str(field.id)),
+                                  E.type(str(field.meta_type))
+                               )
 
-            write('        <messages>\n')
-            for message_key in field.get_error_names():
-                write('          <message name="%s">%s</message>\n' %
-                      (escape(message_key), escape(field.get_error_message(message_key))))
-            write('        </messages>\n')
-            write('      </field>\n')
-        write('      </fields>\n')
-        write('    </group>\n')
-    write('  </groups>\n')
-    write('</form>')
+        fields.append(field_element)
+        values_element = SubElement(field_element, 'values')
+        items = field.values.items()
+        items.sort()
+        for key, value in items:
+          if value is None:
+            continue
+          if value is True: # XXX Patch
+            value = 1 # XXX Patch
+          if value is False: # XXX Patch
+            value = 0 # XXX Patch
+          if callable(value): # XXX Patch
+            value_element = SubElement(values_element, key, type='method')
+          elif isinstance(value, float):
+            value_element = SubElement(values_element, key, type='float')
+          elif isinstance(value, int):
+            value_element = SubElement(values_element, key, type='int')
+          elif isinstance(value, list):
+            value_element = SubElement(values_element, key, type='list')
+          else:
+            if not isinstance(value, (str, unicode)):
+              value = str(value)
+            value_element = SubElement(values_element, key)
+          value_element.text = escape(str(value))
 
+          tales_element = SubElement(field_element, 'tales')
+          items = field.tales.items()
+          items.sort()
+          for key, value in items:
+            if value:
+              tale_element = SubElement(tales_element, key)
+              tale_element.text = escape(str(value._text))
+          messages = SubElement(field_element, 'messages')
+          for message_key in field.get_error_names():
+            message_element = SubElement(messages, 'message', name=message_key)
+            message_element.text = escape(field.get_error_message(message_key))
+    form_as_string = etree.tostring(form_as_xml, encoding='utf-8',
+                                    xml_declaration=True, pretty_print=True)
     if form.unicode_mode:
-        return f.getvalue().encode('UTF-8')
+      return etree.tostring(form_as_xml, encoding='utf-8',
+                                    xml_declaration=True, pretty_print=True)
     else:
-        return unicode(f.getvalue(), form.stored_encoding).encode('UTF-8')
+      return etree.tostring(form_as_xml, encoding=form.stored_encoding,
+                                    xml_declaration=True, pretty_print=True)

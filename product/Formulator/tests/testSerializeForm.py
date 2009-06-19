@@ -165,7 +165,7 @@ class SerializeTestCase(unittest.TestCase):
         form.manage_addField('multi_field', '<Checkbox> Field', 'MultiCheckBoxField')
 
         form2 = ZMIForm('test2', 'ValueTest')
-        
+
         xml = formToXML(form)
         XMLToForm(xml, form2)
 
