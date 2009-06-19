@@ -2363,7 +2363,6 @@ class TestBPMImplementation(TestBPMMixin):
       business_process.getPathValueList(trade_phase='default/delivery')
     )
 
-    # XXX: Luke: it is ORing not ANDing?
     self.assertSameSet(
       (accounting_delivery_business_path, delivery_business_path,
         accounting_business_path),
