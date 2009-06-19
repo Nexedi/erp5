@@ -1124,7 +1124,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         # XXX Hardcoded listbox field
         selection_name = redirect_form.listbox.get_value('selection_name')
         # Reset current selection
-        self.portal_selections.setSelectionFor(selection_name, None)
+        self.setSelectionFor(selection_name, None)
 
 
         if (field.get_value('is_multi_relation_field')) and \
@@ -1144,9 +1144,9 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
           # Checked current uid
           kw ={}
           kw[field.get_value('catalog_index')] = field_value
-          self.portal_selections.setSelectionParamsFor(selection_name,
+          self.setSelectionParamsFor(selection_name,
                                                        kw.copy())
-          self.portal_selections.setSelectionCheckedUidsFor(
+          self.setSelectionCheckedUidsFor(
                                              selection_name,
                                              current_uid_list)
           field_value = str(field_value).splitlines()
