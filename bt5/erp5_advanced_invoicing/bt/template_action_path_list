@@ -1,0 +1,31 @@
+Purchase Invoice Module | view
+Purchase Invoice Transaction | jump_related_order_advanced
+Purchase Invoice Transaction | jump_related_purchase_invoice_advanced
+Purchase Invoice Transaction | jump_related_purchase_packing_list_advanced
+Purchase Invoice | apply_trade_condition
+Purchase Invoice | create_new_file
+Purchase Invoice | detail
+Purchase Invoice | document_list
+Purchase Invoice | jump_related_order
+Purchase Invoice | jump_related_purchase_invoice_transaction
+Purchase Invoice | jump_to_related_purchase_packing_list
+Purchase Invoice | payment_condition
+Purchase Invoice | profile_view
+Purchase Invoice | view_discount
+Purchase Invoice | view_invoice
+Purchase Invoice | view_tax
+Purchase Packing List | jump_related_purchase_invoice_advanced
+Sale Invoice Module | view
+Sale Invoice Transaction | jump_related_order_advanced
+Sale Invoice Transaction | jump_related_sale_invoice_advanced
+Sale Invoice Transaction | jump_related_sale_packing_list_advanced
+Sale Invoice | apply_trade_condition
+Sale Invoice | invoice_print
+Sale Invoice | jump_related_order
+Sale Invoice | jump_related_sale_invoice_transaction
+Sale Invoice | jump_to_related_sale_packing_list
+Sale Invoice | payment_condition
+Sale Invoice | view_discount
+Sale Invoice | view_invoice
+Sale Invoice | view_tax
+Sale Packing List | jump_related_sale_invoice_advanced

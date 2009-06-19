@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""This script is called on the Invoice after the delivery builder has created\n
+the new Invoice.\n
+"""\n
+from Products.ERP5Type.Message import translateString\n
+try:\n
+  from Products.CMFCore.WorkflowCore import WorkflowException\n
+except ImportError:\n
+  # WorkflowException has not always been allowed in restricted\n
+  # environment, in this case, make sure WorkflowException is \n
+  # defined \n
+  class WorkflowException(Exception):\n
+    pass\n
+\n
+if related_simulation_movement_path_list is None:\n
+  raise RuntimeError, \'related_simulation_movement_path_list is missing. Update ERP5 Product.\'\n
+\n
+invoice = context\n
+\n
+# set resource from price currency\n
+#if not invoice.getResource():\n
+#  invoice.setResource(invoice.getPriceCurrency())\n
+\n
+related_packing_list = invoice.getDefaultCausalityValue()\n
+\n
+# copy trade condition:\n
+if not context.getSpecialise():\n
+  related_order = related_packing_list.getDefaultCausalityValue()\n
+  if related_order is not None:\n
+    context.edit(specialise=related_order.getSpecialise())\n
+\n
+# copy title, if not updating a new delivery\n
+if not invoice.hasTitle() and related_packing_list.hasTitle():\n
+  invoice.setTitle(related_packing_list.getTitle())\n
+\n
+# initialize accounting_workflow to confirmed state\n
+if invoice.getSimulationState() == \'draft\':\n
+  try :\n
+    context.getPortalObject().portal_workflow.doActionFor(\n
+      invoice, \'confirm_action\',\n
+      comment=translateString(\'Initialised by Delivery Builder.\'),\n
+      skip_period_validation=1)\n
+  except WorkflowException, e:\n
+    # The user cannot pass the transition, it\'s OK\n
+    pass\n
+\n
+  if invoice.getSimulationState() == \'draft\':\n
+    # call the workflow method, if the user cannot perform this operation.\n
+    invoice.confirm(comment=translateString(\'Initialised by Delivery Builder.\'),)\n
+\n
+\n
+# First set the invoice in the building state on the causality workflow\n
+invoice.startBuilding()\n
+\n
+# Then an activity should put the causality state in diverged or solved\n
+invoice.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
+  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))).updateCausalityState()\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>related_simulation_movement_path_list=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>related_simulation_movement_path_list</string>
+                            <string>kw</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>translateString</string>
+                            <string>Products.CMFCore.WorkflowCore</string>
+                            <string>WorkflowException</string>
+                            <string>ImportError</string>
+                            <string>Exception</string>
+                            <string>None</string>
+                            <string>RuntimeError</string>
+                            <string>context</string>
+                            <string>invoice</string>
+                            <string>_getattr_</string>
+                            <string>related_packing_list</string>
+                            <string>related_order</string>
+                            <string>e</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SaleInvoice_postGeneration</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

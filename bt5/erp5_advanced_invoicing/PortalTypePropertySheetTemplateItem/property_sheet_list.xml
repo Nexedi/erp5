@@ -1,0 +1,8 @@
+<property_sheet_list>
+ <portal_type id="Purchase Invoice">
+  <item>TradeCondition</item>
+ </portal_type>
+ <portal_type id="Sale Invoice">
+  <item>TradeCondition</item>
+ </portal_type>
+</property_sheet_list>

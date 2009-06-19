@@ -1,0 +1,184 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DeliveryBuilder" module="Products.ERP5Type.Document.DeliveryBuilder"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>collect_order</string> </key>
+            <value>
+              <tuple>
+                <string>OrderMovementGroup</string>
+                <string>PathMovementGroup</string>
+                <string>DateMovementGroup</string>
+                <string>ResourceMovementGroup</string>
+                <string>VariantMovementGroup</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>collect_order_list</string> </key>
+            <value>
+              <list>
+                <string>test</string>
+                <string>test2</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>collect_order_list_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>delivery_after_generation_method_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>delivery_after_generation_script_id</string> </key>
+            <value> <string>AdvancedInvoiceTransaction_postTransactionLineGeneration</string> </value>
+        </item>
+        <item>
+            <key> <string>delivery_cell_collect_order</string> </key>
+            <value>
+              <tuple>
+                <string>ResourceMovementGroup</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>delivery_cell_portal_type</string> </key>
+            <value> <string>Delivery Cell</string> </value>
+        </item>
+        <item>
+            <key> <string>delivery_cell_separate_order</string> </key>
+            <value>
+              <tuple>
+                <string>calculateAddQuantity</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>delivery_collect_order</string> </key>
+            <value>
+              <tuple>
+                <string>DateMovementGroup</string>
+                <string>SectionPathMovementGroup</string>
+                <string>CausalityMovementGroup</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>delivery_line_collect_order</string> </key>
+            <value>
+              <tuple>
+                <string>QuantitySignMovementGroup</string>
+                <string>PathMovementGroup</string>
+                <string>ResourceMovementGroup</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>delivery_line_portal_type</string> </key>
+            <value> <string>Sale Invoice Transaction Line</string> </value>
+        </item>
+        <item>
+            <key> <string>delivery_module</string> </key>
+            <value> <string>accounting_module</string> </value>
+        </item>
+        <item>
+            <key> <string>delivery_portal_type</string> </key>
+            <value> <string>Sale Invoice Transaction</string> </value>
+        </item>
+        <item>
+            <key> <string>delivery_select_method_id</string> </key>
+            <value> <string>InvoiceTransaction_selectDelivery</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Build Sale Invoice Transaction from Sale Invoice</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>advanced_sale_invoice_transaction_builder</string> </value>
+        </item>
+        <item>
+            <key> <string>last_id</string> </key>
+            <value> <string>11</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Delivery Builder</string> </value>
+        </item>
+        <item>
+            <key> <string>resource_portal_type</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>simulation_select_method_id</string> </key>
+            <value> <string>SaleInvoice_selectInvoiceMovement</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Sale Invoice  Acconting Transaction Builder</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>

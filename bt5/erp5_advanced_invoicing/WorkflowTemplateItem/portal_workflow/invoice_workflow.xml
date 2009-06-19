@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DCWorkflowDefinition" module="Products.DCWorkflow.DCWorkflow"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>creation_guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>This workflow defines the different steps of an invoice</string> </value>
+        </item>
+        <item>
+            <key> <string>groups</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>invoice_workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>initial_state</string> </key>
+            <value> <string>draft</string> </value>
+        </item>
+        <item>
+            <key> <string>manager_bypass</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>permissions</string> </key>
+            <value>
+              <tuple>
+                <string>Modify portal content</string>
+                <string>View</string>
+                <string>Access contents information</string>
+                <string>Add portal content</string>
+                <string>Delete objects</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>state_var</string> </key>
+            <value> <string>simulation_state</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Invoice Workflow</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
