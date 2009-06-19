@@ -133,6 +133,51 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
                                                 # having cells
       update = 1
     else:
+      # get source and destination using Business Process
+      document = self.getParentValue()
+      if getattr(document, 'findSpecialiseValueList', None) is None:
+        # if parent don't have findSpecialiseValueList, this mean it's on the
+        # specialise_value
+        document = self.getParentValue().getSpecialiseValue()
+      business_process_list = document.findSpecialiseValueList(\
+          context=self, portal_type_list=['Business Process'])
+      business_process = None
+      property_dict = {}
+      if len(business_process_list):
+        # XXX currently, is too complicated to use more than
+        # one Business Process, so the first (which is the nearest from the
+        # delivery) is took
+        business_process = business_process_list[0]
+        business_path_list = business_process.getPathValueList(trade_phase=\
+            self.getTradePhase())
+        if len(business_path_list) > 1:
+          raise NotImplementedError, 'For now, it can not support more '\
+              'than one business_path with same trade_phase. '\
+              '%s have same trade_phase' % repr(business_path_list)
+        if len(business_path_list) == 1:
+          business_path = business_path_list[0]
+          property_dict={
+            'source_value_list': business_path.getSourceValueList(context=context),
+            'destination_value_list':
+            business_path.getDestinationValueList(context=context),
+            'source_section_value_list':
+            business_path.getSourceSectionValueList(context=context),
+            'destination_section_value_list':
+            business_path.getDestinationSectionValueList(context=context),
+            'source_decision_value_list':
+            business_path.getSourceDecisionValueList(context=context),
+            'source_administration_value_list':
+            business_path.getSourceAdministrationValueList(context=context),
+            'source_payment_value_list':
+            business_path.getSourcePaymentValueList(context=context),
+            'destination_decision_value_list':
+            business_path.getDestinationDecisionValueList(context=context),
+            'destination_administration_value_list':
+            business_path.getDestinationAdministrationValueList(context=context),
+            'destination_payment_value_list':
+            business_path.getDestinationPaymentValueList(context=context)
+          }
+
       common_params = {
         'causality': self.getRelativeUrl(),
         'resource': self.getResource(),
@@ -144,6 +189,8 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         'create_line': self.isCreateLine(),
         'trade_phase_list': self.getTradePhaseList(),
       }
+      common_params.update(property_dict)
+
       update = 0
       base_category_list = self.getVariationBaseCategoryList()
       category_list_list = []
