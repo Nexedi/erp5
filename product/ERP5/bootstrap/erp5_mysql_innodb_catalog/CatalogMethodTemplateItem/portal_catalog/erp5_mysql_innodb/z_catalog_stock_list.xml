@@ -162,6 +162,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>isCancellationAmount</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>uid</string> </key>
                                 <value>
                                   <dictionary/>
@@ -182,6 +188,7 @@
                             <string>getSourceSectionUid</string>
                             <string>getDestinationSectionUid</string>
                             <string>isMovement</string>
+                            <string>isCancellationAmount</string>
                             <string>isInventoryMovement</string>
                             <string>getSourcePaymentUid</string>
                             <string>getDestinationPaymentUid</string>
@@ -222,6 +229,7 @@ getDestinationUid\r\n
 getSourceSectionUid\r\n
 getDestinationSectionUid\r\n
 isMovement\r\n
+isCancellationAmount\r\n
 isInventoryMovement\r\n
 getSourcePaymentUid\r\n
 getDestinationPaymentUid\r\n
@@ -304,6 +312,7 @@ WHERE\n
                     getSourceUid[loop_item], \n
                     getResourceUid[loop_item],\n
                     getInventoriatedQuantity[loop_item],\n
+                    isCancellationAmount[loop_item],\n
                     getStopDate[loop_item], \n
                     getStartDate[loop_item], \n
                     getDestinationInventoriatedTotalAssetPrice[loop_item], \n
@@ -326,6 +335,7 @@ WHERE\n
                     getDestinationUid[loop_item], \n
                     getResourceUid[loop_item],\n
                     -(getInventoriatedQuantity[loop_item] or 0), \n
+                    isCancellationAmount[loop_item],\n
                     getStartDate[loop_item], \n
                     getStopDate[loop_item],\n
                     getSourceInventoriatedTotalAssetPrice[loop_item], \n
@@ -354,13 +364,14 @@ VALUES\n
   <dtml-sqlvar expr="row_item[8]" type="int" optional>,\n
   <dtml-sqlvar expr="row_item[9]" type="int">, \n
   <dtml-sqlvar expr="row_item[10]" type="float" optional>,\n
-  <dtml-sqlvar expr="row_item[11]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="row_item[11]" type="int">, \n
   <dtml-sqlvar expr="row_item[12]" type="datetime" optional>,\n
-  <dtml-sqlvar expr="row_item[13]" type="float" optional>,\n
-  <dtml-sqlvar expr="row_item[14]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[13]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="row_item[14]" type="float" optional>,\n
   <dtml-sqlvar expr="row_item[15]" type="string" optional>,\n
   <dtml-sqlvar expr="row_item[16]" type="string" optional>,\n
-  <dtml-sqlvar expr="row_item[17]" type="string" optional>\n
+  <dtml-sqlvar expr="row_item[17]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[18]" type="string" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
     </dtml-in>\n
@@ -433,6 +444,7 @@ WHERE\n
                     getSourceUid[loop_item], \n
                     getResourceUid[loop_item],\n
                     getInventoriatedQuantity[loop_item],\n
+                    isCancellationAmount[loop_item],\n
                     getStopDate[loop_item], \n
                     getStartDate[loop_item], \n
                     getDestinationInventoriatedTotalAssetPrice[loop_item], \n
@@ -455,6 +467,7 @@ WHERE\n
                     getDestinationUid[loop_item], \n
                     getResourceUid[loop_item],\n
                     -(getInventoriatedQuantity[loop_item] or 0), \n
+                    isCancellationAmount[loop_item],\n
                     getStartDate[loop_item], \n
                     getStopDate[loop_item],\n
                     getSourceInventoriatedTotalAssetPrice[loop_item], \n
@@ -483,13 +496,14 @@ VALUES\n
   <dtml-sqlvar expr="row_item[8]" type="int" optional>,\n
   <dtml-sqlvar expr="row_item[9]" type="int">, \n
   <dtml-sqlvar expr="row_item[10]" type="float" optional>,\n
-  <dtml-sqlvar expr="row_item[11]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="row_item[11]" type="int">, \n
   <dtml-sqlvar expr="row_item[12]" type="datetime" optional>,\n
-  <dtml-sqlvar expr="row_item[13]" type="float" optional>,\n
-  <dtml-sqlvar expr="row_item[14]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[13]" type="datetime" optional>,\n
+  <dtml-sqlvar expr="row_item[14]" type="float" optional>,\n
   <dtml-sqlvar expr="row_item[15]" type="string" optional>,\n
   <dtml-sqlvar expr="row_item[16]" type="string" optional>,\n
-  <dtml-sqlvar expr="row_item[17]" type="string" optional>\n
+  <dtml-sqlvar expr="row_item[17]" type="string" optional>,\n
+  <dtml-sqlvar expr="row_item[18]" type="string" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
     </dtml-in>\n

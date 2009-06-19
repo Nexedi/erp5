@@ -810,6 +810,22 @@ class TestTransactionValidation(AccountingTestCase):
     doActionFor(accounting_transaction, 'stop_action')
     self.assertEquals('stopped', accounting_transaction.getSimulationState())
 
+  def test_CancellationAmount(self):
+    accounting_transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.payable,
+                           source_debit=500,)
+                      dict(source_value=self.account_module.receivable,
+                           source_debit=-500,
+                           cancellation_amount=True
+                           )))
+
+    self.assertEquals([], accounting_transaction.checkConsistency())
+    self.portal.portal_workflow.doActionFor(accounting_transaction,
+                                            'stop_action')
+
 
 class TestClosingPeriod(AccountingTestCase):
   """Various tests for closing the period.

@@ -372,7 +372,9 @@ class Movement(XMLObject, Amount):
     """
     result = self.getSourceInventoriatedTotalAssetPrice()
     if result is not None :
-      if result > 0:
+      if result > 0 and not self.isCancellationAmount():
+        return result
+      if result < 0 and self.isCancellationAmount():
         return result
     return 0.0
 
@@ -384,7 +386,9 @@ class Movement(XMLObject, Amount):
     """
     result = self.getSourceInventoriatedTotalAssetPrice()
     if result is not None :
-      if result < 0:
+      if result < 0 and not self.isCancellationAmount():
+        return -result
+      if result > 0 and self.isCancellationAmount():
         return -result
     return 0.0
 
@@ -416,7 +420,9 @@ class Movement(XMLObject, Amount):
     """
     result = self.getDestinationInventoriatedTotalAssetPrice()
     if result is not None :
-      if result > 0:
+      if result > 0 and not self.isCancellationAmount():
+        return result
+      if result < 0 and self.isCancellationAmount():
         return result
     return 0.0
 
@@ -428,7 +434,9 @@ class Movement(XMLObject, Amount):
     """
     result = self.getDestinationInventoriatedTotalAssetPrice()
     if result is not None :
-      if result < 0:
+      if result < 0 and not self.isCancellationAmount():
+        return -result
+      if result > 0 and self.isCancellationAmount():
         return -result
     return 0.0
 
@@ -762,8 +770,7 @@ class Movement(XMLObject, Amount):
       return - quantity
     elif quantity > 0 and self.isCancellationAmount():
       return - quantity
-    else:
-      return 0.0
+    return 0.0
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getSourceCredit')
@@ -779,8 +786,7 @@ class Movement(XMLObject, Amount):
     if quantity < 0 and not self.isCancellationAmount() \
       or quantity > 0 and self.isCancellationAmount():
       return 0.0
-    else:
-      return quantity
+    return quantity
 
   security.declareProtected( Permissions.AccessContentsInformation,
                     'getDestinationDebit', 'getDestinationCredit')
@@ -798,6 +804,7 @@ class Movement(XMLObject, Amount):
       source_debit = float(source_debit)
     except TypeError:
       source_debit = 0.0
+    self.setCancellationAmount(source_debit < 0)
     self.setQuantity(- source_debit)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setSourceCredit')
@@ -811,6 +818,7 @@ class Movement(XMLObject, Amount):
       source_credit = float(source_credit)
     except TypeError:
       source_credit = 0.0
+    self.setCancellationAmount(source_credit < 0)
     self.setQuantity(source_credit)
 
   security.declareProtected( Permissions.ModifyPortalContent,
@@ -827,13 +835,17 @@ class Movement(XMLObject, Amount):
     """
     quantity = 0
     if kw.has_key('source_debit') and kw.has_key('source_credit'):
-      quantity += ((kw.pop('source_credit') or 0) -
-                      (kw.pop('source_debit') or 0))
+      source_credit = kw.pop('source_credit') or 0
+      source_debit = kw.pop('source_debit') or 0
+      quantity += (source_credit - source_debit)
       kw['quantity'] = quantity
+      kw['cancellation_amount'] = (source_credit < 0 or source_debit < 0)
     if kw.has_key('destination_debit') and kw.has_key('destination_credit'):
-      quantity += (kw.pop('destination_debit') or 0 -
-                   kw.pop('destination_credit') or 0)
+      destination_credit = kw.pop('destination_credit') or 0
+      destination_debit = kw.pop('destination_debit') or 0
+      quantity += (destination_debit - destination_credit)
       kw['quantity'] = quantity
+      kw['cancellation_amount'] = (destination_credit < 0 or destination_debit < 0)
     if not edit_order:
       edit_order = ('variation_category_list', )
     return XMLObject._edit(self, edit_order=edit_order, **kw)
@@ -854,10 +866,10 @@ class Movement(XMLObject, Amount):
       quantity = float(quantity)
     except TypeError:
       quantity = 0.0
-    if quantity < 0:
+    if quantity < 0 and not self.isCancellationAmount() \
+      or quantity > 0 and self.isCancellationAmount():
       return 0.0
-    else:
-      return quantity
+    return quantity
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getSourceAssetCredit' )
@@ -874,10 +886,11 @@ class Movement(XMLObject, Amount):
       quantity = float(quantity)
     except TypeError:
       quantity = 0.0
-    if quantity < 0:
+    if (quantity < 0 and not self.isCancellationAmount()):
       return - quantity
-    else:
-      return 0.0
+    elif quantity > 0 and self.isCancellationAmount():
+      return - quantity
+    return 0.0
   
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getDestinationAssetDebit' )
@@ -894,10 +907,10 @@ class Movement(XMLObject, Amount):
       quantity = float(quantity)
     except TypeError:
       quantity = 0.0
-    if quantity < 0:
+    if quantity < 0 and not self.isCancellationAmount() \
+      or quantity > 0 and self.isCancellationAmount():
       return 0.0
-    else:
-      return quantity
+    return quantity
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getDestinationAssetCredit' )
@@ -914,10 +927,11 @@ class Movement(XMLObject, Amount):
       quantity = float(quantity)
     except TypeError:
       quantity = 0.0
-    if quantity < 0:
-      return -quantity
-    else:
-      return 0.0
+    if (quantity < 0 and not self.isCancellationAmount()):
+      return - quantity
+    elif quantity > 0 and self.isCancellationAmount():
+      return - quantity
+    return 0.0
   
   security.declareProtected( Permissions.ModifyPortalContent,
                              'setSourceAssetDebit' )
@@ -932,6 +946,7 @@ class Movement(XMLObject, Amount):
       source_debit = float(source_debit)
     except TypeError:
       source_debit = 0.0
+    self.setCancellationAmount(source_debit < 0)
     self.setSourceTotalAssetPrice(source_debit)
 
   security.declareProtected( Permissions.ModifyPortalContent,
@@ -947,6 +962,7 @@ class Movement(XMLObject, Amount):
       source_credit = float(source_credit)
     except TypeError:
       source_credit = 0.0
+    self.setCancellationAmount(source_credit < 0)
     self.setSourceTotalAssetPrice( - source_credit)
 
   security.declareProtected( Permissions.ModifyPortalContent,
@@ -962,6 +978,7 @@ class Movement(XMLObject, Amount):
       destination_debit = float(destination_debit)
     except TypeError:
       destination_debit = 0.0
+    self.setCancellationAmount(destination_debit < 0)
     self.setDestinationTotalAssetPrice(destination_debit)
 
   security.declareProtected( Permissions.ModifyPortalContent,
@@ -977,6 +994,7 @@ class Movement(XMLObject, Amount):
       destination_credit = float(destination_credit)
     except TypeError:
       destination_credit = 0.0
+    self.setCancellationAmount(destination_credit < 0)
     self.setDestinationTotalAssetPrice( - destination_credit)
 
   # Item Access (tracking)

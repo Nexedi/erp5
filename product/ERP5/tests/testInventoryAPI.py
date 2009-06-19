@@ -599,6 +599,19 @@ class TestInventory(InventoryAPITestCase):
                                   payment_uid=self.other_payment_node.getUid(),
                                   omit_output=1))
 
+  def test_OmitInputOmitOutputCancellationAmount(self):
+    getInventory = self.getSimulationTool().getInventory
+    self._makeMovement(quantity=-1, price=1, cancellation_amount=True)
+    self._makeMovement(quantity=2, price=1, cancellation_amount=True)
+    self.assertEquals(2, getInventory(node_uid=self.node.getUid(),
+                                       omit_input=1))
+    self.assertEquals(-1, getInventory(node_uid=self.node.getUid(),
+                                      omit_output=1))
+    # omit_output & omit_input return nothing in that case
+    self.assertEquals(0, getInventory(node_uid=self.node.getUid(),
+                                      omit_input=1,
+                                      omit_output=1))
+    
   def test_OmitInputOmitOutputWithDifferentPaymentSameNodeSameSection(self):
     getInventory = self.getSimulationTool().getInventory
     self._makeMovement(quantity=2, price=1,
@@ -790,6 +803,24 @@ class TestInventoryList(InventoryAPITestCase):
     self.assertEquals(-2, inventory_list[0].total_price)
     self.assertEquals(-2, inventory_list[0].total_quantity)
 
+  def test_OmitInputOmitOutputCancellationAmount(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    self._makeMovement(quantity=-1, price=1, cancellation_amount=True)
+    self._makeMovement(quantity=2, price=1, cancellation_amount=True)
+
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      omit_input=1)
+    self.assertEquals(1, len(inventory_list))
+    self.assertEquals(2, inventory_list[0].total_price)
+    self.assertEquals(2, inventory_list[0].total_quantity)
+
+    # omit output ignores movement going to this node
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      omit_output=1)
+    self.assertEquals(1, len(inventory_list))
+    self.assertEquals(-1, inventory_list[0].total_price)
+    self.assertEquals(-1, inventory_list[0].total_quantity)
+
   def test_CurentAvailableFutureInventoryList(self):
     def makeMovement(simulation_state=None, quantity=None):
       self._makeMovement(quantity=quantity, price=1,
@@ -830,6 +861,7 @@ class TestInventoryList(InventoryAPITestCase):
     checkInventory(line=0, type='Available', destination=1)
     checkInventory(line=3, type='Future', source=1, quantity=-9)
     checkInventory(line=3, type='Future', destination=1, quantity=9)
+
 
 class TestMovementHistoryList(InventoryAPITestCase):
   """Tests Movement history list methods.
@@ -1440,6 +1472,28 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertEquals(1, len(movement_history_list))
     self.assertEquals(-2, movement_history_list[0].total_price)
     self.assertEquals(-2, movement_history_list[0].total_quantity)
+
+  def test_OmitInputOmitOutputCancellationAmount(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeMovement(quantity=-1, price=1, cancellation_amount=True)
+    self._makeMovement(quantity=2, price=1, cancellation_amount=True)
+    mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
+                                              omit_input=1)
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(2, mvt_history_list[0].total_price)
+    self.assertEquals(2, mvt_history_list[0].total_quantity)
+
+    mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
+                                              omit_output=1)
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(-1, mvt_history_list[0].total_price)
+    self.assertEquals(-1, mvt_history_list[0].total_quantity)
+
+    self.assertEquals(0, len(getMovementHistoryList(
+                                              node_uid=self.node.getUid(),
+                                              omit_input=1,
+                                              omit_output=1)))
+    
 
 class TestNextNegativeInventoryDate(InventoryAPITestCase):
   """Tests getInventory methods.

@@ -95,6 +95,7 @@ class Amount:
     { 'id'          : 'cancellation_amount',
       'description' : 'defines if this quantity is used in order to cancel another one',
       'type'        : 'boolean',
+      'default': False,
       'mode'        : 'w' },
     # quantity_sign is used by QuantitySignMovementGroup
     # When comparing a delivery to a property_dict coming from a MovementGroup,

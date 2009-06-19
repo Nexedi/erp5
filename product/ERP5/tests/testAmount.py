@@ -384,6 +384,110 @@ class TestMovement(ERP5TypeTestCase):
     mvt.edit(destination_asset_debit=None, destination_debit=200)
     self.assertEquals(0.0, mvt.getDestinationAssetDebit())
     self.assertEquals(200, mvt.getDestinationDebit())
+  
+  def testCancellationAmountGetDestinationCredit(self):
+    mvt = self._makeOne('mvt')
+    mvt.setCancellationAmount(True)
+    mvt.setQuantity(10)
+    self.assertEquals(mvt.getQuantity(), 10)
+    self.assertEquals(mvt.getDestinationDebit(), 0)
+    self.assertEquals(mvt.getDestinationCredit(), -10)
+
+  def testCancellationAmountGetDestinationDebit(self):
+    mvt = self._makeOne('mvt')
+    mvt.setCancellationAmount(True)
+    mvt.setQuantity(-10)
+    self.assertEquals(mvt.getQuantity(), -10)
+    self.assertEquals(mvt.getDestinationDebit(), -10)
+    self.assertEquals(mvt.getDestinationCredit(), 0)
+
+  def testCancellationAmountGetSourceCredit(self):
+    mvt = self._makeOne('mvt')
+    mvt.setCancellationAmount(True)
+    mvt.setQuantity(-10)
+    self.assertEquals(mvt.getQuantity(), -10)
+    self.assertEquals(mvt.getSourceDebit(), 0)
+    self.assertEquals(mvt.getSourceCredit(), -10)
+
+  def testCancellationAmountGetSourceDebit(self):
+    mvt = self._makeOne('mvt')
+    mvt.setCancellationAmount(True)
+    mvt.setQuantity(10)
+    self.assertEquals(mvt.getQuantity(), 10)
+    self.assertEquals(mvt.getSourceDebit(), -10)
+    self.assertEquals(mvt.getSourceCredit(), 0)
+
+  def testCancellationAmountSetDestinationCredit(self):
+    mvt = self._makeOne('mvt')
+    mvt.setDestinationCredit(-10)
+    self.assertTrue(mvt.isCancellationAmount())
+    self.assertEquals(mvt.getDestinationDebit(), 0)
+    self.assertEquals(mvt.getDestinationCredit(), -10)
+
+    mvt.setDestinationCredit(10)
+    self.assertFalse(mvt.isCancellationAmount())
+    self.assertEquals(mvt.getDestinationDebit(), 0)
+    self.assertEquals(mvt.getDestinationCredit(), 10)
+
+  def testCancellationAmountSetDestinationDebit(self):
+    mvt = self._makeOne('mvt')
+    mvt.setDestinationDebit(-10)
+    self.assertTrue(mvt.isCancellationAmount())
+    self.assertEquals(mvt.getDestinationDebit(), -10)
+    self.assertEquals(mvt.getDestinationCredit(), 0)
+
+    mvt.setDestinationDebit(10)
+    self.assertFalse(mvt.isCancellationAmount())
+    self.assertEquals(mvt.getDestinationDebit(), 10)
+    self.assertEquals(mvt.getDestinationCredit(), 0)
+
+  def testCancellationAmountSetDestinationDebitCredit(self):
+    mvt = self._makeOne('mvt')
+    mvt.edit(destination_debit=-10, destination_credit=0)
+    self.assertTrue(mvt.isCancellationAmount())
+    self.assertEquals(mvt.getDestinationDebit(), -10)
+    self.assertEquals(mvt.getDestinationCredit(), 0)
+
+    mvt.edit(destination_debit=-10, destination_credit=None)
+    self.assertTrue(mvt.isCancellationAmount())
+    self.assertEquals(mvt.getDestinationDebit(), -10)
+    self.assertEquals(mvt.getDestinationCredit(), 0)
+
+  def testCancellationAmountSetSourceCredit(self):
+    mvt = self._makeOne('mvt')
+    mvt.setSourceCredit(-10)
+    self.assertTrue(mvt.isCancellationAmount())
+    self.assertEquals(mvt.getSourceDebit(), 0)
+    self.assertEquals(mvt.getSourceCredit(), -10)
+
+    mvt.setSourceCredit(10)
+    self.assertFalse(mvt.isCancellationAmount())
+    self.assertEquals(mvt.getSourceDebit(), 0)
+    self.assertEquals(mvt.getSourceCredit(), 10)
+
+  def testCancellationAmountSetSourceDebit(self):
+    mvt = self._makeOne('mvt')
+    mvt.setSourceDebit(-10)
+    self.assertTrue(mvt.isCancellationAmount())
+    self.assertEquals(mvt.getSourceDebit(), -10)
+    self.assertEquals(mvt.getSourceCredit(), 0)
+
+    mvt.setSourceDebit(10)
+    self.assertFalse(mvt.isCancellationAmount())
+    self.assertEquals(mvt.getSourceDebit(), 10)
+    self.assertEquals(mvt.getSourceCredit(), 0)
+
+  def testCancellationAmountSetSourceDebitCredit(self):
+    mvt = self._makeOne('mvt')
+    mvt.edit(source_debit=-10, source_credit=0)
+    self.assertTrue(mvt.isCancellationAmount())
+    self.assertEquals(mvt.getSourceDebit(), -10)
+    self.assertEquals(mvt.getSourceCredit(), 0)
+
+    mvt.edit(source_debit=-10, source_credit=None)
+    self.assertTrue(mvt.isCancellationAmount())
+    self.assertEquals(mvt.getSourceDebit(), -10)
+    self.assertEquals(mvt.getSourceCredit(), 0)
 
 
 class TestAccountingTransactionLine(TestMovement):
@@ -521,6 +625,47 @@ class TestAccountingTransactionLine(TestMovement):
     self.assertEquals(200, mvt.getDestinationInventoriatedTotalAssetDebit())
     self.assertEquals(0, mvt.getDestinationInventoriatedTotalAssetCredit())
     self.assertEquals(200, mvt.getDestinationInventoriatedTotalAssetPrice())
+
+  def testDestinationAssetDebitCancellation(self):
+    mvt = self._makeOne('mvt')
+    mvt.edit(destination_asset_debit=-100)
+    self.assertTrue(mvt.isCancellationAmount())
+    self.assertEquals(-100, mvt.getDestinationAssetDebit())
+    self.assertEquals(0, mvt.getQuantity())
+    self.assertEquals(-100, mvt.getDestinationInventoriatedTotalAssetDebit())
+    self.assertEquals(0, mvt.getDestinationInventoriatedTotalAssetCredit())
+    self.assertEquals(-100, mvt.getDestinationInventoriatedTotalAssetPrice())
+
+  def testDestinationAssetCreditCancellation(self):
+    mvt = self._makeOne('mvt')
+    mvt.edit(destination_asset_credit=-100)
+    self.assertTrue(mvt.isCancellationAmount())
+    self.assertEquals(-100, mvt.getDestinationAssetCredit())
+    self.assertEquals(0, mvt.getQuantity())
+    self.assertEquals(-100, mvt.getDestinationInventoriatedTotalAssetCredit())
+    self.assertEquals(0, mvt.getDestinationInventoriatedTotalAssetDebit())
+    self.assertEquals(100, mvt.getDestinationInventoriatedTotalAssetPrice())
+
+  def testSourceAssetDebitCancellation(self):
+    mvt = self._makeOne('mvt')
+    mvt.edit(source_asset_debit=-100)
+    self.assertTrue(mvt.isCancellationAmount())
+    self.assertEquals(-100, mvt.getSourceAssetDebit())
+    self.assertEquals(0, mvt.getQuantity())
+    self.assertEquals(-100, mvt.getSourceInventoriatedTotalAssetDebit())
+    self.assertEquals(0, mvt.getSourceInventoriatedTotalAssetCredit())
+    self.assertEquals(-100, mvt.getSourceInventoriatedTotalAssetPrice())
+
+  def testSourceAssetCreditCancellation(self):
+    mvt = self._makeOne('mvt')
+    mvt.edit(source_asset_credit=-100)
+    self.assertTrue(mvt.isCancellationAmount())
+    self.assertEquals(-100, mvt.getSourceAssetCredit())
+    self.assertEquals(0, mvt.getQuantity())
+    self.assertEquals(-100, mvt.getSourceInventoriatedTotalAssetCredit())
+    self.assertEquals(0, mvt.getSourceInventoriatedTotalAssetDebit())
+    self.assertEquals(100, mvt.getSourceInventoriatedTotalAssetPrice())
+
 
 def test_suite():
   suite = unittest.TestSuite()
