@@ -1143,19 +1143,19 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
                                   field.get_value('portal_type')])
           # Checked current uid
           kw ={}
-          kw[field.get_value('catalog_index')] = field_value
+          catalog_index = field.get_value('catalog_index')
+          kw[catalog_index] = field_value
           self.setSelectionParamsFor(selection_name,
                                      kw.copy())
           self.setSelectionCheckedUidsFor(selection_name,
                                           current_uid_list)
-          field_value = str(field_value).splitlines()
-          # Prevent displaying useless empty list or list with only one element
-          if not field_value:
-            field_value = ''
-          if len(field_value) == 1:
-            field_value = field_value[0]
-          if len(field_value) > 1 and isinstance(field_value, type([])):
-            field_value = ' OR '.join(field_value)
+          field_value = str(field_value)
+          if len(field_value):
+            sql_catalog = self.portal_catalog.getSQLCatalog()
+            field_value = sql_catalog.buildQuery({
+              catalog_index: field_value.splitlines()
+            }).asSearchTextExpression(sql_catalog, column='')
+
           REQUEST.form[field_key] = field_value
           portal_status_message = translateString("Please select one (or more) object.")
         else:
