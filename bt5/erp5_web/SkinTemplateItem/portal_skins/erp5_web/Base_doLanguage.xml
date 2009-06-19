@@ -69,7 +69,9 @@ if website is not None and website.isStaticLanguageSelection():\n
     # which is different in the case of a Web Site\n
     web_site_url = web_site_url[:-len(current_language) - 1]\n
 \n
-  if current_language == default_language:\n
+  if current_language == select_language:\n
+    redirect_url = referer_url\n
+  elif current_language == default_language:\n
     redirect_url = referer_url.replace(web_site_url, \'%s/%s\' %\n
                             (web_site_url, select_language))\n
   elif select_language == default_language:\n
