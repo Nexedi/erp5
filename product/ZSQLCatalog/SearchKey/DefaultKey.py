@@ -59,7 +59,7 @@ class DefaultKey(SearchKey):
     if operator_text == 'like':
       assert isinstance(value, basestring)
       assert '%' in value
-      result = value
+      result = self._renderValueAsSearchText(value, operator)
       if len(column):
         result = '%s:%s' % (column, result)
     else:
