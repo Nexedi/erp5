@@ -430,6 +430,15 @@ class TestSQLCatalog(unittest.TestCase):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='match_boolean', fulltext='a+b'), operator='and'),
                  {'fulltext': 'a+b'})
 
+  def test_DefaultKeyTextRendering(self):
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='like', default='a% b'), operator='and'),
+                 {'default': 'a% b'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='like', default='%a%'), operator='and'),
+                 {'default': '%a%'})
+    self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='like', default='a% b'),
+                                               ReferenceQuery(operator='like', default='a%'), operator='or'), operator='and'),
+                 {'default': ['a% b', 'a%']})
+
 ##return catalog(title=Query(title='a', operator='not'))
 #return catalog(title={'query': 'a', 'operator': 'not'})
 #return catalog(title={'query': ['a', 'b'], 'operator': 'not'})
