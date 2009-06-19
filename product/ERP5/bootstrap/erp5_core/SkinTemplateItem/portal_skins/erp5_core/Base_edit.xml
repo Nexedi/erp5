@@ -264,7 +264,8 @@ new_url = \'/\'.join(spp)\n
 # for web mode, we should use \'view\' instead of \'WebSite_view\',\n
 # \'WebSection_view\' or \'WebPage_view\'.\n
 if context.REQUEST.get(\'is_web_mode\', False) and \\\n
-    form_id in (\'WebSite_view\', \'WebSection_view\', \'WebPage_view\'):\n
+    form_id in (\'WebSite_view\', \'WebSection_view\', \'WebPage_view\',\n
+                \'WebPage_viewEditor\'):\n
   form_id = \'view\'\n
 \n
 if not selection_index:\n
