@@ -179,7 +179,6 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
           }
 
       common_params = {
-        'causality': self.getRelativeUrl(),
         'resource': self.getResource(),
         'reference': self.getReference(),
         'base_application_list': base_application_list,

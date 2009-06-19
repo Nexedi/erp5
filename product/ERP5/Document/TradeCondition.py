@@ -232,14 +232,13 @@ class TradeCondition(Path, Transformation, XMLMatrix):
             movement_list=movement_list,
             current_aggregated_amount_list=result,
             **kw)
-          result.extend(model_line_result)
+          if model_line.getCreateLine():
+            # remove movement that should not be created
+            result.extend(model_line_result)
         if len(result) != len(movement_list):
           # something was added
           need_to_run = 1
           movement_list = result
-
-      # remove movement that should not be created
-      result = [movement for movement in result if movement.getCausalityValue().getCreateLine()]
       return result
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCell')
