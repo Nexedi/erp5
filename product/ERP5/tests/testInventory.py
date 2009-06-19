@@ -66,6 +66,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
   inventory_portal_type = "Inventory"
   inventory_line_portal_type = inventory_portal_type + ' Line'
   inventory_cell_portal_type = inventory_portal_type + ' Cell'
+  price_currency =  'currency_module/euro'
   
   def getTitle(self):
     return "Inventory"
@@ -87,6 +88,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       return 1
     from Products.ERP5Type.Document.PackingList import PackingList
     PackingList.isPacked = isPacked
+    self.createCurrency()
 
   def createCategory(self, parent, id_list):
       last_category = None
@@ -243,7 +245,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                       destination_section_value = section,
                       destination_value = node,
                       start_date = DateTime() - 2,
-                      stop_date = DateTime() - 2
+                      stop_date = DateTime() - 2,
+                      price_currency = self.price_currency
                      )
     self.assertNotEquals( packing_list.getSourceSectionValue(), None)
     self.assertNotEquals( packing_list.getSourceValue(), None)
@@ -521,6 +524,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       property_list = [(x[0], organisation_list[x[1]].getRelativeUrl()) for x in property_list] + \
                       [x for x in data.items() if x[0] in ('start_date',)]
       property_dict = {}
+      property_dict['price_currency'] = self.price_currency
       for (id, value) in property_list: property_dict[id] = value
       packing_list.edit(**property_dict)
       for line in data['lines']:
@@ -1872,7 +1876,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
 
     sequence_list.play(self)
 
-  def test_02_InventoryModuleWithVariation(self, quiet=0, run=run_all_test):
+  def test_03_InventoryModuleWithVariation(self, quiet=0, run=run_all_test):
     """
       Test the InventoryModule behavior
     """

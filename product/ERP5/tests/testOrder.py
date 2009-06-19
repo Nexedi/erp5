@@ -76,6 +76,10 @@ class TestOrderMixin:
     self.createCategories()
     self.validateRules()
 
+  def createCurrency(self):
+    portal = self.getPortal()
+    portal.currency_module.newContent(id='euro', reference='EUR', title='EURO')
+
   def createCategories(self):
     """
       Light install create only base categories, so we create
