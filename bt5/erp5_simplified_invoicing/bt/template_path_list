@@ -1,0 +1,12 @@
+portal_deliveries/purchase_invoice_builder
+portal_deliveries/purchase_invoice_builder/**
+portal_deliveries/purchase_invoice_tax_builder
+portal_deliveries/purchase_invoice_tax_builder/**
+portal_deliveries/purchase_invoice_transaction_builder
+portal_deliveries/purchase_invoice_transaction_builder/**
+portal_deliveries/sale_invoice_builder
+portal_deliveries/sale_invoice_builder/**
+portal_deliveries/sale_invoice_tax_builder
+portal_deliveries/sale_invoice_tax_builder/**
+portal_deliveries/sale_invoice_transaction_builder
+portal_deliveries/sale_invoice_transaction_builder/**

@@ -1,0 +1,5 @@
+erp5_core (>= 5.4.3)
+erp5_accounting
+erp5_trade
+erp5_pdm
+erp5_invoicing

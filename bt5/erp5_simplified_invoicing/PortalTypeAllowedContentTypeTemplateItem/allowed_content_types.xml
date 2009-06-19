@@ -1,0 +1,14 @@
+<allowed_content_type_list>
+ <portal_type id="Purchase Invoice Transaction">
+  <item>Payment Condition</item>
+  <item>Tax Line</item>
+  <item>Discount Line</item>
+  <item>Invoice Line</item>
+ </portal_type>
+ <portal_type id="Sale Invoice Transaction">
+  <item>Discount Line</item>
+  <item>Tax Line</item>
+  <item>Invoice Line</item>
+  <item>Payment Condition</item>
+ </portal_type>
+</allowed_content_type_list>
