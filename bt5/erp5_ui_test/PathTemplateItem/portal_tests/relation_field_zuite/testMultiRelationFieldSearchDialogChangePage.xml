@@ -111,7 +111,7 @@
 <tr>\n
   <td>assertValue</td>\n
   <td>title</td>\n
-  <td>%1% OR %2%</td>\n
+  <td>"%1%" OR "%2%"</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -126,7 +126,7 @@
 <tr>\n
   <td>assertValue</td>\n
   <td>title</td>\n
-  <td>%1% OR %2%</td>\n
+  <td>"%1%" OR "%2%"</td>\n
 </tr>\n
 \n
 <tr>\n
@@ -142,7 +142,7 @@
 <tr>\n
   <td>assertValue</td>\n
   <td>title</td>\n
-  <td>%1% OR %2%</td>\n
+  <td>"%1%" OR "%2%"</td>\n
 </tr>\n
 \n
 <tr>\n
@@ -174,7 +174,7 @@
 <tr>\n
   <td>assertValue</td>\n
   <td>title</td>\n
-  <td>%1% OR %2%</td>\n
+  <td>"%1%" OR "%2%"</td>\n
 </tr>\n
 \n
 <tr>\n
@@ -195,7 +195,7 @@
 <tr>\n
   <td>assertValue</td>\n
   <td>title</td>\n
-  <td>%1% OR %2%</td>\n
+  <td>"%1%" OR "%2%"</td>\n
 </tr>\n
 \n
 <tr>\n
