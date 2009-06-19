@@ -44,7 +44,7 @@
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
   <tal:block metal:define-macro="master">\n
     <tal:block tal:define="local_parameter_list local_parameter_list | python: {};\n
-               proxy_form_id_list  python: context.Base_getRelatedObjectParameter(\'proxy_listbox_ids\');\n
+               proxy_form_id_list  python: here.Base_getRelatedObjectParameter(\'proxy_listbox_ids\');\n
                dummy python: local_parameter_list.update({ \'field_id\': request[\'field_id\'], \'cancel_url\': request[\'cancel_url\'],\n
                                                                                                   \'saved_form_data\': dict(request[\'saved_form_data\'])});">\n
      <tal:block metal:use-macro="here/dialog_main/macros/master">\n
