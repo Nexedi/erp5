@@ -132,6 +132,7 @@
                         <string>my_layout_configuration_form_id</string>
                         <string>my_subject_list</string>
                         <string>my_translated_validation_state_title</string>
+                        <string>my_absolute_url</string>
                       </list>
                     </value>
                 </item>
