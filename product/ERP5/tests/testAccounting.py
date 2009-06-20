@@ -816,7 +816,7 @@ class TestTransactionValidation(AccountingTestCase):
                start_date=DateTime('2007/01/02'),
                destination_section_value=self.organisation_module.client_1,
                lines=(dict(source_value=self.account_module.payable,
-                           source_debit=500,)
+                           source_debit=500),
                       dict(source_value=self.account_module.receivable,
                            source_debit=-500,
                            cancellation_amount=True
