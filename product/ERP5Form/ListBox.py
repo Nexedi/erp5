@@ -2943,14 +2943,6 @@ class ListBoxLine:
       Returns the property of a column
     """
     return self.column_dict[column_id]
-  
-  
-  security.declarePublic('getColumnPropertyTypeName')
-  def getColumnPropertyTypeName(self, column_id):
-    """
-      Returns the property type of a column
-    """
-    return self.column_dict[column_id].__class__.__name__
 
   security.declarePublic('getColumnPropertyList')
   def getColumnPropertyList(self, column_id_list = None):
