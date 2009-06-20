@@ -899,6 +899,8 @@ class ListBoxRenderer:
       list_action_part_list.append('&reset=1')
     else:
       list_action_part_list.append('?reset=1')
+    if self.request.get('ignore_layout', None):
+      list_action_part_list.append('&ignore_layout:int=1')
     return ''.join(list_action_part_list)
 
   getListActionUrl = lazyMethod(getListActionUrl)
