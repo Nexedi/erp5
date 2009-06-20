@@ -13,17 +13,17 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
-                <string>count_method</string>
-                <string>editable_columns</string>
-                <string>list_action</string>
-                <string>list_method</string>
-                <string>portal_types</string>
-                <string>search</string>
-                <string>select</string>
-                <string>selection_name</string>
-                <string>sort</string>
                 <string>title</string>
+                <string>lines</string>
+                <string>columns</string>
+                <string>sort</string>
+                <string>list_method</string>
+                <string>selection_name</string>
+                <string>portal_types</string>
+                <string>default_params</string>
+                <string>search</string>
+                <string>editable_columns</string>
+                <string>url_columns</string>
               </list>
             </value>
         </item>
@@ -116,8 +116,10 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>count_method</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>default_params</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>editable_columns</string> </key>
@@ -129,22 +131,22 @@
                         </tuple>
                         <tuple>
                           <string>modification_date</string>
-                          <string>Modification Date</string>
+                          <string>Modification</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_list_mode_listbox</string> </value>
+                    <value> <string>listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewWebFieldLibrary</string> </value>
+                    <value> <string>Category_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>list_action</string> </key>
-                    <value> <string>WebSection_viewContentList</string> </value>
+                    <key> <string>lines</string> </key>
+                    <value> <int>15</int> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -169,23 +171,19 @@
                 </item>
                 <item>
                     <key> <string>search</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>select</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>section_content_selection</string> </value>
+                    <value> <string>websection_content_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>reference</string>
-                          <string>ascending</string>
+                          <string>short_title</string>
+                          <string>Short Title</string>
                         </tuple>
                       </list>
                     </value>
@@ -196,7 +194,34 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Section Contents</string> </value>
+                    <value> <string>Section Content</string> </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>short_title</string>
+                          <string>WebSite_getListboxUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>WebSite_getListboxUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string>WebSite_getListboxUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>WebSite_getListboxUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>WebSite_getListboxUrl</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
               </dictionary>
             </value>
