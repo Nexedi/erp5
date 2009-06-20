@@ -13,17 +13,16 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>lines</string>
                 <string>columns</string>
-                <string>sort</string>
-                <string>list_method</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
+                <string>count_method</string>
                 <string>default_params</string>
-                <string>search</string>
                 <string>editable_columns</string>
-                <string>url_columns</string>
+                <string>list_method</string>
+                <string>portal_types</string>
+                <string>search</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -116,6 +115,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>default_params</string> </key>
                     <value>
                       <list/>
@@ -138,15 +141,11 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>listbox</string> </value>
+                    <value> <string>my_list_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Category_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>lines</string> </key>
-                    <value> <int>15</int> </value>
+                    <value> <string>Base_viewWebFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -175,15 +174,15 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>websection_content_selection</string> </value>
+                    <value> <string>section_content_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>short_title</string>
-                          <string>Short Title</string>
+                          <string>reference</string>
+                          <string>ascending</string>
                         </tuple>
                       </list>
                     </value>
@@ -194,34 +193,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Section Content</string> </value>
-                </item>
-                <item>
-                    <key> <string>url_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>short_title</string>
-                          <string>WebSite_getListboxUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>WebSite_getListboxUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_portal_type</string>
-                          <string>WebSite_getListboxUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>WebSite_getListboxUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>WebSite_getListboxUrl</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <value> <string>Section Contents</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -14,7 +14,6 @@
             <value>
               <list>
                 <string>title</string>
-                <string>timezone_style</string>
                 <string>editable</string>
               </list>
             </value>
@@ -86,15 +85,11 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewWebFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>timezone_style</string> </key>
-                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
