@@ -548,7 +548,20 @@
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>thumbnail</string>
+                          <string>Resource_getShopUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Resource_getShopUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>decoratedPrice</string>
+                          <string>Resource_getShopUrl</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>

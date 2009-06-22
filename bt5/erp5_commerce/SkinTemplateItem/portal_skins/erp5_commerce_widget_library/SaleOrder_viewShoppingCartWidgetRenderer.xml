@@ -90,13 +90,13 @@
         <td class="cart_bottom">\n
            <div class="cart_left">\n
              <a class="articlelink" \n
-                tal:attributes="href python: \'%s/product_module/SaleOrder_viewAsWeb\' %website.absolute_url()">\n
+                tal:attributes="href python: \'%s/%s/SaleOrder_viewAsWeb\' % (website.absolute_url(), website.getLayoutProperty(\'ecommerce_cart_section_id\', \'\'))">\n
                 <span tal:replace="python: here.Base_translateString(\'Edit Shopping Cart\')"/>\n
              </a>\n
            </div>\n
            <div class="cart_right">\n
              <a class="articlelink"\n
-                tal:attributes="href python: \'%s/product_module/SaleOrder_confirmShopping\' %website.absolute_url()">\n
+                tal:attributes="href python: \'%s/%s/SaleOrder_confirmShopping\' % (website.absolute_url(), website.getLayoutProperty(\'ecommerce_checkout_section_id\', \'\'))">\n
                <span tal:replace="python: here.Base_translateString(\'Checkout\')"/>\n
              </a>\n
            </div>\n

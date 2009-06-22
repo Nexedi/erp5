@@ -99,6 +99,9 @@ div.selected-product {height : 110px; width:<tal:block tal:replace="main_content
 div.selected-product div {float:left; width:100px; height:100px; text-align:center; padding-right: 25px;}\n
 div.selected-product img {border:solid 1px <tal:block tal:replace="primary_color"/>; padding:0px; margin-left:10px; margin-right:10px; margin-top:5px; margin-bottom:2px;}\n
 div.selected-product img:hover {border:solid 2px <tal:block tal:replace="primary_color"/>; padding:0px; margin-top:4px; margin-left:9px; margin-right:9px; margin-bottom:1px;}\n
+div.selected-product div div {width:50px; height:50px; vertical-align:middle; text-align:middle; border:solid 1px <tal:block tal:replace="primary_color"/>; padding:0px; margin-left:10px; margin-right:10px; margin-top:5px; margin-bottom:2px;}\n
+div.selected-product div div:hover {border:solid 2px <tal:block tal:replace="primary_color"/>; padding:0px; margin-top:4px; margin-left:9px; margin-right:9px; margin-bottom:1px;}\n
+\n
 .cart_item_name {width:180px;}\n
 .headline     {float:left; width:<tal:block tal:replace="main_width"/>px;}\n
 \n

@@ -147,7 +147,7 @@
       </div>\n
 \n
       <!-- SUBCONTENT -->\n
-      <div class="subcontent" tal:condition="python:section.getLayoutProperty(\'layout_right_column\', False)">\n
+      <div class="subcontent" tal:condition="python: section.getLayoutProperty(\'layout_right_column\', False)">\n
 \n
         <!-- Layout form rendering -->\n
         <tal:block tal:condition="python: layout_form is not None"\n
@@ -161,7 +161,7 @@
 \n
       <!-- CONTENT -->\n
       <div class="main_content">\n
-        <div class="main_content">\n
+        <div class="main_content" tal:condition="python: here.getLayoutProperty(\'layout_selected_product\', False)">\n
           <div class="corner-content-1col-top"></div>                        \n
           <div class="content-1col-nobox">\n
             <tal:block tal:content="structure here/WebSection_viewSelectedProductWidget"/>\n

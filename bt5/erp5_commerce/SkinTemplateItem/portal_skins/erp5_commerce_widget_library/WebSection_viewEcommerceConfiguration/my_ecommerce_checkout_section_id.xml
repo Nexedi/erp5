@@ -13,16 +13,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>title</string>
                 <string>default</string>
-                <string>enabled</string>
-                <string>image_display</string>
-                <string>image_resolution</string>
+                <string>display_width</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>product_list_thumbnail</string> </value>
+            <value> <string>my_ecommerce_checkout_section_id</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -59,31 +58,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>image_display</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>image_resolution</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -99,66 +78,30 @@
               <dictionary>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>checkout</string> </value>
                 </item>
                 <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>listbox_thumbnail</string> </value>
+                    <value> <string>my_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>DocumentModule_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>image_display</string> </key>
-                    <value> <string>micro</string> </value>
-                </item>
-                <item>
-                    <key> <string>image_resolution</string> </key>
-                    <value> <int>75</int> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Checkout Section ID</string> </value>
+                </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: cell.getDefaultImageAbsoluteUrl()</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: (cell.getPortalType() == \'Product\') and cell.getDefaultImageValue() not in (None, \'\') and cell.getDefaultImageValue().getData() not in (None, \'\')</string> </value>
         </item>
       </dictionary>
     </pickle>

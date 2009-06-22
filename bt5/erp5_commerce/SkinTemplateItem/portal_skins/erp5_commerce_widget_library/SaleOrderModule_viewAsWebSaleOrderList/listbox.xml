@@ -3,11 +3,8 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Form.ListBox</string>
-          <string>ListBox</string>
-        </tuple>
-        <none/>
+        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -326,6 +323,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>anchor</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
@@ -340,6 +341,10 @@
                         <tuple>
                           <string>SaleOrder_getFormattedCreationDate</string>
                           <string>Order Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
@@ -450,6 +455,10 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>row_css_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>search</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -494,6 +503,10 @@
                           <string>SaleOrder_getFormattedCreationDate</string>
                           <string>Date</string>
                         </tuple>
+                        <tuple>
+                          <string>translated_simulation_state</string>
+                          <string>State</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -512,6 +525,12 @@
                     <value> <string>Sale Orders</string> </value>
                 </item>
                 <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>url_columns</string> </key>
                     <value>
                       <list/>
@@ -526,11 +545,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
