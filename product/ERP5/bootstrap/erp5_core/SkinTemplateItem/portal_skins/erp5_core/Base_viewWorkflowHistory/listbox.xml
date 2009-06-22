@@ -13,13 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>columns</string>
+                <string>editable_columns</string>
+                <string>list_action</string>
                 <string>list_method</string>
                 <string>selection_name</string>
-                <string>editable_columns</string>
+                <string>title</string>
                 <string>url_columns</string>
-                <string>list_action</string>
               </list>
             </value>
         </item>
@@ -75,10 +75,6 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>list_action</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -188,7 +184,7 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>Folder_viewContentList</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
