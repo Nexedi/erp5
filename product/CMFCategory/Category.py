@@ -240,23 +240,7 @@ class Category(Folder):
       """
         Returns title or id, indented from base_category.
       """
-      path_len = 0
-      base = self.getBaseCategory()
-      current = self
-      while not current is base :
-        path_len += 1
-        current = aq_parent(current)
-
-      # it s better for the user to display something than only ''...
-      logical_title_list = []
-
-      if path_len >= 2:
-        logical_title_list.append(' ' * 4 * (path_len - 1))
-      logical_title = getattr(self, item_method)()
-      if logical_title in [None, '']:
-        logical_title = self.getId()
-      logical_title_list.append(logical_title)
-      return ''.join(logical_title_list)
+      return self.getIndentedTitle(item_method=item_method)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getTranslatedIndentedTitle')
