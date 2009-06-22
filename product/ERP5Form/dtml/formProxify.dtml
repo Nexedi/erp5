@@ -5,15 +5,19 @@
 
 <p class="form-help">
 Proxify non-proxy fields.<br/>
-This tool will keep values on fields if they are different from the target
-field.<br/>
+This tool will keep values on fields if they are not empty value and
+different from the target field.<br/>
 If you don't want this behaviour, check the <em>Delegate values</em> checkbox
-below and all values will be delegated to the proxy target.
+below and all values will be delegated to the proxy target.<br/>
+If you want to keep empty values('' or () or [] or 0) after proxify, check
+the <em>Keep empty values</em> checkbox below and all empty values will not be
+delegated. (Delegate values option is high priority.)
 </p>
 
 <form action="proxifyField" method="POST">
 
 Delegate values <input type="checkbox" name="force_delegate"> <br/>
+Keep empty values <input type="checkbox" name="keep_empty_value"> <br/>
 
 <table border="2">
 <tr>

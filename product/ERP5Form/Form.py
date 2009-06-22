@@ -88,6 +88,29 @@ def copyMethod(value):
       value = TALESMethod(value._text)
     return value
 
+def getFieldDict(field, value_type):
+    result = {}
+    if field.meta_type=='ProxyField':
+        if value_type=='values':
+            get_method = getattr(field, 'get_recursive_orig_value')
+        elif value_type=='tales':
+            get_method = getattr(field, 'get_recursive_tales')
+        else:
+            raise ValueError, 'value_type must be values or tales'
+        template_field = field.getRecursiveTemplateField()
+        for ui_field_id in template_field.form.fields.keys():
+            result[ui_field_id] = get_method(ui_field_id)
+    else:
+        if value_type=='values':
+            get_method = getattr(field, 'get_orig_value')
+        elif value_type=='tales':
+            get_method = getattr(field, 'get_tales')
+        else:
+            raise ValueError, 'value_type must be values or tales'
+        for ui_field_id in field.form.fields.keys():
+            result[ui_field_id] = get_method(ui_field_id)
+    return result
+
 
 class StaticValue:
   """
@@ -880,18 +903,26 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
       return [f for f in self.objectValues() if f.meta_type == 'ProxyField']
 
     security.declareProtected('Change Formulator Forms', 'proxifyField')
-    def proxifyField(self, field_dict=None, force_delegate=False, REQUEST=None):
+    def proxifyField(self, field_dict=None, force_delegate=False,
+                     keep_empty_value=False, REQUEST=None):
         """Convert fields to proxy fields
-        If the field value is different from the proxyfield value, the value is
-        kept on the proxyfield, otherwise it is delegated. If you specify
-        force_delegate, values will be delegated even if they are different
+        If the field value is not empty and different from the proxyfield
+        value, the value is kept on the proxyfield, otherwise it is delegated.
+        If you specify force_delegate, values will be delegated even if they
+        are different. And if you specify keep_empty_value, then empty values
+        will not be delegated(force_delegate option is high priority).
         """
         from Products.ERP5Form.ProxyField import ProxyWidget
 
-        def copy(_dict):
+        def copy(field, value_type):
             new_dict = {}
-            for key, value in _dict.items():
-                if value=='':
+            for key, value in getFieldDict(field, value_type).iteritems():
+                if (keep_empty_value is False and
+                    (value=='' or
+                     value==0 or
+                     (isinstance(value, (tuple, list)) and len(value)==0)
+                     )
+                    ):
                     continue
                 if isinstance(aq_base(value), (Method, TALESMethod)):
                     value = copyMethod(value)
@@ -952,10 +983,10 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
             target_field = proxy_field.getTemplateField()
 
             # copy data
-            new_values = remove_same_value(copy(old_field.values),
-                                           target_field.values)
-            new_tales = remove_same_value(copy(old_field.tales),
-                                          target_field.tales)
+            new_values = remove_same_value(copy(old_field, 'values'),
+                                           getFieldDict(target_field, 'values'))
+            new_tales = remove_same_value(copy(old_field, 'tales'),
+                                          getFieldDict(target_field, 'tales'))
 
             if target_field.meta_type=='ProxyField':
                 for i in new_values.keys():
@@ -1001,20 +1032,14 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
     psyco.bind(_exec)
 
     security.declareProtected('Change Formulator Forms', 'unProxifyField')
-    def unProxifyField(self, field_dict=None, REQUEST=None):
+    def unProxifyField(self, field_dict=None, copy_delegated_values=False,
+                       REQUEST=None):
         """
         Convert proxy fields to fields
         """
         def copy(field, value_type):
-            mapping_dict = {'values' : 'get_recursive_orig_value',
-                            'tales'  : 'get_recursive_tales'}
             new_dict = {}
-            key_list = getattr(field.getRecursiveTemplateField(), value_type).keys()
-            for key in key_list:
-                method_id = mapping_dict[value_type]
-                value = getattr(field, method_id)(key)
-                if value=='':
-                    continue
+            for key, value in getFieldDict(field, value_type).iteritems():
                 if isinstance(aq_base(value), (Method, TALESMethod)):
                     value = copyMethod(value)
                 elif value is not None and not isinstance(value,

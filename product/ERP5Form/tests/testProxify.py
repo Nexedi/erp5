@@ -66,8 +66,14 @@ class TestProxify(unittest.TestCase):
     base_view = self.base_view = self.container.Base_view
     base_view.manage_addField('my_string_field', 'String Field', 'StringField')
     base_view.manage_addField('my_list_field', 'List Field', 'ListField')
+    base_view.manage_addField('my_relation_string_field', 'Old Relation String Field', 'RelationStringField')
+    base_view.manage_addField('my_gender', 'Gender', 'ListField')
     base_view.my_string_field.values['display_width'] = 30
     base_view.my_list_field.values['size'] = 1
+    base_view.my_gender.values['items'] = [('Male', 'Male'), ('Female', 'Female')]
+    # old instance does not have recently added properties.
+    del base_view.my_relation_string_field.values['proxy_listbox_ids']
+    del base_view.my_relation_string_field.values['relation_form_id']
 
     # address view
     self.container._setObject('Address_view',
@@ -83,25 +89,29 @@ class TestProxify(unittest.TestCase):
     person_view = self.person_view = self.container.Person_view
     person_view.manage_addField('my_name', 'Name', 'StringField')
     person_view.manage_addField('my_default_region', 'Country', 'ListField')
-    person_view.my_name.values['size'] = 20
+    person_view.my_name.values['display_maxwidth'] = 20
     person_view.my_default_region.values['size'] = 1
     person_view.my_default_region.tales['items'] = TALESMethod('here/portal_categories/region/getCategoryChildTranslatedLogicalPathItemList')
     person_view.my_default_region.values['scrap_variable'] = 'obsolete'
+    person_view.manage_addField('my_career_subordination_title', 'Organisation', 'RelationStringField')
+    person_view.my_career_subordination_title.values['base_category'] = 'subordination'
+    person_view.my_career_subordination_title.values['portal_type'] = [('Organisation', 'Organisation')]
+    person_view.my_career_subordination_title.values['proxy_listbox_ids'] = [('OrganisationModule_viewOrganisationList/listbox', 'Organisation')]
 
     global request
     request = DummyRequest()
 
   def test_single_level_proxify(self):
+    # StringField
     self.person_view.proxifyField({'my_name':'Base_view.my_string_field'})
-
     field = self.person_view.my_name
     self.assertEqual(field.meta_type, 'ProxyField')
     self.assertEqual(field.get_value('form_id'), 'Base_view')
     self.assertEqual(field.get_value('field_id'), 'my_string_field')
     self.assertEqual(field.is_delegated('title'), False)
     self.assertEqual(field.get_value('title'), 'Name')
-    self.assertEqual(field.is_delegated('size'), False)
-    self.assertEqual(field.get_value('size'), 20)
+    self.assertEqual(field.is_delegated('display_maxwidth'), False)
+    self.assertEqual(field.get_value('display_maxwidth'), 20)
     self.assertEqual(field.is_delegated('enabled'), True)
     self.assertEqual(field.get_value('enabled'), 1)
     self.assertEqual(field.is_delegated('description'), True)
@@ -111,6 +121,17 @@ class TestProxify(unittest.TestCase):
     template_field = self.base_view.my_string_field
     template_field.values['description'] = 'Description'
     self.assertEqual(field.get_value('description'), 'Description')
+
+    purgeFieldValueCache()
+    
+    # ListField
+    self.person_view.manage_addField('my_gender', 'Gender', 'ListField')
+    self.person_view.proxifyField({'my_gender':'Base_view.my_gender'})
+    field = self.person_view.my_gender
+    self.assertEqual(field.is_delegated('title'), True)
+    self.assertEqual(field.get_value('title'), 'Gender')
+    self.assertEqual(field.is_delegated('items'), True)
+    self.assertEqual(field.get_value('items'), [('Male', 'Male'), ('Female', 'Female')])
 
   def test_multi_level_proxify(self):
     self.address_view.proxifyField({'my_region':'Base_view.my_list_field'})
@@ -167,7 +188,53 @@ class TestProxify(unittest.TestCase):
     self.assertEqual(field.get_tales('items')._text,
                      'here/portal_categories/region/getCategoryChildTranslatedLogicalPathItemList')
 
+    #Test unproxify with old instance.
+    #Proxify First
+    self.person_view.proxifyField({'my_career_subordination_title':'Base_view.my_relation_string_field'})
+    purgeFieldValueCache()
+    #UnProxify
+    self.person_view.unProxifyField({'my_career_subordination_title':'on'})
+    field = self.person_view.my_career_subordination_title
+    self.assertEqual(field.meta_type, 'RelationStringField')
+    self.assertEqual(field.get_value('title'), 'Organisation')
+    self.assertEqual(field.get_value('proxy_listbox_ids'), [('OrganisationModule_viewOrganisationList/listbox', 'Organisation')])
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestProxify))
   return suite
+
+
+def get_field_data(field):
+  from Products.Formulator.MethodField import Method
+  value_dict = {}
+  tales_dict = {}
+
+  if field.meta_type=='ProxyField':
+    template_field = field.getRecursiveTemplateField()
+    for ui_field_id in template_field.form.fields.keys():
+      value = field.get_recursive_orig_value(ui_field_id)
+      if isinstance(value, Method):
+        value = value.method_name
+      tales = field.get_recursive_tales(ui_field_id)
+      if tales:
+        tales_text = tales._text
+      else:
+        tales_text = ''
+      value_dict[ui_field_id] = value
+      tales_dict[ui_field_id] = tales_text
+  else:
+    for ui_field_id in field.form.fields.keys():
+      value = field.get_orig_value(ui_field_id)
+      if isinstance(value, Method):
+        value = value.method_name
+      tales = field.get_tales(ui_field_id)
+      if tales:
+        tales_text = tales._text
+      else:
+        tales_text = ''
+      value_dict[ui_field_id] = value
+      tales_dict[ui_field_id] = tales_text
+
+  return value_dict, tales_dict
