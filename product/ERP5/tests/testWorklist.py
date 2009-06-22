@@ -174,6 +174,10 @@ class TestWorklist(ERP5TypeTestCase):
           (k.startswith('guard_') and k or 'var_match_'+k, v)
           for k, v in kw.iteritems()))
 
+  def removeWorklist(self, workflow_id, worklist_id_list):
+    worklists = self.getWorkflowTool()[workflow_id].worklists
+    worklists.deleteWorklists(worklist_id_list)
+
   def createWorklists(self):
     for worklist_id, actbox_name, role, expr, state, int_variable in [
           (self.worklist_assignor_id, self.actbox_assignor_name, 
@@ -194,6 +198,16 @@ class TestWorklist(ERP5TypeTestCase):
                           portal_type=self.checked_portal_type,
                           validation_state=state,
                           **{self.int_catalogued_variable_id: int_variable})
+
+  def removeWorklists(self):
+    self.removeWorklist(self.checked_workflow, [
+          self.worklist_assignor_id, 
+          self.worklist_owner_id, 
+          self.worklist_desactivated_id, 
+          self.worklist_wrong_state_id, 
+          self.worklist_assignor_owner_id, 
+          self.worklist_int_variable_id, 
+    ])
 
   def clearCache(self):
     self.portal.portal_caches.clearAllCache()
@@ -222,124 +236,127 @@ class TestWorklist(ERP5TypeTestCase):
     self.addWorkflowCataloguedVariable(self.checked_workflow,
                                        self.int_catalogued_variable_id)
     self.createWorklists()
-    self.logMessage("Create document as Manager")
-    document = self.createDocument()
+    try:
+      self.logMessage("Create document as Manager")
+      document = self.createDocument()
 
-    transaction.commit()
-    self.tic()
-    self.clearCache()
-
-    result = workflow_tool.listActions(object=document)
-
-    # Users can not see worklist as they are not Assignor
-    for user_id in ('manager', ):
-      self.login(user_id)
-      result = workflow_tool.listActions(object=document)
-      self.logMessage("Check %s worklist as Assignor" % user_id)
-      self.checkWorklist(result, self.actbox_assignor_name, 0)
-      self.logMessage("Check %s worklist as Owner" % user_id)
-      self.checkWorklist(result, self.actbox_owner_name, 1)
-    for user_id in ('foo', 'bar'):
-      self.logMessage("Check %s worklist" % user_id)
-      self.login(user_id)
-      result = workflow_tool.listActions(object=document)
-      self.assertEquals(result, [])
-
-    for role, user_id_list in (('Assignor', ('foo', 'manager')),
-                               ('Assignee', ('foo', 'bar'))):
-      self.login('manager')
-      for user_id in user_id_list:
-        self.logMessage("Give %s %s role" % (user_id, role))
-        document.manage_addLocalRoles(user_id, [role])
-      document.reindexObject()
       transaction.commit()
       self.tic()
       self.clearCache()
 
-      for user_id, assignor, owner, both in (('manager', 1, 1, 1),
-                                             ('bar'    , 0, 0, 0),
-                                             ('foo'    , 1, 0, 1)):
+      result = workflow_tool.listActions(object=document)
+
+      # Users can not see worklist as they are not Assignor
+      for user_id in ('manager', ):
         self.login(user_id)
         result = workflow_tool.listActions(object=document)
-        self.logMessage("  Check %s worklist as Assignor" % user_id)
-        self.checkWorklist(result, self.actbox_assignor_name, assignor)
-        self.logMessage("  Check %s worklist as Owner" % user_id)
-        self.checkWorklist(result, self.actbox_owner_name, owner)
-        self.logMessage("  Check %s worklist as Owner and Assignor" % user_id)
-        self.checkWorklist(result, self.actbox_assignor_owner_name, both)
+        self.logMessage("Check %s worklist as Assignor" % user_id)
+        self.checkWorklist(result, self.actbox_assignor_name, 0)
+        self.logMessage("Check %s worklist as Owner" % user_id)
+        self.checkWorklist(result, self.actbox_owner_name, 1)
+      for user_id in ('foo', 'bar'):
+        self.logMessage("Check %s worklist" % user_id)
+        self.login(user_id)
+        result = workflow_tool.listActions(object=document)
+        self.assertEquals(result, [])
 
-    # Check if int variable are managed by the worklist
-    user_id = 'manager'
-    self.login(user_id)
-    result = workflow_tool.listActions(object=document)
-    self.logMessage("Check %s worklist with int value as %s" % \
-                                   (user_id, self.int_value))
-    self.checkWorklist(result, self.actbox_int_variable_name, 1)
-
-    # Change int value on document
-    new_value = self.int_value + 1
-    document.setProperty(self.int_catalogued_variable_id, new_value)
-    transaction.commit()
-    self.tic()
-    self.clearCache()
-
-    result = workflow_tool.listActions(object=document)
-    self.logMessage("Check %s worklist with int value as %s" % \
-                                   (user_id, new_value))
-    self.checkWorklist(result, self.actbox_int_variable_name, 0)
-
-    #
-    # Check monovalued security role
-    #
-    self.login('manager')
-    module = self.getPortal().getDefaultModule(self.checked_portal_type)
-    module.manage_setLocalRoles('bar', ['Author'])
-
-    self.login('bar')
-
-    bar_document = self.createDocument()
-    bar_document.manage_permission('View', ['Owner', 'Assignee'], 0)
-
-    bar_assignee_document = self.createDocument()
-    bar_assignee_document.manage_setLocalRoles('manager', ['Assignee'])
-    bar_assignee_document.manage_permission('View', ['Owner', 'Assignee'], 0)
-
-    user_id = 'manager'
-    self.login(user_id)
-
-    module.manage_delLocalRoles('bar')
-
-    def test(*count_list):
-      local_role_list = 'Assignee', 'Owner'
-      document.manage_setLocalRoles('manager', local_role_list)
-
-      for i, count in enumerate(count_list):
-        document.manage_permission('View', local_role_list[:i], 0)
+      for role, user_id_list in (('Assignor', ('foo', 'manager')),
+                                 ('Assignee', ('foo', 'bar'))):
+        self.login('manager')
+        for user_id in user_id_list:
+          self.logMessage("Give %s %s role" % (user_id, role))
+          document.manage_addLocalRoles(user_id, [role])
         document.reindexObject()
         transaction.commit()
         self.tic()
         self.clearCache()
 
-        result = workflow_tool.listActions(object=document)
-        self.logMessage("Check %s worklist as Owner (%s)" % (user_id, count))
-        self.checkWorklist(result, self.actbox_owner_name, count)
+        for user_id, assignor, owner, both in (('manager', 1, 1, 1),
+                                               ('bar'    , 0, 0, 0),
+                                               ('foo'    , 1, 0, 1)):
+          self.login(user_id)
+          result = workflow_tool.listActions(object=document)
+          self.logMessage("  Check %s worklist as Assignor" % user_id)
+          self.checkWorklist(result, self.actbox_assignor_name, assignor)
+          self.logMessage("  Check %s worklist as Owner" % user_id)
+          self.checkWorklist(result, self.actbox_owner_name, owner)
+          self.logMessage("  Check %s worklist as Owner and Assignor" % user_id)
+          self.checkWorklist(result, self.actbox_assignor_owner_name, both)
 
-    test(0, 0, 1)
+      # Check if int variable are managed by the worklist
+      user_id = 'manager'
+      self.login(user_id)
+      result = workflow_tool.listActions(object=document)
+      self.logMessage("Check %s worklist with int value as %s" % \
+                                     (user_id, self.int_value))
+      self.checkWorklist(result, self.actbox_int_variable_name, 1)
 
-    # Define a local role key
-    sql_catalog = self.portal.portal_catalog.getSQLCatalog()
-    current_sql_catalog_local_role_keys = \
-          sql_catalog.sql_catalog_local_role_keys
-    sql_catalog.sql_catalog_local_role_keys = ('Owner | owner', )
-    transaction.commit()
-    self.portal.portal_caches.clearAllCache()
-
-    try:
-      test(0, 1, 1)
-    finally:
-      sql_catalog.sql_catalog_local_role_keys = \
-          current_sql_catalog_local_role_keys
+      # Change int value on document
+      new_value = self.int_value + 1
+      document.setProperty(self.int_catalogued_variable_id, new_value)
       transaction.commit()
+      self.tic()
+      self.clearCache()
+
+      result = workflow_tool.listActions(object=document)
+      self.logMessage("Check %s worklist with int value as %s" % \
+                                     (user_id, new_value))
+      self.checkWorklist(result, self.actbox_int_variable_name, 0)
+
+      #
+      # Check monovalued security role
+      #
+      self.login('manager')
+      module = self.getPortal().getDefaultModule(self.checked_portal_type)
+      module.manage_setLocalRoles('bar', ['Author'])
+
+      self.login('bar')
+
+      bar_document = self.createDocument()
+      bar_document.manage_permission('View', ['Owner', 'Assignee'], 0)
+
+      bar_assignee_document = self.createDocument()
+      bar_assignee_document.manage_setLocalRoles('manager', ['Assignee'])
+      bar_assignee_document.manage_permission('View', ['Owner', 'Assignee'], 0)
+
+      user_id = 'manager'
+      self.login(user_id)
+
+      module.manage_delLocalRoles('bar')
+
+      def test(*count_list):
+        local_role_list = 'Assignee', 'Owner'
+        document.manage_setLocalRoles('manager', local_role_list)
+
+        for i, count in enumerate(count_list):
+          document.manage_permission('View', local_role_list[:i], 0)
+          document.reindexObject()
+          transaction.commit()
+          self.tic()
+          self.clearCache()
+
+          result = workflow_tool.listActions(object=document)
+          self.logMessage("Check %s worklist as Owner (%s)" % (user_id, count))
+          self.checkWorklist(result, self.actbox_owner_name, count)
+
+      test(0, 0, 1)
+
+      # Define a local role key
+      sql_catalog = self.portal.portal_catalog.getSQLCatalog()
+      current_sql_catalog_local_role_keys = \
+            sql_catalog.sql_catalog_local_role_keys
+      sql_catalog.sql_catalog_local_role_keys = ('Owner | owner', )
+      transaction.commit()
+      self.portal.portal_caches.clearAllCache()
+
+      try:
+        test(0, 1, 1)
+      finally:
+        sql_catalog.sql_catalog_local_role_keys = \
+            current_sql_catalog_local_role_keys
+        transaction.commit()
+    finally:
+      self.removeWorklists()
 
   def test_02_related_key(self, quiet=0, run=run_all_test):
     """
@@ -369,28 +386,32 @@ class TestWorklist(ERP5TypeTestCase):
                         portal_type=self.checked_portal_type,
                         base_category_id='role')
 
-    document = self.createDocument()
-    transaction.commit()
-    self.tic()
-    self.clearCache()
-    self.logMessage("  Check no document has region/role categories defined")
-    result = workflow_tool.listActions(object=document)
-    self.checkWorklist(result, 'has_region', 0)
-    self.checkWorklist(result, 'has_role', 0)
+    try:
+      document = self.createDocument()
+      transaction.commit()
+      self.tic()
+      self.clearCache()
+      self.logMessage("  Check no document has region/role categories defined")
+      result = workflow_tool.listActions(object=document)
+      self.checkWorklist(result, 'has_region', 0)
+      self.checkWorklist(result, 'has_role', 0)
 
-    self.logMessage("  Creates documents with region/role categories defined")
-    self.createDocument(role='client')
-    self.createDocument(region='somewhere')
-    self.createDocument(region='elsewhere')
+      self.logMessage("  Creates documents with region/role categories defined")
+      self.createDocument(role='client')
+      self.createDocument(region='somewhere')
+      self.createDocument(region='elsewhere')
 
-    transaction.commit()
-    self.tic()
-    self.clearCache()
-    self.logMessage(
-             "  Check there are documents with region/role categories defined")
-    result = workflow_tool.listActions(object=document)
-    self.checkWorklist(result, 'has_region', 2)
-    self.checkWorklist(result, 'has_role', 1)
+      transaction.commit()
+      self.tic()
+      self.clearCache()
+      self.logMessage(
+               "  Check there are documents with region/role categories defined")
+      result = workflow_tool.listActions(object=document)
+      self.checkWorklist(result, 'has_region', 2)
+      self.checkWorklist(result, 'has_role', 1)
+    finally:
+      self.removeWorklist(self.checked_workflow, 
+                          ['region_worklist', 'role_worklist'])
 
   def test_03_worklist_guard(self, quiet=0, run=run_all_test):
     """
@@ -411,28 +432,32 @@ class TestWorklist(ERP5TypeTestCase):
                         guard_roles="Associate",
                         guard_expr='python: user.getId() == "bar"')
 
-    document = self.createDocument()
-    document.manage_addLocalRoles("bar", ["Associate"])
-    document.manage_addLocalRoles("foo", ["Associate"])
-    document.validate()
-    document.reindexObject()
-    transaction.commit()
-    self.tic()
-    self.clearCache()
+    try:
+      document = self.createDocument()
+      document.manage_addLocalRoles("bar", ["Associate"])
+      document.manage_addLocalRoles("foo", ["Associate"])
+      document.validate()
+      document.reindexObject()
+      transaction.commit()
+      self.tic()
+      self.clearCache()
 
-    self.logMessage("  Check that manager can not access worklist")
-    result = workflow_tool.listActions(object=document)
-    self.checkWorklist(result, 'valid_guard_expression', 0)
+      self.logMessage("  Check that manager can not access worklist")
+      result = workflow_tool.listActions(object=document)
+      self.checkWorklist(result, 'valid_guard_expression', 0)
 
-    self.logMessage("  Check that user bar can access worklist")
-    self.login('bar')
-    result = workflow_tool.listActions(object=document)
-    self.checkWorklist(result, 'valid_guard_expression', 1)
+      self.logMessage("  Check that user bar can access worklist")
+      self.login('bar')
+      result = workflow_tool.listActions(object=document)
+      self.checkWorklist(result, 'valid_guard_expression', 1)
 
-    self.logMessage("  Check that user foo can not access worklist")
-    self.login('foo')
-    result = workflow_tool.listActions(object=document)
-    self.checkWorklist(result, 'valid_guard_expression', 0)
+      self.logMessage("  Check that user foo can not access worklist")
+      self.login('foo')
+      result = workflow_tool.listActions(object=document)
+      self.checkWorklist(result, 'valid_guard_expression', 0)
+    finally:
+      self.removeWorklist(self.checked_workflow, 
+                          ['guard_expression_worklist'])
 
 def test_suite():
   suite = unittest.TestSuite()
