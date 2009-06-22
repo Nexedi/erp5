@@ -73,6 +73,12 @@ reversal = accounting_module.newContent (\n
     destination_section=context.getDestinationSection(),\n
     source_payment=context.getSourcePayment(),\n
     destination_payment=context.getDestinationPayment(),\n
+    source_project=context.getSourceProject(),\n
+    destination_project=context.getDestinationProject(),\n
+    source_function=context.getSourceFunction(),\n
+    destination_function=context.getDestinationFunction(),\n
+    source_administration=context.getSourceAdministration(),\n
+    destination_administration=context.getDestinationAdministration(),\n
     title = Base_translateString("Reversal Transaction for ${title}",\n
                                  mapping={\'title\':unicode(context.getTitleOrId(), \'utf8\')}),\n
     description = Base_translateString(\n
@@ -124,12 +130,15 @@ for line in line_list:\n
 \n
   # copy some values if they are defined explicitly on line\n
   for prop in [ \'source_section\', \'destination_section\',\n
-                \'source_payment\', \'destination_payment\', \'resource\' ]:\n
+                \'source_payment\', \'destination_payment\',\n
+                \'source_project\', \'destination_project\',\n
+                \'source_function\', \'destination_function\',\n
+                \'resource\', \'product_line\' ]:\n
     if line.getProperty(prop) != context.getProperty(prop):\n
       new_line.setProperty(prop, line.getProperty(prop))\n
 \n
-return context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" %\n
-              (reversal.absolute_url(),\n
+return reversal.Base_redirect(\'view\',\n
+    keep_items=dict(portal_status_message=\n
                Base_translateString("Reversal Transaction for ${specific_reference} created.",\n
                                     mapping={\'specific_reference\': specific_reference})))\n
 </string> </value>
@@ -185,6 +194,7 @@ return context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" %\n
                             <string>line</string>
                             <string>new_line</string>
                             <string>prop</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
