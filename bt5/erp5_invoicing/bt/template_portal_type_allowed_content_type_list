@@ -8,17 +8,9 @@ Invoice Transaction Rule | Quantity Divergence Tester
 Invoicing Rule | Category Divergence Tester
 Invoicing Rule | Property Divergence Tester
 Invoicing Rule | Quantity Divergence Tester
-Purchase Invoice Transaction | Discount Line
-Purchase Invoice Transaction | Invoice Line
-Purchase Invoice Transaction | Payment Condition
-Purchase Invoice Transaction | Tax Line
 Rule Tool | Invoice Transaction Rule
 Rule Tool | Invoicing Rule
 Rule Tool | Tax Rule
-Sale Invoice Transaction | Discount Line
-Sale Invoice Transaction | Invoice Line
-Sale Invoice Transaction | Payment Condition
-Sale Invoice Transaction | Tax Line
 Tax Rule | Category Divergence Tester
 Tax Rule | Property Divergence Tester
 Tax Rule | Quantity Divergence Tester

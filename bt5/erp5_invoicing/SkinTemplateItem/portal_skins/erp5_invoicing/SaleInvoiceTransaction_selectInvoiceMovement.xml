@@ -54,7 +54,10 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>kw[\'parent_specialise_portal_type\'] = \'Invoice Transaction Rule\'\n
-kw[\'explanation_portal_type\']       = [\'Sale Order\', \'Sale Invoice Transaction\', \'Sale Packing List\']\n
+if context.Invoice_isAdvanced():\n
+  kw[\'explanation_portal_type\']       = [\'Sale Order\', \'Sale Invoice\', \'Sale Packing List\']\n
+else:\n
+  kw[\'explanation_portal_type\']       = [\'Sale Order\', \'Sale Invoice Transaction\', \'Sale Packing List\']\n
 kw[\'portal_type\']                   = \'Simulation Movement\'\n
 kw[\'grand_parent_simulation_state\'] = [\'started\']\n
 \n
@@ -109,8 +112,8 @@ return movement_list\n
                             <string>kw</string>
                             <string>_write_</string>
                             <string>_getattr_</string>
-                            <string>_apply_</string>
                             <string>context</string>
+                            <string>_apply_</string>
                             <string>movement_list</string>
                             <string>_getiter_</string>
                             <string>movement</string>

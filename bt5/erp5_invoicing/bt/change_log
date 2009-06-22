@@ -1,3 +1,24 @@
+2009-06-22 tatuya
+* the erp5_invoicing is split into three business templates;
+'erp5_invoicing', 'erp5_simplified_invoicing' and
+'erp5_advanced_invoicing'.
+the erp5_invoicing now only have common invoicing setting.
+- When you want  them to work compatible with previous erp5_invoicing
+you just install 'erp5_invoicing' and 'erp5_simplified_invoicing'
+- When you want to create invoices independently,
+you just install 'erp5_invoicing' and 'erp5_advanced_invoicing'.
+Note: You can not install both 'erp5_simplified_invoicing' and
+'erp5_advanced_invoicing' together. They cause conflicts.
+* Move Allowed Content Type  'Discount Line', 'Invoice Line', 'Payment
+Condition',
+ 'Tax Line' to erp5_simplified_invoicing
+* Move Base Category 'specialise' to erp5_simplified_invoicing
+* Move  Actions  to erp5_simplified_invoicing
+* Move Paths 'purchase_invoice_builder',
+  'purchase_invoice_tax_builder', 'purchase_invoice_transaction_builder'
+  'sale_invoice_builder', 'sale_invoice_tax_builder',
+  'sale_invoice_transaction_builder' to erp5_simplified_invoicing
+
 2009-05-18 yusei
 * Fix some proxy fields. proxy_listbox_ids had to be copied to new proxified fields but it was not copied.
 

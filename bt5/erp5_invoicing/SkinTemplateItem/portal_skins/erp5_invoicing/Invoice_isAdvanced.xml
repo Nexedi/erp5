@@ -53,26 +53,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kw[\'parent_specialise_portal_type\'] = \'Invoice Transaction Rule\'\n
-if context.Invoice_isAdvanced():\n
-  kw[\'explanation_portal_type\']     = [\'Purchase Order\', \'Purchase Invoice\', \'Purchase Packing List\']\n
-else:\n
-  kw[\'explanation_portal_type\']     = [\'Purchase Order\', \'Purchase Invoice Transaction\', \'Purchase Packing List\']\n
-kw[\'portal_type\']                   = \'Simulation Movement\'\n
-kw[\'grand_parent_simulation_state\'] = [\'started\']\n
-\n
-kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
-\n
-movement_list = [] \n
-for movement in context.InvoiceTransaction_zSelectMovement(**kw) :\n
-  movement = movement.getObject()\n
-  if movement.getDeliveryValue() is None :\n
-    movement_list.append(movement)\n
-  else :\n
-    from Products.ERP5Type.Log import log\n
-    log(script.getId(), "simulation movement %s should not have been selected !" % movement.getPath())\n
-\n
-return movement_list\n
+            <value> <string>"""\n
+If the business template \'erp5_advanced_invoicing\' is installed, returns True.\n
+If it is not, returns False.\n
+"""\n
+business_template_list = context.portal_templates.getInstalledBusinessTemplateList()\n
+return filter(lambda x: x.getTitle() == "erp5_advanced_invoicing", business_template_list, False)\n
 </string> </value>
         </item>
         <item>
@@ -83,7 +69,7 @@ return movement_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -109,18 +95,11 @@ return movement_list\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>kw</string>
-                            <string>_write_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>_apply_</string>
-                            <string>movement_list</string>
-                            <string>_getiter_</string>
-                            <string>movement</string>
-                            <string>None</string>
-                            <string>Products.ERP5Type.Log</string>
-                            <string>log</string>
-                            <string>script</string>
+                            <string>business_template_list</string>
+                            <string>filter</string>
+                            <string>False</string>
                           </tuple>
                         </value>
                     </item>
@@ -137,7 +116,7 @@ return movement_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PurchaseInvoiceTransaction_selectInvoiceMovement</string> </value>
+            <value> <string>Invoice_isAdvanced</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -1,17 +1,9 @@
 <hidden_content_type_list>
  <portal_type id="Invoice Line">
-  <item>Invoice Cell</item>
   <item>Invoice Line</item>
+  <item>Invoice Cell</item>
  </portal_type>
  <portal_type id="Invoice Transaction Rule">
   <item>Accounting Rule Cell</item>
- </portal_type>
- <portal_type id="Purchase Invoice Transaction">
-  <item>Tax Line</item>
-  <item>Discount Line</item>
- </portal_type>
- <portal_type id="Sale Invoice Transaction">
-  <item>Discount Line</item>
-  <item>Tax Line</item>
  </portal_type>
 </hidden_content_type_list>

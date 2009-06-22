@@ -71,9 +71,10 @@ if related_simulation_movement_path_list is None:\n
 \n
 invoice = context\n
 \n
-# set resource from price currency\n
-if not invoice.getResource():\n
-  invoice.setResource(invoice.getPriceCurrency())\n
+# if installed erp5_simplified_invoicing, set resource from price currency\n
+if not invoice.Invoice_isAdvanced():\n
+  if not invoice.getResource():\n
+    invoice.setResource(invoice.getPriceCurrency())\n
 \n
 related_packing_list = invoice.getDefaultCausalityValue()\n
 \n
