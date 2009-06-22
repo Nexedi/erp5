@@ -719,6 +719,51 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
       else:
         self.fail("Unknown service for line %s" % paysheet_line.getTitle())
 
+  def stepCheckPaysheetLineAmountsAfterAddingAModelLine(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
+    for paysheet_line in paysheet_line_list:
+      service = paysheet_line.getResourceTitle()
+      if service == 'Urssaf':
+        if len(paysheet_line.contentValues(portal_type='Pay Sheet Cell')) == 6:
+          # there is two lines with the same resource, one with slice and one
+          # without
+          cell1 = paysheet_line.getCell('tax_category/employee_share',
+              'salary_range/france/slice_0_to_200')
+          self.assertEquals(cell1.getQuantity(), 200)
+          self.assertEquals(cell1.getPrice(), 0.1)
+          cell2 = paysheet_line.getCell('tax_category/employer_share',
+              'salary_range/france/slice_0_to_200')
+          self.assertEquals(cell2.getQuantity(), 200)
+          self.assertEquals(cell2.getPrice(), 0.2)
+          cell3 = paysheet_line.getCell('tax_category/employee_share',
+              'salary_range/france/slice_200_to_400')
+          self.assertEquals(cell3.getQuantity(), 200)
+          self.assertEquals(cell3.getPrice(), 0.3)
+          cell4 = paysheet_line.getCell('tax_category/employer_share',
+              'salary_range/france/slice_200_to_400')
+          self.assertEquals(cell4.getQuantity(), 200)
+          self.assertEquals(cell4.getPrice(), 0.4)
+          cell5 = paysheet_line.getCell('tax_category/employee_share',
+              'salary_range/france/slice_400_to_5000')
+          self.assertEquals(cell5.getQuantity(), 2600)
+          self.assertEquals(cell5.getPrice(), 0.5)
+          cell6 = paysheet_line.getCell('tax_category/employer_share',
+              'salary_range/france/slice_400_to_5000')
+          self.assertEquals(cell6.getQuantity(), 2600)
+          self.assertEquals(cell6.getPrice(), 0.6)
+        else:
+          cell1 = paysheet_line.getCell('tax_category/employee_share')
+          self.assertEquals(cell1.getQuantity(), -100)
+          self.assertEquals(cell1.getPrice(), 1)
+          cell2 = paysheet_line.getCell('tax_category/employer_share')
+          self.assertEquals(cell2.getQuantity(), -200)
+          self.assertEquals(cell2.getPrice(), 1)
+      elif service == 'Labour':
+        self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
+      else:
+        self.fail("Unknown service for line %s" % paysheet_line.getTitle())
+
   def stepCheckPaysheetLineAmountsWithSicknessInsuranceAndUrssaf(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
     paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
@@ -1627,7 +1672,7 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
 
   def stepComplexModelInheritanceScheme(self, sequence=None, **kw):
     '''
-    check inheritance and effective model with a more complexe inheritance tree
+    check inheritance and effective model with a more complex inheritance tree
 
     # the inheritance tree look like this :
 
@@ -1792,6 +1837,38 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     self.assertEquals(specialise_value.findEffectiveSpecialiseValueList(\
         context=paysheet, start_date=paysheet.getStartDate(),
         stop_date=paysheet.getStopDate()), [model_2, model_5, model_7])
+
+  def stepCheckPropertiesAreCopiedFromModelLineToPaySheetLine(self,
+      sequence=None, **kw):
+    model = sequence.get('model')
+    paysheet = sequence.get('paysheet')
+    property_list = ('title', 'description', 'int_index')
+    for model_line in model.contentValues(portal_type='Pay Sheet Model Line'):
+      model_line_resource = model_line.getResource()
+      line_found = False
+      for paysheet_line in paysheet.contentValues(portal_type='Pay Sheet Line'):
+        if paysheet_line.getResource() == model_line_resource:
+          line_found = True
+          for prop in property_list:
+            prop_from_model_line = getattr(model_line, prop, None)
+            # check a value is set on the model line
+            self.assertNotEquals(prop_from_model_line, None)
+            prop_from_paysheet_line = getattr(paysheet_line, prop, None)
+            # check the property is the same on model_line and paysheet_line
+            self.assertEquals(prop_from_model_line, prop_from_paysheet_line)
+          break
+
+      # check that for each model line, we foud a corresponding paysheet_line
+      self.assertEquals(line_found, True)
+
+  def stepSetProperiesOnModelLines(self, sequence=None, **kw):
+    model = sequence.get('model')
+    index = 0
+    for model_line in model.contentValues(portal_type='Pay Sheet Model Line'):
+      model_line.setTitle('Model line title %s' % index)
+      model_line.setDescription('Model line description %s' % index)
+      model_line.setIntIndex(index)
+      index += 1
 
 class TestPayroll(TestPayrollMixin):
 
@@ -3215,7 +3292,7 @@ class TestPayroll(TestPayrollMixin):
         model_2.getCell('salary_range/france/slice_a').getQuantityRangeMax())
 
   def test_complexModelInheritanceScheme(self):
-    '''check inheritance and effective model with a more complexe 
+    '''check inheritance and effective model with a more complex
     inheritance tree'''
     sequence_list = SequenceList()
     sequence_string = """
@@ -3226,6 +3303,60 @@ class TestPayroll(TestPayrollMixin):
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+  def test_updatePaysheetAfterModelModification(self):
+    '''generate a paysheet using a model, modify the model, and update the
+    paysheet. Check the paysheet values have been updated
+    '''
+    sequence_list = SequenceList()
+    sequence_string = '''
+               CreateUrssafService
+               CreateLabourService
+               CreateEmployer
+               CreateEmployee
+               CreatePriceCurrency
+               CreateModelWithSlices
+               ModelCreateUrssafModelLine
+               UrssafModelLineCreateMovements
+               CreateBasicPaysheet
+               PaysheetCreateLabourPaySheetLine
+               Tic
+  ''' + self.BUSINESS_PATH_CREATION_SEQUENCE_STRING +'''
+               CheckUpdateAggregatedAmountListReturn
+               PaysheetApplyTransformation
+               Tic
+               CheckPaysheetLineAreCreated
+               CheckPaysheetLineAmounts
+               CheckUpdateAggregatedAmountListReturnNothing
+               CheckPaysheetLineAmounts
+               ModelCreateUrssafModelLineWithComplexSlices
+               Tic
+               UrssafModelLineWithComplexSlicesCreateMovements
+               PaysheetApplyTransformation
+               Tic
+               CheckPaysheetLineAreCreatedUsingWith3Lines
+               CheckPaysheetLineAmountsAfterAddingAModelLine
+               CheckUpdateAggregatedAmountListReturnNothing
+               CheckPaysheetLineAmountsAfterAddingAModelLine
+    '''
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_propertiesAreSetOnPaysheetLines(self):
+    '''check porperties from model line (like description, int_index,
+    title, ...) are copied on the paysheet lines'''
+    sequence_list = SequenceList()
+    sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
+               SetProperiesOnModelLines
+               PaysheetApplyTransformation
+               Tic
+               CheckPaysheetLineAreCreated
+               CheckPaysheetLineAmounts
+               CheckPropertiesAreCopiedFromModelLineToPaySheetLine
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 
 import unittest
 def test_suite():
