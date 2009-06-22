@@ -28,13 +28,13 @@
 
 class Periodicity:
     """
-    A Periodicity allows to define an event wich happens periodically.
+    A Periodicity allows to define an event which happens periodically.
 
-    Here an explanation of wich kind of period we can define:
+    Here an explanation of which kind of period we can define:
     - Every 2 days:
       - set periodicity_day_frequency to 2
 
-    - Every monday and wednesday
+    - Every Monday and Wednesday
       - set periodicity_week_frequency to 1
       - set periodicity_week_day to ['monday','wednesday']
 
