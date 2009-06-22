@@ -1,0 +1,322 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html>\n
+<head><title>Test for Creating Reversal Transaction for an Accounting Transaction</title></head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="4">\n
+Test for Creating Reversal Transaction for an Accounting Transaction\n
+</td></tr>\n
+<!-- XXX we do not need init method here ! -->\n
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">\n
+<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>\n
+\n
+<!-- Setup {{{ -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/AccountingZuite_markChanged</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_module</td>\n
+  <td>Accounting</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- Add an accounting transaction and check the default view {{{ -->\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>Add Accounting Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_my_source_section</td>\n
+  <td>organisation_module/my_organisation</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_my_destination_section_title</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_my_resource</td>\n
+  <td>currency_module/euro</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_my_title</td>\n
+  <td>A Dummy Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_my_start_date_year</td>\n
+  <td>2005</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_my_start_date_month</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>subfield_field_my_start_date_day</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//span[@id=\'listbox_record_number\']</td>\n
+  <td>2 record(s)</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/select</td>\n
+  <td>label=2 - Fixed Assets</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[3]/select</td>\n
+  <td>label=3 - Stocks</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/input</td>\n
+  <td>20.0</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[5]/input</td>\n
+  <td>20.0</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'Base_edit:method\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertPortalStatusMessage</td>\n
+  <td>Data updated.</td>\n
+  <td></td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- Post the transaction to the GL {{{\n
+because the \'create reversal\' action is only available when simulation_state =\n
+delivered.\n
+-->\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>Post Transaction to General Ledger</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_callDialogMethod:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertPortalStatusMessage</td>\n
+  <td>Status changed.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Posted to General Ledger</td>\n
+  <td></td>\n
+</tr>\n
+<!-- next step to delivered step. -->\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>Definitively Close Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_callDialogMethod:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertPortalStatusMessage</td>\n
+  <td>Status changed.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Closed</td>\n
+  <td></td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+<!-- Create the reversal transaction and check values {{{ -->\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>select_action</td>\n
+  <td>Create Reversal Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>field_your_cancellation_amount</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_callDialogMethod:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertPortalStatusMessage</td>\n
+  <td>Reversal Transaction for * created.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_my_source_section</td>\n
+  <td>organisation_module/my_organisation</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_my_title</td>\n
+  <td>Reversal Transaction for A Dummy Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_my_destination_section_title</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>subfield_field_my_start_date_year</td>\n
+  <td>2005</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>subfield_field_my_start_date_month</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>subfield_field_my_start_date_day</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>field_my_resource</td>\n
+  <td>currency_module/euro</td>\n
+</tr>\n
+<tr>\n
+  <td>assertText</td>\n
+  <td>//span[@id=\'listbox_record_number\']</td>\n
+  <td>2 record(s)</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/select</td>\n
+  <td>account_module/fixed_assets</td>\n
+</tr>\n
+<tr>\n
+  <td>assertValue</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[3]/select</td>\n
+  <td>account_module/stocks</td>\n
+</tr>\n
+<tr>\n
+  <td>assertFloatValue</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/input</td>\n
+  <td>-20.0</td> \n
+</tr>\n
+<tr>\n
+  <td>assertFloatValue</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[5]/input</td>\n
+  <td>0.0</td> \n
+</tr>\n
+<tr>\n
+  <td>assertFloatValue</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[4]/input</td>\n
+  <td>0.0</td>\n
+</tr>\n
+<tr>\n
+  <td>assertFloatValue</td>\n
+  <td>//tr[@id=\'listbox_data_line_1\']/td[5]/input</td>\n
+  <td>-20.0</td>\n
+</tr>\n
+<!-- }}} -->\n
+\n
+</tbody></table>\n
+</body>\n
+</html> <!-- vim: syntax=html foldmethod=marker\n
+-->\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test_accounting_transaction_create_reversal_with_cancellation.html</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
