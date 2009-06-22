@@ -82,13 +82,25 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <global name="Length" module="BTrees.Length"/>
+      <tuple>
+        <tuple>
+          <string>BTrees.Length</string>
+          <string>Length</string>
+        </tuple>
+        <none/>
+      </tuple>
     </pickle>
     <pickle> <int>0</int> </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <global name="OOBTree" module="BTrees._OOBTree"/>
+      <tuple>
+        <tuple>
+          <string>BTrees.OOBTree</string>
+          <string>OOBTree</string>
+        </tuple>
+        <none/>
+      </tuple>
     </pickle>
     <pickle>
       <tuple>
@@ -105,7 +117,13 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <global name="OOBTree" module="BTrees._OOBTree"/>
+      <tuple>
+        <tuple>
+          <string>BTrees.OOBTree</string>
+          <string>OOBTree</string>
+        </tuple>
+        <none/>
+      </tuple>
     </pickle>
     <pickle>
       <none/>
@@ -114,14 +132,17 @@
   <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
       <tuple>
-        <global name="PersistentMapping" module="Persistence.mapping"/>
-        <tuple/>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>data</string> </key>
+            <key> <string>_container</string> </key>
             <value>
               <dictionary>
                 <item>
@@ -174,23 +195,19 @@
   <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
       <tuple>
-        <global name="PersistentMapping" module="Persistence.mapping"/>
-        <tuple/>
+        <tuple>
+          <string>Persistence</string>
+          <string>PersistentMapping</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>data</string> </key>
+            <key> <string>_container</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key> <int>0</int> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
-                    </value>
-                </item>
-              </dictionary>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
@@ -215,13 +232,13 @@
                 <item>
                     <key> <int>0</int> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <int>1</int> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -231,33 +248,6 @@
     </pickle>
   </record>
   <record id="9" aka="AAAAAAAAAAk=">
-    <pickle>
-      <tuple>
-        <global name="PersistentMapping" module="Persistence.mapping"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>16</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>17</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="10" aka="AAAAAAAAAAo=">
     <pickle>
       <tuple>
         <tuple>
@@ -283,7 +273,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="11" aka="AAAAAAAAAAs=">
+  <record id="10" aka="AAAAAAAAAAo=">
     <pickle>
       <tuple>
         <tuple>
