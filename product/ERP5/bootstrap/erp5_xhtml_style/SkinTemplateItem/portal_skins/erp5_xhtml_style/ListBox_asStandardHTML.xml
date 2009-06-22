@@ -101,11 +101,11 @@
                    tal:attributes="id string:${field_id}_title; href here/getListActionUrl"\n
                    tal:condition="python: here.field.get_value(\'list_action\')">\n
                   <tal:block i18n:translate="" \n
-                      i18n:domain="ui" tal:content="here/getTitle" tal:condition="here/getTitle"/>:\n
+                      i18n:domain="ui" tal:content="here/getTitle" />:\n
                 </a>\n
                 <tal:block tal:condition="python: not here.field.get_value(\'list_action\')">\n
-                  <tal:block i18n:translate="" \n
-                      i18n:domain="ui" tal:content="here/getTitle" tal:condition="here/getTitle"/>:\n
+                  <span class="listbox_title" i18n:translate="" \n
+                        i18n:domain="ui" tal:content="here/getTitle" />:\n
                 </tal:block>\n
                 <span id="listbox_record_number" class="listbox_record_number"\n
                   tal:attributes="id string:${field_id}_record_number"\n
