@@ -36,6 +36,7 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from zExceptions import BadRequest
 from Products.ERP5Type.Tool.ClassTool import _aq_reset
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
+from Products.ERP5Type.tests.utils import todo_erp5
 
 class TestWorklist(ERP5TypeTestCase):
 
@@ -358,6 +359,7 @@ class TestWorklist(ERP5TypeTestCase):
     finally:
       self.removeWorklists()
 
+  @todo_erp5
   def test_02_related_key(self, quiet=0, run=run_all_test):
     """
     Test related keys
