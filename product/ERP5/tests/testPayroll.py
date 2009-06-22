@@ -38,6 +38,29 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
   normal_resource_use_category_list = ['payroll/base_salary']
   invoicing_resource_use_category_list = ['payroll/tax']
 
+  BUSINESS_PATH_CREATION_SEQUENCE_STRING = """
+               CreateBusinessProcess
+               CreateBusinessPath
+               CreateUrssafRoubaixOrganisation
+               ModifyBusinessPathTradePhase
+               ModelSpecialiseBusinessProcess
+               Tic
+  """
+  COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING = """
+               CreateUrssafService
+               CreateLabourService
+               CreateEmployer
+               CreateEmployee
+               CreatePriceCurrency
+               CreateBasicModel
+               ModelCreateUrssafModelLine
+               UrssafModelLineCreateMovements
+               CreateBasicPaysheet
+               PaysheetCreateLabourPaySheetLine
+               Tic
+  """ + BUSINESS_PATH_CREATION_SEQUENCE_STRING
+
+
   def getTitle(self):
     return "Payroll"
 
@@ -152,7 +175,7 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
   def getBusinessTemplateList(self):
     """ """
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-            'erp5_invoicing', 'erp5_simplified_invoicing', 'erp5_mrp', 
+            'erp5_invoicing', 'erp5_simplified_invoicing', 'erp5_mrp',
             'erp5_bpm', 'erp5_payroll')
 
   def createService(self):
@@ -250,6 +273,11 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     slice_value.setQuantityRangeMax(max_value)
     slice_value.setQuantityRangeMin(min_value)
     return slice_value
+ 
+  def stepSetCurrencyOnModel(self, sequence=None, **kw):
+    model = sequence.get('model')
+    currency = sequence.get('price_currency')
+    model.setPriceCurrencyValue(currency)
 
   def stepCreateModelWithSlices(self, sequence=None, **kw):
     model = self.createModel()
@@ -469,7 +497,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                     price=20,
                     quantity=150,
                     resource_value=sequence.get('labour_service'),
-                    base_contribution_list=[ 'base_amount/base_salary'])
+                    base_contribution_list=['base_amount/base_salary',
+                                            'base_amount/gross_salary'])
     sequence.edit(labour_paysheet_line = paysheet_line)
 
   def stepPaysheetCreateBonusPaySheetLine(self, sequence=None, **kw):
@@ -1882,28 +1911,6 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
       index += 1
 
 class TestPayroll(TestPayrollMixin):
-
-  BUSINESS_PATH_CREATION_SEQUENCE_STRING = """
-               CreateBusinessProcess
-               CreateBusinessPath
-               CreateUrssafRoubaixOrganisation
-               ModifyBusinessPathTradePhase
-               ModelSpecialiseBusinessProcess
-               Tic
-  """
-  COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING = """
-               CreateUrssafService
-               CreateLabourService
-               CreateEmployer
-               CreateEmployee
-               CreatePriceCurrency
-               CreateBasicModel
-               ModelCreateUrssafModelLine
-               UrssafModelLineCreateMovements
-               CreateBasicPaysheet
-               PaysheetCreateLabourPaySheetLine
-               Tic
-  """ + BUSINESS_PATH_CREATION_SEQUENCE_STRING
 
   def test_modelGetCell(self):
     '''
