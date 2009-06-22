@@ -59,6 +59,12 @@ class TestSessionTool(ERP5TypeTestCase):
   def getTitle(self):
     return "Session Tool"
 
+  def getBusinessTemplateList(self):
+    """
+      Return the list of business templates.
+    """
+    return ('erp5_base',)
+
   def afterSetUp(self):
     # create a Memcached Plugin
     memcached_tool = self.getPortal().portal_memcached
