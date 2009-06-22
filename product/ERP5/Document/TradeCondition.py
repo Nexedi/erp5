@@ -54,7 +54,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       business together
     """
     edited_property_list = ['price', 'causality','resource','quantity',
-        'base_application_list', 'base_contribution_list']
+        'reference', 'base_application_list', 'base_contribution_list']
 
     meta_type = 'ERP5 Trade Condition'
     portal_type = 'Trade Condition'
@@ -85,7 +85,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       existing_movement_list = context.getMovementList()
       aggregated_amount_list = self.getAggregatedAmountList(context=context,
           movement_list=movement_list, **kw)
-      modified_resource_list = []
+      modified_reference_list = []
       normal_use_list = self.getPortalObject().portal_preferences\
               .getPreferredNormalResourceUseCategoryList()
       # check if the existing movements are in aggregated movements
@@ -106,16 +106,16 @@ class TradeCondition(Path, Transformation, XMLMatrix):
           update_kw = {}
           for p in self.edited_property_list:
             update_kw[p] = amount.getProperty(p)
-          if movement.getProperty('resource') == update_kw['resource'] and\
+          if movement.getProperty('reference') == update_kw['reference'] and\
               movement.getVariationCategoryList() == \
               amount.getVariationCategoryList():
             movement.edit(**update_kw)
-            modified_resource_list.append(update_kw['resource'])
+            modified_reference_list.append(update_kw['reference'])
             keep_movement = True
         if not keep_movement:
           movement_to_delete_list.append(movement)
       movement_to_add_list = [amount for amount in aggregated_amount_list if
-          amount.getResource() not in modified_resource_list]
+          amount.getReference() not in modified_reference_list]
       return {'movement_to_delete_list' : movement_to_delete_list,
               'movement_to_add_list': movement_to_add_list}
 

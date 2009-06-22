@@ -638,11 +638,6 @@ class TestBPMMixin(ERP5TypeTestCase):
       )
 
       self.assertEqual(
-        business_path_discounting,
-        trade_model_simulation_movement_discount_complex.getCausalityValue()
-      )
-
-      self.assertEqual(
         price_currency,
         trade_model_simulation_movement_discount_complex \
             .getPriceCurrencyValue()
@@ -676,11 +671,6 @@ class TestBPMMixin(ERP5TypeTestCase):
             .getParentValue().getTotalPrice() * self.default_discount_ratio) \
             * self.default_tax_ratio,
         trade_model_simulation_movement_tax_complex.getTotalPrice()
-      )
-
-      self.assertEqual(
-        business_path_taxing,
-        trade_model_simulation_movement_tax_complex.getCausalityValue()
       )
 
       self.assertEqual(
@@ -738,11 +728,6 @@ class TestBPMMixin(ERP5TypeTestCase):
       )
 
       self.assertEqual(
-        business_path_discounting,
-        trade_model_simulation_movement_discount_only.getCausalityValue()
-      )
-
-      self.assertEqual(
         price_currency,
         trade_model_simulation_movement_discount_only.getPriceCurrencyValue()
       )
@@ -770,11 +755,6 @@ class TestBPMMixin(ERP5TypeTestCase):
       self.assertEqual(trade_model_simulation_movement_discount_only. \
           getTotalPrice() * self.default_tax_ratio,
           trade_model_simulation_movement_tax_only.getTotalPrice())
-
-      self.assertEqual(
-        business_path_taxing,
-        trade_model_simulation_movement_tax_only.getCausalityValue()
-      )
 
       self.assertEqual(
         price_currency,
@@ -815,11 +795,6 @@ class TestBPMMixin(ERP5TypeTestCase):
         trade_model_simulation_movement.getParentValue().getParentValue() \
             .getTotalPrice() * self.default_tax_ratio,
         trade_model_simulation_movement.getTotalPrice()
-      )
-
-      self.assertEqual(
-        business_path,
-        trade_model_simulation_movement.getCausalityValue()
       )
 
       self.assertEqual(
@@ -1882,6 +1857,21 @@ class TestBPMTestCases(TestBPMMixin):
               ModifyAgainOrderLineTaxed
               ModifyAgainOrderLineDiscounted
               ModifyAgainOrderLineDiscountedTaxed
+              Tic
+    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_TradeModelRuleSimulationReexpandResourceChange(self):
+    """Tests tree of simulations from Trade Model Rule with reexpanding when resource changes on model"""
+    sequence_list = SequenceList()
+    sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING + """
+              CreateServiceTax
+              CreateServiceDiscount
+              OrderCreateTradeModelLine
+              ModifyTradeModelLineDiscount
+              OrderCreateTradeModelLine
+              ModifyTradeModelLineTax
               Tic
     """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING
     sequence_list.addSequenceString(sequence_string)

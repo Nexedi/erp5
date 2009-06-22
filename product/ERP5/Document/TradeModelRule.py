@@ -130,6 +130,7 @@ class TradeModelRule(TransformationRule):
       # rule specific
       movement_kw['price'] = amount.getProperty('price')
       movement_kw['resource'] = amount.getProperty('resource')
+      movement_kw['reference'] = amount.getProperty('reference')
       movement_kw['quantity'] = amount.getProperty('quantity')
       movement_kw['base_application_list'] = amount.getProperty(
           'base_application_list')
@@ -148,9 +149,13 @@ class TradeModelRule(TransformationRule):
       if not parent_movement.isFrozen():
         # XXX This will change, as soon as frozen will no longer be an expand
         # stopper
+
+        # for now reference is used to compare movements, but as soon as Trade
+        # Models will create more than one movement magic have to be added -
+        # reference on movement have to be properly composed
         add_list, modify_dict, \
           delete_list = self._getCompensatedMovementList(applied_rule,
-              matching_property_list= ('resource',), **kw)
+              matching_property_list = ('reference',), **kw)
         for movement_id in delete_list:
           applied_rule._delObject(movement_id)
 
