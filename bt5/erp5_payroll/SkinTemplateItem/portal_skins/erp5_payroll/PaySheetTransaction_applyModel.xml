@@ -83,6 +83,7 @@ for category in category_list:\n
 price_currency = model.getModelIneritanceEffectiveProperty(paysheet, \'price_currency\')\n
 if price_currency:\n
   new_category_dict[\'resource\'] = price_currency\n
+  new_category_dict[\'price_currency\'] = price_currency\n
 \n
 def copyPaymentCondition(paysheet, model):\n
   filter_dict = {\'portal_type\': \'Payment Condition\'}\n
