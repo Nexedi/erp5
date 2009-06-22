@@ -602,6 +602,15 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                                # (urssaf and sickness insurance. old age
                                # insurance does not match predicate)
 
+  def stepCheckPaysheetLineAreCreatedAfterUpdateWithLinesWithSameResource(self, sequence=None, **kw):
+    paysheet = sequence.get('paysheet')
+    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
+    self.assertEqual(len(paysheet_line_list), 3)
+    self.assertEqual(len(paysheet.getMovementList(portal_type=\
+        'Pay Sheet Cell')), 8) # 8 because labour line contain no movement and
+                               # because of the 3 slice and 2 tax_categories
+                               # + the first model line with 2 tax_categories
+
   def stepCheckPaysheetLineAmounts(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
     paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
@@ -720,7 +729,7 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
       else:
         self.fail("Unknown service for line %s" % paysheet_line.getTitle())
 
-  def stepCheckPaysheetLineAmountsAfterUpdateUsing2LinesWithSameResource(self,
+  def stepCheckPaysheetLineAmountsAfterUpdateWithLinesWithSameResource(self,
       sequence=None, **kw):
     paysheet = sequence.get('paysheet')
     paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
@@ -756,11 +765,11 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
           self.assertEquals(cell6.getPrice(), 0.6)
         else:
           cell1 = paysheet_line.getCell('tax_category/employee_share')
-          self.assertEquals(cell1.getQuantity(), -100)
-          self.assertEquals(cell1.getPrice(), 1)
+          self.assertEquals(cell1.getQuantity(), 3000)
+          self.assertEquals(cell1.getPrice(), 0.1)
           cell2 = paysheet_line.getCell('tax_category/employer_share')
-          self.assertEquals(cell2.getQuantity(), -200)
-          self.assertEquals(cell2.getPrice(), 1)
+          self.assertEquals(cell2.getQuantity(), 3000)
+          self.assertEquals(cell2.getPrice(), 0.5)
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       else:
@@ -2307,7 +2316,7 @@ class TestPayroll(TestPayrollMixin):
   def test_paySheetCalculationWithBonus(self):
     '''
       add one more line in the paysheet that will not be hour count and rate
-      (like the salary) but just a normal amount. Check applyTransformation 
+      (like the salary) but just a normal amount. Check applyTransformation
       method result. It should create new movements applied on the slary + the
       bonnus
     '''
@@ -3332,15 +3341,15 @@ class TestPayroll(TestPayrollMixin):
                CheckPaysheetLineAmounts
                CheckUpdateAggregatedAmountListReturnNothing
                CheckPaysheetLineAmounts
-               ModelCreateUrssafModelLineWithComplexSlices
+               ModelCreateUrssafModelLineWithSlices
                Tic
-               UrssafModelLineWithComplexSlicesCreateMovements
+               UrssafModelLineWithSlicesCreateMovements
                PaysheetApplyTransformation
                Tic
-               CheckPaysheetLineAreCreatedUsingWith3Lines
-               CheckPaysheetLineAmountsAfterUpdateUsing2LinesWithSameResource
+               CheckPaysheetLineAreCreatedAfterUpdateWithLinesWithSameResource
+               CheckPaysheetLineAmountsAfterUpdateWithLinesWithSameResource
                CheckUpdateAggregatedAmountListReturnNothing
-               CheckPaysheetLineAmountsAfterUpdateUsing2LinesWithSameResource
+               CheckPaysheetLineAmountsAfterUpdateWithLinesWithSameResource
     '''
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
