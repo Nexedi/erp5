@@ -181,6 +181,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
       common_params = {
         'resource': self.getResource(),
         'reference': self.getReference(),
+        'int_index': self.getIntIndex(),
         'base_application_list': base_application_list,
         'base_contribution_list': self.getBaseContributionList(),
         'start_date': context.getStartDate(),
