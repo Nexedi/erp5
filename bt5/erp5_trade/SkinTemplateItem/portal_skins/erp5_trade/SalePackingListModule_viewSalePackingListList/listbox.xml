@@ -125,6 +125,14 @@
                           <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
+                        <tuple>
+                          <string>translated_container_state_title</string>
+                          <string>Container State</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_causality_state_title</string>
+                          <string>Causality State</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -257,6 +265,14 @@
                           <string>translated_simulation_state_title</string>
                           <string>State</string>
                         </tuple>
+                        <tuple>
+                          <string>translated_container_state_title</string>
+                          <string>Container State</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_causality_state_title</string>
+                          <string>Causality State</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -314,6 +330,14 @@
                         <tuple>
                           <string>translated_simulation_state_title</string>
                           <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_container_state_title</string>
+                          <string>Container State</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_causality_state_title</string>
+                          <string>Causality State</string>
                         </tuple>
                       </list>
                     </value>
