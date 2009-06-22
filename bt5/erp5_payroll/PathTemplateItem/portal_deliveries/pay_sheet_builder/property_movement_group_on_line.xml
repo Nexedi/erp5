@@ -42,6 +42,7 @@
               <tuple>
                 <string>description</string>
                 <string>title</string>
+                <string>reference</string>
                 <string>int_index</string>
                 <string>base_contribution_list</string>
                 <string>base_application_list</string>
