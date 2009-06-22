@@ -29,6 +29,7 @@
 
 import unittest
 from Products.ERP5.tests.testWorklist import TestWorklist
+from Products.ERP5Type.tests.utils import todo_erp5
 
 class TestSQLCachedWorklist(TestWorklist):
   def getBusinessTemplateList(self):
@@ -40,6 +41,8 @@ class TestSQLCachedWorklist(TestWorklist):
   def clearCache(self):
     TestWorklist.clearCache(self)
     self.portal.portal_workflow.refreshWorklistCache()
+
+  test_02_related_key = todo_erp5(TestWorklist.test_02_related_key)
 
 def test_suite():
   suite = unittest.TestSuite()
