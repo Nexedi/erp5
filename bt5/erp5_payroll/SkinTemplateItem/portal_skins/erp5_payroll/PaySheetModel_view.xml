@@ -88,7 +88,7 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_create_paysheet_line</string>
+                        <string>listbox_create_line_</string>
                         <string>listbox_int_index</string>
                         <string>listbox_float_index</string>
                       </list>
@@ -105,6 +105,7 @@
                         <string>my_price_currency</string>
                         <string>my_specialise_title_list</string>
                         <string>my_default_calculation_script_id</string>
+                        <string>listbox_create_line</string>
                       </list>
                     </value>
                 </item>
