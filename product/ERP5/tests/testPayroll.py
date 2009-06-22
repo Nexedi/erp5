@@ -719,7 +719,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
       else:
         self.fail("Unknown service for line %s" % paysheet_line.getTitle())
 
-  def stepCheckPaysheetLineAmountsAfterAddingAModelLine(self, sequence=None, **kw):
+  def stepCheckPaysheetLineAmountsAfterUpdateUsing2LinesWithSameResource(self,
+      sequence=None, **kw):
     paysheet = sequence.get('paysheet')
     paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
     for paysheet_line in paysheet_line_list:
@@ -3305,8 +3306,9 @@ class TestPayroll(TestPayrollMixin):
     sequence_list.play(self)
 
   def test_updatePaysheetAfterModelModification(self):
-    '''generate a paysheet using a model, modify the model, and update the
-    paysheet. Check the paysheet values have been updated
+    '''generate a paysheet using a model, modify the model by adding a new
+    model line with the same resource as the first one and update the
+    paysheet. Check the paysheet values have been updated (new line created)
     '''
     sequence_list = SequenceList()
     sequence_string = '''
@@ -3335,9 +3337,9 @@ class TestPayroll(TestPayrollMixin):
                PaysheetApplyTransformation
                Tic
                CheckPaysheetLineAreCreatedUsingWith3Lines
-               CheckPaysheetLineAmountsAfterAddingAModelLine
+               CheckPaysheetLineAmountsAfterUpdateUsing2LinesWithSameResource
                CheckUpdateAggregatedAmountListReturnNothing
-               CheckPaysheetLineAmountsAfterAddingAModelLine
+               CheckPaysheetLineAmountsAfterUpdateUsing2LinesWithSameResource
     '''
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
