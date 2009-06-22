@@ -1470,10 +1470,13 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
         else:
           workflow_name = workflow
         if workflow[0] != '-' and \
-            workflow_name not in chain_dict['chain_%s' % portal_type]:
+            workflow_name not in chain_dict['chain_%s' % portal_type].split(', '):
           if not self.is_bt_for_diff:
-            raise NotFound, 'workflow %s not found in chain for portal_type %s'\
-                % (workflow, portal_type)
+            # here, we use 'LOG' instead of 'raise', because it can
+            # happen when a workflow is removed from the chain by
+            # another business template.
+            LOG('BusinessTemplate', WARNING, 'workflow %s not found in chain for portal_type %s'\
+                % (workflow, portal_type))
         if self._objects.has_key(portal_type):
           # other workflow id already defined for this portal type
           self._objects[portal_type].append(workflow)
