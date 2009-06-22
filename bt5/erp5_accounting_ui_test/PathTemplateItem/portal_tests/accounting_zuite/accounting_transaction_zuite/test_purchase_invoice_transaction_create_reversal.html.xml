@@ -222,6 +222,11 @@ delivered.\n
   <td>Create Reversal Transaction</td>\n
 </tr>\n
 <tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_callDialogMethod:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>assertPortalStatusMessage</td>\n
   <td>Reversal Transaction for * created.</td>\n
   <td></td>\n
