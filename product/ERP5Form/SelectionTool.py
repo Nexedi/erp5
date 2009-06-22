@@ -149,7 +149,10 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
           storage = 'selection_data'
         elif storage == 'Memcached Tool':
           memcached_plugin_list = self.portal_memcached.contentValues(portal_type='Memcached Plugin', sort_on='int_index')
-          storage = memcached_plugin_list[0].getRelativeUrl()
+          if len(memcached_plugin_list):
+            storage = memcached_plugin_list[0].getRelativeUrl()
+          else:
+            storage = 'selection_data'
       return storage
 
     def isMemcachedUsed(self):
