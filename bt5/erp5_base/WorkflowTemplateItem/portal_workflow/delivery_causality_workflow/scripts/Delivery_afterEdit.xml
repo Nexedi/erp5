@@ -54,7 +54,8 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>delivery = state_change[\'object\']\n
-delivery.activate().updateCausalityState()\n
+activate_kw = state_change[\'kwargs\'].get(\'activate_kw\') or {}\n
+delivery.activate(**activate_kw).updateCausalityState()\n
 </string> </value>
         </item>
         <item>
@@ -65,7 +66,7 @@ delivery.activate().updateCausalityState()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change, **kw</string> </value>
+            <value> <string>state_change</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -100,10 +101,11 @@ delivery.activate().updateCausalityState()\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>kw</string>
                             <string>_getitem_</string>
                             <string>delivery</string>
                             <string>_getattr_</string>
+                            <string>activate_kw</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
