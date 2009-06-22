@@ -42,6 +42,7 @@
               <tuple>
                 <string>resource</string>
                 <string>aggregate</string>
+                <string>quantity_unit</string>
                 <string>base_contribution</string>
                 <string>source_function</string>
                 <string>destination_function</string>

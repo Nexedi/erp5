@@ -1,2 +1,5 @@
+2009-06-22 tatuya
+set quantity unit on invoice lines
+
 2009-06-19 tatuya
  * initial creation so that it enables to create invoices independently
