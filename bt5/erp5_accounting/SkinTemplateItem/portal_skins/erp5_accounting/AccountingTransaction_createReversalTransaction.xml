@@ -100,7 +100,8 @@ if context.getProperty(\'payment_mode\'):\n
 \n
 line_list = context.AccountingTransaction_getAccountingTransactionLineList(\n
                 portal_type=context.getPortalAccountingMovementTypeList())\n
-line_list.reverse()\n
+if not cancellation_amount:\n
+  line_list.reverse()\n
 \n
 # guess portal_type to create lines\n
 if line_list:\n
@@ -118,7 +119,9 @@ for line in line_list:\n
   if line.getDestinationTotalAssetPrice():\n
     new_line.setDestinationTotalAssetPrice(\n
                                   - line.getDestinationTotalAssetPrice() )\n
-  \n
+\n
+  new_line.setCancellationAmount(cancellation_amount)\n
+\n
   # copy some values if they are defined explicitly on line\n
   for prop in [ \'source_section\', \'destination_section\',\n
                 \'source_payment\', \'destination_payment\', \'resource\' ]:\n
@@ -139,7 +142,7 @@ return context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" %\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>cancellation_amount=False</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -159,12 +162,13 @@ return context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" %\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>cancellation_amount</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>Base_translateString</string>
@@ -192,7 +196,9 @@ return context.REQUEST.RESPONSE.redirect("%s/view?portal_status_message=%s" %\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
