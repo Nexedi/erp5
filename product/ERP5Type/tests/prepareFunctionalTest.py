@@ -46,7 +46,9 @@ class TestZelenium(ERP5TypeTestCase):
         """
         return ('erp5_base', 'erp5_ui_test_core', 'erp5_ui_test', 'erp5_forge',
                 'erp5_trade', 'erp5_pdm', 'erp5_pdf_style', 'erp5_ooo_import',
-                'erp5_accounting', 'erp5_invoicing', 'erp5_accounting_ui_test',
+                'erp5_accounting', 'erp5_invoicing',
+                'erp5_simplified_invoicing',
+                'erp5_accounting_ui_test',
                 'erp5_pdm_ui_test',
                 'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
                 'erp5_web', 'erp5_dms', 'erp5_dms_ui_test',
