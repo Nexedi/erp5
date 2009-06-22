@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+  <tal:block tal:define="form_action string:logged_in;\n
+             global form_id string:login_form;\n
+             js_list python: [\'%s/login_form.js\' % (here.portal_url(), ), \'%s/erp5.js\' % (here.portal_url(), )];\n
+             root_site_url here/ERP5Site_getTioLiveSiteRootUrl">\n
+    <tal:block metal:use-macro="here/main_template/macros/master">\n
+      <tal:block metal:fill-slot="main">\n
+        <div class="content login">\n
+          <tal:block tal:condition="python: request.get(\'came_from\', None) is None">\n
+            <h1 i18n:translate="" i18n:domain="ui">Log in</h1>\n
+          </tal:block>\n
+          <tal:block tal:condition="python: request.get(\'came_from\', None) is not None">\n
+            <h1 i18n:translate="" i18n:domain="ui">You do not have enough permissions to access this page.</h1>\n
+            <p i18n:translate="" i18n:domain="ui">You can login with another user name or\n
+              <span i18n:name="go_back"><a href="javascript:history.back();" i18n:translate="">go back</a></span>.\n
+            </p>\n
+          </tal:block>\n
+          <input tal:condition="exists: request/came_from"\n
+                 type="hidden" name="came_from"\n
+                 tal:attributes="value request/came_from" />\n
+          <fieldset>\n
+            <div class="field">\n
+              <label for="name" class="required" i18n:translate="" i18n:domain="ui">Name</label>\n
+              <div class="input"><input type="text" name="__ac_name" id="name" tal:attributes="value python: request.get(\'__ac_name\') or \'\'" /></div>\n
+              <p class="clear"></p>\n
+            </div>\n
+            <div class="field">\n
+              <label for="password" i18n:translate="" i18n:domain="ui">Password</label>\n
+              <div class="input"><input type="password" name="__ac_password" id="password" /></div>\n
+              <p class="clear"></p>\n
+            </div>\n
+            <div class="field">\n
+              <label for="cb_remember" i18n:translate="" i18n:domain="ui">Remember my name</label>\n
+              <div class="input"><input type="checkbox" name="__ac_persistent" value="1" checked="checked" id="cb_remember" /></div>\n
+              <p class="clear"></p>\n
+            </div>\n
+            <div class="field">\n
+              <label>&nbsp;</label>\n
+              <div class="input">\n
+                <input type="submit" value="Login" class="submit"\n
+                       tal:attributes="name python: \'%s:method\' % (form_action, )"\n
+                       i18n:attributes="value" i18n:domain="ui" />\n
+              </div>\n
+              <p class="clear"></p>\n
+            </div>\n
+            <div class="field">\n
+              <label>&nbsp;</label>\n
+              <div class="input">\n
+                <a tal:attributes="href string:${root_site_url}/WebSite_viewPasswordResetDialog"\n
+                   i18n:translate="" i18n:domain="ui">I forgot my password!</a>\n
+              </div>\n
+            </div>\n
+          </fieldset>\n
+          <script type="text/javascript">setFocus()</script>\n
+          <p i18n:translate="" i18n:domain="ui">Having trouble logging in? Make sure to enable cookies in your web browser.</p>\n
+          <p i18n:translate="" i18n:domain="ui">Do not forget to logout or exit your browser when you are done.</p>\n
+          <p i18n:translate="" i18n:domain="ui">Setting the \'Remember my name\' option will set a cookie with your username, so that when you login next time, your user name will already be filled in for you.</p>\n
+        </div>\n
+      </tal:block>\n
+    </tal:block>\n
+  </tal:block>\n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>login_form</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
