@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>""" Create a reversal transaction from current tansaction. """\n
+            <value> <string>""" Create a reversal transaction from current transaction. """\n
 \n
 Base_translateString = context.Base_translateString\n
 accounting_module = context.getPortalObject().accounting_module\n

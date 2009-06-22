@@ -18,6 +18,7 @@ Accounting Transaction Module | account_statement_report
 Accounting Transaction Module | balance_sheet_report
 Accounting Transaction Module | bank_accounts_report
 Accounting Transaction Module | create_related_payments
+Accounting Transaction Module | create_reversal
 Accounting Transaction Module | general_ledger_export
 Accounting Transaction Module | general_ledger_report
 Accounting Transaction Module | grouping_reference_fast_input
