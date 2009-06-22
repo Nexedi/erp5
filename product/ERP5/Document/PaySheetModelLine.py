@@ -61,6 +61,7 @@ class PaySheetModelLine(TradeModelLine):
                     , PropertySheet.Price
                     , PropertySheet.VariationRange
                     , PropertySheet.MappedValue
+                    , PropertySheet.TradeModelLine
                     , PropertySheet.PaySheetModelLine
                     , PropertySheet.Predicate
                     , PropertySheet.Reference
