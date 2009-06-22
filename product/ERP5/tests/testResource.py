@@ -687,16 +687,11 @@ class TestResource(ERP5TypeTestCase):
     # Create product
     product_module = self.portal.getDefaultModule(self.product_portal_type)
     supply_module = self.portal.getDefaultModule(self.sale_supply_portal_type)
-    currency_module = self.portal.getDefaultModule("Currency")
-    currency = currency_module.newContent(
-                     portal_type="Currency",
-                     title='A great currency')
     # Create generic supply
     self.logMessage("Creating generic fake supply ...", tab=1)
     generic_supply = supply_module.newContent(
                      portal_type=self.sale_supply_portal_type,
-                     title='FakeGenericSupply',
-                     price_currency_value=currency)
+                     title='FakeGenericSupply',)
     # Create empty supply line
     supply_line = generic_supply.newContent(
           portal_type=self.sale_supply_line_portal_type)
@@ -718,7 +713,6 @@ class TestResource(ERP5TypeTestCase):
         supply = supply_module.newContent(
                                      portal_type=self.sale_supply_portal_type,
                                      title='FakeSupply%s' % i,
-                                     price_currency_value=currency,
                                      destination_section_value=node)
         self.logMessage("Creating fake supply line %s..." % i, tab=1)
         supply_line = supply.newContent(
@@ -769,16 +763,11 @@ class TestResource(ERP5TypeTestCase):
     # Create product
     product_module = self.portal.getDefaultModule(self.product_portal_type)
     supply_module = self.portal.getDefaultModule(self.sale_supply_portal_type)
-    currency_module = self.portal.getDefaultModule("Currency")
-    currency = currency_module.newContent(
-                     portal_type="Currency",
-                     title='A great currency')
     # Create generic supply
     self.logMessage("Creating generic fake supply ...", tab=1)
     generic_supply = supply_module.newContent(
                      portal_type=self.sale_supply_portal_type,
-                     title='FakeGenericSupply',
-                     price_currency_value=currency)
+                     title='FakeGenericSupply',)
     # Create empty supply line
     supply_line = generic_supply.newContent(
           portal_type=self.sale_supply_line_portal_type)
@@ -802,7 +791,6 @@ class TestResource(ERP5TypeTestCase):
         supply = supply_module.newContent(
                                      portal_type=self.sale_supply_portal_type,
                                      title='FakeSupply%s' % i,
-                                     price_currency_value=currency,
                                      destination_section_value=node)
 
         if 0:
@@ -891,10 +879,7 @@ class TestResource(ERP5TypeTestCase):
     currency_module = self.getCurrencyModule()
     sale_order_module = self.portal.getDefaultModule("Sale Order")
     purchase_order_module = self.portal.getDefaultModule("Purchase Order")
-    # Create currency and product
-    currency = currency_module.newContent(
-                     portal_type="Currency",
-                     title='A great currency')
+    # Create product
     product = product_module.newContent(
         portal_type=self.product_portal_type,
         title="yet another product")
@@ -987,6 +972,40 @@ class TestResource(ERP5TypeTestCase):
     self.assertEquals(1, sale_order_line.getPrice())
     self.assertEquals(5000, sale_order_line.getTotalPrice())
 
+  def testGetPriceWithPriceCurrency(self):
+    currency_module = self.portal.getDefaultModule("Currency")
+    currency = currency_module.newContent(
+                     portal_type="Currency",
+                     title='A great currency')
+    other_currency = currency_module.newContent(
+                     portal_type="Currency",
+                     title='Another currency')
+
+    resource = self.portal.getDefaultModule(self.product_portal_type)\
+                .newContent(portal_type=self.product_portal_type)
+    resource.setDefaultQuantityUnitValue(self.quantity_unit_kilo)
+    supply_line = resource.newContent(
+                    portal_type=self.sale_supply_line_portal_type)
+    supply_line.setBasePrice(1000)
+    supply_line.setPriceCurrencyValue(currency)
+    transaction.commit()
+    self.tic()
+    sale_order = self.portal.getDefaultModule("Sale Order").newContent(
+                              portal_type='Sale Order',
+                              price_currency_value=other_currency)
+    sale_order_line = sale_order.newContent(
+                          resource_value=resource,
+                          quantity=5)
+    # order and supply lines uses different currency, price does not apply
+    self.assertEquals(None, sale_order_line.getPrice())
+    
+    # set the same currency
+    sale_order.setPriceCurrencyValue(currency)
+
+    # price applies
+    self.assertEquals(1000, sale_order_line.getPrice())
+    self.assertEquals(5000, sale_order_line.getTotalPrice())
+    
   def testQuantityPrecision(self):
     """test how to define quantity precision on resources.
     """
