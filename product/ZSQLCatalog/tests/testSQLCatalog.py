@@ -277,7 +277,9 @@ class TestSQLCatalog(unittest.TestCase):
                    ReferenceQuery(operator='<', date=DateTime('2008/02/02 10:10:11 UTC'))
                  , operator='and'), operator='and'),
                  {column: '2008/02/02 10:10:10 UTC'})
-
+    self.catalog(ReferenceQuery(operator='and', date=None),
+                 {column: None})
+        
   def test_DateTimeKey(self):
     self._testDateTimeKey('date')
 
