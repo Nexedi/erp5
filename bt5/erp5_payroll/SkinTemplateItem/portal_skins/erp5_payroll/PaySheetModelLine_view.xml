@@ -101,14 +101,13 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_float_index</string>
-                        <string>my_int_index</string>
                         <string>my_reference</string>
                         <string>my_resource_title</string>
                         <string>my_calculation_script_id</string>
                         <string>my_price</string>
                         <string>my_quantity</string>
                         <string>my_trade_phase</string>
+                        <string>my_int_index</string>
                       </list>
                     </value>
                 </item>

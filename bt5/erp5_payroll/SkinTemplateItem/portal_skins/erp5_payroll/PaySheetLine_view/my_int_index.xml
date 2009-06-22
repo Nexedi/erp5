@@ -13,8 +13,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>css_class</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -93,7 +93,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>PaySheet Order</string> </value>
+                    <value> <string>Payslip Order</string> </value>
                 </item>
               </dictionary>
             </value>

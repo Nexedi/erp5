@@ -13,14 +13,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>description</string>
+                <string>display_width</string>
+                <string>editable</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_float_index</string> </value>
+            <value> <string>my_reference</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -76,12 +77,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>Pay Sheet Lines will be displayed in this order when printing the Pay Sheet.</string> </value>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_integer_value</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -93,7 +98,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>PaySheet Order</string> </value>
+                    <value> <string>Reference</string> </value>
                 </item>
               </dictionary>
             </value>
