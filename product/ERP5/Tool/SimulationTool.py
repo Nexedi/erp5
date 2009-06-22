@@ -216,7 +216,16 @@ class SimulationTool(BaseTool):
                                  **{'%s.simulation_state' % (table, ):
                                     simulation_state})
       elif input_simulation_state is not None:
-        input_quantity_query = Query(**{'%s.quantity' % (table, ): '>0'})
+        input_quantity_query = ComplexQuery(
+                        ComplexQuery(
+                            Query(**{'%s.quantity' % table: '>0'}),
+                            Query(**{'%s.is_cancellation' % table: 0}),
+                            operator='AND'),
+                        ComplexQuery(
+                            Query(**{'%s.quantity' % table: '<0'}),
+                            Query(**{'%s.is_cancellation' % table: 1}),
+                            operator='AND'),
+                        operator='OR')
         input_simulation_query = Query(operator='IN',
                                        **{'%s.simulation_state' % (table, ):
                                           input_simulation_state})
@@ -224,7 +233,16 @@ class SimulationTool(BaseTool):
                                         input_simulation_query,
                                         operator='AND')
         if output_simulation_state is not None:
-          output_quantity_query = Query(**{'%s.quantity' % (table, ): '<0'})
+          output_quantity_query = ComplexQuery(
+                        ComplexQuery(
+                            Query(**{'%s.quantity' % table: '<0'}),
+                            Query(**{'%s.is_cancellation' % table: 0}),
+                            operator='AND'),
+                        ComplexQuery(
+                            Query(**{'%s.quantity' % table: '>0'}),
+                            Query(**{'%s.is_cancellation' % table: 1}),
+                            operator='AND'),
+                        operator='OR')
           output_simulation_query = Query(operator='IN',
                                           **{'%s.simulation_state' % (table, ):
                                              output_simulation_state})
@@ -344,11 +362,29 @@ class SimulationTool(BaseTool):
          OR %(query_table)s.payment_uid IS NOT NULL \
            " % {'query_table': query_table}
         if omit_input:
-          quantity_query = Query(**{'%s.quantity' % query_table: '<0'})
+          quantity_query = ComplexQuery(
+                        ComplexQuery(
+                            Query(**{'%s.quantity' % query_table: '<0'}),
+                            Query(**{'%s.is_cancellation' % query_table: 0}),
+                            operator='AND'),
+                        ComplexQuery(
+                            Query(**{'%s.quantity' % query_table: '>0'}),
+                            Query(**{'%s.is_cancellation' % query_table: 1}),
+                            operator='AND'),
+                        operator='OR')
           omit_query = ComplexQuery(quantity_query, condition_expression,
                                     operator='AND')
         if omit_output:
-          quantity_query = Query(**{'%s.quantity' % query_table: '>0'})
+          quantity_query = ComplexQuery(
+                        ComplexQuery(
+                            Query(**{'%s.quantity' % query_table: '>0'}),
+                            Query(**{'%s.is_cancellation' % query_table: 0}),
+                            operator='AND'),
+                        ComplexQuery(
+                            Query(**{'%s.quantity' % query_table: '<0'}),
+                            Query(**{'%s.is_cancellation' % query_table: 1}),
+                            operator='AND'),
+                        operator='OR')
           if omit_query is None:
             omit_query = ComplexQuery(quantity_query, condition_expression,
                                       operator='AND')
