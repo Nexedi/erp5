@@ -59,7 +59,7 @@ class TestBudget(ERP5TypeTestCase):
       Return the list of required business templates.
     """
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-            'erp5_invoicing', 'erp5_budget')
+            'erp5_invoicing', 'erp5_simplified_invoicing', 'erp5_budget')
 
   def login(self, quiet=QUIET, run=RUN_ALL_TEST):
     """

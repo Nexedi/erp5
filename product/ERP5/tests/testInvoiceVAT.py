@@ -142,7 +142,7 @@ class TestInvoiceVAT(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     """ """
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-            'erp5_invoicing')
+            'erp5_invoicing', 'erp5_simplified_invoicing')
   
   def _makeAccount(self, **kw):
     """Creates an Account."""

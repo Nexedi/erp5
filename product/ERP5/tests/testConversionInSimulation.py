@@ -181,7 +181,8 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
 	     'erp5_trade',
             'erp5_accounting',
 	    'erp5_accounting_ui_test',
-	    'erp5_invoicing'
+	    'erp5_invoicing',
+            'erp5_simplified_invoicing'
             )
   def createInvoiceTransactionRule(self, resource=None):
     return UnrestrictedMethod(

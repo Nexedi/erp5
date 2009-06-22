@@ -152,7 +152,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
   def getBusinessTemplateList(self):
     """ """
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-            'erp5_invoicing', 'erp5_mrp', 'erp5_bpm', 'erp5_payroll')
+            'erp5_invoicing', 'erp5_simplified_invoicing', 'erp5_mrp', 
+            'erp5_bpm', 'erp5_payroll')
 
   def createService(self):
     module = self.portal.getDefaultModule(portal_type='Service')

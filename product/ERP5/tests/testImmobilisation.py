@@ -82,6 +82,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
             "erp5_pdm",# Needed by accounting
             "erp5_accounting",
             "erp5_invoicing",
+            "erp5_simplified_invoicing",
             "erp5_apparel", # In order to use items
             "erp5_immobilisation",
             )
