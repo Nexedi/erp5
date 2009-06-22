@@ -1146,8 +1146,9 @@ class TestCMFCategory(ERP5TypeTestCase):
       self.assertRaises(AttributeError, getattr, obj, 'getRegion')
       self.assertRaises(AttributeError, getattr, obj, 'getRegionValueList')
       self.assertRaises(AttributeError, getattr, obj, 'getRegionList')
-      #Tester
-      self.assertRaises(AttributeError, getattr, obj, 'hasRegion')
+      # Tester are always present, because they are genereted on the BaseClass
+      # during startup
+      # self.assertRaises(AttributeError, getattr, obj, 'hasRegion')
     finally:
       #add Base Category
       self.portal.portal_categories.newContent(id='region', portal_type='Base Category')
@@ -1162,8 +1163,6 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertTrue(getattr(obj, 'getRegion') is not None)
     self.assertTrue(getattr(obj, 'getRegionValueList') is not None)
     self.assertTrue(getattr(obj, 'getRegionList') is not None)
-    #Tester
-    self.assertTrue(getattr(obj, 'hasRegion') is not None)
 
 def test_suite():
   suite = unittest.TestSuite()
