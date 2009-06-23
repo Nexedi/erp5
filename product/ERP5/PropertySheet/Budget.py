@@ -31,5 +31,4 @@ class Budget:
   Budget properties
   """
 
-  _categories = ( 'budget_type', 'budget_line_variation',
-                  'budget_cell_variation', )
+  _categories = ( 'budget_type', )
