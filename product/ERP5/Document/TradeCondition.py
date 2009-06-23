@@ -53,7 +53,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       which should be applied (and used in the orders) when two companies make
       business together
     """
-    edited_property_list = ['price', 'causality','resource','quantity',
+    edited_property_list = ['price', 'resource', 'quantity',
         'reference', 'base_application_list', 'base_contribution_list']
 
     meta_type = 'ERP5 Trade Condition'
