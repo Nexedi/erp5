@@ -179,7 +179,6 @@ from Products.PythonScripts.standard import html_quote\n
 from Products.CMFCore.utils import getToolByName\n
 \n
 \n
-\n
 #############\n
 # This connector is based on CPS connector from the FCKeditor/zope integration product\n
 #############\n
@@ -586,6 +585,7 @@ def UploadFile(resourceType, currentFolder, data, title) :\n
                         )+1:]\n
 \n
         idObj=fckCreateValidZopeId(utf8Encode(titre_data))\n
+        context.log(\'xxx\', idObj)\n
 \n
 \n
 \n
