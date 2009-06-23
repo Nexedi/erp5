@@ -55,6 +55,9 @@ class ISearchKeyCatalog(Interface):
           performed on them.
       ignore_empty_string (boolean)
         If True, values from kw which are empty will be skipped.
+        This parameter should ultimately disapear *and* be disabled by
+        default, as it is bad to ignore parameters based on their value if
+        that value has a meaning in SQL.
       operator (string)
         Used to explicit the logical relation between kw entries.
         It must be a valid ComplexQuery logical operator ('and', 'or').
