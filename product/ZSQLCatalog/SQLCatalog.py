@@ -2023,7 +2023,6 @@ class Catalog(Folder,
         value = dict(value)
       if ignore_empty_string and (
           value == ''
-          or value is None
           or (isinstance(value, (list, tuple)) and len(value) == 0)
           or (isinstance(value, dict) and (
             'query' not in value
