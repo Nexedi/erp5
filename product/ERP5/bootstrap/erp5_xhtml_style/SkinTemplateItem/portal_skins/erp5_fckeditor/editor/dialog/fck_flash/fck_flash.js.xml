@@ -1,0 +1,347 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749347.99</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fck_flash.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Scripts related to the Flash dialog window (see fck_flash.html).\r\n
+ */\r\n
+\r\n
+var dialog\t\t= window.parent ;\r\n
+var oEditor\t\t= dialog.InnerDialogLoaded() ;\r\n
+var FCK\t\t\t= oEditor.FCK ;\r\n
+var FCKLang\t\t= oEditor.FCKLang ;\r\n
+var FCKConfig\t= oEditor.FCKConfig ;\r\n
+var FCKTools\t= oEditor.FCKTools ;\r\n
+\r\n
+//#### Dialog Tabs\r\n
+\r\n
+// Set the dialog tabs.\r\n
+dialog.AddTab( \'Info\', oEditor.FCKLang.DlgInfoTab ) ;\r\n
+\r\n
+if ( FCKConfig.FlashUpload )\r\n
+\tdialog.AddTab( \'Upload\', FCKLang.DlgLnkUpload ) ;\r\n
+\r\n
+if ( !FCKConfig.FlashDlgHideAdvanced )\r\n
+\tdialog.AddTab( \'Advanced\', oEditor.FCKLang.DlgAdvancedTag ) ;\r\n
+\r\n
+// Function called when a dialog tag is selected.\r\n
+function OnDialogTabChange( tabCode )\r\n
+{\r\n
+\tShowE(\'divInfo\'\t\t, ( tabCode == \'Info\' ) ) ;\r\n
+\tShowE(\'divUpload\'\t, ( tabCode == \'Upload\' ) ) ;\r\n
+\tShowE(\'divAdvanced\'\t, ( tabCode == \'Advanced\' ) ) ;\r\n
+}\r\n
+\r\n
+// Get the selected flash embed (if available).\r\n
+var oFakeImage = dialog.Selection.GetSelectedElement() ;\r\n
+var oEmbed ;\r\n
+\r\n
+if ( oFakeImage )\r\n
+{\r\n
+\tif ( oFakeImage.tagName == \'IMG\' && oFakeImage.getAttribute(\'_fckflash\') )\r\n
+\t\toEmbed = FCK.GetRealElement( oFakeImage ) ;\r\n
+\telse\r\n
+\t\toFakeImage = null ;\r\n
+}\r\n
+\r\n
+window.onload = function()\r\n
+{\r\n
+\t// Translate the dialog box texts.\r\n
+\toEditor.FCKLanguageManager.TranslatePage(document) ;\r\n
+\r\n
+\t// Load the selected element information (if any).\r\n
+\tLoadSelection() ;\r\n
+\r\n
+\t// Show/Hide the "Browse Server" button.\r\n
+\tGetE(\'tdBrowse\').style.display = FCKConfig.FlashBrowser\t? \'\' : \'none\' ;\r\n
+\r\n
+\t// Set the actual uploader URL.\r\n
+\tif ( FCKConfig.FlashUpload )\r\n
+\t\tGetE(\'frmUpload\').action = FCKConfig.FlashUploadURL ;\r\n
+\r\n
+\tdialog.SetAutoSize( true ) ;\r\n
+\r\n
+\t// Activate the "OK" button.\r\n
+\tdialog.SetOkButton( true ) ;\r\n
+\r\n
+\tSelectField( \'txtUrl\' ) ;\r\n
+}\r\n
+\r\n
+function LoadSelection()\r\n
+{\r\n
+\tif ( ! oEmbed ) return ;\r\n
+\r\n
+\tGetE(\'txtUrl\').value    = GetAttribute( oEmbed, \'src\', \'\' ) ;\r\n
+\tGetE(\'txtWidth\').value  = GetAttribute( oEmbed, \'width\', \'\' ) ;\r\n
+\tGetE(\'txtHeight\').value = GetAttribute( oEmbed, \'height\', \'\' ) ;\r\n
+\r\n
+\t// Get Advances Attributes\r\n
+\tGetE(\'txtAttId\').value\t\t= oEmbed.id ;\r\n
+\tGetE(\'chkAutoPlay\').checked\t= GetAttribute( oEmbed, \'play\', \'true\' ) == \'true\' ;\r\n
+\tGetE(\'chkLoop\').checked\t\t= GetAttribute( oEmbed, \'loop\', \'true\' ) == \'true\' ;\r\n
+\tGetE(\'chkMenu\').checked\t\t= GetAttribute( oEmbed, \'menu\', \'true\' ) == \'true\' ;\r\n
+\tGetE(\'cmbScale\').value\t\t= GetAttribute( oEmbed, \'scale\', \'\' ).toLowerCase() ;\r\n
+\r\n
+\tGetE(\'txtAttTitle\').value\t\t= oEmbed.title ;\r\n
+\r\n
+\tif ( oEditor.FCKBrowserInfo.IsIE )\r\n
+\t{\r\n
+\t\tGetE(\'txtAttClasses\').value = oEmbed.getAttribute(\'className\') || \'\' ;\r\n
+\t\tGetE(\'txtAttStyle\').value = oEmbed.style.cssText ;\r\n
+\t}\r\n
+\telse\r\n
+\t{\r\n
+\t\tGetE(\'txtAttClasses\').value = oEmbed.getAttribute(\'class\',2) || \'\' ;\r\n
+\t\tGetE(\'txtAttStyle\').value = oEmbed.getAttribute(\'style\',2) || \'\' ;\r\n
+\t}\r\n
+\r\n
+\tUpdatePreview() ;\r\n
+}\r\n
+\r\n
+//#### The OK button was hit.\r\n
+function Ok()\r\n
+{\r\n
+\tif ( GetE(\'txtUrl\').value.length == 0 )\r\n
+\t{\r\n
+\t\tdialog.SetSelectedTab( \'Info\' ) ;\r\n
+\t\tGetE(\'txtUrl\').focus() ;\r\n
+\r\n
+\t\talert( oEditor.FCKLang.DlgAlertUrl ) ;\r\n
+\r\n
+\t\treturn false ;\r\n
+\t}\r\n
+\r\n
+\toEditor.FCKUndo.SaveUndoStep() ;\r\n
+\tif ( !oEmbed )\r\n
+\t{\r\n
+\t\toEmbed\t\t= FCK.EditorDocument.createElement( \'EMBED\' ) ;\r\n
+\t\toFakeImage  = null ;\r\n
+\t}\r\n
+\tUpdateEmbed( oEmbed ) ;\r\n
+\r\n
+\tif ( !oFakeImage )\r\n
+\t{\r\n
+\t\toFakeImage\t= oEditor.FCKDocumentProcessor_CreateFakeImage( \'FCK__Flash\', oEmbed ) ;\r\n
+\t\toFakeImage.setAttribute( \'_fckflash\', \'true\', 0 ) ;\r\n
+\t\toFakeImage\t= FCK.InsertElement( oFakeImage ) ;\r\n
+\t}\r\n
+\r\n
+\toEditor.FCKEmbedAndObjectProcessor.RefreshView( oFakeImage, oEmbed ) ;\r\n
+\r\n
+\treturn true ;\r\n
+}\r\n
+\r\n
+function UpdateEmbed( e )\r\n
+{\r\n
+\tSetAttribute( e, \'type\'\t\t\t, \'application/x-shockwave-flash\' ) ;\r\n
+\tSetAttribute( e, \'pluginspage\'\t, \'http://www.macromedia.com/go/getflashplayer\' ) ;\r\n
+\r\n
+\tSetAttribute( e, \'src\', GetE(\'txtUrl\').value ) ;\r\n
+\tSetAttribute( e, "width" , GetE(\'txtWidth\').value ) ;\r\n
+\tSetAttribute( e, "height", GetE(\'txtHeight\').value ) ;\r\n
+\r\n
+\t// Advances Attributes\r\n
+\r\n
+\tSetAttribute( e, \'id\'\t, GetE(\'txtAttId\').value ) ;\r\n
+\tSetAttribute( e, \'scale\', GetE(\'cmbScale\').value ) ;\r\n
+\r\n
+\tSetAttribute( e, \'play\', GetE(\'chkAutoPlay\').checked ? \'true\' : \'false\' ) ;\r\n
+\tSetAttribute( e, \'loop\', GetE(\'chkLoop\').checked ? \'true\' : \'false\' ) ;\r\n
+\tSetAttribute( e, \'menu\', GetE(\'chkMenu\').checked ? \'true\' : \'false\' ) ;\r\n
+\r\n
+\tSetAttribute( e, \'title\'\t, GetE(\'txtAttTitle\').value ) ;\r\n
+\r\n
+\tif ( oEditor.FCKBrowserInfo.IsIE )\r\n
+\t{\r\n
+\t\tSetAttribute( e, \'className\', GetE(\'txtAttClasses\').value ) ;\r\n
+\t\te.style.cssText = GetE(\'txtAttStyle\').value ;\r\n
+\t}\r\n
+\telse\r\n
+\t{\r\n
+\t\tSetAttribute( e, \'class\', GetE(\'txtAttClasses\').value ) ;\r\n
+\t\tSetAttribute( e, \'style\', GetE(\'txtAttStyle\').value ) ;\r\n
+\t}\r\n
+}\r\n
+\r\n
+var ePreview ;\r\n
+\r\n
+function SetPreviewElement( previewEl )\r\n
+{\r\n
+\tePreview = previewEl ;\r\n
+\r\n
+\tif ( GetE(\'txtUrl\').value.length > 0 )\r\n
+\t\tUpdatePreview() ;\r\n
+}\r\n
+\r\n
+function UpdatePreview()\r\n
+{\r\n
+\tif ( !ePreview )\r\n
+\t\treturn ;\r\n
+\r\n
+\twhile ( ePreview.firstChild )\r\n
+\t\tePreview.removeChild( ePreview.firstChild ) ;\r\n
+\r\n
+\tif ( GetE(\'txtUrl\').value.length == 0 )\r\n
+\t\tePreview.innerHTML = \'&nbsp;\' ;\r\n
+\telse\r\n
+\t{\r\n
+\t\tvar oDoc\t= ePreview.ownerDocument || ePreview.document ;\r\n
+\t\tvar e\t\t= oDoc.createElement( \'EMBED\' ) ;\r\n
+\r\n
+\t\tSetAttribute( e, \'src\', GetE(\'txtUrl\').value ) ;\r\n
+\t\tSetAttribute( e, \'type\', \'application/x-shockwave-flash\' ) ;\r\n
+\t\tSetAttribute( e, \'width\', \'100%\' ) ;\r\n
+\t\tSetAttribute( e, \'height\', \'100%\' ) ;\r\n
+\r\n
+\t\tePreview.appendChild( e ) ;\r\n
+\t}\r\n
+}\r\n
+\r\n
+// <embed id="ePreview" src="fck_flash/claims.swf" width="100%" height="100%" style="visibility:hidden" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">\r\n
+\r\n
+function BrowseServer()\r\n
+{\r\n
+\tOpenFileBrowser( FCKConfig.FlashBrowserURL, FCKConfig.FlashBrowserWindowWidth, FCKConfig.FlashBrowserWindowHeight ) ;\r\n
+}\r\n
+\r\n
+function SetUrl( url, width, height )\r\n
+{\r\n
+\tGetE(\'txtUrl\').value = url ;\r\n
+\r\n
+\tif ( width )\r\n
+\t\tGetE(\'txtWidth\').value = width ;\r\n
+\r\n
+\tif ( height )\r\n
+\t\tGetE(\'txtHeight\').value = height ;\r\n
+\r\n
+\tUpdatePreview() ;\r\n
+\r\n
+\tdialog.SetSelectedTab( \'Info\' ) ;\r\n
+}\r\n
+\r\n
+function OnUploadCompleted( errorNumber, fileUrl, fileName, customMsg )\r\n
+{\r\n
+\t// Remove animation\r\n
+\twindow.parent.Throbber.Hide() ;\r\n
+\tGetE( \'divUpload\' ).style.display  = \'\' ;\r\n
+\r\n
+\tswitch ( errorNumber )\r\n
+\t{\r\n
+\t\tcase 0 :\t// No errors\r\n
+\t\t\talert( \'Your file has been successfully uploaded\' ) ;\r\n
+\t\t\tbreak ;\r\n
+\t\tcase 1 :\t// Custom error\r\n
+\t\t\talert( customMsg ) ;\r\n
+\t\t\treturn ;\r\n
+\t\tcase 101 :\t// Custom warning\r\n
+\t\t\talert( customMsg ) ;\r\n
+\t\t\tbreak ;\r\n
+\t\tcase 201 :\r\n
+\t\t\talert( \'A file with the same name is already available. The uploaded file has been renamed to "\' + fileName + \'"\' ) ;\r\n
+\t\t\tbreak ;\r\n
+\t\tcase 202 :\r\n
+\t\t\talert( \'Invalid file type\' ) ;\r\n
+\t\t\treturn ;\r\n
+\t\tcase 203 :\r\n
+\t\t\talert( "Security error. You probably don\'t have enough permissions to upload. Please check your server." ) ;\r\n
+\t\t\treturn ;\r\n
+\t\tcase 500 :\r\n
+\t\t\talert( \'The connector is disabled\' ) ;\r\n
+\t\t\tbreak ;\r\n
+\t\tdefault :\r\n
+\t\t\talert( \'Error on file upload. Error number: \' + errorNumber ) ;\r\n
+\t\t\treturn ;\r\n
+\t}\r\n
+\r\n
+\tSetUrl( fileUrl ) ;\r\n
+\tGetE(\'frmUpload\').reset() ;\r\n
+}\r\n
+\r\n
+var oUploadAllowedExtRegex\t= new RegExp( FCKConfig.FlashUploadAllowedExtensions, \'i\' ) ;\r\n
+var oUploadDeniedExtRegex\t= new RegExp( FCKConfig.FlashUploadDeniedExtensions, \'i\' ) ;\r\n
+\r\n
+function CheckUpload()\r\n
+{\r\n
+\tvar sFile = GetE(\'txtUploadFile\').value ;\r\n
+\r\n
+\tif ( sFile.length == 0 )\r\n
+\t{\r\n
+\t\talert( \'Please select a file to upload\' ) ;\r\n
+\t\treturn false ;\r\n
+\t}\r\n
+\r\n
+\tif ( ( FCKConfig.FlashUploadAllowedExtensions.length > 0 && !oUploadAllowedExtRegex.test( sFile ) ) ||\r\n
+\t\t( FCKConfig.FlashUploadDeniedExtensions.length > 0 && oUploadDeniedExtRegex.test( sFile ) ) )\r\n
+\t{\r\n
+\t\tOnUploadCompleted( 202 ) ;\r\n
+\t\treturn false ;\r\n
+\t}\r\n
+\r\n
+\t// Show animation\r\n
+\twindow.parent.Throbber.Show( 100 ) ;\r\n
+\tGetE( \'divUpload\' ).style.display  = \'none\' ;\r\n
+\r\n
+\treturn true ;\r\n
+}\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>8279</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

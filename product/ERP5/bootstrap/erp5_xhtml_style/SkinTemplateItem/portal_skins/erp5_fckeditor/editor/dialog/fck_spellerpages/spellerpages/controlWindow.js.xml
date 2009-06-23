@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749354.5</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>controlWindow.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿////////////////////////////////////////////////////\r\n
+// controlWindow object\r\n
+////////////////////////////////////////////////////\r\n
+function controlWindow( controlForm ) {\r\n
+\t// private properties\r\n
+\tthis._form = controlForm;\r\n
+\r\n
+\t// public properties\r\n
+\tthis.windowType = "controlWindow";\r\n
+//\tthis.noSuggestionSelection = "- No suggestions -";\t// by FredCK\r\n
+\tthis.noSuggestionSelection = FCKLang.DlgSpellNoSuggestions ;\r\n
+\t// set up the properties for elements of the given control form\r\n
+\tthis.suggestionList  = this._form.sugg;\r\n
+\tthis.evaluatedText   = this._form.misword;\r\n
+\tthis.replacementText = this._form.txtsugg;\r\n
+\tthis.undoButton      = this._form.btnUndo;\r\n
+\r\n
+\t// public methods\r\n
+\tthis.addSuggestion = addSuggestion;\r\n
+\tthis.clearSuggestions = clearSuggestions;\r\n
+\tthis.selectDefaultSuggestion = selectDefaultSuggestion;\r\n
+\tthis.resetForm = resetForm;\r\n
+\tthis.setSuggestedText = setSuggestedText;\r\n
+\tthis.enableUndo = enableUndo;\r\n
+\tthis.disableUndo = disableUndo;\r\n
+}\r\n
+\r\n
+function resetForm() {\r\n
+\tif( this._form ) {\r\n
+\t\tthis._form.reset();\r\n
+\t}\r\n
+}\r\n
+\r\n
+function setSuggestedText() {\r\n
+\tvar slct = this.suggestionList;\r\n
+\tvar txt = this.replacementText;\r\n
+\tvar str = "";\r\n
+\tif( (slct.options[0].text) && slct.options[0].text != this.noSuggestionSelection ) {\r\n
+\t\tstr = slct.options[slct.selectedIndex].text;\r\n
+\t}\r\n
+\ttxt.value = str;\r\n
+}\r\n
+\r\n
+function selectDefaultSuggestion() {\r\n
+\tvar slct = this.suggestionList;\r\n
+\tvar txt = this.replacementText;\r\n
+\tif( slct.options.length == 0 ) {\r\n
+\t\tthis.addSuggestion( this.noSuggestionSelection );\r\n
+\t} else {\r\n
+\t\tslct.options[0].selected = true;\r\n
+\t}\r\n
+\tthis.setSuggestedText();\r\n
+}\r\n
+\r\n
+function addSuggestion( sugg_text ) {\r\n
+\tvar slct = this.suggestionList;\r\n
+\tif( sugg_text ) {\r\n
+\t\tvar i = slct.options.length;\r\n
+\t\tvar newOption = new Option( sugg_text, \'sugg_text\'+i );\r\n
+\t\tslct.options[i] = newOption;\r\n
+\t }\r\n
+}\r\n
+\r\n
+function clearSuggestions() {\r\n
+\tvar slct = this.suggestionList;\r\n
+\tfor( var j = slct.length - 1; j > -1; j-- ) {\r\n
+\t\tif( slct.options[j] ) {\r\n
+\t\t\tslct.options[j] = null;\r\n
+\t\t}\r\n
+\t}\r\n
+}\r\n
+\r\n
+function enableUndo() {\r\n
+\tif( this.undoButton ) {\r\n
+\t\tif( this.undoButton.disabled == true ) {\r\n
+\t\t\tthis.undoButton.disabled = false;\r\n
+\t\t}\r\n
+\t}\r\n
+}\r\n
+\r\n
+function disableUndo() {\r\n
+\tif( this.undoButton ) {\r\n
+\t\tif( this.undoButton.disabled == false ) {\r\n
+\t\t\tthis.undoButton.disabled = true;\r\n
+\t\t}\r\n
+\t}\r\n
+}\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>2305</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

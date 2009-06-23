@@ -1,0 +1,581 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749251.75</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>bg.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Bulgarian language file.\r\n
+ */\r\n
+\r\n
+var FCKLang =\r\n
+{\r\n
+// Language direction : "ltr" (left to right) or "rtl" (right to left).\r\n
+Dir\t\t\t\t\t: "ltr",\r\n
+\r\n
+ToolbarCollapse\t\t: "Скрий панела с инструментите",\r\n
+ToolbarExpand\t\t: "Покажи панела с инструментите",\r\n
+\r\n
+// Toolbar Items and Context Menu\r\n
+Save\t\t\t\t: "Запази",\r\n
+NewPage\t\t\t\t: "Нова страница",\r\n
+Preview\t\t\t\t: "Предварителен изглед",\r\n
+Cut\t\t\t\t\t: "Изрежи",\r\n
+Copy\t\t\t\t: "Запамети",\r\n
+Paste\t\t\t\t: "Вмъкни",\r\n
+PasteText\t\t\t: "Вмъкни само текст",\r\n
+PasteWord\t\t\t: "Вмъкни от MS Word",\r\n
+Print\t\t\t\t: "Печат",\r\n
+SelectAll\t\t\t: "Селектирай всичко",\r\n
+RemoveFormat\t\t: "Изтрий форматирането",\r\n
+InsertLinkLbl\t\t: "Връзка",\r\n
+InsertLink\t\t\t: "Добави/Редактирай връзка",\r\n
+RemoveLink\t\t\t: "Изтрий връзка",\r\n
+VisitLink\t\t\t: "Open Link",\t//MISSING\r\n
+Anchor\t\t\t\t: "Добави/Редактирай котва",\r\n
+AnchorDelete\t\t: "Remove Anchor",\t//MISSING\r\n
+InsertImageLbl\t\t: "Изображение",\r\n
+InsertImage\t\t\t: "Добави/Редактирай изображение",\r\n
+InsertFlashLbl\t\t: "Flash",\r\n
+InsertFlash\t\t\t: "Добави/Редактиай Flash обект",\r\n
+InsertTableLbl\t\t: "Таблица",\r\n
+InsertTable\t\t\t: "Добави/Редактирай таблица",\r\n
+InsertLineLbl\t\t: "Линия",\r\n
+InsertLine\t\t\t: "Вмъкни хоризонтална линия",\r\n
+InsertSpecialCharLbl: "Специален символ",\r\n
+InsertSpecialChar\t: "Вмъкни специален символ",\r\n
+InsertSmileyLbl\t\t: "Усмивка",\r\n
+InsertSmiley\t\t: "Добави усмивка",\r\n
+About\t\t\t\t: "За FCKeditor",\r\n
+Bold\t\t\t\t: "Удебелен",\r\n
+Italic\t\t\t\t: "Курсив",\r\n
+Underline\t\t\t: "Подчертан",\r\n
+StrikeThrough\t\t: "Зачертан",\r\n
+Subscript\t\t\t: "Индекс за база",\r\n
+Superscript\t\t\t: "Индекс за степен",\r\n
+LeftJustify\t\t\t: "Подравняване в ляво",\r\n
+CenterJustify\t\t: "Подравнявне в средата",\r\n
+RightJustify\t\t: "Подравняване в дясно",\r\n
+BlockJustify\t\t: "Двустранно подравняване",\r\n
+DecreaseIndent\t\t: "Намали отстъпа",\r\n
+IncreaseIndent\t\t: "Увеличи отстъпа",\r\n
+Blockquote\t\t\t: "Blockquote",\t//MISSING\r\n
+CreateDiv\t\t\t: "Create Div Container",\t//MISSING\r\n
+EditDiv\t\t\t\t: "Edit Div Container",\t//MISSING\r\n
+DeleteDiv\t\t\t: "Remove Div Container",\t//MISSING\r\n
+Undo\t\t\t\t: "Отмени",\r\n
+Redo\t\t\t\t: "Повтори",\r\n
+NumberedListLbl\t\t: "Нумериран списък",\r\n
+NumberedList\t\t: "Добави/Изтрий нумериран списък",\r\n
+BulletedListLbl\t\t: "Ненумериран списък",\r\n
+BulletedList\t\t: "Добави/Изтрий ненумериран списък",\r\n
+ShowTableBorders\t: "Покажи рамките на таблицата",\r\n
+ShowDetails\t\t\t: "Покажи подробности",\r\n
+Style\t\t\t\t: "Стил",\r\n
+FontFormat\t\t\t: "Формат",\r\n
+Font\t\t\t\t: "Шрифт",\r\n
+FontSize\t\t\t: "Размер",\r\n
+TextColor\t\t\t: "Цвят на текста",\r\n
+BGColor\t\t\t\t: "Цвят на фона",\r\n
+Source\t\t\t\t: "Код",\r\n
+Find\t\t\t\t: "Търси",\r\n
+Replace\t\t\t\t: "Замести",\r\n
+SpellCheck\t\t\t: "Провери правописа",\r\n
+UniversalKeyboard\t: "Универсална клавиатура",\r\n
+PageBreakLbl\t\t: "Нов ред",\r\n
+PageBreak\t\t\t: "Вмъкни нов ред",\r\n
+\r\n
+Form\t\t\t: "Формуляр",\r\n
+Checkbox\t\t: "Поле за отметка",\r\n
+RadioButton\t\t: "Поле за опция",\r\n
+TextField\t\t: "Текстово поле",\r\n
+Textarea\t\t: "Текстова област",\r\n
+HiddenField\t\t: "Скрито поле",\r\n
+Button\t\t\t: "Бутон",\r\n
+SelectionField\t: "Падащо меню с опции",\r\n
+ImageButton\t\t: "Бутон-изображение",\r\n
+\r\n
+FitWindow\t\t: "Maximize the editor size",\t//MISSING\r\n
+ShowBlocks\t\t: "Show Blocks",\t//MISSING\r\n
+\r\n
+// Context Menu\r\n
+EditLink\t\t\t: "Редактирай връзка",\r\n
+CellCM\t\t\t\t: "Cell",\t//MISSING\r\n
+RowCM\t\t\t\t: "Row",\t//MISSING\r\n
+ColumnCM\t\t\t: "Column",\t//MISSING\r\n
+InsertRowAfter\t\t: "Insert Row After",\t//MISSING\r\n
+InsertRowBefore\t\t: "Insert Row Before",\t//MISSING\r\n
+DeleteRows\t\t\t: "Изтрий редовете",\r\n
+InsertColumnAfter\t: "Insert Column After",\t//MISSING\r\n
+InsertColumnBefore\t: "Insert Column Before",\t//MISSING\r\n
+DeleteColumns\t\t: "Изтрий колоните",\r\n
+InsertCellAfter\t\t: "Insert Cell After",\t//MISSING\r\n
+InsertCellBefore\t: "Insert Cell Before",\t//MISSING\r\n
+DeleteCells\t\t\t: "Изтрий клетките",\r\n
+MergeCells\t\t\t: "Обедини клетките",\r\n
+MergeRight\t\t\t: "Merge Right",\t//MISSING\r\n
+MergeDown\t\t\t: "Merge Down",\t//MISSING\r\n
+HorizontalSplitCell\t: "Split Cell Horizontally",\t//MISSING\r\n
+VerticalSplitCell\t: "Split Cell Vertically",\t//MISSING\r\n
+TableDelete\t\t\t: "Изтрий таблицата",\r\n
+CellProperties\t\t: "Параметри на клетката",\r\n
+TableProperties\t\t: "Параметри на таблицата",\r\n
+ImageProperties\t\t: "Параметри на изображението",\r\n
+FlashProperties\t\t: "Параметри на Flash обекта",\r\n
+\r\n
+AnchorProp\t\t\t: "Параметри на котвата",\r\n
+ButtonProp\t\t\t: "Параметри на бутона",\r\n
+CheckboxProp\t\t: "Параметри на полето за отметка",\r\n
+HiddenFieldProp\t\t: "Параметри на скритото поле",\r\n
+RadioButtonProp\t\t: "Параметри на полето за опция",\r\n
+ImageButtonProp\t\t: "Параметри на бутона-изображение",\r\n
+TextFieldProp\t\t: "Параметри на текстовото-поле",\r\n
+SelectionFieldProp\t: "Параметри на падащото меню с опции",\r\n
+TextareaProp\t\t: "Параметри на текстовата област",\r\n
+FormProp\t\t\t: "Параметри на формуляра",\r\n
+\r\n
+FontFormats\t\t\t: "Нормален;Форматиран;Адрес;Заглавие 1;Заглавие 2;Заглавие 3;Заглавие 4;Заглавие 5;Заглавие 6;Параграф (DIV)",\r\n
+\r\n
+// Alerts and Messages\r\n
+ProcessingXHTML\t\t: "Обработка на XHTML. Моля изчакайте...",\r\n
+Done\t\t\t\t: "Готово",\r\n
+PasteWordConfirm\t: "Текстът, който искате да вмъкнете е копиран от MS Word. Желаете ли да бъде изчистен преди вмъкването?",\r\n
+NotCompatiblePaste\t: "Тази операция изисква MS Internet Explorer версия 5.5 или по-висока. Желаете ли да вмъкнете запаметеното без изчистване?",\r\n
+UnknownToolbarItem\t: "Непознат инструмент \\"%1\\"",\r\n
+UnknownCommand\t\t: "Непозната команда \\"%1\\"",\r\n
+NotImplemented\t\t: "Командата не е имплементирана",\r\n
+UnknownToolbarSet\t: "Панелът \\"%1\\" не съществува",\r\n
+NoActiveX\t\t\t: "Your browser\'s security settings could limit some features of the editor. You must enable the option \\"Run ActiveX controls and plug-ins\\". You may experience errors and notice missing features.",\t//MISSING\r\n
+BrowseServerBlocked : "The resources browser could not be opened. Make sure that all popup blockers are disabled.",\t//MISSING\r\n
+DialogBlocked\t\t: "It was not possible to open the dialog window. Make sure all popup blockers are disabled.",\t//MISSING\r\n
+VisitLinkBlocked\t: "It was not possible to open a new window. Make sure all popup blockers are disabled.",\t//MISSING\r\n
+\r\n
+// Dialogs\r\n
+DlgBtnOK\t\t\t: "ОК",\r\n
+DlgBtnCancel\t\t: "Отказ",\r\n
+DlgBtnClose\t\t\t: "Затвори",\r\n
+DlgBtnBrowseServer\t: "Разгледай сървъра",\r\n
+DlgAdvancedTag\t\t: "Подробности...",\r\n
+DlgOpOther\t\t\t: "<Друго>",\r\n
+DlgInfoTab\t\t\t: "Информация",\r\n
+DlgAlertUrl\t\t\t: "Моля, въведете пълния път (URL)",\r\n
+\r\n
+// General Dialogs Labels\r\n
+DlgGenNotSet\t\t: "<не е настроен>",\r\n
+DlgGenId\t\t\t: "Идентификатор",\r\n
+DlgGenLangDir\t\t: "посока на речта",\r\n
+DlgGenLangDirLtr\t: "От ляво на дясно",\r\n
+DlgGenLangDirRtl\t: "От дясно на ляво",\r\n
+DlgGenLangCode\t\t: "Код на езика",\r\n
+DlgGenAccessKey\t\t: "Бърз клавиш",\r\n
+DlgGenName\t\t\t: "Име",\r\n
+DlgGenTabIndex\t\t: "Ред на достъп",\r\n
+DlgGenLongDescr\t\t: "Описание на връзката",\r\n
+DlgGenClass\t\t\t: "Клас от стиловите таблици",\r\n
+DlgGenTitle\t\t\t: "Препоръчително заглавие",\r\n
+DlgGenContType\t\t: "Препоръчителен тип на съдържанието",\r\n
+DlgGenLinkCharset\t: "Тип на свързания ресурс",\r\n
+DlgGenStyle\t\t\t: "Стил",\r\n
+\r\n
+// Image Dialog\r\n
+DlgImgTitle\t\t\t: "Параметри на изображението",\r\n
+DlgImgInfoTab\t\t: "Информация за изображението",\r\n
+DlgImgBtnUpload\t\t: "Прати към сървъра",\r\n
+DlgImgURL\t\t\t: "Пълен път (URL)",\r\n
+DlgImgUpload\t\t: "Качи",\r\n
+DlgImgAlt\t\t\t: "Алтернативен текст",\r\n
+DlgImgWidth\t\t\t: "Ширина",\r\n
+DlgImgHeight\t\t: "Височина",\r\n
+DlgImgLockRatio\t\t: "Запази пропорцията",\r\n
+DlgBtnResetSize\t\t: "Възстанови размера",\r\n
+DlgImgBorder\t\t: "Рамка",\r\n
+DlgImgHSpace\t\t: "Хоризонтален отстъп",\r\n
+DlgImgVSpace\t\t: "Вертикален отстъп",\r\n
+DlgImgAlign\t\t\t: "Подравняване",\r\n
+DlgImgAlignLeft\t\t: "Ляво",\r\n
+DlgImgAlignAbsBottom: "Най-долу",\r\n
+DlgImgAlignAbsMiddle: "Точно по средата",\r\n
+DlgImgAlignBaseline\t: "По базовата линия",\r\n
+DlgImgAlignBottom\t: "Долу",\r\n
+DlgImgAlignMiddle\t: "По средата",\r\n
+DlgImgAlignRight\t: "Дясно",\r\n
+DlgImgAlignTextTop\t: "Върху текста",\r\n
+DlgImgAlignTop\t\t: "Отгоре",\r\n
+DlgImgPreview\t\t: "Изглед",\r\n
+DlgImgAlertUrl\t\t: "Моля, въведете пълния път до изображението",\r\n
+DlgImgLinkTab\t\t: "Връзка",\r\n
+\r\n
+// Flash Dialog\r\n
+DlgFlashTitle\t\t: "Параметри на Flash обекта",\r\n
+DlgFlashChkPlay\t\t: "Автоматично стартиране",\r\n
+DlgFlashChkLoop\t\t: "Ново стартиране след завършването",\r\n
+DlgFlashChkMenu\t\t: "Разрешено Flash меню",\r\n
+DlgFlashScale\t\t: "Оразмеряване",\r\n
+DlgFlashScaleAll\t: "Покажи целия обект",\r\n
+DlgFlashScaleNoBorder\t: "Без рамка",\r\n
+DlgFlashScaleFit\t: "Според мястото",\r\n
+\r\n
+// Link Dialog\r\n
+DlgLnkWindowTitle\t: "Връзка",\r\n
+DlgLnkInfoTab\t\t: "Информация за връзката",\r\n
+DlgLnkTargetTab\t\t: "Цел",\r\n
+\r\n
+DlgLnkType\t\t\t: "Вид на връзката",\r\n
+DlgLnkTypeURL\t\t: "Пълен път (URL)",\r\n
+DlgLnkTypeAnchor\t: "Котва в текущата страница",\r\n
+DlgLnkTypeEMail\t\t: "Е-поща",\r\n
+DlgLnkProto\t\t\t: "Протокол",\r\n
+DlgLnkProtoOther\t: "<друго>",\r\n
+DlgLnkURL\t\t\t: "Пълен път (URL)",\r\n
+DlgLnkAnchorSel\t\t: "Изберете котва",\r\n
+DlgLnkAnchorByName\t: "По име на котвата",\r\n
+DlgLnkAnchorById\t: "По идентификатор на елемент",\r\n
+DlgLnkNoAnchors\t\t: "(Няма котви в текущия документ)",\r\n
+DlgLnkEMail\t\t\t: "Адрес за е-поща",\r\n
+DlgLnkEMailSubject\t: "Тема на писмото",\r\n
+DlgLnkEMailBody\t\t: "Текст на писмото",\r\n
+DlgLnkUpload\t\t: "Качи",\r\n
+DlgLnkBtnUpload\t\t: "Прати на сървъра",\r\n
+\r\n
+DlgLnkTarget\t\t: "Цел",\r\n
+DlgLnkTargetFrame\t: "<рамка>",\r\n
+DlgLnkTargetPopup\t: "<дъщерен прозорец>",\r\n
+DlgLnkTargetBlank\t: "Нов прозорец (_blank)",\r\n
+DlgLnkTargetParent\t: "Родителски прозорец (_parent)",\r\n
+DlgLnkTargetSelf\t: "Активния прозорец (_self)",\r\n
+DlgLnkTargetTop\t\t: "Целия прозорец (_top)",\r\n
+DlgLnkTargetFrameName\t: "Име на целевия прозорец",\r\n
+DlgLnkPopWinName\t: "Име на дъщерния прозорец",\r\n
+DlgLnkPopWinFeat\t: "Параметри на дъщерния прозорец",\r\n
+DlgLnkPopResize\t\t: "С променливи размери",\r\n
+DlgLnkPopLocation\t: "Поле за адрес",\r\n
+DlgLnkPopMenu\t\t: "Меню",\r\n
+DlgLnkPopScroll\t\t: "Плъзгач",\r\n
+DlgLnkPopStatus\t\t: "Поле за статус",\r\n
+DlgLnkPopToolbar\t: "Панел с бутони",\r\n
+DlgLnkPopFullScrn\t: "Голям екран (MS IE)",\r\n
+DlgLnkPopDependent\t: "Зависим (Netscape)",\r\n
+DlgLnkPopWidth\t\t: "Ширина",\r\n
+DlgLnkPopHeight\t\t: "Височина",\r\n
+DlgLnkPopLeft\t\t: "Координати - X",\r\n
+DlgLnkPopTop\t\t: "Координати - Y",\r\n
+\r\n
+DlnLnkMsgNoUrl\t\t: "Моля, напишете пълния път (URL)",\r\n
+DlnLnkMsgNoEMail\t: "Моля, напишете адреса за е-поща",\r\n
+DlnLnkMsgNoAnchor\t: "Моля, изберете котва",\r\n
+DlnLnkMsgInvPopName\t: "The popup name must begin with an alphabetic character and must not contain spaces",\t//MISSING\r\n
+\r\n
+// Color Dialog\r\n
+DlgColorTitle\t\t: "Изберете цвят",\r\n
+DlgColorBtnClear\t: "Изчисти",\r\n
+DlgColorHighlight\t: "Текущ",\r\n
+DlgColorSelected\t: "Избран",\r\n
+\r\n
+// Smiley Dialog\r\n
+DlgSmileyTitle\t\t: "Добави усмивка",\r\n
+\r\n
+// Special Character Dialog\r\n
+DlgSpecialCharTitle\t: "Изберете специален символ",\r\n
+\r\n
+// Table Dialog\r\n
+DlgTableTitle\t\t: "Параметри на таблицата",\r\n
+DlgTableRows\t\t: "Редове",\r\n
+DlgTableColumns\t\t: "Колони",\r\n
+DlgTableBorder\t\t: "Размер на рамката",\r\n
+DlgTableAlign\t\t: "Подравняване",\r\n
+DlgTableAlignNotSet\t: "<Не е избрано>",\r\n
+DlgTableAlignLeft\t: "Ляво",\r\n
+DlgTableAlignCenter\t: "Център",\r\n
+DlgTableAlignRight\t: "Дясно",\r\n
+DlgTableWidth\t\t: "Ширина",\r\n
+DlgTableWidthPx\t\t: "пиксели",\r\n
+DlgTableWidthPc\t\t: "проценти",\r\n
+DlgTableHeight\t\t: "Височина",\r\n
+DlgTableCellSpace\t: "Разстояние между клетките",\r\n
+DlgTableCellPad\t\t: "Отстъп на съдържанието в клетките",\r\n
+DlgTableCaption\t\t: "Заглавие",\r\n
+DlgTableSummary\t\t: "Резюме",\r\n
+DlgTableHeaders\t\t: "Headers",\t//MISSING\r\n
+DlgTableHeadersNone\t\t: "None",\t//MISSING\r\n
+DlgTableHeadersColumn\t: "First column",\t//MISSING\r\n
+DlgTableHeadersRow\t\t: "First Row",\t//MISSING\r\n
+DlgTableHeadersBoth\t\t: "Both",\t//MISSING\r\n
+\r\n
+// Table Cell Dialog\r\n
+DlgCellTitle\t\t: "Параметри на клетката",\r\n
+DlgCellWidth\t\t: "Ширина",\r\n
+DlgCellWidthPx\t\t: "пиксели",\r\n
+DlgCellWidthPc\t\t: "проценти",\r\n
+DlgCellHeight\t\t: "Височина",\r\n
+DlgCellWordWrap\t\t: "пренасяне на нов ред",\r\n
+DlgCellWordWrapNotSet\t: "<Не е настроено>",\r\n
+DlgCellWordWrapYes\t: "Да",\r\n
+DlgCellWordWrapNo\t: "не",\r\n
+DlgCellHorAlign\t\t: "Хоризонтално подравняване",\r\n
+DlgCellHorAlignNotSet\t: "<Не е настроено>",\r\n
+DlgCellHorAlignLeft\t: "Ляво",\r\n
+DlgCellHorAlignCenter\t: "Център",\r\n
+DlgCellHorAlignRight: "Дясно",\r\n
+DlgCellVerAlign\t\t: "Вертикално подравняване",\r\n
+DlgCellVerAlignNotSet\t: "<Не е настроено>",\r\n
+DlgCellVerAlignTop\t: "Горе",\r\n
+DlgCellVerAlignMiddle\t: "По средата",\r\n
+DlgCellVerAlignBottom\t: "Долу",\r\n
+DlgCellVerAlignBaseline\t: "По базовата линия",\r\n
+DlgCellType\t\t: "Cell Type",\t//MISSING\r\n
+DlgCellTypeData\t\t: "Data",\t//MISSING\r\n
+DlgCellTypeHeader\t: "Header",\t//MISSING\r\n
+DlgCellRowSpan\t\t: "повече от един ред",\r\n
+DlgCellCollSpan\t\t: "повече от една колона",\r\n
+DlgCellBackColor\t: "фонов цвят",\r\n
+DlgCellBorderColor\t: "цвят на рамката",\r\n
+DlgCellBtnSelect\t: "Изберете...",\r\n
+\r\n
+// Find and Replace Dialog\r\n
+DlgFindAndReplaceTitle\t: "Find and Replace",\t//MISSING\r\n
+\r\n
+// Find Dialog\r\n
+DlgFindTitle\t\t: "Търси",\r\n
+DlgFindFindBtn\t\t: "Търси",\r\n
+DlgFindNotFoundMsg\t: "Указания текст не беше намерен.",\r\n
+\r\n
+// Replace Dialog\r\n
+DlgReplaceTitle\t\t\t: "Замести",\r\n
+DlgReplaceFindLbl\t\t: "Търси:",\r\n
+DlgReplaceReplaceLbl\t: "Замести с:",\r\n
+DlgReplaceCaseChk\t\t: "Със същия регистър",\r\n
+DlgReplaceReplaceBtn\t: "Замести",\r\n
+DlgReplaceReplAllBtn\t: "Замести всички",\r\n
+DlgReplaceWordChk\t\t: "Търси същата дума",\r\n
+\r\n
+// Paste Operations / Dialog\r\n
+PasteErrorCut\t: "Настройките за сигурност на вашия бразуър не разрешават на редактора да изпълни изрязването. За целта използвайте клавиатурата (Ctrl+X).",\r\n
+PasteErrorCopy\t: "Настройките за сигурност на вашия бразуър не разрешават на редактора да изпълни запаметяването. За целта използвайте клавиатурата (Ctrl+C).",\r\n
+\r\n
+PasteAsText\t\t: "Вмъкни като чист текст",\r\n
+PasteFromWord\t: "Вмъкни от MS Word",\r\n
+\r\n
+DlgPasteMsg2\t: "Вмъкнете тук съдъжанието с клавиатуарата (<STRONG>Ctrl+V</STRONG>) и натиснете <STRONG>OK</STRONG>.",\r\n
+DlgPasteSec\t\t: "Because of your browser security settings, the editor is not able to access your clipboard data directly. You are required to paste it again in this window.",\t//MISSING\r\n
+DlgPasteIgnoreFont\t\t: "Игнорирай шрифтовите дефиниции",\r\n
+DlgPasteRemoveStyles\t: "Изтрий стиловите дефиниции",\r\n
+\r\n
+// Color Picker\r\n
+ColorAutomatic\t: "По подразбиране",\r\n
+ColorMoreColors\t: "Други цветове...",\r\n
+\r\n
+// Document Properties\r\n
+DocProps\t\t: "Параметри на документа",\r\n
+\r\n
+// Anchor Dialog\r\n
+DlgAnchorTitle\t\t: "Параметри на котвата",\r\n
+DlgAnchorName\t\t: "Име на котвата",\r\n
+DlgAnchorErrorName\t: "Моля, въведете име на котвата",\r\n
+\r\n
+// Speller Pages Dialog\r\n
+DlgSpellNotInDic\t\t: "Липсва в речника",\r\n
+DlgSpellChangeTo\t\t: "Промени на",\r\n
+DlgSpellBtnIgnore\t\t: "Игнорирай",\r\n
+DlgSpellBtnIgnoreAll\t: "Игнорирай всички",\r\n
+DlgSpellBtnReplace\t\t: "Замести",\r\n
+DlgSpellBtnReplaceAll\t: "Замести всички",\r\n
+DlgSpellBtnUndo\t\t\t: "Отмени",\r\n
+DlgSpellNoSuggestions\t: "- Няма предложения -",\r\n
+DlgSpellProgress\t\t: "Извършване на проверката за правопис...",\r\n
+DlgSpellNoMispell\t\t: "Проверката за правопис завършена: не са открити правописни грешки",\r\n
+DlgSpellNoChanges\t\t: "Проверката за правопис завършена: няма променени думи",\r\n
+DlgSpellOneChange\t\t: "Проверката за правопис завършена: една дума е променена",\r\n
+DlgSpellManyChanges\t\t: "Проверката за правопис завършена: %1 думи са променени",\r\n
+\r\n
+IeSpellDownload\t\t\t: "Инструментът за проверка на правопис не е инсталиран. Желаете ли да го инсталирате ?",\r\n
+\r\n
+// Button Dialog\r\n
+DlgButtonText\t\t: "Текст (Стойност)",\r\n
+DlgButtonType\t\t: "Тип",\r\n
+DlgButtonTypeBtn\t: "Button",\t//MISSING\r\n
+DlgButtonTypeSbm\t: "Submit",\t//MISSING\r\n
+DlgButtonTypeRst\t: "Reset",\t//MISSING\r\n
+\r\n
+// Checkbox and Radio Button Dialogs\r\n
+DlgCheckboxName\t\t: "Име",\r\n
+DlgCheckboxValue\t: "Стойност",\r\n
+DlgCheckboxSelected\t: "Отметнато",\r\n
+\r\n
+// Form Dialog\r\n
+DlgFormName\t\t: "Име",\r\n
+DlgFormAction\t: "Действие",\r\n
+DlgFormMethod\t: "Метод",\r\n
+\r\n
+// Select Field Dialog\r\n
+DlgSelectName\t\t: "Име",\r\n
+DlgSelectValue\t\t: "Стойност",\r\n
+DlgSelectSize\t\t: "Размер",\r\n
+DlgSelectLines\t\t: "линии",\r\n
+DlgSelectChkMulti\t: "Разрешено множествено селектиране",\r\n
+DlgSelectOpAvail\t: "Възможни опции",\r\n
+DlgSelectOpText\t\t: "Текст",\r\n
+DlgSelectOpValue\t: "Стойност",\r\n
+DlgSelectBtnAdd\t\t: "Добави",\r\n
+DlgSelectBtnModify\t: "Промени",\r\n
+DlgSelectBtnUp\t\t: "Нагоре",\r\n
+DlgSelectBtnDown\t: "Надолу",\r\n
+DlgSelectBtnSetValue : "Настрой като избрана стойност",\r\n
+DlgSelectBtnDelete\t: "Изтрий",\r\n
+\r\n
+// Textarea Dialog\r\n
+DlgTextareaName\t: "Име",\r\n
+DlgTextareaCols\t: "Колони",\r\n
+DlgTextareaRows\t: "Редове",\r\n
+\r\n
+// Text Field Dialog\r\n
+DlgTextName\t\t\t: "Име",\r\n
+DlgTextValue\t\t: "Стойност",\r\n
+DlgTextCharWidth\t: "Ширина на символите",\r\n
+DlgTextMaxChars\t\t: "Максимум символи",\r\n
+DlgTextType\t\t\t: "Тип",\r\n
+DlgTextTypeText\t\t: "Текст",\r\n
+DlgTextTypePass\t\t: "Парола",\r\n
+\r\n
+// Hidden Field Dialog\r\n
+DlgHiddenName\t: "Име",\r\n
+DlgHiddenValue\t: "Стойност",\r\n
+\r\n
+// Bulleted List Dialog\r\n
+BulletedListProp\t: "Параметри на ненумерирания списък",\r\n
+NumberedListProp\t: "Параметри на нумерирания списък",\r\n
+DlgLstStart\t\t\t: "Start",\t//MISSING\r\n
+DlgLstType\t\t\t: "Тип",\r\n
+DlgLstTypeCircle\t: "Окръжност",\r\n
+DlgLstTypeDisc\t\t: "Кръг",\r\n
+DlgLstTypeSquare\t: "Квадрат",\r\n
+DlgLstTypeNumbers\t: "Числа (1, 2, 3)",\r\n
+DlgLstTypeLCase\t\t: "Малки букви (a, b, c)",\r\n
+DlgLstTypeUCase\t\t: "Големи букви (A, B, C)",\r\n
+DlgLstTypeSRoman\t: "Малки римски числа (i, ii, iii)",\r\n
+DlgLstTypeLRoman\t: "Големи римски числа (I, II, III)",\r\n
+\r\n
+// Document Properties Dialog\r\n
+DlgDocGeneralTab\t: "Общи",\r\n
+DlgDocBackTab\t\t: "Фон",\r\n
+DlgDocColorsTab\t\t: "Цветове и отстъпи",\r\n
+DlgDocMetaTab\t\t: "Мета данни",\r\n
+\r\n
+DlgDocPageTitle\t\t: "Заглавие на страницата",\r\n
+DlgDocLangDir\t\t: "Посока на речта",\r\n
+DlgDocLangDirLTR\t: "От ляво на дясно",\r\n
+DlgDocLangDirRTL\t: "От дясно на ляво",\r\n
+DlgDocLangCode\t\t: "Код на езика",\r\n
+DlgDocCharSet\t\t: "Кодиране на символите",\r\n
+DlgDocCharSetCE\t\t: "Central European",\t//MISSING\r\n
+DlgDocCharSetCT\t\t: "Chinese Traditional (Big5)",\t//MISSING\r\n
+DlgDocCharSetCR\t\t: "Cyrillic",\t//MISSING\r\n
+DlgDocCharSetGR\t\t: "Greek",\t//MISSING\r\n
+DlgDocCharSetJP\t\t: "Japanese",\t//MISSING\r\n
+DlgDocCharSetKR\t\t: "Korean",\t//MISSING\r\n
+DlgDocCharSetTR\t\t: "Turkish",\t//MISSING\r\n
+DlgDocCharSetUN\t\t: "Unicode (UTF-8)",\t//MISSING\r\n
+DlgDocCharSetWE\t\t: "Western European",\t//MISSING\r\n
+DlgDocCharSetOther\t: "Друго кодиране на символите",\r\n
+\r\n
+DlgDocDocType\t\t: "Тип на документа",\r\n
+DlgDocDocTypeOther\t: "Друг тип на документа",\r\n
+DlgDocIncXHTML\t\t: "Включи XHTML декларация",\r\n
+DlgDocBgColor\t\t: "Цвят на фона",\r\n
+DlgDocBgImage\t\t: "Пълен път до фоновото изображение",\r\n
+DlgDocBgNoScroll\t: "Не-повтарящо се фоново изображение",\r\n
+DlgDocCText\t\t\t: "Текст",\r\n
+DlgDocCLink\t\t\t: "Връзка",\r\n
+DlgDocCVisited\t\t: "Посетена връзка",\r\n
+DlgDocCActive\t\t: "Активна връзка",\r\n
+DlgDocMargins\t\t: "Отстъпи на страницата",\r\n
+DlgDocMaTop\t\t\t: "Горе",\r\n
+DlgDocMaLeft\t\t: "Ляво",\r\n
+DlgDocMaRight\t\t: "Дясно",\r\n
+DlgDocMaBottom\t\t: "Долу",\r\n
+DlgDocMeIndex\t\t: "Ключови думи за документа (разделени със запетаи)",\r\n
+DlgDocMeDescr\t\t: "Описание на документа",\r\n
+DlgDocMeAuthor\t\t: "Автор",\r\n
+DlgDocMeCopy\t\t: "Авторски права",\r\n
+DlgDocPreview\t\t: "Изглед",\r\n
+\r\n
+// Templates Dialog\r\n
+Templates\t\t\t: "Шаблони",\r\n
+DlgTemplatesTitle\t: "Шаблони",\r\n
+DlgTemplatesSelMsg\t: "Изберете шаблон <br>(текущото съдържание на редактора ще бъде загубено):",\r\n
+DlgTemplatesLoading\t: "Зареждане на списъка с шаблоните. Моля изчакайте...",\r\n
+DlgTemplatesNoTpl\t: "(Няма дефинирани шаблони)",\r\n
+DlgTemplatesReplace\t: "Replace actual contents",\t//MISSING\r\n
+\r\n
+// About Dialog\r\n
+DlgAboutAboutTab\t: "За",\r\n
+DlgAboutBrowserInfoTab\t: "Информация за браузъра",\r\n
+DlgAboutLicenseTab\t: "License",\t//MISSING\r\n
+DlgAboutVersion\t\t: "версия",\r\n
+DlgAboutInfo\t\t: "За повече информация посетете",\r\n
+\r\n
+// Div Dialog\r\n
+DlgDivGeneralTab\t: "General",\t//MISSING\r\n
+DlgDivAdvancedTab\t: "Advanced",\t//MISSING\r\n
+DlgDivStyle\t\t: "Style",\t//MISSING\r\n
+DlgDivInlineStyle\t: "Inline Style"\t//MISSING\r\n
+};\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>24984</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

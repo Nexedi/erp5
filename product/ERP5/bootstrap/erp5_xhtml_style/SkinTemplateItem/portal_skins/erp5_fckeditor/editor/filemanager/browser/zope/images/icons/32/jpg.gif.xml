@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="Image" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45758882.09</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jpg.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/gif</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">R0lGODlhIAAgALMPAEGyQVBcUe3x71KnzqmpsDc3OtLV1UJjnCEhIcbGxoSEhISEAAD/AP///wAA
+AP///yH5BAEAAA8ALAAAAAAgACAAAAT/8Mn5nL04Z8qnS2AojorTNE7HfWfruknZppJm35Y810vv
+/8CgQ7dz/FyLlu/0G9oqwUZPmqwCh4qs1hmdMqvU3meU4C6tYbTP9CqXjuF0Ms2GmYN44avhxvkx
+e24qWFqFhnt8Q4MJAg0CBgQJAAEBCoyIiQoeKRYxBAYJkAwJDJMBBI1tipwIDgEIBQUIkwCkAAyl
+DJQJqpoIsL/BwggBt7e4pZWpmRXCDr8FAbKx08W5AAAFBieCzbAKkSEFB+Sy0MbJjd3Nli4K4we8
+r8Cz2JPMHgW8jg3SBwONCPwKcOBVsUmRFFEYsk+AtAEDCBAwF2BAgnm39ClcSOCEgAMFfCAWePbr
+wKcAF11V2sjR0USLAyh+MhCAjwJYAVh6QNAxwbgBoCRG6qeAm0GdNWB1fGdAwKNQDSZu8ygLaQWf
+xC4W+ORUwM2OMFpp6uDA6c1or9DG6thVXYmxKxyBSgutUtOmXUNYrePUgAJpsGJRGkx475/DcDkY
+Wsx4cQQAOw==</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>32</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>463</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>32</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

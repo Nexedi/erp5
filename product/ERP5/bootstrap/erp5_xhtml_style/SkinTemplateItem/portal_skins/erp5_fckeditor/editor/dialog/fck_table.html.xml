@@ -1,0 +1,492 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Table dialog window.\r\n
+-->\r\n
+<html xmlns="http://www.w3.org/1999/xhtml">\r\n
+<head>\r\n
+\t<title>Table Properties</title>\r\n
+\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\r\n
+\t<meta name="robots" content="noindex, nofollow" />\r\n
+\t<script src="common/fck_dialog_common.js" type="text/javascript"></script>\r\n
+\t<script type="text/javascript">\r\n
+\r\n
+var dialog\t= window.parent ;\r\n
+var oEditor = dialog.InnerDialogLoaded() ;\r\n
+\r\n
+var FCKDomTools = oEditor.FCKDomTools ;\r\n
+\r\n
+// Gets the table if there is one selected.\r\n
+var table ;\r\n
+var e = dialog.Selection.GetSelectedElement() ;\r\n
+var hasColumnHeaders ;\r\n
+\r\n
+if ( ( !e && document.location.search.substr(1) == \'Parent\' ) || ( e && e.tagName != \'TABLE\' ) )\r\n
+\te = oEditor.FCKSelection.MoveToAncestorNode( \'TABLE\' ) ;\r\n
+\r\n
+if ( e && e.tagName == "TABLE" )\r\n
+\ttable = e ;\r\n
+\r\n
+// Fired when the window loading process is finished. It sets the fields with the\r\n
+// actual values if a table is selected in the editor.\r\n
+window.onload = function()\r\n
+{\r\n
+\t// First of all, translate the dialog box texts\r\n
+\toEditor.FCKLanguageManager.TranslatePage(document) ;\r\n
+\r\n
+\tif (table)\r\n
+\t{\r\n
+\t\tdocument.getElementById(\'txtRows\').value    = table.rows.length ;\r\n
+\t\tdocument.getElementById(\'txtColumns\').value = table.rows[0].cells.length ;\r\n
+\r\n
+\t\t// Gets the value from the Width or the Style attribute\r\n
+\t\tvar iWidth  = (table.style.width  ? table.style.width  : table.width ) ;\r\n
+\t\tvar iHeight = (table.style.height ? table.style.height : table.height ) ;\r\n
+\r\n
+\t\tif (iWidth.indexOf(\'%\') >= 0)\t\t\t// Percentual = %\r\n
+\t\t{\r\n
+\t\t\tiWidth = parseInt( iWidth.substr(0,iWidth.length - 1), 10 ) ;\r\n
+\t\t\tdocument.getElementById(\'selWidthType\').value = "percent" ;\r\n
+\t\t}\r\n
+\t\telse if (iWidth.indexOf(\'px\') >= 0)\t\t// Style Pixel = px\r\n
+\t\t{\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  //\r\n
+\t\t\tiWidth = iWidth.substr(0,iWidth.length - 2);\r\n
+\t\t\tdocument.getElementById(\'selWidthType\').value = "pixels" ;\r\n
+\t\t}\r\n
+\r\n
+\t\tif (iHeight && iHeight.indexOf(\'px\') >= 0)\t\t// Style Pixel = px\r\n
+\t\t\tiHeight = iHeight.substr(0,iHeight.length - 2);\r\n
+\r\n
+\t\tdocument.getElementById(\'txtWidth\').value\t\t= iWidth || \'\' ;\r\n
+\t\tdocument.getElementById(\'txtHeight\').value\t\t= iHeight || \'\' ;\r\n
+\t\tdocument.getElementById(\'txtBorder\').value\t\t= GetAttribute( table, \'border\', \'\' ) ;\r\n
+\t\tdocument.getElementById(\'selAlignment\').value\t= GetAttribute( table, \'align\', \'\' ) ;\r\n
+\t\tdocument.getElementById(\'txtCellPadding\').value\t= GetAttribute( table, \'cellPadding\', \'\' ) ;\r\n
+\t\tdocument.getElementById(\'txtCellSpacing\').value\t= GetAttribute( table, \'cellSpacing\', \'\' ) ;\r\n
+\t\tdocument.getElementById(\'txtSummary\').value     = GetAttribute( table, \'summary\', \'\' ) ;\r\n
+//\t\tdocument.getElementById(\'cmbFontStyle\').value\t= table.className ;\r\n
+\r\n
+\t\tvar eCaption = oEditor.FCKDomTools.GetFirstChild( table, \'CAPTION\' ) ;\r\n
+\t\tif ( eCaption ) document.getElementById(\'txtCaption\').value = eCaption.innerHTML ;\r\n
+\r\n
+\t\thasColumnHeaders = true ;\r\n
+\t\t// Check if all the first cells in every row are TH\r\n
+\t\tfor (var row=0; row<table.rows.length; row++)\r\n
+\t\t{\r\n
+\t\t\t// If just one cell isn\'t a TH then it isn\'t a header column\r\n
+\t\t\tif ( table.rows[row].cells[0].nodeName != \'TH\' )\r\n
+\t\t\t{\r\n
+\t\t\t\thasColumnHeaders = false ;\r\n
+\r\n
+\t\t\t\tbreak;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\r\n
+\t\t// Check if the table contains <thead>\r\n
+\t\tif ((table.tHead !== null) )\r\n
+\t\t{\r\n
+\t\t\tif (hasColumnHeaders)\r\n
+\t\t\t\tGetE(\'selHeaders\').value = \'both\' ;\r\n
+\t\t\telse\r\n
+\t\t\t\tGetE(\'selHeaders\').value = \'row\' ;\r\n
+\t\t}\r\n
+\t\telse\r\n
+\t\t{\r\n
+\t\t\tif (hasColumnHeaders)\r\n
+\t\t\t\tGetE(\'selHeaders\').value = \'col\' ;\r\n
+\t\t\telse\r\n
+\t\t\t\tGetE(\'selHeaders\').value = \'\' ;\r\n
+\t\t}\r\n
+\r\n
+\r\n
+\t\tdocument.getElementById(\'txtRows\').disabled    = true ;\r\n
+\t\tdocument.getElementById(\'txtColumns\').disabled = true ;\r\n
+\t\tSelectField( \'txtWidth\' ) ;\r\n
+\t}\r\n
+\telse\r\n
+\t\tSelectField( \'txtRows\' ) ;\r\n
+\r\n
+\tdialog.SetOkButton( true ) ;\r\n
+\tdialog.SetAutoSize( true ) ;\r\n
+}\r\n
+\r\n
+// Fired when the user press the OK button\r\n
+function Ok()\r\n
+{\r\n
+\tvar bExists = ( table != null ) ;\r\n
+\r\n
+\tvar oDoc = oEditor.FCK.EditorDocument ;\r\n
+\toEditor.FCKUndo.SaveUndoStep() ;\r\n
+\r\n
+\tif ( ! bExists )\r\n
+\t\ttable = oDoc.createElement( "TABLE" ) ;\r\n
+\r\n
+\t// Removes the Width and Height styles\r\n
+\tif ( bExists && table.style.width )\t\ttable.style.width = null ; //.removeAttribute("width") ;\r\n
+\tif ( bExists && table.style.height )\ttable.style.height = null ; //.removeAttribute("height") ;\r\n
+\r\n
+\tvar sWidth = GetE(\'txtWidth\').value ;\r\n
+\tif ( sWidth.length > 0 && GetE(\'selWidthType\').value == \'percent\' )\r\n
+\t\tsWidth += \'%\' ;\r\n
+\r\n
+\tSetAttribute( table, \'width\'\t\t, sWidth ) ;\r\n
+\tSetAttribute( table, \'height\'\t\t, GetE(\'txtHeight\').value ) ;\r\n
+\tSetAttribute( table, \'border\'\t\t, GetE(\'txtBorder\').value ) ;\r\n
+\tSetAttribute( table, \'align\'\t\t, GetE(\'selAlignment\').value ) ;\r\n
+\tSetAttribute( table, \'cellPadding\'\t, GetE(\'txtCellPadding\').value ) ;\r\n
+\tSetAttribute( table, \'cellSpacing\'\t, GetE(\'txtCellSpacing\').value ) ;\r\n
+\tSetAttribute( table, \'summary\'\t\t, GetE(\'txtSummary\').value ) ;\r\n
+\r\n
+\tvar eCaption = oEditor.FCKDomTools.GetFirstChild( table, \'CAPTION\' ) ;\r\n
+\r\n
+\tif ( document.getElementById(\'txtCaption\').value != \'\')\r\n
+\t{\r\n
+\t\tif ( !eCaption )\r\n
+\t\t{\r\n
+\t\t\teCaption = oDoc.createElement( \'CAPTION\' ) ;\r\n
+\t\t\ttable.insertBefore( eCaption, table.firstChild ) ;\r\n
+\t\t}\r\n
+\r\n
+\t\teCaption.innerHTML = document.getElementById(\'txtCaption\').value ;\r\n
+\t}\r\n
+\telse if ( bExists && eCaption )\r\n
+\t{\r\n
+\t\t// TODO: It causes an IE internal error if using removeChild or\r\n
+\t\t// table.deleteCaption() (see #505).\r\n
+\t\tif ( oEditor.FCKBrowserInfo.IsIE )\r\n
+\t\t\teCaption.innerHTML = \'\' ;\r\n
+\t\telse\r\n
+\t\t\teCaption.parentNode.removeChild( eCaption ) ;\r\n
+\t}\r\n
+\r\n
+\tvar headers = GetE(\'selHeaders\').value ;\r\n
+\tif ( bExists )\r\n
+\t{\r\n
+\t\t// Should we make a <thead>?\r\n
+\t\tif ( table.tHead==null && (headers==\'row\' || headers==\'both\') )\r\n
+\t\t{\r\n
+\t\t\tvar oThead = table.createTHead() ;\r\n
+\t\t\tvar tbody = FCKDomTools.GetFirstChild( table, \'TBODY\' ) ;\r\n
+\t\t\tvar theRow= FCKDomTools.GetFirstChild( tbody, \'TR\' ) ;\r\n
+\r\n
+\t\t\t//now change TD to TH:\r\n
+\t\t\tfor (var i = 0; i<theRow.childNodes.length ; i++)\r\n
+\t\t\t{\r\n
+\t\t\t\tvar th = RenameNode(theRow.childNodes[i], \'TH\') ;\r\n
+\t\t\t\tif (th != null)\r\n
+\t\t\t\t\tth.scope=\'col\' ;\r\n
+\t\t\t}\r\n
+\t\t\toThead.appendChild( theRow ) ;\r\n
+\t\t}\r\n
+\r\n
+\t\tif ( table.tHead!==null && !(headers==\'row\' || headers==\'both\') )\r\n
+\t\t{\r\n
+\t\t\t// Move the row out of the THead and put it in the TBody:\r\n
+\t\t\tvar tHead = table.tHead ;\r\n
+\t\t\tvar tbody = FCKDomTools.GetFirstChild( table, \'TBODY\' ) ;\r\n
+\r\n
+\t\t\tvar previousFirstRow = tbody.firstChild ;\r\n
+\t\t\twhile ( tHead.firstChild )\r\n
+\t\t\t{\r\n
+\t\t\t\tvar theRow = tHead.firstChild ;\r\n
+\t\t\t\tfor (var i = 0; i < theRow.childNodes.length ; i++ )\r\n
+\t\t\t\t{\r\n
+\t\t\t\t\tvar newCell = RenameNode( theRow.childNodes[i], \'TD\' ) ;\r\n
+\t\t\t\t\tif ( newCell != null )\r\n
+\t\t\t\t\t\tnewCell.removeAttribute( \'scope\' ) ;\r\n
+\t\t\t\t}\r\n
+\t\t\t\ttbody.insertBefore( theRow, previousFirstRow ) ;\r\n
+\t\t\t}\r\n
+\t\t\ttable.removeChild( tHead ) ;\r\n
+\t\t}\r\n
+\r\n
+\t\t// Should we make all first cells in a row TH?\r\n
+\t\tif ( (!hasColumnHeaders)  && (headers==\'col\' || headers==\'both\') )\r\n
+\t\t{\r\n
+\t\t\tfor( var row=0 ; row < table.rows.length ; row++ )\r\n
+\t\t\t{\r\n
+\t\t\t\tvar newCell = RenameNode(table.rows[row].cells[0], \'TH\') ;\r\n
+\t\t\t\tif ( newCell != null )\r\n
+\t\t\t\t\tnewCell.scope = \'row\' ;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\r\n
+\t\t// Should we make all first TH-cells in a row make TD? If \'yes\' we do it the other way round :-)\r\n
+\t\tif ( (hasColumnHeaders)  && !(headers==\'col\' || headers==\'both\') )\r\n
+\t\t{\r\n
+\t\t\tfor( var row=0 ; row < table.rows.length ; row++ )\r\n
+\t\t\t{\r\n
+\t\t\t\tvar oRow = table.rows[row] ;\r\n
+\t\t\t\tif ( oRow.parentNode.nodeName == \'TBODY\' )\r\n
+\t\t\t\t{\r\n
+\t\t\t\t\tvar newCell = RenameNode(oRow.cells[0], \'TD\') ;\r\n
+\t\t\t\t\tif (newCell != null)\r\n
+\t\t\t\t\t\tnewCell.removeAttribute( \'scope\' ) ;\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\tif (! bExists)\r\n
+\t{\r\n
+\t\tvar iRows = GetE(\'txtRows\').value ;\r\n
+\t\tvar iCols = GetE(\'txtColumns\').value ;\r\n
+\r\n
+\t\tvar startRow = 0 ;\r\n
+\t\t// Should we make a <thead> ?\r\n
+\t\tif (headers==\'row\' || headers==\'both\')\r\n
+\t\t{\r\n
+\t\t\tstartRow++ ;\r\n
+\t\t\tvar oThead = table.createTHead() ;\r\n
+\t\t\tvar oRow = table.insertRow(-1) ;\r\n
+\t\t\toThead.appendChild(oRow);\r\n
+\r\n
+\t\t\tfor ( var c = 0 ; c < iCols ; c++ )\r\n
+\t\t\t{\r\n
+\t\t\t\tvar oThcell = oDoc.createElement( \'TH\' ) ;\r\n
+\t\t\t\toThcell.scope = \'col\' ;\r\n
+\t\t\t\toRow.appendChild( oThcell ) ;\r\n
+\t\t\t\tif ( oEditor.FCKBrowserInfo.IsGeckoLike )\r\n
+\t\t\t\t\toEditor.FCKTools.AppendBogusBr( oThcell ) ;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\r\n
+\t\t// Opera automatically creates a tbody when a thead has been added\r\n
+\t\tvar oTbody = FCKDomTools.GetFirstChild( table, \'TBODY\' ) ;\r\n
+\t\tif ( !oTbody )\r\n
+\t\t{\r\n
+\t\t\t// make TBODY if it doesn\'t exist\r\n
+\t\t\toTbody = oDoc.createElement( \'TBODY\' ) ;\r\n
+\t\t\ttable.appendChild( oTbody ) ;\r\n
+\t\t}\r\n
+\t\tfor ( var r = startRow ; r < iRows; r++ )\r\n
+\t\t{\r\n
+\t\t\tvar oRow = oDoc.createElement( \'TR\' ) ;\r\n
+\t\t\toTbody.appendChild(oRow) ;\r\n
+\r\n
+\t\t\tvar startCol = 0 ;\r\n
+\t\t\t// Is the first column a header?\r\n
+\t\t\tif (headers==\'col\' || headers==\'both\')\r\n
+\t\t\t{\r\n
+\t\t\t\tvar oThcell = oDoc.createElement( \'TH\' ) ;\r\n
+\t\t\t\toThcell.scope = \'row\' ;\r\n
+\t\t\t\toRow.appendChild( oThcell ) ;\r\n
+\t\t\t\tif ( oEditor.FCKBrowserInfo.IsGeckoLike )\r\n
+\t\t\t\t\toEditor.FCKTools.AppendBogusBr( oThcell ) ;\r\n
+\r\n
+\t\t\t\tstartCol++ ;\r\n
+\t\t\t}\r\n
+\t\t\tfor ( var c = startCol ; c < iCols ; c++ )\r\n
+\t\t\t{\r\n
+\t\t\t\t// IE will leave the TH at the end of the row if we use now oRow.insertCell(-1)\r\n
+\t\t\t\tvar oCell = oDoc.createElement( \'TD\' ) ;\r\n
+\t\t\t\toRow.appendChild( oCell ) ;\r\n
+\t\t\t\tif ( oEditor.FCKBrowserInfo.IsGeckoLike )\r\n
+\t\t\t\t\toEditor.FCKTools.AppendBogusBr( oCell ) ;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\r\n
+\t\toEditor.FCK.InsertElement( table ) ;\r\n
+\t}\r\n
+\r\n
+\treturn true ;\r\n
+}\r\n
+\r\n
+\t</script>\r\n
+</head>\r\n
+<body style="overflow: hidden">\r\n
+\t<table id="otable" cellspacing="0" cellpadding="0" width="100%" border="0" style="height: 100%">\r\n
+\t\t<tr>\r\n
+\t\t\t<td>\r\n
+\t\t\t\t<table cellspacing="1" cellpadding="1" width="100%" border="0">\r\n
+\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t<td valign="top">\r\n
+\t\t\t\t\t\t\t<table cellspacing="1" cellpadding="0" border="0">\r\n
+\t\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t\t<span fcklang="DlgTableRows">Rows</span>:</td>\r\n
+\t\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t\t&nbsp;<input id="txtRows" type="text" maxlength="3" size="2" value="3"\r\n
+\t\t\t\t\t\t\t\t\t\t\tonkeypress="return IsDigit(event);" /></td>\r\n
+\t\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t\t<span fcklang="DlgTableColumns">Columns</span>:</td>\r\n
+\t\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t\t&nbsp;<input id="txtColumns" type="text" maxlength="2" size="2" value="2"\r\n
+\t\t\t\t\t\t\t\t\t\t\tonkeypress="return IsDigit(event);" /></td>\r\n
+\t\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t\t<td><span fcklang="DlgTableHeaders">Headers</span>:</td>\r\n
+\t\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t\t&nbsp;<select id="selHeaders">\r\n
+\t\t\t\t\t\t\t\t\t\t\t<option fcklang="DlgTableHeadersNone" value="">None</option>\r\n
+\t\t\t\t\t\t\t\t\t\t\t<option fcklang="DlgTableHeadersRow" value="row">First row</option>\r\n
+\t\t\t\t\t\t\t\t\t\t\t<option fcklang="DlgTableHeadersColumn" value="col">First column</option>\r\n
+\t\t\t\t\t\t\t\t\t\t\t<option fcklang="DlgTableHeadersBoth" value="both">Both</option>\r\n
+\t\t\t\t\t\t\t\t\t\t</select>\r\n
+\t\t\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t\t<span fcklang="DlgTableBorder">Border size</span>:</td>\r\n
+\t\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t\t&nbsp;<input id="txtBorder" type="text" maxlength="2" size="2" value="1"\r\n
+\t\t\t\t\t\t\t\t\t\t\tonkeypress="return IsDigit(event);" /></td>\r\n
+\t\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t\t<span fcklang="DlgTableAlign">Alignment</span>:</td>\r\n
+\t\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t\t&nbsp;<select id="selAlignment">\r\n
+\t\t\t\t\t\t\t\t\t\t\t<option fcklang="DlgTableAlignNotSet" value="" selected="selected">&lt;Not set&gt;</option>\r\n
+\t\t\t\t\t\t\t\t\t\t\t<option fcklang="DlgTableAlignLeft" value="left">Left</option>\r\n
+\t\t\t\t\t\t\t\t\t\t\t<option fcklang="DlgTableAlignCenter" value="center">Center</option>\r\n
+\t\t\t\t\t\t\t\t\t\t\t<option fcklang="DlgTableAlignRight" value="right">Right</option>\r\n
+\t\t\t\t\t\t\t\t\t\t</select></td>\r\n
+\t\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t\t</table>\r\n
+\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t&nbsp;&nbsp;&nbsp;</td>\r\n
+\t\t\t\t\t\t<td align="right" valign="top">\r\n
+\t\t\t\t\t\t\t<table cellspacing="0" cellpadding="0" border="0">\r\n
+\t\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t\t<span fcklang="DlgTableWidth">Width</span>:</td>\r\n
+\t\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t\t&nbsp;<input id="txtWidth" type="text" maxlength="4" size="3" value="200"\r\n
+\t\t\t\t\t\t\t\t\t\t\tonkeypress="return IsDigit(event);" /></td>\r\n
+\t\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t\t&nbsp;<select id="selWidthType">\r\n
+\t\t\t\t\t\t\t\t\t\t\t<option fcklang="DlgTableWidthPx" value="pixels" selected="selected">pixels</option>\r\n
+\t\t\t\t\t\t\t\t\t\t\t<option fcklang="DlgTableWidthPc" value="percent">percent</option>\r\n
+\t\t\t\t\t\t\t\t\t\t</select></td>\r\n
+\t\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t\t<span fcklang="DlgTableHeight">Height</span>:</td>\r\n
+\t\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t\t&nbsp;<input id="txtHeight" type="text" maxlength="4" size="3" onkeypress="return IsDigit(event);" /></td>\r\n
+\t\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t\t&nbsp;<span fcklang="DlgTableWidthPx">pixels</span></td>\r\n
+\t\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t\t<td colspan="3">&nbsp;</td>\r\n
+\t\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t\t<td nowrap="nowrap">\r\n
+\t\t\t\t\t\t\t\t\t\t<span fcklang="DlgTableCellSpace">Cell spacing</span>:</td>\r\n
+\t\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t\t&nbsp;<input id="txtCellSpacing" type="text" maxlength="2" size="2" value="1"\r\n
+\t\t\t\t\t\t\t\t\t\t\tonkeypress="return IsDigit(event);" /></td>\r\n
+\t\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t\t&nbsp;</td>\r\n
+\t\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t\t<td nowrap="nowrap">\r\n
+\t\t\t\t\t\t\t\t\t\t<span fcklang="DlgTableCellPad">Cell padding</span>:</td>\r\n
+\t\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t\t&nbsp;<input id="txtCellPadding" type="text" maxlength="2" size="2" value="1"\r\n
+\t\t\t\t\t\t\t\t\t\t\tonkeypress="return IsDigit(event);" /></td>\r\n
+\t\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t\t&nbsp;</td>\r\n
+\t\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t\t</table>\r\n
+\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t</tr>\r\n
+\t\t\t\t</table>\r\n
+\t\t\t\t<table cellspacing="0" cellpadding="0" width="100%" border="0">\r\n
+\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t<td nowrap="nowrap">\r\n
+\t\t\t\t\t\t\t<span fcklang="DlgTableCaption">Caption</span>:&nbsp;</td>\r\n
+\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t&nbsp;</td>\r\n
+\t\t\t\t\t\t<td width="100%" nowrap="nowrap">\r\n
+\t\t\t\t\t\t\t<input id="txtCaption" type="text" style="width: 100%" /></td>\r\n
+\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t<td nowrap="nowrap">\r\n
+\t\t\t\t\t\t\t<span fcklang="DlgTableSummary">Summary</span>:&nbsp;</td>\r\n
+\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t&nbsp;</td>\r\n
+\t\t\t\t\t\t<td width="100%" nowrap="nowrap">\r\n
+\t\t\t\t\t\t\t<input id="txtSummary" type="text" style="width: 100%" /></td>\r\n
+\t\t\t\t\t</tr>\r\n
+\t\t\t\t</table>\r\n
+\t\t\t</td>\r\n
+\t\t</tr>\r\n
+\t</table>\r\n
+</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>fck_table.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

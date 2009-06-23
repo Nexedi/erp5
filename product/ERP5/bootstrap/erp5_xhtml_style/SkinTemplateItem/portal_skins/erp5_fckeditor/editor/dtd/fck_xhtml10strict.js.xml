@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749249.76</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fck_xhtml10strict.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>﻿/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Contains the DTD mapping for XHTML 1.0 Strict.\r\n
+ * This file was automatically generated from the file: xhtml10-strict.dtd\r\n
+ */\r\n
+FCK.DTD = (function()\r\n
+{\r\n
+    var X = FCKTools.Merge ;\r\n
+\r\n
+    var H,I,J,K,C,L,M,A,B,D,E,G,N,F ;\r\n
+    A = {ins:1, del:1, script:1} ;\r\n
+    B = {hr:1, ul:1, div:1, blockquote:1, noscript:1, table:1, address:1, pre:1, p:1, h5:1, dl:1, h4:1, ol:1, h6:1, h1:1, h3:1, h2:1} ;\r\n
+    C = X({fieldset:1}, B) ;\r\n
+    D = X({sub:1, bdo:1, \'var\':1, sup:1, br:1, kbd:1, map:1, samp:1, b:1, acronym:1, \'#\':1, abbr:1, code:1, i:1, cite:1, tt:1, strong:1, q:1, em:1, big:1, small:1, span:1, dfn:1}, A) ;\r\n
+    E = X({img:1, object:1}, D) ;\r\n
+    F = {input:1, button:1, textarea:1, select:1, label:1} ;\r\n
+    G = X({a:1}, F) ;\r\n
+    H = {img:1, noscript:1, br:1, kbd:1, button:1, h5:1, h4:1, samp:1, h6:1, ol:1, h1:1, h3:1, h2:1, form:1, select:1, \'#\':1, ins:1, abbr:1, label:1, code:1, table:1, script:1, cite:1, input:1, strong:1, textarea:1, big:1, small:1, span:1, hr:1, sub:1, bdo:1, \'var\':1, div:1, object:1, sup:1, map:1, dl:1, del:1, fieldset:1, ul:1, b:1, acronym:1, a:1, blockquote:1, i:1, address:1, tt:1, q:1, pre:1, p:1, em:1, dfn:1} ;\r\n
+\r\n
+    I = X({form:1, fieldset:1}, B, E, G) ;\r\n
+    J = {tr:1} ;\r\n
+    K = {\'#\':1} ;\r\n
+    L = X(E, G) ;\r\n
+    M = {li:1} ;\r\n
+    N = X({form:1}, A, C) ;\r\n
+\r\n
+    return {\r\n
+        col: {},\r\n
+        tr: {td:1, th:1},\r\n
+        img: {},\r\n
+        colgroup: {col:1},\r\n
+        noscript: N,\r\n
+        td: I,\r\n
+        br: {},\r\n
+        th: I,\r\n
+        kbd: L,\r\n
+        button: X(B, E),\r\n
+        h5: L,\r\n
+        h4: L,\r\n
+        samp: L,\r\n
+        h6: L,\r\n
+        ol: M,\r\n
+        h1: L,\r\n
+        h3: L,\r\n
+        option: K,\r\n
+        h2: L,\r\n
+        form: X(A, C),\r\n
+        select: {optgroup:1, option:1},\r\n
+        ins: I,\r\n
+        abbr: L,\r\n
+        label: L,\r\n
+        code: L,\r\n
+        table: {thead:1, col:1, tbody:1, tr:1, colgroup:1, caption:1, tfoot:1},\r\n
+        script: K,\r\n
+        tfoot: J,\r\n
+        cite: L,\r\n
+        li: I,\r\n
+        input: {},\r\n
+        strong: L,\r\n
+        textarea: K,\r\n
+        big: L,\r\n
+        small: L,\r\n
+        span: L,\r\n
+        dt: L,\r\n
+        hr: {},\r\n
+        sub: L,\r\n
+        optgroup: {option:1},\r\n
+        bdo: L,\r\n
+        param: {},\r\n
+        \'var\': L,\r\n
+        div: I,\r\n
+        object: X({param:1}, H),\r\n
+        sup: L,\r\n
+        dd: I,\r\n
+        area: {},\r\n
+        map: X({form:1, area:1}, A, C),\r\n
+        dl: {dt:1, dd:1},\r\n
+        del: I,\r\n
+        fieldset: X({legend:1}, H),\r\n
+        thead: J,\r\n
+        ul: M,\r\n
+        acronym: L,\r\n
+        b: L,\r\n
+        a: X({img:1, object:1}, D, F),\r\n
+        blockquote: N,\r\n
+        caption: L,\r\n
+        i: L,\r\n
+        tbody: J,\r\n
+        address: L,\r\n
+        tt: L,\r\n
+        legend: L,\r\n
+        q: L,\r\n
+        pre: X({a:1}, D, F),\r\n
+        p: L,\r\n
+        em: L,\r\n
+        dfn: L\r\n
+    } ;\r\n
+})() ;\r\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>3433</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

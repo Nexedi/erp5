@@ -1,0 +1,581 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749255.64</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>et.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Estonian language file.\r\n
+ */\r\n
+\r\n
+var FCKLang =\r\n
+{\r\n
+// Language direction : "ltr" (left to right) or "rtl" (right to left).\r\n
+Dir\t\t\t\t\t: "ltr",\r\n
+\r\n
+ToolbarCollapse\t\t: "Voldi tööriistariba",\r\n
+ToolbarExpand\t\t: "Laienda tööriistariba",\r\n
+\r\n
+// Toolbar Items and Context Menu\r\n
+Save\t\t\t\t: "Salvesta",\r\n
+NewPage\t\t\t\t: "Uus leht",\r\n
+Preview\t\t\t\t: "Eelvaade",\r\n
+Cut\t\t\t\t\t: "Lõika",\r\n
+Copy\t\t\t\t: "Kopeeri",\r\n
+Paste\t\t\t\t: "Kleebi",\r\n
+PasteText\t\t\t: "Kleebi tavalise tekstina",\r\n
+PasteWord\t\t\t: "Kleebi Wordist",\r\n
+Print\t\t\t\t: "Prindi",\r\n
+SelectAll\t\t\t: "Vali kõik",\r\n
+RemoveFormat\t\t: "Eemalda vorming",\r\n
+InsertLinkLbl\t\t: "Link",\r\n
+InsertLink\t\t\t: "Sisesta link / Muuda linki",\r\n
+RemoveLink\t\t\t: "Eemalda link",\r\n
+VisitLink\t\t\t: "Open Link",\t//MISSING\r\n
+Anchor\t\t\t\t: "Sisesta ankur / Muuda ankrut",\r\n
+AnchorDelete\t\t: "Eemalda ankur",\r\n
+InsertImageLbl\t\t: "Pilt",\r\n
+InsertImage\t\t\t: "Sisesta pilt / Muuda pilti",\r\n
+InsertFlashLbl\t\t: "Flash",\r\n
+InsertFlash\t\t\t: "Sisesta flash / Muuda flashi",\r\n
+InsertTableLbl\t\t: "Tabel",\r\n
+InsertTable\t\t\t: "Sisesta tabel / Muuda tabelit",\r\n
+InsertLineLbl\t\t: "Joon",\r\n
+InsertLine\t\t\t: "Sisesta horisontaaljoon",\r\n
+InsertSpecialCharLbl: "Erimärgid",\r\n
+InsertSpecialChar\t: "Sisesta erimärk",\r\n
+InsertSmileyLbl\t\t: "Emotikon",\r\n
+InsertSmiley\t\t: "Sisesta emotikon",\r\n
+About\t\t\t\t: "FCKeditor teave",\r\n
+Bold\t\t\t\t: "Paks",\r\n
+Italic\t\t\t\t: "Kursiiv",\r\n
+Underline\t\t\t: "Allajoonitud",\r\n
+StrikeThrough\t\t: "Läbijoonitud",\r\n
+Subscript\t\t\t: "Allindeks",\r\n
+Superscript\t\t\t: "Ülaindeks",\r\n
+LeftJustify\t\t\t: "Vasakjoondus",\r\n
+CenterJustify\t\t: "Keskjoondus",\r\n
+RightJustify\t\t: "Paremjoondus",\r\n
+BlockJustify\t\t: "Rööpjoondus",\r\n
+DecreaseIndent\t\t: "Vähenda taanet",\r\n
+IncreaseIndent\t\t: "Suurenda taanet",\r\n
+Blockquote\t\t\t: "Blokktsitaat",\r\n
+CreateDiv\t\t\t: "Create Div Container",\t//MISSING\r\n
+EditDiv\t\t\t\t: "Edit Div Container",\t//MISSING\r\n
+DeleteDiv\t\t\t: "Remove Div Container",\t//MISSING\r\n
+Undo\t\t\t\t: "Võta tagasi",\r\n
+Redo\t\t\t\t: "Korda toimingut",\r\n
+NumberedListLbl\t\t: "Nummerdatud loetelu",\r\n
+NumberedList\t\t: "Sisesta/Eemalda nummerdatud loetelu",\r\n
+BulletedListLbl\t\t: "Punktiseeritud loetelu",\r\n
+BulletedList\t\t: "Sisesta/Eemalda punktiseeritud loetelu",\r\n
+ShowTableBorders\t: "Näita tabeli jooni",\r\n
+ShowDetails\t\t\t: "Näita üksikasju",\r\n
+Style\t\t\t\t: "Laad",\r\n
+FontFormat\t\t\t: "Vorming",\r\n
+Font\t\t\t\t: "Kiri",\r\n
+FontSize\t\t\t: "Suurus",\r\n
+TextColor\t\t\t: "Teksti värv",\r\n
+BGColor\t\t\t\t: "Tausta värv",\r\n
+Source\t\t\t\t: "Lähtekood",\r\n
+Find\t\t\t\t: "Otsi",\r\n
+Replace\t\t\t\t: "Asenda",\r\n
+SpellCheck\t\t\t: "Kontrolli õigekirja",\r\n
+UniversalKeyboard\t: "Universaalne klaviatuur",\r\n
+PageBreakLbl\t\t: "Lehepiir",\r\n
+PageBreak\t\t\t: "Sisesta lehevahetuskoht",\r\n
+\r\n
+Form\t\t\t: "Vorm",\r\n
+Checkbox\t\t: "Märkeruut",\r\n
+RadioButton\t\t: "Raadionupp",\r\n
+TextField\t\t: "Tekstilahter",\r\n
+Textarea\t\t: "Tekstiala",\r\n
+HiddenField\t\t: "Varjatud lahter",\r\n
+Button\t\t\t: "Nupp",\r\n
+SelectionField\t: "Valiklahter",\r\n
+ImageButton\t\t: "Piltnupp",\r\n
+\r\n
+FitWindow\t\t: "Maksimeeri redaktori mõõtmed",\r\n
+ShowBlocks\t\t: "Näita blokke",\r\n
+\r\n
+// Context Menu\r\n
+EditLink\t\t\t: "Muuda linki",\r\n
+CellCM\t\t\t\t: "Lahter",\r\n
+RowCM\t\t\t\t: "Rida",\r\n
+ColumnCM\t\t\t: "Veerg",\r\n
+InsertRowAfter\t\t: "Sisesta rida peale",\r\n
+InsertRowBefore\t\t: "Sisesta rida enne",\r\n
+DeleteRows\t\t\t: "Eemalda read",\r\n
+InsertColumnAfter\t: "Sisesta veerg peale",\r\n
+InsertColumnBefore\t: "Sisesta veerg enne",\r\n
+DeleteColumns\t\t: "Eemalda veerud",\r\n
+InsertCellAfter\t\t: "Sisesta lahter peale",\r\n
+InsertCellBefore\t: "Sisesta lahter enne",\r\n
+DeleteCells\t\t\t: "Eemalda lahtrid",\r\n
+MergeCells\t\t\t: "Ühenda lahtrid",\r\n
+MergeRight\t\t\t: "Ühenda paremale",\r\n
+MergeDown\t\t\t: "Ühenda alla",\r\n
+HorizontalSplitCell\t: "Poolita lahter horisontaalselt",\r\n
+VerticalSplitCell\t: "Poolita lahter vertikaalselt",\r\n
+TableDelete\t\t\t: "Kustuta tabel",\r\n
+CellProperties\t\t: "Lahtri atribuudid",\r\n
+TableProperties\t\t: "Tabeli atribuudid",\r\n
+ImageProperties\t\t: "Pildi atribuudid",\r\n
+FlashProperties\t\t: "Flash omadused",\r\n
+\r\n
+AnchorProp\t\t\t: "Ankru omadused",\r\n
+ButtonProp\t\t\t: "Nupu omadused",\r\n
+CheckboxProp\t\t: "Märkeruudu omadused",\r\n
+HiddenFieldProp\t\t: "Varjatud lahtri omadused",\r\n
+RadioButtonProp\t\t: "Raadionupu omadused",\r\n
+ImageButtonProp\t\t: "Piltnupu omadused",\r\n
+TextFieldProp\t\t: "Tekstilahtri omadused",\r\n
+SelectionFieldProp\t: "Valiklahtri omadused",\r\n
+TextareaProp\t\t: "Tekstiala omadused",\r\n
+FormProp\t\t\t: "Vormi omadused",\r\n
+\r\n
+FontFormats\t\t\t: "Tavaline;Vormindatud;Aadress;Pealkiri 1;Pealkiri 2;Pealkiri 3;Pealkiri 4;Pealkiri 5;Pealkiri 6;Tavaline (DIV)",\r\n
+\r\n
+// Alerts and Messages\r\n
+ProcessingXHTML\t\t: "Töötlen XHTML\'i. Palun oota...",\r\n
+Done\t\t\t\t: "Tehtud",\r\n
+PasteWordConfirm\t: "Tekst, mida soovid lisada paistab pärinevat Word\'ist. Kas soovid seda enne kleepimist puhastada?",\r\n
+NotCompatiblePaste\t: "See käsk on saadaval ainult Internet Explorer versioon 5.5 või uuema puhul. Kas soovid kleepida ilma puhastamata?",\r\n
+UnknownToolbarItem\t: "Tundmatu tööriistarea üksus \\"%1\\"",\r\n
+UnknownCommand\t\t: "Tundmatu käsunimi \\"%1\\"",\r\n
+NotImplemented\t\t: "Käsku ei täidetud",\r\n
+UnknownToolbarSet\t: "Tööriistariba \\"%1\\" ei eksisteeri",\r\n
+NoActiveX\t\t\t: "Sinu veebisirvija turvalisuse seaded võivad limiteerida mõningaid tekstirdaktori kasutusvõimalusi. Sa peaksid võimaldama valiku \\"Run ActiveX controls and plug-ins\\" oma veebisirvija seadetes. Muidu võid sa täheldada vigu tekstiredaktori töös ja märgata puuduvaid funktsioone.",\r\n
+BrowseServerBlocked : "Ressursside sirvija avamine ebaõnnestus. Võimalda pop-up akende avanemine.",\r\n
+DialogBlocked\t\t: "Ei olenud võimalik avada dialoogi akent. Võimalda pop-up akende avanemine.",\r\n
+VisitLinkBlocked\t: "It was not possible to open a new window. Make sure all popup blockers are disabled.",\t//MISSING\r\n
+\r\n
+// Dialogs\r\n
+DlgBtnOK\t\t\t: "OK",\r\n
+DlgBtnCancel\t\t: "Loobu",\r\n
+DlgBtnClose\t\t\t: "Sulge",\r\n
+DlgBtnBrowseServer\t: "Sirvi serverit",\r\n
+DlgAdvancedTag\t\t: "Täpsemalt",\r\n
+DlgOpOther\t\t\t: "<Teine>",\r\n
+DlgInfoTab\t\t\t: "Info",\r\n
+DlgAlertUrl\t\t\t: "Palun sisesta URL",\r\n
+\r\n
+// General Dialogs Labels\r\n
+DlgGenNotSet\t\t: "<määramata>",\r\n
+DlgGenId\t\t\t: "Id",\r\n
+DlgGenLangDir\t\t: "Keele suund",\r\n
+DlgGenLangDirLtr\t: "Vasakult paremale (LTR)",\r\n
+DlgGenLangDirRtl\t: "Paremalt vasakule (RTL)",\r\n
+DlgGenLangCode\t\t: "Keele kood",\r\n
+DlgGenAccessKey\t\t: "Juurdepääsu võti",\r\n
+DlgGenName\t\t\t: "Nimi",\r\n
+DlgGenTabIndex\t\t: "Tab indeks",\r\n
+DlgGenLongDescr\t\t: "Pikk kirjeldus URL",\r\n
+DlgGenClass\t\t\t: "Stiilistiku klassid",\r\n
+DlgGenTitle\t\t\t: "Juhendav tiitel",\r\n
+DlgGenContType\t\t: "Juhendava sisu tüüp",\r\n
+DlgGenLinkCharset\t: "Lingitud ressurssi märgistik",\r\n
+DlgGenStyle\t\t\t: "Laad",\r\n
+\r\n
+// Image Dialog\r\n
+DlgImgTitle\t\t\t: "Pildi atribuudid",\r\n
+DlgImgInfoTab\t\t: "Pildi info",\r\n
+DlgImgBtnUpload\t\t: "Saada serverissee",\r\n
+DlgImgURL\t\t\t: "URL",\r\n
+DlgImgUpload\t\t: "Lae üles",\r\n
+DlgImgAlt\t\t\t: "Alternatiivne tekst",\r\n
+DlgImgWidth\t\t\t: "Laius",\r\n
+DlgImgHeight\t\t: "Kõrgus",\r\n
+DlgImgLockRatio\t\t: "Lukusta kuvasuhe",\r\n
+DlgBtnResetSize\t\t: "Lähtesta suurus",\r\n
+DlgImgBorder\t\t: "Joon",\r\n
+DlgImgHSpace\t\t: "H. vaheruum",\r\n
+DlgImgVSpace\t\t: "V. vaheruum",\r\n
+DlgImgAlign\t\t\t: "Joondus",\r\n
+DlgImgAlignLeft\t\t: "Vasak",\r\n
+DlgImgAlignAbsBottom: "Abs alla",\r\n
+DlgImgAlignAbsMiddle: "Abs keskele",\r\n
+DlgImgAlignBaseline\t: "Baasjoonele",\r\n
+DlgImgAlignBottom\t: "Alla",\r\n
+DlgImgAlignMiddle\t: "Keskele",\r\n
+DlgImgAlignRight\t: "Paremale",\r\n
+DlgImgAlignTextTop\t: "Tekstit üles",\r\n
+DlgImgAlignTop\t\t: "Üles",\r\n
+DlgImgPreview\t\t: "Eelvaade",\r\n
+DlgImgAlertUrl\t\t: "Palun kirjuta pildi URL",\r\n
+DlgImgLinkTab\t\t: "Link",\r\n
+\r\n
+// Flash Dialog\r\n
+DlgFlashTitle\t\t: "Flash omadused",\r\n
+DlgFlashChkPlay\t\t: "Automaatne start ",\r\n
+DlgFlashChkLoop\t\t: "Korduv",\r\n
+DlgFlashChkMenu\t\t: "Võimalda flash menüü",\r\n
+DlgFlashScale\t\t: "Mastaap",\r\n
+DlgFlashScaleAll\t: "Näita kõike",\r\n
+DlgFlashScaleNoBorder\t: "Äärist ei ole",\r\n
+DlgFlashScaleFit\t: "Täpne sobivus",\r\n
+\r\n
+// Link Dialog\r\n
+DlgLnkWindowTitle\t: "Link",\r\n
+DlgLnkInfoTab\t\t: "Lingi info",\r\n
+DlgLnkTargetTab\t\t: "Sihtkoht",\r\n
+\r\n
+DlgLnkType\t\t\t: "Lingi tüüp",\r\n
+DlgLnkTypeURL\t\t: "URL",\r\n
+DlgLnkTypeAnchor\t: "Ankur sellel lehel",\r\n
+DlgLnkTypeEMail\t\t: "E-post",\r\n
+DlgLnkProto\t\t\t: "Protokoll",\r\n
+DlgLnkProtoOther\t: "<muu>",\r\n
+DlgLnkURL\t\t\t: "URL",\r\n
+DlgLnkAnchorSel\t\t: "Vali ankur",\r\n
+DlgLnkAnchorByName\t: "Ankru nime järgi",\r\n
+DlgLnkAnchorById\t: "Elemendi id järgi",\r\n
+DlgLnkNoAnchors\t\t: "(Selles dokumendis ei ole ankruid)",\r\n
+DlgLnkEMail\t\t\t: "E-posti aadress",\r\n
+DlgLnkEMailSubject\t: "Sõnumi teema",\r\n
+DlgLnkEMailBody\t\t: "Sõnumi tekst",\r\n
+DlgLnkUpload\t\t: "Lae üles",\r\n
+DlgLnkBtnUpload\t\t: "Saada serverisse",\r\n
+\r\n
+DlgLnkTarget\t\t: "Sihtkoht",\r\n
+DlgLnkTargetFrame\t: "<raam>",\r\n
+DlgLnkTargetPopup\t: "<hüpikaken>",\r\n
+DlgLnkTargetBlank\t: "Uus aken (_blank)",\r\n
+DlgLnkTargetParent\t: "Esivanem aken (_parent)",\r\n
+DlgLnkTargetSelf\t: "Sama aken (_self)",\r\n
+DlgLnkTargetTop\t\t: "Pealmine aken (_top)",\r\n
+DlgLnkTargetFrameName\t: "Sihtmärk raami nimi",\r\n
+DlgLnkPopWinName\t: "Hüpikakna nimi",\r\n
+DlgLnkPopWinFeat\t: "Hüpikakna omadused",\r\n
+DlgLnkPopResize\t\t: "Suurendatav",\r\n
+DlgLnkPopLocation\t: "Aadressiriba",\r\n
+DlgLnkPopMenu\t\t: "Menüüriba",\r\n
+DlgLnkPopScroll\t\t: "Kerimisribad",\r\n
+DlgLnkPopStatus\t\t: "Olekuriba",\r\n
+DlgLnkPopToolbar\t: "Tööriistariba",\r\n
+DlgLnkPopFullScrn\t: "Täisekraan (IE)",\r\n
+DlgLnkPopDependent\t: "Sõltuv (Netscape)",\r\n
+DlgLnkPopWidth\t\t: "Laius",\r\n
+DlgLnkPopHeight\t\t: "Kõrgus",\r\n
+DlgLnkPopLeft\t\t: "Vasak asukoht",\r\n
+DlgLnkPopTop\t\t: "Ülemine asukoht",\r\n
+\r\n
+DlnLnkMsgNoUrl\t\t: "Palun kirjuta lingi URL",\r\n
+DlnLnkMsgNoEMail\t: "Palun kirjuta E-Posti aadress",\r\n
+DlnLnkMsgNoAnchor\t: "Palun vali ankur",\r\n
+DlnLnkMsgInvPopName\t: "Hüpikakna nimi peab algama alfabeetilise tähega ja ei tohi sisaldada tühikuid",\r\n
+\r\n
+// Color Dialog\r\n
+DlgColorTitle\t\t: "Vali värv",\r\n
+DlgColorBtnClear\t: "Tühjenda",\r\n
+DlgColorHighlight\t: "Märgi",\r\n
+DlgColorSelected\t: "Valitud",\r\n
+\r\n
+// Smiley Dialog\r\n
+DlgSmileyTitle\t\t: "Sisesta emotikon",\r\n
+\r\n
+// Special Character Dialog\r\n
+DlgSpecialCharTitle\t: "Vali erimärk",\r\n
+\r\n
+// Table Dialog\r\n
+DlgTableTitle\t\t: "Tabeli atribuudid",\r\n
+DlgTableRows\t\t: "Read",\r\n
+DlgTableColumns\t\t: "Veerud",\r\n
+DlgTableBorder\t\t: "Joone suurus",\r\n
+DlgTableAlign\t\t: "Joondus",\r\n
+DlgTableAlignNotSet\t: "<Määramata>",\r\n
+DlgTableAlignLeft\t: "Vasak",\r\n
+DlgTableAlignCenter\t: "Kesk",\r\n
+DlgTableAlignRight\t: "Parem",\r\n
+DlgTableWidth\t\t: "Laius",\r\n
+DlgTableWidthPx\t\t: "pikslit",\r\n
+DlgTableWidthPc\t\t: "protsenti",\r\n
+DlgTableHeight\t\t: "Kõrgus",\r\n
+DlgTableCellSpace\t: "Lahtri vahe",\r\n
+DlgTableCellPad\t\t: "Lahtri täidis",\r\n
+DlgTableCaption\t\t: "Tabeli tiitel",\r\n
+DlgTableSummary\t\t: "Kokkuvõte",\r\n
+DlgTableHeaders\t\t: "Headers",\t//MISSING\r\n
+DlgTableHeadersNone\t\t: "None",\t//MISSING\r\n
+DlgTableHeadersColumn\t: "First column",\t//MISSING\r\n
+DlgTableHeadersRow\t\t: "First Row",\t//MISSING\r\n
+DlgTableHeadersBoth\t\t: "Both",\t//MISSING\r\n
+\r\n
+// Table Cell Dialog\r\n
+DlgCellTitle\t\t: "Lahtri atribuudid",\r\n
+DlgCellWidth\t\t: "Laius",\r\n
+DlgCellWidthPx\t\t: "pikslit",\r\n
+DlgCellWidthPc\t\t: "protsenti",\r\n
+DlgCellHeight\t\t: "Kõrgus",\r\n
+DlgCellWordWrap\t\t: "Sõna ülekanne",\r\n
+DlgCellWordWrapNotSet\t: "<Määramata>",\r\n
+DlgCellWordWrapYes\t: "Jah",\r\n
+DlgCellWordWrapNo\t: "Ei",\r\n
+DlgCellHorAlign\t\t: "Horisontaaljoondus",\r\n
+DlgCellHorAlignNotSet\t: "<Määramata>",\r\n
+DlgCellHorAlignLeft\t: "Vasak",\r\n
+DlgCellHorAlignCenter\t: "Kesk",\r\n
+DlgCellHorAlignRight: "Parem",\r\n
+DlgCellVerAlign\t\t: "Vertikaaljoondus",\r\n
+DlgCellVerAlignNotSet\t: "<Määramata>",\r\n
+DlgCellVerAlignTop\t: "Üles",\r\n
+DlgCellVerAlignMiddle\t: "Keskele",\r\n
+DlgCellVerAlignBottom\t: "Alla",\r\n
+DlgCellVerAlignBaseline\t: "Baasjoonele",\r\n
+DlgCellType\t\t: "Cell Type",\t//MISSING\r\n
+DlgCellTypeData\t\t: "Data",\t//MISSING\r\n
+DlgCellTypeHeader\t: "Header",\t//MISSING\r\n
+DlgCellRowSpan\t\t: "Reaulatus",\r\n
+DlgCellCollSpan\t\t: "Veeruulatus",\r\n
+DlgCellBackColor\t: "Tausta värv",\r\n
+DlgCellBorderColor\t: "Joone värv",\r\n
+DlgCellBtnSelect\t: "Vali...",\r\n
+\r\n
+// Find and Replace Dialog\r\n
+DlgFindAndReplaceTitle\t: "Otsi ja asenda",\r\n
+\r\n
+// Find Dialog\r\n
+DlgFindTitle\t\t: "Otsi",\r\n
+DlgFindFindBtn\t\t: "Otsi",\r\n
+DlgFindNotFoundMsg\t: "Valitud teksti ei leitud.",\r\n
+\r\n
+// Replace Dialog\r\n
+DlgReplaceTitle\t\t\t: "Asenda",\r\n
+DlgReplaceFindLbl\t\t: "Leia mida:",\r\n
+DlgReplaceReplaceLbl\t: "Asenda millega:",\r\n
+DlgReplaceCaseChk\t\t: "Erista suur- ja väiketähti",\r\n
+DlgReplaceReplaceBtn\t: "Asenda",\r\n
+DlgReplaceReplAllBtn\t: "Asenda kõik",\r\n
+DlgReplaceWordChk\t\t: "Otsi terviklike sõnu",\r\n
+\r\n
+// Paste Operations / Dialog\r\n
+PasteErrorCut\t: "Sinu veebisirvija turvaseaded ei luba redaktoril automaatselt lõigata. Palun kasutage selleks klaviatuuri klahvikombinatsiooni (Ctrl+X).",\r\n
+PasteErrorCopy\t: "Sinu veebisirvija turvaseaded ei luba redaktoril automaatselt kopeerida. Palun kasutage selleks klaviatuuri klahvikombinatsiooni (Ctrl+C).",\r\n
+\r\n
+PasteAsText\t\t: "Kleebi tavalise tekstina",\r\n
+PasteFromWord\t: "Kleebi Wordist",\r\n
+\r\n
+DlgPasteMsg2\t: "Palun kleebi järgnevasse kasti kasutades klaviatuuri klahvikombinatsiooni (<STRONG>Ctrl+V</STRONG>) ja vajuta seejärel <STRONG>OK</STRONG>.",\r\n
+DlgPasteSec\t\t: "Sinu veebisirvija turvaseadete tõttu, ei oma redaktor otsest ligipääsu lõikelaua andmetele. Sa pead kleepima need uuesti siia aknasse.",\r\n
+DlgPasteIgnoreFont\t\t: "Ignoreeri kirja definitsioone",\r\n
+DlgPasteRemoveStyles\t: "Eemalda stiilide definitsioonid",\r\n
+\r\n
+// Color Picker\r\n
+ColorAutomatic\t: "Automaatne",\r\n
+ColorMoreColors\t: "Rohkem värve...",\r\n
+\r\n
+// Document Properties\r\n
+DocProps\t\t: "Dokumendi omadused",\r\n
+\r\n
+// Anchor Dialog\r\n
+DlgAnchorTitle\t\t: "Ankru omadused",\r\n
+DlgAnchorName\t\t: "Ankru nimi",\r\n
+DlgAnchorErrorName\t: "Palun sisest ankru nimi",\r\n
+\r\n
+// Speller Pages Dialog\r\n
+DlgSpellNotInDic\t\t: "Puudub sõnastikust",\r\n
+DlgSpellChangeTo\t\t: "Muuda",\r\n
+DlgSpellBtnIgnore\t\t: "Ignoreeri",\r\n
+DlgSpellBtnIgnoreAll\t: "Ignoreeri kõiki",\r\n
+DlgSpellBtnReplace\t\t: "Asenda",\r\n
+DlgSpellBtnReplaceAll\t: "Asenda kõik",\r\n
+DlgSpellBtnUndo\t\t\t: "Võta tagasi",\r\n
+DlgSpellNoSuggestions\t: "- Soovitused puuduvad -",\r\n
+DlgSpellProgress\t\t: "Toimub õigekirja kontroll...",\r\n
+DlgSpellNoMispell\t\t: "Õigekirja kontroll sooritatud: õigekirjuvigu ei leitud",\r\n
+DlgSpellNoChanges\t\t: "Õigekirja kontroll sooritatud: ühtegi sõna ei muudetud",\r\n
+DlgSpellOneChange\t\t: "Õigekirja kontroll sooritatud: üks sõna muudeti",\r\n
+DlgSpellManyChanges\t\t: "Õigekirja kontroll sooritatud: %1 sõna muudetud",\r\n
+\r\n
+IeSpellDownload\t\t\t: "Õigekirja kontrollija ei ole installeeritud. Soovid sa selle alla laadida?",\r\n
+\r\n
+// Button Dialog\r\n
+DlgButtonText\t\t: "Tekst (väärtus)",\r\n
+DlgButtonType\t\t: "Tüüp",\r\n
+DlgButtonTypeBtn\t: "Nupp",\r\n
+DlgButtonTypeSbm\t: "Saada",\r\n
+DlgButtonTypeRst\t: "Lähtesta",\r\n
+\r\n
+// Checkbox and Radio Button Dialogs\r\n
+DlgCheckboxName\t\t: "Nimi",\r\n
+DlgCheckboxValue\t: "Väärtus",\r\n
+DlgCheckboxSelected\t: "Valitud",\r\n
+\r\n
+// Form Dialog\r\n
+DlgFormName\t\t: "Nimi",\r\n
+DlgFormAction\t: "Toiming",\r\n
+DlgFormMethod\t: "Meetod",\r\n
+\r\n
+// Select Field Dialog\r\n
+DlgSelectName\t\t: "Nimi",\r\n
+DlgSelectValue\t\t: "Väärtus",\r\n
+DlgSelectSize\t\t: "Suurus",\r\n
+DlgSelectLines\t\t: "ridu",\r\n
+DlgSelectChkMulti\t: "Võimalda mitu valikut",\r\n
+DlgSelectOpAvail\t: "Võimalikud valikud",\r\n
+DlgSelectOpText\t\t: "Tekst",\r\n
+DlgSelectOpValue\t: "Väärtus",\r\n
+DlgSelectBtnAdd\t\t: "Lisa",\r\n
+DlgSelectBtnModify\t: "Muuda",\r\n
+DlgSelectBtnUp\t\t: "Üles",\r\n
+DlgSelectBtnDown\t: "Alla",\r\n
+DlgSelectBtnSetValue : "Sea valitud olekuna",\r\n
+DlgSelectBtnDelete\t: "Kustuta",\r\n
+\r\n
+// Textarea Dialog\r\n
+DlgTextareaName\t: "Nimi",\r\n
+DlgTextareaCols\t: "Veerge",\r\n
+DlgTextareaRows\t: "Ridu",\r\n
+\r\n
+// Text Field Dialog\r\n
+DlgTextName\t\t\t: "Nimi",\r\n
+DlgTextValue\t\t: "Väärtus",\r\n
+DlgTextCharWidth\t: "Laius (tähemärkides)",\r\n
+DlgTextMaxChars\t\t: "Maksimaalselt tähemärke",\r\n
+DlgTextType\t\t\t: "Tüüp",\r\n
+DlgTextTypeText\t\t: "Tekst",\r\n
+DlgTextTypePass\t\t: "Parool",\r\n
+\r\n
+// Hidden Field Dialog\r\n
+DlgHiddenName\t: "Nimi",\r\n
+DlgHiddenValue\t: "Väärtus",\r\n
+\r\n
+// Bulleted List Dialog\r\n
+BulletedListProp\t: "Täpitud loetelu omadused",\r\n
+NumberedListProp\t: "Nummerdatud loetelu omadused",\r\n
+DlgLstStart\t\t\t: "Alusta",\r\n
+DlgLstType\t\t\t: "Tüüp",\r\n
+DlgLstTypeCircle\t: "Ring",\r\n
+DlgLstTypeDisc\t\t: "Ketas",\r\n
+DlgLstTypeSquare\t: "Ruut",\r\n
+DlgLstTypeNumbers\t: "Numbrid (1, 2, 3)",\r\n
+DlgLstTypeLCase\t\t: "Väiketähed (a, b, c)",\r\n
+DlgLstTypeUCase\t\t: "Suurtähed (A, B, C)",\r\n
+DlgLstTypeSRoman\t: "Väiksed Rooma numbrid (i, ii, iii)",\r\n
+DlgLstTypeLRoman\t: "Suured Rooma numbrid (I, II, III)",\r\n
+\r\n
+// Document Properties Dialog\r\n
+DlgDocGeneralTab\t: "Üldine",\r\n
+DlgDocBackTab\t\t: "Taust",\r\n
+DlgDocColorsTab\t\t: "Värvid ja veerised",\r\n
+DlgDocMetaTab\t\t: "Meta andmed",\r\n
+\r\n
+DlgDocPageTitle\t\t: "Lehekülje tiitel",\r\n
+DlgDocLangDir\t\t: "Kirja suund",\r\n
+DlgDocLangDirLTR\t: "Vasakult paremale (LTR)",\r\n
+DlgDocLangDirRTL\t: "Paremalt vasakule (RTL)",\r\n
+DlgDocLangCode\t\t: "Keele kood",\r\n
+DlgDocCharSet\t\t: "Märgistiku kodeering",\r\n
+DlgDocCharSetCE\t\t: "Kesk-Euroopa",\r\n
+DlgDocCharSetCT\t\t: "Hiina traditsiooniline (Big5)",\r\n
+DlgDocCharSetCR\t\t: "Kirillisa",\r\n
+DlgDocCharSetGR\t\t: "Kreeka",\r\n
+DlgDocCharSetJP\t\t: "Jaapani",\r\n
+DlgDocCharSetKR\t\t: "Korea",\r\n
+DlgDocCharSetTR\t\t: "Türgi",\r\n
+DlgDocCharSetUN\t\t: "Unicode (UTF-8)",\r\n
+DlgDocCharSetWE\t\t: "Lääne-Euroopa",\r\n
+DlgDocCharSetOther\t: "Ülejäänud märgistike kodeeringud",\r\n
+\r\n
+DlgDocDocType\t\t: "Dokumendi tüüppäis",\r\n
+DlgDocDocTypeOther\t: "Teised dokumendi tüüppäised",\r\n
+DlgDocIncXHTML\t\t: "Arva kaasa XHTML deklaratsioonid",\r\n
+DlgDocBgColor\t\t: "Taustavärv",\r\n
+DlgDocBgImage\t\t: "Taustapildi URL",\r\n
+DlgDocBgNoScroll\t: "Mittekeritav tagataust",\r\n
+DlgDocCText\t\t\t: "Tekst",\r\n
+DlgDocCLink\t\t\t: "Link",\r\n
+DlgDocCVisited\t\t: "Külastatud link",\r\n
+DlgDocCActive\t\t: "Aktiivne link",\r\n
+DlgDocMargins\t\t: "Lehekülje äärised",\r\n
+DlgDocMaTop\t\t\t: "Ülaserv",\r\n
+DlgDocMaLeft\t\t: "Vasakserv",\r\n
+DlgDocMaRight\t\t: "Paremserv",\r\n
+DlgDocMaBottom\t\t: "Alaserv",\r\n
+DlgDocMeIndex\t\t: "Dokumendi võtmesõnad (eraldatud komadega)",\r\n
+DlgDocMeDescr\t\t: "Dokumendi kirjeldus",\r\n
+DlgDocMeAuthor\t\t: "Autor",\r\n
+DlgDocMeCopy\t\t: "Autoriõigus",\r\n
+DlgDocPreview\t\t: "Eelvaade",\r\n
+\r\n
+// Templates Dialog\r\n
+Templates\t\t\t: "Šabloon",\r\n
+DlgTemplatesTitle\t: "Sisu šabloonid",\r\n
+DlgTemplatesSelMsg\t: "Palun vali šabloon, et avada see redaktoris<br />(praegune sisu läheb kaotsi):",\r\n
+DlgTemplatesLoading\t: "Laen šabloonide nimekirja. Palun oota...",\r\n
+DlgTemplatesNoTpl\t: "(Ühtegi šablooni ei ole defineeritud)",\r\n
+DlgTemplatesReplace\t: "Asenda tegelik sisu",\r\n
+\r\n
+// About Dialog\r\n
+DlgAboutAboutTab\t: "Teave",\r\n
+DlgAboutBrowserInfoTab\t: "Veebisirvija info",\r\n
+DlgAboutLicenseTab\t: "Litsents",\r\n
+DlgAboutVersion\t\t: "versioon",\r\n
+DlgAboutInfo\t\t: "Täpsema info saamiseks mine",\r\n
+\r\n
+// Div Dialog\r\n
+DlgDivGeneralTab\t: "General",\t//MISSING\r\n
+DlgDivAdvancedTab\t: "Advanced",\t//MISSING\r\n
+DlgDivStyle\t\t: "Style",\t//MISSING\r\n
+DlgDivInlineStyle\t: "Inline Style"\t//MISSING\r\n
+};\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>18648</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

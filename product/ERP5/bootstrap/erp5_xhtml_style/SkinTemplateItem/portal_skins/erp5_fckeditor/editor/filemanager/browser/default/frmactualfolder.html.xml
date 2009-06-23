@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * This page shows the actual folder path.\r\n
+-->\r\n
+<html>\r\n
+\t<head>\r\n
+\t\t<title>Folder path</title>\r\n
+\t\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\r\n
+\t\t<link href="browser.css" type="text/css" rel="stylesheet">\r\n
+\t\t<script type="text/javascript">\r\n
+// Automatically detect the correct document.domain (#1919).\r\n
+(function()\r\n
+{\r\n
+\tvar d = document.domain ;\r\n
+\r\n
+\twhile ( true )\r\n
+\t{\r\n
+\t\t// Test if we can access a parent property.\r\n
+\t\ttry\r\n
+\t\t{\r\n
+\t\t\tvar test = window.top.opener.document.domain ;\r\n
+\t\t\tbreak ;\r\n
+\t\t}\r\n
+\t\tcatch( e )\r\n
+\t\t{}\r\n
+\r\n
+\t\t// Remove a domain part: www.mytest.example.com => mytest.example.com => example.com ...\r\n
+\t\td = d.replace( /.*?(?:\\.|$)/, \'\' ) ;\r\n
+\r\n
+\t\tif ( d.length == 0 )\r\n
+\t\t\tbreak ;\t\t// It was not able to detect the domain.\r\n
+\r\n
+\t\ttry\r\n
+\t\t{\r\n
+\t\t\tdocument.domain = d ;\r\n
+\t\t}\r\n
+\t\tcatch (e)\r\n
+\t\t{\r\n
+\t\t\tbreak ;\r\n
+\t\t}\r\n
+\t}\r\n
+})() ;\r\n
+\r\n
+function SetCurrentFolder( resourceType, folderPath )\r\n
+{\r\n
+\tdocument.getElementById(\'tdName\').innerHTML = folderPath ;\r\n
+}\r\n
+\r\n
+window.onload = function()\r\n
+{\r\n
+\twindow.top.IsLoadedActualFolder = true ;\r\n
+}\r\n
+\r\n
+\t\t</script>\r\n
+\t</head>\r\n
+\t<body>\r\n
+\t\t<table class="fullHeight" cellSpacing="0" cellPadding="0" width="100%" border="0">\r\n
+\t\t\t<tr>\r\n
+\t\t\t\t<td>\r\n
+\t\t\t\t\t<button style="WIDTH: 100%" type="button">\r\n
+\t\t\t\t\t\t<table cellSpacing="0" cellPadding="0" width="100%" border="0">\r\n
+\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t<td><img height="32" alt="" src="images/FolderOpened32.gif" width="32"></td>\r\n
+\t\t\t\t\t\t\t\t<td>&nbsp;</td>\r\n
+\t\t\t\t\t\t\t\t<td id="tdName" width="100%" nowrap class="ActualFolder">/</td>\r\n
+\t\t\t\t\t\t\t\t<td>&nbsp;</td>\r\n
+\t\t\t\t\t\t\t\t<td><img height="8" src="images/ButtonArrow.gif" width="12" alt=""></td>\r\n
+\t\t\t\t\t\t\t\t<td>&nbsp;</td>\r\n
+\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t</table>\r\n
+\t\t\t\t\t</button>\r\n
+\t\t\t\t</td>\r\n
+\t\t\t</tr>\r\n
+\t\t</table>\r\n
+\t</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>frmactualfolder.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

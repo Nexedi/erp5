@@ -1,0 +1,581 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749264.39</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ru.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Russian language file.\r\n
+ */\r\n
+\r\n
+var FCKLang =\r\n
+{\r\n
+// Language direction : "ltr" (left to right) or "rtl" (right to left).\r\n
+Dir\t\t\t\t\t: "ltr",\r\n
+\r\n
+ToolbarCollapse\t\t: "Свернуть панель инструментов",\r\n
+ToolbarExpand\t\t: "Развернуть панель инструментов",\r\n
+\r\n
+// Toolbar Items and Context Menu\r\n
+Save\t\t\t\t: "Сохранить",\r\n
+NewPage\t\t\t\t: "Новая страница",\r\n
+Preview\t\t\t\t: "Предварительный просмотр",\r\n
+Cut\t\t\t\t\t: "Вырезать",\r\n
+Copy\t\t\t\t: "Копировать",\r\n
+Paste\t\t\t\t: "Вставить",\r\n
+PasteText\t\t\t: "Вставить только текст",\r\n
+PasteWord\t\t\t: "Вставить из Word",\r\n
+Print\t\t\t\t: "Печать",\r\n
+SelectAll\t\t\t: "Выделить все",\r\n
+RemoveFormat\t\t: "Убрать форматирование",\r\n
+InsertLinkLbl\t\t: "Ссылка",\r\n
+InsertLink\t\t\t: "Вставить/Редактировать ссылку",\r\n
+RemoveLink\t\t\t: "Убрать ссылку",\r\n
+VisitLink\t\t\t: "Перейти по ссылке",\r\n
+Anchor\t\t\t\t: "Вставить/Редактировать якорь",\r\n
+AnchorDelete\t\t: "Убрать якорь",\r\n
+InsertImageLbl\t\t: "Изображение",\r\n
+InsertImage\t\t\t: "Вставить/Редактировать изображение",\r\n
+InsertFlashLbl\t\t: "Flash",\r\n
+InsertFlash\t\t\t: "Вставить/Редактировать Flash",\r\n
+InsertTableLbl\t\t: "Таблица",\r\n
+InsertTable\t\t\t: "Вставить/Редактировать таблицу",\r\n
+InsertLineLbl\t\t: "Линия",\r\n
+InsertLine\t\t\t: "Вставить горизонтальную линию",\r\n
+InsertSpecialCharLbl: "Специальный символ",\r\n
+InsertSpecialChar\t: "Вставить специальный символ",\r\n
+InsertSmileyLbl\t\t: "Смайлик",\r\n
+InsertSmiley\t\t: "Вставить смайлик",\r\n
+About\t\t\t\t: "О FCKeditor",\r\n
+Bold\t\t\t\t: "Жирный",\r\n
+Italic\t\t\t\t: "Курсив",\r\n
+Underline\t\t\t: "Подчеркнутый",\r\n
+StrikeThrough\t\t: "Зачеркнутый",\r\n
+Subscript\t\t\t: "Подстрочный индекс",\r\n
+Superscript\t\t\t: "Надстрочный индекс",\r\n
+LeftJustify\t\t\t: "По левому краю",\r\n
+CenterJustify\t\t: "По центру",\r\n
+RightJustify\t\t: "По правому краю",\r\n
+BlockJustify\t\t: "По ширине",\r\n
+DecreaseIndent\t\t: "Уменьшить отступ",\r\n
+IncreaseIndent\t\t: "Увеличить отступ",\r\n
+Blockquote\t\t\t: "Цитата",\r\n
+CreateDiv\t\t\t: "Создать Div контейнер",\r\n
+EditDiv\t\t\t\t: "Редактировать Div контейнер",\r\n
+DeleteDiv\t\t\t: "Удалить Div контейнер",\r\n
+Undo\t\t\t\t: "Отменить",\r\n
+Redo\t\t\t\t: "Повторить",\r\n
+NumberedListLbl\t\t: "Нумерованный список",\r\n
+NumberedList\t\t: "Вставить/Удалить нумерованный список",\r\n
+BulletedListLbl\t\t: "Маркированный список",\r\n
+BulletedList\t\t: "Вставить/Удалить маркированный список",\r\n
+ShowTableBorders\t: "Показать бордюры таблицы",\r\n
+ShowDetails\t\t\t: "Показать детали",\r\n
+Style\t\t\t\t: "Стиль",\r\n
+FontFormat\t\t\t: "Форматирование",\r\n
+Font\t\t\t\t: "Шрифт",\r\n
+FontSize\t\t\t: "Размер",\r\n
+TextColor\t\t\t: "Цвет текста",\r\n
+BGColor\t\t\t\t: "Цвет фона",\r\n
+Source\t\t\t\t: "Источник",\r\n
+Find\t\t\t\t: "Найти",\r\n
+Replace\t\t\t\t: "Заменить",\r\n
+SpellCheck\t\t\t: "Проверить орфографию",\r\n
+UniversalKeyboard\t: "Универсальная клавиатура",\r\n
+PageBreakLbl\t\t: "Разрыв страницы",\r\n
+PageBreak\t\t\t: "Вставить разрыв страницы",\r\n
+\r\n
+Form\t\t\t: "Форма",\r\n
+Checkbox\t\t: "Флаговая кнопка",\r\n
+RadioButton\t\t: "Кнопка выбора",\r\n
+TextField\t\t: "Текстовое поле",\r\n
+Textarea\t\t: "Текстовая область",\r\n
+HiddenField\t\t: "Скрытое поле",\r\n
+Button\t\t\t: "Кнопка",\r\n
+SelectionField\t: "Список",\r\n
+ImageButton\t\t: "Кнопка с изображением",\r\n
+\r\n
+FitWindow\t\t: "Развернуть окно редактора",\r\n
+ShowBlocks\t\t: "Показать блоки",\r\n
+\r\n
+// Context Menu\r\n
+EditLink\t\t\t: "Вставить ссылку",\r\n
+CellCM\t\t\t\t: "Ячейка",\r\n
+RowCM\t\t\t\t: "Строка",\r\n
+ColumnCM\t\t\t: "Колонка",\r\n
+InsertRowAfter\t\t: "Вставить строку после",\r\n
+InsertRowBefore\t\t: "Вставить строку до",\r\n
+DeleteRows\t\t\t: "Удалить строки",\r\n
+InsertColumnAfter\t: "Вставить колонку после",\r\n
+InsertColumnBefore\t: "Вставить колонку до",\r\n
+DeleteColumns\t\t: "Удалить колонки",\r\n
+InsertCellAfter\t\t: "Вставить ячейку после",\r\n
+InsertCellBefore\t: "Вставить ячейку до",\r\n
+DeleteCells\t\t\t: "Удалить ячейки",\r\n
+MergeCells\t\t\t: "Соединить ячейки",\r\n
+MergeRight\t\t\t: "Соединить вправо",\r\n
+MergeDown\t\t\t: "Соединить вниз",\r\n
+HorizontalSplitCell\t: "Разбить ячейку горизонтально",\r\n
+VerticalSplitCell\t: "Разбить ячейку вертикально",\r\n
+TableDelete\t\t\t: "Удалить таблицу",\r\n
+CellProperties\t\t: "Свойства ячейки",\r\n
+TableProperties\t\t: "Свойства таблицы",\r\n
+ImageProperties\t\t: "Свойства изображения",\r\n
+FlashProperties\t\t: "Свойства Flash",\r\n
+\r\n
+AnchorProp\t\t\t: "Свойства якоря",\r\n
+ButtonProp\t\t\t: "Свойства кнопки",\r\n
+CheckboxProp\t\t: "Свойства флаговой кнопки",\r\n
+HiddenFieldProp\t\t: "Свойства скрытого поля",\r\n
+RadioButtonProp\t\t: "Свойства кнопки выбора",\r\n
+ImageButtonProp\t\t: "Свойства кнопки с изображением",\r\n
+TextFieldProp\t\t: "Свойства текстового поля",\r\n
+SelectionFieldProp\t: "Свойства списка",\r\n
+TextareaProp\t\t: "Свойства текстовой области",\r\n
+FormProp\t\t\t: "Свойства формы",\r\n
+\r\n
+FontFormats\t\t\t: "Нормальный;Форматированный;Адрес;Заголовок 1;Заголовок 2;Заголовок 3;Заголовок 4;Заголовок 5;Заголовок 6;Нормальный (DIV)",\r\n
+\r\n
+// Alerts and Messages\r\n
+ProcessingXHTML\t\t: "Обработка XHTML. Пожалуйста, подождите...",\r\n
+Done\t\t\t\t: "Сделано",\r\n
+PasteWordConfirm\t: "Текст, который вы хотите вставить, похож на копируемый из Word. Вы хотите очистить его перед вставкой?",\r\n
+NotCompatiblePaste\t: "Эта команда доступна для Internet Explorer версии 5.5 или выше. Вы хотите вставить без очистки?",\r\n
+UnknownToolbarItem\t: "Не известный элемент панели инструментов \\"%1\\"",\r\n
+UnknownCommand\t\t: "Не известное имя команды \\"%1\\"",\r\n
+NotImplemented\t\t: "Команда не реализована",\r\n
+UnknownToolbarSet\t: "Панель инструментов \\"%1\\" не существует",\r\n
+NoActiveX\t\t\t: "Настройки безопасности вашего браузера могут ограничивать некоторые свойства редактора. Вы должны включить опцию \\"Запускать элементы управления ActiveX и плугины\\". Вы можете видеть ошибки и замечать отсутствие возможностей.",\r\n
+BrowseServerBlocked : "Ресурсы браузера не могут быть открыты. Проверьте что блокировки всплывающих окон выключены.",\r\n
+DialogBlocked\t\t: "Невозможно открыть окно диалога. Проверьте что блокировки всплывающих окон выключены.",\r\n
+VisitLinkBlocked\t: "It was not possible to open a new window. Make sure all popup blockers are disabled.",\t//MISSING\r\n
+\r\n
+// Dialogs\r\n
+DlgBtnOK\t\t\t: "ОК",\r\n
+DlgBtnCancel\t\t: "Отмена",\r\n
+DlgBtnClose\t\t\t: "Закрыть",\r\n
+DlgBtnBrowseServer\t: "Просмотреть на сервере",\r\n
+DlgAdvancedTag\t\t: "Расширенный",\r\n
+DlgOpOther\t\t\t: "<Другое>",\r\n
+DlgInfoTab\t\t\t: "Информация",\r\n
+DlgAlertUrl\t\t\t: "Пожалуйста, вставьте URL",\r\n
+\r\n
+// General Dialogs Labels\r\n
+DlgGenNotSet\t\t: "<не определено>",\r\n
+DlgGenId\t\t\t: "Идентификатор",\r\n
+DlgGenLangDir\t\t: "Направление языка",\r\n
+DlgGenLangDirLtr\t: "Слева на право (LTR)",\r\n
+DlgGenLangDirRtl\t: "Справа на лево (RTL)",\r\n
+DlgGenLangCode\t\t: "Язык",\r\n
+DlgGenAccessKey\t\t: "Горячая клавиша",\r\n
+DlgGenName\t\t\t: "Имя",\r\n
+DlgGenTabIndex\t\t: "Последовательность перехода",\r\n
+DlgGenLongDescr\t\t: "Длинное описание URL",\r\n
+DlgGenClass\t\t\t: "Класс CSS",\r\n
+DlgGenTitle\t\t\t: "Заголовок",\r\n
+DlgGenContType\t\t: "Тип содержимого",\r\n
+DlgGenLinkCharset\t: "Кодировка",\r\n
+DlgGenStyle\t\t\t: "Стиль CSS",\r\n
+\r\n
+// Image Dialog\r\n
+DlgImgTitle\t\t\t: "Свойства изображения",\r\n
+DlgImgInfoTab\t\t: "Информация о изображении",\r\n
+DlgImgBtnUpload\t\t: "Послать на сервер",\r\n
+DlgImgURL\t\t\t: "URL",\r\n
+DlgImgUpload\t\t: "Закачать",\r\n
+DlgImgAlt\t\t\t: "Альтернативный текст",\r\n
+DlgImgWidth\t\t\t: "Ширина",\r\n
+DlgImgHeight\t\t: "Высота",\r\n
+DlgImgLockRatio\t\t: "Сохранять пропорции",\r\n
+DlgBtnResetSize\t\t: "Сбросить размер",\r\n
+DlgImgBorder\t\t: "Бордюр",\r\n
+DlgImgHSpace\t\t: "Горизонтальный отступ",\r\n
+DlgImgVSpace\t\t: "Вертикальный отступ",\r\n
+DlgImgAlign\t\t\t: "Выравнивание",\r\n
+DlgImgAlignLeft\t\t: "По левому краю",\r\n
+DlgImgAlignAbsBottom: "Абс понизу",\r\n
+DlgImgAlignAbsMiddle: "Абс посередине",\r\n
+DlgImgAlignBaseline\t: "По базовой линии",\r\n
+DlgImgAlignBottom\t: "Понизу",\r\n
+DlgImgAlignMiddle\t: "Посередине",\r\n
+DlgImgAlignRight\t: "По правому краю",\r\n
+DlgImgAlignTextTop\t: "Текст наверху",\r\n
+DlgImgAlignTop\t\t: "По верху",\r\n
+DlgImgPreview\t\t: "Предварительный просмотр",\r\n
+DlgImgAlertUrl\t\t: "Пожалуйста, введите URL изображения",\r\n
+DlgImgLinkTab\t\t: "Ссылка",\r\n
+\r\n
+// Flash Dialog\r\n
+DlgFlashTitle\t\t: "Свойства Flash",\r\n
+DlgFlashChkPlay\t\t: "Авто проигрывание",\r\n
+DlgFlashChkLoop\t\t: "Повтор",\r\n
+DlgFlashChkMenu\t\t: "Включить меню Flash",\r\n
+DlgFlashScale\t\t: "Масштабировать",\r\n
+DlgFlashScaleAll\t: "Показывать все",\r\n
+DlgFlashScaleNoBorder\t: "Без бордюра",\r\n
+DlgFlashScaleFit\t: "Точное совпадение",\r\n
+\r\n
+// Link Dialog\r\n
+DlgLnkWindowTitle\t: "Ссылка",\r\n
+DlgLnkInfoTab\t\t: "Информация ссылки",\r\n
+DlgLnkTargetTab\t\t: "Цель",\r\n
+\r\n
+DlgLnkType\t\t\t: "Тип ссылки",\r\n
+DlgLnkTypeURL\t\t: "URL",\r\n
+DlgLnkTypeAnchor\t: "Якорь на эту страницу",\r\n
+DlgLnkTypeEMail\t\t: "Эл. почта",\r\n
+DlgLnkProto\t\t\t: "Протокол",\r\n
+DlgLnkProtoOther\t: "<другое>",\r\n
+DlgLnkURL\t\t\t: "URL",\r\n
+DlgLnkAnchorSel\t\t: "Выберите якорь",\r\n
+DlgLnkAnchorByName\t: "По имени якоря",\r\n
+DlgLnkAnchorById\t: "По идентификатору элемента",\r\n
+DlgLnkNoAnchors\t\t: "(Нет якорей доступных в этом документе)",\r\n
+DlgLnkEMail\t\t\t: "Адрес эл. почты",\r\n
+DlgLnkEMailSubject\t: "Заголовок сообщения",\r\n
+DlgLnkEMailBody\t\t: "Тело сообщения",\r\n
+DlgLnkUpload\t\t: "Закачать",\r\n
+DlgLnkBtnUpload\t\t: "Послать на сервер",\r\n
+\r\n
+DlgLnkTarget\t\t: "Цель",\r\n
+DlgLnkTargetFrame\t: "<фрейм>",\r\n
+DlgLnkTargetPopup\t: "<всплывающее окно>",\r\n
+DlgLnkTargetBlank\t: "Новое окно (_blank)",\r\n
+DlgLnkTargetParent\t: "Родительское окно (_parent)",\r\n
+DlgLnkTargetSelf\t: "Тоже окно (_self)",\r\n
+DlgLnkTargetTop\t\t: "Самое верхнее окно (_top)",\r\n
+DlgLnkTargetFrameName\t: "Имя целевого фрейма",\r\n
+DlgLnkPopWinName\t: "Имя всплывающего окна",\r\n
+DlgLnkPopWinFeat\t: "Свойства всплывающего окна",\r\n
+DlgLnkPopResize\t\t: "Изменяющееся в размерах",\r\n
+DlgLnkPopLocation\t: "Панель локации",\r\n
+DlgLnkPopMenu\t\t: "Панель меню",\r\n
+DlgLnkPopScroll\t\t: "Полосы прокрутки",\r\n
+DlgLnkPopStatus\t\t: "Строка состояния",\r\n
+DlgLnkPopToolbar\t: "Панель инструментов",\r\n
+DlgLnkPopFullScrn\t: "Полный экран (IE)",\r\n
+DlgLnkPopDependent\t: "Зависимый (Netscape)",\r\n
+DlgLnkPopWidth\t\t: "Ширина",\r\n
+DlgLnkPopHeight\t\t: "Высота",\r\n
+DlgLnkPopLeft\t\t: "Позиция слева",\r\n
+DlgLnkPopTop\t\t: "Позиция сверху",\r\n
+\r\n
+DlnLnkMsgNoUrl\t\t: "Пожалуйста, введите URL ссылки",\r\n
+DlnLnkMsgNoEMail\t: "Пожалуйста, введите адрес эл. почты",\r\n
+DlnLnkMsgNoAnchor\t: "Пожалуйста, выберете якорь",\r\n
+DlnLnkMsgInvPopName\t: "Название вспывающего окна должно начинаться буквы и не может содержать пробелов",\r\n
+\r\n
+// Color Dialog\r\n
+DlgColorTitle\t\t: "Выберите цвет",\r\n
+DlgColorBtnClear\t: "Очистить",\r\n
+DlgColorHighlight\t: "Подсвеченный",\r\n
+DlgColorSelected\t: "Выбранный",\r\n
+\r\n
+// Smiley Dialog\r\n
+DlgSmileyTitle\t\t: "Вставить смайлик",\r\n
+\r\n
+// Special Character Dialog\r\n
+DlgSpecialCharTitle\t: "Выберите специальный символ",\r\n
+\r\n
+// Table Dialog\r\n
+DlgTableTitle\t\t: "Свойства таблицы",\r\n
+DlgTableRows\t\t: "Строки",\r\n
+DlgTableColumns\t\t: "Колонки",\r\n
+DlgTableBorder\t\t: "Размер бордюра",\r\n
+DlgTableAlign\t\t: "Выравнивание",\r\n
+DlgTableAlignNotSet\t: "<Не уст.>",\r\n
+DlgTableAlignLeft\t: "Слева",\r\n
+DlgTableAlignCenter\t: "По центру",\r\n
+DlgTableAlignRight\t: "Справа",\r\n
+DlgTableWidth\t\t: "Ширина",\r\n
+DlgTableWidthPx\t\t: "пикселей",\r\n
+DlgTableWidthPc\t\t: "процентов",\r\n
+DlgTableHeight\t\t: "Высота",\r\n
+DlgTableCellSpace\t: "Промежуток (spacing)",\r\n
+DlgTableCellPad\t\t: "Отступ (padding)",\r\n
+DlgTableCaption\t\t: "Заголовок",\r\n
+DlgTableSummary\t\t: "Резюме",\r\n
+DlgTableHeaders\t\t: "Заголовки",\r\n
+DlgTableHeadersNone\t\t: "Нет",\r\n
+DlgTableHeadersColumn\t: "Первый столбец",\r\n
+DlgTableHeadersRow\t\t: "Первая строка",\r\n
+DlgTableHeadersBoth\t\t: "Оба варианта",\r\n
+\r\n
+// Table Cell Dialog\r\n
+DlgCellTitle\t\t: "Свойства ячейки",\r\n
+DlgCellWidth\t\t: "Ширина",\r\n
+DlgCellWidthPx\t\t: "пикселей",\r\n
+DlgCellWidthPc\t\t: "процентов",\r\n
+DlgCellHeight\t\t: "Высота",\r\n
+DlgCellWordWrap\t\t: "Заворачивание текста",\r\n
+DlgCellWordWrapNotSet\t: "<Не уст.>",\r\n
+DlgCellWordWrapYes\t: "Да",\r\n
+DlgCellWordWrapNo\t: "Нет",\r\n
+DlgCellHorAlign\t\t: "Гор. выравнивание",\r\n
+DlgCellHorAlignNotSet\t: "<Не уст.>",\r\n
+DlgCellHorAlignLeft\t: "Слева",\r\n
+DlgCellHorAlignCenter\t: "По центру",\r\n
+DlgCellHorAlignRight: "Справа",\r\n
+DlgCellVerAlign\t\t: "Верт. выравнивание",\r\n
+DlgCellVerAlignNotSet\t: "<Не уст.>",\r\n
+DlgCellVerAlignTop\t: "Сверху",\r\n
+DlgCellVerAlignMiddle\t: "Посередине",\r\n
+DlgCellVerAlignBottom\t: "Снизу",\r\n
+DlgCellVerAlignBaseline\t: "По базовой линии",\r\n
+DlgCellType\t\t: "Тип ячейки",\r\n
+DlgCellTypeData\t\t: "Данные",\r\n
+DlgCellTypeHeader\t: "Заголовок",\r\n
+DlgCellRowSpan\t\t: "Диапазон строк (span)",\r\n
+DlgCellCollSpan\t\t: "Диапазон колонок (span)",\r\n
+DlgCellBackColor\t: "Цвет фона",\r\n
+DlgCellBorderColor\t: "Цвет бордюра",\r\n
+DlgCellBtnSelect\t: "Выберите...",\r\n
+\r\n
+// Find and Replace Dialog\r\n
+DlgFindAndReplaceTitle\t: "Найти и заменить",\r\n
+\r\n
+// Find Dialog\r\n
+DlgFindTitle\t\t: "Найти",\r\n
+DlgFindFindBtn\t\t: "Найти",\r\n
+DlgFindNotFoundMsg\t: "Указанный текст не найден.",\r\n
+\r\n
+// Replace Dialog\r\n
+DlgReplaceTitle\t\t\t: "Заменить",\r\n
+DlgReplaceFindLbl\t\t: "Найти:",\r\n
+DlgReplaceReplaceLbl\t: "Заменить на:",\r\n
+DlgReplaceCaseChk\t\t: "Учитывать регистр",\r\n
+DlgReplaceReplaceBtn\t: "Заменить",\r\n
+DlgReplaceReplAllBtn\t: "Заменить все",\r\n
+DlgReplaceWordChk\t\t: "Совпадение целых слов",\r\n
+\r\n
+// Paste Operations / Dialog\r\n
+PasteErrorCut\t: "Настройки безопасности вашего браузера не позволяют редактору автоматически выполнять операции вырезания. Пожалуйста, используйте клавиатуру для этого (Ctrl+X).",\r\n
+PasteErrorCopy\t: "Настройки безопасности вашего браузера не позволяют редактору автоматически выполнять операции копирования. Пожалуйста, используйте клавиатуру для этого (Ctrl+C).",\r\n
+\r\n
+PasteAsText\t\t: "Вставить только текст",\r\n
+PasteFromWord\t: "Вставить из Word",\r\n
+\r\n
+DlgPasteMsg2\t: "Пожалуйста, вставьте текст в прямоугольник, используя сочетание клавиш (<STRONG>Ctrl+V</STRONG>), и нажмите <STRONG>OK</STRONG>.",\r\n
+DlgPasteSec\t\t: "По причине настроек безопасности браузера, редактор не имеет доступа к данным буфера обмена напрямую. Вам необходимо вставить текст снова в это окно.",\r\n
+DlgPasteIgnoreFont\t\t: "Игнорировать определения гарнитуры",\r\n
+DlgPasteRemoveStyles\t: "Убрать определения стилей",\r\n
+\r\n
+// Color Picker\r\n
+ColorAutomatic\t: "Автоматический",\r\n
+ColorMoreColors\t: "Цвета...",\r\n
+\r\n
+// Document Properties\r\n
+DocProps\t\t: "Свойства документа",\r\n
+\r\n
+// Anchor Dialog\r\n
+DlgAnchorTitle\t\t: "Свойства якоря",\r\n
+DlgAnchorName\t\t: "Имя якоря",\r\n
+DlgAnchorErrorName\t: "Пожалуйста, введите имя якоря",\r\n
+\r\n
+// Speller Pages Dialog\r\n
+DlgSpellNotInDic\t\t: "Нет в словаре",\r\n
+DlgSpellChangeTo\t\t: "Заменить на",\r\n
+DlgSpellBtnIgnore\t\t: "Игнорировать",\r\n
+DlgSpellBtnIgnoreAll\t: "Игнорировать все",\r\n
+DlgSpellBtnReplace\t\t: "Заменить",\r\n
+DlgSpellBtnReplaceAll\t: "Заменить все",\r\n
+DlgSpellBtnUndo\t\t\t: "Отменить",\r\n
+DlgSpellNoSuggestions\t: "- Нет предположений -",\r\n
+DlgSpellProgress\t\t: "Идет проверка орфографии...",\r\n
+DlgSpellNoMispell\t\t: "Проверка орфографии закончена: ошибок не найдено",\r\n
+DlgSpellNoChanges\t\t: "Проверка орфографии закончена: ни одного слова не изменено",\r\n
+DlgSpellOneChange\t\t: "Проверка орфографии закончена: одно слово изменено",\r\n
+DlgSpellManyChanges\t\t: "Проверка орфографии закончена: 1% слов изменен",\r\n
+\r\n
+IeSpellDownload\t\t\t: "Модуль проверки орфографии не установлен. Хотите скачать его сейчас?",\r\n
+\r\n
+// Button Dialog\r\n
+DlgButtonText\t\t: "Текст (Значение)",\r\n
+DlgButtonType\t\t: "Тип",\r\n
+DlgButtonTypeBtn\t: "Кнопка",\r\n
+DlgButtonTypeSbm\t: "Отправить",\r\n
+DlgButtonTypeRst\t: "Сбросить",\r\n
+\r\n
+// Checkbox and Radio Button Dialogs\r\n
+DlgCheckboxName\t\t: "Имя",\r\n
+DlgCheckboxValue\t: "Значение",\r\n
+DlgCheckboxSelected\t: "Выбранная",\r\n
+\r\n
+// Form Dialog\r\n
+DlgFormName\t\t: "Имя",\r\n
+DlgFormAction\t: "Действие",\r\n
+DlgFormMethod\t: "Метод",\r\n
+\r\n
+// Select Field Dialog\r\n
+DlgSelectName\t\t: "Имя",\r\n
+DlgSelectValue\t\t: "Значение",\r\n
+DlgSelectSize\t\t: "Размер",\r\n
+DlgSelectLines\t\t: "линии",\r\n
+DlgSelectChkMulti\t: "Разрешить множественный выбор",\r\n
+DlgSelectOpAvail\t: "Доступные варианты",\r\n
+DlgSelectOpText\t\t: "Текст",\r\n
+DlgSelectOpValue\t: "Значение",\r\n
+DlgSelectBtnAdd\t\t: "Добавить",\r\n
+DlgSelectBtnModify\t: "Модифицировать",\r\n
+DlgSelectBtnUp\t\t: "Вверх",\r\n
+DlgSelectBtnDown\t: "Вниз",\r\n
+DlgSelectBtnSetValue : "Установить как выбранное значение",\r\n
+DlgSelectBtnDelete\t: "Удалить",\r\n
+\r\n
+// Textarea Dialog\r\n
+DlgTextareaName\t: "Имя",\r\n
+DlgTextareaCols\t: "Колонки",\r\n
+DlgTextareaRows\t: "Строки",\r\n
+\r\n
+// Text Field Dialog\r\n
+DlgTextName\t\t\t: "Имя",\r\n
+DlgTextValue\t\t: "Значение",\r\n
+DlgTextCharWidth\t: "Ширина",\r\n
+DlgTextMaxChars\t\t: "Макс. кол-во символов",\r\n
+DlgTextType\t\t\t: "Тип",\r\n
+DlgTextTypeText\t\t: "Текст",\r\n
+DlgTextTypePass\t\t: "Пароль",\r\n
+\r\n
+// Hidden Field Dialog\r\n
+DlgHiddenName\t: "Имя",\r\n
+DlgHiddenValue\t: "Значение",\r\n
+\r\n
+// Bulleted List Dialog\r\n
+BulletedListProp\t: "Свойства маркированного списка",\r\n
+NumberedListProp\t: "Свойства нумерованного списка",\r\n
+DlgLstStart\t\t\t: "Начало",\r\n
+DlgLstType\t\t\t: "Тип",\r\n
+DlgLstTypeCircle\t: "Круг",\r\n
+DlgLstTypeDisc\t\t: "Диск",\r\n
+DlgLstTypeSquare\t: "Квадрат",\r\n
+DlgLstTypeNumbers\t: "Номера (1, 2, 3)",\r\n
+DlgLstTypeLCase\t\t: "Буквы нижнего регистра (a, b, c)",\r\n
+DlgLstTypeUCase\t\t: "Буквы верхнего регистра (A, B, C)",\r\n
+DlgLstTypeSRoman\t: "Малые римские буквы (i, ii, iii)",\r\n
+DlgLstTypeLRoman\t: "Большие римские буквы (I, II, III)",\r\n
+\r\n
+// Document Properties Dialog\r\n
+DlgDocGeneralTab\t: "Общие",\r\n
+DlgDocBackTab\t\t: "Задний фон",\r\n
+DlgDocColorsTab\t\t: "Цвета и отступы",\r\n
+DlgDocMetaTab\t\t: "Мета данные",\r\n
+\r\n
+DlgDocPageTitle\t\t: "Заголовок страницы",\r\n
+DlgDocLangDir\t\t: "Направление текста",\r\n
+DlgDocLangDirLTR\t: "Слева направо (LTR)",\r\n
+DlgDocLangDirRTL\t: "Справа налево (RTL)",\r\n
+DlgDocLangCode\t\t: "Код языка",\r\n
+DlgDocCharSet\t\t: "Кодировка набора символов",\r\n
+DlgDocCharSetCE\t\t: "Центрально-европейская",\r\n
+DlgDocCharSetCT\t\t: "Китайская традиционная (Big5)",\r\n
+DlgDocCharSetCR\t\t: "Кириллица",\r\n
+DlgDocCharSetGR\t\t: "Греческая",\r\n
+DlgDocCharSetJP\t\t: "Японская",\r\n
+DlgDocCharSetKR\t\t: "Корейская",\r\n
+DlgDocCharSetTR\t\t: "Турецкая",\r\n
+DlgDocCharSetUN\t\t: "Юникод (UTF-8)",\r\n
+DlgDocCharSetWE\t\t: "Западно-европейская",\r\n
+DlgDocCharSetOther\t: "Другая кодировка набора символов",\r\n
+\r\n
+DlgDocDocType\t\t: "Заголовок типа документа",\r\n
+DlgDocDocTypeOther\t: "Другой заголовок типа документа",\r\n
+DlgDocIncXHTML\t\t: "Включить XHTML объявления",\r\n
+DlgDocBgColor\t\t: "Цвет фона",\r\n
+DlgDocBgImage\t\t: "URL изображения фона",\r\n
+DlgDocBgNoScroll\t: "Нескроллируемый фон",\r\n
+DlgDocCText\t\t\t: "Текст",\r\n
+DlgDocCLink\t\t\t: "Ссылка",\r\n
+DlgDocCVisited\t\t: "Посещенная ссылка",\r\n
+DlgDocCActive\t\t: "Активная ссылка",\r\n
+DlgDocMargins\t\t: "Отступы страницы",\r\n
+DlgDocMaTop\t\t\t: "Верхний",\r\n
+DlgDocMaLeft\t\t: "Левый",\r\n
+DlgDocMaRight\t\t: "Правый",\r\n
+DlgDocMaBottom\t\t: "Нижний",\r\n
+DlgDocMeIndex\t\t: "Ключевые слова документа (разделенные запятой)",\r\n
+DlgDocMeDescr\t\t: "Описание документа",\r\n
+DlgDocMeAuthor\t\t: "Автор",\r\n
+DlgDocMeCopy\t\t: "Авторские права",\r\n
+DlgDocPreview\t\t: "Предварительный просмотр",\r\n
+\r\n
+// Templates Dialog\r\n
+Templates\t\t\t: "Шаблоны",\r\n
+DlgTemplatesTitle\t: "Шаблоны содержимого",\r\n
+DlgTemplatesSelMsg\t: "Пожалуйста, выберете шаблон для открытия в редакторе<br>(текущее содержимое будет потеряно):",\r\n
+DlgTemplatesLoading\t: "Загрузка списка шаблонов. Пожалуйста, подождите...",\r\n
+DlgTemplatesNoTpl\t: "(Ни одного шаблона не определено)",\r\n
+DlgTemplatesReplace\t: "Заменить текущее содержание",\r\n
+\r\n
+// About Dialog\r\n
+DlgAboutAboutTab\t: "О программе",\r\n
+DlgAboutBrowserInfoTab\t: "Информация браузера",\r\n
+DlgAboutLicenseTab\t: "Лицензия",\r\n
+DlgAboutVersion\t\t: "Версия",\r\n
+DlgAboutInfo\t\t: "Для большей информации, посетите",\r\n
+\r\n
+// Div Dialog\r\n
+DlgDivGeneralTab\t: "Информация",\r\n
+DlgDivAdvancedTab\t: "Расширенные настройки",\r\n
+DlgDivStyle\t\t: "Стиль",\r\n
+DlgDivInlineStyle\t: "Встроенные стили"\r\n
+};\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>25771</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

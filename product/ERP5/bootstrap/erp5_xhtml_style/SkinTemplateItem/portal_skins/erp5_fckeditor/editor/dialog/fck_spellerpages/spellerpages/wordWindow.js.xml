@@ -1,0 +1,319 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749353.57</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>wordWindow.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿////////////////////////////////////////////////////\r\n
+// wordWindow object\r\n
+////////////////////////////////////////////////////\r\n
+function wordWindow() {\r\n
+\t// private properties\r\n
+\tthis._forms = [];\r\n
+\r\n
+\t// private methods\r\n
+\tthis._getWordObject = _getWordObject;\r\n
+\t//this._getSpellerObject = _getSpellerObject;\r\n
+\tthis._wordInputStr = _wordInputStr;\r\n
+\tthis._adjustIndexes = _adjustIndexes;\r\n
+\tthis._isWordChar = _isWordChar;\r\n
+\tthis._lastPos = _lastPos;\r\n
+\r\n
+\t// public properties\r\n
+\tthis.wordChar = /[a-zA-Z]/;\r\n
+\tthis.windowType = "wordWindow";\r\n
+\tthis.originalSpellings = new Array();\r\n
+\tthis.suggestions = new Array();\r\n
+\tthis.checkWordBgColor = "pink";\r\n
+\tthis.normWordBgColor = "white";\r\n
+\tthis.text = "";\r\n
+\tthis.textInputs = new Array();\r\n
+\tthis.indexes = new Array();\r\n
+\t//this.speller = this._getSpellerObject();\r\n
+\r\n
+\t// public methods\r\n
+\tthis.resetForm = resetForm;\r\n
+\tthis.totalMisspellings = totalMisspellings;\r\n
+\tthis.totalWords = totalWords;\r\n
+\tthis.totalPreviousWords = totalPreviousWords;\r\n
+\t//this.getTextObjectArray = getTextObjectArray;\r\n
+\tthis.getTextVal = getTextVal;\r\n
+\tthis.setFocus = setFocus;\r\n
+\tthis.removeFocus = removeFocus;\r\n
+\tthis.setText = setText;\r\n
+\t//this.getTotalWords = getTotalWords;\r\n
+\tthis.writeBody = writeBody;\r\n
+\tthis.printForHtml = printForHtml;\r\n
+}\r\n
+\r\n
+function resetForm() {\r\n
+\tif( this._forms ) {\r\n
+\t\tfor( var i = 0; i < this._forms.length; i++ ) {\r\n
+\t\t\tthis._forms[i].reset();\r\n
+\t\t}\r\n
+\t}\r\n
+\treturn true;\r\n
+}\r\n
+\r\n
+function totalMisspellings() {\r\n
+\tvar total_words = 0;\r\n
+\tfor( var i = 0; i < this.textInputs.length; i++ ) {\r\n
+\t\ttotal_words += this.totalWords( i );\r\n
+\t}\r\n
+\treturn total_words;\r\n
+}\r\n
+\r\n
+function totalWords( textIndex ) {\r\n
+\treturn this.originalSpellings[textIndex].length;\r\n
+}\r\n
+\r\n
+function totalPreviousWords( textIndex, wordIndex ) {\r\n
+\tvar total_words = 0;\r\n
+\tfor( var i = 0; i <= textIndex; i++ ) {\r\n
+\t\tfor( var j = 0; j < this.totalWords( i ); j++ ) {\r\n
+\t\t\tif( i == textIndex && j == wordIndex ) {\r\n
+\t\t\t\tbreak;\r\n
+\t\t\t} else {\r\n
+\t\t\t\ttotal_words++;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t}\r\n
+\treturn total_words;\r\n
+}\r\n
+\r\n
+//function getTextObjectArray() {\r\n
+//\treturn this._form.elements;\r\n
+//}\r\n
+\r\n
+function getTextVal( textIndex, wordIndex ) {\r\n
+\tvar word = this._getWordObject( textIndex, wordIndex );\r\n
+\tif( word ) {\r\n
+\t\treturn word.value;\r\n
+\t}\r\n
+}\r\n
+\r\n
+function setFocus( textIndex, wordIndex ) {\r\n
+\tvar word = this._getWordObject( textIndex, wordIndex );\r\n
+\tif( word ) {\r\n
+\t\tif( word.type == "text" ) {\r\n
+\t\t\tword.focus();\r\n
+\t\t\tword.style.backgroundColor = this.checkWordBgColor;\r\n
+\t\t}\r\n
+\t}\r\n
+}\r\n
+\r\n
+function removeFocus( textIndex, wordIndex ) {\r\n
+\tvar word = this._getWordObject( textIndex, wordIndex );\r\n
+\tif( word ) {\r\n
+\t\tif( word.type == "text" ) {\r\n
+\t\t\tword.blur();\r\n
+\t\t\tword.style.backgroundColor = this.normWordBgColor;\r\n
+\t\t}\r\n
+\t}\r\n
+}\r\n
+\r\n
+function setText( textIndex, wordIndex, newText ) {\r\n
+\tvar word = this._getWordObject( textIndex, wordIndex );\r\n
+\tvar beginStr;\r\n
+\tvar endStr;\r\n
+\tif( word ) {\r\n
+\t\tvar pos = this.indexes[textIndex][wordIndex];\r\n
+\t\tvar oldText = word.value;\r\n
+\t\t// update the text given the index of the string\r\n
+\t\tbeginStr = this.textInputs[textIndex].substring( 0, pos );\r\n
+\t\tendStr = this.textInputs[textIndex].substring(\r\n
+\t\t\tpos + oldText.length,\r\n
+\t\t\tthis.textInputs[textIndex].length\r\n
+\t\t);\r\n
+\t\tthis.textInputs[textIndex] = beginStr + newText + endStr;\r\n
+\r\n
+\t\t// adjust the indexes on the stack given the differences in\r\n
+\t\t// length between the new word and old word.\r\n
+\t\tvar lengthDiff = newText.length - oldText.length;\r\n
+\t\tthis._adjustIndexes( textIndex, wordIndex, lengthDiff );\r\n
+\r\n
+\t\tword.size = newText.length;\r\n
+\t\tword.value = newText;\r\n
+\t\tthis.removeFocus( textIndex, wordIndex );\r\n
+\t}\r\n
+}\r\n
+\r\n
+\r\n
+function writeBody() {\r\n
+\tvar d = window.document;\r\n
+\tvar is_html = false;\r\n
+\r\n
+\td.open();\r\n
+\r\n
+\t// iterate through each text input.\r\n
+\tfor( var txtid = 0; txtid < this.textInputs.length; txtid++ ) {\r\n
+\t\tvar end_idx = 0;\r\n
+\t\tvar begin_idx = 0;\r\n
+\t\td.writeln( \'<form name="textInput\'+txtid+\'">\' );\r\n
+\t\tvar wordtxt = this.textInputs[txtid];\r\n
+\t\tthis.indexes[txtid] = [];\r\n
+\r\n
+\t\tif( wordtxt ) {\r\n
+\t\t\tvar orig = this.originalSpellings[txtid];\r\n
+\t\t\tif( !orig ) break;\r\n
+\r\n
+\t\t\t//!!! plain text, or HTML mode?\r\n
+\t\t\td.writeln( \'<div class="plainText">\' );\r\n
+\t\t\t// iterate through each occurrence of a misspelled word.\r\n
+\t\t\tfor( var i = 0; i < orig.length; i++ ) {\r\n
+\t\t\t\t// find the position of the current misspelled word,\r\n
+\t\t\t\t// starting at the last misspelled word.\r\n
+\t\t\t\t// and keep looking if it\'s a substring of another word\r\n
+\t\t\t\tdo {\r\n
+\t\t\t\t\tbegin_idx = wordtxt.indexOf( orig[i], end_idx );\r\n
+\t\t\t\t\tend_idx = begin_idx + orig[i].length;\r\n
+\t\t\t\t\t// word not found? messed up!\r\n
+\t\t\t\t\tif( begin_idx == -1 ) break;\r\n
+\t\t\t\t\t// look at the characters immediately before and after\r\n
+\t\t\t\t\t// the word. If they are word characters we\'ll keep looking.\r\n
+\t\t\t\t\tvar before_char = wordtxt.charAt( begin_idx - 1 );\r\n
+\t\t\t\t\tvar after_char = wordtxt.charAt( end_idx );\r\n
+\t\t\t\t} while (\r\n
+\t\t\t\t\tthis._isWordChar( before_char )\r\n
+\t\t\t\t\t|| this._isWordChar( after_char )\r\n
+\t\t\t\t);\r\n
+\r\n
+\t\t\t\t// keep track of its position in the original text.\r\n
+\t\t\t\tthis.indexes[txtid][i] = begin_idx;\r\n
+\r\n
+\t\t\t\t// write out the characters before the current misspelled word\r\n
+\t\t\t\tfor( var j = this._lastPos( txtid, i ); j < begin_idx; j++ ) {\r\n
+\t\t\t\t\t// !!! html mode? make it html compatible\r\n
+\t\t\t\t\td.write( this.printForHtml( wordtxt.charAt( j )));\r\n
+\t\t\t\t}\r\n
+\r\n
+\t\t\t\t// write out the misspelled word.\r\n
+\t\t\t\td.write( this._wordInputStr( orig[i] ));\r\n
+\r\n
+\t\t\t\t// if it\'s the last word, write out the rest of the text\r\n
+\t\t\t\tif( i == orig.length-1 ){\r\n
+\t\t\t\t\td.write( printForHtml( wordtxt.substr( end_idx )));\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\r\n
+\t\t\td.writeln( \'</div>\' );\r\n
+\r\n
+\t\t}\r\n
+\t\td.writeln( \'</form>\' );\r\n
+\t}\r\n
+\t//for ( var j = 0; j < d.forms.length; j++ ) {\r\n
+\t//\talert( d.forms[j].name );\r\n
+\t//\tfor( var k = 0; k < d.forms[j].elements.length; k++ ) {\r\n
+\t//\t\talert( d.forms[j].elements[k].name + ": " + d.forms[j].elements[k].value );\r\n
+\t//\t}\r\n
+\t//}\r\n
+\r\n
+\t// set the _forms property\r\n
+\tthis._forms = d.forms;\r\n
+\td.close();\r\n
+}\r\n
+\r\n
+// return the character index in the full text after the last word we evaluated\r\n
+function _lastPos( txtid, idx ) {\r\n
+\tif( idx > 0 )\r\n
+\t\treturn this.indexes[txtid][idx-1] + this.originalSpellings[txtid][idx-1].length;\r\n
+\telse\r\n
+\t\treturn 0;\r\n
+}\r\n
+\r\n
+function printForHtml( n ) {\r\n
+\treturn n ;\t\t// by FredCK\r\n
+/*\r\n
+\tvar htmlstr = n;\r\n
+\tif( htmlstr.length == 1 ) {\r\n
+\t\t// do simple case statement if it\'s just one character\r\n
+\t\tswitch ( n ) {\r\n
+\t\t\tcase "\\n":\r\n
+\t\t\t\thtmlstr = \'<br/>\';\r\n
+\t\t\t\tbreak;\r\n
+\t\t\tcase "<":\r\n
+\t\t\t\thtmlstr = \'&lt;\';\r\n
+\t\t\t\tbreak;\r\n
+\t\t\tcase ">":\r\n
+\t\t\t\thtmlstr = \'&gt;\';\r\n
+\t\t\t\tbreak;\r\n
+\t\t}\r\n
+\t\treturn htmlstr;\r\n
+\t} else {\r\n
+\t\thtmlstr = htmlstr.replace( /</g, \'&lt\' );\r\n
+\t\thtmlstr = htmlstr.replace( />/g, \'&gt\' );\r\n
+\t\thtmlstr = htmlstr.replace( /\\n/g, \'<br/>\' );\r\n
+\t\treturn htmlstr;\r\n
+\t}\r\n
+*/\r\n
+}\r\n
+\r\n
+function _isWordChar( letter ) {\r\n
+\tif( letter.search( this.wordChar ) == -1 ) {\r\n
+\t\treturn false;\r\n
+\t} else {\r\n
+\t\treturn true;\r\n
+\t}\r\n
+}\r\n
+\r\n
+function _getWordObject( textIndex, wordIndex ) {\r\n
+\tif( this._forms[textIndex] ) {\r\n
+\t\tif( this._forms[textIndex].elements[wordIndex] ) {\r\n
+\t\t\treturn this._forms[textIndex].elements[wordIndex];\r\n
+\t\t}\r\n
+\t}\r\n
+\treturn null;\r\n
+}\r\n
+\r\n
+function _wordInputStr( word ) {\r\n
+\tvar str = \'<input readonly \';\r\n
+\tstr += \'class="blend" type="text" value="\' + word + \'" size="\' + word.length + \'">\';\r\n
+\treturn str;\r\n
+}\r\n
+\r\n
+function _adjustIndexes( textIndex, wordIndex, lengthDiff ) {\r\n
+\tfor( var i = wordIndex + 1; i < this.originalSpellings[textIndex].length; i++ ) {\r\n
+\t\tthis.indexes[textIndex][i] = this.indexes[textIndex][i] + lengthDiff;\r\n
+\t}\r\n
+}\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>7402</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

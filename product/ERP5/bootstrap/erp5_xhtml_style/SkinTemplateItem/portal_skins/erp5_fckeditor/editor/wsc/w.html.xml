@@ -1,0 +1,280 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+-->\r\n
+<html>\r\n
+<head>\r\n
+\t<title></title>\r\n
+\t<style>\r\n
+\t\t#wsc_frames , #errorMessage{\r\n
+\t\t\tposition:absolute;\r\n
+\t\t\ttop:0px;\r\n
+\t\t\tleft:0px;\r\n
+\t\t\twidth:500px;\r\n
+\t\t\theight:395px;\r\n
+\t\t\tmargin:0px;\r\n
+\t\t\tpadding:0px;\r\n
+\t\t\tborder:0px;\r\n
+\t\t\tdisplay:block;\r\n
+\t\t\toverflow: hidden;\r\n
+\t\t}\r\n
+\t\t#wsc_frames   { z-index:10;}\r\n
+\t\t#errorMessage {\r\n
+\t\t\tcolor:red;\r\n
+\t\t\tdisplay:none;\r\n
+\t\t\tfont-size:16px;\r\n
+\t\t\tfont-weight:bold;\r\n
+\t\t\tpadding-top:160px;\r\n
+\t\t\ttext-align:center;\r\n
+\t\t\tz-index:11;\r\n
+\t\t}\r\n
+\t\t#errorMessage p {\r\n
+\t\t\tcolor:#000;\r\n
+\t\t\tfont-size:11px;\r\n
+\t\t\ttext-align:left;\r\n
+\t\t\tfont-weight: normal;\r\n
+\t\t\tpadding-left:80px;\r\n
+\t\t}\r\n
+\r\n
+\t</style>\r\n
+\t<script type="text/javascript">\r\n
+\r\n
+var oEditor = window.parent.InnerDialogLoaded() ;\r\n
+var FCKConfig = oEditor.FCKConfig;\r\n
+\r\n
+function doLoadScript(url)\r\n
+{\r\n
+\tif (!url)\r\n
+\t\treturn false ;\r\n
+\r\n
+\tvar s = document.createElement(\'script\') ;\r\n
+\ts.type = \'text/javascript\' ;\r\n
+\ts.src = url ;\r\n
+\r\n
+\tdocument.getElementsByTagName(\'head\')[0].appendChild(s) ;\r\n
+\r\n
+\treturn true ;\r\n
+}\r\n
+\r\n
+function Ok()\r\n
+{\r\n
+\treturn window.parent.Cancel() ;\r\n
+}\r\n
+\r\n
+function _callOnCancel( dT )\r\n
+{\r\n
+\twindow.parent.Cancel() ;\r\n
+}\r\n
+\r\n
+function _callOnFinish( dT )\r\n
+{\r\n
+\toEditor.FCK.SetData( dT.value ) ;\r\n
+\twindow.parent.CloseDialog( true ) ;\r\n
+}\r\n
+\r\n
+function _cancelOnError(m)\r\n
+{\r\n
+\tvar _conId = \'errorMessage\' ;\r\n
+\tvar message = m || \'Sorry, but service is unavailable now.\' ;\r\n
+\r\n
+\tif ( typeof( WSC_Error ) == \'undefined\' )\r\n
+\t{\r\n
+\t\tvar _con = document.createElement( \'div\' ) ;\r\n
+\t\t_con.setAttribute( \'id\', _conId ) ;\r\n
+\t\tdocument.body.appendChild( _con ) ;\r\n
+\t\tdom_con = document.getElementById( _conId ) ;\r\n
+\t\tdom_con.innerHTML = message ;\r\n
+\t\tdom_con.style.display = \'block\' ;\r\n
+\t}\r\n
+\t//return Ok() ;\r\n
+}\r\n
+\r\n
+function URL_abs2full( uri )\r\n
+{\r\n
+\treturn uri.match( \'http\' )\r\n
+\t\t? uri\r\n
+\t\t: document.location.protocol + \'//\' + document.location.host + uri ;\r\n
+}\r\n
+\r\n
+function clearErrorUsermessage()\r\n
+{\r\n
+\t// empty error container\r\n
+\tvar _con = document.getElementById( \'errorMessage\' ) ;\r\n
+\r\n
+\tif ( !_con )\r\n
+\t\treturn ;\r\n
+\r\n
+\t_con.innerHTML = \'\' ;\r\n
+\t_con.style.display = \'none\' ;\r\n
+}\r\n
+\r\n
+var gInterval ;\r\n
+\r\n
+function onLoad()\r\n
+{\r\n
+\tclearErrorUsermessage() ;\r\n
+\tvar _errorMessage = \'The SpellChecker Service is currently unavailable.\' ;\r\n
+\tif ( \'undefined\' != typeof( oEditor.FCK.Config.WSChLoaderScript ) )\r\n
+\t    _errorMessage = \'<div>The SpellChecker Service is currently unavailable.</div><p>Error loading application<br>service host: \' + oEditor.FCK.Config.WSChLoaderScript + \'</p>\';\r\n
+\r\n
+\tvar burnSpelling = function( oName, _eMessage )\r\n
+\t{\r\n
+\t\tvar i = 0 ;\r\n
+\r\n
+\t\treturn function ()\r\n
+\t\t{\r\n
+\t\t\tif ( typeof( window[oName] ) == \'function\' )\r\n
+\t\t\t\tinitAndSpell() ;\r\n
+\t\t\telse if ( i++ == 180 )\r\n
+\t\t\t\t_cancelOnError( _eMessage ) ;\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\tgInterval = window.setInterval( burnSpelling( \'doSpell\', _errorMessage ), 250 ) ;\r\n
+\r\n
+\t// WSC CORE init section\r\n
+\tvar protocol = document.location.protocol || \'http:\' ;\r\n
+\tvar baseUrl = protocol + \'//loader.spellchecker.net/sproxy_fck/sproxy.php\' ;\r\n
+\tvar plugin = "fck2" ;\r\n
+\tvar customerid = oEditor.FCK.Config.WSCnCustomerId\r\n
+\t\t|| "1:ua3xw1-2XyGJ3-GWruD3-6OFNT1-oXcuB1-nR6Bp4-hgQHc-EcYng3-sdRXG3-NOfFk" ;\r\n
+\tvar wscCoreUrl = oEditor.FCK.Config.WSChLoaderScript\r\n
+\t\t|| ( baseUrl + \'?\'\r\n
+\t\t\t+ \'plugin=\'    + plugin + \'&\'\r\n
+\t\t\t+ \'customerid=\'+ customerid + \'&\'\r\n
+\t\t\t+ \'cmd=script&doc=wsc&schema=22\' ) ;\r\n
+\r\n
+\t// load WSC core\r\n
+\tdoLoadScript( wscCoreUrl ) ;\r\n
+}\r\n
+\r\n
+function initAndSpell()\r\n
+{\r\n
+\t//xall from window.setInteval expected at once\r\n
+\tif ( typeof( gInterval ) == \'undefined\' )\r\n
+\t\treturn null ;\r\n
+\twindow.clearInterval( gInterval ) ;\r\n
+\r\n
+\t// global var is used in FCK specific core\r\n
+\t// change on equal var used in fckplugin.js\r\n
+\tgFCKPluginName = \'wsc\' ;\r\n
+\r\n
+\t// get the data to be checked\r\n
+\tvar sData = oEditor.FCK.GetData() ;\r\n
+\r\n
+\t// prepare content\r\n
+\tvar ctrlId =  \'myEditor\' ;\r\n
+\tvar dCurT = document.getElementById( ctrlId ) ;\r\n
+\tdCurT.value = sData ;\r\n
+\r\n
+\t// service paths corecting/preparing\r\n
+\tvar sPath2Scin = URL_abs2full( oEditor.FCK.Config.SkinDialogCSS ) ;\r\n
+\tvar sPathCiframe = FCKConfig.BasePath + \'wsc/ciframe.html\' ;\r\n
+\tvar sPathFrameset = FCKConfig.BasePath + \'wsc/tmpFrameset.html\' ;\r\n
+\r\n
+\t// language abbr standarts comparer\r\n
+\tvar LangComparer = new _SP_FCK_LangCompare() ;\r\n
+\tLangComparer.setDefaulLangCode( oEditor.FCK.Language.DefaultLanguage ) ;\r\n
+\r\n
+\t// clear user message console (if application was loaded more then after 2 seconds)\r\n
+\tclearErrorUsermessage() ;\r\n
+\r\n
+\tdoSpell( {\r\n
+\t\tctrl : ctrlId,\r\n
+\t\tlang : LangComparer.getSPLangCode( oEditor.FCK.Language.GetActiveLanguage() ),\r\n
+\t\twinType : \'wsc_frames\',// if not defined app will run on winpopup\r\n
+\r\n
+\t\t// callback binding section\r\n
+\t\tonCancel :window._callOnCancel,\r\n
+\t\tonFinish :window._callOnFinish,\r\n
+\r\n
+\t\t// @TODO: basePath assingning\r\n
+\r\n
+\t\t// some manipulations with client static pages\r\n
+\t\tframesetPath : sPathFrameset,\r\n
+\t\tiframePath : sPathCiframe,\r\n
+\r\n
+\t\t// styles defining\r\n
+\t\tschemaURI : sPath2Scin\r\n
+\t} ) ;\r\n
+\r\n
+\treturn true ;\r\n
+}\r\n
+\r\n
+\t</script>\r\n
+</head>\r\n
+<body onload="onLoad()" style="padding: 0px; overflow: hidden;">\r\n
+\t<textarea style="display: none;" id="myEditor" rows="10" cols="40"></textarea>\r\n
+\t<iframe src="" name="wsc_frames" id="wsc_frames"></iframe>\r\n
+</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>w.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

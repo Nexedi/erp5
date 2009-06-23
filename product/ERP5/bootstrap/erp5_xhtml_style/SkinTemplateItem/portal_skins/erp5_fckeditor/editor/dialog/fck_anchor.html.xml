@@ -1,0 +1,273 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Anchor dialog window.\r\n
+-->\r\n
+<html>\r\n
+\t<head>\r\n
+\t\t<title>Anchor Properties</title>\r\n
+\t\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\r\n
+\t\t<meta content="noindex, nofollow" name="robots">\r\n
+\t\t<script src="common/fck_dialog_common.js" type="text/javascript"></script>\r\n
+\t\t<script type="text/javascript">\r\n
+\r\n
+var dialog\t\t\t= window.parent ;\r\n
+var oEditor\t\t\t= dialog.InnerDialogLoaded() ;\r\n
+\r\n
+var FCK\t\t\t\t= oEditor.FCK ;\r\n
+var FCKBrowserInfo\t= oEditor.FCKBrowserInfo ;\r\n
+var FCKTools\t\t= oEditor.FCKTools ;\r\n
+var FCKRegexLib\t\t= oEditor.FCKRegexLib ;\r\n
+\r\n
+var oDOM\t\t\t= FCK.EditorDocument ;\r\n
+\r\n
+var oFakeImage = dialog.Selection.GetSelectedElement() ;\r\n
+\r\n
+var oAnchor ;\r\n
+\r\n
+if ( oFakeImage )\r\n
+{\r\n
+\tif ( oFakeImage.tagName == \'IMG\' && oFakeImage.getAttribute(\'_fckanchor\') )\r\n
+\t\toAnchor = FCK.GetRealElement( oFakeImage ) ;\r\n
+\telse\r\n
+\t\toFakeImage = null ;\r\n
+}\r\n
+\r\n
+//Search for a real anchor\r\n
+if ( !oFakeImage )\r\n
+{\r\n
+\toAnchor = FCK.Selection.MoveToAncestorNode( \'A\' ) ;\r\n
+\tif ( oAnchor )\r\n
+\t\tFCK.Selection.SelectNode( oAnchor ) ;\r\n
+}\r\n
+\r\n
+window.onload = function()\r\n
+{\r\n
+\t// First of all, translate the dialog box texts\r\n
+\toEditor.FCKLanguageManager.TranslatePage(document) ;\r\n
+\r\n
+\tif ( oAnchor )\r\n
+\t\tGetE(\'txtName\').value = oAnchor.name ;\r\n
+\telse\r\n
+\t\toAnchor = null ;\r\n
+\r\n
+\twindow.parent.SetOkButton( true ) ;\r\n
+\twindow.parent.SetAutoSize( true ) ;\r\n
+\r\n
+\tSelectField( \'txtName\' ) ;\r\n
+}\r\n
+\r\n
+function Ok()\r\n
+{\r\n
+\tvar sNewName = GetE(\'txtName\').value ;\r\n
+\r\n
+\t// Remove any illegal character in a name attribute:\r\n
+\t// A name should start with a letter, but the validator passes anyway.\r\n
+\tsNewName = sNewName.replace( /[^\\w-_\\.:]/g, \'_\' ) ;\r\n
+\r\n
+\tif ( sNewName.length == 0 )\r\n
+\t{\r\n
+\t\t// Remove the anchor if the user leaves the name blank\r\n
+\t\tif ( oAnchor )\r\n
+\t\t{\r\n
+\t\t\t// Removes the current anchor from the document using the new command\r\n
+\t\t\tFCK.Commands.GetCommand( \'AnchorDelete\' ).Execute() ;\r\n
+\t\t\treturn true ;\r\n
+\t\t}\r\n
+\r\n
+\t\talert( oEditor.FCKLang.DlgAnchorErrorName ) ;\r\n
+\t\treturn false ;\r\n
+\t}\r\n
+\r\n
+\toEditor.FCKUndo.SaveUndoStep() ;\r\n
+\r\n
+\tif ( oAnchor )\t// Modifying an existent anchor.\r\n
+\t{\r\n
+\t\tReadjustLinksToAnchor( oAnchor.name, sNewName );\r\n
+\r\n
+\t\t// Buggy explorer, bad bad browser. http://alt-tag.com/blog/archives/2006/02/ie-dom-bugs/\r\n
+\t\t// Instead of just replacing the .name for the existing anchor (in order to preserve the content), we must remove the .name\r\n
+\t\t// and assign .name, although it won\'t appear until it\'s specially processed in fckxhtml.js\r\n
+\r\n
+\t\t// We remove the previous name\r\n
+\t\toAnchor.removeAttribute( \'name\' ) ;\r\n
+\t\t// Now we set it, but later we must process it specially\r\n
+\t\toAnchor.name = sNewName ;\r\n
+\r\n
+\t\treturn true ;\r\n
+\t}\r\n
+\r\n
+\t// Create a new anchor preserving the current selection\r\n
+\tvar aNewAnchors = oEditor.FCK.CreateLink( \'#\' ) ;\r\n
+\r\n
+\tif ( aNewAnchors.length == 0 )\r\n
+\t\t\taNewAnchors.push( oEditor.FCK.InsertElement( \'a\' ) ) ;\r\n
+\telse\r\n
+\t{\r\n
+\t\t// Remove the fake href\r\n
+\t\tfor ( var i = 0 ; i < aNewAnchors.length ; i++ )\r\n
+\t\t\taNewAnchors[i].removeAttribute( \'href\' ) ;\r\n
+\t}\r\n
+\r\n
+\t// More than one anchors may have been created, so interact through all of them (see #220).\r\n
+\tfor ( var i = 0 ; i < aNewAnchors.length ; i++ )\r\n
+\t{\r\n
+\t\toAnchor = aNewAnchors[i] ;\r\n
+\r\n
+\t\t// Set the name\r\n
+\t\tif ( FCKBrowserInfo.IsIE )\r\n
+\t\t{\r\n
+\t\t\t// Setting anchor names directly in IE will trash the HTML code stored\r\n
+\t\t\t// in FCKTempBin after undos. See #2263.\r\n
+\t\t\tvar replaceAnchor = oEditor.FCK.EditorDocument.createElement( \'<a name="\' +\r\n
+\t\t\t\t\tFCKTools.HTMLEncode( sNewName ).replace( \'"\', \'&quot;\' ) + \'">\' ) ;\r\n
+\t\t\toEditor.FCKDomTools.MoveChildren( oAnchor, replaceAnchor ) ;\r\n
+\t\t\toAnchor.parentNode.replaceChild( replaceAnchor, oAnchor ) ;\r\n
+\t\t\toAnchor = replaceAnchor ;\r\n
+\t\t}\r\n
+\t\telse\r\n
+\t\t\toAnchor.name = sNewName ;\r\n
+\r\n
+\t\t// IE does require special processing to show the Anchor\'s image\r\n
+\t\t// Opera doesn\'t allow to select empty anchors\r\n
+\t\tif ( FCKBrowserInfo.IsIE || FCKBrowserInfo.IsOpera )\r\n
+\t\t{\r\n
+\t\t\tif ( oAnchor.innerHTML != \'\' )\r\n
+\t\t\t{\r\n
+\t\t\t\tif ( FCKBrowserInfo.IsIE )\r\n
+\t\t\t\t\toAnchor.className += \' FCK__AnchorC\' ;\r\n
+\t\t\t}\r\n
+\t\t\telse\r\n
+\t\t\t{\r\n
+\t\t\t\t// Create a fake image for both IE and Opera\r\n
+\t\t\t\tvar oImg = oEditor.FCKDocumentProcessor_CreateFakeImage( \'FCK__Anchor\', oAnchor.cloneNode(true) ) ;\r\n
+\t\t\t\toImg.setAttribute( \'_fckanchor\', \'true\', 0 ) ;\r\n
+\r\n
+\t\t\t\toAnchor.parentNode.insertBefore( oImg, oAnchor ) ;\r\n
+\t\t\t\toAnchor.parentNode.removeChild( oAnchor ) ;\r\n
+\t\t\t}\r\n
+\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\treturn true ;\r\n
+}\r\n
+\r\n
+// Checks all the links in the current page pointing to the current name and changes them to the new name\r\n
+function ReadjustLinksToAnchor( sCurrent, sNew )\r\n
+{\r\n
+\tvar oDoc = FCK.EditorDocument ;\r\n
+\r\n
+\tvar aLinks = oDoc.getElementsByTagName( \'A\' ) ;\r\n
+\r\n
+\tvar sReference = \'#\' + sCurrent ;\r\n
+\t// The url of the document, so we check absolute and partial references.\r\n
+\tvar sFullReference = oDoc.location.href.replace( /(#.*$)/, \'\') ;\r\n
+\tsFullReference += sReference ;\r\n
+\r\n
+\tvar oLink ;\r\n
+\tvar i = aLinks.length - 1 ;\r\n
+\twhile ( i >= 0 && ( oLink = aLinks[i--] ) )\r\n
+\t{\r\n
+\t\tvar sHRef = oLink.getAttribute( \'_fcksavedurl\' ) ;\r\n
+\t\tif ( sHRef == null )\r\n
+\t\t\tsHRef = oLink.getAttribute( \'href\' , 2 ) || \'\' ;\r\n
+\r\n
+\t\tif ( sHRef == sReference || sHRef == sFullReference )\r\n
+\t\t{\r\n
+\t\t\toLink.href = \'#\' + sNew ;\r\n
+\t\t\tSetAttribute( oLink, \'_fcksavedurl\', \'#\' + sNew ) ;\r\n
+\t\t}\r\n
+\t}\r\n
+}\r\n
+\r\n
+\t\t</script>\r\n
+\t</head>\r\n
+\t<body style="overflow: hidden">\r\n
+\t\t<table height="100%" width="100%">\r\n
+\t\t\t<tr>\r\n
+\t\t\t\t<td align="center">\r\n
+\t\t\t\t\t<table border="0" cellpadding="0" cellspacing="0" width="80%">\r\n
+\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t<span fckLang="DlgAnchorName">Anchor Name</span><BR>\r\n
+\t\t\t\t\t\t\t\t<input id="txtName" style="WIDTH: 100%" type="text">\r\n
+\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t</table>\r\n
+\t\t\t\t</td>\r\n
+\t\t\t</tr>\r\n
+\t\t</table>\r\n
+\t</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>fck_anchor.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

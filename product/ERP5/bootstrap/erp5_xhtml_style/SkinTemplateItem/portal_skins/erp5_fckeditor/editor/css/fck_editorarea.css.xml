@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fck_editorarea.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * This is the default CSS file used by the editor area. It defines the\r\n
+ * initial font of the editor and background color.\r\n
+ *\r\n
+ * A user can configure the editor to use another CSS file. Just change\r\n
+ * the value of the FCKConfig.EditorAreaCSS key in the configuration\r\n
+ * file.\r\n
+ */\r\n
+\r\n
+/**\r\n
+ * The "body" styles should match your editor web site, mainly regarding\r\n
+ * background color and font family and size.\r\n
+ */\r\n
+\r\n
+body\r\n
+{\r\n
+\tbackground-color: #ffffff;\r\n
+\tpadding: 5px 5px 5px 5px;\r\n
+\tmargin: 0px;\r\n
+}\r\n
+\r\n
+body, td\r\n
+{\r\n
+\tfont-family: Arial, Verdana, sans-serif;\r\n
+\tfont-size: 12px;\r\n
+}\r\n
+\r\n
+a[href]\r\n
+{\r\n
+\tcolor: -moz-hyperlinktext !important;\t\t/* For Firefox... mark as important, otherwise it becomes black */\r\n
+\ttext-decoration: -moz-anchor-decoration;\t/* For Firefox 3, otherwise no underline will be used */\r\n
+}\r\n
+\r\n
+/**\r\n
+ * Just uncomment the following block if you want to avoid spaces between\r\n
+ * paragraphs. Remember to apply the same style in your output front end page.\r\n
+ */\r\n
+\r\n
+/*\r\n
+p, ul, li\r\n
+{\r\n
+\tmargin-top: 0px;\r\n
+\tmargin-bottom: 0px;\r\n
+}\r\n
+*/\r\n
+\r\n
+/**\r\n
+ * Uncomment the following block, or only selected lines if appropriate,\r\n
+ * if you have some style items that would break the styles combo box.\r\n
+ * You can also write other CSS overrides inside the style block below\r\n
+ * as needed and they will be applied to inside the style combo only.\r\n
+ */\r\n
+\r\n
+/*\r\n
+.SC_Item *, .SC_ItemSelected *\r\n
+{\r\n
+\tmargin: 0px !important;\r\n
+\tpadding: 0px !important;\r\n
+\ttext-indent: 0px !important;\r\n
+\tclip: auto !important;\r\n
+\tposition: static !important;\r\n
+}\r\n
+*/\r\n
+\r\n
+/**\r\n
+ * The following are some sample styles used in the "Styles" toolbar command.\r\n
+ * You should instead remove them, and include the styles used by the site\r\n
+ * you are using the editor in.\r\n
+ */\r\n
+\r\n
+.Bold\r\n
+{\r\n
+\tfont-weight: bold;\r\n
+}\r\n
+\r\n
+.Title\r\n
+{\r\n
+\tfont-weight: bold;\r\n
+\tfont-size: 18px;\r\n
+\tcolor: #cc3300;\r\n
+}\r\n
+\r\n
+.Code\r\n
+{\r\n
+\tborder: #8b4513 1px solid;\r\n
+\tpadding-right: 5px;\r\n
+\tpadding-left: 5px;\r\n
+\tcolor: #000066;\r\n
+\tfont-family: \'Courier New\' , Monospace;\r\n
+\tbackground-color: #ff9933;\r\n
+}\r\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,576 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749406.45</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fckplugin.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿var FCKDragTableHandler =\r\n
+{\r\n
+\t"_DragState" : 0,\r\n
+\t"_LeftCell" : null,\r\n
+\t"_RightCell" : null,\r\n
+\t"_MouseMoveMode" : 0,\t// 0 - find candidate cells for resizing, 1 - drag to resize\r\n
+\t"_ResizeBar" : null,\r\n
+\t"_OriginalX" : null,\r\n
+\t"_MinimumX" : null,\r\n
+\t"_MaximumX" : null,\r\n
+\t"_LastX" : null,\r\n
+\t"_TableMap" : null,\r\n
+\t"_doc" : document,\r\n
+\t"_IsInsideNode" : function( w, domNode, pos )\r\n
+\t{\r\n
+\t\tvar myCoords = FCKTools.GetWindowPosition( w, domNode ) ;\r\n
+\t\tvar xMin = myCoords.x ;\r\n
+\t\tvar yMin = myCoords.y ;\r\n
+\t\tvar xMax = parseInt( xMin, 10 ) + parseInt( domNode.offsetWidth, 10 ) ;\r\n
+\t\tvar yMax = parseInt( yMin, 10 ) + parseInt( domNode.offsetHeight, 10 ) ;\r\n
+\t\tif ( pos.x >= xMin && pos.x <= xMax && pos.y >= yMin && pos.y <= yMax )\r\n
+\t\t\treturn true;\r\n
+\t\treturn false;\r\n
+\t},\r\n
+\t"_GetBorderCells" : function( w, tableNode, tableMap, mouse )\r\n
+\t{\r\n
+\t\t// Enumerate all the cells in the table.\r\n
+\t\tvar cells = [] ;\r\n
+\t\tfor ( var i = 0 ; i < tableNode.rows.length ; i++ )\r\n
+\t\t{\r\n
+\t\t\tvar r = tableNode.rows[i] ;\r\n
+\t\t\tfor ( var j = 0 ; j < r.cells.length ; j++ )\r\n
+\t\t\t\tcells.push( r.cells[j] ) ;\r\n
+\t\t}\r\n
+\r\n
+\t\tif ( cells.length < 1 )\r\n
+\t\t\treturn null ;\r\n
+\r\n
+\t\t// Get the cells whose right or left border is nearest to the mouse cursor\'s x coordinate.\r\n
+\t\tvar minRxDist = null ;\r\n
+\t\tvar lxDist = null ;\r\n
+\t\tvar minYDist = null ;\r\n
+\t\tvar rbCell = null ;\r\n
+\t\tvar lbCell = null ;\r\n
+\t\tfor ( var i = 0 ; i < cells.length ; i++ )\r\n
+\t\t{\r\n
+\t\t\tvar pos = FCKTools.GetWindowPosition( w, cells[i] ) ;\r\n
+\t\t\tvar rightX = pos.x + parseInt( cells[i].clientWidth, 10 ) ;\r\n
+\t\t\tvar rxDist = mouse.x - rightX ;\r\n
+\t\t\tvar yDist = mouse.y - ( pos.y + ( cells[i].clientHeight / 2 ) ) ;\r\n
+\t\t\tif ( minRxDist == null ||\r\n
+\t\t\t\t\t( Math.abs( rxDist ) <= Math.abs( minRxDist ) &&\r\n
+\t\t\t\t\t  ( minYDist == null || Math.abs( yDist ) <= Math.abs( minYDist ) ) ) )\r\n
+\t\t\t{\r\n
+\t\t\t\tminRxDist = rxDist ;\r\n
+\t\t\t\tminYDist = yDist ;\r\n
+\t\t\t\trbCell = cells[i] ;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\t/*\r\n
+\t\tvar rowNode = FCKTools.GetElementAscensor( rbCell, "tr" ) ;\r\n
+\t\tvar cellIndex = rbCell.cellIndex + 1 ;\r\n
+\t\tif ( cellIndex >= rowNode.cells.length )\r\n
+\t\t\treturn null ;\r\n
+\t\tlbCell = rowNode.cells.item( cellIndex ) ;\r\n
+\t\t*/\r\n
+\t\tvar rowIdx = rbCell.parentNode.rowIndex ;\r\n
+\t\tvar colIdx = FCKTableHandler._GetCellIndexSpan( tableMap, rowIdx, rbCell ) ;\r\n
+\t\tvar colSpan = isNaN( rbCell.colSpan ) ? 1 : rbCell.colSpan ;\r\n
+\t\tlbCell = tableMap[rowIdx][colIdx + colSpan] ;\r\n
+\r\n
+\t\tif ( ! lbCell )\r\n
+\t\t\treturn null ;\r\n
+\r\n
+\t\t// Abort if too far from the border.\r\n
+\t\tlxDist = mouse.x - FCKTools.GetWindowPosition( w, lbCell ).x ;\r\n
+\t\tif ( lxDist < 0 && minRxDist < 0 && minRxDist < -2 )\r\n
+\t\t\treturn null ;\r\n
+\t\tif ( lxDist > 0 && minRxDist > 0 && lxDist > 3 )\r\n
+\t\t\treturn null ;\r\n
+\r\n
+\t\treturn { "leftCell" : rbCell, "rightCell" : lbCell } ;\r\n
+\t},\r\n
+\t"_GetResizeBarPosition" : function()\r\n
+\t{\r\n
+\t\tvar row = FCKTools.GetElementAscensor( this._RightCell, "tr" ) ;\r\n
+\t\treturn FCKTableHandler._GetCellIndexSpan( this._TableMap, row.rowIndex, this._RightCell ) ;\r\n
+\t},\r\n
+\t"_ResizeBarMouseDownListener" : function( evt )\r\n
+\t{\r\n
+\t\tif ( FCKDragTableHandler._LeftCell )\r\n
+\t\t\tFCKDragTableHandler._MouseMoveMode = 1 ;\r\n
+\t\tif ( FCKBrowserInfo.IsIE )\r\n
+\t\t\tFCKDragTableHandler._ResizeBar.filters.item("DXImageTransform.Microsoft.Alpha").opacity = 50 ;\r\n
+\t\telse\r\n
+\t\t\tFCKDragTableHandler._ResizeBar.style.opacity = 0.5 ;\r\n
+\t\tFCKDragTableHandler._OriginalX = evt.clientX ;\r\n
+\r\n
+\t\t// Calculate maximum and minimum x-coordinate delta.\r\n
+\t\tvar borderIndex = FCKDragTableHandler._GetResizeBarPosition() ;\r\n
+\t\tvar offset = FCKDragTableHandler._GetIframeOffset();\r\n
+\t\tvar table = FCKTools.GetElementAscensor( FCKDragTableHandler._LeftCell, "table" );\r\n
+\t\tvar minX = null ;\r\n
+\t\tvar maxX = null ;\r\n
+\t\tfor ( var r = 0 ; r < FCKDragTableHandler._TableMap.length ; r++ )\r\n
+\t\t{\r\n
+\t\t\tvar leftCell = FCKDragTableHandler._TableMap[r][borderIndex - 1] ;\r\n
+\t\t\tvar rightCell = FCKDragTableHandler._TableMap[r][borderIndex] ;\r\n
+\t\t\tvar leftPosition = FCKTools.GetWindowPosition( FCK.EditorWindow, leftCell ) ;\r\n
+\t\t\tvar rightPosition = FCKTools.GetWindowPosition( FCK.EditorWindow, rightCell ) ;\r\n
+\t\t\tvar leftPadding = FCKDragTableHandler._GetCellPadding( table, leftCell ) ;\r\n
+\t\t\tvar rightPadding = FCKDragTableHandler._GetCellPadding( table, rightCell ) ;\r\n
+\t\t\tif ( minX == null || leftPosition.x + leftPadding > minX )\r\n
+\t\t\t\tminX = leftPosition.x + leftPadding ;\r\n
+\t\t\tif ( maxX == null || rightPosition.x + rightCell.clientWidth - rightPadding < maxX )\r\n
+\t\t\t\tmaxX = rightPosition.x + rightCell.clientWidth - rightPadding ;\r\n
+\t\t}\r\n
+\r\n
+\t\tFCKDragTableHandler._MinimumX = minX + offset.x ;\r\n
+\t\tFCKDragTableHandler._MaximumX = maxX + offset.x ;\r\n
+\t\tFCKDragTableHandler._LastX = null ;\r\n
+\r\n
+\t\tif (evt.preventDefault)\r\n
+\t\t\tevt.preventDefault();\r\n
+\t\telse\r\n
+\t\t\tevt.returnValue = false;\r\n
+\t},\r\n
+\t"_ResizeBarMouseUpListener" : function( evt )\r\n
+\t{\r\n
+\t\tFCKDragTableHandler._MouseMoveMode = 0 ;\r\n
+\t\tFCKDragTableHandler._HideResizeBar() ;\r\n
+\r\n
+\t\tif ( FCKDragTableHandler._LastX == null )\r\n
+\t\t\treturn ;\r\n
+\r\n
+\t\t// Calculate the delta value.\r\n
+\t\tvar deltaX = FCKDragTableHandler._LastX - FCKDragTableHandler._OriginalX ;\r\n
+\r\n
+\t\t// Then, build an array of current column width values.\r\n
+\t\t// This algorithm can be very slow if the cells have insane colSpan values. (e.g. colSpan=1000).\r\n
+\t\tvar table = FCKTools.GetElementAscensor( FCKDragTableHandler._LeftCell, "table" ) ;\r\n
+\t\tvar colArray = [] ;\r\n
+\t\tvar tableMap = FCKDragTableHandler._TableMap ;\r\n
+\t\tfor ( var i = 0 ; i < tableMap.length ; i++ )\r\n
+\t\t{\r\n
+\t\t\tfor ( var j = 0 ; j < tableMap[i].length ; j++ )\r\n
+\t\t\t{\r\n
+\t\t\t\tvar cell = tableMap[i][j] ;\r\n
+\t\t\t\tvar width = FCKDragTableHandler._GetCellWidth( table, cell ) ;\r\n
+\t\t\t\tvar colSpan = isNaN( cell.colSpan) ? 1 : cell.colSpan ;\r\n
+\t\t\t\tif ( colArray.length <= j )\r\n
+\t\t\t\t\tcolArray.push( { width : width / colSpan, colSpan : colSpan } ) ;\r\n
+\t\t\t\telse\r\n
+\t\t\t\t{\r\n
+\t\t\t\t\tvar guessItem = colArray[j] ;\r\n
+\t\t\t\t\tif ( guessItem.colSpan > colSpan )\r\n
+\t\t\t\t\t{\r\n
+\t\t\t\t\t\tguessItem.width = width / colSpan ;\r\n
+\t\t\t\t\t\tguessItem.colSpan = colSpan ;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\r\n
+\t\t// Find out the equivalent column index of the two cells selected for resizing.\r\n
+\t\tcolIndex = FCKDragTableHandler._GetResizeBarPosition() ;\r\n
+\r\n
+\t\t// Note that colIndex must be at least 1 here, so it\'s safe to subtract 1 from it.\r\n
+\t\tcolIndex-- ;\r\n
+\r\n
+\t\t// Modify the widths in the colArray according to the mouse coordinate delta value.\r\n
+\t\tcolArray[colIndex].width += deltaX ;\r\n
+\t\tcolArray[colIndex + 1].width -= deltaX ;\r\n
+\r\n
+\t\t// Clear all cell widths, delete all <col> elements from the table.\r\n
+\t\tfor ( var r = 0 ; r < table.rows.length ; r++ )\r\n
+\t\t{\r\n
+\t\t\tvar row = table.rows.item( r ) ;\r\n
+\t\t\tfor ( var c = 0 ; c < row.cells.length ; c++ )\r\n
+\t\t\t{\r\n
+\t\t\t\tvar cell = row.cells.item( c ) ;\r\n
+\t\t\t\tcell.width = "" ;\r\n
+\t\t\t\tcell.style.width = "" ;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\tvar colElements = table.getElementsByTagName( "col" ) ;\r\n
+\t\tfor ( var i = colElements.length - 1 ; i >= 0 ; i-- )\r\n
+\t\t\tcolElements[i].parentNode.removeChild( colElements[i] ) ;\r\n
+\r\n
+\t\t// Set new cell widths.\r\n
+\t\tvar processedCells = [] ;\r\n
+\t\tfor ( var i = 0 ; i < tableMap.length ; i++ )\r\n
+\t\t{\r\n
+\t\t\tfor ( var j = 0 ; j < tableMap[i].length ; j++ )\r\n
+\t\t\t{\r\n
+\t\t\t\tvar cell = tableMap[i][j] ;\r\n
+\t\t\t\tif ( cell._Processed )\r\n
+\t\t\t\t\tcontinue ;\r\n
+\t\t\t\tif ( tableMap[i][j-1] != cell )\r\n
+\t\t\t\t\tcell.width = colArray[j].width ;\r\n
+\t\t\t\telse\r\n
+\t\t\t\t\tcell.width = parseInt( cell.width, 10 ) + parseInt( colArray[j].width, 10 ) ;\r\n
+\t\t\t\tif ( tableMap[i][j+1] != cell )\r\n
+\t\t\t\t{\r\n
+\t\t\t\t\tprocessedCells.push( cell ) ;\r\n
+\t\t\t\t\tcell._Processed = true ;\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\tfor ( var i = 0 ; i < processedCells.length ; i++ )\r\n
+\t\t{\r\n
+\t\t\tif ( FCKBrowserInfo.IsIE )\r\n
+\t\t\t\tprocessedCells[i].removeAttribute( \'_Processed\' ) ;\r\n
+\t\t\telse\r\n
+\t\t\t\tdelete processedCells[i]._Processed ;\r\n
+\t\t}\r\n
+\r\n
+\t\tFCKDragTableHandler._LastX = null ;\r\n
+\t},\r\n
+\t"_ResizeBarMouseMoveListener" : function( evt )\r\n
+\t{\r\n
+\t\tif ( FCKDragTableHandler._MouseMoveMode == 0 )\r\n
+\t\t\treturn FCKDragTableHandler._MouseFindHandler( FCK, evt ) ;\r\n
+\t\telse\r\n
+\t\t\treturn FCKDragTableHandler._MouseDragHandler( FCK, evt ) ;\r\n
+\t},\r\n
+\t// Calculate the padding of a table cell.\r\n
+\t// It returns the value of paddingLeft + paddingRight of a table cell.\r\n
+\t// This function is used, in part, to calculate the width parameter that should be used for setting cell widths.\r\n
+\t// The equation in question is clientWidth = paddingLeft + paddingRight + width.\r\n
+\t// So that width = clientWidth - paddingLeft - paddingRight.\r\n
+\t// The return value of this function must be pixel accurate acorss all supported browsers, so be careful if you need to modify it.\r\n
+\t"_GetCellPadding" : function( table, cell )\r\n
+\t{\r\n
+\t\tvar attrGuess = parseInt( table.cellPadding, 10 ) * 2 ;\r\n
+\t\tvar cssGuess = null ;\r\n
+\t\tif ( typeof( window.getComputedStyle ) == "function" )\r\n
+\t\t{\r\n
+\t\t\tvar styleObj = window.getComputedStyle( cell, null ) ;\r\n
+\t\t\tcssGuess = parseInt( styleObj.getPropertyValue( "padding-left" ), 10 ) +\r\n
+\t\t\t\tparseInt( styleObj.getPropertyValue( "padding-right" ), 10 ) ;\r\n
+\t\t}\r\n
+\t\telse\r\n
+\t\t\tcssGuess = parseInt( cell.currentStyle.paddingLeft, 10 ) + parseInt (cell.currentStyle.paddingRight, 10 ) ;\r\n
+\r\n
+\t\tvar cssRuntime = cell.style.padding ;\r\n
+\t\tif ( isFinite( cssRuntime ) )\r\n
+\t\t\tcssGuess = parseInt( cssRuntime, 10 ) * 2 ;\r\n
+\t\telse\r\n
+\t\t{\r\n
+\t\t\tcssRuntime = cell.style.paddingLeft ;\r\n
+\t\t\tif ( isFinite( cssRuntime ) )\r\n
+\t\t\t\tcssGuess = parseInt( cssRuntime, 10 ) ;\r\n
+\t\t\tcssRuntime = cell.style.paddingRight ;\r\n
+\t\t\tif ( isFinite( cssRuntime ) )\r\n
+\t\t\t\tcssGuess += parseInt( cssRuntime, 10 ) ;\r\n
+\t\t}\r\n
+\r\n
+\t\tattrGuess = parseInt( attrGuess, 10 ) ;\r\n
+\t\tcssGuess = parseInt( cssGuess, 10 ) ;\r\n
+\t\tif ( isNaN( attrGuess ) )\r\n
+\t\t\tattrGuess = 0 ;\r\n
+\t\tif ( isNaN( cssGuess ) )\r\n
+\t\t\tcssGuess = 0 ;\r\n
+\t\treturn Math.max( attrGuess, cssGuess ) ;\r\n
+\t},\r\n
+\t// Calculate the real width of the table cell.\r\n
+\t// The real width of the table cell is the pixel width that you can set to the width attribute of the table cell and after\r\n
+\t// that, the table cell should be of exactly the same width as before.\r\n
+\t// The real width of a table cell can be calculated as:\r\n
+\t// width = clientWidth - paddingLeft - paddingRight.\r\n
+\t"_GetCellWidth" : function( table, cell )\r\n
+\t{\r\n
+\t\tvar clientWidth = cell.clientWidth ;\r\n
+\t\tif ( isNaN( clientWidth ) )\r\n
+\t\t\tclientWidth = 0 ;\r\n
+\t\treturn clientWidth - this._GetCellPadding( table, cell ) ;\r\n
+\t},\r\n
+\t"MouseMoveListener" : function( FCK, evt )\r\n
+\t{\r\n
+\t\tif ( FCKDragTableHandler._MouseMoveMode == 0 )\r\n
+\t\t\treturn FCKDragTableHandler._MouseFindHandler( FCK, evt ) ;\r\n
+\t\telse\r\n
+\t\t\treturn FCKDragTableHandler._MouseDragHandler( FCK, evt ) ;\r\n
+\t},\r\n
+\t"_MouseFindHandler" : function( FCK, evt )\r\n
+\t{\r\n
+\t\tif ( FCK.MouseDownFlag )\r\n
+\t\t\treturn ;\r\n
+\t\tvar node = evt.srcElement || evt.target ;\r\n
+\t\ttry\r\n
+\t\t{\r\n
+\t\t\tif ( ! node || node.nodeType != 1 )\r\n
+\t\t\t{\r\n
+\t\t\t\tthis._HideResizeBar() ;\r\n
+\t\t\t\treturn ;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t\tcatch ( e )\r\n
+\t\t{\r\n
+\t\t\tthis._HideResizeBar() ;\r\n
+\t\t\treturn ;\r\n
+\t\t}\r\n
+\r\n
+\t\t// Since this function might be called from the editing area iframe or the outer fckeditor iframe,\r\n
+\t\t// the mouse point coordinates from evt.clientX/Y can have different reference points.\r\n
+\t\t// We need to resolve the mouse pointer position relative to the editing area iframe.\r\n
+\t\tvar mouseX = evt.clientX ;\r\n
+\t\tvar mouseY = evt.clientY ;\r\n
+\t\tif ( FCKTools.GetElementDocument( node ) == document )\r\n
+\t\t{\r\n
+\t\t\tvar offset = this._GetIframeOffset() ;\r\n
+\t\t\tmouseX -= offset.x ;\r\n
+\t\t\tmouseY -= offset.y ;\r\n
+\t\t}\r\n
+\r\n
+\r\n
+\t\tif ( this._ResizeBar && this._LeftCell )\r\n
+\t\t{\r\n
+\t\t\tvar leftPos = FCKTools.GetWindowPosition( FCK.EditorWindow, this._LeftCell ) ;\r\n
+\t\t\tvar rightPos = FCKTools.GetWindowPosition( FCK.EditorWindow, this._RightCell ) ;\r\n
+\t\t\tvar rxDist = mouseX - ( leftPos.x + this._LeftCell.clientWidth ) ;\r\n
+\t\t\tvar lxDist = mouseX - rightPos.x ;\r\n
+\t\t\tvar inRangeFlag = false ;\r\n
+\t\t\tif ( lxDist >= 0 && rxDist <= 0 )\r\n
+\t\t\t\tinRangeFlag = true ;\r\n
+\t\t\telse if ( rxDist > 0 && lxDist <= 3 )\r\n
+\t\t\t\tinRangeFlag = true ;\r\n
+\t\t\telse if ( lxDist < 0 && rxDist >= -2 )\r\n
+\t\t\t\tinRangeFlag = true ;\r\n
+\t\t\tif ( inRangeFlag )\r\n
+\t\t\t{\r\n
+\t\t\t\tthis._ShowResizeBar( FCK.EditorWindow,\r\n
+\t\t\t\t\tFCKTools.GetElementAscensor( this._LeftCell, "table" ),\r\n
+\t\t\t\t\t{ "x" : mouseX, "y" : mouseY } ) ;\r\n
+\t\t\t\treturn ;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\r\n
+\t\tvar tagName = node.tagName.toLowerCase() ;\r\n
+\t\tif ( tagName != "table" && tagName != "td" && tagName != "th" )\r\n
+\t\t{\r\n
+\t\t\tif ( this._LeftCell )\r\n
+\t\t\t\tthis._LeftCell = this._RightCell = this._TableMap = null ;\r\n
+\t\t\tthis._HideResizeBar() ;\r\n
+\t\t\treturn ;\r\n
+\t\t}\r\n
+\t\tnode = FCKTools.GetElementAscensor( node, "table" ) ;\r\n
+\t\tvar tableMap = FCKTableHandler._CreateTableMap( node ) ;\r\n
+\t\tvar cellTuple = this._GetBorderCells( FCK.EditorWindow, node, tableMap, { "x" : mouseX, "y" : mouseY } ) ;\r\n
+\r\n
+\t\tif ( cellTuple == null )\r\n
+\t\t{\r\n
+\t\t\tif ( this._LeftCell )\r\n
+\t\t\t\tthis._LeftCell = this._RightCell = this._TableMap = null ;\r\n
+\t\t\tthis._HideResizeBar() ;\r\n
+\t\t}\r\n
+\t\telse\r\n
+\t\t{\r\n
+\t\t\tthis._LeftCell = cellTuple["leftCell"] ;\r\n
+\t\t\tthis._RightCell = cellTuple["rightCell"] ;\r\n
+\t\t\tthis._TableMap = tableMap ;\r\n
+\t\t\tthis._ShowResizeBar( FCK.EditorWindow,\r\n
+\t\t\t\t\tFCKTools.GetElementAscensor( this._LeftCell, "table" ),\r\n
+\t\t\t\t\t{ "x" : mouseX, "y" : mouseY } ) ;\r\n
+\t\t}\r\n
+\t},\r\n
+\t"_MouseDragHandler" : function( FCK, evt )\r\n
+\t{\r\n
+\t\tvar mouse = { "x" : evt.clientX, "y" : evt.clientY } ;\r\n
+\r\n
+\t\t// Convert mouse coordinates in reference to the outer iframe.\r\n
+\t\tvar node = evt.srcElement || evt.target ;\r\n
+\t\tif ( FCKTools.GetElementDocument( node ) == FCK.EditorDocument )\r\n
+\t\t{\r\n
+\t\t\tvar offset = this._GetIframeOffset() ;\r\n
+\t\t\tmouse.x += offset.x ;\r\n
+\t\t\tmouse.y += offset.y ;\r\n
+\t\t}\r\n
+\r\n
+\t\t// Calculate the mouse position delta and see if we\'ve gone out of range.\r\n
+\t\tif ( mouse.x >= this._MaximumX - 5 )\r\n
+\t\t\tmouse.x = this._MaximumX - 5 ;\r\n
+\t\tif ( mouse.x <= this._MinimumX + 5 )\r\n
+\t\t\tmouse.x = this._MinimumX + 5 ;\r\n
+\r\n
+\t\tvar docX = mouse.x + FCKTools.GetScrollPosition( window ).X ;\r\n
+\t\tthis._ResizeBar.style.left = ( docX - this._ResizeBar.offsetWidth / 2 ) + "px" ;\r\n
+\t\tthis._LastX = mouse.x ;\r\n
+\t},\r\n
+\t"_ShowResizeBar" : function( w, table, mouse )\r\n
+\t{\r\n
+\t\tif ( this._ResizeBar == null )\r\n
+\t\t{\r\n
+\t\t\tthis._ResizeBar = this._doc.createElement( "div" ) ;\r\n
+\t\t\tvar paddingBar = this._ResizeBar ;\r\n
+\t\t\tvar paddingStyles = { \'position\' : \'absolute\', \'cursor\' : \'e-resize\' } ;\r\n
+\t\t\tif ( FCKBrowserInfo.IsIE )\r\n
+\t\t\t\tpaddingStyles.filter = "progid:DXImageTransform.Microsoft.Alpha(opacity=10,enabled=true)" ;\r\n
+\t\t\telse\r\n
+\t\t\t\tpaddingStyles.opacity = 0.10 ;\r\n
+\t\t\tFCKDomTools.SetElementStyles( paddingBar, paddingStyles ) ;\r\n
+\t\t\tthis._avoidStyles( paddingBar );\r\n
+\t\t\tpaddingBar.setAttribute(\'_fcktemp\', true);\r\n
+\t\t\tthis._doc.body.appendChild( paddingBar ) ;\r\n
+\t\t\tFCKTools.AddEventListener( paddingBar, "mousemove", this._ResizeBarMouseMoveListener ) ;\r\n
+\t\t\tFCKTools.AddEventListener( paddingBar, "mousedown", this._ResizeBarMouseDownListener ) ;\r\n
+\t\t\tFCKTools.AddEventListener( document, "mouseup", this._ResizeBarMouseUpListener ) ;\r\n
+\t\t\tFCKTools.AddEventListener( FCK.EditorDocument, "mouseup", this._ResizeBarMouseUpListener ) ;\r\n
+\r\n
+\t\t\t// IE doesn\'t let the tranparent part of the padding block to receive mouse events unless there\'s something inside.\r\n
+\t\t\t// So we need to create a spacer image to fill the block up.\r\n
+\t\t\tvar filler = this._doc.createElement( "img" ) ;\r\n
+\t\t\tfiller.setAttribute(\'_fcktemp\', true);\r\n
+\t\t\tfiller.border = 0 ;\r\n
+\t\t\tfiller.src = FCKConfig.BasePath + "images/spacer.gif" ;\r\n
+\t\t\tfiller.style.position = "absolute" ;\r\n
+\t\t\tpaddingBar.appendChild( filler ) ;\r\n
+\r\n
+\t\t\t// Disable drag and drop, and selection for the filler image.\r\n
+\t\t\tvar disabledListener = function( evt )\r\n
+\t\t\t{\r\n
+\t\t\t\tif ( evt.preventDefault )\r\n
+\t\t\t\t\tevt.preventDefault() ;\r\n
+\t\t\t\telse\r\n
+\t\t\t\t\tevt.returnValue = false ;\r\n
+\t\t\t}\r\n
+\t\t\tFCKTools.AddEventListener( filler, "dragstart", disabledListener ) ;\r\n
+\t\t\tFCKTools.AddEventListener( filler, "selectstart", disabledListener ) ;\r\n
+\t\t}\r\n
+\r\n
+\t\tvar paddingBar = this._ResizeBar ;\r\n
+\t\tvar offset = this._GetIframeOffset() ;\r\n
+\t\tvar tablePos = this._GetTablePosition( w, table ) ;\r\n
+\t\tvar barHeight = table.offsetHeight ;\r\n
+\t\tvar barTop = offset.y + tablePos.y ;\r\n
+\t\t// Do not let the resize bar intrude into the toolbar area.\r\n
+\t\tif ( tablePos.y < 0 )\r\n
+\t\t{\r\n
+\t\t\tbarHeight += tablePos.y ;\r\n
+\t\t\tbarTop -= tablePos.y ;\r\n
+\t\t}\r\n
+\t\tvar bw = parseInt( table.border, 10 ) ;\r\n
+\t\tif ( isNaN( bw ) )\r\n
+\t\t\tbw = 0 ;\r\n
+\t\tvar cs = parseInt( table.cellSpacing, 10 ) ;\r\n
+\t\tif ( isNaN( cs ) )\r\n
+\t\t\tcs = 0 ;\r\n
+\t\tvar barWidth = Math.max( bw+100, cs+100 ) ;\r\n
+\t\tvar paddingStyles =\r\n
+\t\t{\r\n
+\t\t\t\'top\'\t\t: barTop + \'px\',\r\n
+\t\t\t\'height\'\t: barHeight + \'px\',\r\n
+\t\t\t\'width\'\t\t: barWidth + \'px\',\r\n
+\t\t\t\'left\'\t\t: ( offset.x + mouse.x + FCKTools.GetScrollPosition( w ).X - barWidth / 2 ) + \'px\'\r\n
+\t\t} ;\r\n
+\t\tif ( FCKBrowserInfo.IsIE )\r\n
+\t\t\tpaddingBar.filters.item("DXImageTransform.Microsoft.Alpha").opacity = 10 ;\r\n
+\t\telse\r\n
+\t\t\tpaddingStyles.opacity = 0.1 ;\r\n
+\r\n
+\t\tFCKDomTools.SetElementStyles( paddingBar, paddingStyles ) ;\r\n
+\t\tvar filler = paddingBar.getElementsByTagName( "img" )[0] ;\r\n
+\r\n
+\t\tFCKDomTools.SetElementStyles( filler,\r\n
+\t\t\t{\r\n
+\t\t\t\twidth\t: paddingBar.offsetWidth + \'px\',\r\n
+\t\t\t\theight\t: barHeight + \'px\'\r\n
+\t\t\t} ) ;\r\n
+\r\n
+\t\tbarWidth = Math.max( bw, cs, 3 ) ;\r\n
+\t\tvar visibleBar = null ;\r\n
+\t\tif ( paddingBar.getElementsByTagName( "div" ).length < 1 )\r\n
+\t\t{\r\n
+\t\t\tvisibleBar = this._doc.createElement( "div" ) ;\r\n
+\t\t\tthis._avoidStyles( visibleBar );\r\n
+\t\t\tvisibleBar.setAttribute(\'_fcktemp\', true);\r\n
+\t\t\tpaddingBar.appendChild( visibleBar ) ;\r\n
+\t\t}\r\n
+\t\telse\r\n
+\t\t\tvisibleBar = paddingBar.getElementsByTagName( "div" )[0] ;\r\n
+\r\n
+\t\tFCKDomTools.SetElementStyles( visibleBar,\r\n
+\t\t\t{\r\n
+\t\t\t\tposition\t\t: \'absolute\',\r\n
+\t\t\t\tbackgroundColor\t: \'blue\',\r\n
+\t\t\t\twidth\t\t\t: barWidth + \'px\',\r\n
+\t\t\t\theight\t\t\t: barHeight + \'px\',\r\n
+\t\t\t\tleft\t\t\t: \'50px\',\r\n
+\t\t\t\ttop\t\t\t\t: \'0px\'\r\n
+\t\t\t} ) ;\r\n
+\t},\r\n
+\t"_HideResizeBar" : function()\r\n
+\t{\r\n
+\t\tif ( this._ResizeBar )\r\n
+\t\t\t// IE bug: display : none does not hide the resize bar for some reason.\r\n
+\t\t\t// so set the position to somewhere invisible.\r\n
+\t\t\tFCKDomTools.SetElementStyles( this._ResizeBar,\r\n
+\t\t\t\t{\r\n
+\t\t\t\t\ttop\t\t: \'-100000px\',\r\n
+\t\t\t\t\tleft\t: \'-100000px\'\r\n
+\t\t\t\t} ) ;\r\n
+\t},\r\n
+\t"_GetIframeOffset" : function ()\r\n
+\t{\r\n
+\t\treturn FCKTools.GetDocumentPosition( window, FCK.EditingArea.IFrame ) ;\r\n
+\t},\r\n
+\t"_GetTablePosition" : function ( w, table )\r\n
+\t{\r\n
+\t\treturn FCKTools.GetWindowPosition( w, table ) ;\r\n
+\t},\r\n
+\t"_avoidStyles" : function( element )\r\n
+\t{\r\n
+\t\tFCKDomTools.SetElementStyles( element,\r\n
+\t\t\t{\r\n
+\t\t\t\tpadding\t\t: \'0\',\r\n
+\t\t\t\tbackgroundImage\t: \'none\',\r\n
+\t\t\t\tborder\t\t: \'0\'\r\n
+\t\t\t} ) ;\r\n
+\t},\r\n
+\t"Reset" : function()\r\n
+\t{\r\n
+\t\tFCKDragTableHandler._LeftCell = FCKDragTableHandler._RightCell = FCKDragTableHandler._TableMap = null ;\r\n
+\t}\r\n
+\r\n
+};\r\n
+\r\n
+FCK.Events.AttachEvent( "OnMouseMove", FCKDragTableHandler.MouseMoveListener ) ;\r\n
+FCK.Events.AttachEvent( "OnAfterSetHTML", FCKDragTableHandler.Reset ) ;\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>18298</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

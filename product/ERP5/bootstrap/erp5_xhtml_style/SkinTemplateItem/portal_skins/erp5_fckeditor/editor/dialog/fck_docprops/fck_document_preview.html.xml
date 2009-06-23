@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Preview shown in the "Document Properties" dialog window.\r\n
+-->\r\n
+<html>\r\n
+\t<head>\r\n
+\t\t<title>Document Properties - Preview</title>\r\n
+\t\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\r\n
+\t\t<meta name="robots" content="noindex, nofollow">\r\n
+\t\t<script language="javascript">\r\n
+\r\n
+var eBase = parent.FCK.EditorDocument.getElementsByTagName( \'BASE\' ) ;\r\n
+if ( eBase.length > 0 && eBase[0].href.length > 0 )\r\n
+{\r\n
+\tdocument.write( \'<base href="\' + eBase[0].href + \'">\' ) ;\r\n
+}\r\n
+\r\n
+window.onload = function()\r\n
+{\r\n
+\tif ( typeof( parent.OnPreviewLoad ) == \'function\' )\r\n
+\t\tparent.OnPreviewLoad( window, document.body ) ;\r\n
+}\r\n
+\r\n
+function SetBaseHRef( baseHref )\r\n
+{\r\n
+\tvar eBase = document.createElement( \'BASE\' ) ;\r\n
+\teBase.href = baseHref ;\r\n
+\r\n
+\tvar eHead = document.getElementsByTagName( \'HEAD\' )[0] ;\r\n
+\teHead.appendChild( eBase ) ;\r\n
+}\r\n
+\r\n
+function SetLinkColor( color )\r\n
+{\r\n
+\tif ( color && color.length > 0 )\r\n
+\t\tdocument.getElementById(\'eLink\').style.color = color ;\r\n
+\telse\r\n
+\t\tdocument.getElementById(\'eLink\').style.color = window.document.linkColor ;\r\n
+}\r\n
+\r\n
+function SetVisitedColor( color )\r\n
+{\r\n
+\tif ( color && color.length > 0 )\r\n
+\t\tdocument.getElementById(\'eVisited\').style.color = color ;\r\n
+\telse\r\n
+\t\tdocument.getElementById(\'eVisited\').style.color = window.document.vlinkColor ;\r\n
+}\r\n
+\r\n
+function SetActiveColor( color )\r\n
+{\r\n
+\tif ( color && color.length > 0 )\r\n
+\t\tdocument.getElementById(\'eActive\').style.color = color ;\r\n
+\telse\r\n
+\t\tdocument.getElementById(\'eActive\').style.color = window.document.alinkColor ;\r\n
+}\r\n
+\t\t</script>\r\n
+\t</head>\r\n
+\t<body>\r\n
+\t\t<table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">\r\n
+\t\t\t<tr>\r\n
+\t\t\t\t<td align="center" valign="middle">\r\n
+\t\t\t\t\tNormal Text\r\n
+\t\t\t\t</td>\r\n
+\t\t\t\t<td id="eLink" align="center" valign="middle">\r\n
+\t\t\t\t\t<u>Link Text</u>\r\n
+\t\t\t\t</td>\r\n
+\t\t\t</tr>\r\n
+\t\t\t<tr>\r\n
+\t\t\t\t<td id="eVisited" valign="middle" align="center">\r\n
+\t\t\t\t\t<u>Visited Link</u>\r\n
+\t\t\t\t</td>\r\n
+\t\t\t\t<td id="eActive" valign="middle" align="center">\r\n
+\t\t\t\t\t<u>Active Link</u>\r\n
+\t\t\t\t</td>\r\n
+\t\t\t</tr>\r\n
+\t\t</table>\r\n
+\t\t<br>\r\n
+\t\t<br>\r\n
+\t\t<br>\r\n
+\t\t<br>\r\n
+\t\t<br>\r\n
+\t\t<br>\r\n
+\t\t<br>\r\n
+\t\t<br>\r\n
+\t\t<br>\r\n
+\t\t<br>\r\n
+\t\t<br>\r\n
+\t\t<br>\r\n
+\t\t<br>\r\n
+\t\t<br>\r\n
+\t\t<br>\r\n
+\t\t<br>\r\n
+\t</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>fck_document_preview.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

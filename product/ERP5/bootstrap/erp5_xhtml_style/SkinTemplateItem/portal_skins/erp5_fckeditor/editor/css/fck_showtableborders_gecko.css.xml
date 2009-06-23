@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fck_showtableborders_gecko.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * This CSS Style Sheet defines the rules to show table borders on Gecko.\r\n
+ */\r\n
+\r\n
+/* #########\r\n
+ *  WARNING\r\n
+ * #########\r\n
+ * When changing this file, the minified version of it must be updated in the\r\n
+ * fckeditor.html file (see FCK_ShowTableBordersCSS).\r\n
+ */\r\n
+\r\n
+/* For tables with the "border" attribute set to "0" */\r\n
+table[border="0"],\r\n
+table[border="0"] > tr > td, table[border="0"] > tr > th,\r\n
+table[border="0"] > tbody > tr > td, table[border="0"] > tbody > tr > th,\r\n
+table[border="0"] > thead > tr > td, table[border="0"] > thead > tr > th,\r\n
+table[border="0"] > tfoot > tr > td, table[border="0"] > tfoot > tr > th\r\n
+{\r\n
+\tborder: #d3d3d3 1px dotted ;\r\n
+}\r\n
+\r\n
+/* For tables with no "border" attribute set */\r\n
+table:not([border]),\r\n
+table:not([border]) > tr > td, table:not([border]) > tr > th,\r\n
+table:not([border]) > tbody > tr > td, table:not([border]) > tbody > tr > th,\r\n
+table:not([border]) > thead > tr > td, table:not([border]) > thead > tr > th,\r\n
+table:not([border]) > tfoot > tr > td, table:not([border]) > tfoot > tr > th\r\n
+{\r\n
+\tborder: #d3d3d3 1px dotted ;\r\n
+}\r\n
+
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

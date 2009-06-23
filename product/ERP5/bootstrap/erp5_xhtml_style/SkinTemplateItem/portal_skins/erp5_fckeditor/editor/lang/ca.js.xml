@@ -1,0 +1,581 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749252.37</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ca.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Catalan language file.\r\n
+ */\r\n
+\r\n
+var FCKLang =\r\n
+{\r\n
+// Language direction : "ltr" (left to right) or "rtl" (right to left).\r\n
+Dir\t\t\t\t\t: "ltr",\r\n
+\r\n
+ToolbarCollapse\t\t: "Redueix la barra d\'eines",\r\n
+ToolbarExpand\t\t: "Amplia la barra d\'eines",\r\n
+\r\n
+// Toolbar Items and Context Menu\r\n
+Save\t\t\t\t: "Desa",\r\n
+NewPage\t\t\t\t: "Nova Pàgina",\r\n
+Preview\t\t\t\t: "Visualització prèvia",\r\n
+Cut\t\t\t\t\t: "Retalla",\r\n
+Copy\t\t\t\t: "Copia",\r\n
+Paste\t\t\t\t: "Enganxa",\r\n
+PasteText\t\t\t: "Enganxa com a text no formatat",\r\n
+PasteWord\t\t\t: "Enganxa des del Word",\r\n
+Print\t\t\t\t: "Imprimeix",\r\n
+SelectAll\t\t\t: "Selecciona-ho tot",\r\n
+RemoveFormat\t\t: "Elimina Format",\r\n
+InsertLinkLbl\t\t: "Enllaç",\r\n
+InsertLink\t\t\t: "Insereix/Edita enllaç",\r\n
+RemoveLink\t\t\t: "Elimina l\'enllaç",\r\n
+VisitLink\t\t\t: "Obre l\'enllaç",\r\n
+Anchor\t\t\t\t: "Insereix/Edita àncora",\r\n
+AnchorDelete\t\t: "Elimina àncora",\r\n
+InsertImageLbl\t\t: "Imatge",\r\n
+InsertImage\t\t\t: "Insereix/Edita imatge",\r\n
+InsertFlashLbl\t\t: "Flash",\r\n
+InsertFlash\t\t\t: "Insereix/Edita Flash",\r\n
+InsertTableLbl\t\t: "Taula",\r\n
+InsertTable\t\t\t: "Insereix/Edita taula",\r\n
+InsertLineLbl\t\t: "Línia",\r\n
+InsertLine\t\t\t: "Insereix línia horitzontal",\r\n
+InsertSpecialCharLbl: "Caràcter Especial",\r\n
+InsertSpecialChar\t: "Insereix caràcter especial",\r\n
+InsertSmileyLbl\t\t: "Icona",\r\n
+InsertSmiley\t\t: "Insereix icona",\r\n
+About\t\t\t\t: "Quant a l\'FCKeditor",\r\n
+Bold\t\t\t\t: "Negreta",\r\n
+Italic\t\t\t\t: "Cursiva",\r\n
+Underline\t\t\t: "Subratllat",\r\n
+StrikeThrough\t\t: "Barrat",\r\n
+Subscript\t\t\t: "Subíndex",\r\n
+Superscript\t\t\t: "Superíndex",\r\n
+LeftJustify\t\t\t: "Alinia a l\'esquerra",\r\n
+CenterJustify\t\t: "Centrat",\r\n
+RightJustify\t\t: "Alinia a la dreta",\r\n
+BlockJustify\t\t: "Justificat",\r\n
+DecreaseIndent\t\t: "Redueix el sagnat",\r\n
+IncreaseIndent\t\t: "Augmenta el sagnat",\r\n
+Blockquote\t\t\t: "Bloc de cita",\r\n
+CreateDiv\t\t\t: "Crea un contenidor Div",\r\n
+EditDiv\t\t\t\t: "Edita el contenidor Div",\r\n
+DeleteDiv\t\t\t: "Elimina el contenidor Div",\r\n
+Undo\t\t\t\t: "Desfés",\r\n
+Redo\t\t\t\t: "Refés",\r\n
+NumberedListLbl\t\t: "Llista numerada",\r\n
+NumberedList\t\t: "Numeració activada/desactivada",\r\n
+BulletedListLbl\t\t: "Llista de pics",\r\n
+BulletedList\t\t: "Pics activats/descativats",\r\n
+ShowTableBorders\t: "Mostra les vores de les taules",\r\n
+ShowDetails\t\t\t: "Mostra detalls",\r\n
+Style\t\t\t\t: "Estil",\r\n
+FontFormat\t\t\t: "Format",\r\n
+Font\t\t\t\t: "Tipus de lletra",\r\n
+FontSize\t\t\t: "Mida",\r\n
+TextColor\t\t\t: "Color de Text",\r\n
+BGColor\t\t\t\t: "Color de Fons",\r\n
+Source\t\t\t\t: "Codi font",\r\n
+Find\t\t\t\t: "Cerca",\r\n
+Replace\t\t\t\t: "Reemplaça",\r\n
+SpellCheck\t\t\t: "Revisa l\'ortografia",\r\n
+UniversalKeyboard\t: "Teclat universal",\r\n
+PageBreakLbl\t\t: "Salt de pàgina",\r\n
+PageBreak\t\t\t: "Insereix salt de pàgina",\r\n
+\r\n
+Form\t\t\t: "Formulari",\r\n
+Checkbox\t\t: "Casella de verificació",\r\n
+RadioButton\t\t: "Botó d\'opció",\r\n
+TextField\t\t: "Camp de text",\r\n
+Textarea\t\t: "Àrea de text",\r\n
+HiddenField\t\t: "Camp ocult",\r\n
+Button\t\t\t: "Botó",\r\n
+SelectionField\t: "Camp de selecció",\r\n
+ImageButton\t\t: "Botó d\'imatge",\r\n
+\r\n
+FitWindow\t\t: "Maximiza la mida de l\'editor",\r\n
+ShowBlocks\t\t: "Mostra els blocs",\r\n
+\r\n
+// Context Menu\r\n
+EditLink\t\t\t: "Edita l\'enllaç",\r\n
+CellCM\t\t\t\t: "Cel·la",\r\n
+RowCM\t\t\t\t: "Fila",\r\n
+ColumnCM\t\t\t: "Columna",\r\n
+InsertRowAfter\t\t: "Insereix fila darrera",\r\n
+InsertRowBefore\t\t: "Insereix fila abans de",\r\n
+DeleteRows\t\t\t: "Suprimeix una fila",\r\n
+InsertColumnAfter\t: "Insereix columna darrera",\r\n
+InsertColumnBefore\t: "Insereix columna abans de",\r\n
+DeleteColumns\t\t: "Suprimeix una columna",\r\n
+InsertCellAfter\t\t: "Insereix cel·la darrera",\r\n
+InsertCellBefore\t: "Insereix cel·la abans de",\r\n
+DeleteCells\t\t\t: "Suprimeix les cel·les",\r\n
+MergeCells\t\t\t: "Fusiona les cel·les",\r\n
+MergeRight\t\t\t: "Fusiona cap a la dreta",\r\n
+MergeDown\t\t\t: "Fusiona cap avall",\r\n
+HorizontalSplitCell\t: "Divideix la cel·la horitzontalment",\r\n
+VerticalSplitCell\t: "Divideix la cel·la verticalment",\r\n
+TableDelete\t\t\t: "Suprimeix la taula",\r\n
+CellProperties\t\t: "Propietats de la cel·la",\r\n
+TableProperties\t\t: "Propietats de la taula",\r\n
+ImageProperties\t\t: "Propietats de la imatge",\r\n
+FlashProperties\t\t: "Propietats del Flash",\r\n
+\r\n
+AnchorProp\t\t\t: "Propietats de l\'àncora",\r\n
+ButtonProp\t\t\t: "Propietats del botó",\r\n
+CheckboxProp\t\t: "Propietats de la casella de verificació",\r\n
+HiddenFieldProp\t\t: "Propietats del camp ocult",\r\n
+RadioButtonProp\t\t: "Propietats del botó d\'opció",\r\n
+ImageButtonProp\t\t: "Propietats del botó d\'imatge",\r\n
+TextFieldProp\t\t: "Propietats del camp de text",\r\n
+SelectionFieldProp\t: "Propietats del camp de selecció",\r\n
+TextareaProp\t\t: "Propietats de l\'àrea de text",\r\n
+FormProp\t\t\t: "Propietats del formulari",\r\n
+\r\n
+FontFormats\t\t\t: "Normal;Formatejat;Adreça;Encapçalament 1;Encapçalament 2;Encapçalament 3;Encapçalament 4;Encapçalament 5;Encapçalament 6;Normal (DIV)",\r\n
+\r\n
+// Alerts and Messages\r\n
+ProcessingXHTML\t\t: "Processant XHTML. Si us plau esperi...",\r\n
+Done\t\t\t\t: "Fet",\r\n
+PasteWordConfirm\t: "El text que voleu enganxar sembla provenir de Word. Voleu netejar aquest text abans que sigui enganxat?",\r\n
+NotCompatiblePaste\t: "Aquesta funció és disponible per a Internet Explorer versió 5.5 o superior. Voleu enganxar sense netejar?",\r\n
+UnknownToolbarItem\t: "Element de la barra d\'eines desconegut \\"%1\\"",\r\n
+UnknownCommand\t\t: "Nom de comanda desconegut \\"%1\\"",\r\n
+NotImplemented\t\t: "Mètode no implementat",\r\n
+UnknownToolbarSet\t: "Conjunt de barra d\'eines \\"%1\\" inexistent",\r\n
+NoActiveX\t\t\t: "Les preferències del navegador poden limitar algunes funcions d\'aquest editor. Cal habilitar l\'opció \\"Executa controls ActiveX i plug-ins\\". Poden sorgir errors i poden faltar algunes funcions.",\r\n
+BrowseServerBlocked : "El visualitzador de recursos no s\'ha pogut obrir. Assegura\'t de que els bloquejos de finestres emergents estan desactivats.",\r\n
+DialogBlocked\t\t: "No ha estat possible obrir una finestra de diàleg. Assegureu-vos que els bloquejos de finestres emergents estan desactivats.",\r\n
+VisitLinkBlocked\t: "No ha estat possible obrir una nova finestra. Assegureu-vos que els bloquejos de finestres emergents estan desactivats.",\r\n
+\r\n
+// Dialogs\r\n
+DlgBtnOK\t\t\t: "D\'acord",\r\n
+DlgBtnCancel\t\t: "Cancel·la",\r\n
+DlgBtnClose\t\t\t: "Tanca",\r\n
+DlgBtnBrowseServer\t: "Veure servidor",\r\n
+DlgAdvancedTag\t\t: "Avançat",\r\n
+DlgOpOther\t\t\t: "Altres",\r\n
+DlgInfoTab\t\t\t: "Info",\r\n
+DlgAlertUrl\t\t\t: "Si us plau, afegiu la URL",\r\n
+\r\n
+// General Dialogs Labels\r\n
+DlgGenNotSet\t\t: "<no definit>",\r\n
+DlgGenId\t\t\t: "Id",\r\n
+DlgGenLangDir\t\t: "Direcció de l\'idioma",\r\n
+DlgGenLangDirLtr\t: "D\'esquerra a dreta (LTR)",\r\n
+DlgGenLangDirRtl\t: "De dreta a esquerra (RTL)",\r\n
+DlgGenLangCode\t\t: "Codi d\'idioma",\r\n
+DlgGenAccessKey\t\t: "Clau d\'accés",\r\n
+DlgGenName\t\t\t: "Nom",\r\n
+DlgGenTabIndex\t\t: "Index de Tab",\r\n
+DlgGenLongDescr\t\t: "Descripció llarga de la URL",\r\n
+DlgGenClass\t\t\t: "Classes del full d\'estil",\r\n
+DlgGenTitle\t\t\t: "Títol consultiu",\r\n
+DlgGenContType\t\t: "Tipus de contingut consultiu",\r\n
+DlgGenLinkCharset\t: "Conjunt de caràcters font enllaçat",\r\n
+DlgGenStyle\t\t\t: "Estil",\r\n
+\r\n
+// Image Dialog\r\n
+DlgImgTitle\t\t\t: "Propietats de la imatge",\r\n
+DlgImgInfoTab\t\t: "Informació de la imatge",\r\n
+DlgImgBtnUpload\t\t: "Envia-la al servidor",\r\n
+DlgImgURL\t\t\t: "URL",\r\n
+DlgImgUpload\t\t: "Puja",\r\n
+DlgImgAlt\t\t\t: "Text alternatiu",\r\n
+DlgImgWidth\t\t\t: "Amplada",\r\n
+DlgImgHeight\t\t: "Alçada",\r\n
+DlgImgLockRatio\t\t: "Bloqueja les proporcions",\r\n
+DlgBtnResetSize\t\t: "Restaura la mida",\r\n
+DlgImgBorder\t\t: "Vora",\r\n
+DlgImgHSpace\t\t: "Espaiat horit.",\r\n
+DlgImgVSpace\t\t: "Espaiat vert.",\r\n
+DlgImgAlign\t\t\t: "Alineació",\r\n
+DlgImgAlignLeft\t\t: "Ajusta a l\'esquerra",\r\n
+DlgImgAlignAbsBottom: "Abs Bottom",\r\n
+DlgImgAlignAbsMiddle: "Abs Middle",\r\n
+DlgImgAlignBaseline\t: "Baseline",\r\n
+DlgImgAlignBottom\t: "Bottom",\r\n
+DlgImgAlignMiddle\t: "Middle",\r\n
+DlgImgAlignRight\t: "Ajusta a la dreta",\r\n
+DlgImgAlignTextTop\t: "Text Top",\r\n
+DlgImgAlignTop\t\t: "Top",\r\n
+DlgImgPreview\t\t: "Vista prèvia",\r\n
+DlgImgAlertUrl\t\t: "Si us plau, escriviu la URL de la imatge",\r\n
+DlgImgLinkTab\t\t: "Enllaç",\r\n
+\r\n
+// Flash Dialog\r\n
+DlgFlashTitle\t\t: "Propietats del Flash",\r\n
+DlgFlashChkPlay\t\t: "Reprodució automàtica",\r\n
+DlgFlashChkLoop\t\t: "Bucle",\r\n
+DlgFlashChkMenu\t\t: "Habilita menú Flash",\r\n
+DlgFlashScale\t\t: "Escala",\r\n
+DlgFlashScaleAll\t: "Mostra-ho tot",\r\n
+DlgFlashScaleNoBorder\t: "Sense vores",\r\n
+DlgFlashScaleFit\t: "Mida exacta",\r\n
+\r\n
+// Link Dialog\r\n
+DlgLnkWindowTitle\t: "Enllaç",\r\n
+DlgLnkInfoTab\t\t: "Informació de l\'enllaç",\r\n
+DlgLnkTargetTab\t\t: "Destí",\r\n
+\r\n
+DlgLnkType\t\t\t: "Tipus d\'enllaç",\r\n
+DlgLnkTypeURL\t\t: "URL",\r\n
+DlgLnkTypeAnchor\t: "Àncora en aquesta pàgina",\r\n
+DlgLnkTypeEMail\t\t: "Correu electrònic",\r\n
+DlgLnkProto\t\t\t: "Protocol",\r\n
+DlgLnkProtoOther\t: "<altra>",\r\n
+DlgLnkURL\t\t\t: "URL",\r\n
+DlgLnkAnchorSel\t\t: "Selecciona una àncora",\r\n
+DlgLnkAnchorByName\t: "Per nom d\'àncora",\r\n
+DlgLnkAnchorById\t: "Per Id d\'element",\r\n
+DlgLnkNoAnchors\t\t: "(No hi ha àncores disponibles en aquest document)",\r\n
+DlgLnkEMail\t\t\t: "Adreça de correu electrònic",\r\n
+DlgLnkEMailSubject\t: "Assumpte del missatge",\r\n
+DlgLnkEMailBody\t\t: "Cos del missatge",\r\n
+DlgLnkUpload\t\t: "Puja",\r\n
+DlgLnkBtnUpload\t\t: "Envia al servidor",\r\n
+\r\n
+DlgLnkTarget\t\t: "Destí",\r\n
+DlgLnkTargetFrame\t: "<marc>",\r\n
+DlgLnkTargetPopup\t: "<finestra emergent>",\r\n
+DlgLnkTargetBlank\t: "Nova finestra (_blank)",\r\n
+DlgLnkTargetParent\t: "Finestra pare (_parent)",\r\n
+DlgLnkTargetSelf\t: "Mateixa finestra (_self)",\r\n
+DlgLnkTargetTop\t\t: "Finestra Major (_top)",\r\n
+DlgLnkTargetFrameName\t: "Nom del marc de destí",\r\n
+DlgLnkPopWinName\t: "Nom finestra popup",\r\n
+DlgLnkPopWinFeat\t: "Característiques finestra popup",\r\n
+DlgLnkPopResize\t\t: "Redimensionable",\r\n
+DlgLnkPopLocation\t: "Barra d\'adreça",\r\n
+DlgLnkPopMenu\t\t: "Barra de menú",\r\n
+DlgLnkPopScroll\t\t: "Barres d\'scroll",\r\n
+DlgLnkPopStatus\t\t: "Barra d\'estat",\r\n
+DlgLnkPopToolbar\t: "Barra d\'eines",\r\n
+DlgLnkPopFullScrn\t: "Pantalla completa (IE)",\r\n
+DlgLnkPopDependent\t: "Depenent (Netscape)",\r\n
+DlgLnkPopWidth\t\t: "Amplada",\r\n
+DlgLnkPopHeight\t\t: "Alçada",\r\n
+DlgLnkPopLeft\t\t: "Posició esquerra",\r\n
+DlgLnkPopTop\t\t: "Posició dalt",\r\n
+\r\n
+DlnLnkMsgNoUrl\t\t: "Si us plau, escrigui l\'enllaç URL",\r\n
+DlnLnkMsgNoEMail\t: "Si us plau, escrigui l\'adreça correu electrònic",\r\n
+DlnLnkMsgNoAnchor\t: "Si us plau, escrigui l\'àncora",\r\n
+DlnLnkMsgInvPopName\t: "El nom de la finestra emergent ha de començar amb una lletra i no pot tenir espais",\r\n
+\r\n
+// Color Dialog\r\n
+DlgColorTitle\t\t: "Selecciona el color",\r\n
+DlgColorBtnClear\t: "Neteja",\r\n
+DlgColorHighlight\t: "Realça",\r\n
+DlgColorSelected\t: "Selecciona",\r\n
+\r\n
+// Smiley Dialog\r\n
+DlgSmileyTitle\t\t: "Insereix una icona",\r\n
+\r\n
+// Special Character Dialog\r\n
+DlgSpecialCharTitle\t: "Selecciona el caràcter especial",\r\n
+\r\n
+// Table Dialog\r\n
+DlgTableTitle\t\t: "Propietats de la taula",\r\n
+DlgTableRows\t\t: "Files",\r\n
+DlgTableColumns\t\t: "Columnes",\r\n
+DlgTableBorder\t\t: "Mida vora",\r\n
+DlgTableAlign\t\t: "Alineació",\r\n
+DlgTableAlignNotSet\t: "<No Definit>",\r\n
+DlgTableAlignLeft\t: "Esquerra",\r\n
+DlgTableAlignCenter\t: "Centre",\r\n
+DlgTableAlignRight\t: "Dreta",\r\n
+DlgTableWidth\t\t: "Amplada",\r\n
+DlgTableWidthPx\t\t: "píxels",\r\n
+DlgTableWidthPc\t\t: "percentatge",\r\n
+DlgTableHeight\t\t: "Alçada",\r\n
+DlgTableCellSpace\t: "Espaiat de cel·les",\r\n
+DlgTableCellPad\t\t: "Encoixinament de cel·les",\r\n
+DlgTableCaption\t\t: "Títol",\r\n
+DlgTableSummary\t\t: "Resum",\r\n
+DlgTableHeaders\t\t: "Headers",\t//MISSING\r\n
+DlgTableHeadersNone\t\t: "None",\t//MISSING\r\n
+DlgTableHeadersColumn\t: "First column",\t//MISSING\r\n
+DlgTableHeadersRow\t\t: "First Row",\t//MISSING\r\n
+DlgTableHeadersBoth\t\t: "Both",\t//MISSING\r\n
+\r\n
+// Table Cell Dialog\r\n
+DlgCellTitle\t\t: "Propietats de la cel·la",\r\n
+DlgCellWidth\t\t: "Amplada",\r\n
+DlgCellWidthPx\t\t: "píxels",\r\n
+DlgCellWidthPc\t\t: "percentatge",\r\n
+DlgCellHeight\t\t: "Alçada",\r\n
+DlgCellWordWrap\t\t: "Ajust de paraula",\r\n
+DlgCellWordWrapNotSet\t: "<No Definit>",\r\n
+DlgCellWordWrapYes\t: "Si",\r\n
+DlgCellWordWrapNo\t: "No",\r\n
+DlgCellHorAlign\t\t: "Alineació horitzontal",\r\n
+DlgCellHorAlignNotSet\t: "<No Definit>",\r\n
+DlgCellHorAlignLeft\t: "Esquerra",\r\n
+DlgCellHorAlignCenter\t: "Centre",\r\n
+DlgCellHorAlignRight: "Dreta",\r\n
+DlgCellVerAlign\t\t: "Alineació vertical",\r\n
+DlgCellVerAlignNotSet\t: "<No definit>",\r\n
+DlgCellVerAlignTop\t: "Top",\r\n
+DlgCellVerAlignMiddle\t: "Middle",\r\n
+DlgCellVerAlignBottom\t: "Bottom",\r\n
+DlgCellVerAlignBaseline\t: "Baseline",\r\n
+DlgCellType\t\t: "Cell Type",\t//MISSING\r\n
+DlgCellTypeData\t\t: "Data",\t//MISSING\r\n
+DlgCellTypeHeader\t: "Header",\t//MISSING\r\n
+DlgCellRowSpan\t\t: "Rows Span",\r\n
+DlgCellCollSpan\t\t: "Columns Span",\r\n
+DlgCellBackColor\t: "Color de fons",\r\n
+DlgCellBorderColor\t: "Color de la vora",\r\n
+DlgCellBtnSelect\t: "Seleccioneu...",\r\n
+\r\n
+// Find and Replace Dialog\r\n
+DlgFindAndReplaceTitle\t: "Cerca i reemplaça",\r\n
+\r\n
+// Find Dialog\r\n
+DlgFindTitle\t\t: "Cerca",\r\n
+DlgFindFindBtn\t\t: "Cerca",\r\n
+DlgFindNotFoundMsg\t: "El text especificat no s\'ha trobat.",\r\n
+\r\n
+// Replace Dialog\r\n
+DlgReplaceTitle\t\t\t: "Reemplaça",\r\n
+DlgReplaceFindLbl\t\t: "Cerca:",\r\n
+DlgReplaceReplaceLbl\t: "Remplaça amb:",\r\n
+DlgReplaceCaseChk\t\t: "Distingeix majúscules/minúscules",\r\n
+DlgReplaceReplaceBtn\t: "Reemplaça",\r\n
+DlgReplaceReplAllBtn\t: "Reemplaça-ho tot",\r\n
+DlgReplaceWordChk\t\t: "Només paraules completes",\r\n
+\r\n
+// Paste Operations / Dialog\r\n
+PasteErrorCut\t: "La seguretat del vostre navegador no permet executar automàticament les operacions de retallar. Si us plau, utilitzeu el teclat (Ctrl+X).",\r\n
+PasteErrorCopy\t: "La seguretat del vostre navegador no permet executar automàticament les operacions de copiar. Si us plau, utilitzeu el teclat (Ctrl+C).",\r\n
+\r\n
+PasteAsText\t\t: "Enganxa com a text no formatat",\r\n
+PasteFromWord\t: "Enganxa com a Word",\r\n
+\r\n
+DlgPasteMsg2\t: "Si us plau, enganxeu dins del següent camp utilitzant el teclat (<STRONG>Ctrl+V</STRONG>) i premeu <STRONG>OK</STRONG>.",\r\n
+DlgPasteSec\t\t: "A causa de la configuració de seguretat del vostre navegador, l\'editor no pot accedir al porta-retalls directament. Enganxeu-ho un altre cop en aquesta finestra.",\r\n
+DlgPasteIgnoreFont\t\t: "Ignora definicions de font",\r\n
+DlgPasteRemoveStyles\t: "Elimina definicions d\'estil",\r\n
+\r\n
+// Color Picker\r\n
+ColorAutomatic\t: "Automàtic",\r\n
+ColorMoreColors\t: "Més colors...",\r\n
+\r\n
+// Document Properties\r\n
+DocProps\t\t: "Propietats del document",\r\n
+\r\n
+// Anchor Dialog\r\n
+DlgAnchorTitle\t\t: "Propietats de l\'àncora",\r\n
+DlgAnchorName\t\t: "Nom de l\'àncora",\r\n
+DlgAnchorErrorName\t: "Si us plau, escriviu el nom de l\'ancora",\r\n
+\r\n
+// Speller Pages Dialog\r\n
+DlgSpellNotInDic\t\t: "No és al diccionari",\r\n
+DlgSpellChangeTo\t\t: "Reemplaça amb",\r\n
+DlgSpellBtnIgnore\t\t: "Ignora",\r\n
+DlgSpellBtnIgnoreAll\t: "Ignora-les totes",\r\n
+DlgSpellBtnReplace\t\t: "Canvia",\r\n
+DlgSpellBtnReplaceAll\t: "Canvia-les totes",\r\n
+DlgSpellBtnUndo\t\t\t: "Desfés",\r\n
+DlgSpellNoSuggestions\t: "Cap suggeriment",\r\n
+DlgSpellProgress\t\t: "Verificació ortogràfica en curs...",\r\n
+DlgSpellNoMispell\t\t: "Verificació ortogràfica acabada: no hi ha cap paraula mal escrita",\r\n
+DlgSpellNoChanges\t\t: "Verificació ortogràfica: no s\'ha canviat cap paraula",\r\n
+DlgSpellOneChange\t\t: "Verificació ortogràfica: s\'ha canviat una paraula",\r\n
+DlgSpellManyChanges\t\t: "Verificació ortogràfica: s\'han canviat %1 paraules",\r\n
+\r\n
+IeSpellDownload\t\t\t: "Verificació ortogràfica no instal·lada. Voleu descarregar-ho ara?",\r\n
+\r\n
+// Button Dialog\r\n
+DlgButtonText\t\t: "Text (Valor)",\r\n
+DlgButtonType\t\t: "Tipus",\r\n
+DlgButtonTypeBtn\t: "Botó",\r\n
+DlgButtonTypeSbm\t: "Transmet formulari",\r\n
+DlgButtonTypeRst\t: "Reinicia formulari",\r\n
+\r\n
+// Checkbox and Radio Button Dialogs\r\n
+DlgCheckboxName\t\t: "Nom",\r\n
+DlgCheckboxValue\t: "Valor",\r\n
+DlgCheckboxSelected\t: "Seleccionat",\r\n
+\r\n
+// Form Dialog\r\n
+DlgFormName\t\t: "Nom",\r\n
+DlgFormAction\t: "Acció",\r\n
+DlgFormMethod\t: "Mètode",\r\n
+\r\n
+// Select Field Dialog\r\n
+DlgSelectName\t\t: "Nom",\r\n
+DlgSelectValue\t\t: "Valor",\r\n
+DlgSelectSize\t\t: "Mida",\r\n
+DlgSelectLines\t\t: "Línies",\r\n
+DlgSelectChkMulti\t: "Permet múltiples seleccions",\r\n
+DlgSelectOpAvail\t: "Opcions disponibles",\r\n
+DlgSelectOpText\t\t: "Text",\r\n
+DlgSelectOpValue\t: "Valor",\r\n
+DlgSelectBtnAdd\t\t: "Afegeix",\r\n
+DlgSelectBtnModify\t: "Modifica",\r\n
+DlgSelectBtnUp\t\t: "Amunt",\r\n
+DlgSelectBtnDown\t: "Avall",\r\n
+DlgSelectBtnSetValue : "Selecciona per defecte",\r\n
+DlgSelectBtnDelete\t: "Elimina",\r\n
+\r\n
+// Textarea Dialog\r\n
+DlgTextareaName\t: "Nom",\r\n
+DlgTextareaCols\t: "Columnes",\r\n
+DlgTextareaRows\t: "Files",\r\n
+\r\n
+// Text Field Dialog\r\n
+DlgTextName\t\t\t: "Nom",\r\n
+DlgTextValue\t\t: "Valor",\r\n
+DlgTextCharWidth\t: "Amplada",\r\n
+DlgTextMaxChars\t\t: "Nombre màxim de caràcters",\r\n
+DlgTextType\t\t\t: "Tipus",\r\n
+DlgTextTypeText\t\t: "Text",\r\n
+DlgTextTypePass\t\t: "Contrasenya",\r\n
+\r\n
+// Hidden Field Dialog\r\n
+DlgHiddenName\t: "Nom",\r\n
+DlgHiddenValue\t: "Valor",\r\n
+\r\n
+// Bulleted List Dialog\r\n
+BulletedListProp\t: "Propietats de la llista de pics",\r\n
+NumberedListProp\t: "Propietats de llista numerada",\r\n
+DlgLstStart\t\t\t: "Inici",\r\n
+DlgLstType\t\t\t: "Tipus",\r\n
+DlgLstTypeCircle\t: "Cercle",\r\n
+DlgLstTypeDisc\t\t: "Disc",\r\n
+DlgLstTypeSquare\t: "Quadrat",\r\n
+DlgLstTypeNumbers\t: "Números (1, 2, 3)",\r\n
+DlgLstTypeLCase\t\t: "Lletres minúscules (a, b, c)",\r\n
+DlgLstTypeUCase\t\t: "Lletres majúscules (A, B, C)",\r\n
+DlgLstTypeSRoman\t: "Números romans en minúscules (i, ii, iii)",\r\n
+DlgLstTypeLRoman\t: "Números romans en majúscules (I, II, III)",\r\n
+\r\n
+// Document Properties Dialog\r\n
+DlgDocGeneralTab\t: "General",\r\n
+DlgDocBackTab\t\t: "Fons",\r\n
+DlgDocColorsTab\t\t: "Colors i marges",\r\n
+DlgDocMetaTab\t\t: "Metadades",\r\n
+\r\n
+DlgDocPageTitle\t\t: "Títol de la pàgina",\r\n
+DlgDocLangDir\t\t: "Direcció idioma",\r\n
+DlgDocLangDirLTR\t: "Esquerra a dreta (LTR)",\r\n
+DlgDocLangDirRTL\t: "Dreta a esquerra (RTL)",\r\n
+DlgDocLangCode\t\t: "Codi d\'idioma",\r\n
+DlgDocCharSet\t\t: "Codificació de conjunt de caràcters",\r\n
+DlgDocCharSetCE\t\t: "Centreeuropeu",\r\n
+DlgDocCharSetCT\t\t: "Xinès tradicional (Big5)",\r\n
+DlgDocCharSetCR\t\t: "Ciríl·lic",\r\n
+DlgDocCharSetGR\t\t: "Grec",\r\n
+DlgDocCharSetJP\t\t: "Japonès",\r\n
+DlgDocCharSetKR\t\t: "Coreà",\r\n
+DlgDocCharSetTR\t\t: "Turc",\r\n
+DlgDocCharSetUN\t\t: "Unicode (UTF-8)",\r\n
+DlgDocCharSetWE\t\t: "Europeu occidental",\r\n
+DlgDocCharSetOther\t: "Una altra codificació de caràcters",\r\n
+\r\n
+DlgDocDocType\t\t: "Capçalera de tipus de document",\r\n
+DlgDocDocTypeOther\t: "Un altra capçalera de tipus de document",\r\n
+DlgDocIncXHTML\t\t: "Incloure declaracions XHTML",\r\n
+DlgDocBgColor\t\t: "Color de fons",\r\n
+DlgDocBgImage\t\t: "URL de la imatge de fons",\r\n
+DlgDocBgNoScroll\t: "Fons fixe",\r\n
+DlgDocCText\t\t\t: "Text",\r\n
+DlgDocCLink\t\t\t: "Enllaç",\r\n
+DlgDocCVisited\t\t: "Enllaç visitat",\r\n
+DlgDocCActive\t\t: "Enllaç actiu",\r\n
+DlgDocMargins\t\t: "Marges de pàgina",\r\n
+DlgDocMaTop\t\t\t: "Cap",\r\n
+DlgDocMaLeft\t\t: "Esquerra",\r\n
+DlgDocMaRight\t\t: "Dreta",\r\n
+DlgDocMaBottom\t\t: "Peu",\r\n
+DlgDocMeIndex\t\t: "Mots clau per a indexació (separats per coma)",\r\n
+DlgDocMeDescr\t\t: "Descripció del document",\r\n
+DlgDocMeAuthor\t\t: "Autor",\r\n
+DlgDocMeCopy\t\t: "Copyright",\r\n
+DlgDocPreview\t\t: "Vista prèvia",\r\n
+\r\n
+// Templates Dialog\r\n
+Templates\t\t\t: "Plantilles",\r\n
+DlgTemplatesTitle\t: "Contingut plantilles",\r\n
+DlgTemplatesSelMsg\t: "Si us plau, seleccioneu la plantilla per obrir a l\'editor<br>(el contingut actual no serà enregistrat):",\r\n
+DlgTemplatesLoading\t: "Carregant la llista de plantilles. Si us plau, espereu...",\r\n
+DlgTemplatesNoTpl\t: "(No hi ha plantilles definides)",\r\n
+DlgTemplatesReplace\t: "Reemplaça el contingut actual",\r\n
+\r\n
+// About Dialog\r\n
+DlgAboutAboutTab\t: "Quant a",\r\n
+DlgAboutBrowserInfoTab\t: "Informació del navegador",\r\n
+DlgAboutLicenseTab\t: "Llicència",\r\n
+DlgAboutVersion\t\t: "versió",\r\n
+DlgAboutInfo\t\t: "Per a més informació aneu a",\r\n
+\r\n
+// Div Dialog\r\n
+DlgDivGeneralTab\t: "General",\r\n
+DlgDivAdvancedTab\t: "Avançat",\r\n
+DlgDivStyle\t\t: "Estil",\r\n
+DlgDivInlineStyle\t: "Estil en línia"\r\n
+};\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>19574</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

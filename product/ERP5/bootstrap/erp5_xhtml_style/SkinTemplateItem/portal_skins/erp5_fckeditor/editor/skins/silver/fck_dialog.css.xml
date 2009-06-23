@@ -1,0 +1,441 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fck_dialog.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Styles used by the dialog boxes.\r\n
+ */\r\n
+\r\n
+html, body\r\n
+{\r\n
+\tbackground-color: transparent;\r\n
+\tmargin: 0px;\r\n
+\tpadding: 0px;\r\n
+}\r\n
+\r\n
+body\r\n
+{\r\n
+\tpadding: 10px;\r\n
+}\r\n
+\r\n
+body, td, input, select, textarea\r\n
+{\r\n
+\tfont-size: 11px;\r\n
+\tfont-family: \'Microsoft Sans Serif\' , Arial, Helvetica, Verdana;\r\n
+}\r\n
+\r\n
+body, .BackColor\r\n
+{\r\n
+\tbackground-color: #f7f7f7;\r\n
+}\r\n
+\r\n
+.PopupBody\r\n
+{\r\n
+\theight: 100%;\r\n
+\twidth: 100%;\r\n
+\toverflow: hidden;\r\n
+\tbackground-color: transparent;\r\n
+\tpadding: 0px;\r\n
+}\r\n
+\r\n
+#header\r\n
+{\r\n
+\tcursor: move;\r\n
+}\r\n
+\r\n
+.PopupTitle\r\n
+{\r\n
+\tfont-weight: bold;\r\n
+\tfont-size: 14pt;\r\n
+\tcolor: #504845;\r\n
+\tbackground-color: #dedede;\r\n
+\tpadding: 3px 10px 3px 10px;\r\n
+}\r\n
+\r\n
+.PopupButtons\r\n
+{\r\n
+\tposition: absolute;\r\n
+\tright: 0px;\r\n
+\tleft: 0px;\r\n
+\tbottom: 0px;\r\n
+\tborder-top: #cec6b5 1px solid;\r\n
+\tbackground-color: #DEDEDE;\r\n
+\tpadding: 7px 10px 7px 10px;\r\n
+}\r\n
+\r\n
+.Button\r\n
+{\r\n
+\tborder: #7a7261 1px solid;\r\n
+\tcolor: #504845;\r\n
+\tbackground-color: #cec6b5;\r\n
+}\r\n
+\r\n
+#btnOk\r\n
+{\r\n
+\twidth: 100px;\r\n
+}\r\n
+\r\n
+.DarkBackground\r\n
+{\r\n
+\tbackground-color: #f2f2f2;\r\n
+}\r\n
+\r\n
+.LightBackground\r\n
+{\r\n
+\tbackground-color: #ffffbe;\r\n
+}\r\n
+\r\n
+.PopupTitleBorder\r\n
+{\r\n
+\tborder-bottom: #cec6b5 1px solid;\r\n
+}\r\n
+\r\n
+.PopupTabArea\r\n
+{\r\n
+\tcolor: #504845;\r\n
+\tbackground-color: #DEDEDE;\r\n
+}\r\n
+\r\n
+.PopupTabEmptyArea\r\n
+{\r\n
+\tpadding-left: 10px ;\r\n
+\tborder-bottom: #cec6b5 1px solid;\r\n
+}\r\n
+\r\n
+.PopupTab, .PopupTabSelected\r\n
+{\r\n
+\tborder-right: #cec6b5 1px solid;\r\n
+\tborder-top: #cec6b5 1px solid;\r\n
+\tborder-left: #cec6b5 1px solid;\r\n
+\tpadding: 3px 5px 3px 5px;\r\n
+\tcolor: #504845;\r\n
+}\r\n
+\r\n
+.PopupTab\r\n
+{\r\n
+\tmargin-top: 1px;\r\n
+\tborder-bottom: #cec6b5 1px solid;\r\n
+\tcursor: pointer;\r\n
+\tcursor: hand;\r\n
+}\r\n
+\r\n
+.PopupTabSelected\r\n
+{\r\n
+\tfont-weight:bold;\r\n
+\tcursor: default;\r\n
+\tpadding-top: 4px;\r\n
+\tborder-bottom: #f1f1e3 1px solid;\r\n
+\tbackground-color: #f7f7f7;\r\n
+}\r\n
+\r\n
+.PopupSelectionBox\r\n
+{\r\n
+\tborder: #a9a9a9 1px solid !important;\r\n
+\tbackground-color: #dcdcdc !important;\r\n
+\tcursor: pointer;\r\n
+\tcursor: hand;\r\n
+}\r\n
+\r\n
+#tdBrowse\r\n
+{\r\n
+\tvertical-align: bottom;\r\n
+}\r\n
+\r\n
+/**\r\n
+ * Dialog frame related styles.\r\n
+ */\r\n
+\r\n
+.contents\r\n
+{\r\n
+\tposition: absolute;\r\n
+\ttop: 2px;\r\n
+\tleft: 16px;\r\n
+\tright: 16px;\r\n
+\tbottom: 20px;\r\n
+\tbackground-color: #f7f7f7;\r\n
+\toverflow: hidden;\r\n
+\tz-index: 1;\r\n
+}\r\n
+\r\n
+.tl, .tr, .tc, .bl, .br, .bc\r\n
+{\r\n
+\tposition: absolute;\r\n
+\tbackground-image: url(images/sprites.png);\r\n
+\tbackground-repeat: no-repeat;\r\n
+}\r\n
+\r\n
+* html .tl, * html .tr, * html .tc, * html .bl, * html .br, * html .bc\r\n
+{\r\n
+\tbackground-image: url(images/sprites.gif);\r\n
+}\r\n
+\r\n
+.ml, .mr\r\n
+{\r\n
+\tposition: absolute;\r\n
+\tbackground-image: url(images/dialog.sides.png);\r\n
+\tbackground-repeat: repeat-y;\r\n
+}\r\n
+\r\n
+* html .ml, * html .mr\r\n
+{\r\n
+\tbackground-image: url(images/dialog.sides.gif);\r\n
+}\r\n
+\r\n
+.rtl .ml, .rtl .mr\r\n
+{\r\n
+\tposition: absolute;\r\n
+\tbackground-image: url(images/dialog.sides.rtl.png);\r\n
+\tbackground-repeat: repeat-y;\r\n
+}\r\n
+\r\n
+* html .rtl .ml, * html .rtl .mr\r\n
+{\r\n
+\tbackground-image: url(images/dialog.sides.gif);\r\n
+}\r\n
+\r\n
+.tl\r\n
+{\r\n
+\ttop: 0px;\r\n
+\tleft: 0px;\r\n
+\twidth: 16px;\r\n
+\theight: 16px;\r\n
+\tbackground-position: -16px -16px;\r\n
+}\r\n
+\r\n
+.rtl .tl\r\n
+{\r\n
+\tbackground-position: -16px -397px;\r\n
+}\r\n
+\r\n
+.tr\r\n
+{\r\n
+\ttop: 0px;\r\n
+\tright: 0px;\r\n
+\twidth: 16px;\r\n
+\theight: 16px;\r\n
+\tbackground-position: -16px -76px;\r\n
+}\r\n
+\r\n
+.rtl .tr\r\n
+{\r\n
+\tbackground-position: -16px -457px;\r\n
+}\r\n
+\r\n
+.tc\r\n
+{\r\n
+\ttop: 0px;\r\n
+\tright: 16px;\r\n
+\tleft: 16px;\r\n
+\theight: 16px;\r\n
+\tbackground-position: 0px -136px;\r\n
+\tbackground-repeat: repeat-x;\r\n
+}\r\n
+\r\n
+.ml\r\n
+{\r\n
+\ttop: 16px;\r\n
+\tleft: 0px;\r\n
+\twidth: 16px;\r\n
+\tbottom: 51px;\r\n
+\tbackground-position: 0px 0px;\r\n
+}\r\n
+\r\n
+.mr\r\n
+{\r\n
+\ttop: 16px;\r\n
+\tright: 0px;\r\n
+\twidth: 16px;\r\n
+\tbottom: 51px;\r\n
+\tbackground-position: -16px 0px;\r\n
+}\r\n
+\r\n
+.bl\r\n
+{\r\n
+\tbottom: 0px;\r\n
+\tleft: 0px;\r\n
+\twidth: 30px;\r\n
+\theight: 51px;\r\n
+\tbackground-position: -16px -196px;\r\n
+}\r\n
+\r\n
+.rtl .bl\r\n
+{\r\n
+\tbackground-position: -16px -517px;\r\n
+}\r\n
+\r\n
+.br\r\n
+{\r\n
+\tbottom: 0px;\r\n
+\tright: 0px;\r\n
+\twidth: 30px;\r\n
+\theight: 51px;\r\n
+\tbackground-position: -16px -263px;\r\n
+}\r\n
+\r\n
+.rtl .br\r\n
+{\r\n
+\tbackground-position: -16px -584px;\r\n
+}\r\n
+\r\n
+.bc\r\n
+{\r\n
+\tbottom: 0px;\r\n
+\tright: 30px;\r\n
+\tleft: 30px;\r\n
+\theight: 51px;\r\n
+\tbackground-position: 0px -330px;\r\n
+\tbackground-repeat: repeat-x;\r\n
+}\r\n
+\r\n
+/* For IE6. Do not change it. */\r\n
+* html .blocker\r\n
+{\r\n
+\tposition: absolute;\r\n
+\twidth: 100%;\r\n
+\theight: 100%;\r\n
+\tz-index: 12;\r\n
+\tfilter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);\r\n
+}\r\n
+\r\n
+/* The layer used to cover the dialog when opening a child dialog. */\r\n
+.cover\r\n
+{\r\n
+\tposition: absolute;\r\n
+\ttop: 0px;\r\n
+\tleft: 14px;\r\n
+\tright: 14px;\r\n
+\tbottom: 18px;\r\n
+\tz-index: 11;\r\n
+}\r\n
+\r\n
+#closeButton\r\n
+{\r\n
+\tposition: absolute;\r\n
+\tright: 0px;\r\n
+\ttop: 0px;\r\n
+\tmargin-top: 5px;\r\n
+\tmargin-right: 10px;\r\n
+\twidth: 20px;\r\n
+\theight: 20px;\r\n
+\tcursor: pointer;\r\n
+\tbackground-image: url(images/sprites.png);\r\n
+\tbackground-repeat: no-repeat;\r\n
+\tbackground-position: -16px -651px;\r\n
+}\r\n
+\r\n
+* html #closeButton\r\n
+{\r\n
+\tcursor: hand;\r\n
+\tbackground-image: url(images/sprites.gif);\r\n
+}\r\n
+\r\n
+.rtl #closeButton\r\n
+{\r\n
+\tright: auto;\r\n
+\tleft: 10px;\r\n
+\tmargin-right: 0px;\r\n
+}\r\n
+\r\n
+#closeButton:hover\r\n
+{\r\n
+\tbackground-position: -16px -687px;\r\n
+}\r\n
+\r\n
+#throbberBlock\r\n
+{\r\n
+\tz-index: 10;\r\n
+}\r\n
+\r\n
+#throbberBlock div\r\n
+{\r\n
+\tfloat: left;\r\n
+\twidth: 8px;\r\n
+\theight: 9px;\r\n
+\tmargin-left: 2px;\r\n
+\tmargin-right: 2px;\r\n
+\tfont-size: 1px;\t/* IE6 */\r\n
+}\r\n
+\r\n
+/*\r\n
+\tColor Gradient Generator:\r\n
+\thttp://www.herethere.net/~samson/php/color_gradient/?cbegin=504845&cend=DEDEDE&steps=4\r\n
+*/\r\n
+\r\n
+.throbber_1\r\n
+{\r\n
+\tbackground-color: #504845;\r\n
+}\r\n
+\r\n
+.throbber_2\r\n
+{\r\n
+\tbackground-color: #736D6B;\r\n
+}\r\n
+\r\n
+.throbber_3\r\n
+{\r\n
+\tbackground-color: #979391;\r\n
+}\r\n
+\r\n
+.throbber_4\r\n
+{\r\n
+\tbackground-color: #BAB8B7;\r\n
+}\r\n
+\r\n
+.throbber_5\r\n
+{\r\n
+\tbackground-color: #DEDEDE;\r\n
+}\r\n
+
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

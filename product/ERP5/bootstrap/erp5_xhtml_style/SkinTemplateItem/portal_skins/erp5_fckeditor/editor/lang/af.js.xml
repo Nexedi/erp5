@@ -1,0 +1,581 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749251.5</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>af.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Afrikaans language file.\r\n
+ */\r\n
+\r\n
+var FCKLang =\r\n
+{\r\n
+// Language direction : "ltr" (left to right) or "rtl" (right to left).\r\n
+Dir\t\t\t\t\t: "ltr",\r\n
+\r\n
+ToolbarCollapse\t\t: "Vou Gereedskaps balk toe",\r\n
+ToolbarExpand\t\t: "Vou Gereedskaps balk oop",\r\n
+\r\n
+// Toolbar Items and Context Menu\r\n
+Save\t\t\t\t: "Bewaar",\r\n
+NewPage\t\t\t\t: "Nuwe Bladsy",\r\n
+Preview\t\t\t\t: "Voorskou",\r\n
+Cut\t\t\t\t\t: "Uitsny ",\r\n
+Copy\t\t\t\t: "Kopieer",\r\n
+Paste\t\t\t\t: "Byvoeg",\r\n
+PasteText\t\t\t: "Slegs inhoud byvoeg",\r\n
+PasteWord\t\t\t: "Van Word af byvoeg",\r\n
+Print\t\t\t\t: "Druk",\r\n
+SelectAll\t\t\t: "Selekteer alles",\r\n
+RemoveFormat\t\t: "Formaat verweider",\r\n
+InsertLinkLbl\t\t: "Skakel",\r\n
+InsertLink\t\t\t: "Skakel byvoeg/verander",\r\n
+RemoveLink\t\t\t: "Skakel verweider",\r\n
+VisitLink\t\t\t: "Open Link",\t//MISSING\r\n
+Anchor\t\t\t\t: "Plekhouer byvoeg/verander",\r\n
+AnchorDelete\t\t: "Remove Anchor",\t//MISSING\r\n
+InsertImageLbl\t\t: "Beeld",\r\n
+InsertImage\t\t\t: "Beeld byvoeg/verander",\r\n
+InsertFlashLbl\t\t: "Flash",\r\n
+InsertFlash\t\t\t: "Flash byvoeg/verander",\r\n
+InsertTableLbl\t\t: "Tabel",\r\n
+InsertTable\t\t\t: "Tabel byvoeg/verander",\r\n
+InsertLineLbl\t\t: "Lyn",\r\n
+InsertLine\t\t\t: "Horisontale lyn byvoeg",\r\n
+InsertSpecialCharLbl: "Spesiaale karakter",\r\n
+InsertSpecialChar\t: "Spesiaale Karakter byvoeg",\r\n
+InsertSmileyLbl\t\t: "Smiley",\r\n
+InsertSmiley\t\t: "Smiley byvoeg",\r\n
+About\t\t\t\t: "Meer oor FCKeditor",\r\n
+Bold\t\t\t\t: "Vet",\r\n
+Italic\t\t\t\t: "Skuins",\r\n
+Underline\t\t\t: "Onderstreep",\r\n
+StrikeThrough\t\t: "Gestreik",\r\n
+Subscript\t\t\t: "Subscript",\r\n
+Superscript\t\t\t: "Superscript",\r\n
+LeftJustify\t\t\t: "Links rig",\r\n
+CenterJustify\t\t: "Rig Middel",\r\n
+RightJustify\t\t: "Regs rig",\r\n
+BlockJustify\t\t: "Blok paradeer",\r\n
+DecreaseIndent\t\t: "Paradeering verkort",\r\n
+IncreaseIndent\t\t: "Paradeering verleng",\r\n
+Blockquote\t\t\t: "Blockquote",\t//MISSING\r\n
+CreateDiv\t\t\t: "Create Div Container",\t//MISSING\r\n
+EditDiv\t\t\t\t: "Edit Div Container",\t//MISSING\r\n
+DeleteDiv\t\t\t: "Remove Div Container",\t//MISSING\r\n
+Undo\t\t\t\t: "Ont-skep",\r\n
+Redo\t\t\t\t: "Her-skep",\r\n
+NumberedListLbl\t\t: "Genommerde lys",\r\n
+NumberedList\t\t: "Genommerde lys byvoeg/verweider",\r\n
+BulletedListLbl\t\t: "Gepunkte lys",\r\n
+BulletedList\t\t: "Gepunkte lys byvoeg/verweider",\r\n
+ShowTableBorders\t: "Wys tabel kante",\r\n
+ShowDetails\t\t\t: "Wys informasie",\r\n
+Style\t\t\t\t: "Styl",\r\n
+FontFormat\t\t\t: "Karakter formaat",\r\n
+Font\t\t\t\t: "Karakters",\r\n
+FontSize\t\t\t: "Karakter grote",\r\n
+TextColor\t\t\t: "Karakter kleur",\r\n
+BGColor\t\t\t\t: "Agtergrond kleur",\r\n
+Source\t\t\t\t: "Source",\r\n
+Find\t\t\t\t: "Vind",\r\n
+Replace\t\t\t\t: "Vervang",\r\n
+SpellCheck\t\t\t: "Spelling nagaan",\r\n
+UniversalKeyboard\t: "Universeele Sleutelbord",\r\n
+PageBreakLbl\t\t: "Bladsy breek",\r\n
+PageBreak\t\t\t: "Bladsy breek byvoeg",\r\n
+\r\n
+Form\t\t\t: "Form",\r\n
+Checkbox\t\t: "HakBox",\r\n
+RadioButton\t\t: "PuntBox",\r\n
+TextField\t\t: "Byvoegbare karakter strook",\r\n
+Textarea\t\t: "Byvoegbare karakter area",\r\n
+HiddenField\t\t: "Blinde strook",\r\n
+Button\t\t\t: "Knop",\r\n
+SelectionField\t: "Opklapbare keuse strook",\r\n
+ImageButton\t\t: "Beeld knop",\r\n
+\r\n
+FitWindow\t\t: "Maksimaliseer venster grote",\r\n
+ShowBlocks\t\t: "Show Blocks",\t//MISSING\r\n
+\r\n
+// Context Menu\r\n
+EditLink\t\t\t: "Verander skakel",\r\n
+CellCM\t\t\t\t: "Cell",\r\n
+RowCM\t\t\t\t: "Ry",\r\n
+ColumnCM\t\t\t: "Kolom",\r\n
+InsertRowAfter\t\t: "Insert Row After",\t//MISSING\r\n
+InsertRowBefore\t\t: "Insert Row Before",\t//MISSING\r\n
+DeleteRows\t\t\t: "Ry verweider",\r\n
+InsertColumnAfter\t: "Insert Column After",\t//MISSING\r\n
+InsertColumnBefore\t: "Insert Column Before",\t//MISSING\r\n
+DeleteColumns\t\t: "Kolom verweider",\r\n
+InsertCellAfter\t\t: "Insert Cell After",\t//MISSING\r\n
+InsertCellBefore\t: "Insert Cell Before",\t//MISSING\r\n
+DeleteCells\t\t\t: "Cell verweider",\r\n
+MergeCells\t\t\t: "Cell verenig",\r\n
+MergeRight\t\t\t: "Merge Right",\t//MISSING\r\n
+MergeDown\t\t\t: "Merge Down",\t//MISSING\r\n
+HorizontalSplitCell\t: "Split Cell Horizontally",\t//MISSING\r\n
+VerticalSplitCell\t: "Split Cell Vertically",\t//MISSING\r\n
+TableDelete\t\t\t: "Tabel verweider",\r\n
+CellProperties\t\t: "Cell eienskappe",\r\n
+TableProperties\t\t: "Tabel eienskappe",\r\n
+ImageProperties\t\t: "Beeld eienskappe",\r\n
+FlashProperties\t\t: "Flash eienskappe",\r\n
+\r\n
+AnchorProp\t\t\t: "Plekhouer eienskappe",\r\n
+ButtonProp\t\t\t: "Knop eienskappe",\r\n
+CheckboxProp\t\t: "HakBox eienskappe",\r\n
+HiddenFieldProp\t\t: "Blinde strook eienskappe",\r\n
+RadioButtonProp\t\t: "PuntBox eienskappe",\r\n
+ImageButtonProp\t\t: "Beeld knop eienskappe",\r\n
+TextFieldProp\t\t: "Karakter strook eienskappe",\r\n
+SelectionFieldProp\t: "Opklapbare keuse strook eienskappe",\r\n
+TextareaProp\t\t: "Karakter area eienskappe",\r\n
+FormProp\t\t\t: "Form eienskappe",\r\n
+\r\n
+FontFormats\t\t\t: "Normaal;Geformateerd;Adres;Opskrif 1;Opskrif 2;Opskrif 3;Opskrif 4;Opskrif 5;Opskrif 6;Normaal (DIV)",\r\n
+\r\n
+// Alerts and Messages\r\n
+ProcessingXHTML\t\t: "XHTML word verarbeit. U geduld asseblief...",\r\n
+Done\t\t\t\t: "Kompleet",\r\n
+PasteWordConfirm\t: "Die informasie wat U probeer byvoeg is warskynlik van Word. Wil U dit reinig voor die byvoeging?",\r\n
+NotCompatiblePaste\t: "Die instruksie is beskikbaar vir Internet Explorer weergawe 5.5 of hor. Wil U dir byvoeg sonder reiniging?",\r\n
+UnknownToolbarItem\t: "Unbekende gereedskaps balk item \\"%1\\"",\r\n
+UnknownCommand\t\t: "Unbekende instruksie naam \\"%1\\"",\r\n
+NotImplemented\t\t: "Instruksie is nie geimplementeer nie.",\r\n
+UnknownToolbarSet\t: "Gereedskaps balk \\"%1\\" bestaan nie",\r\n
+NoActiveX\t\t\t: "U browser sekuriteit instellings kan die funksies van die editor behinder. U moet die opsie \\"Run ActiveX controls and plug-ins\\" aktiveer. U ondervinding mag problematies geskiet of sekere funksionaliteit mag verhinder word.",\r\n
+BrowseServerBlocked : "Die vorraad venster word geblok! Verseker asseblief dat U die \\"popup blocker\\" instelling verander.",\r\n
+DialogBlocked\t\t: "Die dialoog venster vir verdere informasie word geblok. De-aktiveer asseblief die \\"popup blocker\\" instellings wat dit behinder.",\r\n
+VisitLinkBlocked\t: "It was not possible to open a new window. Make sure all popup blockers are disabled.",\t//MISSING\r\n
+\r\n
+// Dialogs\r\n
+DlgBtnOK\t\t\t: "OK",\r\n
+DlgBtnCancel\t\t: "Kanseleer",\r\n
+DlgBtnClose\t\t\t: "Sluit",\r\n
+DlgBtnBrowseServer\t: "Server deurblaai",\r\n
+DlgAdvancedTag\t\t: "Ingewikkeld",\r\n
+DlgOpOther\t\t\t: "<Ander>",\r\n
+DlgInfoTab\t\t\t: "Info",\r\n
+DlgAlertUrl\t\t\t: "Voeg asseblief die URL in",\r\n
+\r\n
+// General Dialogs Labels\r\n
+DlgGenNotSet\t\t: "<geen instelling>",\r\n
+DlgGenId\t\t\t: "Id",\r\n
+DlgGenLangDir\t\t: "Taal rigting",\r\n
+DlgGenLangDirLtr\t: "Links na regs (LTR)",\r\n
+DlgGenLangDirRtl\t: "Regs na links (RTL)",\r\n
+DlgGenLangCode\t\t: "Taal kode",\r\n
+DlgGenAccessKey\t\t: "Toegang sleutel",\r\n
+DlgGenName\t\t\t: "Naam",\r\n
+DlgGenTabIndex\t\t: "Tab Index",\r\n
+DlgGenLongDescr\t\t: "Lang beskreiwing URL",\r\n
+DlgGenClass\t\t\t: "Skakel Tiepe",\r\n
+DlgGenTitle\t\t\t: "Voorbeveelings Titel",\r\n
+DlgGenContType\t\t: "Voorbeveelings inhoud soort",\r\n
+DlgGenLinkCharset\t: "Geskakelde voorbeeld karakterstel",\r\n
+DlgGenStyle\t\t\t: "Styl",\r\n
+\r\n
+// Image Dialog\r\n
+DlgImgTitle\t\t\t: "Beeld eienskappe",\r\n
+DlgImgInfoTab\t\t: "Beeld informasie",\r\n
+DlgImgBtnUpload\t\t: "Stuur dit na die Server",\r\n
+DlgImgURL\t\t\t: "URL",\r\n
+DlgImgUpload\t\t: "Uplaai",\r\n
+DlgImgAlt\t\t\t: "Alternatiewe beskrywing",\r\n
+DlgImgWidth\t\t\t: "Weidte",\r\n
+DlgImgHeight\t\t: "Hoogde",\r\n
+DlgImgLockRatio\t\t: "Behou preporsie",\r\n
+DlgBtnResetSize\t\t: "Herstel groote",\r\n
+DlgImgBorder\t\t: "Kant",\r\n
+DlgImgHSpace\t\t: "HSpasie",\r\n
+DlgImgVSpace\t\t: "VSpasie",\r\n
+DlgImgAlign\t\t\t: "Paradeer",\r\n
+DlgImgAlignLeft\t\t: "Links",\r\n
+DlgImgAlignAbsBottom: "Abs Onder",\r\n
+DlgImgAlignAbsMiddle: "Abs Middel",\r\n
+DlgImgAlignBaseline\t: "Baseline",\r\n
+DlgImgAlignBottom\t: "Onder",\r\n
+DlgImgAlignMiddle\t: "Middel",\r\n
+DlgImgAlignRight\t: "Regs",\r\n
+DlgImgAlignTextTop\t: "Text Bo",\r\n
+DlgImgAlignTop\t\t: "Bo",\r\n
+DlgImgPreview\t\t: "Voorskou",\r\n
+DlgImgAlertUrl\t\t: "Voeg asseblief Beeld URL in.",\r\n
+DlgImgLinkTab\t\t: "Skakel",\r\n
+\r\n
+// Flash Dialog\r\n
+DlgFlashTitle\t\t: "Flash eienskappe",\r\n
+DlgFlashChkPlay\t\t: "Automaties Speel",\r\n
+DlgFlashChkLoop\t\t: "Herhaling",\r\n
+DlgFlashChkMenu\t\t: "Laat Flash Menu toe",\r\n
+DlgFlashScale\t\t: "Scale",\r\n
+DlgFlashScaleAll\t: "Wys alles",\r\n
+DlgFlashScaleNoBorder\t: "Geen kante",\r\n
+DlgFlashScaleFit\t: "Presiese pas",\r\n
+\r\n
+// Link Dialog\r\n
+DlgLnkWindowTitle\t: "Skakel",\r\n
+DlgLnkInfoTab\t\t: "Skakel informasie",\r\n
+DlgLnkTargetTab\t\t: "Mikpunt",\r\n
+\r\n
+DlgLnkType\t\t\t: "Skakel soort",\r\n
+DlgLnkTypeURL\t\t: "URL",\r\n
+DlgLnkTypeAnchor\t: "Skakel na plekhouers in text",\r\n
+DlgLnkTypeEMail\t\t: "E-Mail",\r\n
+DlgLnkProto\t\t\t: "Protokol",\r\n
+DlgLnkProtoOther\t: "<ander>",\r\n
+DlgLnkURL\t\t\t: "URL",\r\n
+DlgLnkAnchorSel\t\t: "Kies \'n plekhouer",\r\n
+DlgLnkAnchorByName\t: "Volgens plekhouer naam",\r\n
+DlgLnkAnchorById\t: "Volgens element Id",\r\n
+DlgLnkNoAnchors\t\t: "(Geen plekhouers beskikbaar in dokument}",\r\n
+DlgLnkEMail\t\t\t: "E-Mail Adres",\r\n
+DlgLnkEMailSubject\t: "Boodskap Opskrif",\r\n
+DlgLnkEMailBody\t\t: "Boodskap Inhoud",\r\n
+DlgLnkUpload\t\t: "Oplaai",\r\n
+DlgLnkBtnUpload\t\t: "Stuur na Server",\r\n
+\r\n
+DlgLnkTarget\t\t: "Mikpunt",\r\n
+DlgLnkTargetFrame\t: "<raam>",\r\n
+DlgLnkTargetPopup\t: "<popup venster>",\r\n
+DlgLnkTargetBlank\t: "Nuwe Venster (_blank)",\r\n
+DlgLnkTargetParent\t: "Vorige Venster (_parent)",\r\n
+DlgLnkTargetSelf\t: "Selfde Venster (_self)",\r\n
+DlgLnkTargetTop\t\t: "Boonste Venster (_top)",\r\n
+DlgLnkTargetFrameName\t: "Mikpunt Venster Naam",\r\n
+DlgLnkPopWinName\t: "Popup Venster Naam",\r\n
+DlgLnkPopWinFeat\t: "Popup Venster Geaartheid",\r\n
+DlgLnkPopResize\t\t: "Verstelbare Groote",\r\n
+DlgLnkPopLocation\t: "Adres Balk",\r\n
+DlgLnkPopMenu\t\t: "Menu Balk",\r\n
+DlgLnkPopScroll\t\t: "Gleibalkstuk",\r\n
+DlgLnkPopStatus\t\t: "Status Balk",\r\n
+DlgLnkPopToolbar\t: "Gereedskap Balk",\r\n
+DlgLnkPopFullScrn\t: "Voll Skerm (IE)",\r\n
+DlgLnkPopDependent\t: "Afhanklik (Netscape)",\r\n
+DlgLnkPopWidth\t\t: "Weite",\r\n
+DlgLnkPopHeight\t\t: "Hoogde",\r\n
+DlgLnkPopLeft\t\t: "Links Posisie",\r\n
+DlgLnkPopTop\t\t: "Bo Posisie",\r\n
+\r\n
+DlnLnkMsgNoUrl\t\t: "Voeg asseblief die URL in",\r\n
+DlnLnkMsgNoEMail\t: "Voeg asseblief die e-mail adres in",\r\n
+DlnLnkMsgNoAnchor\t: "Kies asseblief \'n plekhouer",\r\n
+DlnLnkMsgInvPopName\t: "Die popup naam moet begin met alphabetiese karakters sonder spasies.",\r\n
+\r\n
+// Color Dialog\r\n
+DlgColorTitle\t\t: "Kies Kleur",\r\n
+DlgColorBtnClear\t: "Maak skoon",\r\n
+DlgColorHighlight\t: "Highlight",\r\n
+DlgColorSelected\t: "Geselekteer",\r\n
+\r\n
+// Smiley Dialog\r\n
+DlgSmileyTitle\t\t: "Voeg Smiley by",\r\n
+\r\n
+// Special Character Dialog\r\n
+DlgSpecialCharTitle\t: "Kies spesiale karakter",\r\n
+\r\n
+// Table Dialog\r\n
+DlgTableTitle\t\t: "Tabel eienskappe",\r\n
+DlgTableRows\t\t: "Reie",\r\n
+DlgTableColumns\t\t: "Kolome",\r\n
+DlgTableBorder\t\t: "Kant groote",\r\n
+DlgTableAlign\t\t: "Parideering",\r\n
+DlgTableAlignNotSet\t: "<geen instelling>",\r\n
+DlgTableAlignLeft\t: "Links",\r\n
+DlgTableAlignCenter\t: "Middel",\r\n
+DlgTableAlignRight\t: "Regs",\r\n
+DlgTableWidth\t\t: "Weite",\r\n
+DlgTableWidthPx\t\t: "pixels",\r\n
+DlgTableWidthPc\t\t: "percent",\r\n
+DlgTableHeight\t\t: "Hoogde",\r\n
+DlgTableCellSpace\t: "Cell spasieering",\r\n
+DlgTableCellPad\t\t: "Cell buffer",\r\n
+DlgTableCaption\t\t: "Beskreiwing",\r\n
+DlgTableSummary\t\t: "Opsomming",\r\n
+DlgTableHeaders\t\t: "Headers",\t//MISSING\r\n
+DlgTableHeadersNone\t\t: "None",\t//MISSING\r\n
+DlgTableHeadersColumn\t: "First column",\t//MISSING\r\n
+DlgTableHeadersRow\t\t: "First Row",\t//MISSING\r\n
+DlgTableHeadersBoth\t\t: "Both",\t//MISSING\r\n
+\r\n
+// Table Cell Dialog\r\n
+DlgCellTitle\t\t: "Cell eienskappe",\r\n
+DlgCellWidth\t\t: "Weite",\r\n
+DlgCellWidthPx\t\t: "pixels",\r\n
+DlgCellWidthPc\t\t: "percent",\r\n
+DlgCellHeight\t\t: "Hoogde",\r\n
+DlgCellWordWrap\t\t: "Woord Wrap",\r\n
+DlgCellWordWrapNotSet\t: "<geen instelling>",\r\n
+DlgCellWordWrapYes\t: "Ja",\r\n
+DlgCellWordWrapNo\t: "Nee",\r\n
+DlgCellHorAlign\t\t: "Horisontale rigting",\r\n
+DlgCellHorAlignNotSet\t: "<geen instelling>",\r\n
+DlgCellHorAlignLeft\t: "Links",\r\n
+DlgCellHorAlignCenter\t: "Middel",\r\n
+DlgCellHorAlignRight: "Regs",\r\n
+DlgCellVerAlign\t\t: "Vertikale rigting",\r\n
+DlgCellVerAlignNotSet\t: "<geen instelling>",\r\n
+DlgCellVerAlignTop\t: "Bo",\r\n
+DlgCellVerAlignMiddle\t: "Middel",\r\n
+DlgCellVerAlignBottom\t: "Onder",\r\n
+DlgCellVerAlignBaseline\t: "Baseline",\r\n
+DlgCellType\t\t: "Cell Type",\t//MISSING\r\n
+DlgCellTypeData\t\t: "Data",\t//MISSING\r\n
+DlgCellTypeHeader\t: "Header",\t//MISSING\r\n
+DlgCellRowSpan\t\t: "Rei strekking",\r\n
+DlgCellCollSpan\t\t: "Kolom strekking",\r\n
+DlgCellBackColor\t: "Agtergrond Kleur",\r\n
+DlgCellBorderColor\t: "Kant Kleur",\r\n
+DlgCellBtnSelect\t: "Keuse...",\r\n
+\r\n
+// Find and Replace Dialog\r\n
+DlgFindAndReplaceTitle\t: "Find and Replace",\t//MISSING\r\n
+\r\n
+// Find Dialog\r\n
+DlgFindTitle\t\t: "Vind",\r\n
+DlgFindFindBtn\t\t: "Vind",\r\n
+DlgFindNotFoundMsg\t: "Die gespesifiseerde karakters word nie gevind nie.",\r\n
+\r\n
+// Replace Dialog\r\n
+DlgReplaceTitle\t\t\t: "Vervang",\r\n
+DlgReplaceFindLbl\t\t: "Soek wat:",\r\n
+DlgReplaceReplaceLbl\t: "Vervang met:",\r\n
+DlgReplaceCaseChk\t\t: "Vergelyk karakter skryfweise",\r\n
+DlgReplaceReplaceBtn\t: "Vervang",\r\n
+DlgReplaceReplAllBtn\t: "Vervang alles",\r\n
+DlgReplaceWordChk\t\t: "Vergelyk komplete woord",\r\n
+\r\n
+// Paste Operations / Dialog\r\n
+PasteErrorCut\t: "U browser se sekuriteit instelling behinder die uitsny aksie. Gebruik asseblief die sleutel kombenasie(Ctrl+X).",\r\n
+PasteErrorCopy\t: "U browser se sekuriteit instelling behinder die kopieerings aksie. Gebruik asseblief die sleutel kombenasie(Ctrl+C).",\r\n
+\r\n
+PasteAsText\t\t: "Voeg slegs karakters by",\r\n
+PasteFromWord\t: "Byvoeging uit Word",\r\n
+\r\n
+DlgPasteMsg2\t: "Voeg asseblief die inhoud in die gegewe box by met sleutel kombenasie(<STRONG>Ctrl+V</STRONG>) en druk <STRONG>OK</STRONG>.",\r\n
+DlgPasteSec\t\t: "Because of your browser security settings, the editor is not able to access your clipboard data directly. You are required to paste it again in this window.",\t//MISSING\r\n
+DlgPasteIgnoreFont\t\t: "Ignoreer karakter soort defenisies",\r\n
+DlgPasteRemoveStyles\t: "Verweider Styl defenisies",\r\n
+\r\n
+// Color Picker\r\n
+ColorAutomatic\t: "Automaties",\r\n
+ColorMoreColors\t: "Meer Kleure...",\r\n
+\r\n
+// Document Properties\r\n
+DocProps\t\t: "Dokument Eienskappe",\r\n
+\r\n
+// Anchor Dialog\r\n
+DlgAnchorTitle\t\t: "Plekhouer Eienskappe",\r\n
+DlgAnchorName\t\t: "Plekhouer Naam",\r\n
+DlgAnchorErrorName\t: "Voltooi die plekhouer naam asseblief",\r\n
+\r\n
+// Speller Pages Dialog\r\n
+DlgSpellNotInDic\t\t: "Nie in woordeboek nie",\r\n
+DlgSpellChangeTo\t\t: "Verander na",\r\n
+DlgSpellBtnIgnore\t\t: "Ignoreer",\r\n
+DlgSpellBtnIgnoreAll\t: "Ignoreer na-volgende",\r\n
+DlgSpellBtnReplace\t\t: "Vervang",\r\n
+DlgSpellBtnReplaceAll\t: "vervang na-volgende",\r\n
+DlgSpellBtnUndo\t\t\t: "Ont-skep",\r\n
+DlgSpellNoSuggestions\t: "- Geen voorstel -",\r\n
+DlgSpellProgress\t\t: "Spelling word beproef...",\r\n
+DlgSpellNoMispell\t\t: "Spellproef kompleet: Geen foute",\r\n
+DlgSpellNoChanges\t\t: "Spellproef kompleet: Geen woord veranderings",\r\n
+DlgSpellOneChange\t\t: "Spellproef kompleet: Een woord verander",\r\n
+DlgSpellManyChanges\t\t: "Spellproef kompleet: %1 woorde verander",\r\n
+\r\n
+IeSpellDownload\t\t\t: "Geen Spellproefer geinstaleer nie. Wil U dit aflaai?",\r\n
+\r\n
+// Button Dialog\r\n
+DlgButtonText\t\t: "Karakters (Waarde)",\r\n
+DlgButtonType\t\t: "Soort",\r\n
+DlgButtonTypeBtn\t: "Knop",\r\n
+DlgButtonTypeSbm\t: "Indien",\r\n
+DlgButtonTypeRst\t: "Reset",\r\n
+\r\n
+// Checkbox and Radio Button Dialogs\r\n
+DlgCheckboxName\t\t: "Naam",\r\n
+DlgCheckboxValue\t: "Waarde",\r\n
+DlgCheckboxSelected\t: "Uitgekies",\r\n
+\r\n
+// Form Dialog\r\n
+DlgFormName\t\t: "Naam",\r\n
+DlgFormAction\t: "Aksie",\r\n
+DlgFormMethod\t: "Metode",\r\n
+\r\n
+// Select Field Dialog\r\n
+DlgSelectName\t\t: "Naam",\r\n
+DlgSelectValue\t\t: "Waarde",\r\n
+DlgSelectSize\t\t: "Grote",\r\n
+DlgSelectLines\t\t: "lyne",\r\n
+DlgSelectChkMulti\t: "Laat meerere keuses toe",\r\n
+DlgSelectOpAvail\t: "Beskikbare Opsies",\r\n
+DlgSelectOpText\t\t: "Karakters",\r\n
+DlgSelectOpValue\t: "Waarde",\r\n
+DlgSelectBtnAdd\t\t: "Byvoeg",\r\n
+DlgSelectBtnModify\t: "Verander",\r\n
+DlgSelectBtnUp\t\t: "Op",\r\n
+DlgSelectBtnDown\t: "Af",\r\n
+DlgSelectBtnSetValue : "Stel as uitgekiesde waarde",\r\n
+DlgSelectBtnDelete\t: "Verweider",\r\n
+\r\n
+// Textarea Dialog\r\n
+DlgTextareaName\t: "Naam",\r\n
+DlgTextareaCols\t: "Kolom",\r\n
+DlgTextareaRows\t: "Reie",\r\n
+\r\n
+// Text Field Dialog\r\n
+DlgTextName\t\t\t: "Naam",\r\n
+DlgTextValue\t\t: "Waarde",\r\n
+DlgTextCharWidth\t: "Karakter weite",\r\n
+DlgTextMaxChars\t\t: "Maximale karakters",\r\n
+DlgTextType\t\t\t: "Soort",\r\n
+DlgTextTypeText\t\t: "Karakters",\r\n
+DlgTextTypePass\t\t: "Wagwoord",\r\n
+\r\n
+// Hidden Field Dialog\r\n
+DlgHiddenName\t: "Naam",\r\n
+DlgHiddenValue\t: "Waarde",\r\n
+\r\n
+// Bulleted List Dialog\r\n
+BulletedListProp\t: "Gepunkte lys eienskappe",\r\n
+NumberedListProp\t: "Genommerde lys eienskappe",\r\n
+DlgLstStart\t\t\t: "Begin",\r\n
+DlgLstType\t\t\t: "Soort",\r\n
+DlgLstTypeCircle\t: "Sirkel",\r\n
+DlgLstTypeDisc\t\t: "Skyf",\r\n
+DlgLstTypeSquare\t: "Vierkant",\r\n
+DlgLstTypeNumbers\t: "Nommer (1, 2, 3)",\r\n
+DlgLstTypeLCase\t\t: "Klein Letters (a, b, c)",\r\n
+DlgLstTypeUCase\t\t: "Hoof Letters (A, B, C)",\r\n
+DlgLstTypeSRoman\t: "Klein Romeinse nommers (i, ii, iii)",\r\n
+DlgLstTypeLRoman\t: "Groot Romeinse nommers (I, II, III)",\r\n
+\r\n
+// Document Properties Dialog\r\n
+DlgDocGeneralTab\t: "Algemeen",\r\n
+DlgDocBackTab\t\t: "Agtergrond",\r\n
+DlgDocColorsTab\t\t: "Kleure en Rante",\r\n
+DlgDocMetaTab\t\t: "Meta Data",\r\n
+\r\n
+DlgDocPageTitle\t\t: "Bladsy Opskrif",\r\n
+DlgDocLangDir\t\t: "Taal rigting",\r\n
+DlgDocLangDirLTR\t: "Link na Regs (LTR)",\r\n
+DlgDocLangDirRTL\t: "Regs na Links (RTL)",\r\n
+DlgDocLangCode\t\t: "Taal Kode",\r\n
+DlgDocCharSet\t\t: "Karakterstel Kodeering",\r\n
+DlgDocCharSetCE\t\t: "Sentraal Europa",\r\n
+DlgDocCharSetCT\t\t: "Chinees Traditioneel (Big5)",\r\n
+DlgDocCharSetCR\t\t: "Cyrillic",\r\n
+DlgDocCharSetGR\t\t: "Grieks",\r\n
+DlgDocCharSetJP\t\t: "Japanees",\r\n
+DlgDocCharSetKR\t\t: "Koreans",\r\n
+DlgDocCharSetTR\t\t: "Turks",\r\n
+DlgDocCharSetUN\t\t: "Unicode (UTF-8)",\r\n
+DlgDocCharSetWE\t\t: "Western European",\r\n
+DlgDocCharSetOther\t: "Ander Karakterstel Kodeering",\r\n
+\r\n
+DlgDocDocType\t\t: "Dokument Opskrif Soort",\r\n
+DlgDocDocTypeOther\t: "Ander Dokument Opskrif Soort",\r\n
+DlgDocIncXHTML\t\t: "Voeg XHTML verklaring by",\r\n
+DlgDocBgColor\t\t: "Agtergrond kleur",\r\n
+DlgDocBgImage\t\t: "Agtergrond Beeld URL",\r\n
+DlgDocBgNoScroll\t: "Vasgeklemde Agtergrond",\r\n
+DlgDocCText\t\t\t: "Karakters",\r\n
+DlgDocCLink\t\t\t: "Skakel",\r\n
+DlgDocCVisited\t\t: "Besoekte Skakel",\r\n
+DlgDocCActive\t\t: "Aktiewe Skakel",\r\n
+DlgDocMargins\t\t: "Bladsy Rante",\r\n
+DlgDocMaTop\t\t\t: "Bo",\r\n
+DlgDocMaLeft\t\t: "Links",\r\n
+DlgDocMaRight\t\t: "Regs",\r\n
+DlgDocMaBottom\t\t: "Onder",\r\n
+DlgDocMeIndex\t\t: "Dokument Index Sleutelwoorde(comma verdeelt)",\r\n
+DlgDocMeDescr\t\t: "Dokument Beskrywing",\r\n
+DlgDocMeAuthor\t\t: "Skrywer",\r\n
+DlgDocMeCopy\t\t: "Kopiereg",\r\n
+DlgDocPreview\t\t: "Voorskou",\r\n
+\r\n
+// Templates Dialog\r\n
+Templates\t\t\t: "Templates",\r\n
+DlgTemplatesTitle\t: "Inhoud Templates",\r\n
+DlgTemplatesSelMsg\t: "Kies die template om te gebruik in die editor<br>(Inhoud word vervang!):",\r\n
+DlgTemplatesLoading\t: "Templates word gelaai. U geduld asseblief...",\r\n
+DlgTemplatesNoTpl\t: "(Geen templates gedefinieerd)",\r\n
+DlgTemplatesReplace\t: "Vervang bestaande inhoud",\r\n
+\r\n
+// About Dialog\r\n
+DlgAboutAboutTab\t: "Meer oor",\r\n
+DlgAboutBrowserInfoTab\t: "Blaai Informasie deur",\r\n
+DlgAboutLicenseTab\t: "Lesensie",\r\n
+DlgAboutVersion\t\t: "weergawe",\r\n
+DlgAboutInfo\t\t: "Vir meer informasie gaan na ",\r\n
+\r\n
+// Div Dialog\r\n
+DlgDivGeneralTab\t: "General",\t//MISSING\r\n
+DlgDivAdvancedTab\t: "Advanced",\t//MISSING\r\n
+DlgDivStyle\t\t: "Style",\t//MISSING\r\n
+DlgDivInlineStyle\t: "Inline Style"\t//MISSING\r\n
+};\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>18799</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

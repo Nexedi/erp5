@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="Image" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749345.56</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>logo_fredck.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/gif</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">R0lGODlhVwAkANUwAOyWTfK5iPGwevXJpO+nafzx5/K2g/O7i+d4GfnbwfbMqf307Prizv77+PfU
+teh9I/CscemCK+uSRf748/TAlfnfyPzt4OyXT/jXvPfQsPrm1O6hX/vq2++jY/bKpfzt4e+oa/K1
+guySRvfTtPncw+uNPfK4h/vq3OmFL/Gye+6gXvbOq+qHNO2cV+ZzEfXFnf///wAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADAALAAAAABXACQAAAb/QJhw
+SCwaj8ik8rgoMBgOx+BFrVYVjoqlsex6v8qJhYHJWM9o9CDBBbvfxYIGo0jb79bBAs7vOh14gYIv
+Dn2GRBNzU4OMeId9CxVmjZSOj2AWCYuVnGkDl36anaN2DKBIExV1pKxnCm1LHgCztLMwsrW0Iiy8
+vb4sBC+9F1UHLb4bVL5UB74CgXteAS7U1dQj09ba29YtL9UsVATbEVTWVBLVD4EcYNnbAiQBAR0t
+9vf4+fbP4C8Q3C4OfKv2woA1CHjauauGopaADytMCDAA4dkLCgIIbBAgsApGAQL6RbAWoRc/giz6
+2RlQ4M27AEMmJFChzduFbSwovLiJcyC1/2BnrIWsZhFNhmhu3gGYl6KFsZrjuG1oAZCFQWrr0FhL
+SU2CnQqwkgJ8Wg0BAa4uJJSo1uKBOrQsDlQrp5Vb0SoDLBh6Z20d1a5U3KZ9MdTFXxd0+52ri7Wa
+VytsDvGtRuywxZEuLkBAUE0utXA+w2F2AdRKN2sdFbQ8VKAD2zOWlXHzxjVrvw1lDQStRoFz1wEa
+HjVI8OKwNyuxX+DWBvSw1369yzqtcu6wixOPLCwyDpsolejg7F30jVjlv23ezoF3AcLQcOSv4VMr
+aoA8VioC7H+uElWoTxcvJBCCNR/wscAkVXAnnwt3GYBWZlU4qA1oVEhIDQLmVDMBDB9Y07XeGwVs
+kmA1CFkhwD0dWWEAAfbopiIE95RWDIxAdRDCPEN4MA+ObnBgxz9WEabPkEQWaaQ9Heyo5JI94lGa
+dQBFKeWUVLoAxgKNnPXLllx26aUIuYQp5hcNrNLKmQpUsOEpRjBwZitrrMbmESK+2cgaes2phJ2U
+ZFABUnruySceA2CgwZqBegHIoGc4wICciV5ZZysKGApppHAMN2kjGWDwKKKYXtKABRU4YCYaWDj6
+KKChghIEADs=</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>36</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>920</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>87</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

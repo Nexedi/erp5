@@ -1,0 +1,222 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * This page shows all resources available in a folder in the File Browser.\r\n
+-->\r\n
+<html>\r\n
+<head>\r\n
+\t<title>Resources</title>\r\n
+\t<link href="browser.css" type="text/css" rel="stylesheet">\r\n
+\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\r\n
+\t<script type="text/javascript" src="js/common.js"></script>\r\n
+\t<script type="text/javascript">\r\n
+\r\n
+var oListManager = new Object() ;\r\n
+\r\n
+oListManager.Clear = function()\r\n
+{\r\n
+\tdocument.body.innerHTML = \'\' ;\r\n
+}\r\n
+\r\n
+function ProtectPath(path)\r\n
+{\r\n
+\tpath = path.replace( /\\\\/g, \'\\\\\\\\\') ;\r\n
+\tpath = path.replace( /\'/g, \'\\\\\\\'\') ;\r\n
+\treturn path ;\r\n
+}\r\n
+\r\n
+oListManager.GetFolderRowHtml = function( folderName, folderPath )\r\n
+{\r\n
+\t// Build the link to view the folder.\r\n
+\tvar sLink = \'<a href="#" onclick="OpenFolder(\\\'\' + ProtectPath( folderPath ) + \'\\\');return false;">\' ;\r\n
+\r\n
+\treturn \'<tr>\' +\r\n
+\t\t\t\'<td width="16">\' +\r\n
+\t\t\t\tsLink +\r\n
+\t\t\t\t\'<img alt="" src="images/Folder.gif" width="16" height="16" border="0"><\\/a>\' +\r\n
+\t\t\t\'<\\/td><td nowrap colspan="2">&nbsp;\' +\r\n
+\t\t\t\tsLink +\r\n
+\t\t\t\tfolderName +\r\n
+\t\t\t\t\'<\\/a>\' +\r\n
+\t\t\'<\\/td><\\/tr>\' ;\r\n
+}\r\n
+\r\n
+oListManager.GetFileRowHtml = function( fileName, fileUrl, fileSize )\r\n
+{\r\n
+\t// Build the link to view the folder.\r\n
+\tvar sLink = \'<a href="#" onclick="OpenFile(\\\'\' + ProtectPath( fileUrl ) + \'\\\');return false;">\' ;\r\n
+\r\n
+\t// Get the file icon.\r\n
+\tvar sIcon = oIcons.GetIcon( fileName ) ;\r\n
+\r\n
+\treturn \'<tr>\' +\r\n
+\t\t\t\'<td width="16">\' +\r\n
+\t\t\t\tsLink +\r\n
+\t\t\t\t\'<img alt="" src="images/icons/\' + sIcon + \'.gif" width="16" height="16" border="0"><\\/a>\' +\r\n
+\t\t\t\'<\\/td><td>&nbsp;\' +\r\n
+\t\t\t\tsLink +\r\n
+\t\t\t\tfileName +\r\n
+\t\t\t\t\'<\\/a>\' +\r\n
+\t\t\t\'<\\/td><td align="right" nowrap>&nbsp;\' +\r\n
+\t\t\t\tfileSize +\r\n
+\t\t\t\t\' KB\' +\r\n
+\t\t\'<\\/td><\\/tr>\' ;\r\n
+}\r\n
+\r\n
+function OpenFolder( folderPath )\r\n
+{\r\n
+\t// Load the resources list for this folder.\r\n
+\twindow.parent.frames[\'frmFolders\'].LoadFolders( folderPath ) ;\r\n
+}\r\n
+\r\n
+function OpenFile( fileUrl )\r\n
+{\r\n
+\twindow.top.opener.SetUrl( encodeURI( fileUrl ).replace( \'#\', \'%23\' ) ) ;\r\n
+\twindow.top.close() ;\r\n
+\twindow.top.opener.focus() ;\r\n
+}\r\n
+\r\n
+function LoadResources( resourceType, folderPath )\r\n
+{\r\n
+\toListManager.Clear() ;\r\n
+\toConnector.ResourceType = resourceType ;\r\n
+\toConnector.CurrentFolder = folderPath ;\r\n
+\toConnector.SendCommand( \'GetFoldersAndFiles\', null, GetFoldersAndFilesCallBack ) ;\r\n
+}\r\n
+\r\n
+function Refresh()\r\n
+{\r\n
+\tLoadResources( oConnector.ResourceType, oConnector.CurrentFolder ) ;\r\n
+}\r\n
+\r\n
+function GetFoldersAndFilesCallBack( fckXml )\r\n
+{\r\n
+\tif ( oConnector.CheckError( fckXml ) != 0 )\r\n
+\t\treturn ;\r\n
+\r\n
+\t// Get the current folder path.\r\n
+\tvar oFolderNode = fckXml.SelectSingleNode( \'Connector/CurrentFolder\' ) ;\r\n
+\tif ( oFolderNode == null )\r\n
+\t{\r\n
+\t\talert( \'The server didn\\\'t reply with a proper XML data. Please check your configuration.\' ) ;\r\n
+\t\treturn ;\r\n
+\t}\r\n
+\tvar sCurrentFolderPath\t= oFolderNode.attributes.getNamedItem(\'path\').value ;\r\n
+\tvar sCurrentFolderUrl\t= oFolderNode.attributes.getNamedItem(\'url\').value ;\r\n
+\r\n
+//\tvar dTimer = new Date() ;\r\n
+\r\n
+\tvar oHtml = new StringBuilder( \'<table id="tableFiles" cellspacing="1" cellpadding="0" width="100%" border="0">\' ) ;\r\n
+\r\n
+\t// Add the Folders.\r\n
+\tvar oNodes ;\r\n
+\toNodes = fckXml.SelectNodes( \'Connector/Folders/Folder\' ) ;\r\n
+\tfor ( var i = 0 ; i < oNodes.length ; i++ )\r\n
+\t{\r\n
+\t\tvar sFolderName = oNodes[i].attributes.getNamedItem(\'name\').value ;\r\n
+\t\toHtml.Append( oListManager.GetFolderRowHtml( sFolderName, sCurrentFolderPath + sFolderName + "/" ) ) ;\r\n
+\t}\r\n
+\r\n
+\t// Add the Files.\r\n
+\toNodes = fckXml.SelectNodes( \'Connector/Files/File\' ) ;\r\n
+\tfor ( var j = 0 ; j < oNodes.length ; j++ )\r\n
+\t{\r\n
+\t\tvar oNode = oNodes[j] ;\r\n
+\t\tvar sFileName = oNode.attributes.getNamedItem(\'name\').value ;\r\n
+\t\tvar sFileSize = oNode.attributes.getNamedItem(\'size\').value ;\r\n
+\r\n
+\t\t// Get the optional "url" attribute. If not available, build the url.\r\n
+\t\tvar oFileUrlAtt = oNodes[j].attributes.getNamedItem(\'url\') ;\r\n
+\t\tvar sFileUrl = oFileUrlAtt != null ? oFileUrlAtt.value : sCurrentFolderUrl + sFileName ;\r\n
+\r\n
+\t\toHtml.Append( oListManager.GetFileRowHtml( sFileName, sFileUrl, sFileSize ) ) ;\r\n
+\t}\r\n
+\r\n
+\toHtml.Append( \'<\\/table>\' ) ;\r\n
+\r\n
+\tdocument.body.innerHTML = oHtml.ToString() ;\r\n
+\r\n
+//\twindow.top.document.title = \'Finished processing in \' + ( ( ( new Date() ) - dTimer ) / 1000 ) + \' seconds\' ;\r\n
+\r\n
+}\r\n
+\r\n
+window.onload = function()\r\n
+{\r\n
+\twindow.top.IsLoadedResourcesList = true ;\r\n
+}\r\n
+\t</script>\r\n
+</head>\r\n
+<body class="FileArea">\r\n
+</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>frmresourceslist.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

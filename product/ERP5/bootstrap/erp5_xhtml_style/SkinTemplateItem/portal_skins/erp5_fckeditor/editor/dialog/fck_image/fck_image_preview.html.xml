@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Preview page for the Image dialog window.\r\n
+ *\r\n
+ * Curiosity: http://en.wikipedia.org/wiki/Lorem_ipsum\r\n
+-->\r\n
+<html xmlns="http://www.w3.org/1999/xhtml">\r\n
+<head>\r\n
+\t<title></title>\r\n
+\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\r\n
+\t<meta name="robots" content="noindex, nofollow" />\r\n
+\t<script src="../common/fck_dialog_common.js" type="text/javascript"></script>\r\n
+\t<script type="text/javascript">\r\n
+\r\n
+var FCKTools\t= window.parent.FCKTools ;\r\n
+var FCKConfig\t= window.parent.FCKConfig ;\r\n
+\r\n
+// Set the preview CSS\r\n
+document.write( FCKTools.GetStyleHtml( FCKConfig.EditorAreaCSS ) ) ;\r\n
+document.write( FCKTools.GetStyleHtml( FCKConfig.EditorAreaStyles ) ) ;\r\n
+\r\n
+if ( window.parent.FCKConfig.BaseHref.length > 0 )\r\n
+\tdocument.write( \'<base href="\' + window.parent.FCKConfig.BaseHref + \'">\' ) ;\r\n
+\r\n
+window.onload = function()\r\n
+{\r\n
+\twindow.parent.SetPreviewElements(\r\n
+\t\tdocument.getElementById( \'imgPreview\' ),\r\n
+\t\tdocument.getElementById( \'lnkPreview\' ) ) ;\r\n
+}\r\n
+\r\n
+\t</script>\r\n
+</head>\r\n
+<body>\r\n
+\t<div>\r\n
+\t\t<a id="lnkPreview" onclick="return false;" style="cursor: default">\r\n
+\t\t\t<img id="imgPreview" onload="window.parent.UpdateOriginal();"\r\n
+\t\t\t\tstyle="display: none" alt="" /></a>Lorem ipsum dolor sit amet, consectetuer adipiscing\r\n
+\t\telit. Maecenas feugiat consequat diam. Maecenas metus. Vivamus diam purus, cursus\r\n
+\t\ta, commodo non, facilisis vitae, nulla. Aenean dictum lacinia tortor. Nunc iaculis,\r\n
+\t\tnibh non iaculis aliquam, orci felis euismod neque, sed ornare massa mauris sed\r\n
+\t\tvelit. Nulla pretium mi et risus. Fusce mi pede, tempor id, cursus ac, ullamcorper\r\n
+\t\tnec, enim. Sed tortor. Curabitur molestie. Duis velit augue, condimentum at, ultrices\r\n
+\t\ta, luctus ut, orci. Donec pellentesque egestas eros. Integer cursus, augue in cursus\r\n
+\t\tfaucibus, eros pede bibendum sem, in tempus tellus justo quis ligula. Etiam eget\r\n
+\t\ttortor. Vestibulum rutrum, est ut placerat elementum, lectus nisl aliquam velit,\r\n
+\t\ttempor aliquam eros nunc nonummy metus. In eros metus, gravida a, gravida sed, lobortis\r\n
+\t\tid, turpis. Ut ultrices, ipsum at venenatis fringilla, sem nulla lacinia tellus,\r\n
+\t\teget aliquet turpis mauris non enim. Nam turpis. Suspendisse lacinia. Curabitur\r\n
+\t\tac tortor ut ipsum egestas elementum. Nunc imperdiet gravida mauris.\r\n
+\t</div>\r\n
+</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>fck_image_preview.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

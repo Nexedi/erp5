@@ -1,0 +1,581 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749257.47</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>hi.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Hindi language file.\r\n
+ */\r\n
+\r\n
+var FCKLang =\r\n
+{\r\n
+// Language direction : "ltr" (left to right) or "rtl" (right to left).\r\n
+Dir\t\t\t\t\t: "ltr",\r\n
+\r\n
+ToolbarCollapse\t\t: "टूलबार सिमटायें",\r\n
+ToolbarExpand\t\t: "टूलबार का विस्तार करें",\r\n
+\r\n
+// Toolbar Items and Context Menu\r\n
+Save\t\t\t\t: "सेव",\r\n
+NewPage\t\t\t\t: "नया पेज",\r\n
+Preview\t\t\t\t: "प्रीव्यू",\r\n
+Cut\t\t\t\t\t: "कट",\r\n
+Copy\t\t\t\t: "कॉपी",\r\n
+Paste\t\t\t\t: "पेस्ट",\r\n
+PasteText\t\t\t: "पेस्ट (सादा टॅक्स्ट)",\r\n
+PasteWord\t\t\t: "पेस्ट (वर्ड से)",\r\n
+Print\t\t\t\t: "प्रिन्ट",\r\n
+SelectAll\t\t\t: "सब सॅलॅक्ट करें",\r\n
+RemoveFormat\t\t: "फ़ॉर्मैट हटायें",\r\n
+InsertLinkLbl\t\t: "लिंक",\r\n
+InsertLink\t\t\t: "लिंक इन्सर्ट/संपादन",\r\n
+RemoveLink\t\t\t: "लिंक हटायें",\r\n
+VisitLink\t\t\t: "लिंक खोलें",\r\n
+Anchor\t\t\t\t: "ऐंकर इन्सर्ट/संपादन",\r\n
+AnchorDelete\t\t: "ऐंकर हटायें",\r\n
+InsertImageLbl\t\t: "तस्वीर",\r\n
+InsertImage\t\t\t: "तस्वीर इन्सर्ट/संपादन",\r\n
+InsertFlashLbl\t\t: "फ़्लैश",\r\n
+InsertFlash\t\t\t: "फ़्लैश इन्सर्ट/संपादन",\r\n
+InsertTableLbl\t\t: "टेबल",\r\n
+InsertTable\t\t\t: "टेबल इन्सर्ट/संपादन",\r\n
+InsertLineLbl\t\t: "रेखा",\r\n
+InsertLine\t\t\t: "हॉरिज़ॉन्टल रेखा इन्सर्ट करें",\r\n
+InsertSpecialCharLbl: "विशेष करॅक्टर",\r\n
+InsertSpecialChar\t: "विशेष करॅक्टर इन्सर्ट करें",\r\n
+InsertSmileyLbl\t\t: "स्माइली",\r\n
+InsertSmiley\t\t: "स्माइली इन्सर्ट करें",\r\n
+About\t\t\t\t: "FCKeditor के बारे में",\r\n
+Bold\t\t\t\t: "बोल्ड",\r\n
+Italic\t\t\t\t: "इटैलिक",\r\n
+Underline\t\t\t: "रेखांकण",\r\n
+StrikeThrough\t\t: "स्ट्राइक थ्रू",\r\n
+Subscript\t\t\t: "अधोलेख",\r\n
+Superscript\t\t\t: "अभिलेख",\r\n
+LeftJustify\t\t\t: "बायीं तरफ",\r\n
+CenterJustify\t\t: "बीच में",\r\n
+RightJustify\t\t: "दायीं तरफ",\r\n
+BlockJustify\t\t: "ब्लॉक जस्टीफ़ाई",\r\n
+DecreaseIndent\t\t: "इन्डॅन्ट कम करें",\r\n
+IncreaseIndent\t\t: "इन्डॅन्ट बढ़ायें",\r\n
+Blockquote\t\t\t: "ब्लॉक-कोट",\r\n
+CreateDiv\t\t\t: "डिव (Div) कन्टेनर बनायें",\r\n
+EditDiv\t\t\t\t: "डिव (Div) कन्टेनर बदलें",\r\n
+DeleteDiv\t\t\t: "डिव कन्टेनर हटायें",\r\n
+Undo\t\t\t\t: "अन्डू",\r\n
+Redo\t\t\t\t: "रीडू",\r\n
+NumberedListLbl\t\t: "अंकीय सूची",\r\n
+NumberedList\t\t: "अंकीय सूची इन्सर्ट/संपादन",\r\n
+BulletedListLbl\t\t: "बुलॅट सूची",\r\n
+BulletedList\t\t: "बुलॅट सूची इन्सर्ट/संपादन",\r\n
+ShowTableBorders\t: "टेबल बॉर्डरयें दिखायें",\r\n
+ShowDetails\t\t\t: "ज्यादा   दिखायें",\r\n
+Style\t\t\t\t: "स्टाइल",\r\n
+FontFormat\t\t\t: "फ़ॉर्मैट",\r\n
+Font\t\t\t\t: "फ़ॉन्ट",\r\n
+FontSize\t\t\t: "साइज़",\r\n
+TextColor\t\t\t: "टेक्स्ट रंग",\r\n
+BGColor\t\t\t\t: "बैक्ग्राउन्ड रंग",\r\n
+Source\t\t\t\t: "सोर्स",\r\n
+Find\t\t\t\t: "खोजें",\r\n
+Replace\t\t\t\t: "रीप्लेस",\r\n
+SpellCheck\t\t\t: "वर्तनी (स्पेलिंग) जाँच",\r\n
+UniversalKeyboard\t: "यूनीवर्सल कीबोर्ड",\r\n
+PageBreakLbl\t\t: "पेज ब्रेक",\r\n
+PageBreak\t\t\t: "पेज ब्रेक इन्सर्ट् करें",\r\n
+\r\n
+Form\t\t\t: "फ़ॉर्म",\r\n
+Checkbox\t\t: "चॅक बॉक्स",\r\n
+RadioButton\t\t: "रेडिओ बटन",\r\n
+TextField\t\t: "टेक्स्ट फ़ील्ड",\r\n
+Textarea\t\t: "टेक्स्ट एरिया",\r\n
+HiddenField\t\t: "गुप्त फ़ील्ड",\r\n
+Button\t\t\t: "बटन",\r\n
+SelectionField\t: "चुनाव फ़ील्ड",\r\n
+ImageButton\t\t: "तस्वीर बटन",\r\n
+\r\n
+FitWindow\t\t: "एडिटर साइज़ को चरम सीमा तक बढ़ायें",\r\n
+ShowBlocks\t\t: "ब्लॉक दिखायें",\r\n
+\r\n
+// Context Menu\r\n
+EditLink\t\t\t: "लिंक संपादन",\r\n
+CellCM\t\t\t\t: "खाना",\r\n
+RowCM\t\t\t\t: "पंक्ति",\r\n
+ColumnCM\t\t\t: "कालम",\r\n
+InsertRowAfter\t\t: "बाद में पंक्ति डालें",\r\n
+InsertRowBefore\t\t: "पहले पंक्ति डालें",\r\n
+DeleteRows\t\t\t: "पंक्तियाँ डिलीट करें",\r\n
+InsertColumnAfter\t: "बाद में कालम डालें",\r\n
+InsertColumnBefore\t: "पहले कालम डालें",\r\n
+DeleteColumns\t\t: "कालम डिलीट करें",\r\n
+InsertCellAfter\t\t: "बाद में सैल डालें",\r\n
+InsertCellBefore\t: "पहले सैल डालें",\r\n
+DeleteCells\t\t\t: "सैल डिलीट करें",\r\n
+MergeCells\t\t\t: "सैल मिलायें",\r\n
+MergeRight\t\t\t: "बाँया विलय",\r\n
+MergeDown\t\t\t: "नीचे विलय करें",\r\n
+HorizontalSplitCell\t: "सैल को क्षैतिज स्थिति में विभाजित करें",\r\n
+VerticalSplitCell\t: "सैल को लम्बाकार में विभाजित करें",\r\n
+TableDelete\t\t\t: "टेबल डिलीट करें",\r\n
+CellProperties\t\t: "सैल प्रॉपर्टीज़",\r\n
+TableProperties\t\t: "टेबल प्रॉपर्टीज़",\r\n
+ImageProperties\t\t: "तस्वीर प्रॉपर्टीज़",\r\n
+FlashProperties\t\t: "फ़्लैश प्रॉपर्टीज़",\r\n
+\r\n
+AnchorProp\t\t\t: "ऐंकर प्रॉपर्टीज़",\r\n
+ButtonProp\t\t\t: "बटन प्रॉपर्टीज़",\r\n
+CheckboxProp\t\t: "चॅक बॉक्स प्रॉपर्टीज़",\r\n
+HiddenFieldProp\t\t: "गुप्त फ़ील्ड प्रॉपर्टीज़",\r\n
+RadioButtonProp\t\t: "रेडिओ बटन प्रॉपर्टीज़",\r\n
+ImageButtonProp\t\t: "तस्वीर बटन प्रॉपर्टीज़",\r\n
+TextFieldProp\t\t: "टेक्स्ट फ़ील्ड प्रॉपर्टीज़",\r\n
+SelectionFieldProp\t: "चुनाव फ़ील्ड प्रॉपर्टीज़",\r\n
+TextareaProp\t\t: "टेक्स्त एरिया प्रॉपर्टीज़",\r\n
+FormProp\t\t\t: "फ़ॉर्म प्रॉपर्टीज़",\r\n
+\r\n
+FontFormats\t\t\t: "साधारण;फ़ॉर्मैटॅड;पता;शीर्षक 1;शीर्षक 2;शीर्षक 3;शीर्षक 4;शीर्षक 5;शीर्षक 6;शीर्षक (DIV)",\r\n
+\r\n
+// Alerts and Messages\r\n
+ProcessingXHTML\t\t: "XHTML प्रोसॅस हो रहा है। ज़रा ठहरें...",\r\n
+Done\t\t\t\t: "पूरा हुआ",\r\n
+PasteWordConfirm\t: "आप जो टेक्स्ट पेस्ट करना चाहते हैं, वह वर्ड से कॉपी किया हुआ लग रहा है। क्या पेस्ट करने से पहले आप इसे साफ़ करना चाहेंगे?",\r\n
+NotCompatiblePaste\t: "यह कमांड इन्टरनॅट एक्स्प्लोरर(Internet Explorer) 5.5 या उसके बाद के वर्ज़न के लिए ही उपलब्ध है। क्या आप बिना साफ़ किए पेस्ट करना चाहेंगे?",\r\n
+UnknownToolbarItem\t: "अनजान टूलबार आइटम \\"%1\\"",\r\n
+UnknownCommand\t\t: "अनजान कमान्ड \\"%1\\"",\r\n
+NotImplemented\t\t: "कमान्ड इम्प्लीमॅन्ट नहीं किया गया है",\r\n
+UnknownToolbarSet\t: "टूलबार सॅट \\"%1\\" उपलब्ध नहीं है",\r\n
+NoActiveX\t\t\t: "आपके ब्राउज़र् की सुरक्शा सेटिंग्स् एडिटर की कुछ् फ़ीचरों को सीमित कर् सकती हैं। क्रिपया \\"Run ActiveX controls and plug-ins\\" विकल्प को एनेबल करें. आपको एरर्स् और गायब फ़ीचर्स् का अनुभव हो सकता है।",\r\n
+BrowseServerBlocked : "रिसोर्सेज़ ब्राउज़र् नहीं खोला जा सका। क्रिपया सभी पॉप्-अप् ब्लॉकर्स् को निष्क्रिय करें।",\r\n
+DialogBlocked\t\t: "डायलग विन्डो नहीं खोला जा सका। क्रिपया सभी पॉप्-अप् ब्लॉकर्स् को निष्क्रिय करें।",\r\n
+VisitLinkBlocked\t: "नया विन्डो नहीं खोला जा सका। क्रिपया सभी पॉप्-अप् ब्लॉकर्स् को निष्क्रिय करें।",\r\n
+\r\n
+// Dialogs\r\n
+DlgBtnOK\t\t\t: "ठीक है",\r\n
+DlgBtnCancel\t\t: "रद्द करें",\r\n
+DlgBtnClose\t\t\t: "बन्द करें",\r\n
+DlgBtnBrowseServer\t: "सर्वर ब्राउज़ करें",\r\n
+DlgAdvancedTag\t\t: "ऍड्वान्स्ड",\r\n
+DlgOpOther\t\t\t: "<अन्य>",\r\n
+DlgInfoTab\t\t\t: "सूचना",\r\n
+DlgAlertUrl\t\t\t: "URL इन्सर्ट करें",\r\n
+\r\n
+// General Dialogs Labels\r\n
+DlgGenNotSet\t\t: "<सॅट नहीं>",\r\n
+DlgGenId\t\t\t: "Id",\r\n
+DlgGenLangDir\t\t: "भाषा लिखने की दिशा",\r\n
+DlgGenLangDirLtr\t: "बायें से दायें (LTR)",\r\n
+DlgGenLangDirRtl\t: "दायें से बायें (RTL)",\r\n
+DlgGenLangCode\t\t: "भाषा कोड",\r\n
+DlgGenAccessKey\t\t: "ऍक्सॅस की",\r\n
+DlgGenName\t\t\t: "नाम",\r\n
+DlgGenTabIndex\t\t: "टैब इन्डॅक्स",\r\n
+DlgGenLongDescr\t\t: "अधिक विवरण के लिए URL",\r\n
+DlgGenClass\t\t\t: "स्टाइल-शीट क्लास",\r\n
+DlgGenTitle\t\t\t: "परामर्श शीर्शक",\r\n
+DlgGenContType\t\t: "परामर्श कन्टॅन्ट प्रकार",\r\n
+DlgGenLinkCharset\t: "लिंक रिसोर्स करॅक्टर सॅट",\r\n
+DlgGenStyle\t\t\t: "स्टाइल",\r\n
+\r\n
+// Image Dialog\r\n
+DlgImgTitle\t\t\t: "तस्वीर प्रॉपर्टीज़",\r\n
+DlgImgInfoTab\t\t: "तस्वीर की जानकारी",\r\n
+DlgImgBtnUpload\t\t: "इसे सर्वर को भेजें",\r\n
+DlgImgURL\t\t\t: "URL",\r\n
+DlgImgUpload\t\t: "अपलोड",\r\n
+DlgImgAlt\t\t\t: "वैकल्पिक टेक्स्ट",\r\n
+DlgImgWidth\t\t\t: "चौड़ाई",\r\n
+DlgImgHeight\t\t: "ऊँचाई",\r\n
+DlgImgLockRatio\t\t: "लॉक अनुपात",\r\n
+DlgBtnResetSize\t\t: "रीसॅट साइज़",\r\n
+DlgImgBorder\t\t: "बॉर्डर",\r\n
+DlgImgHSpace\t\t: "हॉरिज़ॉन्टल स्पेस",\r\n
+DlgImgVSpace\t\t: "वर्टिकल स्पेस",\r\n
+DlgImgAlign\t\t\t: "ऍलाइन",\r\n
+DlgImgAlignLeft\t\t: "दायें",\r\n
+DlgImgAlignAbsBottom: "Abs नीचे",\r\n
+DlgImgAlignAbsMiddle: "Abs ऊपर",\r\n
+DlgImgAlignBaseline\t: "मूल रेखा",\r\n
+DlgImgAlignBottom\t: "नीचे",\r\n
+DlgImgAlignMiddle\t: "मध्य",\r\n
+DlgImgAlignRight\t: "दायें",\r\n
+DlgImgAlignTextTop\t: "टेक्स्ट ऊपर",\r\n
+DlgImgAlignTop\t\t: "ऊपर",\r\n
+DlgImgPreview\t\t: "प्रीव्यू",\r\n
+DlgImgAlertUrl\t\t: "तस्वीर का URL टाइप करें ",\r\n
+DlgImgLinkTab\t\t: "लिंक",\r\n
+\r\n
+// Flash Dialog\r\n
+DlgFlashTitle\t\t: "फ़्लैश प्रॉपर्टीज़",\r\n
+DlgFlashChkPlay\t\t: "ऑटो प्ले",\r\n
+DlgFlashChkLoop\t\t: "लूप",\r\n
+DlgFlashChkMenu\t\t: "फ़्लैश मॅन्यू का प्रयोग करें",\r\n
+DlgFlashScale\t\t: "स्केल",\r\n
+DlgFlashScaleAll\t: "सभी दिखायें",\r\n
+DlgFlashScaleNoBorder\t: "कोई बॉर्डर नहीं",\r\n
+DlgFlashScaleFit\t: "बिल्कुल फ़िट",\r\n
+\r\n
+// Link Dialog\r\n
+DlgLnkWindowTitle\t: "लिंक",\r\n
+DlgLnkInfoTab\t\t: "लिंक  ",\r\n
+DlgLnkTargetTab\t\t: "टार्गेट",\r\n
+\r\n
+DlgLnkType\t\t\t: "लिंक प्रकार",\r\n
+DlgLnkTypeURL\t\t: "URL",\r\n
+DlgLnkTypeAnchor\t: "इस पेज का ऐंकर",\r\n
+DlgLnkTypeEMail\t\t: "ई-मेल",\r\n
+DlgLnkProto\t\t\t: "प्रोटोकॉल",\r\n
+DlgLnkProtoOther\t: "<अन्य>",\r\n
+DlgLnkURL\t\t\t: "URL",\r\n
+DlgLnkAnchorSel\t\t: "ऐंकर चुनें",\r\n
+DlgLnkAnchorByName\t: "ऐंकर नाम से",\r\n
+DlgLnkAnchorById\t: "ऍलीमॅन्ट Id से",\r\n
+DlgLnkNoAnchors\t\t: "(डॉक्यूमॅन्ट में ऐंकर्स की संख्या)",\r\n
+DlgLnkEMail\t\t\t: "ई-मेल पता",\r\n
+DlgLnkEMailSubject\t: "संदेश विषय",\r\n
+DlgLnkEMailBody\t\t: "संदेश",\r\n
+DlgLnkUpload\t\t: "अपलोड",\r\n
+DlgLnkBtnUpload\t\t: "इसे सर्वर को भेजें",\r\n
+\r\n
+DlgLnkTarget\t\t: "टार्गेट",\r\n
+DlgLnkTargetFrame\t: "<फ़्रेम>",\r\n
+DlgLnkTargetPopup\t: "<पॉप-अप विन्डो>",\r\n
+DlgLnkTargetBlank\t: "नया विन्डो (_blank)",\r\n
+DlgLnkTargetParent\t: "मूल विन्डो (_parent)",\r\n
+DlgLnkTargetSelf\t: "इसी विन्डो (_self)",\r\n
+DlgLnkTargetTop\t\t: "शीर्ष विन्डो (_top)",\r\n
+DlgLnkTargetFrameName\t: "टार्गेट फ़्रेम का नाम",\r\n
+DlgLnkPopWinName\t: "पॉप-अप विन्डो का नाम",\r\n
+DlgLnkPopWinFeat\t: "पॉप-अप विन्डो फ़ीचर्स",\r\n
+DlgLnkPopResize\t\t: "साइज़ बदला जा सकता है",\r\n
+DlgLnkPopLocation\t: "लोकेशन बार",\r\n
+DlgLnkPopMenu\t\t: "मॅन्यू बार",\r\n
+DlgLnkPopScroll\t\t: "स्क्रॉल बार",\r\n
+DlgLnkPopStatus\t\t: "स्टेटस बार",\r\n
+DlgLnkPopToolbar\t: "टूल बार",\r\n
+DlgLnkPopFullScrn\t: "फ़ुल स्क्रीन (IE)",\r\n
+DlgLnkPopDependent\t: "डिपेन्डॅन्ट (Netscape)",\r\n
+DlgLnkPopWidth\t\t: "चौड़ाई",\r\n
+DlgLnkPopHeight\t\t: "ऊँचाई",\r\n
+DlgLnkPopLeft\t\t: "बायीं तरफ",\r\n
+DlgLnkPopTop\t\t: "दायीं तरफ",\r\n
+\r\n
+DlnLnkMsgNoUrl\t\t: "लिंक URL टाइप करें",\r\n
+DlnLnkMsgNoEMail\t: "ई-मेल पता टाइप करें",\r\n
+DlnLnkMsgNoAnchor\t: "ऐंकर चुनें",\r\n
+DlnLnkMsgInvPopName\t: "पॉप-अप का नाम अल्फाबेट से शुरू होना चाहिये और उसमें स्पेस नहीं होने चाहिए",\r\n
+\r\n
+// Color Dialog\r\n
+DlgColorTitle\t\t: "रंग चुनें",\r\n
+DlgColorBtnClear\t: "साफ़ करें",\r\n
+DlgColorHighlight\t: "हाइलाइट",\r\n
+DlgColorSelected\t: "सॅलॅक्टॅड",\r\n
+\r\n
+// Smiley Dialog\r\n
+DlgSmileyTitle\t\t: "स्माइली इन्सर्ट करें",\r\n
+\r\n
+// Special Character Dialog\r\n
+DlgSpecialCharTitle\t: "विशेष करॅक्टर चुनें",\r\n
+\r\n
+// Table Dialog\r\n
+DlgTableTitle\t\t: "टेबल प्रॉपर्टीज़",\r\n
+DlgTableRows\t\t: "पंक्तियाँ",\r\n
+DlgTableColumns\t\t: "कालम",\r\n
+DlgTableBorder\t\t: "बॉर्डर साइज़",\r\n
+DlgTableAlign\t\t: "ऍलाइन्मॅन्ट",\r\n
+DlgTableAlignNotSet\t: "<सॅट नहीं>",\r\n
+DlgTableAlignLeft\t: "दायें",\r\n
+DlgTableAlignCenter\t: "बीच में",\r\n
+DlgTableAlignRight\t: "बायें",\r\n
+DlgTableWidth\t\t: "चौड़ाई",\r\n
+DlgTableWidthPx\t\t: "पिक्सैल",\r\n
+DlgTableWidthPc\t\t: "प्रतिशत",\r\n
+DlgTableHeight\t\t: "ऊँचाई",\r\n
+DlgTableCellSpace\t: "सैल अंतर",\r\n
+DlgTableCellPad\t\t: "सैल पैडिंग",\r\n
+DlgTableCaption\t\t: "शीर्षक",\r\n
+DlgTableSummary\t\t: "सारांश",\r\n
+DlgTableHeaders\t\t: "Headers",\t//MISSING\r\n
+DlgTableHeadersNone\t\t: "None",\t//MISSING\r\n
+DlgTableHeadersColumn\t: "First column",\t//MISSING\r\n
+DlgTableHeadersRow\t\t: "First Row",\t//MISSING\r\n
+DlgTableHeadersBoth\t\t: "Both",\t//MISSING\r\n
+\r\n
+// Table Cell Dialog\r\n
+DlgCellTitle\t\t: "सैल प्रॉपर्टीज़",\r\n
+DlgCellWidth\t\t: "चौड़ाई",\r\n
+DlgCellWidthPx\t\t: "पिक्सैल",\r\n
+DlgCellWidthPc\t\t: "प्रतिशत",\r\n
+DlgCellHeight\t\t: "ऊँचाई",\r\n
+DlgCellWordWrap\t\t: "वर्ड रैप",\r\n
+DlgCellWordWrapNotSet\t: "<सॅट नहीं>",\r\n
+DlgCellWordWrapYes\t: "हाँ",\r\n
+DlgCellWordWrapNo\t: "नहीं",\r\n
+DlgCellHorAlign\t\t: "हॉरिज़ॉन्टल ऍलाइन्मॅन्ट",\r\n
+DlgCellHorAlignNotSet\t: "<सॅट नहीं>",\r\n
+DlgCellHorAlignLeft\t: "दायें",\r\n
+DlgCellHorAlignCenter\t: "बीच में",\r\n
+DlgCellHorAlignRight: "बायें",\r\n
+DlgCellVerAlign\t\t: "वर्टिकल ऍलाइन्मॅन्ट",\r\n
+DlgCellVerAlignNotSet\t: "<सॅट नहीं>",\r\n
+DlgCellVerAlignTop\t: "ऊपर",\r\n
+DlgCellVerAlignMiddle\t: "मध्य",\r\n
+DlgCellVerAlignBottom\t: "नीचे",\r\n
+DlgCellVerAlignBaseline\t: "मूलरेखा",\r\n
+DlgCellType\t\t: "Cell Type",\t//MISSING\r\n
+DlgCellTypeData\t\t: "Data",\t//MISSING\r\n
+DlgCellTypeHeader\t: "Header",\t//MISSING\r\n
+DlgCellRowSpan\t\t: "पंक्ति स्पैन",\r\n
+DlgCellCollSpan\t\t: "कालम स्पैन",\r\n
+DlgCellBackColor\t: "बैक्ग्राउन्ड रंग",\r\n
+DlgCellBorderColor\t: "बॉर्डर का रंग",\r\n
+DlgCellBtnSelect\t: "चुनें...",\r\n
+\r\n
+// Find and Replace Dialog\r\n
+DlgFindAndReplaceTitle\t: "खोजें और बदलें",\r\n
+\r\n
+// Find Dialog\r\n
+DlgFindTitle\t\t: "खोजें",\r\n
+DlgFindFindBtn\t\t: "खोजें",\r\n
+DlgFindNotFoundMsg\t: "आपके द्वारा दिया गया टेक्स्ट नहीं मिला",\r\n
+\r\n
+// Replace Dialog\r\n
+DlgReplaceTitle\t\t\t: "रिप्लेस",\r\n
+DlgReplaceFindLbl\t\t: "यह खोजें:",\r\n
+DlgReplaceReplaceLbl\t: "इससे रिप्लेस करें:",\r\n
+DlgReplaceCaseChk\t\t: "केस मिलायें",\r\n
+DlgReplaceReplaceBtn\t: "रिप्लेस",\r\n
+DlgReplaceReplAllBtn\t: "सभी रिप्लेस करें",\r\n
+DlgReplaceWordChk\t\t: "पूरा शब्द मिलायें",\r\n
+\r\n
+// Paste Operations / Dialog\r\n
+PasteErrorCut\t: "आपके ब्राउज़र की सुरक्षा सॅटिन्ग्स ने कट करने की अनुमति नहीं प्रदान की है। (Ctrl+X) का प्रयोग करें।",\r\n
+PasteErrorCopy\t: "आपके ब्राआउज़र की सुरक्षा सॅटिन्ग्स ने कॉपी करने की अनुमति नहीं प्रदान की है। (Ctrl+C) का प्रयोग करें।",\r\n
+\r\n
+PasteAsText\t\t: "पेस्ट (सादा टॅक्स्ट)",\r\n
+PasteFromWord\t: "पेस्ट (वर्ड से)",\r\n
+\r\n
+DlgPasteMsg2\t: "Ctrl+V का प्रयोग करके पेस्ट करें और ठीक है करें.",\r\n
+DlgPasteSec\t\t: "आपके ब्राउज़र की सुरक्षा आपके ब्राउज़र की सुरKश सैटिंग के कारण, एडिटर आपके क्लिपबोर्ड डेटा को नहीं पा सकता है. आपको उसे इस विन्डो में दोबारा पेस्ट करना होगा.",\r\n
+DlgPasteIgnoreFont\t\t: "फ़ॉन्ट परिभाषा निकालें",\r\n
+DlgPasteRemoveStyles\t: "स्टाइल परिभाषा निकालें",\r\n
+\r\n
+// Color Picker\r\n
+ColorAutomatic\t: "स्वचालित",\r\n
+ColorMoreColors\t: "और रंग...",\r\n
+\r\n
+// Document Properties\r\n
+DocProps\t\t: "डॉक्यूमॅन्ट प्रॉपर्टीज़",\r\n
+\r\n
+// Anchor Dialog\r\n
+DlgAnchorTitle\t\t: "ऐंकर प्रॉपर्टीज़",\r\n
+DlgAnchorName\t\t: "ऐंकर का नाम",\r\n
+DlgAnchorErrorName\t: "ऐंकर का नाम टाइप करें",\r\n
+\r\n
+// Speller Pages Dialog\r\n
+DlgSpellNotInDic\t\t: "शब्दकोश में नहीं",\r\n
+DlgSpellChangeTo\t\t: "इसमें बदलें",\r\n
+DlgSpellBtnIgnore\t\t: "इग्नोर",\r\n
+DlgSpellBtnIgnoreAll\t: "सभी इग्नोर करें",\r\n
+DlgSpellBtnReplace\t\t: "रिप्लेस",\r\n
+DlgSpellBtnReplaceAll\t: "सभी रिप्लेस करें",\r\n
+DlgSpellBtnUndo\t\t\t: "अन्डू",\r\n
+DlgSpellNoSuggestions\t: "- कोई सुझाव नहीं -",\r\n
+DlgSpellProgress\t\t: "वर्तनी की जाँच (स्पॅल-चॅक) जारी है...",\r\n
+DlgSpellNoMispell\t\t: "वर्तनी की जाँच : कोई गलत वर्तनी (स्पॅलिंग) नहीं पाई गई",\r\n
+DlgSpellNoChanges\t\t: "वर्तनी की जाँच :कोई शब्द नहीं बदला गया",\r\n
+DlgSpellOneChange\t\t: "वर्तनी की जाँच : एक शब्द बदला गया",\r\n
+DlgSpellManyChanges\t\t: "वर्तनी की जाँच : %1 शब्द बदले गये",\r\n
+\r\n
+IeSpellDownload\t\t\t: "स्पॅल-चॅकर इन्स्टाल नहीं किया गया है। क्या आप इसे डा‌उनलोड करना चाहेंगे?",\r\n
+\r\n
+// Button Dialog\r\n
+DlgButtonText\t\t: "टेक्स्ट (वैल्यू)",\r\n
+DlgButtonType\t\t: "प्रकार",\r\n
+DlgButtonTypeBtn\t: "बटन",\r\n
+DlgButtonTypeSbm\t: "सब्मिट",\r\n
+DlgButtonTypeRst\t: "रिसेट",\r\n
+\r\n
+// Checkbox and Radio Button Dialogs\r\n
+DlgCheckboxName\t\t: "नाम",\r\n
+DlgCheckboxValue\t: "वैल्यू",\r\n
+DlgCheckboxSelected\t: "सॅलॅक्टॅड",\r\n
+\r\n
+// Form Dialog\r\n
+DlgFormName\t\t: "नाम",\r\n
+DlgFormAction\t: "क्रिया",\r\n
+DlgFormMethod\t: "तरीका",\r\n
+\r\n
+// Select Field Dialog\r\n
+DlgSelectName\t\t: "नाम",\r\n
+DlgSelectValue\t\t: "वैल्यू",\r\n
+DlgSelectSize\t\t: "साइज़",\r\n
+DlgSelectLines\t\t: "पंक्तियाँ",\r\n
+DlgSelectChkMulti\t: "एक से ज्यादा विकल्प चुनने दें",\r\n
+DlgSelectOpAvail\t: "उपलब्ध विकल्प",\r\n
+DlgSelectOpText\t\t: "टेक्स्ट",\r\n
+DlgSelectOpValue\t: "वैल्यू",\r\n
+DlgSelectBtnAdd\t\t: "जोड़ें",\r\n
+DlgSelectBtnModify\t: "बदलें",\r\n
+DlgSelectBtnUp\t\t: "ऊपर",\r\n
+DlgSelectBtnDown\t: "नीचे",\r\n
+DlgSelectBtnSetValue : "चुनी गई वैल्यू सॅट करें",\r\n
+DlgSelectBtnDelete\t: "डिलीट",\r\n
+\r\n
+// Textarea Dialog\r\n
+DlgTextareaName\t: "नाम",\r\n
+DlgTextareaCols\t: "कालम",\r\n
+DlgTextareaRows\t: "पंक्तियां",\r\n
+\r\n
+// Text Field Dialog\r\n
+DlgTextName\t\t\t: "नाम",\r\n
+DlgTextValue\t\t: "वैल्यू",\r\n
+DlgTextCharWidth\t: "करॅक्टर की चौढ़ाई",\r\n
+DlgTextMaxChars\t\t: "अधिकतम करॅक्टर",\r\n
+DlgTextType\t\t\t: "टाइप",\r\n
+DlgTextTypeText\t\t: "टेक्स्ट",\r\n
+DlgTextTypePass\t\t: "पास्वर्ड",\r\n
+\r\n
+// Hidden Field Dialog\r\n
+DlgHiddenName\t: "नाम",\r\n
+DlgHiddenValue\t: "वैल्यू",\r\n
+\r\n
+// Bulleted List Dialog\r\n
+BulletedListProp\t: "बुलॅट सूची प्रॉपर्टीज़",\r\n
+NumberedListProp\t: "अंकीय सूची प्रॉपर्टीज़",\r\n
+DlgLstStart\t\t\t: "प्रारम्भ",\r\n
+DlgLstType\t\t\t: "प्रकार",\r\n
+DlgLstTypeCircle\t: "गोल",\r\n
+DlgLstTypeDisc\t\t: "डिस्क",\r\n
+DlgLstTypeSquare\t: "चौकॊण",\r\n
+DlgLstTypeNumbers\t: "अंक (1, 2, 3)",\r\n
+DlgLstTypeLCase\t\t: "छोटे अक्षर (a, b, c)",\r\n
+DlgLstTypeUCase\t\t: "बड़े अक्षर (A, B, C)",\r\n
+DlgLstTypeSRoman\t: "छोटे रोमन अंक (i, ii, iii)",\r\n
+DlgLstTypeLRoman\t: "बड़े रोमन अंक (I, II, III)",\r\n
+\r\n
+// Document Properties Dialog\r\n
+DlgDocGeneralTab\t: "आम",\r\n
+DlgDocBackTab\t\t: "बैक्ग्राउन्ड",\r\n
+DlgDocColorsTab\t\t: "रंग और मार्जिन",\r\n
+DlgDocMetaTab\t\t: "मॅटाडेटा",\r\n
+\r\n
+DlgDocPageTitle\t\t: "पेज शीर्षक",\r\n
+DlgDocLangDir\t\t: "भाषा लिखने की दिशा",\r\n
+DlgDocLangDirLTR\t: "बायें से दायें (LTR)",\r\n
+DlgDocLangDirRTL\t: "दायें से बायें (RTL)",\r\n
+DlgDocLangCode\t\t: "भाषा कोड",\r\n
+DlgDocCharSet\t\t: "करेक्टर सॅट ऍन्कोडिंग",\r\n
+DlgDocCharSetCE\t\t: "मध्य यूरोपीय (Central European)",\r\n
+DlgDocCharSetCT\t\t: "चीनी (Chinese Traditional Big5)",\r\n
+DlgDocCharSetCR\t\t: "सिरीलिक (Cyrillic)",\r\n
+DlgDocCharSetGR\t\t: "यवन (Greek)",\r\n
+DlgDocCharSetJP\t\t: "जापानी (Japanese)",\r\n
+DlgDocCharSetKR\t\t: "कोरीयन (Korean)",\r\n
+DlgDocCharSetTR\t\t: "तुर्की (Turkish)",\r\n
+DlgDocCharSetUN\t\t: "यूनीकोड (UTF-8)",\r\n
+DlgDocCharSetWE\t\t: "पश्चिम यूरोपीय (Western European)",\r\n
+DlgDocCharSetOther\t: "अन्य करेक्टर सॅट ऍन्कोडिंग",\r\n
+\r\n
+DlgDocDocType\t\t: "डॉक्यूमॅन्ट प्रकार शीर्षक",\r\n
+DlgDocDocTypeOther\t: "अन्य डॉक्यूमॅन्ट प्रकार शीर्षक",\r\n
+DlgDocIncXHTML\t\t: "XHTML सूचना सम्मिलित करें",\r\n
+DlgDocBgColor\t\t: "बैक्ग्राउन्ड रंग",\r\n
+DlgDocBgImage\t\t: "बैक्ग्राउन्ड तस्वीर URL",\r\n
+DlgDocBgNoScroll\t: "स्क्रॉल न करने वाला बैक्ग्राउन्ड",\r\n
+DlgDocCText\t\t\t: "टेक्स्ट",\r\n
+DlgDocCLink\t\t\t: "लिंक",\r\n
+DlgDocCVisited\t\t: "विज़िट किया गया लिंक",\r\n
+DlgDocCActive\t\t: "सक्रिय लिंक",\r\n
+DlgDocMargins\t\t: "पेज मार्जिन",\r\n
+DlgDocMaTop\t\t\t: "ऊपर",\r\n
+DlgDocMaLeft\t\t: "बायें",\r\n
+DlgDocMaRight\t\t: "दायें",\r\n
+DlgDocMaBottom\t\t: "नीचे",\r\n
+DlgDocMeIndex\t\t: "डॉक्युमॅन्ट इन्डेक्स संकेतशब्द (अल्पविराम से अलग करें)",\r\n
+DlgDocMeDescr\t\t: "डॉक्यूमॅन्ट करॅक्टरन",\r\n
+DlgDocMeAuthor\t\t: "लेखक",\r\n
+DlgDocMeCopy\t\t: "कॉपीराइट",\r\n
+DlgDocPreview\t\t: "प्रीव्यू",\r\n
+\r\n
+// Templates Dialog\r\n
+Templates\t\t\t: "टॅम्प्लेट",\r\n
+DlgTemplatesTitle\t: "कन्टेन्ट टॅम्प्लेट",\r\n
+DlgTemplatesSelMsg\t: "ऍडिटर में ओपन करने हेतु टॅम्प्लेट चुनें(वर्तमान कन्टॅन्ट सेव नहीं होंगे):",\r\n
+DlgTemplatesLoading\t: "टॅम्प्लेट सूची लोड की जा रही है। ज़रा ठहरें...",\r\n
+DlgTemplatesNoTpl\t: "(कोई टॅम्प्लेट डिफ़ाइन नहीं किया गया है)",\r\n
+DlgTemplatesReplace\t: "मूल शब्दों को बदलें",\r\n
+\r\n
+// About Dialog\r\n
+DlgAboutAboutTab\t: "FCKEditor के बारे में",\r\n
+DlgAboutBrowserInfoTab\t: "ब्राउज़र के बारे में",\r\n
+DlgAboutLicenseTab\t: "लाइसैन्स",\r\n
+DlgAboutVersion\t\t: "वर्ज़न",\r\n
+DlgAboutInfo\t\t: "अधिक जानकारी के लिये यहाँ जायें:",\r\n
+\r\n
+// Div Dialog\r\n
+DlgDivGeneralTab\t: "सामान्य",\r\n
+DlgDivAdvancedTab\t: "एड्वान्स्ड",\r\n
+DlgDivStyle\t\t: "स्टाइल",\r\n
+DlgDivInlineStyle\t: "इनलाइन स्टाइल"\r\n
+};\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>28806</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

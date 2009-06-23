@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Form dialog window.\r\n
+-->\r\n
+<html xmlns="http://www.w3.org/1999/xhtml">\r\n
+<head>\r\n
+\t<title></title>\r\n
+\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\r\n
+\t<meta content="noindex, nofollow" name="robots" />\r\n
+\t<script src="common/fck_dialog_common.js" type="text/javascript"></script>\r\n
+\t<script type="text/javascript">\r\n
+\r\n
+var dialog\t= window.parent ;\r\n
+var oEditor = dialog.InnerDialogLoaded() ;\r\n
+\r\n
+// Gets the document DOM\r\n
+var oDOM = oEditor.FCK.EditorDocument ;\r\n
+\r\n
+var oActiveEl = dialog.Selection.GetSelection().MoveToAncestorNode( \'FORM\' ) ;\r\n
+\r\n
+window.onload = function()\r\n
+{\r\n
+\t// First of all, translate the dialog box texts\r\n
+\toEditor.FCKLanguageManager.TranslatePage(document) ;\r\n
+\r\n
+\tif ( oActiveEl )\r\n
+\t{\r\n
+\t\tGetE(\'txtName\').value\t= oActiveEl.name ;\r\n
+\t\tGetE(\'txtAction\').value\t= oActiveEl.getAttribute( \'action\', 2 ) ;\r\n
+\t\tGetE(\'txtMethod\').value\t= oActiveEl.method ;\r\n
+\t}\r\n
+\telse\r\n
+\t\toActiveEl = null ;\r\n
+\r\n
+\tdialog.SetOkButton( true ) ;\r\n
+\tdialog.SetAutoSize( true ) ;\r\n
+\tSelectField( \'txtName\' ) ;\r\n
+}\r\n
+\r\n
+function Ok()\r\n
+{\r\n
+\tif ( !oActiveEl )\r\n
+\t{\r\n
+\t\toActiveEl = oEditor.FCK.InsertElement( \'form\' ) ;\r\n
+\r\n
+\t\tif ( oEditor.FCKBrowserInfo.IsGeckoLike )\r\n
+\t\t\toEditor.FCKTools.AppendBogusBr( oActiveEl ) ;\r\n
+\t}\r\n
+\r\n
+\toActiveEl.name = GetE(\'txtName\').value ;\r\n
+\tSetAttribute( oActiveEl, \'action\', GetE(\'txtAction\').value ) ;\r\n
+\toActiveEl.method = GetE(\'txtMethod\').value ;\r\n
+\r\n
+\treturn true ;\r\n
+}\r\n
+\r\n
+\t</script>\r\n
+</head>\r\n
+<body style="overflow: hidden">\r\n
+\t<table width="100%" style="height: 100%">\r\n
+\t\t<tr>\r\n
+\t\t\t<td align="center">\r\n
+\t\t\t\t<table cellspacing="0" cellpadding="0" width="80%" border="0">\r\n
+\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t<span fcklang="DlgFormName">Name</span><br />\r\n
+\t\t\t\t\t\t\t<input style="width: 100%" type="text" id="txtName" />\r\n
+\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t<span fcklang="DlgFormAction">Action</span><br />\r\n
+\t\t\t\t\t\t\t<input style="width: 100%" type="text" id="txtAction" />\r\n
+\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t<span fcklang="DlgFormMethod">Method</span><br />\r\n
+\t\t\t\t\t\t\t<select id="txtMethod">\r\n
+\t\t\t\t\t\t\t\t<option value="get" selected="selected">GET</option>\r\n
+\t\t\t\t\t\t\t\t<option value="post">POST</option>\r\n
+\t\t\t\t\t\t\t</select>\r\n
+\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t</tr>\r\n
+\t\t\t\t</table>\r\n
+\t\t\t</td>\r\n
+\t\t</tr>\r\n
+\t</table>\r\n
+</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>fck_form.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

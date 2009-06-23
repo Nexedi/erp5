@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="Image" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45758859.6</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>FolderPA100.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/gif</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">R0lGODlhZABkAMQfADyH0l1gaf/809LS0v7+/ZzR9diwNVFcjv/9mNHq+//+s//fev/yjP/pg/3S
+a8yZAv/77ABKvePHdNOjFOzTju7iu5qamerEU9q5Vu3t7fjkoo51La+IE+72/6yYYDMAmSH5BAEA
+AB8ALAAAAABkAGQAQAX/4CeOZGmeaKqubOu+cCzPdG3feK7vfO//QNFDoEAYj0ijYWKQUCoCgnQK
+qTqkk8CgE+w5KQZBckwuOwTZbbfXMRg0jIZ8Tq/TCYCpfnogrHluGg6DhA4XSw8PHBsBjRYWAwQH
+CQCVlpUFfX+bnJ2en6ChoqOkpaanqKmqq6woGBIQZQIQExYVFRQSbkwSEhoVBBBoFhmtK28aCwYP
+vE+zVQLR0tPUAmcUHJDGJxUXFxJFZeIIeJfmlX7bJRNDC+7v8PHxkgQR9hEJ+fma6iQZA48gDRiQ
+oUO6fggTKlzIsKHDhxAjSpxIsaLFi6cwMHn1pIIIbGownsBAIZY4BdCi/ykIt8CQm0QGXlUw4CGS
+wjDjGlyYUEFYtZ8OhD3QcrCfAQoUJghbybSp06dOz2DYQGyhBG84x2lF4kADBy0MZzZRwKCs2bNo
+z+Kpd68tvYWJNNiZO5dehAAFIhDowPftzQkC5Al255IdvXOY+CXUpYvdIkaOBg4sSELSgcuYMysW
+ybmz58+gQ4seTbq06dOoU6tezbq169ewY8ueTbt2kFu5MLycEFI0GghSpimIgqFmURECcOla9gBD
+huMJ0UQTlzymEygpiRRhsODBhpi9ET4QthVBA5fM3VwHTiAKAQMbwqsbEk7cTuBVsle7QmCo/G1h
+nNXAAoewMwEGPf2kYNJQXoF1EwUaNPdMNVBVuNIZElA1gFVIGQCBhSBCdYYBAVSl0FW6iFHeVmf4
+B902FHgjgYorHrHHjVMoJBY4afWY1lo4SrGZOmJpQJaPSDKwVltuDbnNew9QEAddVDZg1z3l5OHk
+NokIMOBgYC5g1wQARNCBJQlsacwygYU52BV9EKBPAgXUmcmLa75RyJ6E7KIIZJLoY+egaraimyCD
+FPgnZCUKRJBBBwwq6Z1W/dlIo5JlQNkJQd64EAH/PIqnbaSWauqpqKaq6qqsturqq7CeEAIAOw==</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>100</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>853</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>100</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

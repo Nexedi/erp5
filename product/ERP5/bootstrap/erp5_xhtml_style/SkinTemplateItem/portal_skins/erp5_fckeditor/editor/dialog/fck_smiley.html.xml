@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Smileys (emoticons) dialog window.\r\n
+-->\r\n
+<html xmlns="http://www.w3.org/1999/xhtml">\r\n
+<head>\r\n
+\t<title></title>\r\n
+\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\r\n
+\t<meta name="robots" content="noindex, nofollow" />\r\n
+\t<style type="text/css">\r\n
+\t\t.Hand\r\n
+\t\t{\r\n
+\t\t\tcursor: pointer;\r\n
+\t\t\tcursor: hand;\r\n
+\t\t}\r\n
+\t</style>\r\n
+\t<script src="common/fck_dialog_common.js" type="text/javascript"></script>\r\n
+\t<script type="text/javascript">\r\n
+\r\n
+var dialog\t= window.parent ;\r\n
+var oEditor = dialog.InnerDialogLoaded() ;\r\n
+\r\n
+window.onload = function ()\r\n
+{\r\n
+\t// First of all, translate the dialog box texts\r\n
+\toEditor.FCKLanguageManager.TranslatePage(document) ;\r\n
+\r\n
+\tdialog.SetAutoSize( true ) ;\r\n
+}\r\n
+\r\n
+function InsertSmiley( url )\r\n
+{\r\n
+\toEditor.FCKUndo.SaveUndoStep() ;\r\n
+\r\n
+\tvar oImg = oEditor.FCK.InsertElement( \'img\' ) ;\r\n
+\toImg.src = url ;\r\n
+\toImg.setAttribute( \'_fcksavedurl\', url ) ;\r\n
+\r\n
+\t// For long smileys list, it seams that IE continues loading the images in\r\n
+\t// the background when you quickly select one image. so, let\'s clear\r\n
+\t// everything before closing.\r\n
+\tdocument.body.innerHTML = \'\' ;\r\n
+\r\n
+\tdialog.Cancel() ;\r\n
+}\r\n
+\r\n
+function over(td)\r\n
+{\r\n
+\ttd.className = \'LightBackground Hand\' ;\r\n
+}\r\n
+\r\n
+function out(td)\r\n
+{\r\n
+\ttd.className = \'DarkBackground Hand\' ;\r\n
+}\r\n
+\t</script>\r\n
+</head>\r\n
+<body style="overflow: hidden">\r\n
+\t<table cellpadding="2" cellspacing="2" align="center" border="0" width="100%" height="100%">\r\n
+\t\t<script type="text/javascript">\r\n
+\r\n
+var FCKConfig = oEditor.FCKConfig ;\r\n
+\r\n
+var sBasePath\t= FCKConfig.SmileyPath ;\r\n
+var aImages\t\t= FCKConfig.SmileyImages ;\r\n
+var iCols\t\t= FCKConfig.SmileyColumns ;\r\n
+var iColWidth\t= parseInt( 100 / iCols, 10 ) ;\r\n
+\r\n
+var i = 0 ;\r\n
+while (i < aImages.length)\r\n
+{\r\n
+\tdocument.write( \'<tr>\' ) ;\r\n
+\tfor(var j = 0 ; j < iCols ; j++)\r\n
+\t{\r\n
+\t\tif (aImages[i])\r\n
+\t\t{\r\n
+\t\t\tvar sUrl = sBasePath + aImages[i] ;\r\n
+\t\t\tdocument.write( \'<td width="\' + iColWidth + \'%" align="center" class="DarkBackground Hand" onclick="InsertSmiley(\\\'\' + sUrl.replace(/\'/g, "\\\\\'" ) + \'\\\')" onmouseover="over(this)" onmouseout="out(this)">\' ) ;\r\n
+\t\t\tdocument.write( \'<img src="\' + sUrl + \'" border="0" />\' ) ;\r\n
+\t\t}\r\n
+\t\telse\r\n
+\t\t\tdocument.write( \'<td width="\' + iColWidth + \'%" class="DarkBackground">&nbsp;\' ) ;\r\n
+\t\tdocument.write( \'<\\/td>\' ) ;\r\n
+\t\ti++ ;\r\n
+\t}\r\n
+\tdocument.write(\'<\\/tr>\') ;\r\n
+}\r\n
+\r\n
+\t\t</script>\r\n
+\t</table>\r\n
+</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>fck_smiley.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

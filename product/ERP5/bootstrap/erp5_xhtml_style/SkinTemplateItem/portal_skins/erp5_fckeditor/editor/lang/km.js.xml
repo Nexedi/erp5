@@ -1,0 +1,581 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749259.39</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>km.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Khmer language file.\r\n
+ */\r\n
+\r\n
+var FCKLang =\r\n
+{\r\n
+// Language direction : "ltr" (left to right) or "rtl" (right to left).\r\n
+Dir\t\t\t\t\t: "ltr",\r\n
+\r\n
+ToolbarCollapse\t\t: "បង្រួមរបាឧបរកណ៍",\r\n
+ToolbarExpand\t\t: "ពង្រីករបាឧបរណ៍",\r\n
+\r\n
+// Toolbar Items and Context Menu\r\n
+Save\t\t\t\t: "រក្សាទុក",\r\n
+NewPage\t\t\t\t: "ទំព័រថ្មី",\r\n
+Preview\t\t\t\t: "មើលសាកល្បង",\r\n
+Cut\t\t\t\t\t: "កាត់យក",\r\n
+Copy\t\t\t\t: "ចំលងយក",\r\n
+Paste\t\t\t\t: "ចំលងដាក់",\r\n
+PasteText\t\t\t: "ចំលងដាក់ជាអត្ថបទធម្មតា",\r\n
+PasteWord\t\t\t: "ចំលងដាក់ពី Word",\r\n
+Print\t\t\t\t: "បោះពុម្ភ",\r\n
+SelectAll\t\t\t: "ជ្រើសរើសទាំងអស់",\r\n
+RemoveFormat\t\t: "លប់ចោល ការរចនា",\r\n
+InsertLinkLbl\t\t: "ឈ្នាប់",\r\n
+InsertLink\t\t\t: "បន្ថែម/កែប្រែ ឈ្នាប់",\r\n
+RemoveLink\t\t\t: "លប់ឈ្នាប់",\r\n
+VisitLink\t\t\t: "Open Link",\t//MISSING\r\n
+Anchor\t\t\t\t: "បន្ថែម/កែប្រែ យុថ្កា",\r\n
+AnchorDelete\t\t: "Remove Anchor",\t//MISSING\r\n
+InsertImageLbl\t\t: "រូបភាព",\r\n
+InsertImage\t\t\t: "បន្ថែម/កែប្រែ រូបភាព",\r\n
+InsertFlashLbl\t\t: "Flash",\r\n
+InsertFlash\t\t\t: "បន្ថែម/កែប្រែ Flash",\r\n
+InsertTableLbl\t\t: "តារាង",\r\n
+InsertTable\t\t\t: "បន្ថែម/កែប្រែ តារាង",\r\n
+InsertLineLbl\t\t: "បន្ទាត់",\r\n
+InsertLine\t\t\t: "បន្ថែមបន្ទាត់ផ្តេក",\r\n
+InsertSpecialCharLbl: "អក្សរពិសេស",\r\n
+InsertSpecialChar\t: "បន្ថែមអក្សរពិសេស",\r\n
+InsertSmileyLbl\t\t: "រូបភាព",\r\n
+InsertSmiley\t\t: "បន្ថែម រូបភាព",\r\n
+About\t\t\t\t: "អំពី FCKeditor",\r\n
+Bold\t\t\t\t: "អក្សរដិតធំ",\r\n
+Italic\t\t\t\t: "អក្សរផ្តេក",\r\n
+Underline\t\t\t: "ដិតបន្ទាត់ពីក្រោមអក្សរ",\r\n
+StrikeThrough\t\t: "ដិតបន្ទាត់ពាក់កណ្តាលអក្សរ",\r\n
+Subscript\t\t\t: "អក្សរតូចក្រោម",\r\n
+Superscript\t\t\t: "អក្សរតូចលើ",\r\n
+LeftJustify\t\t\t: "តំរឹមឆ្វេង",\r\n
+CenterJustify\t\t: "តំរឹមកណ្តាល",\r\n
+RightJustify\t\t: "តំរឹមស្តាំ",\r\n
+BlockJustify\t\t: "តំរឹមសងខាង",\r\n
+DecreaseIndent\t\t: "បន្ថយការចូលបន្ទាត់",\r\n
+IncreaseIndent\t\t: "បន្ថែមការចូលបន្ទាត់",\r\n
+Blockquote\t\t\t: "Blockquote",\t//MISSING\r\n
+CreateDiv\t\t\t: "Create Div Container",\t//MISSING\r\n
+EditDiv\t\t\t\t: "Edit Div Container",\t//MISSING\r\n
+DeleteDiv\t\t\t: "Remove Div Container",\t//MISSING\r\n
+Undo\t\t\t\t: "សារឡើងវិញ",\r\n
+Redo\t\t\t\t: "ធ្វើឡើងវិញ",\r\n
+NumberedListLbl\t\t: "បញ្ជីជាអក្សរ",\r\n
+NumberedList\t\t: "បន្ថែម/លប់ បញ្ជីជាអក្សរ",\r\n
+BulletedListLbl\t\t: "បញ្ជីជារង្វង់មូល",\r\n
+BulletedList\t\t: "បន្ថែម/លប់ បញ្ជីជារង្វង់មូល",\r\n
+ShowTableBorders\t: "បង្ហាញស៊ុមតារាង",\r\n
+ShowDetails\t\t\t: "បង្ហាញពិស្តារ",\r\n
+Style\t\t\t\t: "ម៉ូត",\r\n
+FontFormat\t\t\t: "រចនា",\r\n
+Font\t\t\t\t: "ហ្វុង",\r\n
+FontSize\t\t\t: "ទំហំ",\r\n
+TextColor\t\t\t: "ពណ៌អក្សរ",\r\n
+BGColor\t\t\t\t: "ពណ៌ផ្ទៃខាងក្រោយ",\r\n
+Source\t\t\t\t: "កូត",\r\n
+Find\t\t\t\t: "ស្វែងរក",\r\n
+Replace\t\t\t\t: "ជំនួស",\r\n
+SpellCheck\t\t\t: "ពិនិត្យអក្ខរាវិរុទ្ធ",\r\n
+UniversalKeyboard\t: "ក្តារពុម្ភអក្សរសកល",\r\n
+PageBreakLbl\t\t: "ការផ្តាច់ទំព័រ",\r\n
+PageBreak\t\t\t: "បន្ថែម ការផ្តាច់ទំព័រ",\r\n
+\r\n
+Form\t\t\t: "បែបបទ",\r\n
+Checkbox\t\t: "ប្រអប់ជ្រើសរើស",\r\n
+RadioButton\t\t: "ប៉ូតុនរង្វង់មូល",\r\n
+TextField\t\t: "ជួរសរសេរអត្ថបទ",\r\n
+Textarea\t\t: "តំបន់សរសេរអត្ថបទ",\r\n
+HiddenField\t\t: "ជួរលាក់",\r\n
+Button\t\t\t: "ប៉ូតុន",\r\n
+SelectionField\t: "ជួរជ្រើសរើស",\r\n
+ImageButton\t\t: "ប៉ូតុនរូបភាព",\r\n
+\r\n
+FitWindow\t\t: "Maximize the editor size",\t//MISSING\r\n
+ShowBlocks\t\t: "Show Blocks",\t//MISSING\r\n
+\r\n
+// Context Menu\r\n
+EditLink\t\t\t: "កែប្រែឈ្នាប់",\r\n
+CellCM\t\t\t\t: "Cell",\t//MISSING\r\n
+RowCM\t\t\t\t: "Row",\t//MISSING\r\n
+ColumnCM\t\t\t: "Column",\t//MISSING\r\n
+InsertRowAfter\t\t: "Insert Row After",\t//MISSING\r\n
+InsertRowBefore\t\t: "Insert Row Before",\t//MISSING\r\n
+DeleteRows\t\t\t: "លប់ជួរផ្តេក",\r\n
+InsertColumnAfter\t: "Insert Column After",\t//MISSING\r\n
+InsertColumnBefore\t: "Insert Column Before",\t//MISSING\r\n
+DeleteColumns\t\t: "លប់ជួរឈរ",\r\n
+InsertCellAfter\t\t: "Insert Cell After",\t//MISSING\r\n
+InsertCellBefore\t: "Insert Cell Before",\t//MISSING\r\n
+DeleteCells\t\t\t: "លប់សែល",\r\n
+MergeCells\t\t\t: "បញ្ជូលសែល",\r\n
+MergeRight\t\t\t: "Merge Right",\t//MISSING\r\n
+MergeDown\t\t\t: "Merge Down",\t//MISSING\r\n
+HorizontalSplitCell\t: "Split Cell Horizontally",\t//MISSING\r\n
+VerticalSplitCell\t: "Split Cell Vertically",\t//MISSING\r\n
+TableDelete\t\t\t: "លប់តារាង",\r\n
+CellProperties\t\t: "ការកំណត់សែល",\r\n
+TableProperties\t\t: "ការកំណត់តារាង",\r\n
+ImageProperties\t\t: "ការកំណត់រូបភាព",\r\n
+FlashProperties\t\t: "ការកំណត់ Flash",\r\n
+\r\n
+AnchorProp\t\t\t: "ការកំណត់យុថ្កា",\r\n
+ButtonProp\t\t\t: "ការកំណត់ ប៉ូតុន",\r\n
+CheckboxProp\t\t: "ការកំណត់ប្រអប់ជ្រើសរើស",\r\n
+HiddenFieldProp\t\t: "ការកំណត់ជួរលាក់",\r\n
+RadioButtonProp\t\t: "ការកំណត់ប៉ូតុនរង្វង់",\r\n
+ImageButtonProp\t\t: "ការកំណត់ប៉ូតុនរូបភាព",\r\n
+TextFieldProp\t\t: "ការកំណត់ជួរអត្ថបទ",\r\n
+SelectionFieldProp\t: "ការកំណត់ជួរជ្រើសរើស",\r\n
+TextareaProp\t\t: "ការកំណត់កន្លែងសរសេរអត្ថបទ",\r\n
+FormProp\t\t\t: "ការកំណត់បែបបទ",\r\n
+\r\n
+FontFormats\t\t\t: "Normal;Formatted;Address;Heading 1;Heading 2;Heading 3;Heading 4;Heading 5;Heading 6;Normal (DIV)",\r\n
+\r\n
+// Alerts and Messages\r\n
+ProcessingXHTML\t\t: "កំពុងដំណើរការ XHTML ។ សូមរងចាំ...",\r\n
+Done\t\t\t\t: "ចប់រួចរាល់",\r\n
+PasteWordConfirm\t: "អត្ថបទដែលលោកអ្នកបំរុងចំលងដាក់ ហាក់បីដូចជាត្រូវចំលងមកពីកម្មវិធី​Word​។ តើលោកអ្នកចង់សំអាតមុនចំលងអត្ថបទដាក់ទេ?",\r\n
+NotCompatiblePaste\t: "ពាក្យបញ្ជានេះប្រើបានតែជាមួយ Internet Explorer កំរិត 5.5 រឺ លើសនេះ ។ តើលោកអ្នកចង់ចំលងដាក់ដោយមិនចាំបាច់សំអាតទេ?",\r\n
+UnknownToolbarItem\t: "វត្ថុលើរបាឧបរកណ៍ មិនស្គាល់ \\"%1\\"",\r\n
+UnknownCommand\t\t: "ឈ្មោះពាក្យបញ្ជា មិនស្គាល់ \\"%1\\"",\r\n
+NotImplemented\t\t: "ពាក្យបញ្ជា មិនបានអនុវត្ត",\r\n
+UnknownToolbarSet\t: "របាឧបរកណ៍ \\"%1\\" ពុំមាន ។",\r\n
+NoActiveX\t\t\t: "ការកំណត់សុវត្ថភាពរបស់កម្មវិធីរុករករបស់លោកអ្នក នេះ​អាចធ្វើអោយលោកអ្នកមិនអាចប្រើមុខងារខ្លះរបស់កម្មវិធីតាក់តែងអត្ថបទនេះ ។ លោកអ្នកត្រូវកំណត់អោយ \\"ActiveX និង​កម្មវិធីជំនួយក្នុង (plug-ins)\\" អោយដំណើរការ ។ លោកអ្នកអាចជួបប្រទះនឹង បញ្ហា ព្រមជាមួយនឹងការបាត់បង់មុខងារណាមួយរបស់កម្មវិធីតាក់តែងអត្ថបទនេះ ។",\r\n
+BrowseServerBlocked : "The resources browser could not be opened. Make sure that all popup blockers are disabled.",\t//MISSING\r\n
+DialogBlocked\t\t: "វីនដូវមិនអាចបើកបានទេ ។ សូមពិនិត្យចំពោះកម្មវិធីបិទ វីនដូវលោត (popup) ថាតើវាដំណើរការរឺទេ ។",\r\n
+VisitLinkBlocked\t: "It was not possible to open a new window. Make sure all popup blockers are disabled.",\t//MISSING\r\n
+\r\n
+// Dialogs\r\n
+DlgBtnOK\t\t\t: "យល់ព្រម",\r\n
+DlgBtnCancel\t\t: "មិនយល់ព្រម",\r\n
+DlgBtnClose\t\t\t: "បិទ",\r\n
+DlgBtnBrowseServer\t: "មើល",\r\n
+DlgAdvancedTag\t\t: "កំរិតខ្ពស់",\r\n
+DlgOpOther\t\t\t: "<ផ្សេងទៅត>",\r\n
+DlgInfoTab\t\t\t: "ពត៌មាន",\r\n
+DlgAlertUrl\t\t\t: "សូមសរសេរ URL",\r\n
+\r\n
+// General Dialogs Labels\r\n
+DlgGenNotSet\t\t: "<មិនមែន>",\r\n
+DlgGenId\t\t\t: "Id",\r\n
+DlgGenLangDir\t\t: "ទិសដៅភាសា",\r\n
+DlgGenLangDirLtr\t: "ពីឆ្វេងទៅស្តាំ(LTR)",\r\n
+DlgGenLangDirRtl\t: "ពីស្តាំទៅឆ្វេង(RTL)",\r\n
+DlgGenLangCode\t\t: "លេខកូតភាសា",\r\n
+DlgGenAccessKey\t\t: "ឃី សំរាប់ចូល",\r\n
+DlgGenName\t\t\t: "ឈ្មោះ",\r\n
+DlgGenTabIndex\t\t: "លេខ Tab",\r\n
+DlgGenLongDescr\t\t: "អធិប្បាយ URL វែង",\r\n
+DlgGenClass\t\t\t: "Stylesheet Classes",\r\n
+DlgGenTitle\t\t\t: "ចំណងជើង ប្រឹក្សា",\r\n
+DlgGenContType\t\t: "ប្រភេទអត្ថបទ ប្រឹក្សា",\r\n
+DlgGenLinkCharset\t: "លេខកូតអក្សររបស់ឈ្នាប់",\r\n
+DlgGenStyle\t\t\t: "ម៉ូត",\r\n
+\r\n
+// Image Dialog\r\n
+DlgImgTitle\t\t\t: "ការកំណត់រូបភាព",\r\n
+DlgImgInfoTab\t\t: "ពត៌មានអំពីរូបភាព",\r\n
+DlgImgBtnUpload\t\t: "បញ្ជូនទៅកាន់ម៉ាស៊ីនផ្តល់សេវា",\r\n
+DlgImgURL\t\t\t: "URL",\r\n
+DlgImgUpload\t\t: "ទាញយក",\r\n
+DlgImgAlt\t\t\t: "អត្ថបទជំនួស",\r\n
+DlgImgWidth\t\t\t: "ទទឹង",\r\n
+DlgImgHeight\t\t: "កំពស់",\r\n
+DlgImgLockRatio\t\t: "អត្រាឡុក",\r\n
+DlgBtnResetSize\t\t: "កំណត់ទំហំឡើងវិញ",\r\n
+DlgImgBorder\t\t: "ស៊ុម",\r\n
+DlgImgHSpace\t\t: "គំលាតទទឹង",\r\n
+DlgImgVSpace\t\t: "គំលាតបណ្តោយ",\r\n
+DlgImgAlign\t\t\t: "កំណត់ទីតាំង",\r\n
+DlgImgAlignLeft\t\t: "ខាងឆ្វង",\r\n
+DlgImgAlignAbsBottom: "Abs Bottom",\t//MISSING\r\n
+DlgImgAlignAbsMiddle: "Abs Middle",\t//MISSING\r\n
+DlgImgAlignBaseline\t: "បន្ទាត់ជាមូលដ្ឋាន",\r\n
+DlgImgAlignBottom\t: "ខាងក្រោម",\r\n
+DlgImgAlignMiddle\t: "កណ្តាល",\r\n
+DlgImgAlignRight\t: "ខាងស្តាំ",\r\n
+DlgImgAlignTextTop\t: "លើអត្ថបទ",\r\n
+DlgImgAlignTop\t\t: "ខាងលើ",\r\n
+DlgImgPreview\t\t: "មើលសាកល្បង",\r\n
+DlgImgAlertUrl\t\t: "សូមសរសេរងាស័យដ្ឋានរបស់រូបភាព",\r\n
+DlgImgLinkTab\t\t: "ឈ្នាប់",\r\n
+\r\n
+// Flash Dialog\r\n
+DlgFlashTitle\t\t: "ការកំណត់ Flash",\r\n
+DlgFlashChkPlay\t\t: "លេងដោយស្វ័យប្រវត្ត",\r\n
+DlgFlashChkLoop\t\t: "ចំនួនដង",\r\n
+DlgFlashChkMenu\t\t: "បង្ហាញ មឺនុយរបស់ Flash",\r\n
+DlgFlashScale\t\t: "ទំហំ",\r\n
+DlgFlashScaleAll\t: "បង្ហាញទាំងអស់",\r\n
+DlgFlashScaleNoBorder\t: "មិនបង្ហាញស៊ុម",\r\n
+DlgFlashScaleFit\t: "ត្រូវល្មម",\r\n
+\r\n
+// Link Dialog\r\n
+DlgLnkWindowTitle\t: "ឈ្នាប់",\r\n
+DlgLnkInfoTab\t\t: "ពត៌មានអំពីឈ្នាប់",\r\n
+DlgLnkTargetTab\t\t: "គោលដៅ",\r\n
+\r\n
+DlgLnkType\t\t\t: "ប្រភេទឈ្នាប់",\r\n
+DlgLnkTypeURL\t\t: "URL",\r\n
+DlgLnkTypeAnchor\t: "យុថ្កានៅក្នុងទំព័រនេះ",\r\n
+DlgLnkTypeEMail\t\t: "អ៊ីមែល",\r\n
+DlgLnkProto\t\t\t: "ប្រូតូកូល",\r\n
+DlgLnkProtoOther\t: "<ផ្សេងទៀត>",\r\n
+DlgLnkURL\t\t\t: "URL",\r\n
+DlgLnkAnchorSel\t\t: "ជ្រើសរើសយុថ្កា",\r\n
+DlgLnkAnchorByName\t: "តាមឈ្មោះរបស់យុថ្កា",\r\n
+DlgLnkAnchorById\t: "តាម Id",\r\n
+DlgLnkNoAnchors\t\t: "(No anchors available in the document)",\t//MISSING\r\n
+DlgLnkEMail\t\t\t: "អ៊ីមែល",\r\n
+DlgLnkEMailSubject\t: "ចំណងជើងអត្ថបទ",\r\n
+DlgLnkEMailBody\t\t: "អត្ថបទ",\r\n
+DlgLnkUpload\t\t: "ទាញយក",\r\n
+DlgLnkBtnUpload\t\t: "ទាញយក",\r\n
+\r\n
+DlgLnkTarget\t\t: "គោលដៅ",\r\n
+DlgLnkTargetFrame\t: "<ហ្វ្រេម>",\r\n
+DlgLnkTargetPopup\t: "<វីនដូវ លោត>",\r\n
+DlgLnkTargetBlank\t: "វីនដូវថ្មី (_blank)",\r\n
+DlgLnkTargetParent\t: "វីនដូវមេ (_parent)",\r\n
+DlgLnkTargetSelf\t: "វីនដូវដដែល (_self)",\r\n
+DlgLnkTargetTop\t\t: "វីនដូវនៅលើគេ(_top)",\r\n
+DlgLnkTargetFrameName\t: "ឈ្មោះហ្រ្វេមដែលជាគោលដៅ",\r\n
+DlgLnkPopWinName\t: "ឈ្មោះវីនដូវលោត",\r\n
+DlgLnkPopWinFeat\t: "លក្ខណះរបស់វីនដូលលោត",\r\n
+DlgLnkPopResize\t\t: "ទំហំអាចផ្លាស់ប្តូរ",\r\n
+DlgLnkPopLocation\t: "របា ទីតាំង",\r\n
+DlgLnkPopMenu\t\t: "របា មឺនុយ",\r\n
+DlgLnkPopScroll\t\t: "របា ទាញ",\r\n
+DlgLnkPopStatus\t\t: "របា ពត៌មាន",\r\n
+DlgLnkPopToolbar\t: "របា ឩបករណ៍",\r\n
+DlgLnkPopFullScrn\t: "អេក្រុងពេញ(IE)",\r\n
+DlgLnkPopDependent\t: "អាស្រ័យលើ (Netscape)",\r\n
+DlgLnkPopWidth\t\t: "ទទឹង",\r\n
+DlgLnkPopHeight\t\t: "កំពស់",\r\n
+DlgLnkPopLeft\t\t: "ទីតាំងខាងឆ្វេង",\r\n
+DlgLnkPopTop\t\t: "ទីតាំងខាងលើ",\r\n
+\r\n
+DlnLnkMsgNoUrl\t\t: "សូមសរសេរ អាស័យដ្ឋាន URL",\r\n
+DlnLnkMsgNoEMail\t: "សូមសរសេរ អាស័យដ្ឋាន អ៊ីមែល",\r\n
+DlnLnkMsgNoAnchor\t: "សូមជ្រើសរើស យុថ្កា",\r\n
+DlnLnkMsgInvPopName\t: "The popup name must begin with an alphabetic character and must not contain spaces",\t//MISSING\r\n
+\r\n
+// Color Dialog\r\n
+DlgColorTitle\t\t: "ជ្រើសរើស ពណ៌",\r\n
+DlgColorBtnClear\t: "លប់",\r\n
+DlgColorHighlight\t: "ផាត់ពណ៌",\r\n
+DlgColorSelected\t: "បានជ្រើសរើស",\r\n
+\r\n
+// Smiley Dialog\r\n
+DlgSmileyTitle\t\t: "បញ្ជូលរូបភាព",\r\n
+\r\n
+// Special Character Dialog\r\n
+DlgSpecialCharTitle\t: "តូអក្សរពិសេស",\r\n
+\r\n
+// Table Dialog\r\n
+DlgTableTitle\t\t: "ការកំណត់ តារាង",\r\n
+DlgTableRows\t\t: "ជួរផ្តេក",\r\n
+DlgTableColumns\t\t: "ជួរឈរ",\r\n
+DlgTableBorder\t\t: "ទំហំស៊ុម",\r\n
+DlgTableAlign\t\t: "ការកំណត់ទីតាំង",\r\n
+DlgTableAlignNotSet\t: "<មិនកំណត់>",\r\n
+DlgTableAlignLeft\t: "ខាងឆ្វេង",\r\n
+DlgTableAlignCenter\t: "កណ្តាល",\r\n
+DlgTableAlignRight\t: "ខាងស្តាំ",\r\n
+DlgTableWidth\t\t: "ទទឹង",\r\n
+DlgTableWidthPx\t\t: "ភីកសែល",\r\n
+DlgTableWidthPc\t\t: "ភាគរយ",\r\n
+DlgTableHeight\t\t: "កំពស់",\r\n
+DlgTableCellSpace\t: "គំលាតសែល",\r\n
+DlgTableCellPad\t\t: "គែមសែល",\r\n
+DlgTableCaption\t\t: "ចំណងជើង",\r\n
+DlgTableSummary\t\t: "សេចក្តីសង្ខេប",\r\n
+DlgTableHeaders\t\t: "Headers",\t//MISSING\r\n
+DlgTableHeadersNone\t\t: "None",\t//MISSING\r\n
+DlgTableHeadersColumn\t: "First column",\t//MISSING\r\n
+DlgTableHeadersRow\t\t: "First Row",\t//MISSING\r\n
+DlgTableHeadersBoth\t\t: "Both",\t//MISSING\r\n
+\r\n
+// Table Cell Dialog\r\n
+DlgCellTitle\t\t: "ការកំណត់ សែល",\r\n
+DlgCellWidth\t\t: "ទទឹង",\r\n
+DlgCellWidthPx\t\t: "ភីកសែល",\r\n
+DlgCellWidthPc\t\t: "ភាគរយ",\r\n
+DlgCellHeight\t\t: "កំពស់",\r\n
+DlgCellWordWrap\t\t: "បង្ហាញអត្ថបទទាំងអស់",\r\n
+DlgCellWordWrapNotSet\t: "<មិនកំណត់>",\r\n
+DlgCellWordWrapYes\t: "បាទ(ចា)",\r\n
+DlgCellWordWrapNo\t: "ទេ",\r\n
+DlgCellHorAlign\t\t: "តំរឹមផ្តេក",\r\n
+DlgCellHorAlignNotSet\t: "<មិនកំណត់>",\r\n
+DlgCellHorAlignLeft\t: "ខាងឆ្វេង",\r\n
+DlgCellHorAlignCenter\t: "កណ្តាល",\r\n
+DlgCellHorAlignRight: "Right",\t//MISSING\r\n
+DlgCellVerAlign\t\t: "តំរឹមឈរ",\r\n
+DlgCellVerAlignNotSet\t: "<មិនកណត់>",\r\n
+DlgCellVerAlignTop\t: "ខាងលើ",\r\n
+DlgCellVerAlignMiddle\t: "កណ្តាល",\r\n
+DlgCellVerAlignBottom\t: "ខាងក្រោម",\r\n
+DlgCellVerAlignBaseline\t: "បន្ទាត់ជាមូលដ្ឋាន",\r\n
+DlgCellType\t\t: "Cell Type",\t//MISSING\r\n
+DlgCellTypeData\t\t: "Data",\t//MISSING\r\n
+DlgCellTypeHeader\t: "Header",\t//MISSING\r\n
+DlgCellRowSpan\t\t: "បញ្ជូលជួរផ្តេក",\r\n
+DlgCellCollSpan\t\t: "បញ្ជូលជួរឈរ",\r\n
+DlgCellBackColor\t: "ពណ៌ផ្នែកខាងក្រោម",\r\n
+DlgCellBorderColor\t: "ពណ៌ស៊ុម",\r\n
+DlgCellBtnSelect\t: "ជ្រើសរើស...",\r\n
+\r\n
+// Find and Replace Dialog\r\n
+DlgFindAndReplaceTitle\t: "Find and Replace",\t//MISSING\r\n
+\r\n
+// Find Dialog\r\n
+DlgFindTitle\t\t: "ស្វែងរក",\r\n
+DlgFindFindBtn\t\t: "ស្វែងរក",\r\n
+DlgFindNotFoundMsg\t: "ពាក្យនេះ រកមិនឃើញទេ ។",\r\n
+\r\n
+// Replace Dialog\r\n
+DlgReplaceTitle\t\t\t: "ជំនួស",\r\n
+DlgReplaceFindLbl\t\t: "ស្វែងរកអ្វី:",\r\n
+DlgReplaceReplaceLbl\t: "ជំនួសជាមួយ:",\r\n
+DlgReplaceCaseChk\t\t: "ករណ៉ត្រូវរក",\r\n
+DlgReplaceReplaceBtn\t: "ជំនួស",\r\n
+DlgReplaceReplAllBtn\t: "ជំនួសទាំងអស់",\r\n
+DlgReplaceWordChk\t\t: "ត្រូវពាក្យទាំងអស់",\r\n
+\r\n
+// Paste Operations / Dialog\r\n
+PasteErrorCut\t: "ការកំណត់សុវត្ថភាពរបស់កម្មវិធីរុករករបស់លោកអ្នក នេះ​មិនអាចធ្វើកម្មវិធីតាក់តែងអត្ថបទ កាត់អត្ថបទយកដោយស្វ័យប្រវត្តបានឡើយ ។ សូមប្រើប្រាស់បន្សំ ឃីដូចនេះ  (Ctrl+X) ។",\r\n
+PasteErrorCopy\t: "ការកំណត់សុវត្ថភាពរបស់កម្មវិធីរុករករបស់លោកអ្នក នេះ​មិនអាចធ្វើកម្មវិធីតាក់តែងអត្ថបទ ចំលងអត្ថបទយកដោយស្វ័យប្រវត្តបានឡើយ ។ សូមប្រើប្រាស់បន្សំ ឃីដូចនេះ (Ctrl+C)។",\r\n
+\r\n
+PasteAsText\t\t: "ចំលងដាក់អត្ថបទធម្មតា",\r\n
+PasteFromWord\t: "ចំលងពាក្យពីកម្មវិធី Word",\r\n
+\r\n
+DlgPasteMsg2\t: "សូមចំលងអត្ថបទទៅដាក់ក្នុងប្រអប់ដូចខាងក្រោមដោយប្រើប្រាស់ ឃី ​(<STRONG>Ctrl+V</STRONG>) ហើយចុច <STRONG>OK</STRONG> ។",\r\n
+DlgPasteSec\t\t: "Because of your browser security settings, the editor is not able to access your clipboard data directly. You are required to paste it again in this window.",\t//MISSING\r\n
+DlgPasteIgnoreFont\t\t: "មិនគិតអំពីប្រភេទពុម្ភអក្សរ",\r\n
+DlgPasteRemoveStyles\t: "លប់ម៉ូត",\r\n
+\r\n
+// Color Picker\r\n
+ColorAutomatic\t: "ស្វ័យប្រវត្ត",\r\n
+ColorMoreColors\t: "ពណ៌ផ្សេងទៀត..",\r\n
+\r\n
+// Document Properties\r\n
+DocProps\t\t: "ការកំណត់ ឯកសារ",\r\n
+\r\n
+// Anchor Dialog\r\n
+DlgAnchorTitle\t\t: "ការកំណត់ចំណងជើងយុទ្ធថ្កា",\r\n
+DlgAnchorName\t\t: "ឈ្មោះយុទ្ធថ្កា",\r\n
+DlgAnchorErrorName\t: "សូមសរសេរ ឈ្មោះយុទ្ធថ្កា",\r\n
+\r\n
+// Speller Pages Dialog\r\n
+DlgSpellNotInDic\t\t: "គ្មានក្នុងវចនានុក្រម",\r\n
+DlgSpellChangeTo\t\t: "ផ្លាស់ប្តូរទៅ",\r\n
+DlgSpellBtnIgnore\t\t: "មិនផ្លាស់ប្តូរ",\r\n
+DlgSpellBtnIgnoreAll\t: "មិនផ្លាស់ប្តូរ ទាំងអស់",\r\n
+DlgSpellBtnReplace\t\t: "ជំនួស",\r\n
+DlgSpellBtnReplaceAll\t: "ជំនួសទាំងអស់",\r\n
+DlgSpellBtnUndo\t\t\t: "សារឡើងវិញ",\r\n
+DlgSpellNoSuggestions\t: "- គ្មានសំណើរ -",\r\n
+DlgSpellProgress\t\t: "កំពុងពិនិត្យអក្ខរាវិរុទ្ធ...",\r\n
+DlgSpellNoMispell\t\t: "ការពិនិត្យអក្ខរាវិរុទ្ធបានចប់: គ្មានកំហុស",\r\n
+DlgSpellNoChanges\t\t: "ការពិនិត្យអក្ខរាវិរុទ្ធបានចប់: ពុំមានផ្លាស់ប្តូរ",\r\n
+DlgSpellOneChange\t\t: "ការពិនិត្យអក្ខរាវិរុទ្ធបានចប់: ពាក្យមួយត្រូចបានផ្លាស់ប្តូរ",\r\n
+DlgSpellManyChanges\t\t: "ការពិនិត្យអក្ខរាវិរុទ្ធបានចប់: %1 ពាក្យបានផ្លាស់ប្តូរ",\r\n
+\r\n
+IeSpellDownload\t\t\t: "ពុំមានកម្មវិធីពិនិត្យអក្ខរាវិរុទ្ធ ។ តើចង់ទាញយកពីណា?",\r\n
+\r\n
+// Button Dialog\r\n
+DlgButtonText\t\t: "អត្ថបទ(តំលៃ)",\r\n
+DlgButtonType\t\t: "ប្រភេទ",\r\n
+DlgButtonTypeBtn\t: "Button",\t//MISSING\r\n
+DlgButtonTypeSbm\t: "Submit",\t//MISSING\r\n
+DlgButtonTypeRst\t: "Reset",\t//MISSING\r\n
+\r\n
+// Checkbox and Radio Button Dialogs\r\n
+DlgCheckboxName\t\t: "ឈ្មោះ",\r\n
+DlgCheckboxValue\t: "តំលៃ",\r\n
+DlgCheckboxSelected\t: "បានជ្រើសរើស",\r\n
+\r\n
+// Form Dialog\r\n
+DlgFormName\t\t: "ឈ្មោះ",\r\n
+DlgFormAction\t: "សកម្មភាព",\r\n
+DlgFormMethod\t: "វិធី",\r\n
+\r\n
+// Select Field Dialog\r\n
+DlgSelectName\t\t: "ឈ្មោះ",\r\n
+DlgSelectValue\t\t: "តំលៃ",\r\n
+DlgSelectSize\t\t: "ទំហំ",\r\n
+DlgSelectLines\t\t: "បន្ទាត់",\r\n
+DlgSelectChkMulti\t: "អនុញ្ញាតអោយជ្រើសរើសច្រើន",\r\n
+DlgSelectOpAvail\t: "ការកំណត់ជ្រើសរើស ដែលអាចកំណត់បាន",\r\n
+DlgSelectOpText\t\t: "ពាក្យ",\r\n
+DlgSelectOpValue\t: "តំលៃ",\r\n
+DlgSelectBtnAdd\t\t: "បន្ថែម",\r\n
+DlgSelectBtnModify\t: "ផ្លាស់ប្តូរ",\r\n
+DlgSelectBtnUp\t\t: "លើ",\r\n
+DlgSelectBtnDown\t: "ក្រោម",\r\n
+DlgSelectBtnSetValue : "Set as selected value",\t//MISSING\r\n
+DlgSelectBtnDelete\t: "លប់",\r\n
+\r\n
+// Textarea Dialog\r\n
+DlgTextareaName\t: "ឈ្មោះ",\r\n
+DlgTextareaCols\t: "ជូរឈរ",\r\n
+DlgTextareaRows\t: "ជូរផ្តេក",\r\n
+\r\n
+// Text Field Dialog\r\n
+DlgTextName\t\t\t: "ឈ្មោះ",\r\n
+DlgTextValue\t\t: "តំលៃ",\r\n
+DlgTextCharWidth\t: "ទទឹង អក្សរ",\r\n
+DlgTextMaxChars\t\t: "អក្សរអតិបរិមា",\r\n
+DlgTextType\t\t\t: "ប្រភេទ",\r\n
+DlgTextTypeText\t\t: "ពាក្យ",\r\n
+DlgTextTypePass\t\t: "ពាក្យសំងាត់",\r\n
+\r\n
+// Hidden Field Dialog\r\n
+DlgHiddenName\t: "ឈ្មោះ",\r\n
+DlgHiddenValue\t: "តំលៃ",\r\n
+\r\n
+// Bulleted List Dialog\r\n
+BulletedListProp\t: "កំណត់បញ្ជីរង្វង់",\r\n
+NumberedListProp\t: "កំណត់បញ្េជីលេខ",\r\n
+DlgLstStart\t\t\t: "Start",\t//MISSING\r\n
+DlgLstType\t\t\t: "ប្រភេទ",\r\n
+DlgLstTypeCircle\t: "រង្វង់",\r\n
+DlgLstTypeDisc\t\t: "Disc",\r\n
+DlgLstTypeSquare\t: "ការេ",\r\n
+DlgLstTypeNumbers\t: "លេខ(1, 2, 3)",\r\n
+DlgLstTypeLCase\t\t: "អក្សរតូច(a, b, c)",\r\n
+DlgLstTypeUCase\t\t: "អក្សរធំ(A, B, C)",\r\n
+DlgLstTypeSRoman\t: "អក្សរឡាតាំងតូច(i, ii, iii)",\r\n
+DlgLstTypeLRoman\t: "អក្សរឡាតាំងធំ(I, II, III)",\r\n
+\r\n
+// Document Properties Dialog\r\n
+DlgDocGeneralTab\t: "ទូទៅ",\r\n
+DlgDocBackTab\t\t: "ផ្នែកខាងក្រោយ",\r\n
+DlgDocColorsTab\t\t: "ទំព័រ​និង ស៊ុម",\r\n
+DlgDocMetaTab\t\t: "ទិន្នន័យមេ",\r\n
+\r\n
+DlgDocPageTitle\t\t: "ចំណងជើងទំព័រ",\r\n
+DlgDocLangDir\t\t: "ទិសដៅសរសេរភាសា",\r\n
+DlgDocLangDirLTR\t: "ពីឆ្វេងទៅស្ដាំ(LTR)",\r\n
+DlgDocLangDirRTL\t: "ពីស្ដាំទៅឆ្វេង(RTL)",\r\n
+DlgDocLangCode\t\t: "លេខកូតភាសា",\r\n
+DlgDocCharSet\t\t: "កំណត់លេខកូតភាសា",\r\n
+DlgDocCharSetCE\t\t: "Central European",\t//MISSING\r\n
+DlgDocCharSetCT\t\t: "Chinese Traditional (Big5)",\t//MISSING\r\n
+DlgDocCharSetCR\t\t: "Cyrillic",\t//MISSING\r\n
+DlgDocCharSetGR\t\t: "Greek",\t//MISSING\r\n
+DlgDocCharSetJP\t\t: "Japanese",\t//MISSING\r\n
+DlgDocCharSetKR\t\t: "Korean",\t//MISSING\r\n
+DlgDocCharSetTR\t\t: "Turkish",\t//MISSING\r\n
+DlgDocCharSetUN\t\t: "Unicode (UTF-8)",\t//MISSING\r\n
+DlgDocCharSetWE\t\t: "Western European",\t//MISSING\r\n
+DlgDocCharSetOther\t: "កំណត់លេខកូតភាសាផ្សេងទៀត",\r\n
+\r\n
+DlgDocDocType\t\t: "ប្រភេទក្បាលទំព័រ",\r\n
+DlgDocDocTypeOther\t: "ប្រភេទក្បាលទំព័រផ្សេងទៀត",\r\n
+DlgDocIncXHTML\t\t: "បញ្ជូល XHTML",\r\n
+DlgDocBgColor\t\t: "ពណ៌ខាងក្រោម",\r\n
+DlgDocBgImage\t\t: "URL របស់រូបភាពខាងក្រោម",\r\n
+DlgDocBgNoScroll\t: "ទំព័រក្រោមមិនប្តូរ",\r\n
+DlgDocCText\t\t\t: "អត្តបទ",\r\n
+DlgDocCLink\t\t\t: "ឈ្នាប់",\r\n
+DlgDocCVisited\t\t: "ឈ្នាប់មើលហើយ",\r\n
+DlgDocCActive\t\t: "ឈ្នាប់កំពុងមើល",\r\n
+DlgDocMargins\t\t: "ស៊ុមទំព័រ",\r\n
+DlgDocMaTop\t\t\t: "លើ",\r\n
+DlgDocMaLeft\t\t: "ឆ្វេង",\r\n
+DlgDocMaRight\t\t: "ស្ដាំ",\r\n
+DlgDocMaBottom\t\t: "ក្រោម",\r\n
+DlgDocMeIndex\t\t: "ពាក្យនៅក្នុងឯកសារ (ផ្តាច់ពីគ្នាដោយក្បៀស)",\r\n
+DlgDocMeDescr\t\t: "សេចក្តីអត្ថាធិប្បាយអំពីឯកសារ",\r\n
+DlgDocMeAuthor\t\t: "អ្នកនិពន្ធ",\r\n
+DlgDocMeCopy\t\t: "រក្សាសិទ្ធិ៏",\r\n
+DlgDocPreview\t\t: "មើលសាកល្បង",\r\n
+\r\n
+// Templates Dialog\r\n
+Templates\t\t\t: "ឯកសារគំរូ",\r\n
+DlgTemplatesTitle\t: "ឯកសារគំរូ របស់អត្ថន័យ",\r\n
+DlgTemplatesSelMsg\t: "សូមជ្រើសរើសឯកសារគំរូ ដើម្បីបើកនៅក្នុងកម្មវិធីតាក់តែងអត្ថបទ<br>(អត្ថបទនឹងបាត់បង់):",\r\n
+DlgTemplatesLoading\t: "កំពុងអានបញ្ជីឯកសារគំរូ ។ សូមរងចាំ...",\r\n
+DlgTemplatesNoTpl\t: "(ពុំមានឯកសារគំរូត្រូវបានកំណត់)",\r\n
+DlgTemplatesReplace\t: "Replace actual contents",\t//MISSING\r\n
+\r\n
+// About Dialog\r\n
+DlgAboutAboutTab\t: "អំពី",\r\n
+DlgAboutBrowserInfoTab\t: "ព៌តមានកម្មវិធីរុករក",\r\n
+DlgAboutLicenseTab\t: "License",\t//MISSING\r\n
+DlgAboutVersion\t\t: "ជំនាន់",\r\n
+DlgAboutInfo\t\t: "សំរាប់ព៌តមានផ្សេងទៀត សូមទាក់ទង",\r\n
+\r\n
+// Div Dialog\r\n
+DlgDivGeneralTab\t: "General",\t//MISSING\r\n
+DlgDivAdvancedTab\t: "Advanced",\t//MISSING\r\n
+DlgDivStyle\t\t: "Style",\t//MISSING\r\n
+DlgDivInlineStyle\t: "Inline Style"\t//MISSING\r\n
+};\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>28759</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

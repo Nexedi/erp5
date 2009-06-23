@@ -1,0 +1,253 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"\r\n
+   "http://www.w3.org/TR/html4/frameset.dtd">\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * This page compose the File Browser dialog frameset.\r\n
+-->\r\n
+<html>\r\n
+\t<head>\r\n
+\t\t<title>FCKeditor - Resources Browser</title>\r\n
+\t\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\r\n
+\t\t<link href="browser.css" type="text/css" rel="stylesheet">\r\n
+\t\t<script type="text/javascript" src="js/fckxml.js"></script>\r\n
+\t\t<script type="text/javascript">\r\n
+// Automatically detect the correct document.domain (#1919).\r\n
+(function()\r\n
+{\r\n
+\tvar d = document.domain ;\r\n
+\r\n
+\twhile ( true )\r\n
+\t{\r\n
+\t\t// Test if we can access a parent property.\r\n
+\t\ttry\r\n
+\t\t{\r\n
+\t\t\tvar test = window.opener.document.domain ;\r\n
+\t\t\tbreak ;\r\n
+\t\t}\r\n
+\t\tcatch( e )\r\n
+\t\t{}\r\n
+\r\n
+\t\t// Remove a domain part: www.mytest.example.com => mytest.example.com => example.com ...\r\n
+\t\td = d.replace( /.*?(?:\\.|$)/, \'\' ) ;\r\n
+\r\n
+\t\tif ( d.length == 0 )\r\n
+\t\t\tbreak ;\t\t// It was not able to detect the domain.\r\n
+\r\n
+\t\ttry\r\n
+\t\t{\r\n
+\t\t\tdocument.domain = d ;\r\n
+\t\t}\r\n
+\t\tcatch (e)\r\n
+\t\t{\r\n
+\t\t\tbreak ;\r\n
+\t\t}\r\n
+\t}\r\n
+})() ;\r\n
+\r\n
+function GetUrlParam( paramName )\r\n
+{\r\n
+\tvar oRegex = new RegExp( \'[\\?&]\' + paramName + \'=([^&]+)\', \'i\' ) ;\r\n
+\tvar oMatch = oRegex.exec( window.top.location.search ) ;\r\n
+\r\n
+\tif ( oMatch && oMatch.length > 1 )\r\n
+\t\treturn decodeURIComponent( oMatch[1] ) ;\r\n
+\telse\r\n
+\t\treturn \'\' ;\r\n
+}\r\n
+\r\n
+var oConnector = new Object() ;\r\n
+oConnector.CurrentFolder\t= \'/\' ;\r\n
+\r\n
+var sConnUrl = GetUrlParam( \'Connector\' ) ;\r\n
+\r\n
+// Gecko has some problems when using relative URLs (not starting with slash).\r\n
+if ( sConnUrl.substr(0,1) != \'/\' && sConnUrl.indexOf( \'://\' ) < 0 )\r\n
+\tsConnUrl = window.location.href.replace( /browser.html.*$/, \'\' ) + sConnUrl ;\r\n
+\r\n
+oConnector.ConnectorUrl = sConnUrl + ( sConnUrl.indexOf(\'?\') != -1 ? \'&\' : \'?\' ) ;\r\n
+\r\n
+var sServerPath = GetUrlParam( \'ServerPath\' ) ;\r\n
+if ( sServerPath.length > 0 )\r\n
+\toConnector.ConnectorUrl += \'ServerPath=\' + encodeURIComponent( sServerPath ) + \'&\' ;\r\n
+\r\n
+oConnector.ResourceType\t\t= GetUrlParam( \'Type\' ) ;\r\n
+oConnector.ShowAllTypes\t\t= ( oConnector.ResourceType.length == 0 ) ;\r\n
+\r\n
+if ( oConnector.ShowAllTypes )\r\n
+\toConnector.ResourceType = \'File\' ;\r\n
+\r\n
+oConnector.SendCommand = function( command, params, callBackFunction )\r\n
+{\r\n
+\tvar sUrl = this.ConnectorUrl + \'Command=\' + command ;\r\n
+\tsUrl += \'&Type=\' + this.ResourceType ;\r\n
+\tsUrl += \'&CurrentFolder=\' + encodeURIComponent( this.CurrentFolder ) ;\r\n
+\r\n
+\tif ( params ) sUrl += \'&\' + params ;\r\n
+\r\n
+\t// Add a random salt to avoid getting a cached version of the command execution\r\n
+\tsUrl += \'&uuid=\' + new Date().getTime() ;\r\n
+\r\n
+\tvar oXML = new FCKXml() ;\r\n
+\r\n
+\tif ( callBackFunction )\r\n
+\t\toXML.LoadUrl( sUrl, callBackFunction ) ;\t// Asynchronous load.\r\n
+\telse\r\n
+\t\treturn oXML.LoadUrl( sUrl ) ;\r\n
+\r\n
+\treturn null ;\r\n
+}\r\n
+\r\n
+oConnector.CheckError = function( responseXml )\r\n
+{\r\n
+\tvar iErrorNumber = 0 ;\r\n
+\tvar oErrorNode = responseXml.SelectSingleNode( \'Connector/Error\' ) ;\r\n
+\r\n
+\tif ( oErrorNode )\r\n
+\t{\r\n
+\t\tiErrorNumber = parseInt( oErrorNode.attributes.getNamedItem(\'number\').value, 10 ) ;\r\n
+\r\n
+\t\tswitch ( iErrorNumber )\r\n
+\t\t{\r\n
+\t\t\tcase 0 :\r\n
+\t\t\t\tbreak ;\r\n
+\t\t\tcase 1 :\t// Custom error. Message placed in the "text" attribute.\r\n
+\t\t\t\talert( oErrorNode.attributes.getNamedItem(\'text\').value ) ;\r\n
+\t\t\t\tbreak ;\r\n
+\t\t\tcase 101 :\r\n
+\t\t\t\talert( \'Folder already exists\' ) ;\r\n
+\t\t\t\tbreak ;\r\n
+\t\t\tcase 102 :\r\n
+\t\t\t\talert( \'Invalid folder name\' ) ;\r\n
+\t\t\t\tbreak ;\r\n
+\t\t\tcase 103 :\r\n
+\t\t\t\talert( \'You have no permissions to create the folder\' ) ;\r\n
+\t\t\t\tbreak ;\r\n
+\t\t\tcase 110 :\r\n
+\t\t\t\talert( \'Unknown error creating folder\' ) ;\r\n
+\t\t\t\tbreak ;\r\n
+\t\t\tdefault :\r\n
+\t\t\t\talert( \'Error on your request. Error number: \' + iErrorNumber ) ;\r\n
+\t\t\t\tbreak ;\r\n
+\t\t}\r\n
+\t}\r\n
+\treturn iErrorNumber ;\r\n
+}\r\n
+\r\n
+var oIcons = new Object() ;\r\n
+\r\n
+oIcons.AvailableIconsArray = [\r\n
+\t\'ai\',\'avi\',\'bmp\',\'cs\',\'dll\',\'doc\',\'exe\',\'fla\',\'gif\',\'htm\',\'html\',\'jpg\',\'js\',\r\n
+\t\'mdb\',\'mp3\',\'pdf\',\'png\',\'ppt\',\'rdp\',\'swf\',\'swt\',\'txt\',\'vsd\',\'xls\',\'xml\',\'zip\' ] ;\r\n
+\r\n
+oIcons.AvailableIcons = new Object() ;\r\n
+\r\n
+for ( var i = 0 ; i < oIcons.AvailableIconsArray.length ; i++ )\r\n
+\toIcons.AvailableIcons[ oIcons.AvailableIconsArray[i] ] = true ;\r\n
+\r\n
+oIcons.GetIcon = function( fileName )\r\n
+{\r\n
+\tvar sExtension = fileName.substr( fileName.lastIndexOf(\'.\') + 1 ).toLowerCase() ;\r\n
+\r\n
+\tif ( this.AvailableIcons[ sExtension ] == true )\r\n
+\t\treturn sExtension ;\r\n
+\telse\r\n
+\t\treturn \'default.icon\' ;\r\n
+}\r\n
+\r\n
+function OnUploadCompleted( errorNumber, fileUrl, fileName, customMsg )\r\n
+{\r\n
+\tif (errorNumber == "1")\r\n
+\t\twindow.frames[\'frmUpload\'].OnUploadCompleted( errorNumber, customMsg ) ;\r\n
+\telse\r\n
+\t\twindow.frames[\'frmUpload\'].OnUploadCompleted( errorNumber, fileName ) ;\r\n
+}\r\n
+\r\n
+\t\t</script>\r\n
+\t</head>\r\n
+\t<frameset cols="150,*" class="Frame" framespacing="3" bordercolor="#f1f1e3" frameborder="1">\r\n
+\t\t<frameset rows="50,*" framespacing="0">\r\n
+\t\t\t<frame src="frmresourcetype.html" scrolling="no" frameborder="0">\r\n
+\t\t\t<frame name="frmFolders" src="frmfolders.html" scrolling="auto" frameborder="1">\r\n
+\t\t</frameset>\r\n
+\t\t<frameset rows="50,*,50" framespacing="0">\r\n
+\t\t\t<frame name="frmActualFolder" src="frmactualfolder.html" scrolling="no" frameborder="0">\r\n
+\t\t\t<frame name="frmResourcesList" src="frmresourceslist.html" scrolling="auto" frameborder="1">\r\n
+\t\t\t<frameset cols="150,*,0" framespacing="0" frameborder="0">\r\n
+\t\t\t\t<frame name="frmCreateFolder" src="frmcreatefolder.html" scrolling="no" frameborder="0">\r\n
+\t\t\t\t<frame name="frmUpload" src="frmupload.html" scrolling="no" frameborder="0">\r\n
+\t\t\t\t<frame name="frmUploadWorker" src="javascript:void(0)" scrolling="no" frameborder="0">\r\n
+\t\t\t</frameset>\r\n
+\t\t</frameset>\r\n
+\t</frameset>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>browser.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

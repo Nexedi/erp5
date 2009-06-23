@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>browser.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * CSS styles used by all pages that compose the File Browser.\r\n
+ */\r\n
+\r\n
+body\r\n
+{\r\n
+\tbackground-color: #f1f1e3;\r\n
+\tmargin-top:0;\r\n
+\tmargin-bottom:0;\r\n
+}\r\n
+\r\n
+form\r\n
+{\r\n
+\tmargin: 0;\r\n
+\tpadding: 0;\r\n
+}\r\n
+\r\n
+.Frame\r\n
+{\r\n
+\tbackground-color: #f1f1e3;\r\n
+\tborder: thin inset #f1f1e3;\r\n
+}\r\n
+\r\n
+body.FileArea\r\n
+{\r\n
+\tbackground-color: #ffffff;\r\n
+\tmargin: 10px;\r\n
+}\r\n
+\r\n
+body, td, input, select\r\n
+{\r\n
+\tfont-size: 11px;\r\n
+\tfont-family: \'Microsoft Sans Serif\' , Arial, Helvetica, Verdana;\r\n
+}\r\n
+\r\n
+.ActualFolder\r\n
+{\r\n
+\tfont-weight: bold;\r\n
+\tfont-size: 14px;\r\n
+}\r\n
+\r\n
+.PopupButtons\r\n
+{\r\n
+\tborder-top: #d5d59d 1px solid;\r\n
+\tbackground-color: #e3e3c7;\r\n
+\tpadding: 7px 10px 7px 10px;\r\n
+}\r\n
+\r\n
+.Button, button\r\n
+{\r\n
+\tcolor: #3b3b1f;\r\n
+\tborder: #737357 1px solid;\r\n
+\tbackground-color: #c7c78f;\r\n
+}\r\n
+\r\n
+.FolderListCurrentFolder img\r\n
+{\r\n
+\tbackground-image: url(images/FolderOpened.gif);\r\n
+}\r\n
+\r\n
+.FolderListFolder img\r\n
+{\r\n
+\tbackground-image: url(images/Folder.gif);\r\n
+}\r\n
+\r\n
+.fullHeight {\r\n
+\theight: 100%;\r\n
+}\r\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,581 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749252.77</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>bn.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Bengali/Bangla language file.\r\n
+ */\r\n
+\r\n
+var FCKLang =\r\n
+{\r\n
+// Language direction : "ltr" (left to right) or "rtl" (right to left).\r\n
+Dir\t\t\t\t\t: "ltr",\r\n
+\r\n
+ToolbarCollapse\t\t: "টূলবার গুটিয়ে দাও",\r\n
+ToolbarExpand\t\t: "টূলবার ছড়িয়ে দাও",\r\n
+\r\n
+// Toolbar Items and Context Menu\r\n
+Save\t\t\t\t: "সংরক্ষন কর",\r\n
+NewPage\t\t\t\t: "নতুন পেজ",\r\n
+Preview\t\t\t\t: "প্রিভিউ",\r\n
+Cut\t\t\t\t\t: "কাট",\r\n
+Copy\t\t\t\t: "কপি",\r\n
+Paste\t\t\t\t: "পেস্ট",\r\n
+PasteText\t\t\t: "পেস্ট (সাদা টেক্সট)",\r\n
+PasteWord\t\t\t: "পেস্ট (শব্দ)",\r\n
+Print\t\t\t\t: "প্রিন্ট",\r\n
+SelectAll\t\t\t: "সব সিলেক্ট কর",\r\n
+RemoveFormat\t\t: "ফরমেট সরাও",\r\n
+InsertLinkLbl\t\t: "লিংকের যুক্ত করার লেবেল",\r\n
+InsertLink\t\t\t: "লিংক যুক্ত কর",\r\n
+RemoveLink\t\t\t: "লিংক সরাও",\r\n
+VisitLink\t\t\t: "Open Link",\t//MISSING\r\n
+Anchor\t\t\t\t: "নোঙ্গর",\r\n
+AnchorDelete\t\t: "Remove Anchor",\t//MISSING\r\n
+InsertImageLbl\t\t: "ছবির লেবেল যুক্ত কর",\r\n
+InsertImage\t\t\t: "ছবি যুক্ত কর",\r\n
+InsertFlashLbl\t\t: "ফ্লাশ লেবেল যুক্ত কর",\r\n
+InsertFlash\t\t\t: "ফ্লাশ যুক্ত কর",\r\n
+InsertTableLbl\t\t: "টেবিলের লেবেল যুক্ত কর",\r\n
+InsertTable\t\t\t: "টেবিল যুক্ত কর",\r\n
+InsertLineLbl\t\t: "রেখা যুক্ত কর",\r\n
+InsertLine\t\t\t: "রেখা যুক্ত কর",\r\n
+InsertSpecialCharLbl: "বিশেষ অক্ষরের লেবেল যুক্ত কর",\r\n
+InsertSpecialChar\t: "বিশেষ অক্ষর যুক্ত কর",\r\n
+InsertSmileyLbl\t\t: "স্মাইলী",\r\n
+InsertSmiley\t\t: "স্মাইলী যুক্ত কর",\r\n
+About\t\t\t\t: "FCKeditor কে বানিয়েছে",\r\n
+Bold\t\t\t\t: "বোল্ড",\r\n
+Italic\t\t\t\t: "ইটালিক",\r\n
+Underline\t\t\t: "আন্ডারলাইন",\r\n
+StrikeThrough\t\t: "স্ট্রাইক থ্রু",\r\n
+Subscript\t\t\t: "অধোলেখ",\r\n
+Superscript\t\t\t: "অভিলেখ",\r\n
+LeftJustify\t\t\t: "বা দিকে ঘেঁষা",\r\n
+CenterJustify\t\t: "মাঝ বরাবর ঘেষা",\r\n
+RightJustify\t\t: "ডান দিকে ঘেঁষা",\r\n
+BlockJustify\t\t: "ব্লক জাস্টিফাই",\r\n
+DecreaseIndent\t\t: "ইনডেন্ট কমাও",\r\n
+IncreaseIndent\t\t: "ইনডেন্ট বাড়াও",\r\n
+Blockquote\t\t\t: "Blockquote",\t//MISSING\r\n
+CreateDiv\t\t\t: "Create Div Container",\t//MISSING\r\n
+EditDiv\t\t\t\t: "Edit Div Container",\t//MISSING\r\n
+DeleteDiv\t\t\t: "Remove Div Container",\t//MISSING\r\n
+Undo\t\t\t\t: "আনডু",\r\n
+Redo\t\t\t\t: "রি-ডু",\r\n
+NumberedListLbl\t\t: "সাংখ্যিক লিস্টের লেবেল",\r\n
+NumberedList\t\t: "সাংখ্যিক লিস্ট",\r\n
+BulletedListLbl\t\t: "বুলেট লিস্ট লেবেল",\r\n
+BulletedList\t\t: "বুলেটেড লিস্ট",\r\n
+ShowTableBorders\t: "টেবিল বর্ডার",\r\n
+ShowDetails\t\t\t: "সবটুকু দেখাও",\r\n
+Style\t\t\t\t: "স্টাইল",\r\n
+FontFormat\t\t\t: "ফন্ট ফরমেট",\r\n
+Font\t\t\t\t: "ফন্ট",\r\n
+FontSize\t\t\t: "সাইজ",\r\n
+TextColor\t\t\t: "টেক্স্ট রং",\r\n
+BGColor\t\t\t\t: "বেকগ্রাউন্ড রং",\r\n
+Source\t\t\t\t: "সোর্স",\r\n
+Find\t\t\t\t: "খোজো",\r\n
+Replace\t\t\t\t: "রিপ্লেস",\r\n
+SpellCheck\t\t\t: "বানান চেক",\r\n
+UniversalKeyboard\t: "সার্বজনীন কিবোর্ড",\r\n
+PageBreakLbl\t\t: "পেজ ব্রেক লেবেল",\r\n
+PageBreak\t\t\t: "পেজ ব্রেক",\r\n
+\r\n
+Form\t\t\t: "ফর্ম",\r\n
+Checkbox\t\t: "চেক বাক্স",\r\n
+RadioButton\t\t: "রেডিও বাটন",\r\n
+TextField\t\t: "টেক্সট ফীল্ড",\r\n
+Textarea\t\t: "টেক্সট এরিয়া",\r\n
+HiddenField\t\t: "গুপ্ত ফীল্ড",\r\n
+Button\t\t\t: "বাটন",\r\n
+SelectionField\t: "বাছাই ফীল্ড",\r\n
+ImageButton\t\t: "ছবির বাটন",\r\n
+\r\n
+FitWindow\t\t: "উইন্ডো ফিট কর",\r\n
+ShowBlocks\t\t: "Show Blocks",\t//MISSING\r\n
+\r\n
+// Context Menu\r\n
+EditLink\t\t\t: "লিংক সম্পাদন",\r\n
+CellCM\t\t\t\t: "সেল",\r\n
+RowCM\t\t\t\t: "রো",\r\n
+ColumnCM\t\t\t: "কলাম",\r\n
+InsertRowAfter\t\t: "Insert Row After",\t//MISSING\r\n
+InsertRowBefore\t\t: "Insert Row Before",\t//MISSING\r\n
+DeleteRows\t\t\t: "রো মুছে দাও",\r\n
+InsertColumnAfter\t: "Insert Column After",\t//MISSING\r\n
+InsertColumnBefore\t: "Insert Column Before",\t//MISSING\r\n
+DeleteColumns\t\t: "কলাম মুছে দাও",\r\n
+InsertCellAfter\t\t: "Insert Cell After",\t//MISSING\r\n
+InsertCellBefore\t: "Insert Cell Before",\t//MISSING\r\n
+DeleteCells\t\t\t: "সেল মুছে দাও",\r\n
+MergeCells\t\t\t: "সেল জোড়া দাও",\r\n
+MergeRight\t\t\t: "Merge Right",\t//MISSING\r\n
+MergeDown\t\t\t: "Merge Down",\t//MISSING\r\n
+HorizontalSplitCell\t: "Split Cell Horizontally",\t//MISSING\r\n
+VerticalSplitCell\t: "Split Cell Vertically",\t//MISSING\r\n
+TableDelete\t\t\t: "টেবিল ডিলীট কর",\r\n
+CellProperties\t\t: "সেলের প্রোপার্টিজ",\r\n
+TableProperties\t\t: "টেবিল প্রোপার্টি",\r\n
+ImageProperties\t\t: "ছবি প্রোপার্টি",\r\n
+FlashProperties\t\t: "ফ্লাশ প্রোপার্টি",\r\n
+\r\n
+AnchorProp\t\t\t: "নোঙর প্রোপার্টি",\r\n
+ButtonProp\t\t\t: "বাটন প্রোপার্টি",\r\n
+CheckboxProp\t\t: "চেক বক্স প্রোপার্টি",\r\n
+HiddenFieldProp\t\t: "গুপ্ত ফীল্ড প্রোপার্টি",\r\n
+RadioButtonProp\t\t: "রেডিও বাটন প্রোপার্টি",\r\n
+ImageButtonProp\t\t: "ছবি বাটন প্রোপার্টি",\r\n
+TextFieldProp\t\t: "টেক্সট ফীল্ড প্রোপার্টি",\r\n
+SelectionFieldProp\t: "বাছাই ফীল্ড প্রোপার্টি",\r\n
+TextareaProp\t\t: "টেক্সট এরিয়া প্রোপার্টি",\r\n
+FormProp\t\t\t: "ফর্ম প্রোপার্টি",\r\n
+\r\n
+FontFormats\t\t\t: "সাধারণ;ফর্মেটেড;ঠিকানা;শীর্ষক ১;শীর্ষক ২;শীর্ষক ৩;শীর্ষক ৪;শীর্ষক ৫;শীর্ষক ৬;শীর্ষক (DIV)",\r\n
+\r\n
+// Alerts and Messages\r\n
+ProcessingXHTML\t\t: "XHTML প্রসেস করা হচ্ছে",\r\n
+Done\t\t\t\t: "শেষ হয়েছে",\r\n
+PasteWordConfirm\t: "যে টেকস্টটি আপনি পেস্ট করতে চাচ্ছেন মনে হচ্ছে সেটি ওয়ার্ড থেকে কপি করা। আপনি কি পেস্ট করার আগে একে পরিষ্কার করতে চান?",\r\n
+NotCompatiblePaste\t: "এই কমান্ডটি শুধুমাত্র ইন্টারনেট এক্সপ্লোরার ৫.০ বা তার পরের ভার্সনে পাওয়া সম্ভব। আপনি কি পরিষ্কার না করেই পেস্ট করতে চান?",\r\n
+UnknownToolbarItem\t: "অজানা টুলবার আইটেম \\"%1\\"",\r\n
+UnknownCommand\t\t: "অজানা কমান্ড \\"%1\\"",\r\n
+NotImplemented\t\t: "কমান্ড ইমপ্লিমেন্ট করা হয়নি",\r\n
+UnknownToolbarSet\t: "টুলবার সেট \\"%1\\" এর অস্তিত্ব নেই",\r\n
+NoActiveX\t\t\t: "আপনার ব্রাউজারের সুরক্ষা সেটিংস কারনে এডিটরের কিছু ফিচার পাওয়া নাও যেতে পারে। আপনাকে অবশ্যই \\"Run ActiveX controls and plug-ins\\" এনাবেল করে নিতে হবে। আপনি ভুলভ্রান্তি কিছু কিছু ফিচারের অনুপস্থিতি উপলব্ধি করতে পারেন।",\r\n
+BrowseServerBlocked : "রিসোর্স ব্রাউজার খোলা গেল না। নিশ্চিত করুন যে সব পপআপ ব্লকার বন্ধ করা আছে।",\r\n
+DialogBlocked\t\t: "ডায়ালগ ইউন্ডো খোলা গেল না। নিশ্চিত করুন যে সব পপআপ ব্লকার বন্ধ করা আছে।",\r\n
+VisitLinkBlocked\t: "It was not possible to open a new window. Make sure all popup blockers are disabled.",\t//MISSING\r\n
+\r\n
+// Dialogs\r\n
+DlgBtnOK\t\t\t: "ওকে",\r\n
+DlgBtnCancel\t\t: "বাতিল",\r\n
+DlgBtnClose\t\t\t: "বন্ধ কর",\r\n
+DlgBtnBrowseServer\t: "ব্রাউজ সার্ভার",\r\n
+DlgAdvancedTag\t\t: "এডভান্সড",\r\n
+DlgOpOther\t\t\t: "<অন্য>",\r\n
+DlgInfoTab\t\t\t: "তথ্য",\r\n
+DlgAlertUrl\t\t\t: "দয়া করে URL যুক্ত করুন",\r\n
+\r\n
+// General Dialogs Labels\r\n
+DlgGenNotSet\t\t: "<সেট নেই>",\r\n
+DlgGenId\t\t\t: "আইডি",\r\n
+DlgGenLangDir\t\t: "ভাষা লেখার দিক",\r\n
+DlgGenLangDirLtr\t: "বাম থেকে ডান (LTR)",\r\n
+DlgGenLangDirRtl\t: "ডান থেকে বাম (RTL)",\r\n
+DlgGenLangCode\t\t: "ভাষা কোড",\r\n
+DlgGenAccessKey\t\t: "এক্সেস কী",\r\n
+DlgGenName\t\t\t: "নাম",\r\n
+DlgGenTabIndex\t\t: "ট্যাব ইন্ডেক্স",\r\n
+DlgGenLongDescr\t\t: "URL এর লম্বা বর্ণনা",\r\n
+DlgGenClass\t\t\t: "স্টাইল-শীট ক্লাস",\r\n
+DlgGenTitle\t\t\t: "পরামর্শ শীর্ষক",\r\n
+DlgGenContType\t\t: "পরামর্শ কন্টেন্টের প্রকার",\r\n
+DlgGenLinkCharset\t: "লিংক রিসোর্স ক্যারেক্টর সেট",\r\n
+DlgGenStyle\t\t\t: "স্টাইল",\r\n
+\r\n
+// Image Dialog\r\n
+DlgImgTitle\t\t\t: "ছবির প্রোপার্টি",\r\n
+DlgImgInfoTab\t\t: "ছবির তথ্য",\r\n
+DlgImgBtnUpload\t\t: "ইহাকে সার্ভারে প্রেরন কর",\r\n
+DlgImgURL\t\t\t: "URL",\r\n
+DlgImgUpload\t\t: "আপলোড",\r\n
+DlgImgAlt\t\t\t: "বিকল্প টেক্সট",\r\n
+DlgImgWidth\t\t\t: "প্রস্থ",\r\n
+DlgImgHeight\t\t: "দৈর্ঘ্য",\r\n
+DlgImgLockRatio\t\t: "অনুপাত লক কর",\r\n
+DlgBtnResetSize\t\t: "সাইজ পূর্বাবস্থায় ফিরিয়ে দাও",\r\n
+DlgImgBorder\t\t: "বর্ডার",\r\n
+DlgImgHSpace\t\t: "হরাইজন্টাল স্পেস",\r\n
+DlgImgVSpace\t\t: "ভার্টিকেল স্পেস",\r\n
+DlgImgAlign\t\t\t: "এলাইন",\r\n
+DlgImgAlignLeft\t\t: "বামে",\r\n
+DlgImgAlignAbsBottom: "Abs নীচে",\r\n
+DlgImgAlignAbsMiddle: "Abs উপর",\r\n
+DlgImgAlignBaseline\t: "মূল রেখা",\r\n
+DlgImgAlignBottom\t: "নীচে",\r\n
+DlgImgAlignMiddle\t: "মধ্য",\r\n
+DlgImgAlignRight\t: "ডানে",\r\n
+DlgImgAlignTextTop\t: "টেক্সট উপর",\r\n
+DlgImgAlignTop\t\t: "উপর",\r\n
+DlgImgPreview\t\t: "প্রীভিউ",\r\n
+DlgImgAlertUrl\t\t: "অনুগ্রহক করে ছবির URL টাইপ করুন",\r\n
+DlgImgLinkTab\t\t: "লিংক",\r\n
+\r\n
+// Flash Dialog\r\n
+DlgFlashTitle\t\t: "ফ্ল্যাশ প্রোপার্টি",\r\n
+DlgFlashChkPlay\t\t: "অটো প্লে",\r\n
+DlgFlashChkLoop\t\t: "লূপ",\r\n
+DlgFlashChkMenu\t\t: "ফ্ল্যাশ মেনু এনাবল কর",\r\n
+DlgFlashScale\t\t: "স্কেল",\r\n
+DlgFlashScaleAll\t: "সব দেখাও",\r\n
+DlgFlashScaleNoBorder\t: "কোনো বর্ডার নেই",\r\n
+DlgFlashScaleFit\t: "নিখুঁত ফিট",\r\n
+\r\n
+// Link Dialog\r\n
+DlgLnkWindowTitle\t: "লিংক",\r\n
+DlgLnkInfoTab\t\t: "লিংক তথ্য",\r\n
+DlgLnkTargetTab\t\t: "টার্গেট",\r\n
+\r\n
+DlgLnkType\t\t\t: "লিংক প্রকার",\r\n
+DlgLnkTypeURL\t\t: "URL",\r\n
+DlgLnkTypeAnchor\t: "এই পেজে নোঙর কর",\r\n
+DlgLnkTypeEMail\t\t: "ইমেইল",\r\n
+DlgLnkProto\t\t\t: "প্রোটোকল",\r\n
+DlgLnkProtoOther\t: "<অন্য>",\r\n
+DlgLnkURL\t\t\t: "URL",\r\n
+DlgLnkAnchorSel\t\t: "নোঙর বাছাই",\r\n
+DlgLnkAnchorByName\t: "নোঙরের নাম দিয়ে",\r\n
+DlgLnkAnchorById\t: "নোঙরের আইডি দিয়ে",\r\n
+DlgLnkNoAnchors\t\t: "(No anchors available in the document)",\t//MISSING\r\n
+DlgLnkEMail\t\t\t: "ইমেইল ঠিকানা",\r\n
+DlgLnkEMailSubject\t: "মেসেজের বিষয়",\r\n
+DlgLnkEMailBody\t\t: "মেসেজের দেহ",\r\n
+DlgLnkUpload\t\t: "আপলোড",\r\n
+DlgLnkBtnUpload\t\t: "একে সার্ভারে পাঠাও",\r\n
+\r\n
+DlgLnkTarget\t\t: "টার্গেট",\r\n
+DlgLnkTargetFrame\t: "<ফ্রেম>",\r\n
+DlgLnkTargetPopup\t: "<পপআপ উইন্ডো>",\r\n
+DlgLnkTargetBlank\t: "নতুন উইন্ডো (_blank)",\r\n
+DlgLnkTargetParent\t: "মূল উইন্ডো (_parent)",\r\n
+DlgLnkTargetSelf\t: "এই উইন্ডো (_self)",\r\n
+DlgLnkTargetTop\t\t: "শীর্ষ উইন্ডো (_top)",\r\n
+DlgLnkTargetFrameName\t: "টার্গেট ফ্রেমের নাম",\r\n
+DlgLnkPopWinName\t: "পপআপ উইন্ডোর নাম",\r\n
+DlgLnkPopWinFeat\t: "পপআপ উইন্ডো ফীচার সমূহ",\r\n
+DlgLnkPopResize\t\t: "রিসাইজ করা সম্ভব",\r\n
+DlgLnkPopLocation\t: "লোকেশন বার",\r\n
+DlgLnkPopMenu\t\t: "মেন্যু বার",\r\n
+DlgLnkPopScroll\t\t: "স্ক্রল বার",\r\n
+DlgLnkPopStatus\t\t: "স্ট্যাটাস বার",\r\n
+DlgLnkPopToolbar\t: "টুল বার",\r\n
+DlgLnkPopFullScrn\t: "পূর্ণ পর্দা জুড়ে (IE)",\r\n
+DlgLnkPopDependent\t: "ডিপেন্ডেন্ট (Netscape)",\r\n
+DlgLnkPopWidth\t\t: "প্রস্থ",\r\n
+DlgLnkPopHeight\t\t: "দৈর্ঘ্য",\r\n
+DlgLnkPopLeft\t\t: "বামের পজিশন",\r\n
+DlgLnkPopTop\t\t: "ডানের পজিশন",\r\n
+\r\n
+DlnLnkMsgNoUrl\t\t: "অনুগ্রহ করে URL লিংক টাইপ করুন",\r\n
+DlnLnkMsgNoEMail\t: "অনুগ্রহ করে ইমেইল এড্রেস টাইপ করুন",\r\n
+DlnLnkMsgNoAnchor\t: "অনুগ্রহ করে নোঙর বাছাই করুন",\r\n
+DlnLnkMsgInvPopName\t: "The popup name must begin with an alphabetic character and must not contain spaces",\t//MISSING\r\n
+\r\n
+// Color Dialog\r\n
+DlgColorTitle\t\t: "রং বাছাই কর",\r\n
+DlgColorBtnClear\t: "পরিষ্কার কর",\r\n
+DlgColorHighlight\t: "হাইলাইট",\r\n
+DlgColorSelected\t: "সিলেক্টেড",\r\n
+\r\n
+// Smiley Dialog\r\n
+DlgSmileyTitle\t\t: "স্মাইলী যুক্ত কর",\r\n
+\r\n
+// Special Character Dialog\r\n
+DlgSpecialCharTitle\t: "বিশেষ ক্যারেক্টার বাছাই কর",\r\n
+\r\n
+// Table Dialog\r\n
+DlgTableTitle\t\t: "টেবিল প্রোপার্টি",\r\n
+DlgTableRows\t\t: "রো",\r\n
+DlgTableColumns\t\t: "কলাম",\r\n
+DlgTableBorder\t\t: "বর্ডার সাইজ",\r\n
+DlgTableAlign\t\t: "এলাইনমেন্ট",\r\n
+DlgTableAlignNotSet\t: "<সেট নেই>",\r\n
+DlgTableAlignLeft\t: "বামে",\r\n
+DlgTableAlignCenter\t: "মাঝখানে",\r\n
+DlgTableAlignRight\t: "ডানে",\r\n
+DlgTableWidth\t\t: "প্রস্থ",\r\n
+DlgTableWidthPx\t\t: "পিক্সেল",\r\n
+DlgTableWidthPc\t\t: "শতকরা",\r\n
+DlgTableHeight\t\t: "দৈর্ঘ্য",\r\n
+DlgTableCellSpace\t: "সেল স্পেস",\r\n
+DlgTableCellPad\t\t: "সেল প্যাডিং",\r\n
+DlgTableCaption\t\t: "শীর্ষক",\r\n
+DlgTableSummary\t\t: "সারাংশ",\r\n
+DlgTableHeaders\t\t: "Headers",\t//MISSING\r\n
+DlgTableHeadersNone\t\t: "None",\t//MISSING\r\n
+DlgTableHeadersColumn\t: "First column",\t//MISSING\r\n
+DlgTableHeadersRow\t\t: "First Row",\t//MISSING\r\n
+DlgTableHeadersBoth\t\t: "Both",\t//MISSING\r\n
+\r\n
+// Table Cell Dialog\r\n
+DlgCellTitle\t\t: "সেল প্রোপার্টি",\r\n
+DlgCellWidth\t\t: "প্রস্থ",\r\n
+DlgCellWidthPx\t\t: "পিক্সেল",\r\n
+DlgCellWidthPc\t\t: "শতকরা",\r\n
+DlgCellHeight\t\t: "দৈর্ঘ্য",\r\n
+DlgCellWordWrap\t\t: "ওয়ার্ড রেপ",\r\n
+DlgCellWordWrapNotSet\t: "<সেট নেই>",\r\n
+DlgCellWordWrapYes\t: "হাঁ",\r\n
+DlgCellWordWrapNo\t: "না",\r\n
+DlgCellHorAlign\t\t: "হরাইজন্টাল এলাইনমেন্ট",\r\n
+DlgCellHorAlignNotSet\t: "<সেট নেই>",\r\n
+DlgCellHorAlignLeft\t: "বামে",\r\n
+DlgCellHorAlignCenter\t: "মাঝখানে",\r\n
+DlgCellHorAlignRight: "ডানে",\r\n
+DlgCellVerAlign\t\t: "ভার্টিক্যাল এলাইনমেন্ট",\r\n
+DlgCellVerAlignNotSet\t: "<সেট নেই>",\r\n
+DlgCellVerAlignTop\t: "উপর",\r\n
+DlgCellVerAlignMiddle\t: "মধ্য",\r\n
+DlgCellVerAlignBottom\t: "নীচে",\r\n
+DlgCellVerAlignBaseline\t: "মূলরেখা",\r\n
+DlgCellType\t\t: "Cell Type",\t//MISSING\r\n
+DlgCellTypeData\t\t: "Data",\t//MISSING\r\n
+DlgCellTypeHeader\t: "Header",\t//MISSING\r\n
+DlgCellRowSpan\t\t: "রো স্প্যান",\r\n
+DlgCellCollSpan\t\t: "কলাম স্প্যান",\r\n
+DlgCellBackColor\t: "ব্যাকগ্রাউন্ড রং",\r\n
+DlgCellBorderColor\t: "বর্ডারের রং",\r\n
+DlgCellBtnSelect\t: "বাছাই কর",\r\n
+\r\n
+// Find and Replace Dialog\r\n
+DlgFindAndReplaceTitle\t: "Find and Replace",\t//MISSING\r\n
+\r\n
+// Find Dialog\r\n
+DlgFindTitle\t\t: "খোঁজো",\r\n
+DlgFindFindBtn\t\t: "খোঁজো",\r\n
+DlgFindNotFoundMsg\t: "আপনার উল্লেখিত টেকস্ট পাওয়া যায়নি",\r\n
+\r\n
+// Replace Dialog\r\n
+DlgReplaceTitle\t\t\t: "বদলে দাও",\r\n
+DlgReplaceFindLbl\t\t: "যা খুঁজতে হবে:",\r\n
+DlgReplaceReplaceLbl\t: "যার সাথে বদলাতে হবে:",\r\n
+DlgReplaceCaseChk\t\t: "কেস মিলাও",\r\n
+DlgReplaceReplaceBtn\t: "বদলে দাও",\r\n
+DlgReplaceReplAllBtn\t: "সব বদলে দাও",\r\n
+DlgReplaceWordChk\t\t: "পুরা শব্দ মেলাও",\r\n
+\r\n
+// Paste Operations / Dialog\r\n
+PasteErrorCut\t: "আপনার ব্রাউজারের সুরক্ষা সেটিংস এডিটরকে অটোমেটিক কাট করার অনুমতি দেয়নি। দয়া করে এই কাজের জন্য কিবোর্ড ব্যবহার করুন (Ctrl+X)।",\r\n
+PasteErrorCopy\t: "আপনার ব্রাউজারের সুরক্ষা সেটিংস এডিটরকে অটোমেটিক কপি করার অনুমতি দেয়নি। দয়া করে এই কাজের জন্য কিবোর্ড ব্যবহার করুন (Ctrl+C)।",\r\n
+\r\n
+PasteAsText\t\t: "সাদা টেক্সট হিসেবে পেস্ট কর",\r\n
+PasteFromWord\t: "ওয়ার্ড থেকে পেস্ট কর",\r\n
+\r\n
+DlgPasteMsg2\t: "অনুগ্রহ করে নীচের বাক্সে কিবোর্ড ব্যবহার করে (<STRONG>Ctrl+V</STRONG>) পেস্ট করুন এবং <STRONG>OK</STRONG> চাপ দিন",\r\n
+DlgPasteSec\t\t: "Because of your browser security settings, the editor is not able to access your clipboard data directly. You are required to paste it again in this window.",\t//MISSING\r\n
+DlgPasteIgnoreFont\t\t: "ফন্ট ফেস ডেফিনেশন ইগনোর করুন",\r\n
+DlgPasteRemoveStyles\t: "স্টাইল ডেফিনেশন সরিয়ে দিন",\r\n
+\r\n
+// Color Picker\r\n
+ColorAutomatic\t: "অটোমেটিক",\r\n
+ColorMoreColors\t: "আরও রং...",\r\n
+\r\n
+// Document Properties\r\n
+DocProps\t\t: "ডক্যুমেন্ট প্রোপার্টি",\r\n
+\r\n
+// Anchor Dialog\r\n
+DlgAnchorTitle\t\t: "নোঙরের প্রোপার্টি",\r\n
+DlgAnchorName\t\t: "নোঙরের নাম",\r\n
+DlgAnchorErrorName\t: "নোঙরের নাম টাইপ করুন",\r\n
+\r\n
+// Speller Pages Dialog\r\n
+DlgSpellNotInDic\t\t: "শব্দকোষে নেই",\r\n
+DlgSpellChangeTo\t\t: "এতে বদলাও",\r\n
+DlgSpellBtnIgnore\t\t: "ইগনোর কর",\r\n
+DlgSpellBtnIgnoreAll\t: "সব ইগনোর কর",\r\n
+DlgSpellBtnReplace\t\t: "বদলে দাও",\r\n
+DlgSpellBtnReplaceAll\t: "সব বদলে দাও",\r\n
+DlgSpellBtnUndo\t\t\t: "আন্ডু",\r\n
+DlgSpellNoSuggestions\t: "- কোন সাজেশন নেই -",\r\n
+DlgSpellProgress\t\t: "বানান পরীক্ষা চলছে...",\r\n
+DlgSpellNoMispell\t\t: "বানান পরীক্ষা শেষ: কোন ভুল বানান পাওয়া যায়নি",\r\n
+DlgSpellNoChanges\t\t: "বানান পরীক্ষা শেষ: কোন শব্দ পরিবর্তন করা হয়নি",\r\n
+DlgSpellOneChange\t\t: "বানান পরীক্ষা শেষ: একটি মাত্র শব্দ পরিবর্তন করা হয়েছে",\r\n
+DlgSpellManyChanges\t\t: "বানান পরীক্ষা শেষ: %1 গুলো শব্দ বদলে গ্যাছে",\r\n
+\r\n
+IeSpellDownload\t\t\t: "বানান পরীক্ষক ইনস্টল করা নেই। আপনি কি এখনই এটা ডাউনলোড করতে চান?",\r\n
+\r\n
+// Button Dialog\r\n
+DlgButtonText\t\t: "টেক্সট (ভ্যালু)",\r\n
+DlgButtonType\t\t: "প্রকার",\r\n
+DlgButtonTypeBtn\t: "Button",\t//MISSING\r\n
+DlgButtonTypeSbm\t: "Submit",\t//MISSING\r\n
+DlgButtonTypeRst\t: "Reset",\t//MISSING\r\n
+\r\n
+// Checkbox and Radio Button Dialogs\r\n
+DlgCheckboxName\t\t: "নাম",\r\n
+DlgCheckboxValue\t: "ভ্যালু",\r\n
+DlgCheckboxSelected\t: "সিলেক্টেড",\r\n
+\r\n
+// Form Dialog\r\n
+DlgFormName\t\t: "নাম",\r\n
+DlgFormAction\t: "একশ্যন",\r\n
+DlgFormMethod\t: "পদ্ধতি",\r\n
+\r\n
+// Select Field Dialog\r\n
+DlgSelectName\t\t: "নাম",\r\n
+DlgSelectValue\t\t: "ভ্যালু",\r\n
+DlgSelectSize\t\t: "সাইজ",\r\n
+DlgSelectLines\t\t: "লাইন সমূহ",\r\n
+DlgSelectChkMulti\t: "একাধিক সিলেকশন এলাউ কর",\r\n
+DlgSelectOpAvail\t: "অন্যান্য বিকল্প",\r\n
+DlgSelectOpText\t\t: "টেক্সট",\r\n
+DlgSelectOpValue\t: "ভ্যালু",\r\n
+DlgSelectBtnAdd\t\t: "যুক্ত",\r\n
+DlgSelectBtnModify\t: "বদলে দাও",\r\n
+DlgSelectBtnUp\t\t: "উপর",\r\n
+DlgSelectBtnDown\t: "নীচে",\r\n
+DlgSelectBtnSetValue : "বাছাই করা ভ্যালু হিসেবে সেট কর",\r\n
+DlgSelectBtnDelete\t: "ডিলীট",\r\n
+\r\n
+// Textarea Dialog\r\n
+DlgTextareaName\t: "নাম",\r\n
+DlgTextareaCols\t: "কলাম",\r\n
+DlgTextareaRows\t: "রো",\r\n
+\r\n
+// Text Field Dialog\r\n
+DlgTextName\t\t\t: "নাম",\r\n
+DlgTextValue\t\t: "ভ্যালু",\r\n
+DlgTextCharWidth\t: "ক্যারেক্টার প্রশস্ততা",\r\n
+DlgTextMaxChars\t\t: "সর্বাধিক ক্যারেক্টার",\r\n
+DlgTextType\t\t\t: "টাইপ",\r\n
+DlgTextTypeText\t\t: "টেক্সট",\r\n
+DlgTextTypePass\t\t: "পাসওয়ার্ড",\r\n
+\r\n
+// Hidden Field Dialog\r\n
+DlgHiddenName\t: "নাম",\r\n
+DlgHiddenValue\t: "ভ্যালু",\r\n
+\r\n
+// Bulleted List Dialog\r\n
+BulletedListProp\t: "বুলেটেড সূচী প্রোপার্টি",\r\n
+NumberedListProp\t: "সাংখ্যিক সূচী প্রোপার্টি",\r\n
+DlgLstStart\t\t\t: "Start",\t//MISSING\r\n
+DlgLstType\t\t\t: "প্রকার",\r\n
+DlgLstTypeCircle\t: "গোল",\r\n
+DlgLstTypeDisc\t\t: "ডিস্ক",\r\n
+DlgLstTypeSquare\t: "চৌকোণা",\r\n
+DlgLstTypeNumbers\t: "সংখ্যা (1, 2, 3)",\r\n
+DlgLstTypeLCase\t\t: "ছোট অক্ষর (a, b, c)",\r\n
+DlgLstTypeUCase\t\t: "বড় অক্ষর (A, B, C)",\r\n
+DlgLstTypeSRoman\t: "ছোট রোমান সংখ্যা (i, ii, iii)",\r\n
+DlgLstTypeLRoman\t: "বড় রোমান সংখ্যা (I, II, III)",\r\n
+\r\n
+// Document Properties Dialog\r\n
+DlgDocGeneralTab\t: "সাধারন",\r\n
+DlgDocBackTab\t\t: "ব্যাকগ্রাউন্ড",\r\n
+DlgDocColorsTab\t\t: "রং এবং মার্জিন",\r\n
+DlgDocMetaTab\t\t: "মেটাডেটা",\r\n
+\r\n
+DlgDocPageTitle\t\t: "পেজ শীর্ষক",\r\n
+DlgDocLangDir\t\t: "ভাষা লিখার দিক",\r\n
+DlgDocLangDirLTR\t: "বাম থেকে ডানে (LTR)",\r\n
+DlgDocLangDirRTL\t: "ডান থেকে বামে (RTL)",\r\n
+DlgDocLangCode\t\t: "ভাষা কোড",\r\n
+DlgDocCharSet\t\t: "ক্যারেক্টার সেট এনকোডিং",\r\n
+DlgDocCharSetCE\t\t: "Central European",\t//MISSING\r\n
+DlgDocCharSetCT\t\t: "Chinese Traditional (Big5)",\t//MISSING\r\n
+DlgDocCharSetCR\t\t: "Cyrillic",\t//MISSING\r\n
+DlgDocCharSetGR\t\t: "Greek",\t//MISSING\r\n
+DlgDocCharSetJP\t\t: "Japanese",\t//MISSING\r\n
+DlgDocCharSetKR\t\t: "Korean",\t//MISSING\r\n
+DlgDocCharSetTR\t\t: "Turkish",\t//MISSING\r\n
+DlgDocCharSetUN\t\t: "Unicode (UTF-8)",\t//MISSING\r\n
+DlgDocCharSetWE\t\t: "Western European",\t//MISSING\r\n
+DlgDocCharSetOther\t: "অন্য ক্যারেক্টার সেট এনকোডিং",\r\n
+\r\n
+DlgDocDocType\t\t: "ডক্যুমেন্ট টাইপ হেডিং",\r\n
+DlgDocDocTypeOther\t: "অন্য ডক্যুমেন্ট টাইপ হেডিং",\r\n
+DlgDocIncXHTML\t\t: "XHTML ডেক্লারেশন যুক্ত কর",\r\n
+DlgDocBgColor\t\t: "ব্যাকগ্রাউন্ড রং",\r\n
+DlgDocBgImage\t\t: "ব্যাকগ্রাউন্ড ছবির URL",\r\n
+DlgDocBgNoScroll\t: "স্ক্রলহীন ব্যাকগ্রাউন্ড",\r\n
+DlgDocCText\t\t\t: "টেক্সট",\r\n
+DlgDocCLink\t\t\t: "লিংক",\r\n
+DlgDocCVisited\t\t: "ভিজিট করা লিংক",\r\n
+DlgDocCActive\t\t: "সক্রিয় লিংক",\r\n
+DlgDocMargins\t\t: "পেজ মার্জিন",\r\n
+DlgDocMaTop\t\t\t: "উপর",\r\n
+DlgDocMaLeft\t\t: "বামে",\r\n
+DlgDocMaRight\t\t: "ডানে",\r\n
+DlgDocMaBottom\t\t: "নীচে",\r\n
+DlgDocMeIndex\t\t: "ডক্যুমেন্ট ইন্ডেক্স কিওয়ার্ড (কমা দ্বারা বিচ্ছিন্ন)",\r\n
+DlgDocMeDescr\t\t: "ডক্যূমেন্ট বর্ণনা",\r\n
+DlgDocMeAuthor\t\t: "লেখক",\r\n
+DlgDocMeCopy\t\t: "কপীরাইট",\r\n
+DlgDocPreview\t\t: "প্রীভিউ",\r\n
+\r\n
+// Templates Dialog\r\n
+Templates\t\t\t: "টেমপ্লেট",\r\n
+DlgTemplatesTitle\t: "কনটেন্ট টেমপ্লেট",\r\n
+DlgTemplatesSelMsg\t: "অনুগ্রহ করে এডিটরে ওপেন করার জন্য টেমপ্লেট বাছাই করুন<br>(আসল কনটেন্ট হারিয়ে যাবে):",\r\n
+DlgTemplatesLoading\t: "টেমপ্লেট লিস্ট হারিয়ে যাবে। অনুগ্রহ করে অপেক্ষা করুন...",\r\n
+DlgTemplatesNoTpl\t: "(কোন টেমপ্লেট ডিফাইন করা নেই)",\r\n
+DlgTemplatesReplace\t: "Replace actual contents",\t//MISSING\r\n
+\r\n
+// About Dialog\r\n
+DlgAboutAboutTab\t: "কে বানিয়েছে",\r\n
+DlgAboutBrowserInfoTab\t: "ব্রাউজারের ব্যাপারে তথ্য",\r\n
+DlgAboutLicenseTab\t: "লাইসেন্স",\r\n
+DlgAboutVersion\t\t: "ভার্সন",\r\n
+DlgAboutInfo\t\t: "আরও তথ্যের জন্য যান",\r\n
+\r\n
+// Div Dialog\r\n
+DlgDivGeneralTab\t: "General",\t//MISSING\r\n
+DlgDivAdvancedTab\t: "Advanced",\t//MISSING\r\n
+DlgDivStyle\t\t: "Style",\t//MISSING\r\n
+DlgDivInlineStyle\t: "Inline Style"\t//MISSING\r\n
+};\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>28089</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

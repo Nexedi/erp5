@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45758856.19</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fckxml.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\n
+ * FCKeditor - The text editor for internet\n
+ * Copyright (C) 2003-2004 Frederico Caldeira Knabben\n
+ * \n
+ * Licensed under the terms of the GNU Lesser General Public License:\n
+ * \t\thttp://www.opensource.org/licenses/lgpl-license.php\n
+ * \n
+ * For further information visit:\n
+ * \t\thttp://www.fckeditor.net/\n
+ * \n
+ * File Name: fckxml.js\n
+ * \tDefines the FCKXml object that is used for XML data calls\n
+ * \tand XML processing.\n
+ * \tThis script is shared by almost all pages that compose the \n
+ * \tFile Browser frameset.\n
+ * \n
+ * Version:  2.0 FC\n
+ * \n
+ * File Authors:\n
+ * \t\tFrederico Caldeira Knabben (fredck@fckeditor.net)\n
+ */\n
+\n
+var FCKXml = function()\n
+{}\n
+\n
+FCKXml.prototype.GetHttpRequest = function()\n
+{\n
+\tif ( window.XMLHttpRequest )\t\t// Gecko\n
+\t\treturn new XMLHttpRequest() ;\n
+\telse if ( window.ActiveXObject )\t// IE\n
+\t\treturn new ActiveXObject("MsXml2.XmlHttp") ;\n
+}\n
+\n
+FCKXml.prototype.LoadUrl = function( urlToCall, asyncFunctionPointer )\n
+{\n
+\tvar oFCKXml = this ;\n
+\n
+\tvar bAsync = ( typeof(asyncFunctionPointer) == \'function\' ) ;\n
+\n
+\tvar oXmlHttp = this.GetHttpRequest() ;\n
+\t\t\n
+\toXmlHttp.open( "GET", urlToCall, bAsync ) ;\n
+\t\n
+\tif ( bAsync )\n
+\t{\t\n
+\t\toXmlHttp.onreadystatechange = function() \n
+\t\t{\n
+\t\t\tif ( oXmlHttp.readyState == 4 )\n
+\t\t\t{\n
+\t\t\t\toFCKXml.DOMDocument = oXmlHttp.responseXML ;\n
+\t\t\t\tif ( oXmlHttp.status == 200 )\n
+\t\t\t\t\tasyncFunctionPointer( oFCKXml ) ;\n
+\t\t\t\telse\n
+\t\t\t\t\talert( \'XML request error: \' + oXmlHttp.statusText + \' (\' + oXmlHttp.status + \')\' ) ;\n
+\t\t\t}\n
+\t\t}\n
+\t}\n
+\t\n
+\toXmlHttp.send( null ) ;\n
+\t\n
+\tif ( ! bAsync )\n
+\t{\n
+\t\tif ( oXmlHttp.status == 200 )\n
+\t\t\tthis.DOMDocument = oXmlHttp.responseXML ;\n
+\t\telse\n
+\t\t{\n
+\t\t\talert( \'XML request error: \' + oXmlHttp.statusText + \' (\' + oXmlHttp.status + \')\' ) ;\n
+\t\t}\n
+\t}\n
+}\n
+\n
+FCKXml.prototype.SelectNodes = function( xpath )\n
+{\n
+\tif ( document.all )\t\t// IE\n
+\t\treturn this.DOMDocument.selectNodes( xpath ) ;\n
+\telse\t\t\t\t\t// Gecko\n
+\t{\n
+\t\tvar aNodeArray = new Array();\n
+\n
+\t\tvar xPathResult = this.DOMDocument.evaluate( xpath, this.DOMDocument, \n
+\t\t\t\tthis.DOMDocument.createNSResolver(this.DOMDocument.documentElement), XPathResult.ORDERED_NODE_ITERATOR_TYPE, null) ;\n
+\t\tif ( xPathResult ) \n
+\t\t{\n
+\t\t\tvar oNode = xPathResult.iterateNext() ;\n
+ \t\t\twhile( oNode )\n
+ \t\t\t{\n
+ \t\t\t\taNodeArray[aNodeArray.length] = oNode ;\n
+ \t\t\t\toNode = xPathResult.iterateNext();\n
+ \t\t\t}\n
+\t\t} \n
+\t\treturn aNodeArray ;\n
+\t}\n
+}\n
+\n
+FCKXml.prototype.SelectSingleNode = function( xpath ) \n
+{\n
+\tif ( document.all )\t\t// IE\n
+\t\treturn this.DOMDocument.selectSingleNode( xpath ) ;\n
+\telse\t\t\t\t\t// Gecko\n
+\t{\n
+\t\tvar xPathResult = this.DOMDocument.evaluate( xpath, this.DOMDocument,\n
+\t\t\t\tthis.DOMDocument.createNSResolver(this.DOMDocument.documentElement), 9, null);\n
+\n
+\t\tif ( xPathResult && xPathResult.singleNodeValue )\n
+\t\t\treturn xPathResult.singleNodeValue ;\n
+\t\telse\t\n
+\t\t\treturn null ;\n
+\t}\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>2712</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

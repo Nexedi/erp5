@@ -1,0 +1,581 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749265.71</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>sl.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Slovenian language file.\r\n
+ */\r\n
+\r\n
+var FCKLang =\r\n
+{\r\n
+// Language direction : "ltr" (left to right) or "rtl" (right to left).\r\n
+Dir\t\t\t\t\t: "ltr",\r\n
+\r\n
+ToolbarCollapse\t\t: "Zloži orodno vrstico",\r\n
+ToolbarExpand\t\t: "Razširi orodno vrstico",\r\n
+\r\n
+// Toolbar Items and Context Menu\r\n
+Save\t\t\t\t: "Shrani",\r\n
+NewPage\t\t\t\t: "Nova stran",\r\n
+Preview\t\t\t\t: "Predogled",\r\n
+Cut\t\t\t\t\t: "Izreži",\r\n
+Copy\t\t\t\t: "Kopiraj",\r\n
+Paste\t\t\t\t: "Prilepi",\r\n
+PasteText\t\t\t: "Prilepi kot golo besedilo",\r\n
+PasteWord\t\t\t: "Prilepi iz Worda",\r\n
+Print\t\t\t\t: "Natisni",\r\n
+SelectAll\t\t\t: "Izberi vse",\r\n
+RemoveFormat\t\t: "Odstrani oblikovanje",\r\n
+InsertLinkLbl\t\t: "Povezava",\r\n
+InsertLink\t\t\t: "Vstavi/uredi povezavo",\r\n
+RemoveLink\t\t\t: "Odstrani povezavo",\r\n
+VisitLink\t\t\t: "Open Link",\t//MISSING\r\n
+Anchor\t\t\t\t: "Vstavi/uredi zaznamek",\r\n
+AnchorDelete\t\t: "Odstrani zaznamek",\r\n
+InsertImageLbl\t\t: "Slika",\r\n
+InsertImage\t\t\t: "Vstavi/uredi sliko",\r\n
+InsertFlashLbl\t\t: "Flash",\r\n
+InsertFlash\t\t\t: "Vstavi/Uredi Flash",\r\n
+InsertTableLbl\t\t: "Tabela",\r\n
+InsertTable\t\t\t: "Vstavi/uredi tabelo",\r\n
+InsertLineLbl\t\t: "Črta",\r\n
+InsertLine\t\t\t: "Vstavi vodoravno črto",\r\n
+InsertSpecialCharLbl: "Posebni znak",\r\n
+InsertSpecialChar\t: "Vstavi posebni znak",\r\n
+InsertSmileyLbl\t\t: "Smeško",\r\n
+InsertSmiley\t\t: "Vstavi smeška",\r\n
+About\t\t\t\t: "O FCKeditorju",\r\n
+Bold\t\t\t\t: "Krepko",\r\n
+Italic\t\t\t\t: "Ležeče",\r\n
+Underline\t\t\t: "Podčrtano",\r\n
+StrikeThrough\t\t: "Prečrtano",\r\n
+Subscript\t\t\t: "Podpisano",\r\n
+Superscript\t\t\t: "Nadpisano",\r\n
+LeftJustify\t\t\t: "Leva poravnava",\r\n
+CenterJustify\t\t: "Sredinska poravnava",\r\n
+RightJustify\t\t: "Desna poravnava",\r\n
+BlockJustify\t\t: "Obojestranska poravnava",\r\n
+DecreaseIndent\t\t: "Zmanjšaj zamik",\r\n
+IncreaseIndent\t\t: "Povečaj zamik",\r\n
+Blockquote\t\t\t: "Citat",\r\n
+CreateDiv\t\t\t: "Create Div Container",\t//MISSING\r\n
+EditDiv\t\t\t\t: "Edit Div Container",\t//MISSING\r\n
+DeleteDiv\t\t\t: "Remove Div Container",\t//MISSING\r\n
+Undo\t\t\t\t: "Razveljavi",\r\n
+Redo\t\t\t\t: "Ponovi",\r\n
+NumberedListLbl\t\t: "Oštevilčen seznam",\r\n
+NumberedList\t\t: "Vstavi/odstrani oštevilčevanje",\r\n
+BulletedListLbl\t\t: "Označen seznam",\r\n
+BulletedList\t\t: "Vstavi/odstrani označevanje",\r\n
+ShowTableBorders\t: "Pokaži meje tabele",\r\n
+ShowDetails\t\t\t: "Pokaži podrobnosti",\r\n
+Style\t\t\t\t: "Slog",\r\n
+FontFormat\t\t\t: "Oblika",\r\n
+Font\t\t\t\t: "Pisava",\r\n
+FontSize\t\t\t: "Velikost",\r\n
+TextColor\t\t\t: "Barva besedila",\r\n
+BGColor\t\t\t\t: "Barva ozadja",\r\n
+Source\t\t\t\t: "Izvorna koda",\r\n
+Find\t\t\t\t: "Najdi",\r\n
+Replace\t\t\t\t: "Zamenjaj",\r\n
+SpellCheck\t\t\t: "Preveri črkovanje",\r\n
+UniversalKeyboard\t: "Večjezična tipkovnica",\r\n
+PageBreakLbl\t\t: "Prelom strani",\r\n
+PageBreak\t\t\t: "Vstavi prelom strani",\r\n
+\r\n
+Form\t\t\t: "Obrazec",\r\n
+Checkbox\t\t: "Potrditveno polje",\r\n
+RadioButton\t\t: "Izbirno polje",\r\n
+TextField\t\t: "Vnosno polje",\r\n
+Textarea\t\t: "Vnosno območje",\r\n
+HiddenField\t\t: "Skrito polje",\r\n
+Button\t\t\t: "Gumb",\r\n
+SelectionField\t: "Spustni seznam",\r\n
+ImageButton\t\t: "Gumb s sliko",\r\n
+\r\n
+FitWindow\t\t: "Razširi velikost urejevalnika čez cel zaslon",\r\n
+ShowBlocks\t\t: "Prikaži ograde",\r\n
+\r\n
+// Context Menu\r\n
+EditLink\t\t\t: "Uredi povezavo",\r\n
+CellCM\t\t\t\t: "Celica",\r\n
+RowCM\t\t\t\t: "Vrstica",\r\n
+ColumnCM\t\t\t: "Stolpec",\r\n
+InsertRowAfter\t\t: "Vstavi vrstico za",\r\n
+InsertRowBefore\t\t: "Vstavi vrstico pred",\r\n
+DeleteRows\t\t\t: "Izbriši vrstice",\r\n
+InsertColumnAfter\t: "Vstavi stolpec za",\r\n
+InsertColumnBefore\t: "Vstavi stolpec pred",\r\n
+DeleteColumns\t\t: "Izbriši stolpce",\r\n
+InsertCellAfter\t\t: "Vstavi celico za",\r\n
+InsertCellBefore\t: "Vstavi celico pred",\r\n
+DeleteCells\t\t\t: "Izbriši celice",\r\n
+MergeCells\t\t\t: "Združi celice",\r\n
+MergeRight\t\t\t: "Združi desno",\r\n
+MergeDown\t\t\t: "Druži navzdol",\r\n
+HorizontalSplitCell\t: "Razdeli celico vodoravno",\r\n
+VerticalSplitCell\t: "Razdeli celico navpično",\r\n
+TableDelete\t\t\t: "Izbriši tabelo",\r\n
+CellProperties\t\t: "Lastnosti celice",\r\n
+TableProperties\t\t: "Lastnosti tabele",\r\n
+ImageProperties\t\t: "Lastnosti slike",\r\n
+FlashProperties\t\t: "Lastnosti Flash",\r\n
+\r\n
+AnchorProp\t\t\t: "Lastnosti zaznamka",\r\n
+ButtonProp\t\t\t: "Lastnosti gumba",\r\n
+CheckboxProp\t\t: "Lastnosti potrditvenega polja",\r\n
+HiddenFieldProp\t\t: "Lastnosti skritega polja",\r\n
+RadioButtonProp\t\t: "Lastnosti izbirnega polja",\r\n
+ImageButtonProp\t\t: "Lastnosti gumba s sliko",\r\n
+TextFieldProp\t\t: "Lastnosti vnosnega polja",\r\n
+SelectionFieldProp\t: "Lastnosti spustnega seznama",\r\n
+TextareaProp\t\t: "Lastnosti vnosnega območja",\r\n
+FormProp\t\t\t: "Lastnosti obrazca",\r\n
+\r\n
+FontFormats\t\t\t: "Navaden;Oblikovan;Napis;Naslov 1;Naslov 2;Naslov 3;Naslov 4;Naslov 5;Naslov 6",\r\n
+\r\n
+// Alerts and Messages\r\n
+ProcessingXHTML\t\t: "Obdelujem XHTML. Prosim počakajte...",\r\n
+Done\t\t\t\t: "Narejeno",\r\n
+PasteWordConfirm\t: "Izgleda, da želite prilepiti besedilo iz Worda. Ali ga želite očistiti, preden ga prilepite?",\r\n
+NotCompatiblePaste\t: "Ta ukaz deluje le v Internet Explorerje različice 5.5 ali višje. Ali želite prilepiti brez čiščenja?",\r\n
+UnknownToolbarItem\t: "Neznan element orodne vrstice \\"%1\\"",\r\n
+UnknownCommand\t\t: "Neznano ime ukaza \\"%1\\"",\r\n
+NotImplemented\t\t: "Ukaz ni izdelan",\r\n
+UnknownToolbarSet\t: "Skupina orodnih vrstic \\"%1\\" ne obstoja",\r\n
+NoActiveX\t\t\t: "Varnostne nastavitve vašega brskalnika lahko omejijo delovanje nekaterih zmožnosti urejevalnika. Če ne želite zaznavati napak in sporočil o manjkajočih zmožnostih, omogočite možnost \\"Zaženi ActiveX kontrolnike in vtičnike\\".",\r\n
+BrowseServerBlocked : "Brskalnik virov se ne more odpreti. Prepričajte se, da je preprečevanje pojavnih oken onemogočeno.",\r\n
+DialogBlocked\t\t: "Pogovorno okno se ni moglo odpreti. Prepričajte se, da je preprečevanje pojavnih oken onemogočeno.",\r\n
+VisitLinkBlocked\t: "It was not possible to open a new window. Make sure all popup blockers are disabled.",\t//MISSING\r\n
+\r\n
+// Dialogs\r\n
+DlgBtnOK\t\t\t: "V redu",\r\n
+DlgBtnCancel\t\t: "Prekliči",\r\n
+DlgBtnClose\t\t\t: "Zapri",\r\n
+DlgBtnBrowseServer\t: "Prebrskaj na strežniku",\r\n
+DlgAdvancedTag\t\t: "Napredno",\r\n
+DlgOpOther\t\t\t: "<Ostalo>",\r\n
+DlgInfoTab\t\t\t: "Podatki",\r\n
+DlgAlertUrl\t\t\t: "Prosim vpiši spletni naslov",\r\n
+\r\n
+// General Dialogs Labels\r\n
+DlgGenNotSet\t\t: "<ni postavljen>",\r\n
+DlgGenId\t\t\t: "Id",\r\n
+DlgGenLangDir\t\t: "Smer jezika",\r\n
+DlgGenLangDirLtr\t: "Od leve proti desni (LTR)",\r\n
+DlgGenLangDirRtl\t: "Od desne proti levi (RTL)",\r\n
+DlgGenLangCode\t\t: "Oznaka jezika",\r\n
+DlgGenAccessKey\t\t: "Vstopno geslo",\r\n
+DlgGenName\t\t\t: "Ime",\r\n
+DlgGenTabIndex\t\t: "Številka tabulatorja",\r\n
+DlgGenLongDescr\t\t: "Dolg opis URL-ja",\r\n
+DlgGenClass\t\t\t: "Razred stilne predloge",\r\n
+DlgGenTitle\t\t\t: "Predlagani naslov",\r\n
+DlgGenContType\t\t: "Predlagani tip vsebine (content-type)",\r\n
+DlgGenLinkCharset\t: "Kodna tabela povezanega vira",\r\n
+DlgGenStyle\t\t\t: "Slog",\r\n
+\r\n
+// Image Dialog\r\n
+DlgImgTitle\t\t\t: "Lastnosti slike",\r\n
+DlgImgInfoTab\t\t: "Podatki o sliki",\r\n
+DlgImgBtnUpload\t\t: "Pošlji na strežnik",\r\n
+DlgImgURL\t\t\t: "URL",\r\n
+DlgImgUpload\t\t: "Pošlji",\r\n
+DlgImgAlt\t\t\t: "Nadomestno besedilo",\r\n
+DlgImgWidth\t\t\t: "Širina",\r\n
+DlgImgHeight\t\t: "Višina",\r\n
+DlgImgLockRatio\t\t: "Zakleni razmerje",\r\n
+DlgBtnResetSize\t\t: "Ponastavi velikost",\r\n
+DlgImgBorder\t\t: "Obroba",\r\n
+DlgImgHSpace\t\t: "Vodoravni razmik",\r\n
+DlgImgVSpace\t\t: "Navpični razmik",\r\n
+DlgImgAlign\t\t\t: "Poravnava",\r\n
+DlgImgAlignLeft\t\t: "Levo",\r\n
+DlgImgAlignAbsBottom: "Popolnoma na dno",\r\n
+DlgImgAlignAbsMiddle: "Popolnoma v sredino",\r\n
+DlgImgAlignBaseline\t: "Na osnovno črto",\r\n
+DlgImgAlignBottom\t: "Na dno",\r\n
+DlgImgAlignMiddle\t: "V sredino",\r\n
+DlgImgAlignRight\t: "Desno",\r\n
+DlgImgAlignTextTop\t: "Besedilo na vrh",\r\n
+DlgImgAlignTop\t\t: "Na vrh",\r\n
+DlgImgPreview\t\t: "Predogled",\r\n
+DlgImgAlertUrl\t\t: "Vnesite URL slike",\r\n
+DlgImgLinkTab\t\t: "Povezava",\r\n
+\r\n
+// Flash Dialog\r\n
+DlgFlashTitle\t\t: "Lastnosti Flash",\r\n
+DlgFlashChkPlay\t\t: "Samodejno predvajaj",\r\n
+DlgFlashChkLoop\t\t: "Ponavljanje",\r\n
+DlgFlashChkMenu\t\t: "Omogoči Flash Meni",\r\n
+DlgFlashScale\t\t: "Povečava",\r\n
+DlgFlashScaleAll\t: "Pokaži vse",\r\n
+DlgFlashScaleNoBorder\t: "Brez obrobe",\r\n
+DlgFlashScaleFit\t: "Natančno prileganje",\r\n
+\r\n
+// Link Dialog\r\n
+DlgLnkWindowTitle\t: "Povezava",\r\n
+DlgLnkInfoTab\t\t: "Podatki o povezavi",\r\n
+DlgLnkTargetTab\t\t: "Cilj",\r\n
+\r\n
+DlgLnkType\t\t\t: "Vrsta povezave",\r\n
+DlgLnkTypeURL\t\t: "URL",\r\n
+DlgLnkTypeAnchor\t: "Zaznamek na tej strani",\r\n
+DlgLnkTypeEMail\t\t: "Elektronski naslov",\r\n
+DlgLnkProto\t\t\t: "Protokol",\r\n
+DlgLnkProtoOther\t: "<drugo>",\r\n
+DlgLnkURL\t\t\t: "URL",\r\n
+DlgLnkAnchorSel\t\t: "Izberi zaznamek",\r\n
+DlgLnkAnchorByName\t: "Po imenu zaznamka",\r\n
+DlgLnkAnchorById\t: "Po ID-ju elementa",\r\n
+DlgLnkNoAnchors\t\t: "(V tem dokumentu ni zaznamkov)",\r\n
+DlgLnkEMail\t\t\t: "Elektronski naslov",\r\n
+DlgLnkEMailSubject\t: "Predmet sporočila",\r\n
+DlgLnkEMailBody\t\t: "Vsebina sporočila",\r\n
+DlgLnkUpload\t\t: "Prenesi",\r\n
+DlgLnkBtnUpload\t\t: "Pošlji na strežnik",\r\n
+\r\n
+DlgLnkTarget\t\t: "Cilj",\r\n
+DlgLnkTargetFrame\t: "<okvir>",\r\n
+DlgLnkTargetPopup\t: "<pojavno okno>",\r\n
+DlgLnkTargetBlank\t: "Novo okno (_blank)",\r\n
+DlgLnkTargetParent\t: "Starševsko okno (_parent)",\r\n
+DlgLnkTargetSelf\t: "Isto okno (_self)",\r\n
+DlgLnkTargetTop\t\t: "Najvišje okno (_top)",\r\n
+DlgLnkTargetFrameName\t: "Ime ciljnega okvirja",\r\n
+DlgLnkPopWinName\t: "Ime pojavnega okna",\r\n
+DlgLnkPopWinFeat\t: "Značilnosti pojavnega okna",\r\n
+DlgLnkPopResize\t\t: "Spremenljive velikosti",\r\n
+DlgLnkPopLocation\t: "Naslovna vrstica",\r\n
+DlgLnkPopMenu\t\t: "Menijska vrstica",\r\n
+DlgLnkPopScroll\t\t: "Drsniki",\r\n
+DlgLnkPopStatus\t\t: "Vrstica stanja",\r\n
+DlgLnkPopToolbar\t: "Orodna vrstica",\r\n
+DlgLnkPopFullScrn\t: "Celozaslonska slika (IE)",\r\n
+DlgLnkPopDependent\t: "Podokno (Netscape)",\r\n
+DlgLnkPopWidth\t\t: "Širina",\r\n
+DlgLnkPopHeight\t\t: "Višina",\r\n
+DlgLnkPopLeft\t\t: "Lega levo",\r\n
+DlgLnkPopTop\t\t: "Lega na vrhu",\r\n
+\r\n
+DlnLnkMsgNoUrl\t\t: "Vnesite URL povezave",\r\n
+DlnLnkMsgNoEMail\t: "Vnesite elektronski naslov",\r\n
+DlnLnkMsgNoAnchor\t: "Izberite zaznamek",\r\n
+DlnLnkMsgInvPopName\t: "Ime pojavnega okna se mora začeti s črko ali številko in ne sme vsebovati presledkov",\r\n
+\r\n
+// Color Dialog\r\n
+DlgColorTitle\t\t: "Izberite barvo",\r\n
+DlgColorBtnClear\t: "Počisti",\r\n
+DlgColorHighlight\t: "Označi",\r\n
+DlgColorSelected\t: "Izbrano",\r\n
+\r\n
+// Smiley Dialog\r\n
+DlgSmileyTitle\t\t: "Vstavi smeška",\r\n
+\r\n
+// Special Character Dialog\r\n
+DlgSpecialCharTitle\t: "Izberi posebni znak",\r\n
+\r\n
+// Table Dialog\r\n
+DlgTableTitle\t\t: "Lastnosti tabele",\r\n
+DlgTableRows\t\t: "Vrstice",\r\n
+DlgTableColumns\t\t: "Stolpci",\r\n
+DlgTableBorder\t\t: "Velikost obrobe",\r\n
+DlgTableAlign\t\t: "Poravnava",\r\n
+DlgTableAlignNotSet\t: "<Ni nastavljeno>",\r\n
+DlgTableAlignLeft\t: "Levo",\r\n
+DlgTableAlignCenter\t: "Sredinsko",\r\n
+DlgTableAlignRight\t: "Desno",\r\n
+DlgTableWidth\t\t: "Širina",\r\n
+DlgTableWidthPx\t\t: "pik",\r\n
+DlgTableWidthPc\t\t: "procentov",\r\n
+DlgTableHeight\t\t: "Višina",\r\n
+DlgTableCellSpace\t: "Razmik med celicami",\r\n
+DlgTableCellPad\t\t: "Polnilo med celicami",\r\n
+DlgTableCaption\t\t: "Naslov",\r\n
+DlgTableSummary\t\t: "Povzetek",\r\n
+DlgTableHeaders\t\t: "Headers",\t//MISSING\r\n
+DlgTableHeadersNone\t\t: "None",\t//MISSING\r\n
+DlgTableHeadersColumn\t: "First column",\t//MISSING\r\n
+DlgTableHeadersRow\t\t: "First Row",\t//MISSING\r\n
+DlgTableHeadersBoth\t\t: "Both",\t//MISSING\r\n
+\r\n
+// Table Cell Dialog\r\n
+DlgCellTitle\t\t: "Lastnosti celice",\r\n
+DlgCellWidth\t\t: "Širina",\r\n
+DlgCellWidthPx\t\t: "pik",\r\n
+DlgCellWidthPc\t\t: "procentov",\r\n
+DlgCellHeight\t\t: "Višina",\r\n
+DlgCellWordWrap\t\t: "Pomikanje besedila",\r\n
+DlgCellWordWrapNotSet\t: "<Ni nastavljeno>",\r\n
+DlgCellWordWrapYes\t: "Da",\r\n
+DlgCellWordWrapNo\t: "Ne",\r\n
+DlgCellHorAlign\t\t: "Vodoravna poravnava",\r\n
+DlgCellHorAlignNotSet\t: "<Ni nastavljeno>",\r\n
+DlgCellHorAlignLeft\t: "Levo",\r\n
+DlgCellHorAlignCenter\t: "Sredinsko",\r\n
+DlgCellHorAlignRight: "Desno",\r\n
+DlgCellVerAlign\t\t: "Navpična poravnava",\r\n
+DlgCellVerAlignNotSet\t: "<Ni nastavljeno>",\r\n
+DlgCellVerAlignTop\t: "Na vrh",\r\n
+DlgCellVerAlignMiddle\t: "V sredino",\r\n
+DlgCellVerAlignBottom\t: "Na dno",\r\n
+DlgCellVerAlignBaseline\t: "Na osnovno črto",\r\n
+DlgCellType\t\t: "Cell Type",\t//MISSING\r\n
+DlgCellTypeData\t\t: "Data",\t//MISSING\r\n
+DlgCellTypeHeader\t: "Header",\t//MISSING\r\n
+DlgCellRowSpan\t\t: "Spojenih vrstic (row-span)",\r\n
+DlgCellCollSpan\t\t: "Spojenih stolpcev (col-span)",\r\n
+DlgCellBackColor\t: "Barva ozadja",\r\n
+DlgCellBorderColor\t: "Barva obrobe",\r\n
+DlgCellBtnSelect\t: "Izberi...",\r\n
+\r\n
+// Find and Replace Dialog\r\n
+DlgFindAndReplaceTitle\t: "Najdi in zamenjaj",\r\n
+\r\n
+// Find Dialog\r\n
+DlgFindTitle\t\t: "Najdi",\r\n
+DlgFindFindBtn\t\t: "Najdi",\r\n
+DlgFindNotFoundMsg\t: "Navedeno besedilo ni bilo najdeno.",\r\n
+\r\n
+// Replace Dialog\r\n
+DlgReplaceTitle\t\t\t: "Zamenjaj",\r\n
+DlgReplaceFindLbl\t\t: "Najdi:",\r\n
+DlgReplaceReplaceLbl\t: "Zamenjaj z:",\r\n
+DlgReplaceCaseChk\t\t: "Razlikuj velike in male črke",\r\n
+DlgReplaceReplaceBtn\t: "Zamenjaj",\r\n
+DlgReplaceReplAllBtn\t: "Zamenjaj vse",\r\n
+DlgReplaceWordChk\t\t: "Samo cele besede",\r\n
+\r\n
+// Paste Operations / Dialog\r\n
+PasteErrorCut\t: "Varnostne nastavitve brskalnika ne dopuščajo samodejnega izrezovanja. Uporabite kombinacijo tipk na tipkovnici (Ctrl+X).",\r\n
+PasteErrorCopy\t: "Varnostne nastavitve brskalnika ne dopuščajo samodejnega kopiranja. Uporabite kombinacijo tipk na tipkovnici (Ctrl+C).",\r\n
+\r\n
+PasteAsText\t\t: "Prilepi kot golo besedilo",\r\n
+PasteFromWord\t: "Prilepi iz Worda",\r\n
+\r\n
+DlgPasteMsg2\t: "Prosim prilepite v sleči okvir s pomočjo tipkovnice (<STRONG>Ctrl+V</STRONG>) in pritisnite <STRONG>V redu</STRONG>.",\r\n
+DlgPasteSec\t\t: "Zaradi varnostnih nastavitev vašega brskalnika urejevalnik ne more neposredno dostopati do odložišča. Vsebino odložišča ponovno prilepite v to okno.",\r\n
+DlgPasteIgnoreFont\t\t: "Prezri obliko pisave",\r\n
+DlgPasteRemoveStyles\t: "Odstrani nastavitve stila",\r\n
+\r\n
+// Color Picker\r\n
+ColorAutomatic\t: "Samodejno",\r\n
+ColorMoreColors\t: "Več barv...",\r\n
+\r\n
+// Document Properties\r\n
+DocProps\t\t: "Lastnosti dokumenta",\r\n
+\r\n
+// Anchor Dialog\r\n
+DlgAnchorTitle\t\t: "Lastnosti zaznamka",\r\n
+DlgAnchorName\t\t: "Ime zaznamka",\r\n
+DlgAnchorErrorName\t: "Prosim vnesite ime zaznamka",\r\n
+\r\n
+// Speller Pages Dialog\r\n
+DlgSpellNotInDic\t\t: "Ni v slovarju",\r\n
+DlgSpellChangeTo\t\t: "Spremeni v",\r\n
+DlgSpellBtnIgnore\t\t: "Prezri",\r\n
+DlgSpellBtnIgnoreAll\t: "Prezri vse",\r\n
+DlgSpellBtnReplace\t\t: "Zamenjaj",\r\n
+DlgSpellBtnReplaceAll\t: "Zamenjaj vse",\r\n
+DlgSpellBtnUndo\t\t\t: "Razveljavi",\r\n
+DlgSpellNoSuggestions\t: "- Ni predlogov -",\r\n
+DlgSpellProgress\t\t: "Preverjanje črkovanja se izvaja...",\r\n
+DlgSpellNoMispell\t\t: "Črkovanje je končano: Brez napak",\r\n
+DlgSpellNoChanges\t\t: "Črkovanje je končano: Nobena beseda ni bila spremenjena",\r\n
+DlgSpellOneChange\t\t: "Črkovanje je končano: Spremenjena je bila ena beseda",\r\n
+DlgSpellManyChanges\t\t: "Črkovanje je končano: Spremenjenih je bilo %1 besed",\r\n
+\r\n
+IeSpellDownload\t\t\t: "Črkovalnik ni nameščen. Ali ga želite prenesti sedaj?",\r\n
+\r\n
+// Button Dialog\r\n
+DlgButtonText\t\t: "Besedilo (Vrednost)",\r\n
+DlgButtonType\t\t: "Tip",\r\n
+DlgButtonTypeBtn\t: "Gumb",\r\n
+DlgButtonTypeSbm\t: "Potrdi",\r\n
+DlgButtonTypeRst\t: "Ponastavi",\r\n
+\r\n
+// Checkbox and Radio Button Dialogs\r\n
+DlgCheckboxName\t\t: "Ime",\r\n
+DlgCheckboxValue\t: "Vrednost",\r\n
+DlgCheckboxSelected\t: "Izbrano",\r\n
+\r\n
+// Form Dialog\r\n
+DlgFormName\t\t: "Ime",\r\n
+DlgFormAction\t: "Akcija",\r\n
+DlgFormMethod\t: "Metoda",\r\n
+\r\n
+// Select Field Dialog\r\n
+DlgSelectName\t\t: "Ime",\r\n
+DlgSelectValue\t\t: "Vrednost",\r\n
+DlgSelectSize\t\t: "Velikost",\r\n
+DlgSelectLines\t\t: "vrstic",\r\n
+DlgSelectChkMulti\t: "Dovoli izbor večih vrstic",\r\n
+DlgSelectOpAvail\t: "Razpoložljive izbire",\r\n
+DlgSelectOpText\t\t: "Besedilo",\r\n
+DlgSelectOpValue\t: "Vrednost",\r\n
+DlgSelectBtnAdd\t\t: "Dodaj",\r\n
+DlgSelectBtnModify\t: "Spremeni",\r\n
+DlgSelectBtnUp\t\t: "Gor",\r\n
+DlgSelectBtnDown\t: "Dol",\r\n
+DlgSelectBtnSetValue : "Postavi kot privzeto izbiro",\r\n
+DlgSelectBtnDelete\t: "Izbriši",\r\n
+\r\n
+// Textarea Dialog\r\n
+DlgTextareaName\t: "Ime",\r\n
+DlgTextareaCols\t: "Stolpcev",\r\n
+DlgTextareaRows\t: "Vrstic",\r\n
+\r\n
+// Text Field Dialog\r\n
+DlgTextName\t\t\t: "Ime",\r\n
+DlgTextValue\t\t: "Vrednost",\r\n
+DlgTextCharWidth\t: "Dolžina",\r\n
+DlgTextMaxChars\t\t: "Največje število znakov",\r\n
+DlgTextType\t\t\t: "Tip",\r\n
+DlgTextTypeText\t\t: "Besedilo",\r\n
+DlgTextTypePass\t\t: "Geslo",\r\n
+\r\n
+// Hidden Field Dialog\r\n
+DlgHiddenName\t: "Ime",\r\n
+DlgHiddenValue\t: "Vrednost",\r\n
+\r\n
+// Bulleted List Dialog\r\n
+BulletedListProp\t: "Lastnosti označenega seznama",\r\n
+NumberedListProp\t: "Lastnosti oštevilčenega seznama",\r\n
+DlgLstStart\t\t\t: "Začetek",\r\n
+DlgLstType\t\t\t: "Tip",\r\n
+DlgLstTypeCircle\t: "Pikica",\r\n
+DlgLstTypeDisc\t\t: "Kroglica",\r\n
+DlgLstTypeSquare\t: "Kvadratek",\r\n
+DlgLstTypeNumbers\t: "Številke (1, 2, 3)",\r\n
+DlgLstTypeLCase\t\t: "Male črke (a, b, c)",\r\n
+DlgLstTypeUCase\t\t: "Velike črke (A, B, C)",\r\n
+DlgLstTypeSRoman\t: "Male rimske številke (i, ii, iii)",\r\n
+DlgLstTypeLRoman\t: "Velike rimske številke (I, II, III)",\r\n
+\r\n
+// Document Properties Dialog\r\n
+DlgDocGeneralTab\t: "Splošno",\r\n
+DlgDocBackTab\t\t: "Ozadje",\r\n
+DlgDocColorsTab\t\t: "Barve in zamiki",\r\n
+DlgDocMetaTab\t\t: "Meta podatki",\r\n
+\r\n
+DlgDocPageTitle\t\t: "Naslov strani",\r\n
+DlgDocLangDir\t\t: "Smer jezika",\r\n
+DlgDocLangDirLTR\t: "Od leve proti desni (LTR)",\r\n
+DlgDocLangDirRTL\t: "Od desne proti levi (RTL)",\r\n
+DlgDocLangCode\t\t: "Oznaka jezika",\r\n
+DlgDocCharSet\t\t: "Kodna tabela",\r\n
+DlgDocCharSetCE\t\t: "Srednjeevropsko",\r\n
+DlgDocCharSetCT\t\t: "Tradicionalno Kitajsko (Big5)",\r\n
+DlgDocCharSetCR\t\t: "Cirilica",\r\n
+DlgDocCharSetGR\t\t: "Grško",\r\n
+DlgDocCharSetJP\t\t: "Japonsko",\r\n
+DlgDocCharSetKR\t\t: "Korejsko",\r\n
+DlgDocCharSetTR\t\t: "Turško",\r\n
+DlgDocCharSetUN\t\t: "Unicode (UTF-8)",\r\n
+DlgDocCharSetWE\t\t: "Zahodnoevropsko",\r\n
+DlgDocCharSetOther\t: "Druga kodna tabela",\r\n
+\r\n
+DlgDocDocType\t\t: "Glava tipa dokumenta",\r\n
+DlgDocDocTypeOther\t: "Druga glava tipa dokumenta",\r\n
+DlgDocIncXHTML\t\t: "Vstavi XHTML deklaracije",\r\n
+DlgDocBgColor\t\t: "Barva ozadja",\r\n
+DlgDocBgImage\t\t: "URL slike za ozadje",\r\n
+DlgDocBgNoScroll\t: "Nepremično ozadje",\r\n
+DlgDocCText\t\t\t: "Besedilo",\r\n
+DlgDocCLink\t\t\t: "Povezava",\r\n
+DlgDocCVisited\t\t: "Obiskana povezava",\r\n
+DlgDocCActive\t\t: "Aktivna povezava",\r\n
+DlgDocMargins\t\t: "Zamiki strani",\r\n
+DlgDocMaTop\t\t\t: "Na vrhu",\r\n
+DlgDocMaLeft\t\t: "Levo",\r\n
+DlgDocMaRight\t\t: "Desno",\r\n
+DlgDocMaBottom\t\t: "Spodaj",\r\n
+DlgDocMeIndex\t\t: "Ključne besede (ločene z vejicami)",\r\n
+DlgDocMeDescr\t\t: "Opis strani",\r\n
+DlgDocMeAuthor\t\t: "Avtor",\r\n
+DlgDocMeCopy\t\t: "Avtorske pravice",\r\n
+DlgDocPreview\t\t: "Predogled",\r\n
+\r\n
+// Templates Dialog\r\n
+Templates\t\t\t: "Predloge",\r\n
+DlgTemplatesTitle\t: "Vsebinske predloge",\r\n
+DlgTemplatesSelMsg\t: "Izberite predlogo, ki jo želite odpreti v urejevalniku<br>(trenutna vsebina bo izgubljena):",\r\n
+DlgTemplatesLoading\t: "Nalagam seznam predlog. Prosim počakajte...",\r\n
+DlgTemplatesNoTpl\t: "(Ni pripravljenih predlog)",\r\n
+DlgTemplatesReplace\t: "Zamenjaj trenutno vsebino",\r\n
+\r\n
+// About Dialog\r\n
+DlgAboutAboutTab\t: "Vizitka",\r\n
+DlgAboutBrowserInfoTab\t: "Informacije o brskalniku",\r\n
+DlgAboutLicenseTab\t: "Dovoljenja",\r\n
+DlgAboutVersion\t\t: "različica",\r\n
+DlgAboutInfo\t\t: "Za več informacij obiščite",\r\n
+\r\n
+// Div Dialog\r\n
+DlgDivGeneralTab\t: "General",\t//MISSING\r\n
+DlgDivAdvancedTab\t: "Advanced",\t//MISSING\r\n
+DlgDivStyle\t\t: "Style",\t//MISSING\r\n
+DlgDivInlineStyle\t: "Inline Style"\t//MISSING\r\n
+};\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>18879</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749295.57</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fckxml.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Defines the FCKXml object that is used for XML data calls\r\n
+ * and XML processing.\r\n
+ *\r\n
+ * This script is shared by almost all pages that compose the\r\n
+ * File Browser frameset.\r\n
+ */\r\n
+\r\n
+var FCKXml = function()\r\n
+{}\r\n
+\r\n
+FCKXml.prototype.GetHttpRequest = function()\r\n
+{\r\n
+\t// Gecko / IE7\r\n
+\ttry { return new XMLHttpRequest(); }\r\n
+\tcatch(e) {}\r\n
+\r\n
+\t// IE6\r\n
+\ttry { return new ActiveXObject( \'Msxml2.XMLHTTP\' ) ; }\r\n
+\tcatch(e) {}\r\n
+\r\n
+\t// IE5\r\n
+\ttry { return new ActiveXObject( \'Microsoft.XMLHTTP\' ) ; }\r\n
+\tcatch(e) {}\r\n
+\r\n
+\treturn null ;\r\n
+}\r\n
+\r\n
+FCKXml.prototype.LoadUrl = function( urlToCall, asyncFunctionPointer )\r\n
+{\r\n
+\tvar oFCKXml = this ;\r\n
+\r\n
+\tvar bAsync = ( typeof(asyncFunctionPointer) == \'function\' ) ;\r\n
+\r\n
+\tvar oXmlHttp = this.GetHttpRequest() ;\r\n
+\r\n
+\toXmlHttp.open( "GET", urlToCall, bAsync ) ;\r\n
+\r\n
+\tif ( bAsync )\r\n
+\t{\r\n
+\t\toXmlHttp.onreadystatechange = function()\r\n
+\t\t{\r\n
+\t\t\tif ( oXmlHttp.readyState == 4 )\r\n
+\t\t\t{\r\n
+\t\t\t\tvar oXml ;\r\n
+\t\t\t\ttry\r\n
+\t\t\t\t{\r\n
+\t\t\t\t\t// this is the same test for an FF2 bug as in fckxml_gecko.js\r\n
+\t\t\t\t\t// but we\'ve moved the responseXML assignment into the try{}\r\n
+\t\t\t\t\t// so we don\'t even have to check the return status codes.\r\n
+\t\t\t\t\tvar test = oXmlHttp.responseXML.firstChild ;\r\n
+\t\t\t\t\toXml = oXmlHttp.responseXML ;\r\n
+\t\t\t\t}\r\n
+\t\t\t\tcatch ( e )\r\n
+\t\t\t\t{\r\n
+\t\t\t\t\ttry\r\n
+\t\t\t\t\t{\r\n
+\t\t\t\t\t\toXml = (new DOMParser()).parseFromString( oXmlHttp.responseText, \'text/xml\' ) ;\r\n
+\t\t\t\t\t}\r\n
+\t\t\t\t\tcatch ( e ) {}\r\n
+\t\t\t\t}\r\n
+\r\n
+\t\t\t\tif ( !oXml || !oXml.firstChild || oXml.firstChild.nodeName == \'parsererror\' )\r\n
+\t\t\t\t{\r\n
+\t\t\t\t\talert( \'The server didn\\\'t send back a proper XML response. Please contact your system administrator.\\n\\n\' +\r\n
+\t\t\t\t\t\t\t\'XML request error: \' + oXmlHttp.statusText + \' (\' + oXmlHttp.status + \')\\n\\n\' +\r\n
+\t\t\t\t\t\t\t\'Requested URL:\\n\' + urlToCall + \'\\n\\n\' +\r\n
+\t\t\t\t\t\t\t\'Response text:\\n\' + oXmlHttp.responseText ) ;\r\n
+\t\t\t\t\treturn ;\r\n
+\t\t\t\t}\r\n
+\r\n
+\t\t\t\toFCKXml.DOMDocument = oXml ;\r\n
+\t\t\t\tasyncFunctionPointer( oFCKXml ) ;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\toXmlHttp.send( null ) ;\r\n
+\r\n
+\tif ( ! bAsync )\r\n
+\t{\r\n
+\t\tif ( oXmlHttp.status == 200 || oXmlHttp.status == 304 )\r\n
+\t\t\tthis.DOMDocument = oXmlHttp.responseXML ;\r\n
+\t\telse\r\n
+\t\t{\r\n
+\t\t\talert( \'XML request error: \' + oXmlHttp.statusText + \' (\' + oXmlHttp.status + \')\' ) ;\r\n
+\t\t}\r\n
+\t}\r\n
+}\r\n
+\r\n
+FCKXml.prototype.SelectNodes = function( xpath )\r\n
+{\r\n
+\tif ( navigator.userAgent.indexOf(\'MSIE\') >= 0 )\t\t// IE\r\n
+\t\treturn this.DOMDocument.selectNodes( xpath ) ;\r\n
+\telse\t\t\t\t\t// Gecko\r\n
+\t{\r\n
+\t\tvar aNodeArray = new Array();\r\n
+\r\n
+\t\tvar xPathResult = this.DOMDocument.evaluate( xpath, this.DOMDocument,\r\n
+\t\t\t\tthis.DOMDocument.createNSResolver(this.DOMDocument.documentElement), XPathResult.ORDERED_NODE_ITERATOR_TYPE, null) ;\r\n
+\t\tif ( xPathResult )\r\n
+\t\t{\r\n
+\t\t\tvar oNode = xPathResult.iterateNext() ;\r\n
+ \t\t\twhile( oNode )\r\n
+ \t\t\t{\r\n
+ \t\t\t\taNodeArray[aNodeArray.length] = oNode ;\r\n
+ \t\t\t\toNode = xPathResult.iterateNext();\r\n
+ \t\t\t}\r\n
+\t\t}\r\n
+\t\treturn aNodeArray ;\r\n
+\t}\r\n
+}\r\n
+\r\n
+FCKXml.prototype.SelectSingleNode = function( xpath )\r\n
+{\r\n
+\tif ( navigator.userAgent.indexOf(\'MSIE\') >= 0 )\t\t// IE\r\n
+\t\treturn this.DOMDocument.selectSingleNode( xpath ) ;\r\n
+\telse\t\t\t\t\t// Gecko\r\n
+\t{\r\n
+\t\tvar xPathResult = this.DOMDocument.evaluate( xpath, this.DOMDocument,\r\n
+\t\t\t\tthis.DOMDocument.createNSResolver(this.DOMDocument.documentElement), 9, null);\r\n
+\r\n
+\t\tif ( xPathResult && xPathResult.singleNodeValue )\r\n
+\t\t\treturn xPathResult.singleNodeValue ;\r\n
+\t\telse\r\n
+\t\t\treturn null ;\r\n
+\t}\r\n
+}\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>3925</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

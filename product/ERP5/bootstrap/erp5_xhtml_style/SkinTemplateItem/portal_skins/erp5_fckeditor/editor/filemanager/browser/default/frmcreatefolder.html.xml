@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Page used to create new folders in the current folder.\r\n
+-->\r\n
+<html>\r\n
+\t<head>\r\n
+\t\t<title>Create Folder</title>\r\n
+\t\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\r\n
+\t\t<link href="browser.css" type="text/css" rel="stylesheet">\r\n
+\t\t<script type="text/javascript" src="js/common.js"></script>\r\n
+\t\t<script type="text/javascript">\r\n
+\r\n
+function SetCurrentFolder( resourceType, folderPath )\r\n
+{\r\n
+\toConnector.ResourceType = resourceType ;\r\n
+\toConnector.CurrentFolder = folderPath ;\r\n
+}\r\n
+\r\n
+function CreateFolder()\r\n
+{\r\n
+\tvar sFolderName ;\r\n
+\r\n
+\twhile ( true )\r\n
+\t{\r\n
+\t\tsFolderName = prompt( \'Type the name of the new folder:\', \'\' ) ;\r\n
+\r\n
+\t\tif ( sFolderName == null )\r\n
+\t\t\treturn ;\r\n
+\t\telse if ( sFolderName.length == 0 )\r\n
+\t\t\talert( \'Please type the folder name\' ) ;\r\n
+\t\telse\r\n
+\t\t\tbreak ;\r\n
+\t}\r\n
+\r\n
+\toConnector.SendCommand( \'CreateFolder\', \'NewFolderName=\' + encodeURIComponent( sFolderName) , CreateFolderCallBack ) ;\r\n
+}\r\n
+\r\n
+function CreateFolderCallBack( fckXml )\r\n
+{\r\n
+\tif ( oConnector.CheckError( fckXml ) == 0 )\r\n
+\t\twindow.parent.frames[\'frmResourcesList\'].Refresh() ;\r\n
+\r\n
+\t/*\r\n
+\t// Get the current folder path.\r\n
+\tvar oNode = fckXml.SelectSingleNode( \'Connector/Error\' ) ;\r\n
+\tvar iErrorNumber = parseInt( oNode.attributes.getNamedItem(\'number\').value ) ;\r\n
+\r\n
+\tswitch ( iErrorNumber )\r\n
+\t{\r\n
+\t\tcase 0 :\r\n
+\t\t\twindow.parent.frames[\'frmResourcesList\'].Refresh() ;\r\n
+\t\t\tbreak ;\r\n
+\t\tcase 101 :\r\n
+\t\t\talert( \'Folder already exists\' ) ;\r\n
+\t\t\tbreak ;\r\n
+\t\tcase 102 :\r\n
+\t\t\talert( \'Invalid folder name\' ) ;\r\n
+\t\t\tbreak ;\r\n
+\t\tcase 103 :\r\n
+\t\t\talert( \'You have no permissions to create the folder\' ) ;\r\n
+\t\t\tbreak ;\r\n
+\t\tcase 110 :\r\n
+\t\t\talert( \'Unknown error creating folder\' ) ;\r\n
+\t\t\tbreak ;\r\n
+\t\tdefault :\r\n
+\t\t\talert( \'Error creating folder. Error number: \' + iErrorNumber ) ;\r\n
+\t\t\tbreak ;\r\n
+\t}\r\n
+\t*/\r\n
+}\r\n
+\r\n
+window.onload = function()\r\n
+{\r\n
+\twindow.top.IsLoadedCreateFolder = true ;\r\n
+}\r\n
+\t\t</script>\r\n
+\t</head>\r\n
+\t<body>\r\n
+\t\t<table class="fullHeight" cellSpacing="0" cellPadding="0" width="100%" border="0">\r\n
+\t\t\t<tr>\r\n
+\t\t\t\t<td>\r\n
+\t\t\t\t\t<button type="button" style="WIDTH: 100%" onclick="CreateFolder();">\r\n
+\t\t\t\t\t\t<table cellSpacing="0" cellPadding="0" border="0">\r\n
+\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t<td><img height="16" alt="" src="images/Folder.gif" width="16"></td>\r\n
+\t\t\t\t\t\t\t\t<td>&nbsp;</td>\r\n
+\t\t\t\t\t\t\t\t<td nowrap>Create New Folder</td>\r\n
+\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t</table>\r\n
+\t\t\t\t\t</button>\r\n
+\t\t\t\t</td>\r\n
+\t\t\t</tr>\r\n
+\t\t</table>\r\n
+\t</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>frmcreatefolder.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

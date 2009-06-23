@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749320.46</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fck_dialog_ie6.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ */\r\n
+\r\n
+(function()\r\n
+{\r\n
+\t// IE6 doens\'t handle absolute positioning properly (it is always in quirks\r\n
+\t// mode). This function fixes the sizes and positions of many elements that\r\n
+\t// compose the skin (this is skin specific).\r\n
+\tvar fixSizes = window.DoResizeFixes = function()\r\n
+\t{\r\n
+\t\tvar fckDlg = window.document.body ;\r\n
+\r\n
+\t\tfor ( var i = 0 ; i < fckDlg.childNodes.length ; i++ )\r\n
+\t\t{\r\n
+\t\t\tvar child = fckDlg.childNodes[i] ;\r\n
+\t\t\tswitch ( child.className )\r\n
+\t\t\t{\r\n
+\t\t\t\tcase \'contents\' :\r\n
+\t\t\t\t\tchild.style.width = Math.max( 0, fckDlg.offsetWidth - 16 - 16 ) ;\t// -left -right\r\n
+\t\t\t\t\tchild.style.height = Math.max( 0, fckDlg.clientHeight - 20 - 2 ) ;\t// -bottom -top\r\n
+\t\t\t\t\tbreak ;\r\n
+\r\n
+\t\t\t\tcase \'blocker\' :\r\n
+\t\t\t\tcase \'cover\' :\r\n
+\t\t\t\t\tchild.style.width = Math.max( 0, fckDlg.offsetWidth - 16 - 16 + 4 ) ;\t// -left -right + 4\r\n
+\t\t\t\t\tchild.style.height = Math.max( 0, fckDlg.clientHeight - 20 - 2 + 4 ) ;\t// -bottom -top + 4\r\n
+\t\t\t\t\tbreak ;\r\n
+\r\n
+\t\t\t\tcase \'tr\' :\r\n
+\t\t\t\t\tchild.style.left = Math.max( 0, fckDlg.clientWidth - 16 ) ;\r\n
+\t\t\t\t\tbreak ;\r\n
+\r\n
+\t\t\t\tcase \'tc\' :\r\n
+\t\t\t\t\tchild.style.width = Math.max( 0, fckDlg.clientWidth - 16 - 16 ) ;\r\n
+\t\t\t\t\tbreak ;\r\n
+\r\n
+\t\t\t\tcase \'ml\' :\r\n
+\t\t\t\t\tchild.style.height = Math.max( 0, fckDlg.clientHeight - 16 - 51 ) ;\r\n
+\t\t\t\t\tbreak ;\r\n
+\r\n
+\t\t\t\tcase \'mr\' :\r\n
+\t\t\t\t\tchild.style.left = Math.max( 0, fckDlg.clientWidth - 16 ) ;\r\n
+\t\t\t\t\tchild.style.height = Math.max( 0, fckDlg.clientHeight - 16 - 51 ) ;\r\n
+\t\t\t\t\tbreak ;\r\n
+\r\n
+\t\t\t\tcase \'bl\' :\r\n
+\t\t\t\t\tchild.style.top = Math.max( 0, fckDlg.clientHeight - 51 ) ;\r\n
+\t\t\t\t\tbreak ;\r\n
+\r\n
+\t\t\t\tcase \'br\' :\r\n
+\t\t\t\t\tchild.style.left = Math.max( 0, fckDlg.clientWidth - 30 ) ;\r\n
+\t\t\t\t\tchild.style.top = Math.max( 0, fckDlg.clientHeight - 51 ) ;\r\n
+\t\t\t\t\tbreak ;\r\n
+\r\n
+\t\t\t\tcase \'bc\' :\r\n
+\t\t\t\t\tchild.style.width = Math.max( 0, fckDlg.clientWidth - 30 - 30 ) ;\r\n
+\t\t\t\t\tchild.style.top = Math.max( 0, fckDlg.clientHeight - 51 ) ;\r\n
+\t\t\t\t\tbreak ;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\tvar closeButtonOver = function()\r\n
+\t{\r\n
+\t\tthis.style.backgroundPosition = \'-16px -687px\' ;\r\n
+\t} ;\r\n
+\r\n
+\tvar closeButtonOut = function()\r\n
+\t{\r\n
+\t\tthis.style.backgroundPosition = \'-16px -651px\' ;\r\n
+\t} ;\r\n
+\r\n
+\tvar fixCloseButton = function()\r\n
+\t{\r\n
+\t\tvar closeButton = document.getElementById ( \'closeButton\' ) ;\r\n
+\r\n
+\t\tcloseButton.onmouseover\t= closeButtonOver ;\r\n
+\t\tcloseButton.onmouseout\t= closeButtonOut ;\r\n
+\t}\r\n
+\r\n
+\tvar onLoad = function()\r\n
+\t{\r\n
+\t\tfixSizes() ;\r\n
+\t\tfixCloseButton() ;\r\n
+\r\n
+\t\twindow.attachEvent( \'onresize\', fixSizes ) ;\r\n
+\t\twindow.detachEvent( \'onload\', onLoad ) ;\r\n
+\t}\r\n
+\r\n
+\twindow.attachEvent( \'onload\', onLoad ) ;\r\n
+\r\n
+})() ;\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>3108</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

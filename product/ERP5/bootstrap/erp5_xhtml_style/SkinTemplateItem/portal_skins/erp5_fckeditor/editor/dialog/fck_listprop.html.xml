@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Bulleted List dialog window.\r\n
+-->\r\n
+<html xmlns="http://www.w3.org/1999/xhtml">\r\n
+<head>\r\n
+\t<title></title>\r\n
+\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\r\n
+\t<meta content="noindex, nofollow" name="robots" />\r\n
+\t<script src="common/fck_dialog_common.js" type="text/javascript"></script>\r\n
+\t<script type="text/javascript">\r\n
+\r\n
+var dialog\t= window.parent ;\r\n
+var oEditor = dialog.InnerDialogLoaded() ;\r\n
+\r\n
+// Gets the document DOM\r\n
+var oDOM = oEditor.FCK.EditorDocument ;\r\n
+var sListType = ( location.search == \'?OL\' ? \'OL\' : \'UL\' ) ;\r\n
+\r\n
+var oActiveEl = dialog.Selection.GetSelection().MoveToAncestorNode( sListType ) ;\r\n
+var oActiveSel ;\r\n
+\r\n
+window.onload = function()\r\n
+{\r\n
+\t// First of all, translate the dialog box texts\r\n
+\toEditor.FCKLanguageManager.TranslatePage(document) ;\r\n
+\r\n
+\tif ( sListType == \'UL\' )\r\n
+\t\toActiveSel = GetE(\'selBulleted\') ;\r\n
+\telse\r\n
+\t{\r\n
+\t\tif ( oActiveEl )\r\n
+\t\t{\r\n
+\t\t\toActiveSel = GetE(\'selNumbered\') ;\r\n
+\t\t\tGetE(\'eStart\').style.display = \'\' ;\r\n
+\t\t\tGetE(\'txtStartPosition\').value\t= GetAttribute( oActiveEl, \'start\' ) ;\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\toActiveSel.style.display = \'\' ;\r\n
+\r\n
+\tif ( oActiveEl )\r\n
+\t{\r\n
+\t\tif ( oActiveEl.getAttribute(\'type\') )\r\n
+\t\t\toActiveSel.value = oActiveEl.getAttribute(\'type\') ;\r\n
+\t}\r\n
+\r\n
+\tdialog.SetOkButton( true ) ;\r\n
+\tdialog.SetAutoSize( true ) ;\r\n
+\r\n
+\tSelectField( sListType == \'OL\' ? \'txtStartPosition\' : \'selBulleted\' ) ;\r\n
+}\r\n
+\r\n
+function Ok()\r\n
+{\r\n
+\tif ( oActiveEl ){\r\n
+\t\tSetAttribute( oActiveEl, \'type\'\t, oActiveSel.value ) ;\r\n
+\t\tif(oActiveEl.tagName == \'OL\')\r\n
+\t\t\tSetAttribute( oActiveEl, \'start\', GetE(\'txtStartPosition\').value ) ;\r\n
+\t}\r\n
+\r\n
+\treturn true ;\r\n
+}\r\n
+\r\n
+\t</script>\r\n
+</head>\r\n
+<body style="overflow: hidden">\r\n
+\t<table width="100%" style="height: 100%">\r\n
+\t\t<tr>\r\n
+\t\t\t<td style="text-align:center">\r\n
+\t\t\t\t<table cellspacing="0" cellpadding="0" border="0" style="margin-left: auto; margin-right: auto;">\r\n
+\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t<td id="eStart" style="display: none; padding-right: 5px; padding-left: 5px">\r\n
+\t\t\t\t\t\t\t<span fcklang="DlgLstStart">Start</span><br />\r\n
+\t\t\t\t\t\t\t<input type="text" id="txtStartPosition" size="5" />\r\n
+\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t<td style="padding-right: 5px; padding-left: 5px">\r\n
+\t\t\t\t\t\t\t<span fcklang="DlgLstType">List Type</span><br />\r\n
+\t\t\t\t\t\t\t<select id="selBulleted" style="display: none">\r\n
+\t\t\t\t\t\t\t\t<option value="" selected="selected"></option>\r\n
+\t\t\t\t\t\t\t\t<option value="circle" fcklang="DlgLstTypeCircle">Circle</option>\r\n
+\t\t\t\t\t\t\t\t<option value="disc" fcklang="DlgLstTypeDisc">Disc</option>\r\n
+\t\t\t\t\t\t\t\t<option value="square" fcklang="DlgLstTypeSquare">Square</option>\r\n
+\t\t\t\t\t\t\t</select>\r\n
+\t\t\t\t\t\t\t<select id="selNumbered" style="display: none">\r\n
+\t\t\t\t\t\t\t\t<option value="" selected="selected"></option>\r\n
+\t\t\t\t\t\t\t\t<option value="1" fcklang="DlgLstTypeNumbers">Numbers (1, 2, 3)</option>\r\n
+\t\t\t\t\t\t\t\t<option value="a" fcklang="DlgLstTypeLCase">Lowercase Letters (a, b, c)</option>\r\n
+\t\t\t\t\t\t\t\t<option value="A" fcklang="DlgLstTypeUCase">Uppercase Letters (A, B, C)</option>\r\n
+\t\t\t\t\t\t\t\t<option value="i" fcklang="DlgLstTypeSRoman">Small Roman Numerals (i, ii, iii)</option>\r\n
+\t\t\t\t\t\t\t\t<option value="I" fcklang="DlgLstTypeLRoman">Large Roman Numerals (I, II, III)</option>\r\n
+\t\t\t\t\t\t\t</select>\r\n
+\t\t\t\t\t\t\t&nbsp;\r\n
+\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t</tr>\r\n
+\t\t\t\t</table>\r\n
+\t\t\t</td>\r\n
+\t\t</tr>\r\n
+\t</table>\r\n
+</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>fck_listprop.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

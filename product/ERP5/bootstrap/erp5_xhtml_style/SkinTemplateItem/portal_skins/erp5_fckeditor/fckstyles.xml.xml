@@ -10,12 +10,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>http_cache</string> </value>
-        </item>
-        <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts22245888.58</string> </value>
+            <value> <string>ts45749207.79</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -23,52 +19,123 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/xml</string> </value>
+            <value> <string>application/xml</string> </value>
         </item>
         <item>
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<?xml version="1.0" encoding="utf-8" ?>\n
-<!--\n
- * FCKeditor - The text editor for internet\n
- * Copyright (C) 2003-2005 Frederico Caldeira Knabben\n
- * \n
- * Licensed under the terms of the GNU Lesser General Public License:\n
- *    http://www.opensource.org/licenses/lgpl-license.php\n
- * \n
- * For further information visit:\n
- *    http://www.fckeditor.net/\n
- * \n
- * File Name: fckstyles.xml\n
- *  This is the sample style definitions file. It makes the styles combo\n
- *  completely customizable.\n
- *  See FCKConfig.StylesXmlPath in the configuration file.\n
- * \n
- * File Authors:\n
- *    Frederico Caldeira Knabben (fredck@fckeditor.net)\n
- *\n
-      \n
--->\n
-<Styles xmlns:tal="http://xml.zope.org/namespaces/tal">\n
-      <Style name="Image on Left" element="img">\n
-        <Attribute name="class" value="img_left" />\n
-      </Style>\n
-      <Style name="Image on Right" element="img">\n
-        <Attribute name="class" value="img_right" />\n
-      </Style>\n
-      <Style name="Image on Top" element="img">\n
-        <Attribute name="class" value="img_top" />\n
-      </Style>\n
-      <Style name="Custom Ruler" element="hr">\n
-        <Attribute name="size" value="1" />\n
-        <Attribute name="color" value="#ff0000" />\n
-      </Style>\n
-        <Style name="Python code" element="div">\n
-                <Attribute name="class" value="python_code" />\n
-        </Style> \n
-</Styles>\n
-\n
+<?xml version="1.0" encoding="utf-8" ?>\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * This is the sample style definitions file. It makes the styles combo\r\n
+ * completely customizable.\r\n
+ *\r\n
+ * See FCKConfig.StylesXmlPath in the configuration file.\r\n
+-->\r\n
+<Styles>\r\n
+\r\n
+\t<!-- Block Styles -->\r\n
+\r\n
+\t<!--\r\n
+\t# These styles are already available in the "Format" combo, so they are not\r\n
+\t# needed here by default.\r\n
+\r\n
+\t<Style name="Heading 1" element="h1" />\r\n
+\t<Style name="Heading 2" element="h2" />\r\n
+\t<Style name="Heading 3" element="h3" />\r\n
+\t<Style name="Heading 4" element="h4" />\r\n
+\t<Style name="Heading 5" element="h5" />\r\n
+\t<Style name="Heading 6" element="h6" />\r\n
+\t<Style name="Paragraph" element="p" />\r\n
+\t<Style name="Document Block" element="div" />\r\n
+\t<Style name="Preformatted Text" element="pre" />\r\n
+\t<Style name="Address" element="address" />\r\n
+\t-->\r\n
+\r\n
+\t<!-- Inline Styles -->\r\n
+\r\n
+\t<!--\r\n
+\t# These are core styles available as toolbar buttons.\r\n
+\r\n
+\t<Style name="Bold" element="b">\r\n
+\t\t<Override element="strong" />\r\n
+\t</Style>\r\n
+\t<Style name="Italic" element="i">\r\n
+\t\t<Override element="em" />\r\n
+\t</Style>\r\n
+\t<Style name="Underline" element="u" />\r\n
+\t<Style name="Strikethrough" element="strike" />\r\n
+\t<Style name="Subscript" element="sub" />\r\n
+\t<Style name="Superscript" element="sup" />\r\n
+\t-->\r\n
+\r\n
+\t<Style name="Marker: Yellow" element="span">\r\n
+\t\t<Style name="background-color" value="Yellow" />\r\n
+\t</Style>\r\n
+\t<Style name="Marker: Green" element="span">\r\n
+\t\t<Style name="background-color" value="Lime" />\r\n
+\t</Style>\r\n
+\r\n
+\t<Style name="Big" element="big" />\r\n
+\t<Style name="Small" element="small" />\r\n
+\t<Style name="Typewriter" element="tt" />\r\n
+\r\n
+\t<Style name="Computer Code" element="code" />\r\n
+\t<Style name="Keyboard Phrase" element="kbd" />\r\n
+\t<Style name="Sample Text" element="samp" />\r\n
+\t<Style name="Variable" element="var" />\r\n
+\r\n
+\t<Style name="Deleted Text" element="del" />\r\n
+\t<Style name="Inserted Text" element="ins" />\r\n
+\r\n
+\t<Style name="Cited Work" element="cite" />\r\n
+\t<Style name="Inline Quotation" element="q" />\r\n
+\r\n
+\t<Style name="Language: RTL" element="span">\r\n
+\t\t<Attribute name="dir" value="rtl" />\r\n
+\t</Style>\r\n
+\t<Style name="Language: LTR" element="span">\r\n
+\t\t<Attribute name="dir" value="ltr" />\r\n
+\t</Style>\r\n
+\t<Style name="Language: RTL Strong" element="bdo">\r\n
+\t\t<Attribute name="dir" value="rtl" />\r\n
+\t</Style>\r\n
+\t<Style name="Language: LTR Strong" element="bdo">\r\n
+\t\t<Attribute name="dir" value="ltr" />\r\n
+\t</Style>\r\n
+\r\n
+\t<!-- Object Styles -->\r\n
+\r\n
+\t<Style name="Image on Left" element="img">\r\n
+\t\t<Attribute name="style" value="padding: 5px; margin-right: 5px" />\r\n
+\t\t<Attribute name="border" value="2" />\r\n
+\t\t<Attribute name="align" value="left" />\r\n
+\t</Style>\r\n
+\t<Style name="Image on Right" element="img">\r\n
+\t\t<Attribute name="style" value="padding: 5px; margin-left: 5px" />\r\n
+\t\t<Attribute name="border" value="2" />\r\n
+\t\t<Attribute name="align" value="right" />\r\n
+\t</Style>\r\n
+</Styles>\r\n
 
 
 ]]></string> </value>
@@ -79,7 +146,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>1331</long> </value>
+            <value> <long>3450</long> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * This page shows the list of available resource types.\r\n
+-->\r\n
+<html>\r\n
+\t<head>\r\n
+\t\t<title>Available types</title>\r\n
+\t\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\r\n
+\t\t<link href="browser.css" type="text/css" rel="stylesheet">\r\n
+\t\t<script type="text/javascript" src="js/common.js"></script>\r\n
+\t\t<script type="text/javascript">\r\n
+\r\n
+function SetResourceType( type )\r\n
+{\r\n
+\twindow.parent.frames["frmFolders"].SetResourceType( type ) ;\r\n
+}\r\n
+\r\n
+var aTypes = [\r\n
+\t[\'File\',\'File\'],\r\n
+\t[\'Image\',\'Image\'],\r\n
+\t[\'Flash\',\'Flash\'],\r\n
+\t[\'Media\',\'Media\']\r\n
+] ;\r\n
+\r\n
+window.onload = function()\r\n
+{\r\n
+\tvar oCombo = document.getElementById(\'cmbType\') ;\r\n
+\toCombo.innerHTML = \'\' ;\r\n
+\tfor ( var i = 0 ; i < aTypes.length ; i++ )\r\n
+\t{\r\n
+\t\tif ( oConnector.ShowAllTypes || aTypes[i][0] == oConnector.ResourceType )\r\n
+\t\t\tAddSelectOption( oCombo, aTypes[i][1], aTypes[i][0] ) ;\r\n
+\t}\r\n
+}\r\n
+\r\n
+\t\t</script>\r\n
+\t</head>\r\n
+\t<body>\r\n
+\t\t<table class="fullHeight" cellSpacing="0" cellPadding="0" width="100%" border="0">\r\n
+\t\t\t<tr>\r\n
+\t\t\t\t<td nowrap>\r\n
+\t\t\t\t\tResource Type<BR>\r\n
+\t\t\t\t\t<select id="cmbType" style="WIDTH: 100%" onchange="SetResourceType(this.value);">\r\n
+\t\t\t\t\t\t<option>&nbsp;\r\n
+\t\t\t\t\t</select>\r\n
+\t\t\t\t</td>\r\n
+\t\t\t</tr>\r\n
+\t\t</table>\r\n
+\t</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>frmresourcetype.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="Image" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749245.36</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fck_plugin.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/gif</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">R0lGODlhMAAwAOe9AAAAAAABAAACAAADAAAEAAAFAAAGAAAHAAAIAAAJAAAKAAALAAAMAAAOAAAP
+AAARAAAUAAAYAAAZAAAeAAAfAAAiAAAkAAAuAAA0AAA2AAA3AAA6AAA9AAA+AABEAABMAABOAABP
+AABQAABTAABXAABYAABZAABcAABdAABeAABfAABiAABkAABlAABmAABnAABoAABpAABqAABrAABs
+AABtAABvAABwAABxAAByAABzAAB0AAB2AAB5AAB6AAB8AAB9AAB+AAB/AACAAACBAACCAACDAACE
+AACFAACGAACIAACJAACLAACMAACNAACOAACPAACRAACSAACTAACUAACVAACWAACXAACYAACZAACb
+AACcAACdAACeAACfAACgAAChAACiAACjAACkAAClAACmAACnAACoAACqAACrAACsAACtAACuAACv
+AACwAACxAACyAACzAAC0AAC1AAC2AAC3AAC4AAC5AAC6AAC7AAC8AAC9AAC+AAC/AADAAADBAADC
+AADDAADEAADFAADGAADHAADIAADJAADKAADLAADMAADNAADOAADPAADQAADRAADSAADTAADUAADV
+AADWAADXAADYAADZAADaAADbAADcAADdAADeAADfAADgAADhAADiAADjAADkAADlAADmAADnAADo
+AADpAADqAADrAADsAADtAADuAADvAADwAADxAADyAADzAAD0AAD1AAD2AAD3AAD4AAD5AAD6AAD8
+AAD9AAD+AAD/AP//////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////yH+EUNyZWF0ZWQgd2l0aCBH
+SU1QACH5BAEKAP8ALAAAAAAwADAAAAj+AP8JHEiwoMGDCBMqXMiwocOHECNKnEixosWLGDNq3Mix
+o8eMAxCIFHmg5AACBg0kSKBAwYIFDBiIpAjABYsVKlKgOHHCxIYBBAeAkFEDxw4iTKBM6VCAJpcw
+XLJYoSJlChUrKAUCyKAH0KFGlDaJShUrDAOaWLhgmQLFSZMmLCYQADBQQAgzhBRFygTq1KsvZycC
+qIJFypMlSZCwEBCALkEDDfIgenTJU6lWXgJLBCCFyhMlRoQAGSEAIQA4hhpV4kRqlZcFNKFEYXIk
+SA8eOAYALWigQp9CjMKOUtUFtuAnUJQM8aHDxo0aGBAAIFBAQAIScfgQWjRJ01guxjf+N3mSJIeO
+GzFm5OgxxEaLF0HIsKHDZxB376nA0xz/AcCADzLQoIMPRCwRBRZemDFfffd9Z9wCACTwEABDMJEA
+ANPBkAMPPxjBhBRZgHGGG3X0sV13Y6lxgEAE8PGBAg4dAIEEBtBVAAc9/DBEEk5QoUUYaLxhhx+F
+gMXJKKuoEkEBCIzACy0OQIThQBEIUUQSTERxRRdkqBEHHl45UkknpLAyyyU3AOEKL7yYsJtECCSh
+RBNRVKGFiPPtEUgikFzyiSmt1LILm4QSgQBFDiAnhRVafNElHHeYuIgkfKHyyi2EEhrEoRNRUIUV
+WGzhKBpu0KFHIIeIeaQqseCyyyf+rBBaQmkMHcBYU/8YIMIWXHgRRhmkyoGHH9tFgsmfrdCiiwjT
+0cHLLg84thAAUUSx2wBMiDFGGWeo4YawfQySyCOrjQXLLXsIgCEFu5xxgLQKAXDHHBoUAAAJaKCR
+xhptwEEHHn0I8tUkmfxpZi5kBJbABVM2BEAfeahhgxNvVAxHHHTcoYcfg3wlySWdjJLKubwkPBCG
+8MY7CCB96IHHHXbYcYcVIEzgQAQc/BDIJZyIgoortORSsmYRAZCIIYME8ocfffRRQgD2YhjAAQpc
+EYoprMiCC5smCwYJI4ocYkghhEzRMEEYhsJKLJhyTbSUlkwCiSONLLKIEfYeBIB4I7HYoguhXW/G
+iSaXVELJJJM44kEAnAqEwAAw9P034G9POAoonnCyiSaZaKLJHm/+M4ElstwyOeU0pXJKKaOIEgoo
+oHyiRugWiLJ1pm7TtMCFKKMswADSJiDAS8QTf7Zgvfeud/LKf+T889BHL/301Fdv/fXYDxQQADs=</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>48</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>1709</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>48</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

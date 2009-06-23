@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45759063.25</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Browser.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\n
+ * FCKeditor - The text editor for internet\n
+ * Copyright (C) 2003-2004 Frederico Caldeira Knabben\n
+ * \n
+ * Licensed under the terms of the GNU Lesser General Public License:\n
+ * \t\thttp://www.opensource.org/licenses/lgpl-license.php\n
+ * \n
+ * For further information visit:\n
+ * \t\thttp://www.fckeditor.net/\n
+ * \n
+ * File Name: Browser.css\n
+ * \tCSS styles used by all pages that compose the File Browser.\n
+ * \n
+ * Version:  2.0 FC\n
+ * Modified: 2005-05-16 très tard\n
+ * \n
+ * File Authors:\n
+ * \t\tFrederico Caldeira Knabben (fredck@fckeditor.net)\n
+ */\n
+\n
+body\n
+{\n
+\tbackground-color: #f1f1e3;\n
+}\n
+\n
+form\n
+{\n
+\tmargin: 0px 0px 0px 0px ;\n
+\tpadding: 0px 0px 0px 0px ;\n
+}\n
+\n
+.Frame\n
+{\n
+\tbackground-color: #f1f1e3;\n
+\tborder-color: #f1f1e3;\n
+\tborder-right: thin inset;\n
+\tborder-top: thin inset;\n
+\tborder-left: thin inset;\n
+\tborder-bottom: thin inset;\n
+}\n
+\n
+body.FileArea\n
+{\n
+\n
+\tbackground-color: #ffffff;\n
+}\n
+\n
+body, td, input, select\n
+{\n
+\tfont-size: 11px;\n
+\tfont-family: \'Microsoft Sans Serif\' , Arial, Helvetica, Verdana;\n
+}\n
+\n
+.ActualFolder\n
+{\n
+\tfont-weight: bold;\n
+\tfont-size: 14px;\n
+}\n
+\n
+.PopupButtons\n
+{\n
+\tborder-top: #d5d59d 1px solid;\n
+\tbackground-color: #e3e3c7;\n
+\tpadding: 7px 10px 7px 10px;\n
+}\n
+\n
+.Button, button\n
+{\n
+\tborder-right: #737357 1px solid;\n
+\tborder-top: #737357 1px solid;\n
+\tborder-left: #737357 1px solid;\n
+\tcolor: #3b3b1f;\n
+\tborder-bottom: #737357 1px solid;\n
+\tbackground-color: #c7c78f;\n
+}\n
+\n
+.FolderListCurrentFolder img\n
+{\n
+\tbackground-image: url(images/FolderOpened.gif);\n
+}\n
+\n
+.FolderListFolder img\n
+{\n
+\tbackground-image: url(images/Folder.gif);\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1485</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!--\n
+ * FCKeditor - The text editor for internet\n
+ * Copyright (C) 2003-2004 Frederico Caldeira Knabben\n
+ * \n
+ * Licensed under the terms of the GNU Lesser General Public License:\n
+ * \t\thttp://www.opensource.org/licenses/lgpl-license.php\n
+ * \n
+ * For further information visit:\n
+ * \t\thttp://www.fckeditor.net/\n
+ * \n
+ * File Name: frmupload.html\n
+ * \tPage used to upload new files in the current folder.\n
+ * \n
+ * Version:  2.0 FC \n
+ * \n
+ * File Authors:\n
+ * \t\tFrederico Caldeira Knabben (fredck@fckeditor.net)\n
+-->\n
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\n
+<html>\n
+\t<head>\n
+\t\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n
+\t\t<link href="Browser.css" type="text/css" rel="stylesheet" />\n
+\t\t<script type="text/javascript" src="js/common.js"></script>\n
+\t\t<script language="javascript">\n
+\n
+function SetCurrentFolder( resourceType, folderPath )\n
+{\n
+\tvar sUrl = oConnector.ConnectorUrl +\'Command=FileUpload\' ;\n
+\tsUrl += \'&Type=\' + resourceType ;\n
+\tsUrl += \'&CurrentFolder=\' + folderPath ;\n
+\t\n
+\tdocument.getElementById(\'Command\').value = \'FileUpload\' ;\n
+\tdocument.getElementById(\'Type\').value = resourceType ;\n
+\tdocument.getElementById(\'CurrentFolder\').value = folderPath ;\n
+\tdocument.getElementById(\'frmUpload\').action = sUrl ;\n
+}\n
+\n
+function OnSubmit()\n
+{\n
+\tif ( document.getElementById(\'NewFile\').value.length == 0 )\n
+\t{\n
+\t\talert( \'Please select a file from your computer\' ) ;\n
+\t\treturn false ;\n
+\t}\n
+\n
+\t// Set the interface elements.\n
+\tdocument.getElementById(\'eUploadMessage\').innerHTML = \'Upload a new file in this folder (Upload in progress, please wait...)\' ;\n
+\tdocument.getElementById(\'btnUpload\').disabled = true ;\n
+\t\n
+\treturn true ;\n
+}\n
+\n
+function OnUploadCompleted( errorNumber, fileName )\n
+{\n
+\t// Reset the Upload Worker Frame.\n
+\twindow.parent.frames[\'frmUploadWorker\'].location = \'about:blank\' ;\n
+\t\n
+\t// Reset the upload form (On IE we must do a little trick to avout problems).\n
+\tif ( document.all )\n
+\t\tdocument.getElementById(\'NewFile\').outerHTML = \'<input id="NewFile" name="NewFile" style="WIDTH: 100%" type="file">\' ;\n
+\telse\n
+\t\tdocument.getElementById(\'frmUpload\').reset() ;\n
+\t\n
+\t// Reset the interface elements.\n
+\tdocument.getElementById(\'eUploadMessage\').innerHTML = \'Upload a new file in this folder\' ;\n
+\tdocument.getElementById(\'btnUpload\').disabled = false ;\n
+\t\n
+\tswitch ( errorNumber )\n
+\t{\n
+\t\tcase 0 :\n
+\t\t\twindow.parent.frames[\'frmResourcesList\'].Refresh() ;\n
+\t\t\tbreak ;\n
+\t\tcase 201 :\n
+\t\t\twindow.parent.frames[\'frmResourcesList\'].Refresh() ;\n
+\t\t\talert( \'A file with the same name is already available. The uploaded file has been renamed to "\' + fileName + \'"\' ) ;\n
+\t\t\tbreak ;\n
+\t\tcase 202 :\n
+\t\t\talert( \'Invalid file\' ) ;\n
+\t\t\tbreak ;\n
+\t\tcase 103 :\n
+\t\t\talert( \'File Upload Forbidden - insufficient privileges or content type not allowed in this context \' ) ;\n
+\t\t\tbreak ;\n
+\t\tcase 104 :\n
+\t\t\talert( \'File Upload Forbidden - exceeded limit size \' ) ;\n
+\t\t\tbreak ;\n
+\t\tdefault :\n
+\t\t\talert( \'Error on file upload. Error number: \' + errorNumber ) ;\n
+\t\t\tbreak ;\n
+\t}\n
+}\n
+\n
+window.onload = function()\n
+{\n
+\twindow.top.IsLoadedUpload = true ;\n
+}\n
+\t\t</script>\n
+\t</head>\n
+\t<body bottomMargin="0" topMargin="0">\n
+\t\t<form id="frmUpload" action="" target="frmUploadWorker" method="post" enctype="multipart/form-data" onsubmit="return OnSubmit();">\n
+                        <input type="hidden" id="Command" name="Command" value="" />\n
+                        <input type="hidden" id="Type" name="Type" value="" />\n
+                        <input type="hidden" id="CurrentFolder" name="CurrentFolder" value="" />\n
+\t\t\t<table height="100%" cellSpacing="0" cellPadding="0" width="100%" border="0">\n
+\t\t\t\t<tr>\n
+\t\t\t\t\t<td nowrap>\n
+\t\t\t\t\t\t<table cellSpacing="0" cellPadding="0" width="100%" border="0">\n
+\t\t\t\t\t\t\t<tr>\n
+\t\t\t\t\t\t\t\t<td width="40%"><span id="eUploadMessage">Upload a new file in this folder</span></td>\n
+\t\t\t\t\t\t\t\t<td colspan="2">Set the title</td>\n
+\t\t\t\t\t\t\t</tr>\n
+\t\t\t\t\t\t\t<tr>\n
+\t\t\t\t\t\t\t\t<td width="40%"><input id="NewFile" name="NewFile" style="WIDTH: 150px" type="file"></td>\n
+\t\t\t\t\t\t\t\t<td width="40%"><input id="Title" name="Title" style="WIDTH: 200px" type="text"></td>\n
+\t\t\t\t\t\t\t\t<td nowrap>&nbsp;<input id="btnUpload" type="submit" value="Upload"></td>\n
+\t\t\t\t\t\t\t</tr>\n
+\t\t\t\t\t\t</table>\n
+\t\t\t\t\t</td>\n
+\t\t\t\t</tr>\n
+\t\t\t</table>\n
+\t\t</form>\n
+\t</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>frmupload.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

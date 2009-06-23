@@ -1,0 +1,582 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749255.86</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>eu.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Basque language file.\r\n
+ * Euskara hizkuntza fitxategia.\r\n
+ */\r\n
+\r\n
+var FCKLang =\r\n
+{\r\n
+// Language direction : "ltr" (left to right) or "rtl" (right to left).\r\n
+Dir\t\t\t\t\t: "ltr",\r\n
+\r\n
+ToolbarCollapse\t\t: "Estutu Tresna Barra",\r\n
+ToolbarExpand\t\t: "Hedatu Tresna Barra",\r\n
+\r\n
+// Toolbar Items and Context Menu\r\n
+Save\t\t\t\t: "Gorde",\r\n
+NewPage\t\t\t\t: "Orrialde Berria",\r\n
+Preview\t\t\t\t: "Aurrebista",\r\n
+Cut\t\t\t\t\t: "Ebaki",\r\n
+Copy\t\t\t\t: "Kopiatu",\r\n
+Paste\t\t\t\t: "Itsatsi",\r\n
+PasteText\t\t\t: "Itsatsi testu bezala",\r\n
+PasteWord\t\t\t: "Itsatsi Word-etik",\r\n
+Print\t\t\t\t: "Inprimatu",\r\n
+SelectAll\t\t\t: "Hautatu dena",\r\n
+RemoveFormat\t\t: "Kendu Formatua",\r\n
+InsertLinkLbl\t\t: "Esteka",\r\n
+InsertLink\t\t\t: "Txertatu/Editatu Esteka",\r\n
+RemoveLink\t\t\t: "Kendu Esteka",\r\n
+VisitLink\t\t\t: "Ireki Esteka",\r\n
+Anchor\t\t\t\t: "Aingura",\r\n
+AnchorDelete\t\t: "Ezabatu Aingura",\r\n
+InsertImageLbl\t\t: "Irudia",\r\n
+InsertImage\t\t\t: "Txertatu/Editatu Irudia",\r\n
+InsertFlashLbl\t\t: "Flasha",\r\n
+InsertFlash\t\t\t: "Txertatu/Editatu Flasha",\r\n
+InsertTableLbl\t\t: "Taula",\r\n
+InsertTable\t\t\t: "Txertatu/Editatu Taula",\r\n
+InsertLineLbl\t\t: "Lerroa",\r\n
+InsertLine\t\t\t: "Txertatu Marra Horizontala",\r\n
+InsertSpecialCharLbl: "Karaktere Berezia",\r\n
+InsertSpecialChar\t: "Txertatu Karaktere Berezia",\r\n
+InsertSmileyLbl\t\t: "Aurpegierak",\r\n
+InsertSmiley\t\t: "Txertatu Aurpegierak",\r\n
+About\t\t\t\t: "FCKeditor-ri buruz",\r\n
+Bold\t\t\t\t: "Lodia",\r\n
+Italic\t\t\t\t: "Etzana",\r\n
+Underline\t\t\t: "Azpimarratu",\r\n
+StrikeThrough\t\t: "Marratua",\r\n
+Subscript\t\t\t: "Azpi-indize",\r\n
+Superscript\t\t\t: "Goi-indize",\r\n
+LeftJustify\t\t\t: "Lerrokatu Ezkerrean",\r\n
+CenterJustify\t\t: "Lerrokatu Erdian",\r\n
+RightJustify\t\t: "Lerrokatu Eskuman",\r\n
+BlockJustify\t\t: "Justifikatu",\r\n
+DecreaseIndent\t\t: "Txikitu Koska",\r\n
+IncreaseIndent\t\t: "Handitu Koska",\r\n
+Blockquote\t\t\t: "Aipamen blokea",\r\n
+CreateDiv\t\t\t: "Sortu Div Edukitzailea",\r\n
+EditDiv\t\t\t\t: "Editatu Div Edukitzailea",\r\n
+DeleteDiv\t\t\t: "Ezabatu Div Edukitzailea",\r\n
+Undo\t\t\t\t: "Desegin",\r\n
+Redo\t\t\t\t: "Berregin",\r\n
+NumberedListLbl\t\t: "Zenbakidun Zerrenda",\r\n
+NumberedList\t\t: "Txertatu/Kendu Zenbakidun zerrenda",\r\n
+BulletedListLbl\t\t: "Buletdun Zerrenda",\r\n
+BulletedList\t\t: "Txertatu/Kendu Buletdun zerrenda",\r\n
+ShowTableBorders\t: "Erakutsi Taularen Ertzak",\r\n
+ShowDetails\t\t\t: "Erakutsi Xehetasunak",\r\n
+Style\t\t\t\t: "Estiloa",\r\n
+FontFormat\t\t\t: "Formatua",\r\n
+Font\t\t\t\t: "Letra-tipoa",\r\n
+FontSize\t\t\t: "Tamaina",\r\n
+TextColor\t\t\t: "Testu Kolorea",\r\n
+BGColor\t\t\t\t: "Atzeko kolorea",\r\n
+Source\t\t\t\t: "HTML Iturburua",\r\n
+Find\t\t\t\t: "Bilatu",\r\n
+Replace\t\t\t\t: "Ordezkatu",\r\n
+SpellCheck\t\t\t: "Ortografia",\r\n
+UniversalKeyboard\t: "Teklatu Unibertsala",\r\n
+PageBreakLbl\t\t: "Orrialde-jauzia",\r\n
+PageBreak\t\t\t: "Txertatu Orrialde-jauzia",\r\n
+\r\n
+Form\t\t\t: "Formularioa",\r\n
+Checkbox\t\t: "Kontrol-laukia",\r\n
+RadioButton\t\t: "Aukera-botoia",\r\n
+TextField\t\t: "Testu Eremua",\r\n
+Textarea\t\t: "Testu-area",\r\n
+HiddenField\t\t: "Ezkutuko Eremua",\r\n
+Button\t\t\t: "Botoia",\r\n
+SelectionField\t: "Hautespen Eremua",\r\n
+ImageButton\t\t: "Irudi Botoia",\r\n
+\r\n
+FitWindow\t\t: "Maximizatu editorearen tamaina",\r\n
+ShowBlocks\t\t: "Blokeak erakutsi",\r\n
+\r\n
+// Context Menu\r\n
+EditLink\t\t\t: "Aldatu Esteka",\r\n
+CellCM\t\t\t\t: "Gelaxka",\r\n
+RowCM\t\t\t\t: "Errenkada",\r\n
+ColumnCM\t\t\t: "Zutabea",\r\n
+InsertRowAfter\t\t: "Txertatu Lerroa Ostean",\r\n
+InsertRowBefore\t\t: "Txertatu Lerroa Aurretik",\r\n
+DeleteRows\t\t\t: "Ezabatu Errenkadak",\r\n
+InsertColumnAfter\t: "Txertatu Zutabea Ostean",\r\n
+InsertColumnBefore\t: "Txertatu Zutabea Aurretik",\r\n
+DeleteColumns\t\t: "Ezabatu Zutabeak",\r\n
+InsertCellAfter\t\t: "Txertatu Gelaxka Ostean",\r\n
+InsertCellBefore\t: "Txertatu Gelaxka Aurretik",\r\n
+DeleteCells\t\t\t: "Kendu Gelaxkak",\r\n
+MergeCells\t\t\t: "Batu Gelaxkak",\r\n
+MergeRight\t\t\t: "Elkartu Eskumara",\r\n
+MergeDown\t\t\t: "Elkartu Behera",\r\n
+HorizontalSplitCell\t: "Banatu Gelaxkak Horizontalki",\r\n
+VerticalSplitCell\t: "Banatu Gelaxkak Bertikalki",\r\n
+TableDelete\t\t\t: "Ezabatu Taula",\r\n
+CellProperties\t\t: "Gelaxkaren Ezaugarriak",\r\n
+TableProperties\t\t: "Taularen Ezaugarriak",\r\n
+ImageProperties\t\t: "Irudiaren Ezaugarriak",\r\n
+FlashProperties\t\t: "Flasharen Ezaugarriak",\r\n
+\r\n
+AnchorProp\t\t\t: "Ainguraren Ezaugarriak",\r\n
+ButtonProp\t\t\t: "Botoiaren Ezaugarriak",\r\n
+CheckboxProp\t\t: "Kontrol-laukiko Ezaugarriak",\r\n
+HiddenFieldProp\t\t: "Ezkutuko Eremuaren Ezaugarriak",\r\n
+RadioButtonProp\t\t: "Aukera-botoiaren Ezaugarriak",\r\n
+ImageButtonProp\t\t: "Irudi Botoiaren Ezaugarriak",\r\n
+TextFieldProp\t\t: "Testu Eremuaren Ezaugarriak",\r\n
+SelectionFieldProp\t: "Hautespen Eremuaren Ezaugarriak",\r\n
+TextareaProp\t\t: "Testu-arearen Ezaugarriak",\r\n
+FormProp\t\t\t: "Formularioaren Ezaugarriak",\r\n
+\r\n
+FontFormats\t\t\t: "Arrunta;Formateatua;Helbidea;Izenburua 1;Izenburua 2;Izenburua 3;Izenburua 4;Izenburua 5;Izenburua 6;Paragrafoa (DIV)",\r\n
+\r\n
+// Alerts and Messages\r\n
+ProcessingXHTML\t\t: "XHTML Prozesatzen. Itxaron mesedez...",\r\n
+Done\t\t\t\t: "Eginda",\r\n
+PasteWordConfirm\t: "Itsatsi nahi duzun testua Wordetik hartua dela dirudi. Itsatsi baino lehen garbitu nahi duzu?",\r\n
+NotCompatiblePaste\t: "Komando hau Internet Explorer 5.5 bertsiorako edo ondorengoentzako erabilgarria dago. Garbitu gabe itsatsi nahi duzu?",\r\n
+UnknownToolbarItem\t: "Ataza barrako elementu ezezaguna \\"%1\\"",\r\n
+UnknownCommand\t\t: "Komando izen ezezaguna \\"%1\\"",\r\n
+NotImplemented\t\t: "Komando ez inplementatua",\r\n
+UnknownToolbarSet\t: "Ataza barra \\"%1\\" taldea ez da existitzen",\r\n
+NoActiveX\t\t\t: "Zure nabigatzailearen segurtasun hobespenak editore honen zenbait ezaugarri mugatu ditzake. \\"ActiveX kontrolak eta pluginak\\" aktibatu beharko zenituzke, bestela erroreak eta ezaugarrietan mugak egon daitezke.",\r\n
+BrowseServerBlocked : "Baliabideen arakatzailea ezin da ireki. Ziurtatu popup blokeatzaileak desgaituta dituzula.",\r\n
+DialogBlocked\t\t: "Ezin da elkarrizketa-leihoa ireki. Ziurtatu popup blokeatzaileak desgaituta dituzula.",\r\n
+VisitLinkBlocked\t: "Ezin da leiho berri bat ireki. Ziurtatu popup blokeatzaileak desgaituta dituzula.",\r\n
+\r\n
+// Dialogs\r\n
+DlgBtnOK\t\t\t: "Ados",\r\n
+DlgBtnCancel\t\t: "Utzi",\r\n
+DlgBtnClose\t\t\t: "Itxi",\r\n
+DlgBtnBrowseServer\t: "Zerbitzaria arakatu",\r\n
+DlgAdvancedTag\t\t: "Aurreratua",\r\n
+DlgOpOther\t\t\t: "<Bestelakoak>",\r\n
+DlgInfoTab\t\t\t: "Informazioa",\r\n
+DlgAlertUrl\t\t\t: "Mesedez URLa idatzi ezazu",\r\n
+\r\n
+// General Dialogs Labels\r\n
+DlgGenNotSet\t\t: "<Ezarri gabe>",\r\n
+DlgGenId\t\t\t: "Id",\r\n
+DlgGenLangDir\t\t: "Hizkuntzaren Norabidea",\r\n
+DlgGenLangDirLtr\t: "Ezkerretik Eskumara(LTR)",\r\n
+DlgGenLangDirRtl\t: "Eskumatik Ezkerrera (RTL)",\r\n
+DlgGenLangCode\t\t: "Hizkuntza Kodea",\r\n
+DlgGenAccessKey\t\t: "Sarbide-gakoa",\r\n
+DlgGenName\t\t\t: "Izena",\r\n
+DlgGenTabIndex\t\t: "Tabulazio Indizea",\r\n
+DlgGenLongDescr\t\t: "URL Deskribapen Luzea",\r\n
+DlgGenClass\t\t\t: "Estilo-orriko Klaseak",\r\n
+DlgGenTitle\t\t\t: "Izenburua",\r\n
+DlgGenContType\t\t: "Eduki Mota (Content Type)",\r\n
+DlgGenLinkCharset\t: "Estekatutako Karaktere Multzoa",\r\n
+DlgGenStyle\t\t\t: "Estiloa",\r\n
+\r\n
+// Image Dialog\r\n
+DlgImgTitle\t\t\t: "Irudi Ezaugarriak",\r\n
+DlgImgInfoTab\t\t: "Irudi informazioa",\r\n
+DlgImgBtnUpload\t\t: "Zerbitzarira bidalia",\r\n
+DlgImgURL\t\t\t: "URL",\r\n
+DlgImgUpload\t\t: "Gora Kargatu",\r\n
+DlgImgAlt\t\t\t: "Ordezko Testua",\r\n
+DlgImgWidth\t\t\t: "Zabalera",\r\n
+DlgImgHeight\t\t: "Altuera",\r\n
+DlgImgLockRatio\t\t: "Erlazioa Blokeatu",\r\n
+DlgBtnResetSize\t\t: "Tamaina Berrezarri",\r\n
+DlgImgBorder\t\t: "Ertza",\r\n
+DlgImgHSpace\t\t: "HSpace",\r\n
+DlgImgVSpace\t\t: "VSpace",\r\n
+DlgImgAlign\t\t\t: "Lerrokatu",\r\n
+DlgImgAlignLeft\t\t: "Ezkerrera",\r\n
+DlgImgAlignAbsBottom: "Abs Behean",\r\n
+DlgImgAlignAbsMiddle: "Abs Erdian",\r\n
+DlgImgAlignBaseline\t: "Oinan",\r\n
+DlgImgAlignBottom\t: "Behean",\r\n
+DlgImgAlignMiddle\t: "Erdian",\r\n
+DlgImgAlignRight\t: "Eskuman",\r\n
+DlgImgAlignTextTop\t: "Testua Goian",\r\n
+DlgImgAlignTop\t\t: "Goian",\r\n
+DlgImgPreview\t\t: "Aurrebista",\r\n
+DlgImgAlertUrl\t\t: "Mesedez Irudiaren URLa idatzi",\r\n
+DlgImgLinkTab\t\t: "Esteka",\r\n
+\r\n
+// Flash Dialog\r\n
+DlgFlashTitle\t\t: "Flasharen Ezaugarriak",\r\n
+DlgFlashChkPlay\t\t: "Automatikoki Erreproduzitu",\r\n
+DlgFlashChkLoop\t\t: "Begizta",\r\n
+DlgFlashChkMenu\t\t: "Flasharen Menua Gaitu",\r\n
+DlgFlashScale\t\t: "Eskalatu",\r\n
+DlgFlashScaleAll\t: "Dena erakutsi",\r\n
+DlgFlashScaleNoBorder\t: "Ertzik gabe",\r\n
+DlgFlashScaleFit\t: "Doitu",\r\n
+\r\n
+// Link Dialog\r\n
+DlgLnkWindowTitle\t: "Esteka",\r\n
+DlgLnkInfoTab\t\t: "Estekaren Informazioa",\r\n
+DlgLnkTargetTab\t\t: "Helburua",\r\n
+\r\n
+DlgLnkType\t\t\t: "Esteka Mota",\r\n
+DlgLnkTypeURL\t\t: "URL",\r\n
+DlgLnkTypeAnchor\t: "Aingura orrialde honetan",\r\n
+DlgLnkTypeEMail\t\t: "ePosta",\r\n
+DlgLnkProto\t\t\t: "Protokoloa",\r\n
+DlgLnkProtoOther\t: "<Beste batzuk>",\r\n
+DlgLnkURL\t\t\t: "URL",\r\n
+DlgLnkAnchorSel\t\t: "Aingura bat hautatu",\r\n
+DlgLnkAnchorByName\t: "Aingura izenagatik",\r\n
+DlgLnkAnchorById\t: "Elementuaren ID-gatik",\r\n
+DlgLnkNoAnchors\t\t: "(Ez daude aingurak eskuragarri dokumentuan)",\r\n
+DlgLnkEMail\t\t\t: "ePosta Helbidea",\r\n
+DlgLnkEMailSubject\t: "Mezuaren Gaia",\r\n
+DlgLnkEMailBody\t\t: "Mezuaren Gorputza",\r\n
+DlgLnkUpload\t\t: "Gora kargatu",\r\n
+DlgLnkBtnUpload\t\t: "Zerbitzarira bidali",\r\n
+\r\n
+DlgLnkTarget\t\t: "Target (Helburua)",\r\n
+DlgLnkTargetFrame\t: "<marko>",\r\n
+DlgLnkTargetPopup\t: "<popup leihoa>",\r\n
+DlgLnkTargetBlank\t: "Leiho Berria (_blank)",\r\n
+DlgLnkTargetParent\t: "Leiho Gurasoa (_parent)",\r\n
+DlgLnkTargetSelf\t: "Leiho Berdina (_self)",\r\n
+DlgLnkTargetTop\t\t: "Goiko Leihoa (_top)",\r\n
+DlgLnkTargetFrameName\t: "Marko Helburuaren Izena",\r\n
+DlgLnkPopWinName\t: "Popup Leihoaren Izena",\r\n
+DlgLnkPopWinFeat\t: "Popup Leihoaren Ezaugarriak",\r\n
+DlgLnkPopResize\t\t: "Tamaina Aldakorra",\r\n
+DlgLnkPopLocation\t: "Kokaleku Barra",\r\n
+DlgLnkPopMenu\t\t: "Menu Barra",\r\n
+DlgLnkPopScroll\t\t: "Korritze Barrak",\r\n
+DlgLnkPopStatus\t\t: "Egoera Barra",\r\n
+DlgLnkPopToolbar\t: "Tresna Barra",\r\n
+DlgLnkPopFullScrn\t: "Pantaila Osoa (IE)",\r\n
+DlgLnkPopDependent\t: "Menpekoa (Netscape)",\r\n
+DlgLnkPopWidth\t\t: "Zabalera",\r\n
+DlgLnkPopHeight\t\t: "Altuera",\r\n
+DlgLnkPopLeft\t\t: "Ezkerreko  Posizioa",\r\n
+DlgLnkPopTop\t\t: "Goiko Posizioa",\r\n
+\r\n
+DlnLnkMsgNoUrl\t\t: "Mesedez URL esteka idatzi",\r\n
+DlnLnkMsgNoEMail\t: "Mesedez ePosta helbidea idatzi",\r\n
+DlnLnkMsgNoAnchor\t: "Mesedez aingura bat aukeratu",\r\n
+DlnLnkMsgInvPopName\t: "Popup leihoaren izenak karaktere alfabetiko batekin hasi behar du eta eta ezin du zuriunerik izan",\r\n
+\r\n
+// Color Dialog\r\n
+DlgColorTitle\t\t: "Kolore Aukeraketa",\r\n
+DlgColorBtnClear\t: "Garbitu",\r\n
+DlgColorHighlight\t: "Nabarmendu",\r\n
+DlgColorSelected\t: "Aukeratuta",\r\n
+\r\n
+// Smiley Dialog\r\n
+DlgSmileyTitle\t\t: "Aurpegiera Sartu",\r\n
+\r\n
+// Special Character Dialog\r\n
+DlgSpecialCharTitle\t: "Karaktere Berezia Aukeratu",\r\n
+\r\n
+// Table Dialog\r\n
+DlgTableTitle\t\t: "Taularen Ezaugarriak",\r\n
+DlgTableRows\t\t: "Lerroak",\r\n
+DlgTableColumns\t\t: "Zutabeak",\r\n
+DlgTableBorder\t\t: "Ertzaren Zabalera",\r\n
+DlgTableAlign\t\t: "Lerrokatu",\r\n
+DlgTableAlignNotSet\t: "<Ezarri gabe>",\r\n
+DlgTableAlignLeft\t: "Ezkerrean",\r\n
+DlgTableAlignCenter\t: "Erdian",\r\n
+DlgTableAlignRight\t: "Eskuman",\r\n
+DlgTableWidth\t\t: "Zabalera",\r\n
+DlgTableWidthPx\t\t: "pixel",\r\n
+DlgTableWidthPc\t\t: "ehuneko",\r\n
+DlgTableHeight\t\t: "Altuera",\r\n
+DlgTableCellSpace\t: "Gelaxka arteko tartea",\r\n
+DlgTableCellPad\t\t: "Gelaxken betegarria",\r\n
+DlgTableCaption\t\t: "Epigrafea",\r\n
+DlgTableSummary\t\t: "Laburpena",\r\n
+DlgTableHeaders\t\t: "Headers",\t//MISSING\r\n
+DlgTableHeadersNone\t\t: "None",\t//MISSING\r\n
+DlgTableHeadersColumn\t: "First column",\t//MISSING\r\n
+DlgTableHeadersRow\t\t: "First Row",\t//MISSING\r\n
+DlgTableHeadersBoth\t\t: "Both",\t//MISSING\r\n
+\r\n
+// Table Cell Dialog\r\n
+DlgCellTitle\t\t: "Gelaxken Ezaugarriak",\r\n
+DlgCellWidth\t\t: "Zabalera",\r\n
+DlgCellWidthPx\t\t: "pixel",\r\n
+DlgCellWidthPc\t\t: "ehuneko",\r\n
+DlgCellHeight\t\t: "Altuera",\r\n
+DlgCellWordWrap\t\t: "Itzulbira",\r\n
+DlgCellWordWrapNotSet\t: "<Ezarri gabe>",\r\n
+DlgCellWordWrapYes\t: "Bai",\r\n
+DlgCellWordWrapNo\t: "Ez",\r\n
+DlgCellHorAlign\t\t: "Lerrokatu Horizontalki",\r\n
+DlgCellHorAlignNotSet\t: "<Ezarri gabe>",\r\n
+DlgCellHorAlignLeft\t: "Ezkerrean",\r\n
+DlgCellHorAlignCenter\t: "Erdian",\r\n
+DlgCellHorAlignRight: "Eskuman",\r\n
+DlgCellVerAlign\t\t: "Lerrokatu Bertikalki",\r\n
+DlgCellVerAlignNotSet\t: "<Ezarri gabe>",\r\n
+DlgCellVerAlignTop\t: "Goian",\r\n
+DlgCellVerAlignMiddle\t: "Erdian",\r\n
+DlgCellVerAlignBottom\t: "Behean",\r\n
+DlgCellVerAlignBaseline\t: "Oinean",\r\n
+DlgCellType\t\t: "Cell Type",\t//MISSING\r\n
+DlgCellTypeData\t\t: "Data",\t//MISSING\r\n
+DlgCellTypeHeader\t: "Header",\t//MISSING\r\n
+DlgCellRowSpan\t\t: "Lerroak Hedatu",\r\n
+DlgCellCollSpan\t\t: "Zutabeak Hedatu",\r\n
+DlgCellBackColor\t: "Atzeko Kolorea",\r\n
+DlgCellBorderColor\t: "Ertzako Kolorea",\r\n
+DlgCellBtnSelect\t: "Aukeratu...",\r\n
+\r\n
+// Find and Replace Dialog\r\n
+DlgFindAndReplaceTitle\t: "Bilatu eta Ordeztu",\r\n
+\r\n
+// Find Dialog\r\n
+DlgFindTitle\t\t: "Bilaketa",\r\n
+DlgFindFindBtn\t\t: "Bilatu",\r\n
+DlgFindNotFoundMsg\t: "Idatzitako testua ez da topatu.",\r\n
+\r\n
+// Replace Dialog\r\n
+DlgReplaceTitle\t\t\t: "Ordeztu",\r\n
+DlgReplaceFindLbl\t\t: "Zer bilatu:",\r\n
+DlgReplaceReplaceLbl\t: "Zerekin ordeztu:",\r\n
+DlgReplaceCaseChk\t\t: "Maiuskula/minuskula",\r\n
+DlgReplaceReplaceBtn\t: "Ordeztu",\r\n
+DlgReplaceReplAllBtn\t: "Ordeztu Guztiak",\r\n
+DlgReplaceWordChk\t\t: "Esaldi osoa bilatu",\r\n
+\r\n
+// Paste Operations / Dialog\r\n
+PasteErrorCut\t: "Zure web nabigatzailearen segurtasun ezarpenak testuak automatikoki moztea ez dute baimentzen. Mesedez teklatua erabili ezazu (Ctrl+X).",\r\n
+PasteErrorCopy\t: "Zure web nabigatzailearen segurtasun ezarpenak testuak automatikoki kopiatzea ez dute baimentzen. Mesedez teklatua erabili ezazu (Ctrl+C).",\r\n
+\r\n
+PasteAsText\t\t: "Testu Arrunta bezala Itsatsi",\r\n
+PasteFromWord\t: "Word-etik itsatsi",\r\n
+\r\n
+DlgPasteMsg2\t: "Mesedez teklatua erabilita (<STRONG>Ctrl+V</STRONG>) ondorego eremuan testua itsatsi eta <STRONG>OK</STRONG> sakatu.",\r\n
+DlgPasteSec\t\t: "Nabigatzailearen segurtasun ezarpenak direla eta, editoreak ezin du arbela zuzenean erabili. Leiho honetan berriro itsatsi behar duzu.",\r\n
+DlgPasteIgnoreFont\t\t: "Letra Motaren definizioa ezikusi",\r\n
+DlgPasteRemoveStyles\t: "Estilo definizioak kendu",\r\n
+\r\n
+// Color Picker\r\n
+ColorAutomatic\t: "Automatikoa",\r\n
+ColorMoreColors\t: "Kolore gehiago...",\r\n
+\r\n
+// Document Properties\r\n
+DocProps\t\t: "Dokumentuaren Ezarpenak",\r\n
+\r\n
+// Anchor Dialog\r\n
+DlgAnchorTitle\t\t: "Ainguraren Ezaugarriak",\r\n
+DlgAnchorName\t\t: "Ainguraren Izena",\r\n
+DlgAnchorErrorName\t: "Idatzi ainguraren izena",\r\n
+\r\n
+// Speller Pages Dialog\r\n
+DlgSpellNotInDic\t\t: "Ez dago hiztegian",\r\n
+DlgSpellChangeTo\t\t: "Honekin ordezkatu",\r\n
+DlgSpellBtnIgnore\t\t: "Ezikusi",\r\n
+DlgSpellBtnIgnoreAll\t: "Denak Ezikusi",\r\n
+DlgSpellBtnReplace\t\t: "Ordezkatu",\r\n
+DlgSpellBtnReplaceAll\t: "Denak Ordezkatu",\r\n
+DlgSpellBtnUndo\t\t\t: "Desegin",\r\n
+DlgSpellNoSuggestions\t: "- Iradokizunik ez -",\r\n
+DlgSpellProgress\t\t: "Zuzenketa ortografikoa martxan...",\r\n
+DlgSpellNoMispell\t\t: "Zuzenketa ortografikoa bukatuta: Akatsik ez",\r\n
+DlgSpellNoChanges\t\t: "Zuzenketa ortografikoa bukatuta: Ez da ezer aldatu",\r\n
+DlgSpellOneChange\t\t: "Zuzenketa ortografikoa bukatuta: Hitz bat aldatu da",\r\n
+DlgSpellManyChanges\t\t: "Zuzenketa ortografikoa bukatuta: %1 hitz aldatu dira",\r\n
+\r\n
+IeSpellDownload\t\t\t: "Zuzentzaile ortografikoa ez dago instalatuta. Deskargatu nahi duzu?",\r\n
+\r\n
+// Button Dialog\r\n
+DlgButtonText\t\t: "Testua (Balorea)",\r\n
+DlgButtonType\t\t: "Mota",\r\n
+DlgButtonTypeBtn\t: "Botoia",\r\n
+DlgButtonTypeSbm\t: "Bidali",\r\n
+DlgButtonTypeRst\t: "Garbitu",\r\n
+\r\n
+// Checkbox and Radio Button Dialogs\r\n
+DlgCheckboxName\t\t: "Izena",\r\n
+DlgCheckboxValue\t: "Balorea",\r\n
+DlgCheckboxSelected\t: "Hautatuta",\r\n
+\r\n
+// Form Dialog\r\n
+DlgFormName\t\t: "Izena",\r\n
+DlgFormAction\t: "Ekintza",\r\n
+DlgFormMethod\t: "Metodoa",\r\n
+\r\n
+// Select Field Dialog\r\n
+DlgSelectName\t\t: "Izena",\r\n
+DlgSelectValue\t\t: "Balorea",\r\n
+DlgSelectSize\t\t: "Tamaina",\r\n
+DlgSelectLines\t\t: "lerro kopurura",\r\n
+DlgSelectChkMulti\t: "Hautaketa anitzak baimendu",\r\n
+DlgSelectOpAvail\t: "Aukera Eskuragarriak",\r\n
+DlgSelectOpText\t\t: "Testua",\r\n
+DlgSelectOpValue\t: "Balorea",\r\n
+DlgSelectBtnAdd\t\t: "Gehitu",\r\n
+DlgSelectBtnModify\t: "Aldatu",\r\n
+DlgSelectBtnUp\t\t: "Gora",\r\n
+DlgSelectBtnDown\t: "Behera",\r\n
+DlgSelectBtnSetValue : "Aukeratutako balorea ezarri",\r\n
+DlgSelectBtnDelete\t: "Ezabatu",\r\n
+\r\n
+// Textarea Dialog\r\n
+DlgTextareaName\t: "Izena",\r\n
+DlgTextareaCols\t: "Zutabeak",\r\n
+DlgTextareaRows\t: "Lerroak",\r\n
+\r\n
+// Text Field Dialog\r\n
+DlgTextName\t\t\t: "Izena",\r\n
+DlgTextValue\t\t: "Balorea",\r\n
+DlgTextCharWidth\t: "Zabalera",\r\n
+DlgTextMaxChars\t\t: "Zenbat karaktere gehienez",\r\n
+DlgTextType\t\t\t: "Mota",\r\n
+DlgTextTypeText\t\t: "Testua",\r\n
+DlgTextTypePass\t\t: "Pasahitza",\r\n
+\r\n
+// Hidden Field Dialog\r\n
+DlgHiddenName\t: "Izena",\r\n
+DlgHiddenValue\t: "Balorea",\r\n
+\r\n
+// Bulleted List Dialog\r\n
+BulletedListProp\t: "Buletdun Zerrendaren Ezarpenak",\r\n
+NumberedListProp\t: "Zenbakidun Zerrendaren Ezarpenak",\r\n
+DlgLstStart\t\t\t: "Hasiera",\r\n
+DlgLstType\t\t\t: "Mota",\r\n
+DlgLstTypeCircle\t: "Zirkulua",\r\n
+DlgLstTypeDisc\t\t: "Diskoa",\r\n
+DlgLstTypeSquare\t: "Karratua",\r\n
+DlgLstTypeNumbers\t: "Zenbakiak (1, 2, 3)",\r\n
+DlgLstTypeLCase\t\t: "Letra xeheak (a, b, c)",\r\n
+DlgLstTypeUCase\t\t: "Letra larriak (A, B, C)",\r\n
+DlgLstTypeSRoman\t: "Erromatar zenbaki zeheak (i, ii, iii)",\r\n
+DlgLstTypeLRoman\t: "Erromatar zenbaki larriak (I, II, III)",\r\n
+\r\n
+// Document Properties Dialog\r\n
+DlgDocGeneralTab\t: "Orokorra",\r\n
+DlgDocBackTab\t\t: "Atzealdea",\r\n
+DlgDocColorsTab\t\t: "Koloreak eta Marjinak",\r\n
+DlgDocMetaTab\t\t: "Meta Informazioa",\r\n
+\r\n
+DlgDocPageTitle\t\t: "Orriaren Izenburua",\r\n
+DlgDocLangDir\t\t: "Hizkuntzaren Norabidea",\r\n
+DlgDocLangDirLTR\t: "Ezkerretik eskumara (LTR)",\r\n
+DlgDocLangDirRTL\t: "Eskumatik ezkerrera (RTL)",\r\n
+DlgDocLangCode\t\t: "Hizkuntzaren Kodea",\r\n
+DlgDocCharSet\t\t: "Karaktere Multzoaren Kodeketa",\r\n
+DlgDocCharSetCE\t\t: "Erdialdeko Europakoa",\r\n
+DlgDocCharSetCT\t\t: "Txinatar Tradizionala (Big5)",\r\n
+DlgDocCharSetCR\t\t: "Zirilikoa",\r\n
+DlgDocCharSetGR\t\t: "Grekoa",\r\n
+DlgDocCharSetJP\t\t: "Japoniarra",\r\n
+DlgDocCharSetKR\t\t: "Korearra",\r\n
+DlgDocCharSetTR\t\t: "Turkiarra",\r\n
+DlgDocCharSetUN\t\t: "Unicode (UTF-8)",\r\n
+DlgDocCharSetWE\t\t: "Mendebaldeko Europakoa",\r\n
+DlgDocCharSetOther\t: "Beste Karaktere Multzoko Kodeketa",\r\n
+\r\n
+DlgDocDocType\t\t: "Document Type Goiburua",\r\n
+DlgDocDocTypeOther\t: "Beste Document Type Goiburua",\r\n
+DlgDocIncXHTML\t\t: "XHTML Ezarpenak",\r\n
+DlgDocBgColor\t\t: "Atzeko Kolorea",\r\n
+DlgDocBgImage\t\t: "Atzeko Irudiaren URL-a",\r\n
+DlgDocBgNoScroll\t: "Korritze gabeko Atzealdea",\r\n
+DlgDocCText\t\t\t: "Testua",\r\n
+DlgDocCLink\t\t\t: "Estekak",\r\n
+DlgDocCVisited\t\t: "Bisitatutako Estekak",\r\n
+DlgDocCActive\t\t: "Esteka Aktiboa",\r\n
+DlgDocMargins\t\t: "Orrialdearen marjinak",\r\n
+DlgDocMaTop\t\t\t: "Goian",\r\n
+DlgDocMaLeft\t\t: "Ezkerrean",\r\n
+DlgDocMaRight\t\t: "Eskuman",\r\n
+DlgDocMaBottom\t\t: "Behean",\r\n
+DlgDocMeIndex\t\t: "Dokumentuaren Gako-hitzak (komarekin bananduta)",\r\n
+DlgDocMeDescr\t\t: "Dokumentuaren Deskribapena",\r\n
+DlgDocMeAuthor\t\t: "Egilea",\r\n
+DlgDocMeCopy\t\t: "Copyright",\r\n
+DlgDocPreview\t\t: "Aurrebista",\r\n
+\r\n
+// Templates Dialog\r\n
+Templates\t\t\t: "Txantiloiak",\r\n
+DlgTemplatesTitle\t: "Eduki Txantiloiak",\r\n
+DlgTemplatesSelMsg\t: "Mesedez txantiloia aukeratu editorean kargatzeko<br>(orain dauden edukiak galduko dira):",\r\n
+DlgTemplatesLoading\t: "Txantiloiak kargatzen. Itxaron mesedez...",\r\n
+DlgTemplatesNoTpl\t: "(Ez dago definitutako txantiloirik)",\r\n
+DlgTemplatesReplace\t: "Ordeztu oraingo edukiak",\r\n
+\r\n
+// About Dialog\r\n
+DlgAboutAboutTab\t: "Honi buruz",\r\n
+DlgAboutBrowserInfoTab\t: "Nabigatzailearen Informazioa",\r\n
+DlgAboutLicenseTab\t: "Lizentzia",\r\n
+DlgAboutVersion\t\t: "bertsioa",\r\n
+DlgAboutInfo\t\t: "Informazio gehiago eskuratzeko hona joan",\r\n
+\r\n
+// Div Dialog\r\n
+DlgDivGeneralTab\t: "Orokorra",\r\n
+DlgDivAdvancedTab\t: "Aurreratua",\r\n
+DlgDivStyle\t\t: "Estiloa",\r\n
+DlgDivInlineStyle\t: "Inline Estiloa"\r\n
+};\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>19231</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

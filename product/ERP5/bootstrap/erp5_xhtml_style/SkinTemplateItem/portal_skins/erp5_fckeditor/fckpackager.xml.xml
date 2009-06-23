@@ -1,0 +1,305 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749204.76</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fckpackager.xml</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/xml</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>\074?xml version="1.0" encoding="utf-8" ?\076\r\n
+\074!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * This is the configuration file to be used with FCKpackager to generate the\r\n
+ * compressed code files in the "js" folder.\r\n
+ *\r\n
+ * Please check http://www.fckeditor.net for more info.\r\n
+--\076\r\n
+\074Package\076\r\n
+\t\074Header\076\074![CDATA[/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * This file has been compressed for better performance. The original source\r\n
+ * can be found at "editor/_source".\r\n
+ */\r\n
+]]\076\074/Header\076\r\n
+\t\074Constants removeDeclaration="false"\076\r\n
+\t\t\074Constant name="FCK_STATUS_NOTLOADED" value="0" /\076\r\n
+\t\t\074Constant name="FCK_STATUS_ACTIVE" value="1" /\076\r\n
+\t\t\074Constant name="FCK_STATUS_COMPLETE" value="2" /\076\r\n
+\t\t\074Constant name="FCK_TRISTATE_OFF" value="0" /\076\r\n
+\t\t\074Constant name="FCK_TRISTATE_ON" value="1" /\076\r\n
+\t\t\074Constant name="FCK_TRISTATE_DISABLED" value="-1" /\076\r\n
+\t\t\074Constant name="FCK_UNKNOWN" value="-9" /\076\r\n
+\t\t\074Constant name="FCK_TOOLBARITEM_ONLYICON" value="0" /\076\r\n
+\t\t\074Constant name="FCK_TOOLBARITEM_ONLYTEXT" value="1" /\076\r\n
+\t\t\074Constant name="FCK_TOOLBARITEM_ICONTEXT" value="2" /\076\r\n
+\t\t\074Constant name="FCK_EDITMODE_WYSIWYG" value="0" /\076\r\n
+\t\t\074Constant name="FCK_EDITMODE_SOURCE" value="1" /\076\r\n
+\t\t\074Constant name="FCK_STYLE_BLOCK" value="0" /\076\r\n
+\t\t\074Constant name="FCK_STYLE_INLINE" value="1" /\076\r\n
+\t\t\074Constant name="FCK_STYLE_OBJECT" value="2" /\076\r\n
+\t\074/Constants\076\r\n
+\t\074PackageFile path="editor/js/fckeditorcode_ie.js"\076\r\n
+\t\t\074File path="editor/_source/fckconstants.js" /\076\r\n
+\t\t\074File path="editor/_source/fckjscoreextensions.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckiecleanup.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckbrowserinfo.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckurlparams.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckevents.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckdataprocessor.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fck.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fck_ie.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckconfig.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckdebug_empty.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckdomtools.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fcktools.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fcktools_ie.js" /\076\r\n
+\t\t\074File path="editor/_source/fckeditorapi.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckimagepreloader.js" /\076\r\n
+\r\n
+\t\t\074File path="editor/_source/internals/fckregexlib.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fcklistslib.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fcklanguagemanager.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckxhtmlentities.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckxhtml.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckxhtml_ie.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckcodeformatter.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckundo.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckeditingarea.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckkeystrokehandler.js" /\076\r\n
+\r\n
+\t\t\074File path="editor/dtd/fck_xhtml10transitional.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckstyle.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckstyles.js" /\076\r\n
+\r\n
+\t\t\074File path="editor/_source/internals/fcklisthandler.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckelementpath.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckdomrange.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckdomrange_ie.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckdomrangeiterator.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckdocumentfragment_ie.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckw3crange.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckenterkey.js" /\076\r\n
+\r\n
+\t\t\074File path="editor/_source/internals/fckdocumentprocessor.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckselection.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckselection_ie.js" /\076\r\n
+\r\n
+\t\t\074File path="editor/_source/internals/fcktablehandler.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fcktablehandler_ie.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckxml.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckxml_ie.js" /\076\r\n
+\r\n
+\t\t\074File path="editor/_source/commandclasses/fcknamedcommand.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckstylecommand.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fck_othercommands.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckshowblocks.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckspellcheckcommand_ie.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fcktextcolorcommand.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckpasteplaintextcommand.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckpastewordcommand.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fcktablecommand.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckfitwindow.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fcklistcommands.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckjustifycommands.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckindentcommands.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckblockquotecommand.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckcorestylecommand.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckremoveformatcommand.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckcommands.js" /\076\r\n
+\r\n
+\t\t\074File path="editor/_source/classes/fckpanel.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckicon.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fcktoolbarbuttonui.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fcktoolbarbutton.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckspecialcombo.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fcktoolbarspecialcombo.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fcktoolbarstylecombo.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fcktoolbarfontformatcombo.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fcktoolbarfontscombo.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fcktoolbarfontsizecombo.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fcktoolbarpanelbutton.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fcktoolbaritems.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fcktoolbar.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fcktoolbarbreak_ie.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fcktoolbarset.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckdialog.js" /\076\r\n
+\r\n
+\t\t\074File path="editor/_source/classes/fckmenuitem.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckmenublock.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckmenublockpanel.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckcontextmenu.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fck_contextmenu.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckhtmliterator.js" /\076\r\n
+\r\n
+\t\t\074File path="editor/_source/classes/fckplugin.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckplugins.js" /\076\r\n
+\t\074/PackageFile\076\r\n
+\r\n
+\t\074PackageFile path="editor/js/fckeditorcode_gecko.js"\076\r\n
+\t\t\074File path="editor/_source/fckconstants.js" /\076\r\n
+\t\t\074File path="editor/_source/fckjscoreextensions.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckbrowserinfo.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckurlparams.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckevents.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckdataprocessor.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fck.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fck_gecko.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckconfig.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckdebug_empty.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckdomtools.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fcktools.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fcktools_gecko.js" /\076\r\n
+\t\t\074File path="editor/_source/fckeditorapi.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckimagepreloader.js" /\076\r\n
+\r\n
+\t\t\074File path="editor/_source/internals/fckregexlib.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fcklistslib.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fcklanguagemanager.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckxhtmlentities.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckxhtml.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckxhtml_gecko.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckcodeformatter.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckundo.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckeditingarea.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckkeystrokehandler.js" /\076\r\n
+\r\n
+\t\t\074File path="editor/dtd/fck_xhtml10transitional.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckstyle.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckstyles.js" /\076\r\n
+\r\n
+\t\t\074File path="editor/_source/internals/fcklisthandler.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckelementpath.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckdomrange.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckdomrange_gecko.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckdomrangeiterator.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckdocumentfragment_gecko.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckw3crange.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckenterkey.js" /\076\r\n
+\r\n
+\t\t\074File path="editor/_source/internals/fckdocumentprocessor.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckselection.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckselection_gecko.js" /\076\r\n
+\r\n
+\t\t\074File path="editor/_source/internals/fcktablehandler.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fcktablehandler_gecko.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckxml.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckxml_gecko.js" /\076\r\n
+\r\n
+\t\t\074File path="editor/_source/commandclasses/fcknamedcommand.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckstylecommand.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fck_othercommands.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckshowblocks.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckspellcheckcommand_gecko.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fcktextcolorcommand.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckpasteplaintextcommand.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckpastewordcommand.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fcktablecommand.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckfitwindow.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fcklistcommands.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckjustifycommands.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckindentcommands.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckblockquotecommand.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckcorestylecommand.js" /\076\r\n
+\t\t\074File path="editor/_source/commandclasses/fckremoveformatcommand.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckcommands.js" /\076\r\n
+\r\n
+\t\t\074File path="editor/_source/classes/fckpanel.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckicon.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fcktoolbarbuttonui.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fcktoolbarbutton.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckspecialcombo.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fcktoolbarspecialcombo.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fcktoolbarstylecombo.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fcktoolbarfontformatcombo.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fcktoolbarfontscombo.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fcktoolbarfontsizecombo.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fcktoolbarpanelbutton.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fcktoolbaritems.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fcktoolbar.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fcktoolbarbreak_gecko.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fcktoolbarset.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckdialog.js" /\076\r\n
+\r\n
+\t\t\074File path="editor/_source/classes/fckmenuitem.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckmenublock.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckmenublockpanel.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckcontextmenu.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fck_contextmenu.js" /\076\r\n
+\t\t\074File path="editor/_source/classes/fckhtmliterator.js" /\076\r\n
+\r\n
+\t\t\074File path="editor/_source/classes/fckplugin.js" /\076\r\n
+\t\t\074File path="editor/_source/internals/fckplugins.js" /\076\r\n
+\t\074/PackageFile\076\r\n
+\r\n
+\074/Package\076\r\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>13201</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

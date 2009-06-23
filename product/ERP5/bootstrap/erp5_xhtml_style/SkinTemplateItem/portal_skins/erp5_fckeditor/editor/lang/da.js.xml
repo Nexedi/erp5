@@ -1,0 +1,581 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749253.41</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>da.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Danish language file.\r\n
+ */\r\n
+\r\n
+var FCKLang =\r\n
+{\r\n
+// Language direction : "ltr" (left to right) or "rtl" (right to left).\r\n
+Dir\t\t\t\t\t: "ltr",\r\n
+\r\n
+ToolbarCollapse\t\t: "Skjul værktøjslinier",\r\n
+ToolbarExpand\t\t: "Vis værktøjslinier",\r\n
+\r\n
+// Toolbar Items and Context Menu\r\n
+Save\t\t\t\t: "Gem",\r\n
+NewPage\t\t\t\t: "Ny side",\r\n
+Preview\t\t\t\t: "Vis eksempel",\r\n
+Cut\t\t\t\t\t: "Klip",\r\n
+Copy\t\t\t\t: "Kopier",\r\n
+Paste\t\t\t\t: "Indsæt",\r\n
+PasteText\t\t\t: "Indsæt som ikke-formateret tekst",\r\n
+PasteWord\t\t\t: "Indsæt fra Word",\r\n
+Print\t\t\t\t: "Udskriv",\r\n
+SelectAll\t\t\t: "Vælg alt",\r\n
+RemoveFormat\t\t: "Fjern formatering",\r\n
+InsertLinkLbl\t\t: "Hyperlink",\r\n
+InsertLink\t\t\t: "Indsæt/rediger hyperlink",\r\n
+RemoveLink\t\t\t: "Fjern hyperlink",\r\n
+VisitLink\t\t\t: "Åbn hyperlink",\r\n
+Anchor\t\t\t\t: "Indsæt/rediger bogmærke",\r\n
+AnchorDelete\t\t: "Fjern bogmærke",\r\n
+InsertImageLbl\t\t: "Indsæt billede",\r\n
+InsertImage\t\t\t: "Indsæt/rediger billede",\r\n
+InsertFlashLbl\t\t: "Flash",\r\n
+InsertFlash\t\t\t: "Indsæt/rediger Flash",\r\n
+InsertTableLbl\t\t: "Table",\r\n
+InsertTable\t\t\t: "Indsæt/rediger tabel",\r\n
+InsertLineLbl\t\t: "Linie",\r\n
+InsertLine\t\t\t: "Indsæt vandret linie",\r\n
+InsertSpecialCharLbl: "Symbol",\r\n
+InsertSpecialChar\t: "Indsæt symbol",\r\n
+InsertSmileyLbl\t\t: "Smiley",\r\n
+InsertSmiley\t\t: "Indsæt smiley",\r\n
+About\t\t\t\t: "Om FCKeditor",\r\n
+Bold\t\t\t\t: "Fed",\r\n
+Italic\t\t\t\t: "Kursiv",\r\n
+Underline\t\t\t: "Understreget",\r\n
+StrikeThrough\t\t: "Overstreget",\r\n
+Subscript\t\t\t: "Sænket skrift",\r\n
+Superscript\t\t\t: "Hævet skrift",\r\n
+LeftJustify\t\t\t: "Venstrestillet",\r\n
+CenterJustify\t\t: "Centreret",\r\n
+RightJustify\t\t: "Højrestillet",\r\n
+BlockJustify\t\t: "Lige margener",\r\n
+DecreaseIndent\t\t: "Formindsk indrykning",\r\n
+IncreaseIndent\t\t: "Forøg indrykning",\r\n
+Blockquote\t\t\t: "Blokcitat",\r\n
+CreateDiv\t\t\t: "Opret div container",\r\n
+EditDiv\t\t\t\t: "Rediger div container",\r\n
+DeleteDiv\t\t\t: "Fjern div container",\r\n
+Undo\t\t\t\t: "Fortryd",\r\n
+Redo\t\t\t\t: "Annuller fortryd",\r\n
+NumberedListLbl\t\t: "Talopstilling",\r\n
+NumberedList\t\t: "Indsæt/fjern talopstilling",\r\n
+BulletedListLbl\t\t: "Punktopstilling",\r\n
+BulletedList\t\t: "Indsæt/fjern punktopstilling",\r\n
+ShowTableBorders\t: "Vis tabelkanter",\r\n
+ShowDetails\t\t\t: "Vis detaljer",\r\n
+Style\t\t\t\t: "Typografi",\r\n
+FontFormat\t\t\t: "Formatering",\r\n
+Font\t\t\t\t: "Skrifttype",\r\n
+FontSize\t\t\t: "Skriftstørrelse",\r\n
+TextColor\t\t\t: "Tekstfarve",\r\n
+BGColor\t\t\t\t: "Baggrundsfarve",\r\n
+Source\t\t\t\t: "Kilde",\r\n
+Find\t\t\t\t: "Søg",\r\n
+Replace\t\t\t\t: "Erstat",\r\n
+SpellCheck\t\t\t: "Stavekontrol",\r\n
+UniversalKeyboard\t: "Universaltastatur",\r\n
+PageBreakLbl\t\t: "Sidskift",\r\n
+PageBreak\t\t\t: "Indsæt sideskift",\r\n
+\r\n
+Form\t\t\t: "Indsæt formular",\r\n
+Checkbox\t\t: "Indsæt afkrydsningsfelt",\r\n
+RadioButton\t\t: "Indsæt alternativknap",\r\n
+TextField\t\t: "Indsæt tekstfelt",\r\n
+Textarea\t\t: "Indsæt tekstboks",\r\n
+HiddenField\t\t: "Indsæt skjult felt",\r\n
+Button\t\t\t: "Indsæt knap",\r\n
+SelectionField\t: "Indsæt liste",\r\n
+ImageButton\t\t: "Indsæt billedknap",\r\n
+\r\n
+FitWindow\t\t: "Maksimer editor vinduet",\r\n
+ShowBlocks\t\t: "Show Blocks",\t//MISSING\r\n
+\r\n
+// Context Menu\r\n
+EditLink\t\t\t: "Rediger hyperlink",\r\n
+CellCM\t\t\t\t: "Celle",\r\n
+RowCM\t\t\t\t: "Række",\r\n
+ColumnCM\t\t\t: "Kolonne",\r\n
+InsertRowAfter\t\t: "Indsæt række efter",\r\n
+InsertRowBefore\t\t: "Indsæt række før",\r\n
+DeleteRows\t\t\t: "Slet række",\r\n
+InsertColumnAfter\t: "Indsæt kolonne efter",\r\n
+InsertColumnBefore\t: "Indsæt kolonne før",\r\n
+DeleteColumns\t\t: "Slet kolonne",\r\n
+InsertCellAfter\t\t: "Indsæt celle efter",\r\n
+InsertCellBefore\t: "Indsæt celle før",\r\n
+DeleteCells\t\t\t: "Slet celle",\r\n
+MergeCells\t\t\t: "Flet celler",\r\n
+MergeRight\t\t\t: "Flet til højre",\r\n
+MergeDown\t\t\t: "Flet nedad",\r\n
+HorizontalSplitCell\t: "Del celle vandret",\r\n
+VerticalSplitCell\t: "Del celle lodret",\r\n
+TableDelete\t\t\t: "Slet tabel",\r\n
+CellProperties\t\t: "Egenskaber for celle",\r\n
+TableProperties\t\t: "Egenskaber for tabel",\r\n
+ImageProperties\t\t: "Egenskaber for billede",\r\n
+FlashProperties\t\t: "Egenskaber for Flash",\r\n
+\r\n
+AnchorProp\t\t\t: "Egenskaber for bogmærke",\r\n
+ButtonProp\t\t\t: "Egenskaber for knap",\r\n
+CheckboxProp\t\t: "Egenskaber for afkrydsningsfelt",\r\n
+HiddenFieldProp\t\t: "Egenskaber for skjult felt",\r\n
+RadioButtonProp\t\t: "Egenskaber for alternativknap",\r\n
+ImageButtonProp\t\t: "Egenskaber for billedknap",\r\n
+TextFieldProp\t\t: "Egenskaber for tekstfelt",\r\n
+SelectionFieldProp\t: "Egenskaber for liste",\r\n
+TextareaProp\t\t: "Egenskaber for tekstboks",\r\n
+FormProp\t\t\t: "Egenskaber for formular",\r\n
+\r\n
+FontFormats\t\t\t: "Normal;Formateret;Adresse;Overskrift 1;Overskrift 2;Overskrift 3;Overskrift 4;Overskrift 5;Overskrift 6;Normal (DIV)",\r\n
+\r\n
+// Alerts and Messages\r\n
+ProcessingXHTML\t\t: "Behandler XHTML...",\r\n
+Done\t\t\t\t: "Færdig",\r\n
+PasteWordConfirm\t: "Den tekst du forsøger at indsætte ser ud til at komme fra Word.<br>Vil du rense teksten før den indsættes?",\r\n
+NotCompatiblePaste\t: "Denne kommando er tilgændelig i Internet Explorer 5.5 eller senere.<br>Vil du indsætte teksten uden at rense den ?",\r\n
+UnknownToolbarItem\t: "Ukendt værktøjslinjeobjekt \\"%1\\"!",\r\n
+UnknownCommand\t\t: "Ukendt kommandonavn \\"%1\\"!",\r\n
+NotImplemented\t\t: "Kommandoen er ikke implementeret!",\r\n
+UnknownToolbarSet\t: "Værktøjslinjen \\"%1\\" eksisterer ikke!",\r\n
+NoActiveX\t\t\t: "Din browsers sikkerhedsindstillinger begrænser nogle af editorens muligheder.<br>Slå \\"Kør ActiveX-objekter og plug-ins\\" til, ellers vil du opleve fejl og manglende muligheder.",\r\n
+BrowseServerBlocked : "Browseren kunne ikke åbne de nødvendige ressourcer!<br>Slå pop-up blokering fra.",\r\n
+DialogBlocked\t\t: "Dialogvinduet kunne ikke åbnes!<br>Slå pop-up blokering fra.",\r\n
+VisitLinkBlocked\t: "Det var ikke muligt at åbne et nyt vindue. Tjek, at ingen popup-blokkere er aktive.",\r\n
+\r\n
+// Dialogs\r\n
+DlgBtnOK\t\t\t: "OK",\r\n
+DlgBtnCancel\t\t: "Annuller",\r\n
+DlgBtnClose\t\t\t: "Luk",\r\n
+DlgBtnBrowseServer\t: "Gennemse...",\r\n
+DlgAdvancedTag\t\t: "Avanceret",\r\n
+DlgOpOther\t\t\t: "<Andet>",\r\n
+DlgInfoTab\t\t\t: "Generelt",\r\n
+DlgAlertUrl\t\t\t: "Indtast URL",\r\n
+\r\n
+// General Dialogs Labels\r\n
+DlgGenNotSet\t\t: "<intet valgt>",\r\n
+DlgGenId\t\t\t: "Id",\r\n
+DlgGenLangDir\t\t: "Tekstretning",\r\n
+DlgGenLangDirLtr\t: "Fra venstre mod højre (LTR)",\r\n
+DlgGenLangDirRtl\t: "Fra højre mod venstre (RTL)",\r\n
+DlgGenLangCode\t\t: "Sprogkode",\r\n
+DlgGenAccessKey\t\t: "Genvejstast",\r\n
+DlgGenName\t\t\t: "Navn",\r\n
+DlgGenTabIndex\t\t: "Tabulator indeks",\r\n
+DlgGenLongDescr\t\t: "Udvidet beskrivelse",\r\n
+DlgGenClass\t\t\t: "Typografiark",\r\n
+DlgGenTitle\t\t\t: "Titel",\r\n
+DlgGenContType\t\t: "Indholdstype",\r\n
+DlgGenLinkCharset\t: "Tegnsæt",\r\n
+DlgGenStyle\t\t\t: "Typografi",\r\n
+\r\n
+// Image Dialog\r\n
+DlgImgTitle\t\t\t: "Egenskaber for billede",\r\n
+DlgImgInfoTab\t\t: "Generelt",\r\n
+DlgImgBtnUpload\t\t: "Upload",\r\n
+DlgImgURL\t\t\t: "URL",\r\n
+DlgImgUpload\t\t: "Upload",\r\n
+DlgImgAlt\t\t\t: "Alternativ tekst",\r\n
+DlgImgWidth\t\t\t: "Bredde",\r\n
+DlgImgHeight\t\t: "Højde",\r\n
+DlgImgLockRatio\t\t: "Lås størrelsesforhold",\r\n
+DlgBtnResetSize\t\t: "Nulstil størrelse",\r\n
+DlgImgBorder\t\t: "Ramme",\r\n
+DlgImgHSpace\t\t: "HMargen",\r\n
+DlgImgVSpace\t\t: "VMargen",\r\n
+DlgImgAlign\t\t\t: "Justering",\r\n
+DlgImgAlignLeft\t\t: "Venstre",\r\n
+DlgImgAlignAbsBottom: "Absolut nederst",\r\n
+DlgImgAlignAbsMiddle: "Absolut centreret",\r\n
+DlgImgAlignBaseline\t: "Grundlinje",\r\n
+DlgImgAlignBottom\t: "Nederst",\r\n
+DlgImgAlignMiddle\t: "Centreret",\r\n
+DlgImgAlignRight\t: "Højre",\r\n
+DlgImgAlignTextTop\t: "Toppen af teksten",\r\n
+DlgImgAlignTop\t\t: "Øverst",\r\n
+DlgImgPreview\t\t: "Vis eksempel",\r\n
+DlgImgAlertUrl\t\t: "Indtast stien til billedet",\r\n
+DlgImgLinkTab\t\t: "Hyperlink",\r\n
+\r\n
+// Flash Dialog\r\n
+DlgFlashTitle\t\t: "Egenskaber for Flash",\r\n
+DlgFlashChkPlay\t\t: "Automatisk afspilning",\r\n
+DlgFlashChkLoop\t\t: "Gentagelse",\r\n
+DlgFlashChkMenu\t\t: "Vis Flash menu",\r\n
+DlgFlashScale\t\t: "Skalér",\r\n
+DlgFlashScaleAll\t: "Vis alt",\r\n
+DlgFlashScaleNoBorder\t: "Ingen ramme",\r\n
+DlgFlashScaleFit\t: "Tilpas størrelse",\r\n
+\r\n
+// Link Dialog\r\n
+DlgLnkWindowTitle\t: "Egenskaber for hyperlink",\r\n
+DlgLnkInfoTab\t\t: "Generelt",\r\n
+DlgLnkTargetTab\t\t: "Mål",\r\n
+\r\n
+DlgLnkType\t\t\t: "Hyperlink type",\r\n
+DlgLnkTypeURL\t\t: "URL",\r\n
+DlgLnkTypeAnchor\t: "Bogmærke på denne side",\r\n
+DlgLnkTypeEMail\t\t: "E-mail",\r\n
+DlgLnkProto\t\t\t: "Protokol",\r\n
+DlgLnkProtoOther\t: "<anden>",\r\n
+DlgLnkURL\t\t\t: "URL",\r\n
+DlgLnkAnchorSel\t\t: "Vælg et anker",\r\n
+DlgLnkAnchorByName\t: "Efter anker navn",\r\n
+DlgLnkAnchorById\t: "Efter element Id",\r\n
+DlgLnkNoAnchors\t\t: "(Ingen bogmærker dokumentet)",\r\n
+DlgLnkEMail\t\t\t: "E-mailadresse",\r\n
+DlgLnkEMailSubject\t: "Emne",\r\n
+DlgLnkEMailBody\t\t: "Brødtekst",\r\n
+DlgLnkUpload\t\t: "Upload",\r\n
+DlgLnkBtnUpload\t\t: "Upload",\r\n
+\r\n
+DlgLnkTarget\t\t: "Mål",\r\n
+DlgLnkTargetFrame\t: "<ramme>",\r\n
+DlgLnkTargetPopup\t: "<popup vindue>",\r\n
+DlgLnkTargetBlank\t: "Nyt vindue (_blank)",\r\n
+DlgLnkTargetParent\t: "Overordnet ramme (_parent)",\r\n
+DlgLnkTargetSelf\t: "Samme vindue (_self)",\r\n
+DlgLnkTargetTop\t\t: "Hele vinduet (_top)",\r\n
+DlgLnkTargetFrameName\t: "Destinationsvinduets navn",\r\n
+DlgLnkPopWinName\t: "Pop-up vinduets navn",\r\n
+DlgLnkPopWinFeat\t: "Egenskaber for pop-up",\r\n
+DlgLnkPopResize\t\t: "Skalering",\r\n
+DlgLnkPopLocation\t: "Adresselinje",\r\n
+DlgLnkPopMenu\t\t: "Menulinje",\r\n
+DlgLnkPopScroll\t\t: "Scrollbars",\r\n
+DlgLnkPopStatus\t\t: "Statuslinje",\r\n
+DlgLnkPopToolbar\t: "Værktøjslinje",\r\n
+DlgLnkPopFullScrn\t: "Fuld skærm (IE)",\r\n
+DlgLnkPopDependent\t: "Koblet/dependent (Netscape)",\r\n
+DlgLnkPopWidth\t\t: "Bredde",\r\n
+DlgLnkPopHeight\t\t: "Højde",\r\n
+DlgLnkPopLeft\t\t: "Position fra venstre",\r\n
+DlgLnkPopTop\t\t: "Position fra toppen",\r\n
+\r\n
+DlnLnkMsgNoUrl\t\t: "Indtast hyperlink URL!",\r\n
+DlnLnkMsgNoEMail\t: "Indtast e-mailaddresse!",\r\n
+DlnLnkMsgNoAnchor\t: "Vælg bogmærke!",\r\n
+DlnLnkMsgInvPopName\t: "Navnet på popup\'en skal starte med et bogstav og må ikke indeholde mellemrum",\r\n
+\r\n
+// Color Dialog\r\n
+DlgColorTitle\t\t: "Vælg farve",\r\n
+DlgColorBtnClear\t: "Nulstil",\r\n
+DlgColorHighlight\t: "Markeret",\r\n
+DlgColorSelected\t: "Valgt",\r\n
+\r\n
+// Smiley Dialog\r\n
+DlgSmileyTitle\t\t: "Vælg smiley",\r\n
+\r\n
+// Special Character Dialog\r\n
+DlgSpecialCharTitle\t: "Vælg symbol",\r\n
+\r\n
+// Table Dialog\r\n
+DlgTableTitle\t\t: "Egenskaber for tabel",\r\n
+DlgTableRows\t\t: "Rækker",\r\n
+DlgTableColumns\t\t: "Kolonner",\r\n
+DlgTableBorder\t\t: "Rammebredde",\r\n
+DlgTableAlign\t\t: "Justering",\r\n
+DlgTableAlignNotSet\t: "<intet valgt>",\r\n
+DlgTableAlignLeft\t: "Venstrestillet",\r\n
+DlgTableAlignCenter\t: "Centreret",\r\n
+DlgTableAlignRight\t: "Højrestillet",\r\n
+DlgTableWidth\t\t: "Bredde",\r\n
+DlgTableWidthPx\t\t: "pixels",\r\n
+DlgTableWidthPc\t\t: "procent",\r\n
+DlgTableHeight\t\t: "Højde",\r\n
+DlgTableCellSpace\t: "Celleafstand",\r\n
+DlgTableCellPad\t\t: "Cellemargen",\r\n
+DlgTableCaption\t\t: "Titel",\r\n
+DlgTableSummary\t\t: "Resume",\r\n
+DlgTableHeaders\t\t: "Headers",\t//MISSING\r\n
+DlgTableHeadersNone\t\t: "None",\t//MISSING\r\n
+DlgTableHeadersColumn\t: "First column",\t//MISSING\r\n
+DlgTableHeadersRow\t\t: "First Row",\t//MISSING\r\n
+DlgTableHeadersBoth\t\t: "Both",\t//MISSING\r\n
+\r\n
+// Table Cell Dialog\r\n
+DlgCellTitle\t\t: "Egenskaber for celle",\r\n
+DlgCellWidth\t\t: "Bredde",\r\n
+DlgCellWidthPx\t\t: "pixels",\r\n
+DlgCellWidthPc\t\t: "procent",\r\n
+DlgCellHeight\t\t: "Højde",\r\n
+DlgCellWordWrap\t\t: "Orddeling",\r\n
+DlgCellWordWrapNotSet\t: "<intet valgt>",\r\n
+DlgCellWordWrapYes\t: "Ja",\r\n
+DlgCellWordWrapNo\t: "Nej",\r\n
+DlgCellHorAlign\t\t: "Vandret justering",\r\n
+DlgCellHorAlignNotSet\t: "<intet valgt>",\r\n
+DlgCellHorAlignLeft\t: "Venstrestillet",\r\n
+DlgCellHorAlignCenter\t: "Centreret",\r\n
+DlgCellHorAlignRight: "Højrestillet",\r\n
+DlgCellVerAlign\t\t: "Lodret justering",\r\n
+DlgCellVerAlignNotSet\t: "<intet valgt>",\r\n
+DlgCellVerAlignTop\t: "Øverst",\r\n
+DlgCellVerAlignMiddle\t: "Centreret",\r\n
+DlgCellVerAlignBottom\t: "Nederst",\r\n
+DlgCellVerAlignBaseline\t: "Grundlinje",\r\n
+DlgCellType\t\t: "Cell Type",\t//MISSING\r\n
+DlgCellTypeData\t\t: "Data",\t//MISSING\r\n
+DlgCellTypeHeader\t: "Header",\t//MISSING\r\n
+DlgCellRowSpan\t\t: "Højde i antal rækker",\r\n
+DlgCellCollSpan\t\t: "Bredde i antal kolonner",\r\n
+DlgCellBackColor\t: "Baggrundsfarve",\r\n
+DlgCellBorderColor\t: "Rammefarve",\r\n
+DlgCellBtnSelect\t: "Vælg...",\r\n
+\r\n
+// Find and Replace Dialog\r\n
+DlgFindAndReplaceTitle\t: "Søg og erstat",\r\n
+\r\n
+// Find Dialog\r\n
+DlgFindTitle\t\t: "Find",\r\n
+DlgFindFindBtn\t\t: "Find",\r\n
+DlgFindNotFoundMsg\t: "Søgeteksten blev ikke fundet!",\r\n
+\r\n
+// Replace Dialog\r\n
+DlgReplaceTitle\t\t\t: "Erstat",\r\n
+DlgReplaceFindLbl\t\t: "Søg efter:",\r\n
+DlgReplaceReplaceLbl\t: "Erstat med:",\r\n
+DlgReplaceCaseChk\t\t: "Forskel på store og små bogstaver",\r\n
+DlgReplaceReplaceBtn\t: "Erstat",\r\n
+DlgReplaceReplAllBtn\t: "Erstat alle",\r\n
+DlgReplaceWordChk\t\t: "Kun hele ord",\r\n
+\r\n
+// Paste Operations / Dialog\r\n
+PasteErrorCut\t: "Din browsers sikkerhedsindstillinger tillader ikke editoren at klippe tekst automatisk!<br>Brug i stedet tastaturet til at klippe teksten (Ctrl+X).",\r\n
+PasteErrorCopy\t: "Din browsers sikkerhedsindstillinger tillader ikke editoren at kopiere tekst automatisk!<br>Brug i stedet tastaturet til at kopiere teksten (Ctrl+C).",\r\n
+\r\n
+PasteAsText\t\t: "Indsæt som ikke-formateret tekst",\r\n
+PasteFromWord\t: "Indsæt fra Word",\r\n
+\r\n
+DlgPasteMsg2\t: "Indsæt i feltet herunder (<STRONG>Ctrl+V</STRONG>) og klik <STRONG>OK</STRONG>.",\r\n
+DlgPasteSec\t\t: "På grund af browserens sikkerhedsindstillinger kan editoren ikke tilgå udklipsholderen direkte. Du skal indsætte udklipsholderens indhold i dette vindue igen.",\r\n
+DlgPasteIgnoreFont\t\t: "Ignorer font definitioner",\r\n
+DlgPasteRemoveStyles\t: "Ignorer typografi",\r\n
+\r\n
+// Color Picker\r\n
+ColorAutomatic\t: "Automatisk",\r\n
+ColorMoreColors\t: "Flere farver...",\r\n
+\r\n
+// Document Properties\r\n
+DocProps\t\t: "Egenskaber for dokument",\r\n
+\r\n
+// Anchor Dialog\r\n
+DlgAnchorTitle\t\t: "Egenskaber for bogmærke",\r\n
+DlgAnchorName\t\t: "Bogmærke navn",\r\n
+DlgAnchorErrorName\t: "Indtast bogmærke navn!",\r\n
+\r\n
+// Speller Pages Dialog\r\n
+DlgSpellNotInDic\t\t: "Ikke i ordbogen",\r\n
+DlgSpellChangeTo\t\t: "Forslag",\r\n
+DlgSpellBtnIgnore\t\t: "Ignorer",\r\n
+DlgSpellBtnIgnoreAll\t: "Ignorer alle",\r\n
+DlgSpellBtnReplace\t\t: "Erstat",\r\n
+DlgSpellBtnReplaceAll\t: "Erstat alle",\r\n
+DlgSpellBtnUndo\t\t\t: "Tilbage",\r\n
+DlgSpellNoSuggestions\t: "- ingen forslag -",\r\n
+DlgSpellProgress\t\t: "Stavekontrolen arbejder...",\r\n
+DlgSpellNoMispell\t\t: "Stavekontrol færdig: Ingen fejl fundet",\r\n
+DlgSpellNoChanges\t\t: "Stavekontrol færdig: Ingen ord ændret",\r\n
+DlgSpellOneChange\t\t: "Stavekontrol færdig: Et ord ændret",\r\n
+DlgSpellManyChanges\t\t: "Stavekontrol færdig: %1 ord ændret",\r\n
+\r\n
+IeSpellDownload\t\t\t: "Stavekontrol ikke installeret.<br>Vil du hente den nu?",\r\n
+\r\n
+// Button Dialog\r\n
+DlgButtonText\t\t: "Tekst",\r\n
+DlgButtonType\t\t: "Type",\r\n
+DlgButtonTypeBtn\t: "Knap",\r\n
+DlgButtonTypeSbm\t: "Send",\r\n
+DlgButtonTypeRst\t: "Nulstil",\r\n
+\r\n
+// Checkbox and Radio Button Dialogs\r\n
+DlgCheckboxName\t\t: "Navn",\r\n
+DlgCheckboxValue\t: "Værdi",\r\n
+DlgCheckboxSelected\t: "Valgt",\r\n
+\r\n
+// Form Dialog\r\n
+DlgFormName\t\t: "Navn",\r\n
+DlgFormAction\t: "Handling",\r\n
+DlgFormMethod\t: "Metod",\r\n
+\r\n
+// Select Field Dialog\r\n
+DlgSelectName\t\t: "Navn",\r\n
+DlgSelectValue\t\t: "Værdi",\r\n
+DlgSelectSize\t\t: "Størrelse",\r\n
+DlgSelectLines\t\t: "linier",\r\n
+DlgSelectChkMulti\t: "Tillad flere valg",\r\n
+DlgSelectOpAvail\t: "Valgmuligheder",\r\n
+DlgSelectOpText\t\t: "Tekst",\r\n
+DlgSelectOpValue\t: "Værdi",\r\n
+DlgSelectBtnAdd\t\t: "Tilføj",\r\n
+DlgSelectBtnModify\t: "Rediger",\r\n
+DlgSelectBtnUp\t\t: "Op",\r\n
+DlgSelectBtnDown\t: "Ned",\r\n
+DlgSelectBtnSetValue : "Sæt som valgt",\r\n
+DlgSelectBtnDelete\t: "Slet",\r\n
+\r\n
+// Textarea Dialog\r\n
+DlgTextareaName\t: "Navn",\r\n
+DlgTextareaCols\t: "Kolonner",\r\n
+DlgTextareaRows\t: "Rækker",\r\n
+\r\n
+// Text Field Dialog\r\n
+DlgTextName\t\t\t: "Navn",\r\n
+DlgTextValue\t\t: "Værdi",\r\n
+DlgTextCharWidth\t: "Bredde (tegn)",\r\n
+DlgTextMaxChars\t\t: "Max antal tegn",\r\n
+DlgTextType\t\t\t: "Type",\r\n
+DlgTextTypeText\t\t: "Tekst",\r\n
+DlgTextTypePass\t\t: "Adgangskode",\r\n
+\r\n
+// Hidden Field Dialog\r\n
+DlgHiddenName\t: "Navn",\r\n
+DlgHiddenValue\t: "Værdi",\r\n
+\r\n
+// Bulleted List Dialog\r\n
+BulletedListProp\t: "Egenskaber for punktopstilling",\r\n
+NumberedListProp\t: "Egenskaber for talopstilling",\r\n
+DlgLstStart\t\t\t: "Start",\r\n
+DlgLstType\t\t\t: "Type",\r\n
+DlgLstTypeCircle\t: "Cirkel",\r\n
+DlgLstTypeDisc\t\t: "Udfyldt cirkel",\r\n
+DlgLstTypeSquare\t: "Firkant",\r\n
+DlgLstTypeNumbers\t: "Nummereret (1, 2, 3)",\r\n
+DlgLstTypeLCase\t\t: "Små bogstaver (a, b, c)",\r\n
+DlgLstTypeUCase\t\t: "Store bogstaver (A, B, C)",\r\n
+DlgLstTypeSRoman\t: "Små romertal (i, ii, iii)",\r\n
+DlgLstTypeLRoman\t: "Store romertal (I, II, III)",\r\n
+\r\n
+// Document Properties Dialog\r\n
+DlgDocGeneralTab\t: "Generelt",\r\n
+DlgDocBackTab\t\t: "Baggrund",\r\n
+DlgDocColorsTab\t\t: "Farver og margen",\r\n
+DlgDocMetaTab\t\t: "Metadata",\r\n
+\r\n
+DlgDocPageTitle\t\t: "Sidetitel",\r\n
+DlgDocLangDir\t\t: "Sprog",\r\n
+DlgDocLangDirLTR\t: "Fra venstre mod højre (LTR)",\r\n
+DlgDocLangDirRTL\t: "Fra højre mod venstre (RTL)",\r\n
+DlgDocLangCode\t\t: "Landekode",\r\n
+DlgDocCharSet\t\t: "Tegnsæt kode",\r\n
+DlgDocCharSetCE\t\t: "Centraleuropæisk",\r\n
+DlgDocCharSetCT\t\t: "Traditionel kinesisk (Big5)",\r\n
+DlgDocCharSetCR\t\t: "Kyrillisk",\r\n
+DlgDocCharSetGR\t\t: "Græsk",\r\n
+DlgDocCharSetJP\t\t: "Japansk",\r\n
+DlgDocCharSetKR\t\t: "Koreansk",\r\n
+DlgDocCharSetTR\t\t: "Tyrkisk",\r\n
+DlgDocCharSetUN\t\t: "Unicode (UTF-8)",\r\n
+DlgDocCharSetWE\t\t: "Vesteuropæisk",\r\n
+DlgDocCharSetOther\t: "Anden tegnsæt kode",\r\n
+\r\n
+DlgDocDocType\t\t: "Dokumenttype kategori",\r\n
+DlgDocDocTypeOther\t: "Anden dokumenttype kategori",\r\n
+DlgDocIncXHTML\t\t: "Inkludere XHTML deklartion",\r\n
+DlgDocBgColor\t\t: "Baggrundsfarve",\r\n
+DlgDocBgImage\t\t: "Baggrundsbillede URL",\r\n
+DlgDocBgNoScroll\t: "Fastlåst baggrund",\r\n
+DlgDocCText\t\t\t: "Tekst",\r\n
+DlgDocCLink\t\t\t: "Hyperlink",\r\n
+DlgDocCVisited\t\t: "Besøgt hyperlink",\r\n
+DlgDocCActive\t\t: "Aktivt hyperlink",\r\n
+DlgDocMargins\t\t: "Sidemargen",\r\n
+DlgDocMaTop\t\t\t: "Øverst",\r\n
+DlgDocMaLeft\t\t: "Venstre",\r\n
+DlgDocMaRight\t\t: "Højre",\r\n
+DlgDocMaBottom\t\t: "Nederst",\r\n
+DlgDocMeIndex\t\t: "Dokument index nøgleord (kommasepareret)",\r\n
+DlgDocMeDescr\t\t: "Dokument beskrivelse",\r\n
+DlgDocMeAuthor\t\t: "Forfatter",\r\n
+DlgDocMeCopy\t\t: "Copyright",\r\n
+DlgDocPreview\t\t: "Vis",\r\n
+\r\n
+// Templates Dialog\r\n
+Templates\t\t\t: "Skabeloner",\r\n
+DlgTemplatesTitle\t: "Indholdsskabeloner",\r\n
+DlgTemplatesSelMsg\t: "Vælg den skabelon, som skal åbnes i editoren.<br>(Nuværende indhold vil blive overskrevet!):",\r\n
+DlgTemplatesLoading\t: "Henter liste over skabeloner...",\r\n
+DlgTemplatesNoTpl\t: "(Der er ikke defineret nogen skabelon!)",\r\n
+DlgTemplatesReplace\t: "Erstat det faktiske indhold",\r\n
+\r\n
+// About Dialog\r\n
+DlgAboutAboutTab\t: "Om",\r\n
+DlgAboutBrowserInfoTab\t: "Generelt",\r\n
+DlgAboutLicenseTab\t: "Licens",\r\n
+DlgAboutVersion\t\t: "version",\r\n
+DlgAboutInfo\t\t: "For yderlig information gå til",\r\n
+\r\n
+// Div Dialog\r\n
+DlgDivGeneralTab\t: "Generelt",\r\n
+DlgDivAdvancedTab\t: "Avanceret",\r\n
+DlgDivStyle\t\t: "Style",\r\n
+DlgDivInlineStyle\t: "Inline style"\r\n
+};\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>18430</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

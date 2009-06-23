@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!--\n
+ * FCKeditor - The text editor for internet\n
+ * Copyright (C) 2003-2004 Frederico Caldeira Knabben\n
+ * \n
+ * Licensed under the terms of the GNU Lesser General Public License:\n
+ * \t\thttp://www.opensource.org/licenses/lgpl-license.php\n
+ * \n
+ * For further information visit:\n
+ * \t\thttp://www.fckeditor.net/\n
+ * \n
+ * File Name: frmcreatefolder.html\n
+ * \tPage used to create new folders in the current folder.\n
+ * \n
+ * Version:  2.0 FC\n
+ * Modified: 2005-05-16 je vais me coucher\n
+ * \n
+ * File Authors:\n
+ * \t\tFrederico Caldeira Knabben (fredck@fckeditor.net)\n
+-->\n
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\n
+<html>\n
+\t<head>\n
+\t\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n
+\t\t<link href="Browser.css" type="text/css" rel="stylesheet">\n
+\t\t<script type="text/javascript" src="js/common.js"></script>\n
+\t\t<script language="javascript">\n
+\n
+function SetCurrentFolder( resourceType, folderPath )\n
+{\n
+\toConnector.ResourceType = resourceType ;\n
+\toConnector.CurrentFolder = folderPath\n
+}\n
+\n
+function CreateFolder()\n
+{\n
+\tvar sFolderName ;\n
+\t\n
+\twhile ( true ) \n
+\t{\n
+\t\tsFolderName = prompt( \'Type the name of the new folder:\', \'\' ) ;\n
+\t\n
+\t\tif ( sFolderName == null )\n
+\t\t\treturn ;\n
+\t\telse if ( sFolderName.length == 0 )\n
+\t\t\talert( \'Please type the folder name\' ) ;\n
+\t\telse\n
+\t\t\tbreak ;\n
+\t}\n
+\t\n
+\toConnector.SendCommand( \'CreateFolder\', \'NewFolderName=\' + encodeURI( sFolderName) , CreateFolderCallBack ) ;\n
+}\n
+\n
+function CreateFolderCallBack( fckXml )\n
+{\n
+\t// Get the current folder path.\n
+\tvar oNode = fckXml.SelectSingleNode( \'Connector/Error\' ) ;\n
+\tvar iErrorNumber = parseInt( oNode.attributes.getNamedItem(\'number\').value ) ;\n
+\t\n
+\tswitch ( iErrorNumber )\n
+\t{\n
+\t\tcase 0 :\n
+\t\t\twindow.parent.frames[\'frmResourcesList\'].Refresh() ;\n
+\t\t\tbreak ;\n
+\t\tcase 101 :\n
+\t\t\talert( \'Folder already exists\' ) ;\n
+\t\t\tbreak ;\n
+\t\tcase 102 :\n
+\t\t\talert( \'Invalid folder name\' ) ;\n
+\t\t\tbreak ;\n
+\t\tcase 103 :\n
+\t\t\talert( \'You have no permissions to create the folder\' ) ;\n
+\t\t\tbreak ;\n
+\t\tcase 110 :\n
+\t\t\talert( \'Unknown error creating folder\' ) ;\n
+\t\t\tbreak ;\n
+\t\tdefault :\n
+\t\t\talert( \'Error creating folder. Error number: \' + iErrorNumber ) ;\n
+\t\t\tbreak ;\n
+\t}\n
+}\n
+\n
+window.onload = function()\n
+{\n
+\twindow.top.IsLoadedCreateFolder = true ;\n
+}\n
+\t\t</script>\n
+\t</head>\n
+\t<body bottomMargin="0" topMargin="0">\n
+\t\t<table height="100%" cellSpacing="0" cellPadding="0" width="100%" border="0">\n
+\t\t\t<tr>\n
+\t\t\t\t<td>\n
+\t\t\t\t\t<button type="button" style="WIDTH: 100%" onclick="CreateFolder();">\n
+\t\t\t\t\t\t<table cellSpacing="0" cellPadding="0" border="0">\n
+\t\t\t\t\t\t\t<tr>\n
+\t\t\t\t\t\t\t\t<td><img height="16" alt="" src="images/Folder.gif" width="16"></td>\n
+\t\t\t\t\t\t\t\t<td>&nbsp;</td>\n
+\t\t\t\t\t\t\t\t<td nowrap>Create New Folder</td>\n
+\t\t\t\t\t\t\t</tr>\n
+\t\t\t\t\t\t</table>\n
+\t\t\t\t\t</button>\n
+\t\t\t\t</td>\n
+\t\t\t</tr>\n
+\t\t</table>\n
+\t</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>frmcreatefolder.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

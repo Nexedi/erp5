@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\r\n
+<script>\r\n
+\r\n
+var wordWindow = null;\r\n
+var controlWindow = null;\r\n
+\r\n
+function init_spell( spellerWindow ) {\r\n
+\r\n
+\tif( spellerWindow ) {\r\n
+\t\tif( spellerWindow.windowType == "wordWindow" ) {\r\n
+\t\t\twordWindow = spellerWindow;\r\n
+\t\t} else if ( spellerWindow.windowType == "controlWindow" ) {\r\n
+\t\t\tcontrolWindow = spellerWindow;\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\tif( controlWindow && wordWindow ) {\r\n
+\t\t// populate the speller object and start it off!\r\n
+\t\tvar speller = opener.speller;\r\n
+\t\twordWindow.speller = speller;\r\n
+\t\tspeller.startCheck( wordWindow, controlWindow );\r\n
+\t}\r\n
+}\r\n
+\r\n
+// encodeForPost\r\n
+function encodeForPost( str ) {\r\n
+\tvar s = new String( str );\r\n
+\ts = encodeURIComponent( s );\r\n
+\t// additionally encode single quotes to evade any PHP\r\n
+\t// magic_quotes_gpc setting (it inserts escape characters and\r\n
+\t// therefore skews the btye positions of misspelled words)\r\n
+\treturn s.replace( /\\\'/g, \'%27\' );\r\n
+}\r\n
+\r\n
+// post the text area data to the script that populates the speller\r\n
+function postWords() {\r\n
+\tvar bodyDoc = window.frames[0].document;\r\n
+\tbodyDoc.open();\r\n
+\tbodyDoc.write(\'<html>\');\r\n
+\tbodyDoc.write(\'<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\');\r\n
+\tbodyDoc.write(\'<link rel="stylesheet" type="text/css" href="spellerStyle.css"/>\');\r\n
+\tif (opener) {\r\n
+\t\tvar speller = opener.speller;\r\n
+\t\tbodyDoc.write(\'<body class="normalText" onLoad="document.forms[0].submit();">\');\r\n
+\t\tbodyDoc.write(\'<p>\' + window.parent.FCKLang.DlgSpellProgress + \'<\\/p>\');\t\t// by FredCK\r\n
+\t\tbodyDoc.write(\'<form action="\'+speller.spellCheckScript+\'" method="post">\');\r\n
+\t\tfor( var i = 0; i < speller.textInputs.length; i++ ) {\r\n
+\t\t\tbodyDoc.write(\'<input type="hidden" name="textinputs[]" value="\'+encodeForPost(speller.textInputs[i].value)+\'">\');\r\n
+\t\t}\r\n
+\t\tbodyDoc.write(\'<\\/form>\');\r\n
+\t\tbodyDoc.write(\'<\\/body>\');\r\n
+\t} else {\r\n
+\t\tbodyDoc.write(\'<body class="normalText">\');\r\n
+\t\tbodyDoc.write(\'<p><b>This page cannot be displayed<\\/b><\\/p><p>The window was not opened from another window.<\\/p>\');\r\n
+\t\tbodyDoc.write(\'<\\/body>\');\r\n
+\t}\r\n
+\tbodyDoc.write(\'<\\/html>\');\r\n
+\tbodyDoc.close();\r\n
+}\r\n
+</script>\r\n
+\r\n
+<html>\r\n
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\r\n
+<head>\r\n
+<title>Speller Pages</title>\r\n
+</head>\r\n
+<frameset rows="*,201" onLoad="postWords();">\r\n
+<frame src="blank.html">\r\n
+<frame src="controls.html">\r\n
+</frameset>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>spellchecker.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

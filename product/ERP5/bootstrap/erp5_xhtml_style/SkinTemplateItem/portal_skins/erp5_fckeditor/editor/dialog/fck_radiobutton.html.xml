@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Radio Button dialog window.\r\n
+-->\r\n
+<html>\r\n
+\t<head>\r\n
+\t\t<title>Radio Button Properties</title>\r\n
+\t\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\r\n
+\t\t<meta content="noindex, nofollow" name="robots">\r\n
+\t\t<script src="common/fck_dialog_common.js" type="text/javascript"></script>\r\n
+\t\t<script type="text/javascript">\r\n
+\r\n
+var dialog\t= window.parent ;\r\n
+var oEditor = dialog.InnerDialogLoaded() ;\r\n
+\r\n
+// Gets the document DOM\r\n
+var oDOM = oEditor.FCK.EditorDocument ;\r\n
+\r\n
+var oActiveEl = dialog.Selection.GetSelectedElement() ;\r\n
+\r\n
+window.onload = function()\r\n
+{\r\n
+\t// First of all, translate the dialog box texts\r\n
+\toEditor.FCKLanguageManager.TranslatePage(document) ;\r\n
+\r\n
+\tif ( oActiveEl && oActiveEl.tagName.toUpperCase() == \'INPUT\' && oActiveEl.type == \'radio\' )\r\n
+\t{\r\n
+\t\tGetE(\'txtName\').value\t\t= oActiveEl.name ;\r\n
+\t\tGetE(\'txtValue\').value\t\t= oEditor.FCKBrowserInfo.IsIE ? oActiveEl.value : GetAttribute( oActiveEl, \'value\' ) ;\r\n
+\t\tGetE(\'txtSelected\').checked\t= oActiveEl.checked ;\r\n
+\t}\r\n
+\telse\r\n
+\t\toActiveEl = null ;\r\n
+\r\n
+\tdialog.SetOkButton( true ) ;\r\n
+\tdialog.SetAutoSize( true ) ;\r\n
+\tSelectField( \'txtName\' ) ;\r\n
+}\r\n
+\r\n
+function Ok()\r\n
+{\r\n
+\toEditor.FCKUndo.SaveUndoStep() ;\r\n
+\r\n
+\toActiveEl = CreateNamedElement( oEditor, oActiveEl, \'INPUT\', {name: GetE(\'txtName\').value, type: \'radio\' } ) ;\r\n
+\r\n
+\tif ( oEditor.FCKBrowserInfo.IsIE )\r\n
+\t\toActiveEl.value = GetE(\'txtValue\').value ;\r\n
+\telse\r\n
+\t\tSetAttribute( oActiveEl, \'value\', GetE(\'txtValue\').value ) ;\r\n
+\r\n
+\tvar bIsChecked = GetE(\'txtSelected\').checked ;\r\n
+\tSetAttribute( oActiveEl, \'checked\', bIsChecked ? \'checked\' : null ) ;\t// For Firefox\r\n
+\toActiveEl.checked = bIsChecked ;\r\n
+\r\n
+\treturn true ;\r\n
+}\r\n
+\r\n
+\t\t</script>\r\n
+\t</head>\r\n
+\t<body style="OVERFLOW: hidden" scroll="no">\r\n
+\t\t<table height="100%" width="100%">\r\n
+\t\t\t<tr>\r\n
+\t\t\t\t<td align="center">\r\n
+\t\t\t\t\t<table border="0" cellpadding="0" cellspacing="0" width="80%">\r\n
+\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t<span fckLang="DlgCheckboxName">Name</span><br>\r\n
+\t\t\t\t\t\t\t\t<input type="text" size="20" id="txtName" style="WIDTH: 100%">\r\n
+\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t<span fckLang="DlgCheckboxValue">Value</span><br>\r\n
+\t\t\t\t\t\t\t\t<input type="text" size="20" id="txtValue" style="WIDTH: 100%">\r\n
+\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t<td><input type="checkbox" id="txtSelected"><label for="txtSelected" fckLang="DlgCheckboxSelected">Checked</label></td>\r\n
+\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t</table>\r\n
+\t\t\t\t</td>\r\n
+\t\t\t</tr>\r\n
+\t\t</table>\r\n
+\t</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>fck_radiobutton.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+-->\r\n
+<html>\r\n
+<head>\r\n
+\t<title></title>\r\n
+\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\r\n
+\t<script type="text/javascript">\r\n
+\r\n
+function doLoadScript( url )\r\n
+{\r\n
+\tif ( !url )\r\n
+\t\treturn false ;\r\n
+\r\n
+\tvar s = document.createElement( "script" ) ;\r\n
+\ts.type = "text/javascript" ;\r\n
+\ts.src = url ;\r\n
+\tdocument.getElementsByTagName( "head" )[ 0 ].appendChild( s ) ;\r\n
+\r\n
+\treturn true ;\r\n
+}\r\n
+\r\n
+function tryLoad ()\r\n
+{\r\n
+    if ( typeof( opener ) == \'undefined\' || !opener )\r\n
+        opener = parent ;\r\n
+\r\n
+    // get access to global parameters\r\n
+    oParams = opener.oldFramesetPageParams ;\r\n
+\r\n
+    // make frameset rows string prepare\r\n
+    sFramesetRows = ( parseInt( oParams.firstframeh, 10 ) || \'30\') + ",*," + ( parseInt( oParams.thirdframeh, 10 ) || \'150\' ) + \',0\' ;\r\n
+    document.getElementById( \'itFrameset\' ).rows = sFramesetRows ;\r\n
+\r\n
+    // dynamic including init frames and crossdomain transport code\r\n
+    // from config sproxy_js_frameset url\r\n
+    var addScriptUrl = oParams.sproxy_js_frameset ;\r\n
+    doLoadScript( addScriptUrl ) ;\r\n
+}\r\n
+\r\n
+\t</script>\r\n
+</head>\r\n
+<frameset id="itFrameset" onload="tryLoad();" border="0" rows="30,*,*,0">\r\n
+    <frame scrolling="no" framespacing="0" frameborder="0" noresize="noresize" marginheight="0" marginwidth="2" src="" name="navbar"></frame>\r\n
+    <frame scrolling="auto" framespacing="0" frameborder="0" noresize="noresize" marginheight="0" marginwidth="0" src="" name="mid"></frame>\r\n
+    <frame scrolling="no" framespacing="0" frameborder="0" noresize="noresize" marginheight="1" marginwidth="1" src="" name="bot"></frame>\r\n
+    <frame scrolling="no" framespacing="0" frameborder="0" noresize="noresize" marginheight="1" marginwidth="1" src="" name="spellsuggestall"></frame>\r\n
+</frameset>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>tmpFrameset.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

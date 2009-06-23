@@ -1,0 +1,854 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fckdialog.html</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>\074!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"\076\r\n
+\074!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * This page is used by all dialog box as the container.\r\n
+--\076\r\n
+\074html xmlns="http://www.w3.org/1999/xhtml"\076\r\n
+\t\074head\076\r\n
+\t\t\074title\076\074/title\076\r\n
+\t\t\074meta http-equiv="Content-Type" content="text/html; charset=utf-8" /\076\r\n
+\t\t\074meta name="robots" content="noindex, nofollow" /\076\r\n
+\t\t\074script type="text/javascript"\076\r\n
+// \074![CDATA[\r\n
+\r\n
+// Domain relaxation logic.\r\n
+(function()\r\n
+{\r\n
+\tvar d = document.domain ;\r\n
+\r\n
+\twhile ( true )\r\n
+\t{\r\n
+\t\t// Test if we can access a parent property.\r\n
+\t\ttry\r\n
+\t\t{\r\n
+\t\t\tvar parentDomain = ( Args().TopWindow || E ).document.domain ;\r\n
+\r\n
+\t\t\tif ( document.domain != parentDomain )\r\n
+\t\t\t\tdocument.domain = parentDomain ;\r\n
+\r\n
+\t\t\tbreak ;\r\n
+\t\t}\r\n
+\t\tcatch( e ) {}\r\n
+\r\n
+\t\t// Remove a domain part: www.mytest.example.com =\076 mytest.example.com =\076 example.com ...\r\n
+\t\td = d.replace( /.*?(?:\\.|$)/, \'\' ) ;\r\n
+\r\n
+\t\tif ( d.length == 0 )\r\n
+\t\t\tbreak ;\t\t// It was not able to detect the domain.\r\n
+\r\n
+\t\tdocument.domain = d ;\r\n
+\t}\r\n
+})() ;\r\n
+\r\n
+var E = frameElement._DialogArguments.Editor ;\r\n
+\r\n
+// It seems referencing to frameElement._DialogArguments directly would lead to memory leaks in IE.\r\n
+// So let\'s use functions to access its members instead.\r\n
+function Args()\r\n
+{\r\n
+\treturn frameElement._DialogArguments ;\r\n
+}\r\n
+\r\n
+function ParentDialog( dialog )\r\n
+{\r\n
+\treturn dialog ? dialog._ParentDialog : frameElement._ParentDialog ;\r\n
+}\r\n
+\r\n
+var FCK\t\t\t\t= E.FCK ;\r\n
+var FCKTools\t\t= E.FCKTools ;\r\n
+var FCKDomTools\t\t= E.FCKDomTools ;\r\n
+var FCKDialog\t\t= E.FCKDialog ;\r\n
+var FCKBrowserInfo\t= E.FCKBrowserInfo ;\r\n
+var FCKConfig\t\t= E.FCKConfig ;\r\n
+\r\n
+// Steal the focus so that the caret would no longer stay in the editor iframe.\r\n
+window.focus() ;\r\n
+\r\n
+// Sets the Skin CSS\r\n
+document.write( FCKTools.GetStyleHtml( FCKConfig.SkinDialogCSS ) ) ;\r\n
+\r\n
+// Sets the language direction.\r\n
+var langDir = E.FCKLang.Dir ;\r\n
+\r\n
+// For IE6-, the fck_dialog_ie6.js is loaded, used to fix limitations in the browser.\r\n
+if ( FCKBrowserInfo.IsIE \046\046 !FCKBrowserInfo.IsIE7 )\r\n
+\tdocument.write( \'\074\' + \'script type="text/javascript" src="\' + FCKConfig.SkinPath + \'fck_dialog_ie6.js"\076\074\' + \'\\/script\076\' ) ;\r\n
+\r\n
+FCKTools.RegisterDollarFunction( window ) ;\r\n
+\r\n
+// Resize related functions.\r\n
+var Sizer = function()\r\n
+{\r\n
+\tvar bAutoSize = false ;\r\n
+\r\n
+\tvar retval = {\r\n
+\t\t// Sets whether the dialog should auto-resize according to its content\'s height.\r\n
+\t\tSetAutoSize : function( autoSize )\r\n
+\t\t{\r\n
+\t\t\tbAutoSize = autoSize ;\r\n
+\t\t\tthis.RefreshSize() ;\r\n
+\t\t},\r\n
+\r\n
+\t\t// Fit the dialog container\'s layout to the inner iframe\'s external size.\r\n
+\t\tRefreshContainerSize : function()\r\n
+\t\t{\r\n
+\t\t\tvar frmMain = $( \'frmMain\' ) ;\r\n
+\r\n
+\t\t\tif ( frmMain )\r\n
+\t\t\t{\r\n
+\t\t\t\t// Get the container size.\r\n
+\t\t\t\tvar height = $( \'contents\' ).offsetHeight ;\r\n
+\r\n
+\t\t\t\t// Subtract the size of other elements.\r\n
+\t\t\t\theight -= $( \'TitleArea\' ).offsetHeight ;\r\n
+\t\t\t\theight -= $( \'TabsRow\' ).offsetHeight ;\r\n
+\t\t\t\theight -= $( \'PopupButtons\' ).offsetHeight ;\r\n
+\r\n
+\t\t\t\tfrmMain.style.height = Math.max( height, 0 ) + \'px\' ;\r\n
+\t\t\t}\r\n
+\t\t},\r\n
+\r\n
+\t\t// Resize and re-layout the dialog.\r\n
+\t\t// Triggers the onresize event for the layout logic.\r\n
+\t\tResizeDialog : function( width, height )\r\n
+\t\t{\r\n
+\t\t\tFCKDomTools.SetElementStyles( window.frameElement,\r\n
+\t\t\t\t\t{\r\n
+\t\t\t\t\t\t\'width\' : width + \'px\',\r\n
+\t\t\t\t\t\t\'height\' : height + \'px\'\r\n
+\t\t\t\t\t} ) ;\r\n
+\r\n
+\t\t\t// If the skin have defined a function for resize fixes, call it now.\r\n
+\t\t\tif ( typeof window.DoResizeFixes == \'function\' )\r\n
+\t\t\t\twindow.DoResizeFixes() ;\r\n
+\t\t},\r\n
+\r\n
+\t\t// if bAutoSize is true, automatically fit the dialog size and layout to\r\n
+\t\t// accomodate the inner iframe\'s internal height.\r\n
+\t\t// if bAutoSize is false, then only the layout logic for the dialog decorations\r\n
+\t\t// is run to accomodate the inner iframe\'s external height.\r\n
+\t\tRefreshSize : function()\r\n
+\t\t{\r\n
+\t\t\tif ( bAutoSize )\r\n
+\t\t\t{\r\n
+\t\t\t\tvar frmMain\t\t= $( \'frmMain\' ) ;\r\n
+\t\t\t\tvar innerDoc\t= frmMain.contentWindow.document ;\r\n
+\t\t\t\tvar isStrict\t= FCKTools.IsStrictMode( innerDoc ) ;\r\n
+\r\n
+\t\t\t\t// Get the size of the frame contents.\r\n
+\t\t\t\tvar innerWidth\t= isStrict ? innerDoc.documentElement.scrollWidth : innerDoc.body.scrollWidth ;\r\n
+\t\t\t\tvar innerHeight\t= isStrict ? innerDoc.documentElement.scrollHeight : innerDoc.body.scrollHeight ;\r\n
+\r\n
+\t\t\t\t// Get the current frame size.\r\n
+\t\t\t\tvar frameSize = FCKTools.GetViewPaneSize( frmMain.contentWindow ) ;\r\n
+\r\n
+\t\t\t\tvar deltaWidth\t= innerWidth - frameSize.Width ;\r\n
+\t\t\t\tvar deltaHeight\t= innerHeight - frameSize.Height ;\r\n
+\r\n
+\t\t\t\t// If the contents fits the current size.\r\n
+\t\t\t\tif ( deltaWidth \074= 0 \046\046 deltaHeight \074= 0 )\r\n
+\t\t\t\t\treturn ;\r\n
+\r\n
+\t\t\t\tvar dialogWidth\t\t= frameElement.offsetWidth + Math.max( deltaWidth, 0 ) ;\r\n
+\t\t\t\tvar dialogHeight\t= frameElement.offsetHeight + Math.max( deltaHeight, 0 ) ;\r\n
+\r\n
+\t\t\t\tthis.ResizeDialog( dialogWidth, dialogHeight ) ;\r\n
+\t\t\t}\r\n
+\t\t\tthis.RefreshContainerSize() ;\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\t/**\r\n
+\t * Safari seems to have a bug with the time when RefreshSize() is executed - it\r\n
+\t * thinks frmMain\'s innerHeight is 0 if we query the value too soon after the\r\n
+\t * page is loaded in some circumstances. (#1316)\r\n
+\t * TODO : Maybe this is not needed anymore after #35.\r\n
+\t */\r\n
+\tif ( FCKBrowserInfo.IsSafari )\r\n
+\t{\r\n
+\t\tvar originalRefreshSize = retval.RefreshSize ;\r\n
+\r\n
+\t\tretval.RefreshSize = function()\r\n
+\t\t{\r\n
+\t\t\tFCKTools.SetTimeout( originalRefreshSize, 1, retval ) ;\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\t/**\r\n
+\t * IE6 has a similar bug where it sometimes thinks $(\'contents\') has an\r\n
+\t * offsetHeight of 0 (#2114).\r\n
+\t */\r\n
+\tif ( FCKBrowserInfo.IsIE \046\046 !FCKBrowserInfo.IsIE7 )\r\n
+\t{\r\n
+\t\tvar originalRefreshContainerSize = retval.RefreshContainerSize ;\r\n
+\t\tretval.RefreshContainerSize = function()\r\n
+\t\t{\r\n
+\t\t\tFCKTools.SetTimeout( originalRefreshContainerSize, 1, retval ) ;\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\twindow.onresize = function()\r\n
+\t{\r\n
+\t\tretval.RefreshContainerSize() ;\r\n
+\t}\r\n
+\r\n
+\twindow.SetAutoSize = FCKTools.Bind( retval, retval.SetAutoSize ) ;\r\n
+\r\n
+\treturn retval ;\r\n
+}() ;\r\n
+\r\n
+// Manages the throbber image that appears if the inner part of dialog is taking too long to load.\r\n
+var Throbber = function()\r\n
+{\r\n
+\tvar timer ;\r\n
+\r\n
+\tvar updateThrobber = function()\r\n
+\t{\r\n
+\t\tvar throbberParent = $( \'throbberBlock\' ) ;\r\n
+\t\tvar throbberBlocks = throbberParent.childNodes ;\r\n
+\t\tvar lastClass = throbberParent.lastChild.className ;\r\n
+\r\n
+\t\t// From the last to the second one, copy the class from the previous one.\r\n
+\t\tfor ( var i = throbberBlocks.length - 1 ; i \076 0 ; i-- )\r\n
+\t\t\tthrobberBlocks[i].className = throbberBlocks[i-1].className ;\r\n
+\r\n
+\t\t// For the first one, copy the last class (rotation).\r\n
+\t\tthrobberBlocks[0].className = lastClass ;\r\n
+\t}\r\n
+\r\n
+\treturn {\r\n
+\t\tShow : function( waitMilliseconds )\r\n
+\t\t{\r\n
+\t\t\t// Auto-setup the Show function to be called again after the\r\n
+\t\t\t// requested amount of time.\r\n
+\t\t\tif ( waitMilliseconds \046\046 waitMilliseconds \076 0 )\r\n
+\t\t\t{\r\n
+\t\t\t\ttimer = FCKTools.SetTimeout( this.Show, waitMilliseconds, this, null, window ) ;\r\n
+\t\t\t\treturn ;\r\n
+\t\t\t}\r\n
+\r\n
+\t\t\tvar throbberParent = $( \'throbberBlock\' ) ;\r\n
+\r\n
+\t\t\tif (throbberParent.childNodes.length == 0)\r\n
+\t\t\t{\r\n
+\t\t\t\t// Create the throbber blocks.\r\n
+\t\t\t\tvar classIds = [ 1,2,3,4,5,4,3,2 ] ;\r\n
+\t\t\t\twhile ( classIds.length \076 0 )\r\n
+\t\t\t\t\tthrobberParent.appendChild( document.createElement( \'div\' ) ).className = \' throbber_\' + classIds.shift() ;\r\n
+\t\t\t}\r\n
+\r\n
+\t\t\t// Center the throbber.\r\n
+\t\t\tvar frm = $( \'contents\' ) ;\r\n
+\t\t\tvar frmCoords = FCKTools.GetDocumentPosition( window, frm ) ;\r\n
+\t\t\tvar x = frmCoords.x + ( frm.offsetWidth - throbberParent.offsetWidth ) / 2 ;\r\n
+\t\t\tvar y = frmCoords.y + ( frm.offsetHeight - throbberParent.offsetHeight ) / 2 ;\r\n
+\t\t\tthrobberParent.style.left = parseInt( x, 10 ) + \'px\' ;\r\n
+\t\t\tthrobberParent.style.top = parseInt( y, 10 ) + \'px\' ;\r\n
+\r\n
+\t\t\t// Show it.\r\n
+\t\t\tthrobberParent.style.visibility = \'\'  ;\r\n
+\r\n
+\t\t\t// Hide tabs and buttons:\r\n
+\t\t\t$( \'Tabs\' ).style.visibility = \'hidden\' ;\r\n
+\t\t\t$( \'PopupButtons\' ).style.visibility = \'hidden\' ;\r\n
+\r\n
+\t\t\t// Setup the animation interval.\r\n
+\t\t\ttimer = setInterval( updateThrobber, 100 ) ;\r\n
+\t\t},\r\n
+\r\n
+\t\tHide : function()\r\n
+\t\t{\r\n
+\t\t\tif ( timer )\r\n
+\t\t\t{\r\n
+\t\t\t\tclearInterval( timer ) ;\r\n
+\t\t\t\ttimer = null ;\r\n
+\t\t\t}\r\n
+\r\n
+\t\t\t$( \'throbberBlock\' ).style.visibility = \'hidden\' ;\r\n
+\r\n
+\t\t\t// Show tabs and buttons:\r\n
+\t\t\t$( \'Tabs\' ).style.visibility = \'\' ;\r\n
+\t\t\t$( \'PopupButtons\' ).style.visibility = \'\' ;\r\n
+\t\t}\r\n
+\t} ;\r\n
+}() ;\r\n
+\r\n
+// Drag and drop handlers.\r\n
+var DragAndDrop = function()\r\n
+{\r\n
+\tvar registeredWindows = [] ;\r\n
+\tvar lastCoords ;\r\n
+\tvar currentPos ;\r\n
+\r\n
+\tvar cleanUpHandlers = function()\r\n
+\t{\r\n
+\t\tfor ( var i = 0 ; i \074 registeredWindows.length ; i++ )\r\n
+\t\t{\r\n
+\t\t\tFCKTools.RemoveEventListener( registeredWindows[i].document, \'mousemove\', dragMouseMoveHandler ) ;\r\n
+\t\t\tFCKTools.RemoveEventListener( registeredWindows[i].document, \'mouseup\', dragMouseUpHandler ) ;\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\tvar dragMouseMoveHandler = function( evt )\r\n
+\t{\r\n
+\t\tif ( !lastCoords )\r\n
+\t\t\treturn ;\r\n
+\r\n
+\t\tif ( !evt )\r\n
+\t\t\tevt = FCKTools.GetElementDocument( this ).parentWindow.event ;\r\n
+\r\n
+\t\t// Updated the last coordinates.\r\n
+\t\tvar currentCoords =\r\n
+\t\t{\r\n
+\t\t\tx : evt.screenX,\r\n
+\t\t\ty : evt.screenY\r\n
+\t\t} ;\r\n
+\r\n
+\t\tcurrentPos =\r\n
+\t\t{\r\n
+\t\t\tx : currentPos.x + ( currentCoords.x - lastCoords.x ),\r\n
+\t\t\ty : currentPos.y + ( currentCoords.y - lastCoords.y )\r\n
+\t\t} ;\r\n
+\r\n
+\t\tlastCoords = currentCoords ;\r\n
+\r\n
+\t\tframeElement.style.left\t= currentPos.x + \'px\' ;\r\n
+\t\tframeElement.style.top\t= currentPos.y + \'px\' ;\r\n
+\r\n
+\t\tif ( evt.preventDefault )\r\n
+\t\t\tevt.preventDefault() ;\r\n
+\t\telse\r\n
+\t\t\tevt.returnValue = false ;\r\n
+\t}\r\n
+\r\n
+\tvar dragMouseUpHandler = function( evt )\r\n
+\t{\r\n
+\t\tif ( !lastCoords )\r\n
+\t\t\treturn ;\r\n
+\t\tif ( !evt )\r\n
+\t\t\tevt = FCKTools.GetElementDocument( this ).parentWindow.event ;\r\n
+\t\tcleanUpHandlers() ;\r\n
+\t\tlastCoords = null ;\r\n
+\t}\r\n
+\r\n
+\treturn {\r\n
+\r\n
+\t\tMouseDownHandler : function( evt )\r\n
+\t\t{\r\n
+\t\t\tvar view = null ;\r\n
+\t\t\tif ( !evt )\r\n
+\t\t\t{\r\n
+\t\t\t\tview = FCKTools.GetElementDocument( this ).parentWindow ;\r\n
+\t\t\t\tevt = view.event ;\r\n
+\t\t\t}\r\n
+\t\t\telse\r\n
+\t\t\t\tview = evt.view ;\r\n
+\r\n
+\t\t\tvar target = evt.srcElement || evt.target ;\r\n
+\t\t\tif ( target.id == \'closeButton\' || target.className == \'PopupTab\' || target.className == \'PopupTabSelected\' )\r\n
+\t\t\t\treturn ;\r\n
+\r\n
+\t\t\tlastCoords =\r\n
+\t\t\t{\r\n
+\t\t\t\tx : evt.screenX,\r\n
+\t\t\t\ty : evt.screenY\r\n
+\t\t\t} ;\r\n
+\r\n
+\t\t\t// Save the current IFRAME position.\r\n
+\t\t\tcurrentPos =\r\n
+\t\t\t{\r\n
+\t\t\t\tx : parseInt( FCKDomTools.GetCurrentElementStyle( frameElement, \'left\' ), 10 ),\r\n
+\t\t\t\ty : parseInt( FCKDomTools.GetCurrentElementStyle( frameElement, \'top\' ), 10 )\r\n
+\t\t\t} ;\r\n
+\r\n
+\t\t\tfor ( var i = 0 ; i \074 registeredWindows.length ; i++ )\r\n
+\t\t\t{\r\n
+\t\t\t\tFCKTools.AddEventListener( registeredWindows[i].document, \'mousemove\', dragMouseMoveHandler ) ;\r\n
+\t\t\t\tFCKTools.AddEventListener( registeredWindows[i].document, \'mouseup\', dragMouseUpHandler ) ;\r\n
+\t\t\t}\r\n
+\r\n
+\t\t\tif ( evt.preventDefault )\r\n
+\t\t\t\tevt.preventDefault() ;\r\n
+\t\t\telse\r\n
+\t\t\t\tevt.returnValue = false ;\r\n
+\t\t},\r\n
+\r\n
+\t\tRegisterHandlers : function( w )\r\n
+\t\t{\r\n
+\t\t\tregisteredWindows.push( w ) ;\r\n
+\t\t}\r\n
+\t}\r\n
+}() ;\r\n
+\r\n
+// Selection related functions.\r\n
+//(Became simple shortcuts after the fix for #1990)\r\n
+var Selection =\r\n
+{\r\n
+\t/**\r\n
+\t * Ensures that the editing area contains an active selection. This is a\r\n
+\t * requirement for IE, as it looses the selection when the focus moves to other\r\n
+\t * frames.\r\n
+\t */\r\n
+\tEnsureSelection : function()\r\n
+\t{\r\n
+\t\t// Move the focus to the Cancel button so even if the dialog contains a\r\n
+\t\t// contentEditable element the selection is properly restored in the editor #2496\r\n
+\t\twindow.focus() ;\r\n
+\t\t$( \'btnCancel\' ).focus() ;\r\n
+\r\n
+\t\tFCK.Selection.Restore() ;\r\n
+\t},\r\n
+\r\n
+\t/**\r\n
+\t * Get the FCKSelection object for the editor instance.\r\n
+\t */\r\n
+\tGetSelection : function()\r\n
+\t{\r\n
+\t\treturn FCK.Selection ;\r\n
+\t},\r\n
+\r\n
+\t/**\r\n
+\t * Get the selected element in the editing area (for object selections).\r\n
+\t */\r\n
+\tGetSelectedElement : function()\r\n
+\t{\r\n
+\t\treturn FCK.Selection.GetSelectedElement() ;\r\n
+\t}\r\n
+}\r\n
+\r\n
+// Tab related functions.\r\n
+var Tabs = function()\r\n
+{\r\n
+\t// Only element ids should be stored here instead of element references since setSelectedTab and TabDiv_OnClick\r\n
+\t// would build circular references with the element references inside and cause memory leaks in IE6.\r\n
+\tvar oTabs = new Object() ;\r\n
+\r\n
+\tvar setSelectedTab = function( tabCode )\r\n
+\t{\r\n
+\t\tfor ( var sCode in oTabs )\r\n
+\t\t{\r\n
+\t\t\tif ( sCode == tabCode )\r\n
+\t\t\t\t$( oTabs[sCode] ).className = \'PopupTabSelected\' ;\r\n
+\t\t\telse\r\n
+\t\t\t\t$( oTabs[sCode] ).className = \'PopupTab\' ;\r\n
+\t\t}\r\n
+\r\n
+\t\tif ( typeof( window.frames["frmMain"].OnDialogTabChange ) == \'function\' )\r\n
+\t\t\twindow.frames["frmMain"].OnDialogTabChange( tabCode ) ;\r\n
+\t}\r\n
+\r\n
+\tfunction TabDiv_OnClick()\r\n
+\t{\r\n
+\t\tsetSelectedTab( this.TabCode ) ;\r\n
+\t}\r\n
+\r\n
+\twindow.AddTab = function( tabCode, tabText, startHidden )\r\n
+\t{\r\n
+\t\tif ( typeof( oTabs[ tabCode ] ) != \'undefined\' )\r\n
+\t\t\treturn ;\r\n
+\r\n
+\t\tvar eTabsRow = $( \'Tabs\' ) ;\r\n
+\r\n
+\t\tvar oCell = eTabsRow.insertCell(  eTabsRow.cells.length - 1 ) ;\r\n
+\t\toCell.noWrap = true ;\r\n
+\r\n
+\t\tvar oDiv = document.createElement( \'DIV\' ) ;\r\n
+\t\toDiv.className = \'PopupTab\' ;\r\n
+\t\toDiv.innerHTML = tabText ;\r\n
+\t\toDiv.TabCode = tabCode ;\r\n
+\t\toDiv.onclick = TabDiv_OnClick ;\r\n
+\t\toDiv.id = Math.random() ;\r\n
+\r\n
+\t\tif ( startHidden )\r\n
+\t\t\toDiv.style.display = \'none\' ;\r\n
+\r\n
+\t\teTabsRow = $( \'TabsRow\' ) ;\r\n
+\r\n
+\t\toCell.appendChild( oDiv ) ;\r\n
+\r\n
+\t\tif ( eTabsRow.style.display == \'none\' )\r\n
+\t\t{\r\n
+\t\t\tvar eTitleArea = $( \'TitleArea\' ) ;\r\n
+\t\t\teTitleArea.className = \'PopupTitle\' ;\r\n
+\r\n
+\t\t\toDiv.className = \'PopupTabSelected\' ;\r\n
+\t\t\teTabsRow.style.display = \'\' ;\r\n
+\r\n
+\t\t\tif ( window.onresize )\r\n
+\t\t\t\twindow.onresize() ;\r\n
+\t\t}\r\n
+\r\n
+\t\toTabs[ tabCode ] = oDiv.id ;\r\n
+\r\n
+\t\tFCKTools.DisableSelection( oDiv ) ;\r\n
+\t} ;\r\n
+\r\n
+\twindow.SetSelectedTab = setSelectedTab ;\r\n
+\r\n
+\twindow.SetTabVisibility = function( tabCode, isVisible )\r\n
+\t{\r\n
+\t\tvar oTab = $( oTabs[ tabCode ] ) ;\r\n
+\t\toTab.style.display = isVisible ? \'\' : \'none\' ;\r\n
+\r\n
+\t\tif ( ! isVisible \046\046 oTab.className == \'PopupTabSelected\' )\r\n
+\t\t{\r\n
+\t\t\tfor ( var sCode in oTabs )\r\n
+\t\t\t{\r\n
+\t\t\t\tif ( $( oTabs[sCode] ).style.display != \'none\' )\r\n
+\t\t\t\t{\r\n
+\t\t\t\t\tsetSelectedTab( sCode ) ;\r\n
+\t\t\t\t\tbreak ;\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t} ;\r\n
+}() ;\r\n
+\r\n
+// readystatechange handler for registering drag and drop handlers in cover\r\n
+// iframes, defined out here to avoid memory leak.\r\n
+// Do NOT put this function as a private function as it will induce memory leak\r\n
+// in IE and it\'s not detectable with Drip or sIEve and undetectable leaks are\r\n
+// really nasty (sigh).\r\n
+var onReadyRegister = function()\r\n
+{\r\n
+\tif ( this.readyState != \'complete\' )\r\n
+\t\treturn ;\r\n
+\tDragAndDrop.RegisterHandlers( this.contentWindow ) ;\r\n
+} ;\r\n
+\r\n
+// The business logic of the dialog, dealing with operational things like\r\n
+// dialog open/dialog close/enable/disable/etc.\r\n
+(function()\r\n
+{\r\n
+\tvar setOnKeyDown = function( targetDocument )\r\n
+\t{\r\n
+\t\ttargetDocument.onkeydown = function ( e )\r\n
+\t\t{\r\n
+\t\t\te = e || event || this.parentWindow.event ;\r\n
+\t\t\tswitch ( e.keyCode )\r\n
+\t\t\t{\r\n
+\t\t\t\tcase 13 :\t\t// ENTER\r\n
+\t\t\t\t\tvar oTarget = e.srcElement || e.target ;\r\n
+\t\t\t\t\tif ( oTarget.tagName == \'TEXTAREA\' )\r\n
+\t\t\t\t\t\treturn true ;\r\n
+\t\t\t\t\tOk() ;\r\n
+\t\t\t\t\treturn false ;\r\n
+\r\n
+\t\t\t\tcase 27 :\t\t// ESC\r\n
+\t\t\t\t\tCancel() ;\r\n
+\t\t\t\t\treturn false ;\r\n
+\t\t\t}\r\n
+\t\t\treturn true ;\r\n
+\t\t}\r\n
+\t} ;\r\n
+\r\n
+\tvar contextMenuBlocker = function( e )\r\n
+\t{\r\n
+\t\tvar sTagName = e.target.tagName ;\r\n
+\t\tif ( ! ( ( sTagName == "INPUT" \046\046 e.target.type == "text" ) || sTagName == "TEXTAREA" ) )\r\n
+\t\t\te.preventDefault() ;\r\n
+\t} ;\r\n
+\r\n
+\tvar disableContextMenu = function( targetDocument )\r\n
+\t{\r\n
+\t\tif ( FCKBrowserInfo.IsIE )\r\n
+\t\t\treturn ;\r\n
+\r\n
+\t\ttargetDocument.addEventListener( \'contextmenu\', contextMenuBlocker, true ) ;\r\n
+\t} ;\r\n
+\r\n
+\t// Program entry point.\r\n
+\twindow.Init = function()\r\n
+\t{\r\n
+\t\t$( \'contents\' ).dir = langDir;\r\n
+\r\n
+\t\t// Start the throbber timer.\r\n
+\t\tThrobber.Show( 1000 ) ;\r\n
+\r\n
+\t\tSizer.RefreshContainerSize() ;\r\n
+\t\tLoadInnerDialog() ;\r\n
+\r\n
+\t\tFCKTools.DisableSelection( document.body ) ;\r\n
+\r\n
+\t\t// Make the title area draggable.\r\n
+\t\tvar titleElement = $( \'header\' ) ;\r\n
+\t\ttitleElement.onmousedown = DragAndDrop.MouseDownHandler ;\r\n
+\r\n
+\t\t// Connect mousemove and mouseup events from dialog frame and outer window to dialog dragging logic.\r\n
+\t\tDragAndDrop.RegisterHandlers( window ) ;\r\n
+\t\tDragAndDrop.RegisterHandlers( Args().TopWindow ) ;\r\n
+\r\n
+\t\t// Disable the previous dialog if it exists.\r\n
+\t\tif ( ParentDialog() )\r\n
+\t\t{\r\n
+\t\t\tParentDialog().contentWindow.SetEnabled( false ) ;\r\n
+\t\t\tif ( FCKBrowserInfo.IsIE \046\046 !FCKBrowserInfo.IsIE7 )\r\n
+\t\t\t{\r\n
+\t\t\t\tvar currentParent = ParentDialog() ;\r\n
+\t\t\t\twhile ( currentParent )\r\n
+\t\t\t\t{\r\n
+\t\t\t\t\tvar blockerFrame = currentParent.contentWindow.$( \'blocker\' ) ;\r\n
+\t\t\t\t\tif ( blockerFrame.readyState == \'complete\' )\r\n
+\t\t\t\t\t\tDragAndDrop.RegisterHandlers( blockerFrame.contentWindow ) ;\r\n
+\t\t\t\t\telse\r\n
+\t\t\t\t\t\tblockerFrame.onreadystatechange = onReadyRegister ;\r\n
+\t\t\t\t\tcurrentParent = ParentDialog( currentParent ) ;\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t\telse\r\n
+\t\t\t{\r\n
+\t\t\t\tvar currentParent = ParentDialog() ;\r\n
+\t\t\t\twhile ( currentParent )\r\n
+\t\t\t\t{\r\n
+\t\t\t\t\tDragAndDrop.RegisterHandlers( currentParent.contentWindow ) ;\r\n
+\t\t\t\t\tcurrentParent = ParentDialog( currentParent ) ;\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\r\n
+\t\t// If this is the only dialog on screen, enable the background cover.\r\n
+\t\tif ( FCKBrowserInfo.IsIE \046\046 !FCKBrowserInfo.IsIE7 )\r\n
+\t\t{\r\n
+\t\t\tvar blockerFrame = FCKDialog.GetCover().firstChild ;\r\n
+\t\t\tif ( blockerFrame.readyState == \'complete\' )\r\n
+\t\t\t\tDragAndDrop.RegisterHandlers( blockerFrame.contentWindow ) ;\r\n
+\t\t\telse\r\n
+\t\t\t\tblockerFrame.onreadystatechange = onReadyRegister;\r\n
+\t\t}\r\n
+\r\n
+\t\t// Add Enter/Esc hotkeys and disable context menu for the dialog.\r\n
+\t\tsetOnKeyDown( document ) ;\r\n
+\t\tdisableContextMenu( document ) ;\r\n
+\t} ;\r\n
+\r\n
+\twindow.LoadInnerDialog = function()\r\n
+\t{\r\n
+\t\tif ( window.onresize )\r\n
+\t\t\twindow.onresize() ;\r\n
+\r\n
+\t\t// First of all, translate the dialog box contents.\r\n
+\t\tE.FCKLanguageManager.TranslatePage( document ) ;\r\n
+\r\n
+\t\t// Create the IFRAME that holds the dialog contents.\r\n
+\t\t$( \'innerContents\' ).innerHTML = \'\074iframe id="frmMain" src="\' + Args().Page + \'" name="frmMain" frameborder="0" width="100%" height="100%" scrolling="auto" style="visibility: hidden;" allowtransparency="true"\076\074\\/iframe\076\' ;\r\n
+\t} ;\r\n
+\r\n
+\twindow.InnerDialogLoaded = function()\r\n
+\t{\r\n
+\t\t// If the dialog has been closed before the iframe is loaded, do nothing.\r\n
+\t\tif ( !frameElement.parentNode )\r\n
+\t\t\treturn null ;\r\n
+\r\n
+\t\tThrobber.Hide() ;\r\n
+\r\n
+\t\tvar frmMain = $(\'frmMain\') ;\r\n
+\t\tvar innerWindow = frmMain.contentWindow ;\r\n
+\t\tvar innerDoc = innerWindow.document ;\r\n
+\r\n
+\t\t// Show the loaded iframe.\r\n
+\t\tfrmMain.style.visibility = \'\' ;\r\n
+\r\n
+\t\t// Set the language direction.\r\n
+\t\tinnerDoc.documentElement.dir = langDir ;\r\n
+\r\n
+\t\t// Sets the Skin CSS.\r\n
+\t\tinnerDoc.write( FCKTools.GetStyleHtml( FCKConfig.SkinDialogCSS ) ) ;\r\n
+\r\n
+\t\tsetOnKeyDown( innerDoc ) ;\r\n
+\t\tdisableContextMenu( innerDoc ) ;\r\n
+\r\n
+\t\tSizer.RefreshContainerSize();\r\n
+\r\n
+\t\tDragAndDrop.RegisterHandlers( innerWindow ) ;\r\n
+\r\n
+\t\tinnerWindow.focus() ;\r\n
+\r\n
+\t\treturn E ;\r\n
+\t} ;\r\n
+\r\n
+\twindow.SetOkButton = function( showIt )\r\n
+\t{\r\n
+\t\t$(\'btnOk\').style.visibility = ( showIt ? \'\' : \'hidden\' ) ;\r\n
+\t} ;\r\n
+\r\n
+\twindow.Ok = function()\r\n
+\t{\r\n
+\t\tSelection.EnsureSelection() ;\r\n
+\r\n
+\t\tvar frmMain = window.frames["frmMain"] ;\r\n
+\r\n
+\t\tif ( frmMain.Ok \046\046 frmMain.Ok() )\r\n
+\t\t\tCloseDialog() ;\r\n
+\t\telse\r\n
+\t\t\tfrmMain.focus() ;\r\n
+\t} ;\r\n
+\r\n
+\twindow.Cancel = function( dontFireChange )\r\n
+\t{\r\n
+\t\tSelection.EnsureSelection() ;\r\n
+\t\treturn CloseDialog( dontFireChange ) ;\r\n
+\t} ;\r\n
+\r\n
+\twindow.CloseDialog = function( dontFireChange )\r\n
+\t{\r\n
+\t\tThrobber.Hide() ;\r\n
+\r\n
+\t\t// Points the src to a non-existent location to avoid loading errors later, in case the dialog\r\n
+\t\t// haven\'t been completed loaded at this point.\r\n
+\t\tif ( $( \'frmMain\' ) )\r\n
+\t\t\t$( \'frmMain\' ).src = FCKTools.GetVoidUrl() ;\r\n
+\r\n
+\t\tif ( !dontFireChange \046\046 !FCK.EditMode )\r\n
+\t\t{\r\n
+\t\t\t// All dialog windows, by default, will fire the "OnSelectionChange"\r\n
+\t\t\t// event, no matter the Ok or Cancel button has been pressed.\r\n
+\t\t\t// It seems that OnSelectionChange may enter on a concurrency state\r\n
+\t\t\t// on some situations (#1965), so we should put the event firing in\r\n
+\t\t\t// the execution queue instead of executing it immediately.\r\n
+\t\t\tsetTimeout( function()\r\n
+\t\t\t\t{\r\n
+\t\t\t\t\tFCK.Events.FireEvent( \'OnSelectionChange\' ) ;\r\n
+\t\t\t\t}, 0 ) ;\r\n
+\t\t}\r\n
+\r\n
+\t\tFCKDialog.OnDialogClose( window ) ;\r\n
+\t} ;\r\n
+\r\n
+\twindow.SetEnabled = function( isEnabled )\r\n
+\t{\r\n
+\t\tvar cover = $( \'cover\' ) ;\r\n
+\t\tcover.style.display = isEnabled ? \'none\' : \'\' ;\r\n
+\r\n
+\t\tif ( FCKBrowserInfo.IsIE \046\046 !FCKBrowserInfo.IsIE7 )\r\n
+\t\t{\r\n
+\t\t\tif ( !isEnabled )\r\n
+\t\t\t{\r\n
+\t\t\t\t// Inser the blocker IFRAME before the cover.\r\n
+\t\t\t\tvar blocker = document.createElement( \'iframe\' ) ;\r\n
+\t\t\t\tblocker.src = FCKTools.GetVoidUrl() ;\r\n
+\t\t\t\tblocker.hideFocus = true ;\r\n
+\t\t\t\tblocker.frameBorder = 0 ;\r\n
+\t\t\t\tblocker.id = blocker.className = \'blocker\' ;\r\n
+\t\t\t\tcover.appendChild( blocker ) ;\r\n
+\t\t\t}\r\n
+\t\t\telse\r\n
+\t\t\t{\r\n
+\t\t\t\tvar blocker = $( \'blocker\' ) ;\r\n
+\t\t\t\tif ( blocker \046\046 blocker.parentNode )\r\n
+\t\t\t\t\tblocker.parentNode.removeChild( blocker ) ;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t} ;\r\n
+})() ;\r\n
+// ]]\076\r\n
+\t\t\074/script\076\r\n
+\t\074/head\076\r\n
+\t\074body onload="Init();" class="PopupBody"\076\r\n
+\t\t\074div class="contents" id="contents"\076\r\n
+\t\t\t\074div id="header"\076\r\n
+\t\t\t\t\074div id="TitleArea" class="PopupTitle PopupTitleBorder"\076\r\n
+\t\t\t\t\t\074script type="text/javascript"\076\r\n
+// \074![CDATA[\r\n
+document.write( Args().Title ) ;\r\n
+// ]]\076\r\n
+\t\t\t\t\t\074/script\076\r\n
+\t\t\t\t\t\074div id="closeButton" onclick="Cancel();"\076\074/div\076\r\n
+\t\t\t\t\074/div\076\r\n
+\t\t\t\t\074div id="TabsRow" class="PopupTabArea" style="display: none"\076\r\n
+\t\t\t\t\t\074table border="0" cellpadding="0" cellspacing="0" width="100%"\076\r\n
+\t\t\t\t\t\t\074tr id="Tabs"\076\r\n
+\t\t\t\t\t\t\t\074td class="PopupTabEmptyArea"\076\046nbsp;\074/td\076\r\n
+\t\t\t\t\t\t\t\074td class="PopupTabEmptyArea" width="100%"\076\046nbsp;\074/td\076\r\n
+\t\t\t\t\t\t\074/tr\076\r\n
+\t\t\t\t\t\074/table\076\r\n
+\t\t\t\t\074/div\076\r\n
+\t\t\t\074/div\076\r\n
+\t\t\t\074div id="innerContents"\076\074/div\076\r\n
+\t\t\t\074div id="PopupButtons" class="PopupButtons"\076\r\n
+\t\t\t\t\074table border="0" cellpadding="0" cellspacing="0"\076\r\n
+\t\t\t\t\t\074tr\076\r\n
+\t\t\t\t\t\t\074td width="100%"\076\046nbsp;\074/td\076\r\n
+\t\t\t\t\t\t\074td nowrap="nowrap"\076\r\n
+\t\t\t\t\t\t\t\074input id="btnOk" style="visibility: hidden;" type="button" value="Ok" class="Button" onclick="Ok();" fckLang="DlgBtnOK" /\076\r\n
+\t\t\t\t\t\t\t\046nbsp;\r\n
+\t\t\t\t\t\t\t\074input id="btnCancel" type="button" value="Cancel" class="Button" onclick="Cancel();" fckLang="DlgBtnCancel" /\076\r\n
+\t\t\t\t\t\t\074/td\076\r\n
+\t\t\t\t\t\074/tr\076\r\n
+\t\t\t\t\074/table\076\r\n
+\t\t\t\074/div\076\r\n
+\t\t\074/div\076\r\n
+\t\t\074div class="tl"\076\074/div\076\r\n
+\t\t\074div class="tc"\076\074/div\076\r\n
+\t\t\074div class="tr"\076\074/div\076\r\n
+\t\t\074div class="ml"\076\074/div\076\r\n
+\t\t\074div class="mr"\076\074/div\076\r\n
+\t\t\074div class="bl"\076\074/div\076\r\n
+\t\t\074div class="bc"\076\074/div\076\r\n
+\t\t\074div class="br"\076\074/div\076\r\n
+\t\t\074div class="cover" id="cover" style="display:none"\076\074/div\076\r\n
+\t\t\074div id="throbberBlock" style="position: absolute; visibility: hidden"\076\074/div\076\r\n
+\t\t\074script type="text/javascript"\076\r\n
+// \074![CDATA[\r\n
+\t\t\t// Set the class name for language direction.\r\n
+\t\t\tdocument.body.className += \' \' + langDir ;\r\n
+\r\n
+\t\t\tvar cover = $( \'cover\' ) ;\r\n
+\t\t\tcover.style.backgroundColor = FCKConfig.BackgroundBlockerColor ;\r\n
+\t\t\tFCKDomTools.SetOpacity( cover, FCKConfig.BackgroundBlockerOpacity ) ;\r\n
+// ]]\076\r\n
+\t\t\074/script\076\r\n
+\t\074/body\076\r\n
+\074/html\076\r\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

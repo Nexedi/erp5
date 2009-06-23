@@ -1,0 +1,377 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749208.15</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fckeditor.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * This is the integration file for JavaScript.\r\n
+ *\r\n
+ * It defines the FCKeditor class that can be used to create editor\r\n
+ * instances in a HTML page in the client side. For server side\r\n
+ * operations, use the specific integration system.\r\n
+ */\r\n
+\r\n
+// FCKeditor Class\r\n
+var FCKeditor = function( instanceName, width, height, toolbarSet, value )\r\n
+{\r\n
+\t// Properties\r\n
+\tthis.InstanceName\t= instanceName ;\r\n
+\tthis.Width\t\t\t= width\t\t\t|| \'100%\' ;\r\n
+\tthis.Height\t\t\t= height\t\t|| \'200\' ;\r\n
+\tthis.ToolbarSet\t\t= toolbarSet\t|| \'Default\' ;\r\n
+\tthis.Value\t\t\t= value\t\t\t|| \'\' ;\r\n
+\tthis.BasePath\t\t= FCKeditor.BasePath ;\r\n
+\tthis.CheckBrowser\t= true ;\r\n
+\tthis.DisplayErrors\t= true ;\r\n
+\r\n
+\tthis.Config\t\t\t= new Object() ;\r\n
+\r\n
+\t// Events\r\n
+\tthis.OnError\t\t= null ;\t// function( source, errorNumber, errorDescription )\r\n
+}\r\n
+\r\n
+/**\r\n
+ * This is the default BasePath used by all editor instances.\r\n
+ */\r\n
+FCKeditor.BasePath = \'/fckeditor/\' ;\r\n
+\r\n
+/**\r\n
+ * The minimum height used when replacing textareas.\r\n
+ */\r\n
+FCKeditor.MinHeight = 200 ;\r\n
+\r\n
+/**\r\n
+ * The minimum width used when replacing textareas.\r\n
+ */\r\n
+FCKeditor.MinWidth = 750 ;\r\n
+\r\n
+FCKeditor.prototype.Version\t\t\t= \'2.6.4\' ;\r\n
+FCKeditor.prototype.VersionBuild\t= \'21629\' ;\r\n
+\r\n
+FCKeditor.prototype.Create = function()\r\n
+{\r\n
+\tdocument.write( this.CreateHtml() ) ;\r\n
+}\r\n
+\r\n
+FCKeditor.prototype.CreateHtml = function()\r\n
+{\r\n
+\t// Check for errors\r\n
+\tif ( !this.InstanceName || this.InstanceName.length == 0 )\r\n
+\t{\r\n
+\t\tthis._ThrowError( 701, \'You must specify an instance name.\' ) ;\r\n
+\t\treturn \'\' ;\r\n
+\t}\r\n
+\r\n
+\tvar sHtml = \'\' ;\r\n
+\r\n
+\tif ( !this.CheckBrowser || this._IsCompatibleBrowser() )\r\n
+\t{\r\n
+\t\tsHtml += \'<input type="hidden" id="\' + this.InstanceName + \'" name="\' + this.InstanceName + \'" value="\' + this._HTMLEncode( this.Value ) + \'" style="display:none" />\' ;\r\n
+\t\tsHtml += this._GetConfigHtml() ;\r\n
+\t\tsHtml += this._GetIFrameHtml() ;\r\n
+\t}\r\n
+\telse\r\n
+\t{\r\n
+\t\tvar sWidth  = this.Width.toString().indexOf(\'%\')  > 0 ? this.Width  : this.Width  + \'px\' ;\r\n
+\t\tvar sHeight = this.Height.toString().indexOf(\'%\') > 0 ? this.Height : this.Height + \'px\' ;\r\n
+\r\n
+\t\tsHtml += \'<textarea name="\' + this.InstanceName +\r\n
+\t\t\t\'" rows="4" cols="40" style="width:\' + sWidth +\r\n
+\t\t\t\';height:\' + sHeight ;\r\n
+\r\n
+\t\tif ( this.TabIndex )\r\n
+\t\t\tsHtml += \'" tabindex="\' + this.TabIndex ;\r\n
+\r\n
+\t\tsHtml += \'">\' +\r\n
+\t\t\tthis._HTMLEncode( this.Value ) +\r\n
+\t\t\t\'<\\/textarea>\' ;\r\n
+\t}\r\n
+\r\n
+\treturn sHtml ;\r\n
+}\r\n
+\r\n
+FCKeditor.prototype.ReplaceTextarea = function()\r\n
+{\r\n
+\tif ( document.getElementById( this.InstanceName + \'___Frame\' ) )\r\n
+\t\treturn ;\r\n
+\tif ( !this.CheckBrowser || this._IsCompatibleBrowser() )\r\n
+\t{\r\n
+\t\t// We must check the elements firstly using the Id and then the name.\r\n
+\t\tvar oTextarea = document.getElementById( this.InstanceName ) ;\r\n
+\t\tvar colElementsByName = document.getElementsByName( this.InstanceName ) ;\r\n
+\t\tvar i = 0;\r\n
+\t\twhile ( oTextarea || i == 0 )\r\n
+\t\t{\r\n
+\t\t\tif ( oTextarea && oTextarea.tagName.toLowerCase() == \'textarea\' )\r\n
+\t\t\t\tbreak ;\r\n
+\t\t\toTextarea = colElementsByName[i++] ;\r\n
+\t\t}\r\n
+\r\n
+\t\tif ( !oTextarea )\r\n
+\t\t{\r\n
+\t\t\talert( \'Error: The TEXTAREA with id or name set to "\' + this.InstanceName + \'" was not found\' ) ;\r\n
+\t\t\treturn ;\r\n
+\t\t}\r\n
+\r\n
+\t\toTextarea.style.display = \'none\' ;\r\n
+\r\n
+\t\tif ( oTextarea.tabIndex )\r\n
+\t\t\tthis.TabIndex = oTextarea.tabIndex ;\r\n
+\r\n
+\t\tthis._InsertHtmlBefore( this._GetConfigHtml(), oTextarea ) ;\r\n
+\t\tthis._InsertHtmlBefore( this._GetIFrameHtml(), oTextarea ) ;\r\n
+\t}\r\n
+}\r\n
+\r\n
+FCKeditor.prototype._InsertHtmlBefore = function( html, element )\r\n
+{\r\n
+\tif ( element.insertAdjacentHTML )\t// IE\r\n
+\t\telement.insertAdjacentHTML( \'beforeBegin\', html ) ;\r\n
+\telse\t\t\t\t\t\t\t\t// Gecko\r\n
+\t{\r\n
+\t\tvar oRange = document.createRange() ;\r\n
+\t\toRange.setStartBefore( element ) ;\r\n
+\t\tvar oFragment = oRange.createContextualFragment( html );\r\n
+\t\telement.parentNode.insertBefore( oFragment, element ) ;\r\n
+\t}\r\n
+}\r\n
+\r\n
+FCKeditor.prototype._GetConfigHtml = function()\r\n
+{\r\n
+\tvar sConfig = \'\' ;\r\n
+\tfor ( var o in this.Config )\r\n
+\t{\r\n
+\t\tif ( sConfig.length > 0 ) sConfig += \'&amp;\' ;\r\n
+\t\tsConfig += encodeURIComponent( o ) + \'=\' + encodeURIComponent( this.Config[o] ) ;\r\n
+\t}\r\n
+\r\n
+\treturn \'<input type="hidden" id="\' + this.InstanceName + \'___Config" value="\' + sConfig + \'" style="display:none" />\' ;\r\n
+}\r\n
+\r\n
+FCKeditor.prototype._GetIFrameHtml = function()\r\n
+{\r\n
+\tvar sFile = \'fckeditor.html\' ;\r\n
+\r\n
+\ttry\r\n
+\t{\r\n
+\t\tif ( (/fcksource=true/i).test( window.top.location.search ) )\r\n
+\t\t\tsFile = \'fckeditor.original.html\' ;\r\n
+\t}\r\n
+\tcatch (e) { /* Ignore it. Much probably we are inside a FRAME where the "top" is in another domain (security error). */ }\r\n
+\r\n
+\tvar sLink = this.BasePath + \'editor/\' + sFile + \'?InstanceName=\' + encodeURIComponent( this.InstanceName ) ;\r\n
+\tif (this.ToolbarSet)\r\n
+\t\tsLink += \'&amp;Toolbar=\' + this.ToolbarSet ;\r\n
+\r\n
+\tvar html = \'<iframe id="\' + this.InstanceName +\r\n
+\t\t\'___Frame" src="\' + sLink +\r\n
+\t\t\'" width="\' + this.Width +\r\n
+\t\t\'" height="\' + this.Height ;\r\n
+\r\n
+\tif ( this.TabIndex )\r\n
+\t\thtml += \'" tabindex="\' + this.TabIndex ;\r\n
+\r\n
+\thtml += \'" frameborder="0" scrolling="no"></iframe>\' ;\r\n
+\r\n
+\treturn html ;\r\n
+}\r\n
+\r\n
+FCKeditor.prototype._IsCompatibleBrowser = function()\r\n
+{\r\n
+\treturn FCKeditor_IsCompatibleBrowser() ;\r\n
+}\r\n
+\r\n
+FCKeditor.prototype._ThrowError = function( errorNumber, errorDescription )\r\n
+{\r\n
+\tthis.ErrorNumber\t\t= errorNumber ;\r\n
+\tthis.ErrorDescription\t= errorDescription ;\r\n
+\r\n
+\tif ( this.DisplayErrors )\r\n
+\t{\r\n
+\t\tdocument.write( \'<div style="COLOR: #ff0000">\' ) ;\r\n
+\t\tdocument.write( \'[ FCKeditor Error \' + this.ErrorNumber + \': \' + this.ErrorDescription + \' ]\' ) ;\r\n
+\t\tdocument.write( \'</div>\' ) ;\r\n
+\t}\r\n
+\r\n
+\tif ( typeof( this.OnError ) == \'function\' )\r\n
+\t\tthis.OnError( this, errorNumber, errorDescription ) ;\r\n
+}\r\n
+\r\n
+FCKeditor.prototype._HTMLEncode = function( text )\r\n
+{\r\n
+\tif ( typeof( text ) != "string" )\r\n
+\t\ttext = text.toString() ;\r\n
+\r\n
+\ttext = text.replace(\r\n
+\t\t/&/g, "&amp;").replace(\r\n
+\t\t/"/g, "&quot;").replace(\r\n
+\t\t/</g, "&lt;").replace(\r\n
+\t\t/>/g, "&gt;") ;\r\n
+\r\n
+\treturn text ;\r\n
+}\r\n
+\r\n
+;(function()\r\n
+{\r\n
+\tvar textareaToEditor = function( textarea )\r\n
+\t{\r\n
+\t\tvar editor = new FCKeditor( textarea.name ) ;\r\n
+\r\n
+\t\teditor.Width = Math.max( textarea.offsetWidth, FCKeditor.MinWidth ) ;\r\n
+\t\teditor.Height = Math.max( textarea.offsetHeight, FCKeditor.MinHeight ) ;\r\n
+\r\n
+\t\treturn editor ;\r\n
+\t}\r\n
+\r\n
+\t/**\r\n
+\t * Replace all <textarea> elements available in the document with FCKeditor\r\n
+\t * instances.\r\n
+\t *\r\n
+\t *\t// Replace all <textarea> elements in the page.\r\n
+\t *\tFCKeditor.ReplaceAllTextareas() ;\r\n
+\t *\r\n
+\t *\t// Replace all <textarea class="myClassName"> elements in the page.\r\n
+\t *\tFCKeditor.ReplaceAllTextareas( \'myClassName\' ) ;\r\n
+\t *\r\n
+\t *\t// Selectively replace <textarea> elements, based on custom assertions.\r\n
+\t *\tFCKeditor.ReplaceAllTextareas( function( textarea, editor )\r\n
+\t *\t\t{\r\n
+\t *\t\t\t// Custom code to evaluate the replace, returning false if it\r\n
+\t *\t\t\t// must not be done.\r\n
+\t *\t\t\t// It also passes the "editor" parameter, so the developer can\r\n
+\t *\t\t\t// customize the instance.\r\n
+\t *\t\t} ) ;\r\n
+\t */\r\n
+\tFCKeditor.ReplaceAllTextareas = function()\r\n
+\t{\r\n
+\t\tvar textareas = document.getElementsByTagName( \'textarea\' ) ;\r\n
+\r\n
+\t\tfor ( var i = 0 ; i < textareas.length ; i++ )\r\n
+\t\t{\r\n
+\t\t\tvar editor = null ;\r\n
+\t\t\tvar textarea = textareas[i] ;\r\n
+\t\t\tvar name = textarea.name ;\r\n
+\r\n
+\t\t\t// The "name" attribute must exist.\r\n
+\t\t\tif ( !name || name.length == 0 )\r\n
+\t\t\t\tcontinue ;\r\n
+\r\n
+\t\t\tif ( typeof arguments[0] == \'string\' )\r\n
+\t\t\t{\r\n
+\t\t\t\t// The textarea class name could be passed as the function\r\n
+\t\t\t\t// parameter.\r\n
+\r\n
+\t\t\t\tvar classRegex = new RegExp( \'(?:^| )\' + arguments[0] + \'(?:$| )\' ) ;\r\n
+\r\n
+\t\t\t\tif ( !classRegex.test( textarea.className ) )\r\n
+\t\t\t\t\tcontinue ;\r\n
+\t\t\t}\r\n
+\t\t\telse if ( typeof arguments[0] == \'function\' )\r\n
+\t\t\t{\r\n
+\t\t\t\t// An assertion function could be passed as the function parameter.\r\n
+\t\t\t\t// It must explicitly return "false" to ignore a specific <textarea>.\r\n
+\t\t\t\teditor = textareaToEditor( textarea ) ;\r\n
+\t\t\t\tif ( arguments[0]( textarea, editor ) === false )\r\n
+\t\t\t\t\tcontinue ;\r\n
+\t\t\t}\r\n
+\r\n
+\t\t\tif ( !editor )\r\n
+\t\t\t\teditor = textareaToEditor( textarea ) ;\r\n
+\r\n
+\t\t\teditor.ReplaceTextarea() ;\r\n
+\t\t}\r\n
+\t}\r\n
+})() ;\r\n
+\r\n
+function FCKeditor_IsCompatibleBrowser()\r\n
+{\r\n
+\tvar sAgent = navigator.userAgent.toLowerCase() ;\r\n
+\r\n
+\t// Internet Explorer 5.5+\r\n
+\tif ( /*@cc_on!@*/false && sAgent.indexOf("mac") == -1 )\r\n
+\t{\r\n
+\t\tvar sBrowserVersion = navigator.appVersion.match(/MSIE (.\\..)/)[1] ;\r\n
+\t\treturn ( sBrowserVersion >= 5.5 ) ;\r\n
+\t}\r\n
+\r\n
+\t// Gecko (Opera 9 tries to behave like Gecko at this point).\r\n
+\tif ( navigator.product == "Gecko" && navigator.productSub >= 20030210 && !( typeof(opera) == \'object\' && opera.postError ) )\r\n
+\t\treturn true ;\r\n
+\r\n
+\t// Opera 9.50+\r\n
+\tif ( window.opera && window.opera.version && parseFloat( window.opera.version() ) >= 9.5 )\r\n
+\t\treturn true ;\r\n
+\r\n
+\t// Adobe AIR\r\n
+\t// Checked before Safari because AIR have the WebKit rich text editor\r\n
+\t// features from Safari 3.0.4, but the version reported is 420.\r\n
+\tif ( sAgent.indexOf( \' adobeair/\' ) != -1 )\r\n
+\t\treturn ( sAgent.match( / adobeair\\/(\\d+)/ )[1] >= 1 ) ;\t// Build must be at least v1\r\n
+\r\n
+\t// Safari 3+\r\n
+\tif ( sAgent.indexOf( \' applewebkit/\' ) != -1 )\r\n
+\t\treturn ( sAgent.match( / applewebkit\\/(\\d+)/ )[1] >= 522 ) ;\t// Build must be at least 522 (v3)\r\n
+\r\n
+\treturn false ;\r\n
+}\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>9606</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

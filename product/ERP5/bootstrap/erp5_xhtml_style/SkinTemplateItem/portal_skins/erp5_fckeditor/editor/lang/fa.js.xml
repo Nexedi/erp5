@@ -1,0 +1,581 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749254.43</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fa.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Persian language file.\r\n
+ */\r\n
+\r\n
+var FCKLang =\r\n
+{\r\n
+// Language direction : "ltr" (left to right) or "rtl" (right to left).\r\n
+Dir\t\t\t\t\t: "rtl",\r\n
+\r\n
+ToolbarCollapse\t\t: "برچیدن نوارابزار",\r\n
+ToolbarExpand\t\t: "گستردن نوارابزار",\r\n
+\r\n
+// Toolbar Items and Context Menu\r\n
+Save\t\t\t\t: "ذخیره",\r\n
+NewPage\t\t\t\t: "برگهٴ تازه",\r\n
+Preview\t\t\t\t: "پیش‌نمایش",\r\n
+Cut\t\t\t\t\t: "برش",\r\n
+Copy\t\t\t\t: "کپی",\r\n
+Paste\t\t\t\t: "چسباندن",\r\n
+PasteText\t\t\t: "چسباندن به عنوان متن ِساده",\r\n
+PasteWord\t\t\t: "چسباندن از Word",\r\n
+Print\t\t\t\t: "چاپ",\r\n
+SelectAll\t\t\t: "گزینش همه",\r\n
+RemoveFormat\t\t: "برداشتن فرمت",\r\n
+InsertLinkLbl\t\t: "پیوند",\r\n
+InsertLink\t\t\t: "گنجاندن/ویرایش ِپیوند",\r\n
+RemoveLink\t\t\t: "برداشتن پیوند",\r\n
+VisitLink\t\t\t: "باز کردن پیوند",\r\n
+Anchor\t\t\t\t: "گنجاندن/ویرایش ِلنگر",\r\n
+AnchorDelete\t\t: "برداشتن لنگر",\r\n
+InsertImageLbl\t\t: "تصویر",\r\n
+InsertImage\t\t\t: "گنجاندن/ویرایش ِتصویر",\r\n
+InsertFlashLbl\t\t: "Flash",\r\n
+InsertFlash\t\t\t: "گنجاندن/ویرایش ِFlash",\r\n
+InsertTableLbl\t\t: "جدول",\r\n
+InsertTable\t\t\t: "گنجاندن/ویرایش ِجدول",\r\n
+InsertLineLbl\t\t: "خط",\r\n
+InsertLine\t\t\t: "گنجاندن خط ِافقی",\r\n
+InsertSpecialCharLbl: "نویسهٴ ویژه",\r\n
+InsertSpecialChar\t: "گنجاندن نویسهٴ ویژه",\r\n
+InsertSmileyLbl\t\t: "خندانک",\r\n
+InsertSmiley\t\t: "گنجاندن خندانک",\r\n
+About\t\t\t\t: "دربارهٴ FCKeditor",\r\n
+Bold\t\t\t\t: "درشت",\r\n
+Italic\t\t\t\t: "خمیده",\r\n
+Underline\t\t\t: "خط‌زیردار",\r\n
+StrikeThrough\t\t: "میان‌خط",\r\n
+Subscript\t\t\t: "زیرنویس",\r\n
+Superscript\t\t\t: "بالانویس",\r\n
+LeftJustify\t\t\t: "چپ‌چین",\r\n
+CenterJustify\t\t: "میان‌چین",\r\n
+RightJustify\t\t: "راست‌چین",\r\n
+BlockJustify\t\t: "بلوک‌چین",\r\n
+DecreaseIndent\t\t: "کاهش تورفتگی",\r\n
+IncreaseIndent\t\t: "افزایش تورفتگی",\r\n
+Blockquote\t\t\t: "بلوک نقل قول",\r\n
+CreateDiv\t\t\t: "Create Div Container",\t//MISSING\r\n
+EditDiv\t\t\t\t: "Edit Div Container",\t//MISSING\r\n
+DeleteDiv\t\t\t: "Remove Div Container",\t//MISSING\r\n
+Undo\t\t\t\t: "واچیدن",\r\n
+Redo\t\t\t\t: "بازچیدن",\r\n
+NumberedListLbl\t\t: "فهرست شماره‌دار",\r\n
+NumberedList\t\t: "گنجاندن/برداشتن فهرست شماره‌دار",\r\n
+BulletedListLbl\t\t: "فهرست نقطه‌ای",\r\n
+BulletedList\t\t: "گنجاندن/برداشتن فهرست نقطه‌ای",\r\n
+ShowTableBorders\t: "نمایش لبهٴ جدول",\r\n
+ShowDetails\t\t\t: "نمایش جزئیات",\r\n
+Style\t\t\t\t: "سبک",\r\n
+FontFormat\t\t\t: "فرمت",\r\n
+Font\t\t\t\t: "قلم",\r\n
+FontSize\t\t\t: "اندازه",\r\n
+TextColor\t\t\t: "رنگ متن",\r\n
+BGColor\t\t\t\t: "رنگ پس‌زمینه",\r\n
+Source\t\t\t\t: "منبع",\r\n
+Find\t\t\t\t: "جستجو",\r\n
+Replace\t\t\t\t: "جایگزینی",\r\n
+SpellCheck\t\t\t: "بررسی املا",\r\n
+UniversalKeyboard\t: "صفحه‌کلید جهانی",\r\n
+PageBreakLbl\t\t: "شکستگی ِپایان ِبرگه",\r\n
+PageBreak\t\t\t: "گنجاندن شکستگی ِپایان ِبرگه",\r\n
+\r\n
+Form\t\t\t: "فرم",\r\n
+Checkbox\t\t: "خانهٴ گزینه‌ای",\r\n
+RadioButton\t\t: "دکمهٴ رادیویی",\r\n
+TextField\t\t: "فیلد متنی",\r\n
+Textarea\t\t: "ناحیهٴ متنی",\r\n
+HiddenField\t\t: "فیلد پنهان",\r\n
+Button\t\t\t: "دکمه",\r\n
+SelectionField\t: "فیلد چندگزینه‌ای",\r\n
+ImageButton\t\t: "دکمهٴ تصویری",\r\n
+\r\n
+FitWindow\t\t: "بیشینه‌سازی ِاندازهٴ ویرایشگر",\r\n
+ShowBlocks\t\t: "نمایش بلوک‌ها",\r\n
+\r\n
+// Context Menu\r\n
+EditLink\t\t\t: "ویرایش پیوند",\r\n
+CellCM\t\t\t\t: "سلول",\r\n
+RowCM\t\t\t\t: "سطر",\r\n
+ColumnCM\t\t\t: "ستون",\r\n
+InsertRowAfter\t\t: "افزودن سطر بعد از",\r\n
+InsertRowBefore\t\t: "افزودن سطر قبل از",\r\n
+DeleteRows\t\t\t: "حذف سطرها",\r\n
+InsertColumnAfter\t: "افزودن ستون بعد از",\r\n
+InsertColumnBefore\t: "افزودن ستون قبل از",\r\n
+DeleteColumns\t\t: "حذف ستونها",\r\n
+InsertCellAfter\t\t: "افزودن سلول بعد از",\r\n
+InsertCellBefore\t: "افزودن سلول قبل از",\r\n
+DeleteCells\t\t\t: "حذف سلولها",\r\n
+MergeCells\t\t\t: "ادغام سلولها",\r\n
+MergeRight\t\t\t: "ادغام به راست",\r\n
+MergeDown\t\t\t: "ادغام به پایین",\r\n
+HorizontalSplitCell\t: "جدا کردن افقی سلول",\r\n
+VerticalSplitCell\t: "جدا کردن عمودی سلول",\r\n
+TableDelete\t\t\t: "پاک‌کردن جدول",\r\n
+CellProperties\t\t: "ویژگیهای سلول",\r\n
+TableProperties\t\t: "ویژگیهای جدول",\r\n
+ImageProperties\t\t: "ویژگیهای تصویر",\r\n
+FlashProperties\t\t: "ویژگیهای Flash",\r\n
+\r\n
+AnchorProp\t\t\t: "ویژگیهای لنگر",\r\n
+ButtonProp\t\t\t: "ویژگیهای دکمه",\r\n
+CheckboxProp\t\t: "ویژگیهای خانهٴ گزینه‌ای",\r\n
+HiddenFieldProp\t\t: "ویژگیهای فیلد پنهان",\r\n
+RadioButtonProp\t\t: "ویژگیهای دکمهٴ رادیویی",\r\n
+ImageButtonProp\t\t: "ویژگیهای دکمهٴ تصویری",\r\n
+TextFieldProp\t\t: "ویژگیهای فیلد متنی",\r\n
+SelectionFieldProp\t: "ویژگیهای فیلد چندگزینه‌ای",\r\n
+TextareaProp\t\t: "ویژگیهای ناحیهٴ متنی",\r\n
+FormProp\t\t\t: "ویژگیهای فرم",\r\n
+\r\n
+FontFormats\t\t\t: "نرمال;فرمت‌شده;آدرس;سرنویس 1;سرنویس 2;سرنویس 3;سرنویس 4;سرنویس 5;سرنویس 6;بند;(DIV)",\r\n
+\r\n
+// Alerts and Messages\r\n
+ProcessingXHTML\t\t: "پردازش XHTML. لطفا صبر کنید...",\r\n
+Done\t\t\t\t: "انجام شد",\r\n
+PasteWordConfirm\t: "متنی که می‌خواهید بچسبانید به نظر می‌رسد از Word کپی شده است. آیا می‌خواهید قبل از چسباندن آن را پاک‌سازی کنید؟",\r\n
+NotCompatiblePaste\t: "این فرمان برای مرورگر Internet Explorer از نگارش 5.5 یا بالاتر در دسترس است. آیا می‌خواهید بدون پاک‌سازی، متن را بچسبانید؟",\r\n
+UnknownToolbarItem\t: "فقرهٴ نوارابزار ناشناخته \\"%1\\"",\r\n
+UnknownCommand\t\t: "نام دستور ناشناخته \\"%1\\"",\r\n
+NotImplemented\t\t: "دستور پیاده‌سازی‌نشده",\r\n
+UnknownToolbarSet\t: "مجموعهٴ نوارابزار \\"%1\\" وجود ندارد",\r\n
+NoActiveX\t\t\t: "تنظیمات امنیتی مرورگر شما ممکن است در بعضی از ویژگیهای مرورگر محدودیت ایجاد کند. شما باید گزینهٴ \\"Run ActiveX controls and plug-ins\\" را فعال کنید. ممکن است شما با خطاهایی روبرو باشید و متوجه کمبود ویژگیهایی شوید.",\r\n
+BrowseServerBlocked : "توانایی بازگشایی مرورگر منابع فراهم نیست. اطمینان حاصل کنید که تمامی برنامه‌های پیشگیری از نمایش popup را از کار بازداشته‌اید.",\r\n
+DialogBlocked\t\t: "توانایی بازگشایی پنجرهٴ کوچک ِگفتگو فراهم نیست. اطمینان حاصل کنید که تمامی برنامه‌های پیشگیری از نمایش popup را از کار بازداشته‌اید.",\r\n
+VisitLinkBlocked\t: "امکان بازکردن یک پنجره جدید نیست. اطمینان حاصل کنید که تمامی برنامه‌های پیشگیری از نمایش popup را از کار بازداشته‌اید.",\r\n
+\r\n
+// Dialogs\r\n
+DlgBtnOK\t\t\t: "پذیرش",\r\n
+DlgBtnCancel\t\t: "انصراف",\r\n
+DlgBtnClose\t\t\t: "بستن",\r\n
+DlgBtnBrowseServer\t: "فهرست‌نمایی سرور",\r\n
+DlgAdvancedTag\t\t: "پیشرفته",\r\n
+DlgOpOther\t\t\t: "<غیره>",\r\n
+DlgInfoTab\t\t\t: "اطلاعات",\r\n
+DlgAlertUrl\t\t\t: "لطفاً URL را بنویسید",\r\n
+\r\n
+// General Dialogs Labels\r\n
+DlgGenNotSet\t\t: "<تعین‌نشده>",\r\n
+DlgGenId\t\t\t: "شناسه",\r\n
+DlgGenLangDir\t\t: "جهت‌نمای زبان",\r\n
+DlgGenLangDirLtr\t: "چپ به راست (LTR)",\r\n
+DlgGenLangDirRtl\t: "راست به چپ (RTL)",\r\n
+DlgGenLangCode\t\t: "کد زبان",\r\n
+DlgGenAccessKey\t\t: "کلید دستیابی",\r\n
+DlgGenName\t\t\t: "نام",\r\n
+DlgGenTabIndex\t\t: "نمایهٴ دسترسی با Tab",\r\n
+DlgGenLongDescr\t\t: "URL توصیف طولانی",\r\n
+DlgGenClass\t\t\t: "کلاسهای شیوه‌نامه(Stylesheet)",\r\n
+DlgGenTitle\t\t\t: "عنوان کمکی",\r\n
+DlgGenContType\t\t: "نوع محتوای کمکی",\r\n
+DlgGenLinkCharset\t: "نویسه‌گان منبع ِپیوندشده",\r\n
+DlgGenStyle\t\t\t: "شیوه(style)",\r\n
+\r\n
+// Image Dialog\r\n
+DlgImgTitle\t\t\t: "ویژگیهای تصویر",\r\n
+DlgImgInfoTab\t\t: "اطلاعات تصویر",\r\n
+DlgImgBtnUpload\t\t: "به سرور بفرست",\r\n
+DlgImgURL\t\t\t: "URL",\r\n
+DlgImgUpload\t\t: "انتقال به سرور",\r\n
+DlgImgAlt\t\t\t: "متن جایگزین",\r\n
+DlgImgWidth\t\t\t: "پهنا",\r\n
+DlgImgHeight\t\t: "درازا",\r\n
+DlgImgLockRatio\t\t: "قفل‌کردن ِنسبت",\r\n
+DlgBtnResetSize\t\t: "بازنشانی اندازه",\r\n
+DlgImgBorder\t\t: "لبه",\r\n
+DlgImgHSpace\t\t: "فاصلهٴ افقی",\r\n
+DlgImgVSpace\t\t: "فاصلهٴ عمودی",\r\n
+DlgImgAlign\t\t\t: "چینش",\r\n
+DlgImgAlignLeft\t\t: "چپ",\r\n
+DlgImgAlignAbsBottom: "پائین مطلق",\r\n
+DlgImgAlignAbsMiddle: "وسط مطلق",\r\n
+DlgImgAlignBaseline\t: "خط‌پایه",\r\n
+DlgImgAlignBottom\t: "پائین",\r\n
+DlgImgAlignMiddle\t: "وسط",\r\n
+DlgImgAlignRight\t: "راست",\r\n
+DlgImgAlignTextTop\t: "متن بالا",\r\n
+DlgImgAlignTop\t\t: "بالا",\r\n
+DlgImgPreview\t\t: "پیش‌نمایش",\r\n
+DlgImgAlertUrl\t\t: "لطفا URL تصویر را بنویسید",\r\n
+DlgImgLinkTab\t\t: "پیوند",\r\n
+\r\n
+// Flash Dialog\r\n
+DlgFlashTitle\t\t: "ویژگیهای Flash",\r\n
+DlgFlashChkPlay\t\t: "آغاز ِخودکار",\r\n
+DlgFlashChkLoop\t\t: "اجرای پیاپی",\r\n
+DlgFlashChkMenu\t\t: "دردسترس‌بودن منوی Flash",\r\n
+DlgFlashScale\t\t: "مقیاس",\r\n
+DlgFlashScaleAll\t: "نمایش همه",\r\n
+DlgFlashScaleNoBorder\t: "بدون کران",\r\n
+DlgFlashScaleFit\t: "جایگیری کامل",\r\n
+\r\n
+// Link Dialog\r\n
+DlgLnkWindowTitle\t: "پیوند",\r\n
+DlgLnkInfoTab\t\t: "اطلاعات پیوند",\r\n
+DlgLnkTargetTab\t\t: "مقصد",\r\n
+\r\n
+DlgLnkType\t\t\t: "نوع پیوند",\r\n
+DlgLnkTypeURL\t\t: "URL",\r\n
+DlgLnkTypeAnchor\t: "لنگر در همین صفحه",\r\n
+DlgLnkTypeEMail\t\t: "پست الکترونیکی",\r\n
+DlgLnkProto\t\t\t: "پروتکل",\r\n
+DlgLnkProtoOther\t: "<دیگر>",\r\n
+DlgLnkURL\t\t\t: "URL",\r\n
+DlgLnkAnchorSel\t\t: "یک لنگر برگزینید",\r\n
+DlgLnkAnchorByName\t: "با نام لنگر",\r\n
+DlgLnkAnchorById\t: "با شناسهٴ المان",\r\n
+DlgLnkNoAnchors\t\t: "(در این سند لنگری دردسترس نیست)",\r\n
+DlgLnkEMail\t\t\t: "نشانی پست الکترونیکی",\r\n
+DlgLnkEMailSubject\t: "موضوع پیام",\r\n
+DlgLnkEMailBody\t\t: "متن پیام",\r\n
+DlgLnkUpload\t\t: "انتقال به سرور",\r\n
+DlgLnkBtnUpload\t\t: "به سرور بفرست",\r\n
+\r\n
+DlgLnkTarget\t\t: "مقصد",\r\n
+DlgLnkTargetFrame\t: "<فریم>",\r\n
+DlgLnkTargetPopup\t: "<پنجرهٴ پاپاپ>",\r\n
+DlgLnkTargetBlank\t: "پنجرهٴ دیگر (_blank)",\r\n
+DlgLnkTargetParent\t: "پنجرهٴ والد (_parent)",\r\n
+DlgLnkTargetSelf\t: "همان پنجره (_self)",\r\n
+DlgLnkTargetTop\t\t: "بالاترین پنجره (_top)",\r\n
+DlgLnkTargetFrameName\t: "نام فریم مقصد",\r\n
+DlgLnkPopWinName\t: "نام پنجرهٴ پاپاپ",\r\n
+DlgLnkPopWinFeat\t: "ویژگیهای پنجرهٴ پاپاپ",\r\n
+DlgLnkPopResize\t\t: "قابل تغییر اندازه",\r\n
+DlgLnkPopLocation\t: "نوار موقعیت",\r\n
+DlgLnkPopMenu\t\t: "نوار منو",\r\n
+DlgLnkPopScroll\t\t: "میله‌های پیمایش",\r\n
+DlgLnkPopStatus\t\t: "نوار وضعیت",\r\n
+DlgLnkPopToolbar\t: "نوارابزار",\r\n
+DlgLnkPopFullScrn\t: "تمام‌صفحه (IE)",\r\n
+DlgLnkPopDependent\t: "وابسته (Netscape)",\r\n
+DlgLnkPopWidth\t\t: "پهنا",\r\n
+DlgLnkPopHeight\t\t: "درازا",\r\n
+DlgLnkPopLeft\t\t: "موقعیت ِچپ",\r\n
+DlgLnkPopTop\t\t: "موقعیت ِبالا",\r\n
+\r\n
+DlnLnkMsgNoUrl\t\t: "لطفا URL پیوند را بنویسید",\r\n
+DlnLnkMsgNoEMail\t: "لطفا نشانی پست الکترونیکی را بنویسید",\r\n
+DlnLnkMsgNoAnchor\t: "لطفا لنگری را برگزینید",\r\n
+DlnLnkMsgInvPopName\t: "نام پنجرهٴ پاپاپ باید با یک نویسهٴ الفبایی آغاز گردد و نباید فاصله‌های خالی در آن باشند",\r\n
+\r\n
+// Color Dialog\r\n
+DlgColorTitle\t\t: "گزینش رنگ",\r\n
+DlgColorBtnClear\t: "پاک‌کردن",\r\n
+DlgColorHighlight\t: "نمونه",\r\n
+DlgColorSelected\t: "برگزیده",\r\n
+\r\n
+// Smiley Dialog\r\n
+DlgSmileyTitle\t\t: "گنجاندن خندانک",\r\n
+\r\n
+// Special Character Dialog\r\n
+DlgSpecialCharTitle\t: "گزینش نویسهٴ‌ویژه",\r\n
+\r\n
+// Table Dialog\r\n
+DlgTableTitle\t\t: "ویژگیهای جدول",\r\n
+DlgTableRows\t\t: "سطرها",\r\n
+DlgTableColumns\t\t: "ستونها",\r\n
+DlgTableBorder\t\t: "اندازهٴ لبه",\r\n
+DlgTableAlign\t\t: "چینش",\r\n
+DlgTableAlignNotSet\t: "<تعین‌نشده>",\r\n
+DlgTableAlignLeft\t: "چپ",\r\n
+DlgTableAlignCenter\t: "وسط",\r\n
+DlgTableAlignRight\t: "راست",\r\n
+DlgTableWidth\t\t: "پهنا",\r\n
+DlgTableWidthPx\t\t: "پیکسل",\r\n
+DlgTableWidthPc\t\t: "درصد",\r\n
+DlgTableHeight\t\t: "درازا",\r\n
+DlgTableCellSpace\t: "فاصلهٴ میان سلولها",\r\n
+DlgTableCellPad\t\t: "فاصلهٴ پرشده در سلول",\r\n
+DlgTableCaption\t\t: "عنوان",\r\n
+DlgTableSummary\t\t: "خلاصه",\r\n
+DlgTableHeaders\t\t: "Headers",\t//MISSING\r\n
+DlgTableHeadersNone\t\t: "None",\t//MISSING\r\n
+DlgTableHeadersColumn\t: "First column",\t//MISSING\r\n
+DlgTableHeadersRow\t\t: "First Row",\t//MISSING\r\n
+DlgTableHeadersBoth\t\t: "Both",\t//MISSING\r\n
+\r\n
+// Table Cell Dialog\r\n
+DlgCellTitle\t\t: "ویژگیهای سلول",\r\n
+DlgCellWidth\t\t: "پهنا",\r\n
+DlgCellWidthPx\t\t: "پیکسل",\r\n
+DlgCellWidthPc\t\t: "درصد",\r\n
+DlgCellHeight\t\t: "درازا",\r\n
+DlgCellWordWrap\t\t: "شکستن واژه‌ها",\r\n
+DlgCellWordWrapNotSet\t: "<تعین‌نشده>",\r\n
+DlgCellWordWrapYes\t: "بله",\r\n
+DlgCellWordWrapNo\t: "خیر",\r\n
+DlgCellHorAlign\t\t: "چینش ِافقی",\r\n
+DlgCellHorAlignNotSet\t: "<تعین‌نشده>",\r\n
+DlgCellHorAlignLeft\t: "چپ",\r\n
+DlgCellHorAlignCenter\t: "وسط",\r\n
+DlgCellHorAlignRight: "راست",\r\n
+DlgCellVerAlign\t\t: "چینش ِعمودی",\r\n
+DlgCellVerAlignNotSet\t: "<تعین‌نشده>",\r\n
+DlgCellVerAlignTop\t: "بالا",\r\n
+DlgCellVerAlignMiddle\t: "میان",\r\n
+DlgCellVerAlignBottom\t: "پائین",\r\n
+DlgCellVerAlignBaseline\t: "خط‌پایه",\r\n
+DlgCellType\t\t: "Cell Type",\t//MISSING\r\n
+DlgCellTypeData\t\t: "Data",\t//MISSING\r\n
+DlgCellTypeHeader\t: "Header",\t//MISSING\r\n
+DlgCellRowSpan\t\t: "گستردگی سطرها",\r\n
+DlgCellCollSpan\t\t: "گستردگی ستونها",\r\n
+DlgCellBackColor\t: "رنگ پس‌زمینه",\r\n
+DlgCellBorderColor\t: "رنگ لبه",\r\n
+DlgCellBtnSelect\t: "برگزینید...",\r\n
+\r\n
+// Find and Replace Dialog\r\n
+DlgFindAndReplaceTitle\t: "جستجو و جایگزینی",\r\n
+\r\n
+// Find Dialog\r\n
+DlgFindTitle\t\t: "یافتن",\r\n
+DlgFindFindBtn\t\t: "یافتن",\r\n
+DlgFindNotFoundMsg\t: "متن موردنظر یافت نشد.",\r\n
+\r\n
+// Replace Dialog\r\n
+DlgReplaceTitle\t\t\t: "جایگزینی",\r\n
+DlgReplaceFindLbl\t\t: "چه‌چیز را می‌یابید:",\r\n
+DlgReplaceReplaceLbl\t: "جایگزینی با:",\r\n
+DlgReplaceCaseChk\t\t: "همسانی در بزرگی و کوچکی نویسه‌ها",\r\n
+DlgReplaceReplaceBtn\t: "جایگزینی",\r\n
+DlgReplaceReplAllBtn\t: "جایگزینی همهٴ یافته‌ها",\r\n
+DlgReplaceWordChk\t\t: "همسانی با واژهٴ کامل",\r\n
+\r\n
+// Paste Operations / Dialog\r\n
+PasteErrorCut\t: "تنظیمات امنیتی مرورگر شما اجازه نمی‌دهد که ویرایشگر به طور خودکار عملکردهای برش را انجام دهد. لطفا با دکمه‌های صفحه‌کلید این کار را انجام دهید (Ctrl+X).",\r\n
+PasteErrorCopy\t: "تنظیمات امنیتی مرورگر شما اجازه نمی‌دهد که ویرایشگر به طور خودکار عملکردهای کپی‌کردن را انجام دهد. لطفا با دکمه‌های صفحه‌کلید این کار را انجام دهید (Ctrl+C).",\r\n
+\r\n
+PasteAsText\t\t: "چسباندن به عنوان متن ِساده",\r\n
+PasteFromWord\t: "چسباندن از Word",\r\n
+\r\n
+DlgPasteMsg2\t: "لطفا متن را با کلیدهای (<STRONG>Ctrl+V</STRONG>) در این جعبهٴ متنی بچسبانید و <STRONG>پذیرش</STRONG> را بزنید.",\r\n
+DlgPasteSec\t\t: "به خاطر تنظیمات امنیتی مرورگر شما، ویرایشگر نمی‌تواند دسترسی مستقیم به داده‌های clipboard داشته باشد. شما باید دوباره آنرا در این پنجره بچسبانید.",\r\n
+DlgPasteIgnoreFont\t\t: "چشم‌پوشی از تعاریف نوع قلم",\r\n
+DlgPasteRemoveStyles\t: "چشم‌پوشی از تعاریف سبک (style)",\r\n
+\r\n
+// Color Picker\r\n
+ColorAutomatic\t: "خودکار",\r\n
+ColorMoreColors\t: "رنگهای بیشتر...",\r\n
+\r\n
+// Document Properties\r\n
+DocProps\t\t: "ویژگیهای سند",\r\n
+\r\n
+// Anchor Dialog\r\n
+DlgAnchorTitle\t\t: "ویژگیهای لنگر",\r\n
+DlgAnchorName\t\t: "نام لنگر",\r\n
+DlgAnchorErrorName\t: "لطفا نام لنگر را بنویسید",\r\n
+\r\n
+// Speller Pages Dialog\r\n
+DlgSpellNotInDic\t\t: "در واژه‌نامه یافت نشد",\r\n
+DlgSpellChangeTo\t\t: "تغییر به",\r\n
+DlgSpellBtnIgnore\t\t: "چشم‌پوشی",\r\n
+DlgSpellBtnIgnoreAll\t: "چشم‌پوشی همه",\r\n
+DlgSpellBtnReplace\t\t: "جایگزینی",\r\n
+DlgSpellBtnReplaceAll\t: "جایگزینی همه",\r\n
+DlgSpellBtnUndo\t\t\t: "واچینش",\r\n
+DlgSpellNoSuggestions\t: "- پیشنهادی نیست -",\r\n
+DlgSpellProgress\t\t: "بررسی املا در حال انجام...",\r\n
+DlgSpellNoMispell\t\t: "بررسی املا انجام شد. هیچ غلط‌املائی یافت نشد",\r\n
+DlgSpellNoChanges\t\t: "بررسی املا انجام شد. هیچ واژه‌ای تغییر نیافت",\r\n
+DlgSpellOneChange\t\t: "بررسی املا انجام شد. یک واژه تغییر یافت",\r\n
+DlgSpellManyChanges\t\t: "بررسی املا انجام شد. %1 واژه تغییر یافت",\r\n
+\r\n
+IeSpellDownload\t\t\t: "بررسی‌کنندهٴ املا نصب نشده است. آیا می‌خواهید آن را هم‌اکنون دریافت کنید؟",\r\n
+\r\n
+// Button Dialog\r\n
+DlgButtonText\t\t: "متن (مقدار)",\r\n
+DlgButtonType\t\t: "نوع",\r\n
+DlgButtonTypeBtn\t: "دکمه",\r\n
+DlgButtonTypeSbm\t: "Submit",\r\n
+DlgButtonTypeRst\t: "بازنشانی (Reset)",\r\n
+\r\n
+// Checkbox and Radio Button Dialogs\r\n
+DlgCheckboxName\t\t: "نام",\r\n
+DlgCheckboxValue\t: "مقدار",\r\n
+DlgCheckboxSelected\t: "برگزیده",\r\n
+\r\n
+// Form Dialog\r\n
+DlgFormName\t\t: "نام",\r\n
+DlgFormAction\t: "رویداد",\r\n
+DlgFormMethod\t: "متد",\r\n
+\r\n
+// Select Field Dialog\r\n
+DlgSelectName\t\t: "نام",\r\n
+DlgSelectValue\t\t: "مقدار",\r\n
+DlgSelectSize\t\t: "اندازه",\r\n
+DlgSelectLines\t\t: "خطوط",\r\n
+DlgSelectChkMulti\t: "گزینش چندگانه فراهم باشد",\r\n
+DlgSelectOpAvail\t: "گزینه‌های دردسترس",\r\n
+DlgSelectOpText\t\t: "متن",\r\n
+DlgSelectOpValue\t: "مقدار",\r\n
+DlgSelectBtnAdd\t\t: "افزودن",\r\n
+DlgSelectBtnModify\t: "ویرایش",\r\n
+DlgSelectBtnUp\t\t: "بالا",\r\n
+DlgSelectBtnDown\t: "پائین",\r\n
+DlgSelectBtnSetValue : "تنظیم به عنوان مقدار ِبرگزیده",\r\n
+DlgSelectBtnDelete\t: "پاک‌کردن",\r\n
+\r\n
+// Textarea Dialog\r\n
+DlgTextareaName\t: "نام",\r\n
+DlgTextareaCols\t: "ستونها",\r\n
+DlgTextareaRows\t: "سطرها",\r\n
+\r\n
+// Text Field Dialog\r\n
+DlgTextName\t\t\t: "نام",\r\n
+DlgTextValue\t\t: "مقدار",\r\n
+DlgTextCharWidth\t: "پهنای نویسه",\r\n
+DlgTextMaxChars\t\t: "بیشینهٴ نویسه‌ها",\r\n
+DlgTextType\t\t\t: "نوع",\r\n
+DlgTextTypeText\t\t: "متن",\r\n
+DlgTextTypePass\t\t: "گذرواژه",\r\n
+\r\n
+// Hidden Field Dialog\r\n
+DlgHiddenName\t: "نام",\r\n
+DlgHiddenValue\t: "مقدار",\r\n
+\r\n
+// Bulleted List Dialog\r\n
+BulletedListProp\t: "ویژگیهای فهرست نقطه‌ای",\r\n
+NumberedListProp\t: "ویژگیهای فهرست شماره‌دار",\r\n
+DlgLstStart\t\t\t: "آغاز",\r\n
+DlgLstType\t\t\t: "نوع",\r\n
+DlgLstTypeCircle\t: "دایره",\r\n
+DlgLstTypeDisc\t\t: "قرص",\r\n
+DlgLstTypeSquare\t: "چهارگوش",\r\n
+DlgLstTypeNumbers\t: "شماره‌ها (1، 2، 3)",\r\n
+DlgLstTypeLCase\t\t: "نویسه‌های کوچک (a، b، c)",\r\n
+DlgLstTypeUCase\t\t: "نویسه‌های بزرگ (A، B، C)",\r\n
+DlgLstTypeSRoman\t: "شمارگان رومی کوچک (i، ii، iii)",\r\n
+DlgLstTypeLRoman\t: "شمارگان رومی بزرگ (I، II، III)",\r\n
+\r\n
+// Document Properties Dialog\r\n
+DlgDocGeneralTab\t: "عمومی",\r\n
+DlgDocBackTab\t\t: "پس‌زمینه",\r\n
+DlgDocColorsTab\t\t: "رنگها و حاشیه‌ها",\r\n
+DlgDocMetaTab\t\t: "فراداده",\r\n
+\r\n
+DlgDocPageTitle\t\t: "عنوان صفحه",\r\n
+DlgDocLangDir\t\t: "جهت زبان",\r\n
+DlgDocLangDirLTR\t: "چپ به راست (LTR(",\r\n
+DlgDocLangDirRTL\t: "راست به چپ (RTL(",\r\n
+DlgDocLangCode\t\t: "کد زبان",\r\n
+DlgDocCharSet\t\t: "رمزگذاری نویسه‌گان",\r\n
+DlgDocCharSetCE\t\t: "اروپای مرکزی",\r\n
+DlgDocCharSetCT\t\t: "چینی رسمی (Big5)",\r\n
+DlgDocCharSetCR\t\t: "سیریلیک",\r\n
+DlgDocCharSetGR\t\t: "یونانی",\r\n
+DlgDocCharSetJP\t\t: "ژاپنی",\r\n
+DlgDocCharSetKR\t\t: "کره‌ای",\r\n
+DlgDocCharSetTR\t\t: "ترکی",\r\n
+DlgDocCharSetUN\t\t: "یونیکُد (UTF-8)",\r\n
+DlgDocCharSetWE\t\t: "اروپای غربی",\r\n
+DlgDocCharSetOther\t: "رمزگذاری نویسه‌گان دیگر",\r\n
+\r\n
+DlgDocDocType\t\t: "عنوان نوع سند",\r\n
+DlgDocDocTypeOther\t: "عنوان نوع سند دیگر",\r\n
+DlgDocIncXHTML\t\t: "شامل تعاریف XHTML",\r\n
+DlgDocBgColor\t\t: "رنگ پس‌زمینه",\r\n
+DlgDocBgImage\t\t: "URL تصویر پس‌زمینه",\r\n
+DlgDocBgNoScroll\t: "پس‌زمینهٴ پیمایش‌ناپذیر",\r\n
+DlgDocCText\t\t\t: "متن",\r\n
+DlgDocCLink\t\t\t: "پیوند",\r\n
+DlgDocCVisited\t\t: "پیوند مشاهده‌شده",\r\n
+DlgDocCActive\t\t: "پیوند فعال",\r\n
+DlgDocMargins\t\t: "حاشیه‌های صفحه",\r\n
+DlgDocMaTop\t\t\t: "بالا",\r\n
+DlgDocMaLeft\t\t: "چپ",\r\n
+DlgDocMaRight\t\t: "راست",\r\n
+DlgDocMaBottom\t\t: "پایین",\r\n
+DlgDocMeIndex\t\t: "کلیدواژگان نمایه‌گذاری سند (با کاما جدا شوند)",\r\n
+DlgDocMeDescr\t\t: "توصیف سند",\r\n
+DlgDocMeAuthor\t\t: "نویسنده",\r\n
+DlgDocMeCopy\t\t: "کپی‌رایت",\r\n
+DlgDocPreview\t\t: "پیش‌نمایش",\r\n
+\r\n
+// Templates Dialog\r\n
+Templates\t\t\t: "الگوها",\r\n
+DlgTemplatesTitle\t: "الگوهای محتویات",\r\n
+DlgTemplatesSelMsg\t: "لطفا الگوی موردنظر را برای بازکردن در ویرایشگر برگزینید<br>(محتویات کنونی از دست خواهند رفت):",\r\n
+DlgTemplatesLoading\t: "بارگذاری فهرست الگوها. لطفا صبر کنید...",\r\n
+DlgTemplatesNoTpl\t: "(الگوئی تعریف نشده است)",\r\n
+DlgTemplatesReplace\t: "محتویات کنونی جایگزین شوند",\r\n
+\r\n
+// About Dialog\r\n
+DlgAboutAboutTab\t: "درباره",\r\n
+DlgAboutBrowserInfoTab\t: "اطلاعات مرورگر",\r\n
+DlgAboutLicenseTab\t: "گواهینامه",\r\n
+DlgAboutVersion\t\t: "نگارش",\r\n
+DlgAboutInfo\t\t: "برای آگاهی بیشتر به این نشانی بروید",\r\n
+\r\n
+// Div Dialog\r\n
+DlgDivGeneralTab\t: "General",\t//MISSING\r\n
+DlgDivAdvancedTab\t: "Advanced",\t//MISSING\r\n
+DlgDivStyle\t\t: "Style",\t//MISSING\r\n
+DlgDivInlineStyle\t: "Inline Style"\t//MISSING\r\n
+};\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>23563</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

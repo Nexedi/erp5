@@ -1,0 +1,581 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749251.96</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ar.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Arabic language file.\r\n
+ */\r\n
+\r\n
+var FCKLang =\r\n
+{\r\n
+// Language direction : "ltr" (left to right) or "rtl" (right to left).\r\n
+Dir\t\t\t\t\t: "rtl",\r\n
+\r\n
+ToolbarCollapse\t\t: "ضم شريط الأدوات",\r\n
+ToolbarExpand\t\t: "تمدد شريط الأدوات",\r\n
+\r\n
+// Toolbar Items and Context Menu\r\n
+Save\t\t\t\t: "حفظ",\r\n
+NewPage\t\t\t\t: "صفحة جديدة",\r\n
+Preview\t\t\t\t: "معاينة الصفحة",\r\n
+Cut\t\t\t\t\t: "قص",\r\n
+Copy\t\t\t\t: "نسخ",\r\n
+Paste\t\t\t\t: "لصق",\r\n
+PasteText\t\t\t: "لصق كنص بسيط",\r\n
+PasteWord\t\t\t: "لصق من وورد",\r\n
+Print\t\t\t\t: "طباعة",\r\n
+SelectAll\t\t\t: "تحديد الكل",\r\n
+RemoveFormat\t\t: "إزالة التنسيقات",\r\n
+InsertLinkLbl\t\t: "رابط",\r\n
+InsertLink\t\t\t: "إدراج/تحرير رابط",\r\n
+RemoveLink\t\t\t: "إزالة رابط",\r\n
+VisitLink\t\t\t: "افتح الرابط",\r\n
+Anchor\t\t\t\t: "إدراج/تحرير إشارة مرجعية",\r\n
+AnchorDelete\t\t: "إزالة إشارة مرجعية",\r\n
+InsertImageLbl\t\t: "صورة",\r\n
+InsertImage\t\t\t: "إدراج/تحرير صورة",\r\n
+InsertFlashLbl\t\t: "فلاش",\r\n
+InsertFlash\t\t\t: "إدراج/تحرير فيلم فلاش",\r\n
+InsertTableLbl\t\t: "جدول",\r\n
+InsertTable\t\t\t: "إدراج/تحرير جدول",\r\n
+InsertLineLbl\t\t: "خط فاصل",\r\n
+InsertLine\t\t\t: "إدراج خط فاصل",\r\n
+InsertSpecialCharLbl: "رموز",\r\n
+InsertSpecialChar\t: "إدراج  رموز..ِ",\r\n
+InsertSmileyLbl\t\t: "ابتسامات",\r\n
+InsertSmiley\t\t: "إدراج ابتسامات",\r\n
+About\t\t\t\t: "حول FCKeditor",\r\n
+Bold\t\t\t\t: "غامق",\r\n
+Italic\t\t\t\t: "مائل",\r\n
+Underline\t\t\t: "تسطير",\r\n
+StrikeThrough\t\t: "يتوسطه خط",\r\n
+Subscript\t\t\t: "منخفض",\r\n
+Superscript\t\t\t: "مرتفع",\r\n
+LeftJustify\t\t\t: "محاذاة إلى اليسار",\r\n
+CenterJustify\t\t: "توسيط",\r\n
+RightJustify\t\t: "محاذاة إلى اليمين",\r\n
+BlockJustify\t\t: "ضبط",\r\n
+DecreaseIndent\t\t: "إنقاص المسافة البادئة",\r\n
+IncreaseIndent\t\t: "زيادة المسافة البادئة",\r\n
+Blockquote\t\t\t: "اقتباس",\r\n
+CreateDiv\t\t\t: "إنشاء حاوية Div",\r\n
+EditDiv\t\t\t\t: "تعديل حاوية Div",\r\n
+DeleteDiv\t\t\t: "إزالة حاوية Div",\r\n
+Undo\t\t\t\t: "تراجع",\r\n
+Redo\t\t\t\t: "إعادة",\r\n
+NumberedListLbl\t\t: "تعداد رقمي",\r\n
+NumberedList\t\t: "إدراج/إلغاء تعداد رقمي",\r\n
+BulletedListLbl\t\t: "تعداد نقطي",\r\n
+BulletedList\t\t: "إدراج/إلغاء تعداد نقطي",\r\n
+ShowTableBorders\t: "معاينة حدود الجداول",\r\n
+ShowDetails\t\t\t: "معاينة التفاصيل",\r\n
+Style\t\t\t\t: "نمط",\r\n
+FontFormat\t\t\t: "تنسيق",\r\n
+Font\t\t\t\t: "خط",\r\n
+FontSize\t\t\t: "حجم الخط",\r\n
+TextColor\t\t\t: "لون النص",\r\n
+BGColor\t\t\t\t: "لون الخلفية",\r\n
+Source\t\t\t\t: "شفرة المصدر",\r\n
+Find\t\t\t\t: "بحث",\r\n
+Replace\t\t\t\t: "إستبدال",\r\n
+SpellCheck\t\t\t: "تدقيق إملائي",\r\n
+UniversalKeyboard\t: "لوحة المفاتيح العالمية",\r\n
+PageBreakLbl\t\t: "فصل الصفحة",\r\n
+PageBreak\t\t\t: "إدخال صفحة جديدة",\r\n
+\r\n
+Form\t\t\t: "نموذج",\r\n
+Checkbox\t\t: "خانة إختيار",\r\n
+RadioButton\t\t: "زر خيار",\r\n
+TextField\t\t: "مربع نص",\r\n
+Textarea\t\t: "ناحية نص",\r\n
+HiddenField\t\t: "إدراج حقل خفي",\r\n
+Button\t\t\t: "زر ضغط",\r\n
+SelectionField\t: "قائمة منسدلة",\r\n
+ImageButton\t\t: "زر صورة",\r\n
+\r\n
+FitWindow\t\t: "تكبير حجم المحرر",\r\n
+ShowBlocks\t\t: "مخطط تفصيلي",\r\n
+\r\n
+// Context Menu\r\n
+EditLink\t\t\t: "تحرير رابط",\r\n
+CellCM\t\t\t\t: "خلية",\r\n
+RowCM\t\t\t\t: "صف",\r\n
+ColumnCM\t\t\t: "عمود",\r\n
+InsertRowAfter\t\t: "إدراج صف بعد",\r\n
+InsertRowBefore\t\t: "إدراج صف قبل",\r\n
+DeleteRows\t\t\t: "حذف صفوف",\r\n
+InsertColumnAfter\t: "إدراج عمود بعد",\r\n
+InsertColumnBefore\t: "إدراج عمود قبل",\r\n
+DeleteColumns\t\t: "حذف أعمدة",\r\n
+InsertCellAfter\t\t: "إدراج خلية بعد",\r\n
+InsertCellBefore\t: "إدراج خلية قبل",\r\n
+DeleteCells\t\t\t: "حذف خلايا",\r\n
+MergeCells\t\t\t: "دمج خلايا",\r\n
+MergeRight\t\t\t: "دمج لليمين",\r\n
+MergeDown\t\t\t: "دمج للأسفل",\r\n
+HorizontalSplitCell\t: "تقسيم الخلية أفقياً",\r\n
+VerticalSplitCell\t: "تقسيم الخلية عمودياً",\r\n
+TableDelete\t\t\t: "حذف الجدول",\r\n
+CellProperties\t\t: "خصائص الخلية",\r\n
+TableProperties\t\t: "خصائص الجدول",\r\n
+ImageProperties\t\t: "خصائص الصورة",\r\n
+FlashProperties\t\t: "خصائص فيلم الفلاش",\r\n
+\r\n
+AnchorProp\t\t\t: "خصائص الإشارة المرجعية",\r\n
+ButtonProp\t\t\t: "خصائص زر الضغط",\r\n
+CheckboxProp\t\t: "خصائص خانة الإختيار",\r\n
+HiddenFieldProp\t\t: "خصائص الحقل الخفي",\r\n
+RadioButtonProp\t\t: "خصائص زر الخيار",\r\n
+ImageButtonProp\t\t: "خصائص زر الصورة",\r\n
+TextFieldProp\t\t: "خصائص مربع النص",\r\n
+SelectionFieldProp\t: "خصائص القائمة المنسدلة",\r\n
+TextareaProp\t\t: "خصائص ناحية النص",\r\n
+FormProp\t\t\t: "خصائص النموذج",\r\n
+\r\n
+FontFormats\t\t\t: "عادي;منسّق;دوس;العنوان 1;العنوان  2;العنوان  3;العنوان  4;العنوان  5;العنوان  6",\r\n
+\r\n
+// Alerts and Messages\r\n
+ProcessingXHTML\t\t: "إنتظر قليلاً ريثما تتم   معالَجة‏ XHTML. لن يستغرق طويلاً...",\r\n
+Done\t\t\t\t: "تم",\r\n
+PasteWordConfirm\t: "يبدو أن النص المراد لصقه منسوخ من برنامج وورد. هل تود تنظيفه قبل الشروع في عملية اللصق؟",\r\n
+NotCompatiblePaste\t: "هذه الميزة تحتاج لمتصفح من النوعInternet Explorer إصدار 5.5 فما فوق. هل تود اللصق دون تنظيف الكود؟",\r\n
+UnknownToolbarItem\t: "عنصر شريط أدوات غير معروف \\"%1\\"",\r\n
+UnknownCommand\t\t: "أمر غير معروف \\"%1\\"",\r\n
+NotImplemented\t\t: "لم يتم دعم هذا الأمر",\r\n
+UnknownToolbarSet\t: "لم أتمكن من العثور على طقم الأدوات \\"%1\\" ",\r\n
+NoActiveX\t\t\t: "لتأمين متصفحك يجب أن تحدد بعض مميزات المحرر. يتوجب عليك تمكين الخيار \\"Run ActiveX controls and plug-ins\\". قد تواجة أخطاء وتلاحظ مميزات مفقودة",\r\n
+BrowseServerBlocked : "لايمكن فتح مصدر المتصفح. فضلا يجب التأكد بأن جميع موانع النوافذ المنبثقة معطلة",\r\n
+DialogBlocked\t\t: "لايمكن فتح نافذة الحوار . فضلا تأكد من أن  مانع النوافذ المنبثة معطل .",\r\n
+VisitLinkBlocked\t: "لا يمكن فتح نافذة جديدة. تأكد من إيقاف كل مانعي فتح النوافذ من العمل.",\r\n
+\r\n
+// Dialogs\r\n
+DlgBtnOK\t\t\t: "موافق",\r\n
+DlgBtnCancel\t\t: "إلغاء الأمر",\r\n
+DlgBtnClose\t\t\t: "إغلاق",\r\n
+DlgBtnBrowseServer\t: "تصفح الخادم",\r\n
+DlgAdvancedTag\t\t: "متقدم",\r\n
+DlgOpOther\t\t\t: "<أخرى>",\r\n
+DlgInfoTab\t\t\t: "معلومات",\r\n
+DlgAlertUrl\t\t\t: "الرجاء كتابة عنوان الإنترنت",\r\n
+\r\n
+// General Dialogs Labels\r\n
+DlgGenNotSet\t\t: "<بدون تحديد>",\r\n
+DlgGenId\t\t\t: "الرقم",\r\n
+DlgGenLangDir\t\t: "إتجاه النص",\r\n
+DlgGenLangDirLtr\t: "اليسار لليمين (LTR)",\r\n
+DlgGenLangDirRtl\t: "اليمين لليسار (RTL)",\r\n
+DlgGenLangCode\t\t: "رمز اللغة",\r\n
+DlgGenAccessKey\t\t: "مفاتيح الإختصار",\r\n
+DlgGenName\t\t\t: "الاسم",\r\n
+DlgGenTabIndex\t\t: "الترتيب",\r\n
+DlgGenLongDescr\t\t: "عنوان الوصف المفصّل",\r\n
+DlgGenClass\t\t\t: "فئات التنسيق",\r\n
+DlgGenTitle\t\t\t: "تلميح الشاشة",\r\n
+DlgGenContType\t\t: "نوع التلميح",\r\n
+DlgGenLinkCharset\t: "ترميز المادة المطلوبة",\r\n
+DlgGenStyle\t\t\t: "نمط",\r\n
+\r\n
+// Image Dialog\r\n
+DlgImgTitle\t\t\t: "خصائص الصورة",\r\n
+DlgImgInfoTab\t\t: "معلومات الصورة",\r\n
+DlgImgBtnUpload\t\t: "أرسلها للخادم",\r\n
+DlgImgURL\t\t\t: "موقع الصورة",\r\n
+DlgImgUpload\t\t: "رفع",\r\n
+DlgImgAlt\t\t\t: "الوصف",\r\n
+DlgImgWidth\t\t\t: "العرض",\r\n
+DlgImgHeight\t\t: "الإرتفاع",\r\n
+DlgImgLockRatio\t\t: "تناسق الحجم",\r\n
+DlgBtnResetSize\t\t: "إستعادة الحجم الأصلي",\r\n
+DlgImgBorder\t\t: "سمك الحدود",\r\n
+DlgImgHSpace\t\t: "تباعد أفقي",\r\n
+DlgImgVSpace\t\t: "تباعد عمودي",\r\n
+DlgImgAlign\t\t\t: "محاذاة",\r\n
+DlgImgAlignLeft\t\t: "يسار",\r\n
+DlgImgAlignAbsBottom: "أسفل النص",\r\n
+DlgImgAlignAbsMiddle: "وسط السطر",\r\n
+DlgImgAlignBaseline\t: "على السطر",\r\n
+DlgImgAlignBottom\t: "أسفل",\r\n
+DlgImgAlignMiddle\t: "وسط",\r\n
+DlgImgAlignRight\t: "يمين",\r\n
+DlgImgAlignTextTop\t: "أعلى النص",\r\n
+DlgImgAlignTop\t\t: "أعلى",\r\n
+DlgImgPreview\t\t: "معاينة",\r\n
+DlgImgAlertUrl\t\t: "فضلاً أكتب الموقع الذي توجد عليه هذه الصورة.",\r\n
+DlgImgLinkTab\t\t: "الرابط",\r\n
+\r\n
+// Flash Dialog\r\n
+DlgFlashTitle\t\t: "خصائص فيلم الفلاش",\r\n
+DlgFlashChkPlay\t\t: "تشغيل تلقائي",\r\n
+DlgFlashChkLoop\t\t: "تكرار",\r\n
+DlgFlashChkMenu\t\t: "تمكين قائمة فيلم الفلاش",\r\n
+DlgFlashScale\t\t: "الحجم",\r\n
+DlgFlashScaleAll\t: "إظهار الكل",\r\n
+DlgFlashScaleNoBorder\t: "بلا حدود",\r\n
+DlgFlashScaleFit\t: "ضبط تام",\r\n
+\r\n
+// Link Dialog\r\n
+DlgLnkWindowTitle\t: "إرتباط تشعبي",\r\n
+DlgLnkInfoTab\t\t: "معلومات الرابط",\r\n
+DlgLnkTargetTab\t\t: "الهدف",\r\n
+\r\n
+DlgLnkType\t\t\t: "نوع الربط",\r\n
+DlgLnkTypeURL\t\t: "العنوان",\r\n
+DlgLnkTypeAnchor\t: "مكان في هذا المستند",\r\n
+DlgLnkTypeEMail\t\t: "بريد إلكتروني",\r\n
+DlgLnkProto\t\t\t: "البروتوكول",\r\n
+DlgLnkProtoOther\t: "<أخرى>",\r\n
+DlgLnkURL\t\t\t: "الموقع",\r\n
+DlgLnkAnchorSel\t\t: "اختر علامة مرجعية",\r\n
+DlgLnkAnchorByName\t: "حسب اسم العلامة",\r\n
+DlgLnkAnchorById\t: "حسب تعريف العنصر",\r\n
+DlgLnkNoAnchors\t\t: "(لا يوجد علامات مرجعية في هذا المستند)",\r\n
+DlgLnkEMail\t\t\t: "عنوان بريد إلكتروني",\r\n
+DlgLnkEMailSubject\t: "موضوع الرسالة",\r\n
+DlgLnkEMailBody\t\t: "محتوى الرسالة",\r\n
+DlgLnkUpload\t\t: "رفع",\r\n
+DlgLnkBtnUpload\t\t: "أرسلها للخادم",\r\n
+\r\n
+DlgLnkTarget\t\t: "الهدف",\r\n
+DlgLnkTargetFrame\t: "<إطار>",\r\n
+DlgLnkTargetPopup\t: "<نافذة منبثقة>",\r\n
+DlgLnkTargetBlank\t: "إطار جديد (_blank)",\r\n
+DlgLnkTargetParent\t: "الإطار الأصل (_parent)",\r\n
+DlgLnkTargetSelf\t: "نفس الإطار (_self)",\r\n
+DlgLnkTargetTop\t\t: "صفحة كاملة (_top)",\r\n
+DlgLnkTargetFrameName\t: "اسم الإطار الهدف",\r\n
+DlgLnkPopWinName\t: "تسمية النافذة المنبثقة",\r\n
+DlgLnkPopWinFeat\t: "خصائص النافذة المنبثقة",\r\n
+DlgLnkPopResize\t\t: "قابلة للتحجيم",\r\n
+DlgLnkPopLocation\t: "شريط العنوان",\r\n
+DlgLnkPopMenu\t\t: "القوائم الرئيسية",\r\n
+DlgLnkPopScroll\t\t: "أشرطة التمرير",\r\n
+DlgLnkPopStatus\t\t: "شريط الحالة السفلي",\r\n
+DlgLnkPopToolbar\t: "شريط الأدوات",\r\n
+DlgLnkPopFullScrn\t: "ملئ الشاشة (IE)",\r\n
+DlgLnkPopDependent\t: "تابع (Netscape)",\r\n
+DlgLnkPopWidth\t\t: "العرض",\r\n
+DlgLnkPopHeight\t\t: "الإرتفاع",\r\n
+DlgLnkPopLeft\t\t: "التمركز لليسار",\r\n
+DlgLnkPopTop\t\t: "التمركز للأعلى",\r\n
+\r\n
+DlnLnkMsgNoUrl\t\t: "فضلاً أدخل عنوان الموقع الذي يشير إليه الرابط",\r\n
+DlnLnkMsgNoEMail\t: "فضلاً أدخل عنوان البريد الإلكتروني",\r\n
+DlnLnkMsgNoAnchor\t: "فضلاً حدد العلامة المرجعية المرغوبة",\r\n
+DlnLnkMsgInvPopName\t: "اسم النافذة المنبثقة يجب أن يبدأ بحرف أبجدي دون مسافات",\r\n
+\r\n
+// Color Dialog\r\n
+DlgColorTitle\t\t: "اختر لوناً",\r\n
+DlgColorBtnClear\t: "مسح",\r\n
+DlgColorHighlight\t: "تحديد",\r\n
+DlgColorSelected\t: "إختيار",\r\n
+\r\n
+// Smiley Dialog\r\n
+DlgSmileyTitle\t\t: "إدراج إبتسامات ",\r\n
+\r\n
+// Special Character Dialog\r\n
+DlgSpecialCharTitle\t: "إدراج رمز",\r\n
+\r\n
+// Table Dialog\r\n
+DlgTableTitle\t\t: "إدراج جدول",\r\n
+DlgTableRows\t\t: "صفوف",\r\n
+DlgTableColumns\t\t: "أعمدة",\r\n
+DlgTableBorder\t\t: "سمك الحدود",\r\n
+DlgTableAlign\t\t: "المحاذاة",\r\n
+DlgTableAlignNotSet\t: "<بدون تحديد>",\r\n
+DlgTableAlignLeft\t: "يسار",\r\n
+DlgTableAlignCenter\t: "وسط",\r\n
+DlgTableAlignRight\t: "يمين",\r\n
+DlgTableWidth\t\t: "العرض",\r\n
+DlgTableWidthPx\t\t: "بكسل",\r\n
+DlgTableWidthPc\t\t: "بالمئة",\r\n
+DlgTableHeight\t\t: "الإرتفاع",\r\n
+DlgTableCellSpace\t: "تباعد الخلايا",\r\n
+DlgTableCellPad\t\t: "المسافة البادئة",\r\n
+DlgTableCaption\t\t: "الوصف",\r\n
+DlgTableSummary\t\t: "الخلاصة",\r\n
+DlgTableHeaders\t\t: "Headers",\t//MISSING\r\n
+DlgTableHeadersNone\t\t: "None",\t//MISSING\r\n
+DlgTableHeadersColumn\t: "First column",\t//MISSING\r\n
+DlgTableHeadersRow\t\t: "First Row",\t//MISSING\r\n
+DlgTableHeadersBoth\t\t: "Both",\t//MISSING\r\n
+\r\n
+// Table Cell Dialog\r\n
+DlgCellTitle\t\t: "خصائص الخلية",\r\n
+DlgCellWidth\t\t: "العرض",\r\n
+DlgCellWidthPx\t\t: "بكسل",\r\n
+DlgCellWidthPc\t\t: "بالمئة",\r\n
+DlgCellHeight\t\t: "الإرتفاع",\r\n
+DlgCellWordWrap\t\t: "التفاف النص",\r\n
+DlgCellWordWrapNotSet\t: "<بدون تحديد>",\r\n
+DlgCellWordWrapYes\t: "نعم",\r\n
+DlgCellWordWrapNo\t: "لا",\r\n
+DlgCellHorAlign\t\t: "المحاذاة الأفقية",\r\n
+DlgCellHorAlignNotSet\t: "<بدون تحديد>",\r\n
+DlgCellHorAlignLeft\t: "يسار",\r\n
+DlgCellHorAlignCenter\t: "وسط",\r\n
+DlgCellHorAlignRight: "يمين",\r\n
+DlgCellVerAlign\t\t: "المحاذاة العمودية",\r\n
+DlgCellVerAlignNotSet\t: "<بدون تحديد>",\r\n
+DlgCellVerAlignTop\t: "أعلى",\r\n
+DlgCellVerAlignMiddle\t: "وسط",\r\n
+DlgCellVerAlignBottom\t: "أسفل",\r\n
+DlgCellVerAlignBaseline\t: "على السطر",\r\n
+DlgCellType\t\t: "Cell Type",\t//MISSING\r\n
+DlgCellTypeData\t\t: "Data",\t//MISSING\r\n
+DlgCellTypeHeader\t: "Header",\t//MISSING\r\n
+DlgCellRowSpan\t\t: "إمتداد الصفوف",\r\n
+DlgCellCollSpan\t\t: "إمتداد الأعمدة",\r\n
+DlgCellBackColor\t: "لون الخلفية",\r\n
+DlgCellBorderColor\t: "لون الحدود",\r\n
+DlgCellBtnSelect\t: "حدّد...",\r\n
+\r\n
+// Find and Replace Dialog\r\n
+DlgFindAndReplaceTitle\t: "بحث واستبدال",\r\n
+\r\n
+// Find Dialog\r\n
+DlgFindTitle\t\t: "بحث",\r\n
+DlgFindFindBtn\t\t: "ابحث",\r\n
+DlgFindNotFoundMsg\t: "لم يتم العثور على النص المحدد.",\r\n
+\r\n
+// Replace Dialog\r\n
+DlgReplaceTitle\t\t\t: "إستبدال",\r\n
+DlgReplaceFindLbl\t\t: "البحث عن:",\r\n
+DlgReplaceReplaceLbl\t: "إستبدال بـ:",\r\n
+DlgReplaceCaseChk\t\t: "مطابقة حالة الأحرف",\r\n
+DlgReplaceReplaceBtn\t: "إستبدال",\r\n
+DlgReplaceReplAllBtn\t: "إستبدال الكل",\r\n
+DlgReplaceWordChk\t\t: "الكلمة بالكامل فقط",\r\n
+\r\n
+// Paste Operations / Dialog\r\n
+PasteErrorCut\t: "الإعدادات الأمنية للمتصفح الذي تستخدمه تمنع القص التلقائي. فضلاً إستخدم لوحة المفاتيح لفعل ذلك (Ctrl+X).",\r\n
+PasteErrorCopy\t: "الإعدادات الأمنية للمتصفح الذي تستخدمه تمنع النسخ التلقائي. فضلاً إستخدم لوحة المفاتيح لفعل ذلك (Ctrl+C).",\r\n
+\r\n
+PasteAsText\t\t: "لصق كنص بسيط",\r\n
+PasteFromWord\t: "لصق من وورد",\r\n
+\r\n
+DlgPasteMsg2\t: "الصق داخل الصندوق بإستخدام زرّي (<STRONG>Ctrl+V</STRONG>) في لوحة المفاتيح، ثم اضغط زر  <STRONG>موافق</STRONG>.",\r\n
+DlgPasteSec\t\t: "نظراً لإعدادات الأمان الخاصة بمتصفحك، لن يتمكن هذا المحرر من الوصول لمحتوى حافظتك، لذا وجب عليك لصق المحتوى مرة أخرى في هذه النافذة.",\r\n
+DlgPasteIgnoreFont\t\t: "تجاهل تعريفات أسماء الخطوط",\r\n
+DlgPasteRemoveStyles\t: "إزالة تعريفات الأنماط",\r\n
+\r\n
+// Color Picker\r\n
+ColorAutomatic\t: "تلقائي",\r\n
+ColorMoreColors\t: "ألوان إضافية...",\r\n
+\r\n
+// Document Properties\r\n
+DocProps\t\t: "خصائص الصفحة",\r\n
+\r\n
+// Anchor Dialog\r\n
+DlgAnchorTitle\t\t: "خصائص إشارة مرجعية",\r\n
+DlgAnchorName\t\t: "اسم الإشارة المرجعية",\r\n
+DlgAnchorErrorName\t: "الرجاء كتابة اسم الإشارة المرجعية",\r\n
+\r\n
+// Speller Pages Dialog\r\n
+DlgSpellNotInDic\t\t: "ليست في القاموس",\r\n
+DlgSpellChangeTo\t\t: "التغيير إلى",\r\n
+DlgSpellBtnIgnore\t\t: "تجاهل",\r\n
+DlgSpellBtnIgnoreAll\t: "تجاهل الكل",\r\n
+DlgSpellBtnReplace\t\t: "تغيير",\r\n
+DlgSpellBtnReplaceAll\t: "تغيير الكل",\r\n
+DlgSpellBtnUndo\t\t\t: "تراجع",\r\n
+DlgSpellNoSuggestions\t: "- لا توجد إقتراحات -",\r\n
+DlgSpellProgress\t\t: "جاري التدقيق إملائياً",\r\n
+DlgSpellNoMispell\t\t: "تم إكمال التدقيق الإملائي: لم يتم العثور على أي أخطاء إملائية",\r\n
+DlgSpellNoChanges\t\t: "تم إكمال التدقيق الإملائي: لم يتم تغيير أي كلمة",\r\n
+DlgSpellOneChange\t\t: "تم إكمال التدقيق الإملائي: تم تغيير كلمة واحدة فقط",\r\n
+DlgSpellManyChanges\t\t: "تم إكمال التدقيق الإملائي: تم تغيير %1 كلمات\\كلمة",\r\n
+\r\n
+IeSpellDownload\t\t\t: "المدقق الإملائي (الإنجليزي) غير مثبّت. هل تود تحميله الآن؟",\r\n
+\r\n
+// Button Dialog\r\n
+DlgButtonText\t\t: "القيمة/التسمية",\r\n
+DlgButtonType\t\t: "نوع الزر",\r\n
+DlgButtonTypeBtn\t: "زر",\r\n
+DlgButtonTypeSbm\t: "إرسال",\r\n
+DlgButtonTypeRst\t: "إعادة تعيين",\r\n
+\r\n
+// Checkbox and Radio Button Dialogs\r\n
+DlgCheckboxName\t\t: "الاسم",\r\n
+DlgCheckboxValue\t: "القيمة",\r\n
+DlgCheckboxSelected\t: "محدد",\r\n
+\r\n
+// Form Dialog\r\n
+DlgFormName\t\t: "الاسم",\r\n
+DlgFormAction\t: "اسم الملف",\r\n
+DlgFormMethod\t: "الأسلوب",\r\n
+\r\n
+// Select Field Dialog\r\n
+DlgSelectName\t\t: "الاسم",\r\n
+DlgSelectValue\t\t: "القيمة",\r\n
+DlgSelectSize\t\t: "الحجم",\r\n
+DlgSelectLines\t\t: "الأسطر",\r\n
+DlgSelectChkMulti\t: "السماح بتحديدات متعددة",\r\n
+DlgSelectOpAvail\t: "الخيارات المتاحة",\r\n
+DlgSelectOpText\t\t: "النص",\r\n
+DlgSelectOpValue\t: "القيمة",\r\n
+DlgSelectBtnAdd\t\t: "إضافة",\r\n
+DlgSelectBtnModify\t: "تعديل",\r\n
+DlgSelectBtnUp\t\t: "تحريك لأعلى",\r\n
+DlgSelectBtnDown\t: "تحريك لأسفل",\r\n
+DlgSelectBtnSetValue : "إجعلها محددة",\r\n
+DlgSelectBtnDelete\t: "إزالة",\r\n
+\r\n
+// Textarea Dialog\r\n
+DlgTextareaName\t: "الاسم",\r\n
+DlgTextareaCols\t: "الأعمدة",\r\n
+DlgTextareaRows\t: "الصفوف",\r\n
+\r\n
+// Text Field Dialog\r\n
+DlgTextName\t\t\t: "الاسم",\r\n
+DlgTextValue\t\t: "القيمة",\r\n
+DlgTextCharWidth\t: "العرض بالأحرف",\r\n
+DlgTextMaxChars\t\t: "عدد الحروف الأقصى",\r\n
+DlgTextType\t\t\t: "نوع المحتوى",\r\n
+DlgTextTypeText\t\t: "نص",\r\n
+DlgTextTypePass\t\t: "كلمة مرور",\r\n
+\r\n
+// Hidden Field Dialog\r\n
+DlgHiddenName\t: "الاسم",\r\n
+DlgHiddenValue\t: "القيمة",\r\n
+\r\n
+// Bulleted List Dialog\r\n
+BulletedListProp\t: "خصائص التعداد النقطي",\r\n
+NumberedListProp\t: "خصائص التعداد الرقمي",\r\n
+DlgLstStart\t\t\t: "البدء عند",\r\n
+DlgLstType\t\t\t: "النوع",\r\n
+DlgLstTypeCircle\t: "دائرة",\r\n
+DlgLstTypeDisc\t\t: "قرص",\r\n
+DlgLstTypeSquare\t: "مربع",\r\n
+DlgLstTypeNumbers\t: "أرقام (1، 2، 3)َ",\r\n
+DlgLstTypeLCase\t\t: "حروف صغيرة (a, b, c)َ",\r\n
+DlgLstTypeUCase\t\t: "حروف كبيرة (A, B, C)َ",\r\n
+DlgLstTypeSRoman\t: "ترقيم روماني صغير (i, ii, iii)َ",\r\n
+DlgLstTypeLRoman\t: "ترقيم روماني كبير (I, II, III)َ",\r\n
+\r\n
+// Document Properties Dialog\r\n
+DlgDocGeneralTab\t: "عام",\r\n
+DlgDocBackTab\t\t: "الخلفية",\r\n
+DlgDocColorsTab\t\t: "الألوان والهوامش",\r\n
+DlgDocMetaTab\t\t: "المعرّفات الرأسية",\r\n
+\r\n
+DlgDocPageTitle\t\t: "عنوان الصفحة",\r\n
+DlgDocLangDir\t\t: "إتجاه اللغة",\r\n
+DlgDocLangDirLTR\t: "اليسار لليمين (LTR)",\r\n
+DlgDocLangDirRTL\t: "اليمين لليسار (RTL)",\r\n
+DlgDocLangCode\t\t: "رمز اللغة",\r\n
+DlgDocCharSet\t\t: "ترميز الحروف",\r\n
+DlgDocCharSetCE\t\t: "أوروبا الوسطى",\r\n
+DlgDocCharSetCT\t\t: "الصينية التقليدية (Big5)",\r\n
+DlgDocCharSetCR\t\t: "السيريلية",\r\n
+DlgDocCharSetGR\t\t: "اليونانية",\r\n
+DlgDocCharSetJP\t\t: "اليابانية",\r\n
+DlgDocCharSetKR\t\t: "الكورية",\r\n
+DlgDocCharSetTR\t\t: "التركية",\r\n
+DlgDocCharSetUN\t\t: "Unicode (UTF-8)",\r\n
+DlgDocCharSetWE\t\t: "أوروبا الغربية",\r\n
+DlgDocCharSetOther\t: "ترميز آخر",\r\n
+\r\n
+DlgDocDocType\t\t: "ترويسة نوع  الصفحة",\r\n
+DlgDocDocTypeOther\t: "ترويسة نوع  صفحة أخرى",\r\n
+DlgDocIncXHTML\t\t: "تضمين   إعلانات‏ لغة XHTMLَ",\r\n
+DlgDocBgColor\t\t: "لون الخلفية",\r\n
+DlgDocBgImage\t\t: "رابط الصورة الخلفية",\r\n
+DlgDocBgNoScroll\t: "جعلها علامة مائية",\r\n
+DlgDocCText\t\t\t: "النص",\r\n
+DlgDocCLink\t\t\t: "الروابط",\r\n
+DlgDocCVisited\t\t: "المزارة",\r\n
+DlgDocCActive\t\t: "النشطة",\r\n
+DlgDocMargins\t\t: "هوامش الصفحة",\r\n
+DlgDocMaTop\t\t\t: "علوي",\r\n
+DlgDocMaLeft\t\t: "أيسر",\r\n
+DlgDocMaRight\t\t: "أيمن",\r\n
+DlgDocMaBottom\t\t: "سفلي",\r\n
+DlgDocMeIndex\t\t: "الكلمات الأساسية (مفصولة بفواصل)َ",\r\n
+DlgDocMeDescr\t\t: "وصف الصفحة",\r\n
+DlgDocMeAuthor\t\t: "الكاتب",\r\n
+DlgDocMeCopy\t\t: "المالك",\r\n
+DlgDocPreview\t\t: "معاينة",\r\n
+\r\n
+// Templates Dialog\r\n
+Templates\t\t\t: "القوالب",\r\n
+DlgTemplatesTitle\t: "قوالب المحتوى",\r\n
+DlgTemplatesSelMsg\t: "اختر القالب الذي تود وضعه في المحرر <br>(سيتم فقدان المحتوى الحالي):",\r\n
+DlgTemplatesLoading\t: "جاري تحميل قائمة القوالب، الرجاء الإنتظار...",\r\n
+DlgTemplatesNoTpl\t: "(لم يتم تعريف أي قالب)",\r\n
+DlgTemplatesReplace\t: "استبدال المحتوى",\r\n
+\r\n
+// About Dialog\r\n
+DlgAboutAboutTab\t: "نبذة",\r\n
+DlgAboutBrowserInfoTab\t: "معلومات متصفحك",\r\n
+DlgAboutLicenseTab\t: "الترخيص",\r\n
+DlgAboutVersion\t\t: "الإصدار",\r\n
+DlgAboutInfo\t\t: "لمزيد من المعلومات تفضل بزيارة",\r\n
+\r\n
+// Div Dialog\r\n
+DlgDivGeneralTab\t: "عام",\r\n
+DlgDivAdvancedTab\t: "متقدم",\r\n
+DlgDivStyle\t\t: "المظهر",\r\n
+DlgDivInlineStyle\t: "المظهر المضمن"\r\n
+};\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>22602</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

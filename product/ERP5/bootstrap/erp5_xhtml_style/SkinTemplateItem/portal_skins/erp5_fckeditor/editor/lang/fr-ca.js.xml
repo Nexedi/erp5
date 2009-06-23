@@ -1,0 +1,581 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749270.8</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fr-ca.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Canadian French language file.\r\n
+ */\r\n
+\r\n
+var FCKLang =\r\n
+{\r\n
+// Language direction : "ltr" (left to right) or "rtl" (right to left).\r\n
+Dir\t\t\t\t\t: "ltr",\r\n
+\r\n
+ToolbarCollapse\t\t: "Masquer Outils",\r\n
+ToolbarExpand\t\t: "Afficher Outils",\r\n
+\r\n
+// Toolbar Items and Context Menu\r\n
+Save\t\t\t\t: "Sauvegarder",\r\n
+NewPage\t\t\t\t: "Nouvelle page",\r\n
+Preview\t\t\t\t: "Previsualiser",\r\n
+Cut\t\t\t\t\t: "Couper",\r\n
+Copy\t\t\t\t: "Copier",\r\n
+Paste\t\t\t\t: "Coller",\r\n
+PasteText\t\t\t: "Coller en tant que texte",\r\n
+PasteWord\t\t\t: "Coller en tant que Word (formaté)",\r\n
+Print\t\t\t\t: "Imprimer",\r\n
+SelectAll\t\t\t: "Tout sélectionner",\r\n
+RemoveFormat\t\t: "Supprimer le formatage",\r\n
+InsertLinkLbl\t\t: "Lien",\r\n
+InsertLink\t\t\t: "Insérer/modifier le lien",\r\n
+RemoveLink\t\t\t: "Supprimer le lien",\r\n
+VisitLink\t\t\t: "Suivre le lien",\r\n
+Anchor\t\t\t\t: "Insérer/modifier l\'ancre",\r\n
+AnchorDelete\t\t: "Supprimer l\'ancre",\r\n
+InsertImageLbl\t\t: "Image",\r\n
+InsertImage\t\t\t: "Insérer/modifier l\'image",\r\n
+InsertFlashLbl\t\t: "Animation Flash",\r\n
+InsertFlash\t\t\t: "Insérer/modifier l\'animation Flash",\r\n
+InsertTableLbl\t\t: "Tableau",\r\n
+InsertTable\t\t\t: "Insérer/modifier le tableau",\r\n
+InsertLineLbl\t\t: "Séparateur",\r\n
+InsertLine\t\t\t: "Insérer un séparateur",\r\n
+InsertSpecialCharLbl: "Caractères spéciaux",\r\n
+InsertSpecialChar\t: "Insérer un caractère spécial",\r\n
+InsertSmileyLbl\t\t: "Emoticon",\r\n
+InsertSmiley\t\t: "Insérer un Emoticon",\r\n
+About\t\t\t\t: "A propos de FCKeditor",\r\n
+Bold\t\t\t\t: "Gras",\r\n
+Italic\t\t\t\t: "Italique",\r\n
+Underline\t\t\t: "Souligné",\r\n
+StrikeThrough\t\t: "Barrer",\r\n
+Subscript\t\t\t: "Indice",\r\n
+Superscript\t\t\t: "Exposant",\r\n
+LeftJustify\t\t\t: "Aligner à gauche",\r\n
+CenterJustify\t\t: "Centrer",\r\n
+RightJustify\t\t: "Aligner à Droite",\r\n
+BlockJustify\t\t: "Texte justifié",\r\n
+DecreaseIndent\t\t: "Diminuer le retrait",\r\n
+IncreaseIndent\t\t: "Augmenter le retrait",\r\n
+Blockquote\t\t\t: "Citation",\r\n
+CreateDiv\t\t\t: "Créer Balise Div",\r\n
+EditDiv\t\t\t\t: "Modifier Balise Div",\r\n
+DeleteDiv\t\t\t: "Supprimer Balise Div",\r\n
+Undo\t\t\t\t: "Annuler",\r\n
+Redo\t\t\t\t: "Refaire",\r\n
+NumberedListLbl\t\t: "Liste numérotée",\r\n
+NumberedList\t\t: "Insérer/supprimer la liste numérotée",\r\n
+BulletedListLbl\t\t: "Liste à puces",\r\n
+BulletedList\t\t: "Insérer/supprimer la liste à puces",\r\n
+ShowTableBorders\t: "Afficher les bordures du tableau",\r\n
+ShowDetails\t\t\t: "Afficher les caractères invisibles",\r\n
+Style\t\t\t\t: "Style",\r\n
+FontFormat\t\t\t: "Format",\r\n
+Font\t\t\t\t: "Police",\r\n
+FontSize\t\t\t: "Taille",\r\n
+TextColor\t\t\t: "Couleur de caractère",\r\n
+BGColor\t\t\t\t: "Couleur de fond",\r\n
+Source\t\t\t\t: "Source",\r\n
+Find\t\t\t\t: "Chercher",\r\n
+Replace\t\t\t\t: "Remplacer",\r\n
+SpellCheck\t\t\t: "Orthographe",\r\n
+UniversalKeyboard\t: "Clavier universel",\r\n
+PageBreakLbl\t\t: "Saut de page",\r\n
+PageBreak\t\t\t: "Insérer un saut de page",\r\n
+\r\n
+Form\t\t\t: "Formulaire",\r\n
+Checkbox\t\t: "Case à cocher",\r\n
+RadioButton\t\t: "Bouton radio",\r\n
+TextField\t\t: "Champ texte",\r\n
+Textarea\t\t: "Zone de texte",\r\n
+HiddenField\t\t: "Champ caché",\r\n
+Button\t\t\t: "Bouton",\r\n
+SelectionField\t: "Champ de sélection",\r\n
+ImageButton\t\t: "Bouton image",\r\n
+\r\n
+FitWindow\t\t: "Edition pleine page",\r\n
+ShowBlocks\t\t: "Afficher les blocs",\r\n
+\r\n
+// Context Menu\r\n
+EditLink\t\t\t: "Modifier le lien",\r\n
+CellCM\t\t\t\t: "Cellule",\r\n
+RowCM\t\t\t\t: "Ligne",\r\n
+ColumnCM\t\t\t: "Colonne",\r\n
+InsertRowAfter\t\t: "Insérer une ligne après",\r\n
+InsertRowBefore\t\t: "Insérer une ligne avant",\r\n
+DeleteRows\t\t\t: "Supprimer des lignes",\r\n
+InsertColumnAfter\t: "Insérer une colonne après",\r\n
+InsertColumnBefore\t: "Insérer une colonne avant",\r\n
+DeleteColumns\t\t: "Supprimer des colonnes",\r\n
+InsertCellAfter\t\t: "Insérer une cellule après",\r\n
+InsertCellBefore\t: "Insérer une cellule avant",\r\n
+DeleteCells\t\t\t: "Supprimer des cellules",\r\n
+MergeCells\t\t\t: "Fusionner les cellules",\r\n
+MergeRight\t\t\t: "Fusionner à droite",\r\n
+MergeDown\t\t\t: "Fusionner en bas",\r\n
+HorizontalSplitCell\t: "Scinder la cellule horizontalement",\r\n
+VerticalSplitCell\t: "Scinder la cellule verticalement",\r\n
+TableDelete\t\t\t: "Supprimer le tableau",\r\n
+CellProperties\t\t: "Propriétés de cellule",\r\n
+TableProperties\t\t: "Propriétés du tableau",\r\n
+ImageProperties\t\t: "Propriétés de l\'image",\r\n
+FlashProperties\t\t: "Propriétés de l\'animation Flash",\r\n
+\r\n
+AnchorProp\t\t\t: "Propriétés de l\'ancre",\r\n
+ButtonProp\t\t\t: "Propriétés du bouton",\r\n
+CheckboxProp\t\t: "Propriétés de la case à cocher",\r\n
+HiddenFieldProp\t\t: "Propriétés du champ caché",\r\n
+RadioButtonProp\t\t: "Propriétés du bouton radio",\r\n
+ImageButtonProp\t\t: "Propriétés du bouton image",\r\n
+TextFieldProp\t\t: "Propriétés du champ texte",\r\n
+SelectionFieldProp\t: "Propriétés de la liste/du menu",\r\n
+TextareaProp\t\t: "Propriétés de la zone de texte",\r\n
+FormProp\t\t\t: "Propriétés du formulaire",\r\n
+\r\n
+FontFormats\t\t\t: "Normal;Formaté;Adresse;En-tête 1;En-tête 2;En-tête 3;En-tête 4;En-tête 5;En-tête 6;Normal (DIV)",\r\n
+\r\n
+// Alerts and Messages\r\n
+ProcessingXHTML\t\t: "Calcul XHTML. Veuillez patienter...",\r\n
+Done\t\t\t\t: "Terminé",\r\n
+PasteWordConfirm\t: "Le texte à coller semble provenir de Word. Désirez-vous le nettoyer avant de coller?",\r\n
+NotCompatiblePaste\t: "Cette commande nécessite Internet Explorer version 5.5 et plus. Souhaitez-vous coller sans nettoyage?",\r\n
+UnknownToolbarItem\t: "Élément de barre d\'outil inconnu \\"%1\\"",\r\n
+UnknownCommand\t\t: "Nom de commande inconnu \\"%1\\"",\r\n
+NotImplemented\t\t: "Commande indisponible",\r\n
+UnknownToolbarSet\t: "La barre d\'outils \\"%1\\" n\'existe pas",\r\n
+NoActiveX\t\t\t: "Les paramètres de sécurité de votre navigateur peuvent limiter quelques fonctionnalités de l\'éditeur. Veuillez activer l\'option \\"Exécuter les contrôles ActiveX et les plug-ins\\". Il se peut que vous rencontriez des erreurs et remarquiez quelques limitations.",\r\n
+BrowseServerBlocked : "Le navigateur n\'a pas pu être ouvert. Assurez-vous que les bloqueurs de popups soient désactivés.",\r\n
+DialogBlocked\t\t: "La fenêtre de dialogue n\'a pas pu s\'ouvrir. Assurez-vous que les bloqueurs de popups soient désactivés.",\r\n
+VisitLinkBlocked\t: "It was not possible to open a new window. Make sure all popup blockers are disabled.",\t//MISSING\r\n
+\r\n
+// Dialogs\r\n
+DlgBtnOK\t\t\t: "OK",\r\n
+DlgBtnCancel\t\t: "Annuler",\r\n
+DlgBtnClose\t\t\t: "Fermer",\r\n
+DlgBtnBrowseServer\t: "Parcourir le serveur",\r\n
+DlgAdvancedTag\t\t: "Avancée",\r\n
+DlgOpOther\t\t\t: "<autre>",\r\n
+DlgInfoTab\t\t\t: "Info",\r\n
+DlgAlertUrl\t\t\t: "Veuillez saisir l\'URL",\r\n
+\r\n
+// General Dialogs Labels\r\n
+DlgGenNotSet\t\t: "<Par défaut>",\r\n
+DlgGenId\t\t\t: "Id",\r\n
+DlgGenLangDir\t\t: "Sens d\'écriture",\r\n
+DlgGenLangDirLtr\t: "De gauche à droite (LTR)",\r\n
+DlgGenLangDirRtl\t: "De droite à gauche (RTL)",\r\n
+DlgGenLangCode\t\t: "Code langue",\r\n
+DlgGenAccessKey\t\t: "Équivalent clavier",\r\n
+DlgGenName\t\t\t: "Nom",\r\n
+DlgGenTabIndex\t\t: "Ordre de tabulation",\r\n
+DlgGenLongDescr\t\t: "URL de description longue",\r\n
+DlgGenClass\t\t\t: "Classes de feuilles de style",\r\n
+DlgGenTitle\t\t\t: "Titre",\r\n
+DlgGenContType\t\t: "Type de contenu",\r\n
+DlgGenLinkCharset\t: "Encodage de caractère",\r\n
+DlgGenStyle\t\t\t: "Style",\r\n
+\r\n
+// Image Dialog\r\n
+DlgImgTitle\t\t\t: "Propriétés de l\'image",\r\n
+DlgImgInfoTab\t\t: "Informations sur l\'image",\r\n
+DlgImgBtnUpload\t\t: "Envoyer sur le serveur",\r\n
+DlgImgURL\t\t\t: "URL",\r\n
+DlgImgUpload\t\t: "Télécharger",\r\n
+DlgImgAlt\t\t\t: "Texte de remplacement",\r\n
+DlgImgWidth\t\t\t: "Largeur",\r\n
+DlgImgHeight\t\t: "Hauteur",\r\n
+DlgImgLockRatio\t\t: "Garder les proportions",\r\n
+DlgBtnResetSize\t\t: "Taille originale",\r\n
+DlgImgBorder\t\t: "Bordure",\r\n
+DlgImgHSpace\t\t: "Espacement horizontal",\r\n
+DlgImgVSpace\t\t: "Espacement vertical",\r\n
+DlgImgAlign\t\t\t: "Alignement",\r\n
+DlgImgAlignLeft\t\t: "Gauche",\r\n
+DlgImgAlignAbsBottom: "Abs Bas",\r\n
+DlgImgAlignAbsMiddle: "Abs Milieu",\r\n
+DlgImgAlignBaseline\t: "Bas du texte",\r\n
+DlgImgAlignBottom\t: "Bas",\r\n
+DlgImgAlignMiddle\t: "Milieu",\r\n
+DlgImgAlignRight\t: "Droite",\r\n
+DlgImgAlignTextTop\t: "Haut du texte",\r\n
+DlgImgAlignTop\t\t: "Haut",\r\n
+DlgImgPreview\t\t: "Prévisualisation",\r\n
+DlgImgAlertUrl\t\t: "Veuillez saisir l\'URL de l\'image",\r\n
+DlgImgLinkTab\t\t: "Lien",\r\n
+\r\n
+// Flash Dialog\r\n
+DlgFlashTitle\t\t: "Propriétés de l\'animation Flash",\r\n
+DlgFlashChkPlay\t\t: "Lecture automatique",\r\n
+DlgFlashChkLoop\t\t: "Boucle",\r\n
+DlgFlashChkMenu\t\t: "Activer le menu Flash",\r\n
+DlgFlashScale\t\t: "Affichage",\r\n
+DlgFlashScaleAll\t: "Par défaut (tout montrer)",\r\n
+DlgFlashScaleNoBorder\t: "Sans bordure",\r\n
+DlgFlashScaleFit\t: "Ajuster aux dimensions",\r\n
+\r\n
+// Link Dialog\r\n
+DlgLnkWindowTitle\t: "Propriétés du lien",\r\n
+DlgLnkInfoTab\t\t: "Informations sur le lien",\r\n
+DlgLnkTargetTab\t\t: "Destination",\r\n
+\r\n
+DlgLnkType\t\t\t: "Type de lien",\r\n
+DlgLnkTypeURL\t\t: "URL",\r\n
+DlgLnkTypeAnchor\t: "Ancre dans cette page",\r\n
+DlgLnkTypeEMail\t\t: "E-Mail",\r\n
+DlgLnkProto\t\t\t: "Protocole",\r\n
+DlgLnkProtoOther\t: "<autre>",\r\n
+DlgLnkURL\t\t\t: "URL",\r\n
+DlgLnkAnchorSel\t\t: "Sélectionner une ancre",\r\n
+DlgLnkAnchorByName\t: "Par nom",\r\n
+DlgLnkAnchorById\t: "Par id",\r\n
+DlgLnkNoAnchors\t\t: "(Pas d\'ancre disponible dans le document)",\r\n
+DlgLnkEMail\t\t\t: "Adresse E-Mail",\r\n
+DlgLnkEMailSubject\t: "Sujet du message",\r\n
+DlgLnkEMailBody\t\t: "Corps du message",\r\n
+DlgLnkUpload\t\t: "Télécharger",\r\n
+DlgLnkBtnUpload\t\t: "Envoyer sur le serveur",\r\n
+\r\n
+DlgLnkTarget\t\t: "Destination",\r\n
+DlgLnkTargetFrame\t: "<Cadre>",\r\n
+DlgLnkTargetPopup\t: "<fenêtre popup>",\r\n
+DlgLnkTargetBlank\t: "Nouvelle fenêtre (_blank)",\r\n
+DlgLnkTargetParent\t: "Fenêtre mère (_parent)",\r\n
+DlgLnkTargetSelf\t: "Même fenêtre (_self)",\r\n
+DlgLnkTargetTop\t\t: "Fenêtre supérieure (_top)",\r\n
+DlgLnkTargetFrameName\t: "Nom du cadre de destination",\r\n
+DlgLnkPopWinName\t: "Nom de la fenêtre popup",\r\n
+DlgLnkPopWinFeat\t: "Caractéristiques de la fenêtre popup",\r\n
+DlgLnkPopResize\t\t: "Taille modifiable",\r\n
+DlgLnkPopLocation\t: "Barre d\'adresses",\r\n
+DlgLnkPopMenu\t\t: "Barre de menu",\r\n
+DlgLnkPopScroll\t\t: "Barres de défilement",\r\n
+DlgLnkPopStatus\t\t: "Barre d\'état",\r\n
+DlgLnkPopToolbar\t: "Barre d\'outils",\r\n
+DlgLnkPopFullScrn\t: "Plein écran (IE)",\r\n
+DlgLnkPopDependent\t: "Dépendante (Netscape)",\r\n
+DlgLnkPopWidth\t\t: "Largeur",\r\n
+DlgLnkPopHeight\t\t: "Hauteur",\r\n
+DlgLnkPopLeft\t\t: "Position à partir de la gauche",\r\n
+DlgLnkPopTop\t\t: "Position à partir du haut",\r\n
+\r\n
+DlnLnkMsgNoUrl\t\t: "Veuillez saisir l\'URL",\r\n
+DlnLnkMsgNoEMail\t: "Veuillez saisir l\'adresse e-mail",\r\n
+DlnLnkMsgNoAnchor\t: "Veuillez sélectionner une ancre",\r\n
+DlnLnkMsgInvPopName\t: "Le nom de la fenêtre popup doit commencer par une lettre et ne doit pas contenir d\'espace",\r\n
+\r\n
+// Color Dialog\r\n
+DlgColorTitle\t\t: "Sélectionner",\r\n
+DlgColorBtnClear\t: "Effacer",\r\n
+DlgColorHighlight\t: "Prévisualisation",\r\n
+DlgColorSelected\t: "Sélectionné",\r\n
+\r\n
+// Smiley Dialog\r\n
+DlgSmileyTitle\t\t: "Insérer un Emoticon",\r\n
+\r\n
+// Special Character Dialog\r\n
+DlgSpecialCharTitle\t: "Insérer un caractère spécial",\r\n
+\r\n
+// Table Dialog\r\n
+DlgTableTitle\t\t: "Propriétés du tableau",\r\n
+DlgTableRows\t\t: "Lignes",\r\n
+DlgTableColumns\t\t: "Colonnes",\r\n
+DlgTableBorder\t\t: "Taille de la bordure",\r\n
+DlgTableAlign\t\t: "Alignement",\r\n
+DlgTableAlignNotSet\t: "<Par défaut>",\r\n
+DlgTableAlignLeft\t: "Gauche",\r\n
+DlgTableAlignCenter\t: "Centré",\r\n
+DlgTableAlignRight\t: "Droite",\r\n
+DlgTableWidth\t\t: "Largeur",\r\n
+DlgTableWidthPx\t\t: "pixels",\r\n
+DlgTableWidthPc\t\t: "pourcentage",\r\n
+DlgTableHeight\t\t: "Hauteur",\r\n
+DlgTableCellSpace\t: "Espacement",\r\n
+DlgTableCellPad\t\t: "Contour",\r\n
+DlgTableCaption\t\t: "Titre",\r\n
+DlgTableSummary\t\t: "Résumé",\r\n
+DlgTableHeaders\t\t: "Headers",\t//MISSING\r\n
+DlgTableHeadersNone\t\t: "None",\t//MISSING\r\n
+DlgTableHeadersColumn\t: "First column",\t//MISSING\r\n
+DlgTableHeadersRow\t\t: "First Row",\t//MISSING\r\n
+DlgTableHeadersBoth\t\t: "Both",\t//MISSING\r\n
+\r\n
+// Table Cell Dialog\r\n
+DlgCellTitle\t\t: "Propriétés de la cellule",\r\n
+DlgCellWidth\t\t: "Largeur",\r\n
+DlgCellWidthPx\t\t: "pixels",\r\n
+DlgCellWidthPc\t\t: "pourcentage",\r\n
+DlgCellHeight\t\t: "Hauteur",\r\n
+DlgCellWordWrap\t\t: "Retour à la ligne",\r\n
+DlgCellWordWrapNotSet\t: "<Par défaut>",\r\n
+DlgCellWordWrapYes\t: "Oui",\r\n
+DlgCellWordWrapNo\t: "Non",\r\n
+DlgCellHorAlign\t\t: "Alignement horizontal",\r\n
+DlgCellHorAlignNotSet\t: "<Par défaut>",\r\n
+DlgCellHorAlignLeft\t: "Gauche",\r\n
+DlgCellHorAlignCenter\t: "Centré",\r\n
+DlgCellHorAlignRight: "Droite",\r\n
+DlgCellVerAlign\t\t: "Alignement vertical",\r\n
+DlgCellVerAlignNotSet\t: "<Par défaut>",\r\n
+DlgCellVerAlignTop\t: "Haut",\r\n
+DlgCellVerAlignMiddle\t: "Milieu",\r\n
+DlgCellVerAlignBottom\t: "Bas",\r\n
+DlgCellVerAlignBaseline\t: "Bas du texte",\r\n
+DlgCellType\t\t: "Cell Type",\t//MISSING\r\n
+DlgCellTypeData\t\t: "Data",\t//MISSING\r\n
+DlgCellTypeHeader\t: "Header",\t//MISSING\r\n
+DlgCellRowSpan\t\t: "Lignes fusionnées",\r\n
+DlgCellCollSpan\t\t: "Colonnes fusionnées",\r\n
+DlgCellBackColor\t: "Couleur de fond",\r\n
+DlgCellBorderColor\t: "Couleur de bordure",\r\n
+DlgCellBtnSelect\t: "Sélectionner...",\r\n
+\r\n
+// Find and Replace Dialog\r\n
+DlgFindAndReplaceTitle\t: "Chercher et Remplacer",\r\n
+\r\n
+// Find Dialog\r\n
+DlgFindTitle\t\t: "Chercher",\r\n
+DlgFindFindBtn\t\t: "Chercher",\r\n
+DlgFindNotFoundMsg\t: "Le texte indiqué est introuvable.",\r\n
+\r\n
+// Replace Dialog\r\n
+DlgReplaceTitle\t\t\t: "Remplacer",\r\n
+DlgReplaceFindLbl\t\t: "Rechercher:",\r\n
+DlgReplaceReplaceLbl\t: "Remplacer par:",\r\n
+DlgReplaceCaseChk\t\t: "Respecter la casse",\r\n
+DlgReplaceReplaceBtn\t: "Remplacer",\r\n
+DlgReplaceReplAllBtn\t: "Tout remplacer",\r\n
+DlgReplaceWordChk\t\t: "Mot entier",\r\n
+\r\n
+// Paste Operations / Dialog\r\n
+PasteErrorCut\t: "Les paramètres de sécurité de votre navigateur empêchent l\'éditeur de couper automatiquement vos données. Veuillez utiliser les équivalents claviers (Ctrl+X).",\r\n
+PasteErrorCopy\t: "Les paramètres de sécurité de votre navigateur empêchent l\'éditeur de copier automatiquement vos données. Veuillez utiliser les équivalents claviers (Ctrl+C).",\r\n
+\r\n
+PasteAsText\t\t: "Coller comme texte",\r\n
+PasteFromWord\t: "Coller à partir de Word",\r\n
+\r\n
+DlgPasteMsg2\t: "Veuillez coller dans la zone ci-dessous en utilisant le clavier (<STRONG>Ctrl+V</STRONG>) et appuyer sur <STRONG>OK</STRONG>.",\r\n
+DlgPasteSec\t\t: "A cause des paramètres de sécurité de votre navigateur, l\'éditeur ne peut accéder au presse-papier directement. Vous devez coller à nouveau le contenu dans cette fenêtre.",\r\n
+DlgPasteIgnoreFont\t\t: "Ignorer les polices de caractères",\r\n
+DlgPasteRemoveStyles\t: "Supprimer les styles",\r\n
+\r\n
+// Color Picker\r\n
+ColorAutomatic\t: "Automatique",\r\n
+ColorMoreColors\t: "Plus de couleurs...",\r\n
+\r\n
+// Document Properties\r\n
+DocProps\t\t: "Propriétés du document",\r\n
+\r\n
+// Anchor Dialog\r\n
+DlgAnchorTitle\t\t: "Propriétés de l\'ancre",\r\n
+DlgAnchorName\t\t: "Nom de l\'ancre",\r\n
+DlgAnchorErrorName\t: "Veuillez saisir le nom de l\'ancre",\r\n
+\r\n
+// Speller Pages Dialog\r\n
+DlgSpellNotInDic\t\t: "Pas dans le dictionnaire",\r\n
+DlgSpellChangeTo\t\t: "Changer en",\r\n
+DlgSpellBtnIgnore\t\t: "Ignorer",\r\n
+DlgSpellBtnIgnoreAll\t: "Ignorer tout",\r\n
+DlgSpellBtnReplace\t\t: "Remplacer",\r\n
+DlgSpellBtnReplaceAll\t: "Remplacer tout",\r\n
+DlgSpellBtnUndo\t\t\t: "Annuler",\r\n
+DlgSpellNoSuggestions\t: "- Pas de suggestion -",\r\n
+DlgSpellProgress\t\t: "Vérification d\'orthographe en cours...",\r\n
+DlgSpellNoMispell\t\t: "Vérification d\'orthographe terminée: pas d\'erreur trouvée",\r\n
+DlgSpellNoChanges\t\t: "Vérification d\'orthographe terminée: Pas de modifications",\r\n
+DlgSpellOneChange\t\t: "Vérification d\'orthographe terminée: Un mot modifié",\r\n
+DlgSpellManyChanges\t\t: "Vérification d\'orthographe terminée: %1 mots modifiés",\r\n
+\r\n
+IeSpellDownload\t\t\t: "Le Correcteur d\'orthographe n\'est pas installé. Souhaitez-vous le télécharger maintenant?",\r\n
+\r\n
+// Button Dialog\r\n
+DlgButtonText\t\t: "Texte (Valeur)",\r\n
+DlgButtonType\t\t: "Type",\r\n
+DlgButtonTypeBtn\t: "Bouton",\r\n
+DlgButtonTypeSbm\t: "Soumettre",\r\n
+DlgButtonTypeRst\t: "Réinitialiser",\r\n
+\r\n
+// Checkbox and Radio Button Dialogs\r\n
+DlgCheckboxName\t\t: "Nom",\r\n
+DlgCheckboxValue\t: "Valeur",\r\n
+DlgCheckboxSelected\t: "Sélectionné",\r\n
+\r\n
+// Form Dialog\r\n
+DlgFormName\t\t: "Nom",\r\n
+DlgFormAction\t: "Action",\r\n
+DlgFormMethod\t: "Méthode",\r\n
+\r\n
+// Select Field Dialog\r\n
+DlgSelectName\t\t: "Nom",\r\n
+DlgSelectValue\t\t: "Valeur",\r\n
+DlgSelectSize\t\t: "Taille",\r\n
+DlgSelectLines\t\t: "lignes",\r\n
+DlgSelectChkMulti\t: "Sélection multiple",\r\n
+DlgSelectOpAvail\t: "Options disponibles",\r\n
+DlgSelectOpText\t\t: "Texte",\r\n
+DlgSelectOpValue\t: "Valeur",\r\n
+DlgSelectBtnAdd\t\t: "Ajouter",\r\n
+DlgSelectBtnModify\t: "Modifier",\r\n
+DlgSelectBtnUp\t\t: "Monter",\r\n
+DlgSelectBtnDown\t: "Descendre",\r\n
+DlgSelectBtnSetValue : "Valeur sélectionnée",\r\n
+DlgSelectBtnDelete\t: "Supprimer",\r\n
+\r\n
+// Textarea Dialog\r\n
+DlgTextareaName\t: "Nom",\r\n
+DlgTextareaCols\t: "Colonnes",\r\n
+DlgTextareaRows\t: "Lignes",\r\n
+\r\n
+// Text Field Dialog\r\n
+DlgTextName\t\t\t: "Nom",\r\n
+DlgTextValue\t\t: "Valeur",\r\n
+DlgTextCharWidth\t: "Largeur en caractères",\r\n
+DlgTextMaxChars\t\t: "Nombre maximum de caractères",\r\n
+DlgTextType\t\t\t: "Type",\r\n
+DlgTextTypeText\t\t: "Texte",\r\n
+DlgTextTypePass\t\t: "Mot de passe",\r\n
+\r\n
+// Hidden Field Dialog\r\n
+DlgHiddenName\t: "Nom",\r\n
+DlgHiddenValue\t: "Valeur",\r\n
+\r\n
+// Bulleted List Dialog\r\n
+BulletedListProp\t: "Propriétés de liste à puces",\r\n
+NumberedListProp\t: "Propriétés de liste numérotée",\r\n
+DlgLstStart\t\t\t: "Début",\r\n
+DlgLstType\t\t\t: "Type",\r\n
+DlgLstTypeCircle\t: "Cercle",\r\n
+DlgLstTypeDisc\t\t: "Disque",\r\n
+DlgLstTypeSquare\t: "Carré",\r\n
+DlgLstTypeNumbers\t: "Nombres (1, 2, 3)",\r\n
+DlgLstTypeLCase\t\t: "Lettres minuscules (a, b, c)",\r\n
+DlgLstTypeUCase\t\t: "Lettres majuscules (A, B, C)",\r\n
+DlgLstTypeSRoman\t: "Chiffres romains minuscules (i, ii, iii)",\r\n
+DlgLstTypeLRoman\t: "Chiffres romains majuscules (I, II, III)",\r\n
+\r\n
+// Document Properties Dialog\r\n
+DlgDocGeneralTab\t: "Général",\r\n
+DlgDocBackTab\t\t: "Fond",\r\n
+DlgDocColorsTab\t\t: "Couleurs et Marges",\r\n
+DlgDocMetaTab\t\t: "Méta-Données",\r\n
+\r\n
+DlgDocPageTitle\t\t: "Titre de la page",\r\n
+DlgDocLangDir\t\t: "Sens d\'écriture",\r\n
+DlgDocLangDirLTR\t: "De la gauche vers la droite (LTR)",\r\n
+DlgDocLangDirRTL\t: "De la droite vers la gauche (RTL)",\r\n
+DlgDocLangCode\t\t: "Code langue",\r\n
+DlgDocCharSet\t\t: "Encodage de caractère",\r\n
+DlgDocCharSetCE\t\t: "Europe Centrale",\r\n
+DlgDocCharSetCT\t\t: "Chinois Traditionnel (Big5)",\r\n
+DlgDocCharSetCR\t\t: "Cyrillique",\r\n
+DlgDocCharSetGR\t\t: "Grecque",\r\n
+DlgDocCharSetJP\t\t: "Japonais",\r\n
+DlgDocCharSetKR\t\t: "Coréen",\r\n
+DlgDocCharSetTR\t\t: "Turcque",\r\n
+DlgDocCharSetUN\t\t: "Unicode (UTF-8)",\r\n
+DlgDocCharSetWE\t\t: "Occidental",\r\n
+DlgDocCharSetOther\t: "Autre encodage de caractère",\r\n
+\r\n
+DlgDocDocType\t\t: "Type de document",\r\n
+DlgDocDocTypeOther\t: "Autre type de document",\r\n
+DlgDocIncXHTML\t\t: "Inclure les déclarations XHTML",\r\n
+DlgDocBgColor\t\t: "Couleur de fond",\r\n
+DlgDocBgImage\t\t: "Image de fond",\r\n
+DlgDocBgNoScroll\t: "Image fixe sans défilement",\r\n
+DlgDocCText\t\t\t: "Texte",\r\n
+DlgDocCLink\t\t\t: "Lien",\r\n
+DlgDocCVisited\t\t: "Lien visité",\r\n
+DlgDocCActive\t\t: "Lien activé",\r\n
+DlgDocMargins\t\t: "Marges",\r\n
+DlgDocMaTop\t\t\t: "Haut",\r\n
+DlgDocMaLeft\t\t: "Gauche",\r\n
+DlgDocMaRight\t\t: "Droite",\r\n
+DlgDocMaBottom\t\t: "Bas",\r\n
+DlgDocMeIndex\t\t: "Mots-clés (séparés par des virgules)",\r\n
+DlgDocMeDescr\t\t: "Description",\r\n
+DlgDocMeAuthor\t\t: "Auteur",\r\n
+DlgDocMeCopy\t\t: "Copyright",\r\n
+DlgDocPreview\t\t: "Prévisualisation",\r\n
+\r\n
+// Templates Dialog\r\n
+Templates\t\t\t: "Modèles",\r\n
+DlgTemplatesTitle\t: "Modèles de contenu",\r\n
+DlgTemplatesSelMsg\t: "Sélectionner le modèle à ouvrir dans l\'éditeur<br>(le contenu actuel sera remplacé):",\r\n
+DlgTemplatesLoading\t: "Chargement de la liste des modèles. Veuillez patienter...",\r\n
+DlgTemplatesNoTpl\t: "(Aucun modèle disponible)",\r\n
+DlgTemplatesReplace\t: "Remplacer tout le contenu actuel",\r\n
+\r\n
+// About Dialog\r\n
+DlgAboutAboutTab\t: "Á propos de",\r\n
+DlgAboutBrowserInfoTab\t: "Navigateur",\r\n
+DlgAboutLicenseTab\t: "License",\r\n
+DlgAboutVersion\t\t: "Version",\r\n
+DlgAboutInfo\t\t: "Pour plus d\'informations, visiter",\r\n
+\r\n
+// Div Dialog\r\n
+DlgDivGeneralTab\t: "Général",\r\n
+DlgDivAdvancedTab\t: "Avancé",\r\n
+DlgDivStyle\t\t: "Style",\r\n
+DlgDivInlineStyle\t: "Attribut Style"\r\n
+};\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>19669</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

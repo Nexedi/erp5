@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Page used to upload new files in the current folder.\r\n
+-->\r\n
+<html>\r\n
+\t<head>\r\n
+\t\t<title>File Upload</title>\r\n
+\t\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\r\n
+\t\t<link href="browser.css" type="text/css" rel="stylesheet" >\r\n
+\t\t<script type="text/javascript" src="js/common.js"></script>\r\n
+\t\t<script type="text/javascript">\r\n
+\r\n
+function SetCurrentFolder( resourceType, folderPath )\r\n
+{\r\n
+\tvar sUrl = oConnector.ConnectorUrl + \'Command=FileUpload\' ;\r\n
+\tsUrl += \'&Type=\' + resourceType ;\r\n
+\tsUrl += \'&CurrentFolder=\' + encodeURIComponent( folderPath ) ;\r\n
+\r\n
+\tdocument.getElementById(\'frmUpload\').action = sUrl ;\r\n
+}\r\n
+\r\n
+function OnSubmit()\r\n
+{\r\n
+\tif ( document.getElementById(\'NewFile\').value.length == 0 )\r\n
+\t{\r\n
+\t\talert( \'Please select a file from your computer\' ) ;\r\n
+\t\treturn false ;\r\n
+\t}\r\n
+\r\n
+\t// Set the interface elements.\r\n
+\tdocument.getElementById(\'eUploadMessage\').innerHTML = \'Upload a new file in this folder (Upload in progress, please wait...)\' ;\r\n
+\tdocument.getElementById(\'btnUpload\').disabled = true ;\r\n
+\r\n
+\treturn true ;\r\n
+}\r\n
+\r\n
+function OnUploadCompleted( errorNumber, data )\r\n
+{\r\n
+\t// Reset the Upload Worker Frame.\r\n
+\twindow.parent.frames[\'frmUploadWorker\'].location = \'javascript:void(0)\' ;\r\n
+\r\n
+\t// Reset the upload form (On IE we must do a little trick to avoid problems).\r\n
+\tif ( document.all )\r\n
+\t\tdocument.getElementById(\'NewFile\').outerHTML = \'<input id="NewFile" name="NewFile" style="WIDTH: 100%" type="file">\' ;\r\n
+\telse\r\n
+\t\tdocument.getElementById(\'frmUpload\').reset() ;\r\n
+\r\n
+\t// Reset the interface elements.\r\n
+\tdocument.getElementById(\'eUploadMessage\').innerHTML = \'Upload a new file in this folder\' ;\r\n
+\tdocument.getElementById(\'btnUpload\').disabled = false ;\r\n
+\r\n
+\tswitch ( errorNumber )\r\n
+\t{\r\n
+\t\tcase 0 :\r\n
+\t\t\twindow.parent.frames[\'frmResourcesList\'].Refresh() ;\r\n
+\t\t\tbreak ;\r\n
+\t\tcase 1 :\t// Custom error.\r\n
+\t\t\talert( data ) ;\r\n
+\t\t\tbreak ;\r\n
+\t\tcase 201 :\r\n
+\t\t\twindow.parent.frames[\'frmResourcesList\'].Refresh() ;\r\n
+\t\t\talert( \'A file with the same name is already available. The uploaded file has been renamed to "\' + data + \'"\' ) ;\r\n
+\t\t\tbreak ;\r\n
+\t\tcase 202 :\r\n
+\t\t\talert( \'Invalid file\' ) ;\r\n
+\t\t\tbreak ;\r\n
+\t\tdefault :\r\n
+\t\t\talert( \'Error on file upload. Error number: \' + errorNumber ) ;\r\n
+\t\t\tbreak ;\r\n
+\t}\r\n
+}\r\n
+\r\n
+window.onload = function()\r\n
+{\r\n
+\twindow.top.IsLoadedUpload = true ;\r\n
+}\r\n
+\t\t</script>\r\n
+\t</head>\r\n
+\t<body>\r\n
+\t\t<form id="frmUpload" action="" target="frmUploadWorker" method="post" enctype="multipart/form-data" onsubmit="return OnSubmit();">\r\n
+\t\t\t<table class="fullHeight" cellspacing="0" cellpadding="0" width="100%" border="0">\r\n
+\t\t\t\t<tr>\r\n
+\t\t\t\t\t<td nowrap="nowrap">\r\n
+\t\t\t\t\t\t<span id="eUploadMessage">Upload a new file in this folder</span><br>\r\n
+\t\t\t\t\t\t<table cellspacing="0" cellpadding="0" width="100%" border="0">\r\n
+\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t<td width="100%"><input id="NewFile" name="NewFile" style="WIDTH: 100%" type="file"></td>\r\n
+\t\t\t\t\t\t\t\t<td nowrap="nowrap">&nbsp;<input id="btnUpload" type="submit" value="Upload"></td>\r\n
+\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t</table>\r\n
+\t\t\t\t\t</td>\r\n
+\t\t\t\t</tr>\r\n
+\t\t\t</table>\r\n
+\t\t</form>\r\n
+\t</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>frmupload.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

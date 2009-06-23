@@ -1,0 +1,251 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * This page shows the list of folders available in the parent folder\r\n
+ * of the current folder.\r\n
+-->\r\n
+<html>\r\n
+\t<head>\r\n
+\t\t<title>Folders</title>\r\n
+\t\t<link href="browser.css" type="text/css" rel="stylesheet">\r\n
+\t\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\r\n
+\t\t<script type="text/javascript" src="js/common.js"></script>\r\n
+\t\t<script type="text/javascript">\r\n
+\r\n
+var sActiveFolder ;\r\n
+\r\n
+var bIsLoaded = false ;\r\n
+var iIntervalId ;\r\n
+\r\n
+var oListManager = new Object() ;\r\n
+\r\n
+oListManager.Init = function()\r\n
+{\r\n
+\tthis.Table = document.getElementById(\'tableFiles\') ;\r\n
+\tthis.UpRow = document.getElementById(\'trUp\') ;\r\n
+\r\n
+\tthis.TableRows = new Object() ;\r\n
+}\r\n
+\r\n
+oListManager.Clear = function()\r\n
+{\r\n
+\t// Remove all other rows available.\r\n
+\twhile ( this.Table.rows.length > 1 )\r\n
+\t\tthis.Table.deleteRow(1) ;\r\n
+\r\n
+\t// Reset the TableRows collection.\r\n
+\tthis.TableRows = new Object() ;\r\n
+}\r\n
+\r\n
+oListManager.AddItem = function( folderName, folderPath )\r\n
+{\r\n
+\t// Create the new row.\r\n
+\tvar oRow = this.Table.insertRow(-1) ;\r\n
+\toRow.className = \'FolderListFolder\' ;\r\n
+\r\n
+\t// Build the link to view the folder.\r\n
+\tvar sLink = \'<a href="#" onclick="OpenFolder(\\\'\' + folderPath + \'\\\');return false;">\' ;\r\n
+\r\n
+\t// Add the folder icon cell.\r\n
+\tvar oCell = oRow.insertCell(-1) ;\r\n
+\toCell.width = 16 ;\r\n
+\toCell.innerHTML = sLink + \'<img alt="" src="images/spacer.gif" width="16" height="16" border="0"><\\/a>\' ;\r\n
+\r\n
+\t// Add the folder name cell.\r\n
+\toCell = oRow.insertCell(-1) ;\r\n
+\toCell.noWrap = true ;\r\n
+\toCell.innerHTML = \'&nbsp;\' + sLink + folderName + \'<\\/a>\' ;\r\n
+\r\n
+\tthis.TableRows[ folderPath ] = oRow ;\r\n
+}\r\n
+\r\n
+oListManager.ShowUpFolder = function( upFolderPath )\r\n
+{\r\n
+\tthis.UpRow.style.display = ( upFolderPath != null ? \'\' : \'none\' ) ;\r\n
+\r\n
+\tif ( upFolderPath != null )\r\n
+\t{\r\n
+\t\tdocument.getElementById(\'linkUpIcon\').onclick = document.getElementById(\'linkUp\').onclick = function()\r\n
+\t\t{\r\n
+\t\t\tLoadFolders( upFolderPath ) ;\r\n
+\t\t\treturn false ;\r\n
+\t\t}\r\n
+\t}\r\n
+}\r\n
+\r\n
+function CheckLoaded()\r\n
+{\r\n
+\tif ( window.top.IsLoadedActualFolder\r\n
+\t\t&& window.top.IsLoadedCreateFolder\r\n
+\t\t&& window.top.IsLoadedUpload\r\n
+\t\t&& window.top.IsLoadedResourcesList )\r\n
+\t{\r\n
+\t\twindow.clearInterval( iIntervalId ) ;\r\n
+\t\tbIsLoaded = true ;\r\n
+\t\tOpenFolder( sActiveFolder ) ;\r\n
+\t}\r\n
+}\r\n
+\r\n
+function OpenFolder( folderPath )\r\n
+{\r\n
+\tsActiveFolder = folderPath ;\r\n
+\r\n
+\tif ( ! bIsLoaded )\r\n
+\t{\r\n
+\t\tif ( ! iIntervalId )\r\n
+\t\t\tiIntervalId = window.setInterval( CheckLoaded, 100 ) ;\r\n
+\t\treturn ;\r\n
+\t}\r\n
+\r\n
+\t// Change the style for the select row (to show the opened folder).\r\n
+\tfor ( var sFolderPath in oListManager.TableRows )\r\n
+\t{\r\n
+\t\toListManager.TableRows[ sFolderPath ].className =\r\n
+\t\t\t( sFolderPath == folderPath ? \'FolderListCurrentFolder\' : \'FolderListFolder\' ) ;\r\n
+\t}\r\n
+\r\n
+\t// Set the current folder in all frames.\r\n
+\twindow.parent.frames[\'frmActualFolder\'].SetCurrentFolder( oConnector.ResourceType, folderPath ) ;\r\n
+\twindow.parent.frames[\'frmCreateFolder\'].SetCurrentFolder( oConnector.ResourceType, folderPath ) ;\r\n
+\twindow.parent.frames[\'frmUpload\'].SetCurrentFolder( oConnector.ResourceType, folderPath ) ;\r\n
+\r\n
+\t// Load the resources list for this folder.\r\n
+\twindow.parent.frames[\'frmResourcesList\'].LoadResources( oConnector.ResourceType, folderPath ) ;\r\n
+}\r\n
+\r\n
+function LoadFolders( folderPath )\r\n
+{\r\n
+\t// Clear the folders list.\r\n
+\toListManager.Clear() ;\r\n
+\r\n
+\t// Get the parent folder path.\r\n
+\tvar sParentFolderPath ;\r\n
+\tif ( folderPath != \'/\' )\r\n
+\t\tsParentFolderPath = folderPath.substring( 0, folderPath.lastIndexOf( \'/\', folderPath.length - 2 ) + 1 ) ;\r\n
+\r\n
+\t// Show/Hide the Up Folder.\r\n
+\toListManager.ShowUpFolder( sParentFolderPath ) ;\r\n
+\r\n
+\tif ( folderPath != \'/\' )\r\n
+\t{\r\n
+\t\tsActiveFolder = folderPath ;\r\n
+\t\toConnector.CurrentFolder = sParentFolderPath ;\r\n
+\t\toConnector.SendCommand( \'GetFolders\', null, GetFoldersCallBack ) ;\r\n
+\t}\r\n
+\telse\r\n
+\t\tOpenFolder( \'/\' ) ;\r\n
+}\r\n
+\r\n
+function GetFoldersCallBack( fckXml )\r\n
+{\r\n
+\tif ( oConnector.CheckError( fckXml ) != 0 )\r\n
+\t\treturn ;\r\n
+\r\n
+\t// Get the current folder path.\r\n
+\tvar oNode = fckXml.SelectSingleNode( \'Connector/CurrentFolder\' ) ;\r\n
+\tvar sCurrentFolderPath = oNode.attributes.getNamedItem(\'path\').value ;\r\n
+\r\n
+\tvar oNodes = fckXml.SelectNodes( \'Connector/Folders/Folder\' ) ;\r\n
+\r\n
+\tfor ( var i = 0 ; i < oNodes.length ; i++ )\r\n
+\t{\r\n
+\t\tvar sFolderName = oNodes[i].attributes.getNamedItem(\'name\').value ;\r\n
+\t\toListManager.AddItem( sFolderName, sCurrentFolderPath + sFolderName + \'/\' ) ;\r\n
+\t}\r\n
+\r\n
+\tOpenFolder( sActiveFolder ) ;\r\n
+}\r\n
+\r\n
+function SetResourceType( type )\r\n
+{\r\n
+\toConnector.ResourceType = type ;\r\n
+\tLoadFolders( \'/\' ) ;\r\n
+}\r\n
+\r\n
+window.onload = function()\r\n
+{\r\n
+\toListManager.Init() ;\r\n
+\tLoadFolders( \'/\' ) ;\r\n
+}\r\n
+\t\t</script>\r\n
+\t</head>\r\n
+\t<body class="FileArea">\r\n
+\t\t<table id="tableFiles" cellSpacing="0" cellPadding="0" width="100%" border="0">\r\n
+\t\t\t<tr id="trUp" style="DISPLAY: none">\r\n
+\t\t\t\t<td width="16"><a id="linkUpIcon" href="#"><img alt="" src="images/FolderUp.gif" width="16" height="16" border="0"></a></td>\r\n
+\t\t\t\t<td nowrap width="100%">&nbsp;<a id="linkUp" href="#">..</a></td>\r\n
+\t\t\t</tr>\r\n
+\t\t</table>\r\n
+\t</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>frmfolders.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

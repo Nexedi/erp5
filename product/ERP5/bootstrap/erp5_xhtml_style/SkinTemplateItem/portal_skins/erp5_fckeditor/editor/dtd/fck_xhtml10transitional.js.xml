@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749249.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fck_xhtml10transitional.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Contains the DTD mapping for XHTML 1.0 Transitional.\r\n
+ * This file was automatically generated from the file: xhtml10-transitional.dtd\r\n
+ */\r\n
+FCK.DTD = (function()\r\n
+{\r\n
+    var X = FCKTools.Merge ;\r\n
+\r\n
+    var A,L,J,M,N,O,D,H,P,K,Q,F,G,C,B,E,I ;\r\n
+    A = {isindex:1, fieldset:1} ;\r\n
+    B = {input:1, button:1, select:1, textarea:1, label:1} ;\r\n
+    C = X({a:1}, B) ;\r\n
+    D = X({iframe:1}, C) ;\r\n
+    E = {hr:1, ul:1, menu:1, div:1, blockquote:1, noscript:1, table:1, center:1, address:1, dir:1, pre:1, h5:1, dl:1, h4:1, noframes:1, h6:1, ol:1, h1:1, h3:1, h2:1} ;\r\n
+    F = {ins:1, del:1, script:1} ;\r\n
+    G = X({b:1, acronym:1, bdo:1, \'var\':1, \'#\':1, abbr:1, code:1, br:1, i:1, cite:1, kbd:1, u:1, strike:1, s:1, tt:1, strong:1, q:1, samp:1, em:1, dfn:1, span:1}, F) ;\r\n
+    H = X({sub:1, img:1, object:1, sup:1, basefont:1, map:1, applet:1, font:1, big:1, small:1}, G) ;\r\n
+    I = X({p:1}, H) ;\r\n
+    J = X({iframe:1}, H, B) ;\r\n
+    K = {img:1, noscript:1, br:1, kbd:1, center:1, button:1, basefont:1, h5:1, h4:1, samp:1, h6:1, ol:1, h1:1, h3:1, h2:1, form:1, font:1, \'#\':1, select:1, menu:1, ins:1, abbr:1, label:1, code:1, table:1, script:1, cite:1, input:1, iframe:1, strong:1, textarea:1, noframes:1, big:1, small:1, span:1, hr:1, sub:1, bdo:1, \'var\':1, div:1, object:1, sup:1, strike:1, dir:1, map:1, dl:1, applet:1, del:1, isindex:1, fieldset:1, ul:1, b:1, acronym:1, a:1, blockquote:1, i:1, u:1, s:1, tt:1, address:1, q:1, pre:1, p:1, em:1, dfn:1} ;\r\n
+\r\n
+    L = X({a:1}, J) ;\r\n
+    M = {tr:1} ;\r\n
+    N = {\'#\':1} ;\r\n
+    O = X({param:1}, K) ;\r\n
+    P = X({form:1}, A, D, E, I) ;\r\n
+    Q = {li:1} ;\r\n
+\r\n
+    return {\r\n
+        col: {},\r\n
+        tr: {td:1, th:1},\r\n
+        img: {},\r\n
+        colgroup: {col:1},\r\n
+        noscript: P,\r\n
+        td: P,\r\n
+        br: {},\r\n
+        th: P,\r\n
+        center: P,\r\n
+        kbd: L,\r\n
+        button: X(I, E),\r\n
+        basefont: {},\r\n
+        h5: L,\r\n
+        h4: L,\r\n
+        samp: L,\r\n
+        h6: L,\r\n
+        ol: Q,\r\n
+        h1: L,\r\n
+        h3: L,\r\n
+        option: N,\r\n
+        h2: L,\r\n
+        form: X(A, D, E, I),\r\n
+        select: {optgroup:1, option:1},\r\n
+        font: J,\t\t// Changed from L to J (see (1))\r\n
+        ins: P,\r\n
+        menu: Q,\r\n
+        abbr: L,\r\n
+        label: L,\r\n
+        table: {thead:1, col:1, tbody:1, tr:1, colgroup:1, caption:1, tfoot:1},\r\n
+        code: L,\r\n
+        script: N,\r\n
+        tfoot: M,\r\n
+        cite: L,\r\n
+        li: P,\r\n
+        input: {},\r\n
+        iframe: P,\r\n
+        strong: J,\t\t// Changed from L to J (see (1))\r\n
+        textarea: N,\r\n
+        noframes: P,\r\n
+        big: J,\t\t\t// Changed from L to J (see (1))\r\n
+        small: J,\t\t// Changed from L to J (see (1))\r\n
+        span: J,\t\t// Changed from L to J (see (1))\r\n
+        hr: {},\r\n
+        dt: L,\r\n
+        sub: J,\t\t\t// Changed from L to J (see (1))\r\n
+        optgroup: {option:1},\r\n
+        param: {},\r\n
+        bdo: L,\r\n
+        \'var\': J,\t\t// Changed from L to J (see (1))\r\n
+        div: P,\r\n
+        object: O,\r\n
+        sup: J,\t\t\t// Changed from L to J (see (1))\r\n
+        dd: P,\r\n
+        strike: J,\t\t// Changed from L to J (see (1))\r\n
+        area: {},\r\n
+        dir: Q,\r\n
+        map: X({area:1, form:1, p:1}, A, F, E),\r\n
+        applet: O,\r\n
+        dl: {dt:1, dd:1},\r\n
+        del: P,\r\n
+        isindex: {},\r\n
+        fieldset: X({legend:1}, K),\r\n
+        thead: M,\r\n
+        ul: Q,\r\n
+        acronym: L,\r\n
+        b: J,\t\t\t// Changed from L to J (see (1))\r\n
+        a: J,\r\n
+        blockquote: P,\r\n
+        caption: L,\r\n
+        i: J,\t\t\t// Changed from L to J (see (1))\r\n
+        u: J,\t\t\t// Changed from L to J (see (1))\r\n
+        tbody: M,\r\n
+        s: L,\r\n
+        address: X(D, I),\r\n
+        tt: J,\t\t\t// Changed from L to J (see (1))\r\n
+        legend: L,\r\n
+        q: L,\r\n
+        pre: X(G, C),\r\n
+        p: L,\r\n
+        em: J,\t\t\t// Changed from L to J (see (1))\r\n
+        dfn: L\r\n
+    } ;\r\n
+})() ;\r\n
+\r\n
+/*\r\n
+\tNotes:\r\n
+\t(1) According to the DTD, many elements, like <b> accept <a> elements\r\n
+\t    inside of them. But, to produce better output results, we have manually\r\n
+\t    changed the map to avoid breaking the links on pieces, having\r\n
+\t    "<b>this is a </b><a><b>link</b> test</a>", instead of\r\n
+\t    "<b>this is a <a>link</a></b><a> test</a>".\r\n
+*/\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>4757</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

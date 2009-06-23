@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="Image" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749296.96</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>FolderOpened32.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/gif</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">R0lGODlhIAAgAKIHAICAAPj4+MzMZgAAAJmZAP/Mmf//mf///yH5BAEAAAcALAAAAAAgACAAAAPN
+eLrc/jDK2Yi9l0oSuu8CoT2cYZ5nODIl6hrq2r6FWYdYLrLB6xufYGfAo9mONUMtuSQQFbOfK4k0
+OBdR5lHJ5S6VV514nBMUCk6OcM3+DAiht1Sq5TrjhHmV+gUP8D9UPoI3f2l6NF9nSgKGRHl0Xih1
+BQBvj4OBlGdpmFuZk1sFjWFzfYJKX6RPkKGBqUiVA6yfJ4qSsGdos1BTXqc2uqq8B62ovrDBZwKW
+WKHAycLCV1C3uF2L0pxPxWTeY9wHs+Pk5ebnK+nq6+wUCQA7</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>32</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>264</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>32</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

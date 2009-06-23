@@ -1,0 +1,511 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fck_editor.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Styles used by the editor IFRAME and Toolbar.\r\n
+ */\r\n
+\r\n
+/*\r\n
+\t### Basic Editor IFRAME Styles.\r\n
+*/\r\n
+\r\n
+body\r\n
+{\r\n
+\tpadding: 1px;\r\n
+\tmargin: 0;\r\n
+\tbackground-color: #ffffff;\r\n
+}\r\n
+\r\n
+#xEditingArea\r\n
+{\r\n
+    border: #696969 1px solid;\r\n
+}\r\n
+\r\n
+.SourceField\r\n
+{\r\n
+    padding: 5px;\r\n
+    margin: 0px;\r\n
+    font-family: Monospace;\r\n
+}\r\n
+\r\n
+/*\r\n
+\tToolbar\r\n
+*/\r\n
+\r\n
+.TB_ToolbarSet, .TB_Expand, .TB_Collapse\r\n
+{\r\n
+    cursor: default;\r\n
+    background-color: #f7f8fd;\r\n
+}\r\n
+\r\n
+.TB_ToolbarSet\r\n
+{\r\n
+    border-top: #f7f8fd 1px outset;\r\n
+    border-bottom: #f7f8fd 1px outset;\r\n
+}\r\n
+\r\n
+.TB_ToolbarSet TD\r\n
+{\r\n
+    font-size: 11px;\r\n
+    font-family: \'Microsoft Sans Serif\' , Tahoma, Arial, Verdana, Sans-Serif;\r\n
+}\r\n
+\r\n
+.TB_Toolbar\r\n
+{\r\n
+   \tbackground-color: #d6dff7;\r\n
+\tbackground-image: url(images/toolbar.bg.gif);\r\n
+\tbackground-repeat: repeat-x;\r\n
+    display: inline-table;\r\n
+}\r\n
+\r\n
+.TB_Separator\r\n
+{\r\n
+    width: 1px;\r\n
+    height: 16px;\r\n
+    margin: 2px;\r\n
+    background-color: #B2CBFF;\r\n
+}\r\n
+\r\n
+.TB_Start\r\n
+{\r\n
+    background-image: url(images/toolbar.start.gif);\r\n
+    background-repeat: no-repeat;\r\n
+    background-position: center center;\r\n
+    margin: 0px;\r\n
+    width: 7px;\r\n
+    height: 24px;\r\n
+}\r\n
+\r\n
+.TB_End\r\n
+{\r\n
+    background-image: url(images/toolbar.end.gif);\r\n
+    background-repeat: no-repeat;\r\n
+    background-position: center left;\r\n
+    height: 24px;\r\n
+    width: 4px;\r\n
+}\r\n
+\r\n
+.TB_ExpandImg\r\n
+{\r\n
+    background-image: url(images/toolbar.expand.gif);\r\n
+    background-repeat: no-repeat;\r\n
+}\r\n
+\r\n
+.TB_CollapseImg\r\n
+{\r\n
+    background-image: url(images/toolbar.collapse.gif);\r\n
+    background-repeat: no-repeat;\r\n
+}\r\n
+\r\n
+.TB_SideBorder\r\n
+{\r\n
+    background-color: #696969;\r\n
+}\r\n
+\r\n
+.TB_Expand, .TB_Collapse\r\n
+{\r\n
+    padding: 2px 2px 2px 2px;\r\n
+    border: #f7f8fd 1px outset;\r\n
+}\r\n
+\r\n
+.TB_Collapse\r\n
+{\r\n
+    width: 5px;\r\n
+}\r\n
+\r\n
+.TB_Break\r\n
+{\r\n
+    height: 24px; /* IE needs the height to be set, otherwise no break */\r\n
+}\r\n
+\r\n
+/*\r\n
+\tToolbar Button\r\n
+*/\r\n
+\r\n
+.TB_Button_On, .TB_Button_Off, .TB_Button_On_Over, .TB_Button_Off_Over, .TB_Button_Disabled\r\n
+{\r\n
+    margin: 1px;\r\n
+    height: 22px; /* The height is necessary, otherwise IE will not apply the alpha */\r\n
+}\r\n
+\r\n
+.TB_Button_On\r\n
+{\r\n
+    margin: 0px;\r\n
+    border: #316ac5 1px solid;\r\n
+    background-color: #c1d2ee;\r\n
+}\r\n
+\r\n
+.TB_Button_On_Over, .TB_Button_Off_Over\r\n
+{\r\n
+    margin: 0px ;\r\n
+    border: #316ac5 1px solid;\r\n
+    background-color: #dff1ff;\r\n
+}\r\n
+\r\n
+.TB_Button_Off\r\n
+{\r\n
+    filter: alpha(opacity=70); /* IE */\r\n
+    opacity: 0.70; /* Safari, Opera and Mozilla */\r\n
+}\r\n
+\r\n
+.TB_Button_Disabled\r\n
+{\r\n
+    filter: gray() alpha(opacity=30); /* IE */\r\n
+    opacity: 0.30; /* Safari, Opera and Mozilla */\r\n
+}\r\n
+\r\n
+.TB_Button_Padding\r\n
+{\r\n
+    visibility: hidden;\r\n
+    width: 3px;\r\n
+    height: 22px;\r\n
+}\r\n
+\r\n
+.TB_Button_Image\r\n
+{\r\n
+    overflow: hidden;\r\n
+    width: 16px;\r\n
+    height: 16px;\r\n
+    margin: 3px;\r\n
+    background-repeat: no-repeat;\r\n
+}\r\n
+\r\n
+.TB_Button_Image img\r\n
+{\r\n
+    position: relative;\r\n
+}\r\n
+\r\n
+.TB_Button_Off .TB_Button_Text\r\n
+{\r\n
+   \tbackground-color: #d6dff7;  /* Needed because of a bug on ClearType */\r\n
+\tbackground-image: url(images/toolbar.bg.gif);\r\n
+\tbackground-repeat: repeat-x;\r\n
+}\r\n
+\r\n
+.TB_ConnectionLine\r\n
+{\r\n
+    background-color: #f7f8fd;\r\n
+    height: 1px;\r\n
+    margin-left: 1px;   /* ltr */\r\n
+    margin-right: 1px;  /* rtl */\r\n
+}\r\n
+\r\n
+.TB_Button_Off .TB_Text\r\n
+{\r\n
+   \tbackground-color: #d6dff7;  /* Needed because of a bug on ClearType */\r\n
+\tbackground-image: url(images/toolbar.bg.gif);\r\n
+\tbackground-repeat: repeat-x;\r\n
+}\r\n
+\r\n
+.TB_Button_On_Over .TB_Text\r\n
+{\r\n
+   \tbackground-color: #dff1ff ;  /* Needed because of a bug on ClearType */\r\n
+}\r\n
+\r\n
+/*\r\n
+\tMenu\r\n
+*/\r\n
+\r\n
+.MN_Menu\r\n
+{\r\n
+    border: 1px solid #8f8f73;\r\n
+    padding: 2px;\r\n
+    background-color: #f7f8fd;\r\n
+    cursor: default;\r\n
+}\r\n
+\r\n
+.MN_Menu, .MN_Menu .MN_Label\r\n
+{\r\n
+    font-size: 11px;\r\n
+    font-family: \'Microsoft Sans Serif\' , Tahoma, Arial, Verdana, Sans-Serif;\r\n
+}\r\n
+\r\n
+.MN_Item_Padding\r\n
+{\r\n
+    visibility: hidden;\r\n
+    width: 3px;\r\n
+    height: 20px;\r\n
+}\r\n
+\r\n
+.MN_Icon\r\n
+{\r\n
+    background-color: #d6dff7;\r\n
+    text-align: center;\r\n
+    height: 20px;\r\n
+}\r\n
+\r\n
+.MN_Label\r\n
+{\r\n
+    padding-left: 3px;\r\n
+    padding-right: 3px;\r\n
+}\r\n
+\r\n
+.MN_Separator\r\n
+{\r\n
+    height: 3px;\r\n
+}\r\n
+\r\n
+.MN_Separator_Line\r\n
+{\r\n
+    border-top: #b9b99d 1px solid;\r\n
+}\r\n
+\r\n
+.MN_Item .MN_Icon IMG\r\n
+{\r\n
+    filter: alpha(opacity=70);\r\n
+    opacity: 0.70;\r\n
+}\r\n
+\r\n
+.MN_Item_Over\r\n
+{\r\n
+    color: #ffffff;\r\n
+    background-color: #7096FA;\r\n
+}\r\n
+\r\n
+.MN_Item_Over .MN_Icon\r\n
+{\r\n
+    background-color: #466ca6;\r\n
+}\r\n
+\r\n
+.MN_Item_Disabled IMG\r\n
+{\r\n
+    filter: gray() alpha(opacity=30); /* IE */\r\n
+    opacity: 0.30; /* Safari, Opera and Mozilla */\r\n
+}\r\n
+\r\n
+.MN_Item_Disabled .MN_Label\r\n
+{\r\n
+    color: #b7b7b7;\r\n
+}\r\n
+\r\n
+.MN_Arrow\r\n
+{\r\n
+    padding-right: 3px;\r\n
+    padding-left: 3px;\r\n
+}\r\n
+\r\n
+.MN_ConnectionLine\r\n
+{\r\n
+    background-color: #f7f8fd;\r\n
+}\r\n
+\r\n
+.Menu .TB_Button_On, .Menu .TB_Button_On_Over\r\n
+{\r\n
+    border: #8f8f73 1px solid;\r\n
+    background-color: #f7f8fd;\r\n
+}\r\n
+\r\n
+/*\r\n
+\t### Panel Styles\r\n
+*/\r\n
+\r\n
+.FCK_Panel\r\n
+{\r\n
+    border: #8f8f73 1px solid;\r\n
+    padding: 2px;\r\n
+    background-color: #f7f8fd;\r\n
+}\r\n
+\r\n
+.FCK_Panel, .FCK_Panel TD\r\n
+{\r\n
+    font-family: \'Microsoft Sans Serif\' , Tahoma, Arial, Verdana, Sans-Serif;\r\n
+    font-size: 11px;\r\n
+}\r\n
+\r\n
+/*\r\n
+\t### Special Combos\r\n
+*/\r\n
+\r\n
+.SC_Panel\r\n
+{\r\n
+    overflow: auto;\r\n
+    white-space: nowrap;\r\n
+    cursor: default;\r\n
+    border: 1px solid #8f8f73;\r\n
+    padding-left: 2px;\r\n
+    padding-right: 2px;\r\n
+}\r\n
+\r\n
+.SC_Panel, .SC_Panel TD\r\n
+{\r\n
+    font-size: 11px;\r\n
+    font-family: \'Microsoft Sans Serif\' , Tahoma, Arial, Verdana, Sans-Serif;\r\n
+}\r\n
+\r\n
+.SC_Item, .SC_ItemSelected\r\n
+{\r\n
+    margin-top: 2px;\r\n
+    margin-bottom: 2px;\r\n
+    background-position: left center;\r\n
+    padding-left: 11px;\r\n
+    padding-right: 3px;\r\n
+    padding-top: 2px;\r\n
+    padding-bottom: 2px;\r\n
+    text-overflow: ellipsis;\r\n
+    overflow: hidden;\r\n
+    background-repeat: no-repeat;\r\n
+    border: #dddddd 1px solid;\r\n
+}\r\n
+\r\n
+.SC_Item *, .SC_ItemSelected *\r\n
+{\r\n
+    margin-top: 0px;\r\n
+    margin-bottom: 0px;\r\n
+}\r\n
+\r\n
+.SC_ItemSelected\r\n
+{\r\n
+    border: #9a9afb 1px solid;\r\n
+    background-image: url(images/toolbar.arrowright.gif);\r\n
+}\r\n
+\r\n
+.SC_ItemOver\r\n
+{\r\n
+    border: #316ac5 1px solid;\r\n
+}\r\n
+\r\n
+.SC_Field\r\n
+{\r\n
+    margin-top: 2px ;\r\n
+    border: #b7b7a6 1px solid;\r\n
+    cursor: default;\r\n
+}\r\n
+\r\n
+.SC_FieldCaption\r\n
+{\r\n
+    overflow: visible;\r\n
+    padding-right: 5px;\r\n
+    padding-left: 5px;\r\n
+    opacity: 0.75; /* Safari, Opera and Mozilla */\r\n
+    filter: alpha(opacity=70); /* IE */ /* -moz-opacity: 0.75; Mozilla (Old) */\r\n
+    height: 23px;\r\n
+   \tbackground-color: #d6dff7;  /* Needed because of a bug on ClearType */\r\n
+\tbackground-image: url(images/toolbar.bg.gif);\r\n
+\tbackground-repeat: repeat-x;\r\n
+/*    background-color:  inherit;     Maybe this is needed wait to check */\r\n
+}\r\n
+\r\n
+.SC_FieldLabel\r\n
+{\r\n
+    white-space: nowrap;\r\n
+    padding: 2px;\r\n
+    width: 100%;\r\n
+    cursor: default;\r\n
+    background-color: #ffffff;\r\n
+    text-overflow: ellipsis;\r\n
+    overflow: hidden;\r\n
+}\r\n
+\r\n
+.SC_FieldButton\r\n
+{\r\n
+    background-position: center center;\r\n
+    background-image: url(images/toolbar.buttonarrow.gif);\r\n
+    border-left: #b7b7a6 1px solid;\r\n
+    width: 14px;\r\n
+    background-repeat: no-repeat;\r\n
+}\r\n
+\r\n
+.SC_FieldDisabled .SC_FieldButton, .SC_FieldDisabled .SC_FieldCaption, .SC_FieldDisabled .TB_ButtonType_Text\r\n
+{\r\n
+    opacity: 0.30; /* Safari, Opera and Mozilla */\r\n
+    filter: gray() alpha(opacity=30); /* IE */ /* -moz-opacity: 0.30; Mozilla (Old) */\r\n
+}\r\n
+\r\n
+.SC_FieldOver\r\n
+{\r\n
+    border: #316ac5 1px solid;\r\n
+}\r\n
+\r\n
+.SC_FieldOver .SC_FieldButton\r\n
+{\r\n
+    border-left: #316ac5 1px solid;\r\n
+}\r\n
+\r\n
+/*\r\n
+\t### Color Selector Panel\r\n
+*/\r\n
+\r\n
+.ColorBoxBorder\r\n
+{\r\n
+    border: #808080 1px solid;\r\n
+    position: static;\r\n
+}\r\n
+\r\n
+.ColorBox\r\n
+{\r\n
+    font-size: 1px;\r\n
+    width: 10px;\r\n
+    position: static;\r\n
+    height: 10px;\r\n
+}\r\n
+\r\n
+.ColorDeselected, .ColorSelected\r\n
+{\r\n
+    cursor: default;\r\n
+}\r\n
+\r\n
+.ColorDeselected\r\n
+{\r\n
+    border: #ffffff 1px solid;\r\n
+    padding: 2px;\r\n
+    float: left;\r\n
+}\r\n
+\r\n
+.ColorSelected\r\n
+{\r\n
+    border: #330066 1px solid;\r\n
+    padding: 2px;\r\n
+    float: left;\r\n
+    background-color: #c4cdd6;\r\n
+}\r\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

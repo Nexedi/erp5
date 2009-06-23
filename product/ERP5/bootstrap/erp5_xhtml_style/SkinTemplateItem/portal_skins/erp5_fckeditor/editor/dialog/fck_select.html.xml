@@ -1,0 +1,233 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Select dialog window.\r\n
+-->\r\n
+<html>\r\n
+\t<head>\r\n
+\t\t<title>Select Properties</title>\r\n
+\t\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\r\n
+\t\t<meta content="noindex, nofollow" name="robots">\r\n
+\t\t<script src="common/fck_dialog_common.js" type="text/javascript"></script>\r\n
+\t\t<script type="text/javascript" src="fck_select/fck_select.js"></script>\r\n
+\t\t<script type="text/javascript">\r\n
+\r\n
+var dialog\t= window.parent ;\r\n
+var oEditor = dialog.InnerDialogLoaded() ;\r\n
+\r\n
+// Gets the document DOM\r\n
+var oDOM = oEditor.FCK.EditorDocument ;\r\n
+\r\n
+var oActiveEl = dialog.Selection.GetSelectedElement() ;\r\n
+\r\n
+var oListText ;\r\n
+var oListValue ;\r\n
+\r\n
+window.onload = function()\r\n
+{\r\n
+\t// First of all, translate the dialog box texts\r\n
+\toEditor.FCKLanguageManager.TranslatePage(document) ;\r\n
+\r\n
+\toListText\t= document.getElementById( \'cmbText\' ) ;\r\n
+\toListValue\t= document.getElementById( \'cmbValue\' ) ;\r\n
+\r\n
+\t// Fix the lists widths. (Bug #970)\r\n
+\toListText.style.width = oListText.offsetWidth ;\r\n
+\toListValue.style.width = oListValue.offsetWidth ;\r\n
+\r\n
+\tif ( oActiveEl && oActiveEl.tagName == \'SELECT\' )\r\n
+\t{\r\n
+\t\tGetE(\'txtName\').value\t\t= oActiveEl.name ;\r\n
+\t\tGetE(\'txtSelValue\').value\t= oActiveEl.value ;\r\n
+\t\tGetE(\'txtLines\').value\t\t= GetAttribute( oActiveEl, \'size\' ) ;\r\n
+\t\tGetE(\'chkMultiple\').checked\t= oActiveEl.multiple ;\r\n
+\r\n
+\t\t// Load the actual options\r\n
+\t\tfor ( var i = 0 ; i < oActiveEl.options.length ; i++ )\r\n
+\t\t{\r\n
+\t\t\tvar sText\t= HTMLDecode( oActiveEl.options[i].innerHTML ) ;\r\n
+\t\t\tvar sValue\t= oActiveEl.options[i].value ;\r\n
+\r\n
+\t\t\tAddComboOption( oListText, sText, sText ) ;\r\n
+\t\t\tAddComboOption( oListValue, sValue, sValue ) ;\r\n
+\t\t}\r\n
+\t}\r\n
+\telse\r\n
+\t\toActiveEl = null ;\r\n
+\r\n
+\tdialog.SetOkButton( true ) ;\r\n
+\tdialog.SetAutoSize( true ) ;\r\n
+\tSelectField( \'txtName\' ) ;\r\n
+}\r\n
+\r\n
+function Ok()\r\n
+{\r\n
+\toEditor.FCKUndo.SaveUndoStep() ;\r\n
+\r\n
+\tvar sSize = GetE(\'txtLines\').value ;\r\n
+\tif ( sSize == null || isNaN( sSize ) || sSize <= 1 )\r\n
+\t\tsSize = \'\' ;\r\n
+\r\n
+\toActiveEl = CreateNamedElement( oEditor, oActiveEl, \'SELECT\', {name: GetE(\'txtName\').value} ) ;\r\n
+\r\n
+\tSetAttribute( oActiveEl, \'size\'\t, sSize ) ;\r\n
+\toActiveEl.multiple = ( sSize.length > 0 && GetE(\'chkMultiple\').checked ) ;\r\n
+\r\n
+\t// Remove all options.\r\n
+\twhile ( oActiveEl.options.length > 0 )\r\n
+\t\toActiveEl.remove(0) ;\r\n
+\r\n
+\t// Add all available options.\r\n
+\tfor ( var i = 0 ; i < oListText.options.length ; i++ )\r\n
+\t{\r\n
+\t\tvar sText\t= oListText.options[i].value ;\r\n
+\t\tvar sValue\t= oListValue.options[i].value ;\r\n
+\t\tif ( sValue.length == 0 ) sValue = sText ;\r\n
+\r\n
+\t\tvar oOption = AddComboOption( oActiveEl, sText, sValue, oDOM ) ;\r\n
+\r\n
+\t\tif ( sValue == GetE(\'txtSelValue\').value )\r\n
+\t\t{\r\n
+\t\t\tSetAttribute( oOption, \'selected\', \'selected\' ) ;\r\n
+\t\t\toOption.selected = true ;\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\treturn true ;\r\n
+}\r\n
+\r\n
+\t\t</script>\r\n
+\t</head>\r\n
+\t<body style="overflow: hidden">\r\n
+\t\t<table width="100%" height="100%">\r\n
+\t\t\t<tr>\r\n
+\t\t\t\t<td>\r\n
+\t\t\t\t\t<table width="100%">\r\n
+\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t<td nowrap><span fckLang="DlgSelectName">Name</span>&nbsp;</td>\r\n
+\t\t\t\t\t\t\t<td width="100%" colSpan="2"><input id="txtName" style="WIDTH: 100%" type="text"></td>\r\n
+\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t<td nowrap><span fckLang="DlgSelectValue">Value</span>&nbsp;</td>\r\n
+\t\t\t\t\t\t\t<td width="100%" colSpan="2"><input id="txtSelValue" style="WIDTH: 100%; BACKGROUND-COLOR: buttonface" type="text" readonly></td>\r\n
+\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t<td nowrap><span fckLang="DlgSelectSize">Size</span>&nbsp;</td>\r\n
+\t\t\t\t\t\t\t<td nowrap><input id="txtLines" type="text" size="2" value="">&nbsp;<span fckLang="DlgSelectLines">lines</span></td>\r\n
+\t\t\t\t\t\t\t<td nowrap align="right"><input id="chkMultiple" type="checkbox"><label for="chkMultiple" fckLang="DlgSelectChkMulti">Allow\r\n
+\t\t\t\t\t\t\t\t\tmultiple selections</label></td>\r\n
+\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t</table>\r\n
+\t\t\t\t\t<br>\r\n
+\t\t\t\t\t<hr style="POSITION: absolute">\r\n
+\t\t\t\t\t<span style="LEFT: 10px; POSITION: relative; TOP: -7px" class="BackColor">&nbsp;<span fckLang="DlgSelectOpAvail">Available\r\n
+\t\t\t\t\t\t\tOptions</span>&nbsp;</span>\r\n
+\t\t\t\t\t<table width="100%">\r\n
+\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t<td width="50%"><span fckLang="DlgSelectOpText">Text</span><br>\r\n
+\t\t\t\t\t\t\t\t<input id="txtText" style="WIDTH: 100%" type="text">\r\n
+\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t<td width="50%"><span fckLang="DlgSelectOpValue">Value</span><br>\r\n
+\t\t\t\t\t\t\t\t<input id="txtValue" style="WIDTH: 100%" type="text">\r\n
+\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t<td vAlign="bottom"><input onclick="Add();" type="button" fckLang="DlgSelectBtnAdd" value="Add"></td>\r\n
+\t\t\t\t\t\t\t<td vAlign="bottom"><input onclick="Modify();" type="button" fckLang="DlgSelectBtnModify" value="Modify"></td>\r\n
+\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t<td rowSpan="2"><select id="cmbText" style="WIDTH: 100%" onchange="GetE(\'cmbValue\').selectedIndex = this.selectedIndex;Select(this);"\r\n
+\t\t\t\t\t\t\t\t\tsize="5"></select>\r\n
+\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t<td rowSpan="2"><select id="cmbValue" style="WIDTH: 100%" onchange="GetE(\'cmbText\').selectedIndex = this.selectedIndex;Select(this);"\r\n
+\t\t\t\t\t\t\t\t\tsize="5"></select>\r\n
+\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t<td vAlign="top" colSpan="2">\r\n
+\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t<td vAlign="bottom" colSpan="2"><input style="WIDTH: 100%" onclick="Move(-1);" type="button" fckLang="DlgSelectBtnUp" value="Up">\r\n
+\t\t\t\t\t\t\t\t<br>\r\n
+\t\t\t\t\t\t\t\t<input style="WIDTH: 100%" onclick="Move(1);" type="button" fckLang="DlgSelectBtnDown"\r\n
+\t\t\t\t\t\t\t\t\tvalue="Down">\r\n
+\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t<TR>\r\n
+\t\t\t\t\t\t\t<TD vAlign="bottom" colSpan="4"><INPUT onclick="SetSelectedValue();" type="button" fckLang="DlgSelectBtnSetValue" value="Set as selected value">&nbsp;&nbsp;\r\n
+\t\t\t\t\t\t\t\t<input onclick="Delete();" type="button" fckLang="DlgSelectBtnDelete" value="Delete"></TD>\r\n
+\t\t\t\t\t\t</TR>\r\n
+\t\t\t\t\t</table>\r\n
+\t\t\t\t</td>\r\n
+\t\t\t</tr>\r\n
+\t\t</table>\r\n
+\t</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>fck_select.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

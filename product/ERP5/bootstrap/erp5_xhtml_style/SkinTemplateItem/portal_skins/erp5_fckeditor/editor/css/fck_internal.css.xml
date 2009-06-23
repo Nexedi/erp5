@@ -1,0 +1,234 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fck_internal.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * This CSS Style Sheet defines rules used by the editor for its internal use.\r\n
+ */\r\n
+\r\n
+/* #########\r\n
+ *  WARNING\r\n
+ * #########\r\n
+ * When changing this file, the minified version of it must be updated in the\r\n
+ * fckeditor.html file (see FCK_InternalCSS).\r\n
+ */\r\n
+\r\n
+/* Fix to allow putting the caret at the end of the content in Firefox if\r\n
+   clicking below the content. */\r\n
+html\r\n
+{\r\n
+\tmin-height: 100%;\r\n
+}\r\n
+\r\n
+table.FCK__ShowTableBorders, table.FCK__ShowTableBorders td, table.FCK__ShowTableBorders th\r\n
+{\r\n
+\tborder: #d3d3d3 1px solid;\r\n
+}\r\n
+\r\n
+form\r\n
+{\r\n
+\tborder: 1px dotted #FF0000;\r\n
+\tpadding: 2px;\r\n
+}\r\n
+\r\n
+.FCK__Flash\r\n
+{\r\n
+\tborder: #a9a9a9 1px solid;\r\n
+\tbackground-position: center center;\r\n
+\tbackground-image: url(images/fck_flashlogo.gif);\r\n
+\tbackground-repeat: no-repeat;\r\n
+\twidth: 80px;\r\n
+\theight: 80px;\r\n
+}\r\n
+\r\n
+.FCK__UnknownObject\r\n
+{\r\n
+\tborder: #a9a9a9 1px solid;\r\n
+\tbackground-position: center center;\r\n
+\tbackground-image: url(images/fck_plugin.gif);\r\n
+\tbackground-repeat: no-repeat;\r\n
+\twidth: 80px;\r\n
+\theight: 80px;\r\n
+}\r\n
+\r\n
+/* Empty anchors images */\r\n
+.FCK__Anchor\r\n
+{\r\n
+\tborder: 1px dotted #00F;\r\n
+\tbackground-position: center center;\r\n
+\tbackground-image: url(images/fck_anchor.gif);\r\n
+\tbackground-repeat: no-repeat;\r\n
+\twidth: 16px;\r\n
+\theight: 15px;\r\n
+\tvertical-align: middle;\r\n
+}\r\n
+\r\n
+/* Anchors with content */\r\n
+.FCK__AnchorC\r\n
+{\r\n
+\tborder: 1px dotted #00F;\r\n
+\tbackground-position: 1px center;\r\n
+\tbackground-image: url(images/fck_anchor.gif);\r\n
+\tbackground-repeat: no-repeat;\r\n
+\tpadding-left: 18px;\r\n
+}\r\n
+\r\n
+/* Any anchor for non-IE, if we combine it with the previous rule IE ignores all. */\r\n
+a[name]\r\n
+{\r\n
+\tborder: 1px dotted #00F;\r\n
+\tbackground-position: 0 center;\r\n
+\tbackground-image: url(images/fck_anchor.gif);\r\n
+\tbackground-repeat: no-repeat;\r\n
+\tpadding-left: 18px;\r\n
+}\r\n
+\r\n
+.FCK__PageBreak\r\n
+{\r\n
+\tbackground-position: center center;\r\n
+\tbackground-image: url(images/fck_pagebreak.gif);\r\n
+\tbackground-repeat: no-repeat;\r\n
+\tclear: both;\r\n
+\tdisplay: block;\r\n
+\tfloat: none;\r\n
+\twidth: 100%;\r\n
+\tborder-top: #999999 1px dotted;\r\n
+\tborder-bottom: #999999 1px dotted;\r\n
+\tborder-right: 0px;\r\n
+\tborder-left: 0px;\r\n
+\theight: 5px;\r\n
+}\r\n
+\r\n
+/* Hidden fields */\r\n
+.FCK__InputHidden\r\n
+{\r\n
+\twidth: 19px;\r\n
+\theight: 18px;\r\n
+\tbackground-image: url(images/fck_hiddenfield.gif);\r\n
+\tbackground-repeat: no-repeat;\r\n
+\tvertical-align: text-bottom;\r\n
+\tbackground-position: center center;\r\n
+}\r\n
+\r\n
+.FCK__ShowBlocks p,\r\n
+.FCK__ShowBlocks div,\r\n
+.FCK__ShowBlocks pre,\r\n
+.FCK__ShowBlocks address,\r\n
+.FCK__ShowBlocks blockquote,\r\n
+.FCK__ShowBlocks h1,\r\n
+.FCK__ShowBlocks h2,\r\n
+.FCK__ShowBlocks h3,\r\n
+.FCK__ShowBlocks h4,\r\n
+.FCK__ShowBlocks h5,\r\n
+.FCK__ShowBlocks h6\r\n
+{\r\n
+\tbackground-repeat: no-repeat;\r\n
+\tborder: 1px dotted gray;\r\n
+\tpadding-top: 8px;\r\n
+\tpadding-left: 8px;\r\n
+}\r\n
+\r\n
+.FCK__ShowBlocks p\r\n
+{\r\n
+\tbackground-image: url(images/block_p.png);\r\n
+}\r\n
+\r\n
+.FCK__ShowBlocks div\r\n
+{\r\n
+\tbackground-image: url(images/block_div.png);\r\n
+}\r\n
+\r\n
+.FCK__ShowBlocks pre\r\n
+{\r\n
+\tbackground-image: url(images/block_pre.png);\r\n
+}\r\n
+\r\n
+.FCK__ShowBlocks address\r\n
+{\r\n
+\tbackground-image: url(images/block_address.png);\r\n
+}\r\n
+\r\n
+.FCK__ShowBlocks blockquote\r\n
+{\r\n
+\tbackground-image: url(images/block_blockquote.png);\r\n
+}\r\n
+\r\n
+.FCK__ShowBlocks h1\r\n
+{\r\n
+\tbackground-image: url(images/block_h1.png);\r\n
+}\r\n
+\r\n
+.FCK__ShowBlocks h2\r\n
+{\r\n
+\tbackground-image: url(images/block_h2.png);\r\n
+}\r\n
+\r\n
+.FCK__ShowBlocks h3\r\n
+{\r\n
+\tbackground-image: url(images/block_h3.png);\r\n
+}\r\n
+\r\n
+.FCK__ShowBlocks h4\r\n
+{\r\n
+\tbackground-image: url(images/block_h4.png);\r\n
+}\r\n
+\r\n
+.FCK__ShowBlocks h5\r\n
+{\r\n
+\tbackground-image: url(images/block_h5.png);\r\n
+}\r\n
+\r\n
+.FCK__ShowBlocks h6\r\n
+{\r\n
+\tbackground-image: url(images/block_h6.png);\r\n
+}\r\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

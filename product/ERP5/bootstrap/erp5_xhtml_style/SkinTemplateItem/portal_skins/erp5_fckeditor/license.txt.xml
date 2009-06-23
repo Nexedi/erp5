@@ -1,0 +1,1281 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>license.txt</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+\r\n
+Licensed under the terms of any of the following licenses at your\r\n
+choice:\r\n
+\r\n
+ - GNU General Public License Version 2 or later (the "GPL")\r\n
+   http://www.gnu.org/licenses/gpl.html\r\n
+   (See Appendix A)\r\n
+\r\n
+ - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+   http://www.gnu.org/licenses/lgpl.html\r\n
+   (See Appendix B)\r\n
+\r\n
+ - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+   http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+   (See Appendix C)\r\n
+\r\n
+You are not required to, but if you want to explicitly declare the\r\n
+license you have chosen to be bound to when using, reproducing,\r\n
+modifying and distributing this software, just include a text file\r\n
+titled "legal.txt" in your version of this software, indicating your\r\n
+license choice. In any case, your choice will not restrict any\r\n
+recipient of your version of this software to use, reproduce, modify\r\n
+and distribute this software under any of the above licenses.\r\n
+\r\n
+Appendix A: The GPL License\r\n
+===========================\r\n
+\r\n
+\t\t    GNU GENERAL PUBLIC LICENSE\r\n
+\t\t       Version 2, June 1991\r\n
+\r\n
+ Copyright (C) 1989, 1991 Free Software Foundation, Inc.,\r\n
+ 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA\r\n
+ Everyone is permitted to copy and distribute verbatim copies\r\n
+ of this license document, but changing it is not allowed.\r\n
+\r\n
+\t\t\t    Preamble\r\n
+\r\n
+  The licenses for most software are designed to take away your\r\n
+freedom to share and change it.  By contrast, the GNU General Public\r\n
+License is intended to guarantee your freedom to share and change free\r\n
+software--to make sure the software is free for all its users.  This\r\n
+General Public License applies to most of the Free Software\r\n
+Foundation\'s software and to any other program whose authors commit to\r\n
+using it.  (Some other Free Software Foundation software is covered by\r\n
+the GNU Lesser General Public License instead.)  You can apply it to\r\n
+your programs, too.\r\n
+\r\n
+  When we speak of free software, we are referring to freedom, not\r\n
+price.  Our General Public Licenses are designed to make sure that you\r\n
+have the freedom to distribute copies of free software (and charge for\r\n
+this service if you wish), that you receive source code or can get it\r\n
+if you want it, that you can change the software or use pieces of it\r\n
+in new free programs; and that you know you can do these things.\r\n
+\r\n
+  To protect your rights, we need to make restrictions that forbid\r\n
+anyone to deny you these rights or to ask you to surrender the rights.\r\n
+These restrictions translate to certain responsibilities for you if you\r\n
+distribute copies of the software, or if you modify it.\r\n
+\r\n
+  For example, if you distribute copies of such a program, whether\r\n
+gratis or for a fee, you must give the recipients all the rights that\r\n
+you have.  You must make sure that they, too, receive or can get the\r\n
+source code.  And you must show them these terms so they know their\r\n
+rights.\r\n
+\r\n
+  We protect your rights with two steps: (1) copyright the software, and\r\n
+(2) offer you this license which gives you legal permission to copy,\r\n
+distribute and/or modify the software.\r\n
+\r\n
+  Also, for each author\'s protection and ours, we want to make certain\r\n
+that everyone understands that there is no warranty for this free\r\n
+software.  If the software is modified by someone else and passed on, we\r\n
+want its recipients to know that what they have is not the original, so\r\n
+that any problems introduced by others will not reflect on the original\r\n
+authors\' reputations.\r\n
+\r\n
+  Finally, any free program is threatened constantly by software\r\n
+patents.  We wish to avoid the danger that redistributors of a free\r\n
+program will individually obtain patent licenses, in effect making the\r\n
+program proprietary.  To prevent this, we have made it clear that any\r\n
+patent must be licensed for everyone\'s free use or not licensed at all.\r\n
+\r\n
+  The precise terms and conditions for copying, distribution and\r\n
+modification follow.\r\n
+\r\n
+\t\t    GNU GENERAL PUBLIC LICENSE\r\n
+   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION\r\n
+\r\n
+  0. This License applies to any program or other work which contains\r\n
+a notice placed by the copyright holder saying it may be distributed\r\n
+under the terms of this General Public License.  The "Program", below,\r\n
+refers to any such program or work, and a "work based on the Program"\r\n
+means either the Program or any derivative work under copyright law:\r\n
+that is to say, a work containing the Program or a portion of it,\r\n
+either verbatim or with modifications and/or translated into another\r\n
+language.  (Hereinafter, translation is included without limitation in\r\n
+the term "modification".)  Each licensee is addressed as "you".\r\n
+\r\n
+Activities other than copying, distribution and modification are not\r\n
+covered by this License; they are outside its scope.  The act of\r\n
+running the Program is not restricted, and the output from the Program\r\n
+is covered only if its contents constitute a work based on the\r\n
+Program (independent of having been made by running the Program).\r\n
+Whether that is true depends on what the Program does.\r\n
+\r\n
+  1. You may copy and distribute verbatim copies of the Program\'s\r\n
+source code as you receive it, in any medium, provided that you\r\n
+conspicuously and appropriately publish on each copy an appropriate\r\n
+copyright notice and disclaimer of warranty; keep intact all the\r\n
+notices that refer to this License and to the absence of any warranty;\r\n
+and give any other recipients of the Program a copy of this License\r\n
+along with the Program.\r\n
+\r\n
+You may charge a fee for the physical act of transferring a copy, and\r\n
+you may at your option offer warranty protection in exchange for a fee.\r\n
+\r\n
+  2. You may modify your copy or copies of the Program or any portion\r\n
+of it, thus forming a work based on the Program, and copy and\r\n
+distribute such modifications or work under the terms of Section 1\r\n
+above, provided that you also meet all of these conditions:\r\n
+\r\n
+    a) You must cause the modified files to carry prominent notices\r\n
+    stating that you changed the files and the date of any change.\r\n
+\r\n
+    b) You must cause any work that you distribute or publish, that in\r\n
+    whole or in part contains or is derived from the Program or any\r\n
+    part thereof, to be licensed as a whole at no charge to all third\r\n
+    parties under the terms of this License.\r\n
+\r\n
+    c) If the modified program normally reads commands interactively\r\n
+    when run, you must cause it, when started running for such\r\n
+    interactive use in the most ordinary way, to print or display an\r\n
+    announcement including an appropriate copyright notice and a\r\n
+    notice that there is no warranty (or else, saying that you provide\r\n
+    a warranty) and that users may redistribute the program under\r\n
+    these conditions, and telling the user how to view a copy of this\r\n
+    License.  (Exception: if the Program itself is interactive but\r\n
+    does not normally print such an announcement, your work based on\r\n
+    the Program is not required to print an announcement.)\r\n
+\r\n
+These requirements apply to the modified work as a whole.  If\r\n
+identifiable sections of that work are not derived from the Program,\r\n
+and can be reasonably considered independent and separate works in\r\n
+themselves, then this License, and its terms, do not apply to those\r\n
+sections when you distribute them as separate works.  But when you\r\n
+distribute the same sections as part of a whole which is a work based\r\n
+on the Program, the distribution of the whole must be on the terms of\r\n
+this License, whose permissions for other licensees extend to the\r\n
+entire whole, and thus to each and every part regardless of who wrote it.\r\n
+\r\n
+Thus, it is not the intent of this section to claim rights or contest\r\n
+your rights to work written entirely by you; rather, the intent is to\r\n
+exercise the right to control the distribution of derivative or\r\n
+collective works based on the Program.\r\n
+\r\n
+In addition, mere aggregation of another work not based on the Program\r\n
+with the Program (or with a work based on the Program) on a volume of\r\n
+a storage or distribution medium does not bring the other work under\r\n
+the scope of this License.\r\n
+\r\n
+  3. You may copy and distribute the Program (or a work based on it,\r\n
+under Section 2) in object code or executable form under the terms of\r\n
+Sections 1 and 2 above provided that you also do one of the following:\r\n
+\r\n
+    a) Accompany it with the complete corresponding machine-readable\r\n
+    source code, which must be distributed under the terms of Sections\r\n
+    1 and 2 above on a medium customarily used for software interchange; or,\r\n
+\r\n
+    b) Accompany it with a written offer, valid for at least three\r\n
+    years, to give any third party, for a charge no more than your\r\n
+    cost of physically performing source distribution, a complete\r\n
+    machine-readable copy of the corresponding source code, to be\r\n
+    distributed under the terms of Sections 1 and 2 above on a medium\r\n
+    customarily used for software interchange; or,\r\n
+\r\n
+    c) Accompany it with the information you received as to the offer\r\n
+    to distribute corresponding source code.  (This alternative is\r\n
+    allowed only for noncommercial distribution and only if you\r\n
+    received the program in object code or executable form with such\r\n
+    an offer, in accord with Subsection b above.)\r\n
+\r\n
+The source code for a work means the preferred form of the work for\r\n
+making modifications to it.  For an executable work, complete source\r\n
+code means all the source code for all modules it contains, plus any\r\n
+associated interface definition files, plus the scripts used to\r\n
+control compilation and installation of the executable.  However, as a\r\n
+special exception, the source code distributed need not include\r\n
+anything that is normally distributed (in either source or binary\r\n
+form) with the major components (compiler, kernel, and so on) of the\r\n
+operating system on which the executable runs, unless that component\r\n
+itself accompanies the executable.\r\n
+\r\n
+If distribution of executable or object code is made by offering\r\n
+access to copy from a designated place, then offering equivalent\r\n
+access to copy the source code from the same place counts as\r\n
+distribution of the source code, even though third parties are not\r\n
+compelled to copy the source along with the object code.\r\n
+\r\n
+  4. You may not copy, modify, sublicense, or distribute the Program\r\n
+except as expressly provided under this License.  Any attempt\r\n
+otherwise to copy, modify, sublicense or distribute the Program is\r\n
+void, and will automatically terminate your rights under this License.\r\n
+However, parties who have received copies, or rights, from you under\r\n
+this License will not have their licenses terminated so long as such\r\n
+parties remain in full compliance.\r\n
+\r\n
+  5. You are not required to accept this License, since you have not\r\n
+signed it.  However, nothing else grants you permission to modify or\r\n
+distribute the Program or its derivative works.  These actions are\r\n
+prohibited by law if you do not accept this License.  Therefore, by\r\n
+modifying or distributing the Program (or any work based on the\r\n
+Program), you indicate your acceptance of this License to do so, and\r\n
+all its terms and conditions for copying, distributing or modifying\r\n
+the Program or works based on it.\r\n
+\r\n
+  6. Each time you redistribute the Program (or any work based on the\r\n
+Program), the recipient automatically receives a license from the\r\n
+original licensor to copy, distribute or modify the Program subject to\r\n
+these terms and conditions.  You may not impose any further\r\n
+restrictions on the recipients\' exercise of the rights granted herein.\r\n
+You are not responsible for enforcing compliance by third parties to\r\n
+this License.\r\n
+\r\n
+  7. If, as a consequence of a court judgment or allegation of patent\r\n
+infringement or for any other reason (not limited to patent issues),\r\n
+conditions are imposed on you (whether by court order, agreement or\r\n
+otherwise) that contradict the conditions of this License, they do not\r\n
+excuse you from the conditions of this License.  If you cannot\r\n
+distribute so as to satisfy simultaneously your obligations under this\r\n
+License and any other pertinent obligations, then as a consequence you\r\n
+may not distribute the Program at all.  For example, if a patent\r\n
+license would not permit royalty-free redistribution of the Program by\r\n
+all those who receive copies directly or indirectly through you, then\r\n
+the only way you could satisfy both it and this License would be to\r\n
+refrain entirely from distribution of the Program.\r\n
+\r\n
+If any portion of this section is held invalid or unenforceable under\r\n
+any particular circumstance, the balance of the section is intended to\r\n
+apply and the section as a whole is intended to apply in other\r\n
+circumstances.\r\n
+\r\n
+It is not the purpose of this section to induce you to infringe any\r\n
+patents or other property right claims or to contest validity of any\r\n
+such claims; this section has the sole purpose of protecting the\r\n
+integrity of the free software distribution system, which is\r\n
+implemented by public license practices.  Many people have made\r\n
+generous contributions to the wide range of software distributed\r\n
+through that system in reliance on consistent application of that\r\n
+system; it is up to the author/donor to decide if he or she is willing\r\n
+to distribute software through any other system and a licensee cannot\r\n
+impose that choice.\r\n
+\r\n
+This section is intended to make thoroughly clear what is believed to\r\n
+be a consequence of the rest of this License.\r\n
+\r\n
+  8. If the distribution and/or use of the Program is restricted in\r\n
+certain countries either by patents or by copyrighted interfaces, the\r\n
+original copyright holder who places the Program under this License\r\n
+may add an explicit geographical distribution limitation excluding\r\n
+those countries, so that distribution is permitted only in or among\r\n
+countries not thus excluded.  In such case, this License incorporates\r\n
+the limitation as if written in the body of this License.\r\n
+\r\n
+  9. The Free Software Foundation may publish revised and/or new versions\r\n
+of the General Public License from time to time.  Such new versions will\r\n
+be similar in spirit to the present version, but may differ in detail to\r\n
+address new problems or concerns.\r\n
+\r\n
+Each version is given a distinguishing version number.  If the Program\r\n
+specifies a version number of this License which applies to it and "any\r\n
+later version", you have the option of following the terms and conditions\r\n
+either of that version or of any later version published by the Free\r\n
+Software Foundation.  If the Program does not specify a version number of\r\n
+this License, you may choose any version ever published by the Free Software\r\n
+Foundation.\r\n
+\r\n
+  10. If you wish to incorporate parts of the Program into other free\r\n
+programs whose distribution conditions are different, write to the author\r\n
+to ask for permission.  For software which is copyrighted by the Free\r\n
+Software Foundation, write to the Free Software Foundation; we sometimes\r\n
+make exceptions for this.  Our decision will be guided by the two goals\r\n
+of preserving the free status of all derivatives of our free software and\r\n
+of promoting the sharing and reuse of software generally.\r\n
+\r\n
+\t\t\t    NO WARRANTY\r\n
+\r\n
+  11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY\r\n
+FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN\r\n
+OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES\r\n
+PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED\r\n
+OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF\r\n
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS\r\n
+TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE\r\n
+PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING,\r\n
+REPAIR OR CORRECTION.\r\n
+\r\n
+  12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING\r\n
+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR\r\n
+REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES,\r\n
+INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING\r\n
+OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED\r\n
+TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY\r\n
+YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER\r\n
+PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE\r\n
+POSSIBILITY OF SUCH DAMAGES.\r\n
+\r\n
+\t\t     END OF TERMS AND CONDITIONS\r\n
+\r\n
+\r\n
+Appendix B: The LGPL License\r\n
+============================\r\n
+\r\n
+\t\t  GNU LESSER GENERAL PUBLIC LICENSE\r\n
+\t\t       Version 2.1, February 1999\r\n
+\r\n
+ Copyright (C) 1991, 1999 Free Software Foundation, Inc.\r\n
+     59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\r\n
+ Everyone is permitted to copy and distribute verbatim copies\r\n
+ of this license document, but changing it is not allowed.\r\n
+\r\n
+[This is the first released version of the Lesser GPL.  It also counts\r\n
+ as the successor of the GNU Library Public License, version 2, hence\r\n
+ the version number 2.1.]\r\n
+\r\n
+\t\t\t    Preamble\r\n
+\r\n
+  The licenses for most software are designed to take away your\r\n
+freedom to share and change it.  By contrast, the GNU General Public\r\n
+Licenses are intended to guarantee your freedom to share and change\r\n
+free software--to make sure the software is free for all its users.\r\n
+\r\n
+  This license, the Lesser General Public License, applies to some\r\n
+specially designated software packages--typically libraries--of the\r\n
+Free Software Foundation and other authors who decide to use it.  You\r\n
+can use it too, but we suggest you first think carefully about whether\r\n
+this license or the ordinary General Public License is the better\r\n
+strategy to use in any particular case, based on the explanations below.\r\n
+\r\n
+  When we speak of free software, we are referring to freedom of use,\r\n
+not price.  Our General Public Licenses are designed to make sure that\r\n
+you have the freedom to distribute copies of free software (and charge\r\n
+for this service if you wish); that you receive source code or can get\r\n
+it if you want it; that you can change the software and use pieces of\r\n
+it in new free programs; and that you are informed that you can do\r\n
+these things.\r\n
+\r\n
+  To protect your rights, we need to make restrictions that forbid\r\n
+distributors to deny you these rights or to ask you to surrender these\r\n
+rights.  These restrictions translate to certain responsibilities for\r\n
+you if you distribute copies of the library or if you modify it.\r\n
+\r\n
+  For example, if you distribute copies of the library, whether gratis\r\n
+or for a fee, you must give the recipients all the rights that we gave\r\n
+you.  You must make sure that they, too, receive or can get the source\r\n
+code.  If you link other code with the library, you must provide\r\n
+complete object files to the recipients, so that they can relink them\r\n
+with the library after making changes to the library and recompiling\r\n
+it.  And you must show them these terms so they know their rights.\r\n
+\r\n
+  We protect your rights with a two-step method: (1) we copyright the\r\n
+library, and (2) we offer you this license, which gives you legal\r\n
+permission to copy, distribute and/or modify the library.\r\n
+\r\n
+  To protect each distributor, we want to make it very clear that\r\n
+there is no warranty for the free library.  Also, if the library is\r\n
+modified by someone else and passed on, the recipients should know\r\n
+that what they have is not the original version, so that the original\r\n
+author\'s reputation will not be affected by problems that might be\r\n
+introduced by others.\r\n
+\r\n
+  Finally, software patents pose a constant threat to the existence of\r\n
+any free program.  We wish to make sure that a company cannot\r\n
+effectively restrict the users of a free program by obtaining a\r\n
+restrictive license from a patent holder.  Therefore, we insist that\r\n
+any patent license obtained for a version of the library must be\r\n
+consistent with the full freedom of use specified in this license.\r\n
+\r\n
+  Most GNU software, including some libraries, is covered by the\r\n
+ordinary GNU General Public License.  This license, the GNU Lesser\r\n
+General Public License, applies to certain designated libraries, and\r\n
+is quite different from the ordinary General Public License.  We use\r\n
+this license for certain libraries in order to permit linking those\r\n
+libraries into non-free programs.\r\n
+\r\n
+  When a program is linked with a library, whether statically or using\r\n
+a shared library, the combination of the two is legally speaking a\r\n
+combined work, a derivative of the original library.  The ordinary\r\n
+General Public License therefore permits such linking only if the\r\n
+entire combination fits its criteria of freedom.  The Lesser General\r\n
+Public License permits more lax criteria for linking other code with\r\n
+the library.\r\n
+\r\n
+  We call this license the "Lesser" General Public License because it\r\n
+does Less to protect the user\'s freedom than the ordinary General\r\n
+Public License.  It also provides other free software developers Less\r\n
+of an advantage over competing non-free programs.  These disadvantages\r\n
+are the reason we use the ordinary General Public License for many\r\n
+libraries.  However, the Lesser license provides advantages in certain\r\n
+special circumstances.\r\n
+\r\n
+  For example, on rare occasions, there may be a special need to\r\n
+encourage the widest possible use of a certain library, so that it becomes\r\n
+a de-facto standard.  To achieve this, non-free programs must be\r\n
+allowed to use the library.  A more frequent case is that a free\r\n
+library does the same job as widely used non-free libraries.  In this\r\n
+case, there is little to gain by limiting the free library to free\r\n
+software only, so we use the Lesser General Public License.\r\n
+\r\n
+  In other cases, permission to use a particular library in non-free\r\n
+programs enables a greater number of people to use a large body of\r\n
+free software.  For example, permission to use the GNU C Library in\r\n
+non-free programs enables many more people to use the whole GNU\r\n
+operating system, as well as its variant, the GNU/Linux operating\r\n
+system.\r\n
+\r\n
+  Although the Lesser General Public License is Less protective of the\r\n
+users\' freedom, it does ensure that the user of a program that is\r\n
+linked with the Library has the freedom and the wherewithal to run\r\n
+that program using a modified version of the Library.\r\n
+\r\n
+  The precise terms and conditions for copying, distribution and\r\n
+modification follow.  Pay close attention to the difference between a\r\n
+"work based on the library" and a "work that uses the library".  The\r\n
+former contains code derived from the library, whereas the latter must\r\n
+be combined with the library in order to run.\r\n
+\r\n
+\t\t  GNU LESSER GENERAL PUBLIC LICENSE\r\n
+   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION\r\n
+\r\n
+  0. This License Agreement applies to any software library or other\r\n
+program which contains a notice placed by the copyright holder or\r\n
+other authorized party saying it may be distributed under the terms of\r\n
+this Lesser General Public License (also called "this License").\r\n
+Each licensee is addressed as "you".\r\n
+\r\n
+  A "library" means a collection of software functions and/or data\r\n
+prepared so as to be conveniently linked with application programs\r\n
+(which use some of those functions and data) to form executables.\r\n
+\r\n
+  The "Library", below, refers to any such software library or work\r\n
+which has been distributed under these terms.  A "work based on the\r\n
+Library" means either the Library or any derivative work under\r\n
+copyright law: that is to say, a work containing the Library or a\r\n
+portion of it, either verbatim or with modifications and/or translated\r\n
+straightforwardly into another language.  (Hereinafter, translation is\r\n
+included without limitation in the term "modification".)\r\n
+\r\n
+  "Source code" for a work means the preferred form of the work for\r\n
+making modifications to it.  For a library, complete source code means\r\n
+all the source code for all modules it contains, plus any associated\r\n
+interface definition files, plus the scripts used to control compilation\r\n
+and installation of the library.\r\n
+\r\n
+  Activities other than copying, distribution and modification are not\r\n
+covered by this License; they are outside its scope.  The act of\r\n
+running a program using the Library is not restricted, and output from\r\n
+such a program is covered only if its contents constitute a work based\r\n
+on the Library (independent of the use of the Library in a tool for\r\n
+writing it).  Whether that is true depends on what the Library does\r\n
+and what the program that uses the Library does.\r\n
+\r\n
+  1. You may copy and distribute verbatim copies of the Library\'s\r\n
+complete source code as you receive it, in any medium, provided that\r\n
+you conspicuously and appropriately publish on each copy an\r\n
+appropriate copyright notice and disclaimer of warranty; keep intact\r\n
+all the notices that refer to this License and to the absence of any\r\n
+warranty; and distribute a copy of this License along with the\r\n
+Library.\r\n
+\r\n
+  You may charge a fee for the physical act of transferring a copy,\r\n
+and you may at your option offer warranty protection in exchange for a\r\n
+fee.\r\n
+\r\n
+  2. You may modify your copy or copies of the Library or any portion\r\n
+of it, thus forming a work based on the Library, and copy and\r\n
+distribute such modifications or work under the terms of Section 1\r\n
+above, provided that you also meet all of these conditions:\r\n
+\r\n
+    a) The modified work must itself be a software library.\r\n
+\r\n
+    b) You must cause the files modified to carry prominent notices\r\n
+    stating that you changed the files and the date of any change.\r\n
+\r\n
+    c) You must cause the whole of the work to be licensed at no\r\n
+    charge to all third parties under the terms of this License.\r\n
+\r\n
+    d) If a facility in the modified Library refers to a function or a\r\n
+    table of data to be supplied by an application program that uses\r\n
+    the facility, other than as an argument passed when the facility\r\n
+    is invoked, then you must make a good faith effort to ensure that,\r\n
+    in the event an application does not supply such function or\r\n
+    table, the facility still operates, and performs whatever part of\r\n
+    its purpose remains meaningful.\r\n
+\r\n
+    (For example, a function in a library to compute square roots has\r\n
+    a purpose that is entirely well-defined independent of the\r\n
+    application.  Therefore, Subsection 2d requires that any\r\n
+    application-supplied function or table used by this function must\r\n
+    be optional: if the application does not supply it, the square\r\n
+    root function must still compute square roots.)\r\n
+\r\n
+These requirements apply to the modified work as a whole.  If\r\n
+identifiable sections of that work are not derived from the Library,\r\n
+and can be reasonably considered independent and separate works in\r\n
+themselves, then this License, and its terms, do not apply to those\r\n
+sections when you distribute them as separate works.  But when you\r\n
+distribute the same sections as part of a whole which is a work based\r\n
+on the Library, the distribution of the whole must be on the terms of\r\n
+this License, whose permissions for other licensees extend to the\r\n
+entire whole, and thus to each and every part regardless of who wrote\r\n
+it.\r\n
+\r\n
+Thus, it is not the intent of this section to claim rights or contest\r\n
+your rights to work written entirely by you; rather, the intent is to\r\n
+exercise the right to control the distribution of derivative or\r\n
+collective works based on the Library.\r\n
+\r\n
+In addition, mere aggregation of another work not based on the Library\r\n
+with the Library (or with a work based on the Library) on a volume of\r\n
+a storage or distribution medium does not bring the other work under\r\n
+the scope of this License.\r\n
+\r\n
+  3. You may opt to apply the terms of the ordinary GNU General Public\r\n
+License instead of this License to a given copy of the Library.  To do\r\n
+this, you must alter all the notices that refer to this License, so\r\n
+that they refer to the ordinary GNU General Public License, version 2,\r\n
+instead of to this License.  (If a newer version than version 2 of the\r\n
+ordinary GNU General Public License has appeared, then you can specify\r\n
+that version instead if you wish.)  Do not make any other change in\r\n
+these notices.\r\n
+\r\n
+  Once this change is made in a given copy, it is irreversible for\r\n
+that copy, so the ordinary GNU General Public License applies to all\r\n
+subsequent copies and derivative works made from that copy.\r\n
+\r\n
+  This option is useful when you wish to copy part of the code of\r\n
+the Library into a program that is not a library.\r\n
+\r\n
+  4. You may copy and distribute the Library (or a portion or\r\n
+derivative of it, under Section 2) in object code or executable form\r\n
+under the terms of Sections 1 and 2 above provided that you accompany\r\n
+it with the complete corresponding machine-readable source code, which\r\n
+must be distributed under the terms of Sections 1 and 2 above on a\r\n
+medium customarily used for software interchange.\r\n
+\r\n
+  If distribution of object code is made by offering access to copy\r\n
+from a designated place, then offering equivalent access to copy the\r\n
+source code from the same place satisfies the requirement to\r\n
+distribute the source code, even though third parties are not\r\n
+compelled to copy the source along with the object code.\r\n
+\r\n
+  5. A program that contains no derivative of any portion of the\r\n
+Library, but is designed to work with the Library by being compiled or\r\n
+linked with it, is called a "work that uses the Library".  Such a\r\n
+work, in isolation, is not a derivative work of the Library, and\r\n
+therefore falls outside the scope of this License.\r\n
+\r\n
+  However, linking a "work that uses the Library" with the Library\r\n
+creates an executable that is a derivative of the Library (because it\r\n
+contains portions of the Library), rather than a "work that uses the\r\n
+library".  The executable is therefore covered by this License.\r\n
+Section 6 states terms for distribution of such executables.\r\n
+\r\n
+  When a "work that uses the Library" uses material from a header file\r\n
+that is part of the Library, the object code for the work may be a\r\n
+derivative work of the Library even though the source code is not.\r\n
+Whether this is true is especially significant if the work can be\r\n
+linked without the Library, or if the work is itself a library.  The\r\n
+threshold for this to be true is not precisely defined by law.\r\n
+\r\n
+  If such an object file uses only numerical parameters, data\r\n
+structure layouts and accessors, and small macros and small inline\r\n
+functions (ten lines or less in length), then the use of the object\r\n
+file is unrestricted, regardless of whether it is legally a derivative\r\n
+work.  (Executables containing this object code plus portions of the\r\n
+Library will still fall under Section 6.)\r\n
+\r\n
+  Otherwise, if the work is a derivative of the Library, you may\r\n
+distribute the object code for the work under the terms of Section 6.\r\n
+Any executables containing that work also fall under Section 6,\r\n
+whether or not they are linked directly with the Library itself.\r\n
+\r\n
+  6. As an exception to the Sections above, you may also combine or\r\n
+link a "work that uses the Library" with the Library to produce a\r\n
+work containing portions of the Library, and distribute that work\r\n
+under terms of your choice, provided that the terms permit\r\n
+modification of the work for the customer\'s own use and reverse\r\n
+engineering for debugging such modifications.\r\n
+\r\n
+  You must give prominent notice with each copy of the work that the\r\n
+Library is used in it and that the Library and its use are covered by\r\n
+this License.  You must supply a copy of this License.  If the work\r\n
+during execution displays copyright notices, you must include the\r\n
+copyright notice for the Library among them, as well as a reference\r\n
+directing the user to the copy of this License.  Also, you must do one\r\n
+of these things:\r\n
+\r\n
+    a) Accompany the work with the complete corresponding\r\n
+    machine-readable source code for the Library including whatever\r\n
+    changes were used in the work (which must be distributed under\r\n
+    Sections 1 and 2 above); and, if the work is an executable linked\r\n
+    with the Library, with the complete machine-readable "work that\r\n
+    uses the Library", as object code and/or source code, so that the\r\n
+    user can modify the Library and then relink to produce a modified\r\n
+    executable containing the modified Library.  (It is understood\r\n
+    that the user who changes the contents of definitions files in the\r\n
+    Library will not necessarily be able to recompile the application\r\n
+    to use the modified definitions.)\r\n
+\r\n
+    b) Use a suitable shared library mechanism for linking with the\r\n
+    Library.  A suitable mechanism is one that (1) uses at run time a\r\n
+    copy of the library already present on the user\'s computer system,\r\n
+    rather than copying library functions into the executable, and (2)\r\n
+    will operate properly with a modified version of the library, if\r\n
+    the user installs one, as long as the modified version is\r\n
+    interface-compatible with the version that the work was made with.\r\n
+\r\n
+    c) Accompany the work with a written offer, valid for at\r\n
+    least three years, to give the same user the materials\r\n
+    specified in Subsection 6a, above, for a charge no more\r\n
+    than the cost of performing this distribution.\r\n
+\r\n
+    d) If distribution of the work is made by offering access to copy\r\n
+    from a designated place, offer equivalent access to copy the above\r\n
+    specified materials from the same place.\r\n
+\r\n
+    e) Verify that the user has already received a copy of these\r\n
+    materials or that you have already sent this user a copy.\r\n
+\r\n
+  For an executable, the required form of the "work that uses the\r\n
+Library" must include any data and utility programs needed for\r\n
+reproducing the executable from it.  However, as a special exception,\r\n
+the materials to be distributed need not include anything that is\r\n
+normally distributed (in either source or binary form) with the major\r\n
+components (compiler, kernel, and so on) of the operating system on\r\n
+which the executable runs, unless that component itself accompanies\r\n
+the executable.\r\n
+\r\n
+  It may happen that this requirement contradicts the license\r\n
+restrictions of other proprietary libraries that do not normally\r\n
+accompany the operating system.  Such a contradiction means you cannot\r\n
+use both them and the Library together in an executable that you\r\n
+distribute.\r\n
+\r\n
+  7. You may place library facilities that are a work based on the\r\n
+Library side-by-side in a single library together with other library\r\n
+facilities not covered by this License, and distribute such a combined\r\n
+library, provided that the separate distribution of the work based on\r\n
+the Library and of the other library facilities is otherwise\r\n
+permitted, and provided that you do these two things:\r\n
+\r\n
+    a) Accompany the combined library with a copy of the same work\r\n
+    based on the Library, uncombined with any other library\r\n
+    facilities.  This must be distributed under the terms of the\r\n
+    Sections above.\r\n
+\r\n
+    b) Give prominent notice with the combined library of the fact\r\n
+    that part of it is a work based on the Library, and explaining\r\n
+    where to find the accompanying uncombined form of the same work.\r\n
+\r\n
+  8. You may not copy, modify, sublicense, link with, or distribute\r\n
+the Library except as expressly provided under this License.  Any\r\n
+attempt otherwise to copy, modify, sublicense, link with, or\r\n
+distribute the Library is void, and will automatically terminate your\r\n
+rights under this License.  However, parties who have received copies,\r\n
+or rights, from you under this License will not have their licenses\r\n
+terminated so long as such parties remain in full compliance.\r\n
+\r\n
+  9. You are not required to accept this License, since you have not\r\n
+signed it.  However, nothing else grants you permission to modify or\r\n
+distribute the Library or its derivative works.  These actions are\r\n
+prohibited by law if you do not accept this License.  Therefore, by\r\n
+modifying or distributing the Library (or any work based on the\r\n
+Library), you indicate your acceptance of this License to do so, and\r\n
+all its terms and conditions for copying, distributing or modifying\r\n
+the Library or works based on it.\r\n
+\r\n
+  10. Each time you redistribute the Library (or any work based on the\r\n
+Library), the recipient automatically receives a license from the\r\n
+original licensor to copy, distribute, link with or modify the Library\r\n
+subject to these terms and conditions.  You may not impose any further\r\n
+restrictions on the recipients\' exercise of the rights granted herein.\r\n
+You are not responsible for enforcing compliance by third parties with\r\n
+this License.\r\n
+\r\n
+  11. If, as a consequence of a court judgment or allegation of patent\r\n
+infringement or for any other reason (not limited to patent issues),\r\n
+conditions are imposed on you (whether by court order, agreement or\r\n
+otherwise) that contradict the conditions of this License, they do not\r\n
+excuse you from the conditions of this License.  If you cannot\r\n
+distribute so as to satisfy simultaneously your obligations under this\r\n
+License and any other pertinent obligations, then as a consequence you\r\n
+may not distribute the Library at all.  For example, if a patent\r\n
+license would not permit royalty-free redistribution of the Library by\r\n
+all those who receive copies directly or indirectly through you, then\r\n
+the only way you could satisfy both it and this License would be to\r\n
+refrain entirely from distribution of the Library.\r\n
+\r\n
+If any portion of this section is held invalid or unenforceable under any\r\n
+particular circumstance, the balance of the section is intended to apply,\r\n
+and the section as a whole is intended to apply in other circumstances.\r\n
+\r\n
+It is not the purpose of this section to induce you to infringe any\r\n
+patents or other property right claims or to contest validity of any\r\n
+such claims; this section has the sole purpose of protecting the\r\n
+integrity of the free software distribution system which is\r\n
+implemented by public license practices.  Many people have made\r\n
+generous contributions to the wide range of software distributed\r\n
+through that system in reliance on consistent application of that\r\n
+system; it is up to the author/donor to decide if he or she is willing\r\n
+to distribute software through any other system and a licensee cannot\r\n
+impose that choice.\r\n
+\r\n
+This section is intended to make thoroughly clear what is believed to\r\n
+be a consequence of the rest of this License.\r\n
+\r\n
+  12. If the distribution and/or use of the Library is restricted in\r\n
+certain countries either by patents or by copyrighted interfaces, the\r\n
+original copyright holder who places the Library under this License may add\r\n
+an explicit geographical distribution limitation excluding those countries,\r\n
+so that distribution is permitted only in or among countries not thus\r\n
+excluded.  In such case, this License incorporates the limitation as if\r\n
+written in the body of this License.\r\n
+\r\n
+  13. The Free Software Foundation may publish revised and/or new\r\n
+versions of the Lesser General Public License from time to time.\r\n
+Such new versions will be similar in spirit to the present version,\r\n
+but may differ in detail to address new problems or concerns.\r\n
+\r\n
+Each version is given a distinguishing version number.  If the Library\r\n
+specifies a version number of this License which applies to it and\r\n
+"any later version", you have the option of following the terms and\r\n
+conditions either of that version or of any later version published by\r\n
+the Free Software Foundation.  If the Library does not specify a\r\n
+license version number, you may choose any version ever published by\r\n
+the Free Software Foundation.\r\n
+\r\n
+  14. If you wish to incorporate parts of the Library into other free\r\n
+programs whose distribution conditions are incompatible with these,\r\n
+write to the author to ask for permission.  For software which is\r\n
+copyrighted by the Free Software Foundation, write to the Free\r\n
+Software Foundation; we sometimes make exceptions for this.  Our\r\n
+decision will be guided by the two goals of preserving the free status\r\n
+of all derivatives of our free software and of promoting the sharing\r\n
+and reuse of software generally.\r\n
+\r\n
+\t\t\t    NO WARRANTY\r\n
+\r\n
+  15. BECAUSE THE LIBRARY IS LICENSED FREE OF CHARGE, THERE IS NO\r\n
+WARRANTY FOR THE LIBRARY, TO THE EXTENT PERMITTED BY APPLICABLE LAW.\r\n
+EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR\r\n
+OTHER PARTIES PROVIDE THE LIBRARY "AS IS" WITHOUT WARRANTY OF ANY\r\n
+KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE\r\n
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR\r\n
+PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE\r\n
+LIBRARY IS WITH YOU.  SHOULD THE LIBRARY PROVE DEFECTIVE, YOU ASSUME\r\n
+THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.\r\n
+\r\n
+  16. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN\r\n
+WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY\r\n
+AND/OR REDISTRIBUTE THE LIBRARY AS PERMITTED ABOVE, BE LIABLE TO YOU\r\n
+FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR\r\n
+CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE\r\n
+LIBRARY (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING\r\n
+RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A\r\n
+FAILURE OF THE LIBRARY TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF\r\n
+SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH\r\n
+DAMAGES.\r\n
+\r\n
+\t\t     END OF TERMS AND CONDITIONS\r\n
+\r\n
+\r\n
+Appendix C: The MPL License\r\n
+===========================\r\n
+\r\n
+                          MOZILLA PUBLIC LICENSE\r\n
+                                Version 1.1\r\n
+\r\n
+                              ---------------\r\n
+\r\n
+1. Definitions.\r\n
+\r\n
+     1.0.1. "Commercial Use" means distribution or otherwise making the\r\n
+     Covered Code available to a third party.\r\n
+\r\n
+     1.1. "Contributor" means each entity that creates or contributes to\r\n
+     the creation of Modifications.\r\n
+\r\n
+     1.2. "Contributor Version" means the combination of the Original\r\n
+     Code, prior Modifications used by a Contributor, and the Modifications\r\n
+     made by that particular Contributor.\r\n
+\r\n
+     1.3. "Covered Code" means the Original Code or Modifications or the\r\n
+     combination of the Original Code and Modifications, in each case\r\n
+     including portions thereof.\r\n
+\r\n
+     1.4. "Electronic Distribution Mechanism" means a mechanism generally\r\n
+     accepted in the software development community for the electronic\r\n
+     transfer of data.\r\n
+\r\n
+     1.5. "Executable" means Covered Code in any form other than Source\r\n
+     Code.\r\n
+\r\n
+     1.6. "Initial Developer" means the individual or entity identified\r\n
+     as the Initial Developer in the Source Code notice required by Exhibit\r\n
+     A.\r\n
+\r\n
+     1.7. "Larger Work" means a work which combines Covered Code or\r\n
+     portions thereof with code not governed by the terms of this License.\r\n
+\r\n
+     1.8. "License" means this document.\r\n
+\r\n
+     1.8.1. "Licensable" means having the right to grant, to the maximum\r\n
+     extent possible, whether at the time of the initial grant or\r\n
+     subsequently acquired, any and all of the rights conveyed herein.\r\n
+\r\n
+     1.9. "Modifications" means any addition to or deletion from the\r\n
+     substance or structure of either the Original Code or any previous\r\n
+     Modifications. When Covered Code is released as a series of files, a\r\n
+     Modification is:\r\n
+          A. Any addition to or deletion from the contents of a file\r\n
+          containing Original Code or previous Modifications.\r\n
+\r\n
+          B. Any new file that contains any part of the Original Code or\r\n
+          previous Modifications.\r\n
+\r\n
+     1.10. "Original Code" means Source Code of computer software code\r\n
+     which is described in the Source Code notice required by Exhibit A as\r\n
+     Original Code, and which, at the time of its release under this\r\n
+     License is not already Covered Code governed by this License.\r\n
+\r\n
+     1.10.1. "Patent Claims" means any patent claim(s), now owned or\r\n
+     hereafter acquired, including without limitation,  method, process,\r\n
+     and apparatus claims, in any patent Licensable by grantor.\r\n
+\r\n
+     1.11. "Source Code" means the preferred form of the Covered Code for\r\n
+     making modifications to it, including all modules it contains, plus\r\n
+     any associated interface definition files, scripts used to control\r\n
+     compilation and installation of an Executable, or source code\r\n
+     differential comparisons against either the Original Code or another\r\n
+     well known, available Covered Code of the Contributor\'s choice. The\r\n
+     Source Code can be in a compressed or archival form, provided the\r\n
+     appropriate decompression or de-archiving software is widely available\r\n
+     for no charge.\r\n
+\r\n
+     1.12. "You" (or "Your")  means an individual or a legal entity\r\n
+     exercising rights under, and complying with all of the terms of, this\r\n
+     License or a future version of this License issued under Section 6.1.\r\n
+     For legal entities, "You" includes any entity which controls, is\r\n
+     controlled by, or is under common control with You. For purposes of\r\n
+     this definition, "control" means (a) the power, direct or indirect,\r\n
+     to cause the direction or management of such entity, whether by\r\n
+     contract or otherwise, or (b) ownership of more than fifty percent\r\n
+     (50%) of the outstanding shares or beneficial ownership of such\r\n
+     entity.\r\n
+\r\n
+2. Source Code License.\r\n
+\r\n
+     2.1. The Initial Developer Grant.\r\n
+     The Initial Developer hereby grants You a world-wide, royalty-free,\r\n
+     non-exclusive license, subject to third party intellectual property\r\n
+     claims:\r\n
+          (a)  under intellectual property rights (other than patent or\r\n
+          trademark) Licensable by Initial Developer to use, reproduce,\r\n
+          modify, display, perform, sublicense and distribute the Original\r\n
+          Code (or portions thereof) with or without Modifications, and/or\r\n
+          as part of a Larger Work; and\r\n
+\r\n
+          (b) under Patents Claims infringed by the making, using or\r\n
+          selling of Original Code, to make, have made, use, practice,\r\n
+          sell, and offer for sale, and/or otherwise dispose of the\r\n
+          Original Code (or portions thereof).\r\n
+\r\n
+          (c) the licenses granted in this Section 2.1(a) and (b) are\r\n
+          effective on the date Initial Developer first distributes\r\n
+          Original Code under the terms of this License.\r\n
+\r\n
+          (d) Notwithstanding Section 2.1(b) above, no patent license is\r\n
+          granted: 1) for code that You delete from the Original Code; 2)\r\n
+          separate from the Original Code;  or 3) for infringements caused\r\n
+          by: i) the modification of the Original Code or ii) the\r\n
+          combination of the Original Code with other software or devices.\r\n
+\r\n
+     2.2. Contributor Grant.\r\n
+     Subject to third party intellectual property claims, each Contributor\r\n
+     hereby grants You a world-wide, royalty-free, non-exclusive license\r\n
+\r\n
+          (a)  under intellectual property rights (other than patent or\r\n
+          trademark) Licensable by Contributor, to use, reproduce, modify,\r\n
+          display, perform, sublicense and distribute the Modifications\r\n
+          created by such Contributor (or portions thereof) either on an\r\n
+          unmodified basis, with other Modifications, as Covered Code\r\n
+          and/or as part of a Larger Work; and\r\n
+\r\n
+          (b) under Patent Claims infringed by the making, using, or\r\n
+          selling of  Modifications made by that Contributor either alone\r\n
+          and/or in combination with its Contributor Version (or portions\r\n
+          of such combination), to make, use, sell, offer for sale, have\r\n
+          made, and/or otherwise dispose of: 1) Modifications made by that\r\n
+          Contributor (or portions thereof); and 2) the combination of\r\n
+          Modifications made by that Contributor with its Contributor\r\n
+          Version (or portions of such combination).\r\n
+\r\n
+          (c) the licenses granted in Sections 2.2(a) and 2.2(b) are\r\n
+          effective on the date Contributor first makes Commercial Use of\r\n
+          the Covered Code.\r\n
+\r\n
+          (d)    Notwithstanding Section 2.2(b) above, no patent license is\r\n
+          granted: 1) for any code that Contributor has deleted from the\r\n
+          Contributor Version; 2)  separate from the Contributor Version;\r\n
+          3)  for infringements caused by: i) third party modifications of\r\n
+          Contributor Version or ii)  the combination of Modifications made\r\n
+          by that Contributor with other software  (except as part of the\r\n
+          Contributor Version) or other devices; or 4) under Patent Claims\r\n
+          infringed by Covered Code in the absence of Modifications made by\r\n
+          that Contributor.\r\n
+\r\n
+3. Distribution Obligations.\r\n
+\r\n
+     3.1. Application of License.\r\n
+     The Modifications which You create or to which You contribute are\r\n
+     governed by the terms of this License, including without limitation\r\n
+     Section 2.2. The Source Code version of Covered Code may be\r\n
+     distributed only under the terms of this License or a future version\r\n
+     of this License released under Section 6.1, and You must include a\r\n
+     copy of this License with every copy of the Source Code You\r\n
+     distribute. You may not offer or impose any terms on any Source Code\r\n
+     version that alters or restricts the applicable version of this\r\n
+     License or the recipients\' rights hereunder. However, You may include\r\n
+     an additional document offering the additional rights described in\r\n
+     Section 3.5.\r\n
+\r\n
+     3.2. Availability of Source Code.\r\n
+     Any Modification which You create or to which You contribute must be\r\n
+     made available in Source Code form under the terms of this License\r\n
+     either on the same media as an Executable version or via an accepted\r\n
+     Electronic Distribution Mechanism to anyone to whom you made an\r\n
+     Executable version available; and if made available via Electronic\r\n
+     Distribution Mechanism, must remain available for at least twelve (12)\r\n
+     months after the date it initially became available, or at least six\r\n
+     (6) months after a subsequent version of that particular Modification\r\n
+     has been made available to such recipients. You are responsible for\r\n
+     ensuring that the Source Code version remains available even if the\r\n
+     Electronic Distribution Mechanism is maintained by a third party.\r\n
+\r\n
+     3.3. Description of Modifications.\r\n
+     You must cause all Covered Code to which You contribute to contain a\r\n
+     file documenting the changes You made to create that Covered Code and\r\n
+     the date of any change. You must include a prominent statement that\r\n
+     the Modification is derived, directly or indirectly, from Original\r\n
+     Code provided by the Initial Developer and including the name of the\r\n
+     Initial Developer in (a) the Source Code, and (b) in any notice in an\r\n
+     Executable version or related documentation in which You describe the\r\n
+     origin or ownership of the Covered Code.\r\n
+\r\n
+     3.4. Intellectual Property Matters\r\n
+          (a) Third Party Claims.\r\n
+          If Contributor has knowledge that a license under a third party\'s\r\n
+          intellectual property rights is required to exercise the rights\r\n
+          granted by such Contributor under Sections 2.1 or 2.2,\r\n
+          Contributor must include a text file with the Source Code\r\n
+          distribution titled "LEGAL" which describes the claim and the\r\n
+          party making the claim in sufficient detail that a recipient will\r\n
+          know whom to contact. If Contributor obtains such knowledge after\r\n
+          the Modification is made available as described in Section 3.2,\r\n
+          Contributor shall promptly modify the LEGAL file in all copies\r\n
+          Contributor makes available thereafter and shall take other steps\r\n
+          (such as notifying appropriate mailing lists or newsgroups)\r\n
+          reasonably calculated to inform those who received the Covered\r\n
+          Code that new knowledge has been obtained.\r\n
+\r\n
+          (b) Contributor APIs.\r\n
+          If Contributor\'s Modifications include an application programming\r\n
+          interface and Contributor has knowledge of patent licenses which\r\n
+          are reasonably necessary to implement that API, Contributor must\r\n
+          also include this information in the LEGAL file.\r\n
+\r\n
+               (c)    Representations.\r\n
+          Contributor represents that, except as disclosed pursuant to\r\n
+          Section 3.4(a) above, Contributor believes that Contributor\'s\r\n
+          Modifications are Contributor\'s original creation(s) and/or\r\n
+          Contributor has sufficient rights to grant the rights conveyed by\r\n
+          this License.\r\n
+\r\n
+     3.5. Required Notices.\r\n
+     You must duplicate the notice in Exhibit A in each file of the Source\r\n
+     Code.  If it is not possible to put such notice in a particular Source\r\n
+     Code file due to its structure, then You must include such notice in a\r\n
+     location (such as a relevant directory) where a user would be likely\r\n
+     to look for such a notice.  If You created one or more Modification(s)\r\n
+     You may add your name as a Contributor to the notice described in\r\n
+     Exhibit A.  You must also duplicate this License in any documentation\r\n
+     for the Source Code where You describe recipients\' rights or ownership\r\n
+     rights relating to Covered Code.  You may choose to offer, and to\r\n
+     charge a fee for, warranty, support, indemnity or liability\r\n
+     obligations to one or more recipients of Covered Code. However, You\r\n
+     may do so only on Your own behalf, and not on behalf of the Initial\r\n
+     Developer or any Contributor. You must make it absolutely clear than\r\n
+     any such warranty, support, indemnity or liability obligation is\r\n
+     offered by You alone, and You hereby agree to indemnify the Initial\r\n
+     Developer and every Contributor for any liability incurred by the\r\n
+     Initial Developer or such Contributor as a result of warranty,\r\n
+     support, indemnity or liability terms You offer.\r\n
+\r\n
+     3.6. Distribution of Executable Versions.\r\n
+     You may distribute Covered Code in Executable form only if the\r\n
+     requirements of Section 3.1-3.5 have been met for that Covered Code,\r\n
+     and if You include a notice stating that the Source Code version of\r\n
+     the Covered Code is available under the terms of this License,\r\n
+     including a description of how and where You have fulfilled the\r\n
+     obligations of Section 3.2. The notice must be conspicuously included\r\n
+     in any notice in an Executable version, related documentation or\r\n
+     collateral in which You describe recipients\' rights relating to the\r\n
+     Covered Code. You may distribute the Executable version of Covered\r\n
+     Code or ownership rights under a license of Your choice, which may\r\n
+     contain terms different from this License, provided that You are in\r\n
+     compliance with the terms of this License and that the license for the\r\n
+     Executable version does not attempt to limit or alter the recipient\'s\r\n
+     rights in the Source Code version from the rights set forth in this\r\n
+     License. If You distribute the Executable version under a different\r\n
+     license You must make it absolutely clear that any terms which differ\r\n
+     from this License are offered by You alone, not by the Initial\r\n
+     Developer or any Contributor. You hereby agree to indemnify the\r\n
+     Initial Developer and every Contributor for any liability incurred by\r\n
+     the Initial Developer or such Contributor as a result of any such\r\n
+     terms You offer.\r\n
+\r\n
+     3.7. Larger Works.\r\n
+     You may create a Larger Work by combining Covered Code with other code\r\n
+     not governed by the terms of this License and distribute the Larger\r\n
+     Work as a single product. In such a case, You must make sure the\r\n
+     requirements of this License are fulfilled for the Covered Code.\r\n
+\r\n
+4. Inability to Comply Due to Statute or Regulation.\r\n
+\r\n
+     If it is impossible for You to comply with any of the terms of this\r\n
+     License with respect to some or all of the Covered Code due to\r\n
+     statute, judicial order, or regulation then You must: (a) comply with\r\n
+     the terms of this License to the maximum extent possible; and (b)\r\n
+     describe the limitations and the code they affect. Such description\r\n
+     must be included in the LEGAL file described in Section 3.4 and must\r\n
+     be included with all distributions of the Source Code. Except to the\r\n
+     extent prohibited by statute or regulation, such description must be\r\n
+     sufficiently detailed for a recipient of ordinary skill to be able to\r\n
+     understand it.\r\n
+\r\n
+5. Application of this License.\r\n
+\r\n
+     This License applies to code to which the Initial Developer has\r\n
+     attached the notice in Exhibit A and to related Covered Code.\r\n
+\r\n
+6. Versions of the License.\r\n
+\r\n
+     6.1. New Versions.\r\n
+     Netscape Communications Corporation ("Netscape") may publish revised\r\n
+     and/or new versions of the License from time to time. Each version\r\n
+     will be given a distinguishing version number.\r\n
+\r\n
+     6.2. Effect of New Versions.\r\n
+     Once Covered Code has been published under a particular version of the\r\n
+     License, You may always continue to use it under the terms of that\r\n
+     version. You may also choose to use such Covered Code under the terms\r\n
+     of any subsequent version of the License published by Netscape. No one\r\n
+     other than Netscape has the right to modify the terms applicable to\r\n
+     Covered Code created under this License.\r\n
+\r\n
+     6.3. Derivative Works.\r\n
+     If You create or use a modified version of this License (which you may\r\n
+     only do in order to apply it to code which is not already Covered Code\r\n
+     governed by this License), You must (a) rename Your license so that\r\n
+     the phrases "Mozilla", "MOZILLAPL", "MOZPL", "Netscape",\r\n
+     "MPL", "NPL" or any confusingly similar phrase do not appear in your\r\n
+     license (except to note that your license differs from this License)\r\n
+     and (b) otherwise make it clear that Your version of the license\r\n
+     contains terms which differ from the Mozilla Public License and\r\n
+     Netscape Public License. (Filling in the name of the Initial\r\n
+     Developer, Original Code or Contributor in the notice described in\r\n
+     Exhibit A shall not of themselves be deemed to be modifications of\r\n
+     this License.)\r\n
+\r\n
+7. DISCLAIMER OF WARRANTY.\r\n
+\r\n
+     COVERED CODE IS PROVIDED UNDER THIS LICENSE ON AN "AS IS" BASIS,\r\n
+     WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING,\r\n
+     WITHOUT LIMITATION, WARRANTIES THAT THE COVERED CODE IS FREE OF\r\n
+     DEFECTS, MERCHANTABLE, FIT FOR A PARTICULAR PURPOSE OR NON-INFRINGING.\r\n
+     THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE COVERED CODE\r\n
+     IS WITH YOU. SHOULD ANY COVERED CODE PROVE DEFECTIVE IN ANY RESPECT,\r\n
+     YOU (NOT THE INITIAL DEVELOPER OR ANY OTHER CONTRIBUTOR) ASSUME THE\r\n
+     COST OF ANY NECESSARY SERVICING, REPAIR OR CORRECTION. THIS DISCLAIMER\r\n
+     OF WARRANTY CONSTITUTES AN ESSENTIAL PART OF THIS LICENSE. NO USE OF\r\n
+     ANY COVERED CODE IS AUTHORIZED HEREUNDER EXCEPT UNDER THIS DISCLAIMER.\r\n
+\r\n
+8. TERMINATION.\r\n
+\r\n
+     8.1.  This License and the rights granted hereunder will terminate\r\n
+     automatically if You fail to comply with terms herein and fail to cure\r\n
+     such breach within 30 days of becoming aware of the breach. All\r\n
+     sublicenses to the Covered Code which are properly granted shall\r\n
+     survive any termination of this License. Provisions which, by their\r\n
+     nature, must remain in effect beyond the termination of this License\r\n
+     shall survive.\r\n
+\r\n
+     8.2.  If You initiate litigation by asserting a patent infringement\r\n
+     claim (excluding declatory judgment actions) against Initial Developer\r\n
+     or a Contributor (the Initial Developer or Contributor against whom\r\n
+     You file such action is referred to as "Participant")  alleging that:\r\n
+\r\n
+     (a)  such Participant\'s Contributor Version directly or indirectly\r\n
+     infringes any patent, then any and all rights granted by such\r\n
+     Participant to You under Sections 2.1 and/or 2.2 of this License\r\n
+     shall, upon 60 days notice from Participant terminate prospectively,\r\n
+     unless if within 60 days after receipt of notice You either: (i)\r\n
+     agree in writing to pay Participant a mutually agreeable reasonable\r\n
+     royalty for Your past and future use of Modifications made by such\r\n
+     Participant, or (ii) withdraw Your litigation claim with respect to\r\n
+     the Contributor Version against such Participant.  If within 60 days\r\n
+     of notice, a reasonable royalty and payment arrangement are not\r\n
+     mutually agreed upon in writing by the parties or the litigation claim\r\n
+     is not withdrawn, the rights granted by Participant to You under\r\n
+     Sections 2.1 and/or 2.2 automatically terminate at the expiration of\r\n
+     the 60 day notice period specified above.\r\n
+\r\n
+     (b)  any software, hardware, or device, other than such Participant\'s\r\n
+     Contributor Version, directly or indirectly infringes any patent, then\r\n
+     any rights granted to You by such Participant under Sections 2.1(b)\r\n
+     and 2.2(b) are revoked effective as of the date You first made, used,\r\n
+     sold, distributed, or had made, Modifications made by that\r\n
+     Participant.\r\n
+\r\n
+     8.3.  If You assert a patent infringement claim against Participant\r\n
+     alleging that such Participant\'s Contributor Version directly or\r\n
+     indirectly infringes any patent where such claim is resolved (such as\r\n
+     by license or settlement) prior to the initiation of patent\r\n
+     infringement litigation, then the reasonable value of the licenses\r\n
+     granted by such Participant under Sections 2.1 or 2.2 shall be taken\r\n
+     into account in determining the amount or value of any payment or\r\n
+     license.\r\n
+\r\n
+     8.4.  In the event of termination under Sections 8.1 or 8.2 above,\r\n
+     all end user license agreements (excluding distributors and resellers)\r\n
+     which have been validly granted by You or any distributor hereunder\r\n
+     prior to termination shall survive termination.\r\n
+\r\n
+9. LIMITATION OF LIABILITY.\r\n
+\r\n
+     UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THEORY, WHETHER TORT\r\n
+     (INCLUDING NEGLIGENCE), CONTRACT, OR OTHERWISE, SHALL YOU, THE INITIAL\r\n
+     DEVELOPER, ANY OTHER CONTRIBUTOR, OR ANY DISTRIBUTOR OF COVERED CODE,\r\n
+     OR ANY SUPPLIER OF ANY OF SUCH PARTIES, BE LIABLE TO ANY PERSON FOR\r\n
+     ANY INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES OF ANY\r\n
+     CHARACTER INCLUDING, WITHOUT LIMITATION, DAMAGES FOR LOSS OF GOODWILL,\r\n
+     WORK STOPPAGE, COMPUTER FAILURE OR MALFUNCTION, OR ANY AND ALL OTHER\r\n
+     COMMERCIAL DAMAGES OR LOSSES, EVEN IF SUCH PARTY SHALL HAVE BEEN\r\n
+     INFORMED OF THE POSSIBILITY OF SUCH DAMAGES. THIS LIMITATION OF\r\n
+     LIABILITY SHALL NOT APPLY TO LIABILITY FOR DEATH OR PERSONAL INJURY\r\n
+     RESULTING FROM SUCH PARTY\'S NEGLIGENCE TO THE EXTENT APPLICABLE LAW\r\n
+     PROHIBITS SUCH LIMITATION. SOME JURISDICTIONS DO NOT ALLOW THE\r\n
+     EXCLUSION OR LIMITATION OF INCIDENTAL OR CONSEQUENTIAL DAMAGES, SO\r\n
+     THIS EXCLUSION AND LIMITATION MAY NOT APPLY TO YOU.\r\n
+\r\n
+10. U.S. GOVERNMENT END USERS.\r\n
+\r\n
+     The Covered Code is a "commercial item," as that term is defined in\r\n
+     48 C.F.R. 2.101 (Oct. 1995), consisting of "commercial computer\r\n
+     software" and "commercial computer software documentation," as such\r\n
+     terms are used in 48 C.F.R. 12.212 (Sept. 1995). Consistent with 48\r\n
+     C.F.R. 12.212 and 48 C.F.R. 227.7202-1 through 227.7202-4 (June 1995),\r\n
+     all U.S. Government End Users acquire Covered Code with only those\r\n
+     rights set forth herein.\r\n
+\r\n
+11. MISCELLANEOUS.\r\n
+\r\n
+     This License represents the complete agreement concerning subject\r\n
+     matter hereof. If any provision of this License is held to be\r\n
+     unenforceable, such provision shall be reformed only to the extent\r\n
+     necessary to make it enforceable. This License shall be governed by\r\n
+     California law provisions (except to the extent applicable law, if\r\n
+     any, provides otherwise), excluding its conflict-of-law provisions.\r\n
+     With respect to disputes in which at least one party is a citizen of,\r\n
+     or an entity chartered or registered to do business in the United\r\n
+     States of America, any litigation relating to this License shall be\r\n
+     subject to the jurisdiction of the Federal Courts of the Northern\r\n
+     District of California, with venue lying in Santa Clara County,\r\n
+     California, with the losing party responsible for costs, including\r\n
+     without limitation, court costs and reasonable attorneys\' fees and\r\n
+     expenses. The application of the United Nations Convention on\r\n
+     Contracts for the International Sale of Goods is expressly excluded.\r\n
+     Any law or regulation which provides that the language of a contract\r\n
+     shall be construed against the drafter shall not apply to this\r\n
+     License.\r\n
+\r\n
+12. RESPONSIBILITY FOR CLAIMS.\r\n
+\r\n
+     As between Initial Developer and the Contributors, each party is\r\n
+     responsible for claims and damages arising, directly or indirectly,\r\n
+     out of its utilization of rights under this License and You agree to\r\n
+     work with Initial Developer and Contributors to distribute such\r\n
+     responsibility on an equitable basis. Nothing herein is intended or\r\n
+     shall be deemed to constitute any admission of liability.\r\n
+\r\n
+13. MULTIPLE-LICENSED CODE.\r\n
+\r\n
+     Initial Developer may designate portions of the Covered Code as\r\n
+     "Multiple-Licensed".  "Multiple-Licensed" means that the Initial\r\n
+     Developer permits you to utilize portions of the Covered Code under\r\n
+     Your choice of the NPL or the alternative licenses, if any, specified\r\n
+     by the Initial Developer in the file described in Exhibit A.\r\n
+\r\n
+EXHIBIT A -Mozilla Public License.\r\n
+\r\n
+     ``The contents of this file are subject to the Mozilla Public License\r\n
+     Version 1.1 (the "License"); you may not use this file except in\r\n
+     compliance with the License. You may obtain a copy of the License at\r\n
+     http://www.mozilla.org/MPL/\r\n
+\r\n
+     Software distributed under the License is distributed on an "AS IS"\r\n
+     basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the\r\n
+     License for the specific language governing rights and limitations\r\n
+     under the License.\r\n
+\r\n
+     The Original Code is ______________________________________.\r\n
+\r\n
+     The Initial Developer of the Original Code is ________________________.\r\n
+     Portions created by ______________________ are Copyright (C) ______\r\n
+     _______________________. All Rights Reserved.\r\n
+\r\n
+     Contributor(s): ______________________________________.\r\n
+\r\n
+     Alternatively, the contents of this file may be used under the terms\r\n
+     of the _____ license (the  "[___] License"), in which case the\r\n
+     provisions of [______] License are applicable instead of those\r\n
+     above.  If you wish to allow use of your version of this file only\r\n
+     under the terms of the [____] License and not to allow others to use\r\n
+     your version of this file under the MPL, indicate your decision by\r\n
+     deleting  the provisions above and replace  them with the notice and\r\n
+     other provisions required by the [___] License.  If you do not delete\r\n
+     the provisions above, a recipient may use your version of this file\r\n
+     under either the MPL or the [___] License."\r\n
+\r\n
+     [NOTE: The text of this Exhibit A may differ slightly from the text of\r\n
+     the notices in the Source Code files of the Original Code. You should\r\n
+     use the text of this Exhibit A rather than the text found in the\r\n
+     Original Code Source Code for Your Modifications.]\r\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

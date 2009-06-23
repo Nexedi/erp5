@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!--\n
+ * FCKeditor - The text editor for internet\n
+ * Copyright (C) 2003-2004 Frederico Caldeira Knabben\n
+ * \n
+ * Licensed under the terms of the GNU Lesser General Public License:\n
+ * \t\thttp://www.opensource.org/licenses/lgpl-license.php\n
+ * \n
+ * For further information visit:\n
+ * \t\thttp://www.fckeditor.net/\n
+ * \n
+ * File Name: frmactualfolder.html\n
+ * \tThis page shows the actual folder path.\n
+ * \n
+ * Version:  2.0 FC\n
+ * Modified: 2005-05-16 tr\xe8s tard\n
+ * \n
+ * File Authors:\n
+ * \t\tFrederico Caldeira Knabben (fredck@fckeditor.net)\n
+-->\n
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\n
+<html>\n
+\t<head>\n
+\t\t<link href="Browser.css" type="text/css" rel="stylesheet">\n
+\t\t<script type="text/javascript">\n
+\n
+function OnResize()\n
+{\n
+\tdivName.style.width = "1px" ;\n
+\tdivName.style.width = tdName.offsetWidth + "px" ;\n
+}\n
+\n
+function SetCurrentFolder( resourceType, folderPath )\n
+{\n
+\tdocument.getElementById(\'tdName\').innerHTML = folderPath ;\n
+}\n
+\n
+window.onload = function()\n
+{\n
+\twindow.top.IsLoadedActualFolder = true ;\n
+}\n
+\n
+\t\t</script>\n
+\t</head>\n
+\t<body bottomMargin="0" topMargin="0">\n
+\t\t<table height="100%" cellSpacing="0" cellPadding="0" width="100%" border="0">\n
+\t\t\t<tr>\n
+\t\t\t\t<td>\n
+\t\t\t\t\t<button style="WIDTH: 100%" type="button">\n
+\t\t\t\t\t\t<table cellSpacing="0" cellPadding="0" width="100%" border="0">\n
+\t\t\t\t\t\t\t<tr>\n
+\t\t\t\t\t\t\t\t<td><img height="32" alt="" src="images/FolderOpened32.gif" width="32"></td>\n
+\t\t\t\t\t\t\t\t<td>&nbsp;</td>\n
+\t\t\t\t\t\t\t\t<td id="tdName" width="100%" nowrap class="ActualFolder">/</td>\n
+\t\t\t\t\t\t\t\t<td>&nbsp;</td>\n
+\t\t\t\t\t\t\t\t<td><img height="8" src="images/ButtonArrow.gif" width="12"></td>\n
+\t\t\t\t\t\t\t\t<td>&nbsp;</td>\n
+\t\t\t\t\t\t\t</tr>\n
+\t\t\t\t\t\t</table>\n
+\t\t\t\t\t</button>\n
+\t\t\t\t</td>\n
+\t\t\t</tr>\n
+\t\t</table>\n
+\t</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>frmactualfolder.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,400 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * This dialog is shown when, for some reason (usually security settings),\r\n
+ * the user is not able to paste data from the clipboard to the editor using\r\n
+ * the toolbar buttons or the context menu.\r\n
+-->\r\n
+<html xmlns="http://www.w3.org/1999/xhtml">\r\n
+<head>\r\n
+\t<title></title>\r\n
+\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\r\n
+\t<meta name="robots" content="noindex, nofollow" />\r\n
+\t<script src="common/fck_dialog_common.js" type="text/javascript"></script>\r\n
+\t<script type="text/javascript">\r\n
+var dialog = window.parent ;\r\n
+var oEditor = dialog.InnerDialogLoaded() ;\r\n
+var FCK = oEditor.FCK;\r\n
+var FCKTools\t= oEditor.FCKTools ;\r\n
+var FCKConfig\t= oEditor.FCKConfig ;\r\n
+var FCKBrowserInfo = oEditor.FCKBrowserInfo ;\r\n
+\r\n
+window.onload = function ()\r\n
+{\r\n
+\t// First of all, translate the dialog box texts\r\n
+\toEditor.FCKLanguageManager.TranslatePage(document) ;\r\n
+\r\n
+\tvar sPastingType = dialog.Args().CustomValue ;\r\n
+\r\n
+\tif ( sPastingType == \'Word\' || sPastingType == \'Security\' )\r\n
+\t{\r\n
+\t\tif ( sPastingType == \'Security\' )\r\n
+\t\t\tdocument.getElementById( \'xSecurityMsg\' ).style.display = \'\' ;\r\n
+\r\n
+\t\t// For document.domain compatibility (#123) we must do all the magic in\r\n
+\t\t// the URL for IE.\r\n
+\t\tvar sFrameUrl = !oEditor.FCK_IS_CUSTOM_DOMAIN || !FCKBrowserInfo.IsIE ?\r\n
+\t\t\t\'javascript:void(0)\' :\r\n
+\t\t\t\'javascript:void( (function(){\' +\r\n
+\t\t\t\t\'document.open() ;\' +\r\n
+\t\t\t\t\'document.domain=\\\'\' + document.domain + \'\\\' ;\' +\r\n
+\t\t\t\t\'document.write(\\\'<html><head><script>window.onerror = function() { return true ; };<\\/script><\\/head><body><\\/body><\\/html>\\\') ;\' +\r\n
+\t\t\t\t\'document.close() ;\' +\r\n
+\t\t\t\t\'document.body.contentEditable = true ;\' +\r\n
+\t\t\t\t\'window.focus() ;\' +\r\n
+\t\t\t\t\'})() )\' ;\r\n
+\r\n
+\t\tvar eFrameSpace = document.getElementById( \'xFrameSpace\' ) ;\r\n
+\t\teFrameSpace.innerHTML = \'<iframe id="frmData" src="\' + sFrameUrl + \'" \' +\r\n
+\t\t\t\t\t\'height="98%" width="99%" frameborder="0" style="border: #000000 1px; background-color: #ffffff"><\\/iframe>\' ;\r\n
+\r\n
+\t\tvar oFrame = eFrameSpace.firstChild ;\r\n
+\r\n
+\t\tif ( !oEditor.FCK_IS_CUSTOM_DOMAIN || !FCKBrowserInfo.IsIE )\r\n
+\t\t{\r\n
+\t\t\t// Avoid errors if the pasted content has any script that fails: #389\r\n
+\t\t\tvar oDoc = oFrame.contentWindow.document ;\r\n
+\t\t\toDoc.open() ;\r\n
+\t\t\toDoc.write(\'<html><head><script>window.onerror = function() { return true ; };<\\/script><\\/head><body><\\/body><\\/html>\') ;\r\n
+\t\t\toDoc.close() ;\r\n
+\r\n
+\t\t\tif ( FCKBrowserInfo.IsIE )\r\n
+\t\t\t\toDoc.body.contentEditable = true ;\r\n
+\t\t\telse\r\n
+\t\t\t\toDoc.designMode = \'on\' ;\r\n
+\r\n
+\t\t\toFrame.contentWindow.focus();\r\n
+\t\t}\r\n
+\t}\r\n
+\telse\r\n
+\t{\r\n
+\t\tdocument.getElementById(\'txtData\').style.display = \'\' ;\r\n
+\t\tSelectField( \'txtData\' ) ;\r\n
+\t}\r\n
+\r\n
+\tif ( sPastingType != \'Word\' )\r\n
+\t\tdocument.getElementById(\'oWordCommands\').style.display = \'none\' ;\r\n
+\r\n
+\tdialog.SetOkButton( true ) ;\r\n
+\tdialog.SetAutoSize( true ) ;\r\n
+}\r\n
+\r\n
+function Ok()\r\n
+{\r\n
+\t// Before doing anything, save undo snapshot.\r\n
+\toEditor.FCKUndo.SaveUndoStep() ;\r\n
+\r\n
+\tvar sHtml ;\r\n
+\r\n
+\tvar sPastingType = dialog.Args().CustomValue ;\r\n
+\r\n
+\tif ( sPastingType == \'Word\' || sPastingType == \'Security\' )\r\n
+\t{\r\n
+\t\tvar oFrame = document.getElementById(\'frmData\') ;\r\n
+\t\tvar oBody ;\r\n
+\r\n
+\t\tif ( oFrame.contentDocument )\r\n
+\t\t\toBody = oFrame.contentDocument.body ;\r\n
+\t\telse\r\n
+\t\t\toBody = oFrame.contentWindow.document.body ;\r\n
+\r\n
+\t\tif ( sPastingType == \'Word\' )\r\n
+\t\t{\r\n
+\t\t\t// If a plugin creates a FCK.CustomCleanWord function it will be called instead of the default one\r\n
+\t\t\tif ( typeof( FCK.CustomCleanWord ) == \'function\' )\r\n
+\t\t\t\tsHtml = FCK.CustomCleanWord( oBody, document.getElementById(\'chkRemoveFont\').checked, document.getElementById(\'chkRemoveStyles\').checked ) ;\r\n
+\t\t\telse\r\n
+\t\t\t\tsHtml = CleanWord( oBody, document.getElementById(\'chkRemoveFont\').checked, document.getElementById(\'chkRemoveStyles\').checked ) ;\r\n
+\t\t}\r\n
+\t\telse\r\n
+\t\t\tsHtml = oBody.innerHTML ;\r\n
+\r\n
+\t\t// Fix relative anchor URLs (IE automatically adds the current page URL).\r\n
+\t\tvar re = new RegExp( window.location + "#", "g" ) ;\r\n
+\t\tsHtml = sHtml.replace( re, \'#\') ;\r\n
+\t}\r\n
+\telse\r\n
+\t{\r\n
+\t\tsHtml = oEditor.FCKTools.HTMLEncode( document.getElementById(\'txtData\').value )  ;\r\n
+\t\tsHtml = FCKTools.ProcessLineBreaks( oEditor, FCKConfig, sHtml ) ;\r\n
+\r\n
+\t\t// FCK.InsertHtml() does not work for us, since document fragments cannot contain node fragments. :(\r\n
+\t\t// Use the marker method instead. It\'s primitive, but it works.\r\n
+\t\tvar range = new oEditor.FCKDomRange( oEditor.FCK.EditorWindow ) ;\r\n
+\t\tvar oDoc = oEditor.FCK.EditorDocument ;\r\n
+\t\tdialog.Selection.EnsureSelection() ;\r\n
+\t\trange.MoveToSelection() ;\r\n
+\t\trange.DeleteContents() ;\r\n
+\t\tvar marker = [] ;\r\n
+\t\tfor ( var i = 0 ; i < 5 ; i++ )\r\n
+\t\t\tmarker.push( parseInt(Math.random() * 100000, 10 ) ) ;\r\n
+\t\tmarker = marker.join( "" ) ;\r\n
+\t\trange.InsertNode ( oDoc.createTextNode( marker ) ) ;\r\n
+\t\tvar bookmark = range.CreateBookmark() ;\r\n
+\r\n
+\t\t// Now we\'ve got a marker indicating the paste position in the editor document.\r\n
+\t\t// Find its position in the HTML code.\r\n
+\t\tvar htmlString = oDoc.body.innerHTML ;\r\n
+\t\tvar index = htmlString.indexOf( marker ) ;\r\n
+\r\n
+\t\t// Split it the HTML code up, add the code we generated, and put them back together.\r\n
+\t\tvar htmlList = [] ;\r\n
+\t\thtmlList.push( htmlString.substr( 0, index ) ) ;\r\n
+\t\thtmlList.push( sHtml ) ;\r\n
+\t\thtmlList.push( htmlString.substr( index + marker.length ) ) ;\r\n
+\t\thtmlString = htmlList.join( "" ) ;\r\n
+\r\n
+\t\tif ( oEditor.FCKBrowserInfo.IsIE )\r\n
+\t\t\toEditor.FCK.SetInnerHtml( htmlString ) ;\r\n
+\t\telse\r\n
+\t\t\toDoc.body.innerHTML = htmlString ;\r\n
+\r\n
+\t\trange.MoveToBookmark( bookmark ) ;\r\n
+\t\trange.Collapse( false ) ;\r\n
+\t\trange.Select() ;\r\n
+\t\trange.Release() ;\r\n
+\t\treturn true ;\r\n
+\t}\r\n
+\r\n
+\toEditor.FCK.InsertHtml( sHtml ) ;\r\n
+\r\n
+\treturn true ;\r\n
+}\r\n
+\r\n
+// This function will be called from the PasteFromWord dialog (fck_paste.html)\r\n
+// Input: oNode a DOM node that contains the raw paste from the clipboard\r\n
+// bIgnoreFont, bRemoveStyles booleans according to the values set in the dialog\r\n
+// Output: the cleaned string\r\n
+function CleanWord( oNode, bIgnoreFont, bRemoveStyles )\r\n
+{\r\n
+\tvar html = oNode.innerHTML ;\r\n
+\r\n
+\thtml = html.replace(/<o:p>\\s*<\\/o:p>/g, \'\') ;\r\n
+\thtml = html.replace(/<o:p>[\\s\\S]*?<\\/o:p>/g, \'&nbsp;\') ;\r\n
+\r\n
+\t// Remove mso-xxx styles.\r\n
+\thtml = html.replace( /\\s*mso-[^:]+:[^;"]+;?/gi, \'\' ) ;\r\n
+\r\n
+\t// Remove margin styles.\r\n
+\thtml = html.replace( /\\s*MARGIN: 0cm 0cm 0pt\\s*;/gi, \'\' ) ;\r\n
+\thtml = html.replace( /\\s*MARGIN: 0cm 0cm 0pt\\s*"/gi, "\\"" ) ;\r\n
+\r\n
+\thtml = html.replace( /\\s*TEXT-INDENT: 0cm\\s*;/gi, \'\' ) ;\r\n
+\thtml = html.replace( /\\s*TEXT-INDENT: 0cm\\s*"/gi, "\\"" ) ;\r\n
+\r\n
+\thtml = html.replace( /\\s*TEXT-ALIGN: [^\\s;]+;?"/gi, "\\"" ) ;\r\n
+\r\n
+\thtml = html.replace( /\\s*PAGE-BREAK-BEFORE: [^\\s;]+;?"/gi, "\\"" ) ;\r\n
+\r\n
+\thtml = html.replace( /\\s*FONT-VARIANT: [^\\s;]+;?"/gi, "\\"" ) ;\r\n
+\r\n
+\thtml = html.replace( /\\s*tab-stops:[^;"]*;?/gi, \'\' ) ;\r\n
+\thtml = html.replace( /\\s*tab-stops:[^"]*/gi, \'\' ) ;\r\n
+\r\n
+\t// Remove FONT face attributes.\r\n
+\tif ( bIgnoreFont )\r\n
+\t{\r\n
+\t\thtml = html.replace( /\\s*face="[^"]*"/gi, \'\' ) ;\r\n
+\t\thtml = html.replace( /\\s*face=[^ >]*/gi, \'\' ) ;\r\n
+\r\n
+\t\thtml = html.replace( /\\s*FONT-FAMILY:[^;"]*;?/gi, \'\' ) ;\r\n
+\t}\r\n
+\r\n
+\t// Remove Class attributes\r\n
+\thtml = html.replace(/<(\\w[^>]*) class=([^ |>]*)([^>]*)/gi, "<$1$3") ;\r\n
+\r\n
+\t// Remove styles.\r\n
+\tif ( bRemoveStyles )\r\n
+\t\thtml = html.replace( /<(\\w[^>]*) style="([^\\"]*)"([^>]*)/gi, "<$1$3" ) ;\r\n
+\r\n
+\t// Remove style, meta and link tags\r\n
+\thtml = html.replace( /<STYLE[^>]*>[\\s\\S]*?<\\/STYLE[^>]*>/gi, \'\' ) ;\r\n
+\thtml = html.replace( /<(?:META|LINK)[^>]*>\\s*/gi, \'\' ) ;\r\n
+\r\n
+\t// Remove empty styles.\r\n
+\thtml =  html.replace( /\\s*style="\\s*"/gi, \'\' ) ;\r\n
+\r\n
+\thtml = html.replace( /<SPAN\\s*[^>]*>\\s*&nbsp;\\s*<\\/SPAN>/gi, \'&nbsp;\' ) ;\r\n
+\r\n
+\thtml = html.replace( /<SPAN\\s*[^>]*><\\/SPAN>/gi, \'\' ) ;\r\n
+\r\n
+\t// Remove Lang attributes\r\n
+\thtml = html.replace(/<(\\w[^>]*) lang=([^ |>]*)([^>]*)/gi, "<$1$3") ;\r\n
+\r\n
+\thtml = html.replace( /<SPAN\\s*>([\\s\\S]*?)<\\/SPAN>/gi, \'$1\' ) ;\r\n
+\r\n
+\thtml = html.replace( /<FONT\\s*>([\\s\\S]*?)<\\/FONT>/gi, \'$1\' ) ;\r\n
+\r\n
+\t// Remove XML elements and declarations\r\n
+\thtml = html.replace(/<\\\\?\\?xml[^>]*>/gi, \'\' ) ;\r\n
+\r\n
+\t// Remove w: tags with contents.\r\n
+\thtml = html.replace( /<w:[^>]*>[\\s\\S]*?<\\/w:[^>]*>/gi, \'\' ) ;\r\n
+\r\n
+\t// Remove Tags with XML namespace declarations: <o:p><\\/o:p>\r\n
+\thtml = html.replace(/<\\/?\\w+:[^>]*>/gi, \'\' ) ;\r\n
+\r\n
+\t// Remove comments [SF BUG-1481861].\r\n
+\thtml = html.replace(/<\\!--[\\s\\S]*?-->/g, \'\' ) ;\r\n
+\r\n
+\thtml = html.replace( /<(U|I|STRIKE)>&nbsp;<\\/\\1>/g, \'&nbsp;\' ) ;\r\n
+\r\n
+\thtml = html.replace( /<H\\d>\\s*<\\/H\\d>/gi, \'\' ) ;\r\n
+\r\n
+\t// Remove "display:none" tags.\r\n
+\thtml = html.replace( /<(\\w+)[^>]*\\sstyle="[^"]*DISPLAY\\s?:\\s?none[\\s\\S]*?<\\/\\1>/ig, \'\' ) ;\r\n
+\r\n
+\t// Remove language tags\r\n
+\thtml = html.replace( /<(\\w[^>]*) language=([^ |>]*)([^>]*)/gi, "<$1$3") ;\r\n
+\r\n
+\t// Remove onmouseover and onmouseout events (from MS Word comments effect)\r\n
+\thtml = html.replace( /<(\\w[^>]*) onmouseover="([^\\"]*)"([^>]*)/gi, "<$1$3") ;\r\n
+\thtml = html.replace( /<(\\w[^>]*) onmouseout="([^\\"]*)"([^>]*)/gi, "<$1$3") ;\r\n
+\r\n
+\tif ( FCKConfig.CleanWordKeepsStructure )\r\n
+\t{\r\n
+\t\t// The original <Hn> tag send from Word is something like this: <Hn style="margin-top:0px;margin-bottom:0px">\r\n
+\t\thtml = html.replace( /<H(\\d)([^>]*)>/gi, \'<h$1>\' ) ;\r\n
+\r\n
+\t\t// Word likes to insert extra <font> tags, when using MSIE. (Wierd).\r\n
+\t\thtml = html.replace( /<(H\\d)><FONT[^>]*>([\\s\\S]*?)<\\/FONT><\\/\\1>/gi, \'<$1>$2<\\/$1>\' );\r\n
+\t\thtml = html.replace( /<(H\\d)><EM>([\\s\\S]*?)<\\/EM><\\/\\1>/gi, \'<$1>$2<\\/$1>\' );\r\n
+\t}\r\n
+\telse\r\n
+\t{\r\n
+\t\thtml = html.replace( /<H1([^>]*)>/gi, \'<div$1><b><font size="6">\' ) ;\r\n
+\t\thtml = html.replace( /<H2([^>]*)>/gi, \'<div$1><b><font size="5">\' ) ;\r\n
+\t\thtml = html.replace( /<H3([^>]*)>/gi, \'<div$1><b><font size="4">\' ) ;\r\n
+\t\thtml = html.replace( /<H4([^>]*)>/gi, \'<div$1><b><font size="3">\' ) ;\r\n
+\t\thtml = html.replace( /<H5([^>]*)>/gi, \'<div$1><b><font size="2">\' ) ;\r\n
+\t\thtml = html.replace( /<H6([^>]*)>/gi, \'<div$1><b><font size="1">\' ) ;\r\n
+\r\n
+\t\thtml = html.replace( /<\\/H\\d>/gi, \'<\\/font><\\/b><\\/div>\' ) ;\r\n
+\r\n
+\t\t// Transform <P> to <DIV>\r\n
+\t\tvar re = new RegExp( \'(<P)([^>]*>[\\\\s\\\\S]*?)(<\\/P>)\', \'gi\' ) ;\t// Different because of a IE 5.0 error\r\n
+\t\thtml = html.replace( re, \'<div$2<\\/div>\' ) ;\r\n
+\r\n
+\t\t// Remove empty tags (three times, just to be sure).\r\n
+\t\t// This also removes any empty anchor\r\n
+\t\thtml = html.replace( /<([^\\s>]+)(\\s[^>]*)?>\\s*<\\/\\1>/g, \'\' ) ;\r\n
+\t\thtml = html.replace( /<([^\\s>]+)(\\s[^>]*)?>\\s*<\\/\\1>/g, \'\' ) ;\r\n
+\t\thtml = html.replace( /<([^\\s>]+)(\\s[^>]*)?>\\s*<\\/\\1>/g, \'\' ) ;\r\n
+\t}\r\n
+\r\n
+\treturn html ;\r\n
+}\r\n
+\r\n
+\t</script>\r\n
+\r\n
+</head>\r\n
+<body style="overflow: hidden">\r\n
+\t<table cellspacing="0" cellpadding="0" width="100%" border="0" style="height: 98%">\r\n
+\t\t<tr>\r\n
+\t\t\t<td>\r\n
+\t\t\t\t<div id="xSecurityMsg" style="display: none">\r\n
+\t\t\t\t\t<span fcklang="DlgPasteSec">Because of your browser security settings,\r\n
+\t\t\t\t\t\tthe editor is not able to access your clipboard data directly. You are required\r\n
+\t\t\t\t\t\tto paste it again in this window.</span><br />\r\n
+\t\t\t\t\t&nbsp;\r\n
+\t\t\t\t</div>\r\n
+\t\t\t\t<div>\r\n
+\t\t\t\t\t<span fcklang="DlgPasteMsg2">Please paste inside the following box using the keyboard\r\n
+\t\t\t\t\t\t(<strong>Ctrl+V</strong>) and hit <strong>OK</strong>.</span><br />\r\n
+\t\t\t\t\t&nbsp;\r\n
+\t\t\t\t</div>\r\n
+\t\t\t</td>\r\n
+\t\t</tr>\r\n
+\t\t<tr>\r\n
+\t\t\t<td id="xFrameSpace" valign="top" height="100%" style="border: #000000 1px solid">\r\n
+\t\t\t\t<textarea id="txtData" cols="80" rows="5" style="border: #000000 1px; display: none;\r\n
+\t\t\t\t\twidth: 99%; height: 98%"></textarea>\r\n
+\t\t\t</td>\r\n
+\t\t</tr>\r\n
+\t\t<tr id="oWordCommands">\r\n
+\t\t\t<td>\r\n
+\r\n
+\t\t\t\t\t<input id="chkRemoveFont" type="checkbox" checked="checked" />\r\n
+\t\t\t\t\t<label for="chkRemoveFont" fcklang="DlgPasteIgnoreFont">\r\n
+\t\t\t\t\t\tIgnore Font Face definitions</label>\r\n
+\t\t\t\t\t<br />\r\n
+\t\t\t\t\t<input id="chkRemoveStyles" type="checkbox" />\r\n
+\t\t\t\t\t<label for="chkRemoveStyles" fcklang="DlgPasteRemoveStyles">\r\n
+\t\t\t\t\t\tRemove Styles definitions</label>\r\n
+\r\n
+\t\t\t</td>\r\n
+\t\t</tr>\r\n
+\t</table>\r\n
+</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>fck_paste.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

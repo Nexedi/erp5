@@ -1,0 +1,581 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749259.69</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ko.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Korean language file.\r\n
+ */\r\n
+\r\n
+var FCKLang =\r\n
+{\r\n
+// Language direction : "ltr" (left to right) or "rtl" (right to left).\r\n
+Dir\t\t\t\t\t: "ltr",\r\n
+\r\n
+ToolbarCollapse\t\t: "툴바 감추기",\r\n
+ToolbarExpand\t\t: "툴바 보이기",\r\n
+\r\n
+// Toolbar Items and Context Menu\r\n
+Save\t\t\t\t: "저장하기",\r\n
+NewPage\t\t\t\t: "새 문서",\r\n
+Preview\t\t\t\t: "미리보기",\r\n
+Cut\t\t\t\t\t: "잘라내기",\r\n
+Copy\t\t\t\t: "복사하기",\r\n
+Paste\t\t\t\t: "붙여넣기",\r\n
+PasteText\t\t\t: "텍스트로 붙여넣기",\r\n
+PasteWord\t\t\t: "MS Word 형식에서 붙여넣기",\r\n
+Print\t\t\t\t: "인쇄하기",\r\n
+SelectAll\t\t\t: "전체선택",\r\n
+RemoveFormat\t\t: "포맷 지우기",\r\n
+InsertLinkLbl\t\t: "링크",\r\n
+InsertLink\t\t\t: "링크 삽입/변경",\r\n
+RemoveLink\t\t\t: "링크 삭제",\r\n
+VisitLink\t\t\t: "Open Link",\t//MISSING\r\n
+Anchor\t\t\t\t: "책갈피 삽입/변경",\r\n
+AnchorDelete\t\t: "Remove Anchor",\t//MISSING\r\n
+InsertImageLbl\t\t: "이미지",\r\n
+InsertImage\t\t\t: "이미지 삽입/변경",\r\n
+InsertFlashLbl\t\t: "플래쉬",\r\n
+InsertFlash\t\t\t: "플래쉬 삽입/변경",\r\n
+InsertTableLbl\t\t: "표",\r\n
+InsertTable\t\t\t: "표 삽입/변경",\r\n
+InsertLineLbl\t\t: "수평선",\r\n
+InsertLine\t\t\t: "수평선 삽입",\r\n
+InsertSpecialCharLbl: "특수문자 삽입",\r\n
+InsertSpecialChar\t: "특수문자 삽입",\r\n
+InsertSmileyLbl\t\t: "아이콘",\r\n
+InsertSmiley\t\t: "아이콘 삽입",\r\n
+About\t\t\t\t: "FCKeditor에 대하여",\r\n
+Bold\t\t\t\t: "진하게",\r\n
+Italic\t\t\t\t: "이텔릭",\r\n
+Underline\t\t\t: "밑줄",\r\n
+StrikeThrough\t\t: "취소선",\r\n
+Subscript\t\t\t: "아래 첨자",\r\n
+Superscript\t\t\t: "위 첨자",\r\n
+LeftJustify\t\t\t: "왼쪽 정렬",\r\n
+CenterJustify\t\t: "가운데 정렬",\r\n
+RightJustify\t\t: "오른쪽 정렬",\r\n
+BlockJustify\t\t: "양쪽 맞춤",\r\n
+DecreaseIndent\t\t: "내어쓰기",\r\n
+IncreaseIndent\t\t: "들여쓰기",\r\n
+Blockquote\t\t\t: "Blockquote",\t//MISSING\r\n
+CreateDiv\t\t\t: "Create Div Container",\t//MISSING\r\n
+EditDiv\t\t\t\t: "Edit Div Container",\t//MISSING\r\n
+DeleteDiv\t\t\t: "Remove Div Container",\t//MISSING\r\n
+Undo\t\t\t\t: "취소",\r\n
+Redo\t\t\t\t: "재실행",\r\n
+NumberedListLbl\t\t: "순서있는 목록",\r\n
+NumberedList\t\t: "순서있는 목록",\r\n
+BulletedListLbl\t\t: "순서없는 목록",\r\n
+BulletedList\t\t: "순서없는 목록",\r\n
+ShowTableBorders\t: "표 테두리 보기",\r\n
+ShowDetails\t\t\t: "문서기호 보기",\r\n
+Style\t\t\t\t: "스타일",\r\n
+FontFormat\t\t\t: "포맷",\r\n
+Font\t\t\t\t: "폰트",\r\n
+FontSize\t\t\t: "글자 크기",\r\n
+TextColor\t\t\t: "글자 색상",\r\n
+BGColor\t\t\t\t: "배경 색상",\r\n
+Source\t\t\t\t: "소스",\r\n
+Find\t\t\t\t: "찾기",\r\n
+Replace\t\t\t\t: "바꾸기",\r\n
+SpellCheck\t\t\t: "철자검사",\r\n
+UniversalKeyboard\t: "다국어 입력기",\r\n
+PageBreakLbl\t\t: "Page Break",\t//MISSING\r\n
+PageBreak\t\t\t: "Insert Page Break",\t//MISSING\r\n
+\r\n
+Form\t\t\t: "폼",\r\n
+Checkbox\t\t: "체크박스",\r\n
+RadioButton\t\t: "라디오버튼",\r\n
+TextField\t\t: "입력필드",\r\n
+Textarea\t\t: "입력영역",\r\n
+HiddenField\t\t: "숨김필드",\r\n
+Button\t\t\t: "버튼",\r\n
+SelectionField\t: "펼침목록",\r\n
+ImageButton\t\t: "이미지버튼",\r\n
+\r\n
+FitWindow\t\t: "에디터 최대화",\r\n
+ShowBlocks\t\t: "Show Blocks",\t//MISSING\r\n
+\r\n
+// Context Menu\r\n
+EditLink\t\t\t: "링크 수정",\r\n
+CellCM\t\t\t\t: "셀/칸(Cell)",\r\n
+RowCM\t\t\t\t: "행(Row)",\r\n
+ColumnCM\t\t\t: "열(Column)",\r\n
+InsertRowAfter\t\t: "뒤에 행 삽입",\r\n
+InsertRowBefore\t\t: "앞에 행 삽입",\r\n
+DeleteRows\t\t\t: "가로줄 삭제",\r\n
+InsertColumnAfter\t: "뒤에 열 삽입",\r\n
+InsertColumnBefore\t: "앞에 열 삽입",\r\n
+DeleteColumns\t\t: "세로줄 삭제",\r\n
+InsertCellAfter\t\t: "뒤에 셀/칸 삽입",\r\n
+InsertCellBefore\t: "앞에 셀/칸 삽입",\r\n
+DeleteCells\t\t\t: "셀 삭제",\r\n
+MergeCells\t\t\t: "셀 합치기",\r\n
+MergeRight\t\t\t: "오른쪽 뭉치기",\r\n
+MergeDown\t\t\t: "왼쪽 뭉치기",\r\n
+HorizontalSplitCell\t: "수평 나누기",\r\n
+VerticalSplitCell\t: "수직 나누기",\r\n
+TableDelete\t\t\t: "표 삭제",\r\n
+CellProperties\t\t: "셀 속성",\r\n
+TableProperties\t\t: "표 속성",\r\n
+ImageProperties\t\t: "이미지 속성",\r\n
+FlashProperties\t\t: "플래쉬 속성",\r\n
+\r\n
+AnchorProp\t\t\t: "책갈피 속성",\r\n
+ButtonProp\t\t\t: "버튼 속성",\r\n
+CheckboxProp\t\t: "체크박스 속성",\r\n
+HiddenFieldProp\t\t: "숨김필드 속성",\r\n
+RadioButtonProp\t\t: "라디오버튼 속성",\r\n
+ImageButtonProp\t\t: "이미지버튼 속성",\r\n
+TextFieldProp\t\t: "입력필드 속성",\r\n
+SelectionFieldProp\t: "펼침목록 속성",\r\n
+TextareaProp\t\t: "입력영역 속성",\r\n
+FormProp\t\t\t: "폼 속성",\r\n
+\r\n
+FontFormats\t\t\t: "Normal;Formatted;Address;Heading 1;Heading 2;Heading 3;Heading 4;Heading 5;Heading 6",\r\n
+\r\n
+// Alerts and Messages\r\n
+ProcessingXHTML\t\t: "XHTML 처리중. 잠시만 기다려주십시요.",\r\n
+Done\t\t\t\t: "완료",\r\n
+PasteWordConfirm\t: "붙여넣기 할 텍스트는 MS Word에서 복사한 것입니다. 붙여넣기 전에 MS Word 포멧을 삭제하시겠습니까?",\r\n
+NotCompatiblePaste\t: "이 명령은 인터넷익스플로러 5.5 버전 이상에서만 작동합니다. 포멧을 삭제하지 않고 붙여넣기 하시겠습니까?",\r\n
+UnknownToolbarItem\t: "알수없는 툴바입니다. : \\"%1\\"",\r\n
+UnknownCommand\t\t: "알수없는 기능입니다. : \\"%1\\"",\r\n
+NotImplemented\t\t: "기능이 실행되지 않았습니다.",\r\n
+UnknownToolbarSet\t: "툴바 설정이 없습니다. : \\"%1\\"",\r\n
+NoActiveX\t\t\t: "브러우저의 보안 설정으로 인해 몇몇 기능의 작동에 장애가 있을 수 있습니다. \\"액티브-액스 기능과 플러그 인\\" 옵션을 허용하여 주시지 않으면 오류가 발생할 수 있습니다.",\r\n
+BrowseServerBlocked : "브러우저 요소가 열리지 않습니다. 팝업차단 설정이 꺼져있는지 확인하여 주십시오.",\r\n
+DialogBlocked\t\t: "윈도우 대화창을 열 수 없습니다. 팝업차단 설정이 꺼져있는지 확인하여 주십시오.",\r\n
+VisitLinkBlocked\t: "It was not possible to open a new window. Make sure all popup blockers are disabled.",\t//MISSING\r\n
+\r\n
+// Dialogs\r\n
+DlgBtnOK\t\t\t: "예",\r\n
+DlgBtnCancel\t\t: "아니오",\r\n
+DlgBtnClose\t\t\t: "닫기",\r\n
+DlgBtnBrowseServer\t: "서버 보기",\r\n
+DlgAdvancedTag\t\t: "자세히",\r\n
+DlgOpOther\t\t\t: "<기타>",\r\n
+DlgInfoTab\t\t\t: "정보",\r\n
+DlgAlertUrl\t\t\t: "URL을 입력하십시요",\r\n
+\r\n
+// General Dialogs Labels\r\n
+DlgGenNotSet\t\t: "<설정되지 않음>",\r\n
+DlgGenId\t\t\t: "ID",\r\n
+DlgGenLangDir\t\t: "쓰기 방향",\r\n
+DlgGenLangDirLtr\t: "왼쪽에서 오른쪽 (LTR)",\r\n
+DlgGenLangDirRtl\t: "오른쪽에서 왼쪽 (RTL)",\r\n
+DlgGenLangCode\t\t: "언어 코드",\r\n
+DlgGenAccessKey\t\t: "엑세스 키",\r\n
+DlgGenName\t\t\t: "Name",\r\n
+DlgGenTabIndex\t\t: "탭 순서",\r\n
+DlgGenLongDescr\t\t: "URL 설명",\r\n
+DlgGenClass\t\t\t: "Stylesheet Classes",\r\n
+DlgGenTitle\t\t\t: "Advisory Title",\r\n
+DlgGenContType\t\t: "Advisory Content Type",\r\n
+DlgGenLinkCharset\t: "Linked Resource Charset",\r\n
+DlgGenStyle\t\t\t: "Style",\r\n
+\r\n
+// Image Dialog\r\n
+DlgImgTitle\t\t\t: "이미지 설정",\r\n
+DlgImgInfoTab\t\t: "이미지 정보",\r\n
+DlgImgBtnUpload\t\t: "서버로 전송",\r\n
+DlgImgURL\t\t\t: "URL",\r\n
+DlgImgUpload\t\t: "업로드",\r\n
+DlgImgAlt\t\t\t: "이미지 설명",\r\n
+DlgImgWidth\t\t\t: "너비",\r\n
+DlgImgHeight\t\t: "높이",\r\n
+DlgImgLockRatio\t\t: "비율 유지",\r\n
+DlgBtnResetSize\t\t: "원래 크기로",\r\n
+DlgImgBorder\t\t: "테두리",\r\n
+DlgImgHSpace\t\t: "수평여백",\r\n
+DlgImgVSpace\t\t: "수직여백",\r\n
+DlgImgAlign\t\t\t: "정렬",\r\n
+DlgImgAlignLeft\t\t: "왼쪽",\r\n
+DlgImgAlignAbsBottom: "줄아래(Abs Bottom)",\r\n
+DlgImgAlignAbsMiddle: "줄중간(Abs Middle)",\r\n
+DlgImgAlignBaseline\t: "기준선",\r\n
+DlgImgAlignBottom\t: "아래",\r\n
+DlgImgAlignMiddle\t: "중간",\r\n
+DlgImgAlignRight\t: "오른쪽",\r\n
+DlgImgAlignTextTop\t: "글자상단",\r\n
+DlgImgAlignTop\t\t: "위",\r\n
+DlgImgPreview\t\t: "미리보기",\r\n
+DlgImgAlertUrl\t\t: "이미지 URL을 입력하십시요",\r\n
+DlgImgLinkTab\t\t: "링크",\r\n
+\r\n
+// Flash Dialog\r\n
+DlgFlashTitle\t\t: "플래쉬 등록정보",\r\n
+DlgFlashChkPlay\t\t: "자동재생",\r\n
+DlgFlashChkLoop\t\t: "반복",\r\n
+DlgFlashChkMenu\t\t: "플래쉬메뉴 가능",\r\n
+DlgFlashScale\t\t: "영역",\r\n
+DlgFlashScaleAll\t: "모두보기",\r\n
+DlgFlashScaleNoBorder\t: "경계선없음",\r\n
+DlgFlashScaleFit\t: "영역자동조절",\r\n
+\r\n
+// Link Dialog\r\n
+DlgLnkWindowTitle\t: "링크",\r\n
+DlgLnkInfoTab\t\t: "링크 정보",\r\n
+DlgLnkTargetTab\t\t: "타겟",\r\n
+\r\n
+DlgLnkType\t\t\t: "링크 종류",\r\n
+DlgLnkTypeURL\t\t: "URL",\r\n
+DlgLnkTypeAnchor\t: "책갈피",\r\n
+DlgLnkTypeEMail\t\t: "이메일",\r\n
+DlgLnkProto\t\t\t: "프로토콜",\r\n
+DlgLnkProtoOther\t: "<기타>",\r\n
+DlgLnkURL\t\t\t: "URL",\r\n
+DlgLnkAnchorSel\t\t: "책갈피 선택",\r\n
+DlgLnkAnchorByName\t: "책갈피 이름",\r\n
+DlgLnkAnchorById\t: "책갈피 ID",\r\n
+DlgLnkNoAnchors\t\t: "(문서에 책갈피가 없습니다.)",\r\n
+DlgLnkEMail\t\t\t: "이메일 주소",\r\n
+DlgLnkEMailSubject\t: "제목",\r\n
+DlgLnkEMailBody\t\t: "내용",\r\n
+DlgLnkUpload\t\t: "업로드",\r\n
+DlgLnkBtnUpload\t\t: "서버로 전송",\r\n
+\r\n
+DlgLnkTarget\t\t: "타겟",\r\n
+DlgLnkTargetFrame\t: "<프레임>",\r\n
+DlgLnkTargetPopup\t: "<팝업창>",\r\n
+DlgLnkTargetBlank\t: "새 창 (_blank)",\r\n
+DlgLnkTargetParent\t: "부모 창 (_parent)",\r\n
+DlgLnkTargetSelf\t: "현재 창 (_self)",\r\n
+DlgLnkTargetTop\t\t: "최 상위 창 (_top)",\r\n
+DlgLnkTargetFrameName\t: "타겟 프레임 이름",\r\n
+DlgLnkPopWinName\t: "팝업창 이름",\r\n
+DlgLnkPopWinFeat\t: "팝업창 설정",\r\n
+DlgLnkPopResize\t\t: "크기조정",\r\n
+DlgLnkPopLocation\t: "주소표시줄",\r\n
+DlgLnkPopMenu\t\t: "메뉴바",\r\n
+DlgLnkPopScroll\t\t: "스크롤바",\r\n
+DlgLnkPopStatus\t\t: "상태바",\r\n
+DlgLnkPopToolbar\t: "툴바",\r\n
+DlgLnkPopFullScrn\t: "전체화면 (IE)",\r\n
+DlgLnkPopDependent\t: "Dependent (Netscape)",\r\n
+DlgLnkPopWidth\t\t: "너비",\r\n
+DlgLnkPopHeight\t\t: "높이",\r\n
+DlgLnkPopLeft\t\t: "왼쪽 위치",\r\n
+DlgLnkPopTop\t\t: "윗쪽 위치",\r\n
+\r\n
+DlnLnkMsgNoUrl\t\t: "링크 URL을 입력하십시요.",\r\n
+DlnLnkMsgNoEMail\t: "이메일주소를 입력하십시요.",\r\n
+DlnLnkMsgNoAnchor\t: "책갈피명을 입력하십시요.",\r\n
+DlnLnkMsgInvPopName\t: "팝업창의 타이틀은 공백을 허용하지 않습니다.",\r\n
+\r\n
+// Color Dialog\r\n
+DlgColorTitle\t\t: "색상 선택",\r\n
+DlgColorBtnClear\t: "지우기",\r\n
+DlgColorHighlight\t: "현재",\r\n
+DlgColorSelected\t: "선택됨",\r\n
+\r\n
+// Smiley Dialog\r\n
+DlgSmileyTitle\t\t: "아이콘 삽입",\r\n
+\r\n
+// Special Character Dialog\r\n
+DlgSpecialCharTitle\t: "특수문자 선택",\r\n
+\r\n
+// Table Dialog\r\n
+DlgTableTitle\t\t: "표 설정",\r\n
+DlgTableRows\t\t: "가로줄",\r\n
+DlgTableColumns\t\t: "세로줄",\r\n
+DlgTableBorder\t\t: "테두리 크기",\r\n
+DlgTableAlign\t\t: "정렬",\r\n
+DlgTableAlignNotSet\t: "<설정되지 않음>",\r\n
+DlgTableAlignLeft\t: "왼쪽",\r\n
+DlgTableAlignCenter\t: "가운데",\r\n
+DlgTableAlignRight\t: "오른쪽",\r\n
+DlgTableWidth\t\t: "너비",\r\n
+DlgTableWidthPx\t\t: "픽셀",\r\n
+DlgTableWidthPc\t\t: "퍼센트",\r\n
+DlgTableHeight\t\t: "높이",\r\n
+DlgTableCellSpace\t: "셀 간격",\r\n
+DlgTableCellPad\t\t: "셀 여백",\r\n
+DlgTableCaption\t\t: "캡션",\r\n
+DlgTableSummary\t\t: "Summary",\t//MISSING\r\n
+DlgTableHeaders\t\t: "Headers",\t//MISSING\r\n
+DlgTableHeadersNone\t\t: "None",\t//MISSING\r\n
+DlgTableHeadersColumn\t: "First column",\t//MISSING\r\n
+DlgTableHeadersRow\t\t: "First Row",\t//MISSING\r\n
+DlgTableHeadersBoth\t\t: "Both",\t//MISSING\r\n
+\r\n
+// Table Cell Dialog\r\n
+DlgCellTitle\t\t: "셀 설정",\r\n
+DlgCellWidth\t\t: "너비",\r\n
+DlgCellWidthPx\t\t: "픽셀",\r\n
+DlgCellWidthPc\t\t: "퍼센트",\r\n
+DlgCellHeight\t\t: "높이",\r\n
+DlgCellWordWrap\t\t: "워드랩",\r\n
+DlgCellWordWrapNotSet\t: "<설정되지 않음>",\r\n
+DlgCellWordWrapYes\t: "예",\r\n
+DlgCellWordWrapNo\t: "아니오",\r\n
+DlgCellHorAlign\t\t: "수평 정렬",\r\n
+DlgCellHorAlignNotSet\t: "<설정되지 않음>",\r\n
+DlgCellHorAlignLeft\t: "왼쪽",\r\n
+DlgCellHorAlignCenter\t: "가운데",\r\n
+DlgCellHorAlignRight: "오른쪽",\r\n
+DlgCellVerAlign\t\t: "수직 정렬",\r\n
+DlgCellVerAlignNotSet\t: "<설정되지 않음>",\r\n
+DlgCellVerAlignTop\t: "위",\r\n
+DlgCellVerAlignMiddle\t: "중간",\r\n
+DlgCellVerAlignBottom\t: "아래",\r\n
+DlgCellVerAlignBaseline\t: "기준선",\r\n
+DlgCellType\t\t: "Cell Type",\t//MISSING\r\n
+DlgCellTypeData\t\t: "Data",\t//MISSING\r\n
+DlgCellTypeHeader\t: "Header",\t//MISSING\r\n
+DlgCellRowSpan\t\t: "세로 합치기",\r\n
+DlgCellCollSpan\t\t: "가로 합치기",\r\n
+DlgCellBackColor\t: "배경 색상",\r\n
+DlgCellBorderColor\t: "테두리 색상",\r\n
+DlgCellBtnSelect\t: "선택",\r\n
+\r\n
+// Find and Replace Dialog\r\n
+DlgFindAndReplaceTitle\t: "찾기 & 바꾸기",\r\n
+\r\n
+// Find Dialog\r\n
+DlgFindTitle\t\t: "찾기",\r\n
+DlgFindFindBtn\t\t: "찾기",\r\n
+DlgFindNotFoundMsg\t: "문자열을 찾을 수 없습니다.",\r\n
+\r\n
+// Replace Dialog\r\n
+DlgReplaceTitle\t\t\t: "바꾸기",\r\n
+DlgReplaceFindLbl\t\t: "찾을 문자열:",\r\n
+DlgReplaceReplaceLbl\t: "바꿀 문자열:",\r\n
+DlgReplaceCaseChk\t\t: "대소문자 구분",\r\n
+DlgReplaceReplaceBtn\t: "바꾸기",\r\n
+DlgReplaceReplAllBtn\t: "모두 바꾸기",\r\n
+DlgReplaceWordChk\t\t: "온전한 단어",\r\n
+\r\n
+// Paste Operations / Dialog\r\n
+PasteErrorCut\t: "브라우저의 보안설정때문에 잘라내기 기능을 실행할 수 없습니다. 키보드 명령을 사용하십시요. (Ctrl+X).",\r\n
+PasteErrorCopy\t: "브라우저의 보안설정때문에 복사하기 기능을 실행할 수 없습니다. 키보드 명령을 사용하십시요.  (Ctrl+C).",\r\n
+\r\n
+PasteAsText\t\t: "텍스트로 붙여넣기",\r\n
+PasteFromWord\t: "MS Word 형식에서 붙여넣기",\r\n
+\r\n
+DlgPasteMsg2\t: "키보드의 (<STRONG>Ctrl+V</STRONG>) 를 이용해서 상자안에 붙여넣고 <STRONG>OK</STRONG> 를 누르세요.",\r\n
+DlgPasteSec\t\t: "브러우저 보안 설정으로 인해, 클립보드의 자료를 직접 접근할 수 없습니다. 이 창에 다시 붙여넣기 하십시오.",\r\n
+DlgPasteIgnoreFont\t\t: "폰트 설정 무시",\r\n
+DlgPasteRemoveStyles\t: "스타일 정의 제거",\r\n
+\r\n
+// Color Picker\r\n
+ColorAutomatic\t: "기본색상",\r\n
+ColorMoreColors\t: "색상선택...",\r\n
+\r\n
+// Document Properties\r\n
+DocProps\t\t: "문서 속성",\r\n
+\r\n
+// Anchor Dialog\r\n
+DlgAnchorTitle\t\t: "책갈피 속성",\r\n
+DlgAnchorName\t\t: "책갈피 이름",\r\n
+DlgAnchorErrorName\t: "책갈피 이름을 입력하십시요.",\r\n
+\r\n
+// Speller Pages Dialog\r\n
+DlgSpellNotInDic\t\t: "사전에 없는 단어",\r\n
+DlgSpellChangeTo\t\t: "변경할 단어",\r\n
+DlgSpellBtnIgnore\t\t: "건너뜀",\r\n
+DlgSpellBtnIgnoreAll\t: "모두 건너뜀",\r\n
+DlgSpellBtnReplace\t\t: "변경",\r\n
+DlgSpellBtnReplaceAll\t: "모두 변경",\r\n
+DlgSpellBtnUndo\t\t\t: "취소",\r\n
+DlgSpellNoSuggestions\t: "- 추천단어 없음 -",\r\n
+DlgSpellProgress\t\t: "철자검사를 진행중입니다...",\r\n
+DlgSpellNoMispell\t\t: "철자검사 완료: 잘못된 철자가 없습니다.",\r\n
+DlgSpellNoChanges\t\t: "철자검사 완료: 변경된 단어가 없습니다.",\r\n
+DlgSpellOneChange\t\t: "철자검사 완료: 단어가 변경되었습니다.",\r\n
+DlgSpellManyChanges\t\t: "철자검사 완료: %1 단어가 변경되었습니다.",\r\n
+\r\n
+IeSpellDownload\t\t\t: "철자 검사기가 철치되지 않았습니다. 지금 다운로드하시겠습니까?",\r\n
+\r\n
+// Button Dialog\r\n
+DlgButtonText\t\t: "버튼글자(값)",\r\n
+DlgButtonType\t\t: "버튼종류",\r\n
+DlgButtonTypeBtn\t: "Button",\t//MISSING\r\n
+DlgButtonTypeSbm\t: "Submit",\t//MISSING\r\n
+DlgButtonTypeRst\t: "Reset",\t//MISSING\r\n
+\r\n
+// Checkbox and Radio Button Dialogs\r\n
+DlgCheckboxName\t\t: "이름",\r\n
+DlgCheckboxValue\t: "값",\r\n
+DlgCheckboxSelected\t: "선택됨",\r\n
+\r\n
+// Form Dialog\r\n
+DlgFormName\t\t: "폼이름",\r\n
+DlgFormAction\t: "실행경로(Action)",\r\n
+DlgFormMethod\t: "방법(Method)",\r\n
+\r\n
+// Select Field Dialog\r\n
+DlgSelectName\t\t: "이름",\r\n
+DlgSelectValue\t\t: "값",\r\n
+DlgSelectSize\t\t: "세로크기",\r\n
+DlgSelectLines\t\t: "줄",\r\n
+DlgSelectChkMulti\t: "여러항목 선택 허용",\r\n
+DlgSelectOpAvail\t: "선택옵션",\r\n
+DlgSelectOpText\t\t: "이름",\r\n
+DlgSelectOpValue\t: "값",\r\n
+DlgSelectBtnAdd\t\t: "추가",\r\n
+DlgSelectBtnModify\t: "변경",\r\n
+DlgSelectBtnUp\t\t: "위로",\r\n
+DlgSelectBtnDown\t: "아래로",\r\n
+DlgSelectBtnSetValue : "선택된것으로 설정",\r\n
+DlgSelectBtnDelete\t: "삭제",\r\n
+\r\n
+// Textarea Dialog\r\n
+DlgTextareaName\t: "이름",\r\n
+DlgTextareaCols\t: "칸수",\r\n
+DlgTextareaRows\t: "줄수",\r\n
+\r\n
+// Text Field Dialog\r\n
+DlgTextName\t\t\t: "이름",\r\n
+DlgTextValue\t\t: "값",\r\n
+DlgTextCharWidth\t: "글자 너비",\r\n
+DlgTextMaxChars\t\t: "최대 글자수",\r\n
+DlgTextType\t\t\t: "종류",\r\n
+DlgTextTypeText\t\t: "문자열",\r\n
+DlgTextTypePass\t\t: "비밀번호",\r\n
+\r\n
+// Hidden Field Dialog\r\n
+DlgHiddenName\t: "이름",\r\n
+DlgHiddenValue\t: "값",\r\n
+\r\n
+// Bulleted List Dialog\r\n
+BulletedListProp\t: "순서없는 목록 속성",\r\n
+NumberedListProp\t: "순서있는 목록 속성",\r\n
+DlgLstStart\t\t\t: "Start",\t//MISSING\r\n
+DlgLstType\t\t\t: "종류",\r\n
+DlgLstTypeCircle\t: "원(Circle)",\r\n
+DlgLstTypeDisc\t\t: "Disc",\t//MISSING\r\n
+DlgLstTypeSquare\t: "네모점(Square)",\r\n
+DlgLstTypeNumbers\t: "번호 (1, 2, 3)",\r\n
+DlgLstTypeLCase\t\t: "소문자 (a, b, c)",\r\n
+DlgLstTypeUCase\t\t: "대문자 (A, B, C)",\r\n
+DlgLstTypeSRoman\t: "로마자 수문자 (i, ii, iii)",\r\n
+DlgLstTypeLRoman\t: "로마자 대문자 (I, II, III)",\r\n
+\r\n
+// Document Properties Dialog\r\n
+DlgDocGeneralTab\t: "일반",\r\n
+DlgDocBackTab\t\t: "배경",\r\n
+DlgDocColorsTab\t\t: "색상 및 여백",\r\n
+DlgDocMetaTab\t\t: "메타데이터",\r\n
+\r\n
+DlgDocPageTitle\t\t: "페이지명",\r\n
+DlgDocLangDir\t\t: "문자 쓰기방향",\r\n
+DlgDocLangDirLTR\t: "왼쪽에서 오른쪽 (LTR)",\r\n
+DlgDocLangDirRTL\t: "오른쪽에서 왼쪽 (RTL)",\r\n
+DlgDocLangCode\t\t: "언어코드",\r\n
+DlgDocCharSet\t\t: "캐릭터셋 인코딩",\r\n
+DlgDocCharSetCE\t\t: "Central European",\t//MISSING\r\n
+DlgDocCharSetCT\t\t: "Chinese Traditional (Big5)",\t//MISSING\r\n
+DlgDocCharSetCR\t\t: "Cyrillic",\t//MISSING\r\n
+DlgDocCharSetGR\t\t: "Greek",\t//MISSING\r\n
+DlgDocCharSetJP\t\t: "Japanese",\t//MISSING\r\n
+DlgDocCharSetKR\t\t: "Korean",\t//MISSING\r\n
+DlgDocCharSetTR\t\t: "Turkish",\t//MISSING\r\n
+DlgDocCharSetUN\t\t: "Unicode (UTF-8)",\t//MISSING\r\n
+DlgDocCharSetWE\t\t: "Western European",\t//MISSING\r\n
+DlgDocCharSetOther\t: "다른 캐릭터셋 인코딩",\r\n
+\r\n
+DlgDocDocType\t\t: "문서 헤드",\r\n
+DlgDocDocTypeOther\t: "다른 문서헤드",\r\n
+DlgDocIncXHTML\t\t: "XHTML 문서정의 포함",\r\n
+DlgDocBgColor\t\t: "배경색상",\r\n
+DlgDocBgImage\t\t: "배경이미지 URL",\r\n
+DlgDocBgNoScroll\t: "스크롤되지않는 배경",\r\n
+DlgDocCText\t\t\t: "텍스트",\r\n
+DlgDocCLink\t\t\t: "링크",\r\n
+DlgDocCVisited\t\t: "방문한 링크(Visited)",\r\n
+DlgDocCActive\t\t: "활성화된 링크(Active)",\r\n
+DlgDocMargins\t\t: "페이지 여백",\r\n
+DlgDocMaTop\t\t\t: "위",\r\n
+DlgDocMaLeft\t\t: "왼쪽",\r\n
+DlgDocMaRight\t\t: "오른쪽",\r\n
+DlgDocMaBottom\t\t: "아래",\r\n
+DlgDocMeIndex\t\t: "문서 키워드 (콤마로 구분)",\r\n
+DlgDocMeDescr\t\t: "문서 설명",\r\n
+DlgDocMeAuthor\t\t: "작성자",\r\n
+DlgDocMeCopy\t\t: "저작권",\r\n
+DlgDocPreview\t\t: "미리보기",\r\n
+\r\n
+// Templates Dialog\r\n
+Templates\t\t\t: "템플릿",\r\n
+DlgTemplatesTitle\t: "내용 템플릿",\r\n
+DlgTemplatesSelMsg\t: "에디터에서 사용할 템플릿을 선택하십시요.<br>(지금까지 작성된 내용은 사라집니다.):",\r\n
+DlgTemplatesLoading\t: "템플릿 목록을 불러오는중입니다. 잠시만 기다려주십시요.",\r\n
+DlgTemplatesNoTpl\t: "(템플릿이 없습니다.)",\r\n
+DlgTemplatesReplace\t: "현재 내용 바꾸기",\r\n
+\r\n
+// About Dialog\r\n
+DlgAboutAboutTab\t: "About",\r\n
+DlgAboutBrowserInfoTab\t: "브라우저 정보",\r\n
+DlgAboutLicenseTab\t: "License",\t//MISSING\r\n
+DlgAboutVersion\t\t: "버전",\r\n
+DlgAboutInfo\t\t: "더 많은 정보를 보시려면 다음 사이트로 가십시오.",\r\n
+\r\n
+// Div Dialog\r\n
+DlgDivGeneralTab\t: "General",\t//MISSING\r\n
+DlgDivAdvancedTab\t: "Advanced",\t//MISSING\r\n
+DlgDivStyle\t\t: "Style",\t//MISSING\r\n
+DlgDivInlineStyle\t: "Inline Style"\t//MISSING\r\n
+};\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>19282</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

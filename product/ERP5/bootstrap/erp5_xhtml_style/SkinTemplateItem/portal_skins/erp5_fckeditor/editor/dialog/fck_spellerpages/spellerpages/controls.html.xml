@@ -1,0 +1,206 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html>\r\n
+\t<head>\r\n
+\t\t<link rel="stylesheet" type="text/css" href="spellerStyle.css" />\r\n
+\t\t<script type="text/javascript" src="controlWindow.js"></script>\r\n
+\t\t<script type="text/javascript">\r\n
+var spellerObject;\r\n
+var controlWindowObj;\r\n
+\r\n
+if( parent.opener ) {\r\n
+\tspellerObject = parent.opener.speller;\r\n
+}\r\n
+\r\n
+function ignore_word() {\r\n
+\tif( spellerObject ) {\r\n
+\t\tspellerObject.ignoreWord();\r\n
+\t}\r\n
+}\r\n
+\r\n
+function ignore_all() {\r\n
+\tif( spellerObject ) {\r\n
+\t\tspellerObject.ignoreAll();\r\n
+\t}\r\n
+}\r\n
+\r\n
+function replace_word() {\r\n
+\tif( spellerObject ) {\r\n
+\t\tspellerObject.replaceWord();\r\n
+\t}\r\n
+}\r\n
+\r\n
+function replace_all() {\r\n
+\tif( spellerObject ) {\r\n
+\t\tspellerObject.replaceAll();\r\n
+\t}\r\n
+}\r\n
+\r\n
+function end_spell() {\r\n
+\tif( spellerObject ) {\r\n
+\t\tspellerObject.terminateSpell();\r\n
+\t}\r\n
+}\r\n
+\r\n
+function undo() {\r\n
+\tif( spellerObject ) {\r\n
+\t\tspellerObject.undo();\r\n
+\t}\r\n
+}\r\n
+\r\n
+function suggText() {\r\n
+\tif( controlWindowObj ) {\r\n
+\t\tcontrolWindowObj.setSuggestedText();\r\n
+\t}\r\n
+}\r\n
+\r\n
+var FCKLang = window.parent.parent.FCKLang ;\t// by FredCK\r\n
+\r\n
+function init_spell() {\r\n
+\t// By FredCK (fckLang attributes have been added to the HTML source of this page)\r\n
+\twindow.parent.parent.OnSpellerControlsLoad( this ) ;\r\n
+\r\n
+\tvar controlForm = document.spellcheck;\r\n
+\r\n
+\t// create a new controlWindow object\r\n
+ \tcontrolWindowObj = new controlWindow( controlForm );\r\n
+\r\n
+\t// call the init_spell() function in the parent frameset\r\n
+\tif( parent.frames.length ) {\r\n
+\t\tparent.init_spell( controlWindowObj );\r\n
+\t} else {\r\n
+\t\talert( \'This page was loaded outside of a frameset. It might not display properly\' );\r\n
+\t}\r\n
+}\r\n
+\r\n
+</script>\r\n
+\t</head>\r\n
+\t<body class="controlWindowBody" onLoad="init_spell();" style="OVERFLOW: hidden" scroll="no">\t<!-- by FredCK -->\r\n
+\t\t<form name="spellcheck">\r\n
+\t\t\t<table border="0" cellpadding="0" cellspacing="0" border="0" align="center">\r\n
+\t\t\t\t<tr>\r\n
+\t\t\t\t\t<td colspan="3" class="normalLabel"><span fckLang="DlgSpellNotInDic">Not in dictionary:</span></td>\r\n
+\t\t\t\t</tr>\r\n
+\t\t\t\t<tr>\r\n
+\t\t\t\t\t<td colspan="3"><input class="readonlyInput" type="text" name="misword" readonly /></td>\r\n
+\t\t\t\t</tr>\r\n
+\t\t\t\t<tr>\r\n
+\t\t\t\t\t<td colspan="3" height="5"></td>\r\n
+\t\t\t\t</tr>\r\n
+\t\t\t\t<tr>\r\n
+\t\t\t\t\t<td class="normalLabel"><span fckLang="DlgSpellChangeTo">Change to:</span></td>\r\n
+\t\t\t\t</tr>\r\n
+\t\t\t\t<tr valign="top">\r\n
+\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t<table border="0" cellpadding="0" cellspacing="0" border="0">\r\n
+\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t<td class="normalLabel">\r\n
+\t\t\t\t\t\t\t\t\t<input class="textDefault" type="text" name="txtsugg" />\r\n
+\t\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t<select class="suggSlct" name="sugg" size="7" onChange="suggText();" onDblClick="replace_word();">\r\n
+\t\t\t\t\t\t\t\t\t\t<option></option>\r\n
+\t\t\t\t\t\t\t\t\t</select>\r\n
+\t\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t</table>\r\n
+\t\t\t\t\t</td>\r\n
+\t\t\t\t\t<td>&nbsp;&nbsp;</td>\r\n
+\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t<table border="0" cellpadding="0" cellspacing="0" border="0">\r\n
+\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t<input class="buttonDefault" type="button" fckLang="DlgSpellBtnIgnore" value="Ignore" onClick="ignore_word();">\r\n
+\t\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t\t<td>&nbsp;&nbsp;</td>\r\n
+\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t<input class="buttonDefault" type="button" fckLang="DlgSpellBtnIgnoreAll" value="Ignore All" onClick="ignore_all();">\r\n
+\t\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t<td colspan="3" height="5"></td>\r\n
+\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t<input class="buttonDefault" type="button" fckLang="DlgSpellBtnReplace" value="Replace" onClick="replace_word();">\r\n
+\t\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t\t<td>&nbsp;&nbsp;</td>\r\n
+\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t<input class="buttonDefault" type="button" fckLang="DlgSpellBtnReplaceAll" value="Replace All" onClick="replace_all();">\r\n
+\t\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t<td colspan="3" height="5"></td>\r\n
+\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t<input class="buttonDefault" type="button" name="btnUndo" fckLang="DlgSpellBtnUndo" value="Undo" onClick="undo();"\r\n
+\t\t\t\t\t\t\t\t\t\tdisabled>\r\n
+\t\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t\t<td>&nbsp;&nbsp;</td>\r\n
+\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t<!-- by FredCK\r\n
+\t\t\t\t\t\t\t\t\t<input class="buttonDefault" type="button" value="Close" onClick="end_spell();">\r\n
+\t\t\t\t\t\t\t\t\t-->\r\n
+\t\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t</table>\r\n
+\t\t\t\t\t</td>\r\n
+\t\t\t\t</tr>\r\n
+\t\t\t</table>\r\n
+\t\t</form>\r\n
+\t</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>controls.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

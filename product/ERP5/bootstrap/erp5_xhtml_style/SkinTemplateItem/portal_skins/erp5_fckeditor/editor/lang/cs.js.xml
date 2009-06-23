@@ -1,0 +1,581 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749253.85</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>cs.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Czech language file.\r\n
+ */\r\n
+\r\n
+var FCKLang =\r\n
+{\r\n
+// Language direction : "ltr" (left to right) or "rtl" (right to left).\r\n
+Dir\t\t\t\t\t: "ltr",\r\n
+\r\n
+ToolbarCollapse\t\t: "Skrýt panel nástrojů",\r\n
+ToolbarExpand\t\t: "Zobrazit panel nástrojů",\r\n
+\r\n
+// Toolbar Items and Context Menu\r\n
+Save\t\t\t\t: "Uložit",\r\n
+NewPage\t\t\t\t: "Nová stránka",\r\n
+Preview\t\t\t\t: "Náhled",\r\n
+Cut\t\t\t\t\t: "Vyjmout",\r\n
+Copy\t\t\t\t: "Kopírovat",\r\n
+Paste\t\t\t\t: "Vložit",\r\n
+PasteText\t\t\t: "Vložit jako čistý text",\r\n
+PasteWord\t\t\t: "Vložit z Wordu",\r\n
+Print\t\t\t\t: "Tisk",\r\n
+SelectAll\t\t\t: "Vybrat vše",\r\n
+RemoveFormat\t\t: "Odstranit formátování",\r\n
+InsertLinkLbl\t\t: "Odkaz",\r\n
+InsertLink\t\t\t: "Vložit/změnit odkaz",\r\n
+RemoveLink\t\t\t: "Odstranit odkaz",\r\n
+VisitLink\t\t\t: "Otevřít odkaz",\r\n
+Anchor\t\t\t\t: "Vložít/změnit záložku",\r\n
+AnchorDelete\t\t: "Odstranit kotvu",\r\n
+InsertImageLbl\t\t: "Obrázek",\r\n
+InsertImage\t\t\t: "Vložit/změnit obrázek",\r\n
+InsertFlashLbl\t\t: "Flash",\r\n
+InsertFlash\t\t\t: "Vložit/Upravit Flash",\r\n
+InsertTableLbl\t\t: "Tabulka",\r\n
+InsertTable\t\t\t: "Vložit/změnit tabulku",\r\n
+InsertLineLbl\t\t: "Linka",\r\n
+InsertLine\t\t\t: "Vložit vodorovnou linku",\r\n
+InsertSpecialCharLbl: "Speciální znaky",\r\n
+InsertSpecialChar\t: "Vložit speciální znaky",\r\n
+InsertSmileyLbl\t\t: "Smajlíky",\r\n
+InsertSmiley\t\t: "Vložit smajlík",\r\n
+About\t\t\t\t: "O aplikaci FCKeditor",\r\n
+Bold\t\t\t\t: "Tučné",\r\n
+Italic\t\t\t\t: "Kurzíva",\r\n
+Underline\t\t\t: "Podtržené",\r\n
+StrikeThrough\t\t: "Přeškrtnuté",\r\n
+Subscript\t\t\t: "Dolní index",\r\n
+Superscript\t\t\t: "Horní index",\r\n
+LeftJustify\t\t\t: "Zarovnat vlevo",\r\n
+CenterJustify\t\t: "Zarovnat na střed",\r\n
+RightJustify\t\t: "Zarovnat vpravo",\r\n
+BlockJustify\t\t: "Zarovnat do bloku",\r\n
+DecreaseIndent\t\t: "Zmenšit odsazení",\r\n
+IncreaseIndent\t\t: "Zvětšit odsazení",\r\n
+Blockquote\t\t\t: "Citace",\r\n
+CreateDiv\t\t\t: "Vytvořit Div kontejner",\r\n
+EditDiv\t\t\t\t: "Upravit Div kontejner",\r\n
+DeleteDiv\t\t\t: "Odstranit Div kontejner",\r\n
+Undo\t\t\t\t: "Zpět",\r\n
+Redo\t\t\t\t: "Znovu",\r\n
+NumberedListLbl\t\t: "Číslování",\r\n
+NumberedList\t\t: "Vložit/odstranit číslovaný seznam",\r\n
+BulletedListLbl\t\t: "Odrážky",\r\n
+BulletedList\t\t: "Vložit/odstranit odrážky",\r\n
+ShowTableBorders\t: "Zobrazit okraje tabulek",\r\n
+ShowDetails\t\t\t: "Zobrazit podrobnosti",\r\n
+Style\t\t\t\t: "Styl",\r\n
+FontFormat\t\t\t: "Formát",\r\n
+Font\t\t\t\t: "Písmo",\r\n
+FontSize\t\t\t: "Velikost",\r\n
+TextColor\t\t\t: "Barva textu",\r\n
+BGColor\t\t\t\t: "Barva pozadí",\r\n
+Source\t\t\t\t: "Zdroj",\r\n
+Find\t\t\t\t: "Hledat",\r\n
+Replace\t\t\t\t: "Nahradit",\r\n
+SpellCheck\t\t\t: "Zkontrolovat pravopis",\r\n
+UniversalKeyboard\t: "Univerzální klávesnice",\r\n
+PageBreakLbl\t\t: "Konec stránky",\r\n
+PageBreak\t\t\t: "Vložit konec stránky",\r\n
+\r\n
+Form\t\t\t: "Formulář",\r\n
+Checkbox\t\t: "Zaškrtávací políčko",\r\n
+RadioButton\t\t: "Přepínač",\r\n
+TextField\t\t: "Textové pole",\r\n
+Textarea\t\t: "Textová oblast",\r\n
+HiddenField\t\t: "Skryté pole",\r\n
+Button\t\t\t: "Tlačítko",\r\n
+SelectionField\t: "Seznam",\r\n
+ImageButton\t\t: "Obrázkové tlačítko",\r\n
+\r\n
+FitWindow\t\t: "Maximalizovat velikost editoru",\r\n
+ShowBlocks\t\t: "Ukázat bloky",\r\n
+\r\n
+// Context Menu\r\n
+EditLink\t\t\t: "Změnit odkaz",\r\n
+CellCM\t\t\t\t: "Buňka",\r\n
+RowCM\t\t\t\t: "Řádek",\r\n
+ColumnCM\t\t\t: "Sloupec",\r\n
+InsertRowAfter\t\t: "Vložit řádek za",\r\n
+InsertRowBefore\t\t: "Vložit řádek před",\r\n
+DeleteRows\t\t\t: "Smazat řádky",\r\n
+InsertColumnAfter\t: "Vložit sloupec za",\r\n
+InsertColumnBefore\t: "Vložit sloupec před",\r\n
+DeleteColumns\t\t: "Smazat sloupec",\r\n
+InsertCellAfter\t\t: "Vložit buňku za",\r\n
+InsertCellBefore\t: "Vložit buňku před",\r\n
+DeleteCells\t\t\t: "Smazat buňky",\r\n
+MergeCells\t\t\t: "Sloučit buňky",\r\n
+MergeRight\t\t\t: "Sloučit doprava",\r\n
+MergeDown\t\t\t: "Sloučit dolů",\r\n
+HorizontalSplitCell\t: "Rozdělit buňky vodorovně",\r\n
+VerticalSplitCell\t: "Rozdělit buňky svisle",\r\n
+TableDelete\t\t\t: "Smazat tabulku",\r\n
+CellProperties\t\t: "Vlastnosti buňky",\r\n
+TableProperties\t\t: "Vlastnosti tabulky",\r\n
+ImageProperties\t\t: "Vlastnosti obrázku",\r\n
+FlashProperties\t\t: "Vlastnosti Flashe",\r\n
+\r\n
+AnchorProp\t\t\t: "Vlastnosti záložky",\r\n
+ButtonProp\t\t\t: "Vlastnosti tlačítka",\r\n
+CheckboxProp\t\t: "Vlastnosti zaškrtávacího políčka",\r\n
+HiddenFieldProp\t\t: "Vlastnosti skrytého pole",\r\n
+RadioButtonProp\t\t: "Vlastnosti přepínače",\r\n
+ImageButtonProp\t\t: "Vlastností obrázkového tlačítka",\r\n
+TextFieldProp\t\t: "Vlastnosti textového pole",\r\n
+SelectionFieldProp\t: "Vlastnosti seznamu",\r\n
+TextareaProp\t\t: "Vlastnosti textové oblasti",\r\n
+FormProp\t\t\t: "Vlastnosti formuláře",\r\n
+\r\n
+FontFormats\t\t\t: "Normální;Naformátováno;Adresa;Nadpis 1;Nadpis 2;Nadpis 3;Nadpis 4;Nadpis 5;Nadpis 6;Normální (DIV)",\r\n
+\r\n
+// Alerts and Messages\r\n
+ProcessingXHTML\t\t: "Probíhá zpracování XHTML. Prosím čekejte...",\r\n
+Done\t\t\t\t: "Hotovo",\r\n
+PasteWordConfirm\t: "Jak je vidět, vkládaný text je kopírován z Wordu. Chcete jej před vložením vyčistit?",\r\n
+NotCompatiblePaste\t: "Tento příkaz je dostupný pouze v Internet Exploreru verze 5.5 nebo vyšší. Chcete vložit text bez vyčištění?",\r\n
+UnknownToolbarItem\t: "Neznámá položka panelu nástrojů \\"%1\\"",\r\n
+UnknownCommand\t\t: "Neznámý příkaz \\"%1\\"",\r\n
+NotImplemented\t\t: "Příkaz není implementován",\r\n
+UnknownToolbarSet\t: "Panel nástrojů \\"%1\\" neexistuje",\r\n
+NoActiveX\t\t\t: "Nastavení bezpečnosti Vašeho prohlížeče omezuje funkčnost některých jeho možností. Je třeba zapnout volbu \\"Spouštět ovládáací prvky ActiveX a moduly plug-in\\", jinak nebude možné využívat všechny dosputné schopnosti editoru.",\r\n
+BrowseServerBlocked : "Průzkumník zdrojů nelze otevřít. Prověřte, zda nemáte aktivováno blokování popup oken.",\r\n
+DialogBlocked\t\t: "Nelze otevřít dialogové okno. Prověřte, zda nemáte aktivováno blokování popup oken.",\r\n
+VisitLinkBlocked\t: "Není možné otevřít nové okno. Prověřte, zda všechny nástroje pro blokování vyskakovacích oken jsou vypnuty.",\r\n
+\r\n
+// Dialogs\r\n
+DlgBtnOK\t\t\t: "OK",\r\n
+DlgBtnCancel\t\t: "Storno",\r\n
+DlgBtnClose\t\t\t: "Zavřít",\r\n
+DlgBtnBrowseServer\t: "Vybrat na serveru",\r\n
+DlgAdvancedTag\t\t: "Rozšířené",\r\n
+DlgOpOther\t\t\t: "<Ostatní>",\r\n
+DlgInfoTab\t\t\t: "Info",\r\n
+DlgAlertUrl\t\t\t: "Prosím vložte URL",\r\n
+\r\n
+// General Dialogs Labels\r\n
+DlgGenNotSet\t\t: "<nenastaveno>",\r\n
+DlgGenId\t\t\t: "Id",\r\n
+DlgGenLangDir\t\t: "Orientace jazyka",\r\n
+DlgGenLangDirLtr\t: "Zleva do prava (LTR)",\r\n
+DlgGenLangDirRtl\t: "Zprava do leva (RTL)",\r\n
+DlgGenLangCode\t\t: "Kód jazyka",\r\n
+DlgGenAccessKey\t\t: "Přístupový klíč",\r\n
+DlgGenName\t\t\t: "Jméno",\r\n
+DlgGenTabIndex\t\t: "Pořadí prvku",\r\n
+DlgGenLongDescr\t\t: "Dlouhý popis URL",\r\n
+DlgGenClass\t\t\t: "Třída stylu",\r\n
+DlgGenTitle\t\t\t: "Pomocný titulek",\r\n
+DlgGenContType\t\t: "Pomocný typ obsahu",\r\n
+DlgGenLinkCharset\t: "Přiřazená znaková sada",\r\n
+DlgGenStyle\t\t\t: "Styl",\r\n
+\r\n
+// Image Dialog\r\n
+DlgImgTitle\t\t\t: "Vlastnosti obrázku",\r\n
+DlgImgInfoTab\t\t: "Informace o obrázku",\r\n
+DlgImgBtnUpload\t\t: "Odeslat na server",\r\n
+DlgImgURL\t\t\t: "URL",\r\n
+DlgImgUpload\t\t: "Odeslat",\r\n
+DlgImgAlt\t\t\t: "Alternativní text",\r\n
+DlgImgWidth\t\t\t: "Šířka",\r\n
+DlgImgHeight\t\t: "Výška",\r\n
+DlgImgLockRatio\t\t: "Zámek",\r\n
+DlgBtnResetSize\t\t: "Původní velikost",\r\n
+DlgImgBorder\t\t: "Okraje",\r\n
+DlgImgHSpace\t\t: "H-mezera",\r\n
+DlgImgVSpace\t\t: "V-mezera",\r\n
+DlgImgAlign\t\t\t: "Zarovnání",\r\n
+DlgImgAlignLeft\t\t: "Vlevo",\r\n
+DlgImgAlignAbsBottom: "Zcela dolů",\r\n
+DlgImgAlignAbsMiddle: "Doprostřed",\r\n
+DlgImgAlignBaseline\t: "Na účaří",\r\n
+DlgImgAlignBottom\t: "Dolů",\r\n
+DlgImgAlignMiddle\t: "Na střed",\r\n
+DlgImgAlignRight\t: "Vpravo",\r\n
+DlgImgAlignTextTop\t: "Na horní okraj textu",\r\n
+DlgImgAlignTop\t\t: "Nahoru",\r\n
+DlgImgPreview\t\t: "Náhled",\r\n
+DlgImgAlertUrl\t\t: "Zadejte prosím URL obrázku",\r\n
+DlgImgLinkTab\t\t: "Odkaz",\r\n
+\r\n
+// Flash Dialog\r\n
+DlgFlashTitle\t\t: "Vlastnosti Flashe",\r\n
+DlgFlashChkPlay\t\t: "Automatické spuštění",\r\n
+DlgFlashChkLoop\t\t: "Opakování",\r\n
+DlgFlashChkMenu\t\t: "Nabídka Flash",\r\n
+DlgFlashScale\t\t: "Zobrazit",\r\n
+DlgFlashScaleAll\t: "Zobrazit vše",\r\n
+DlgFlashScaleNoBorder\t: "Bez okraje",\r\n
+DlgFlashScaleFit\t: "Přizpůsobit",\r\n
+\r\n
+// Link Dialog\r\n
+DlgLnkWindowTitle\t: "Odkaz",\r\n
+DlgLnkInfoTab\t\t: "Informace o odkazu",\r\n
+DlgLnkTargetTab\t\t: "Cíl",\r\n
+\r\n
+DlgLnkType\t\t\t: "Typ odkazu",\r\n
+DlgLnkTypeURL\t\t: "URL",\r\n
+DlgLnkTypeAnchor\t: "Kotva v této stránce",\r\n
+DlgLnkTypeEMail\t\t: "E-Mail",\r\n
+DlgLnkProto\t\t\t: "Protokol",\r\n
+DlgLnkProtoOther\t: "<jiný>",\r\n
+DlgLnkURL\t\t\t: "URL",\r\n
+DlgLnkAnchorSel\t\t: "Vybrat kotvu",\r\n
+DlgLnkAnchorByName\t: "Podle jména kotvy",\r\n
+DlgLnkAnchorById\t: "Podle Id objektu",\r\n
+DlgLnkNoAnchors\t\t: "(Ve stránce není definována žádná kotva!)",\r\n
+DlgLnkEMail\t\t\t: "E-Mailová adresa",\r\n
+DlgLnkEMailSubject\t: "Předmět zprávy",\r\n
+DlgLnkEMailBody\t\t: "Tělo zprávy",\r\n
+DlgLnkUpload\t\t: "Odeslat",\r\n
+DlgLnkBtnUpload\t\t: "Odeslat na Server",\r\n
+\r\n
+DlgLnkTarget\t\t: "Cíl",\r\n
+DlgLnkTargetFrame\t: "<rámec>",\r\n
+DlgLnkTargetPopup\t: "<vyskakovací okno>",\r\n
+DlgLnkTargetBlank\t: "Nové okno (_blank)",\r\n
+DlgLnkTargetParent\t: "Rodičovské okno (_parent)",\r\n
+DlgLnkTargetSelf\t: "Stejné okno (_self)",\r\n
+DlgLnkTargetTop\t\t: "Hlavní okno (_top)",\r\n
+DlgLnkTargetFrameName\t: "Název cílového rámu",\r\n
+DlgLnkPopWinName\t: "Název vyskakovacího okna",\r\n
+DlgLnkPopWinFeat\t: "Vlastnosti vyskakovacího okna",\r\n
+DlgLnkPopResize\t\t: "Měnitelná velikost",\r\n
+DlgLnkPopLocation\t: "Panel umístění",\r\n
+DlgLnkPopMenu\t\t: "Panel nabídky",\r\n
+DlgLnkPopScroll\t\t: "Posuvníky",\r\n
+DlgLnkPopStatus\t\t: "Stavový řádek",\r\n
+DlgLnkPopToolbar\t: "Panel nástrojů",\r\n
+DlgLnkPopFullScrn\t: "Celá obrazovka (IE)",\r\n
+DlgLnkPopDependent\t: "Závislost (Netscape)",\r\n
+DlgLnkPopWidth\t\t: "Šířka",\r\n
+DlgLnkPopHeight\t\t: "Výška",\r\n
+DlgLnkPopLeft\t\t: "Levý okraj",\r\n
+DlgLnkPopTop\t\t: "Horní okraj",\r\n
+\r\n
+DlnLnkMsgNoUrl\t\t: "Zadejte prosím URL odkazu",\r\n
+DlnLnkMsgNoEMail\t: "Zadejte prosím e-mailovou adresu",\r\n
+DlnLnkMsgNoAnchor\t: "Vyberte prosím kotvu",\r\n
+DlnLnkMsgInvPopName\t: "Název vyskakovacího okna musí začínat písmenem a nesmí obsahovat mezery",\r\n
+\r\n
+// Color Dialog\r\n
+DlgColorTitle\t\t: "Výběr barvy",\r\n
+DlgColorBtnClear\t: "Vymazat",\r\n
+DlgColorHighlight\t: "Zvýrazněná",\r\n
+DlgColorSelected\t: "Vybraná",\r\n
+\r\n
+// Smiley Dialog\r\n
+DlgSmileyTitle\t\t: "Vkládání smajlíků",\r\n
+\r\n
+// Special Character Dialog\r\n
+DlgSpecialCharTitle\t: "Výběr speciálního znaku",\r\n
+\r\n
+// Table Dialog\r\n
+DlgTableTitle\t\t: "Vlastnosti tabulky",\r\n
+DlgTableRows\t\t: "Řádky",\r\n
+DlgTableColumns\t\t: "Sloupce",\r\n
+DlgTableBorder\t\t: "Ohraničení",\r\n
+DlgTableAlign\t\t: "Zarovnání",\r\n
+DlgTableAlignNotSet\t: "<nenastaveno>",\r\n
+DlgTableAlignLeft\t: "Vlevo",\r\n
+DlgTableAlignCenter\t: "Na střed",\r\n
+DlgTableAlignRight\t: "Vpravo",\r\n
+DlgTableWidth\t\t: "Šířka",\r\n
+DlgTableWidthPx\t\t: "bodů",\r\n
+DlgTableWidthPc\t\t: "procent",\r\n
+DlgTableHeight\t\t: "Výška",\r\n
+DlgTableCellSpace\t: "Vzdálenost buněk",\r\n
+DlgTableCellPad\t\t: "Odsazení obsahu",\r\n
+DlgTableCaption\t\t: "Popis",\r\n
+DlgTableSummary\t\t: "Souhrn",\r\n
+DlgTableHeaders\t\t: "Headers",\t//MISSING\r\n
+DlgTableHeadersNone\t\t: "None",\t//MISSING\r\n
+DlgTableHeadersColumn\t: "First column",\t//MISSING\r\n
+DlgTableHeadersRow\t\t: "First Row",\t//MISSING\r\n
+DlgTableHeadersBoth\t\t: "Both",\t//MISSING\r\n
+\r\n
+// Table Cell Dialog\r\n
+DlgCellTitle\t\t: "Vlastnosti buňky",\r\n
+DlgCellWidth\t\t: "Šířka",\r\n
+DlgCellWidthPx\t\t: "bodů",\r\n
+DlgCellWidthPc\t\t: "procent",\r\n
+DlgCellHeight\t\t: "Výška",\r\n
+DlgCellWordWrap\t\t: "Zalamování",\r\n
+DlgCellWordWrapNotSet\t: "<nenanstaveno>",\r\n
+DlgCellWordWrapYes\t: "Ano",\r\n
+DlgCellWordWrapNo\t: "Ne",\r\n
+DlgCellHorAlign\t\t: "Vodorovné zarovnání",\r\n
+DlgCellHorAlignNotSet\t: "<nenastaveno>",\r\n
+DlgCellHorAlignLeft\t: "Vlevo",\r\n
+DlgCellHorAlignCenter\t: "Na střed",\r\n
+DlgCellHorAlignRight: "Vpravo",\r\n
+DlgCellVerAlign\t\t: "Svislé zarovnání",\r\n
+DlgCellVerAlignNotSet\t: "<nenastaveno>",\r\n
+DlgCellVerAlignTop\t: "Nahoru",\r\n
+DlgCellVerAlignMiddle\t: "Doprostřed",\r\n
+DlgCellVerAlignBottom\t: "Dolů",\r\n
+DlgCellVerAlignBaseline\t: "Na účaří",\r\n
+DlgCellType\t\t: "Cell Type",\t//MISSING\r\n
+DlgCellTypeData\t\t: "Data",\t//MISSING\r\n
+DlgCellTypeHeader\t: "Header",\t//MISSING\r\n
+DlgCellRowSpan\t\t: "Sloučené řádky",\r\n
+DlgCellCollSpan\t\t: "Sloučené sloupce",\r\n
+DlgCellBackColor\t: "Barva pozadí",\r\n
+DlgCellBorderColor\t: "Barva ohraničení",\r\n
+DlgCellBtnSelect\t: "Výběr...",\r\n
+\r\n
+// Find and Replace Dialog\r\n
+DlgFindAndReplaceTitle\t: "Najít a nahradit",\r\n
+\r\n
+// Find Dialog\r\n
+DlgFindTitle\t\t: "Hledat",\r\n
+DlgFindFindBtn\t\t: "Hledat",\r\n
+DlgFindNotFoundMsg\t: "Hledaný text nebyl nalezen.",\r\n
+\r\n
+// Replace Dialog\r\n
+DlgReplaceTitle\t\t\t: "Nahradit",\r\n
+DlgReplaceFindLbl\t\t: "Co hledat:",\r\n
+DlgReplaceReplaceLbl\t: "Čím nahradit:",\r\n
+DlgReplaceCaseChk\t\t: "Rozlišovat velikost písma",\r\n
+DlgReplaceReplaceBtn\t: "Nahradit",\r\n
+DlgReplaceReplAllBtn\t: "Nahradit vše",\r\n
+DlgReplaceWordChk\t\t: "Pouze celá slova",\r\n
+\r\n
+// Paste Operations / Dialog\r\n
+PasteErrorCut\t: "Bezpečnostní nastavení Vašeho prohlížeče nedovolují editoru spustit funkci pro vyjmutí zvoleného textu do schránky. Prosím vyjměte zvolený text do schránky pomocí klávesnice (Ctrl+X).",\r\n
+PasteErrorCopy\t: "Bezpečnostní nastavení Vašeho prohlížeče nedovolují editoru spustit funkci pro kopírování zvoleného textu do schránky. Prosím zkopírujte zvolený text do schránky pomocí klávesnice (Ctrl+C).",\r\n
+\r\n
+PasteAsText\t\t: "Vložit jako čistý text",\r\n
+PasteFromWord\t: "Vložit text z Wordu",\r\n
+\r\n
+DlgPasteMsg2\t: "Do následujícího pole vložte požadovaný obsah pomocí klávesnice (<STRONG>Ctrl+V</STRONG>) a stiskněte <STRONG>OK</STRONG>.",\r\n
+DlgPasteSec\t\t: "Z důvodů nastavení bezpečnosti Vašeho prohlížeče nemůže editor přistupovat přímo do schránky. Obsah schránky prosím vložte znovu do tohoto okna.",\r\n
+DlgPasteIgnoreFont\t\t: "Ignorovat písmo",\r\n
+DlgPasteRemoveStyles\t: "Odstranit styly",\r\n
+\r\n
+// Color Picker\r\n
+ColorAutomatic\t: "Automaticky",\r\n
+ColorMoreColors\t: "Více barev...",\r\n
+\r\n
+// Document Properties\r\n
+DocProps\t\t: "Vlastnosti dokumentu",\r\n
+\r\n
+// Anchor Dialog\r\n
+DlgAnchorTitle\t\t: "Vlastnosti záložky",\r\n
+DlgAnchorName\t\t: "Název záložky",\r\n
+DlgAnchorErrorName\t: "Zadejte prosím název záložky",\r\n
+\r\n
+// Speller Pages Dialog\r\n
+DlgSpellNotInDic\t\t: "Není ve slovníku",\r\n
+DlgSpellChangeTo\t\t: "Změnit na",\r\n
+DlgSpellBtnIgnore\t\t: "Přeskočit",\r\n
+DlgSpellBtnIgnoreAll\t: "Přeskakovat vše",\r\n
+DlgSpellBtnReplace\t\t: "Zaměnit",\r\n
+DlgSpellBtnReplaceAll\t: "Zaměňovat vše",\r\n
+DlgSpellBtnUndo\t\t\t: "Zpět",\r\n
+DlgSpellNoSuggestions\t: "- žádné návrhy -",\r\n
+DlgSpellProgress\t\t: "Probíhá kontrola pravopisu...",\r\n
+DlgSpellNoMispell\t\t: "Kontrola pravopisu dokončena: Žádné pravopisné chyby nenalezeny",\r\n
+DlgSpellNoChanges\t\t: "Kontrola pravopisu dokončena: Beze změn",\r\n
+DlgSpellOneChange\t\t: "Kontrola pravopisu dokončena: Jedno slovo změněno",\r\n
+DlgSpellManyChanges\t\t: "Kontrola pravopisu dokončena: %1 slov změněno",\r\n
+\r\n
+IeSpellDownload\t\t\t: "Kontrola pravopisu není nainstalována. Chcete ji nyní stáhnout?",\r\n
+\r\n
+// Button Dialog\r\n
+DlgButtonText\t\t: "Popisek",\r\n
+DlgButtonType\t\t: "Typ",\r\n
+DlgButtonTypeBtn\t: "Tlačítko",\r\n
+DlgButtonTypeSbm\t: "Odeslat",\r\n
+DlgButtonTypeRst\t: "Obnovit",\r\n
+\r\n
+// Checkbox and Radio Button Dialogs\r\n
+DlgCheckboxName\t\t: "Název",\r\n
+DlgCheckboxValue\t: "Hodnota",\r\n
+DlgCheckboxSelected\t: "Zaškrtnuto",\r\n
+\r\n
+// Form Dialog\r\n
+DlgFormName\t\t: "Název",\r\n
+DlgFormAction\t: "Akce",\r\n
+DlgFormMethod\t: "Metoda",\r\n
+\r\n
+// Select Field Dialog\r\n
+DlgSelectName\t\t: "Název",\r\n
+DlgSelectValue\t\t: "Hodnota",\r\n
+DlgSelectSize\t\t: "Velikost",\r\n
+DlgSelectLines\t\t: "Řádků",\r\n
+DlgSelectChkMulti\t: "Povolit mnohonásobné výběry",\r\n
+DlgSelectOpAvail\t: "Dostupná nastavení",\r\n
+DlgSelectOpText\t\t: "Text",\r\n
+DlgSelectOpValue\t: "Hodnota",\r\n
+DlgSelectBtnAdd\t\t: "Přidat",\r\n
+DlgSelectBtnModify\t: "Změnit",\r\n
+DlgSelectBtnUp\t\t: "Nahoru",\r\n
+DlgSelectBtnDown\t: "Dolů",\r\n
+DlgSelectBtnSetValue : "Nastavit jako vybranou hodnotu",\r\n
+DlgSelectBtnDelete\t: "Smazat",\r\n
+\r\n
+// Textarea Dialog\r\n
+DlgTextareaName\t: "Název",\r\n
+DlgTextareaCols\t: "Sloupců",\r\n
+DlgTextareaRows\t: "Řádků",\r\n
+\r\n
+// Text Field Dialog\r\n
+DlgTextName\t\t\t: "Název",\r\n
+DlgTextValue\t\t: "Hodnota",\r\n
+DlgTextCharWidth\t: "Šířka ve znacích",\r\n
+DlgTextMaxChars\t\t: "Maximální počet znaků",\r\n
+DlgTextType\t\t\t: "Typ",\r\n
+DlgTextTypeText\t\t: "Text",\r\n
+DlgTextTypePass\t\t: "Heslo",\r\n
+\r\n
+// Hidden Field Dialog\r\n
+DlgHiddenName\t: "Název",\r\n
+DlgHiddenValue\t: "Hodnota",\r\n
+\r\n
+// Bulleted List Dialog\r\n
+BulletedListProp\t: "Vlastnosti odrážek",\r\n
+NumberedListProp\t: "Vlastnosti číslovaného seznamu",\r\n
+DlgLstStart\t\t\t: "Začátek",\r\n
+DlgLstType\t\t\t: "Typ",\r\n
+DlgLstTypeCircle\t: "Kružnice",\r\n
+DlgLstTypeDisc\t\t: "Kruh",\r\n
+DlgLstTypeSquare\t: "Čtverec",\r\n
+DlgLstTypeNumbers\t: "Čísla (1, 2, 3)",\r\n
+DlgLstTypeLCase\t\t: "Malá písmena (a, b, c)",\r\n
+DlgLstTypeUCase\t\t: "Velká písmena (A, B, C)",\r\n
+DlgLstTypeSRoman\t: "Malé římská číslice (i, ii, iii)",\r\n
+DlgLstTypeLRoman\t: "Velké římské číslice (I, II, III)",\r\n
+\r\n
+// Document Properties Dialog\r\n
+DlgDocGeneralTab\t: "Obecné",\r\n
+DlgDocBackTab\t\t: "Pozadí",\r\n
+DlgDocColorsTab\t\t: "Barvy a okraje",\r\n
+DlgDocMetaTab\t\t: "Metadata",\r\n
+\r\n
+DlgDocPageTitle\t\t: "Titulek stránky",\r\n
+DlgDocLangDir\t\t: "Směr jazyku",\r\n
+DlgDocLangDirLTR\t: "Zleva do prava ",\r\n
+DlgDocLangDirRTL\t: "Zprava doleva",\r\n
+DlgDocLangCode\t\t: "Kód jazyku",\r\n
+DlgDocCharSet\t\t: "Znaková sada",\r\n
+DlgDocCharSetCE\t\t: "Středoevropské jazyky",\r\n
+DlgDocCharSetCT\t\t: "Tradiční čínština (Big5)",\r\n
+DlgDocCharSetCR\t\t: "Cyrilice",\r\n
+DlgDocCharSetGR\t\t: "Řečtina",\r\n
+DlgDocCharSetJP\t\t: "Japonština",\r\n
+DlgDocCharSetKR\t\t: "Korejština",\r\n
+DlgDocCharSetTR\t\t: "Turečtina",\r\n
+DlgDocCharSetUN\t\t: "Unicode (UTF-8)",\r\n
+DlgDocCharSetWE\t\t: "Západoevropské jazyky",\r\n
+DlgDocCharSetOther\t: "Další znaková sada",\r\n
+\r\n
+DlgDocDocType\t\t: "Typ dokumentu",\r\n
+DlgDocDocTypeOther\t: "Jiný typ dokumetu",\r\n
+DlgDocIncXHTML\t\t: "Zahrnou deklarace XHTML",\r\n
+DlgDocBgColor\t\t: "Barva pozadí",\r\n
+DlgDocBgImage\t\t: "URL obrázku na pozadí",\r\n
+DlgDocBgNoScroll\t: "Nerolovatelné pozadí",\r\n
+DlgDocCText\t\t\t: "Text",\r\n
+DlgDocCLink\t\t\t: "Odkaz",\r\n
+DlgDocCVisited\t\t: "Navštívený odkaz",\r\n
+DlgDocCActive\t\t: "Vybraný odkaz",\r\n
+DlgDocMargins\t\t: "Okraje stránky",\r\n
+DlgDocMaTop\t\t\t: "Horní",\r\n
+DlgDocMaLeft\t\t: "Levý",\r\n
+DlgDocMaRight\t\t: "Pravý",\r\n
+DlgDocMaBottom\t\t: "Dolní",\r\n
+DlgDocMeIndex\t\t: "Klíčová slova (oddělená čárkou)",\r\n
+DlgDocMeDescr\t\t: "Popis dokumentu",\r\n
+DlgDocMeAuthor\t\t: "Autor",\r\n
+DlgDocMeCopy\t\t: "Autorská práva",\r\n
+DlgDocPreview\t\t: "Náhled",\r\n
+\r\n
+// Templates Dialog\r\n
+Templates\t\t\t: "Šablony",\r\n
+DlgTemplatesTitle\t: "Šablony obsahu",\r\n
+DlgTemplatesSelMsg\t: "Prosím zvolte šablonu pro otevření v editoru<br>(aktuální obsah editoru bude ztracen):",\r\n
+DlgTemplatesLoading\t: "Nahrávám přeheld šablon. Prosím čekejte...",\r\n
+DlgTemplatesNoTpl\t: "(Není definována žádná šablona)",\r\n
+DlgTemplatesReplace\t: "Nahradit aktuální obsah",\r\n
+\r\n
+// About Dialog\r\n
+DlgAboutAboutTab\t: "O aplikaci",\r\n
+DlgAboutBrowserInfoTab\t: "Informace o prohlížeči",\r\n
+DlgAboutLicenseTab\t: "Licence",\r\n
+DlgAboutVersion\t\t: "verze",\r\n
+DlgAboutInfo\t\t: "Více informací získáte na",\r\n
+\r\n
+// Div Dialog\r\n
+DlgDivGeneralTab\t: "Obecné",\r\n
+DlgDivAdvancedTab\t: "Rozšířené",\r\n
+DlgDivStyle\t\t: "Styl",\r\n
+DlgDivInlineStyle\t: "Vložený styl"\r\n
+};\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>19210</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

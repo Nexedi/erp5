@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\r\n
+<html xmlns="http://www.w3.org/1999/xhtml">\r\n
+<head>\r\n
+\t<title>DTD Test Page</title>\r\n
+\t<script type="text/javascript">\r\n
+\r\n
+\t// Define an object for this test page, so the assignment to FCK.DTD works\r\n
+\tvar FCK = {} ;\r\n
+\t</script>\r\n
+\t<script type="text/javascript" src="../_source/internals/fcktools.js"></script>\r\n
+\t<script type="text/javascript" src="fck_xhtml10transitional.js"></script>\r\n
+</head>\r\n
+<body>\r\n
+\t<h1>\r\n
+\t\tDTD Contents\r\n
+\t</h1>\r\n
+\t<table border="1">\r\n
+\t\t<script type="text/javascript">\r\n
+\r\n
+for ( var p in FCK.DTD )\r\n
+{\r\n
+\tdocument.write( \'<tr><td><b>\' + p + \'</b></td><td>\' ) ;\r\n
+\r\n
+\tvar isFirst = true ;\r\n
+\r\n
+\tfor ( var c in FCK.DTD[p] )\r\n
+\t{\r\n
+\t\tif ( !isFirst )\r\n
+\t\t\tdocument.write( \', \' ) ;\r\n
+\t\tisFirst = false ;\r\n
+\r\n
+\t\tdocument.write( c ) ;\r\n
+\t}\r\n
+\r\n
+\r\n
+\tdocument.write( \'</td></tr>\' ) ;\r\n
+}\r\n
+\t\t</script>\r\n
+\t</table>\r\n
+</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>fck_dtd_test.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

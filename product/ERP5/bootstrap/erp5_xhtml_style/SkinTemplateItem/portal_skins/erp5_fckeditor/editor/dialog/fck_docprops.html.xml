@@ -1,0 +1,653 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Link dialog window.\r\n
+-->\r\n
+<html xmlns="http://www.w3.org/1999/xhtml">\r\n
+<head>\r\n
+\t<title></title>\r\n
+\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\r\n
+\t<meta content="noindex, nofollow" name="robots" />\r\n
+\t<script src="common/fck_dialog_common.js" type="text/javascript"></script>\r\n
+\t<script type="text/javascript">\r\n
+\r\n
+var oEditor\t\t= window.parent.InnerDialogLoaded() ;\r\n
+var FCK\t\t\t= oEditor.FCK ;\r\n
+var FCKLang\t\t= oEditor.FCKLang ;\r\n
+var FCKConfig\t= oEditor.FCKConfig ;\r\n
+\r\n
+//#### Dialog Tabs\r\n
+\r\n
+// Set the dialog tabs.\r\n
+window.parent.AddTab( \'General\'\t\t, FCKLang.DlgDocGeneralTab ) ;\r\n
+window.parent.AddTab( \'Background\'\t, FCKLang.DlgDocBackTab ) ;\r\n
+window.parent.AddTab( \'Colors\'\t\t, FCKLang.DlgDocColorsTab ) ;\r\n
+window.parent.AddTab( \'Meta\'\t\t, FCKLang.DlgDocMetaTab ) ;\r\n
+\r\n
+// Function called when a dialog tag is selected.\r\n
+function OnDialogTabChange( tabCode )\r\n
+{\r\n
+\tShowE( \'divGeneral\'\t\t, ( tabCode == \'General\' ) ) ;\r\n
+\tShowE( \'divBackground\'\t, ( tabCode == \'Background\' ) ) ;\r\n
+\tShowE( \'divColors\'\t\t, ( tabCode == \'Colors\' ) ) ;\r\n
+\tShowE( \'divMeta\'\t\t, ( tabCode == \'Meta\' ) ) ;\r\n
+\r\n
+\tShowE( \'ePreview\'\t\t, ( tabCode == \'Background\' || tabCode == \'Colors\' ) ) ;\r\n
+}\r\n
+\r\n
+//#### Get Base elements from the document: BEGIN\r\n
+\r\n
+// The HTML element of the document.\r\n
+var oHTML = FCK.EditorDocument.getElementsByTagName(\'html\')[0] ;\r\n
+\r\n
+// The HEAD element of the document.\r\n
+var oHead = oHTML.getElementsByTagName(\'head\')[0] ;\r\n
+\r\n
+var oBody = FCK.EditorDocument.body ;\r\n
+\r\n
+// This object contains all META tags defined in the document.\r\n
+var oMetaTags = new Object() ;\r\n
+\r\n
+// Get all META tags defined in the document.\r\n
+AppendMetaCollection( oMetaTags, oHead.getElementsByTagName(\'meta\') ) ;\r\n
+AppendMetaCollection( oMetaTags, oHead.getElementsByTagName(\'fck:meta\') ) ;\r\n
+\r\n
+function AppendMetaCollection( targetObject, metaCollection )\r\n
+{\r\n
+\t// Loop throw all METAs and put it in the HashTable.\r\n
+\tfor ( var i = 0 ; i < metaCollection.length ; i++ )\r\n
+\t{\r\n
+\t\t// Try to get the "name" attribute.\r\n
+\t\tvar sName = GetAttribute( metaCollection[i], \'name\', GetAttribute( metaCollection[i], \'___fcktoreplace:name\', \'\' ) ) ;\r\n
+\r\n
+\t\t// If no "name", try with the "http-equiv" attribute.\r\n
+\t\tif ( sName.length == 0 )\r\n
+\t\t{\r\n
+\t\t\tif ( oEditor.FCKBrowserInfo.IsIE )\r\n
+\t\t\t{\r\n
+\t\t\t\t// Get the http-equiv value from the outerHTML.\r\n
+\t\t\t\tvar oHttpEquivMatch = metaCollection[i].outerHTML.match( oEditor.FCKRegexLib.MetaHttpEquiv ) ;\r\n
+\t\t\t\tif ( oHttpEquivMatch )\r\n
+\t\t\t\t\tsName = oHttpEquivMatch[1] ;\r\n
+\t\t\t}\r\n
+\t\t\telse\r\n
+\t\t\t\tsName = GetAttribute( metaCollection[i], \'http-equiv\', \'\' ) ;\r\n
+\t\t}\r\n
+\r\n
+\t\tif ( sName.length > 0 )\r\n
+\t\t\ttargetObject[ sName.toLowerCase() ] = metaCollection[i] ;\r\n
+\t}\r\n
+}\r\n
+\r\n
+//#### END\r\n
+\r\n
+// Set a META tag in the document.\r\n
+function SetMetadata( name, content, isHttp )\r\n
+{\r\n
+\tif ( content.length == 0 )\r\n
+\t{\r\n
+\t\tRemoveMetadata( name ) ;\r\n
+\t\treturn ;\r\n
+\t}\r\n
+\r\n
+\tvar oMeta = oMetaTags[ name.toLowerCase() ] ;\r\n
+\r\n
+\tif ( !oMeta )\r\n
+\t{\r\n
+\t\toMeta = oHead.appendChild( FCK.EditorDocument.createElement(\'META\') ) ;\r\n
+\r\n
+\t\tif ( isHttp )\r\n
+\t\t\tSetAttribute( oMeta, \'http-equiv\', name ) ;\r\n
+\t\telse\r\n
+\t\t{\r\n
+\t\t\t// On IE, it is not possible to set the "name" attribute of the META tag.\r\n
+\t\t\t// So a temporary attribute is used and it is replaced when getting the\r\n
+\t\t\t// editor\'s HTML/XHTML value. This is sad, I know :(\r\n
+\t\t\tif ( oEditor.FCKBrowserInfo.IsIE )\r\n
+\t\t\t\tSetAttribute( oMeta, \'___fcktoreplace:name\', name ) ;\r\n
+\t\t\telse\r\n
+\t\t\t\tSetAttribute( oMeta, \'name\', name ) ;\r\n
+\t\t}\r\n
+\r\n
+\t\toMetaTags[ name.toLowerCase() ] = oMeta ;\r\n
+\t}\r\n
+\r\n
+\tSetAttribute( oMeta, \'content\', content ) ;\r\n
+//\toMeta.content = content ;\r\n
+}\r\n
+\r\n
+function RemoveMetadata( name )\r\n
+{\r\n
+\tvar oMeta = oMetaTags[ name.toLowerCase() ] ;\r\n
+\r\n
+\tif ( oMeta && oMeta != null )\r\n
+\t{\r\n
+\t\toMeta.parentNode.removeChild( oMeta ) ;\r\n
+\t\toMetaTags[ name.toLowerCase() ] = null ;\r\n
+\t}\r\n
+}\r\n
+\r\n
+function GetMetadata( name )\r\n
+{\r\n
+\tvar oMeta = oMetaTags[ name.toLowerCase() ] ;\r\n
+\r\n
+\tif ( oMeta && oMeta != null )\r\n
+\t\treturn oMeta.getAttribute( \'content\', 2 ) ;\r\n
+\telse\r\n
+\t\treturn \'\' ;\r\n
+}\r\n
+\r\n
+window.onload = function ()\r\n
+{\r\n
+\t// Show/Hide the "Browse Server" button.\r\n
+\tGetE(\'tdBrowse\').style.display = oEditor.FCKConfig.ImageBrowser ? "" : "none";\r\n
+\r\n
+\t// First of all, translate the dialog box texts\r\n
+\toEditor.FCKLanguageManager.TranslatePage( document ) ;\r\n
+\r\n
+\tFillFields() ;\r\n
+\r\n
+\tUpdatePreview() ;\r\n
+\r\n
+\t// Show the "Ok" button.\r\n
+\twindow.parent.SetOkButton( true ) ;\r\n
+\r\n
+\twindow.parent.SetAutoSize( true ) ;\r\n
+}\r\n
+\r\n
+function FillFields()\r\n
+{\r\n
+\t// ### General Info\r\n
+\tGetE(\'txtPageTitle\').value = FCK.EditorDocument.title ;\r\n
+\r\n
+\tGetE(\'selDirection\').value\t= GetAttribute( oHTML, \'dir\', \'\' ) ;\r\n
+\tGetE(\'txtLang\').value\t\t= GetAttribute( oHTML, \'xml:lang\', GetAttribute( oHTML, \'lang\', \'\' ) ) ;\t// "xml:lang" takes precedence to "lang".\r\n
+\r\n
+\t// Character Set Encoding.\r\n
+//\tif ( oEditor.FCKBrowserInfo.IsIE )\r\n
+//\t\tvar sCharSet = FCK.EditorDocument.charset ;\r\n
+//\telse\r\n
+\t\tvar sCharSet = GetMetadata( \'Content-Type\' ) ;\r\n
+\r\n
+\tif ( sCharSet != null && sCharSet.length > 0 )\r\n
+\t{\r\n
+//\t\tif ( !oEditor.FCKBrowserInfo.IsIE )\r\n
+\t\t\tsCharSet = sCharSet.match( /[^=]*$/ ) ;\r\n
+\r\n
+\t\tGetE(\'selCharSet\').value = sCharSet ;\r\n
+\r\n
+\t\tif ( GetE(\'selCharSet\').selectedIndex == -1 )\r\n
+\t\t{\r\n
+\t\t\tGetE(\'selCharSet\').value = \'...\' ;\r\n
+\t\t\tGetE(\'txtCustomCharSet\').value = sCharSet ;\r\n
+\r\n
+\t\t\tCheckOther( GetE(\'selCharSet\'), \'txtCustomCharSet\' ) ;\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\t// Document Type.\r\n
+\tif ( FCK.DocTypeDeclaration && FCK.DocTypeDeclaration.length > 0 )\r\n
+\t{\r\n
+\t\tGetE(\'selDocType\').value = FCK.DocTypeDeclaration ;\r\n
+\r\n
+\t\tif ( GetE(\'selDocType\').selectedIndex == -1 )\r\n
+\t\t{\r\n
+\t\t\tGetE(\'selDocType\').value = \'...\' ;\r\n
+\t\t\tGetE(\'txtDocType\').value = FCK.DocTypeDeclaration ;\r\n
+\r\n
+\t\t\tCheckOther( GetE(\'selDocType\'), \'txtDocType\' ) ;\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\t// Document Type.\r\n
+\tGetE(\'chkIncXHTMLDecl\').checked = ( FCK.XmlDeclaration && FCK.XmlDeclaration.length > 0 ) ;\r\n
+\r\n
+\t// ### Background\r\n
+\tGetE(\'txtBackColor\').value = GetAttribute( oBody, \'bgColor\'\t\t, \'\' ) ;\r\n
+\tGetE(\'txtBackImage\').value = GetAttribute( oBody, \'background\'\t, \'\' ) ;\r\n
+\tGetE(\'chkBackNoScroll\').checked = ( GetAttribute( oBody, \'bgProperties\', \'\' ).toLowerCase() == \'fixed\' ) ;\r\n
+\r\n
+\t// ### Colors\r\n
+\tGetE(\'txtColorText\').value\t\t= GetAttribute( oBody, \'text\'\t, \'\' ) ;\r\n
+\tGetE(\'txtColorLink\').value\t\t= GetAttribute( oBody, \'link\'\t, \'\' ) ;\r\n
+\tGetE(\'txtColorVisited\').value\t= GetAttribute( oBody, \'vLink\'\t, \'\' ) ;\r\n
+\tGetE(\'txtColorActive\').value\t= GetAttribute( oBody, \'aLink\'\t, \'\' ) ;\r\n
+\r\n
+\t// ### Margins\r\n
+\tGetE(\'txtMarginTop\').value\t\t= GetAttribute( oBody, \'topMargin\'\t\t, \'\' ) ;\r\n
+\tGetE(\'txtMarginLeft\').value\t\t= GetAttribute( oBody, \'leftMargin\'\t\t, \'\' ) ;\r\n
+\tGetE(\'txtMarginRight\').value\t= GetAttribute( oBody, \'rightMargin\'\t, \'\' ) ;\r\n
+\tGetE(\'txtMarginBottom\').value\t= GetAttribute( oBody, \'bottomMargin\'\t, \'\' ) ;\r\n
+\r\n
+\t// ### Meta Data\r\n
+\tGetE(\'txtMetaKeywords\').value\t\t= GetMetadata( \'keywords\' ) ;\r\n
+\tGetE(\'txtMetaDescription\').value\t= GetMetadata( \'description\' ) ;\r\n
+\tGetE(\'txtMetaAuthor\').value\t\t\t= GetMetadata( \'author\' ) ;\r\n
+\tGetE(\'txtMetaCopyright\').value\t\t= GetMetadata( \'copyright\' ) ;\r\n
+}\r\n
+\r\n
+// Called when the "Ok" button is clicked.\r\n
+function Ok()\r\n
+{\r\n
+\t// ### General Info\r\n
+\tFCK.EditorDocument.title = GetE(\'txtPageTitle\').value ;\r\n
+\r\n
+\tvar oHTML = FCK.EditorDocument.getElementsByTagName(\'html\')[0] ;\r\n
+\r\n
+\tSetAttribute( oHTML, \'dir\'\t\t, GetE(\'selDirection\').value ) ;\r\n
+\tSetAttribute( oHTML, \'lang\'\t\t, GetE(\'txtLang\').value ) ;\r\n
+\tSetAttribute( oHTML, \'xml:lang\'\t, GetE(\'txtLang\').value ) ;\r\n
+\r\n
+\t// Character Set Enconding.\r\n
+\tvar sCharSet = GetE(\'selCharSet\').value ;\r\n
+\tif ( sCharSet == \'...\' )\r\n
+\t\tsCharSet = GetE(\'txtCustomCharSet\').value ;\r\n
+\r\n
+\tif ( sCharSet.length > 0 )\r\n
+\t\t\tsCharSet = \'text/html; charset=\' + sCharSet ;\r\n
+\r\n
+//\tif ( oEditor.FCKBrowserInfo.IsIE )\r\n
+//\t\tFCK.EditorDocument.charset = sCharSet ;\r\n
+//\telse\r\n
+\t\tSetMetadata( \'Content-Type\', sCharSet, true ) ;\r\n
+\r\n
+\t// Document Type\r\n
+\tvar sDocType = GetE(\'selDocType\').value ;\r\n
+\tif ( sDocType == \'...\' )\r\n
+\t\tsDocType = GetE(\'txtDocType\').value ;\r\n
+\r\n
+\tFCK.DocTypeDeclaration = sDocType ;\r\n
+\r\n
+\t// XHTML Declarations.\r\n
+\tif ( GetE(\'chkIncXHTMLDecl\').checked )\r\n
+\t{\r\n
+\t\tif ( sCharSet.length == 0 )\r\n
+\t\t\tsCharSet = \'utf-8\' ;\r\n
+\r\n
+\t\tFCK.XmlDeclaration = \'<\' + \'?xml version="1.0" encoding="\' + sCharSet + \'"?>\' ;\r\n
+\r\n
+\t\tSetAttribute( oHTML, \'xmlns\', \'http://www.w3.org/1999/xhtml\' ) ;\r\n
+\t}\r\n
+\telse\r\n
+\t{\r\n
+\t\tFCK.XmlDeclaration = null ;\r\n
+\t\toHTML.removeAttribute( \'xmlns\', 0 ) ;\r\n
+\t}\r\n
+\r\n
+\t// ### Background\r\n
+\tSetAttribute( oBody, \'bgcolor\'\t\t, GetE(\'txtBackColor\').value ) ;\r\n
+\tSetAttribute( oBody, \'background\'\t, GetE(\'txtBackImage\').value ) ;\r\n
+\tSetAttribute( oBody, \'bgproperties\'\t, GetE(\'chkBackNoScroll\').checked ? \'fixed\' : \'\' ) ;\r\n
+\r\n
+\t// ### Colors\r\n
+\tSetAttribute( oBody, \'text\'\t, GetE(\'txtColorText\').value ) ;\r\n
+\tSetAttribute( oBody, \'link\'\t, GetE(\'txtColorLink\').value ) ;\r\n
+\tSetAttribute( oBody, \'vlink\', GetE(\'txtColorVisited\').value ) ;\r\n
+\tSetAttribute( oBody, \'alink\', GetE(\'txtColorActive\').value ) ;\r\n
+\r\n
+\t// ### Margins\r\n
+\tSetAttribute( oBody, \'topmargin\'\t, GetE(\'txtMarginTop\').value ) ;\r\n
+\tSetAttribute( oBody, \'leftmargin\'\t, GetE(\'txtMarginLeft\').value ) ;\r\n
+\tSetAttribute( oBody, \'rightmargin\'\t, GetE(\'txtMarginRight\').value ) ;\r\n
+\tSetAttribute( oBody, \'bottommargin\'\t, GetE(\'txtMarginBottom\').value ) ;\r\n
+\r\n
+\t// ### Meta data\r\n
+\tSetMetadata( \'keywords\'\t\t, GetE(\'txtMetaKeywords\').value ) ;\r\n
+\tSetMetadata( \'description\'\t, GetE(\'txtMetaDescription\').value ) ;\r\n
+\tSetMetadata( \'author\'\t\t, GetE(\'txtMetaAuthor\').value ) ;\r\n
+\tSetMetadata( \'copyright\'\t, GetE(\'txtMetaCopyright\').value ) ;\r\n
+\r\n
+\treturn true ;\r\n
+}\r\n
+\r\n
+var bPreviewIsLoaded = false ;\r\n
+var oPreviewWindow ;\r\n
+var oPreviewBody ;\r\n
+\r\n
+// Called by the Preview page when loaded.\r\n
+function OnPreviewLoad( previewWindow, previewBody )\r\n
+{\r\n
+\toPreviewWindow\t= previewWindow ;\r\n
+\toPreviewBody\t= previewBody ;\r\n
+\r\n
+\tbPreviewIsLoaded = true ;\r\n
+\tUpdatePreview() ;\r\n
+}\r\n
+\r\n
+function UpdatePreview()\r\n
+{\r\n
+\tif ( !bPreviewIsLoaded )\r\n
+\t\treturn ;\r\n
+\r\n
+\t// ### Background\r\n
+\tSetAttribute( oPreviewBody, \'bgcolor\'\t\t, GetE(\'txtBackColor\').value ) ;\r\n
+\tSetAttribute( oPreviewBody, \'background\'\t, GetE(\'txtBackImage\').value ) ;\r\n
+\tSetAttribute( oPreviewBody, \'bgproperties\'\t, GetE(\'chkBackNoScroll\').checked ? \'fixed\' : \'\' ) ;\r\n
+\r\n
+\t// ### Colors\r\n
+\tSetAttribute( oPreviewBody, \'text\', GetE(\'txtColorText\').value ) ;\r\n
+\r\n
+\toPreviewWindow.SetLinkColor( GetE(\'txtColorLink\').value ) ;\r\n
+\toPreviewWindow.SetVisitedColor( GetE(\'txtColorVisited\').value ) ;\r\n
+\toPreviewWindow.SetActiveColor( GetE(\'txtColorActive\').value ) ;\r\n
+}\r\n
+\r\n
+function CheckOther( combo, txtField )\r\n
+{\r\n
+\tvar bNotOther = ( combo.value != \'...\' ) ;\r\n
+\r\n
+\tGetE(txtField).style.backgroundColor = ( bNotOther ? \'#cccccc\' : \'\' ) ;\r\n
+\tGetE(txtField).disabled = bNotOther ;\r\n
+}\r\n
+\r\n
+function SetColor( inputId, color )\r\n
+{\r\n
+\tGetE( inputId ).value = color + \'\' ;\r\n
+\tUpdatePreview() ;\r\n
+}\r\n
+\r\n
+function SelectBackColor( color )\t\t{ SetColor(\'txtBackColor\', color ) ; }\r\n
+function SelectColorText( color )\t\t{ SetColor(\'txtColorText\', color ) ; }\r\n
+function SelectColorLink( color )\t\t{ SetColor(\'txtColorLink\', color ) ; }\r\n
+function SelectColorVisited( color )\t{ SetColor(\'txtColorVisited\', color ) ; }\r\n
+function SelectColorActive( color )\t\t{ SetColor(\'txtColorActive\', color ) ; }\r\n
+\r\n
+function SelectColor( wich )\r\n
+{\r\n
+\tswitch ( wich )\r\n
+\t{\r\n
+\t\tcase \'Back\'\t\t\t: oEditor.FCKDialog.OpenDialog( \'FCKDialog_Color\', FCKLang.DlgColorTitle, \'dialog/fck_colorselector.html\', 410, 320, SelectBackColor, window ) ; return ;\r\n
+\t\tcase \'ColorText\'\t: oEditor.FCKDialog.OpenDialog( \'FCKDialog_Color\', FCKLang.DlgColorTitle, \'dialog/fck_colorselector.html\', 410, 320, SelectColorText, window ) ; return ;\r\n
+\t\tcase \'ColorLink\'\t: oEditor.FCKDialog.OpenDialog( \'FCKDialog_Color\', FCKLang.DlgColorTitle, \'dialog/fck_colorselector.html\', 410, 320, SelectColorLink, window ) ; return ;\r\n
+\t\tcase \'ColorVisited\'\t: oEditor.FCKDialog.OpenDialog( \'FCKDialog_Color\', FCKLang.DlgColorTitle, \'dialog/fck_colorselector.html\', 410, 320, SelectColorVisited, window ) ; return ;\r\n
+\t\tcase \'ColorActive\'\t: oEditor.FCKDialog.OpenDialog( \'FCKDialog_Color\', FCKLang.DlgColorTitle, \'dialog/fck_colorselector.html\', 410, 320, SelectColorActive, window ) ; return ;\r\n
+\t}\r\n
+}\r\n
+\r\n
+function BrowseServerBack()\r\n
+{\r\n
+\tOpenFileBrowser( FCKConfig.ImageBrowserURL, FCKConfig.ImageBrowserWindowWidth, FCKConfig.ImageBrowserWindowHeight ) ;\r\n
+}\r\n
+\r\n
+function SetUrl( url )\r\n
+{\r\n
+\tGetE(\'txtBackImage\').value = url ;\r\n
+\tUpdatePreview() ;\r\n
+}\r\n
+\r\n
+\t</script>\r\n
+</head>\r\n
+<body style="overflow: hidden">\r\n
+\t<table cellspacing="0" cellpadding="0" width="100%" border="0" style="height: 100%">\r\n
+\t\t<tr>\r\n
+\t\t\t<td valign="top" style="height: 100%">\r\n
+\t\t\t\t<div id="divGeneral">\r\n
+\t\t\t\t\t<span fcklang="DlgDocPageTitle">Page Title</span><br />\r\n
+\t\t\t\t\t<input id="txtPageTitle" style="width: 100%" type="text" />\r\n
+\t\t\t\t\t<br />\r\n
+\t\t\t\t\t<table cellspacing="0" cellpadding="0" border="0">\r\n
+\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t<span fcklang="DlgDocLangDir">Language Direction</span><br />\r\n
+\t\t\t\t\t\t\t\t<select id="selDirection">\r\n
+\t\t\t\t\t\t\t\t\t<option value="" selected="selected"></option>\r\n
+\t\t\t\t\t\t\t\t\t<option value="ltr" fcklang="DlgDocLangDirLTR">Left to Right (LTR)</option>\r\n
+\t\t\t\t\t\t\t\t\t<option value="rtl" fcklang="DlgDocLangDirRTL">Right to Left (RTL)</option>\r\n
+\t\t\t\t\t\t\t\t</select>\r\n
+\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t&nbsp;&nbsp;&nbsp;</td>\r\n
+\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t<span fcklang="DlgDocLangCode">Language Code</span><br />\r\n
+\t\t\t\t\t\t\t\t<input id="txtLang" type="text" />\r\n
+\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t</table>\r\n
+\t\t\t\t\t<br />\r\n
+\t\t\t\t\t<table cellspacing="0" cellpadding="0" width="100%" border="0">\r\n
+\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t<td style="white-space: nowrap">\r\n
+\t\t\t\t\t\t\t\t<span fcklang="DlgDocCharSet">Character Set Encoding</span><br />\r\n
+\t\t\t\t\t\t\t\t<select id="selCharSet" onchange="CheckOther( this, \'txtCustomCharSet\' );">\r\n
+\t\t\t\t\t\t\t\t\t<option value="" selected="selected"></option>\r\n
+\t\t\t\t\t\t\t\t\t<option value="us-ascii">ASCII</option>\r\n
+\t\t\t\t\t\t\t\t\t<option fcklang="DlgDocCharSetCE" value="iso-8859-2">Central European</option>\r\n
+\t\t\t\t\t\t\t\t\t<option fcklang="DlgDocCharSetCT" value="big5">Chinese Traditional (Big5)</option>\r\n
+\t\t\t\t\t\t\t\t\t<option fcklang="DlgDocCharSetCR" value="iso-8859-5">Cyrillic</option>\r\n
+\t\t\t\t\t\t\t\t\t<option fcklang="DlgDocCharSetGR" value="iso-8859-7">Greek</option>\r\n
+\t\t\t\t\t\t\t\t\t<option fcklang="DlgDocCharSetJP" value="iso-2022-jp">Japanese</option>\r\n
+\t\t\t\t\t\t\t\t\t<option fcklang="DlgDocCharSetKR" value="iso-2022-kr">Korean</option>\r\n
+\t\t\t\t\t\t\t\t\t<option fcklang="DlgDocCharSetTR" value="iso-8859-9">Turkish</option>\r\n
+\t\t\t\t\t\t\t\t\t<option fcklang="DlgDocCharSetUN" value="utf-8">Unicode (UTF-8)</option>\r\n
+\t\t\t\t\t\t\t\t\t<option fcklang="DlgDocCharSetWE" value="iso-8859-1">Western European</option>\r\n
+\t\t\t\t\t\t\t\t\t<option fcklang="DlgOpOther" value="...">&lt;Other&gt;</option>\r\n
+\t\t\t\t\t\t\t\t</select>\r\n
+\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t&nbsp;&nbsp;&nbsp;</td>\r\n
+\t\t\t\t\t\t\t<td width="100%">\r\n
+\t\t\t\t\t\t\t\t<span fcklang="DlgDocCharSetOther">Other Character Set Encoding</span><br />\r\n
+\t\t\t\t\t\t\t\t<input id="txtCustomCharSet" style="width: 100%; background-color: #cccccc" disabled="disabled"\r\n
+\t\t\t\t\t\t\t\t\ttype="text" />\r\n
+\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t<td colspan="3">\r\n
+\t\t\t\t\t\t\t\t&nbsp;</td>\r\n
+\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t<td nowrap="nowrap">\r\n
+\t\t\t\t\t\t\t\t<span fcklang="DlgDocDocType">Document Type Heading</span><br />\r\n
+\t\t\t\t\t\t\t\t<select id="selDocType" onchange="CheckOther( this, \'txtDocType\' );">\r\n
+\t\t\t\t\t\t\t\t\t<option value="" selected="selected"></option>\r\n
+\t\t\t\t\t\t\t\t\t<option value=\'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">\'>HTML\r\n
+\t\t\t\t\t\t\t\t\t\t4.01 Transitional</option>\r\n
+\t\t\t\t\t\t\t\t\t<option value=\'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">\'>\r\n
+\t\t\t\t\t\t\t\t\t\tHTML 4.01 Strict</option>\r\n
+\t\t\t\t\t\t\t\t\t<option value=\'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">\'>\r\n
+\t\t\t\t\t\t\t\t\t\tHTML 4.01 Frameset</option>\r\n
+\t\t\t\t\t\t\t\t\t<option value=\'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\'>\r\n
+\t\t\t\t\t\t\t\t\t\tXHTML 1.0 Transitional</option>\r\n
+\t\t\t\t\t\t\t\t\t<option value=\'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">\'>\r\n
+\t\t\t\t\t\t\t\t\t\tXHTML 1.0 Strict</option>\r\n
+\t\t\t\t\t\t\t\t\t<option value=\'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">\'>\r\n
+\t\t\t\t\t\t\t\t\t\tXHTML 1.0 Frameset</option>\r\n
+\t\t\t\t\t\t\t\t\t<option value=\'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">\'>\r\n
+\t\t\t\t\t\t\t\t\t\tXHTML 1.1</option>\r\n
+\t\t\t\t\t\t\t\t\t<option value=\'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">\'>HTML 3.2</option>\r\n
+\t\t\t\t\t\t\t\t\t<option value=\'<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">\'>HTML 2.0</option>\r\n
+\t\t\t\t\t\t\t\t\t<option value="..." fcklang="DlgOpOther">&lt;Other&gt;</option>\r\n
+\t\t\t\t\t\t\t\t</select>\r\n
+\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t<td width="100%">\r\n
+\t\t\t\t\t\t\t\t<span fcklang="DlgDocDocTypeOther">Other Document Type Heading</span><br />\r\n
+\t\t\t\t\t\t\t\t<input id="txtDocType" style="width: 100%; background-color: #cccccc" disabled="disabled"\r\n
+\t\t\t\t\t\t\t\t\ttype="text" />\r\n
+\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t</table>\r\n
+\t\t\t\t\t<br />\r\n
+\t\t\t\t\t<input id="chkIncXHTMLDecl" type="checkbox" />\r\n
+\t\t\t\t\t<label for="chkIncXHTMLDecl" fcklang="DlgDocIncXHTML">\r\n
+\t\t\t\t\t\tInclude XHTML Declarations</label>\r\n
+\t\t\t\t</div>\r\n
+\t\t\t\t<div id="divBackground" style="display: none">\r\n
+\t\t\t\t\t<span fcklang="DlgDocBgColor">Background Color</span><br />\r\n
+\t\t\t\t\t<input id="txtBackColor" type="text" onchange="UpdatePreview();" onkeyup="UpdatePreview();" />&nbsp;<input\r\n
+\t\t\t\t\t\tid="btnSelBackColor" onclick="SelectColor( \'Back\' )" type="button" value="Select..."\r\n
+\t\t\t\t\t\tfcklang="DlgCellBtnSelect" /><br />\r\n
+\t\t\t\t\t<br />\r\n
+\t\t\t\t\t<span fcklang="DlgDocBgImage">Background Image URL</span><br />\r\n
+\t\t\t\t\t<table cellspacing="0" cellpadding="0" width="100%" border="0">\r\n
+\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t<td width="100%">\r\n
+\t\t\t\t\t\t\t\t<input id="txtBackImage" style="width: 100%" type="text" onchange="UpdatePreview();"\r\n
+\t\t\t\t\t\t\t\t\tonkeyup="UpdatePreview();" /></td>\r\n
+\t\t\t\t\t\t\t<td id="tdBrowse" nowrap="nowrap">\r\n
+\t\t\t\t\t\t\t\t&nbsp;<input id="btnBrowse" onclick="BrowseServerBack();" type="button" fcklang="DlgBtnBrowseServer"\r\n
+\t\t\t\t\t\t\t\t\tvalue="Browse Server" /></td>\r\n
+\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t</table>\r\n
+\t\t\t\t\t<input id="chkBackNoScroll" type="checkbox" onclick="UpdatePreview();" />\r\n
+\t\t\t\t\t<label for="chkBackNoScroll" fcklang="DlgDocBgNoScroll">\r\n
+\t\t\t\t\t\tNonscrolling Background</label>\r\n
+\t\t\t\t</div>\r\n
+\t\t\t\t<div id="divColors" style="display: none">\r\n
+\t\t\t\t\t<table cellspacing="0" cellpadding="0" width="100%" border="0">\r\n
+\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t<span fcklang="DlgDocCText">Text</span><br />\r\n
+\t\t\t\t\t\t\t\t<input id="txtColorText" type="text" onchange="UpdatePreview();" onkeyup="UpdatePreview();" /><input\r\n
+\t\t\t\t\t\t\t\t\tonclick="SelectColor( \'ColorText\' )" type="button" value="Select..." fcklang="DlgCellBtnSelect" />\r\n
+\t\t\t\t\t\t\t\t<br />\r\n
+\t\t\t\t\t\t\t\t<span fcklang="DlgDocCLink">Link</span><br />\r\n
+\t\t\t\t\t\t\t\t<input id="txtColorLink" type="text" onchange="UpdatePreview();" onkeyup="UpdatePreview();" /><input\r\n
+\t\t\t\t\t\t\t\t\tonclick="SelectColor( \'ColorLink\' )" type="button" value="Select..." fcklang="DlgCellBtnSelect" />\r\n
+\t\t\t\t\t\t\t\t<br />\r\n
+\t\t\t\t\t\t\t\t<span fcklang="DlgDocCVisited">Visited Link</span><br />\r\n
+\t\t\t\t\t\t\t\t<input id="txtColorVisited" type="text" onchange="UpdatePreview();" onkeyup="UpdatePreview();" /><input\r\n
+\t\t\t\t\t\t\t\t\tonclick="SelectColor( \'ColorVisited\' )" type="button" value="Select..." fcklang="DlgCellBtnSelect" />\r\n
+\t\t\t\t\t\t\t\t<br />\r\n
+\t\t\t\t\t\t\t\t<span fcklang="DlgDocCActive">Active Link</span><br />\r\n
+\t\t\t\t\t\t\t\t<input id="txtColorActive" type="text" onchange="UpdatePreview();" onkeyup="UpdatePreview();" /><input\r\n
+\t\t\t\t\t\t\t\t\tonclick="SelectColor( \'ColorActive\' )" type="button" value="Select..." fcklang="DlgCellBtnSelect" />\r\n
+\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t<td valign="middle" align="center">\r\n
+\t\t\t\t\t\t\t\t<table cellspacing="2" cellpadding="0" border="0">\r\n
+\t\t\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t\t\t<span fcklang="DlgDocMargins">Page Margins</span></td>\r\n
+\t\t\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t\t\t<td style="border: #000000 1px solid; padding: 5px">\r\n
+\t\t\t\t\t\t\t\t\t\t\t<table cellpadding="0" cellspacing="0" border="0" dir="ltr">\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t<td align="center" colspan="3">\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span fcklang="DlgDocMaTop">Top</span><br />\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t\t<input id="txtMarginTop" type="text" size="3" />\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t<td align="left">\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span fcklang="DlgDocMaLeft">Left</span><br />\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t\t<input id="txtMarginLeft" type="text" size="3" />\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t\t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t<td align="right">\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span fcklang="DlgDocMaRight">Right</span><br />\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t\t<input id="txtMarginRight" type="text" size="3" />\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t<td align="center" colspan="3">\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span fcklang="DlgDocMaBottom">Bottom</span><br />\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t\t<input id="txtMarginBottom" type="text" size="3" />\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t\t\t\t\t\t</table>\r\n
+\t\t\t\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t\t\t\t</table>\r\n
+\t\t\t\t\t\t\t</td>\r\n
+\t\t\t\t\t\t</tr>\r\n
+\t\t\t\t\t</table>\r\n
+\t\t\t\t</div>\r\n
+\t\t\t\t<div id="divMeta" style="display: none">\r\n
+\t\t\t\t\t<span fcklang="DlgDocMeIndex">Document Indexing Keywords (comma separated)</span><br />\r\n
+\t\t\t\t\t<textarea id="txtMetaKeywords" style="width: 100%" rows="2" cols="20"></textarea>\r\n
+\t\t\t\t\t<br />\r\n
+\t\t\t\t\t<span fcklang="DlgDocMeDescr">Document Description</span><br />\r\n
+\t\t\t\t\t<textarea id="txtMetaDescription" style="width: 100%" rows="4" cols="20"></textarea>\r\n
+\t\t\t\t\t<br />\r\n
+\t\t\t\t\t<span fcklang="DlgDocMeAuthor">Author</span><br />\r\n
+\t\t\t\t\t<input id="txtMetaAuthor" style="width: 100%" type="text" /><br />\r\n
+\t\t\t\t\t<br />\r\n
+\t\t\t\t\t<span fcklang="DlgDocMeCopy">Copyright</span><br />\r\n
+\t\t\t\t\t<input id="txtMetaCopyright" type="text" style="width: 100%" />\r\n
+\t\t\t\t</div>\r\n
+\t\t\t</td>\r\n
+\t\t</tr>\r\n
+\t\t<tr id="ePreview" style="display: none">\r\n
+\t\t\t<td>\r\n
+\t\t\t\t<span fcklang="DlgDocPreview">Preview</span><br />\r\n
+\t\t\t\t<iframe id="frmPreview" src="fck_docprops/fck_document_preview.html" width="100%"\r\n
+\t\t\t\t\theight="100"></iframe>\r\n
+\t\t\t</td>\r\n
+\t\t</tr>\r\n
+\t</table>\r\n
+</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>fck_docprops.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

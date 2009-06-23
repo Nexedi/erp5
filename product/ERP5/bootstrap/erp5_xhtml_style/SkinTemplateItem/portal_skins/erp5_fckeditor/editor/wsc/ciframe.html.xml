@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+-->\r\n
+<html>\r\n
+<head>\r\n
+\t<title></title>\r\n
+\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\r\n
+\t<script type="text/javascript">\r\n
+\r\n
+function gup( name )\r\n
+{\r\n
+\tname = name.replace( /[\\[]/, \'\\\\\\[\' ).replace( /[\\]]/, \'\\\\\\]\' ) ;\r\n
+\tvar regexS = \'[\\\\?&]\' + name + \'=([^&#]*)\' ;\r\n
+\tvar regex = new RegExp( regexS ) ;\r\n
+\tvar results = regex.exec( window.location.href ) ;\r\n
+\r\n
+\tif( results == null )\r\n
+\t\treturn \'\' ;\r\n
+\telse\r\n
+\t\treturn results[ 1 ] ;\r\n
+}\r\n
+\r\n
+function sendData2Master()\r\n
+{\r\n
+\tvar destination = parent.parent ;\r\n
+\ttry\r\n
+\t{\r\n
+\t\tif ( destination.XDTMaster )\r\n
+\t\t{\r\n
+\t\t\tvar t = destination.XDTMaster.read( [ gup( \'cmd\' ), gup( \'data\' ) ] ) ;\r\n
+\t\t\twindow.clearInterval( interval ) ;\r\n
+\t\t}\r\n
+\t}\r\n
+\tcatch (e) {}\r\n
+}\r\n
+\r\n
+function onLoad()\r\n
+{\r\n
+\tinterval = window.setInterval( sendData2Master, 100 );\r\n
+}\r\n
+\r\n
+        </script>\r\n
+</head>\r\n
+<body onload="onLoad()">\r\n
+\t<p></p>\r\n
+</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ciframe.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

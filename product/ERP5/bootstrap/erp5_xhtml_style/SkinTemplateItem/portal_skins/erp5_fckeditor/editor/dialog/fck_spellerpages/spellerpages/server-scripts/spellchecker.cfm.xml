@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<cfsetting enablecfoutputonly="true">\r\n
+<!---\r\n
+This code uses a CF User Defined Function and should work in CF version 5.0\r\n
+and up without alteration.\r\n
+\r\n
+Also if you are hosting your site at an ISP, you will have to check with them\r\n
+to see if the use of <CFEXECUTE> is allowed. In most cases ISP will not allow\r\n
+the use of that tag for security reasons. Clients would be able to access each\r\n
+others files in certain cases.\r\n
+--->\r\n
+\r\n
+<!--- The following variables values must reflect your installation. --->\r\n
+<cfset aspell_dir\t  = "C:\\Program Files\\Aspell\\bin">\r\n
+<cfset lang         = "en_US">\r\n
+<cfset aspell_opts  = "-a --lang=#lang# --encoding=utf-8 -H --rem-sgml-check=alt">\r\n
+<cfset tempfile_in  = GetTempFile(GetTempDirectory(), "spell_")>\r\n
+<cfset tempfile_out = GetTempFile(GetTempDirectory(), "spell_")>\r\n
+<cfset spellercss   = "../spellerStyle.css">\r\n
+<cfset word_win_src = "../wordWindow.js">\r\n
+\r\n
+<cfset form.checktext = form["textinputs[]"]>\r\n
+\r\n
+<!--- make no difference between URL and FORM scopes --->\r\n
+<cfparam name="url.checktext"  default="">\r\n
+<cfparam name="form.checktext" default="#url.checktext#">\r\n
+\r\n
+<!--- Takes care of those pesky smart quotes from MS apps, replaces them with regular quotes --->\r\n
+<cfset submitted_text = ReplaceList(form.checktext,"%u201C,%u201D","%22,%22")>\r\n
+\r\n
+<!--- submitted_text now is ready for processing --->\r\n
+\r\n
+<!--- use carat on each line to escape possible aspell commands --->\r\n
+<cfset text = "">\r\n
+<cfset CRLF = Chr(13) & Chr(10)>\r\n
+\r\n
+<cfloop list="#submitted_text#" index="field" delimiters=",">\r\n
+\t<cfset text = text & "%"  & CRLF\r\n
+                      & "^A" & CRLF\r\n
+                      & "!"  & CRLF>\r\n
+\t<!--- Strip all tags for the text. (by FredCK - #339 / #681) --->\r\n
+\t<cfset field = REReplace(URLDecode(field), "<[^>]+>", " ", "all")>\r\n
+\t<cfloop list="#field#" index="line" delimiters="#CRLF#">\r\n
+\t\t<cfset text = ListAppend(text, "^" & Trim(JSStringFormat(line)), CRLF)>\r\n
+\t</cfloop>\r\n
+</cfloop>\r\n
+\r\n
+<!--- create temp file from the submitted text, this will be passed to aspell to be check for misspelled words --->\r\n
+<cffile action="write" file="#tempfile_in#" output="#text#" charset="utf-8">\r\n
+\r\n
+<!--- execute aspell in an UTF-8 console and redirect output to a file. UTF-8 encoding is lost if done differently --->\r\n
+<cfexecute name="cmd.exe" arguments=\'/c type "#tempfile_in#" | "#aspell_dir#\\aspell.exe" #aspell_opts# > "#tempfile_out#"\' timeout="100"/>\r\n
+\r\n
+<!--- read output file for further processing --->\r\n
+<cffile action="read" file="#tempfile_out#" variable="food" charset="utf-8">\r\n
+\r\n
+<!--- remove temp files --->\r\n
+<cffile action="delete" file="#tempfile_in#">\r\n
+<cffile action="delete" file="#tempfile_out#">\r\n
+\r\n
+<cfset texts = StructNew()>\r\n
+<cfset texts.textinputs = "">\r\n
+<cfset texts.words      = "">\r\n
+<cfset texts.abort      = "">\r\n
+\r\n
+<!--- Generate Text Inputs --->\r\n
+<cfset i = 0>\r\n
+<cfloop list="#submitted_text#" index="textinput">\r\n
+  <cfset texts.textinputs = ListAppend(texts.textinputs, \'textinputs[#i#] = decodeURIComponent("#textinput#");\', CRLF)>\r\n
+  <cfset i = i + 1>\r\n
+</cfloop>\r\n
+\r\n
+<!--- Generate Words Lists --->\r\n
+<cfset word_cnt  = 0>\r\n
+<cfset input_cnt = -1>\r\n
+<cfloop list="#food#" index="aspell_line" delimiters="#CRLF#">\r\n
+    <cfset leftChar = Left(aspell_line, 1)>\r\n
+\t<cfif leftChar eq "*">\r\n
+\t\t\t<cfset input_cnt   = input_cnt + 1>\r\n
+\t\t\t<cfset word_cnt    = 0>\r\n
+\t\t\t<cfset texts.words = ListAppend(texts.words, "words[#input_cnt#] = [];", CRLF)>\r\n
+\t\t\t<cfset texts.words = ListAppend(texts.words, "suggs[#input_cnt#] = [];", CRLF)>\r\n
+    <cfelse>\r\n
+        <cfif leftChar eq "&" or leftChar eq "##">\r\n
+\t\t\t<!--- word that misspelled --->\r\n
+\t\t\t<cfset bad_word    = Trim(ListGetAt(aspell_line, 2, " "))>\r\n
+\t\t\t<cfset bad_word    = Replace(bad_word, "\'", "\\\'", "ALL")>\r\n
+\t\t\t<!--- sugestions --->\r\n
+\t\t\t<cfset sug_list    = Trim(ListRest(aspell_line, ":"))>\r\n
+\t\t\t<cfset sug_list    = ListQualify(Replace(sug_list, "\'", "\\\'", "ALL"), "\'")>\r\n
+\t\t\t<!--- javascript --->\r\n
+\t\t\t<cfset texts.words = ListAppend(texts.words, "words[#input_cnt#][#word_cnt#] = \'#bad_word#\';", CRLF)>\r\n
+\t\t\t<cfset texts.words = ListAppend(texts.words, "suggs[#input_cnt#][#word_cnt#] = [#sug_list#];", CRLF)>\r\n
+\t\t\t<cfset word_cnt    = word_cnt + 1>\r\n
+\t\t</cfif>\r\n
+     </cfif>\r\n
+</cfloop>\r\n
+\r\n
+<cfif texts.words eq "">\r\n
+  <cfset texts.abort = "alert(\'Spell check complete.\\n\\nNo misspellings found.\'); top.window.close();">\r\n
+</cfif>\r\n
+\r\n
+<cfcontent type="text/html; charset=utf-8">\r\n
+\r\n
+<cfoutput><html>\r\n
+<head>\r\n
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\r\n
+<link rel="stylesheet" type="text/css" href="#spellercss#" />\r\n
+<script language="javascript" src="#word_win_src#"></script>\r\n
+<script language="javascript">\r\n
+var suggs      = new Array();\r\n
+var words      = new Array();\r\n
+var textinputs = new Array();\r\n
+var error;\r\n
+\r\n
+#texts.textinputs##CRLF#\r\n
+#texts.words#\r\n
+#texts.abort#\r\n
+\r\n
+var wordWindowObj = new wordWindow();\r\n
+wordWindowObj.originalSpellings = words;\r\n
+wordWindowObj.suggestions = suggs;\r\n
+wordWindowObj.textInputs = textinputs;\r\n
+\r\n
+function init_spell() {\r\n
+\t// check if any error occured during server-side processing\r\n
+\tif( error ) {\r\n
+\t\talert( error );\r\n
+\t} else {\r\n
+\t\t// call the init_spell() function in the parent frameset\r\n
+\t\tif (parent.frames.length) {\r\n
+\t\t\tparent.init_spell( wordWindowObj );\r\n
+\t\t} else {\r\n
+\t\t\talert(\'This page was loaded outside of a frameset. It might not display properly\');\r\n
+\t\t}\r\n
+\t}\r\n
+}\r\n
+</script>\r\n
+\r\n
+</head>\r\n
+<body onLoad="init_spell();">\r\n
+\r\n
+<script type="text/javascript">\r\n
+wordWindowObj.writeBody();\r\n
+</script>\r\n
+\r\n
+</body>\r\n
+</html></cfoutput>\r\n
+<cfsetting enablecfoutputonly="false">\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>spellchecker.cfm</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

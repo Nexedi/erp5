@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!--\n
+ * FCKeditor - The text editor for internet\n
+ * Copyright (C) 2003-2004 Frederico Caldeira Knabben\n
+ * \n
+ * Licensed under the terms of the GNU Lesser General Public License:\n
+ * \t\thttp://www.opensource.org/licenses/lgpl-license.php\n
+ * \n
+ * For further information visit:\n
+ * \t\thttp://www.fckeditor.net/\n
+ * \n
+ * File Name: frmresourcetype.html\n
+ * \tThis page shows the list of available resource types.\n
+ * \n
+ * Version:  2.0 FC \n
+ * \n
+ * File Authors:\n
+ * \t\tFrederico Caldeira Knabben (fredck@fckeditor.net)\n
+-->\n
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\n
+<html>\n
+\t<head>\n
+\t\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n
+\t\t<link href="Browser.css" type="text/css" rel="stylesheet">\n
+\t\t<script type="text/javascript" src="js/common.js"></script>\n
+\t\t<script language="javascript">\n
+\n
+function SetResourceType( type )\n
+{\n
+\twindow.parent.frames["frmFolders"].SetResourceType( type ) ;\n
+}\n
+\n
+var aTypes = [\n
+\t[\'File\',\'File\'],\n
+\t[\'Image\',\'Image\'],\n
+\t[\'Flash\',\'Flash\'],\n
+\t[\'Media\',\'Media\']\n
+] ;\n
+\n
+window.onload = function()\n
+{\n
+\tfor ( var i = 0 ; i < aTypes.length ; i++ )\n
+\t{\n
+\t\tif ( oConnector.ShowAllTypes || aTypes[i][0] == oConnector.ResourceType )\n
+\t\t\tAddSelectOption( document.getElementById(\'cmbType\'), aTypes[i][1], aTypes[i][0] ) ;\n
+\t}\n
+}\n
+\n
+\t\t</script>\n
+\t</head>\n
+\t<body bottomMargin="0" topMargin="0">\n
+\t\t<table height="100%" cellSpacing="0" cellPadding="0" width="100%" border="0">\n
+\t\t\t<tr>\n
+\t\t\t\t<td nowrap>\n
+\t\t\t\t\tResource Type<BR>\n
+\t\t\t\t\t<select id="cmbType" style="WIDTH: 100%" onchange="SetResourceType(this.value);">\n
+\t\t\t\t\t</select>\n
+\t\t\t\t</td>\n
+\t\t\t</tr>\n
+\t\t</table>\n
+\t</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>frmresourcetype.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

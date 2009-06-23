@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>spellerStyle.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>.blend {\r\n
+\tfont-family: courier new;\r\n
+\tfont-size: 10pt;\r\n
+\tborder: 0;\r\n
+\tmargin-bottom:-1;\r\n
+}\r\n
+.normalLabel {\r\n
+\tfont-size:8pt;\r\n
+}\r\n
+.normalText {\r\n
+\tfont-family:arial, helvetica, sans-serif;\r\n
+\tfont-size:10pt;\r\n
+\tcolor:000000;\r\n
+\tbackground-color:FFFFFF;\r\n
+}\r\n
+.plainText {\r\n
+\tfont-family: courier new, courier, monospace;\r\n
+\tfont-size: 10pt;\r\n
+\tcolor:000000;\r\n
+\tbackground-color:FFFFFF;\r\n
+}\r\n
+.controlWindowBody {\r\n
+\tfont-family:arial, helvetica, sans-serif;\r\n
+\tfont-size:8pt;\r\n
+\tpadding: 7px ;\t\t/* by FredCK */\r\n
+\tmargin: 0px ;\t\t/* by FredCK */\r\n
+\t/* color:000000;\t\t\t\tby FredCK */\r\n
+\t/* background-color:DADADA;\t\tby FredCK */\r\n
+}\r\n
+.readonlyInput {\r\n
+\tbackground-color:DADADA;\r\n
+\tcolor:000000;\r\n
+\tfont-size:8pt;\r\n
+\twidth:392px;\r\n
+}\r\n
+.textDefault {\r\n
+\tfont-size:8pt;\r\n
+\twidth: 200px;\r\n
+}\r\n
+.buttonDefault {\r\n
+\twidth:90px;\r\n
+\theight:22px;\r\n
+\tfont-size:8pt;\r\n
+}\r\n
+.suggSlct {\r\n
+\twidth:200px;\r\n
+\tmargin-top:2;\r\n
+\tfont-size:8pt;\r\n
+}\r\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

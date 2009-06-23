@@ -1,0 +1,703 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * "Find" and "Replace" dialog box window.\r\n
+-->\r\n
+<html xmlns="http://www.w3.org/1999/xhtml">\r\n
+<head>\r\n
+\t<title></title>\r\n
+\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\r\n
+\t<meta content="noindex, nofollow" name="robots" />\r\n
+\t<script src="common/fck_dialog_common.js" type="text/javascript"></script>\r\n
+\t<script type="text/javascript">\r\n
+\r\n
+var dialog\t= window.parent ;\r\n
+var oEditor = dialog.InnerDialogLoaded() ;\r\n
+var dialogArguments = dialog.Args() ;\r\n
+\r\n
+var FCKLang = oEditor.FCKLang ;\r\n
+var FCKDomTools = oEditor.FCKDomTools ;\r\n
+var FCKDomRange = oEditor.FCKDomRange ;\r\n
+var FCKListsLib = oEditor.FCKListsLib ;\r\n
+var FCKTools = oEditor.FCKTools ;\r\n
+var EditorDocument = oEditor.FCK.EditorDocument ;\r\n
+var HighlightStyle = oEditor.FCKStyles.GetStyle( \'_FCK_SelectionHighlight\' )  ;\r\n
+\r\n
+dialog.AddTab( \'Find\', FCKLang.DlgFindTitle ) ;\r\n
+dialog.AddTab( \'Replace\', FCKLang.DlgReplaceTitle ) ;\r\n
+var idMap = {} ;\r\n
+\r\n
+function OnDialogTabChange( tabCode )\r\n
+{\r\n
+\tShowE( \'divFind\', ( tabCode == \'Find\' ) ) ;\r\n
+\tShowE( \'divReplace\', ( tabCode == \'Replace\' ) ) ;\r\n
+\tidMap[\'FindText\'] = \'txtFind\' + tabCode ;\r\n
+\tidMap[\'CheckCase\'] = \'chkCase\' + tabCode ;\r\n
+\tidMap[\'CheckWord\'] = \'chkWord\' + tabCode ;\r\n
+\r\n
+\tif ( tabCode == \'Replace\' )\r\n
+\t\tdialog.SetAutoSize( true ) ;\r\n
+}\r\n
+\r\n
+GetNextNonEmptyTextNode = function( node, stopNode )\r\n
+{\r\n
+\twhile ( ( node = FCKDomTools.GetNextSourceNode( node, false, 3, stopNode ) ) && node && node.length < 1 )\r\n
+\t\t1 ;\r\n
+\treturn node ;\r\n
+}\r\n
+\r\n
+CharacterCursor = function( arg )\r\n
+{\r\n
+\tif ( arg.nodeType && arg.nodeType == 9 )\r\n
+\t{\r\n
+\t\tthis._textNode = GetNextNonEmptyTextNode( arg.body, arg.documentElement ) ;\r\n
+\t\tthis._offset = 0 ;\r\n
+\t\tthis._doc = arg ;\r\n
+\t}\r\n
+\telse\r\n
+\t{\r\n
+\t\tthis._textNode = arguments[0] ;\r\n
+\t\tthis._offset = arguments[1] ;\r\n
+\t\tthis._doc = FCKTools.GetElementDocument( arguments[0] ) ;\r\n
+\t}\r\n
+}\r\n
+CharacterCursor.prototype =\r\n
+{\r\n
+\tGetCharacter : function()\r\n
+\t{\r\n
+\t\treturn ( this._textNode && this._textNode.nodeValue.charAt( this._offset ) ) || null ;\r\n
+\t},\r\n
+\r\n
+\t// Non-normalized.\r\n
+\tGetTextNode : function()\r\n
+\t{\r\n
+\t\treturn this._textNode ;\r\n
+\t},\r\n
+\r\n
+\t// Non-normalized.\r\n
+\tGetIndex : function()\r\n
+\t{\r\n
+\t\treturn this._offset ;\r\n
+\t},\r\n
+\r\n
+\t// Return value means whehther we\'ve crossed a line break or a paragraph boundary.\r\n
+\tMoveNext : function()\r\n
+\t{\r\n
+\t\tif ( this._offset < this._textNode.length - 1 )\r\n
+\t\t{\r\n
+\t\t\tthis._offset++ ;\r\n
+\t\t\treturn false ;\r\n
+\t\t}\r\n
+\r\n
+\t\tvar crossed = false ;\r\n
+\t\tvar curNode = this._textNode ;\r\n
+\t\twhile ( ( curNode = FCKDomTools.GetNextSourceNode( curNode ) )\r\n
+\t\t\t\t&& curNode && ( curNode.nodeType != 3 || curNode.length < 1 ) )\r\n
+\t\t{\r\n
+\t\t\tvar tag = curNode.nodeName.toLowerCase() ;\r\n
+\t\t\tif ( FCKListsLib.BlockElements[tag] || tag == \'br\' )\r\n
+\t\t\t\tcrossed = true ;\r\n
+\t\t}\r\n
+\r\n
+\t\tthis._textNode = curNode ;\r\n
+\t\tthis._offset = 0 ;\r\n
+\t\treturn crossed ;\r\n
+\t},\r\n
+\r\n
+\t// Return value means whehther we\'ve crossed a line break or a paragraph boundary.\r\n
+\tMoveBack : function()\r\n
+\t{\r\n
+\t\tif ( this._offset > 0 && this._textNode.length > 0 )\r\n
+\t\t{\r\n
+\t\t\tthis._offset = Math.min( this._offset - 1, this._textNode.length - 1 ) ;\r\n
+\t\t\treturn false ;\r\n
+\t\t}\r\n
+\r\n
+\t\tvar crossed = false ;\r\n
+\t\tvar curNode = this._textNode ;\r\n
+\t\twhile ( ( curNode = FCKDomTools.GetPreviousSourceNode( curNode ) )\r\n
+\t\t\t\t&& curNode && ( curNode.nodeType != 3 || curNode.length < 1 ) )\r\n
+\t\t{\r\n
+\t\t\tvar tag = curNode.nodeName.toLowerCase() ;\r\n
+\t\t\tif ( FCKListsLib.BlockElements[tag] || tag == \'br\' )\r\n
+\t\t\t\tcrossed = true ;\r\n
+\t\t}\r\n
+\r\n
+\t\tthis._textNode = curNode ;\r\n
+\t\tthis._offset = curNode && curNode.length - 1 ;\r\n
+\t\treturn crossed ;\r\n
+\t},\r\n
+\r\n
+\tClone : function()\r\n
+\t{\r\n
+\t\treturn new CharacterCursor( this._textNode, this._offset ) ;\r\n
+\t}\r\n
+} ;\r\n
+\r\n
+CharacterRange = function( initCursor, maxLength )\r\n
+{\r\n
+\tthis._cursors = initCursor.push ? initCursor : [initCursor] ;\r\n
+\tthis._maxLength = maxLength ;\r\n
+\tthis._highlightRange = null ;\r\n
+}\r\n
+CharacterRange.prototype =\r\n
+{\r\n
+\tToDomRange : function()\r\n
+\t{\r\n
+\t\tvar firstCursor = this._cursors[0] ;\r\n
+\t\tvar lastCursor = this._cursors[ this._cursors.length - 1 ] ;\r\n
+\t\tvar domRange = new FCKDomRange( FCKTools.GetElementWindow( firstCursor.GetTextNode() ) ) ;\r\n
+\t\tvar w3cRange = domRange._Range = domRange.CreateRange() ;\r\n
+\t\tw3cRange.setStart( firstCursor.GetTextNode(), firstCursor.GetIndex() ) ;\r\n
+\t\tw3cRange.setEnd( lastCursor.GetTextNode(), lastCursor.GetIndex() + 1 ) ;\r\n
+\t\tdomRange._UpdateElementInfo() ;\r\n
+\t\treturn domRange ;\r\n
+\t},\r\n
+\r\n
+\tHighlight : function()\r\n
+\t{\r\n
+\t\tif ( this._cursors.length < 1 )\r\n
+\t\t\treturn ;\r\n
+\r\n
+\t\tvar domRange = this.ToDomRange() ;\r\n
+\t\tHighlightStyle.ApplyToRange( domRange, false, true ) ;\r\n
+\t\tthis._highlightRange = domRange ;\r\n
+\r\n
+\t\tvar charRange = CharacterRange.CreateFromDomRange( domRange ) ;\r\n
+\t\tvar focusNode = domRange.StartNode ;\r\n
+\t\tif ( focusNode.nodeType != 1 )\r\n
+\t\t\tfocusNode = focusNode.parentNode ;\r\n
+\t\tFCKDomTools.ScrollIntoView( focusNode, false ) ;\r\n
+\t\tthis._cursors = charRange._cursors ;\r\n
+\t},\r\n
+\r\n
+\tRemoveHighlight : function()\r\n
+\t{\r\n
+\t\tif ( this._highlightRange )\r\n
+\t\t{\r\n
+\t\t\tHighlightStyle.RemoveFromRange( this._highlightRange, false, true ) ;\r\n
+\t\t\tvar charRange = CharacterRange.CreateFromDomRange( this._highlightRange ) ;\r\n
+\t\t\tthis._cursors = charRange._cursors ;\r\n
+\t\t\tthis._highlightRange = null ;\r\n
+\t\t}\r\n
+\t},\r\n
+\r\n
+\tGetHighlightDomRange : function()\r\n
+\t{\r\n
+\t\treturn this._highlightRange;\r\n
+\t},\r\n
+\r\n
+\tMoveNext : function()\r\n
+\t{\r\n
+\t\tvar next = this._cursors[ this._cursors.length - 1 ].Clone() ;\r\n
+\t\tvar retval = next.MoveNext() ;\r\n
+\t\tif ( retval )\r\n
+\t\t\tthis._cursors = [] ;\r\n
+\t\tthis._cursors.push( next ) ;\r\n
+\t\tif ( this._cursors.length > this._maxLength )\r\n
+\t\t\tthis._cursors.shift() ;\r\n
+\t\treturn retval ;\r\n
+\t},\r\n
+\r\n
+\tMoveBack : function()\r\n
+\t{\r\n
+\t\tvar prev = this._cursors[0].Clone() ;\r\n
+\t\tvar retval = prev.MoveBack() ;\r\n
+\t\tif ( retval )\r\n
+\t\t\tthis._cursors = [] ;\r\n
+\t\tthis._cursors.unshift( prev ) ;\r\n
+\t\tif ( this._cursors.length > this._maxLength )\r\n
+\t\t\tthis._cursors.pop() ;\r\n
+\t\treturn retval ;\r\n
+\t},\r\n
+\r\n
+\tGetEndCharacter : function()\r\n
+\t{\r\n
+\t\tif ( this._cursors.length < 1 )\r\n
+\t\t\treturn null ;\r\n
+\t\tvar retval = this._cursors[ this._cursors.length - 1 ].GetCharacter() ;\r\n
+\t\treturn retval ;\r\n
+\t},\r\n
+\r\n
+\tGetNextRange : function( len )\r\n
+\t{\r\n
+\t\tif ( this._cursors.length == 0 )\r\n
+\t\t\treturn null ;\r\n
+\t\tvar cur = this._cursors[ this._cursors.length - 1 ].Clone() ;\r\n
+\t\tcur.MoveNext() ;\r\n
+\t\treturn new CharacterRange( cur, len ) ;\r\n
+\t},\r\n
+\r\n
+\tGetCursors : function()\r\n
+\t{\r\n
+\t\treturn this._cursors ;\r\n
+\t}\r\n
+} ;\r\n
+\r\n
+CharacterRange.CreateFromDomRange = function( domRange )\r\n
+{\r\n
+\tvar w3cRange = domRange._Range ;\r\n
+\tvar startContainer = w3cRange.startContainer ;\r\n
+\tvar endContainer = w3cRange.endContainer ;\r\n
+\tvar startTextNode, startIndex, endTextNode, endIndex ;\r\n
+\r\n
+\tif ( startContainer.nodeType == 3 )\r\n
+\t{\r\n
+\t\tstartTextNode = startContainer ;\r\n
+\t\tstartIndex = w3cRange.startOffset ;\r\n
+\t}\r\n
+\telse if ( domRange.StartNode.nodeType == 3 )\r\n
+\t{\r\n
+\t\tstartTextNode = domRange.StartNode ;\r\n
+\t\tstartIndex = 0 ;\r\n
+\t}\r\n
+\telse\r\n
+\t{\r\n
+\t\tstartTextNode = GetNextNonEmptyTextNode( domRange.StartNode, domRange.StartNode.parentNode ) ;\r\n
+\t\tif ( !startTextNode )\r\n
+\t\t\treturn null ;\r\n
+\t\tstartIndex = 0 ;\r\n
+\t}\r\n
+\r\n
+\tif ( endContainer.nodeType == 3 && w3cRange.endOffset > 0 )\r\n
+\t{\r\n
+\t\tendTextNode = endContainer ;\r\n
+\t\tendIndex = w3cRange.endOffset - 1 ;\r\n
+\t}\r\n
+\telse\r\n
+\t{\r\n
+\t\tendTextNode = domRange.EndNode ;\r\n
+\t\twhile ( endTextNode.nodeType != 3 )\r\n
+\t\t\tendTextNode = endTextNode.lastChild ;\r\n
+\t\tendIndex = endTextNode.length - 1 ;\r\n
+\t}\r\n
+\r\n
+\tvar cursors = [] ;\r\n
+\tvar current = new CharacterCursor( startTextNode, startIndex ) ;\r\n
+\tcursors.push( current ) ;\r\n
+\tif ( !( current.GetTextNode() == endTextNode && current.GetIndex() == endIndex ) && !domRange.CheckIsEmpty() )\r\n
+\t{\r\n
+\t\tdo\r\n
+\t\t{\r\n
+\t\t\tcurrent = current.Clone() ;\r\n
+\t\t\tcurrent.MoveNext() ;\r\n
+\t\t\tcursors.push( current ) ;\r\n
+\t\t}\r\n
+\t\twhile ( !( current.GetTextNode() == endTextNode && current.GetIndex() == endIndex ) ) ;\r\n
+\t}\r\n
+\r\n
+\treturn new CharacterRange( cursors, cursors.length ) ;\r\n
+}\r\n
+\r\n
+// Knuth-Morris-Pratt Algorithm for stream input\r\n
+KMP_NOMATCH = 0 ;\r\n
+KMP_ADVANCED = 1 ;\r\n
+KMP_MATCHED = 2 ;\r\n
+KmpMatch = function( pattern, ignoreCase )\r\n
+{\r\n
+\tvar overlap = [ -1 ] ;\r\n
+\tfor ( var i = 0 ; i < pattern.length ; i++ )\r\n
+\t{\r\n
+\t\toverlap.push( overlap[i] + 1 ) ;\r\n
+\t\twhile ( overlap[ i + 1 ] > 0 && pattern.charAt( i ) != pattern.charAt( overlap[ i + 1 ] - 1 ) )\r\n
+\t\t\toverlap[ i + 1 ] = overlap[ overlap[ i + 1 ] - 1 ] + 1 ;\r\n
+\t}\r\n
+\tthis._Overlap = overlap ;\r\n
+\tthis._State = 0 ;\r\n
+\tthis._IgnoreCase = ( ignoreCase === true ) ;\r\n
+\tif ( ignoreCase )\r\n
+\t\tthis.Pattern = pattern.toLowerCase();\r\n
+\telse\r\n
+\t\tthis.Pattern = pattern ;\r\n
+}\r\n
+KmpMatch.prototype = {\r\n
+\tFeedCharacter : function( c )\r\n
+\t{\r\n
+\t\tif ( this._IgnoreCase )\r\n
+\t\t\tc = c.toLowerCase();\r\n
+\r\n
+\t\twhile ( true )\r\n
+\t\t{\r\n
+\t\t\tif ( c == this.Pattern.charAt( this._State ) )\r\n
+\t\t\t{\r\n
+\t\t\t\tthis._State++ ;\r\n
+\t\t\t\tif ( this._State == this.Pattern.length )\r\n
+\t\t\t\t{\r\n
+\t\t\t\t\t// found a match, start over, don\'t care about partial matches involving the current match\r\n
+\t\t\t\t\tthis._State = 0;\r\n
+\t\t\t\t\treturn KMP_MATCHED;\r\n
+\t\t\t\t}\r\n
+\t\t\t\treturn KMP_ADVANCED ;\r\n
+\t\t\t}\r\n
+\t\t\telse if ( this._State == 0 )\r\n
+\t\t\t\treturn KMP_NOMATCH;\r\n
+\t\t\telse\r\n
+\t\t\t\tthis._State = this._Overlap[ this._State ];\r\n
+\t\t}\r\n
+\r\n
+\t\treturn null ;\r\n
+\t},\r\n
+\r\n
+\tReset : function()\r\n
+\t{\r\n
+\t\tthis._State = 0 ;\r\n
+\t}\r\n
+};\r\n
+\r\n
+// Place a range at the start of document.\r\n
+function OnLoad()\r\n
+{\r\n
+\t// First of all, translate the dialog box texts.\r\n
+\toEditor.FCKLanguageManager.TranslatePage( document ) ;\r\n
+\r\n
+\t// Show the appropriate tab at startup.\r\n
+\tif ( dialogArguments.CustomValue == \'Find\' )\r\n
+\t{\r\n
+\t\tdialog.SetSelectedTab( \'Find\' ) ;\r\n
+\t\tdialog.SetAutoSize( true ) ;\r\n
+\t}\r\n
+\telse\r\n
+\t\tdialog.SetSelectedTab( \'Replace\' ) ;\r\n
+\r\n
+\tSelectField( \'txtFind\' + dialogArguments.CustomValue ) ;\r\n
+}\r\n
+\r\n
+function btnStat()\r\n
+{\r\n
+\tGetE(\'btnReplace\').disabled =\r\n
+\t\tGetE(\'btnReplaceAll\').disabled =\r\n
+\t\t\tGetE(\'btnFind\').disabled =\r\n
+\t\t\t\t( GetE(idMap["FindText"]).value.length == 0 ) ;\r\n
+}\r\n
+\r\n
+function btnStatDelayed()\r\n
+{\r\n
+\tsetTimeout( btnStat, 1 ) ;\r\n
+}\r\n
+\r\n
+function GetSearchString()\r\n
+{\r\n
+\treturn GetE(idMap[\'FindText\']).value ;\r\n
+}\r\n
+\r\n
+function GetReplaceString()\r\n
+{\r\n
+\treturn GetE("txtReplace").value ;\r\n
+}\r\n
+\r\n
+function GetCheckCase()\r\n
+{\r\n
+\treturn !! ( GetE(idMap[\'CheckCase\']).checked ) ;\r\n
+}\r\n
+\r\n
+function GetMatchWord()\r\n
+{\r\n
+\treturn !! ( GetE(idMap[\'CheckWord\']).checked ) ;\r\n
+}\r\n
+\r\n
+/* Is this character a unicode whitespace or a punctuation mark?\r\n
+ * References:\r\n
+ * http://unicode.org/Public/UNIDATA/PropList.txt (whitespaces)\r\n
+ * http://php.chinaunix.net/manual/tw/ref.regex.php (punctuation marks)\r\n
+ */\r\n
+function CheckIsWordSeparator( c )\r\n
+{\r\n
+\tif ( !c )\r\n
+\t\treturn true;\r\n
+\tvar code = c.charCodeAt( 0 );\r\n
+\tif ( code >= 9 && code <= 0xd )\r\n
+\t\treturn true;\r\n
+\tif ( code >= 0x2000 && code <= 0x200a )\r\n
+\t\treturn true;\r\n
+\tswitch ( code )\r\n
+\t{\r\n
+\t\tcase 0x20:\r\n
+\t\tcase 0x85:\r\n
+\t\tcase 0xa0:\r\n
+\t\tcase 0x1680:\r\n
+\t\tcase 0x180e:\r\n
+\t\tcase 0x2028:\r\n
+\t\tcase 0x2029:\r\n
+\t\tcase 0x202f:\r\n
+\t\tcase 0x205f:\r\n
+\t\tcase 0x3000:\r\n
+\t\t\treturn true;\r\n
+\t\tdefault:\r\n
+\t}\r\n
+\treturn /[.,"\'?!;:]/.test( c ) ;\r\n
+}\r\n
+\r\n
+FindRange = null ;\r\n
+function _Find()\r\n
+{\r\n
+\tvar searchString = GetSearchString() ;\r\n
+\tif ( !FindRange )\r\n
+\t\tFindRange = new CharacterRange( new CharacterCursor( EditorDocument ), searchString.length ) ;\r\n
+\telse\r\n
+\t{\r\n
+\t\tFindRange.RemoveHighlight() ;\r\n
+\t\tFindRange = FindRange.GetNextRange( searchString.length ) ;\r\n
+\t}\r\n
+\tvar matcher = new KmpMatch( searchString, ! GetCheckCase() ) ;\r\n
+\tvar matchState = KMP_NOMATCH ;\r\n
+\tvar character = \'%\' ;\r\n
+\r\n
+\twhile ( character != null )\r\n
+\t{\r\n
+\t\twhile ( ( character = FindRange.GetEndCharacter() ) )\r\n
+\t\t{\r\n
+\t\t\tmatchState = matcher.FeedCharacter( character ) ;\r\n
+\t\t\tif ( matchState == KMP_MATCHED )\r\n
+\t\t\t\tbreak ;\r\n
+\t\t\tif ( FindRange.MoveNext() )\r\n
+\t\t\t\tmatcher.Reset() ;\r\n
+\t\t}\r\n
+\r\n
+\t\tif ( matchState == KMP_MATCHED )\r\n
+\t\t{\r\n
+\t\t\tif ( GetMatchWord() )\r\n
+\t\t\t{\r\n
+\t\t\t\tvar cursors = FindRange.GetCursors() ;\r\n
+\t\t\t\tvar head = cursors[ cursors.length - 1 ].Clone() ;\r\n
+\t\t\t\tvar tail = cursors[0].Clone() ;\r\n
+\t\t\t\tif ( !head.MoveNext() && !CheckIsWordSeparator( head.GetCharacter() ) )\r\n
+\t\t\t\t\tcontinue ;\r\n
+\t\t\t\tif ( !tail.MoveBack() && !CheckIsWordSeparator( tail.GetCharacter() ) )\r\n
+\t\t\t\t\tcontinue ;\r\n
+\t\t\t}\r\n
+\r\n
+\t\t\tFindRange.Highlight() ;\r\n
+\t\t\treturn true ;\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\tFindRange = null ;\r\n
+\treturn false ;\r\n
+}\r\n
+\r\n
+function Find()\r\n
+{\r\n
+\tif ( ! _Find() )\r\n
+\t\talert( FCKLang.DlgFindNotFoundMsg ) ;\r\n
+}\r\n
+\r\n
+function Replace()\r\n
+{\r\n
+\tvar saveUndoStep = function( selectRange )\r\n
+\t{\r\n
+\t\tvar ieRange ;\r\n
+\t\tif ( oEditor.FCKBrowserInfo.IsIE )\r\n
+\t\t\tieRange = document.selection.createRange() ;\r\n
+\r\n
+\t\tselectRange.Select() ;\r\n
+\t\toEditor.FCKUndo.SaveUndoStep() ;\r\n
+\t\tvar cloneRange = selectRange.Clone() ;\r\n
+\t\tcloneRange.Collapse( false ) ;\r\n
+\t\tcloneRange.Select() ;\r\n
+\r\n
+\t\tif ( ieRange )\r\n
+\t\t\tsetTimeout( function(){ ieRange.select() ; }, 1 ) ;\r\n
+\t}\r\n
+\r\n
+\tif ( FindRange && FindRange.GetHighlightDomRange() )\r\n
+\t{\r\n
+\t\tvar range = FindRange.GetHighlightDomRange() ;\r\n
+\t\tvar bookmark = range.CreateBookmark() ;\r\n
+\t\tFindRange.RemoveHighlight() ;\r\n
+\t\trange.MoveToBookmark( bookmark ) ;\r\n
+\r\n
+\t\tsaveUndoStep( range ) ;\r\n
+\t\trange.DeleteContents() ;\r\n
+\t\trange.InsertNode( EditorDocument.createTextNode( GetReplaceString() ) ) ;\r\n
+\t\trange._UpdateElementInfo() ;\r\n
+\r\n
+\t\tFindRange = CharacterRange.CreateFromDomRange( range ) ;\r\n
+\t}\r\n
+\telse\r\n
+\t{\r\n
+\t\tif ( ! _Find() )\r\n
+\t\t{\r\n
+\t\t\tFindRange && FindRange.RemoveHighlight() ;\r\n
+\t\t\talert( FCKLang.DlgFindNotFoundMsg ) ;\r\n
+\t\t}\r\n
+\t}\r\n
+}\r\n
+\r\n
+function ReplaceAll()\r\n
+{\r\n
+\toEditor.FCKUndo.SaveUndoStep() ;\r\n
+\tvar replaceCount = 0 ;\r\n
+\r\n
+\twhile ( _Find() )\r\n
+\t{\r\n
+\t\tvar range = FindRange.GetHighlightDomRange() ;\r\n
+\t\tvar bookmark = range.CreateBookmark() ;\r\n
+\t\tFindRange.RemoveHighlight() ;\r\n
+\t\trange.MoveToBookmark( bookmark) ;\r\n
+\r\n
+\t\trange.DeleteContents() ;\r\n
+\t\trange.InsertNode( EditorDocument.createTextNode( GetReplaceString() ) ) ;\r\n
+\t\trange._UpdateElementInfo() ;\r\n
+\r\n
+\t\tFindRange = CharacterRange.CreateFromDomRange( range ) ;\r\n
+\t\treplaceCount++ ;\r\n
+\t}\r\n
+\tif ( replaceCount == 0 )\r\n
+\t{\r\n
+\t\tFindRange && FindRange.RemoveHighlight() ;\r\n
+\t\talert( FCKLang.DlgFindNotFoundMsg ) ;\r\n
+\t}\r\n
+\tdialog.Cancel() ;\r\n
+}\r\n
+\r\n
+window.onunload = function()\r\n
+{\r\n
+\tif ( FindRange )\r\n
+\t{\r\n
+\t\tFindRange.RemoveHighlight() ;\r\n
+\t\tFindRange.ToDomRange().Select() ;\r\n
+\t}\r\n
+}\r\n
+\t</script>\r\n
+</head>\r\n
+<body onload="OnLoad()" style="overflow: hidden">\r\n
+\t<div id="divFind" style="display: none">\r\n
+\t\t<table cellspacing="3" cellpadding="2" width="100%" border="0">\r\n
+\t\t\t<tr>\r\n
+\t\t\t\t<td nowrap="nowrap">\r\n
+\t\t\t\t\t<label for="txtFindFind" fcklang="DlgReplaceFindLbl">\r\n
+\t\t\t\t\t\tFind what:</label>\r\n
+\t\t\t\t</td>\r\n
+\t\t\t\t<td width="100%">\r\n
+\t\t\t\t\t<input id="txtFindFind" onkeyup="btnStat()" oninput="btnStat()" onpaste="btnStatDelayed()" style="width: 100%" tabindex="1"\r\n
+\t\t\t\t\t\ttype="text" />\r\n
+\t\t\t\t</td>\r\n
+\t\t\t\t<td>\r\n
+\t\t\t\t\t<input id="btnFind" style="width: 80px" disabled="disabled" onclick="Find();"\r\n
+\t\t\t\t\t\ttype="button" value="Find" fcklang="DlgFindFindBtn" />\r\n
+\t\t\t\t</td>\r\n
+\t\t\t</tr>\r\n
+\t\t\t<tr>\r\n
+\t\t\t\t<td valign="bottom" colspan="3">\r\n
+\t\t\t\t\t&nbsp;<input id="chkCaseFind" tabindex="3" type="checkbox" /><label for="chkCaseFind" fcklang="DlgReplaceCaseChk">Match\r\n
+\t\t\t\t\t\tcase</label>\r\n
+\t\t\t\t\t<br />\r\n
+\t\t\t\t\t&nbsp;<input id="chkWordFind" tabindex="4" type="checkbox" /><label for="chkWordFind" fcklang="DlgReplaceWordChk">Match\r\n
+\t\t\t\t\t\twhole word</label>\r\n
+\t\t\t\t</td>\r\n
+\t\t\t</tr>\r\n
+\t\t</table>\r\n
+\t</div>\r\n
+\t<div id="divReplace" style="display:none">\r\n
+\t\t<table cellspacing="3" cellpadding="2" width="100%" border="0">\r\n
+\t\t\t<tr>\r\n
+\t\t\t\t<td nowrap="nowrap">\r\n
+\t\t\t\t\t<label for="txtFindReplace" fcklang="DlgReplaceFindLbl">\r\n
+\t\t\t\t\t\tFind what:</label>\r\n
+\t\t\t\t</td>\r\n
+\t\t\t\t<td width="100%">\r\n
+\t\t\t\t\t<input id="txtFindReplace" onkeyup="btnStat()" oninput="btnStat()" onpaste="btnStatDelayed()" style="width: 100%" tabindex="1"\r\n
+\t\t\t\t\t\ttype="text" />\r\n
+\t\t\t\t</td>\r\n
+\t\t\t\t<td>\r\n
+\t\t\t\t\t<input id="btnReplace" style="width: 80px" disabled="disabled" onclick="Replace();"\r\n
+\t\t\t\t\t\ttype="button" value="Replace" fcklang="DlgReplaceReplaceBtn" />\r\n
+\t\t\t\t</td>\r\n
+\t\t\t</tr>\r\n
+\t\t\t<tr>\r\n
+\t\t\t\t<td valign="top" nowrap="nowrap">\r\n
+\t\t\t\t\t<label for="txtReplace" fcklang="DlgReplaceReplaceLbl">\r\n
+\t\t\t\t\t\tReplace with:</label>\r\n
+\t\t\t\t</td>\r\n
+\t\t\t\t<td valign="top">\r\n
+\t\t\t\t\t<input id="txtReplace" style="width: 100%" tabindex="2" type="text" />\r\n
+\t\t\t\t</td>\r\n
+\t\t\t\t<td>\r\n
+\t\t\t\t\t<input id="btnReplaceAll" style="width: 80px" disabled="disabled" onclick="ReplaceAll()" type="button"\r\n
+\t\t\t\t\t\tvalue="Replace All" fcklang="DlgReplaceReplAllBtn" />\r\n
+\t\t\t\t</td>\r\n
+\t\t\t</tr>\r\n
+\t\t\t<tr>\r\n
+\t\t\t\t<td valign="bottom" colspan="3">\r\n
+\t\t\t\t\t&nbsp;<input id="chkCaseReplace" tabindex="3" type="checkbox" /><label for="chkCaseReplace" fcklang="DlgReplaceCaseChk">Match\r\n
+\t\t\t\t\t\tcase</label>\r\n
+\t\t\t\t\t<br />\r\n
+\t\t\t\t\t&nbsp;<input id="chkWordReplace" tabindex="4" type="checkbox" /><label for="chkWordReplace" fcklang="DlgReplaceWordChk">Match\r\n
+\t\t\t\t\t\twhole word</label>\r\n
+\t\t\t\t</td>\r\n
+\t\t\t</tr>\r\n
+\t\t</table>\r\n
+\t</div>\r\n
+</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>fck_replace.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

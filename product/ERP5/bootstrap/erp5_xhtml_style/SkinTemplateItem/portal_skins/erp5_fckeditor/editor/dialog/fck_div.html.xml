@@ -1,0 +1,449 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Form dialog window.\r\n
+-->\r\n
+<html xmlns="http://www.w3.org/1999/xhtml">\r\n
+<head>\r\n
+\t<title></title>\r\n
+\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\r\n
+\t<meta content="noindex, nofollow" name="robots" />\r\n
+\t<script src="common/fck_dialog_common.js" type="text/javascript"></script>\r\n
+\t<script type="text/javascript">\r\n
+var dialog\t= window.parent ;\r\n
+var oEditor = dialog.InnerDialogLoaded() ;\r\n
+var FCK = oEditor.FCK ;\r\n
+var FCKLang = oEditor.FCKLang ;\r\n
+var FCKBrowserInfo = oEditor.FCKBrowserInfo ;\r\n
+var FCKStyles = oEditor.FCKStyles ;\r\n
+var FCKElementPath = oEditor.FCKElementPath ;\r\n
+var FCKDomRange = oEditor.FCKDomRange ;\r\n
+var FCKDomTools = oEditor.FCKDomTools ;\r\n
+var FCKDomRangeIterator = oEditor.FCKDomRangeIterator ;\r\n
+var FCKListsLib = oEditor.FCKListsLib ;\r\n
+var AlwaysCreate = dialog.Args().CustomValue ;\r\n
+\r\n
+String.prototype.IEquals = function()\r\n
+{\r\n
+\tvar thisUpper = this.toUpperCase() ;\r\n
+\r\n
+\tvar aArgs = arguments ;\r\n
+\r\n
+\t// The arguments could also be a single array.\r\n
+\tif ( aArgs.length == 1 && aArgs[0].pop )\r\n
+\t\taArgs = aArgs[0] ;\r\n
+\r\n
+\tfor ( var i = 0 ; i < aArgs.length ; i++ )\r\n
+\t{\r\n
+\t\tif ( thisUpper == aArgs[i].toUpperCase() )\r\n
+\t\t\treturn true ;\r\n
+\t}\r\n
+\treturn false ;\r\n
+}\r\n
+\r\n
+var CurrentContainers = [] ;\r\n
+if ( !AlwaysCreate )\r\n
+{\r\n
+\tdialog.Selection.EnsureSelection() ;\r\n
+\tCurrentContainers = FCKDomTools.GetSelectedDivContainers() ;\r\n
+}\r\n
+\r\n
+// Add some tabs\r\n
+dialog.AddTab( \'General\', FCKLang.DlgDivGeneralTab );\r\n
+dialog.AddTab( \'Advanced\', FCKLang.DlgDivAdvancedTab ) ;\r\n
+\r\n
+function AddStyleOption( styleName )\r\n
+{\r\n
+\tvar el = GetE( \'selStyle\' ) ;\r\n
+\tvar opt = document.createElement( \'option\' ) ;\r\n
+\topt.text = opt.value = styleName ;\r\n
+\r\n
+\tif ( FCKBrowserInfo.IsIE )\r\n
+\t\tel.add( opt ) ;\r\n
+\telse\r\n
+\t\tel.add( opt, null ) ;\r\n
+}\r\n
+\r\n
+function OnDialogTabChange( tabCode )\r\n
+{\r\n
+\tShowE( \'divGeneral\', tabCode == \'General\' ) ;\r\n
+\tShowE( \'divAdvanced\', tabCode == \'Advanced\' ) ;\r\n
+\tdialog.SetAutoSize( true ) ;\r\n
+}\r\n
+\r\n
+function GetNearestAncestorDirection( node )\r\n
+{\r\n
+\tvar dir = \'ltr\' ;\t// HTML default.\r\n
+\twhile ( ( node = node.parentNode ) )\r\n
+\t{\r\n
+\t\tif ( node.dir )\r\n
+\t\t\tdir = node.dir ;\r\n
+\t}\r\n
+\treturn dir ;\r\n
+}\r\n
+\r\n
+window.onload = function()\r\n
+{\r\n
+\t// First of all, translate the dialog box texts\r\n
+\toEditor.FCKLanguageManager.TranslatePage(document) ;\r\n
+\r\n
+\tdialog.SetOkButton( true ) ;\r\n
+\tdialog.SetAutoSize( true ) ;\r\n
+\r\n
+\t// Popuplate the style menu\r\n
+\tvar styles = FCKStyles.GetStyles() ;\r\n
+\tvar selectableStyles = {} ;\r\n
+\tfor ( var i in styles )\r\n
+\t{\r\n
+\t\tif ( ! /^_FCK_/.test( i ) && styles[i].Element == \'div\' )\r\n
+\t\t\tselectableStyles[i] = styles[i] ;\r\n
+\t}\r\n
+\tif ( CurrentContainers.length <= 1 )\r\n
+\t{\r\n
+\t\tvar target = CurrentContainers[0] ;\r\n
+\t\tvar match = null ;\r\n
+\t\tfor ( var i in selectableStyles )\r\n
+\t\t{\r\n
+\t\t\tif ( target && styles[i].CheckElementRemovable( target, true ) )\r\n
+\t\t\t\tmatch = i ;\r\n
+\t\t}\r\n
+\t\tif ( !match )\r\n
+\t\t\tAddStyleOption( "" ) ;\r\n
+\t\tfor ( var i in selectableStyles )\r\n
+\t\t\tAddStyleOption( i ) ;\r\n
+\t\tif ( match )\r\n
+\t\t\tGetE( \'selStyle\' ).value = match ;\r\n
+\r\n
+\t\t// Set the value for other inputs\r\n
+\t\tif ( target )\r\n
+\t\t{\r\n
+\t\t\tGetE( \'txtClass\' ).value = target.className ;\r\n
+\t\t\tGetE( \'txtId\' ).value = target.id ;\r\n
+\t\t\tGetE( \'txtLang\' ).value = target.lang ;\r\n
+\t\t\tGetE( \'txtInlineStyle\').value = target.style.cssText ;\r\n
+\t\t\tGetE( \'txtTitle\' ).value = target.title ;\r\n
+\t\t\tGetE( \'selLangDir\').value = target.dir || GetNearestAncestorDirection( target ) ;\r\n
+\t\t}\r\n
+\t}\r\n
+\telse\r\n
+\t{\r\n
+\t\tGetE( \'txtId\' ).disabled = true ;\r\n
+\t\tAddStyleOption( "" ) ;\r\n
+\t\tfor ( var i in selectableStyles )\r\n
+\t\t\tAddStyleOption( i ) ;\r\n
+\t}\r\n
+}\r\n
+\r\n
+function CreateDiv()\r\n
+{\r\n
+\tvar newBlocks = [] ;\r\n
+\tvar range = new FCKDomRange( FCK.EditorWindow ) ;\r\n
+\trange.MoveToSelection() ;\r\n
+\r\n
+\tvar bookmark = range.CreateBookmark() ;\r\n
+\r\n
+\t// Kludge for #1592: if the bookmark nodes are in the beginning of\r\n
+\t// $tagName, then move them to the nearest block element in the\r\n
+\t// $tagName.\r\n
+\tif ( FCKBrowserInfo.IsIE )\r\n
+\t{\r\n
+\t\tvar bStart\t= range.GetBookmarkNode( bookmark, true ) ;\r\n
+\t\tvar bEnd\t= range.GetBookmarkNode( bookmark, false ) ;\r\n
+\r\n
+\t\tvar cursor ;\r\n
+\r\n
+\t\tif ( bStart\r\n
+\t\t\t\t&& bStart.parentNode.nodeName.IEquals( \'div\' )\r\n
+\t\t\t\t&& !bStart.previousSibling )\r\n
+\t\t{\r\n
+\t\t\tcursor = bStart ;\r\n
+\t\t\twhile ( ( cursor = cursor.nextSibling ) )\r\n
+\t\t\t{\r\n
+\t\t\t\tif ( FCKListsLib.BlockElements[ cursor.nodeName.toLowerCase() ] )\r\n
+\t\t\t\t\tFCKDomTools.MoveNode( bStart, cursor, true ) ;\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\r\n
+\t\tif ( bEnd\r\n
+\t\t\t\t&& bEnd.parentNode.nodeName.IEquals( \'div\' )\r\n
+\t\t\t\t&& !bEnd.previousSibling )\r\n
+\t\t{\r\n
+\t\t\tcursor = bEnd ;\r\n
+\t\t\twhile ( ( cursor = cursor.nextSibling ) )\r\n
+\t\t\t{\r\n
+\t\t\t\tif ( FCKListsLib.BlockElements[ cursor.nodeName.toLowerCase() ] )\r\n
+\t\t\t\t{\r\n
+\t\t\t\t\tif ( cursor.firstChild == bStart )\r\n
+\t\t\t\t\t\tFCKDomTools.InsertAfterNode( bStart, bEnd ) ;\r\n
+\t\t\t\t\telse\r\n
+\t\t\t\t\t\tFCKDomTools.MoveNode( bEnd, cursor, true ) ;\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\tvar iterator = new FCKDomRangeIterator( range ) ;\r\n
+\tvar block ;\r\n
+\r\n
+\tvar paragraphs = [] ;\r\n
+\twhile ( ( block = iterator.GetNextParagraph() ) )\r\n
+\t\tparagraphs.push( block ) ;\r\n
+\r\n
+\t// Make sure all paragraphs have the same parent.\r\n
+\tvar commonParent = paragraphs[0].parentNode ;\r\n
+\tvar tmp = [] ;\r\n
+\tfor ( var i = 0 ; i < paragraphs.length ; i++ )\r\n
+\t{\r\n
+\t\tblock = paragraphs[i] ;\r\n
+\t\tcommonParent = FCKDomTools.GetCommonParents( block.parentNode, commonParent ).pop() ;\r\n
+\t}\r\n
+\r\n
+\t// The common parent must not be the following tags: table, tbody, tr, ol, ul.\r\n
+\twhile ( commonParent.nodeName.IEquals( \'table\', \'tbody\', \'tr\', \'ol\', \'ul\' ) )\r\n
+\t\tcommonParent = commonParent.parentNode ;\r\n
+\r\n
+\t// Reconstruct the block list to be processed such that all resulting blocks\r\n
+\t// satisfy parentNode == commonParent.\r\n
+\tvar lastBlock = null ;\r\n
+\twhile ( paragraphs.length > 0 )\r\n
+\t{\r\n
+\t\tblock = paragraphs.shift() ;\r\n
+\t\twhile ( block.parentNode != commonParent )\r\n
+\t\t\tblock = block.parentNode ;\r\n
+\t\tif ( block != lastBlock )\r\n
+\t\t\ttmp.push( block ) ;\r\n
+\t\tlastBlock = block ;\r\n
+\t}\r\n
+\tparagraphs = tmp ;\r\n
+\r\n
+\t// Split the paragraphs into groups depending on their BlockLimit element.\r\n
+\tvar groups = [] ;\r\n
+\tvar lastBlockLimit = null ;\r\n
+\tfor ( var i = 0 ; i < paragraphs.length ; i++ )\r\n
+\t{\r\n
+\t\tblock = paragraphs[i] ;\r\n
+\t\tvar elementPath = new FCKElementPath( block ) ;\r\n
+\t\tif ( elementPath.BlockLimit != lastBlockLimit )\r\n
+\t\t{\r\n
+\t\t\tgroups.push( [] ) ;\r\n
+\t\t\tlastBlockLimit = elementPath.BlockLimit ;\r\n
+\t\t}\r\n
+\t\tgroups[groups.length - 1].push( block ) ;\r\n
+\t}\r\n
+\r\n
+\t// Create a DIV container for each group.\r\n
+\tfor ( var i = 0 ; i < groups.length ; i++ )\r\n
+\t{\r\n
+\t\tvar divNode = FCK.EditorDocument.createElement( \'div\' ) ;\r\n
+\t\tgroups[i][0].parentNode.insertBefore( divNode, groups[i][0] ) ;\r\n
+\t\tfor ( var j = 0 ; j < groups[i].length ; j++ )\r\n
+\t\t\tFCKDomTools.MoveNode( groups[i][j], divNode ) ;\r\n
+\t\tnewBlocks.push( divNode ) ;\r\n
+\t}\r\n
+\r\n
+\trange.MoveToBookmark( bookmark ) ;\r\n
+\trange.Select() ;\r\n
+\r\n
+\tFCK.Focus() ;\r\n
+\tFCK.Events.FireEvent( \'OnSelectionChange\' ) ;\r\n
+\r\n
+\treturn newBlocks ;\r\n
+}\r\n
+\r\n
+function Ok()\r\n
+{\r\n
+\toEditor.FCKUndo.SaveUndoStep() ;\r\n
+\r\n
+\tif ( CurrentContainers.length < 1 )\r\n
+\t\tCurrentContainers = CreateDiv();\r\n
+\r\n
+\tvar setValue = function( attrName, inputName )\r\n
+\t{\r\n
+\t\tvar val = GetE( inputName ).value ;\r\n
+\t\tfor ( var i = 0 ; i < CurrentContainers.length ; i++ )\r\n
+\t\t{\r\n
+\t\t\tif ( val == \'\' )\r\n
+\t\t\t\tCurrentContainers[i].removeAttribute( attrName ) ;\r\n
+\t\t\telse\r\n
+\t\t\t\tCurrentContainers[i].setAttribute( attrName, val ) ;\r\n
+\t\t}\r\n
+\t}\r\n
+\r\n
+\t// Apply modifications to the DIV container according to dialog inputs.\r\n
+\tif ( CurrentContainers.length == 1 )\r\n
+\t{\r\n
+\t\tsetValue( \'class\', \'txtClass\' ) ;\r\n
+\t\tsetValue( \'id\', \'txtId\' ) ;\r\n
+\t}\r\n
+\tsetValue( \'lang\', \'txtLang\' ) ;\r\n
+\tif ( FCKBrowserInfo.IsIE )\r\n
+\t{\r\n
+\t\tfor ( var i = 0 ; i < CurrentContainers.length ; i++ )\r\n
+\t\t\tCurrentContainers[i].style.cssText = GetE( \'txtInlineStyle\' ).value ;\r\n
+\t}\r\n
+\telse\r\n
+\t\tsetValue( \'style\', \'txtInlineStyle\' ) ;\r\n
+\tsetValue( \'title\', \'txtTitle\' ) ;\r\n
+\tfor ( var i = 0 ; i < CurrentContainers.length ; i++ )\r\n
+\t{\r\n
+\t\tvar dir = GetE( \'selLangDir\' ).value ;\r\n
+\t\tvar styleName = GetE( \'selStyle\' ).value ;\r\n
+\t\tif ( GetNearestAncestorDirection( CurrentContainers[i] ) != dir )\r\n
+\t\t\tCurrentContainers[i].dir = dir ;\r\n
+\t\telse\r\n
+\t\t\tCurrentContainers[i].removeAttribute( \'dir\' ) ;\r\n
+\r\n
+\t\tif ( styleName )\r\n
+\t\t\tFCKStyles.GetStyle( styleName ).ApplyToObject( CurrentContainers[i] ) ;\r\n
+\t}\r\n
+\r\n
+\treturn true ;\r\n
+}\r\n
+\r\n
+\t</script>\r\n
+</head>\r\n
+<body style="overflow: hidden">\r\n
+\t<div id="divGeneral">\r\n
+\t\t<table cellspacing="0" cellpadding="0" width="100%" border="0">\r\n
+\t\t\t<colgroup span="2">\r\n
+\t\t\t\t<col width="49%" />\r\n
+\t\t\t\t<col width="2%" />\r\n
+\t\t\t\t<col width="49%" />\r\n
+\t\t\t</colgroup>\r\n
+\t\t\t<tr>\r\n
+\t\t\t\t<td>\r\n
+\t\t\t\t\t<span fcklang="DlgDivStyle">Style</span><br />\r\n
+\t\t\t\t\t<select id="selStyle" style="width: 100%;">\r\n
+\t\t\t\t\t</select>\r\n
+\t\t\t\t</td>\r\n
+\t\t\t\t<td>&nbsp;</td>\r\n
+\t\t\t\t<td>\r\n
+\t\t\t\t\t<span fcklang="DlgGenClass">Stylesheet Classes</span><br />\r\n
+\t\t\t\t\t<input id="txtClass" style="width: 100%" type="text" />\r\n
+\t\t\t\t</td>\r\n
+\t\t\t</tr>\r\n
+\t\t</table>\r\n
+\t</div>\r\n
+\t<div id="divAdvanced" style="display: none">\r\n
+\t\t<table cellspacing="0" cellpadding="0" width="100%" border="0">\r\n
+\t\t\t<colgroup span="2">\r\n
+\t\t\t\t<col width="49%" />\r\n
+\t\t\t\t<col width="2%" />\r\n
+\t\t\t\t<col width="49%" />\r\n
+\t\t\t</colgroup>\r\n
+\t\t\t<tr>\r\n
+\t\t\t\t<td>\r\n
+\t\t\t\t\t<span fcklang="DlgGenId">Id</span><br />\r\n
+\t\t\t\t\t<input style="width: 100%" type="text" id="txtId" />\r\n
+\t\t\t\t</td>\r\n
+\t\t\t\t<td>&nbsp;</td>\r\n
+\t\t\t\t<td>\r\n
+\t\t\t\t\t<span fcklang="DlgGenLangCode">Language Code</span><br />\r\n
+\t\t\t\t\t<input style="width: 100%" type="text" id="txtLang" />\r\n
+\t\t\t\t</td>\r\n
+\t\t\t</tr>\r\n
+\t\t\t<tr>\r\n
+\t\t\t\t<td colspan="3">&nbsp;</td>\r\n
+\t\t\t</tr>\r\n
+\t\t\t<tr>\r\n
+\t\t\t\t<td colspan="3">\r\n
+\t\t\t\t\t<span fcklang="DlgDivInlineStyle">Inline Style</span><br />\r\n
+\t\t\t\t\t<input style="width: 100%" type="text" id="txtInlineStyle" />\r\n
+\t\t\t\t</td>\r\n
+\t\t\t</tr>\r\n
+\t\t\t<tr>\r\n
+\t\t\t\t<td colspan="3">&nbsp;</td>\r\n
+\t\t\t</tr>\r\n
+\t\t\t<tr>\r\n
+\t\t\t\t<td colspan="3">\r\n
+\t\t\t\t\t<span fcklang="DlgGenTitle">Advisory Title</span><br />\r\n
+\t\t\t\t\t<input style="width: 100%" type="text" id="txtTitle" />\r\n
+\t\t\t\t</td>\r\n
+\t\t\t</tr>\r\n
+\t\t\t<tr>\r\n
+\t\t\t\t<td>&nbsp;</td>\r\n
+\t\t\t</tr>\r\n
+\t\t\t<tr>\r\n
+\t\t\t\t<td>\r\n
+\t\t\t\t\t<span fcklang="DlgGenLangDir">Language Direction</span><br />\r\n
+\t\t\t\t\t<select id="selLangDir">\r\n
+\t\t\t\t\t\t<option fcklang="DlgGenLangDirLtr" value="ltr">Left to Right (LTR)\r\n
+\t\t\t\t\t\t<option fcklang="DlgGenLangDirRtl" value="rtl">Right to Left (RTL)\r\n
+\t\t\t\t\t</select>\r\n
+\t\t\t\t</td>\r\n
+\t\t\t</tr>\r\n
+\t\t</table>\r\n
+\t</div>\r\n
+</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>fck_div.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

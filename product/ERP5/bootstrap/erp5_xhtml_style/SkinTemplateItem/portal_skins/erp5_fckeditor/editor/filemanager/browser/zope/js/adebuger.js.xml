@@ -1,0 +1,320 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45758856.41</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>adebuger.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+var oListManager = new Object() ;\r\n
+// define the nb cell by row for album presentation\r\n
+var nbCell=3;\r\n
+\r\n
+oListManager.Init = function()\r\n
+{\r\n
+\tthis.Table = document.getElementById(\'tableFiles\') ;\r\n
+}\r\n
+\r\n
+oListManager.Clear = function()\r\n
+{\r\n
+\t// Remove all other rows available.\r\n
+\twhile ( this.Table.rows.length > 0 )\r\n
+\t\tthis.Table.deleteRow(0) ;\r\n
+}\r\n
+\r\n
+oListManager.AddFolder = function( folderName, folderTitle, folderPath, sType, sLinkbyuid, sUid )\r\n
+{\r\n
+\t// Create the new row.\r\n
+\tvar oRow = this.Table.insertRow(-1) ;\r\n
+\r\n
+\t// Build the link to view the folder.\r\n
+\tvar sLink = \'<a href="#" onclick="OpenFolder(\\\'\' + folderPath + \'\\\');return false;">\' ;\r\n
+        var sLinkFolder = \'\';\r\n
+        if (sType!=\'Image\') {\r\n
+                            if (sLinkbyuid==\'yes\' && sUid !=\'\') {\r\n
+                                                                 sFolderUrl = \'./resolveUid/\' + sUid ;\r\n
+                                                                }\r\n
+                            else                                {\r\n
+                                                                 sFolderUrl = folderPath ;\r\n
+                                                                }\r\n
+                            sLinkFolder = \'<a title="link the folder" href="#" onclick="OpenFile(\\\'\' + sFolderUrl + \'\\\');return false;"><img alt="link the folder" src="images/lier.gif" width="12" height="12" border="0"><\\/a>\' ;\r\n
+                            }\r\n
+\r\n
+\t// Add the folder icon cell.\r\n
+\tvar oCell = oRow.insertCell(-1) ;\r\n
+\toCell.width = 16 ;\r\n
+\toCell.innerHTML = sLink + \'<img alt="" src="images/Folder.gif" width="16" height="16" border="0"><\\/a>\' ;\r\n
+\r\n
+\t// Add the folder name cell.\r\n
+\toCell = oRow.insertCell(-1) ;\r\n
+\toCell.noWrap = true ;\r\n
+\toCell.colSpan = 2 ;\r\n
+\toCell.innerHTML = \'&nbsp;\' + sLink + folderTitle + \'<\\/a>&nbsp;\' + sLinkFolder  ;\r\n
+}\r\n
+\r\n
+oListManager.AddFile = function( fileName, fileTitle, filePhoto, fileUrl, fileSize, sType )\r\n
+{\r\n
+\t// Create the new row.\r\n
+\tvar oRow = this.Table.insertRow(-1) ;\r\n
+\r\n
+\t// Build the link to view the file.\r\n
+        var sLink = \'<a href="#" onclick="OpenFile(\\\'\' + fileUrl + \'\\\');return false;">\' ;\r\n
+        // Change the link if type is image since setUrl for images support more arguments\r\n
+        if (sType==\'Image\') {\r\n
+\t                        sLink = \'<a href="#" onclick="OpenImage(\\\'\' + fileUrl + \'\\\',\\\'\\\',\\\'\\\',\\\'\' + fileTitle + \'\\\');return false;">\' ;\r\n
+                               }\r\n
+\r\n
+\t// Get the file icon.\r\n
+\tvar sIcon = oIcons.GetIcon( fileName ) ;\r\n
+\r\n
+\t// Add the file icon cell.\r\n
+\tvar oCell = oRow.insertCell(-1) ;\r\n
+\toCell.width = 16 ;\r\n
+\toCell.innerHTML = sLink + \'<img alt="" src="images/icons/\' + sIcon + \'.gif" width="16" height="16" border="0"><\\/a>\' ;\r\n
+\r\n
+\t// Add the file name cell.\r\n
+\toCell = oRow.insertCell(-1) ;\r\n
+\toCell.innerHTML = \'&nbsp;\' + sLink + fileTitle + \'<\\/a>\' ;\r\n
+        if (filePhoto==\'yes\') {\r\n
+                               var sLinkThumb = \'<a href="#" onclick="OpenImage(\\\'\' + fileUrl + \'?size=thumb\\\',\\\'\\\',\\\'\\\',\\\'\' + fileTitle + \'\\\');return false;">\' ;\r\n
+                               var sLinkMedium = \'<a href="#" onclick="OpenImage(\\\'\' + fileUrl + \'?size=medium\\\',\\\'\\\',\\\'\\\',\\\'\' + fileTitle + \'\\\');return false;">\' ;\r\n
+                               var sLinkFull = \'<a href="#" onclick="OpenImage(\\\'\' + fileUrl + \'?size=full\\\',\\\'\\\',\\\'\\\',\\\'\' + fileTitle + \'\\\');return false;">\' ;\r\n
+                               // Add the photo cell.\r\n
+                               oCell = oRow.insertCell(-1) ;\r\n
+                               oCell.innerHTML = \'Photo&nbsp;Size&nbsp;:&nbsp;\' + sLinkThumb + \'small<\\/a>&nbsp;-&nbsp;\' + sLinkMedium + \'medium<\\/a>&nbsp;-&nbsp;\' + sLinkFull + \'full<\\/a>\' ;\r\n
+                              }\r\n
+\t\r\n
+\t// Add the file size cell.\r\n
+\toCell = oRow.insertCell(-1) ;\r\n
+\toCell.noWrap = true ;\r\n
+\toCell.align = \'right\' ;\r\n
+\toCell.innerHTML = \'&nbsp;\' + fileSize + \' KB\' ;\r\n
+}\r\n
+\r\n
+oListManager.AddFolderToAlbum = function( folderName, folderTitle, folderPath, sType, sLinkbyuid, sUid, numCell )\r\n
+{\r\n
+\r\n
+      \r\n
+\t// Create the new row.\r\n
+        if (numCell%nbCell==0)\r\n
+        {\r\n
+\t    var oRow = this.Table.insertRow(-1) ;\r\n
+        }\r\n
+        else\r\n
+        {\r\n
+            numRow = Math.floor (numCell/nbCell);\r\n
+            var oRow= this.Table[numCell];\r\n
+        }\r\n
+\r\n
+\t// Build the link to view the folder.\r\n
+\tvar sLink = \'<a href="#" title="browse the folder" onclick="OpenFolder(\\\'\' + folderPath + \'\\\');return false;">\' ;\r\n
+        var sLinkFolder = \'&nbsp;\';\r\n
+        if (sType!=\'Image\') {\r\n
+                            if (sLinkbyuid==\'yes\' && sUid !=\'\') {\r\n
+                                                                 sFolderUrl = \'./resolveUid/\' + sUid ;\r\n
+                                                                }\r\n
+                            else                                {\r\n
+                                                                 sFolderUrl = folderPath ;\r\n
+                                                                }\r\n
+                            sLinkFolder = \'<a title="link the folder" href="#" onclick="OpenFile(\\\'\' + sFolderUrl + \'\\\');return false;"><img alt="link the folder" src="images/lier.gif" width="12" height="12" border="0">&nbsp;Link the folder<\\/a>\' ;\r\n
+                            }\r\n
+\r\n
+\t// Add the folder icon cell.\r\n
+\tvar oCell = oRow.insertCell(-1) ;\r\n
+\toCell.width = 130 ;\r\n
+        oCell.height = 130;\r\n
+        oCell.noWrap = true ;\r\n
+        oCell.align = \'center\' ;\r\n
+\toCell.innerHTML = sLink + \'<img alt="browse the folder" src="images/Folder100.gif" width="100" height="100" border="0"><\\/a>\' + \'<br \\/>\' + folderTitle +  + \'<br \\/>\' + sLinkFolder  ;\r\n
+\r\n
+}\r\n
+\r\n
+oListManager.AddFileToAlbum = function( fileName, fileTitle, filePhoto, fileUrl, fileSize, sType, numCell )\r\n
+{\r\n
+\t// Create the new row.\r\n
+        if (numCell%nbCell==0)\r\n
+        {\r\n
+\t    var oRow = this.Table.insertRow(-1) ;\r\n
+        }\r\n
+        else\r\n
+        {\r\n
+            numRow = Math.floor (numCell/nbCell);\r\n
+            var oRow= this.Table[numCell];\r\n
+        }\r\n
+\r\n
+\t// Build the link to view the file.\r\n
+        var sLink = \'<a title="link the file" href="#" onclick="OpenFile(\\\'\' + fileUrl + \'\\\');return false;">\' ;\r\n
+        // Change the link if type is image since setUrl for images support more arguments\r\n
+        if (sType==\'Image\') {\r\n
+\t                        sLink = \'<a title="link the image" href="#" onclick="OpenImage(\\\'\' + fileUrl + \'\\\',\\\'\\\',\\\'\\\',\\\'\' + fileTitle + \'\\\');return false;">\' ;\r\n
+                            }\r\n
+\r\n
+\t// Get the file icon.\r\n
+        if (sType!=\'Image\')\r\n
+        {\r\n
+\t    var sIcon = \'images/icons/\' + oIcons.GetIcon( fileName ) +\'.gif\' ;\r\n
+        }\r\n
+        else\r\n
+        {\r\n
+\t    var sIcon = fileUrl ;\r\n
+        }\r\n
+        if (filePhoto==\'yes\') {\r\n
+                               var sLinkThumb = \'<a href="#" onclick="OpenImage(\\\'\' + fileUrl + \'?size=thumb\\\',\\\'\\\',\\\'\\\',\\\'\' + fileTitle + \'\\\');return false;">\' ;\r\n
+                               var sLinkMedium = \'<a href="#" onclick="OpenImage(\\\'\' + fileUrl + \'?size=medium\\\',\\\'\\\',\\\'\\\',\\\'\' + fileTitle + \'\\\');return false;">\' ;\r\n
+                               var sLinkFull = \'<a href="#" onclick="OpenImage(\\\'\' + fileUrl + \'?size=full\\\',\\\'\\\',\\\'\\\',\\\'\' + fileTitle + \'\\\');return false;">\' ;\r\n
+                               sLinksPhoto = \'Size&nbsp;:&nbsp;\' + sLinkThumb + \'small<\\/a>&nbsp;-&nbsp;\' + sLinkMedium + \'medium<\\/a>&nbsp;-&nbsp;\' + sLinkFull + \'full<\\/a>\' ;\r\n
+                              }\r\n
+\r\n
+\r\n
+\t// Add the file icon cell.\r\n
+\tvar oCell = oRow.insertCell(-1) ;\r\n
+\toCell.width = 130 ; \r\n
+        oCell.height = 130;\r\n
+        oCell.align = \'center\' ;\r\n
+\toCell.innerHTML = sLink + \'<img alt="" src="\' + sIcon + \'" width="100" height="100" border="0"><\\/a>\' + \'<br\\/>\' + sLink + fileTitle + \'<\\/a><br\\/>\' + sLinksPhoto + \'<br\\/>\' + fileSize + \' KB\' ;\r\n
+\r\n
+}\r\n
+\r\n
+\r\n
+\r\n
+function OpenFolder( folderPath )\r\n
+{\r\n
+\t// Load the resources list for this folder.\r\n
+\twindow.parent.frames[\'frmFolders\'].LoadFolders( folderPath ) ;\r\n
+}\r\n
+\r\n
+function OpenFile( fileUrl )\r\n
+{\r\n
+\twindow.top.opener.SetUrl( fileUrl ) ;\r\n
+\twindow.top.close() ;\r\n
+\twindow.top.opener.focus() ;\r\n
+}\r\n
+\r\n
+function OpenImage( fileUrl, fileWidth, fileHeight, fileTitle )\r\n
+{\r\n
+\twindow.top.opener.SetUrl( fileUrl, fileWidth, fileHeight, fileTitle ) ;\r\n
+\twindow.top.close() ;\r\n
+\twindow.top.opener.focus() ;\r\n
+}\r\n
+\r\n
+function LoadResources( resourceType, folderPath )\r\n
+{\r\n
+\toListManager.Clear() ;\r\n
+\toConnector.ResourceType = resourceType ;\r\n
+\toConnector.CurrentFolder = folderPath\r\n
+\toConnector.SendCommand( \'GetFoldersAndFiles\', null, GetFoldersAndFilesCallBack ) ;\r\n
+}\r\n
+\r\n
+function Refresh()\r\n
+{\r\n
+\tLoadResources( oConnector.ResourceType, oConnector.CurrentFolder ) ;\r\n
+}\r\n
+\r\n
+function GetFoldersAndFilesCallBack( fckXml )\r\n
+{\r\n
+\r\n
+        // Get the resourceType\r\n
+        var oRootNode = fckXml.SelectSingleNode( \'Connector\' ) ;\r\n
+      \tvar sRootType\t= oRootNode.attributes.getNamedItem(\'resourceType\').value ;\r\n
+\t// Get the current folder path.\r\n
+\tvar oNode = fckXml.SelectSingleNode( \'Connector/CurrentFolder\' ) ;\r\n
+\tvar sCurrentFolderPath\t= oNode.attributes.getNamedItem(\'path\').value ;\r\n
+\tvar sCurrentFolderUrl\t= oNode.attributes.getNamedItem(\'url\').value ;\r\n
+\r\n
+\t// Add the Folders.\t\r\n
+\tvar oNodes = fckXml.SelectNodes( \'Connector/Folders/Folder\' ) ;\r\n
+\tfor ( var i = 0 ; i < oNodes.length ; i++ )\r\n
+\t{\r\n
+\t\tvar sFolderName = oNodes[i].attributes.getNamedItem(\'name\').value ;\r\n
+\t\tvar sFolderTitle = oNodes[i].attributes.getNamedItem(\'title\').value ;\r\n
+                var sType =  oNodes[i].attributes.getNamedItem(\'type\').value ;\r\n
+                var sLinkbyuid =  oNodes[i].attributes.getNamedItem(\'linkbyuid\').value ;\r\n
+                var sUid =  oNodes[i].attributes.getNamedItem(\'uid\').value ;\r\n
+                if (sRootType!= \'Image\')\r\n
+                {\r\n
+\t\t       oListManager.AddFolder( sFolderName, sFolderTitle, sCurrentFolderPath + sFolderName + "/", sType, sLinkbyuid, sUid ) ;\r\n
+                }\r\n
+                else\r\n
+                {\r\n
+                       oListManager.AddFolderToAlbum( sFolderName, sFolderTitle, sCurrentFolderPath + sFolderName + "/", sType, sLinkbyuid, sUid, i ) ;\r\n
+                       // need j to continue in the same row or table\r\n
+                       var j= i;\r\n
+                }\r\n
+\t}\r\n
+\t// Add the Files.\t\r\n
+\tvar oNodes = fckXml.SelectNodes( \'Connector/Files/File\' ) ;\r\n
+\tfor ( var i = 0 ; i < oNodes.length ; i++ )\r\n
+\t{\r\n
+\t\tvar sFileName = oNodes[i].attributes.getNamedItem(\'name\').value ;\r\n
+\t\tvar sFileSize = oNodes[i].attributes.getNamedItem(\'size\').value ;\r\n
+\t\tvar sFileTitle = oNodes[i].attributes.getNamedItem(\'title\').value ;\r\n
+\t\tvar sFilePhoto = oNodes[i].attributes.getNamedItem(\'photo\').value ;\r\n
+                var sLinkbyuid =  oNodes[i].attributes.getNamedItem(\'linkbyuid\').value ;\r\n
+                var sUid =  oNodes[i].attributes.getNamedItem(\'uid\').value ;\r\n
+                var sType =  oNodes[i].attributes.getNamedItem(\'type\').value ;\r\n
+                var sIsAttach =  oNodes[i].attributes.getNamedItem(\'isattach\').value ;\r\n
+                var sAttachId =  oNodes[i].attributes.getNamedItem(\'attachid\').value ;\r\n
+                var sFileUrl = sCurrentFolderUrl + sFileName ;\r\n
+                if (sLinkbyuid==\'yes\' && sUid !=\'\') {\r\n
+                                                     sFileUrl = \'./resolveUid/\' + sUid ;\r\n
+                                                     }\r\n
+                if (sIsAttach==\'yes\' && sAttachId !=\'\') {\r\n
+                                                        sFileUrl = sFileUrl +\'/\' + sAttachId ;\r\n
+                                                        }\r\n
+                if (sAttachId !=\'\') {\r\n
+                                                        sFileName = sAttachId ;\r\n
+                                                        }\r\n
+\r\n
+                if (sRootType!= \'Image\')\r\n
+                {\r\n
+\t\t       oListManager.AddFile( sFileName, sFileTitle, sFilePhoto, sFileUrl, sFileSize, sType ) ;\r\n
+                else\r\n
+                {\r\n
+                       oListManager.AddFileToAlbum( sFileName, sFileTitle, sFilePhoto, sFileUrl, sFileSize, sType, j+i ) ;\r\n
+                }\t\r\n
+        }\r\n
+}\r\n
+\r\n
+window.onload = function()\r\n
+{\r\n
+\toListManager.Init() ;\r\n
+\twindow.top.IsLoadedResourcesList = true ;\r\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>12074</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749208.67</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fcktemplates.xml</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/xml</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>\074?xml version="1.0" encoding="utf-8" ?\076\r\n
+\074!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * This is the sample templates definitions file. It makes the "templates"\r\n
+ * command completely customizable.\r\n
+ *\r\n
+ * See FCKConfig.TemplatesXmlPath in the configuration file.\r\n
+--\076\r\n
+\074Templates imagesBasePath="fck_template/images/"\076\r\n
+\t\074Template title="Image and Title" image="template1.gif"\076\r\n
+\t\t\074Description\076One main image with a title and text that surround the image.\074/Description\076\r\n
+\t\t\074Html\076\r\n
+\t\t\t\074![CDATA[\r\n
+\t\t\t\t\074img style="MARGIN-RIGHT: 10px" height="100" alt="" width="100" align="left"/\076\r\n
+\t\t\t\t\074h3\076Type the title here\074/h3\076\r\n
+\t\t\t\tType the text here\r\n
+\t\t\t]]\076\r\n
+\t\t\074/Html\076\r\n
+\t\074/Template\076\r\n
+\t\074Template title="Strange Template" image="template2.gif"\076\r\n
+\t\t\074Description\076A template that defines two colums, each one with a title, and some text.\074/Description\076\r\n
+\t\t\074Html\076\r\n
+\t\t\t\074![CDATA[\r\n
+\t\t\t\t\074table cellspacing="0" cellpadding="0" width="100%" border="0"\076\r\n
+\t\t\t\t\t\074tbody\076\r\n
+\t\t\t\t\t\t\074tr\076\r\n
+\t\t\t\t\t\t\t\074td width="50%"\076\r\n
+\t\t\t\t\t\t\t\074h3\076Title 1\074/h3\076\r\n
+\t\t\t\t\t\t\t\074/td\076\r\n
+\t\t\t\t\t\t\t\074td\076\046nbsp;\046nbsp;\046nbsp;\046nbsp;\046nbsp;\046nbsp;\046nbsp;\046nbsp;\046nbsp; \074/td\076\r\n
+\t\t\t\t\t\t\t\074td width="50%"\076\r\n
+\t\t\t\t\t\t\t\074h3\076Title 2\074/h3\076\r\n
+\t\t\t\t\t\t\t\074/td\076\r\n
+\t\t\t\t\t\t\074/tr\076\r\n
+\t\t\t\t\t\t\074tr\076\r\n
+\t\t\t\t\t\t\t\074td\076Text 1\074/td\076\r\n
+\t\t\t\t\t\t\t\074td\076\046nbsp;\074/td\076\r\n
+\t\t\t\t\t\t\t\074td\076Text 2\074/td\076\r\n
+\t\t\t\t\t\t\074/tr\076\r\n
+\t\t\t\t\t\074/tbody\076\r\n
+\t\t\t\t\074/table\076\r\n
+\t\t\t\tMore text goes here.\r\n
+\t\t\t]]\076\r\n
+\t\t\074/Html\076\r\n
+\t\074/Template\076\r\n
+\t\074Template title="Text and Table" image="template3.gif"\076\r\n
+\t\t\074Description\076A title with some text and a table.\074/Description\076\r\n
+\t\t\074Html\076\r\n
+\t\t\t\074![CDATA[\r\n
+\t\t\t\t\074table align="left" width="80%" border="0" cellspacing="0" cellpadding="0"\076\074tr\076\074td\076\r\n
+\t\t\t\t\t\074h3\076Title goes here\074/h3\076\r\n
+\t\t\t\t\t\074p\076\r\n
+\t\t\t\t\t\074table style="FLOAT: right" cellspacing="0" cellpadding="0" width="150" border="1"\076\r\n
+\t\t\t\t\t\t\074tbody\076\r\n
+\t\t\t\t\t\t\t\074tr\076\r\n
+\t\t\t\t\t\t\t\t\074td align="center" colspan="3"\076\074strong\076Table title\074/strong\076\074/td\076\r\n
+\t\t\t\t\t\t\t\074/tr\076\r\n
+\t\t\t\t\t\t\t\074tr\076\r\n
+\t\t\t\t\t\t\t\t\074td\076\046nbsp;\074/td\076\r\n
+\t\t\t\t\t\t\t\t\074td\076\046nbsp;\074/td\076\r\n
+\t\t\t\t\t\t\t\t\074td\076\046nbsp;\074/td\076\r\n
+\t\t\t\t\t\t\t\074/tr\076\r\n
+\t\t\t\t\t\t\t\074tr\076\r\n
+\t\t\t\t\t\t\t\t\074td\076\046nbsp;\074/td\076\r\n
+\t\t\t\t\t\t\t\t\074td\076\046nbsp;\074/td\076\r\n
+\t\t\t\t\t\t\t\t\074td\076\046nbsp;\074/td\076\r\n
+\t\t\t\t\t\t\t\074/tr\076\r\n
+\t\t\t\t\t\t\t\074tr\076\r\n
+\t\t\t\t\t\t\t\t\074td\076\046nbsp;\074/td\076\r\n
+\t\t\t\t\t\t\t\t\074td\076\046nbsp;\074/td\076\r\n
+\t\t\t\t\t\t\t\t\074td\076\046nbsp;\074/td\076\r\n
+\t\t\t\t\t\t\t\074/tr\076\r\n
+\t\t\t\t\t\t\t\074tr\076\r\n
+\t\t\t\t\t\t\t\t\074td\076\046nbsp;\074/td\076\r\n
+\t\t\t\t\t\t\t\t\074td\076\046nbsp;\074/td\076\r\n
+\t\t\t\t\t\t\t\t\074td\076\046nbsp;\074/td\076\r\n
+\t\t\t\t\t\t\t\074/tr\076\r\n
+\t\t\t\t\t\t\074/tbody\076\r\n
+\t\t\t\t\t\074/table\076\r\n
+\t\t\t\t\tType the text here\074/p\076\r\n
+\t\t\t\t\074/td\076\074/tr\076\074/table\076\r\n
+\t\t\t]]\076\r\n
+\t\t\074/Html\076\r\n
+\t\074/Template\076\r\n
+\074/Templates\076\r\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>2959</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

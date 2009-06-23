@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>fckdebug.html</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * This is the Debug window.\r\n
+ * It automatically popups if the Debug = true in the configuration file.\r\n
+-->\r\n
+<html xmlns="http://www.w3.org/1999/xhtml">\r\n
+<head>\r\n
+\t<title>FCKeditor Debug Window</title>\r\n
+\t<meta name="robots" content="noindex, nofollow" />\r\n
+\t<script type="text/javascript">\r\n
+\r\n
+var oWindow ;\r\n
+var oDiv ;\r\n
+\r\n
+if ( !window.FCKMessages )\r\n
+\twindow.FCKMessages = new Array() ;\r\n
+\r\n
+window.onload = function()\r\n
+{\r\n
+\toWindow = document.getElementById(\'xOutput\').contentWindow ;\r\n
+\toWindow.document.open() ;\r\n
+\toWindow.document.write( \'<div id="divMsg"><\\/div>\' ) ;\r\n
+\toWindow.document.close() ;\r\n
+\toDiv\t= oWindow.document.getElementById(\'divMsg\') ;\r\n
+}\r\n
+\r\n
+function Output( message, color, noParse )\r\n
+{\r\n
+\tif ( !noParse && message != null && isNaN( message ) )\r\n
+\t\tmessage = message.replace(/</g, "&lt;") ;\r\n
+\r\n
+\tif ( color )\r\n
+\t\tmessage = \'<font color="\' + color + \'">\' + message + \'<\\/font>\' ;\r\n
+\r\n
+\twindow.FCKMessages[ window.FCKMessages.length ] = message ;\r\n
+\tStartTimer() ;\r\n
+}\r\n
+\r\n
+function OutputObject( anyObject, color )\r\n
+{\r\n
+\tvar message ;\r\n
+\r\n
+\tif ( anyObject != null )\r\n
+\t{\r\n
+\t\tmessage = \'Properties of: \' + anyObject + \'</b><blockquote>\' ;\r\n
+\r\n
+\t\tfor (var prop in anyObject)\r\n
+\t\t{\r\n
+\t\t\ttry\r\n
+\t\t\t{\r\n
+\t\t\t\tvar sVal = anyObject[ prop ] != null ? anyObject[ prop ] + \'\' : \'[null]\' ;\r\n
+\t\t\t\tmessage += \'<b>\' + prop + \'</b> : \' + sVal.replace(/</g, \'&lt;\') + \'<br>\' ;\r\n
+\t\t\t}\r\n
+\t\t\tcatch (e)\r\n
+\t\t\t{\r\n
+\t\t\t\ttry\r\n
+\t\t\t\t{\r\n
+\t\t\t\t\tmessage += \'<b>\' + prop + \'</b> : [\' + typeof( anyObject[ prop ] ) + \']<br>\' ;\r\n
+\t\t\t\t}\r\n
+\t\t\t\tcatch (e)\r\n
+\t\t\t\t{\r\n
+\t\t\t\t\tmessage += \'<b>\' + prop + \'</b> : [-error-]<br>\' ;\r\n
+\t\t\t\t}\r\n
+\t\t\t}\r\n
+\t\t}\r\n
+\r\n
+\t\tmessage += \'</blockquote><b>\' ;\r\n
+\t} else\r\n
+\t\tmessage = \'OutputObject : Object is "null".\' ;\r\n
+\r\n
+\tOutput( message, color, true ) ;\r\n
+}\r\n
+\r\n
+function StartTimer()\r\n
+{\r\n
+\twindow.setTimeout( \'CheckMessages()\', 100 ) ;\r\n
+}\r\n
+\r\n
+function CheckMessages()\r\n
+{\r\n
+\tif ( window.FCKMessages.length > 0 )\r\n
+\t{\r\n
+\t\t// Get the first item in the queue\r\n
+\t\tvar sMessage = window.FCKMessages[0] ;\r\n
+\r\n
+\t\t// Removes the first item from the queue\r\n
+\t\tvar oTempArray = new Array() ;\r\n
+\t\tfor ( i = 1 ; i < window.FCKMessages.length ; i++ )\r\n
+\t\t\toTempArray[ i - 1 ] = window.FCKMessages[ i ] ;\r\n
+\t\twindow.FCKMessages = oTempArray ;\r\n
+\r\n
+\t\tvar d = new Date() ;\r\n
+\t\tvar sTime =\r\n
+\t\t\t( d.getHours() + 100 + \'\' ).substr( 1,2 ) + \':\' +\r\n
+\t\t\t( d.getMinutes() + 100 + \'\' ).substr( 1,2 ) + \':\' +\r\n
+\t\t\t( d.getSeconds() + 100 + \'\' ).substr( 1,2 ) + \':\' +\r\n
+\t\t\t( d.getMilliseconds() + 1000 + \'\' ).substr( 1,3 ) ;\r\n
+\r\n
+\t\tvar oMsgDiv = oWindow.document.createElement( \'div\' ) ;\r\n
+\t\toMsgDiv.innerHTML = sTime + \': <b>\' + sMessage + \'<\\/b>\' ;\r\n
+\t\toDiv.appendChild( oMsgDiv ) ;\r\n
+\t\toMsgDiv.scrollIntoView() ;\r\n
+\t}\r\n
+}\r\n
+\r\n
+function Clear()\r\n
+{\r\n
+\toDiv.innerHTML = \'\' ;\r\n
+}\r\n
+\t</script>\r\n
+</head>\r\n
+<body style="margin: 10px">\r\n
+\t<table style="height: 100%" cellspacing="5" cellpadding="0" width="100%" border="0">\r\n
+\t\t<tr>\r\n
+\t\t\t<td>\r\n
+\t\t\t\t<table cellspacing="0" cellpadding="0" width="100%" border="0">\r\n
+\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t<td style="font-weight: bold; font-size: 1.2em;">\r\n
+\t\t\t\t\t\t\tFCKeditor Debug Window</td>\r\n
+\t\t\t\t\t\t<td align="right">\r\n
+\t\t\t\t\t\t\t<input type="button" value="Clear" onclick="Clear();" /></td>\r\n
+\t\t\t\t\t</tr>\r\n
+\t\t\t\t</table>\r\n
+\t\t\t</td>\r\n
+\t\t</tr>\r\n
+\t\t<tr style="height: 100%">\r\n
+\t\t\t<td style="border: #696969 1px solid">\r\n
+\t\t\t\t<iframe id="xOutput" width="100%" height="100%" scrolling="auto" src="javascript:void(0)"\r\n
+\t\t\t\t\tframeborder="0"></iframe>\r\n
+\t\t\t</td>\r\n
+\t\t</tr>\r\n
+\t</table>\r\n
+</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

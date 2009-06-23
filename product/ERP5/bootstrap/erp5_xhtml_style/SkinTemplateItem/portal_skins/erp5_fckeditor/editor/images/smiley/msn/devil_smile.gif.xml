@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="Image" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts45749394.27</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>devil_smile.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/gif</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">R0lGODlhEwATANUAAP/////78P/f/9Tf/8DcwP+Y/9S/qtSfqqq/qqqfqoCAgNR/qqp/qip//1V/
+qip/qtSfVf9/VdR/Vf9fVdRfVap/VapfVf8/VdQ/VdQfVao/VaofVf8/ANQ/ANQfAKo/AKofAFUf
+VX8fAFUfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkIAAUALAAAAAATABMAAAbZwILQ
+ohEajR+K4ViggBIEptCwsUSnmg7jyjR8PAmjJQOyHKQFC6Z6/Wg+meSEg+lQNB68ZVkw5C0XIyMi
+EhIUgyMaFghiH4UQEREiESMRFBgfUEYHExIRhaCRESBbR4aFkiGREoIUVkedhSMAAZWzACMbfEIX
+oCIBDYQiAA4iHYxGHaghDw6OzA0fG2FGGJ+RHyGeER8jFB/IQhITn76CkRiLRwYYocMAuNylRwsd
+ExSes5UgCggDUgs+WKNA6U4FTWgOWIDjxoIChGgKDCCAIEECAwQGCDgSBAA7</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>19</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>444</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>19</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

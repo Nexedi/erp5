@@ -1,0 +1,220 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>spellchecker.pl</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+#!/usr/bin/perl\r\n
+\r\n
+use CGI qw/ :standard /;\r\n
+use File::Temp qw/ tempfile tempdir /;\r\n
+\r\n
+# my $spellercss = \'/speller/spellerStyle.css\';\t\t\t\t\t# by FredCK\r\n
+my $spellercss = \'../spellerStyle.css\';\t\t\t\t\t\t\t# by FredCK\r\n
+# my $wordWindowSrc = \'/speller/wordWindow.js\';\t\t\t\t\t# by FredCK\r\n
+my $wordWindowSrc = \'../wordWindow.js\';\t\t\t\t\t\t\t# by FredCK\r\n
+my @textinputs = param( \'textinputs[]\' ); # array\r\n
+# my $aspell_cmd = \'aspell\';\t\t\t\t\t\t\t\t\t# by FredCK (for Linux)\r\n
+my $aspell_cmd = \'"C:\\Program Files\\Aspell\\bin\\aspell.exe"\';\t# by FredCK (for Windows)\r\n
+my $lang = \'en_US\';\r\n
+# my $aspell_opts = "-a --lang=$lang --encoding=utf-8";\t\t\t# by FredCK\r\n
+my $aspell_opts = "-a --lang=$lang --encoding=utf-8 -H --rem-sgml-check=alt";\t\t# by FredCK\r\n
+my $input_separator = "A";\r\n
+\r\n
+# set the \'wordtext\' JavaScript variable to the submitted text.\r\n
+sub printTextVar {\r\n
+\tfor( my $i = 0; $i <= $#textinputs; $i++ ) {\r\n
+\t        print "textinputs[$i] = decodeURIComponent(\'" . escapeQuote( $textinputs[$i] ) . "\')\\n";\r\n
+\t}\r\n
+}\r\n
+\r\n
+sub printTextIdxDecl {\r\n
+\tmy $idx = shift;\r\n
+\tprint "words[$idx] = [];\\n";\r\n
+\tprint "suggs[$idx] = [];\\n";\r\n
+}\r\n
+\r\n
+sub printWordsElem {\r\n
+\tmy( $textIdx, $wordIdx, $word ) = @_;\r\n
+\tprint "words[$textIdx][$wordIdx] = \'" . escapeQuote( $word ) . "\';\\n";\r\n
+}\r\n
+\r\n
+sub printSuggsElem {\r\n
+\tmy( $textIdx, $wordIdx, @suggs ) = @_;\r\n
+\tprint "suggs[$textIdx][$wordIdx] = [";\r\n
+\tfor my $i ( 0..$#suggs ) {\r\n
+\t\tprint "\'" . escapeQuote( $suggs[$i] ) . "\'";\r\n
+\t\tif( $i < $#suggs ) {\r\n
+\t\t\tprint ", ";\r\n
+\t\t}\r\n
+\t}\r\n
+\tprint "];\\n";\r\n
+}\r\n
+\r\n
+sub printCheckerResults {\r\n
+\tmy $textInputIdx = -1;\r\n
+\tmy $wordIdx = 0;\r\n
+\tmy $unhandledText;\r\n
+\t# create temp file\r\n
+\tmy $dir = tempdir( CLEANUP => 1 );\r\n
+\tmy( $fh, $tmpfilename ) = tempfile( DIR => $dir );\r\n
+\r\n
+\t# temp file was created properly?\r\n
+\r\n
+\t# open temp file, add the submitted text.\r\n
+\tfor( my $i = 0; $i <= $#textinputs; $i++ ) {\r\n
+\t\t$text = url_decode( $textinputs[$i] );\r\n
+\t\t# Strip all tags for the text. (by FredCK - #339 / #681)\r\n
+\t\t$text =~ s/<[^>]+>/ /g;\r\n
+\t\t@lines = split( /\\n/, $text );\r\n
+\t\tprint $fh "\\%\\n"; # exit terse mode\r\n
+\t\tprint $fh "^$input_separator\\n";\r\n
+\t\tprint $fh "!\\n";  # enter terse mode\r\n
+\t\tfor my $line ( @lines ) {\r\n
+\t\t\t# use carat on each line to escape possible aspell commands\r\n
+\t\t\tprint $fh "^$line\\n";\r\n
+\t\t}\r\n
+\r\n
+\t}\r\n
+\t# exec aspell command\r\n
+\tmy $cmd = "$aspell_cmd $aspell_opts < $tmpfilename 2>&1";\r\n
+\topen ASPELL, "$cmd |" or handleError( "Could not execute `$cmd`\\\\n$!" ) and return;\r\n
+\t# parse each line of aspell return\r\n
+\tfor my $ret ( <ASPELL> ) {\r\n
+\t\tchomp( $ret );\r\n
+\t\t# if \'&\', then not in dictionary but has suggestions\r\n
+\t\t# if \'#\', then not in dictionary and no suggestions\r\n
+\t\t# if \'*\', then it is a delimiter between text inputs\r\n
+\t\tif( $ret =~ /^\\*/ ) {\r\n
+\t\t\t$textInputIdx++;\r\n
+\t\t\tprintTextIdxDecl( $textInputIdx );\r\n
+\t\t\t$wordIdx = 0;\r\n
+\r\n
+\t\t} elsif( $ret =~ /^(&|#)/ ) {\r\n
+\t\t\tmy @tokens = split( " ", $ret, 5 );\r\n
+\t\t\tprintWordsElem( $textInputIdx, $wordIdx, $tokens[1] );\r\n
+\t\t\tmy @suggs = ();\r\n
+\t\t\tif( $tokens[4] ) {\r\n
+\t\t\t\t@suggs = split( ", ", $tokens[4] );\r\n
+\t\t\t}\r\n
+\t\t\tprintSuggsElem( $textInputIdx, $wordIdx, @suggs );\r\n
+\t\t\t$wordIdx++;\r\n
+\t\t} else {\r\n
+\t\t\t$unhandledText .= $ret;\r\n
+\t\t}\r\n
+\t}\r\n
+\tclose ASPELL or handleError( "Error executing `$cmd`\\\\n$unhandledText" ) and return;\r\n
+}\r\n
+\r\n
+sub escapeQuote {\r\n
+\tmy $str = shift;\r\n
+\t$str =~ s/\'/\\\\\'/g;\r\n
+\treturn $str;\r\n
+}\r\n
+\r\n
+sub handleError {\r\n
+\tmy $err = shift;\r\n
+\tprint "error = \'" . escapeQuote( $err ) . "\';\\n";\r\n
+}\r\n
+\r\n
+sub url_decode {\r\n
+\tlocal $_ = @_ ? shift : $_;\r\n
+\tdefined or return;\r\n
+\t# change + signs to spaces\r\n
+\ttr/+/ /;\r\n
+\t# change hex escapes to the proper characters\r\n
+\ts/%([a-fA-F0-9]{2})/pack "H2", $1/eg;\r\n
+\treturn $_;\r\n
+}\r\n
+\r\n
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\r\n
+# Display HTML\r\n
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\r\n
+\r\n
+print <<EOF;\r\n
+Content-type: text/html; charset=utf-8\r\n
+\r\n
+<html>\r\n
+<head>\r\n
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">\r\n
+<link rel="stylesheet" type="text/css" href="$spellercss"/>\r\n
+<script src="$wordWindowSrc"></script>\r\n
+<script type="text/javascript">\r\n
+var suggs = new Array();\r\n
+var words = new Array();\r\n
+var textinputs = new Array();\r\n
+var error;\r\n
+EOF\r\n
+\r\n
+printTextVar();\r\n
+\r\n
+printCheckerResults();\r\n
+\r\n
+print <<EOF;\r\n
+var wordWindowObj = new wordWindow();\r\n
+wordWindowObj.originalSpellings = words;\r\n
+wordWindowObj.suggestions = suggs;\r\n
+wordWindowObj.textInputs = textinputs;\r\n
+\r\n
+\r\n
+function init_spell() {\r\n
+\t// check if any error occured during server-side processing\r\n
+\tif( error ) {\r\n
+\t\talert( error );\r\n
+\t} else {\r\n
+\t\t// call the init_spell() function in the parent frameset\r\n
+\t\tif (parent.frames.length) {\r\n
+\t\t\tparent.init_spell( wordWindowObj );\r\n
+\t\t} else {\r\n
+\t\t\terror = "This page was loaded outside of a frameset. ";\r\n
+\t\t\terror += "It might not display properly";\r\n
+\t\t\talert( error );\r\n
+\t\t}\r\n
+\t}\r\n
+}\r\n
+\r\n
+</script>\r\n
+\r\n
+</head>\r\n
+<body onLoad="init_spell();">\r\n
+\r\n
+<script type="text/javascript">\r\n
+wordWindowObj.writeBody();\r\n
+</script>\r\n
+\r\n
+</body>\r\n
+</html>\r\n
+EOF\r\n
+
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

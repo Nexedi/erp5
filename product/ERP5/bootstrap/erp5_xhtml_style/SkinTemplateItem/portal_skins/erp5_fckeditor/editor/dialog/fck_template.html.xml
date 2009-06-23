@@ -1,0 +1,295 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\r\n
+<!--\r\n
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
+ * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ *\r\n
+ * == BEGIN LICENSE ==\r\n
+ *\r\n
+ * Licensed under the terms of any of the following licenses at your\r\n
+ * choice:\r\n
+ *\r\n
+ *  - GNU General Public License Version 2 or later (the "GPL")\r\n
+ *    http://www.gnu.org/licenses/gpl.html\r\n
+ *\r\n
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")\r\n
+ *    http://www.gnu.org/licenses/lgpl.html\r\n
+ *\r\n
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")\r\n
+ *    http://www.mozilla.org/MPL/MPL-1.1.html\r\n
+ *\r\n
+ * == END LICENSE ==\r\n
+ *\r\n
+ * Template selection dialog window.\r\n
+-->\r\n
+<html xmlns="http://www.w3.org/1999/xhtml">\r\n
+<head>\r\n
+\t<title></title>\r\n
+\t<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\r\n
+\t<meta name="robots" content="noindex, nofollow" />\r\n
+\t<style type="text/css">\r\n
+\t\t\t.TplList\r\n
+\t\t\t{\r\n
+\t\t\t\tborder: #dcdcdc 2px solid;\r\n
+\t\t\t\tbackground-color: #ffffff;\r\n
+\t\t\t\toverflow: auto;\r\n
+\t\t\t\twidth: 90%;\r\n
+\t\t\t}\r\n
+\r\n
+\t\t\t.TplItem\r\n
+\t\t\t{\r\n
+\t\t\t\tmargin: 5px;\r\n
+\t\t\t\tpadding: 7px;\r\n
+\t\t\t\tborder: #eeeeee 1px solid;\r\n
+\t\t\t}\r\n
+\r\n
+\t\t\t.TplItem TABLE\r\n
+\t\t\t{\r\n
+\t\t\t\tdisplay: inline;\r\n
+\t\t\t}\r\n
+\r\n
+\t\t\t.TplTitle\r\n
+\t\t\t{\r\n
+\t\t\t\tfont-weight: bold;\r\n
+\t\t\t}\r\n
+\t\t</style>\r\n
+\t<script src="common/fck_dialog_common.js" type="text/javascript"></script>\r\n
+\t<script type="text/javascript">\r\n
+\r\n
+var oEditor\t\t= window.parent.InnerDialogLoaded() ;\r\n
+var FCK\t\t\t= oEditor.FCK ;\r\n
+var FCKLang\t\t= oEditor.FCKLang ;\r\n
+var FCKConfig\t= oEditor.FCKConfig ;\r\n
+\r\n
+window.onload = function()\r\n
+{\r\n
+\t// Set the right box height (browser dependent).\r\n
+\tGetE(\'eList\').style.height = document.all ? \'100%\' : \'295px\' ;\r\n
+\r\n
+\t// Translate the dialog box texts.\r\n
+\toEditor.FCKLanguageManager.TranslatePage(document) ;\r\n
+\r\n
+\tGetE(\'xChkReplaceAll\').checked = ( FCKConfig.TemplateReplaceAll !== false ) ;\r\n
+\r\n
+\tif ( FCKConfig.TemplateReplaceCheckbox !== false )\r\n
+\t\tGetE(\'xReplaceBlock\').style.display = \'\' ;\r\n
+\r\n
+\twindow.parent.SetAutoSize( true ) ;\r\n
+\r\n
+\tLoadTemplatesXml() ;\r\n
+}\r\n
+\r\n
+function LoadTemplatesXml()\r\n
+{\r\n
+\tvar oTemplate ;\r\n
+\r\n
+\tif ( !FCK._Templates )\r\n
+\t{\r\n
+\t\tGetE(\'eLoading\').style.display = \'\' ;\r\n
+\r\n
+\t\t// Create the Templates array.\r\n
+\t\tFCK._Templates = new Array() ;\r\n
+\r\n
+\t\t// Load the XML file.\r\n
+\t\tvar oXml = new oEditor.FCKXml() ;\r\n
+\t\toXml.LoadUrl( FCKConfig.TemplatesXmlPath ) ;\r\n
+\r\n
+\t\t// Get the Images Base Path.\r\n
+\t\tvar oAtt = oXml.SelectSingleNode( \'Templates/@imagesBasePath\' ) ;\r\n
+\t\tvar sImagesBasePath = oAtt ? oAtt.value : \'\' ;\r\n
+\r\n
+\t\t// Get the "Template" nodes defined in the XML file.\r\n
+\t\tvar aTplNodes = oXml.SelectNodes( \'Templates/Template\' ) ;\r\n
+\r\n
+\t\tfor ( var i = 0 ; i < aTplNodes.length ; i++ )\r\n
+\t\t{\r\n
+\t\t\tvar oNode = aTplNodes[i] ;\r\n
+\r\n
+\t\t\toTemplate = new Object() ;\r\n
+\r\n
+\t\t\tvar oPart ;\r\n
+\r\n
+\t\t\t// Get the Template Title.\r\n
+\t\t\tif ( (oPart = oNode.attributes.getNamedItem(\'title\')) )\r\n
+\t\t\t\toTemplate.Title = oPart.value ;\r\n
+\t\t\telse\r\n
+\t\t\t\toTemplate.Title = \'Template \' + ( i + 1 ) ;\r\n
+\r\n
+\t\t\t// Get the Template Description.\r\n
+\t\t\tif ( (oPart = oXml.SelectSingleNode( \'Description\', oNode )) )\r\n
+\t\t\t\toTemplate.Description = oPart.text ? oPart.text : oPart.textContent ;\r\n
+\r\n
+\t\t\t// Get the Template Image.\r\n
+\t\t\tif ( (oPart = oNode.attributes.getNamedItem(\'image\')) )\r\n
+\t\t\t\toTemplate.Image = sImagesBasePath + oPart.value ;\r\n
+\r\n
+\t\t\t// Get the Template HTML.\r\n
+\t\t\tif ( (oPart = oXml.SelectSingleNode( \'Html\', oNode )) )\r\n
+\t\t\t\toTemplate.Html = oPart.text ? oPart.text : oPart.textContent ;\r\n
+\t\t\telse\r\n
+\t\t\t{\r\n
+\t\t\t\talert( \'No HTML defined for template index \' + i + \'. Please review the "\' + FCKConfig.TemplatesXmlPath + \'" file.\' ) ;\r\n
+\t\t\t\tcontinue ;\r\n
+\t\t\t}\r\n
+\r\n
+\t\t\tFCK._Templates[ FCK._Templates.length ] = oTemplate ;\r\n
+\t\t}\r\n
+\r\n
+\t\tGetE(\'eLoading\').style.display = \'none\' ;\r\n
+\t}\r\n
+\r\n
+\tif ( FCK._Templates.length == 0 )\r\n
+\t\tGetE(\'eEmpty\').style.display = \'\' ;\r\n
+\telse\r\n
+\t{\r\n
+\t\tfor ( var j = 0 ; j < FCK._Templates.length ; j++ )\r\n
+\t\t{\r\n
+\t\t\toTemplate = FCK._Templates[j] ;\r\n
+\r\n
+\t\t\tvar oItemDiv = GetE(\'eList\').appendChild( document.createElement( \'DIV\' ) ) ;\r\n
+\t\t\toItemDiv.TplIndex = j ;\r\n
+\t\t\toItemDiv.className = \'TplItem\' ;\r\n
+\r\n
+\t\t\t// Build the inner HTML of our new item DIV.\r\n
+\t\t\tvar sInner = \'<table><tr>\' ;\r\n
+\r\n
+\t\t\tif ( oTemplate.Image )\r\n
+\t\t\t\tsInner += \'<td valign="top"><img src="\' + oTemplate.Image + \'"><\\/td>\' ;\r\n
+\r\n
+\t\t\tsInner += \'<td valign="top"><div class="TplTitle">\' + oTemplate.Title + \'<\\/div>\' ;\r\n
+\r\n
+\t\t\tif ( oTemplate.Description )\r\n
+\t\t\t\tsInner += \'<div>\' + oTemplate.Description + \'<\\/div>\' ;\r\n
+\r\n
+\t\t\tsInner += \'<\\/td><\\/tr><\\/table>\' ;\r\n
+\r\n
+\t\t\toItemDiv.innerHTML = sInner ;\r\n
+\r\n
+\t\t\toItemDiv.onmouseover = ItemDiv_OnMouseOver ;\r\n
+\t\t\toItemDiv.onmouseout = ItemDiv_OnMouseOut ;\r\n
+\t\t\toItemDiv.onclick = ItemDiv_OnClick ;\r\n
+\t\t}\r\n
+\t}\r\n
+}\r\n
+\r\n
+function ItemDiv_OnMouseOver()\r\n
+{\r\n
+\tthis.className += \' PopupSelectionBox\' ;\r\n
+}\r\n
+\r\n
+function ItemDiv_OnMouseOut()\r\n
+{\r\n
+\tthis.className = this.className.replace( /\\s*PopupSelectionBox\\s*/, \'\' ) ;\r\n
+}\r\n
+\r\n
+function ItemDiv_OnClick()\r\n
+{\r\n
+\tSelectTemplate( this.TplIndex ) ;\r\n
+}\r\n
+\r\n
+function SelectTemplate( index )\r\n
+{\r\n
+\toEditor.FCKUndo.SaveUndoStep() ;\r\n
+\r\n
+\tif ( GetE(\'xChkReplaceAll\').checked )\r\n
+\t\tFCK.SetData( FCK._Templates[index].Html ) ;\r\n
+\telse\r\n
+\t\tFCK.InsertHtml( FCK._Templates[index].Html ) ;\r\n
+\r\n
+\twindow.parent.Cancel( true ) ;\r\n
+}\r\n
+\r\n
+\t</script>\r\n
+</head>\r\n
+<body style="overflow: hidden">\r\n
+\t<table width="100%" style="height: 100%">\r\n
+\t\t<tr>\r\n
+\t\t\t<td align="center">\r\n
+\t\t\t\t<span fcklang="DlgTemplatesSelMsg">Please select the template to open in the editor<br />\r\n
+\t\t\t\t\t(the actual contents will be lost):</span>\r\n
+\t\t\t</td>\r\n
+\t\t</tr>\r\n
+\t\t<tr>\r\n
+\t\t\t<td height="100%" align="center">\r\n
+\t\t\t\t<div id="eList" align="left" class="TplList">\r\n
+\t\t\t\t\t<div id="eLoading" align="center" style="display: none">\r\n
+\t\t\t\t\t\t<br />\r\n
+\t\t\t\t\t\t<span fcklang="DlgTemplatesLoading">Loading templates list. Please wait...</span>\r\n
+\t\t\t\t\t</div>\r\n
+\t\t\t\t\t<div id="eEmpty" align="center" style="display: none">\r\n
+\t\t\t\t\t\t<br />\r\n
+\t\t\t\t\t\t<span fcklang="DlgTemplatesNoTpl">(No templates defined)</span>\r\n
+\t\t\t\t\t</div>\r\n
+\t\t\t\t</div>\r\n
+\t\t\t</td>\r\n
+\t\t</tr>\r\n
+\t\t<tr id="xReplaceBlock" style="display: none">\r\n
+\t\t\t<td>\r\n
+\t\t\t\t<table cellpadding="0" cellspacing="0">\r\n
+\t\t\t\t\t<tr>\r\n
+\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t<input id="xChkReplaceAll" type="checkbox" /></td>\r\n
+\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t&nbsp;</td>\r\n
+\t\t\t\t\t\t<td>\r\n
+\t\t\t\t\t\t\t<label for="xChkReplaceAll" fcklang="DlgTemplatesReplace">\r\n
+\t\t\t\t\t\t\t\tReplace actual contents</label></td>\r\n
+\t\t\t\t\t</tr>\r\n
+\t\t\t\t</table>\r\n
+\t\t\t</td>\r\n
+\t\t</tr>\r\n
+\t</table>\r\n
+</body>\r\n
+</html>\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>fck_template.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
