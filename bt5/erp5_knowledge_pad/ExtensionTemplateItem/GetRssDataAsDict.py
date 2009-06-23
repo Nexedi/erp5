@@ -1,6 +1,6 @@
 from urllib2 import HTTPPasswordMgrWithDefaultRealm, HTTPBasicAuthHandler, \
      build_opener, install_opener, urlopen, HTTPError
-from xml.dom.minidom import parse
+from xml.dom.minidom import parseString
 import md5
 from HTMLParser import HTMLParser
 
@@ -24,8 +24,11 @@ def getRssDataAsDict(url, username, password):
         return {'title': 'Page not found.' }
   except :
     return {'title': 'Fetching Rss failed.' }
+  return parseRssDataAsDict(file.read())
+
+def parseRssDataAsDict(rss_string):
   try:
-    xmlDoc = parse(file).documentElement
+    xmlDoc = parseString(rss_string).documentElement
   except :
     return {'title': 'Parsing RSS failed.' }
   if(xmlDoc.tagName.startswith('rss') or xmlDoc.tagName.startswith('rdf') ):
