@@ -225,7 +225,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
           self.getTradeModelLineComposedList(context)
 
       need_to_run = 1
-      while need_to_run:
+      while need_to_run: # XXX Dangerous code. This can leed to infinite loop
         need_to_run = 0
         for model_line in trade_model_line_composed_list:
           model_line_result = model_line.getAggregatedAmountList(context,
