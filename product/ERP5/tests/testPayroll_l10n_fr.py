@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2007-2009 Nexedi SA and Contributors. All Rights Reserved.
 #          Fabien Morin <fabien.morin@gmail.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -26,7 +26,8 @@
 #
 ##############################################################################
 """
-  test cases related to french localisation (tranche A for example)
+  test cases related to french localisation. Scripts inclued in
+  erp5_payroll_l10n_fr will be tested here.
 """
 
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -70,6 +71,11 @@ class TestPayroll_l10n_fr(TestPayrollMixin):
     self.stepTic()
 
     # here, check how much is contributed to the slices
+    # the slices defined for this tax are :
+    # - 0 to 200
+    # - 200 to 400
+    # - 400 to 5000
+    # the salary is of 3000
     self.assertEquals(400, # 200 from the 1st paysheet + 200 from the 2e
         paysheet_list[1].PaySheetTransaction_getYearToDateSlice(\
             'salary_range/france/slice_0_to_200'))
@@ -81,9 +87,8 @@ class TestPayroll_l10n_fr(TestPayrollMixin):
             'salary_range/france/slice_400_to_5000'))
 
   def test_01_getYearToDateSlice(self):
-    '''
-      that slices works and we can caculate the total amount spend on a slice
-
+    '''Check that is possible to calculate the total amount spend on a slice
+    since the begining of the year.
     '''
     sequence_list = SequenceList()
     sequence_string = """
