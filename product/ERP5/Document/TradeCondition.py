@@ -224,19 +224,15 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       trade_model_line_composed_list = \
           self.getTradeModelLineComposedList(context)
 
-      need_to_run = 1
-      while need_to_run: # XXX Dangerous code. This can leed to infinite loop
-        need_to_run = 0
+      # initialise run then rerun only once, as trade_model_line_composed_list
+      # is sorted in good way to have simple algorithm
+      for pass_type in ['initialise', 'rerun']:
         for model_line in trade_model_line_composed_list:
-          model_line_result = model_line.getAggregatedAmountList(context,
+          result.extend(model_line.getAggregatedAmountList(context,
             movement_list=movement_list,
             current_aggregated_amount_list=result,
-            **kw)
-          result.extend(model_line_result)
-        if len(result) != len(movement_list):
-          # something was added
-          need_to_run = 1
-          movement_list = result
+            **kw))
+        movement_list = result # apply model again on generated movements
 
       # remove movement that should not be created
       movement_list = []
