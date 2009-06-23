@@ -184,7 +184,7 @@ oListManager.AddFile = function( fileName, fileTitle, filePhoto, fileUrl, realUr
 \tvar oRow = this.Table.insertRow(-1) ;\n
 \n
 \t// Build the link to view the file.\n
-        var sLink = \'<a href="#" onclick="OpenFile(\\\'\' + fileUrl + \'\\\');return false;">\' ;\n
+        var sLink = \'<a href="#" onclick="OpenFile(\\\'\' + fileName + \'\\\');return false;">\' ;\n
         // Change the link if type is image since setUrl for images support more arguments\n
         if (sType==\'Image\') {\n
 \t                        sLink = \'<a href="#" onclick="OpenImage(\\\'\' + fileName + \'\\\',\\\'\\\',\\\'\\\',\\\'\' + fileTitle + \'\\\');return false;">\' ;\n
@@ -303,7 +303,7 @@ oListManager.AddFileToAlbum = function( fileName, fileTitle, filePhoto, fileUrl,
         // init sLinksPhoto\n
         var sLinksPhoto=\'\' ;\n
 \t// Build the link to view the file.\n
-        var sLink = \'<a title="link the file" href="#" onclick="OpenFile(\\\'\' + fileUrl + \'\\\');return false;">\' ;\n
+        var sLink = \'<a title="link the file" href="#" onclick="OpenFile(\\\'\' + fileName + \'\\\');return false;">\' ;\n
         // Change the link if type is image since setUrl for images support more arguments\n
         if (sType==\'Image\') {\n
 \t                        sLink = \'<a title="link the image" href="#" onclick="OpenImage(\\\'\' + fileName + \'\\\',\\\'\\\',\\\'\\\',\\\'\' + fileTitle + \'\\\');return false;">\' ;\n
