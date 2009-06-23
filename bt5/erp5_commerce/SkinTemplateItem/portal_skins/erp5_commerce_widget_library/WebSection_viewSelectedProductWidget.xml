@@ -68,6 +68,7 @@
             tal:attributes="src python: product.getDefaultImageAbsoluteUrl() + \'?display=thumbnail\'" width="75" height="75"/>\n
        <tal:block tal:condition="python: product.getDefaultImageValue() in (None, \'\') or product.getDefaultImageValue().getData() in (None, \'\')">\n
          <div style="width:75px; height:75px;vertical-align:middle; text-align:middle;">\n
+         <br />\n
          <span>No image available.</span>\n
          </div>\n
        </tal:block>\n

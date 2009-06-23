@@ -69,6 +69,7 @@
           \n
             <caption>\n
                 <span class="left">\n
+                  <!--\n
                   <button tal:condition="is_gadget_mode"\n
                           tal:define = "params python: {\'list_style\':\'search\'}"\n
                           type="button"\n
@@ -79,6 +80,7 @@
                          alt="Search mode"\n
                          src="erp5/images/table_style_icon.png"\n
                          height="16"/></button>\n
+                  -->\n
                   <a tal:attributes="id string:${field_id}_title; href string:${context_url}?reset=1"\n
                      tal:condition="python: here.field.get_value(\'list_action\')">\n
                     <em i18n:translate="" \n
@@ -289,7 +291,7 @@
             <input class="button" value="Search" name="ERP5Site_processAdvancedSearchBottom:method" type="submit" />\n
           </div>\n
 \n
-          <!-- Copy / Paste buttons -->\n
+          <!-- For futur resources diff\n
           <div class="bottom_actions" \n
                tal:condition="python:not is_gadget_mode and show_select_column">\n
 \n
@@ -300,6 +302,7 @@
               <span class="description" i18n:translate="" i18n:domain="ui">Compare</span>\n
             </button>\n
           </div>\n
+          -->\n
       </tal:block>\n
     </tal:block>\n
   </tal:block>\n

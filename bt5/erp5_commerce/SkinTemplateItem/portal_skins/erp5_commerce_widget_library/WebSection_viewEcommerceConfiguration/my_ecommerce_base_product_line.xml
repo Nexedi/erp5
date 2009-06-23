@@ -14,9 +14,10 @@
             <value>
               <list>
                 <string>description</string>
-                <string>title</string>
-                <string>size</string>
+                <string>enabled</string>
                 <string>items</string>
+                <string>size</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -59,6 +60,16 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -69,11 +80,19 @@
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
+                    <key> <string>size</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -88,12 +107,22 @@
                     <value> <string>Your site will list by default all product of this product line.</string> </value>
                 </item>
                 <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_category</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>size</string> </key>
@@ -114,6 +143,22 @@
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.getPortalType() == \'Web Site\'</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <global name="TALESMethod" module="Products.Formulator.TALESField"/>

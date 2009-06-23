@@ -86,6 +86,7 @@
                     <key> <string>left resource_left</string> </key>
                     <value>
                       <list>
+                        <string>default_image</string>
                         <string>my_default_image_absolute_url</string>
                         <string>my_title</string>
                       </list>

@@ -3,27 +3,15 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <global name="CheckBoxField" module="Products.Formulator.StandardFields"/>
         <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>delegated_list</string> </key>
-            <value>
-              <list>
-                <string>css_class</string>
-                <string>default</string>
-                <string>description</string>
-                <string>enabled</string>
-                <string>title</string>
-              </list>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>my_default_image_absolute_url</string> </value>
+            <value> <string>my_ecommerce_default_content</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -41,24 +29,9 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>field_id</string> </key>
+                    <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>form_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>tales</string> </key>
-            <value>
-              <dictionary>
                 <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
@@ -72,21 +45,72 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>tales</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>enabled</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>field_id</string> </key>
+                    <key> <string>external_validator</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>form_id</string> </key>
+                    <key> <string>extra</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -101,36 +125,44 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>resource_image</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>By default the content of web sections is hidden for only display product.</string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>field_id</string> </key>
-                    <value> <string>my_thumbnail</string> </value>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>form_id</string> </key>
-                    <value> <string>File_viewFieldLibrary</string> </value>
+                    <key> <string>extra</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
-                    <value> <string>Click to edit the target</string> </value>
+                    <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Image</string> </value>
+                    <value> <string>Display Default Content</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -149,7 +181,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getDefaultImageValue() not in (None, \'\') and here.getDefaultImageValue().getData() not in (None, \'\')</string> </value>
+            <value> <string>python: here.getPortalType() != \'Web Site\'</string> </value>
         </item>
       </dictionary>
     </pickle>

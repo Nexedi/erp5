@@ -67,13 +67,12 @@ kw[\'limit\'] = limit\n
 \n
 if current_web_section.getMembershipCriterionCategoryList() in (None, []) and current_web_section.getCriterionList() in (None, []):\n
   kw[\'product_line_uid\'] = context.REQUEST.get(\'current_web_site\').getLayoutProperty(\'ecommerce_base_product_line\', \'\')\n
-context.pdb()\n
+\n
 product_list = current_web_section.WebSection_getDocumentValueListBase(all_versions=1,\n
                                                                        all_languages=1,\n
                                                                        **kw\n
                                                                       )\n
-  \n
-#raise \'\'.join([x.getObject() for x in product_list])\n
+\n
 product_list = [x.getObject() for x in product_list if x.getPortalType() == \'Product\']\n
 \n
 # this step will be remove after have find a good way to improve WebSection_getDocumentValueListBase\n

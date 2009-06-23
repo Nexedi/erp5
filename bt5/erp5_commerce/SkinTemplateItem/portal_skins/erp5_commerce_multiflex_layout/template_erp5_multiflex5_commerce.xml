@@ -161,14 +161,16 @@
 \n
       <!-- CONTENT -->\n
       <div class="main_content">\n
-        <div class="main_content" tal:condition="python: here.getLayoutProperty(\'layout_selected_product\', False)">\n
-          <div class="corner-content-1col-top"></div>                        \n
+        <tal:block  tal:condition="python: section.getLayoutProperty(\'ecommerce_selected_product\', False)">\n
+        <div class="main_content">\n
+          <div class="corner-content-1col-top"></div>\n
           <div class="content-1col-nobox">\n
             <tal:block tal:content="structure here/WebSection_viewSelectedProductWidget"/>\n
           </div>\n
           <div class="corner-content-1col-bottom"></div>                       \n
         </div>\n
-      <tal:block tal:condition="python: here.REQUEST.get(\'current_form_id\') != \'WebPage_viewAsWeb\' and here.REQUEST.get(\'current_form_id\') != \'WebSection_viewAsWeb\'">\n
+        </tal:block>\n
+      <tal:block tal:condition="python: (section is website) or section.getLayoutProperty(\'ecommerce_default_content\', False)">\n
         <div class="main_content">\n
         <div class="corner-content-1col-top"></div>                        \n
         <div class="content-1col-nobox">\n
@@ -176,7 +178,7 @@
         </div>\n
         <div class="corner-content-1col-bottom"></div>\n
       </tal:block>\n
-      <tal:block tal:condition="python: here.REQUEST.get(\'current_form_id\') == \'WebPage_viewAsWeb\' or here.REQUEST.get(\'current_form_id\') == \'WebSection_viewAsWeb\'">\n
+      <tal:block tal:condition="python: (section is not website) and section.getLayoutProperty(\'ecommerce_product_list\', True)">\n
         <div class="main_content">\n
           <tal:block tal:condition="python: layout_form is not None"\n
                      tal:define="widget_renderer here/multiflex5_large_box_renderer/macros/large_widget">\n
