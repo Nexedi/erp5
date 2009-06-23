@@ -120,7 +120,7 @@
         </item>
         <item>
             <key> <string>delivery_portal_type</string> </key>
-            <value> <string>Purchase Invoice</string> </value>
+            <value> <string>Purchase Invoice Transaction</string> </value>
         </item>
         <item>
             <key> <string>delivery_select_method_id</string> </key>
