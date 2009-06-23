@@ -3445,7 +3445,12 @@ class Base( CopyContainer,
     # dochelper.setSecurity() # (maybe) TODO: Add class instance security gthering.
 
     # Class-level method & properties
+    # We exclude some properites about interface definition because they
+    # need specific handling
+    excluded_property_set = set(['__provides__'])
     for k, v in item_class.__dict__.items():
+      if k in excluded_property_set:
+        continue
       subdochelper = newTempDocumentationHelper(dochelper, k,
                   title=k, description=inspect.getdoc(v),
                   security=repr(getattr(documented_item, '%s__roles__' % (k,),None)))
