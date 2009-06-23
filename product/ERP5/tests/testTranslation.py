@@ -61,8 +61,6 @@ target_business_templates = (
   'erp5_budget',
   'erp5_public_accounting_budget',
 
-  'erp5_commerce',
-
   'erp5_consulting',
 
   'erp5_ingestion',
@@ -71,6 +69,8 @@ target_business_templates = (
 
   'erp5_web',
   'erp5_dms',
+
+  'erp5_commerce',
 
   'erp5_forge',
 
