@@ -54,11 +54,6 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>translateString = context.Base_translateString\n
-request = context.REQUEST\n
-\n
-# display only title line instead of description\n
-use_line_title =  request.get(\'use_line_title\', 0)\n
-\n
 model = context.getSpecialiseValue().getEffectiveModel(\\\n
    start_date=context.getStartDate(), stop_date=context.getStopDate())\n
 \n
@@ -415,8 +410,6 @@ return unicodeDict(data_dict)\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>translateString</string>
-                            <string>request</string>
-                            <string>use_line_title</string>
                             <string>model</string>
                             <string>getFieldAsLineList</string>
                             <string>getFieldAsString</string>

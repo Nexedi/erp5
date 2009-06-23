@@ -57,9 +57,6 @@
   this script get all paysheet lines in the int_index order with all the amounts\n
   displayed in the lisbox\n
 \'\'\'\n
-import pprint\n
-precision = context.getPriceCurrencyValue().getQuantityPrecision()\n
-\n
 line_list = context.PaySheetTransaction_getMovementList(sort_on=[(\'int_index\',\n
                                                                   \'ascending\')])\n
 def addProperties(line, line_dict, property_list):\n
@@ -132,10 +129,8 @@ return line_dict_list\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>pprint</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>precision</string>
                             <string>line_list</string>
                             <string>addProperties</string>
                             <string>line_dict_list</string>

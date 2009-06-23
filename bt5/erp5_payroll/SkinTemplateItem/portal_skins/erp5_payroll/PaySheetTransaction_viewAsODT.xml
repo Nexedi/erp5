@@ -477,9 +477,8 @@ AAA=</string> </value>
                  right_style_name python:\'Table_20_Contents_20_Right\'">\n
 \n
               <table:table-cell table:style-name=\'Tableau1.A3\' office:value-type=\'string\'>\n
-                <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["title"]\' tal:attributes=\'text:style-name left_style_name\'>1</text:p>\n
+                <text:p text:style-name=\'Table_20_Contents\' tal:content=\'python:line_dict["slice"] is not None and "%s (%s)" %(line_dict["title"], line_dict["slice"]) or line_dict["title"]\' tal:attributes=\'text:style-name left_style_name\'>1</text:p>\n
               </table:table-cell>\n
-              \n
               <table:table-cell table:style-name=\'Tableau1.A3\'\n
                                 office:value-type=\'float\'\n
                                 tal:condition="python: line_dict[\'base\'] != None"\n
