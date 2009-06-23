@@ -44,7 +44,7 @@
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
   <tal:block metal:define-macro="breadcrumb">\n
-    <a href="https://www.tiolive.com/">TioLive</a> /\n
+    <a tal:attributes="href here/ERP5Site_getTioLiveSiteRootUrl">TioLive</a> /\n
     <tal:block tal:repeat="item here/breadcrumbs">\n
       <a tal:attributes="href item/url" tal:content="item/title" />\n
       /\n
