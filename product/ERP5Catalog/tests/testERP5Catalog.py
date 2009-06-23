@@ -1619,6 +1619,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(1,
                 ctool.unrestrictedCountResults(title='Object Title')[0][0])
     
+  @todo_erp5
   def test_49_IndexInOrderedSearchFolder(self, quiet=quiet, run=run_all_test):
     if not run: return
     if not quiet:
