@@ -38,7 +38,8 @@ from Products.CMFDefault.utils import isHTMLSafe
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.TextDocument import TextDocument
 from Products.ERP5.Document.File import File
-from Products.ERP5.Document.Document import ConversionError, DocumentProxyMixin
+from Products.ERP5.Document.Document import ConversionError, \
+  DocumentProxyMixin, DocumentProxyError
 from Products.ERP5.Tool.NotificationTool import buildEmailMessage
 from MethodObject import Method
 
@@ -72,6 +73,33 @@ class EmailDocumentProxyMixin(DocumentProxyMixin):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'hasFile')
+  def hasFile(self):
+    """
+    hasFile is used in many parts of EmailDocument in order to know
+    if there is some document content to manage. We define it here
+    in order to say that there is no document if we are not able to
+    get the proxy
+    """
+    has_file = False
+    try:
+      proxied_document = self.getProxiedDocument()
+      has_file = proxied_document.hasFile()
+    except DocumentProxyError:
+      pass
+    return has_file
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTextContent')
+  def getTextContent(self, default=_MARKER):
+    result = None
+    try:
+      proxied_document = self.getProxiedDocument()
+      result = proxied_document.getTextContent(default=default)
+    except DocumentProxyError:
+      pass
+    if default is _MARKER:
+      return result
+    return result or default
 
 class ProxiedMethod(Method):
   """
@@ -87,7 +115,7 @@ class ProxiedMethod(Method):
     return method(*args, **kw)
 
 # generate all proxy method on EmailDocumentProxyMixin
-for method_id in ('getTextContent', 'getTextFormat', 'hasFile', 
+for method_id in ('getTextFormat', 
                   'getContentInformation', 'getAttachmentData',
                   'getAttachmentInformationList'):
   EmailDocumentProxyMixin.security.declareProtected(

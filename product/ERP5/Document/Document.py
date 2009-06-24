@@ -103,6 +103,8 @@ class SnapshotMixin:
 
 class ConversionError(Exception):pass
 
+class DocumentProxyError(Exception):pass
+
 class NotConvertedError(Exception):pass
 
 class ConversionCacheMixin:
@@ -397,7 +399,7 @@ class DocumentProxyMixin:
     """
     proxied_document = self.getDocumentProxyValue()
     if proxied_document is None:
-      raise ValueError("Unable to find a proxied document")
+      raise DocumentProxyError("Unable to find a proxied document")
     return proxied_document
 
 class UpdateMixIn:
