@@ -13,6 +13,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>all_columns</string>
                 <string>columns</string>
                 <string>editable_columns</string>
                 <string>portal_types</string>
@@ -79,6 +80,57 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Payslip Order</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource_title</string>
+                          <string>Service</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>create_line</string>
+                          <string>Create Line</string>
+                        </tuple>
+                        <tuple>
+                          <string>trade_phase_title</string>
+                          <string>Trade Phase</string>
+                        </tuple>
+                        <tuple>
+                          <string>calculation_script_id</string>
+                          <string>Calculation Script</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_contribution_list</string>
+                          <string>Base Contribution</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_application_list</string>
+                          <string>Base Application</string>
+                        </tuple>
+                        <tuple>
+                          <string>variation_category_list</string>
+                          <string>Variation Axes</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
                 <item>
                     <key> <string>columns</string> </key>
                     <value>
