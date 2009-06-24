@@ -35,6 +35,7 @@ from Products.ERP5Type.Cache import CachingMethod
 from Globals import get_request
 from Persistence import Persistent
 from ZPublisher import BeforeTraverse
+from ZPublisher.HTTPRequest import HTTPRequest
 
 from zLOG import LOG
 
@@ -66,7 +67,7 @@ class WebSiteTraversalHook(Persistent):
     # In ignore_layout case, we only remove empty element from path
     # XXX more support required for ignore_layout?
     if request.get('ignore_layout', None):
-      return tuple([x for x in path if x])
+      return HTTPRequest.physicalPathToVirtualPath(request, path)
     website_path = request.get(WEBSITE_KEY, None)
     select_language = request.get(WEBSITE_LANGUAGE_KEY, None)
     if website_path:
