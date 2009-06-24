@@ -58,7 +58,8 @@ class TestCRM(ERP5TypeTestCase):
     event_module = self.portal.event_module
     portal_workflow = self.portal.portal_workflow
     ticket = self.portal.campaign_module.newContent(portal_type='Campaign',)
-    for ptype in self.portal.getPortalEventTypeList():
+    for ptype in [x for x in self.portal.getPortalEventTypeList() if x !=
+        'Acknowledgement']:
       event = event_module.newContent(portal_type=ptype,
                                       follow_up_value=ticket)
 
@@ -103,7 +104,8 @@ class TestCRM(ERP5TypeTestCase):
     # test action to create a related event from a ticket
     event_module_url = self.portal.event_module.absolute_url()
     ticket = self.portal.meeting_module.newContent(portal_type='Meeting')
-    for ptype in self.portal.getPortalEventTypeList():
+    for ptype in [x for x in self.portal.getPortalEventTypeList() if x !=
+        'Acknowledgement']:
       # incoming
       redirect = ticket.Ticket_newEvent(direction='incoming',
                                         portal_type=ptype,
@@ -265,7 +267,7 @@ class TestCRM(ERP5TypeTestCase):
     portal_workflow = self.portal.portal_workflow
 
     event_type_list = [x for x in self.portal.getPortalEventTypeList() \
-                       if x != 'Site Message']
+                       if x not in  ['Site Message', 'Acknowledgement']]
 
     # if create_event option is false, it does not create a new event.
     for portal_type in event_type_list:
@@ -712,7 +714,8 @@ class TestCRMMailSend(ERP5TypeTestCase):
     # passing start_action transition on event workflow will not send an email
     # when the portal type is not Mail Message
     for ptype in [t for t in self.portal.getPortalEventTypeList()
-        if t not in ('Mail Message', 'Document Ingestion Message')]:
+        if t not in ('Mail Message', 'Document Ingestion Message',
+          'Acknowledgement')]:
       event = self.portal.event_module.newContent(portal_type=ptype)
       event.setSource('person_module/me')
       event.setDestination('person_module/recipient')
@@ -728,7 +731,8 @@ class TestCRMMailSend(ERP5TypeTestCase):
   def test_MailMarkPosted(self):
     # mark_started_action transition on event workflow will not send an email
     # even if the portal type is a Mail Message
-    for ptype in self.portal.getPortalEventTypeList():
+    for ptype in [x for x in self.portal.getPortalEventTypeList() if x !=
+        'Acknowledgement']:
       event = self.portal.event_module.newContent(portal_type=ptype)
       event.setSource('person_module/me')
       event.setDestination('person_module/recipient')
