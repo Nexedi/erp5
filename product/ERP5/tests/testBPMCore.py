@@ -1757,8 +1757,8 @@ class TestBPMTestCases(TestBPMMixin):
     trade_model_line_list = trade_condition.getTradeModelLineComposedList()
 
     # XXX: This is only one good possible sorting
-    self.assertEquals(sorted([q.getRelativeUrl() for q in trade_model_line_list]),
-        sorted([q.getRelativeUrl() for q in [D, E, B, F, G, C, A]]))
+    self.assertEquals([q.getRelativeUrl() for q in trade_model_line_list],
+        [q.getRelativeUrl() for q in [D, E, B, F, G, C, A]])
 
   def test_getAggregatedAmountList(self):
     """
