@@ -194,12 +194,11 @@ class WorkflowMethod(Method):
     if not candidate_transition_item_list:
       return apply(self.__dict__['_m'], (instance,) + args, kw)
 
-    # Prepare a list of transitions which should be invoked
-    #   this list is based on the results of isWorkflowMethodSupported
-    #   XXX - the behaviour of isWorkflowMethodSupported should be extended
-    #         some day so that a workflow method raises an exception
-    #         when it is invoked from a workflow state which does 
-    #         not support it or whenever guards reject it
+    # Prepare a list of transitions which should be invoked.
+    # This list is based on the results of isWorkflowMethodSupported.
+    # An interaction is ignored if the guard prevents execution.
+    # Otherwise, an exception is raised if the workflow transition does not
+    # exist from the current state, or if the guard rejects it.
     valid_transition_item_list = []
     for wf_id, transition_list in candidate_transition_item_list:
       candidate_workflow = wf[wf_id]
@@ -208,8 +207,8 @@ class WorkflowMethod(Method):
         if candidate_workflow.isWorkflowMethodSupported(instance, transition_id):
           valid_list.append(transition_id)
         elif candidate_workflow.__class__.__name__ == 'DCWorkflowDefinition':
-          if 0: # disabled for the moment
-            raise UnsupportedWorkflowMethod(instance, wf_id, transition_id)
+          # XXX Do not raise for the moment as ERP5 is not ready.
+          #raise UnsupportedWorkflowMethod(instance, wf_id, transition_id)
           LOG("WorkflowMethod.__call__", ERROR,
               "Transition %s/%s on %r is ignored. Current state is %r."
               % (wf_id, transition_id, instance,
