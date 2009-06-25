@@ -80,6 +80,14 @@ return found_user_list[0].getObject()\n
             <value> <string>user_name = None</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>errors</string> </key>
             <value>
               <tuple/>
