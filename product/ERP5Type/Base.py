@@ -68,7 +68,7 @@ from ZopePatch import ERP5PropertyManager
 
 from CopySupport import CopyContainer, CopyError,\
     tryMethodCallWithTemporaryPermission
-from Errors import DeferredCatalogError
+from Errors import DeferredCatalogError, UnsupportedWorkflowMethod
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.ERP5Type.Accessor.Accessor import Accessor as Method
 from Products.ERP5Type.Accessor.TypeDefinition import asDate
@@ -207,7 +207,9 @@ class WorkflowMethod(Method):
       for transition_id in transition_list:
         if candidate_workflow.isWorkflowMethodSupported(instance, transition_id):
           valid_list.append(transition_id)
-        else:
+        elif candidate_workflow.__class__.__name__ == 'DCWorkflowDefinition':
+          if 0: # disabled for the moment
+            raise UnsupportedWorkflowMethod(instance, wf_id, transition_id)
           LOG("WorkflowMethod.__call__", ERROR,
               "Transition %s/%s on %r is ignored. Current state is %r."
               % (wf_id, transition_id, instance,
