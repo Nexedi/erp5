@@ -357,12 +357,8 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       effective_model_list = []
       model_object_list = [result.getObject() for result in \
           self.portal_catalog(portal_type=self.portal_type,
-                              reference=reference,)]
-                              #sort_on=(('version','descending'),))]
-      # XXX currently, version is not catalogued, so sort using python
-      def sortByVersion(a, b):
-        return cmp(b.getVersion(), a.getVersion())
-      model_object_list.sort(sortByVersion)
+                              reference=reference,
+                              sort_on=(('version','descending'),))]
 
       # if there is model which has effective period containing
       # the start_date and the stop date of the paysheet, return it
