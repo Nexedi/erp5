@@ -358,18 +358,16 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       model_object_list = [result.getObject() for result in \
           self.portal_catalog(portal_type=self.portal_type,
                               reference=reference,
-                              sort_on=(('version','descending'),))]
-
-      # if there is model which has effective period containing
-      # the start_date and the stop date of the paysheet, return it
-      for current_model in model_object_list:
-        if current_model.getEffectiveDate() <= start_date and \
-            current_model.getExpirationDate() >= stop_date:
-          effective_model_list.append(current_model)
-      if len(effective_model_list):
-        return effective_model_list[0]
-      # if no effective model are found (ex. because dates are None), return self
-      return self
+                              sort_on=(('version','descending'),),
+                              effective_date="<=%s"%start_date,
+                              expiration_date=">=%s"%stop_date,
+                              limit=1)]
+      if len(model_object_list):
+        return model_object_list[0].getObject()
+      else:
+        # if no effective model are found (ex. because dates are None), 
+        # return self
+        return self
 
     security.declareProtected(Permissions.AccessContentsInformation,
         'getModelIneritanceEffectiveProperty')
