@@ -1687,7 +1687,10 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     # the effective model should be model_2 because of the effective date and
     # version number
     specialise_value = paysheet.getSpecialiseValue()
-    self.assertEquals(specialise_value.getEffectiveModel(paysheet), model_2)
+    effective_model = specialise_value.getEffectiveModel(\
+        start_date=paysheet.getStartDate(),
+        stop_date=paysheet.getStopDate())
+    self.assertEquals(effective_model, model_2)
 
     # check the effective model tree list
     effective_value_list = specialise_value.findEffectiveSpecialiseValueList(\
