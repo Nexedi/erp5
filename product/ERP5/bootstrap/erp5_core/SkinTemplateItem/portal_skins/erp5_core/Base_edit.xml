@@ -261,11 +261,10 @@ spp.insert(0,s_url)\n
 #calculate direct the url instead of using absolute_url\n
 new_url = \'/\'.join(spp)\n
 \n
-# for web mode, we should use \'view\' instead of \'WebSite_view\',\n
-# \'WebSection_view\' or \'WebPage_view\'.\n
+# for web mode, we should use \'view\' instead of passed form_id\n
+# after \'Save & View\'.\n
 if context.REQUEST.get(\'is_web_mode\', False) and \\\n
-    form_id in (\'WebSite_view\', \'WebSection_view\', \'WebPage_view\',\n
-                \'WebPage_viewEditor\'):\n
+    not editable_mode:\n
   form_id = \'view\'\n
 \n
 if not selection_index:\n

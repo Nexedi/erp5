@@ -53,7 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Updates attributes of an Zope document\n
+            <value> <string encoding="cdata"><![CDATA[
+
+# Updates attributes of an Zope document\n
 # which is in a class inheriting from ERP5 Base\n
 #\n
 # TODO\n
@@ -103,6 +105,12 @@ except FormValidationError, validation_errors:\n
   request.set(\'field_errors\', field_errors)\n
   return form(request)\n
 else:\n
+  # for web mode, we should use \'view\' instead of passed form_id\n
+  # after \'Save & View\'.\n
+  if context.REQUEST.get(\'is_web_mode\', False) and \\\n
+      not editable_mode:\n
+    form_id = \'view\'\n
+\n
   if not selection_index:\n
     redirect_url = \'%s/%s?%s\' % (\n
       context.absolute_url(),\n
@@ -125,7 +133,9 @@ else:\n
       )\n
 \n
 request[ \'RESPONSE\' ].redirect( redirect_url )\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -193,6 +203,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>_apply_</string>
                             <string>validation_errors</string>
                             <string>field_errors</string>
+                            <string>False</string>
                             <string>redirect_url</string>
                           </tuple>
                         </value>
