@@ -87,7 +87,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_sort</string> </value>
+            <value> <string>sort_list_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>

@@ -120,7 +120,7 @@ for repository, id in tuple_list:\n
   bt_list.append(bt.getId())\n
 \n
 RESPONSE.redirect(\'%s/TemplateTool_viewMultiInstallationDialog?%s&form_id=BusinessTemplate_installationChoice\' %(context.absolute_url(), make_query({\'bt_list\' : bt_list})))\n
-#return context.ERP5XhtmlStyle_redirect(\'%s/TemplateTool_viewMultiInstallationDialog\' % (context.absolute_url(), ), {\'bt_list\' : bt_list})\n
+#return context.ERP5Site_redirect(\'%s/TemplateTool_viewMultiInstallationDialog\' % (context.absolute_url(), ), {\'bt_list\' : bt_list})\n
 
 
 ]]></string> </value>

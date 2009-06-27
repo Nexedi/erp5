@@ -95,7 +95,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>list_dialog_master</string> </value>
+            <value> <string>list_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>

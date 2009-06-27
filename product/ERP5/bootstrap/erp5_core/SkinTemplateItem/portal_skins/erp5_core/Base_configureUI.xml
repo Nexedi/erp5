@@ -76,7 +76,7 @@ for x in range(len(field_columns)):\n
     stat_columns[x] = \' \'\n
 \n
 \n
-# The file named "form_list_ui.pt" displays first, columns in selection and then, those\n
+# The page template named "configure_list_dialog" displays first, columns in selection and then, those\n
 # which are defined by default in the corresponding listbox properties. So field_columns\n
 # and stat_columns may not be ordered the same way. So the script below sort the\n
 # field_column list so as to have every \'None\' at the end of the list\n

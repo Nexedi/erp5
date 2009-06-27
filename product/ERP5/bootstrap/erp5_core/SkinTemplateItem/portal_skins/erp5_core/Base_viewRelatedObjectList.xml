@@ -89,7 +89,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_list_relation</string> </value>
+            <value> <string>relation_form</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>

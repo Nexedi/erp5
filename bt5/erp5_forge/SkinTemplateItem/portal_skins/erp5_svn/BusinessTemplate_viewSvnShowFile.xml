@@ -62,7 +62,7 @@ along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 -->\n
 </tal:block>\n
-<tal:block metal:use-macro="here/view_master/macros/master">\n
+<tal:block metal:use-macro="here/view_main/macros/master">\n
   <tal:block metal:fill-slot="main">\n
 <br/>\n
 <tal:block tal:content="structure python: context.getPortalObject()[\'portal_subversion\'].fileHTML(context,context.REQUEST[\'file\'])">file content</tal:block>\n

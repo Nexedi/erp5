@@ -68,7 +68,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
     xml:lang="en"\n
     xmlns:tal="http://xml.zope.org/namespaces/tal"\n
     xmlns:metal="http://xml.zope.org/namespaces/metal"\n
-    metal:use-macro="here/view_master/macros/master">\n
+    metal:use-macro="here/view_main/macros/master">\n
 \n
   <head>\n
       <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />\n
