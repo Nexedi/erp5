@@ -2627,7 +2627,7 @@ class ModuleTemplateItem(BaseTemplateItem):
     keys = self._objects.keys()
     keys.sort()
     for id in keys:
-      # expor module one by one
+      # export modules one by one
       xml_data = self.generateXml(path=id)
       bta.addObject(obj=xml_data, name=id, path=path)
 
