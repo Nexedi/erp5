@@ -119,6 +119,8 @@
                         <string>my_layout_news_reference</string>
                         <string>my_layout_highlight_reference</string>
                         <string>my_layout_display_content_widget</string>
+                        <string>my_layout_all_languages</string>
+                        <string>my_layout_all_versions</string>
                       </list>
                     </value>
                 </item>
