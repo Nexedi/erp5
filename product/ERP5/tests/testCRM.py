@@ -948,7 +948,6 @@ class TestCRMMailSend(ERP5TypeTestCase):
                aggregate=document_zip.getRelativeUrl(),
                text_content='This is an advertisement mail.')
 
-    event.pdb()
     mail_text = event.send(download=True)
 
     # Check mail text.
