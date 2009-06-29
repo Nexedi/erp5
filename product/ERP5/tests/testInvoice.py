@@ -172,8 +172,9 @@ class TestInvoiceMixin(TestPackingListMixin,
         portal.portal_workflow.doActionFor(account, 'validate_action')
 
     invoice_rule = portal.portal_rules.default_invoice_transaction_rule
-    invoice_rule.deleteContent([x.getId()
-                          for x in invoice_rule.objectValues()])
+    if invoice_rule.getValidationState() == 'validated':
+      invoice_rule.invalidate()
+    invoice_rule.deleteContent(list(invoice_rule.objectIds()))
     transaction.commit()
     self.tic()
     region_predicate = invoice_rule.newContent(portal_type = 'Predicate')

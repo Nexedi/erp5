@@ -1627,10 +1627,7 @@ class TestTaxLineInvoiceSimulation(AccountingBuildTestCase):
                       invoice_simulation_movement.getPriceCurrencyValue())
     self.assertEquals(self.resource,
                       invoice_simulation_movement.getResourceValue())
-    invoice.start()
-    self.assertEquals('started', invoice.getSimulationState())
-    transaction.commit()
-    self.tic()
+
     accounting_line_list = invoice.getMovementList(
                             portal_type=('Sale Invoice Transaction Line',
                                          'Purchase Invoice Transaction Line'))

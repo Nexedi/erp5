@@ -184,35 +184,30 @@ class CrmTestCase(ERP5ReportTestCase):
                               reference='Person_1',
                               title='Person_1',
                               id='Person_1')
-      user.validate()
     if not self.person_module.has_key('Person_2'): 
       user = self.portal.person_module.newContent(
                               portal_type='Person',
                               reference='Person_2',
                               title='Person_2',
                               id='Person_2')
-      user.validate()
     if not self.person_module.has_key('Person_3'): 
       user = self.portal.person_module.newContent(
                               portal_type='Person',
                               reference='Person_3',
                               title='Person_3',
                               id='Person_3')
-      user.validate()
     if not self.organisation_module.has_key('Organisation_1'): 
       org = self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='Organisation_1',
                               title='Organisation_1',
                               id='Organisation_1')
-      org.validate()
     if not self.organisation_module.has_key('Organisation_2'): 
       org = self.portal.organisation_module.newContent(
                               portal_type='Organisation',
                               reference='Organisation_2',
                               title='Organisation_2',
                               id='Organisation_2')
-      org.validate()
     if not self.organisation_module.has_key('My_organisation'): 
       org = self.portal.organisation_module.newContent(
                               portal_type='Organisation',
@@ -220,8 +215,7 @@ class CrmTestCase(ERP5ReportTestCase):
                               title='My_organisation',
                               group_value=self.portal_categories['group'].demo_group,
                               id='My_organisation')
-      org.validate()
-    
+
     # make sure documents are validated
     for module in (self.organisation_module,
                    self.person_module):
@@ -237,22 +231,15 @@ class CrmTestCase(ERP5ReportTestCase):
     """Remove all documents.
     """
     transaction.abort()
-    self.campaign_module.manage_delObjects(
-                      list(self.campaign_module.objectIds()))
-    self.meeting_module.manage_delObjects(
-                      list(self.meeting_module.objectIds()))
-    self.sale_opportunity_module.manage_delObjects(
-                      list(self.sale_opportunity_module.objectIds()))
-    self.support_request_module.manage_delObjects(
-                      list(self.support_request_module.objectIds()))
-    self.organisation_module.manage_delObjects(
-                      list(self.campaign_module.objectIds()))
-    self.person_module.manage_delObjects(
-                      list(self.person_module.objectIds()))
+    for module in (self.campaign_module,
+                   self.meeting_module,
+                   self.sale_opportunity_module,
+                   self.support_request_module,
+                   self.organisation_module,
+                   self.person_module,
+                   self.event_module):
+      module.manage_delObjects(list(module.objectIds()))
     self.portal_categories['group'].manage_delObjects((['demo_group',]))
-    self.event_module.manage_delObjects(
-                      list(self.event_module.objectIds()))
-                      
     transaction.commit()
     self.tic()
 

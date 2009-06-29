@@ -30,6 +30,7 @@
 import unittest
 import transaction
 from Testing import ZopeTestCase
+from zExceptions import Unauthorized
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
@@ -422,9 +423,6 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
 
   def stepTic(self, sequence=None, sequence_list=None, **kw):
     self.tic()
-
-  def stepPdb(self, sequence=None, sequence_list=None, **kw):
-    import pdb;pdb.set_trace()
 
   def stepCreatePackingList(self, sequence=None, sequence_list=None, **kw):
     property_dict = {}
@@ -992,8 +990,9 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     """
     Launch adopt_prevision() on each Amortisation Transaction
     """
+    isTransitionPossible = self.portal.portal_workflow.isTransitionPossible
     for transaction in self.getAccountingModule().contentValues():
-      if hasattr(transaction, 'adoptPrevision'):
+      if isTransitionPossible(transaction, 'adopt_prevision'):
         transaction.adoptPrevision()
         #LOG('Launched adoptPrevision() for transaction', 0, transaction.getRelativeUrl())
       else:
@@ -1011,7 +1010,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
                                                      'accept_decision_action',
                                                      'amortisation_transaction_causality_workflow')
         #LOG('Launched acceptDecision() for transaction', 0, transaction.getRelativeUrl())
-      except:
+      except Unauthorized:
         pass
         #LOG('Cannot launch acceptDecision() for transaction', 0, transaction.getRelativeUrl())
 

@@ -204,6 +204,10 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     """
     invoice_transaction_rule = getattr(self.getRuleTool(),
             'default_invoice_transaction_rule')
+    if invoice_transaction_rule.getValidationState() == 'validated':
+      invoice_transaction_rule.invalidate()
+      transaction.commit()
+
     # delete anything inside the rule first
     # clear the message queue, so that it does not contains unexistant paths
     self.tic()

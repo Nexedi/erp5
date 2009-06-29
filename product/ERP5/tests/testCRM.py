@@ -621,7 +621,8 @@ class TestCRMMailSend(ERP5TypeTestCase):
     default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
     default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
-    default_pref.enable()
+    if default_pref.getPreferenceState() == 'disabled':
+      default_pref.enable()
 
     # add a dummy mailhost not to send real messages
     if 'MailHost' in self.portal.objectIds():
@@ -947,6 +948,7 @@ class TestCRMMailSend(ERP5TypeTestCase):
                aggregate=document_zip.getRelativeUrl(),
                text_content='This is an advertisement mail.')
 
+    event.pdb()
     mail_text = event.send(download=True)
 
     # Check mail text.

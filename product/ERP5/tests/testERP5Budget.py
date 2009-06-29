@@ -211,9 +211,9 @@ class TestBudget(ERP5TypeTestCase):
           portal_type='Account',
           financial_section='actif/actif_immobilise/immobilisations_financieres')
 
-    # Open accounts
-    for account in account_module.objectValues(portal_type='Account'):
-      account.validate()
+      # Open accounts
+      for account in account_module.objectValues(portal_type='Account'):
+        account.validate()
 
     # Create some accounting transactions
     self.accounting_transaction1 = accounting_module.newContent(

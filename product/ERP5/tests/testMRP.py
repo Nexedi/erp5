@@ -47,9 +47,6 @@ class TestMRPMixin(TestBPMMixin):
   order_portal_type = 'Production Order'
   order_line_portal_type = 'Production Order Line'
 
-  def setUpOnce(self):
-    self.portal = self.getPortalObject()
-
   def invalidateRules(self):
     """
     do reversely of validateRules
@@ -57,7 +54,8 @@ class TestMRPMixin(TestBPMMixin):
     rule_tool = self.getRuleTool()
     for rule in rule_tool.contentValues(
       portal_type=rule_tool.getPortalRuleTypeList()):
-      rule.invalidate()
+      if rule.getValidationState() == 'validated':
+        rule.invalidate()
 
   def _createDocument(self, portal_type, **kw):
     module = self.portal.getDefaultModule(

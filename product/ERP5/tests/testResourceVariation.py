@@ -175,37 +175,28 @@ class ResourceVariationTestCase(ERP5TypeTestCase):
                       reference='A2',id='a2')
 
     #create resource variation preferences
-    if not self.portal_preferences.hasContent('test_site_preference'):
+    preference = getattr(self.portal_preferences, 'test_site_preference', None)
+    if preference is None:
       preference = self.portal_preferences.newContent(portal_type='Preference',
                                 title='Default Site Preference',
                                 id='test_site_preference')
       preference.enable()
 
     value='individual_aspect'
-    self.portal_preferences['test_site_preference'
-                ].setPreferredProductIndividualVariationBaseCategory(value)
-    self.portal_preferences['test_site_preference'
-                ].setPreferredServiceIndividualVariationBaseCategory(value)
-    self.portal_preferences['test_site_preference'
-                ].setPreferredComponentIndividualVariationBaseCategory(value)
+    preference.setPreferredProductIndividualVariationBaseCategory(value)
+    preference.setPreferredServiceIndividualVariationBaseCategory(value)
+    preference.setPreferredComponentIndividualVariationBaseCategory(value)
 
     value=('required_size',)
-    self.portal_preferences['test_site_preference'
-                ].setPreferredProductVariationBaseCategoryList(value)
-    self.portal_preferences['test_site_preference'
-                ].setPreferredServiceVariationBaseCategoryList(value)
-    self.portal_preferences['test_site_preference'
-                ].setPreferredComponentVariationBaseCategoryList(value)
+    preference.setPreferredProductVariationBaseCategoryList(value)
+    preference.setPreferredServiceVariationBaseCategoryList(value)
+    preference.setPreferredComponentVariationBaseCategoryList(value)
 
     value=('option_colour',)
-    self.portal_preferences['test_site_preference'
-                ].setPreferredProductOptionalVariationBaseCategory(value)
-    self.portal_preferences['test_site_preference'
-                ].setPreferredServiceOptionalVariationBaseCategory(value)
-    self.portal_preferences['test_site_preference'
-                ].setPreferredComponentOptionalVariationBaseCategory(value)
-                
-    self.portal_preferences['test_site_preference'].enable()
+    preference.setPreferredProductOptionalVariationBaseCategory(value)
+    preference.setPreferredServiceOptionalVariationBaseCategory(value)
+    preference.setPreferredComponentOptionalVariationBaseCategory(value)
+
     # all this available to catalog
 
     #adding to base categories of resources

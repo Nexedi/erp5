@@ -76,7 +76,6 @@ class TestBPMMixin(ERP5TypeTestCase):
   invoicing_resource_use_category_list = ['discount', 'tax']
 
   def setUpOnce(self):
-    self.portal = self.getPortalObject()
     self.validateRules()
 
   def createCategoriesInCategory(self, category, category_id_list):

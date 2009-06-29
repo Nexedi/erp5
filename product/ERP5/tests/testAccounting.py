@@ -177,17 +177,16 @@ class AccountingTestCase(ERP5TypeTestCase):
     for module in (self.account_module, self.organisation_module,
                    self.person_module):
       for doc in module.objectValues():
-        doc.validate()
+        if doc.getValidationState() != 'validated':
+          doc.validate()
 
     # and the preference enabled
     pref = self.portal.portal_preferences._getOb(
                   'accounting_zuite_preference', None)
     if pref is not None:
       pref.manage_addLocalRoles(self.username, ('Auditor', ))
-      # Make sure _aq_dynamic is called before calling the workflow method
-      # otherwise .enable might not been wrapped yet. This happen in --load
-      pref._aq_dynamic('hack')
-      pref.enable()
+      if pref.getPreferenceState() != 'enabled':
+        pref.enable()
     
     self.validateRules()
 

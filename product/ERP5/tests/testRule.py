@@ -41,7 +41,6 @@ class TestRuleMixin(TestOrderMixin):
   """
 
   def afterSetUp(self):
-    self.test_data = []
     # delete rules
     self.getRuleTool().manage_delObjects(
         ids=list(list(self.getRuleTool().objectIds())))
@@ -52,14 +51,15 @@ class TestRuleMixin(TestOrderMixin):
     delivery_rule = self.getRuleTool().newContent(portal_type="Delivery Rule",
         id='default_delivery_rule',
         reference='default_delivery_rule', version='1')
-    # at least one default_delivery_rule should be validated here to
-    # confirm Sale Packing List in afterSetUp()
-    delivery_rule.validate()
     # create packing list if necessary
     pl_module = self.getPortal().getDefaultModule(
         self.packing_list_portal_type)
     if pl_module.objectCount() == 0:
+      # at least one default_delivery_rule should be validated here to
+      # confirm Sale Packing List
+      delivery_rule.validate()
       self.pl = self.createPackingList()
+      delivery_rule.invalidate()
     else:
       self.pl = self.getPortal().getDefaultModule(
           self.packing_list_portal_type).objectValues()[0]
@@ -72,10 +72,8 @@ class TestRuleMixin(TestOrderMixin):
 
 
   def beforeTearDown(self):
-    for container, id in self.test_data:
-      container.manage_delObjects(ids=[id])
-    self.getSimulationTool().manage_delObjects(
-        ids=list(self.getSimulationTool().objectIds()))
+    for module in self.getRuleTool(), self.getSimulationTool():
+      module.manage_delObjects(list(module.objectIds()))
     transaction.commit()
     self.tic()
 
@@ -188,26 +186,6 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     self.assertEquals(self.getRuleTool().countFolder(
       validation_state="validated")[0][0], 0)
     self.assertEquals(len(self.getRuleTool().searchRuleList(self.pl)), 0)
-
-  def test_05_ValidatedRule(self, quiet=quiet, run=run_all_test):
-    """
-    test that when a rule is validated, it will apply
-    """
-    if not run: return
-
-    skin_folder = self.getPortal().portal_skins.custom
-    skin = createZODBPythonScript(skin_folder, 'good_script', 'rule',
-        'return True')
-    delivery_rule = self.getRuleTool().searchFolder(
-        reference='default_delivery_rule')[0]
-    delivery_rule.setTestMethodId('good_script')
-    delivery_rule.validate()
-    transaction.commit()
-    self.tic()
-
-    self.assertEquals(self.getRuleTool().countFolder(
-      validation_state="validated")[0][0], 1)
-    self.assertEquals(len(self.getRuleTool().searchRuleList(self.pl)), 1)
 
   def test_06_WrongDateRange(self, quiet=quiet, run=run_all_test):
     """
