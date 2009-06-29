@@ -41,6 +41,16 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -52,9 +62,9 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left</string>
-                <string>right</string>
-                <string>center</string>
+                <string>left (Personal Informations)</string>
+                <string>right (Contact Informations)</string>
+                <string>center (Login Informations)</string>
                 <string>bottom</string>
               </list>
             </value>
@@ -72,7 +82,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>center</string> </key>
+                    <key> <string>center (Login Informations)</string> </key>
                     <value>
                       <list>
                         <string>my_description</string>
@@ -83,7 +93,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>left</string> </key>
+                    <key> <string>left (Personal Informations)</string> </key>
                     <value>
                       <list>
                         <string>my_first_name</string>
@@ -96,7 +106,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>right</string> </key>
+                    <key> <string>right (Contact Informations)</string> </key>
                     <value>
                       <list>
                         <string>my_default_email_text</string>
@@ -126,7 +136,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>ecommerce_form_list</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -146,6 +156,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>

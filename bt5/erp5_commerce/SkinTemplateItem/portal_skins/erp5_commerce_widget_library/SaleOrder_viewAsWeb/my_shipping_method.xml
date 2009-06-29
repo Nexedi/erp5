@@ -311,7 +311,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [( \'%s - %s %s\' %(o.getObject().getTitle(), o.getObject().getPrice(), here.SaleOrder_getShoppingCartDefaultCurrency().getTitle() ), o.getObject().getRelativeUrl(),) for o in here.SaleOrder_getAvailableShippingResourceList()]</string> </value>
+            <value> <string>python: [(\'\', \'\')] + [( \'%s - %s %s\' %(o.getObject().getTitle(), o.getObject().getPrice(), here.SaleOrder_getShoppingCartDefaultCurrency().getTitle() ), o.getObject().getRelativeUrl(),) for o in here.SaleOrder_getAvailableShippingResourceList()]</string> </value>
         </item>
       </dictionary>
     </pickle>

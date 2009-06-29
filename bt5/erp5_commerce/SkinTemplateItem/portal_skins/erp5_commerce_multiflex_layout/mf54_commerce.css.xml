@@ -99,7 +99,7 @@ div.selected-product {height : 110px; width:<tal:block tal:replace="main_content
 div.selected-product div {float:left; width:100px; height:100px; text-align:center; padding-right: 25px;}\n
 div.selected-product img {border:solid 1px <tal:block tal:replace="primary_color"/>; padding:0px; margin-left:10px; margin-right:10px; margin-top:5px; margin-bottom:2px;}\n
 div.selected-product img:hover {border:solid 2px <tal:block tal:replace="primary_color"/>; padding:0px; margin-top:4px; margin-left:9px; margin-right:9px; margin-bottom:1px;}\n
-div.selected-product div div {width:50px; height:50px; vertical-align:middle; text-align:middle; border:solid 1px <tal:block tal:replace="primary_color"/>; padding:0px; margin-left:10px; margin-right:10px; margin-top:5px; margin-bottom:2px;}\n
+div.selected-product div div {width:50px; height:50px; vertical-align:middle; text-align:center; border:solid 1px <tal:block tal:replace="primary_color"/>; padding:0px; margin-left:10px; margin-right:10px; margin-top:5px; margin-bottom:2px;}\n
 div.selected-product div div:hover {border:solid 2px <tal:block tal:replace="primary_color"/>; padding:0px; margin-top:4px; margin-left:9px; margin-right:9px; margin-bottom:1px;}\n
 \n
 .cart_item_name {width:180px;}\n
@@ -156,6 +156,9 @@ div.shopping_cart_renderer_shipping {width: <tal:block tal:replace="python: main
 div.shopping_cart_renderer_submit {width: <tal:block tal:replace="python: main_content_width - 40"/>px; height:20px; margin-bottom:20px; padding-left:20px; padding-right:20px; padding-top:3px;  padding-bottom:3px; background-color:<tal:block tal:replace="body_color"/>;}\n
 .shopping_cart_renderer_submit label {float:left; width: <tal:block tal:replace="python: main_content_width / 8"/>px; height:20px;padding:0px;}\n
 .shopping_cart_renderer_submit div {float:right; height:20px; padding:0px}\n
+.shopping_cart_renderer_submit input {float:right;}\n
+.shopping_cart_renderer input {float:right;}\n
+\n
 \n
 .mf_commerce_text {font: 12px <tal:block tal:replace="python: \',\'.join(font_list)"/>}\n
 .mf_commerce_text_bold {font: bold 12px <tal:block tal:replace="python: \',\'.join(font_list)"/>;}\n
@@ -165,7 +168,7 @@ div.shopping_cart_renderer_submit {width: <tal:block tal:replace="python: main_c
 div.hiddenLabel label {display:none;}\n
 fieldset.editable div.input {padding:0px;}\n
 \n
-.main_content table {border-top: solid 1px <tal:block tal:replace="primary_color"/>;}\n
+.main_content table {border-top: solid 1px <tal:block tal:replace="primary_color"/>; margin-bottom:10px;}\n
 .main_content table th {border:none; background-color:<tal:block tal:replace="body_color"/>;}\n
 .main_content table tr {border:none; border-bottom:dashed 1px <tal:block tal:replace="menu_color"/>; background-color:#FFF;}\n
 .main_content table td {border:none; background-color:#FFF;}\n
@@ -178,6 +181,25 @@ fieldset.editable div.input {padding:0px;}\n
 .main_content th img {clear:none; border:none; margin-left:5px;}\n
 .main_content .pageNavigation input {vertical-align:middle;}\n
 .main_content table td.td_check_all {background-color:<tal:block tal:replace="body_color"/>;}\n
+\n
+#fieldset_left {padding:10px;}\n
+#fieldset_left div.field {float:left; width:90%; margin-top:5px; margin-bottom: 10px;}\n
+#fieldset_left label {float:left; width: <tal:block tal:replace="python: main_content_width / 5"/>px;}\n
+#fieldset_left label a {display:none;}\n
+#fieldset_left div.input {float:left;}\n
+#fieldset_right {padding:10px;}\n
+#fieldset_right div.field {float:left; width:90%; margin-top:5px; margin-bottom: 10px;}\n
+#fieldset_right label {float:left; width:<tal:block tal:replace="python: main_content_width / 5"/>px;}\n
+#fieldset_right label a {display:none;}\n
+#fieldset_right div.input {float:left;}\n
+#fieldset_center {padding:10px;}\n
+#fieldset_center div.field {float:left; width:90%; margin-top:5px; margin-bottom: 10px;}\n
+#fieldset_center label {float:left; width:<tal:block tal:replace="python: main_content_width / 5"/>px;}\n
+#fieldset_center label a {display:none;}\n
+#fieldset_center div.input {float:left;}\n
+\n
+.ecommerce_submit {margin:10px; margin-left:20px;}\n
+\n
 </tal:block>
 
 ]]></string> </value>

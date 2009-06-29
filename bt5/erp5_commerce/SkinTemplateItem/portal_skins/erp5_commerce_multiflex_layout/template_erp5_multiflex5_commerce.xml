@@ -161,7 +161,16 @@
 \n
       <!-- CONTENT -->\n
       <div class="main_content">\n
-        <tal:block  tal:condition="python: section.getLayoutProperty(\'ecommerce_selected_product\', False)">\n
+        <tal:block  tal:condition="python: request.get(\'portal_status_message\') is not None">\n
+        <div class="main_content">\n
+          <div class="corner-content-1col-top"></div>\n
+          <div class="content-1col-nobox">\n
+            <span tal:content="python: request.get(\'portal_status_message\')"></span>\n
+          </div>\n
+          <div class="corner-content-1col-bottom"></div>                       \n
+        </div>\n
+        </tal:block>        \n
+        <tal:block  tal:condition="python: request.get(\'current_web_section\', here).getLayoutProperty(\'ecommerce_selected_product\', False)">\n
         <div class="main_content">\n
           <div class="corner-content-1col-top"></div>\n
           <div class="content-1col-nobox">\n

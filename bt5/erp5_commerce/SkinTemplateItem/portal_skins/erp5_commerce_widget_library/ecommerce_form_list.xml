@@ -39,33 +39,16 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<div tal:repeat="product python: here.WebSection_getProductList()">\n
-  <div tal:condition="python: product is not None"\n
-       tal:define="shopping_cart    here/SaleOrder_getShoppingCart;\n
-                   site_url         python:here.getWebSiteValue().absolute_url();\n
-                   product_href     python: \'%s/product_module/%s/%s\' % (site_url, product.getId(), \'Resource_viewAsShop\');\n
-                   currency_symbole python: context.getPortalObject().restrictedTraverse(shopping_cart.getPriceCurrency()).getShortTitle();"\n
-       tal:attributes="class python: repeat[\'product\'].index % 2 and \'product_list_bis\' or \'product_list\'">\n
-    <div class="product_list_left">\n
-      <a tal:attributes="href product_href">\n
-        <img  tal:attributes="src python: product.getDefaultImageAbsoluteUrl() + \'?display=thumbnail\'" width="75" height="75">\n
-      </a>\n
-      <p tal:content="python: product.getTranslatedTitle()">Title of the product</p>\n
-      <p tal:content="python: \'%s ...\' % product.getDescription()[0:80]">Description of the product</p>\n
-    </div>\n
-    <div class="product_list_right">\n
-      <tal:block tal:define="price product/getPrice">\n
-        <tal:block tal:condition="python: price is not None">\n
-          <span>Price : </span><span tal:content="python: \'%s %s\' % (product.getPrice(), currency_symbole)">0 euros</span><br />\n
-        </tal:block>\n
-        <tal:block tal:condition="python: price is None">\n
-          <span>The price is not setted yet.</span><br />\n
-        </tal:block>\n
-      </tal:block>\n
-        <a tal:attributes="href product_href">More informations</a>\n
-    </div>\n
-  </div>\n
-</div>
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+  <tal:block metal:use-macro="here/ecommerce_list_main/macros/master">\n
+    <tal:block metal:fill-slot="main">\n
+      <tal:block metal:use-macro="here/form_render/macros/master" />\n
+    </tal:block>\n
+  </tal:block>\n
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>
@@ -79,7 +62,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_viewProductList</string> </value>
+            <value> <string>ecommerce_form_list</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
