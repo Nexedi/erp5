@@ -67,6 +67,9 @@
     - you need to adjust group, function and site to your needs\n
 """\n
 from Products.Formulator.Errors import ValidationError, FormValidationError\n
+portal = context.getPortalObject()\n
+translateString = context.Base_translateString\n
+website = context.getWebSiteValue()\n
 \n
 # Call Base_edit\n
 result, result_type = context.Base_edit(form_id, silent_mode=1, field_prefix=\'your_\')\n
@@ -77,18 +80,25 @@ if result_type != \'edit\':\n
 kw, encapsulated_editor_list = result\n
 \n
 # Set default values\n
-person_group = kw.get(\'group\', \'\')\n
-person_function = kw.get(\'function\', \'\')\n
-person_site = kw.get(\'site\', \'\')\n
-person_role = kw.get(\'role\', \'\')\n
+person_group = kw.get(\'group\', None)\n
+person_function = kw.get(\'function\', None)\n
+person_site = kw.get(\'site\', None)\n
+person_role = kw.get(\'role\', None)\n
 kw.setdefault(\'reference\', kw[\'default_email_text\'])\n
 if \'password_confirm\' in kw:\n
   del kw[\'password_confirm\']\n
 \n
+#Check that user doesn\'t already exists\n
+person_list = portal.acl_users.erp5_users.getUserByLogin(kw[\'reference\'])\n
+if person_list:\n
+  msg = translateString("This account already exists. Please provide another email address.")\n
+  kw[\'portal_status_message\'] = msg\n
+  context.REQUEST.form.update(kw)\n
+  return getattr(website, form_id)()\n
+\n
 # create Person account\n
-person_module = context.getPortalObject().person_module\n
-person = person_module.newContent(portal_type = \'Person\', \n
-                                  **kw)\n
+person_module = portal.getDefaultModule(portal_type=\'Person\')\n
+person = person_module.newContent(portal_type=\'Person\', **kw)\n
 person.validate()\n
 # do not immediate reindex object\n
 # this means that when creating an account the new one will *NOT*\n
@@ -97,24 +107,21 @@ person.validate()\n
 #person.immediateReindexObject()\n
 \n
 # Create default career\n
-career = person.newContent(portal_type = \'Career\',\n
-                           id = \'default_career\',\n
-                           group = person_group,\n
-                           function = person_function,\n
-                           role = person_role)\n
+career = person.newContent(portal_type=\'Career\',\n
+                           id=\'default_career\',\n
+                           group=person_group,\n
+                           function=person_function,\n
+                           role=person_role)\n
 # Create assignment\n
-assignment = person.newContent(portal_type = \'Assignment\',\n
-                               group = person_group,\n
-                               function = person_function,\n
-                               site = person_site)\n
+assignment = person.newContent(portal_type=\'Assignment\',\n
+                               group=person_group,\n
+                               function=person_function,\n
+                               site=person_site)\n
 assignment.open()\n
 \n
-translateString = context.Base_translateString\n
 msg = translateString("Your account was successfully created.")\n
-website = context.getWebSiteValue()\n
-return website.Base_redirect(\'view\', \n
-                             keep_items = dict(portal_status_message = msg,\n
-                                               editable_mode = 0))\n
+return website.Base_redirect(form_id, keep_items=dict(portal_status_message=msg,\n
+                             editable_mode=0))\n
 
 
 ]]></string> </value>
@@ -167,25 +174,29 @@ return website.Base_redirect(\'view\', \n
                             <string>FormValidationError</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>translateString</string>
+                            <string>website</string>
                             <string>_getiter_</string>
                             <string>result</string>
                             <string>result_type</string>
                             <string>kw</string>
                             <string>encapsulated_editor_list</string>
+                            <string>None</string>
                             <string>person_group</string>
                             <string>person_function</string>
                             <string>person_site</string>
                             <string>person_role</string>
                             <string>_getitem_</string>
                             <string>_write_</string>
+                            <string>person_list</string>
+                            <string>msg</string>
+                            <string>getattr</string>
                             <string>person_module</string>
                             <string>_apply_</string>
                             <string>person</string>
                             <string>career</string>
                             <string>assignment</string>
-                            <string>translateString</string>
-                            <string>msg</string>
-                            <string>website</string>
                             <string>dict</string>
                           </tuple>
                         </value>

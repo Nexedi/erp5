@@ -1,3 +1,6 @@
+2009-06-29 nicolas
+* Check that user doesn't already exists
+
 2009-05-15 yusei
 * Add a template field for Editor Field to Base_viewWebFieldLibrary.
 
