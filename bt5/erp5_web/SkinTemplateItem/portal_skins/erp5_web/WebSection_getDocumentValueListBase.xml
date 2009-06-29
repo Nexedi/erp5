@@ -108,6 +108,11 @@ try:\n
   # First find the Web Section or Web Site we belong to\n
   current_section = context.getWebSectionValue()\n
 \n
+  if all_versions is None:\n
+    all_versions = context.getLayoutProperty(\'layout_all_versions\', default=False)\n
+  if all_languages is None:\n
+    all_languages = context.getLayoutProperty(\'layout_all_languages\', default=False)\n
+\n
   # Build the list of parameters\n
   if language is None:\n
     language = portal.Localizer.get_selected_language()\n
@@ -146,7 +151,7 @@ except Unauthorized:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>language=None, validation_state=None, all_languages=False, all_versions=None, src__=0, **kw</string> </value>
+            <value> <string>language=None, validation_state=None, all_languages=None, all_versions=None, src__=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -186,6 +191,7 @@ except Unauthorized:\n
                             <string>context</string>
                             <string>current_section</string>
                             <string>None</string>
+                            <string>False</string>
                             <string>_write_</string>
                             <string>_apply_</string>
                           </tuple>
@@ -202,7 +208,7 @@ except Unauthorized:\n
               <tuple>
                 <none/>
                 <none/>
-                <int>0</int>
+                <none/>
                 <none/>
                 <int>0</int>
               </tuple>
