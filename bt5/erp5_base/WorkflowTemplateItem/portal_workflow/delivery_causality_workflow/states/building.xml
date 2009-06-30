@@ -33,6 +33,7 @@
               <tuple>
                 <string>converge</string>
                 <string>diverge</string>
+                <string>start_building</string>
               </tuple>
             </value>
         </item>
@@ -62,16 +63,7 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Associate</string>
-                        <string>Auditor</string>
-                        <string>Authenticated</string>
-                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Member</string>
-                        <string>Owner</string>
-                        <string>Reviewer</string>
                       </tuple>
                     </value>
                 </item>
@@ -79,16 +71,7 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Associate</string>
-                        <string>Auditor</string>
-                        <string>Authenticated</string>
-                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Member</string>
-                        <string>Owner</string>
-                        <string>Reviewer</string>
                       </tuple>
                     </value>
                 </item>

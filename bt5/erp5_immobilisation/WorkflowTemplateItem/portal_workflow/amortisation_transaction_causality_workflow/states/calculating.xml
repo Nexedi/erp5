@@ -32,9 +32,7 @@
             <value>
               <tuple>
                 <string>accept_decision</string>
-                <string>accept_decision_action</string>
                 <string>adopt_prevision</string>
-                <string>adopt_prevision_action</string>
                 <string>converge</string>
                 <string>diverge</string>
                 <string>start_building</string>

@@ -33,6 +33,7 @@
               <tuple>
                 <string>calculate</string>
                 <string>converge</string>
+                <string>diverge</string>
                 <string>solve_divergence</string>
                 <string>solve_divergence_action</string>
                 <string>split_and_defer</string>

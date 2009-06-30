@@ -37,6 +37,12 @@
             </value>
         </item>
         <item>
+            <key> <string>before_commit_script_name</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string></string> </value>
         </item>
@@ -54,8 +60,7 @@
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>_set*</string>
-                <string>_edit</string>
+                <string>_set.*</string>
               </list>
             </value>
         </item>

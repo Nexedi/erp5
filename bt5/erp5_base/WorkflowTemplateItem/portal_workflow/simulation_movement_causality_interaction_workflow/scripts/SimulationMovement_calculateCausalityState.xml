@@ -59,15 +59,7 @@ delivery_movement = simulation_movement.getDeliveryValue()\n
 \n
 if delivery_movement is not None:\n
   delivery = delivery_movement.getExplanationValue()\n
-  # Because Payment Transaction does not have a causality workflow, we cannot assume that\n
-  # getCausalityState will always be present. This getattr test needs to be removed once\n
-  # Payment Transaction is linked to a correct causality workflow.\n
-  getCausalityState = getattr(delivery, \'getCausalityState\', None)\n
-\n
-  if getCausalityState is not None and getCausalityState() != \'draft\':\n
-    delivery.activate(\n
-        after_path_and_method_id=(delivery_movement.getPath(),\n
-        (\'recursiveImmediateReindexObject\', \'immediateReindexObject\'))).calculate()\n
+  delivery.activate().Delivery_calculate()\n
 </string> </value>
         </item>
         <item>
@@ -129,8 +121,6 @@ if delivery_movement is not None:\n
                             <string>delivery_movement</string>
                             <string>None</string>
                             <string>delivery</string>
-                            <string>getattr</string>
-                            <string>getCausalityState</string>
                           </tuple>
                         </value>
                     </item>

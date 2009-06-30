@@ -37,6 +37,7 @@
                 <string>adopt_prevision_action</string>
                 <string>calculate</string>
                 <string>converge</string>
+                <string>diverge</string>
                 <string>start_building</string>
               </tuple>
             </value>

@@ -53,11 +53,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>line = state_change[\'object\']\n
-# Clean simulation\n
-for simulation_movement in line.getDeliveryRelatedValueList():\n
-  if simulation_movement.getDelivery() == line.getRelativeUrl():\n
-    simulation_movement.setDelivery(None)\n
+            <value> <string># Note that delivery may have no causality state.\n
+# For instance, Accounting Transaction Lines\n
+# can be contained in a Accounting Rule Cell\n
+# of a Invoice Transaction Rule, and none of\n
+# these provide a causality workflow, but\n
+# Accounting Transaction Line is also a\n
+# possible child of a Accounting Transaction\n
+# in the Accounting Transaction Module\n
+\n
+portal = context.getPortalObject()\n
+if portal.portal_workflow.isTransitionPossible(context, \'calculate\'):\n
+  context.calculate()\n
+else:\n
+  # Make sure no other node is moving the delivery\n
+  # to \'diverged\' or \'solved\' state.\n
+  context.serialize()\n
 </string> </value>
         </item>
         <item>
@@ -68,13 +79,7 @@ for simulation_movement in line.getDeliveryRelatedValueList():\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -94,19 +99,15 @@ for simulation_movement in line.getDeliveryRelatedValueList():\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>line</string>
-                            <string>_getiter_</string>
                             <string>_getattr_</string>
-                            <string>simulation_movement</string>
-                            <string>None</string>
+                            <string>context</string>
+                            <string>portal</string>
                           </tuple>
                         </value>
                     </item>
@@ -123,7 +124,7 @@ for simulation_movement in line.getDeliveryRelatedValueList():\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AmortisationTransactionContent_updateRelatedSimulationMovement</string> </value>
+            <value> <string>Delivery_calculate</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

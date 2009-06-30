@@ -53,12 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>delivery = state_change[\'object\']\n
-\n
-getCausalityState = getattr(delivery, \'getCausalityState\', None)\n
-\n
-if getCausalityState is not None and getCausalityState() != \'draft\':\n
-  delivery.calculate()\n
+            <value> <string>state_change[\'object\'].Delivery_calculate()\n
 </string> </value>
         </item>
         <item>
@@ -96,12 +91,8 @@ if getCausalityState is not None and getCausalityState() != \'draft\':\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>delivery</string>
-                            <string>getattr</string>
-                            <string>None</string>
-                            <string>getCausalityState</string>
                             <string>_getattr_</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
