@@ -95,6 +95,8 @@ if clone:\n
   original_id = getattr(context, \'original_id\', None) or context.getId()\n
   # This is required for objects acquired in Web Section\n
   clipboard = directory.manage_copyObjects(ids=[original_id])\n
+  context.REQUEST.set(\'__cp\', clipboard) # CopySupport is using this to set\n
+                           # tracebility information in edit_workflow history\n
   paste_result = directory.manage_pasteObjects(cb_copy_data=clipboard)\n
   new_object = directory[paste_result[0][\'new_id\']]\n
   message_kind = \'Clone\'\n
