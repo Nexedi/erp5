@@ -29,6 +29,12 @@
             <value> <string>property_movement_group_on_cell</string> </value>
         </item>
         <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Property Movement Group</string> </value>
         </item>

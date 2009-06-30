@@ -158,7 +158,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Pay Sheet Transaction Builder</string> </value>
+            <value> <string>Pay Sheet Builder</string> </value>
         </item>
       </dictionary>
     </pickle>
