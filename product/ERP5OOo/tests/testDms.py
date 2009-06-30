@@ -118,7 +118,8 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
     default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
-    default_pref.enable()
+    if default_pref.getPreferenceState() != 'global':
+      default_pref.enable()
 
   def getDocumentModule(self):
     return getattr(self.getPortal(),'document_module')
@@ -784,7 +785,8 @@ class TestDocumentWithSecurity(ERP5TypeTestCase):
     default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
     default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
-    default_pref.enable()
+    if default_pref.getPreferenceState() != 'global':
+      default_pref.enable()
     transaction.commit()
     self.tic()
 

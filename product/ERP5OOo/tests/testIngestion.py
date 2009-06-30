@@ -122,7 +122,8 @@ class TestIngestion(ERP5TypeTestCase):
     default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
     default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
-    default_pref.enable()
+    if default_pref.getPreferenceState() != 'global':
+      default_pref.enable()
 
   def setSimulatedNotificationScript(self, sequence=None, sequence_list=None, **kw):
     """
