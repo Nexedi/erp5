@@ -498,7 +498,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
   def stepEditPackingList(self, sequence=None, sequence_list=None, **kw):
     pl = sequence.get('packing_list')
     if pl is None: pl = sequence.get('packing_list_list', [])[-1]
-    pl.edit()
+    pl.setReference(pl.getReference())
 
   def stepCreateComplexPackingListStructure(self, sequence=None, sequence_list=None, **kw):
     """
