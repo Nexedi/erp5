@@ -54,6 +54,8 @@ def _DateTime(*args, **kw):
 
 @profiler_decorator
 def castDate(value):
+  if value is None:
+    return None
   date_kw = {'datefmt': 'international'}
   if isinstance(value, dict):
     # Convert value into a DateTime, and guess desired delta from what user
