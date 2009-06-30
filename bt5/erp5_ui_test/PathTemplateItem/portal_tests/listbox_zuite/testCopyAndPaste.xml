@@ -138,6 +138,21 @@
 </tr>\n
 <tr>\n
   <td>open</td>\n
+  <td>${base_url}/bar_module/0/Base_viewHistory</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>x0_listbox_record_number</td>\n
+  <td>2 record(s)</td> <!-- Creation + paste notification -->\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>x0_listbox_data_line_1</td>\n
+  <td>regexp:Object copied from /erp5/foo_module/0$</td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
   <td>${base_url}/foo_module/view</td>\n
   <td></td>\n
 </tr>\n

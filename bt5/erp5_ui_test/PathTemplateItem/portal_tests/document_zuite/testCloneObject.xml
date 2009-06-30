@@ -148,7 +148,21 @@ another object of the same type. -->\n
   <td>Created Clone Foo.</td>\n
   <td></td>\n
 </tr>\n
-\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=History</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>x0_listbox_record_number</td>\n
+  <td>2 record(s)</td> <!-- Creation + paste notification -->\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>x0_listbox_data_line_1</td>\n
+  <td>regexp:Object copied from /erp5/foo_module/2$</td>\n
+</tr>\n
 </body>\n
 </html>\n
 
