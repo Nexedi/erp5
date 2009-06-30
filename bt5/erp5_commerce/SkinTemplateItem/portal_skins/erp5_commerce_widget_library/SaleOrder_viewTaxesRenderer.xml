@@ -48,14 +48,14 @@
     <span tal:replace="python: here.Base_translateString(\'Taxes\')"/>\n
   </h2>\n
 \n
-    <p tal:condition="python: tax_info is not None">\n
-      <span tal:replace="python: here.Base_translateString(\'For your location the following taxes are applicable\')"/> :\n
-      <b>\n
-        <tal:block tal:repeat="tax_name python: tax_info.keys()">\n
-           <li tal:content="python: \'%s (%s %s)\' %(tax_name, tax_info[tax_name], \'%\')">item </li>\n
-        </tal:block>\n
-      </b>\n
-    </p>\n
+    <div tal:condition="python: tax_info is not None">\n
+      <p><span tal:replace="python: here.Base_translateString(\'For your location the following taxes are applicable\')"/> :</p>\n
+        <ul>\n
+          <tal:block tal:repeat="tax_name python: tax_info.keys()">\n
+            <li tal:content="python: \'%s (%s %s)\' %(tax_name, tax_info[tax_name], \'%\')">item </li>\n
+          </tal:block>\n
+        </ul>\n
+    </div>\n
 \n
     <p tal:condition="python: tax_info is None"> \n
       <span tal:replace="python: here.Base_translateString(\'You do not have to pay any taxes.\')"/>  \n

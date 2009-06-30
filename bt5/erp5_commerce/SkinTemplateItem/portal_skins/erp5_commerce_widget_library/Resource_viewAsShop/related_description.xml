@@ -274,7 +274,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>related_description</string> </value>
+                    <value> <string>Description</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -305,7 +305,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/Product_viewRelatedDescription</string> </value>
+            <value> <string>here/Product_getRelatedDescription</string> </value>
         </item>
       </dictionary>
     </pickle>

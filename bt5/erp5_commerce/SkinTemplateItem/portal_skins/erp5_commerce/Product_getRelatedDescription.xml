@@ -63,10 +63,12 @@ web_page = portal.portal_catalog(portal_type=\'Web Page\',\n
                                  default_publication_section_uid=context.restrictedTraverse(\'portal_categories/publication_section/pamphlet/web/short\').getUid(),\n
                                  #src__=1,\n
                                  )\n
+#context.pdb()\n
+\n
 #return web_page\n
 if web_page is None or len(web_page) == 0:\n
   return context.Base_translateString("No more information for this product.")\n
-return "\\n".join([x.getObject().getTitle() for x in web_page])\n
+return web_page[0].getObject().asStrippedHTML()\n
 </string> </value>
         </item>
         <item>
@@ -111,10 +113,7 @@ return "\\n".join([x.getObject().getTitle() for x in web_page])\n
                             <string>web_page</string>
                             <string>None</string>
                             <string>len</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
