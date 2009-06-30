@@ -187,20 +187,21 @@ class W3Validator(object):
     parses the validation results, returns a list of tuples:
     line_number, col_number, error description
     """
-    error_list=[]
-    warning_list=[]
+    result_list_list = []
     xml_doc = minidom.parseString(result)
-    for error in xml_doc.getElementsByTagName('m:error'):
-      error_line = error.getElementsByTagName('m:line')[0].firstChild.nodeValue
-      error_col = error.getElementsByTagName('m:col')[0].firstChild.nodeValue
-      error_message = error.getElementsByTagName('m:message')[0].firstChild.nodeValue
-      error_list.append((error_line,error_col,error_message))
-    for warning in xml_doc.getElementsByTagName('m:warning'):
-      warning_line = warning.getElementsByTagName('m:line')[0].firstChild.nodeValue
-      warning_col = warning.getElementsByTagName('m:col')[0].firstChild.nodeValue
-      warning_message = warning.getElementsByTagName('m:message')[0].firstChild.nodeValue
-      warning_list.append((warning_line, warning_col, warning_message))
-    return error_list, warning_list
+    for severity in 'm:error', 'm:warning':
+      result_list = []
+      for error in xml_doc.getElementsByTagName(severity):
+        result = []
+        for name in 'm:line', 'm:col', 'm:message':
+          element_list = error.getElementsByTagName(name)
+          if element_list:
+            result.append(element_list[0].firstChild.nodeValue)
+          else:
+            result.append(None)
+        result_list.append(tuple(result))
+      result_list_list.append(result_list)
+    return result_list_list
 
   def getErrorAndWarningList(self, page_source):
     '''
@@ -270,29 +271,27 @@ def validate_xhtml(validator, source, view_name, bt_name):
     validator object, and there is some warning on the page, the function 
     return False, even if there is no error.
   '''
-
   # display some information when test faild to facilitate debugging
-  message = []
-  message.append('Using %s validator to parse the view "%s" (from %s bt) with warning %sdisplayed :' %\
-      (validator.name, view_name, bt_name, 
-        validator.show_warnings and ' ' or 'NOT '))
+  message = ['Using %s validator to parse the view "%s" (from %s bt)'
+             ' with warning%sdisplayed :'
+             % (validator.name, view_name, bt_name,
+                validator.show_warnings and ' ' or 'NOT ')]
 
-  error_list, warning_list = validator.getErrorAndWarningList(source)
+  result_list_list = validator.getErrorAndWarningList(source)
 
-  if error_list:
-    # build error message
-    for error in error_list:
-      message.append('Error: line %s column %s : %s' % error)
-
-  if warning_list and validator.show_warnings:
-    # build error message
-    for warning in warning_list:
-      message.append('Warning: line %s column %s : %s' % warning)
-
-  message = '\n'.join(message)
+  severity_list = ['Error']
   if validator.show_warnings:
-    return ((not (len(error_list) or len(warning_list))), message)
-  return ((not len(error_list)), message)
+    severity_list.append('Warning')
+
+  for i, severity in enumerate(severity_list):
+    for line, column, msg in result_list_list[i]:
+      if line is None and column is None:
+        message.append('%s: %s' % (severity, msg))
+      else:
+        message.append('%s: line %s column %s : %s' %
+                       (severity, line, column, msg))
+
+  return len(message) == 1, '\n'.join(message)
 
 
 def makeTestMethod(validator, module_id, portal_type, view_name, bt_name):
