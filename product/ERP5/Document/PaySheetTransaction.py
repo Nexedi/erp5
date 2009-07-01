@@ -162,7 +162,8 @@ class PaySheetTransaction(Invoice):
     movement_dict = paysheet_model.updateAggregatedAmountList(context=self)
     for movement in movement_dict['movement_to_delete_list']:
       parent = movement.getParentValue()
-      parent.manage_delObjects(movement.getId())
+      if parent.getPortalType() == 'Pay Sheet Line':
+        parent.manage_delObjects(movement.getId())
       if len(parent.contentValues(portal_type='Pay Sheet Cell')) == 0:
         # the line contain no movements, remove it
         self.manage_delObjects(parent.getId())
@@ -176,10 +177,12 @@ class PaySheetTransaction(Invoice):
       business_process = business_process_list[0]
       movement_list_trade_phase_dic = {}
       for movement in movement_dict['movement_to_add_list']:
-        trade_phase = movement.getTradePhase()
-        if not movement_list_trade_phase_dic.has_key(trade_phase):
-          movement_list_trade_phase_dic[trade_phase] = []
-        movement_list_trade_phase_dic[trade_phase].append(movement)
+        if movement.getTotalPrice() != 0:
+          # remove movement with 0 total_price
+          trade_phase = movement.getTradePhase()
+          if not movement_list_trade_phase_dic.has_key(trade_phase):
+            movement_list_trade_phase_dic[trade_phase] = []
+          movement_list_trade_phase_dic[trade_phase].append(movement)
 
       for trade_phase in movement_list_trade_phase_dic.keys():
         business_path_list = business_process.getPathValueList(trade_phase=\
