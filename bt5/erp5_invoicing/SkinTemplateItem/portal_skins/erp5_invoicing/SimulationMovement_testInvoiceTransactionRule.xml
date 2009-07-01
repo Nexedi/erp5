@@ -62,6 +62,7 @@ if parent.getPortalType() != \'Applied Rule\':\n
 parent_rule = parent.getSpecialiseValue()\n
 if parent_rule.getPortalType() not in (\'Invoice Rule\',\n
                                        \'Invoicing Rule\',\n
+                                       \'Trade Model Rule\',\n
                                        \'Tax Rule\'):\n
   return False\n
 \n
