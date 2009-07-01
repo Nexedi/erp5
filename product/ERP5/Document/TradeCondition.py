@@ -45,8 +45,6 @@ import zope.interface
 # XXX TODO: review naming of new methods
 # XXX WARNING: current API naming may change although model should be stable.
 
-class CircularException(Exception): pass
-
 class TradeCondition(Path, Transformation, XMLMatrix):
     """
       Trade Conditions are used to store the conditions (payment, logistic,...)
@@ -138,13 +136,17 @@ class TradeCondition(Path, Transformation, XMLMatrix):
             portal_type=portal_type_list)
       while len(specialise_value_list) != 0:
         specialise = specialise_value_list.pop(0)
-        children = specialise.getSpecialiseValueList(\
+        child_list = specialise.getSpecialiseValueList(\
             portal_type=portal_type_list)
-        specialise_value_list.extend(children)
-        if not set(children).intersection(visited_trade_condition_list):
-          visited_trade_condition_list.extend(children)
-        else:
-          raise CircularException
+
+        intersection = set(child_list).intersection(\
+            set(visited_trade_condition_list))
+        for model in child_list:
+          if model not in intersection:
+            # don't add model that are already been visited. This permit to
+            # visit all model tree, and to not have circular dependency
+            specialise_value_list.append(model)
+            visited_trade_condition_list.append(model)
       return visited_trade_condition_list
 
     security.declareProtected(Permissions.AccessContentsInformation,
