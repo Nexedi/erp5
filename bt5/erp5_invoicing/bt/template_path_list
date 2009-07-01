@@ -6,3 +6,5 @@ portal_rules/default_invoicing_rule
 portal_rules/default_invoicing_rule/**
 portal_rules/default_tax_rule
 portal_rules/default_tax_rule/**
+portal_rules/default_trade_model_rule
+portal_rules/default_trade_model_rule/**
