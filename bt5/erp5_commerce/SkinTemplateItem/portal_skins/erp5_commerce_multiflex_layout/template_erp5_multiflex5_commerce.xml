@@ -164,8 +164,10 @@
         <tal:block  tal:condition="python: request.get(\'portal_status_message\') is not None">\n
         <div class="main_content">\n
           <div class="corner-content-1col-top"></div>\n
-          <div class="content-1col-nobox">\n
-            <span tal:content="python: request.get(\'portal_status_message\')"></span>\n
+          <div class="content-1col-nobox portal_status_message">\n
+            <h3>\n
+              <span tal:content="python: request.get(\'portal_status_message\')"></span>\n
+            </h3>\n
           </div>\n
           <div class="corner-content-1col-bottom"></div>                       \n
         </div>\n

@@ -273,7 +273,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getPrice()  and \'%s %s\' % (here.getPrice(), here.restrictedTraverse(here.getSaleSupplyLinePriceCurrency()).getShortTitle()) or \'No price.\'</string> </value>
+            <value> <string>python: here.getPrice()  and \'%s %s\' % (here.getPrice(), here.restrictedTraverse(here.getSaleSupplyLinePriceCurrency()).getReference()) or \'No price.\'</string> </value>
         </item>
       </dictionary>
     </pickle>

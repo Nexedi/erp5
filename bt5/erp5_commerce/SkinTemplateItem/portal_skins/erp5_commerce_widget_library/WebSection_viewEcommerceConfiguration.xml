@@ -90,6 +90,7 @@
                         <string>my_ecommerce_base_product_line</string>
                         <string>my_ecommerce_default_content</string>
                         <string>my_ecommerce_product_list</string>
+                        <string>my_ecommerce_base_currency</string>
                       </list>
                     </value>
                 </item>

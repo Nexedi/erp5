@@ -80,7 +80,7 @@
   <tal:block tal:condition = "not: empty_cart">\n
     <tr><td class="cart_middle">\n
         <div class="cart_left">\n
-          <span tal:replace="python: here.Base_translateString(\'Total price\')"/> \n
+          <span tal:replace="python: here.Base_translateString(\'Total cart\')"/> \n
         </div>\n
         <div class="cart_right">\n
           <span tal:replace="total_price"/>\n

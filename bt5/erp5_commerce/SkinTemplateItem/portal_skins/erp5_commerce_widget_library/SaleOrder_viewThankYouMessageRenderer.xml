@@ -44,7 +44,7 @@
 <p>Your order will be processed by our personel now.</p>\n
 \n
 <p> If you want to check your orders you can do it \n
-    <a href="SaleOrderModule_viewAsWebSaleOrderList">here</a>\n
+    <a tal:attributes="href python: \'%s/SaleOrderModule_viewAsWebSaleOrderList\' % here.getWebSiteValue().absolute_url()">here</a>\n
 </p>
 
 ]]></string> </value>

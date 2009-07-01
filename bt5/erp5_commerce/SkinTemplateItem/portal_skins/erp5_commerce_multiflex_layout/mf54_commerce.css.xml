@@ -77,6 +77,7 @@
 ">\n
 \n
 .main_content h2 {margin:0px;}\n
+div.portal_status_message h3 {margin:0px;}\n
 \n
 #fieldset_left {padding:10px;}\n
 #fieldset_left div.field {margin-top:5px; margin-bottom: 10px;}\n
@@ -166,10 +167,14 @@ div.shopping_cart_renderer div.input {padding:0px;}\n
 .shopping_cart_renderer_shipping label a {display:none;}\n
 .shopping_cart_renderer_submit label a {display:none;}\n
 \n
-div.shopping_cart_renderer_shipping {clear:both; height:20px; margin-bottom:20px; margin-top:20px; padding-left:20px; padding-right:20px; padding-top:3px; padding-bottom:3px;}\n
+select.shopping_cart_renderer_shipping {float:right;}\n
+input.shopping_cart_renderer_submit {float:right;}\n
+\n
+\n
+div.shopping_cart_renderer_shipping {clear:both; height:20px; margin-bottom:20px; margin-top:20px; padding-left:20px; padding-right:20px; padding-top:3px; padding-bottom:3px; background-color: <tal:block tal:replace="body_color"/>;}\n
 .shopping_cart_renderer_shipping label {float:left; width: <tal:block tal:replace="python: main_content_width / 4"/>px; height:20px;padding:0px;}\n
 .shopping_cart_renderer_shipping div {height:20px; padding:0px}\n
-div.shopping_cart_renderer_submit {clear:both; height:20px; margin-bottom:20px; padding-left:20px; padding-right:20px; padding-top:3px;  padding-bottom:3px;}\n
+div.shopping_cart_renderer_submit {clear:both; height:20px; margin-bottom:20px; padding-left:20px; padding-right:20px; padding-top:3px;  padding-bottom:3px; background-color: <tal:block tal:replace="body_color"/>;}\n
 .shopping_cart_renderer_submit label {float:left; width: <tal:block tal:replace="python: main_content_width / 8"/>px; height:20px;padding:0px;}\n
 .shopping_cart_renderer_submit div {margin-left:10px; height:20px; padding:0px}\n
 \n
@@ -196,6 +201,11 @@ fieldset.editable div.input {padding:0px;}\n
 .main_content table td.td_check_all {background-color:<tal:block tal:replace="body_color"/>;}\n
 \n
 .ecommerce_submit {margin:10px; margin-left:20px;}\n
+\n
+.main_content table tr.shopping_cart_end_lines {border:none;}\n
+.main_content table tr.shopping_cart_end_lines td {border:none;}\n
+.main_content table tr.shopping_cart_end_lines td.used {border-bottom:solid 1px #CCC;}\n
+\n
 \n
 </tal:block>
 

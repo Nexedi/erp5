@@ -60,6 +60,7 @@
                 <string>right</string>
                 <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -80,13 +81,20 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list>
+                        <string>shipping</string>
+                        <string>taxes</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
                         <string>shopping_cart</string>
                         <string>discounts</string>
-                        <string>shipping</string>
-                        <string>taxes</string>
                         <string>fake_form</string>
                         <string>customer</string>
                         <string>submit</string>

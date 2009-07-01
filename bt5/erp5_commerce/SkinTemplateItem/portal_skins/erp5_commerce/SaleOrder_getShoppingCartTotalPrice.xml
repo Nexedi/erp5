@@ -80,7 +80,7 @@ if include_taxes:\n
     \n
 if include_currency:\n
   currency = context.SaleOrder_getShoppingCartDefaultCurrency()\n
-  return \'%s %s\' %(total, currency.getTitle())\n
+  return \'%s %s\' %(total, currency.getReference())\n
 else:\n
   return str(total)\n
 </string> </value>
