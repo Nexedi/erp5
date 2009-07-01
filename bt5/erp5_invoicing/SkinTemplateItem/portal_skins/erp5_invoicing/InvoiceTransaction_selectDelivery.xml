@@ -72,6 +72,10 @@ for movement in movement_list:\n
       for sm in other_rule.contentValues():\n
         line = sm.getDeliveryValue()\n
 \n
+  # case of trade model movement\n
+  if ar.getParentValue().getParentValue().getSpecialiseValue().getPortalType() == \'Trade Model Rule\':\n
+    line = ar.getParentValue().getParentValue().getParentValue().getDeliveryValue()\n
+\n
   # in case of invoice rule (ie. starting from Invoice)\n
   if line is None:\n
     line = ar.getParentValue().getOrderValue()\n
