@@ -1530,10 +1530,9 @@ class TestBPMTestCases(TestBPMMixin):
     trade_condition_1.setSpecialiseValue(trade_condition_2)
     trade_condition_2.setSpecialiseValue(trade_condition_1)
 
-    from Products.ERP5Type.Document.TradeCondition import CircularException
-    self.assertRaises(
-      CircularException,
-      trade_condition_1.getTradeModelLineComposedList
+    self.assertEquals(trade_condition_1. \
+        findSpecialiseValueList(trade_condition_1),
+        [trade_condition_1, trade_condition_2]
     )
 
   def test_TradeConditionTradeModelLineBasicComposition(self):
@@ -1761,6 +1760,44 @@ class TestBPMTestCases(TestBPMMixin):
     self.assertEquals([q.getReference() for q in trade_model_line_list],
         [q.getReference() for q in [G, F, E, D, C, B, A]])
 
+  def test_getComplexTradeModelLineComposedList(self):
+    """Test that list of contribution/application relations is sorted to do easy traversal
+
+    Let assume such graph of contribution/application dependency:
+
+             /--------\
+            /          \
+      A----+ -----B-----+-D
+            \          /
+             \----C---/
+
+    It shall return list which is sorted like:
+      * A (BC) D
+    where everything in parenthesis can be not sorted
+    """
+    trade_condition = self.createTradeCondition()
+
+    C = self.createTradeModelLine(trade_condition, reference='C',
+        base_contribution_list=['base_amount/total'],
+        base_application_list=['base_amount/total_discount'])
+
+    A = self.createTradeModelLine(trade_condition, reference='A',
+        base_contribution_list=['base_amount/total', 'base_amount/total_tax',
+          'base_amount/total_discount'],
+        base_application_list=['base_amount/tax'])
+
+    D = self.createTradeModelLine(trade_condition, reference='D',
+        base_application_list=['base_amount/total'])
+
+    B = self.createTradeModelLine(trade_condition, reference='B',
+        base_contribution_list=['base_amount/total'],
+        base_application_list=['base_amount/total_tax'])
+
+    trade_model_line_list = trade_condition.getTradeModelLineComposedList()
+
+    # XXX: This is only one good possible sorting
+    self.assertEquals([q.getReference() for q in trade_model_line_list],
+        [q.getReference() for q in [A, B, C, D]])
 
   def test_getAggregatedAmountList(self):
     """
