@@ -53,7 +53,30 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.InvoiceTransaction_selectInvoiceMovement(trade_type=\'Purchase\', **kw)\n
+            <value> <string>kw[\'parent_specialise_portal_type\'] = \'Invoice Transaction Rule\'\n
+if context.Invoice_isAdvanced():\n
+  kw[\'explanation_portal_type\']       = [\'%s Order\' % trade_type,\n
+                                         \'%s Invoice\' % trade_type,\n
+                                         \'%s Packing List\' % trade_type]\n
+else:\n
+  kw[\'explanation_portal_type\']       = [\'%s Order\' % trade_type,\n
+                                         \'%s Invoice Transaction\' % trade_type,\n
+                                         \'%s Packing List\' % trade_type]\n
+kw[\'portal_type\']                   = \'Simulation Movement\'\n
+kw[\'grand_parent_simulation_state\'] = [\'started\']\n
+\n
+kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
+\n
+movement_list = [] \n
+for movement in context.InvoiceTransaction_zSelectMovement(**kw) :\n
+  movement = movement.getObject()\n
+  if movement.getDeliveryValue() is None :\n
+    movement_list.append(movement)\n
+  else :\n
+    from Products.ERP5Type.Log import log\n
+    log(script.getId(), "simulation movement %s should not have been selected !" % movement.getPath())\n
+\n
+return movement_list\n
 </string> </value>
         </item>
         <item>
@@ -64,7 +87,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>trade_type, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -84,16 +107,25 @@
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>trade_type</string>
                             <string>kw</string>
-                            <string>_apply_</string>
+                            <string>_write_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>_apply_</string>
+                            <string>movement_list</string>
+                            <string>_getiter_</string>
+                            <string>movement</string>
+                            <string>None</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
+                            <string>script</string>
                           </tuple>
                         </value>
                     </item>
@@ -110,7 +142,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PurchaseInvoiceTransaction_selectInvoiceMovement</string> </value>
+            <value> <string>InvoiceTransaction_selectInvoiceMovement</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
