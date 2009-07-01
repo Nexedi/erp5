@@ -53,7 +53,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kw[\'parent_specialise_portal_type\'] = \'Invoice Transaction Rule\'\n
+            <value> <string>"""Returns Simulation Movements for invoice\n
+\n
+Simulation Movements can come from normal Invoice Transaction Rule\n
+and same rule which is children of Trade Model Rule """\n
+\n
+# search for normal movements\n
+kw[\'parent_specialise_portal_type\'] = \'Invoice Transaction Rule\'\n
 if context.Invoice_isAdvanced():\n
   kw[\'explanation_portal_type\']       = [\'%s Order\' % trade_type,\n
                                          \'%s Invoice\' % trade_type,\n
@@ -65,10 +71,24 @@ else:\n
 kw[\'portal_type\']                   = \'Simulation Movement\'\n
 kw[\'grand_parent_simulation_state\'] = [\'started\']\n
 \n
-kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
+search_kw = kw.copy()\n
+search_kw.update(context.portal_catalog.buildSQLQuery(**search_kw))\n
+\n
+normal_movement_list = [movement for movement in context.InvoiceTransaction_zSelectMovement(**search_kw)]\n
+\n
+# update query to search for movements which are children of Trade Model Rule\n
+kw.pop(\'grand_parent_simulation_state\')\n
+kw[\'grand_grand_parent_specialise_portal_type\'] = \'Trade Model Rule\'\n
+kw[\'grand_grand_grand_parent_simulation_state\'] = [\'started\']\n
+\n
+search_kw = kw.copy()\n
+\n
+search_kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
+\n
+trade_model_movement_list = [movement for movement in context.InvoiceTransaction_zSelectMovement(**search_kw)]\n
 \n
 movement_list = [] \n
-for movement in context.InvoiceTransaction_zSelectMovement(**kw) :\n
+for movement in normal_movement_list + trade_model_movement_list:\n
   movement = movement.getObject()\n
   if movement.getDeliveryValue() is None :\n
     movement_list.append(movement)\n
@@ -118,10 +138,15 @@ return movement_list\n
                             <string>_write_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>search_kw</string>
                             <string>_apply_</string>
-                            <string>movement_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
                             <string>_getiter_</string>
                             <string>movement</string>
+                            <string>normal_movement_list</string>
+                            <string>trade_model_movement_list</string>
+                            <string>movement_list</string>
                             <string>None</string>
                             <string>Products.ERP5Type.Log</string>
                             <string>log</string>
