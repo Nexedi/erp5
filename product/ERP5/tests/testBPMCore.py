@@ -1722,6 +1722,8 @@ class TestBPMTestCases(TestBPMMixin):
       * (DE) B (FG) C A
         or
       * (FG) C (DE) B A
+        or
+      * (DEFG) (BC) A
     where everything in parenthesis can be not sorted
     """
     trade_condition = self.createTradeCondition()
@@ -1757,7 +1759,7 @@ class TestBPMTestCases(TestBPMMixin):
 
     # XXX: This is only one good possible sorting
     self.assertEquals([q.getReference() for q in trade_model_line_list],
-        [q.getReference() for q in [D, E, B, F, G, C, A]])
+        [q.getReference() for q in [G, F, E, D, C, B, A]])
 
 
   def test_getAggregatedAmountList(self):
