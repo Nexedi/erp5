@@ -425,7 +425,6 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
       portal.portal_categories.publication_section.newContent(portal_type = 'Category',
                                                               id = category_id)
 
-    web_page_list = []
     property_dict = { '01' : dict(language = 'en' , version = "1" , reference = "A"),
                       '02' : dict(language = 'en' , version = "2" , reference = "B"),
                       '03' : dict(language = 'en' , version = "3" , reference = "C"),
@@ -456,6 +455,7 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                                 % (sequence_count)
         ZopeTestCase._print(message)
 
+      web_page_list = []
       for key in sequence:
         web_page = self.portal.web_page_module.newContent(
                                   title=key,
@@ -469,10 +469,10 @@ class TestERP5Web(ERP5TypeTestCase, ZopeTestCase.Functional):
   
       transaction.commit()
       self.tic()
-      # in draft state no documents should belong to this Web Section
+      # in draft state, no documents should belong to this Web Section
       self.assertEqual(0, len(websection.getDocumentValueList()))
   
-      # when published all web pages should belong to it
+      # when published, all web pages should belong to it
       for web_page in web_page_list:
         web_page.publish()
       transaction.commit()
