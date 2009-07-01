@@ -12,12 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>title</string>
-                <string>selection_name</string>
-                <string>columns</string>
-                <string>portal_types</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -78,54 +73,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Resource</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_types</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Supply Line</string>
-                          <string>Supply Line</string>
-                        </tuple>
-                        <tuple>
-                          <string>Purchase Supply Line</string>
-                          <string>Purchase Supply Line</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>purchase_supply_line_selection</string> </value>
+                    <value> <string>PurchaseSupply_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Purchase Supply Lines</string> </value>
                 </item>
               </dictionary>
             </value>

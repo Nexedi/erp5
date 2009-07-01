@@ -13,14 +13,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>domain_root_list</string>
-                <string>all_columns</string>
-                <string>editable_columns</string>
                 <string>title</string>
-                <string>report_root_list</string>
                 <string>selection_name</string>
-                <string>columns</string>
-                <string>sort</string>
                 <string>portal_types</string>
               </list>
             </value>
@@ -83,140 +77,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
-                          <string>industrial_phase_translated_title</string>
-                          <string>Industrial Phase</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit</string>
-                          <string>Quantity Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>efficiency</string>
-                          <string>Efficiency</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Modification Date</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
-                          <string>industrial_phase_translated_title</string>
-                          <string>Industrial Phase</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit</string>
-                          <string>Quantity Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>efficiency</string>
-                          <string>Efficiency</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>domain_root_list</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>industrial_phase</string>
-                          <string>Industrial phase</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit</string>
-                          <string>Quantity unit</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>editable_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>int_index</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit</string>
-                          <string>quantity_unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>efficiency</string>
-                          <string>efficiency</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_transformation_content_list_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                    <value> <string>Transformation_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -230,38 +96,8 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>report_root_list</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>industrial_phase</string>
-                          <string>Industrial phase</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit</string>
-                          <string>Quantity unit</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>transformation_view_transformation_optional_resource_list</string> </value>
-                </item>
-                <item>
-                    <key> <string>sort</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>translated_portal_type</string>
-                          <string>ascending</string>
-                        </tuple>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>ascending</string>
-                        </tuple>
-                      </list>
-                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

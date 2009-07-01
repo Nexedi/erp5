@@ -3,31 +3,12 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
         <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>delegated_list</string> </key>
-            <value>
-              <list>
-                <string>domain_root_list</string>
-                <string>stat_method</string>
-                <string>title</string>
-                <string>selection_name</string>
-                <string>columns</string>
-                <string>sort</string>
-                <string>editable_columns</string>
-                <string>editable</string>
-                <string>default_params</string>
-                <string>list_method</string>
-                <string>domain_tree</string>
-                <string>list_action</string>
-              </list>
-            </value>
-        </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>listbox</string> </value>
@@ -48,15 +29,119 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>field_id</string> </key>
+                    <key> <string>all_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>form_id</string> </key>
+                    <key> <string>all_editable_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default_params</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>domain_tree</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>global_attributes</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>list_action</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>list_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>meta_types</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>report_root_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>report_tree</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>search</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>search_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>sort_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>stat_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -67,15 +152,119 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>field_id</string> </key>
+                    <key> <string>all_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>form_id</string> </key>
+                    <key> <string>all_editable_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default_params</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>domain_tree</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>global_attributes</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>list_action</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>list_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>meta_types</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>report_root_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>report_tree</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>search</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>search_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>sort_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>stat_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -85,6 +274,26 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>all_editable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>anchor</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
                 <item>
                     <key> <string>columns</string> </key>
                     <value>
@@ -121,10 +330,26 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>default_params</string> </key>
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>domain_root_list</string> </key>
@@ -169,12 +394,26 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>global_attributes</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>lines</string> </key>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
@@ -185,6 +424,46 @@
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>meta_types</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>page_template</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>report_root_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>report_tree</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>search</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>search_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>select</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
@@ -202,18 +481,38 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>sort_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>stat_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>stat_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
-                    <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
                     <value> <string>Movements</string> </value>
+                </item>
+                <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
               </dictionary>
             </value>

@@ -12,12 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>description</string>
-                <string>title</string>
-                <string>enabled</string>
-                <string>display_width</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -40,6 +35,38 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>extra_context</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -48,7 +75,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
+                    <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -59,15 +90,15 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>extra_context</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -79,27 +110,21 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>A non discountable per unit additional price which applies for example whenever certain options or variations are selected. Multiple additional prices related to different options sum up. The total of additional prices may not be discounted.</string> </value>
+                    <value> <string>A per unit additional price that is not impacted by discount ratio</string> </value>
                 </item>
                 <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>10</int> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>extra_context</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_float_field</string> </value>
+                    <value> <string>my_non_discountable_additional_price</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>target</string> </key>
-                    <value> <string>Click to edit the target</string> </value>
+                    <value> <string>BaseTradePurchase_FieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>

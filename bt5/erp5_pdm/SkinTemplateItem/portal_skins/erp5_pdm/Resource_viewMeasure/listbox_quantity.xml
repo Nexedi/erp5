@@ -78,7 +78,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                    <value> <string>Measure_view</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

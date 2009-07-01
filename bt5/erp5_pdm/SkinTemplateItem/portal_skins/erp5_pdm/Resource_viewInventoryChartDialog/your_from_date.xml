@@ -13,8 +13,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>required</string>
                 <string>default_now</string>
+                <string>required</string>
               </list>
             </value>
         </item>
@@ -85,7 +85,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                    <value> <string>Base_viewDialogFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>

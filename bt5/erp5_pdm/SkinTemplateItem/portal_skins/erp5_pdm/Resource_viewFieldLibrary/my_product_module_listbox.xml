@@ -13,16 +13,16 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>columns</string>
                 <string>all_columns</string>
-                <string>search_columns</string>
-                <string>sort_columns</string>
-                <string>selection_name</string>
-                <string>domain_tree</string>
+                <string>columns</string>
                 <string>domain_root_list</string>
-                <string>report_tree</string>
+                <string>domain_tree</string>
                 <string>report_root_list</string>
+                <string>report_tree</string>
+                <string>search_columns</string>
+                <string>selection_name</string>
+                <string>sort_columns</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -128,6 +128,10 @@
                           <string>Default Sale Price</string>
                         </tuple>
                         <tuple>
+                          <string>use</string>
+                          <string>Use</string>
+                        </tuple>
+                        <tuple>
                           <string>modification_date</string>
                           <string>Modification Date</string>
                         </tuple>
@@ -173,6 +177,10 @@
                           <string>product_line</string>
                           <string>Product Line</string>
                         </tuple>
+                        <tuple>
+                          <string>use</string>
+                          <string>Use</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -199,6 +207,10 @@
                         <tuple>
                           <string>product_line</string>
                           <string>Product Line</string>
+                        </tuple>
+                        <tuple>
+                          <string>use</string>
+                          <string>Use</string>
                         </tuple>
                       </list>
                     </value>
@@ -250,6 +262,10 @@
                         <tuple>
                           <string>sale_supply_line_base_price</string>
                           <string>Default Sale Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>use</string>
+                          <string>Use</string>
                         </tuple>
                         <tuple>
                           <string>modification_date</string>
@@ -309,6 +325,10 @@
                         <tuple>
                           <string>sale_supply_line_base_price</string>
                           <string>Default Sale Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>use</string>
+                          <string>Use</string>
                         </tuple>
                         <tuple>
                           <string>modification_date</string>

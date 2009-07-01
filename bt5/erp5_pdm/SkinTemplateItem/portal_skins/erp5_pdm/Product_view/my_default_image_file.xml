@@ -14,7 +14,6 @@
             <value>
               <list>
                 <string>description</string>
-                <string>title</string>
               </list>
             </value>
         </item>
@@ -81,19 +80,15 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_file_field</string> </value>
+                    <value> <string>my_file</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                    <value> <string>File_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Upload</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -12,15 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>catalog_index</string>
-                <string>title</string>
-                <string>description</string>
-                <string>portal_type</string>
-                <string>display_width</string>
-                <string>base_category</string>
-                <string>items</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -43,15 +35,15 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>extra_context</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -62,27 +54,15 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>extra_context</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -93,82 +73,29 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>base_category</string> </key>
-                    <value> <string>resource</string> </value>
-                </item>
-                <item>
-                    <key> <string>catalog_index</string> </key>
-                    <value> <string>title</string> </value>
-                </item>
-                <item>
                     <key> <string>description</string> </key>
-                    <value> <string>A resource in ERP5 can be a product or a service. This term will be found in orders for instance, or accounting and inventories.</string> </value>
+                    <value> <string>The title of the resource involved</string> </value>
                 </item>
                 <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>40</int> </value>
-                </item>
-                <item>
-                    <key> <string>field_id</string> </key>
-                    <value> <string>my_relation_field</string> </value>
-                </item>
-                <item>
-                    <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_type</string> </key>
+                    <key> <string>extra_context</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>Resource</string>
-                          <string>Resource</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
-                    <value> <string>Click to edit the target</string> </value>
+                    <key> <string>field_id</string> </key>
+                    <value> <string>my_resource_title</string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>BaseTradePurchase_FieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Product or Service</string> </value>
+                    <value> <string>Resource</string> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>REQUEST/relation_item_list</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: map( lambda x: (x,x), here.getPortalResourceTypeList())</string> </value>
         </item>
       </dictionary>
     </pickle>

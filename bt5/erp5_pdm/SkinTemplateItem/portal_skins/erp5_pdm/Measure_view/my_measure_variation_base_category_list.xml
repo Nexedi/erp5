@@ -14,8 +14,8 @@
             <value>
               <list>
                 <string>title</string>
-                <string>size</string>
                 <string>items</string>
+                <string>size</string>
               </list>
             </value>
         </item>
@@ -72,7 +72,15 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>size</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -88,7 +96,13 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>size</string> </key>

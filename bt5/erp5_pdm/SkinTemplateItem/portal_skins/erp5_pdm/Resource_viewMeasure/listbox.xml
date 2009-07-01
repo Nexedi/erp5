@@ -13,13 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable_columns</string>
                 <string>title</string>
-                <string>selection_name</string>
                 <string>columns</string>
-                <string>default_params</string>
+                <string>selection_name</string>
                 <string>portal_types</string>
+                <string>default_params</string>
                 <string>anchor</string>
+                <string>editable_columns</string>
               </list>
             </value>
         </item>
@@ -138,7 +138,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>

@@ -13,17 +13,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>all_columns</string>
-                <string>columns</string>
-                <string>domain_root_list</string>
-                <string>domain_tree</string>
                 <string>portal_types</string>
-                <string>report_root_list</string>
-                <string>report_tree</string>
-                <string>search_columns</string>
-                <string>selection_name</string>
-                <string>sort_columns</string>
-                <string>title</string>
               </list>
             </value>
         </item>
@@ -85,117 +75,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string>Description</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit_title</string>
-                          <string>Quantity Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>product_line_title</string>
-                          <string>Product Line</string>
-                        </tuple>
-                        <tuple>
-                          <string>base_contribution_title</string>
-                          <string>Base Contribution</string>
-                        </tuple>
-                        <tuple>
-                          <string>comment</string>
-                          <string>Comment</string>
-                        </tuple>
-                        <tuple>
-                          <string>purchase_supply_line_base_price</string>
-                          <string>Default Purchase Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>sale_supply_line_base_price</string>
-                          <string>Default Sale Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>use</string>
-                          <string>Use</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Modification Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string>Description</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>domain_root_list</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>quantity_unit</string>
-                          <string>Quantity Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>product_line</string>
-                          <string>Product Line</string>
-                        </tuple>
-                        <tuple>
-                          <string>use</string>
-                          <string>Use</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>domain_tree</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_list_mode_listbox</string> </value>
+                    <value> <string>my_component_module_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                    <value> <string>Resource_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -209,157 +94,8 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>report_root_list</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>quantity_unit</string>
-                          <string>Quantity Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>product_line</string>
-                          <string>Product Line</string>
-                        </tuple>
-                        <tuple>
-                          <string>use</string>
-                          <string>Use</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>report_tree</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>search_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string>Description</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit_title</string>
-                          <string>Quantity Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>product_line_title</string>
-                          <string>Product Line</string>
-                        </tuple>
-                        <tuple>
-                          <string>base_contribution_title</string>
-                          <string>Base Contribution</string>
-                        </tuple>
-                        <tuple>
-                          <string>comment</string>
-                          <string>Comment</string>
-                        </tuple>
-                        <tuple>
-                          <string>purchase_supply_line_base_price</string>
-                          <string>Default Purchase Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>sale_supply_line_base_price</string>
-                          <string>Default Sale Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>use</string>
-                          <string>Use</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Modification Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>component_module_selection</string> </value>
-                </item>
-                <item>
-                    <key> <string>sort_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string>Description</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit_title</string>
-                          <string>Quantity Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>product_line_title</string>
-                          <string>Product Line</string>
-                        </tuple>
-                        <tuple>
-                          <string>base_contribution_title</string>
-                          <string>Base Contribution</string>
-                        </tuple>
-                        <tuple>
-                          <string>comment</string>
-                          <string>Comment</string>
-                        </tuple>
-                        <tuple>
-                          <string>purchase_supply_line_base_price</string>
-                          <string>Default Purchase Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>sale_supply_line_base_price</string>
-                          <string>Default Sale Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>use</string>
-                          <string>Use</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Modification Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Components</string> </value>
                 </item>
               </dictionary>
             </value>

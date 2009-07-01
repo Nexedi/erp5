@@ -73,16 +73,24 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The quantity of resource</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_quantity</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Default Quantity</string> </value>
                 </item>
               </dictionary>
             </value>

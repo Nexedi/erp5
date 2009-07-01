@@ -13,13 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>stat_columns</string>
-                <string>stat_method</string>
                 <string>title</string>
                 <string>columns</string>
-                <string>editable</string>
                 <string>list_method</string>
+                <string>stat_method</string>
+                <string>stat_columns</string>
                 <string>enabled</string>
+                <string>editable</string>
               </list>
             </value>
         </item>
@@ -62,6 +62,14 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>enabled</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -76,7 +84,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>list_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>stat_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -86,6 +106,12 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>all_editable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
                 <item>
                     <key> <string>columns</string> </key>
                     <value>
@@ -114,12 +140,16 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_view_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>

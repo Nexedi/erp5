@@ -13,7 +13,6 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>portal_type</string>
               </list>
             </value>
@@ -83,11 +82,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_relation_field</string> </value>
+                    <value> <string>my_resource_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                    <value> <string>TransformationOptionalResource_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
@@ -103,10 +102,6 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Optional Resource</string> </value>
                 </item>
               </dictionary>
             </value>

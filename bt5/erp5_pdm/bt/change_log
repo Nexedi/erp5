@@ -1,3 +1,6 @@
+2009-07-01 romain
+* Revert latest proxy field library simplification, as the design was not finalized.
+
 2009-05-19 yusei
 * Fix some proxy fields. count_method and listbox_id should not be inherited from template field.
 
