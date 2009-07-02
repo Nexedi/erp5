@@ -1,6 +1,7 @@
 Invoice Line | price
 Invoice Line | quantity
 Invoice Line | view
+Invoice Line | view_trade_model
 Invoice Transaction Rule | divergence
 Invoice Transaction Rule | view
 Invoicing Rule | view
