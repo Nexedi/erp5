@@ -11,6 +11,10 @@ Invoicing Rule | Quantity Divergence Tester
 Rule Tool | Invoice Transaction Rule
 Rule Tool | Invoicing Rule
 Rule Tool | Tax Rule
+Rule Tool | Trade Model Rule
 Tax Rule | Category Divergence Tester
 Tax Rule | Property Divergence Tester
 Tax Rule | Quantity Divergence Tester
+Trade Model Rule | Category Divergence Tester
+Trade Model Rule | Property Divergence Tester
+Trade Model Rule | Quantity Divergence Tester

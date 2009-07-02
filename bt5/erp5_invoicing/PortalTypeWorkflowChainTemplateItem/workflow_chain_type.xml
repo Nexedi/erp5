@@ -43,4 +43,8 @@
   <type>Tax Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
+ <chain>
+  <type>Trade Model Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
+ </chain>
 </workflow_chain>
