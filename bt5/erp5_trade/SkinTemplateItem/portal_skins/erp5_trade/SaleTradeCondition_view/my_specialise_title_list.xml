@@ -12,14 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>base_category</string>
-                <string>catalog_index</string>
-                <string>columns</string>
-                <string>portal_type</string>
-                <string>proxy_listbox_ids</string>
-                <string>title</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -80,77 +73,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>base_category</string> </key>
-                    <value> <string>specialise</string> </value>
-                </item>
-                <item>
-                    <key> <string>catalog_index</string> </key>
-                    <value> <string>title</string> </value>
-                </item>
-                <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_section_title</string>
-                          <string>Supplier</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_section_title</string>
-                          <string>Client</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_portal_type</string>
-                          <string>Type</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_multi_relation_field</string> </value>
+                    <value> <string>my_specialise_title_list</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Sale Trade Condition</string>
-                          <string>Sale Trade Condition</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>proxy_listbox_ids</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>SaleTradeConditionModule_viewSaleTradeConditionList/listbox</string>
-                          <string>Sale Trade Conditions</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <value> <string>SaleTradeCondition_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Specialised Trade Conditions</string> </value>
                 </item>
               </dictionary>
             </value>

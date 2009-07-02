@@ -12,13 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>title</string>
-                <string>base_category</string>
-                <string>portal_type</string>
-                <string>catalog_index</string>
-                <string>proxy_listbox_ids</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -79,50 +73,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>base_category</string> </key>
-                    <value> <string>source_trade</string> </value>
-                </item>
-                <item>
-                    <key> <string>catalog_index</string> </key>
-                    <value> <string>title</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_multi_relation_field</string> </value>
+                    <value> <string>my_source_trade_title_list</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewCRMFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Person</string>
-                          <string>Person</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>proxy_listbox_ids</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>PersonModule_viewPersonList/listbox</string>
-                          <string>Persons</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <value> <string>Ticket_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Operators</string> </value>
                 </item>
               </dictionary>
             </value>

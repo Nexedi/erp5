@@ -14,6 +14,7 @@
             <value>
               <list>
                 <string>title</string>
+                <string>timezone_style</string>
                 <string>input_order</string>
                 <string>default</string>
               </list>
@@ -84,11 +85,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_date</string> </value>
+                    <value> <string>your_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewProjectFieldLibrary</string> </value>
+                    <value> <string>Base_viewDialogFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>input_order</string> </key>
@@ -97,6 +98,10 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>timezone_style</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>

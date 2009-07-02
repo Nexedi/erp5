@@ -3,28 +3,12 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+        <global name="MatrixBox" module="Products.ERP5Form.MatrixBox"/>
         <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
-        <item>
-            <key> <string>delegated_list</string> </key>
-            <value>
-              <list>
-                <string>cell_base_id</string>
-                <string>editable_attributes</string>
-                <string>title</string>
-                <string>global_attributes</string>
-                <string>cell_portal_type</string>
-                <string>update_cell_range</string>
-                <string>tabs</string>
-                <string>lines</string>
-                <string>columns</string>
-              </list>
-            </value>
-        </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>matrixbox</string> </value>
@@ -45,15 +29,71 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>field_id</string> </key>
+                    <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>form_id</string> </key>
+                    <key> <string>cell_base_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
+                    <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable_attributes</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>getter_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>global_attributes</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>tabs</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>update_cell_range</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -64,17 +104,61 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>cell_base_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>cell_portal_type</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>field_id</string> </key>
+                    <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>form_id</string> </key>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable_attributes</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>getter_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>global_attributes</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -90,7 +174,11 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>update_cell_range</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -101,12 +189,63 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>all_editable_attributes</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>target_quantity</string>
+                          <string>quantity</string>
+                        </tuple>
+                        <tuple>
+                          <string>price</string>
+                          <string>price</string>
+                        </tuple>
+                        <tuple>
+                          <string>predicate_value</string>
+                          <string>predicate_value</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>cell_base_id</string> </key>
                     <value> <string>movement</string> </value>
                 </item>
                 <item>
                     <key> <string>cell_portal_type</string> </key>
                     <value> <string>Inventory Cell</string> </value>
+                </item>
+                <item>
+                    <key> <string>cell_range</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>editable_attributes</string> </key>
@@ -132,12 +271,16 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>field_id</string> </key>
-                    <value> <string>my_matrix_box</string> </value>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>getter_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>global_attributes</string> </key>
@@ -151,8 +294,24 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
-                    <value> <string>Click to edit the target</string> </value>
+                    <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>lines</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>setter_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>tabs</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -171,8 +330,11 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -187,8 +349,11 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -203,8 +368,11 @@
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>

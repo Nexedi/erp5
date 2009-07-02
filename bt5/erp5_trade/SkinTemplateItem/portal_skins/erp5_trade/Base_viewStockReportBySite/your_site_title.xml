@@ -13,7 +13,6 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>description</string>
                 <string>title</string>
                 <string>editable</string>
                 <string>display_width</string>
@@ -85,10 +84,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>The name of a document in ERP5</string> </value>
-                </item>
-                <item>
                     <key> <string>display_width</string> </key>
                     <value> <int>20</int> </value>
                 </item>
@@ -98,11 +93,11 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_string_field</string> </value>
+                    <value> <string>your_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
+                    <value> <string>Base_viewDialogFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

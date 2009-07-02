@@ -12,9 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>title</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -37,15 +35,15 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>extra_context</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -56,15 +54,15 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>extra_context</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -75,20 +73,18 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>extra_context</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_category</string> </value>
+                    <value> <string>my_quantity_unit</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewProjectFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>target</string> </key>
-                    <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Quantity Unit</string> </value>
+                    <value> <string>TaskLine_viewFieldLibrary</string> </value>
                 </item>
               </dictionary>
             </value>

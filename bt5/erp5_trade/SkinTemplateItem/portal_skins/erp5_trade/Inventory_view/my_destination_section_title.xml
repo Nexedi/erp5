@@ -10,16 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>delegated_list</string> </key>
-            <value>
-              <list>
-                <string>portal_type</string>
-                <string>proxy_listbox_ids</string>
-                <string>title</string>
-              </list>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>my_destination_section_title</string> </value>
         </item>
@@ -78,41 +68,15 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_relation_field</string> </value>
+                    <value> <string>my_destination_section_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Organisation</string>
-                          <string>Organisation</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>proxy_listbox_ids</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>OrganisationModule_viewOrganisationList/listbox</string>
-                          <string>Organisations</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <value> <string>Inventory_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Owner</string> </value>
                 </item>
               </dictionary>
             </value>

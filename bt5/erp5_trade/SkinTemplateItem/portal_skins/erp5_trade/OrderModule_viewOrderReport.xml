@@ -96,10 +96,14 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_section_category</string>
-                        <string>your_order</string>
+                        <string>your_aggregation_level</string>
+                        <string>your_at_date</string>
                         <string>your_delivery_mode</string>
+                        <string>your_from_date</string>
+                        <string>your_group_by</string>
                         <string>your_incoterm</string>
+                        <string>your_order</string>
+                        <string>your_section_category</string>
                         <string>your_simulation_state</string>
                       </list>
                     </value>
@@ -107,12 +111,7 @@
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>your_from_date</string>
-                        <string>your_at_date</string>
-                        <string>your_aggregation_level</string>
-                        <string>your_group_by</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>

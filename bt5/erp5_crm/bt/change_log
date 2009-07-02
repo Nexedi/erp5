@@ -1,3 +1,6 @@
+2009-07-02 romain
+* Revert latest proxy field library simplification, as the design was not finalized.
+
 2009-05-27 Seb
 * Add Site Message and Acknowledgements
 

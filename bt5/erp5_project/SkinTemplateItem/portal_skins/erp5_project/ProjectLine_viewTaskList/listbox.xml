@@ -13,14 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>all_columns</string>
-                <string>editable_columns</string>
                 <string>title</string>
-                <string>selection_name</string>
                 <string>columns</string>
+                <string>all_columns</string>
                 <string>list_method</string>
+                <string>selection_name</string>
                 <string>portal_types</string>
                 <string>default_params</string>
+                <string>editable_columns</string>
               </list>
             </value>
         </item>
@@ -63,10 +63,22 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>all_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>default_params</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -77,7 +89,23 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>list_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -87,6 +115,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>Base_viewSearchResultList</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
@@ -122,6 +154,29 @@
                         <tuple>
                           <string>destination_title</string>
                           <string>Location</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>all_editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Estimated Time</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Begin</string>
+                        </tuple>
+                        <tuple>
+                          <string>stop_date</string>
+                          <string>End</string>
                         </tuple>
                       </list>
                     </value>
@@ -166,6 +221,17 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>default_params</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>checked_permission</string>
+                          <string>View</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
@@ -186,7 +252,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewProjectFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>

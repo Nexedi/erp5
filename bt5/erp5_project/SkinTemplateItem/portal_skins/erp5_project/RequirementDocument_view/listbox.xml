@@ -13,15 +13,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable_columns</string>
                 <string>title</string>
-                <string>selection_name</string>
-                <string>sort_columns</string>
-                <string>columns</string>
-                <string>sort</string>
                 <string>description</string>
                 <string>lines</string>
+                <string>columns</string>
+                <string>sort_columns</string>
+                <string>sort</string>
+                <string>selection_name</string>
                 <string>portal_types</string>
+                <string>editable_columns</string>
               </list>
             </value>
         </item>
@@ -83,6 +83,16 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>Base_viewSearchResultList</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>all_editable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
@@ -141,16 +151,32 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>editable_permission</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_role</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_view_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewProjectFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
                     <value> <int>200</int> </value>
+                </item>
+                <item>
+                    <key> <string>not_viewable</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -162,6 +188,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>read_only</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
@@ -220,6 +250,18 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Requirements</string> </value>
+                </item>
+                <item>
+                    <key> <string>viewable_permission</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>viewable_role</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
               </dictionary>
             </value>

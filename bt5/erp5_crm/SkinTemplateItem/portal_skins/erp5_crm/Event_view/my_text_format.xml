@@ -13,10 +13,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>description</string>
                 <string>title</string>
-                <string>items</string>
-                <string>orientation</string>
               </list>
             </value>
         </item>
@@ -67,12 +64,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -85,42 +76,15 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The text format used by default</string> </value>
+                    <value> <string>Format of the event content</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_radio_field</string> </value>
+                    <value> <string>my_text_format</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewCRMFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>HTML</string>
-                          <string>text/html</string>
-                        </tuple>
-                        <tuple>
-                          <string>Plain Text</string>
-                          <string>text/plain</string>
-                        </tuple>
-                        <tuple>
-                          <string>Structured Text</string>
-                          <string>text/structured</string>
-                        </tuple>
-                        <tuple>
-                          <string>reStructuredText</string>
-                          <string>text/x-rst</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>orientation</string> </key>
-                    <value> <string>horizontal</string> </value>
+                    <value> <string>Event_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -132,22 +96,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: [(context.Base_translateString(x[0]), x[1]) for x in ((\'HTML\', \'text/html\'), (\'Plain Text\', \'text/plain\'), (\'reStructuredText\', \'text/x-rst\'))]</string> </value>
         </item>
       </dictionary>
     </pickle>

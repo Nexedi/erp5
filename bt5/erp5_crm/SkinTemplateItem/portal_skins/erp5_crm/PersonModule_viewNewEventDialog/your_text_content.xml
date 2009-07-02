@@ -14,13 +14,10 @@
             <value>
               <list>
                 <string>title</string>
-                <string>description</string>
+                <string>default</string>
                 <string>css_class</string>
-                <string>width</string>
-                <string>height</string>
                 <string>text_editor</string>
                 <string>editable</string>
-                <string>whitespace_preserve</string>
               </list>
             </value>
         </item>
@@ -63,6 +60,18 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -80,6 +89,10 @@
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -92,6 +105,10 @@
                     <value> <string>page</string> </value>
                 </item>
                 <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>description</string> </key>
                     <value> <string>The content of the document considered as a text string</string> </value>
                 </item>
@@ -101,15 +118,11 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_editor_field</string> </value>
+                    <value> <string>my_text_content</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewCRMFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>height</string> </key>
-                    <value> <int>18</int> </value>
+                    <value> <string>Event_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -122,14 +135,6 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Text</string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>120</int> </value>
                 </item>
               </dictionary>
             </value>

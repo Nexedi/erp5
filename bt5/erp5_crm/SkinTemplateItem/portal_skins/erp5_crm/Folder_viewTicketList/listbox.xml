@@ -13,14 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>all_columns</string>
-                <string>editable_columns</string>
                 <string>title</string>
-                <string>selection_name</string>
-                <string>sort_columns</string>
-                <string>columns</string>
                 <string>lines</string>
+                <string>columns</string>
+                <string>all_columns</string>
                 <string>search_columns</string>
+                <string>sort_columns</string>
+                <string>selection_name</string>
+                <string>editable_columns</string>
               </list>
             </value>
         </item>
@@ -63,6 +63,18 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>all_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -71,10 +83,22 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>search_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>selection_name</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>sort_columns</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -93,6 +117,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>Base_viewSearchResultList</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
@@ -177,6 +205,12 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>all_editable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
@@ -240,11 +274,23 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewCRMFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>height</string> </key>
+                    <value> <int>5</int> </value>
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
                     <value> <int>30</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_cookie</string> </key>
+                    <value> <string>PERSON_LIST</string> </value>
+                </item>
+                <item>
+                    <key> <string>reverse</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>search_columns</string> </key>
@@ -424,6 +470,10 @@
                     <key> <string>title</string> </key>
                     <value> <string>Tickets</string> </value>
                 </item>
+                <item>
+                    <key> <string>width</string> </key>
+                    <value> <int>40</int> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -433,8 +483,11 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
@@ -449,8 +502,11 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>

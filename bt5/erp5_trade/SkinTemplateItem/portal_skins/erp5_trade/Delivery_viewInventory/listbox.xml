@@ -13,14 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>domain_root_list</string>
-                <string>editable_columns</string>
                 <string>title</string>
-                <string>selection_name</string>
                 <string>columns</string>
-                <string>default_params</string>
                 <string>list_method</string>
+                <string>selection_name</string>
+                <string>default_params</string>
+                <string>editable_columns</string>
                 <string>domain_tree</string>
+                <string>domain_root_list</string>
                 <string>list_action</string>
               </list>
             </value>
@@ -82,6 +82,12 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>all_editable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
                 <item>
                     <key> <string>columns</string> </key>
                     <value>
@@ -176,7 +182,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>

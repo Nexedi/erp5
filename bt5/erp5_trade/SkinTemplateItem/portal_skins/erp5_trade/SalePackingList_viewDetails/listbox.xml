@@ -12,16 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>all_columns</string>
-                <string>editable_columns</string>
-                <string>title</string>
-                <string>report_root_list</string>
-                <string>selection_name</string>
-                <string>columns</string>
-                <string>sort</string>
-                <string>portal_types</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -82,170 +73,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>all_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Product or Service</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_quantity</string>
-                          <string>Total Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit</string>
-                          <string>Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>price</string>
-                          <string>Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_price</string>
-                          <string>Total Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_date</string>
-                          <string>Delivery Date</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Product or Service</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_quantity</string>
-                          <string>Total Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit</string>
-                          <string>Unit</string>
-                        </tuple>
-                        <tuple>
-                          <string>price</string>
-                          <string>Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_price</string>
-                          <string>Total Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_date</string>
-                          <string>Delivery Date</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>editable_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_sale_packing_list_lines_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_types</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Sale Packing List Line</string>
-                          <string>Sale Packing List Line</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>report_root_list</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>parent_domain</string>
-                          <string>Object Tree</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource</string>
-                          <string>Resource</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>sale_packing_list_movement_selection</string> </value>
-                </item>
-                <item>
-                    <key> <string>sort</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>ascending</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <value> <string>SalePackingList_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Sale Packing List Lines</string> </value>
                 </item>
               </dictionary>
             </value>

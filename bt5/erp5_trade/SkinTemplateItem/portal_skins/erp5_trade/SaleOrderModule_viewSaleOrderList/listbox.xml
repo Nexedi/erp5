@@ -13,17 +13,17 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>domain_root_list</string>
-                <string>all_columns</string>
-                <string>editable_columns</string>
                 <string>title</string>
-                <string>selection_name</string>
-                <string>sort_columns</string>
                 <string>columns</string>
-                <string>sort</string>
-                <string>domain_tree</string>
-                <string>portal_types</string>
+                <string>all_columns</string>
                 <string>search_columns</string>
+                <string>sort_columns</string>
+                <string>sort</string>
+                <string>selection_name</string>
+                <string>portal_types</string>
+                <string>editable_columns</string>
+                <string>domain_tree</string>
+                <string>domain_root_list</string>
               </list>
             </value>
         </item>
@@ -144,6 +144,12 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>all_editable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
@@ -234,7 +240,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>

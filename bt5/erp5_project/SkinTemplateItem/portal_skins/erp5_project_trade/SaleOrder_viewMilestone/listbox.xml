@@ -13,13 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable_columns</string>
                 <string>title</string>
+                <string>columns</string>
+                <string>selection_name</string>
+                <string>portal_types</string>
+                <string>editable_columns</string>
                 <string>report_tree</string>
                 <string>report_root_list</string>
-                <string>selection_name</string>
-                <string>columns</string>
-                <string>portal_types</string>
               </list>
             </value>
         </item>
@@ -81,6 +81,33 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>Base_viewSearchResultList</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>all_editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Estimated Time</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Begin</string>
+                        </tuple>
+                        <tuple>
+                          <string>stop_date</string>
+                          <string>End</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
@@ -120,7 +147,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewProjectFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>

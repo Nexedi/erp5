@@ -13,12 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>all_columns</string>
                 <string>title</string>
-                <string>selection_name</string>
-                <string>sort_columns</string>
                 <string>columns</string>
+                <string>all_columns</string>
                 <string>search_columns</string>
+                <string>sort_columns</string>
+                <string>selection_name</string>
               </list>
             </value>
         </item>
@@ -131,7 +131,18 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Tax</string>
+                          <string>Tax</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>search_columns</string> </key>

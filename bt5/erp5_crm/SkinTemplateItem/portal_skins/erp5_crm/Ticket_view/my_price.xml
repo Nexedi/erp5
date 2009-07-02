@@ -12,10 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>description</string>
-                <string>title</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -77,15 +74,15 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Price for one unit.</string> </value>
+                    <value> <string>The unit price at which a product or service is traded. This price is a net price which has been applied all pricing conditions defined in supply documents.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_money_quantity</string> </value>
+                    <value> <string>my_price</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewCRMFieldLibrary</string> </value>
+                    <value> <string>Ticket_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -93,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Unit Price</string> </value>
+                    <value> <string>Price</string> </value>
                 </item>
               </dictionary>
             </value>

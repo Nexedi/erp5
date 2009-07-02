@@ -12,12 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>description</string>
-                <string>title</string>
-                <string>css_class</string>
-                <string>input_style</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -78,32 +73,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string>figure</string> </value>
-                </item>
-                <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>The percentage of the total price.</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_float_field</string> </value>
+                    <value> <string>my_efficiency</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>input_style</string> </key>
-                    <value> <string>-12.3%</string> </value>
+                    <value> <string>Tax_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Percentage of Total</string> </value>
                 </item>
               </dictionary>
             </value>
