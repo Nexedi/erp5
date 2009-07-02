@@ -112,13 +112,6 @@ class TestCalendar(ERP5ReportTestCase):
     transaction.commit()
     self.tic()
 
-  def _addPropertySheet(self, type_info_name, property_sheet_name):
-    ti = self.portal.portal_types.getTypeInfo(type_info_name)
-    if property_sheet_name not in ti.property_sheet_list:
-      ti.property_sheet_list = tuple(ti.property_sheet_list)\
-                                      + (property_sheet_name,)
-      _aq_reset()
-
   def stepCreatePerson(self, sequence=None, sequence_list=None, **kw):
     """
     Create an person

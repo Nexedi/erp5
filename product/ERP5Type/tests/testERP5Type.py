@@ -95,37 +95,8 @@ class %(property_sheet_name)s:
   _properties = ( %(property_definition_code)s, )
 """ % locals()
     self._addPropertySheet(portal_type_name,
-                           property_sheet_code,
-                           property_sheet_name)
-
-  def _addPropertySheet(self, portal_type_name, property_sheet_code,
-                       property_sheet_name='TestPropertySheet'):
-    """Utility method to add a property sheet to a type information.
-    You might be interested in the higer level method _addProperty
-    This method registers all added property sheets, to be able to remove
-    them in tearDown.
-    """
-    # install the 'real' class tool
-    class_tool = self.getClassTool()
-
-    class_tool.newPropertySheet(property_sheet_name)
-    # XXX need to commit the transaction at this point, because class tool
-    # files are no longer available to the current transaction.
-    transaction.commit()
-    class_tool.editPropertySheet(property_sheet_name, property_sheet_code)
-    transaction.commit()
-    class_tool.importPropertySheet(property_sheet_name)
-    
-    # We set the property sheet on the portal type
-    ti = self.getTypesTool().getTypeInfo(portal_type_name)
-    ti.property_sheet_list = list(ti.property_sheet_list) +\
-                                [property_sheet_name]
-    # remember that we added a property sheet for tear down
-    self._added_property_sheets.setdefault(
-                portal_type_name, []).append(property_sheet_name)
-    # reset aq_dynamic cache
-    _aq_reset()
-
+                           property_sheet_code=property_sheet_code,
+                           property_sheet_name=property_sheet_name)
 
 class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     """Tests ERP5TypeInformation and per portal type generated accessors.
@@ -622,7 +593,7 @@ class TestPropertySheet:
       )
 
 """
-      self._addPropertySheet('Organisation', text)
+      self._addPropertySheet('Organisation', property_sheet_code=text)
       folder = self.getOrganisationModule()
       # We check that we raise exception when we create new object
       from Products.ERP5Type.Utils import ConstraintNotFound
@@ -2047,7 +2018,7 @@ class TestPropertySheet:
       )
 
 """
-      self._addPropertySheet('Person', text)
+      self._addPropertySheet('Person', property_sheet_code=text)
 
       # Create a new person, and associate it to beta and gamma.
       module = self.getPersonModule()

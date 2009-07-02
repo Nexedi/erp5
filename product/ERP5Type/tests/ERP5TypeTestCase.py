@@ -46,6 +46,7 @@ from Products.ERP5Type.Utils import getLocalConstraintList, \
                                     removeLocalConstraint, \
                                     importLocalConstraint
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.Base import _aq_reset
 from zLOG import LOG, DEBUG
 
 # Quiet messages when installing products
@@ -516,6 +517,39 @@ class ERP5TypeTestCase(PortalTestCase):
     def getCurrencyModule(self):
       return getattr(self.getPortal(), 'currency_module',
           getattr(self.getPortal(), 'currency', None))
+
+    def _addPropertySheet(self, portal_type_name,
+                         property_sheet_name='TestPropertySheet',
+                         property_sheet_code=None):
+      """Utility method to add a property sheet to a type information.
+      You might be interested in the higer level method _addProperty
+      This method registers all added property sheets, to be able to remove
+      them in tearDown.
+      """
+      # install the 'real' class tool
+      class_tool = self.getClassTool()
+
+      if property_sheet_code is not None:
+        class_tool.newPropertySheet(property_sheet_name)
+        # XXX need to commit the transaction at this point, because class tool
+        # files are no longer available to the current transaction.
+        transaction.commit()
+        class_tool.editPropertySheet(property_sheet_name, property_sheet_code)
+        transaction.commit()
+        class_tool.importPropertySheet(property_sheet_name)
+      
+      # We set the property sheet on the portal type
+      ti = self.getTypesTool().getTypeInfo(portal_type_name)
+      if property_sheet_name not in ti.property_sheet_list:
+        ti.property_sheet_list = list(ti.property_sheet_list) +\
+                                    [property_sheet_name]
+
+      # remember that we added a property sheet for tear down
+      if getattr(self, '_added_property_sheets', None) is not None:
+        self._added_property_sheets.setdefault(
+                    portal_type_name, []).append(property_sheet_name)
+      # reset aq_dynamic cache
+      _aq_reset()
 
     def validateRules(self):
       """

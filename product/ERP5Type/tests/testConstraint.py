@@ -1270,7 +1270,8 @@ class TestConstraint(PropertySheetTestCase):
     self.assertEquals([], constraint.checkConsistency(obj))
     # now add a 'local_property' property defined on a property sheet
     self._addPropertySheet(obj.getPortalType(),
-      '''class TestPropertySheet: _categories=('testing_category',)''')
+      property_sheet_code=\
+       '''class TestPropertySheet: _categories=('testing_category',)''')
     # fix consistency
     constraint.fixConsistency(obj)
     # now we can use testing_category as any category accessor
@@ -1397,6 +1398,7 @@ class TestConstraint(PropertySheetTestCase):
     obj = self._makeOne()
     obj.setTitle('b')
     self._addPropertySheet(obj.getPortalType(),
+      property_sheet_code=\
       '''class TestPropertySheet:
           _constraints = (
             { 'id': 'testing_constraint',
@@ -1417,6 +1419,7 @@ class TestConstraint(PropertySheetTestCase):
     obj = self._makeOne()
     obj.setTitle('b')
     self._addPropertySheet(obj.getPortalType(),
+      property_sheet_code=\
       '''class TestPropertySheet:
           _constraints = (
             { 'id': 'testing_constraint',
