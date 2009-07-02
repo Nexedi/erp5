@@ -12,15 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>title</string>
-                <string>base_category</string>
-                <string>portal_type</string>
-                <string>allow_creation</string>
-                <string>catalog_index</string>
-                <string>columns</string>
-                <string>proxy_listbox_ids</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -81,105 +73,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>allow_creation</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>base_category</string> </key>
-                    <value> <string>causality</string> </value>
-                </item>
-                <item>
-                    <key> <string>catalog_index</string> </key>
-                    <value> <string>title</string> </value>
-                </item>
-                <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery.start_date</string>
-                          <string>Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_portal_type</string>
-                          <string>Transaction Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_section_title</string>
-                          <string>Supplier</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_section_title</string>
-                          <string>Client</string>
-                        </tuple>
-                        <tuple>
-                          <string>AccountingTransactionLine_statSourceDebit</string>
-                          <string>Debit</string>
-                        </tuple>
-                        <tuple>
-                          <string>AccountingTransactionLine_statSourceCredit</string>
-                          <string>Credit</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_multi_relation_field</string> </value>
+                    <value> <string>my_causality_title_list</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewAccountingFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Pay Sheet Transaction</string>
-                          <string>Pay Sheet Transaction</string>
-                        </tuple>
-                        <tuple>
-                          <string>Purchase Invoice Transaction</string>
-                          <string>Purchase Invoice Transaction</string>
-                        </tuple>
-                        <tuple>
-                          <string>Sale Invoice Transaction</string>
-                          <string>Sale Invoice Transaction</string>
-                        </tuple>
-                        <tuple>
-                          <string>Accounting Transaction</string>
-                          <string>Accounting Transaction</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>proxy_listbox_ids</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>AccountingTransactionModule_viewAccountingTransactionList/listbox</string>
-                          <string>Accounting Transactions</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <value> <string>AccountingTransaction_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Causality (Invoices ...)</string> </value>
                 </item>
               </dictionary>
             </value>

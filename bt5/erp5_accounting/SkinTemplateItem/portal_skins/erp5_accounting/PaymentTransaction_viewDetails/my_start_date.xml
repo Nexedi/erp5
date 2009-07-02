@@ -14,7 +14,6 @@
             <value>
               <list>
                 <string>title</string>
-                <string>default_now</string>
                 <string>date_only</string>
               </list>
             </value>
@@ -81,16 +80,16 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>default_now</string> </key>
-                    <value> <int>1</int> </value>
+                    <key> <string>description</string> </key>
+                    <value> <string>The date at which an operation starts in ERP5</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_date</string> </value>
+                    <value> <string>my_stop_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewAccountingFieldLibrary</string> </value>
+                    <value> <string>AccountingTransaction_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

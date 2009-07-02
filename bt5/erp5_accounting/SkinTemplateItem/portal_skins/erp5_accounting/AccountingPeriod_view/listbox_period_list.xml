@@ -13,12 +13,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable_columns</string>
-                <string>title</string>
                 <string>selection_name</string>
-                <string>columns</string>
-                <string>portal_types</string>
-                <string>enabled</string>
               </list>
             </value>
         </item>
@@ -61,17 +56,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -86,61 +79,18 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
+                    <key> <string>all_editable_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>start_date</string>
-                          <string>Start Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_date</string>
-                          <string>Stop Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>editable_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>start_date</string>
-                          <string>Start Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_date</string>
-                          <string>Stop Date</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>listbox_period_list</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewAccountingFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_types</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Accounting Period</string>
-                          <string>Accounting Period</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <value> <string>Organisation_viewFinancialInformationList</string> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
@@ -150,28 +100,8 @@
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Accounting Periods</string> </value>
-                </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:context.Base_checkPermission(\'accounting_module\', \'View\')</string> </value>
         </item>
       </dictionary>
     </pickle>

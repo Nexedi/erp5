@@ -13,15 +13,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>columns</string>
-                <string>list_method</string>
-                <string>stat_method</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
-                <string>anchor</string>
                 <string>editable_columns</string>
-                <string>stat_columns</string>
+                <string>list_method</string>
+                <string>selection_name</string>
+                <string>stat_method</string>
               </list>
             </value>
         </item>
@@ -64,24 +59,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_types</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -94,37 +77,6 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>anchor</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>translated_id</string>
-                          <string>ID</string>
-                        </tuple>
-                        <tuple>
-                          <string>source</string>
-                          <string>Account</string>
-                        </tuple>
-                        <tuple>
-                          <string>getDestinationSectionTitle</string>
-                          <string>Third Party</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_debit</string>
-                          <string>Debit</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_credit</string>
-                          <string>Credit</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
@@ -150,22 +102,16 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_destination_view_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewAccountingFieldLibrary</string> </value>
+                    <value> <string>AccountingTransaction_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>portal_types</string> </key>
-                    <value>
-                      <list/>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -173,41 +119,14 @@
                     <value> <string>payment_transaction_destination_selection</string> </value>
                 </item>
                 <item>
-                    <key> <string>stat_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>source_debit</string>
-                          <string>AccountingTransactionLine_statSourceDebit</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_credit</string>
-                          <string>AccountingTransactionLine_statSourceCredit</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_credit</string>
-                          <string>AccountingTransactionLine_statSourceDebit</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_debit</string>
-                          <string>AccountingTransactionLine_statSourceCredit</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>stat_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Accounting Transaction Lines</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -216,38 +135,6 @@
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: here.AccountingTransaction_getListBoxColumnList(source=0)</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: [(x, x) for x in context.getPortalAccountingMovementTypeList()]</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <tuple>
         <global name="Method" module="Products.Formulator.MethodField"/>
@@ -263,7 +150,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="5" aka="AAAAAAAAAAU=">
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
         <global name="Method" module="Products.Formulator.MethodField"/>

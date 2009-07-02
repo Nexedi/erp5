@@ -101,6 +101,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>Base_viewSearchResultList</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>all_columns</string> </key>
                     <value>
                       <list>
@@ -177,6 +181,12 @@
                           <string>Causality State</string>
                         </tuple>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>all_editable_columns</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -266,18 +276,34 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>editable_permission</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_role</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_list_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewAccountingFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>not_viewable</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -309,6 +335,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>read_only</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>search_columns</string> </key>
@@ -445,6 +475,18 @@
                           <string>AccountingTransaction_getThirdPartyUrl</string>
                         </tuple>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>viewable_permission</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>viewable_role</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
               </dictionary>

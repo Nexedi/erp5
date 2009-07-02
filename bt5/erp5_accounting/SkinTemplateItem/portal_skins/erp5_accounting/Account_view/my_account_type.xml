@@ -12,10 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>description</string>
-                <string>title</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -76,26 +73,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>The type of the account.\n
-\n
-This category defines how the account will behave. For instance Payable or Receivable accounts will need to be used with a third party.</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_category</string> </value>
+                    <value> <string>my_account_type</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewAccountingFieldLibrary</string> </value>
+                    <value> <string>Account_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Account Type</string> </value>
                 </item>
               </dictionary>
             </value>

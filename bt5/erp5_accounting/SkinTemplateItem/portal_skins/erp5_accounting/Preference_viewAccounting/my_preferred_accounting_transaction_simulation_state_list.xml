@@ -13,10 +13,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>description</string>
-                <string>title</string>
-                <string>size</string>
-                <string>items</string>
+                <string>default</string>
+                <string>required</string>
               </list>
             </value>
         </item>
@@ -67,18 +65,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>size</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -90,63 +76,29 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>Only consider transactions in those states.</string> </value>
+                    <key> <string>default</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_multi_list_field</string> </value>
+                    <value> <string>your_simulation_state</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewAccountingFieldLibrary</string> </value>
+                    <value> <string>AccountModule_viewDialogFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>size</string> </key>
-                    <value> <int>5</int> </value>
+                    <key> <string>required</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Simulation State</string> </value>
-                </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:here.Base_getTranslatedWorkflowStateItemList(wf_id=\'accounting_workflow\')</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: len(field.get_value(\'items\'))</string> </value>
         </item>
       </dictionary>
     </pickle>

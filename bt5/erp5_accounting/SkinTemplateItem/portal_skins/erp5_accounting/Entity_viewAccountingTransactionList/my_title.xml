@@ -14,7 +14,6 @@
             <value>
               <list>
                 <string>description</string>
-                <string>title</string>
                 <string>editable</string>
               </list>
             </value>
@@ -90,15 +89,11 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewAccountingFieldLibrary</string> </value>
+                    <value> <string>Person_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Usual Name</string> </value>
                 </item>
               </dictionary>
             </value>

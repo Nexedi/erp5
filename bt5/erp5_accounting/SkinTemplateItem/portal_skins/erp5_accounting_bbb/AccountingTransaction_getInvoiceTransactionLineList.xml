@@ -116,6 +116,10 @@
             <value> <string>AccountingTransaction_getInvoiceTransactionLineList</string> </value>
         </item>
         <item>
+            <key> <string>isIndexable</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>warnings</string> </key>
             <value>
               <tuple/>

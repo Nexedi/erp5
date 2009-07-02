@@ -13,10 +13,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>description</string>
                 <string>title</string>
-                <string>editable</string>
-                <string>display_width</string>
               </list>
             </value>
         </item>
@@ -79,23 +76,15 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>the accountant transaction reference of the sale</string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <string>Reference of the buyer in the purchase transaction</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_string_field</string> </value>
+                    <value> <string>my_source_reference</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewAccountingFieldLibrary</string> </value>
+                    <value> <string>AccountingTransaction_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

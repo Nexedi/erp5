@@ -13,6 +13,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>description</string>
                 <string>display_width</string>
               </list>
             </value>
@@ -75,6 +76,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>display_width</string> </key>
                     <value> <int>50</int> </value>
                 </item>
@@ -84,7 +89,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewAccountingFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
