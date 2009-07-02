@@ -1,3 +1,6 @@
+2009-07-02 romain
+* Revert latest proxy field library simplification, as the design was not finalized.
+
 2009-06-19 tatuya
 * Fix workflow scripts to enable to create  Sale Invoices and Purchase Invoices when using erp5_advanced_invoicing
 
