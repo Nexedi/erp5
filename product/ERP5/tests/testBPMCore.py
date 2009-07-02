@@ -1799,6 +1799,40 @@ class TestBPMTestCases(TestBPMMixin):
     self.assertEquals([q.getReference() for q in trade_model_line_list],
         [q.getReference() for q in [A, B, C, D]])
 
+  def test_tradeModelLineWithFixedPrice(self):
+    """
+      Check it's possible to have fixed quantity on lines. Sometimes we want
+      to say "discount 10 euros" or "pay more 10 euros" instead of saying "10%
+      discount from total"
+    """
+    trade_condition = self.createTradeCondition()
+
+    # create a model line with 100 euros
+    A = self.createTradeModelLine(trade_condition, reference='A',
+        base_contribution_list=['base_amount/total'])
+    A.edit(quantity=100, price=1)
+
+    # add a discount of 10 euros
+    B = self.createTradeModelLine(trade_condition, reference='B',
+        base_contribution_list=['base_amount/total'])
+    B.edit(quantity=10, price=-1)
+
+    order = self.createOrder()
+    order.setSpecialiseValue(trade_condition)
+    amount_list = trade_condition.getAggregatedAmountList(order)
+    self.assertEquals(2, len(amount_list))
+    total_amount_list = [q for q in amount_list
+        if q.getBaseContribution() == 'base_amount/total']
+
+    self.assertEquals(2, len(total_amount_list))
+
+    # the total amount for base_amount/total should be of 100 - 10 = 90 euros
+    total_amount = 0
+    for amount in total_amount_list:
+      total_amount += amount.getTotalPrice()
+
+    self.assertEqual(total_amount, 100 - 10)
+
   def test_getAggregatedAmountList(self):
     """
       Test for case, when discount contributes to tax, and order has mix of contributing lines
