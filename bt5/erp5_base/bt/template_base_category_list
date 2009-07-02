@@ -3,11 +3,13 @@ agent_privilege
 bank_account_type
 collect_order_group
 currency_exchange_type
+delivery_builder
 destination_carrier
 destination_referral
 destination_region
 divergence_scope
 economical_class
+end_of
 follow_up
 function
 gender
@@ -19,6 +21,7 @@ marital_status
 market_segment
 nationality
 natural_parent
+order_builder
 payment_mode
 predecessor
 price_currency
@@ -35,4 +38,5 @@ source_region
 specialise
 subordination
 successor
+trade_phase
 use
