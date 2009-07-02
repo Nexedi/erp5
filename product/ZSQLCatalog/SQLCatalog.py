@@ -1467,6 +1467,8 @@ class Catalog(Folder,
               except ConflictError:
                 raise
               except:
+                LOG('SQLCatalog', WARNING, 'Failed to call method %s on %s' %
+                    (arg, object), error=sys.exc_info())
                 value = None
               if not disable_cache:
                 argument_cache[(object.uid, arg)] = value
