@@ -2,7 +2,9 @@ Purchase Invoice Transaction | Discount Line
 Purchase Invoice Transaction | Invoice Line
 Purchase Invoice Transaction | Payment Condition
 Purchase Invoice Transaction | Tax Line
+Purchase Invoice Transaction | Trade Model Line
 Sale Invoice Transaction | Discount Line
 Sale Invoice Transaction | Invoice Line
 Sale Invoice Transaction | Payment Condition
 Sale Invoice Transaction | Tax Line
+Sale Invoice Transaction | Trade Model Line

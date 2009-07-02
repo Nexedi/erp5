@@ -9,6 +9,8 @@ Purchase Invoice Transaction | view_confirmed_invoice
 Purchase Invoice Transaction | view_discount
 Purchase Invoice Transaction | view_invoice
 Purchase Invoice Transaction | view_tax
+Purchase Invoice Transaction | view_trade_model
+Purchase Invoice Transaction | view_trade_model_line_list
 Purchase Order | jump_related_invoice
 Sale Invoice Transaction | apply_trade_condition
 Sale Invoice Transaction | invoice_item_list
@@ -19,4 +21,6 @@ Sale Invoice Transaction | payment_condition
 Sale Invoice Transaction | view_confirmed_invoice
 Sale Invoice Transaction | view_discount
 Sale Invoice Transaction | view_tax
+Sale Invoice Transaction | view_trade_model
+Sale Invoice Transaction | view_trade_model_line_list
 Sale Order | jump_related_invoice

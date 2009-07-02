@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="CausalityMovementGroup" module="Products.ERP5Type.Document.CausalityMovementGroup"/>
+        <global name="FirstCausalityMovementGroup" module="Products.ERP5Type.Document.FirstCausalityMovementGroup"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -19,9 +19,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>BPM modification - used instead of Causality Movement Group to group orphaned parent movements coming from invoice</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -33,11 +31,11 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Causality Movement Group</string> </value>
+            <value> <string>First Causality Movement Group</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>causality_movement_group_on_delivery</string> </value>
+            <value> <string>First Causality Movement Group</string> </value>
         </item>
       </dictionary>
     </pickle>
