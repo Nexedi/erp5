@@ -41,6 +41,12 @@ class TradeModelLine:
       'mode'        : 'w',
       'default'     : True,
     },
+    { 'id'          : 'calculation_script_id',
+      'description' : 'If a scrip is defined on Trade Model Line, this script'\
+                        ' is used to do localised calculs',
+      'type'        : 'string',
+      'mode'        : 'w',
+    },
   )
 
   _categories = (

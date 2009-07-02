@@ -40,6 +40,11 @@ class TradeCondition:
                             ' default destination',
             'type'        : 'string',
             'mode'        : 'w' },
+        {   'id'          : 'calculation_script_id',
+            'description' : 'If no script found on Trade Model Lines, this\
+                script is used to do localised calculs',
+            'type'        : 'string',
+            'mode'        : 'w' },
         {   'id'          : 'destination_decision_source_reference',
             'description' : 'The reference of the destination_decision'+
                             ' for default source',
