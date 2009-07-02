@@ -1,4 +1,13 @@
 <base_category_list>
+ <portal_type id="Business Path">
+  <item>delivery_builder</item>
+  <item>end_of</item>
+  <item>trade_phase</item>
+  <item>order_builder</item>
+ </portal_type>
+ <portal_type id="Business Process">
+  <item>specialise</item>
+ </portal_type>
  <portal_type id="Discount Module">
   <item>business_application</item>
  </portal_type>

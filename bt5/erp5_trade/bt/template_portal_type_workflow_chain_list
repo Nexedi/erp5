@@ -1,3 +1,7 @@
+Business Path | edit_workflow
+Business Process | edit_workflow
+Business Process | validation_workflow
+Business State | edit_workflow
 Container Cell | container_interaction_workflow
 Container Cell | edit_workflow
 Container Cell | pricing_interaction_workflow
@@ -100,3 +104,5 @@ Sale Trade Condition | edit_workflow
 Sale Trade Condition | validation_workflow
 Tax | edit_workflow
 Tax | validation_workflow
+Trade Model Line | edit_workflow
+Trade Model Line | trade_model_line_interaction_workflow

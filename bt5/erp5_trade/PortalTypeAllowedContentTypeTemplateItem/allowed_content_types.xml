@@ -1,10 +1,20 @@
 <allowed_content_type_list>
+ <portal_type id="Business Process">
+  <item>Business State</item>
+  <item>Business Path</item>
+ </portal_type>
+ <portal_type id="Business Process Module">
+  <item>Business Process</item>
+ </portal_type>
  <portal_type id="Container">
   <item>Container Line</item>
   <item>Container</item>
  </portal_type>
  <portal_type id="Container Line">
   <item>Container Cell</item>
+ </portal_type>
+ <portal_type id="Delivery Builder">
+  <item>First Causality Movement Group</item>
  </portal_type>
  <portal_type id="Delivery Rule">
   <item>Quantity Divergence Tester</item>
@@ -43,6 +53,7 @@
  <portal_type id="Purchase Order">
   <item>Payment Condition</item>
   <item>Purchase Order Line</item>
+  <item>Trade Model Line</item>
   <item>Tax Line</item>
   <item>Discount Line</item>
  </portal_type>
@@ -66,6 +77,7 @@
   <item>Tax Model Line</item>
   <item>Discount Model Line</item>
   <item>Payment Condition</item>
+  <item>Trade Model Line</item>
   <item>Purchase Supply Line</item>
  </portal_type>
  <portal_type id="Purchase Trade Condition Module">
@@ -86,6 +98,7 @@
   <item>Delivery Rule</item>
  </portal_type>
  <portal_type id="Sale Order">
+  <item>Trade Model Line</item>
   <item>Sale Order Line</item>
   <item>Tax Line</item>
   <item>Discount Line</item>
@@ -111,13 +124,17 @@
  <portal_type id="Sale Trade Condition">
   <item>Tax Model Line</item>
   <item>Payment Condition</item>
-  <item>Sale Supply Line</item>
   <item>Discount Model Line</item>
+  <item>Trade Model Line</item>
+  <item>Sale Supply Line</item>
  </portal_type>
  <portal_type id="Sale Trade Condition Module">
   <item>Sale Trade Condition</item>
  </portal_type>
  <portal_type id="Tax Module">
   <item>Tax</item>
+ </portal_type>
+ <portal_type id="Trade Model Line">
+  <item>Trade Model Cell</item>
  </portal_type>
 </allowed_content_type_list>

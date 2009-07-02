@@ -1,6 +1,10 @@
+Business Process Module | Business Process
+Business Process | Business Path
+Business Process | Business State
 Container Line | Container Cell
 Container | Container
 Container | Container Line
+Delivery Builder | First Causality Movement Group
 Delivery Rule | Category Divergence Tester
 Delivery Rule | Property Divergence Tester
 Delivery Rule | Quantity Divergence Tester
@@ -22,6 +26,7 @@ Purchase Order | Discount Line
 Purchase Order | Payment Condition
 Purchase Order | Purchase Order Line
 Purchase Order | Tax Line
+Purchase Order | Trade Model Line
 Purchase Packing List Line | Purchase Packing List Cell
 Purchase Packing List Module | Purchase Packing List
 Purchase Packing List | Purchase Packing List Line
@@ -30,6 +35,7 @@ Purchase Trade Condition | Discount Model Line
 Purchase Trade Condition | Payment Condition
 Purchase Trade Condition | Purchase Supply Line
 Purchase Trade Condition | Tax Model Line
+Purchase Trade Condition | Trade Model Line
 Returned Sale Packing List Line | Returned Sale Packing List Cell
 Returned Sale Packing List Module | Returned Sale Packing List
 Returned Sale Packing List | Container
@@ -43,6 +49,7 @@ Sale Order | Discount Line
 Sale Order | Payment Condition
 Sale Order | Sale Order Line
 Sale Order | Tax Line
+Sale Order | Trade Model Line
 Sale Packing List Line | Sale Packing List Cell
 Sale Packing List Module | Sale Packing List
 Sale Packing List | Container
@@ -52,4 +59,6 @@ Sale Trade Condition | Discount Model Line
 Sale Trade Condition | Payment Condition
 Sale Trade Condition | Sale Supply Line
 Sale Trade Condition | Tax Model Line
+Sale Trade Condition | Trade Model Line
 Tax Module | Tax
+Trade Model Line | Trade Model Cell

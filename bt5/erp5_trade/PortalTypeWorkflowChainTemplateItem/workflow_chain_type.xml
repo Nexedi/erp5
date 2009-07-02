@@ -1,5 +1,17 @@
 <workflow_chain>
  <chain>
+  <type>Business Path</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Business Process</type>
+  <workflow>validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Business State</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Container</type>
   <workflow>edit_workflow, pricing_interaction_workflow</workflow>
  </chain>
@@ -113,7 +125,7 @@
  </chain>
  <chain>
   <type>Sale Packing List Cell</type>
-  <workflow>pricing_interaction_workflow, container_interaction_workflow, delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow</workflow>
+  <workflow>pricing_interaction_workflow, delivery_movement_simulation_interaction_workflow, container_interaction_workflow, delivery_movement_causality_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Packing List Line</type>
@@ -126,5 +138,9 @@
  <chain>
   <type>Tax</type>
   <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Trade Model Line</type>
+  <workflow>trade_model_line_interaction_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>

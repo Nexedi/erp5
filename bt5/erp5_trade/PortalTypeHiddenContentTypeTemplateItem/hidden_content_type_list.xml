@@ -34,4 +34,7 @@
  <portal_type id="Sale Packing List Line">
   <item>Sale Packing List Cell</item>
  </portal_type>
+ <portal_type id="Trade Model Line">
+  <item>Trade Model Cell</item>
+ </portal_type>
 </hidden_content_type_list>

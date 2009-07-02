@@ -1,3 +1,7 @@
+Business Path
+Business Process
+Business Process Module
+Business State
 Container
 Container Cell
 Container Line
@@ -7,6 +11,7 @@ Discount
 Discount Line
 Discount Model Line
 Discount Module
+First Causality Movement Group
 Internal Packing List
 Internal Packing List Cell
 Internal Packing List Line
@@ -45,3 +50,5 @@ Tax
 Tax Line
 Tax Model Line
 Tax Module
+Trade Model Cell
+Trade Model Line

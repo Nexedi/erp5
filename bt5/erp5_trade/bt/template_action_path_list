@@ -1,3 +1,10 @@
+Business Path | profile
+Business Path | view
+Business Path | view_wait_time
+Business Process Module | view
+Business Process | view
+Business Process | view_supply_state_list
+Business State | view
 Container Line | view
 Container Line | view_quantity
 Container | view
@@ -8,6 +15,7 @@ Discount Model Line | view
 Discount Module | view
 Discount | view
 Discount | view
+First Causality Movement Group | view
 Internal Packing List Cell | view
 Internal Packing List Line | quantity_view
 Internal Packing List Line | view
@@ -41,6 +49,7 @@ Purchase Order Cell | view
 Purchase Order Line | price_view
 Purchase Order Line | quantity_view
 Purchase Order Line | view
+Purchase Order Line | view_trade_model
 Purchase Order Module | delivery_line_report
 Purchase Order Module | order_export
 Purchase Order Module | order_report
@@ -53,6 +62,8 @@ Purchase Order | profile_view
 Purchase Order | view
 Purchase Order | view_discount
 Purchase Order | view_tax
+Purchase Order | view_trade_model
+Purchase Order | view_trade_model_line_list
 Purchase Packing List Cell | apparel_fabric_item_fast_input
 Purchase Packing List Cell | view
 Purchase Packing List Line | apparel_fabric_item_fast_input
@@ -74,6 +85,7 @@ Purchase Trade Condition | view_discount
 Purchase Trade Condition | view_payment
 Purchase Trade Condition | view_profile
 Purchase Trade Condition | view_tax
+Purchase Trade Condition | view_trade_model_line_list
 Returned Sale Packing List Cell | view
 Returned Sale Packing List Line | price_view
 Returned Sale Packing List Line | quantity_view
@@ -88,6 +100,7 @@ Sale Order Cell | view
 Sale Order Line | price_view
 Sale Order Line | quantity_view
 Sale Order Line | view
+Sale Order Line | view_trade_model
 Sale Order Module | delivery_line_report
 Sale Order Module | order_export
 Sale Order Module | order_report
@@ -106,6 +119,8 @@ Sale Order | view
 Sale Order | view_discount
 Sale Order | view_stock
 Sale Order | view_tax
+Sale Order | view_trade_model
+Sale Order | view_trade_model_line_list
 Sale Packing List Cell | view
 Sale Packing List Line | price_view
 Sale Packing List Line | quantity_view
@@ -127,7 +142,11 @@ Sale Trade Condition | view_discount
 Sale Trade Condition | view_payment
 Sale Trade Condition | view_profile
 Sale Trade Condition | view_tax
+Sale Trade Condition | view_trade_model_line_list
+System Preference | bpm_preference
 Tax Line | view
 Tax Model Line | view
 Tax Module | view
 Tax | view
+Trade Model Cell | view
+Trade Model Line | view
