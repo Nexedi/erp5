@@ -100,7 +100,7 @@ class CatalogMethodWrapper(MethodWrapper):
     # It is probably needed at a more generic level (Forms ? Selection ?), or
     # even a more specific one (limited to HTML ?)...
     for key, value in kw.items():
-      if value == '':
+      if value == '' or value is None:
         kw.pop(key)
     return getattr(self.context, self.method_name)(*args, **kw)
 
