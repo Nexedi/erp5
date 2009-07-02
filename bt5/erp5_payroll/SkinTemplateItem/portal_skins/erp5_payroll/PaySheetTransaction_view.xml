@@ -89,6 +89,8 @@
                         <string>listbox_employer_share_price</string>
                         <string>listbox_employee_share_total_price</string>
                         <string>listbox_employer_share_total_price</string>
+                        <string>listbox_int_index</string>
+                        <string>listbox_title</string>
                       </list>
                     </value>
                 </item>

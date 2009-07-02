@@ -12,15 +12,12 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>description</string>
-                <string>title</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_default_calculation_script_id</string> </value>
+            <value> <string>listbox_int_index</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -76,12 +73,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>The default script used to calculated the withhold amount for each line.</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_string_field</string> </value>
+                    <value> <string>my_integer_value</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -90,10 +83,6 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Default Calculation Script</string> </value>
                 </item>
               </dictionary>
             </value>

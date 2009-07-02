@@ -62,17 +62,18 @@
 \'\'\'\n
 \n
 column_list = []\n
-editable_column_list = [(\'base\', \'Base\'),]\n
+editable_column_list = [(\'int_index\', \'PaySheet Order\'),\n
+                        (\'title\', \'Title\'),]\n
 \n
-not_editable_column_list = [(\'int_index\', \'PaySheet Order\'),\n
-                            (\'title\', \'Title\'),\n
-                            (\'source_section_title\', \'Service Provider\'),\n
-                            (\'slice\', \'Slice\'),]\n
+not_editable_column_list = [(\'source_section_title\', \'Service Provider\'),\n
+                            (\'slice\', \'Slice\'),\n
+                            (\'base\', \'Base\'),]\n
+\n
+column_list.extend(editable_column_list)\n
 \n
 if not editable:\n
   column_list.extend(not_editable_column_list)\n
 \n
-column_list.extend(editable_column_list)\n
 \n
 # this following columns are add for both edibales and not\n
 for model_line in context.contentValues(portal_type=\'Pay Sheet Line\'):\n

@@ -91,7 +91,7 @@
                     <value>
                       <list>
                         <string>my_specialise_title_list</string>
-                        <string>my_default_calculation_script_id</string>
+                        <string>my_calculation_script_id</string>
                         <string>my_float_index</string>
                         <string>my_int_index</string>
                       </list>

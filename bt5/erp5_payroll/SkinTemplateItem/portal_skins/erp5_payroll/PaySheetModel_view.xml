@@ -104,7 +104,7 @@
                         <string>my_source_section_title</string>
                         <string>my_price_currency</string>
                         <string>my_specialise_title_list</string>
-                        <string>my_default_calculation_script_id</string>
+                        <string>my_calculation_script_id</string>
                       </list>
                     </value>
                 </item>
