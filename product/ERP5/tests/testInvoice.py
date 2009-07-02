@@ -269,7 +269,10 @@ class TestInvoiceMixin(TestPackingListMixin,
       simulation_movement_list = invoicing_rule.objectValues()
       self.assertNotEquals(len(simulation_movement_list), 0)
       for simulation_movement in simulation_movement_list :
-        invoice_transaction_rule_list.extend(simulation_movement.objectValues())
+        invoice_transaction_rule_list.extend([applied_rule for applied_rule
+          in simulation_movement.objectValues() if applied_rule \
+              .getSpecialiseValue().getPortalType()
+              == 'Invoice Transaction Rule'])
         resource_list = sequence.get('resource_list')
         self.assertEquals(simulation_movement.getPortalType(),
                           'Simulation Movement')
