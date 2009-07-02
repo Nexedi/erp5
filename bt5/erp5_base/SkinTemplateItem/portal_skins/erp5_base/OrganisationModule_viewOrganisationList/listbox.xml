@@ -13,16 +13,16 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>columns</string>
                 <string>all_columns</string>
-                <string>search_columns</string>
-                <string>sort</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
-                <string>url_columns</string>
-                <string>domain_tree</string>
+                <string>columns</string>
                 <string>domain_root_list</string>
+                <string>domain_tree</string>
+                <string>portal_types</string>
+                <string>search_columns</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>title</string>
+                <string>url_columns</string>
               </list>
             </value>
         </item>
@@ -324,10 +324,6 @@
                         <tuple>
                           <string>economical_class_title</string>
                           <string>Economic Class</string>
-                        </tuple>
-                        <tuple>
-                          <string>start_date</string>
-                          <string>Birth Date</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
