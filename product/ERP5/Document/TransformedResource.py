@@ -184,7 +184,9 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
         # XXX changed by TB getParentID()+getId() instead of getId()
         # This might not be enough if we have different transformation
         # with the same id (for example in several modules)
-        tmp_amount = newTempTransformedResource(self.getPortalObject(), self.getParentId()+'_'+self.getId())
+        parent = self.getParentValue()
+        tmp_amount = parent.newContent(id=self.getParentId()+'_'+self.getId(),
+                        temp_object=1, portal_type=self.getPortalType())
         # Create error string
         error_string = ''
         # Add resource relation

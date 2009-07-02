@@ -57,9 +57,15 @@ from Products.ERP5Type import product_path
 from Products.CMFCore.utils import getToolByName
 from testOrder import TestOrderMixin
 
-class TestTransformation(TestOrderMixin, ERP5TypeTestCase):
+class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
   """
-    Test Transformations
+    Test Transformations with erp5_apparel configuration
+
+    This test :
+      - is checking so many values
+      - is specific to erp5_apparel, so does not allows to reuse it's code
+
+    Therefore, it's better to use testTransformation for future tests
   """
   run_all_test = 1
   transformation_portal_type = 'Apparel Transformation'
