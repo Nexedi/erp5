@@ -13,13 +13,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>description</string>
                 <string>base_category</string>
                 <string>portal_type</string>
                 <string>catalog_index</string>
                 <string>columns</string>
-                <string>proxy_listbox_ids</string>
               </list>
             </value>
         </item>
@@ -113,15 +110,15 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The invoiced person or organisation.</string> </value>
+                    <value> <string>Destination client of the invoice</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_relation_field</string> </value>
+                    <value> <string>my_destination_section_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewInvoicingFieldLibrary</string> </value>
+                    <value> <string>SaleTradeCondition_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_type</string> </key>
@@ -134,21 +131,6 @@
                         <tuple>
                           <string>Person</string>
                           <string>Person</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>proxy_listbox_ids</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>OrganisationModule_viewOrganisationList/listbox</string>
-                          <string>Organisations</string>
-                        </tuple>
-                        <tuple>
-                          <string>PersonModule_viewPersonList/listbox</string>
-                          <string>Persons</string>
                         </tuple>
                       </list>
                     </value>

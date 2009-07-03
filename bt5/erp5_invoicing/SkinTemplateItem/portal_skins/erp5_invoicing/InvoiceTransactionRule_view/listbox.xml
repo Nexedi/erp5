@@ -14,11 +14,12 @@
             <value>
               <list>
                 <string>title</string>
-                <string>selection_name</string>
-                <string>sort_columns</string>
                 <string>columns</string>
+                <string>sort_columns</string>
                 <string>sort</string>
+                <string>selection_name</string>
                 <string>portal_types</string>
+                <string>editable_columns</string>
               </list>
             </value>
         </item>
@@ -80,6 +81,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>all_editable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
@@ -107,12 +114,18 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_view_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewInvoicingFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
