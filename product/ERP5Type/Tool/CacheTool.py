@@ -86,8 +86,9 @@ class CacheTool(BaseTool):
           if getattr(cp, 'getSpecialiseValue', None) is not None:
             memcached_plugin = cp.getSpecialiseValue()
             if memcached_plugin is not None:
+              server = memcached_plugin.getUrlString('')[len('memcached://'):]
               init_dict = {
-                'server': memcached_plugin.getUrlString(),
+                'server': server,
                 'server_max_key_length': memcached_plugin.getServerMaxKeyLength(),
                 'server_max_value_length': memcached_plugin.getServerMaxValueLength(),
                             }
