@@ -36,7 +36,7 @@ class IExpandable(Interface):
     and its expansion.
   """
 
-  def expand(self, applied_rule_id=None, force=0, activate_kw=None, **kw):
+  def expand(applied_rule_id=None, force=0, activate_kw=None, **kw):
     """
-      Expand the current Expandable class into the similation
+      Expand the current Expandable class into the simulation
     """
