@@ -112,6 +112,7 @@
                         <string>my_quantity</string>
                         <string>my_delivery_mode</string>
                         <string>my_completed_state_list</string>
+                        <string>my_frozen_state_list</string>
                       </list>
                     </value>
                 </item>
