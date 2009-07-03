@@ -223,20 +223,20 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     document_url = document.getRelativeUrl()
     def getTestDocument():
       return self.portal.restrictedTraverse(document_url)
-    self.failUnless(getTestDocument().getRevision(), '1')
+    self.assertEqual(getTestDocument().getRevision(), '1')
     getTestDocument().edit(file=file)
     transaction.commit()
     self.tic()
-    self.failUnless(getTestDocument().getRevision(), '2')
+    self.assertEqual(getTestDocument().getRevision(), '2')
     getTestDocument().edit(title='Hey Joe')
     transaction.commit()
     self.tic()
-    self.failUnless(getTestDocument().getRevision(), '3')
+    self.assertEqual(getTestDocument().getRevision(), '3')
     another_document = self.portal.portal_contributions.newContent(file=file)
     transaction.commit()
     self.tic()
-    self.failUnless(getTestDocument().getRevision(), '4')
-    self.failUnless(getTestDocument().getRevisionList(), ['1', '2', '3', '4'])
+    self.assertEqual(getTestDocument().getRevision(), '4')
+    self.assertEqual(getTestDocument().getRevisionList(), ['1', '2', '3', '4'])
 
   def test_03_Versioning(self,quiet=QUIET,run=RUN_ALL_TEST):
     """
