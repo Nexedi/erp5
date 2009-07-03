@@ -40,6 +40,7 @@ from Products.ERP5Type.Document import newTempBase
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache, enableReadOnlyTransactionCache, disableReadOnlyTransactionCache
+from Globals import PersistentMapping
 
 from zLOG import LOG
 
@@ -100,8 +101,8 @@ class Predicate(XMLObject, Folder):
     self = self.asPredicate()
     result = 1
     if getattr(aq_base(self), '_identity_criterion', None) is None:
-      self._identity_criterion = {}
-      self._range_criterion = {}
+      self._identity_criterion = PersistentMapping()
+      self._range_criterion = PersistentMapping()
 #    LOG('PREDICATE TEST', 0,
 #        'testing %s on context of %s' % \
 #        (self.getRelativeUrl(), context.getRelativeUrl()))
@@ -348,8 +349,8 @@ class Predicate(XMLObject, Folder):
             instance
     """
     if getattr(aq_base(self), '_identity_criterion', None) is None:
-      self._identity_criterion = {}
-      self._range_criterion = {}
+      self._identity_criterion = PersistentMapping()
+      self._range_criterion = PersistentMapping()
     criterion_dict = {}
     for p in self.getCriterionPropertyList():
       criterion_dict[p] = newTempBase(self, 'new_%s' % p)
@@ -380,8 +381,8 @@ class Predicate(XMLObject, Folder):
     """
     # XXX 'min' and 'max' are built-in functions.
     if getattr(aq_base(self), '_identity_criterion', None) is None:
-      self._identity_criterion = {}
-      self._range_criterion = {}
+      self._identity_criterion = PersistentMapping()
+      self._range_criterion = PersistentMapping()
     if identity is not None :
       self._identity_criterion[property] = identity
     if min == '':
@@ -405,8 +406,8 @@ class Predicate(XMLObject, Folder):
       is created to match the provided criterion_property_list.
     """
     if getattr(aq_base(self), '_identity_criterion', None) is None:
-      self._identity_criterion = {}
-      self._range_criterion = {}
+      self._identity_criterion = PersistentMapping()
+      self._range_criterion = PersistentMapping()
     if 'criterion_property_list' in kwd:
       criterion_property_list = kwd['criterion_property_list']
       identity_criterion = {}
@@ -443,8 +444,8 @@ class Predicate(XMLObject, Folder):
     test_method_id_list = []
     criterion_property_list = []
     # reset criterions
-    self._identity_criterion = {}
-    self._range_criterion = {}
+    self._identity_criterion = PersistentMapping()
+    self._range_criterion = PersistentMapping()
 
     for c in category_list:
       bc = c.split('/')[0]
