@@ -1069,11 +1069,14 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     self.assertEqual( invoice_line.getDestination(),
                       simulation_movement.getDestination())
     
-    # inside this movement there is an applied rule which
-    # specialize invoice_transaction_rule
+    # inside this movement there are applied rules which specialize
+    # invoice_transaction_rule and trade_model_rule...
     applied_rule_list = simulation_movement.contentValues()
-    self.assertEquals( len(applied_rule_list), 1)
-    applied_rule = applied_rule_list[0]
+    self.assertEquals( len(applied_rule_list), 2)
+    # ...but only invoice_transaction_rule is interesting
+    applied_rule = [applied_rule for applied_rule in applied_rule_list if 
+      applied_rule.getSpecialiseValue().getPortalType() == 
+      'Invoice Transaction Rule'][0]
     self.assertEquals( applied_rule.getPortalType(),
                       self.applied_rule_portal_type)
     self.assertEquals( applied_rule.getSpecialise(),
