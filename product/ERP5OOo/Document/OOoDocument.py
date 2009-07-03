@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002-2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -254,7 +255,7 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
           # returned response_dict
           response_code, response_dict, response_message = \
                          200, dict(response_data=allowed_target_item_list), ''
-        
+
         if response_code == 200:
           allowed = response_dict['response_data']
         else:
@@ -405,9 +406,9 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
       else:
         has_format = self.hasConversion(format=original_format, display=display)
     elif display is None or original_format not in STANDARD_IMAGE_FORMAT_LIST:
-      has_format = self.hasConversion(format=format)
+      has_format = self.hasConversion(format=original_format)
     else:
-      has_format = self.hasConversion(format=format, display=display)
+      has_format = self.hasConversion(format=original_format, display=display)
     if not has_format:
       # Do real conversion
       mime, data = self._convert(format)
@@ -432,7 +433,7 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
         cs.close()
       if (display is None or original_format not in STANDARD_IMAGE_FORMAT_LIST) \
         and not requires_pdf_first:
-        self.setConversion(data, mime, format=format)
+        self.setConversion(data, mime, format=original_format)
       else:
         temp_image = self.portal_contributions.newContent(
                                        portal_type='Image',
@@ -446,15 +447,15 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
             self.setConversion(data, mime, format=original_format, display=display)
         else:
           if display is None:
-            self.setConversion(data, mime, format=format)
+            self.setConversion(data, mime, format=original_format)
           else:
-            self.setConversion(data, mime, format=format, display=display)
+            self.setConversion(data, mime, format=original_format, display=display)
     if requires_pdf_first:
       format = original_format
     if display is None or original_format not in STANDARD_IMAGE_FORMAT_LIST:
-      return self.getConversion(format=format)
+      return self.getConversion(format=original_format)
     else:
-      return self.getConversion(format=format, display=display)
+      return self.getConversion(format=original_format, display=display)
 
   security.declareProtected(Permissions.View, 'asTextContent')
   def asTextContent(self):
@@ -494,7 +495,7 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
       else:
         mime = guess_content_type(file_name)[0]
         data = Pdata(zip_file.read(file_name))
-      self.setConversion(data, mime, format='_embedded', file_name=file_name)
+      self.setConversion(data, mime=mime, format='_embedded', file_name=file_name)
     if must_close:
       zip_file.close()
       archive_file.close()
