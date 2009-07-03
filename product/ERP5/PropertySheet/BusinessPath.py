@@ -56,7 +56,15 @@ class BusinessPath:
             'type'        : 'float',
             'mode'        : 'w' },
         {   'id'          : 'completed_state',
-            'description' : 'Which movement of simulation state can be passed on this path',
+            'description' : 'List of states for which related Simulation '
+                            'Movement is considered as completed',
+            'type'        : 'lines',
+            'default'     : [],
+            'multivalued' : 1,
+            'mode'        : 'w' },
+        {   'id'          : 'frozen_state',
+            'description' : 'List of states for which related Simulation '
+                            'Movement is considered as frozen',
             'type'        : 'lines',
             'default'     : [],
             'multivalued' : 1,
