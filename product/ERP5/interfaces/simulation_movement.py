@@ -103,11 +103,10 @@ class ISimulationMovement(Interface):
   def isFrozen():
     """Tells whether the simulation movement is frozen.
     By default, looks up the related Business Process Path
-    and tells if the simulation state is part of completed
+    and tells if the simulation state is part of frozen
     states.
 
-    XXX - should this be renamed isCompleted ? are the
-    notions of isFrozen and isCompleted same or different ?
+    Frozen simulation movement cannot be modified by expanding.
     """
 
   def isSimulated():

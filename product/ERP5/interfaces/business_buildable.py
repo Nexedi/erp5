@@ -30,12 +30,7 @@
 from zope.interface import Interface
 
 class IBusinessBuildable(Interface):
-  """Business Buildable interface specification
-
-  TODO:
-    - is isFrozen useful ? is it the same as isCompleted ?
-    - why isFrozen is here and not in Completable
-  """
+  """Business Buildable interface specification"""
   def isBuildable(explanation):
     """Returns True if any of the related Simulation Movement
     is buildable and if the predecessor state is completed.
@@ -50,17 +45,6 @@ class IBusinessBuildable(Interface):
 
     'explanation' is the Order or Item or Document which is the
     cause of a root applied rule in the simulation
-    """
-
-  def isFrozen(explanation):
-    """Returns True if all related movements in the simulation
-    are frozen
-
-    'explanation' is the Order or Item or Document which is the
-    cause of a root applied rule in the simulation
-
-    XXX - could be redundant with isBuildable
-    (isFrozen = not isBuildable ?)
     """
 
   def build(explanation):

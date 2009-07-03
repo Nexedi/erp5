@@ -45,6 +45,11 @@ class IBusinessCompletable(Interface):
     as finished.
     """
 
+  def isFrozen(explanation):
+    """True if all related simulation movements for this explanation
+    are frozen.
+    """
+
   def getExpectedCompletionDate(task):
     """Returns the date at which the given state is expected to
     be completed, based on the start_date and stop_date of
