@@ -37,6 +37,8 @@ class IBusinessCompletable(Interface):
     """True if all related simulation movements for this explanation
     document are delivered and in simulation state which is considered
     as finished.
+
+    Completed means that it is possible to move to next step of Business Process
     """
 
   def isPartiallyCompleted(explanation):

@@ -95,7 +95,7 @@ class ISimulationMovement(Interface):
     """
 
   def getDivergenceList():
-    """Returns a list of divergences 
+    """Returns a list of divergences
     XXX - unclear, please explan what the returned documents
     or object are (type, class)
     """
@@ -107,6 +107,15 @@ class ISimulationMovement(Interface):
     states.
 
     Frozen simulation movement cannot be modified by expanding.
+    """
+
+  def isCompleted():
+    """Tells whether the simulation movement is completed.
+    By default, looks up the related Business Process Path
+    and tells if the simulation state is part of completed
+    states.
+
+    Completed simulation movement allow to move to next step of Business Process
     """
 
   def isSimulated():
