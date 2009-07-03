@@ -142,6 +142,9 @@ class BusinessProcess(Path, XMLObject):
     return filter(lambda x:x.isPartiallyCompleted(explanation), self.getStateValueList())
 
   def getLatestCompletedStateValue(self, explanation):
+    """
+      Returns the most advanced completed state
+    """
     for state in self.getCompletedStateValueList(explanation):
       for path in state.getPredecessorRelatedValueList():
         if not path.isCompleted(explanation):
@@ -149,6 +152,9 @@ class BusinessProcess(Path, XMLObject):
     return None
 
   def getLatestPartiallyCompletedStateValue(self, explanation):
+    """
+      Returns the most advanced completed state
+    """
     for state in self.getCompletedStateValueList(explanation):
       for path in state.getPredecessorRelatedValueList():
         if not path.isPartiallyCompleted(explanation):
@@ -156,6 +162,9 @@ class BusinessProcess(Path, XMLObject):
     return None
 
   def getLatestCompletedStateValueList(self, explanation):
+    """
+      Returns the most advanced completed state
+    """
     result = []
     for state in self.getCompletedStateValueList(explanation):
       for path in state.getPredecessorRelatedValueList():
@@ -164,6 +173,9 @@ class BusinessProcess(Path, XMLObject):
     return result
 
   def getLatestPartiallyCompletedStateValueList(self, explanation):
+    """
+      Returns the most advanced completed state
+    """
     result = []
     for state in self.getCompletedStateValueList(explanation):
       for path in state.getPredecessorRelatedValueList():
@@ -185,6 +197,9 @@ class BusinessProcess(Path, XMLObject):
     return self.getReferentialDate() == 'stop_date'
 
   def getTradePhaseList(self):
+    """
+      Returns all trade_phase of this business process
+    """
     path_list = self.objectValues(portal_type=self.getPortalBusinessPathTypeList())
     return filter(None, [path.getTradePhase()
                          for path in path_list])

@@ -176,6 +176,8 @@ class BusinessPath(Path):
 
   # IBusinessBuildable implementation
   def isBuildable(self, explanation):
+    """
+    """
     if self.isCompleted(explanation):
       return False # No need to build what was already built
     if self.isFrozen(explanation):
@@ -193,6 +195,9 @@ class BusinessPath(Path):
     """
 
   def build(self, explanation):
+    """
+      Build
+    """
     builder_list = self.getBuilderList() # Missing method
     for builder in builder_list:
       builder.build(causality_uid=self.getUid()) # This is one way of doing
@@ -208,6 +213,10 @@ class BusinessPath(Path):
 
   # IBusinessCompletable implementation
   def isCompleted(self, explanation):
+    """
+      Looks at all simulation related movements
+      and checks the simulation_state of the delivery
+    """
     acceptable_state_list = self.getCompletedStateList()
     for movement in self._getRelatedSimulationMovementList(explanation):
       if movement.getSimulationState() not in acceptable_state_list:
@@ -215,6 +224,10 @@ class BusinessPath(Path):
     return True
 
   def isPartiallyCompleted(self, explanation):
+    """
+      Looks at all simulation related movements
+      and checks the simulation_state of the delivery
+    """
     acceptable_state_list = self.getCompletedStateList()
     for movement in self._getRelatedSimulationMovementList(explanation):
       if movement.getSimulationState() in acceptable_state_list:
@@ -222,6 +235,10 @@ class BusinessPath(Path):
     return False
 
   def isFrozen(self, explanation):
+    """
+      Looks at all simulation related movements
+      and checks if frozen
+    """
     movement_list = self._getRelatedSimulationMovementList(explanation)
     if len(movement_list) == 0:
       return False # Nothing to be considered as Frozen
@@ -270,6 +287,13 @@ class BusinessPath(Path):
         return expected_date - self.getLeadTime()
 
   def getExpectedStopDate(self, explanation, predecessor_date=None, *args, **kwargs):
+    """
+      Returns the expected stop date for this
+      path based on the explanation.
+
+      predecessor_date -- if provided, computes the date base on the
+                          date value provided
+    """
     return self._getExpectedDate(explanation,
                                  self._getRootExplanationExpectedStopDate,
                                  self._getPredecessorExpectedStopDate,
