@@ -55,6 +55,8 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+portal = context.getPortalObject()\n
+\n
 if body is None:\n
   body = context.getTextContent() #XXX This does not support structured text format.\n
 \n
@@ -73,7 +75,7 @@ if from_url is None:\n
 \n
 # Return-Path\n
 if reply_url is None:\n
-  reply_url = context.portal_preferences.getPreferredEventSenderEmail()\n
+  reply_url = portal.portal_preferences.getPreferredEventSenderEmail()\n
 additional_headers = None\n
 if reply_url:\n
   additional_headers = {\'Return-Path\':reply_url}\n
@@ -133,9 +135,9 @@ context.setData(mail_message)\n
 \n
 # Transit event workflow\n
 if context.getTypeInfo() is not None:\n
-  context.plan()\n
-  context.order()\n
-  context.start()\n
+  for transition_id in \'plan\', \'order\', \'start\':\n
+    if portal.portal_workflow.isTransitionPossible(context, transition_id):\n
+      getattr(context, transition_id)()\n
 \n
 if download:\n
   return mail_message\n
@@ -194,9 +196,10 @@ if download:\n
                             <string>attachment_list</string>
                             <string>download</string>
                             <string>kw</string>
-                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>None</string>
                             <string>sender</string>
                             <string>additional_headers</string>
                             <string>to_url_list</string>
@@ -221,6 +224,8 @@ if download:\n
                             <string>attachment_dict</string>
                             <string>_getitem_</string>
                             <string>str</string>
+                            <string>transition_id</string>
+                            <string>getattr</string>
                           </tuple>
                         </value>
                     </item>
