@@ -82,18 +82,16 @@ class CacheTool(BaseTool):
         elif cp_meta_type == 'ERP5 Distributed Ram Cache':
           ## even thougn we have such plugin in ZODB that doens't mean
           ## we have corresponding memcache module installed
-          memcached_plugin = cp.getSpecialiseValue()
-          if memcached_plugin is not None:
-            init_dict = {
-              'server': memcached_plugin.getUrlString(),
-              'server_max_key_length': memcached_plugin.getServerMaxKeyLength(),
-              'server_max_value_length': memcached_plugin.getServerMaxValueLength(),
-                          }
-            cache_obj = DistributedRamCache(init_dict)
-          else:
-            ## we don't have memcache python module installed 
-            ## thus we can't use DistributedRamCache plugin
-            cache_obj = None
+          cache_obj = None
+          if getattr(cp, 'getSpecialiseValue', None) is not None:
+            memcached_plugin = cp.getSpecialiseValue()
+            if memcached_plugin is not None:
+              init_dict = {
+                'server': memcached_plugin.getUrlString(),
+                'server_max_key_length': memcached_plugin.getServerMaxKeyLength(),
+                'server_max_value_length': memcached_plugin.getServerMaxValueLength(),
+                            }
+              cache_obj = DistributedRamCache(init_dict)
         if cache_obj is not None:
           ## set cache expire check interval
           cache_obj.cache_expire_check_interval = cp.getCacheExpireCheckInterval()
