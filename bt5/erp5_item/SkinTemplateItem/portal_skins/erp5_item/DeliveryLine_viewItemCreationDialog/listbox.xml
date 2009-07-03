@@ -351,10 +351,6 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
                           <string>line_variation_category_list</string>
                           <string>Variation 1</string>
                         </tuple>
@@ -365,6 +361,10 @@
                         <tuple>
                           <string>tab_variation_category_list</string>
                           <string>Variation 3</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
                         </tuple>
                       </list>
                     </value>
@@ -414,10 +414,6 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
                           <string>line_variation_category_list</string>
                           <string>Variation 1</string>
                         </tuple>
@@ -428,6 +424,10 @@
                         <tuple>
                           <string>tab_variation_category_list</string>
                           <string>Variation 3</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
                         </tuple>
                       </list>
                     </value>
