@@ -125,7 +125,7 @@
  </chain>
  <chain>
   <type>Sale Packing List Cell</type>
-  <workflow>pricing_interaction_workflow, delivery_movement_simulation_interaction_workflow, container_interaction_workflow, delivery_movement_causality_interaction_workflow</workflow>
+  <workflow>pricing_interaction_workflow, container_interaction_workflow, delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Packing List Line</type>
