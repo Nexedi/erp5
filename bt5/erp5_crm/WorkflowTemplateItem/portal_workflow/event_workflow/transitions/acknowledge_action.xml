@@ -23,7 +23,7 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>acknowledge</string> </value>
+            <value> <string>acknowledge_event</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>

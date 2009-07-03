@@ -31,8 +31,8 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>acknowledge</string>
                 <string>acknowledge_action</string>
+                <string>acknowledge_event</string>
                 <string>cancel</string>
                 <string>cancel_action</string>
               </tuple>
