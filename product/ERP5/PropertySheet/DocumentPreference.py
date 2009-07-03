@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -89,6 +90,12 @@ class DocumentPreference:
       'default'         : ['always','problem','never'],
       'write_permission': 'Manage properties',
       'mode'            : 'w'},
+    { 'id'          : 'preferred_conversion_cache_factory',
+      'description' : 'Preferred Conversion Cache',
+      'type'        : 'string',
+      'write_permission': 'Manage properties',
+      'preference'  : 1,
+      'mode'        : '' },
     )
 
 # vim: shiftwidth=2
