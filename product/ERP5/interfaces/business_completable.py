@@ -64,9 +64,8 @@ class IBusinessCompletable(Interface):
     """
 
   def getExpectedCompletionDuration(task):
-    """Returns the duration  at which the the state
-    if expected to be completed, based on the start_date
-    and stop_date of the explanation document.
+    """Returns the duration at which the state is expected to be completed,
+    based on the start_date and stop_date of the explanation document.
 
     'task' is a document which follows the ITaskGetter interface
     (getStartDate, getStopDate)
@@ -74,7 +73,9 @@ class IBusinessCompletable(Interface):
 
   def getRemainingTradePhaseList(explanation, trade_phase_list=None):
     """
-      Returns the list of remaining trade phase which to be done on the explanation.
+      Returns the list of remaining trade phases which to be done on the
+      explanation.
 
-      trade_phase_list -- if provide, the result is filtered by it after collected
+      trade_phase_list -- if provided, the result is filtered by it after
+                          being collected
     """
