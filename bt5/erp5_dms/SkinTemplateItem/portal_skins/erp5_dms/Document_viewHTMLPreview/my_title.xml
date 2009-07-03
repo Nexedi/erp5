@@ -13,7 +13,6 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>display_width</string>
                 <string>editable</string>
               </list>
             </value>
@@ -76,8 +75,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>40</int> </value>
+                    <key> <string>description</string> </key>
+                    <value> <string>The title is display as main content title and page title.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -89,11 +88,15 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewDMSFieldLibrary</string> </value>
+                    <value> <string>Document_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Title</string> </value>
                 </item>
               </dictionary>
             </value>
