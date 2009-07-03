@@ -48,6 +48,7 @@ class TestResource(ERP5TypeTestCase):
   product_portal_type = 'Product'
   node_portal_type = 'Organisation'
   sale_supply_portal_type = 'Sale Supply'
+  sale_order_line_portal_type = 'Sale Order Line'
   sale_supply_line_portal_type = 'Sale Supply Line'
   purchase_supply_line_portal_type = 'Purchase Supply Line'
   sale_supply_cell_portal_type = 'Sale Supply Cell'
@@ -920,7 +921,7 @@ class TestResource(ERP5TypeTestCase):
         start_date=DateTime(),
         stop_date=DateTime())
     sale_order_line = sale_order.newContent(
-        portal_type="Sale Order Line",
+        portal_type=self.sale_order_line_portal_type,
         resource_value=product)
     transaction.commit()
     self.tic()
@@ -959,6 +960,7 @@ class TestResource(ERP5TypeTestCase):
     sale_order = self.portal.getDefaultModule("Sale Order").newContent(
                               portal_type='Sale Order',)
     sale_order_line = sale_order.newContent(
+                          portal_type=self.sale_order_line_portal_type,
                           resource_value=resource,
                           quantity=5)
     self.assertEquals(1000, sale_order_line.getPrice())
@@ -966,6 +968,7 @@ class TestResource(ERP5TypeTestCase):
     
     # if we give the quantity unit in grams
     sale_order_line = sale_order.newContent(
+                          portal_type=self.sale_order_line_portal_type,
                           resource_value=resource,
                           quantity=5000,
                           quantity_unit_value=self.quantity_unit_gram)
@@ -994,6 +997,7 @@ class TestResource(ERP5TypeTestCase):
                               portal_type='Sale Order',
                               price_currency_value=other_currency)
     sale_order_line = sale_order.newContent(
+                          portal_type=self.sale_order_line_portal_type,
                           resource_value=resource,
                           quantity=5)
     # order and supply lines uses different currency, price does not apply
