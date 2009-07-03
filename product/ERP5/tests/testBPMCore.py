@@ -47,7 +47,7 @@ class TestBPMMixin(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-      'erp5_invoicing', 'erp5_simplified_invoicing', 'erp5_mrp', 'erp5_bpm')
+      'erp5_invoicing', 'erp5_simplified_invoicing')
 
   default_discount_ratio = -0.05 # -5%
   default_tax_ratio = 0.196 # 19,6%
