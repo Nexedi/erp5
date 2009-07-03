@@ -86,8 +86,9 @@ fast_input_type = getattr(request, \'your_fast_input_type\', None)\n
 if fast_input_type is None:\n
   fast_input_type = getattr(request, \'field_your_fast_input_type\')\n
 \n
-context.log(\'ListBox_listCheckbook, fast_input_type\', fast_input_type)\n
-\n
+reference = getattr(request, \'your_reference\', None)\n
+if reference is None:\n
+  reference = getattr(request, \'field_your_reference\', None)\n
 \n
 disable_node = 0\n
 at_date = context.getStartDate()\n
@@ -111,8 +112,6 @@ elif fast_input_type == \'checkbook_usual_cash_transfer\':\n
   model_filter_dict[\'fixed_price\']=1\n
   item_portal_type_list = (\'Check\',)\n
 \n
-\n
-\n
 listbox = context.Delivery_getCheckbookList(\n
                     item_portal_type_list=item_portal_type_list,\n
                     destination_payment=destination_payment,\n
@@ -120,9 +119,11 @@ listbox = context.Delivery_getCheckbookList(\n
                     simulation_state=simulation_state,\n
                     disable_node=disable_node,\n
                     at_date=at_date,\n
-                    node=node)\n
+                    node=node,\n
+                    reference=reference)\n
 \n
 context.Base_updateDialogForm(listbox=listbox)\n
+\n
 return context.ListBox_initializeFastInput()\n
 </string> </value>
         </item>
@@ -190,6 +191,7 @@ return context.ListBox_initializeFastInput()\n
                             <string>model_filter_dict</string>
                             <string>getattr</string>
                             <string>fast_input_type</string>
+                            <string>reference</string>
                             <string>disable_node</string>
                             <string>at_date</string>
                             <string>_write_</string>

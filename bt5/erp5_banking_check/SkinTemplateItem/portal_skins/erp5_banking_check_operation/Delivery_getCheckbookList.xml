@@ -95,14 +95,16 @@ if listbox is None:\n
   listbox = []\n
   if node is not None or disable_node:\n
     getCurrentTrackingList = context.portal_simulation.getCurrentTrackingList\n
-    #context.log(\'Delivery_viewCheckbookInputDialog\', getCurrentTrackingList(at_date=at_date, node=node,src__=1,where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'"))\n
-    #return [x.path for x in  getCurrentTrackingList(at_date=at_date, node=node)]\n
+#     context.log(\'Delivery_viewCheckbookInputDialog\', getCurrentTrackingList(at_date=at_date, node=node,src__=1,where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'"))\n
     if disable_node:\n
       node=None\n
-    current_tracking_list = [x.getObject() for x in getCurrentTrackingList(\n
-                               to_date=at_date, node=node,\n
-                               where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'")]\n
+\n
+    current_tracking_list = getCurrentTrackingList(to_date=at_date,\n
+                                                   node=node,\n
+                                                   where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'")\n
+\n
     for item in current_tracking_list:\n
+      item = item.getObject()\n
       exclude=0\n
       if model_filter_dict is not None:\n
         resource = item.getResourceValue()\n
@@ -133,18 +135,18 @@ if listbox is None:\n
           item_dict[\'internal_bank_account_number\'] = \'\'\n
           destination_payment_value = item.getDestinationPaymentValue()\n
           if destination_payment_value is not None:\n
-            item_dict[\'internal_bank_account_number\'] = destination_payment_value.getInternalBankAccountNumber()\n
+            internal_bank_account_number = destination_payment_value.getInternalBankAccountNumber()\n
+            if reference is not None and reference != internal_bank_account_number:\n
+              continue\n
+            item_dict[\'internal_bank_account_number\'] = internal_bank_account_number\n
+            item_dict[\'account_owner\'] = item.getDestinationPaymentTitle()\n
+          item_dict[\'recept_date\'] = item.getStartDate()\n
           item_dict[\'selection\'] = 0\n
           item_dict[\'uid\'] = \'new_%s\' %(item.getUid(),)\n
 \n
           listbox.append(item_dict)\n
 \n
 return listbox\n
-#context.Base_updateDialogForm(listbox=listbox\n
-#                              )\n
-#return context.asContext(context=None\n
-#                         , portal_type=context.getPortalType()\n
-#                         ).CheckbookDelivery_fastInputForm(**kw)\n
 </string> </value>
         </item>
         <item>
@@ -167,7 +169,7 @@ return listbox\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox=None, item_portal_type_list=None,destination_payment=None,model_filter_dict=None,batch_mode=0,simulation_state=None,disable_node=0,at_date=None,**kw</string> </value>
+            <value> <string>listbox=None, item_portal_type_list=None,destination_payment=None,model_filter_dict=None,batch_mode=0,simulation_state=None,disable_node=0,at_date=None,reference=None,**kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -195,7 +197,7 @@ return listbox\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>8</int> </value>
+                        <value> <int>9</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -209,6 +211,7 @@ return listbox\n
                             <string>simulation_state</string>
                             <string>disable_node</string>
                             <string>at_date</string>
+                            <string>reference</string>
                             <string>kw</string>
                             <string>DateTime</string>
                             <string>Dummy</string>
@@ -220,11 +223,8 @@ return listbox\n
                             <string>context</string>
                             <string>item_list</string>
                             <string>getCurrentTrackingList</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
                             <string>current_tracking_list</string>
+                            <string>_getiter_</string>
                             <string>item</string>
                             <string>exclude</string>
                             <string>resource</string>
@@ -234,6 +234,7 @@ return listbox\n
                             <string>item_dict</string>
                             <string>_write_</string>
                             <string>destination_payment_value</string>
+                            <string>internal_bank_account_number</string>
                           </tuple>
                         </value>
                     </item>
@@ -253,6 +254,7 @@ return listbox\n
                 <int>0</int>
                 <none/>
                 <int>0</int>
+                <none/>
                 <none/>
               </tuple>
             </value>

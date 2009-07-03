@@ -53,6 +53,10 @@
             <value> <string>Delivery_saveCheckbookFastInputLine</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string>None</string> </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -103,6 +107,7 @@
                     <value>
                       <list>
                         <string>your_fast_input_type</string>
+                        <string>your_reference</string>
                       </list>
                     </value>
                 </item>
@@ -149,7 +154,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>CheckbookDelivery_fastInputForm</string> </value>
         </item>
       </dictionary>
     </pickle>
