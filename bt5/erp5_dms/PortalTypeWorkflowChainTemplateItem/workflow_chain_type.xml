@@ -5,19 +5,19 @@
  </chain>
  <chain>
   <type>Drawing</type>
-  <workflow>local_permission_interaction_workflow, processing_status_workflow, document_interaction_workflow, document_publication_workflow</workflow>
+  <workflow>local_permission_interaction_workflow, edit_workflow, processing_status_workflow, document_interaction_workflow, document_publication_workflow</workflow>
  </chain>
  <chain>
   <type>File</type>
-  <workflow>-edit_workflow, document_publication_workflow, document_interaction_workflow, local_permission_interaction_workflow, processing_status_workflow</workflow>
+  <workflow>document_publication_workflow, document_interaction_workflow, local_permission_interaction_workflow, processing_status_workflow</workflow>
  </chain>
  <chain>
   <type>Image</type>
-  <workflow>-edit_workflow, document_interaction_workflow, document_publication_workflow, processing_status_workflow, local_permission_interaction_workflow</workflow>
+  <workflow>document_interaction_workflow, document_publication_workflow, processing_status_workflow, local_permission_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>PDF</type>
-  <workflow>local_permission_interaction_workflow, processing_status_workflow, document_interaction_workflow, document_publication_workflow</workflow>
+  <workflow>local_permission_interaction_workflow, edit_workflow, processing_status_workflow, document_interaction_workflow, document_publication_workflow</workflow>
  </chain>
  <chain>
   <type>Person</type>
@@ -25,7 +25,7 @@
  </chain>
  <chain>
   <type>Presentation</type>
-  <workflow>document_publication_workflow, local_permission_interaction_workflow, processing_status_workflow, document_interaction_workflow</workflow>
+  <workflow>document_publication_workflow, local_permission_interaction_workflow, processing_status_workflow, document_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>RSS Feed</type>
@@ -33,11 +33,11 @@
  </chain>
  <chain>
   <type>Spreadsheet</type>
-  <workflow>document_interaction_workflow, processing_status_workflow, document_publication_workflow, local_permission_interaction_workflow</workflow>
+  <workflow>edit_workflow, document_interaction_workflow, processing_status_workflow, document_publication_workflow, local_permission_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Text</type>
-  <workflow>processing_status_workflow, local_permission_interaction_workflow, document_publication_workflow, document_interaction_workflow</workflow>
+  <workflow>processing_status_workflow, local_permission_interaction_workflow, document_publication_workflow, edit_workflow, document_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>URL Crawler</type>

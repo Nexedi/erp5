@@ -27,7 +27,6 @@
               <tuple>
                 <string>convert_action</string>
                 <string>detect_converted_file</string>
-                <string>edit</string>
                 <string>process_file</string>
                 <string>upload_file</string>
               </tuple>

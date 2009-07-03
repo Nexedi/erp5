@@ -980,26 +980,14 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
       of the current object. The return value is a string
       in order to be consistent with the property sheet
       definition.
-      
-      NOTE: for now, workflow choice is hardcoded. This is
-      an optimisation hack. If a document does neither use
-      edit_workflow or processing_status_workflow, the
-      first workflow in the chain has prioriot. Better
-      implementation would require to be able to define
-      which workflow in a chain is the default one for
-      revision tracking (and for modification date).
     """
-    portal_workflow = getToolByName(self, 'portal_workflow')
-    wf_list = list(portal_workflow.getWorkflowsFor(self))
-    wf = portal_workflow.getWorkflowById('edit_workflow')
-    if wf is not None: wf_list = [wf] + wf_list
-    wf = portal_workflow.getWorkflowById('processing_status_workflow')
-    if wf is not None: wf_list = [wf] + wf_list
-    for wf in wf_list:
-      history = wf.getInfoFor(self, 'history', None)
-      if history:
-        return str(len(filter(lambda x:x.get('action', None) in ('edit', 'upload'), history)))
-    return ''
+    revision = len(self.getWorkflowInfo('history', 'edit_workflow'))
+    # XXX Also look at processing_status_workflow for compatibility.
+    for history_item in self.getWorkflowInfo('history',
+                                             'processing_status_workflow'):
+      if history_item.get('action') == 'edit':
+        revision += 1
+    return str(revision)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getRevisionList')
   def getRevisionList(self):
@@ -1007,10 +995,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
       Returns the list of revision numbers of the current document
       by by analysing the change log of the current object.
     """
-    revision = self.getRevision()
-    if revision == '':
-      return []
-    return [str(r) for r in range(0, int(self.getRevision()))]
+    return map(str, range(1, 1 + int(self.getRevision())))
 
   security.declareProtected(Permissions.ModifyPortalContent, 'mergeRevision')
   def mergeRevision(self):

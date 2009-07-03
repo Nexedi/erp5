@@ -304,7 +304,6 @@ class TestIngestion(ERP5TypeTestCase):
       printAndLog('Ingesting file: ' + filename)
       f = makeFileUpload(filename)
       context.edit(file=f)
-      context.convertToBaseFormat()
       context.reindexObject()
       transaction.commit()
       self.tic()
@@ -328,7 +327,6 @@ class TestIngestion(ERP5TypeTestCase):
     filename = 'TEST-en-002.' + format
     f = makeFileUpload(filename)
     context.edit(file=f)
-    context.convertToBaseFormat()
     context.reindexObject()
     transaction.commit()
     self.tic()

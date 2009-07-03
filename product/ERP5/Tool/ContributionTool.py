@@ -364,14 +364,9 @@ class ContributionTool(BaseTool):
           # If we need to discoverMetadata synchronously, it must
           # be for user interface and should thus be handled by
           # ZODB scripts
-
-          # XXX converting state is for only document which is necessary to
-          # convert base format.
-          portal_workflow = self.getPortalObject().portal_workflow
-          if 'processing_status_workflow' in portal_workflow.getChainFor(document):
-            document.processFile() # move to converting state.
-          document.activate().Document_convertToBaseFormatAndDiscoverMetadata(
-            file_name=name, user_login=user_login)
+          document.activate(after_path_and_method_id=(document.getPath(),
+            ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat'))) \
+          .discoverMetadata(file_name=name, user_login=user_login)
       else:
         if existing_document.isExternalDocument():
           document = existing_document

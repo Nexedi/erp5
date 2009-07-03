@@ -53,15 +53,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>object = state_change[\'object\']\n
-object.uploadFile()\n
+            <value> <string>document = state_change[\'object\']\n
+document.uploadFile()\n
 \n
 # do not activate conversion if the object is in portal_contributions\n
 # because it will be gone from there in a second\n
 # and activate would fail\n
-if object.getParentValue().getPortalType() != \'Contribution Tool\':\n
-  object.processFile()\n
-  object.activate().Document_tryToConvertToBaseFormat()\n
+if document.getParentValue().getPortalType() != \'Contribution Tool\' \\\n
+   and document.isSupportBaseDataConversion():\n
+  document.processFile()\n
+  document.activate().Document_tryToConvertToBaseFormat()\n
 </string> </value>
         </item>
         <item>
@@ -100,7 +101,7 @@ if object.getParentValue().getPortalType() != \'Contribution Tool\':\n
                           <tuple>
                             <string>state_change</string>
                             <string>_getitem_</string>
-                            <string>object</string>
+                            <string>document</string>
                             <string>_getattr_</string>
                           </tuple>
                         </value>

@@ -206,14 +206,14 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     if not run: return
     printAndLog('\nTest Revision System')
     # create a test document
-    # revision should be 0
+    # revision should be 1
     # upload file (can be the same) into it
-    # revision should now be 1
-    # edit the document with any value or no values
     # revision should now be 2
+    # edit the document with any value or no values
+    # revision should now be 3
     # contribute the same file through portal_contributions
-    # the same document should now have revision 3 (because it should have done mergeRevision)
-    # getRevisionList should return (0, 1, 2, 3)
+    # the same document should now have revision 4 (because it should have done mergeRevision)
+    # getRevisionList should return (1, 2, 3, 4)
     filename = 'TEST-en-002.doc'
     file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file)
@@ -223,20 +223,20 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     document_url = document.getRelativeUrl()
     def getTestDocument():
       return self.portal.restrictedTraverse(document_url)
-    self.failUnless(getTestDocument().getRevision() == '0')
+    self.failUnless(getTestDocument().getRevision(), '1')
     getTestDocument().edit(file=file)
     transaction.commit()
     self.tic()
-    self.failUnless(getTestDocument().getRevision() == '1')
+    self.failUnless(getTestDocument().getRevision(), '2')
     getTestDocument().edit(title='Hey Joe')
     transaction.commit()
     self.tic()
-    self.failUnless(getTestDocument().getRevision() == '2')
+    self.failUnless(getTestDocument().getRevision(), '3')
     another_document = self.portal.portal_contributions.newContent(file=file)
     transaction.commit()
     self.tic()
-    self.failUnless(getTestDocument().getRevision() == '3')
-    self.failUnless(getTestDocument().getRevisionList() == ['0', '1', '2'] )
+    self.failUnless(getTestDocument().getRevision(), '4')
+    self.failUnless(getTestDocument().getRevisionList(), ['1', '2', '3', '4'])
 
   def test_03_Versioning(self,quiet=QUIET,run=RUN_ALL_TEST):
     """

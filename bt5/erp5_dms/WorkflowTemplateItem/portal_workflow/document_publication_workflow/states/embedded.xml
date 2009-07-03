@@ -31,7 +31,6 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>edit</string>
                 <string>extract</string>
               </tuple>
             </value>

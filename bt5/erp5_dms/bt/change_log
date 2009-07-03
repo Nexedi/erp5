@@ -1,3 +1,6 @@
+2009-07-03 jm
+* Remove 'edit' transition on processing_status_workflow and reuse edit_workflow.
+
 2009-05-15 yusei
 * Add my_editor_field to Base_viewDMSFieldLibrary.
 

@@ -25,7 +25,6 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>edit</string>
                 <string>update_file_metadata</string>
                 <string>upload_file</string>
               </tuple>
