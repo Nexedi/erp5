@@ -50,6 +50,8 @@ class IBusinessCompletable(Interface):
   def isFrozen(explanation):
     """True if all related simulation movements for this explanation
     are frozen.
+
+    Frozen means that simulation movement cannot be modified.
     """
 
   def getExpectedCompletionDate(task):
