@@ -2411,12 +2411,16 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
           },
         'Invoicing Rule': {
           'movement_type_list': invoice.getPortalInvoiceMovementTypeList(),
+          'next_rule_list': ['Invoice Transaction Rule', 'Trade Model Rule'],
+          },
+        'Trade Model Rule': {
           'next_rule_list': ['Invoice Transaction Rule'],
           },
         'Invoice Rule': {
           'movement_type_list': invoice.getPortalInvoiceMovementTypeList() \
               + invoice.getPortalAccountingMovementTypeList(),
-          'next_rule_list': ['Invoice Transaction Rule', 'Payment Rule'],
+          'next_rule_list': ['Invoice Transaction Rule', 'Payment Rule',
+            'Trade Model Rule'],
           },
         'Invoice Transaction Rule': {
           'parent_movement_type_list': invoice.getPortalInvoiceMovementTypeList(),
