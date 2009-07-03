@@ -98,6 +98,9 @@ class TradeModelRule(TransformationRule):
     else:
       movement_dict['start_date'] = movement.getStartDate()
       movement_dict['stop_date'] = movement.getStopDate()
+
+    movement_dict['causality_value'] = business_path
+
     return movement_dict
 
   def _getStaticPropertyDict(self, context_movement):
