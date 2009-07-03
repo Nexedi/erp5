@@ -1108,8 +1108,6 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
       if not html.find('<base') >= 0:
         base = '<base href="%s">' % self.getContentBaseURL()
         html = html.replace('<head>', '<head>%s' % base)
-      # We do not implement cache yet since it increases ZODB
-      # for probably no reason. More research needed
       self.setConversion(html, mime='text/html', format='base-html')
     return html
 
