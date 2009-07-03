@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004 Nexedi SARL and Contributors. All Rights Reserved.
@@ -118,6 +119,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
     default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
+    default_pref.setPreferredConversionCacheFactory('document_cache_factory')
     if default_pref.getPreferenceState() != 'global':
       default_pref.enable()
 
@@ -192,12 +194,12 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     if not run: return
     printAndLog('\nTest Has Everything ')
-    self.failUnless(self.getCategoryTool()!=None)
-    self.failUnless(self.getSimulationTool()!=None)
-    self.failUnless(self.getTypeTool()!=None)
-    self.failUnless(self.getSQLConnection()!=None)
-    self.failUnless(self.getCatalogTool()!=None)
-    self.failUnless(self.getWorkflowTool()!=None)
+    self.assertNotEqual(self.getCategoryTool(), None)
+    self.assertNotEqual(self.getSimulationTool(), None)
+    self.assertNotEqual(self.getTypeTool(), None)
+    self.assertNotEqual(self.getSQLConnection(), None)
+    self.assertNotEqual(self.getCatalogTool(), None)
+    self.assertNotEqual(self.getWorkflowTool(), None)
 
   def test_02_RevisionSystem(self,quiet=QUIET,run=RUN_ALL_TEST):
     """
