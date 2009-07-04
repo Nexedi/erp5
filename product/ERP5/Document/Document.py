@@ -791,10 +791,11 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
       in order to be consistent with the property sheet
       definition.
     """
-    revision = len(self.getWorkflowInfo('history', 'edit_workflow'))
+    getInfoFor = getToolByName(self, 'portal_workflow').getInfoFor
+    revision = len(getInfoFor(self, 'history', (), 'edit_workflow'))
     # XXX Also look at processing_status_workflow for compatibility.
-    for history_item in self.getWorkflowInfo('history',
-                                             'processing_status_workflow'):
+    for history_item in getInfoFor(self, 'history', (),
+                                   'processing_status_workflow'):
       if history_item.get('action') == 'edit':
         revision += 1
     return str(revision)
