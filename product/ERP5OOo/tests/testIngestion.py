@@ -556,8 +556,8 @@ class TestIngestion(ERP5TypeTestCase):
     """
     filename = 'TEST-en-002.doc'
     document = self.getDocument('one')
-    # Revision is 0 before upload (revisions are strings)
-    self.assertEquals(document.getRevision(), '0')
+    # First revision is 1 (like web pages)
+    self.assertEquals(document.getRevision(), '1')
     f = makeFileUpload(filename)
     document.edit(file=f)
     # set source
@@ -566,7 +566,7 @@ class TestIngestion(ERP5TypeTestCase):
     # source_reference set to file name ?
     self.assertEquals(document.getSourceReference(), filename) 
     # Revision is 1 after upload (revisions are strings)
-    self.assertEquals(document.getRevision(), '1')
+    self.assertEquals(document.getRevision(), '2')
     document.reindexObject()
     transaction.commit()
 
