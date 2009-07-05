@@ -129,7 +129,7 @@ class CrmTestCase(ERP5ReportTestCase):
       self._doWorkflowAction(ev,'assign_action',
                          follow_up_ticket_type = ticket.getPortalType(),
                          follow_up_ticket_title = ticket.getTitle())
-      ev.acknowledge()
+      self._doWorkflowAction(ev, 'acknowledge_action')
     elif simulation_state == 'cancelled':
       ev.receive()
       ev.cancel()
