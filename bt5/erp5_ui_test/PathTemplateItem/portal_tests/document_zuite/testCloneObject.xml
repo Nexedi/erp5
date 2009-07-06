@@ -161,7 +161,7 @@ another object of the same type. -->\n
 <tr>\n
   <td>verifyText</td>\n
   <td>x0_listbox_data_line_1</td>\n
-  <td>regexp:Object copied from /erp5/foo_module/2$</td>\n
+  <td tal:content="string:regexp:Object copied from /.*/foo_module/2$$"/>\n
 </tr>\n
 </body>\n
 </html>\n
