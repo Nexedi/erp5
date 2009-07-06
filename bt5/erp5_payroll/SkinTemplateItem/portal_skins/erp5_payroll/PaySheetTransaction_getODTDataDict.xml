@@ -363,8 +363,7 @@ data_dict = {\n
   \'incoterm\': context.getIncoterm() and context.getIncotermValue().getCodification() or \'\',\n
 \n
   \'total_price_novat\': total_price,\n
-  \'description\': getFieldAsLineList(context.getDescription() or\n
-                                    model.getModelIneritanceEffectiveProperty(context, \'description\') or \'\'),\n
+  \'description\': getFieldAsLineList(context.getDescription() or \'\'),\n
   \'specialise_title\': context.getProperty(\'specialise_title\',\'\'),\n
 \n
   \'line_list\': line_list,\n
