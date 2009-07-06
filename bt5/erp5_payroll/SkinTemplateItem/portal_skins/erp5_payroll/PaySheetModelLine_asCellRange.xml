@@ -86,6 +86,7 @@ cell_range = []\n
 if matrixbox :\n
   if resource is not None:\n
     base_category_list = resource.getVariationBaseCategoryList()\n
+    base_category_list.sort()\n
     for base_category in base_category_list:\n
       category_cell_range = []\n
       category_item_list = context.getVariationCategoryItemList(base_category_list = (base_category,),\n
