@@ -83,22 +83,26 @@ class BudgetCell(Predicate, MetaNode):
               self.getPortalType()
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventory')
-    def getCurrentInventory(self, **kw):
-      """
-      Returns current inventory
+    def getCurrentInventory(self, at_date=None, **kw):
+      """ Returns current inventory.
+
+      at_date parameter can be used to take into account budget transactions
+      before that date.
       """
       kw['node_uid'] = self.getUid()
       resource = self.getResourceValue()
       if resource is not None:
         kw['resource_uid'] = resource.getUid()
+      if at_date:
+        kw['at_date'] = at_date
       return self.portal_simulation.getCurrentInventory(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentBalance')
-    def getCurrentBalance(self, **kw):
+    def getCurrentBalance(self, at_date=None):
       """
       Returns current balance
       """
-      return self.getQuantity(0.0) + self.getCurrentInventory(**kw)
+      return self.getQuantity(0.0) + self.getCurrentInventory(at_date=at_date)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getConsumedBudget')
     def getConsumedBudget(self, src__=0):
@@ -113,11 +117,11 @@ class BudgetCell(Predicate, MetaNode):
               self.getPortalType()
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getAvailableBudget')
-    def getAvailableBudget(self):
+    def getAvailableBudget(self, at_date=None):
       """
       Return available budget.
       """
-      return self.getCurrentBalance() - self.getEngagedBudget()
+      return self.getCurrentBalance(at_date=at_date) - self.getEngagedBudget()
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getEngagedBudget')
     def getEngagedBudget(self, src__=0):
