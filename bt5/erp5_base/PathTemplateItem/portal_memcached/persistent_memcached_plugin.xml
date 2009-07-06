@@ -52,7 +52,7 @@
         </item>
         <item>
             <key> <string>url_string</string> </key>
-            <value> <string>memcached://127.0.0.1:12121</string> </value>
+            <value> <string>127.0.0.1:12121</string> </value>
         </item>
       </dictionary>
     </pickle>
