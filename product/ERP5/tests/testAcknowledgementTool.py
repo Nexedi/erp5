@@ -77,7 +77,7 @@ class TestAcknowledgementTool(ERP5TypeTestCase):
       acknowledgement_list = portal.portal_acknowledgements\
                          .getUnreadAcknowledgementList(
                                  **acknowledgement_tool_kw)
-      event_acknowledgement_list = [x for x in acknowledgement_list 
+      event_acknowledgement_list = [x for x in acknowledgement_list
          if x.getCausality() == event.getRelativeUrl()]
       return event_acknowledgement_list
 
@@ -93,7 +93,7 @@ class TestAcknowledgementTool(ERP5TypeTestCase):
     acknowledgement = portal.portal_acknowledgements.acknowledge(
          path=event.getRelativeUrl(),
          user_name='seb')
-    # Make sure that we have a new acknowledge document wich is a proxy of 
+    # Make sure that we have a new acknowledge document which is a proxy of
     # the event
     self.assertEqual(acknowledgement.getPortalType(), 'Acknowledgement')
     self.assertEqual(acknowledgement.getTextContent(), "A Nice Message")
