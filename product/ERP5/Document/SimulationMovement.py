@@ -188,6 +188,14 @@ class SimulationMovement(Movement):
     # nothing better to return.
     return self.getSimulationState()
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isCompleted')
+  def isCompleted(self):
+    """Zope publisher docstring. Documentation in ISimulationMovement"""
+    # only available in BPM, so fail totally in case of working without BPM
+    return self.getSimulationState() in self.getCausalityValue(
+        portal_type='Business Path').getCompletedStateList()
+
   security.declareProtected( Permissions.AccessContentsInformation,
                             'isAccountable')
   def isAccountable(self):
