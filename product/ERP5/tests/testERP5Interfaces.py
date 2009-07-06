@@ -48,6 +48,14 @@ implements_tuple_list = [
   ('TransformationRule', 'IPredicate'),
   ('TransformationRule', 'IRule'),
   ('TransformedResource', 'IVariated'),
+  #IDocument
+  ('Document', 'IDocument'),
+  ('Image', 'IDocument'),
+  ('File', 'IDocument'),
+  ('OOoDocument', 'IDocument'),
+  ('TextDocument', 'IDocument'),
+  ('EmailDocument', 'IDocument'),
+  ('Event', 'IDocument'),
 ]
 
 class TestERP5Interfaces(ERP5TypeTestCase):
