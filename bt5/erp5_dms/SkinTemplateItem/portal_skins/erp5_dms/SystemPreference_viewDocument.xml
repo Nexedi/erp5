@@ -75,6 +75,7 @@
                         <string>my_preferred_document_email_ingestion_address</string>
                         <string>my_preferred_document_ingestion_email_notification</string>
                         <string>my_preferred_document_reference_method_id</string>
+                        <string>my_preferred_conversion_cache_factory</string>
                       </list>
                     </value>
                 </item>
