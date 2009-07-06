@@ -118,7 +118,9 @@ class TestAcknowledgementTool(ERP5TypeTestCase):
     acknowledgement = acknowledgement_list[0].getObject()
     # and acknowledgement is delivered
     self.assertEqual(acknowledgement.getSimulationState(), 'delivered')
-
+    self.assertEqual(acknowledgement.getCausality(), event.getRelativeUrl())
+    self.assertEqual(acknowledgement.getDocumentProxy(),
+        event.getRelativeUrl())
 
 def test_suite():
   suite = unittest.TestSuite()
