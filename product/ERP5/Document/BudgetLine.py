@@ -55,7 +55,6 @@ class BudgetLine(Predicate, XMLMatrix, Variated):
                       , PropertySheet.Arrow
                       , PropertySheet.Budget
                       , PropertySheet.Amount
-                      , PropertySheet.Document
                       , PropertySheet.VariationRange
                       , PropertySheet.Assignment
     )
