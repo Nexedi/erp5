@@ -1,7 +1,8 @@
 ##############################################################################
 # -*- coding: utf8 -*-
-# Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Sebastien Robin <seb@nexedi.com>
+#                    Łukasz Nowak <luke@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -109,8 +110,14 @@ class TestAcknowledgementTool(ERP5TypeTestCase):
     event_acknowledgement_list = getEventAcknowlegementList()
     self.assertEqual(0, len(event_acknowledgement_list))
 
-    # We should have one acknowledgement in the event module
+    # We should have one acknowledgement in the event module for seb
+    acknowledgement_list = module.searchFolder(portal_type='Acknowledgement',
+        destination = person.getRelativeUrl())
+    self.assertEqual(1, len(acknowledgement_list))
 
+    acknowledgement = acknowledgement_list[0].getObject()
+    # and acknowledgement is delivered
+    self.assertEqual(acknowledgement.getSimulationState(), 'delivered')
 
 
 def test_suite():
