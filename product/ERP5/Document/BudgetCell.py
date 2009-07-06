@@ -94,11 +94,11 @@ class BudgetCell(Predicate, MetaNode):
       return self.portal_simulation.getCurrentInventory(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentBalance')
-    def getCurrentBalance(self):
+    def getCurrentBalance(self, **kw):
       """
       Returns current balance
       """
-      return self.getQuantity(0.0) + self.getCurrentInventory()
+      return self.getQuantity(0.0) + self.getCurrentInventory(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getConsumedBudget')
     def getConsumedBudget(self, src__=0):
