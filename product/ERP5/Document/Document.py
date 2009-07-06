@@ -63,12 +63,6 @@ def makeSortedTuple(kw):
   items.sort()
   return tuple(items)
 
-def generateCacheId(**kw):
-  """Generate proper cache id based on **kw.
-  Function inspired from ERP5Type.Cache
-  """
-  return str(makeSortedTuple(kw)).translate(string.maketrans('', ''), """[]()<>'", """)
-
 class SnapshotMixin:
   """
     This class provides a generic API to store in the ZODB
@@ -163,7 +157,7 @@ class ConversionCacheMixin:
     """
     """
     self.updateConversionCache()
-    cache_id = generateCacheId(**kw)
+    cache_id = self.generateCacheId(**kw)
     plugin_list = self._getCacheFactory().getCachePluginList()
     #If there is no plugin list return False OR one them is doesn't contain
     #cache_id for givent scope, return False
@@ -180,7 +174,7 @@ class ConversionCacheMixin:
     """
     """
     self.updateConversionCache()
-    cache_id = generateCacheId(**kw)
+    cache_id = self.generateCacheId(**kw)
     cache_factory = self._getCacheFactory()
     cache_duration = cache_factory.cache_duration
     if data is not None:
@@ -197,7 +191,7 @@ class ConversionCacheMixin:
     """
     """
     self.updateConversionCache()
-    cache_id = generateCacheId(**kw)
+    cache_id = self.generateCacheId(**kw)
     for cache_plugin in self._getCacheFactory().getCachePluginList():
       cache_entry = cache_plugin.get(self.getPath(), DEFAULT_CACHE_SCOPE)
       data = cache_entry.getValue().get(cache_id)
@@ -212,6 +206,12 @@ class ConversionCacheMixin:
     if self.hasConversion(**kw):
       return len(self.getConversion(**kw))
     return 0
+
+  def generateCacheId(self, **kw):
+    """Generate proper cache id based on **kw.
+    Function inspired from ERP5Type.Cache
+    """
+    return str(makeSortedTuple(kw)).translate(string.maketrans('', ''), """[]()<>'", """)
 
 class PermanentURLMixIn(ExtensibleTraversableMixIn):
   """
@@ -1199,7 +1199,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, ConversionCacheMixin, Sna
 
   # Base format support
   security.declareProtected(Permissions.ModifyPortalContent, 'convertToBaseFormat')
-  def convertToBaseFormat(self):
+  def convertToBaseFormat(self, **kw):
     """
       Converts the content of the document to a base format
       which is later used for all conversions. This method

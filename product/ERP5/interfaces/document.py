@@ -191,9 +191,9 @@ class IDocument(Interface):
     **kw can be various things - e.g. resolution
     """
 
-  def generateCacheId(format):
+  def generateCacheId(**kw):
     """Return string to identify Document in cache pool with
-    format - reference - version - language
+    all arguments used to convert the document
     """
 
   def convertToBaseFormat(**kw):
