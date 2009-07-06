@@ -282,8 +282,7 @@ if memcache is not None:
         memcached_plugin = self.restrictedTraverse(plugin_path, None)
         if memcached_plugin is None:
           raise ValueError, 'Memcached Plugin does not exists: %r' % (plugin_path,)
-        url_string = memcached_plugin.getUrlString('')[len('memcached://'):]
-        dictionary = MemcachedDict((url_string,),
+        dictionary = MemcachedDict((memcached_plugin.getUrlString(''),),
                    server_max_key_length=memcached_plugin.getServerMaxKeyLength(),
                    server_max_value_length=memcached_plugin.getServerMaxValueLength())
         memcached_dict_pool.memcached_dict = dictionary
