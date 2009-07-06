@@ -1,5 +1,5 @@
 ##############################################################################
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Kevin Deldycke <kevin@nexedi.com>

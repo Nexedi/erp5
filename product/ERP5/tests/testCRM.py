@@ -1,5 +1,5 @@
 ##############################################################################
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 # Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional

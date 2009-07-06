@@ -1,5 +1,5 @@
 ##############################################################################
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
 #                Aurélien Calonne <aurel@nexedi.com>

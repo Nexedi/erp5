@@ -1,5 +1,5 @@
 ##############################################################################
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #          Bartek Górny <bartek@erp5.pl>
