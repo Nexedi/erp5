@@ -1,4 +1,5 @@
 edit_workflow
+memcached_plugin_interaction_workflow
 preference_workflow
 pricing_interaction_workflow
 rule_interaction_workflow
