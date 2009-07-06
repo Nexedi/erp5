@@ -207,8 +207,9 @@ class WorkflowMethod(Method):
         if candidate_workflow.isWorkflowMethodSupported(instance, transition_id):
           valid_list.append(transition_id)
         elif candidate_workflow.__class__.__name__ == 'DCWorkflowDefinition':
-          # XXX Do not raise for the moment as ERP5 is not ready.
-          #raise UnsupportedWorkflowMethod(instance, wf_id, transition_id)
+          raise UnsupportedWorkflowMethod(instance, wf_id, transition_id)
+          # XXX Keep the log for projects that needs to comment out
+          #     the previous line.
           LOG("WorkflowMethod.__call__", ERROR,
               "Transition %s/%s on %r is ignored. Current state is %r."
               % (wf_id, transition_id, instance,

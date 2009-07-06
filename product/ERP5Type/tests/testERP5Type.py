@@ -38,6 +38,7 @@ from Products.ERP5Type.tests.utils import DummyLocalizer
 from zLOG import LOG, INFO
 from Products.CMFCore.Expression import Expression
 from Products.CMFCore.tests.base.testcase import LogInterceptor
+from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.ERP5Type.Base import _aq_reset
 from Products.ERP5Type.tests.utils import installRealClassTool
 from Products.ERP5Type.Utils import removeLocalPropertySheet
@@ -2612,6 +2613,15 @@ class TestPropertySheet:
       for permission in 'View', 'Access contents information':
         address.manage_permission(permission, roles=(), acquire=0)
         check(0)
+
+    def test_unsupportedTransitionRaises(self):
+      """
+      Check that an object must be in the expected state in order to execute
+      a transition.
+      """
+      person = self.getPersonModule().newContent(portal_type='Person')
+      person.validate()
+      self.assertRaises(WorkflowException, person.validate)
 
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests
