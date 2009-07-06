@@ -497,25 +497,33 @@ class Movement(XMLObject, Amount):
                             'isFrozen')
   def isFrozen(self):
     """
-    Returns the frozen status of this movemnt.
+    Returns the frozen status of this movement.
     a movement in started, stopped, delivered is automatically frozen.
     If frozen is locally set to '0', we must check for a parent set to '1', in
     which case, we want the children to be frozen as well.
+
+    BPM evaluation allows to set frozen state list per Business Path.
     """
-    # XXX Hardcoded
-    # Maybe, we should use getPortalCurrentInventoryStateList
-    # and another portal method for cancelled (and deleted)
-#     LOG("Movement, isFrozen", DEBUG, "Hardcoded state list")
-    if self.getSimulationState() in ('stopped', 'delivered', 'cancelled'):
-      return 1
+    business_path = self.getCausalityValue(portal_type='Business Path')
+    if business_path is None:
+      # XXX Hardcoded
+      # Maybe, we should use getPortalCurrentInventoryStateList
+      # and another portal method for cancelled (and deleted)
+      #     LOG("Movement, isFrozen", DEBUG, "Hardcoded state list")
+      if self.getSimulationState() in ('stopped', 'delivered', 'cancelled'):
+        return 1
+    else:
+      # conditional BPM enabled frozen state check
+      LOG("Movement.isFrozen", WARNING, "%s is using BPM experimental \
+          evaluation" % self.getPath())
+      # BPM dynamic configuration
+      if self.getSimulationState() in business_path.getFrozenStateList():
+        return True
+
+    # manually frozen
     if self._baseIsFrozen() == 0:
       self._baseSetFrozen(None)
-    return self._baseGetFrozen() or 0
-    # Future implementation - for information
-    path = self.getCausalityValue()
-    if path is not None:
-      return self.getSimulationState() in path.getCompletedSimulationStateList()
-    return False
+    return self._baseGetFrozen() or False
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getExplanation')
