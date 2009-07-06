@@ -135,7 +135,7 @@ class ConversionCacheMixin:
     """
     cache_tool = getToolByName(self, 'portal_caches')
     preference_tool = getToolByName(self, 'portal_preferences')
-    cache_factory_name = preference_tool.getPreferredConversionCacheFactory()
+    cache_factory_name = preference_tool.getPreferredConversionCacheFactory('document_cache_factory')
     return cache_tool.getRamCacheRoot().get(cache_factory_name)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'clearConversionCache')
