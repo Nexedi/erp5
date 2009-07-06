@@ -88,7 +88,7 @@ class TestAcknowledgementTool(ERP5TypeTestCase):
     event_acknowledgement = event_acknowledgement_list[0]
     self.assertEqual(event_acknowledgement.getTextContent(), "A Nice Message")
 
-    # We know acknowledge the event
+    # We now acknowledge the event
     acknowledgement = portal.portal_acknowledgements.acknowledge(
          path=event.getRelativeUrl(),
          user_name='seb')
@@ -98,13 +98,13 @@ class TestAcknowledgementTool(ERP5TypeTestCase):
     self.assertEqual(acknowledgement.getTextContent(), "A Nice Message")
     transaction.commit()
 
-    # We should not have any acknowledgements, we just commited previous
+    # We should not have any acknowledgements, we just committed previous
     # transaction, this means that we look if the mechanism that looks at
     # activity tags is working or not
     event_acknowledgement_list = getEventAcknowlegementList()
     self.assertEqual(0, len(event_acknowledgement_list))
     # We should not have any acknowledgements, tic is finished
-    # the code should look directly for acnowledgement documents
+    # the code should look directly for acknowledgement documents
     self.tic()
     event_acknowledgement_list = getEventAcknowlegementList()
     self.assertEqual(0, len(event_acknowledgement_list))
