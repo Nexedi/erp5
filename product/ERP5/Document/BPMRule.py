@@ -102,7 +102,7 @@ class BPMRule(Rule):
 
   def _getCompensatedMovementList(self, applied_rule,
                                   matching_property_list=(
-                                  'resource',
+                                  'resource_list',
                                   'variation_category_list',
                                   'variation_property_dict',), **kw):
     """
