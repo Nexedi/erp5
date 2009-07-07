@@ -119,7 +119,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
     default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
-    default_pref.setPreferredConversionCacheFactory('document_cache_factory')
+    default_pref.setPreferredConversionCacheFactory('dms_cache_factory')
     if default_pref.getPreferenceState() != 'global':
       default_pref.enable()
 
@@ -762,7 +762,6 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
                  document._convertToHTML().replace('&nbsp;', ' '))
     self.assert_('I use reference to look up TEST' in
                  document.SearchableText())
-
 
 class TestDocumentWithSecurity(ERP5TypeTestCase):
 
