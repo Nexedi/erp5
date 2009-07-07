@@ -1,0 +1,18 @@
+BPM Delivery Rule | Category Divergence Tester
+BPM Delivery Rule | Property Divergence Tester
+BPM Delivery Rule | Quantity Divergence Tester
+BPM Invoice Transaction Rule | Accounting Rule Cell
+BPM Invoice Transaction Rule | Category Divergence Tester
+BPM Invoice Transaction Rule | Predicate
+BPM Invoice Transaction Rule | Property Divergence Tester
+BPM Invoice Transaction Rule | Quantity Divergence Tester
+BPM Invoicing Rule | Category Divergence Tester
+BPM Invoicing Rule | Property Divergence Tester
+BPM Invoicing Rule | Quantity Divergence Tester
+BPM Order Rule | Category Divergence Tester
+BPM Order Rule | Property Divergence Tester
+BPM Order Rule | Quantity Divergence Tester
+Rule Tool | BPM Delivery Rule
+Rule Tool | BPM Invoice Transaction Rule
+Rule Tool | BPM Invoicing Rule
+Rule Tool | BPM Order Rule

@@ -79,13 +79,23 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>trade_phase/default/delivery</string>
                 <string>source_stage/business_process_module/erp5_default_business_process/1</string>
                 <string>destination_stage/business_process_module/erp5_default_business_process/2</string>
                 <string>predecessor/business_process_module/erp5_default_business_process/1</string>
                 <string>successor/business_process_module/erp5_default_business_process/2</string>
                 <string>delivery_builder/portal_deliveries/purchase_packing_list_builder</string>
                 <string>delivery_builder/portal_deliveries/sale_packing_list_builder</string>
+                <string>trade_phase/default/delivery</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>completed_state</string> </key>
+            <value>
+              <tuple>
+                <string>delivered</string>
+                <string>started</string>
+                <string>stopped</string>
               </tuple>
             </value>
         </item>
@@ -104,12 +114,31 @@
             <value> <string>BusinessPath_getDefaultDestinationList</string> </value>
         </item>
         <item>
+            <key> <string>efficiency</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>frozen_state</string> </key>
+            <value>
+              <tuple>
+                <string>delivered</string>
+                <string>stopped</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>6</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
             <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>lead_time</string> </key>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

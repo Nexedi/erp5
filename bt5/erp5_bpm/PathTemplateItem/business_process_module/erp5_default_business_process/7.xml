@@ -79,13 +79,23 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>trade_phase/default/invoicing</string>
                 <string>source_stage/business_process_module/erp5_default_business_process/2</string>
                 <string>destination_stage/business_process_module/erp5_default_business_process/3</string>
                 <string>delivery_builder/portal_deliveries/purchase_invoice_builder</string>
                 <string>delivery_builder/portal_deliveries/sale_invoice_builder</string>
                 <string>predecessor/business_process_module/erp5_default_business_process/2</string>
                 <string>successor/business_process_module/erp5_default_business_process/10</string>
+                <string>trade_phase/default/invoicing</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>completed_state</string> </key>
+            <value>
+              <tuple>
+                <string>delivered</string>
+                <string>started</string>
+                <string>stopped</string>
               </tuple>
             </value>
         </item>
@@ -102,6 +112,15 @@
         <item>
             <key> <string>destination_method_id</string> </key>
             <value> <string>BusinessPath_getDefaultDestinationList</string> </value>
+        </item>
+        <item>
+            <key> <string>frozen_state</string> </key>
+            <value>
+              <tuple>
+                <string>delivered</string>
+                <string>stopped</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -1,0 +1,18 @@
+<workflow_chain>
+ <chain>
+  <type>BPM Delivery Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>BPM Invoice Transaction Rule</type>
+  <workflow>rule_interaction_workflow, rule_validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>BPM Invoicing Rule</type>
+  <workflow>rule_validation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>BPM Order Rule</type>
+  <workflow>rule_validation_workflow, edit_workflow</workflow>
+ </chain>
+</workflow_chain>

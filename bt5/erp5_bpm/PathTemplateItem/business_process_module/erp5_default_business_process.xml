@@ -118,6 +118,10 @@
             <value> <string>Business Process</string> </value>
         </item>
         <item>
+            <key> <string>referential_date</string> </key>
+            <value> <string>start_date</string> </value>
+        </item>
+        <item>
             <key> <string>version</string> </key>
             <value> <string>1</string> </value>
         </item>
