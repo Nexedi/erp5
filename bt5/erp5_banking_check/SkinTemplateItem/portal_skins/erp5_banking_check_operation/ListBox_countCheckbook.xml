@@ -71,59 +71,26 @@
 request = context.REQUEST\n
 item_portal_type_list = ["Checkbook","Check"]\n
 node = context.getBaobabSource()\n
-destination_payment = request.get(\'destination_payment\', None)\n
 \n
-# retrieve listbox limit\n
-nb_lines = int(kw.get(\'list_lines\'))\n
-limit_start = int(kw.get(\'list_start\'))\n
-limit = limit_start, nb_lines\n
-\n
-simulation_state = None\n
-model_filter_dict = {}\n
 fast_input_type = getattr(request, \'your_fast_input_type\', None)\n
 if fast_input_type is None:\n
   fast_input_type = getattr(request, \'field_your_fast_input_type\')\n
 \n
-# retrieve reference field to filter list\n
-reference = getattr(request, \'your_reference\', None)\n
-if reference is None:\n
-  reference = getattr(request, \'field_your_reference\', None)\n
-\n
 disable_node = 0\n
 at_date = context.getStartDate()\n
-if fast_input_type == \'traveler_check_purchase\':\n
-  model_filter_dict[\'fixed_price\']=1\n
-  item_portal_type_list = (\'Check\',)\n
-  destination_payment = context.getDestinationPayment()\n
-  disable_node = 1\n
-if fast_input_type == \'checkbook_delivery\':\n
-  destination_payment = context.getDestinationPayment()\n
-elif fast_input_type == \'traveler_check_sale\':\n
-  model_filter_dict[\'fixed_price\']=1\n
-  item_portal_type_list = (\'Check\',)\n
-elif fast_input_type == \'checkbook_movement\':\n
-  # Nothing special here\n
-  pass\n
-elif fast_input_type == \'checkbook_vault_transfer\':\n
-  # Nothing special here\n
-  pass\n
-elif fast_input_type == \'checkbook_usual_cash_transfer\':\n
-  model_filter_dict[\'fixed_price\']=1\n
-  item_portal_type_list = (\'Check\',)\n
 \n
-listbox = context.Delivery_getCheckbookList(\n
+if fast_input_type == \'traveler_check_purchase\':\n
+  item_portal_type_list = (\'Check\',)\n
+  disable_node = 1\n
+\n
+nb = context.Delivery_getCheckbookList(\n
                     item_portal_type_list=item_portal_type_list,\n
-                    destination_payment=destination_payment,\n
-                    model_filter_dict=model_filter_dict,\n
-                    simulation_state=simulation_state,\n
                     disable_node=disable_node,\n
                     at_date=at_date,\n
                     node=node,\n
-                    reference=reference,\n
-                    limit=limit)\n
-context.Base_updateDialogForm(listbox=listbox)\n
+                    count=True)\n
 \n
-return context.ListBox_initializeFastInput()\n
+return [[nb,],]\n
 </string> </value>
         </item>
         <item>
@@ -179,21 +146,13 @@ return context.ListBox_initializeFastInput()\n
                             <string>request</string>
                             <string>item_portal_type_list</string>
                             <string>node</string>
-                            <string>None</string>
-                            <string>destination_payment</string>
-                            <string>int</string>
-                            <string>nb_lines</string>
-                            <string>limit_start</string>
-                            <string>limit</string>
-                            <string>simulation_state</string>
-                            <string>model_filter_dict</string>
                             <string>getattr</string>
+                            <string>None</string>
                             <string>fast_input_type</string>
-                            <string>reference</string>
                             <string>disable_node</string>
                             <string>at_date</string>
-                            <string>_write_</string>
-                            <string>listbox</string>
+                            <string>True</string>
+                            <string>nb</string>
                           </tuple>
                         </value>
                     </item>
@@ -210,7 +169,7 @@ return context.ListBox_initializeFastInput()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ListBox_listCheckbook</string> </value>
+            <value> <string>ListBox_countCheckbook</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

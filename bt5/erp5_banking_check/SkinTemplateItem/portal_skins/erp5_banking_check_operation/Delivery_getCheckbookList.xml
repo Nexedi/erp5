@@ -65,7 +65,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Look at all items availables for the source and then\n
+            <value> <string encoding="cdata"><![CDATA[
+
+# Look at all items availables for the source and then\n
 # display them on a listbox so that the user will be able\n
 # to select them\n
 from DateTime import DateTime\n
@@ -103,6 +105,9 @@ if listbox is None:\n
                                                    node=node,\n
                                                    where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'")\n
 \n
+    if count is True:\n
+      return len(current_tracking_list)\n
+\n
     for item in current_tracking_list:\n
       item = item.getObject()\n
       exclude=0\n
@@ -136,18 +141,21 @@ if listbox is None:\n
           destination_payment_value = item.getDestinationPaymentValue()\n
           if destination_payment_value is not None:\n
             internal_bank_account_number = destination_payment_value.getInternalBankAccountNumber()\n
-            if reference is not None and reference != internal_bank_account_number:\n
+            if reference not in (None, \'\') and reference != internal_bank_account_number:\n
               continue\n
             item_dict[\'internal_bank_account_number\'] = internal_bank_account_number\n
             item_dict[\'account_owner\'] = item.getDestinationPaymentTitle()\n
           item_dict[\'recept_date\'] = item.getStartDate()\n
           item_dict[\'selection\'] = 0\n
           item_dict[\'uid\'] = \'new_%s\' %(item.getUid(),)\n
-\n
           listbox.append(item_dict)\n
+          if len(listbox) > limit[0]+limit[1]-1:\n
+            break\n
 \n
 return listbox\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -169,7 +177,7 @@ return listbox\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox=None, item_portal_type_list=None,destination_payment=None,model_filter_dict=None,batch_mode=0,simulation_state=None,disable_node=0,at_date=None,reference=None,**kw</string> </value>
+            <value> <string>listbox=None, item_portal_type_list=None,destination_payment=None,model_filter_dict=None,batch_mode=0,simulation_state=None,disable_node=0,at_date=None,reference=None,limit=None,count=False,**kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -197,7 +205,7 @@ return listbox\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>9</int> </value>
+                        <value> <int>11</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -212,6 +220,8 @@ return listbox\n
                             <string>disable_node</string>
                             <string>at_date</string>
                             <string>reference</string>
+                            <string>limit</string>
+                            <string>count</string>
                             <string>kw</string>
                             <string>DateTime</string>
                             <string>Dummy</string>
@@ -224,6 +234,8 @@ return listbox\n
                             <string>item_list</string>
                             <string>getCurrentTrackingList</string>
                             <string>current_tracking_list</string>
+                            <string>True</string>
+                            <string>len</string>
                             <string>_getiter_</string>
                             <string>item</string>
                             <string>exclude</string>
@@ -235,6 +247,7 @@ return listbox\n
                             <string>_write_</string>
                             <string>destination_payment_value</string>
                             <string>internal_bank_account_number</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -256,6 +269,8 @@ return listbox\n
                 <int>0</int>
                 <none/>
                 <none/>
+                <none/>
+                <int>0</int>
               </tuple>
             </value>
         </item>
