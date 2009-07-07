@@ -72,23 +72,17 @@ class RamCache(BaseCache):
     
   def get(self, cache_id, scope, default=None):
     cache = self.getCacheStorage()
-    try:
-      cache_entry = cache[(scope, cache_id)]
-      # Note: tracking down cache hit could be achieved by uncommenting
-      # methods below. In production environment this is likely uneeded
-      #cache_entry.markCacheHit()
-      #self.markCacheHit()
-      return cache_entry
-    except KeyError:
-      pass
-    return default
-            
+    cache_entry = cache.get((scope, cache_id), default)
+    cache_entry.markCacheHit()
+    self.markCacheHit()
+    return cache_entry
+
   def set(self, cache_id, scope, value, cache_duration=None, calculation_time=0):
     cache = self.getCacheStorage()
     cache[(scope, cache_id)] = CacheEntry(value, cache_duration, calculation_time)
-    #self.markCacheMiss()
+    self.markCacheMiss()
 
-  def expireOldCacheEntries(self, forceCheck = False):
+  def expireOldCacheEntries(self, forceCheck=False):
     now = time.time()
     if forceCheck or (now > self._next_cache_expire_check_at):
       ## time to check for expired cache items

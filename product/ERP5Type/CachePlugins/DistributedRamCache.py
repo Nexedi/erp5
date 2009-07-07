@@ -45,6 +45,8 @@ except ImportError:
 ## global ditionary containing connection objects
 connection_pool = {}
 
+_MARKER = []
+
 class DistributedRamCache(BaseCache):
   """ Memcached based cache plugin. """
 
@@ -94,18 +96,24 @@ class DistributedRamCache(BaseCache):
       return cache_id[:self._server_max_key_length]
     return cache_id
 
-  def get(self, cache_id, scope, default=None):
+  def get(self, cache_id, scope, default=_MARKER):
     cache_storage = self.getCacheStorage()
     cache_id = self.checkAndFixCacheId(cache_id, scope)
     cache_entry = cache_storage.get(cache_id)
-    if cache_entry is not None:
-      # since some memcached-like products don't support expiration, we
-      # check it by ourselves.
-      if cache_entry.isExpired():
-        cache_storage.delete(cache_id)
+    #Simulate the behaviour of a standard Dictionary
+    if not isinstance(cache_entry, CacheEntry):
+      if default is _MARKER:
+        #Error to connect memcached server
+        raise KeyError('Failed to retrieve value or to access memcached server: %s' % self._servers)
+      else:
         return default
-      self.markCacheHit()
-    return cache_entry or default
+    # since some memcached-like products does not support expiration, we
+    # check it by ourselves.
+    if cache_entry.isExpired():
+      cache_storage.delete(cache_id)
+      return default
+    self.markCacheHit()
+    return cache_entry
 
   def set(self, cache_id, scope, value, cache_duration=None, calculation_time=0):
     cache_storage = self.getCacheStorage()
@@ -131,7 +139,10 @@ class DistributedRamCache(BaseCache):
     cache_storage.delete(cache_id)
 
   def has_key(self, cache_id, scope):
-    if self.get(cache_id, scope):
+    cache_storage = self.getCacheStorage()
+    cache_id = self.checkAndFixCacheId(cache_id, scope)
+    cache_entry = cache_storage.get(cache_id)
+    if isinstance(cache_entry, CacheEntry):
       return True
     else:
       return False

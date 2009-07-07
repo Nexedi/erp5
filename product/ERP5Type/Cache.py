@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004 Nexedi SARL and Contributors. All Rights Reserved.
@@ -88,15 +89,15 @@ class CacheFactory:
     ## Expired Cache (if needed)
     self.expire()
 
-    quick_cached = self.quick_cache.get(cache_id, scope)
-    if quick_cached is not None:
-      return quick_cached.value
+    if self.quick_cache.has_key(cache_id, scope):
+      quick_cached = self.quick_cache.get(cache_id, scope)
+      return quick_cached.getValue()
     else:
       ## not in local, check if it's in shared
       for shared_cache in self.shared_caches:
         if shared_cache.has_key(cache_id, scope):
           cache_entry = shared_cache.get(cache_id, scope)
-          value = cache_entry.value
+          value = cache_entry.getValue()
           ## update local cache
           self.quick_cache.set(cache_id, scope, value,
                               cache_duration,
