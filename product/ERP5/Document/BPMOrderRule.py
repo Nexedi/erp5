@@ -83,12 +83,7 @@ class BPMOrderRule(BPMDeliveryRule):
       # check existing movements
       for simulation_movement in applied_rule.contentValues(
           portal_type=self.movement_type):
-        if (not simulation_movement.getLastExpandSimulationState() in
-            order.getPortalReservedInventoryStateList() and
-            not simulation_movement.getLastExpandSimulationState() in
-            order.getPortalCurrentInventoryStateList()) and \
-            not simulation_movement._isTreeDelivered():
-
+        if not simulation_movement.isFrozen():
           movement_order = simulation_movement.getOrderValue()
           if movement_order in order_movement_list:
             existing_movement_list.append(simulation_movement)
