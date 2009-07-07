@@ -82,11 +82,7 @@ class BPMDeliveryRule(BPMRule):
       # Check existing movements
       for movement in applied_rule.contentValues(
           portal_type=self.movement_type):
-        if movement.getLastExpandSimulationState() not in \
-          self.getPortalCurrentInventoryStateList():
-          # XXX: This condition is quick and dirty hack - knowing if
-          #      Simulation Movement is frozen shall not be ever hardcoded,
-          #      this is BPM configuration
+        if not movement.isFrozen():
           movement_delivery = movement.getDeliveryValue()
           if not movement._isTreeDelivered(ignore_first=1) and \
               movement_delivery not in delivery_movement_list:
