@@ -35,6 +35,7 @@ import random
 import traceback
 import linecache
 import sys
+import re
 # Monkey patch traceback system to print how far we get in the current
 # sequence.
 # This part is adapted from python 2.4's traceback.py
@@ -142,6 +143,8 @@ class SequenceList:
 
     returns the sequence for those steps.
     """
+    # remove comments in sequence strings
+    sequence_string = re.subn("#.*\n", "\n", sequence_string)[0]
     step_list = sequence_string.split()
     return self.addSequenceStringList(step_list)
 
