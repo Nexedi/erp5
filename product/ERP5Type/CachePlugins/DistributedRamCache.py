@@ -79,7 +79,7 @@ class DistributedRamCache(BaseCache):
                               debug=self._debug_level,
                               server_max_key_length=self._server_max_key_length,
                               server_max_value_length=self._server_max_value_length)
-      connection_pool[thread_id] =  memcache_conn
+      connection_pool[thread_id] = memcache_conn
       return memcache_conn
     else:
       ## we have memcache_conn for this thread
