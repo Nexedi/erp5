@@ -124,7 +124,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(plugin.getTitle(), plugin.getRelativeUrl()) for plugin in here.portal_memcached.contentValues(portal_type=\'Memcached Plugin\', sort_on=\'int_index\')]</string> </value>
+            <value> <string>python:[(\'\',\'\')] + [(plugin.getTitle(), plugin.getRelativeUrl()) for plugin in here.portal_memcached.contentValues(portal_type=\'Memcached Plugin\', sort_on=\'int_index\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
