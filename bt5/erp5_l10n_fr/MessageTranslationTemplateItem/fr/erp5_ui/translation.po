@@ -660,7 +660,7 @@ msgstr "Fonction de l'annotation"
 msgid "Annotation Line"
 msgstr "Annotation"
 
-msgid "Annotation Line Reference for Payroll Service Provider"
+msgid "Annotation Line Reference for Service Provider"
 msgstr "Référence de l'annotation pour l'organisme collecteur"
 
 msgid "Annotation Lines"
@@ -6582,17 +6582,8 @@ msgstr "Paiement de ${invoice_title}"
 msgid "Payments creation for ${activated_invoice_count} on ${total_selection_count} invoices in progress."
 msgstr "Création des écritures de trésorerie pour ${activated_invoice_count} sur ${total_selection_count} en cours."
 
-msgid "Payroll Service"
-msgstr "Cotisation"
-
-msgid "Payroll Service Module"
-msgstr "Module des cotisations"
-
-msgid "Payroll Service Provider"
+msgid "Service Provider"
 msgstr "Organisme collecteur"
-
-msgid "Payroll Services"
-msgstr "Cotisations"
 
 msgid "Payroll Taxes Report"
 msgstr "Rapport des taxes sur salaires"
@@ -9823,7 +9814,7 @@ msgstr "La commande qui est à l'origine de la livraison."
 msgid "The Organisation that will collect the corresponding tax."
 msgstr "L'organisme en charge de collecter les cotisations salariales."
 
-msgid "The Payroll Service Provider will be the one defined in the Annotation Line with this reference."
+msgid "The Service Provider will be the one defined in the Annotation Line with this reference."
 msgstr "La référence de l'annotation comportant l'organisme collecteur."
 
 msgid "The Person's Social Code."
