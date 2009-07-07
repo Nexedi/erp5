@@ -303,19 +303,6 @@ if memcache is not None:
       """
       return SharedDict(self._getMemcachedDict(plugin_path), prefix=key_prefix)
 
-    def manage_beforeDelete(self, *args, **kw):
-      try:
-        del(memcached_dict_pool.memcached_dict)
-      except AttributeError:
-        pass
-      BaseTool.manage_beforeDelete(self, *args, **kw)
-
-    def manage_afterAdd(self, *args, **kw):
-      try:
-        del(memcached_dict_pool.memcached_dict)
-      except AttributeError:
-        pass
-      BaseTool.manage_afterAdd(self, *args, **kw)
 else:
   # Placeholder memcache tool
   class MemcachedTool(BaseTool):
