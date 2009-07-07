@@ -231,8 +231,7 @@ data_dict = {\n
           and getPaymentConditionText(context) or \'\',\n
   \'price_currency\': getPriceCurrencyId(context.getPriceCurrencyReference() or \'\'),\n
   \'year\': str(context.getStartDate() is not None and context.getStartDate().year() or \'\'),\n
-  \'description\': getFieldAsLineList(context.getDescription() or\n
-                 model.getModelIneritanceEffectiveProperty(context, \'description\') or \'\'),\n
+  \'description\': getFieldAsLineList(context.getDescription() or \'\'),\n
   \'year_to_date_gross_salary\': year_to_date_gross_salary,\n
   \'year_to_date_slice_a\': year_to_date_slice_a,\n
   \'year_to_date_worked_hour_count\': year_to_date_worked_hour_count,\n
