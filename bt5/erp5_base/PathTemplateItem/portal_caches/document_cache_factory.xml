@@ -29,7 +29,7 @@
         </item>
         <item>
             <key> <string>cache_duration</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>3600</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -37,7 +37,7 @@
         </item>
         <item>
             <key> <string>last_id</string> </key>
-            <value> <string>7</string> </value>
+            <value> <string>8</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
