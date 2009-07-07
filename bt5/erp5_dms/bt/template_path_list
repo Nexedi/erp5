@@ -1,1 +1,3 @@
 portal_alarms/document_update_content_alarm
+portal_caches/dms_cache_factory
+portal_caches/dms_cache_factory/**
