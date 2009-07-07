@@ -558,7 +558,8 @@ class ERP5TypeTestCase(PortalTestCase):
       rule_tool = self.getRuleTool()
       for rule in rule_tool.contentValues(
           portal_type=rule_tool.getPortalRuleTypeList()):
-        rule.validate()
+        if rule.getValidationState() != 'validated':
+          rule.validate()
 
     def tic(self):
       """
