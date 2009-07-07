@@ -147,8 +147,7 @@ class ConversionCacheMixin:
     cache_duration = cache_factory.cache_duration
     for cache_plugin in cache_factory.getCachePluginList():
       cache_plugin.initCacheStorage()
-      cache_dict = cache_plugin.get(self.getPath(), DEFAULT_CACHE_SCOPE)
-      if cache_dict is None:
+      if not cache_plugin.has_key(self.getPath(), DEFAULT_CACHE_SCOPE):
         cache_dict = {}
         cache_plugin.set(self.getPath(), DEFAULT_CACHE_SCOPE, cache_dict, cache_duration=cache_duration)
 
@@ -158,16 +157,16 @@ class ConversionCacheMixin:
     """
     self.updateConversionCache()
     cache_id = self.generateCacheId(**kw)
-    plugin_list = self._getCacheFactory().getCachePluginList()
+    cache_factory = self._getCacheFactory()
+    plugin_list = cache_factory.getCachePluginList()
     #If there is no plugin list return False OR one them is doesn't contain
     #cache_id for givent scope, return False
-    if not plugin_list:
-      return False
     for cache_plugin in plugin_list:
-      cache_entry = cache_plugin.get(self.getPath(), DEFAULT_CACHE_SCOPE)
-      if not cache_entry.getValue().has_key(cache_id):
-        return False
-    return True
+      if cache_plugin.has_key(self.getPath(), DEFAULT_CACHE_SCOPE):
+        cache_entry = cache_plugin.get(self.getPath(), DEFAULT_CACHE_SCOPE)
+        if cache_entry.getValue().has_key(cache_id):
+          return True
+    return False
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setConversion')
   def setConversion(self, data, mime=None, calculation_time=None, **kw):
@@ -179,8 +178,11 @@ class ConversionCacheMixin:
     cache_duration = cache_factory.cache_duration
     if data is not None:
       for cache_plugin in cache_factory.getCachePluginList():
-        cache_entry = cache_plugin.get(self.getPath(), DEFAULT_CACHE_SCOPE)
-        cache_dict = cache_entry.getValue()
+        if cache_plugin.has_key(self.getPath(), DEFAULT_CACHE_SCOPE):
+          cache_entry = cache_plugin.get(self.getPath(), DEFAULT_CACHE_SCOPE)
+          cache_dict = cache_entry.getValue()
+        else:
+          cache_dict = {}
         cache_dict.update({cache_id: (mime, aq_base(data))})
         cache_plugin.set(self.getPath(), DEFAULT_CACHE_SCOPE,
                          cache_dict, calculation_time=calculation_time,
