@@ -357,7 +357,7 @@ data_dict = {\n
   \'start_date\': getOrderedDate(context.getStartDate()) or \'\',\n
   \'stop_date\': getOrderedDate(context.getStopDate()) or \'\',\n
   \'creation_date\': getOrderedDate(context.getCreationDate()) or \'\',\n
-  \'currency\': context.getPriceCurrencyReference() or \'\',\n
+  \'currency\': context.getPriceCurrencyValue() is not None and context.getPriceCurrencyValue().getShortTitle() or context.getPriceCurrencyReference() or \'\',\n
   \'payment_condition\': getPaymentConditionText(context),\n
   \'delivery_mode\': context.getDeliveryModeTitle() or \'\',\n
   \'incoterm\': context.getIncoterm() and context.getIncotermValue().getCodification() or \'\',\n

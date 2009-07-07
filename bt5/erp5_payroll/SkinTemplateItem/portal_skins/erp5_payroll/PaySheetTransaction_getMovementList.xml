@@ -101,7 +101,6 @@ for paysheet_line in paysheet_line_list:\n
   object_dict = {}\n
   if cartesian_product == [[]] or cartesian_product == []:\n
     params = {\n
-                  \'title\':paysheet_line.getTitle(),\n
                   \'base\':paysheet_line.getTotalPrice(),\n
                   \'base_contribution_list\':base_contribution_list,\n
                   \'base_application_list\': base_application_list,\n
