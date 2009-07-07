@@ -53,13 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>document = state_change[\'object\']\n
-cache_plugin_list = document.getSpecialiseRelatedValueList(portal_type=\'Distributed Ram Cache\')\n
-from Products.CMFCore.utils import getToolByName\n
-if cache_plugin_list:\n
-  cache_tool = getToolByName(document.getPortalObject(), \'portal_caches\')\n
-  if cache_tool is not None:\n
-    cache_tool.updateCache()\n
+            <value> <string>plugin = state_change[\'object\']\n
+cache_tool = plugin.getParentValue()\n
+cache_tool.updateCache()\n
 </string> </value>
         </item>
         <item>
@@ -98,13 +94,9 @@ if cache_plugin_list:\n
                           <tuple>
                             <string>state_change</string>
                             <string>_getitem_</string>
-                            <string>document</string>
+                            <string>plugin</string>
                             <string>_getattr_</string>
-                            <string>cache_plugin_list</string>
-                            <string>Products.CMFCore.utils</string>
-                            <string>getToolByName</string>
                             <string>cache_tool</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -121,7 +113,7 @@ if cache_plugin_list:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>afterEdit</string> </value>
+            <value> <string>DistributedRamCache_updateCache</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -37,7 +37,7 @@
             <key> <string>before_commit_script_name</string> </key>
             <value>
               <list>
-                <string>MemcachedPlugin_afterEdit</string>
+                <string>DistributedRamCache_updateCache</string>
               </list>
             </value>
         </item>
@@ -53,13 +53,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>MemcachedPlugin_edit</string> </value>
+            <value> <string>DistributedRamCache_setSpecialise</string> </value>
         </item>
         <item>
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>_set.*</string>
+                <string>_setSpecialise.*</string>
               </list>
             </value>
         </item>

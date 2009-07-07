@@ -8,12 +8,20 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Distributed Ram Cache</type>
+  <workflow>distributed_ram_cache_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Document</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
   <type>Mapped Value</type>
   <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Memcached Plugin</type>
+  <workflow>memcached_plugin_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Predicate</type>

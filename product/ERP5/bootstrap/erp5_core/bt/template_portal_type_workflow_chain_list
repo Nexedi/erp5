@@ -1,7 +1,9 @@
 Base Category | edit_workflow
 Category | edit_workflow
+Distributed Ram Cache | distributed_ram_cache_interaction_workflow
 Document | edit_workflow
 Mapped Value | edit_workflow
+Memcached Plugin | memcached_plugin_interaction_workflow
 Predicate | rule_interaction_workflow
 Preference | preference_workflow
 System Preference | preference_workflow
