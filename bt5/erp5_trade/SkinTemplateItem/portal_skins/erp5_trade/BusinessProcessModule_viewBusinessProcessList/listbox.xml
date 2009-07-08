@@ -13,9 +13,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>columns</string>
+                <string>portal_types</string>
                 <string>selection_name</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -82,7 +83,7 @@
                       <list>
                         <tuple>
                           <string>title</string>
-                          <string>Title</string>
+                          <string>Business Process</string>
                         </tuple>
                         <tuple>
                           <string>reference</string>
@@ -114,6 +115,17 @@
                         <tuple>
                           <string>Business Process Model</string>
                           <string>Business Process Model</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Business Process</string>
+                          <string>Business Process</string>
                         </tuple>
                       </list>
                     </value>
