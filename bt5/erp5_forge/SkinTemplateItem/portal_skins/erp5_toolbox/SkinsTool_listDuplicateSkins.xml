@@ -182,6 +182,7 @@ priority.\n
 # make sure context is the skins tool\n
 stool = context.portal_skins\n
 \n
+print \'<html><body>\'\n
 skins_by_name = {}\n
 \n
 for skin_key, skin_path_list in stool.getSkinPaths():\n
@@ -199,10 +200,11 @@ for skin_key, skin_path_list in stool.getSkinPaths():\n
 \n
 for skin_name, location_list in skins_by_name.items():\n
   if len(location_list) > 1:\n
-    print skin_name\n
+    print skin_name, \'<br/>\'\n
     for location in location_list:\n
-      print "  ", location\n
+      print "&nbsp;" * 3, \'<a href="%s/%s/%s/manage_main">%s</a><br/>\' % (stool.absolute_url(), location, skin_name, location)\n
 \n
+print \'</body></html>\'\n
 return printed\n
 
 
@@ -213,6 +215,10 @@ return printed\n
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
