@@ -6,11 +6,15 @@ Budget Line | engaged_view
 Budget Line | initial_view
 Budget Model Module | view
 Budget Model | view
+Budget Module | budget_group_consumption_export
+Budget Module | budget_group_consumption_report
 Budget Module | view
 Budget Transaction Module | view
 Budget Transaction | view
 Budget Transfer Line | view
 Budget Transfer | view
+Budget | budget_group_consumption_export
+Budget | budget_group_consumption_report
 Budget | generate_structure
 Budget | original_budget
 Budget | transfer_line_list_view

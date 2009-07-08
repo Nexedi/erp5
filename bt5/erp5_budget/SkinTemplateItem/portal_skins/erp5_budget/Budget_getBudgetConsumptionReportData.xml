@@ -1,0 +1,354 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from pprint import pformat\n
+portal = context.getPortalObject()\n
+request= portal.REQUEST\n
+\n
+# this report can be called on a budget ...\n
+if context.getPortalType() == \'Budget\':\n
+  defined_group = \'group\'\n
+  if \'group\' in context.getVariationBaseCategoryList():\n
+    for category in context.getVariationCategoryList():\n
+      if category.startswith(\'group/\'):\n
+        defined_group = category\n
+  budget_list = (context,)\n
+else:\n
+  # ... or on the budget module, and in this case, all budgets are used\n
+  defined_group = request[\'section_category\']\n
+  from_date = request.get(\'from_date\')\n
+  at_date = request.get(\'at_date\')\n
+  validation_state = request.get(\'validation_state\', [])\n
+  \n
+  budget_list = portal.portal_catalog.searchResults(\n
+                                portal_type=\'Budget\',\n
+                                validation_state=validation_state)\n
+  if from_date or at_date:\n
+    new_budget_list = []\n
+    for budget in budget_list:\n
+      if from_date and budget.getStartDateRangeMax() < from_date:\n
+        continue\n
+      if at_date and budget.getStartDateRangeMin() > at_date:\n
+        continue\n
+      new_budget_list.append(budget)\n
+    budget_list = new_budget_list\n
+\n
+line_list = []\n
+\n
+def isVisibleCell(cell):\n
+  # can this cell be viewed by this user ?\n
+  for category in cell.getMembershipCriterionCategoryList():\n
+    if category.startswith(\'group/\'):\n
+      if not category.startswith(defined_group):\n
+        return False\n
+  return True\n
+\n
+\n
+for budget in budget_list:\n
+  for budget_line in budget.contentValues():\n
+    total_level_1_initial_budget = 0\n
+    total_level_1_current_budget = 0\n
+    total_level_1_engaged_budget = 0\n
+    total_level_1_consumed_budget = 0\n
+    total_level_1_available_budget = 0\n
+    \n
+    level_1_line_list = [dict(is_level_1=1,\n
+                              title=budget_line.getTitle().decode(\'utf8\'))]\n
+\n
+    variation_axis_list = []\n
+    for possible_axis in budget_line.getVariationBaseCategoryList():\n
+      for cell_range in budget_line.getCellRange():\n
+        if cell_range and cell_range[0].startswith(possible_axis):\n
+          variation_axis_list.append(possible_axis)\n
+          break\n
+    \n
+    if len(variation_axis_list) == 1:\n
+      # if there\'s only one dimension, we add a virtual level 2, to keep the\n
+      # same structure\n
+      level_2_variation_category_list = [budget_line.getResource(base=1)]\n
+      level_3_variation_category_list = [x for x in\n
+          budget_line.getVariationCategoryList() if\n
+          x.startswith(variation_axis_list[0])]\n
+    else:\n
+      level_2_variation_category_list = [x for x in\n
+          budget_line.getVariationCategoryList() if\n
+          x.startswith(variation_axis_list[0])]\n
+      level_3_variation_category_list = [x for x in\n
+          budget_line.getVariationCategoryList() if\n
+          x.startswith(variation_axis_list[1])]\n
+\n
+    # we use BudgetLine_asCellRange to get cell names, and have a default value\n
+    # for "virtual level 2"\n
+    cell_name_dict = {budget_line.getResource(base=1):\n
+                          budget_line.getTitle().encode(\'utf8\')}\n
+    for cell_range_list in budget_line.BudgetLine_asCellRange(matrixbox=1):\n
+      for category, title in cell_range_list:\n
+        cell_name_dict[category] = title.decode(\'utf8\')\n
+\n
+    for level_2_category in level_2_variation_category_list:\n
+\n
+      total_level_2_initial_budget = 0\n
+      total_level_2_current_budget = 0\n
+      total_level_2_engaged_budget = 0\n
+      total_level_2_consumed_budget = 0\n
+      total_level_2_available_budget = 0\n
+      level_2_line_list = [dict(is_level_2=1,\n
+                                title=cell_name_dict[level_2_category])]\n
+      \n
+      for level_3_category in level_3_variation_category_list:\n
+        for cell in budget_line.getCellValueList():\n
+          if not isVisibleCell(cell):\n
+            continue\n
+          if level_2_category in cell.getMembershipCriterionCategoryList() and\\\n
+              level_3_category in cell.getMembershipCriterionCategoryList():\n
+\n
+            initial_budget = cell.getQuantity()\n
+            current_budget = cell.getCurrentBalance()\n
+            engaged_budget = cell.getEngagedBudget()\n
+            consumed_budget = cell.getConsumedBudget()\n
+            available_budget = cell.getAvailableBudget()\n
+            \n
+            total_level_2_initial_budget += initial_budget\n
+            total_level_2_current_budget += current_budget\n
+            total_level_2_engaged_budget += engaged_budget\n
+            total_level_2_consumed_budget += consumed_budget\n
+            total_level_2_available_budget += available_budget\n
+\n
+            consumed_ratio = 0\n
+            if current_budget:\n
+              consumed_ratio = consumed_budget / current_budget\n
+            level_2_line_list.append(dict(is_level_3=1,\n
+                                          title=cell_name_dict[level_3_category],\n
+                                          initial_budget=initial_budget,\n
+                                          current_budget=current_budget,\n
+                                          engaged_budget=engaged_budget,\n
+                                          consumed_budget=consumed_budget,\n
+                                          available_budget=available_budget,\n
+                                          consumed_ratio=consumed_ratio))\n
+\n
+      if len(level_2_line_list) > 1:\n
+        consumed_ratio = 0\n
+        if total_level_2_current_budget:\n
+          consumed_ratio = total_level_2_consumed_budget / total_level_2_current_budget\n
+        level_1_line_list.extend(level_2_line_list)\n
+        level_1_line_list.append(dict(is_total_level_2=1,\n
+                                      title=cell_name_dict[level_2_category],\n
+                                      initial_budget=total_level_2_initial_budget,\n
+                                      current_budget=total_level_2_current_budget,\n
+                                      engaged_budget=total_level_2_engaged_budget,\n
+                                      consumed_budget=total_level_2_consumed_budget,\n
+                                      available_budget=total_level_2_available_budget,\n
+                                      consumed_ratio=consumed_ratio))\n
+\n
+      total_level_1_initial_budget += total_level_2_initial_budget\n
+      total_level_1_current_budget += total_level_2_current_budget\n
+      total_level_1_engaged_budget += total_level_2_engaged_budget\n
+      total_level_1_consumed_budget += total_level_2_consumed_budget\n
+      total_level_1_available_budget += total_level_2_available_budget\n
+\n
+    if len(level_1_line_list) > 1:\n
+      consumed_ratio = 0\n
+      if total_level_1_current_budget:\n
+        consumed_ratio = total_level_1_consumed_budget / total_level_1_current_budget\n
+      line_list.extend(level_1_line_list)\n
+      line_list.append(dict(is_total_level_1=1,\n
+                            title=budget_line.getTitle().decode(\'utf8\'),\n
+                            initial_budget=total_level_1_initial_budget,\n
+                            current_budget=total_level_1_current_budget,\n
+                            engaged_budget=total_level_1_engaged_budget,\n
+                            consumed_budget=total_level_1_consumed_budget,\n
+                            available_budget=total_level_1_available_budget,\n
+                            consumed_ratio=consumed_ratio))\n
+\n
+      \n
+  \n
+if line_list:\n
+  line_list[-1][\'is_last_line\'] = 1\n
+\n
+return line_list\n
+\n
+from pprint import pformat\n
+return pformat(line_list)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>pprint</string>
+                            <string>pformat</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>request</string>
+                            <string>defined_group</string>
+                            <string>_getiter_</string>
+                            <string>category</string>
+                            <string>budget_list</string>
+                            <string>_getitem_</string>
+                            <string>from_date</string>
+                            <string>at_date</string>
+                            <string>validation_state</string>
+                            <string>new_budget_list</string>
+                            <string>budget</string>
+                            <string>line_list</string>
+                            <string>isVisibleCell</string>
+                            <string>budget_line</string>
+                            <string>total_level_1_initial_budget</string>
+                            <string>total_level_1_current_budget</string>
+                            <string>total_level_1_engaged_budget</string>
+                            <string>total_level_1_consumed_budget</string>
+                            <string>total_level_1_available_budget</string>
+                            <string>dict</string>
+                            <string>level_1_line_list</string>
+                            <string>variation_axis_list</string>
+                            <string>possible_axis</string>
+                            <string>cell_range</string>
+                            <string>len</string>
+                            <string>level_2_variation_category_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>level_3_variation_category_list</string>
+                            <string>cell_name_dict</string>
+                            <string>cell_range_list</string>
+                            <string>title</string>
+                            <string>_write_</string>
+                            <string>level_2_category</string>
+                            <string>total_level_2_initial_budget</string>
+                            <string>total_level_2_current_budget</string>
+                            <string>total_level_2_engaged_budget</string>
+                            <string>total_level_2_consumed_budget</string>
+                            <string>total_level_2_available_budget</string>
+                            <string>level_2_line_list</string>
+                            <string>level_3_category</string>
+                            <string>cell</string>
+                            <string>initial_budget</string>
+                            <string>current_budget</string>
+                            <string>engaged_budget</string>
+                            <string>consumed_budget</string>
+                            <string>available_budget</string>
+                            <string>_inplacevar_</string>
+                            <string>consumed_ratio</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Budget_getBudgetConsumptionReportData</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
