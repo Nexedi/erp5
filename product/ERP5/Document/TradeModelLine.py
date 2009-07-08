@@ -79,6 +79,27 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
     raise NotImplementedError('TODO')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getCalculationScript')
+  def getCalculationScript(self, context):
+    '''get script in this order :
+          1 - model_line script
+          2 - model script
+    '''
+    # get the model line script
+    script_name = self.getCalculationScriptId()
+    if script_name is None:
+      # if model line script is None, get the default model script
+      model = context.getSpecialiseValue().getEffectiveModel()
+      script_name = model.getCalculationScriptId()
+    if script_name is None:
+      return None
+    script = getattr(context, script_name, None)
+    if script is None:
+      raise ValueError, "Unable to find `%s` calculation script" % \
+                                                       script_name
+    return script
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getAggregatedAmountList')
   def getAggregatedAmountList(self, context, movement_list = None,
       current_aggregated_amount_list = None, base_id='movement', **kw):
@@ -244,6 +265,14 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
             quantity = tmp_movement.getQuantity(0.0)
             modified = 1
             tmp_movement.setQuantity(quantity + movement.getTotalPrice())
+
+      # if a calculation script is defined, use it
+      calculation_script = self.getCalculationScript(context)
+      if calculation_script is not None:
+        tmp_movement = calculation_script(\
+            current_aggregated_amount_list=movement_list,
+            current_movement=tmp_movement)
+
       else:
         # if the quantity is defined, use it
         modified = 1
@@ -255,13 +284,16 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
       salary_range_list = tmp_movement.getVariationCategoryList(\
           base_category_list='salary_range') #XXX hardcoded values
       salary_range = len(salary_range_list) and salary_range_list[0] or None
-      if salary_range is not None:
-        # slice are used
+      if salary_range is not None and calculation_script is None:
+        # slice are used only if there is no script found, in case where a
+        # script exist, slice should be handle in it
         model = self.getParentValue()
         cell = model.getCell(salary_range)
         if cell is None:
-          raise ValueError("Can't find the cell corresponding to those "+\
-              "cells coordinates : %s" % salary_range)
+          raise ValueError("Line '%s' (%s) can't find the cell corresponding"+\
+              " to those cells coordinates : %s" % (self.getTitle(),
+                                                    self.getRelativeUlr(),
+                                                    salary_range))
         model_slice_min = cell.getQuantityRangeMin()
         model_slice_max = cell.getQuantityRangeMax()
         base_application = tmp_movement.getQuantity(0.0)
