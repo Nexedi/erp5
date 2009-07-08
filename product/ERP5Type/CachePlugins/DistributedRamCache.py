@@ -59,6 +59,7 @@ class DistributedRamCache(BaseCache):
     self._server_max_key_length = params.get('server_max_key_length', 250)
     self._server_max_value_length = params.get('server_max_value_length', 1024*1024)
     self._debug_level = params.get('debug_level', 0)
+    self._key_prefix = params.get('key_prefix', '')
     BaseCache.__init__(self)
 
   def initCacheStorage(self):
@@ -90,7 +91,7 @@ class DistributedRamCache(BaseCache):
   def checkAndFixCacheId(self, cache_id, scope):
     ## memcached doesn't support namespaces (cache scopes) so to "emmulate"
     ## such behaviour when constructing cache_id we add scope in front
-    cache_id = "%s.%s" %(scope, cache_id)
+    cache_id = "%s%s.%s" % (self._key_prefix, scope, cache_id)
     if self._server_max_key_length != 0:
       ## memcached will fail to store cache_id longer than MEMCACHED_SERVER_MAX_KEY_LENGTH.
       return cache_id[:self._server_max_key_length]
