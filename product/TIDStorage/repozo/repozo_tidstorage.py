@@ -55,6 +55,7 @@ Usage: %(program)s [-h|--help] [-c|--config configuration_file]
 
 import imp
 import getopt
+import glob
 import sys
 import os
 import md5
@@ -62,12 +63,45 @@ import time
 import tempfile
 from shutil import copy
 
-from repozo.restore_tidstorage import parse, get_tid_position
+from restore_tidstorage import parse, get_tid_position
 
 program = sys.argv[0]
 
 def log(message):
   print message
+
+def cleanup(known_tid_storage_identifier_dict, keep_full_backup_count,
+            status_file_backup_dir, status_file):
+  if keep_full_backup_count <= 0:
+    raise ValueError("A number of full backups to keep must be specified.")
+  cleanup_list = []
+  date_len = 19
+  oldest_fsz = None # Oldest full backup to keep among all storages.
+  for file_path, storage_path, object_path \
+      in known_tid_storage_identifier_dict.itervalues():
+    # Find oldest full backup to keep for this storage -> fsz
+    fsz_list = sorted(glob.glob(os.path.join(storage_path, '*.fsz')))
+    fsz = fsz_list[max(0, len(fsz_list) - keep_full_backup_count)]
+    fsz, ext = os.path.splitext(os.path.basename(fsz))
+    assert len(fsz) == date_len
+    if oldest_fsz is None or fsz < oldest_fsz:
+      oldest_fsz = fsz
+    # Clean up all repozo files older than fsz.
+    for path in glob.glob(os.path.join(storage_path, '*')):
+      date, ext = os.path.splitext(os.path.basename(path))
+      assert len(date) == date_len
+      if ext in ('.fsz', '.deltafsz', '.dat') and date < fsz:
+        cleanup_list.append(path)
+  # Clean up all status files older than oldest_fsz.
+  if oldest_fsz and status_file_backup_dir and status_file:
+    prefix = os.path.join(status_file_backup_dir,
+                          os.path.basename(status_file) + '-')
+    path_len = len(prefix) + date_len
+    for path in glob.glob(prefix + '*'):
+      assert path.startswith(path) and len(path) == path_len
+      if path[-date_len:] < oldest_fsz:
+        cleanup_list.append(path)
+  return cleanup_list
 
 def backup(known_tid_storage_identifier_dict, repozo_formated_command):
   """Backups all ZODB files"""
@@ -193,7 +227,7 @@ def parseargs():
                                ['help', 'verbose', 'quick', 'full',
                                 'gzip', 'repository', 'repozo=',
                                 'config=','recover', 'recover_check',
-                                'tid_log='])
+                                'tid_log=', 'cleanup'])
   except getopt.error, msg:
     usage(1, msg)
 
@@ -203,11 +237,12 @@ def parseargs():
     configuration_file_name = None
     repozo_opts = ['-B']
     known_tid_storage_identifier_dict = {}
-    recover = False
+    action = None
     dry_run = False
     status_file = None
     status_file_backup_dir = None
     recover_status_file = None
+    keep_full_backup_count = None
 
   options = Options()
 
@@ -223,9 +258,15 @@ def parseargs():
       options.repozo_file_name = arg
     elif opt in ('-R', '--recover', '--recover_check'):
       options.repozo_opts[0] = '-R'
-      options.recover = True
+      if options.action:
+        usage(1, 'Only 1 command allowed.')
+      options.action = 'recover'
       if opt == '--recover_check':
         options.dry_run = True
+    elif opt in ('--cleanup'):
+      if options.action:
+        usage(1, 'Only 1 command allowed.')
+      options.action = 'cleanup'
     elif opt in ('-r', '--repository'):
       options.repozo_opts.append('%s %s' % (opt, arg))
     elif opt in ('-t', '--tid_log'):
@@ -250,7 +291,8 @@ def parseargs():
     options.timestamp_file_path = module.timestamp_file_path
   except AttributeError, msg:
     usage(1, msg)
-  for option_id in ('status_file', 'status_file_backup_dir' ):
+  for option_id in ('status_file', 'status_file_backup_dir',
+                    'keep_full_backup_count'):
     if getattr(options, option_id) is None:
       setattr(options, option_id, getattr(module, option_id, None))
   # XXX: we do not check any option this way, it's too dangerous.
@@ -260,20 +302,27 @@ def parseargs():
 
 def backupStatusFile(status_file,destination_directory):
   file_name = os.path.basename(status_file) + '-' + '%04d-%02d-%02d-%02d-%02d-%02d' % time.gmtime()[:6]
-  copy(status_file, os.path.sep.join((destination_directory,file_name)))
-  log("Written status file backup as %s" % os.path.sep.join((destination_directory,file_name)))
+  copy(status_file, os.path.join(destination_directory, file_name))
+  log("Written status file backup as %s" % os.path.join(destination_directory, file_name))
   
 def main():
   options = parseargs()
-  if not options.recover and options.recover_status_file:
-    raise ValueError("Status file path only for recovering")
 
   last_tid_dict = None
   if options.recover_status_file:
+    if options.action != 'recover':
+      raise ValueError("Status file path only for recovering")
     last_tid_dict = parse(options.recover_status_file)
 
+  if options.action == 'cleanup':
+    for path in cleanup(options.known_tid_storage_identifier_dict,
+                        options.keep_full_backup_count,
+                        options.status_file_backup_dir, options.status_file):
+      os.remove(path)
+    return 0
+
   repozo_formated_command = '%s %s -r "%%s"' % (options.repozo_file_name, ' '.join(options.repozo_opts))
-  if options.recover:
+  if options.action == 'recover':
     timestamp_file = open(options.timestamp_file_path, 'r')
     timestamp = ''
     read_line = ' '

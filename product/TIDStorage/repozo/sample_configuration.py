@@ -35,3 +35,5 @@ timestamp_file_path = 'repozo_tidstorage_timestamp.log'
 # place to put backuped TIDStorage status_file logs
 status_file_backup_dir = '/home/vincent/tmp/repozo'
 
+# When cleaning up old backups, keep this number of full backups.
+keep_full_backup_count = 3
