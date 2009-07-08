@@ -33,13 +33,8 @@ from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5.Document.MetaNode import MetaNode
 
-from Products.ERP5.Document.InventoryCell import InventoryCell
-
-from zLOG import LOG
-
 class BudgetCell(Predicate, MetaNode):
-    """
-    BudgetCell ...
+    """ Budget Cell defines a cell of budget.
     """
 
     # Default Properties
