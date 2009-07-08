@@ -265,7 +265,10 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         model_slice_min = cell.getQuantityRangeMin()
         model_slice_max = cell.getQuantityRangeMax()
         base_application = tmp_movement.getQuantity(0.0)
-        if base_application-model_slice_min>0:
+        if base_application < model_slice_min:
+          # if base_application is not in the slice range, quantity is 0
+          tmp_movement.setQuantity(0)
+        elif base_application-model_slice_min > 0:
           if base_application <= model_slice_max:
             tmp_movement.setQuantity(base_application-model_slice_min)
           elif model_slice_max:
