@@ -111,6 +111,7 @@ if matrixbox :\n
 else:\n
   list_of_category_list = []\n
   variation_base_category_list = context.getVariationBaseCategoryList()\n
+  variation_base_category_list.sort()\n
   for base_category in variation_base_category_list:\n
     list_of_category_list.append(\\\n
         context.getVariationCategoryList(base_category_list=base_category))\n
