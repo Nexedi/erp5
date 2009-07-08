@@ -220,14 +220,14 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       trade_model_line_composed_list = \
           self.getTradeModelLineComposedList(context)
 
-      # initialise run then rerun only once, as trade_model_line_composed_list
-      # is sorted in good way to have simple algorithm
+      # trade_model_line_composed_list is sorted in good way to have
+      # simple algorithm
       for model_line in trade_model_line_composed_list:
         result.extend(model_line.getAggregatedAmountList(context,
           movement_list=movement_list,
           current_aggregated_amount_list=result,
           **kw))
-      movement_list = result # apply model again on generated movements
+      movement_list = result
 
       # remove movement that should not be created
       final_movement_list = []
