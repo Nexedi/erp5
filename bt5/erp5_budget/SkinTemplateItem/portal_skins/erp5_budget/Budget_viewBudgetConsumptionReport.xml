@@ -303,7 +303,7 @@ AQABAEMAAAB9AQAAAAA=</string> </value>
        <text:p i18n:translate="">Available Budget</text:p>\n
      </table:table-cell>\n
      <table:table-cell table:style-name="ce8" office:value-type="string">\n
-      <text:p i18n:translate="">Percentage realized</text:p>\n
+      <text:p i18n:translate="">Percentage Realized</text:p>\n
      </table:table-cell>\n
      <table:table-cell table:style-name="ce25" table:number-columns-repeated="248"/>\n
      <table:table-cell table:number-columns-repeated="768"/>\n
