@@ -33,7 +33,6 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Document.Amount import Amount
 from Products.ERP5.Document.Predicate import Predicate
-from Products.ERP5Type.Utils import cartesianProduct
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 import zope.interface
 
@@ -129,8 +128,6 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
     tmp_movement_list = [q for q in current_aggregated_amount_list \
         if q.getReference() == self.getReference()]
     if len(tmp_movement_list) > 0:
-      tmp_movement_list = tmp_movement_list[:1] # list is needed in case of
-                                                # having cells
       update = 1
     else:
       # get source and destination using Business Process
@@ -195,19 +192,17 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
 
       update = 0
       base_category_list = self.getVariationBaseCategoryList()
-      category_list_list = []
-      for base_cat in base_category_list:
-        category_list = self.getVariationCategoryList(
-                                        base_category_list=base_cat)
-        category_list_list.append(category_list)
-      cartesian_product = cartesianProduct(category_list_list)
-      # look for cells if categories are used
-      if len(category_list_list) > 0:
-        for cell_coordinates in cartesian_product:
+      # get cells categories cartesian product
+      cell_key_list = self.getCellKeyList(base_id='movement')
+      if len(cell_key_list) > 0:
+        # look for cells
+        for cell_coordinates in cell_key_list:
           cell = self.getCell(base_id=base_id, *cell_coordinates)
           if cell is None:
-            raise ValueError("Can't find the cell corresponding to those "+\
-                "cells coordinates : %s" % cell_coordinates)
+            raise ValueError("Line '%s' (%s) can't find the cell corresponding"+\
+                " to those cells coordinates : %s" % (self.getTitle(),
+                                                      self.getRelativeUrl(),
+                                                      cell_coordinates))
           tmp_movement = newTempSimulationMovement(self.getPortalObject(),
               self_id)
           tmp_movement.edit(
@@ -232,14 +227,17 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
           self.getQuantity(None) is None or \
           len(self.getVariationCategoryList()) and \
           tmp_movement.getQuantity(None) is None:
-        # if the quantity is not defined, take it by searching all movements
-        # that used this base_amount
-        for movement in movement_list:
+        for movement in movement_list + current_aggregated_amount_list:
+          # here we need to look on movement_list and also on already processed
+          # movements (current_aggregated_amount_list).
+          # if the quantity is not defined, take it by searching all movements
+          # that used this base_amount
           if set(base_application_list)\
               .intersection(set(movement.getBaseContributionList())) and \
-              len(movement.getVariationCategoryList()) == 0 or \
+              (len(movement.getVariationCategoryList()) == 0 or \
+               len(tmp_movement.getVariationCategoryList()) == 0 or \
               set(movement.getVariationCategoryList()).intersection( \
-              set(tmp_movement.getVariationCategoryList())):
+              set(tmp_movement.getVariationCategoryList()))):
             # at least one base application is in base contributions and
             # if the movement have no variation category, it's the same as
             # if he have all variation categories

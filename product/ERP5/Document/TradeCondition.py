@@ -222,23 +222,22 @@ class TradeCondition(Path, Transformation, XMLMatrix):
 
       # initialise run then rerun only once, as trade_model_line_composed_list
       # is sorted in good way to have simple algorithm
-      for pass_type in ['initialise', 'rerun']:
-        for model_line in trade_model_line_composed_list:
-          result.extend(model_line.getAggregatedAmountList(context,
-            movement_list=movement_list,
-            current_aggregated_amount_list=result,
-            **kw))
-        movement_list = result # apply model again on generated movements
+      for model_line in trade_model_line_composed_list:
+        result.extend(model_line.getAggregatedAmountList(context,
+          movement_list=movement_list,
+          current_aggregated_amount_list=result,
+          **kw))
+      movement_list = result # apply model again on generated movements
 
       # remove movement that should not be created
-      movement_list = []
-      for movement in result:
+      final_movement_list = []
+      for movement in movement_list:
         movement_ref = movement.getReference()
         for model_line in trade_model_line_composed_list:
           if model_line.getReference() == movement_ref and\
               model_line.isCreateLine():
-            movement_list.append(movement)
-      return movement_list
+            final_movement_list.append(movement)
+      return final_movement_list
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCell')
     def getCell(self, *kw , **kwd):
