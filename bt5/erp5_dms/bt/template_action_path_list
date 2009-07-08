@@ -133,3 +133,4 @@ Text | web_view
 URL Crawler | crawl
 URL Crawler | crawled_content
 URL Crawler | view
+Web Page | related
