@@ -266,19 +266,19 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
             modified = 1
             tmp_movement.setQuantity(quantity + movement.getTotalPrice())
 
-      # if a calculation script is defined, use it
-      calculation_script = self.getCalculationScript(context)
-      if calculation_script is not None:
-        tmp_movement = calculation_script(\
-            current_aggregated_amount_list=movement_list,
-            current_movement=tmp_movement)
-
       else:
         # if the quantity is defined, use it
         modified = 1
         if tmp_movement.getPrice() is None:
           # if price is not defined, it the same as 100 %
           tmp_movement.setPrice(1)
+
+      # if a calculation script is defined, use it
+      calculation_script = self.getCalculationScript(context)
+      if calculation_script is not None:
+        tmp_movement = calculation_script(\
+            current_aggregated_amount_list=movement_list,
+            current_movement=tmp_movement)
 
       # check if slices are used
       salary_range_list = tmp_movement.getVariationCategoryList(\
