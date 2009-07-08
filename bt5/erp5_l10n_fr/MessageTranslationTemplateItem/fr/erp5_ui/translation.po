@@ -1264,10 +1264,10 @@ msgid "Budget"
 msgstr "Budget"
 
 msgid "Budget Cell"
-msgstr "Cellule Budgétaire"
+msgstr "Cellule budgétaire"
 
 msgid "Budget Consumption"
-msgstr "Consommation budgétaire"
+msgstr "Consommation de budget"
 
 msgid "Budget Line"
 msgstr "Ligne Budgétaire"
@@ -1282,7 +1282,10 @@ msgid "Budget Models"
 msgstr "Modèles de budget"
 
 msgid "Budget Module"
-msgstr "Budget"
+msgstr "Budgets"
+
+msgid "Budget Situation"
+msgstr "Situation budgétaire"
 
 msgid "Budget Start Date"
 msgstr "Début période budgétaire"
@@ -1291,28 +1294,28 @@ msgid "Budget Stop Date"
 msgstr "Fin période budgétaire"
 
 msgid "Budget Transaction"
-msgstr "Transaction Budgétaire"
+msgstr "Transaction budgétaire"
 
 msgid "Budget Transaction Module"
-msgstr "Transaction Budgétaire"
+msgstr "Module des transactions budgétaires"
 
 msgid "Budget Transactions"
-msgstr "Transactions Budgétaires"
+msgstr "Transactions budgétaires"
 
 msgid "Budget Transfert"
-msgstr "Transfert Budgétaire"
+msgstr "Transfert budgétaire"
 
 msgid "Budget Transfert Line"
-msgstr "Ligne de Transfert Budgétaire"
+msgstr "Ligne de transfert budgétaire"
 
 msgid "Budget Type"
 msgstr "Type de budget"
 
 msgid "Budget Variation"
-msgstr "Variation du budget"
+msgstr "Variation de budget"
 
 msgid "Budget Variations"
-msgstr "Variations du budget"
+msgstr "Variations de budget"
 
 msgid "Budget title"
 msgstr "Intitule du budget"
@@ -1321,7 +1324,7 @@ msgid "Budget to Submit"
 msgstr "Budgets à soumettre"
 
 msgid "Budget transactions"
-msgstr "Transactions Budgétaires"
+msgstr "Transactions budgétaires"
 
 msgid "Budgets"
 msgstr "Budgets"
@@ -1805,6 +1808,9 @@ msgstr "Catégories"
 
 msgid "Category"
 msgstr "Catégorie"
+
+msgid "Category Budget Variation"
+msgstr "Variation de budget par catégories"
 
 msgid "Category Divergence Tester"
 msgstr "Test de divergence de la catégorie"
@@ -5939,7 +5945,7 @@ msgid "No trade condition."
 msgstr "Pas de condition commerciale trouvée."
 
 msgid "Node Budget Variation"
-msgstr "Variation de budget sur le noeud"
+msgstr "Variation de budget par noeuds"
 
 msgid "Non Deductible Tax"
 msgstr "Cotisation non déductible"
@@ -6582,9 +6588,6 @@ msgstr "Paiement de ${invoice_title}"
 msgid "Payments creation for ${activated_invoice_count} on ${total_selection_count} invoices in progress."
 msgstr "Création des écritures de trésorerie pour ${activated_invoice_count} sur ${total_selection_count} en cours."
 
-msgid "Service Provider"
-msgstr "Organisme collecteur"
-
 msgid "Payroll Taxes Report"
 msgstr "Rapport des taxes sur salaires"
 
@@ -6622,6 +6625,9 @@ msgstr "Pourcentage"
 
 msgid "Percentage Of Total"
 msgstr "Pourcentage du total"
+
+msgid "Percentage Realized"
+msgstr "Pourcentage réalisé"
 
 msgid "Percentage of Total"
 msgstr "Pourcentage du total"
@@ -8531,9 +8537,6 @@ msgstr "Compte en banque"
 msgid "Section Category"
 msgstr "Catégorie de section"
 
-msgid "Section Category Budget Variation"
-msgstr "Variation de budget sur la catégorie de la section"
-
 msgid "Section Content"
 msgstr "Contenu de la section"
 
@@ -8665,6 +8668,9 @@ msgstr "Variations sur le service"
 
 msgid "Service Module"
 msgstr "Module des services"
+
+msgid "Service Provider"
+msgstr "Organisme collecteur"
 
 msgid "Services"
 msgstr "Services"
@@ -9814,9 +9820,6 @@ msgstr "La commande qui est à l'origine de la livraison."
 msgid "The Organisation that will collect the corresponding tax."
 msgstr "L'organisme en charge de collecter les cotisations salariales."
 
-msgid "The Service Provider will be the one defined in the Annotation Line with this reference."
-msgstr "La référence de l'annotation comportant l'organisme collecteur."
-
 msgid "The Person's Social Code."
 msgstr "Le code social d'une personne."
 
@@ -9828,6 +9831,9 @@ msgstr "La référence pour ce taux. Ce taux peut être remplacé par un autre a
 
 msgid "The Sale Opportunity has expired."
 msgstr "L'opportunité de vente n'a pas été fructueuse et est à présent expirée."
+
+msgid "The Service Provider will be the one defined in the Annotation Line with this reference."
+msgstr "La référence de l'annotation comportant l'organisme collecteur."
 
 msgid "The Share Alive workflow method sets the document validation state to shared_alive and archives any previously shared document with same version and same language."
 msgstr "Partage le document et autorise l'édition de ce dernier."
