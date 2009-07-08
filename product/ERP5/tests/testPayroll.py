@@ -189,7 +189,12 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
         variation_base_category_list=['tax_category', 'salary_range'],
         use='payroll/tax')
     node.setVariationCategoryList(['tax_category/employee_share',
-                                   'tax_category/employer_share'])
+                                   'tax_category/employer_share',
+                                    'salary_range/france/slice_0_to_200',
+                                    'salary_range/france/slice_200_to_400',
+                                    'salary_range/france/slice_400_to_5000',
+                                    'salary_range/france/slice_600_to_800',
+                                   ])
     sequence.edit(urssaf_service = node)
 
   def stepCreateLabourService(self, sequence=None, **kw):
@@ -273,7 +278,7 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     slice_value.setQuantityRangeMax(max_value)
     slice_value.setQuantityRangeMin(min_value)
     return slice_value
- 
+
   def stepSetCurrencyOnModel(self, sequence=None, **kw):
     model = sequence.get('model')
     currency = sequence.get('price_currency')
@@ -384,43 +389,43 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
 
   def stepUrssafModelLineWithSlicesCreateMovements(self, sequence=None, **kw):
     model_line = sequence.get('urssaf_model_line_with_slices')
-    cell1 = model_line.newCell('tax_category/employee_share',
-        'salary_range/france/slice_0_to_200',
+    cell1 = model_line.newCell('salary_range/france/slice_0_to_200',
+        'tax_category/employee_share',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
     cell1.edit(price=0.1, tax_category='employee_share',
         salary_range='france/slice_0_to_200')
-    cell2 = model_line.newCell('tax_category/employer_share',
-        'salary_range/france/slice_0_to_200',
+    cell2 = model_line.newCell('salary_range/france/slice_0_to_200',
+        'tax_category/employer_share',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
     cell2.edit(price=0.2, tax_category='employer_share',
         salary_range='france/slice_0_to_200')
-    cell3 = model_line.newCell('tax_category/employee_share',
-        'salary_range/france/slice_200_to_400',
+    cell3 = model_line.newCell('salary_range/france/slice_200_to_400',
+        'tax_category/employee_share',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
     cell3.edit(price=0.3, tax_category='employee_share',
         salary_range='france/slice_200_to_400')
-    cell4 = model_line.newCell('tax_category/employer_share',
-        'salary_range/france/slice_200_to_400',
+    cell4 = model_line.newCell('salary_range/france/slice_200_to_400',
+        'tax_category/employer_share',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
     cell4.edit(price=0.4, tax_category='employer_share',
         salary_range='france/slice_200_to_400')
-    cell5 = model_line.newCell('tax_category/employee_share',
-        'salary_range/france/slice_400_to_5000',
+    cell5 = model_line.newCell('salary_range/france/slice_400_to_5000',
+        'tax_category/employee_share',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
     cell5.edit(price=0.5, tax_category='employee_share',
         salary_range='france/slice_400_to_5000')
-    cell6 = model_line.newCell('tax_category/employer_share',
-        'salary_range/france/slice_400_to_5000',
+    cell6 = model_line.newCell('salary_range/france/slice_400_to_5000',
+        'tax_category/employer_share',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
@@ -430,29 +435,29 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
   def stepUrssafModelLineWithComplexSlicesCreateMovements(self,
       sequence=None, **kw):
     model_line = sequence.get('urssaf_model_line_with_slices')
-    cell1 = model_line.newCell('tax_category/employee_share',
-        'salary_range/france/slice_200_to_400',
+    cell1 = model_line.newCell('salary_range/france/slice_200_to_400',
+        'tax_category/employee_share',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
     cell1.edit(price=0.1, tax_category='employee_share',
         salary_range='france/slice_200_to_400')
-    cell2 = model_line.newCell('tax_category/employer_share',
-        'salary_range/france/slice_200_to_400',
+    cell2 = model_line.newCell('salary_range/france/slice_200_to_400',
+        'tax_category/employer_share',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
     cell2.edit(price=0.2, tax_category='employer_share',
         salary_range='france/slice_200_to_400')
-    cell3 = model_line.newCell('tax_category/employee_share',
-        'salary_range/france/slice_600_to_800',
+    cell3 = model_line.newCell('salary_range/france/slice_600_to_800',
+        'tax_category/employee_share',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
     cell3.edit(price=0.3, tax_category='employee_share',
         salary_range='france/slice_600_to_800')
-    cell4 = model_line.newCell('tax_category/employer_share',
-        'salary_range/france/slice_600_to_800',
+    cell4 = model_line.newCell('salary_range/france/slice_600_to_800',
+        'tax_category/employer_share',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
         mapped_value_property_list=('quantity', 'price'))
@@ -3354,6 +3359,7 @@ class TestPayroll(TestPayrollMixin):
                ModelCreateUrssafModelLineWithSlices
                Tic
                UrssafModelLineWithSlicesCreateMovements
+               Tic
                PaysheetApplyTransformation
                Tic
                CheckPaysheetLineAreCreatedAfterUpdateWithLinesWithSameResource
@@ -3370,6 +3376,7 @@ class TestPayroll(TestPayrollMixin):
     sequence_list = SequenceList()
     sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
                SetProperiesOnModelLines
+               Tic
                PaysheetApplyTransformation
                Tic
                CheckPaysheetLineAreCreated
