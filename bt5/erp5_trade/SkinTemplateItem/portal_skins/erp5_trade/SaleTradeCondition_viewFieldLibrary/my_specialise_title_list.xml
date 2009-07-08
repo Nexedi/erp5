@@ -91,6 +91,10 @@
                           <string>Sale Trade Condition</string>
                           <string>Sale Trade Condition</string>
                         </tuple>
+                        <tuple>
+                          <string>Business Process</string>
+                          <string>Business Process</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -101,6 +105,10 @@
                         <tuple>
                           <string>SaleTradeConditionModule_viewSaleTradeConditionList/listbox</string>
                           <string>Sale Trade Conditions</string>
+                        </tuple>
+                        <tuple>
+                          <string>BusinessProcessModule_viewBusinessProcessList/listbox</string>
+                          <string>Business Processes</string>
                         </tuple>
                       </list>
                     </value>

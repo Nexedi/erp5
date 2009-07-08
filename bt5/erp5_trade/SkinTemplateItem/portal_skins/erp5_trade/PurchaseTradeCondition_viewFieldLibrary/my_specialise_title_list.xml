@@ -13,12 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>base_category</string>
-                <string>portal_type</string>
                 <string>catalog_index</string>
                 <string>columns</string>
+                <string>portal_type</string>
                 <string>proxy_listbox_ids</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -130,6 +130,10 @@
                           <string>Purchase Trade Condition</string>
                           <string>Purchase Trade Condition</string>
                         </tuple>
+                        <tuple>
+                          <string>Business Process</string>
+                          <string>Business Process</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -141,6 +145,10 @@
                           <string>PurchaseTradeConditionModule_viewPurchaseTradeConditionList/listbox</string>
                           <string>Purchase Trade Conditions</string>
                         </tuple>
+                        <tuple>
+                          <string>BusinessProcessModule_viewBusinessProcessList/listbox</string>
+                          <string>Business Processes</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -150,7 +158,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Specialised Trade Conditions</string> </value>
+                    <value> <string>Specialised Trade Conditions and Business Processes</string> </value>
                 </item>
               </dictionary>
             </value>
