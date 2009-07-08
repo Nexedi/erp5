@@ -72,32 +72,14 @@ class BPMInvoicingRule(BPMRule):
     """
     return 0
 
-#### Helper method for expand
+#### Helper methods for expand
   def _generatePrevisionList(self, applied_rule, **kw):
-    """
-    Generate a list of movements, that should be children of this rule,
-    based on its context (parent movement, delivery, configuration ...)
-
-    These previsions are returned as dictionaries.
-    """
-    # XXX Isn't it better to share the code with expand method
-    context_movement = applied_rule.getParentValue()
-    business_process = applied_rule.getBusinessProcessValue()
-
-    movement_and_path_list = []
-    for business_path in business_process.getPathValueList(
-                        self.getProperty('trade_phase_list'),
-                        context_movement):
-      movement_and_path_list.append((context_movement, business_path))
-
-    if len(movement_and_path_list) > 1:
-      raise NotImplementedError
-
-    for movement, business_path in movement_and_path_list:
-      property_dict = self._getExpandablePropertyDict(
-                                     applied_rule, movement, business_path)
-      property_dict['deliverable'] = 1
-    return [property_dict]
+    return_list = []
+    for prevision_dict in BPMRule._generatePrevisionList(self, applied_rule,
+        **kw):
+      prevision_dict['deliverable'] = 1
+      return_list.append(prevision_dict)
+    return return_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
   def expand(self, applied_rule, force=0, **kw):

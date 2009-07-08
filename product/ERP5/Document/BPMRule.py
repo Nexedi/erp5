@@ -242,3 +242,29 @@ class BPMRule(Rule):
     property_dict['causality_value'] = business_path
 
     return property_dict
+
+  def _generatePrevisionList(self, applied_rule, **kw):
+    """
+    Generate a list of movements, that should be children of this rule,
+    based on its context (parent movement, delivery, configuration ...)
+
+    These previsions are returned as dictionaries.
+    """
+    # XXX support list of movements
+    context_movement = applied_rule.getParentValue()
+    business_process = applied_rule.getBusinessProcessValue()
+
+    movement_and_path_list = []
+    for business_path in business_process.getPathValueList(
+                        self.getProperty('trade_phase_list'),
+                        context_movement):
+      movement_and_path_list.append((context_movement, business_path))
+
+    if len(movement_and_path_list) > 1:
+      raise NotImplementedError
+
+    for movement, business_path in movement_and_path_list:
+      property_dict = self._getExpandablePropertyDict(
+                                     applied_rule, movement, business_path)
+      property_dict['deliverable'] = 1
+    return [property_dict]
