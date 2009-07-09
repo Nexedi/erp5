@@ -115,6 +115,8 @@ def getOrderedDate(date):\n
   return date.strftime(pattern)\n
 \n
 def getPaymentConditionText(order):\n
+  if \'custom\' == order.getPaymentConditionTradeDate():\n
+    return order.getPaymentConditionPaymentDate()\n
   end_of_month = order.getPaymentConditionPaymentEndOfMonth()\n
   days = order.getPaymentConditionPaymentTerm()\n
   if days:\n

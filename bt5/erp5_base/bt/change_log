@@ -1,3 +1,6 @@
+2009-07-09 tatuya
+* Fix when printing invoice and setting 'Custom' for payment-trade-date, payment condition returns the custom setting date
+
 2009-07-03 nicolas
 * add cache plugin and memcached plugin for Persistent Caching of document conversions.
 Flare should be installed and running
