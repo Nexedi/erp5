@@ -34,17 +34,7 @@ except ImportError:
 import transaction
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase, user_name
-from Products.ERP5Type.tests.utils import getMySQLArguments
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.Utils import getLocalPropertySheetList, \
-                                    removeLocalPropertySheet, \
-                                    importLocalPropertySheet
-from Products.ERP5Type.Utils import getLocalDocumentList, \
-                                    removeLocalDocument, \
-                                    importLocalDocument
-from Products.ERP5Type.Utils import getLocalConstraintList, \
-                                    removeLocalConstraint, \
-                                    importLocalConstraint
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.ERP5Type.Base import _aq_reset
 from zLOG import LOG, DEBUG
@@ -53,6 +43,9 @@ from zLOG import LOG, DEBUG
 install_product_quiet = 1
 # Quiet messages when installing business templates
 install_bt5_quiet = 0
+
+import OFS.Application
+OFS.Application.import_products()
 
 # Std Zope Products
 ZopeTestCase.installProduct('ExtFile', quiet=install_product_quiet)
@@ -162,10 +155,6 @@ for priority, product_name, index, product_dir in get_products():
      or os.path.isdir(os.path.join(product_dir, product_name, 'Tool')):
     ZopeTestCase.installProduct(product_name, quiet=install_product_quiet)
 
-# Install Document types (circumvent different init order in ZopeTestCase)
-from Products.ERP5Type.InitGenerator import initializeProductDocumentRegistry
-initializeProductDocumentRegistry()
-
 from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
 
 from Acquisition import aq_base
@@ -226,7 +215,8 @@ class ERP5TypeTestCase(PortalTestCase):
     """
 
     def dummy_test(self):
-      ZopeTestCase._print('All tests are skipped with --save option.')
+      ZopeTestCase._print('All tests are skipped when --save option is passed '
+                          'with --update_business_templates or without --load')
 
     def getRevision(self):
       try:
@@ -328,7 +318,7 @@ class ERP5TypeTestCase(PortalTestCase):
       erp5_catalog_storage = os.environ.get('erp5_catalog_storage',
                                             'erp5_mysql_innodb_catalog')
       update_business_templates = os.environ.get('update_business_templates') is not None
-      erp5_load_data_fs = os.environ.get('erp5_load_data_fs') is not None
+      erp5_load_data_fs = int(os.environ.get('erp5_load_data_fs', 0))
       if update_business_templates and erp5_load_data_fs:
         update_only = os.environ.get('update_only', None)
         template_list = (erp5_catalog_storage, 'erp5_core', 'erp5_xhtml_style') + tuple(template_list)
@@ -393,7 +383,6 @@ class ERP5TypeTestCase(PortalTestCase):
       global current_app
       current_app = self.app
       self._updateConnectionStrings()
-      self._recreateCatalog()
 
     def afterSetUp(self):
       '''Called after setUp() has completed. This is
@@ -431,13 +420,12 @@ class ERP5TypeTestCase(PortalTestCase):
       """Clear activities and catalog and recatalog everything.
       Test runner can set `erp5_tests_recreate_catalog` environnement variable,
       in that case we have to clear catalog. """
-      portal = self.getPortal()
       if int(os.environ.get('erp5_tests_recreate_catalog', 0)):
         try:
-          self.login()
           _start = time.time()
           if not quiet:
             ZopeTestCase._print('\nRecreating catalog ... ')
+          portal = self.getPortal()
           portal.portal_activities.manageClearActivities()
           portal.portal_catalog.manage_catalogClear()
           transaction.commit()
@@ -448,7 +436,6 @@ class ERP5TypeTestCase(PortalTestCase):
             ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start,))
         finally:
           os.environ['erp5_tests_recreate_catalog'] = '0'
-          noSecurityManager()
 
     # Utility methods specific to ERP5Type
     def getTemplateTool(self):
@@ -698,25 +685,23 @@ class ERP5TypeTestCase(PortalTestCase):
                 ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start))
               # Release locks
               transaction.commit()
+            self.portal = portal
+            portal_activities = getattr(portal, 'portal_activities', None)
 
-            if os.environ.get('erp5_load_data_fs'):
-              # Import local PropertySheets, Documents
-              for id_ in getLocalPropertySheetList():
-                importLocalPropertySheet(id_)
-              for id_ in getLocalDocumentList():
-                importLocalDocument(id_)
-              for id_ in getLocalConstraintList():
-                importLocalConstraint(id_)
-            else:
-              # Remove all local PropertySheets, Documents
-              for id_ in getLocalPropertySheetList():
-                removeLocalPropertySheet(id_)
-              for id_ in getLocalDocumentList():
-                removeLocalDocument(id_)
-              for id_ in getLocalConstraintList():
-                removeLocalConstraint(id_)
+            if len(setup_done) == 1: # make sure it is run only once
+              try:
+                from Products import DeadlockDebugger
+              except ImportError:
+                pass
+              from Testing.ZopeTestCase.utils import startZServer
+              ZopeTestCase._print('Running ZServer on port %i\n'
+                                  % startZServer()[1])
+              if portal_activities is not None:
+                portal_activities.distributingNode = portal_activities.getCurrentNode()
+                portal_activities._nodes = portal_activities.distributingNode,
 
             self._updateConnectionStrings()
+            self._recreateCatalog()
 
             update_business_templates = os.environ.get('update_business_templates') is not None
             BusinessTemplate_getModifiedObject = aq_base(getattr(portal, 'BusinessTemplate_getModifiedObject', None))
@@ -762,7 +747,6 @@ class ERP5TypeTestCase(PortalTestCase):
                 start = time.time()
               # setUpOnce method may use self.app and self.portal
               self.app = app
-              self.portal = portal
               setup_once()
               if not quiet:
                 ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
@@ -775,7 +759,6 @@ class ERP5TypeTestCase(PortalTestCase):
 
             transaction.commit()
 
-            portal_activities = getattr(portal, 'portal_activities', None)
             if portal_activities is not None:
               if not quiet:
                 ZopeTestCase._print('Executing pending activities ... ')
@@ -804,33 +787,6 @@ class ERP5TypeTestCase(PortalTestCase):
             # Reset aq dynamic, so all unit tests will start again
             _aq_reset()
 
-            if os.environ.get('erp5_save_data_fs'):
-              # Quit the test in order to get a clean site
-              if not quiet:
-                ZopeTestCase._print('done (%.3fs)\n' % (time.time()-_start,))
-                ZopeTestCase._print('Data.fs created\n')
-              transaction.commit()
-              ZopeTestCase.close(app)
-              instance_home = os.environ['INSTANCE_HOME']
-              # The output of mysqldump needs to merge many lines at a time
-              # for performance reasons (merging lines is at most 10 times
-              # faster, so this produce somewhat not nice to read sql
-              command = 'mysqldump %s > %s/dump.sql' \
-                          % (getMySQLArguments(), instance_home)
-              if not quiet:
-                ZopeTestCase._print('Dumping MySQL database with %s... ' \
-                                      % command)
-              os.system(command)
-              if not quiet:
-                ZopeTestCase._print('done\n')
-              if not quiet:
-                ZopeTestCase._print('Dumping static files... ')
-              for dir in ('Constraint', 'Document', 'PropertySheet', 'Extensions'):
-                os.system('rm -rf %s/%s.bak' % (instance_home, dir))
-                os.system('cp -ar %s/%s %s/%s.bak' % (instance_home, dir, instance_home, dir))
-              if not quiet:
-                ZopeTestCase._print('done\n')
-
             # Log out
             if not quiet:
               ZopeTestCase._print('Logout ... \n')
@@ -844,18 +800,6 @@ class ERP5TypeTestCase(PortalTestCase):
           else:
             transaction.commit()
             ZopeTestCase.close(app)
-
-        if os.environ.get('erp5_load_data_fs'):
-          # Import local PropertySheets, Documents
-          # when loading an environnement
-          for id_ in getLocalPropertySheetList():
-            importLocalPropertySheet(id_)
-          for id_ in getLocalDocumentList():
-            importLocalDocument(id_)
-          for id_ in getLocalConstraintList():
-            importLocalConstraint(id_)
-          _aq_reset()
-
       except:
         f = StringIO()
         traceback.print_exc(file=f)

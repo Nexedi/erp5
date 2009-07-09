@@ -135,7 +135,7 @@ def main():
         os.kill(firefox_pid, signal.SIGTERM)
 
 def startZope():
-  os.environ['erp5_force_data_fs'] = "1"
+  os.environ['erp5_save_data_fs'] = "1"
   os.system('%s/bin/zopectl start' % instance_home)
   sleep(2) # ad hoc
 

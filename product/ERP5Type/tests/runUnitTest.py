@@ -5,11 +5,10 @@ import pdb
 import re
 import getopt
 import unittest
+import shutil
+import errno
 
-WIN = False
-if os.name == 'nt':
-  import shutil
-  WIN = True
+WIN = os.name == 'nt'
 
 
 __doc__ = """%(program)s: unit test runner for the ERP5 Project
@@ -23,20 +22,20 @@ Options:
   --portal_id=STRING         force id of the portal. Useful when using
                              --data_fs_path to run tests on an existing
                              Data.fs
-  --data_fs_path=STRING      Path to the original Data.fs to run tests on an
-                             existing environment. The Data.fs is opened read
-                             only
+  --data_fs_path=STRING      Use the given path for the Data.fs
   --bt5_path                 Path to the Business Templates. Default is
                              INSTANCE_HOME/bt5.
   --recreate_catalog=0 or 1  recreate the content of the sql catalog. Default
                              is to recreate, unless using --data_fs_path
-  --save                     add erp5 sites and business templates in Data.fs
-                             and exit without invoking any tests
-  --load                     load Data.fs and skip adding erp5 sites and
-                             business templates
+  --save                     Run unit tests in persistent mode (if unset,
+                             existing Data.fs, dump.sql and *.bak static
+                             folders are not modified). Tests are skipped
+                             if business templates are updated
+                             or if --load is unset.
+  --load                     Reuse existing instance (created with --save).
   --erp5_sql_connection_string=STRING
                              ZSQL Connection string for erp5_sql_connection, by
-                             default, it will use "test test"                            
+                             default, it will use "test test"
   --cmf_activity_sql_connection_string=STRING
                              ZSQL Connection string for
                              cmf_activity_sql_connection (if unset, defaults to
@@ -45,7 +44,7 @@ Options:
                              ZSQL Connection string for
                              erp5_sql_deferred_connection (if unset, defaults
                              to erp5_sql_connection_string)
-  --email_from_address=STRING 
+  --email_from_address=STRING
                              Initialise the email_from_address property of the
                              portal, by defaults, CMFActivity failures are sent
                              on localhost from this address, to this address
@@ -58,7 +57,7 @@ Options:
                              Run only specified test methods delimited with
                              commas (e.g. testFoo,testBar). This can be regular
                              expressions.
-  -D                         
+  -D
                              Invoke debugger on errors / failures.
   --update_business_templates
                              Update all business templates prior to runing
@@ -174,10 +173,6 @@ if '__INSTANCE_HOME' not in globals().keys() :
 class ERP5TypeTestLoader(unittest.TestLoader):
   """Load test cases from the name passed on the command line.
   """
-  def __init__(self, save=0):
-    if save:
-      self.testMethodPrefix = 'dummy_test'
-
   def loadTestsFromName(self, name, module=None):
     """This method is here for compatibility with old style arguments.
     - It is possible to have the .py prefix for the test file
@@ -249,7 +244,10 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   else:
     products_home = os.path.join(instance_home, 'Products')
 
-  from Testing import ZopeTestCase
+  import OFS.Application
+  import_products = OFS.Application.import_products
+  from Testing import ZopeTestCase # This will import custom_zodb.py
+  OFS.Application.import_products = import_products
 
   try:
     # On Zope 2.8, ZopeTestCase does not have any logging facility.
@@ -299,29 +297,31 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   # it is then possible to run the debugger by "import pdb; pdb.set_trace()"
   sys.path.insert(0, tests_framework_home)
 
-  save = 0
-  # pass save=1 to test loader to skip all tests in save mode
-  # and monkeypatch PortalTestCase.setUp to skip beforeSetUp and afterSetUp.
-  # Also patch unittest.makeSuite, as it's used in test_suite function in 
-  # test cases.
-  if os.environ.get('erp5_save_data_fs'):
+  test_loader = ERP5TypeTestLoader()
+
+  save = int(os.environ.get('erp5_save_data_fs', 0))
+  dummy_test = save and (int(os.environ.get('update_business_templates', 0))
+                         or not int(os.environ.get('erp5_load_data_fs', 0)))
+  if dummy_test:
+    # Skip all tests in save mode and monkeypatch PortalTestCase.setUp
+    # to skip beforeSetUp and afterSetUp. Also patch unittest.makeSuite,
+    # as it's used in test_suite function in test cases.
     from Products.ERP5Type.tests.ERP5TypeTestCase import \
                   dummy_makeSuite, dummy_setUp, dummy_tearDown
-    save = 1
     from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
     unittest.makeSuite = dummy_makeSuite
     PortalTestCase.setUp = dummy_setUp
     PortalTestCase.tearDown = dummy_tearDown
-  
-  suite = ERP5TypeTestLoader(save=save).loadTestsFromNames(test_list)
+    test_loader.testMethodPrefix = 'dummy_test'
+
+  suite = test_loader.loadTestsFromNames(test_list)
 
   # Hack the profiler to run only specified test methods, and wrap results when
   # running in debug mode. We also monkeypatch unittest.TestCase for tests that
   # does not use ERP5TypeTestCase
-  run_only = os.environ.get('run_only', '')
-  if not save:
-    test_method_list = run_only.split(',')
-    
+  if not dummy_test:
+    test_method_list = os.environ.get('run_only', '').split(',')
+
     def wrapped_run(run_orig):
       # wrap the method that run the test to run test method only if its name
       # matches the run_only spec and to provide post mortem debugging facility
@@ -341,11 +341,33 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
     from unittest import TestCase
     TestCase.__call__ = wrapped_run(TestCase.__call__)
 
-
-
   # change current directory to the test home, to create zLOG.log in this dir.
   os.chdir(tests_home)
-  return TestRunner(verbosity=verbosity).run(suite)
+  result = TestRunner(verbosity=verbosity).run(suite)
+
+  if save:
+    from Products.ERP5Type.tests.utils import getMySQLArguments
+    # The output of mysqldump needs to merge many lines at a time
+    # for performance reasons (merging lines is at most 10 times
+    # faster, so this produce somewhat not nice to read sql
+    command = 'mysqldump %s > %s' % (getMySQLArguments(),
+                                     os.path.join(instance_home, 'dump.sql'))
+    if verbosity:
+      print('Dumping MySQL database with %s... ' % command)
+    os.system(command)
+    if verbosity:
+      print('Dumping static files... ')
+    for static_dir in 'Constraint', 'Document', 'Extensions', 'PropertySheet':
+      static_dir = os.path.join(instance_home, static_dir)
+      try:
+        shutil.rmtree(static_dir + '.bak')
+      except OSError, e:
+        if e.errno != errno.ENOENT:
+          raise
+      shutil.copytree(static_dir, static_dir + '.bak', symlinks=True)
+
+  return result
+
 
 def usage(stream, msg=None):
   if msg:
@@ -379,9 +401,7 @@ def main():
   os.environ["erp5_tests_recreate_catalog"] = "0"
   verbosity = 1
   debug = 0
-  load = False
-  save = False
-  
+
   for opt, arg in opts:
     if opt in ("-v", "--verbose"):
       os.environ['VERBOSE'] = "1"
@@ -418,10 +438,8 @@ def main():
       os.environ["email_from_address"] = arg
     elif opt == "--save":
       os.environ["erp5_save_data_fs"] = "1"
-      save = True
     elif opt == "--load":
       os.environ["erp5_load_data_fs"] = "1"
-      load = True
     elif opt == "--erp5_catalog_storage":
       os.environ["erp5_catalog_storage"] = arg
     elif opt == "--run_only":
@@ -431,9 +449,6 @@ def main():
       os.environ["update_business_templates"] = "1"
     elif opt == "--update_business_templates":
       os.environ["update_business_templates"] = "1"
-
-  if load and save:
-    os.environ["erp5_force_data_fs"] = "1"
 
   test_list = args
   if not test_list:
