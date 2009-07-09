@@ -53,6 +53,7 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                CreateEmployee
                CreatePriceCurrency
                CreateBasicModel
+               Tic
                ModelCreateUrssafModelLine
                UrssafModelLineCreateMovements
                CreateBasicPaysheet
@@ -268,7 +269,12 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     employer = sequence.get('employer')
     employee = sequence.get('employee')
     model.edit(destination_section_value=employer,
-        source_section_value=employee)
+        source_section_value=employee,
+        effective_date=DateTime(2009,01,01),
+        expiration_date=DateTime(2009,12,31),
+        version='001',
+        reference='basic_model',
+    )
     sequence.edit(model = model)
 
   def addSlice(self, model, slice, min_value, max_value, base_id='cell'):
@@ -488,8 +494,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
                   source_section_value=sequence.get('employee'),
                   destination_section_value=sequence.get('employer'),
                   resource_value=sequence.get('price_currency'),
-                  start_date=DateTime(),
-                  stop_date=DateTime()+1)
+                  start_date=DateTime(2009,06,01),
+                  stop_date=DateTime(2009,06,30))
     sequence.edit(paysheet = paysheet)
 
   def createPaysheetLine(self, document, **kw):
@@ -912,7 +918,7 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model.edit(\
         price_currency_value=currency,
         default_payment_condition_trade_date='custom',
-        default_payment_condition_payment_date=DateTime(2009/05/25),
+        default_payment_condition_payment_date=DateTime(2009,05,25),
         work_time_annotation_line_quantity=151.67,
         work_time_annotation_line_quantity_unit='time/hours',
         )
@@ -922,7 +928,7 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     model = sequence.get('model')
     paysheet.setSpecialiseValue(model)
     paysheet.PaySheetTransaction_applyModel(force=1)
-   
+
   def stepCheckCategoriesOnPaySheet(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
     employer = sequence.get('employer')
@@ -933,7 +939,7 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     self.assertEquals(paysheet.getPriceCurrencyValue(), currency)
     self.assertEquals(paysheet.getDefaultPaymentConditionTradeDate(), 'custom')
     self.assertEquals(paysheet.getDefaultPaymentConditionPaymentDate(),
-        DateTime(2009/05/25))
+        DateTime(2009,05,25))
     self.assertEquals(paysheet.getWorkTimeAnnotationLineQuantity(), 151.67)
     self.assertEquals(paysheet.getWorkTimeAnnotationLineQuantityUnit(),
       'time/hours')
@@ -1507,8 +1513,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
     # create the paysheet
     paysheet = self.createPaysheet()
     paysheet.edit(specialise_value=model_without_ref,
-                  start_date=DateTime(2008, 1, 1),
-                  stop_date=DateTime(2008, 1, 31),
+                  start_date=DateTime(2009, 1, 1),
+                  stop_date=DateTime(2009, 1, 31),
                   price_currency_value=eur)
     paysheet.PaySheetTransaction_applyModel()
     self.stepTic()
@@ -1531,9 +1537,10 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
   def stepCheckModelWithoutDateValidity(self, sequence=None, **kw):
     '''
     If no date are defined on a model, the behavior is that this model
-    is always valid. (XXX check if it's what we want)
-    So check that a line is created after calling calculation script, even if
-    there is no start_date or stop_date
+    is valid only for paysheet that don't have dates.
+    So check that a line is created after calling calculation script on a
+    paysheet with no dates and check nothing is created on a paysheet that uses
+    dates
     '''
     eur = sequence.get('currency')
     labour = sequence.get('labour_service_output')
@@ -1553,29 +1560,48 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
           'base_amount/gross_salary'],
         quantity=10000)
 
-    # create the paysheet
-    paysheet = self.createPaysheet()
-    paysheet.edit(specialise_value=model_without_date,
-                  start_date=DateTime(2008, 1, 1),
-                  stop_date=DateTime(2008, 1, 31),
+    # create a paysheet without date
+    paysheet_without_date = self.createPaysheet()
+    paysheet_without_date.edit(specialise_value=model_without_date,
                   price_currency_value=eur)
-    paysheet.PaySheetTransaction_applyModel()
+    paysheet_without_date.PaySheetTransaction_applyModel()
     self.stepTic()
 
     portal_type_list = ['Pay Sheet Model Line',]
 
-    # if no dates, we don't care about dates
-    sub_object_list = paysheet.getInheritedObjectValueList(portal_type_list)
-    
-    self.assertEquals(len(paysheet.contentValues(\
+    # check the paysheet contail no lines before calculation
+    self.assertEquals(len(paysheet_without_date.contentValues(\
         portal_type='Pay Sheet Line')), 0)
     # calculate the pay sheet
-    paysheet.applyTransformation()
+    paysheet_without_date.applyTransformation()
     self.stepTic()
-    self.assertEquals(len(paysheet.contentValues(\
+    self.assertEquals(len(paysheet_without_date.contentValues(\
         portal_type='Pay Sheet Line')), 1)
-    # check values on the paysheet
-    self.assertEquals(paysheet.contentValues()[0].getTotalPrice(), 10000)
+    # check values on the paysheet_without_date
+    self.assertEquals(paysheet_without_date.contentValues()[0].getTotalPrice(),
+        10000)
+
+    # create a paysheet with dates
+    paysheet_with_date = self.createPaysheet()
+    paysheet_with_date.edit(specialise_value=model_without_date,
+                  start_date=DateTime(2009, 1, 1),
+                  stop_date=DateTime(2009, 1, 31),
+                  price_currency_value=eur)
+    paysheet_with_date.PaySheetTransaction_applyModel()
+    self.stepTic()
+
+    portal_type_list = ['Pay Sheet Model Line',]
+
+    # check the paysheet contail no lines before calculation
+    self.assertEquals(len(paysheet_with_date.contentValues(\
+        portal_type='Pay Sheet Line')), 0)
+    # calculate the pay sheet
+    paysheet_with_date.applyTransformation()
+    self.stepTic()
+    # after calculation, paysheet should contain no lines because no effective
+    # model could be found for this paysheet
+    self.assertEquals(len(paysheet_with_date.contentValues(\
+        portal_type='Pay Sheet Line')), 0)
 
   def stepCheckModelDateValidity(self, sequence=None, **kw):
     '''
@@ -1936,6 +1962,7 @@ class TestPayroll(TestPayrollMixin):
     sequence_list = SequenceList()
     sequence_string = """
                CreateModelTree
+               Tic
                CheckgetCellResults
     """
     sequence_list.addSequenceString(sequence_string)
@@ -1954,6 +1981,7 @@ class TestPayroll(TestPayrollMixin):
                CreateEmployer
                CreateEmployee
                CreateBasicModel
+               Tic
                CreatePriceCurrency
                ModelSetCategories
                CreateBasicPaysheet
@@ -1974,6 +2002,7 @@ class TestPayroll(TestPayrollMixin):
                CreateEmployer
                CreateEmployee
                CreateBasicModel
+               Tic
                CreatePriceCurrency
                ModelSetCategories
                CreateBasicPaysheet
@@ -2033,6 +2062,7 @@ class TestPayroll(TestPayrollMixin):
                CreateEmployer
                CreateEmployee
                CreateBasicModel
+               Tic
                ModelCreateIntermediateModelLine
                ModelCreateAppliedOnTaxModelLine
                IntermediateModelLineCreateMovements
@@ -2253,6 +2283,7 @@ class TestPayroll(TestPayrollMixin):
                CreateEmployee
                CreatePriceCurrency
                CreateBasicModel
+               Tic
                ModelCreateUrssafModelLine
                UrssafModelLineCreateMovementsWithQuantityOnly
                CreateBasicPaysheet
@@ -2279,6 +2310,7 @@ class TestPayroll(TestPayrollMixin):
                CreateEmployee
                CreatePriceCurrency
                CreateBasicModel
+               Tic
                CreateModelLineZeroPrice
                CreateBasicPaysheet
   """ + self.BUSINESS_PATH_CREATION_SEQUENCE_STRING + """
@@ -3343,6 +3375,7 @@ class TestPayroll(TestPayrollMixin):
                CreateEmployee
                CreatePriceCurrency
                CreateModelWithSlices
+               Tic
                ModelCreateUrssafModelLine
                UrssafModelLineCreateMovements
                CreateBasicPaysheet
