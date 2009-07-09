@@ -13,13 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
+                <string>all_columns</string>
+                <string>columns</string>
                 <string>search_columns</string>
                 <string>selection_name</string>
-                <string>sort_columns</string>
-                <string>columns</string>
                 <string>sort</string>
-                <string>all_columns</string>
+                <string>sort_columns</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -117,6 +117,18 @@
                           <string>State</string>
                         </tuple>
                         <tuple>
+                          <string>version</string>
+                          <string>Version</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>calculation_script_id</string>
+                          <string>Calculation Script</string>
+                        </tuple>
+                        <tuple>
                           <string>creation_date</string>
                           <string>Creation Date</string>
                         </tuple>
@@ -199,6 +211,14 @@
                           <string>Employee</string>
                         </tuple>
                         <tuple>
+                          <string>version</string>
+                          <string>Version</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>effective_date</string>
                           <string>Effective Date</string>
                         </tuple>
@@ -259,6 +279,14 @@
                         <tuple>
                           <string>source_section_title</string>
                           <string>Employee</string>
+                        </tuple>
+                        <tuple>
+                          <string>version</string>
+                          <string>Version</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>effective_date</string>
