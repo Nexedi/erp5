@@ -112,7 +112,8 @@ pref = getattr(context.portal_preferences, "erp5_ui_test_preference", None)\n
 if pref is None:\n
   pref = context.portal_preferences.newContent(id="erp5_ui_test_preference", portal_type="Preference")\n
 pref.setPreferredListboxListModeLineCount(10)\n
-pref.enable()\n
+if pref.getPreferenceState() == \'disabled\':\n
+  pref.enable()\n
 \n
 return \'Reset Successfully.\'\n
 </string> </value>
