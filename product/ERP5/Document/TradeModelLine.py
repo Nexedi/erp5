@@ -34,6 +34,7 @@ from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Document.Amount import Amount
 from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
+from Products.ERP5.Document.TradeCondition import TradeCondition
 import zope.interface
 
 def isMovement(document):
@@ -89,8 +90,9 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
     script_name = self.getCalculationScriptId()
     if script_name is None:
       # if model line script is None, get the default model script
-      model = self.getParentValue()
-      script_name = model.getCalculationScriptId()
+      if isinstance(self.getParentValue(), TradeCondition):
+        # if parent is a TradeCondition
+        script_name = self.getParentValue().getCalculationScriptId()
     if script_name is None:
       return None
     script = getattr(context, script_name, None)
