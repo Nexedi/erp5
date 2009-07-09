@@ -4,6 +4,7 @@
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Yusuke Muraoka <yusuke@nexedi.com>
+#                    Łukasz Nowak <luke@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -182,15 +183,20 @@ class BusinessPath(Path):
   def isBuildable(self, explanation):
     """
     """
-    if self.isCompleted(explanation):
-      return False # No need to build what was already built
-    if self.isFrozen(explanation):
-      return False # No need to build what is frozen
+    # check if there is at least one simulation movement which is not
+    # delivered
+    result = False
+    if self.isCompleted(explanation) or self.isFrozen(explanation):
+      return False # No need to build what was already built or frozen
+    for simulation_movement in self._getRelatedSimulationMovementValueList(
+        explanation):
+      if simulation_movement.getDeliveryValue() is None:
+        result = True
     predecessor = self.getPredecessorValue()
     if predecessor is None:
-      return True # No predecessor, let's build
+      return result
     if predecessor.isCompleted(explanation):
-      return True
+      return result
     return False
 
   def isPartiallyBuildable(self, explanation):
@@ -198,22 +204,42 @@ class BusinessPath(Path):
       Not sure if this will exist some day XXX
     """
 
+  def _getExplanationUidList(self, explanation):
+    """Helper method to fetch really explanation related movements
+
+       As Business Path is related to movement by causality, thanks to
+       trade_phase during expand, it is correct to pass too much explanations
+       than not enough"""
+    explanation_uid_list = [explanation.getUid()]
+    for ex in explanation.getCausalityRelatedValueList(
+        portal_type=self.getPortalDeliveryTypeList()):
+      explanation_uid_list.extend(self._getExplanationUidList(ex))
+    return explanation_uid_list
+
   def build(self, explanation):
     """
       Build
     """
-    builder_list = self.getBuilderList() # Missing method
+    builder_list = self.getDeliveryBuilderValueList() # Missing method
     for builder in builder_list:
-      builder.build(causality_uid=self.getUid()) # This is one way of doing
-      builder.build(movement_relative_url_list=
-        self._getRelatedSimulationMovementList(explanation)) # Another way
+      # chosen a way that builder is good enough to decide to select movements
+      # which shall be really build (movement selection for build is builder
+      # job, not business path job)
+      builder.build(select_method_dict={
+        'causality_uid': self.getUid(),
+        'explanation_uid': self._getExplanationUidList(explanation)
+      })
 
-  def _getRelatedSimulationMovementList(self, explanation): # XXX - What API ?
+  def _getRelatedSimulationMovementValueList(self, explanation): # XXX - What API ?
     """
-      
+      Returns all Simulation Movements related to explanation
     """
-    return self.getCausalityRelatedValueList(portal_type='Simulation Movement',
-                                             explanation_uid=explanation.getUid())
+    # XXX What about explanations for causality related documents to explanation?
+    explanation_uid_list = self._getExplanationUidList(explanation)
+    # getCausalityRelated do not support filtering, so post filtering needed
+    return [x for x in self.getCausalityRelatedValueList(
+      portal_type='Simulation Movement')
+      if x.getExplanationUid() in explanation_uid_list]
 
   # IBusinessCompletable implementation
   def isCompleted(self, explanation):
@@ -222,7 +248,7 @@ class BusinessPath(Path):
       and checks the simulation_state of the delivery
     """
     acceptable_state_list = self.getCompletedStateList()
-    for movement in self._getRelatedSimulationMovementList(explanation):
+    for movement in self._getRelatedSimulationMovementValueList(explanation):
       if movement.getSimulationState() not in acceptable_state_list:
         return False
     return True
@@ -233,7 +259,7 @@ class BusinessPath(Path):
       and checks the simulation_state of the delivery
     """
     acceptable_state_list = self.getCompletedStateList()
-    for movement in self._getRelatedSimulationMovementList(explanation):
+    for movement in self._getRelatedSimulationMovementValueList(explanation):
       if movement.getSimulationState() in acceptable_state_list:
         return True
     return False
@@ -243,7 +269,7 @@ class BusinessPath(Path):
       Looks at all simulation related movements
       and checks if frozen
     """
-    movement_list = self._getRelatedSimulationMovementList(explanation)
+    movement_list = self._getRelatedSimulationMovementValueList(explanation)
     if len(movement_list) == 0:
       return False # Nothing to be considered as Frozen
     for movement in movement_list:
