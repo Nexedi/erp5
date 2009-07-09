@@ -755,6 +755,10 @@ AAA=</string> </value>
             <value> <string>Invoice_viewAsODT</string> </value>
         </item>
         <item>
+            <key> <string>ooo_script_name</string> </key>
+            <value> <string>Invoice_getLocalizedODTStyleSheet</string> </value>
+        </item>
+        <item>
             <key> <string>ooo_stylesheet</string> </key>
             <value> <string>Invoice_viewAsODTStyles</string> </value>
         </item>

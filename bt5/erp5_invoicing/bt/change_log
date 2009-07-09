@@ -1,3 +1,6 @@
+2009-07-09 tatuya
+* Append Japanese localized invoice style-sheet  fixing font setting. To avoid hand modification after printing Japanese invoice.
+
 2009-07-03 romain
 * Revert latest proxy field library simplification, as the design was not finalized.
 
