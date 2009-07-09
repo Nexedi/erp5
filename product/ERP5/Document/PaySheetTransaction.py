@@ -141,14 +141,16 @@ class PaySheetTransaction(Invoice):
     model = self.getSpecialiseValue().getEffectiveModel(\
         start_date=self.getStartDate(),
         stop_date=self.getStopDate())
-    model_reference_dict = model.getInheritanceReferenceDict(
-                                   portal_type_list=portal_type_list,
-                                   property_list=property_list)
     sub_object_list = []
-    traverse = self.getPortalObject().unrestrictedTraverse
-    for model_url, id_list in model_reference_dict.items():
-      model = traverse(model_url)
-      sub_object_list.extend([model._getOb(x) for x in id_list])
+    if model is not None:
+      # if there is an effective model
+      model_reference_dict = model.getInheritanceReferenceDict(
+                                     portal_type_list=portal_type_list,
+                                     property_list=property_list)
+      traverse = self.getPortalObject().unrestrictedTraverse
+      for model_url, id_list in model_reference_dict.items():
+        model = traverse(model_url)
+        sub_object_list.extend([model._getOb(x) for x in id_list])
     return sub_object_list
 
   security.declareProtected(Permissions.ModifyPortalContent,
