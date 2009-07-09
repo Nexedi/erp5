@@ -80,7 +80,7 @@ class TestBPMMixin(ERP5TypeTestCase):
 
   def createCategoriesInCategory(self, category, category_id_list):
     for category_id in category_id_list:
-      if getattr(category,category_id,None) is None:
+      if not category.hasObject(category_id):
         category.newContent(portal_type='Category', id = category_id,
             title = category_id)
 
