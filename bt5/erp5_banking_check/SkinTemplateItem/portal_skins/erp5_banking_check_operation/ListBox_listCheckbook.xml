@@ -74,8 +74,8 @@ node = context.getBaobabSource()\n
 destination_payment = request.get(\'destination_payment\', None)\n
 \n
 # retrieve listbox limit\n
-nb_lines = int(kw.get(\'list_lines\'))\n
-limit_start = int(kw.get(\'list_start\'))\n
+nb_lines = int(kw.get(\'list_lines\', 20))\n
+limit_start = int(kw.get(\'list_start\', 0))\n
 limit = limit_start, nb_lines\n
 \n
 simulation_state = None\n
