@@ -89,7 +89,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
     script_name = self.getCalculationScriptId()
     if script_name is None:
       # if model line script is None, get the default model script
-      model = context.getSpecialiseValue().getEffectiveModel()
+      model = self.getParentValue()
       script_name = model.getCalculationScriptId()
     if script_name is None:
       return None
