@@ -176,7 +176,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
           document = context.getExplanationValue()
         containting_object_list.append(document)
         start_date = document.getStartDate()
-        stop_date = document.getStartDate()
+        stop_date = document.getStopDate()
       containting_object_list.extend(\
           self.findEffectiveSpecialiseValueList(context=self,
             start_date=start_date, stop_date=stop_date))
@@ -291,25 +291,53 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       included) to the range of the given start and stop_date.
       If no start date and stop date are provided, findSpecialiseValueList is
       returned
+
+      Uses Breadth First Search.
       '''
       if start_date is None and stop_date is None:
         # if dates are not defined, return the specalise_value_list
         return self.findSpecialiseValueList(context=context)
       if effecive_model_list is None:
         effecive_model_list=[]
+      visited_trade_condition_list = []
       if portal_type_list is None:
         portal_type_list = [self.getPortalType()]
 
-      new_model = self.getEffectiveModel(start_date, stop_date)
-      model_list = new_model.getSpecialiseValueList(portal_type=\
-          portal_type_list)
-      effecive_model_list.append(new_model)
-      for model in model_list:
-        model.findEffectiveSpecialiseValueList(context=context,
-            start_date=start_date, stop_date=stop_date,
-            portal_type_list=portal_type_list,
-            effecive_model_list=effecive_model_list)
-      return effecive_model_list
+      if context.getPortalType() in portal_type_list:
+        effective_model = context.getEffectiveModel(
+            start_date=start_date, stop_date=stop_date)
+        if effective_model is not None:
+          effecive_model_list = [effective_model]
+          visited_trade_condition_list = [effective_model]
+      else:
+        model_list = context.getSpecialiseValueList(\
+            portal_type=portal_type_list)
+        effecive_model_list = [model.getEffectiveModel(\
+            start_date=start_date, stop_date=stop_date) for model in\
+            model_list]
+        visited_trade_condition_list = [model.getEffectiveModel(\
+            start_date=start_date, stop_date=stop_date) for model in\
+            model_list]
+      while len(effecive_model_list) != 0:
+        specialise = effecive_model_list.pop(0)
+        effective_specialise = specialise.getEffectiveModel(start_date=start_date,
+          stop_date=stop_date)
+        child_list = []
+        if effective_specialise is not None:
+          child_list = effective_specialise.getSpecialiseValueList(\
+              portal_type=portal_type_list)
+
+        intersection = set(child_list).intersection(\
+            set(visited_trade_condition_list))
+        for model in child_list:
+          effective_model = model.getEffectiveModel(start_date=start_date,
+              stop_date=stop_date)
+          if effective_model not in intersection:
+            # don't add model that are already been visited. This permit to
+            # visit all model tree, and to not have circular dependency
+            effecive_model_list.append(effective_model)
+            visited_trade_condition_list.append(effective_model)
+      return visited_trade_condition_list
 
     security.declareProtected(Permissions.AccessContentsInformation,
         'getInheritanceReferenceDict')
@@ -347,7 +375,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
       higher version number (if there is more than one)
       '''
       reference = self.getReference()
-      if not reference:
+      if not reference or (start_date is None and stop_date is None):
         return self
       effective_model_list = []
       model_object_list = [result.getObject() for result in \
@@ -358,11 +386,8 @@ class TradeCondition(Path, Transformation, XMLMatrix):
                               expiration_date=">=%s"%stop_date,
                               limit=1)]
       if len(model_object_list):
-        return model_object_list[0].getObject()
-      else:
-        # if no effective model are found (ex. because dates are None), 
-        # return self
-        return self
+        return model_object_list[0]
+      return None
 
     security.declareProtected(Permissions.AccessContentsInformation,
         'getModelIneritanceEffectiveProperty')
