@@ -6537,8 +6537,8 @@ msgstr "Feuille de paye"
 msgid "Pay sheet calculation done."
 msgstr "Calcul de feuille de salaire effectué."
 
-msgid "PaySheet Order"
-msgstr "Ordre d'affichage"
+msgid "Payslip Order"
+msgstr "Ordre d'affichage sur la fiche de paye"
 
 msgid "Payable"
 msgstr "Dettes"
