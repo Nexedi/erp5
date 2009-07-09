@@ -57,7 +57,9 @@
 request = context.REQUEST\n
 quantity_renderer = context.Base_viewFieldLibrary.my_money_quantity.render_pdf\n
 \n
-model = context.getSpecialiseValue().getEffectiveModel(context)\n
+model = context.getSpecialiseValue().getEffectiveModel(\\\n
+    start_date=context.getStartDate(),\n
+    stop_date=context.getStopDate())\n
 \n
 def getFieldAsString(field):\n
   return \', \'.join(getFieldAsLineList(field))\n

@@ -59,27 +59,26 @@
   This script get year to date amount for the slice corresponding to slice_path\n
   of the model.\n
 \'\'\'\n
-\n
-\n
 portal = context.getPortalObject()\n
 accounting_module = portal.accounting_module\n
 \n
 from_date=DateTime(context.getStartDate().year(), 1, 1)\n
 to_date=context.getStartDate()\n
 \n
-search_params = \\\n
-  {\n
-   \'portal_type\'         : \'Pay Sheet Transaction\',\n
-   \'delivery.start_date\' : {\'range\': "minmax", \'query\': (from_date, to_date)},\n
-   \'delivery.source_section_uid\' : context.getSourceSectionUid(),\n
-   \'simulation_state\'    : [\'stopped\', \'delivered\'],\n
-  }\n
+search_params = {\n
+    \'portal_type\'         : \'Pay Sheet Transaction\',\n
+    \'delivery.start_date\' : {\'range\': "minmax", \'query\': (from_date, to_date)},\n
+    \'delivery.source_section_uid\' : context.getSourceSectionUid(),\n
+    \'simulation_state\'    : [\'stopped\', \'delivered\'],\n
+}\n
 \n
 paysheet_list = [r.getObject() for r in accounting_module.searchFolder(**search_params)]\n
 \n
 yearly_slice_amount = 0\n
 # get the slice value for this paysheet :\n
-model = context.getSpecialiseValue().getEffectiveModel(context)\n
+model = context.getSpecialiseValue().getEffectiveModel(\\\n
+    start_date=context.getStartDate(),\n
+    stop_date=context.getStopDate())\n
 slice = model.getCell(slice_path, paysheet=context)\n
 \n
 if slice is None:\n
@@ -99,7 +98,9 @@ else:\n
 yearly_slice_amount += slice_amount\n
 \n
 for paysheet in paysheet_list :\n
-  model = paysheet.getSpecialiseValue().getEffectiveModel(paysheet)\n
+  model = paysheet.getSpecialiseValue().getEffectiveModel(\\\n
+      start_date=paysheet.getStartDate(),\n
+      stop_date=paysheet.getStopDate())\n
   if model is not None:\n
     slice = model.getCell(slice_path)\n
     plafond_max = slice.getQuantityRangeMax()\n
