@@ -49,6 +49,7 @@ def calcPythonObjectMemorySize(i):
       s += calcPythonObjectMemorySize(v)
   return s
 
+_MARKER = []
 class RamCache(BaseCache):
   """ RAM based cache plugin."""
 
@@ -58,7 +59,7 @@ class RamCache(BaseCache):
 
   _cache_dict = {}
   cache_expire_check_interval = 300
-    
+
   def __init__(self, params={}):
     BaseCache.__init__(self)
  
@@ -66,15 +67,19 @@ class RamCache(BaseCache):
     """ Init cache storage """
     ## cache storage is a RAM based dictionary
     pass
-    
+
   def getCacheStorage(self, **kw):
     return self._cache_dict
-    
-  def get(self, cache_id, scope, default=None):
+
+  def get(self, cache_id, scope, default=_MARKER):
     cache = self.getCacheStorage()
     cache_entry = cache.get((scope, cache_id), default)
-    cache_entry.markCacheHit()
-    self.markCacheHit()
+    if cache_entry is _MARKER:
+      raise KeyError, 'CacheEntry for key %s not Found' % ((scope, cache_id),)
+    if isinstance(cache_entry, CacheEntry):
+      #The value is well retrieved from cache storage
+      cache_entry.markCacheHit()
+      self.markCacheHit()
     return cache_entry
 
   def set(self, cache_id, scope, value, cache_duration=None, calculation_time=0):
