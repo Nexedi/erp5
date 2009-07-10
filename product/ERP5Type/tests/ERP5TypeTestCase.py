@@ -693,12 +693,13 @@ class ERP5TypeTestCase(PortalTestCase):
                 from Products import DeadlockDebugger
               except ImportError:
                 pass
-              from Testing.ZopeTestCase.utils import startZServer
-              ZopeTestCase._print('Running ZServer on port %i\n'
-                                  % startZServer()[1])
-              if portal_activities is not None:
-                portal_activities.distributingNode = portal_activities.getCurrentNode()
-                portal_activities._nodes = portal_activities.distributingNode,
+              if int(os.environ.get('start_zserver', 0)):
+                from Testing.ZopeTestCase.utils import startZServer
+                ZopeTestCase._print('Running ZServer on port %i\n'
+                                    % startZServer()[1])
+                if portal_activities is not None:
+                  portal_activities.distributingNode = portal_activities.getCurrentNode()
+                  portal_activities._nodes = portal_activities.distributingNode,
 
             self._updateConnectionStrings()
             self._recreateCatalog()
