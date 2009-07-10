@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -219,7 +220,7 @@ class SessionTool(BaseTool):
       storage_plugin.set(session_id, SESSION_SCOPE, session, session_duration)
     else:
       # cache plugin returns wrapper (CacheEntry instance)
-      session = session.value
+      session = session.getValue()
     return session 
 
   def newContent(self, id, **kw):
