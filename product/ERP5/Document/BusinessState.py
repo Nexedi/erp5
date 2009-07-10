@@ -170,7 +170,7 @@ class BusinessState(XMLObject):
     for path in self.getPredecessorRelatedValueList():
       # XXX When no simulations related to path, what should path.isCompleted return?
       #     if True we don't have way to add remaining trade phases to new movement
-      if not (path._getRelatedSimulationMovementList(explanation) and
+      if not (path._getRelatedSimulationMovementValueList(explanation) and
               path.isCompleted(explanation)):
         remaining_trade_phase_list += path.getTradePhaseValueList()
 
