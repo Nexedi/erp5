@@ -130,8 +130,7 @@ class TradeCondition(Path, Transformation, XMLMatrix):
         specialise_value_list = [context]
         visited_trade_condition_list = [context]
       else:
-        specialise_value_list = context.getSpecialiseValueList(\
-            portal_type=portal_type_list)
+        specialise_value_list = context.getSpecialiseValueList()
         visited_trade_condition_list = context.getSpecialiseValueList(\
             portal_type=portal_type_list)
       while len(specialise_value_list) != 0:
