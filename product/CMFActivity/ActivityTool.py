@@ -868,7 +868,7 @@ class ActivityTool (Folder, UniqueObject):
               self.registerNode(currentNode)
               processing_node_list = self.getNodeList(role=ROLE_PROCESSING)
 
-              # only distribute when we are the distributingNode or if it's empty
+              # only distribute when we are the distributingNode
               if (self.getDistributingNode() == currentNode):
                 self.distribute(len(processing_node_list))
 
