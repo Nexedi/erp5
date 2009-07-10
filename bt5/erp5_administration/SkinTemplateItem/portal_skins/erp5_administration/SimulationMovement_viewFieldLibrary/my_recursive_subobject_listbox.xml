@@ -13,16 +13,16 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>columns</string>
                 <string>all_columns</string>
-                <string>sort</string>
+                <string>columns</string>
                 <string>lines</string>
                 <string>list_method</string>
-                <string>selection_name</string>
-                <string>url_columns</string>
-                <string>report_tree</string>
                 <string>report_root_list</string>
+                <string>report_tree</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>title</string>
+                <string>url_columns</string>
               </list>
             </value>
         </item>
@@ -194,6 +194,14 @@
                         <tuple>
                           <string>variation_text</string>
                           <string>Variation Text</string>
+                        </tuple>
+                        <tuple>
+                          <string>isBuildable</string>
+                          <string>Buildable</string>
+                        </tuple>
+                        <tuple>
+                          <string>isFrozen</string>
+                          <string>Frozen</string>
                         </tuple>
                       </list>
                     </value>
