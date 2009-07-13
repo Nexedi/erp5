@@ -186,7 +186,7 @@ class BusinessPath(Path):
     result = False
     if self.isCompleted(explanation) or self.isFrozen(explanation):
       return False # No need to build what was already built or frozen
-    for simulation_movement in self._getRelatedSimulationMovementValueList(
+    for simulation_movement in self.getRelatedSimulationMovementValueList(
         explanation):
       if simulation_movement.getDeliveryValue() is None:
         result = True
@@ -225,7 +225,52 @@ class BusinessPath(Path):
         'explanation_uid': self._getExplanationUidList(explanation)
       })
 
-  def _getRelatedSimulationMovementValueList(self, explanation): # XXX - What API ?
+  # IBusinessCompletable implementation
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'isCompleted')
+  def isCompleted(self, explanation):
+    """
+      Looks at all simulation related movements
+      and checks the simulation_state of the delivery
+    """
+    acceptable_state_list = self.getCompletedStateList()
+    for movement in self.getRelatedSimulationMovementValueList(explanation):
+      if movement.getSimulationState() not in acceptable_state_list:
+        return False
+    return True
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'isPartiallyCompleted')
+  def isPartiallyCompleted(self, explanation):
+    """
+      Looks at all simulation related movements
+      and checks the simulation_state of the delivery
+    """
+    acceptable_state_list = self.getCompletedStateList()
+    for movement in self.getRelatedSimulationMovementValueList(explanation):
+      if movement.getSimulationState() in acceptable_state_list:
+        return True
+    return False
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'isFrozen')
+  def isFrozen(self, explanation):
+    """
+      Looks at all simulation related movements
+      and checks if frozen
+    """
+    movement_list = self.getRelatedSimulationMovementValueList(explanation)
+    if len(movement_list) == 0:
+      return False # Nothing to be considered as Frozen
+    for movement in movement_list:
+      if not movement.isFrozen():
+        return False
+    return True
+
+  # IBusinessPath implementation
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'getRelatedSimulationMovementValueList')
+  def getRelatedSimulationMovementValueList(self, explanation):
     """
       Returns all Simulation Movements related to explanation
     """
@@ -243,43 +288,6 @@ class BusinessPath(Path):
               .getCausalityValue() == self])
       return simulation_movement_value_list
 
-  # IBusinessCompletable implementation
-  def isCompleted(self, explanation):
-    """
-      Looks at all simulation related movements
-      and checks the simulation_state of the delivery
-    """
-    acceptable_state_list = self.getCompletedStateList()
-    for movement in self._getRelatedSimulationMovementValueList(explanation):
-      if movement.getSimulationState() not in acceptable_state_list:
-        return False
-    return True
-
-  def isPartiallyCompleted(self, explanation):
-    """
-      Looks at all simulation related movements
-      and checks the simulation_state of the delivery
-    """
-    acceptable_state_list = self.getCompletedStateList()
-    for movement in self._getRelatedSimulationMovementValueList(explanation):
-      if movement.getSimulationState() in acceptable_state_list:
-        return True
-    return False
-
-  def isFrozen(self, explanation):
-    """
-      Looks at all simulation related movements
-      and checks if frozen
-    """
-    movement_list = self._getRelatedSimulationMovementValueList(explanation)
-    if len(movement_list) == 0:
-      return False # Nothing to be considered as Frozen
-    for movement in movement_list:
-      if not movement.isFrozen():
-        return False
-    return True
-
-  # IBusinessPath implementation
   def getExpectedStartDate(self, explanation, predecessor_date=None, *args, **kwargs):
     """
       Returns the expected start date for this

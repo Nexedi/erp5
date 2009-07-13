@@ -55,3 +55,11 @@ class IBusinessPath(IBusinessCompletable, IBusinessBuildable):
     'predecessor_date' can be provided as predecessor date and
      to override the date provided in the task
     """
+
+  def getRelatedSimulationMovementValueList(explanation):
+    """Returns list of values of Simulation Movements related to self
+    and delivery
+
+    explanation - any document related to business path - which bootstraped
+                  process or is related to build of one paths
+    """
