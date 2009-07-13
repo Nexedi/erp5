@@ -85,7 +85,8 @@ if pref.owner_info()[\'id\'] != str(context.REQUEST.AUTHENTICATED_USER):\n
   ptool.manage_pasteObjects(cb)\n
 pref.edit(preferred_accounting_transaction_at_date=None)\n
 pref.edit(preferred_accounting_transaction_from_date=None)\n
-pref.enable()\n
+if pref.getPreferenceState() == \'disabled\':\n
+  pref.enable()\n
 \n
 # reset selections\n
 stool = context.getPortalObject().portal_selections\n
