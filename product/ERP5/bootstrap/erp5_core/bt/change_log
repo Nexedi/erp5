@@ -1,3 +1,6 @@
+2009-07-13 tatuya
+* Remove None value from the request parameters to prevent creating unnecessary ' is Null' queries when searching via the search dialogs
+
 2009-07-06 nicolas
 * add memcached_plugin_interaction_workflow to update related Distributed Ram Cache Plugins
 

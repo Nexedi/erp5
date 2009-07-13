@@ -80,6 +80,11 @@ for key in sorted(request.form.keys()):\n
   # we use sorted to make sure x_search_key appears before x\n
   value = request.form[key]\n
 \n
+  # to remove unnecessary None value\n
+  if value == None:\n
+    request.form.pop(key)\n
+    continue\n
+\n
   # workaround the bogus case where a value is passed ?value=None\n
   if value == \'None\':\n
     value = None\n
