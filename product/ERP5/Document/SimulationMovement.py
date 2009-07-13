@@ -542,3 +542,59 @@ class SimulationMovement(Movement):
     else:
       return getTreeDelivered(self, ignore_first=ignore_first)
 
+  def _isRelatedWithMovement(self, movement_value):
+    """Checks if self is parent or children to movement_value, so those are related somehow
+
+    As simulation tree is not related to business process, relation can be bidirectional
+    """
+    self_path_list = self.getRelativeUrl().split('/')
+    movement_path_list = movement_value.getRelativeUrl().split('/')
+    
+    if len(self_path_list) == len(movement_path_list):
+      # same level, cannot be related
+      return False
+    
+    index = 0
+    for self_part in self_path_list:
+      try:
+        movement_part = movement_path_list[index]
+      except IndexError:
+        # so far was good, they are related
+        return True
+      if self_part != movement_part:
+        return False
+      index += 1
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isBuildable')
+  def isBuildable(self):
+    """Simulation Movement buildable logic"""
+    if self.getDeliveryValue() is not None:
+      # already delivered
+      return False
+    # might be buildable - business path depended
+    business_path = self.getCausalityValue(portal_type='Business Path')
+    explanation_value = self.getExplanationValue()
+    if business_path is not None and explanation_value is not None:
+      predecessor = business_path.getPredecessorValue()
+      if predecessor is None:
+        # first one, can be built
+        return True
+      else:
+        for successor_related in predecessor.getSuccessorRelatedValueList():
+          for business_path_movement in successor_related \
+              .getRelatedSimulationMovementValueList(explanation_value):
+            if self._isRelatedWithMovement(business_path_movement):
+              business_path_movement_delivery = business_path_movement \
+                  .getDeliveryValue()
+              if business_path_movement_delivery is None:
+                return False # related movement is not delivered yet
+              business_path_movement_delivery_document = \
+                  business_path_movement_delivery.getParentValue()
+              # here we can optimise somehow, as
+              # business_path_movement_delivery_document would repeat
+              if not successor_related.isCompleted(
+                  business_path_movement_delivery_document):
+                # related movements delivery is not completed
+                return False
+    return True
