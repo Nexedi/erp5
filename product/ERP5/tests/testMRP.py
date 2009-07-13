@@ -30,10 +30,8 @@ import unittest
 import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
 
-from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.tests.utils import reindex
 
@@ -48,8 +46,7 @@ class TestMRPMixin(TestBPMMixin):
   order_line_portal_type = 'Production Order Line'
 
   def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-      'erp5_invoicing', 'erp5_simplified_invoicing', 'erp5_mrp')
+    return TestBPMMixin.getBusinessTemplateList(self) + ('erp5_mrp', )
 
   def invalidateRules(self):
     """

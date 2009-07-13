@@ -26,7 +26,7 @@
 #
 ##############################################################################
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
-from Products.ERP5.tests.testBPMCore import TestBPMMixin
+from Products.ERP5.tests.testTradeModelLine import TestTradeModelLineMixin
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import reindex
@@ -34,7 +34,7 @@ from Products.CMFCore.utils import getToolByName
 from DateTime import DateTime
 import transaction
 
-class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
+class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
   normal_resource_use_category_list = ['payroll/base_salary']
   invoicing_resource_use_category_list = ['payroll/tax']
 
@@ -174,10 +174,7 @@ class TestPayrollMixin(ERP5ReportTestCase, TestBPMMixin):
            )
 
   def getBusinessTemplateList(self):
-    """ """
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-            'erp5_invoicing', 'erp5_simplified_invoicing', 'erp5_mrp',
-            'erp5_payroll')
+    return TestTradeModelLineMixin.getBusinessTemplateList(self) + ('erp5_payroll', )
 
   def createService(self):
     module = self.portal.getDefaultModule(portal_type='Service')
