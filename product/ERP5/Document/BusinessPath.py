@@ -203,15 +203,12 @@ class BusinessPath(Path):
     """
 
   def _getExplanationUidList(self, explanation):
-    """Helper method to fetch really explanation related movements
-
-       As Business Path is related to movement by causality, thanks to
-       trade_phase during expand, it is correct to pass too much explanations
-       than not enough"""
+    """Helper method to fetch really explanation related movements"""
     explanation_uid_list = [explanation.getUid()]
-    for ex in explanation.getCausalityRelatedValueList(
+    for found_explanation in explanation.getCausalityRelatedValueList(
         portal_type=self.getPortalDeliveryTypeList()):
-      explanation_uid_list.extend(self._getExplanationUidList(ex))
+      explanation_uid_list.extend(self._getExplanationUidList(
+        found_explanation))
     return explanation_uid_list
 
   def build(self, explanation):
@@ -232,12 +229,19 @@ class BusinessPath(Path):
     """
       Returns all Simulation Movements related to explanation
     """
-    # XXX What about explanations for causality related documents to explanation?
-    explanation_uid_list = self._getExplanationUidList(explanation)
-    # getCausalityRelated do not support filtering, so post filtering needed
-    return [x for x in self.getCausalityRelatedValueList(
-      portal_type='Simulation Movement')
-      if x.getExplanationUid() in explanation_uid_list]
+    simulation_movement_value_list = []
+    # first simulation movements related to explanation itself by its applied rule
+    for applied_rule in explanation.getCausalityRelatedValueList(
+        portal_type='Applied Rule'):
+      simulation_movement_value_list.extend([x.getObject() for x in
+        applied_rule.contentValues() if x.getCausalityValue() == self])
+    # now simulation movements which were used to build this delivery
+    for movement in explanation.getMovementList():
+      simulation_movement_value_list.extend([x.getObject() for x in
+        movement.getDeliveryRelatedValueList(
+          portal_type='Simulation Movement') if x \
+              .getCausalityValue() == self])
+      return simulation_movement_value_list
 
   # IBusinessCompletable implementation
   def isCompleted(self, explanation):
