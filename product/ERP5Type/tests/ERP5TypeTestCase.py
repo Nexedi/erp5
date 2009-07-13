@@ -686,20 +686,15 @@ class ERP5TypeTestCase(PortalTestCase):
               # Release locks
               transaction.commit()
             self.portal = portal
-            portal_activities = getattr(portal, 'portal_activities', None)
 
             if len(setup_done) == 1: # make sure it is run only once
               try:
                 from Products import DeadlockDebugger
               except ImportError:
                 pass
-              if int(os.environ.get('start_zserver', 0)):
-                from Testing.ZopeTestCase.utils import startZServer
-                ZopeTestCase._print('Running ZServer on port %i\n'
-                                    % startZServer()[1])
-                if portal_activities is not None:
-                  portal_activities.distributingNode = portal_activities.getCurrentNode()
-                  portal_activities._nodes = portal_activities.distributingNode,
+              from Testing.ZopeTestCase.utils import startZServer
+              ZopeTestCase._print('Running ZServer on port %i\n'
+                                  % startZServer()[1])
 
             self._updateConnectionStrings()
             self._recreateCatalog()
@@ -760,6 +755,7 @@ class ERP5TypeTestCase(PortalTestCase):
 
             transaction.commit()
 
+            portal_activities = getattr(portal, 'portal_activities', None)
             if portal_activities is not None:
               if not quiet:
                 ZopeTestCase._print('Executing pending activities ... ')
@@ -767,9 +763,7 @@ class ERP5TypeTestCase(PortalTestCase):
               count = 1000
               message_count = len(portal_activities.getMessageList())
               while message_count > 0:
-                portal_activities.distribute()
-                portal_activities.tic()
-                transaction.commit()
+                portal_activities.process_timer(None, None)
                 new_message_count = len(portal_activities.getMessageList())
                 if new_message_count != message_count:
                   if not quiet:
@@ -810,6 +804,19 @@ class ERP5TypeTestCase(PortalTestCase):
         ZopeTestCase._print('Ran Unit test of %s (installation failed)\n'
                             % title) # run_unit_test depends on this string.
         raise
+
+    def beforeClose(self):
+      PortalTestCase.beforeClose(self)
+      try:
+        # portal_activities.process_timer automatically registers current node
+        # (localhost:<random_port>). We must unregister it so that Data.fs can
+        # be reused without reconfiguring portal_activities.
+        portal_activities = self.portal.portal_activities
+        del portal_activities.distributingNode
+        del portal_activities._nodes
+        transaction.commit()
+      except AttributeError:
+        pass
 
     def stepPdb(self, sequence=None, sequence_list=None):
       """Invoke debugger"""
@@ -989,7 +996,7 @@ def dummy_tearDown(self):
   the original tests, which would write to the FileStorage when --save
   is enabled
   '''
-  self._close()
+  self._clear(1)
 
 def optimize():
   '''Significantly reduces portal creation time.'''
