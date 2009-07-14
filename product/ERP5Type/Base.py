@@ -40,6 +40,8 @@ from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.ZopeGuards import guarded_getattr
 from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 import OFS.History
+from OFS.SimpleItem import SimpleItem
+from OFS.PropertyManager import PropertyManager
 
 from Products.CMFCore.PortalContent import PortalContent
 from Products.CMFCore.Expression import Expression
@@ -791,7 +793,13 @@ class Base( CopyContainer,
                             )
 
   # We want to use a default property view
-  manage_propertiesForm = DTMLFile( 'properties', _dtmldir )
+  manage_main = manage_propertiesForm = DTMLFile( 'properties', _dtmldir )
+
+  manage_options = ( PropertyManager.manage_options +
+                     SimpleItem.manage_options +
+                     OFS.History.Historical.manage_options +
+                     CMFCatalogAware.manage_options
+                   )
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setTitle' )
   def setTitle(self, value):
