@@ -27,9 +27,11 @@
 #
 ##############################################################################
 
-from zope.interface import Interface
+from Products.ERP5.interfaces.amount import IAmount
+from Products.ERP5.interfaces.arrow_base import IArrowBase
 
-class IMovement(Interface):
+
+class IMovement(IAmount, IArrowBase):
   """Movement interface specification
 
   A movement represents an amount of resources which 
@@ -162,3 +164,4 @@ class IMovement(Interface):
   def getDestinationInventoriatedTotalAssetCredit():
     """Unclear - XXX
     """
+
