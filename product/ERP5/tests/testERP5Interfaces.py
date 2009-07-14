@@ -61,6 +61,12 @@ implements_tuple_list = [
 class TestERP5Interfaces(ERP5TypeTestCase):
   """Tests implementation of interfaces"""
 
+  def test_AggregatedAmountList_implements_IAggregatedAmountList(self):
+    # AggregatedAmountList is not a document
+    from Products.ERP5.interfaces.transformation import IAggregatedAmountList
+    from Products.ERP5.AggregatedAmountList import AggregatedAmountList
+    verifyClass(IAggregatedAmountList, AggregatedAmountList)
+  
 def makeTestMethod(document, interface):
   """Common method which checks if documents implements interface"""
   def testMethod(self):

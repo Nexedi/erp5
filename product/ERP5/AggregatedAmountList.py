@@ -28,15 +28,21 @@
 ##############################################################################
 
 from UserList import UserList
+
+import zope.interface
 from Globals import InitializeClass
 from Products.PythonScripts.Utility import allow_class
 from AccessControl import ClassSecurityInfo
-from UserList import UserList
+
+from Products.ERP5.interfaces.transformation import IAggregatedAmountList
+
 class AggregatedAmountList(UserList):
   """
     Temporary object needed to aggregate Amount value
     And to calculate some report or total value
   """
+  zope.interface.implements(IAggregatedAmountList)
+
   meta_type = "AggregatedAmountList"
   security = ClassSecurityInfo()
 #  security.declareObjectPublic()

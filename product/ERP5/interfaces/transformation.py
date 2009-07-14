@@ -30,10 +30,18 @@
 
 from zope.interface import Interface
 
+try:
+  from zope.interface.common.sequence import ISequence
+except ImportError:
+  # ISequence does not exists in old zope.interface versions
+  class ISequence(Interface):
+    pass
+
+
 class ITransformation(Interface):
   """
-    Common Interface to implementing querying of Indirect Amount
-    Models (TaxModelLine, InvoiceModelLine, etc) shall be based on this
+    Common Interface to implementing querying of indirect amount
+    models (TaxModelLine, InvoiceModelLine, etc) shall be based on this
     interface
   """
 
@@ -48,17 +56,16 @@ class ITransformation(Interface):
     rounding - boolean argument, which controls if rounding shall be applied on
       generated movements or not
 
-    Returns list of instance of AggregatedAmountList class
+    Returns an instance implementing IAggregatedAmountList.
 
     Note: This method shall be linear in case if context is order, line,
     applied rule or movement. In case of built delivery this method shall
     be wise enough to CORRECTLY un-linearise calculation, eg. tax is
     time dependent, paysheet build from invoices.
     """
-    pass
 
   def updateAggregatedAmountList(context, movement_list=None, rounding=False):
-    """Updates existing movement and returns new or deleted if any according to model
+    """Updates existing movements and returns new or deleted if any according to model
 
     context - represents object on which update shall happen
 
@@ -68,9 +75,18 @@ class ITransformation(Interface):
     rounding - boolean argument, which controls if rounding shall be applied on
       generated movements or not
 
-    Returns a dictionary of list of instances of AggregatedAmountList class.
-    Dictionary contain lists described by keys:
-      * movement_to_add_list - list for movements which shall be added
-      * movement_to_delete_list - list of movements which shall be deleted
+    Returns a dictionary with two keys:
+      * movement_to_add_list - an instance of IAggregatedAmountList for amounts
+        that have to be added in the context.
+        FIXME: this is not 'movement'
+      * movement_to_delete_list - a list of movements from movement_list or from the
+        context that shall be deleted.
     """
-    pass
+
+
+class IAggregatedAmountList(ISequence):
+  """An Aggregated Amount List is a list of amounts aggregated together.
+
+  It is a sequence of objects implementing IAmount interface.
+  """
+

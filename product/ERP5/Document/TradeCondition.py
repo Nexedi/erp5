@@ -88,7 +88,6 @@ class TradeCondition(Path, Transformation, XMLMatrix):
               .getPreferredNormalResourceUseCategoryList()
       # check if the existing movements are in aggregated movements
       movement_to_delete_list = []
-      movement_to_add_list = []
       for movement in existing_movement_list:
         keep_movement = False
         # check if the movement is a generated one or entered by the user.
@@ -112,8 +111,9 @@ class TradeCondition(Path, Transformation, XMLMatrix):
             keep_movement = True
         if not keep_movement:
           movement_to_delete_list.append(movement)
-      movement_to_add_list = [amount for amount in aggregated_amount_list if
-          amount.getReference() not in modified_reference_list]
+      movement_to_add_list = AggregatedAmountList(
+                  [amount for amount in aggregated_amount_list if
+                    amount.getReference() not in modified_reference_list])
       return {'movement_to_delete_list' : movement_to_delete_list,
               'movement_to_add_list': movement_to_add_list}
 
@@ -228,15 +228,20 @@ class TradeCondition(Path, Transformation, XMLMatrix):
           **kw))
       movement_list = result
 
-      # remove movement that should not be created
-      final_movement_list = []
+      # remove amounts that should not be created, or with "incorrect" references.
+      # XXX what are incorrect references ???
+      # getTradeModelLineComposedList should have removed duplicate reference
+      # in the model graph
+      # TODO: review this part
+      aggregated_amount_list = AggregatedAmountList()
       for movement in movement_list:
-        movement_ref = movement.getReference()
+        movement_reference = movement.getReference()
         for model_line in trade_model_line_composed_list:
-          if model_line.getReference() == movement_ref and\
+          if model_line.getReference() == movement_reference and\
               model_line.isCreateLine():
-            final_movement_list.append(movement)
-      return final_movement_list
+            aggregated_amount_list.append(movement)
+
+      return aggregated_amount_list
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCell')
     def getCell(self, *kw , **kwd):
