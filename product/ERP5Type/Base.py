@@ -791,7 +791,7 @@ class Base( CopyContainer,
                             )
 
   # We want to use a default property view
-  manage_propertiesForm = DTMLFile( 'dtml/properties', _dtmldir )
+  manage_propertiesForm = DTMLFile( 'properties', _dtmldir )
 
   security.declareProtected( Permissions.ModifyPortalContent, 'setTitle' )
   def setTitle(self, value):
