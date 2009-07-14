@@ -47,6 +47,7 @@ from Products.CMFCore.PortalContent import PortalContent
 from Products.CMFCore.Expression import Expression
 from Products.CMFCore.utils import getToolByName, _getViewFor
 from Products.CMFCore.WorkflowCore import ObjectDeleted, ObjectMoved
+from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
 
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD, TRIGGER_USER_ACTION
 
