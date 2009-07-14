@@ -100,7 +100,7 @@ class IAmount(Interface):
 
   def getNetQuantity():
     """
-      Returns the quantity multiplied by the ratio.
+      Returns the quantity multiplied by the efficiency ratio.
     """
 
   # Price API
@@ -119,13 +119,23 @@ class IAmount(Interface):
   def getConvertedQuantity():
     """
       Returns the quantity of the resource converted in the
-      management unit of the resource
+      management unit of the resource.
     """
 
   def getNetConvertedQuantity():
     """
       Returns the net quantity of the resource converted in the
-      management unit of the resource
+      management unit of the resource.
+    """
+
+  # Transformation API
+  def getBaseContributionList():
+    """The list of bases this amount contributes to. 
+    """
+
+  def getBaseApplicationList():
+    """The list of bases this amount has been applied on. Only set if the
+    amount comes from a transformation.
     """
 
   # Make it possible to add amounts
