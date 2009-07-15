@@ -57,7 +57,8 @@
 \n
 # validate rules\n
 for rule in portal.portal_rules.objectValues():\n
-  rule.validate()\n
+  if rule.getValidationState() != \'validated\':\n
+    rule.validate()\n
 \n
 # open all accounts\n
 for account in portal.account_module.objectValues():\n
