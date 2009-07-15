@@ -546,7 +546,7 @@ class OOoDocument(PermanentURLMixIn, File, ConversionCacheMixin):
       Returns the metadata extracted by the conversion
       server.
     """
-    return self._base_metadata
+    return getattr(self, '_base_metadata', {})
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'updateBaseMetadata')
