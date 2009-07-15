@@ -126,7 +126,7 @@
                         <string>my_successor_title</string>
                         <string>my_destination_method_id</string>
                         <string>my_delivery_builder_list</string>
-                        <string>my_trade_phase_list</string>
+                        <string>my_trade_phase</string>
                       </list>
                     </value>
                 </item>
