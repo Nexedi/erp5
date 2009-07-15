@@ -133,6 +133,9 @@ class ConversionCacheMixin:
     preference_tool = getToolByName(self, 'portal_preferences')
     cache_factory_name = preference_tool.getPreferredConversionCacheFactory('document_cache_factory')
     cache_factory = cache_tool.getRamCacheRoot().get(cache_factory_name)
+    #XXX This conditional statement should be remove as soon as
+    #Broadcasting will be enable among all zeo clients.
+    #Interaction which update portal_caches should interact with all nodes.
     if cache_factory is None and getattr(cache_tool, cache_factory_name, None) is not None:
       #ram_cache_root is not up to date for current node
       cache_tool.updateCache()
