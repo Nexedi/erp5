@@ -127,15 +127,24 @@ class ConversionCacheMixin:
   def _getCacheFactory(self):
     """
     """
+    if self.isTempObject():
+      return
     cache_tool = getToolByName(self, 'portal_caches')
     preference_tool = getToolByName(self, 'portal_preferences')
     cache_factory_name = preference_tool.getPreferredConversionCacheFactory('document_cache_factory')
+    cache_factory = cache_tool.getRamCacheRoot().get(cache_factory_name)
+    if cache_factory is None and getattr(cache_tool, cache_factory_name, None) is not None:
+      #ram_cache_root is not up to date for current node
+      cache_tool.updateCache()
     return cache_tool.getRamCacheRoot().get(cache_factory_name)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'clearConversionCache')
   def clearConversionCache(self):
     """
     """
+    if self.isTempObject():
+      self.temp_conversion_data = {}
+      return
     for cache_plugin in self._getCacheFactory().getCachePluginList():
       cache_plugin.delete(self.getPath(), DEFAULT_CACHE_SCOPE)
 
@@ -143,6 +152,10 @@ class ConversionCacheMixin:
   def updateConversionCache(self):
     """
     """
+    if self.isTempObject():
+      if getattr(aq_base(self), 'temp_conversion_data', None) is None:
+        self.temp_conversion_data = {}
+      return
     cache_factory = self._getCacheFactory()
     cache_duration = cache_factory.cache_duration
     for cache_plugin in cache_factory.getCachePluginList():
@@ -157,6 +170,9 @@ class ConversionCacheMixin:
     """
     self.updateConversionCache()
     cache_id = self.generateCacheId(**kw)
+    if self.isTempObject():
+      temp_conversion_dict = getattr(aq_base(self), 'temp_conversion_data')
+      return temp_conversion_dict.has_key(cache_id)
     cache_factory = self._getCacheFactory()
     plugin_list = cache_factory.getCachePluginList()
     #If there is no plugin list return False OR one them is doesn't contain
@@ -174,6 +190,10 @@ class ConversionCacheMixin:
     """
     self.updateConversionCache()
     cache_id = self.generateCacheId(**kw)
+    if self.isTempObject():
+      temp_conversion_cache = getattr(aq_base(self), 'temp_conversion_data')
+      temp_conversion_cache[cache_id] = (mime, aq_base(data))
+      return
     cache_factory = self._getCacheFactory()
     cache_duration = cache_factory.cache_duration
     if data is not None:
@@ -194,6 +214,9 @@ class ConversionCacheMixin:
     """
     self.updateConversionCache()
     cache_id = self.generateCacheId(**kw)
+    if self.isTempObject():
+      temp_conversion_cache = getattr(aq_base(self), 'temp_conversion_data')
+      return temp_conversion_cache[cache_id]
     for cache_plugin in self._getCacheFactory().getCachePluginList():
       cache_entry = cache_plugin.get(self.getPath(), DEFAULT_CACHE_SCOPE)
       data = cache_entry.getValue().get(cache_id)
