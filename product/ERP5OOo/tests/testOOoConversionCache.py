@@ -171,6 +171,41 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
       self.assertTrue(document.getConversionSize(format=format))
 
+  def test_02_PersistentCacheConversionOfTempObject(self):
+    """
+      Test Conversion Cache mechanism
+    """
+    print '\nPersistent Cache Conversion Of Temp Objects'
+
+    filename = 'TEST-en-002.doc'
+    file = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file, temp_object=1)
+    document.convertToBaseFormat()
+    format_list = document.getTargetFormatList()
+    if not format_list:
+      self.fail('Target format list is empty')
+    #Test Conversion Cache
+    for format in format_list:
+      document.convert(format=format)
+      transaction.commit()
+      self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
+      self.assertTrue(document.getConversionSize(format=format))
+    document.clearConversionCache()
+    transaction.commit()
+    #Test Cache is cleared
+    for format in format_list:
+      self.assertFalse(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
+      self.assertEqual(document.getConversionSize(format=format), 0)
+    document.clearConversionCache()
+    transaction.commit()
+    #Test Conversion Cache after clearConversionCache
+    for format in format_list:
+      document.convert(format=format)
+      transaction.commit()
+      self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
+      self.assertTrue(document.getConversionSize(format=format))
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocumentConversionCache))
