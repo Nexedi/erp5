@@ -380,7 +380,11 @@ class ImmobilisationMovement(Movement, XMLObject):
                             'getImmobilisationState')
   def getImmobilisationState(self):
     """
-    Return root delivery immobilisation state
+    Return root delivery immobilisation state, or None if this is not chained
+    to an immobilisation workflow
     """
-    return self.getRootDeliveryValue().getImmobilisationState()
+    root_delivery = self.getRootDeliveryValue()
+    if getattr(root_delivery, 'getImmobilisationState', None) is not None:
+      return root_delivery.getImmobilisationState()
+
 
