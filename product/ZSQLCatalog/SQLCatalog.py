@@ -256,14 +256,7 @@ class Catalog(Folder,
   the argument search_mode_KeyName, or even more specifically, search_mode_Table.Key
   or search_mode_Table_Key
 
-
-  brain defined in methods...
-
-  TODO:
-
-    - optmization: indexing objects should be deferred
-      until timeout value or end of transaction
-  """
+ """
 
   __implements__ = ISearchKeyCatalog
 
