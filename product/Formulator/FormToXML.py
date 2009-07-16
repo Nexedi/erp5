@@ -8,6 +8,7 @@ def formToXML(form, prologue=1):
     """Takes a formulator form and serializes it to an XML representation.
     """
     form_as_xml = Element('form')
+    encoding = form.stored_encoding or 'utf-8'
     # export form settings
     for field in form.settings_form.get_fields(include_disabled=1):
       id = field.id
@@ -18,7 +19,7 @@ def formToXML(form, prologue=1):
         else:
           value = 'false'
       sub_element = SubElement(form_as_xml, id)
-      sub_element.text = escape(str(value))
+      sub_element.text = escape(str(value)).decode(encoding)
     groups = SubElement(form_as_xml, 'groups')
     # export form groups
     for group in form.get_groups(include_empty=1):
@@ -55,7 +56,7 @@ def formToXML(form, prologue=1):
             if not isinstance(value, (str, unicode)):
               value = str(value)
             value_element = SubElement(values_element, key)
-          value_element.text = escape(str(value))
+          value_element.text = escape(str(value)).decode(encoding)
 
           tales_element = SubElement(field_element, 'tales')
           items = field.tales.items()
@@ -63,11 +64,11 @@ def formToXML(form, prologue=1):
           for key, value in items:
             if value:
               tale_element = SubElement(tales_element, key)
-              tale_element.text = escape(str(value._text))
+              tale_element.text = escape(str(value._text)).decode(encoding)
           messages = SubElement(field_element, 'messages')
           for message_key in field.get_error_names():
             message_element = SubElement(messages, 'message', name=message_key)
-            message_element.text = escape(field.get_error_message(message_key))
+            message_element.text = escape(field.get_error_message(message_key)).decode(encoding)
     form_as_string = etree.tostring(form_as_xml, encoding='utf-8',
                                     xml_declaration=True, pretty_print=True)
     if form.unicode_mode:
