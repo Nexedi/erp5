@@ -158,6 +158,40 @@
                        set_page python:1">\n
   <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
 </tal:block>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>id=x1_listbox_last_page</td>\n
+  <td></td>\n
+</tr>\n
+<tal:block tal:define="prefix string:x0_listbox;\n
+                       set_page python:2">\n
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+</tal:block>\n
+<tal:block tal:define="prefix string:x1_listbox;\n
+                       set_page python:10">\n
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+</tal:block>\n
+<tal:block tal:define="prefix string:x2_listbox;\n
+                       set_page python:1">\n
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+</tal:block>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>id=x1_listbox_first_page</td>\n
+  <td></td>\n
+</tr>\n
+<tal:block tal:define="prefix string:x0_listbox;\n
+                       set_page python:2">\n
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+</tal:block>\n
+<tal:block tal:define="prefix string:x1_listbox;\n
+                       set_page python:1">\n
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+</tal:block>\n
+<tal:block tal:define="prefix string:x2_listbox;\n
+                       set_page python:1">\n
+  <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/checkCurrentPage" />\n
+</tal:block>\n
 </tbody></table>\n
 </body>\n
 </html>\n
