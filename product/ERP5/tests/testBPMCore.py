@@ -35,7 +35,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.tests.utils import reindex
+from Products.ERP5Type.tests.utils import reindex, todo_erp5
 
 class TestBPMMixin(ERP5TypeTestCase):
   """Skeletons for tests which depend on BPM"""
@@ -79,21 +79,19 @@ class TestBPMMixin(ERP5TypeTestCase):
     return module.newContent(portal_type=self.business_process_portal_type)
 
   @reindex
-  def createBusinessPath(self, business_process=None):
+  def createBusinessPath(self, business_process=None, **kw):
     if business_process is None:
-      business_process = self.portal.business_process_module.newContent(
-        portal_type=self.business_process_portal_type)
+      business_process = self.createBusinessProcess()
     business_path = business_process.newContent(
-      portal_type=self.business_path_portal_type)
+      portal_type=self.business_path_portal_type, **kw)
     return business_path
 
   @reindex
-  def createBusinessState(self, business_process=None):
+  def createBusinessState(self, business_process=None, **kw):
     if business_process is None:
-      business_process = self.portal.business_process_module.newContent(
-                           portal_type=self.business_process_portal_type)
+      business_process = self.createBusinessProcess()
     business_path = business_process.newContent(
-        portal_type=self.business_state_portal_type)
+        portal_type=self.business_state_portal_type, **kw)
     return business_path
 
   def createMovement(self):
@@ -595,7 +593,159 @@ class TestBPMImplementation(TestBPMMixin):
     self.assertEquals(business_path_d_e.getExpectedStartDate(mock), DateTime('2009/04/08 GMT+9'))
     self.assertEquals(business_path_d_e.getExpectedStopDate(mock), DateTime('2009/04/12 GMT+9'))
 
+class TestBPMisBuildableImplementation(TestBPMMixin):
+
+  order_portal_type = 'Sale Order'
+  order_line_portal_type = 'Sale Order Line'
+  delivery_portal_type = 'Sale Packing List'
+  delivery_line_portal_type = 'Sale Packing List Line'
+
+  @todo_erp5
+  def test_isBuildable(self):
+    """Test isBuildable implementation for Business Paths and Simulation Movements"""
+
+    # disable interactions in workflow methods to do not have side effects and
+    # to increase readability of assertions and code
+    # FIXME:
+    #  * do it non destructive way
+    #  * trim list
+    #  * or do it other way
+    for workflow_id in (
+        'delivery_causality_interaction_workflow',
+        'delivery_causality_workflow',
+        'delivery_movement_causality_interaction_workflow',
+        'delivery_movement_simulation_interaction_workflow',
+        'delivery_simulation_interaction_workflow',
+        'order_movement_simulation_interaction_workflow',
+        'order_simulation_interaction_workflow',
+        'order_workflow',
+        'packing_list_workflow',
+      ):
+      workflow = getattr(self.portal.portal_workflow, workflow_id)
+      for script in workflow.scripts.objectValues():
+        script.write('return')
+    transaction.commit()
+
+    # simple business process preparation
+    business_process = self.createBusinessProcess()
+    first_state = self.createBusinessState(business_process)
+    middle_state = self.createBusinessState(business_process)
+    last_state = self.createBusinessState(business_process)
+
+    # path which is completed, as soon as related simulation movements are in
+    # proper state
+    delivery_path = self.createBusinessPath(business_process,
+        predecessor_value = first_state, successor_value = middle_state,
+        trade_phase='default/delivery', completed_state_list = ['confirmed'])
+
+    invoice_path = self.createBusinessPath(business_process,
+        predecessor_value = middle_state, successor_value = last_state,
+        trade_phase='default/invoicing')
+
+    # create order and order line to have starting point for business process
+    order = self.portal.getDefaultModule(
+        portal_type=self.order_portal_type).newContent(
+            portal_type=self.order_portal_type)
+    order_line = order.newContent(portal_type=self.order_line_portal_type)
+
+    # first level rule with simulation movement
+    applied_rule = self.portal.portal_simulation.newContent(
+        portal_type='Applied Rule', causality_value=order)
+
+    simulation_movement = applied_rule.newContent(
+      portal_type = 'Simulation Movement',
+      order_value = order_line,
+      causality_value = delivery_path
+    )
+
+    # second level rule with simulation movement
+    invoicing_rule = simulation_movement.newContent(
+        portal_type='Applied Rule')
+    invoicing_simulation_movement = invoicing_rule.newContent(
+        portal_type='Simulation Movement', causality_value = invoice_path)
+
+    # split simulation movement for first level applied rule
+    split_simulation_movement = applied_rule.newContent(
+      portal_type = 'Simulation Movement', order_value = order_line,
+      causality_value = delivery_path)
+
+    # second level rule with simulation movement for split parent movement
+    split_invoicing_rule = split_simulation_movement.newContent(
+        portal_type='Applied Rule')
+    split_invoicing_simulation_movement = split_invoicing_rule.newContent(
+        portal_type='Simulation Movement', causality_value = invoice_path)
+
+    self.stepTic()
+
+    # in the beginning only order related movements shall be buildable
+    self.assertEquals(delivery_path.isBuildable(order), True)
+    self.assertEquals(simulation_movement.isBuildable(), True)
+    self.assertEquals(split_simulation_movement.isBuildable(), True)
+
+    self.assertEquals(invoice_path.isBuildable(order), False)
+    self.assertEquals(invoicing_simulation_movement.isBuildable(), False)
+    self.assertEquals(split_invoicing_simulation_movement.isBuildable(),
+        False)
+
+    # add delivery
+    delivery = self.portal.getDefaultModule(
+        portal_type=self.delivery_portal_type).newContent(
+            portal_type=self.delivery_portal_type, causality_value = order)
+    delivery_line = delivery.newContent(
+        portal_type=self.delivery_line_portal_type)
+
+    # relate not split movement with delivery (deliver it)
+    simulation_movement.edit(delivery_value = delivery_line)
+
+    self.stepTic()
+
+    # delivery_path (for order) is still buildable, as split movement is not
+    # delivered yet
+    #
+    # invoice_path is not yet buildable, delivery is in inproper simulation state
+    #
+    # delivery_path (for delivery) is not buildable - delivery is already
+    # built for those movements
+    self.assertEquals(delivery_path.isBuildable(order), True)
+    self.assertEquals(split_simulation_movement.isBuildable(), True)
+
+    self.assertEquals(delivery_path.isBuildable(delivery), False)
+    self.assertEquals(invoice_path.isBuildable(delivery), False)
+    self.assertEquals(simulation_movement.isBuildable(), False)
+    self.assertEquals(invoicing_simulation_movement.isBuildable(), False)
+    self.assertEquals(invoice_path.isBuildable(order), False)
+    self.assertEquals(split_invoicing_simulation_movement.isBuildable(),
+        False)
+
+    # put delivery in simulation state configured on path (and this state is
+    # available directly on movements)
+    delivery.plan()
+    delivery.confirm()
+
+    self.assertEqual('confirmed', delivery.getSimulationState())
+
+    self.stepTic()
+
+    # delivery_path (for order) is still buildable, as split movement is not
+    # delivered yet
+    #
+    # invoicing_path (for delivery and order) buildable - in case of order,
+    # because part of tree is buildable
+    #
+    # split movement for invoicing is not buildable - no proper delivery
+    # related for previous path
+    self.assertEquals(delivery_path.isBuildable(order), True)
+    self.assertEquals(invoicing_simulation_movement.isBuildable(), True)
+    self.assertEquals(invoice_path.isBuildable(delivery), True)
+    self.assertEquals(invoice_path.isBuildable(order), True)
+
+    self.assertEquals(delivery_path.isBuildable(delivery), False)
+    self.assertEquals(simulation_movement.isBuildable(), False)
+    self.assertEquals(split_invoicing_simulation_movement.isBuildable(),
+        False)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestBPMImplementation))
+  suite.addTest(unittest.makeSuite(TestBPMisBuildableImplementation))
   return suite
