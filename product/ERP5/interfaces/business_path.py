@@ -64,7 +64,7 @@ class IBusinessPath(IBusinessCompletable, IBusinessBuildable):
                   process or is related to build of one paths
     """
 
-  def isMovementRelatedWithMovement(movement_value_a, movement_value_b)
+  def isMovementRelatedWithMovement(movement_value_a, movement_value_b):
     """Checks if self is parent or children to movement_value
 
     This logic is Business Process specific for Simulation Movements, as
