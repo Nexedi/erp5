@@ -229,16 +229,17 @@ class ImmobilisationMovement(Movement, XMLObject):
     return errors
       
       
-  security.declareProtected(Permissions.View, 'checkImmobilisationConsistency')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'checkImmobilisationConsistency')
   def checkImmobilisationConsistency(self, *args, **kw):
     """
     Checks the consistency about immobilisation values
     """
-    return_value = self._checkImmobilisationConsistency(*args, **kw)
-    return return_value
+    return self._checkImmobilisationConsistency(*args, **kw)
 
 
-  security.declareProtected(Permissions.View, 'getAmortisationMethodParameter')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getAmortisationMethodParameter')
   def getAmortisationMethodParameter(self, parameter_list, **kw):
     """
     Returns a dictionary containing the value of each parameter
@@ -251,7 +252,8 @@ class ImmobilisationMovement(Movement, XMLObject):
     return self.getAmortisationMethodParameterForItem(None, parameter_list, **kw)
 
 
-  security.declareProtected(Permissions.View, 'getAmortisationMethodParameterForItem')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getAmortisationMethodParameterForItem')
   def getAmortisationMethodParameterForItem(self, item, parameter_list, split_char=None, split_qty=3, **kw):
     """
     Returns a dictionary containing the value of each parameter
@@ -299,7 +301,8 @@ class ImmobilisationMovement(Movement, XMLObject):
     return parameter_dict
 
       
-  security.declareProtected(Permissions.View, 'getActualAmortisationMethodForItem')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getActualAmortisationMethodForItem')
   def getActualAmortisationMethodForItem(self, item, **kw):
     """
     Returns the actual amortisation method by getting the previous
@@ -322,7 +325,8 @@ class ImmobilisationMovement(Movement, XMLObject):
     return None
 
 
-  security.declareProtected(Permissions.View, 'getNeededSpecificParameterListForItem')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getNeededSpecificParameterListForItem')
   def getNeededSpecificParameterListForItem(self, item, **kw):
     """
     Returns the list of specific parameters which are
@@ -335,7 +339,8 @@ class ImmobilisationMovement(Movement, XMLObject):
                                                       **kw)["needed_specific_parameter_list"]
                                                       
   
-  security.declareProtected(Permissions.View, 'getUncontinuousNeededSpecificParameterListForItem')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getUncontinuousNeededSpecificParameterListForItem')
   def getUncontinuousNeededSpecificParameterListForItem(self, item, **kw):
     """
     Returns the list of specific parameters which are
@@ -349,7 +354,8 @@ class ImmobilisationMovement(Movement, XMLObject):
                                                       **kw)["uncontinuous_needed_specific_parameter_list"]
                                                       
                                                           
-  security.declareProtected(Permissions.View, 'getFacultativeSpecificParameterListForItem')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getFacultativeSpecificParameterListForItem')
   def getFacultativeSpecificParameterListForItem(self, item, **kw):
     """
     Returns the list of specific parameters which are
@@ -362,18 +368,19 @@ class ImmobilisationMovement(Movement, XMLObject):
                                                       **kw)["facultative_specific_parameter_list"]
 
                                                                                                             
-  security.declareProtected(Permissions.View, 'isUsingAmortisationMethod')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isUsingAmortisationMethod')
   def isUsingAmortisationMethod(self, method):
     """
     Return true if this item is using the given method
     """
-    if self.getAmortisationMethod() == method:
-      return 1
-    return 0
+    return self.getAmortisationMethod() == method
 
-  security.declareProtected(Permissions.View, 'getImmobilisationState')
-  def getImmobilisationState(self, id_only=1):
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getImmobilisationState')
+  def getImmobilisationState(self):
     """
     Return root delivery immobilisation state
     """
     return self.getRootDeliveryValue().getImmobilisationState()
+
