@@ -193,7 +193,7 @@ class BusinessPath(Path):
     predecessor = self.getPredecessorValue()
     if predecessor is None:
       return result
-    if predecessor.isCompleted(explanation):
+    if predecessor.isPartiallyCompleted(explanation):
       return result
     return False
 
@@ -267,26 +267,103 @@ class BusinessPath(Path):
         return False
     return True
 
+  def _recurseGetValueList(self, document, portal_type):
+    """Helper method to recurse documents as deep as possible and returns
+       list of document values matching portal_type"""
+    return_list = []
+    for subdocument in document.contentValues():
+      if subdocument.getPortalType() == portal_type:
+        return_list.append(subdocument)
+      return_list.extend(self._recurseGetValueList(subdocument, portal_type))
+    return return_list
+
+  def isMovementRelatedWithMovement(self, movement_value_a, movement_value_b):
+    """Documentation in IBusinessPath"""
+    movement_a_path_list = movement_value_a.getRelativeUrl().split('/')
+    movement_b_path_list = movement_value_b.getRelativeUrl().split('/')
+
+    if len(movement_a_path_list) == len(movement_b_path_list):
+      if movement_value_a == movement_value_b:
+        # same is related
+        return True
+      # same level, cannot be related
+      return False
+
+    index = 0
+    for movement_a_part in movement_a_path_list:
+      try:
+        movement_b_part = movement_b_path_list[index]
+      except IndexError:
+        # so far was good, they are related
+        return True
+      if movement_a_part != movement_b_part:
+        return False
+      index += 1
+    # movement_a_path_list was shorter than movement_b_path_list and matched
+    # so they are related
+    return True
+
+  def _isDeliverySimulationMovementRelated(self, delivery, simulation_movement):
+    """Helper method, which checks if simulation_movement is BPM like related
+       with delivery"""
+    for delivery_simulation_movement in self \
+        ._getDeliverySimulationMovementList(delivery):
+      if self.isMovementRelatedWithMovement(delivery_simulation_movement,
+          simulation_movement):
+        return True
+    return False
+
+  def _getDeliverySimulationMovementList(self, delivery):
+    """Returns list of simulation movements related to delivery by applied rule
+       or delivery's movements"""
+    movement_list = []
+    for applied_rule in delivery.getCausalityRelatedValueList(
+        portal_type='Applied Rule'):
+      movement_list.extend(applied_rule.contentValues(
+        portal_type='Simulation Movement'))
+    for movement in delivery.getMovementList():
+      movement_list.extend(movement.getDeliveryRelatedValueList(
+        portal_type='Simulation Movement'))
+    return movement_list
+
   # IBusinessPath implementation
   security.declareProtected(Permissions.AccessContentsInformation,
       'getRelatedSimulationMovementValueList')
   def getRelatedSimulationMovementValueList(self, explanation):
     """
-      Returns all Simulation Movements related to explanation
+      Returns recursively all Simulation Movements indirectly related to explanation and self
+
+      As business sequence is not related to simulation tree need to built
+      full simulation trees per applied rule
     """
+    # FIXME: Needed better implementation, maybe use catalog?
     simulation_movement_value_list = []
-    # first simulation movements related to explanation itself by its applied rule
+    # first tree from root Applied Rules related to delivery itself
     for applied_rule in explanation.getCausalityRelatedValueList(
         portal_type='Applied Rule'):
-      simulation_movement_value_list.extend([x.getObject() for x in
-        applied_rule.contentValues() if x.getCausalityValue() == self])
-    # now simulation movements which were used to build this delivery
+      simulation_movement_value_list.extend(self._recurseGetValueList(
+        applied_rule, 'Simulation Movement'))
+    # now tree from root Applied Rules related to movements used to build delivery
+    root_applied_rule_list = []
     for movement in explanation.getMovementList():
-      simulation_movement_value_list.extend([x.getObject() for x in
-        movement.getDeliveryRelatedValueList(
-          portal_type='Simulation Movement') if x \
-              .getCausalityValue() == self])
-      return simulation_movement_value_list
+      for simulation_movement in movement.getDeliveryRelatedValueList(
+          portal_type='Simulation Movement'):
+        applied_rule = simulation_movement.getRootAppliedRule()
+        if applied_rule not in root_applied_rule_list:
+          root_applied_rule_list.append(
+              simulation_movement.getRootAppliedRule())
+
+    for applied_rule in root_applied_rule_list:
+      simulation_movement_value_list.extend(self._recurseGetValueList(
+        applied_rule, 'Simulation Movement'))
+
+    return [simulation_movement.getObject() for simulation_movement
+          in simulation_movement_value_list
+          # this business path
+          if simulation_movement.getCausalityValue() == self
+          # related with explanation
+          and self._isDeliverySimulationMovementRelated(
+            explanation, simulation_movement)]
 
   def getExpectedStartDate(self, explanation, predecessor_date=None, *args, **kwargs):
     """

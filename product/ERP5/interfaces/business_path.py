@@ -63,3 +63,12 @@ class IBusinessPath(IBusinessCompletable, IBusinessBuildable):
     explanation - any document related to business path - which bootstraped
                   process or is related to build of one paths
     """
+
+  def isMovementRelatedWithMovement(movement_value_a, movement_value_b)
+    """Checks if self is parent or children to movement_value
+
+    This logic is Business Process specific for Simulation Movements, as
+    sequence of Business Process is not related appearance of Simulation Tree
+
+    movement_value_a, movement_value_b - movements to check relation between
+    """

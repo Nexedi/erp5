@@ -542,29 +542,6 @@ class SimulationMovement(Movement):
     else:
       return getTreeDelivered(self, ignore_first=ignore_first)
 
-  def _isRelatedWithMovement(self, movement_value):
-    """Checks if self is parent or children to movement_value, so those are related somehow
-
-    As simulation tree is not related to business process, relation can be bidirectional
-    """
-    self_path_list = self.getRelativeUrl().split('/')
-    movement_path_list = movement_value.getRelativeUrl().split('/')
-    
-    if len(self_path_list) == len(movement_path_list):
-      # same level, cannot be related
-      return False
-    
-    index = 0
-    for self_part in self_path_list:
-      try:
-        movement_part = movement_path_list[index]
-      except IndexError:
-        # so far was good, they are related
-        return True
-      if self_part != movement_part:
-        return False
-      index += 1
-
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isBuildable')
   def isBuildable(self):
@@ -584,7 +561,7 @@ class SimulationMovement(Movement):
         for successor_related in predecessor.getSuccessorRelatedValueList():
           for business_path_movement in successor_related \
               .getRelatedSimulationMovementValueList(explanation_value):
-            if self._isRelatedWithMovement(business_path_movement):
+            if successor_related.isMovementRelatedWithMovement(self, business_path_movement):
               business_path_movement_delivery = business_path_movement \
                   .getDeliveryValue()
               if business_path_movement_delivery is None:
