@@ -171,11 +171,11 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
       self.assertTrue(document.getConversionSize(format=format))
 
-  def test_02_PersistentCacheConversionOfTempObject(self):
+  def test_02_VolatileCacheConversionOfTempObject(self):
     """
       Test Conversion Cache mechanism
     """
-    print '\nPersistent Cache Conversion Of Temp Objects'
+    print '\nVolatile Cache Conversion of temp objects'
 
     filename = 'TEST-en-002.doc'
     file = makeFileUpload(filename)
@@ -205,7 +205,25 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
       self.assertTrue(document.getConversionSize(format=format))
 
+  def test_03_CacheConversionOfTempObjectIsNotMixed(self):
+    """
+      Test Conversion Cache mechanism
+    """
+    print '\nCache Conversion of temp objects is not mixed'
 
+    filename1 = 'TEST-en-002.doc'
+    filename2 = 'TEST-en-002.odt'
+    file1 = makeFileUpload(filename1)
+    file2 = makeFileUpload(filename2)
+    document1 = self.portal.portal_contributions.newContent(file=file1, temp_object=1)
+    document1.convertToBaseFormat()
+    document2 = self.portal.portal_contributions.newContent(file=file2, temp_object=1)
+    document2.convertToBaseFormat()
+    format = 'pdf'
+    document1.convert(format=format)
+    document2.convert(format=format)
+    self.assertNotEqual(document1.getConversion(format=format),
+                        document2.getConversion(format=format))
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocumentConversionCache))
