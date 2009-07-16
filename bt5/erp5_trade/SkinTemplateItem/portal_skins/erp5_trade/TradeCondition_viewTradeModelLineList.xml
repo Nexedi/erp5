@@ -96,6 +96,8 @@
                       <list>
                         <string>listbox_price</string>
                         <string>listbox_reference</string>
+                        <string>listbox_base_application_title_list</string>
+                        <string>listbox_base_contribution_title_list</string>
                       </list>
                     </value>
                 </item>
