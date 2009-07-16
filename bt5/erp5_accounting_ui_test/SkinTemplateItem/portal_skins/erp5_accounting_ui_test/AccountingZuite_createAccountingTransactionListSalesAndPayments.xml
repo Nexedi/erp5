@@ -77,7 +77,6 @@ if accounting_module.getProperty(\'current_content_script\',\n
 # XXX should be done in an external script / tool, because we have to\n
 # workaround some security checks\n
 if 1:\n
-  [ tr.cancel() for tr in accounting_module.objectValues() ]\n
   accounting_module.manage_delObjects(list(accounting_module.objectIds()))\n
 \n
 # XXX copy & paste \n
@@ -248,10 +247,6 @@ return "Accounting Transactions Created."\n
                             <string>total_receivable_quantity</string>
                             <string>script</string>
                             <string>current_script_data_id</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>tr</string>
                             <string>list</string>
                             <string>getAccountByTitle</string>
                             <string>getOrganisationByTitle</string>
@@ -259,12 +254,14 @@ return "Accounting Transactions Created."\n
                             <string>getCurrencyByReference</string>
                             <string>euro_resource</string>
                             <string>getBankAccountByTitle</string>
+                            <string>_getiter_</string>
                             <string>range</string>
                             <string>month</string>
                             <string>day</string>
                             <string>vat_rate</string>
                             <string>client_title</string>
                             <string>amount</string>
+                            <string>tr</string>
                             <string>receivable_qty</string>
                             <string>_inplacevar_</string>
                             <string>ptr</string>

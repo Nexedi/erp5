@@ -77,7 +77,6 @@ if accounting_module.getProperty(\'current_content_script\',\n
 # XXX should be done in an external script / tool, because we have to\n
 # workaround some security checks\n
 if 1:\n
-  [ tr.cancel() for tr in accounting_module.objectValues() ]\n
   for module_id in [\'accounting_module\',\n
                     \'sale_packing_list_module\',\n
                     \'portal_simulation\', ]:\n
@@ -413,10 +412,7 @@ return "Accounting Transactions Created."\n
                             <string>immediate_reindex</string>
                             <string>script</string>
                             <string>current_script_data_id</string>
-                            <string>append</string>
-                            <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>tr</string>
                             <string>module_id</string>
                             <string>_getitem_</string>
                             <string>module</string>
@@ -427,6 +423,8 @@ return "Accounting Transactions Created."\n
                             <string>getCurrencyByReference</string>
                             <string>euro_resource</string>
                             <string>getBankAccountByTitle</string>
+                            <string>append</string>
+                            <string>$append0</string>
                             <string>o</string>
                             <string>product_list</string>
                             <string>product</string>
@@ -438,6 +436,7 @@ return "Accounting Transactions Created."\n
                             <string>pl</string>
                             <string>line</string>
                             <string>month</string>
+                            <string>tr</string>
                             <string>AssertionError</string>
                             <string>vat_rate</string>
                             <string>client_title</string>
