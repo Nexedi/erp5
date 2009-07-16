@@ -104,15 +104,9 @@
                         <string>my_title</string>
                         <string>my_int_index</string>
                         <string>my_reference</string>
-                        <string>my_predecessor_title</string>
-                        <string>my_source_method_id</string>
-                        <string>my_order_builder_list</string>
                         <string>my_payment_mode</string>
-                        <string>my_efficiency</string>
-                        <string>my_quantity</string>
                         <string>my_delivery_mode</string>
-                        <string>my_completed_state_list</string>
-                        <string>my_frozen_state_list</string>
+                        <string>my_incoterm</string>
                       </list>
                     </value>
                 </item>
@@ -120,13 +114,11 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_deliverable</string>
                         <string>my_lead_time</string>
-                        <string>my_incoterm</string>
-                        <string>my_successor_title</string>
-                        <string>my_destination_method_id</string>
-                        <string>my_delivery_builder_list</string>
-                        <string>my_trade_phase</string>
+                        <string>my_end_of</string>
+                        <string>my_wait_time</string>
+                        <string>my_efficiency</string>
+                        <string>my_quantity</string>
                       </list>
                     </value>
                 </item>

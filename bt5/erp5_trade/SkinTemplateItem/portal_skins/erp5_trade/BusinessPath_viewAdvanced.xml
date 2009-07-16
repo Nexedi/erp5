@@ -83,9 +83,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>your_explanation</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -98,15 +96,25 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_wait_time</string>
-                        <string>my_end_of</string>
+                        <string>my_title</string>
+                        <string>my_order_builder_list</string>
+                        <string>my_source_method_id</string>
+                        <string>my_completed_state_list</string>
+                        <string>my_predecessor_title</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_trade_phase</string>
+                        <string>my_delivery_builder_list</string>
+                        <string>my_destination_method_id</string>
+                        <string>my_frozen_state_list</string>
+                        <string>my_successor_title</string>
+                        <string>my_deliverable</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -114,7 +122,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessPath_viewWait</string> </value>
+            <value> <string>BusinessPath_viewAdvanced</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -122,7 +130,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SupplyPath_viewWaitTime</string> </value>
+            <value> <string>BusinessPath_viewAdvanced</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -138,7 +146,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Wait</string> </value>
+            <value> <string>Advanced</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -146,6 +154,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>
