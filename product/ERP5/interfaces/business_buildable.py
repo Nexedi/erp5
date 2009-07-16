@@ -31,6 +31,7 @@ from zope.interface import Interface
 
 class IBusinessBuildable(Interface):
   """Business Buildable interface specification"""
+
   def isBuildable(explanation):
     """Returns True if any of the related Simulation Movement
     is buildable and if the predecessor state is completed.
@@ -45,6 +46,8 @@ class IBusinessBuildable(Interface):
 
     'explanation' is the Order or Item or Document which is the
     cause of a root applied rule in the simulation
+
+    FIXME/JPS: Not sure if this will exist some day XXX
     """
 
   def build(explanation):
