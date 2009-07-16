@@ -498,7 +498,7 @@ class Movement(XMLObject, Amount):
   def isFrozen(self):
     """
     Returns the frozen status of this movement.
-    a movement in started, stopped, delivered is automatically frozen.
+    a movement in stopped, delivered or cancelled states is automatically frozen.
     If frozen is locally set to '0', we must check for a parent set to '1', in
     which case, we want the children to be frozen as well.
 
