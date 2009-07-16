@@ -12,15 +12,12 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>editable_columns</string>
-                <string>selection_name</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>listbox_base_application_title_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -76,31 +73,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>editable_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>price</string>
-                          <string>price</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>reference</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>listbox</string> </value>
+                    <value> <string>listbox_base_application_title_list</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>TradeCondition_viewTradeModelLineList</string> </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>delivery_view_trade_model_line_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
