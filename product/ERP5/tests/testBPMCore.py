@@ -35,7 +35,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.tests.utils import reindex, todo_erp5
+from Products.ERP5Type.tests.utils import reindex
 
 class TestBPMMixin(ERP5TypeTestCase):
   """Skeletons for tests which depend on BPM"""
@@ -600,7 +600,6 @@ class TestBPMisBuildableImplementation(TestBPMMixin):
   delivery_portal_type = 'Sale Packing List'
   delivery_line_portal_type = 'Sale Packing List Line'
 
-  @todo_erp5
   def test_isBuildable(self):
     """Test isBuildable implementation for Business Paths and Simulation Movements"""
 
