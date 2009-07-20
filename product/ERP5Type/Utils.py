@@ -1400,8 +1400,7 @@ def setDefaultProperties(property_holder, object=None, portal=None):
           read_permission = Permissions.AccessContentsInformation
           write_permission = Permissions.ModifyPortalContent
         # Actualy create accessors
-        createRelatedValueAccessors(cat, read_permission=read_permission,
-                                         write_permission=write_permission)
+        createRelatedValueAccessors(property_holder, cat, read_permission=read_permission)
       # Unnecessary to create these accessors more than once.
       base_category_dict.clear()
     # Create the constraint method list - always check type
@@ -1437,7 +1436,7 @@ def setDefaultProperties(property_holder, object=None, portal=None):
     # allows to create the equivalent of NULL values
     # - new - XXX
     # We remove such properties here
-    from Base import Base as BaseClass
+    #from Base import Base as BaseClass
     for prop in converted_prop_list:
       if prop['type'] in legalTypes:
         #if not hasattr(property_holder, prop['id']):
@@ -2417,8 +2416,7 @@ def createValueAccessors(property_holder, id,
     property_holder.registerAccessor(setter_name, id, Value.UidSetSetter, accessor_args)
 
 
-def createRelatedValueAccessors(id, read_permission=Permissions.AccessContentsInformation,
-                                    write_permission=Permissions.ModifyPortalContent):
+def createRelatedValueAccessors(property_holder, id, read_permission=Permissions.AccessContentsInformation):
 
   upper_case_id = UpperCase(id)
   # Related Values (ie. reverse relation getters)
@@ -2530,26 +2528,21 @@ def createRelatedValueAccessors(id, read_permission=Permissions.AccessContentsIn
     ),
   }
 
-  permission = read_permission
   for accessor_class, accessor_name_list in accessor_dict.items():
-
-    # First element is the original accessor
-    accessor_name = accessor_name_list[0]
-    accessor = accessor_class(accessor_name, id)
-    if not hasattr(BaseClass, accessor_name):
-      setattr(BaseClass, accessor_name, accessor)
-      # Declare the security of method which doesn't start with _
-      if accessor_name[0] != '_':
-        BaseClass.security.declareProtected(permission, accessor_name)
-
-    # Others are dummy copies
-    for accessor_name in accessor_name_list[1:]:
-      if not hasattr(BaseClass, accessor_name):
-        setattr(BaseClass, accessor_name, 
-                accessor.dummy_copy(accessor_name))
-        # Declare the security of method which doesn't start with _
-        if accessor_name[0] != '_':
-          BaseClass.security.declareProtected(permission, accessor_name)
+    for accessor_name in accessor_name_list:
+      if property_holder is not None:
+        if not hasattr(property_holder, accessor_name):
+          property_holder.registerAccessor(accessor_name, id, accessor_class, ())
+          if accessor_name[0] != '_':
+            property_holder.declareProtected(read_permission, accessor_name)
+      else:
+        accessor = accessor_class(accessor_name, id)
+        if not hasattr(BaseClass, accessor_name):
+          setattr(BaseClass, accessor_name,
+                  accessor.dummy_copy(accessor_name))
+          # Declare the security of method which doesn't start with _
+          if accessor_name[0] != '_':
+            BaseClass.security.declareProtected(read_permission, accessor_name)
 
 def createTranslationAccessors(property_holder, id,
     read_permission=Permissions.AccessContentsInformation,

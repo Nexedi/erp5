@@ -885,7 +885,7 @@ class Base( CopyContainer,
         accessor = property_holder.createAccessor(id)
       return accessor
     except KeyError:
-      pass
+      property_holder = None
 
     if id in ('portal_types', 'portal_url', 'portal_workflow'):
       # This is required to precent infinite loop (we need to access portal_types tool)
@@ -942,12 +942,12 @@ class Base( CopyContainer,
           for bid in base_category_list:
             if bid not in generated_bid:
               #LOG( "Create createRelatedValueAccessors %s" % bid,0,'')
-              createRelatedValueAccessors(bid)
+              createRelatedValueAccessors(property_holder, bid)
               generated_bid[bid] = 1
       for ptype in portal_types.objectValues('ERP5 Type Information') :
         for bid in ptype.base_category_list :
           if bid not in generated_bid :
-            createRelatedValueAccessors(bid)
+            createRelatedValueAccessors(property_holder, bid)
             generated_bid[bid] = 1
 
       Base.aq_related_generated = 1
