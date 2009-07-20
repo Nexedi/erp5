@@ -78,6 +78,7 @@ class BusinessPath(Path):
                     , PropertySheet.Comment
                     , PropertySheet.Arrow
                     , PropertySheet.Chain
+                    , PropertySheet.SortIndex
                     , PropertySheet.BusinessPath
                     )
 

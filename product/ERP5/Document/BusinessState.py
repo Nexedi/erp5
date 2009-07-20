@@ -56,6 +56,7 @@ class BusinessState(XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.Folder
                     , PropertySheet.Comment
+                    , PropertySheet.SortIndex
                     )
 
   # Declarative interfaces
