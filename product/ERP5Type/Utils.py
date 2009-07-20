@@ -1889,9 +1889,6 @@ def createDefaultAccessors(property_holder, id, prop = None,
     if not hasattr(property_holder, tester_name) or prop.get('override', 0):
       property_holder.registerAccessor(setter_name, id, Content.Tester, accessor_args)
       property_holder.declareProtected(read_permission, tester_name)
-    if not hasattr(property_holder, tester_name) or prop.get('override', 0):
-      property_holder.registerAccessor(setter_name, id, Content.Tester, accessor_args)
-      property_holder.declareProtected(read_permission, tester_name)
   else:
     accessor_args = (prop['type'], prop.get('storage_id'))
     tester_name = 'has' + UpperCase(id)
