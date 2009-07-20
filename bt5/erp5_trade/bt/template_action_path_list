@@ -61,6 +61,7 @@ Purchase Order | payment_condition
 Purchase Order | profile_view
 Purchase Order | view
 Purchase Order | view_discount
+Purchase Order | view_stock
 Purchase Order | view_tax
 Purchase Order | view_trade_model
 Purchase Order | view_trade_model_line_list
