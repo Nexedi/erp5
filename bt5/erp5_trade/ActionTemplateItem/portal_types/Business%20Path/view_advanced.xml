@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>view_wait_time</string> </value>
+            <value> <string>view_advanced</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Wait</string> </value>
+            <value> <string>Advanced</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -69,7 +69,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/BusinessPath_viewWait</string> </value>
+            <value> <string>string:${object_url}/BusinessPath_viewAdvanced</string> </value>
         </item>
       </dictionary>
     </pickle>
