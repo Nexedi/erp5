@@ -180,6 +180,8 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
     filename = 'TEST-en-002.doc'
     file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file, temp_object=1)
+    document.uploadFile()
+    document.processFile()
     document.convertToBaseFormat()
     format_list = document.getTargetFormatList()
     if not format_list:
@@ -216,8 +218,12 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
     file1 = makeFileUpload(filename1)
     file2 = makeFileUpload(filename2)
     document1 = self.portal.portal_contributions.newContent(file=file1, temp_object=1)
+    document1.uploadFile()
+    document1.processFile()
     document1.convertToBaseFormat()
     document2 = self.portal.portal_contributions.newContent(file=file2, temp_object=1)
+    document2.uploadFile()
+    document2.processFile()
     document2.convertToBaseFormat()
     format = 'pdf'
     document1.convert(format=format)
