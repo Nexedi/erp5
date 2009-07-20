@@ -13,15 +13,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>columns</string>
                 <string>all_columns</string>
-                <string>sort</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
+                <string>columns</string>
                 <string>editable_columns</string>
-                <string>report_tree</string>
+                <string>portal_types</string>
                 <string>report_root_list</string>
+                <string>report_tree</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -125,6 +125,10 @@
                         <tuple>
                           <string>stop_date</string>
                           <string>Delivery Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_contribution_title_list</string>
+                          <string>Base Contribution</string>
                         </tuple>
                       </list>
                     </value>
