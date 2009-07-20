@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -1884,50 +1885,49 @@ def createDefaultAccessors(property_holder, id, prop = None,
   if prop['type'] == 'content':
     # XXX This approach is wrong because testers for all properties
     # should be created upfront rather than on demand
+    accessor_args = (prop['type'], prop.get('storage_id'))
     tester_name = 'has' + UpperCase(id)
-    tester = Content.Tester(tester_name, id, prop['type'],
-                                                  storage_id = prop.get('storage_id'))
-    if not hasattr(BaseClass, tester_name):
-      setattr(BaseClass, tester_name, tester)
-      BaseClass.security.declareProtected(read_permission, tester_name)
-    tester_name = '_baseHas' + UpperCase(id)
-    if not hasattr(BaseClass, tester_name):
-      setattr(BaseClass, tester_name, tester.dummy_copy(tester_name))
+    if not hasattr(property_holder, tester_name) or prop.get('override', 0):
+      property_holder.registerAccessor(setter_name, id, Content.Tester, accessor_args)
+      property_holder.declareProtected(read_permission, tester_name)
+    if not hasattr(property_holder, tester_name) or prop.get('override', 0):
+      property_holder.registerAccessor(setter_name, id, Content.Tester, accessor_args)
+      property_holder.declareProtected(read_permission, tester_name)
   else:
+    accessor_args = (prop['type'], prop.get('storage_id'))
     tester_name = 'has' + UpperCase(id)
-    tester = Base.Tester(tester_name, id, prop['type'],
-                                                  storage_id = prop.get('storage_id'))
-    if not hasattr(BaseClass, tester_name):
-      setattr(BaseClass, tester_name, tester)
-      BaseClass.security.declareProtected(read_permission, tester_name)
+    if not hasattr(property_holder, tester_name) or prop.get('override', 0):
+      property_holder.registerAccessor(tester_name, id, Base.Tester, accessor_args)
+      property_holder.declareProtected(read_permission, tester_name)
+
     tester_name = '_baseHas' + UpperCase(id)
-    if not hasattr(BaseClass, tester_name):
-      setattr(BaseClass, tester_name, tester.dummy_copy(tester_name))
+    if not hasattr(property_holder, tester_name) or prop.get('override', 0):
+      property_holder.registerAccessor(tester_name, id, Base.Tester, accessor_args)
 
     # List Tester
     tester_name = 'has' + UpperCase(id) + 'List'
-    if not hasattr(BaseClass, tester_name):
-      setattr(BaseClass, tester_name, tester.dummy_copy(tester_name))
-      BaseClass.security.declareProtected(read_permission, tester_name)
+    if not hasattr(property_holder, tester_name) or prop.get('override', 0):
+      property_holder.registerAccessor(tester_name, id, List.Tester, accessor_args)
+      property_holder.declareProtected(read_permission, tester_name)
     tester_name = '_baseHas' + UpperCase(id) + 'List'
-    if not hasattr(BaseClass, tester_name):
-      setattr(BaseClass, tester_name, tester.dummy_copy(tester_name))
+    if not hasattr(property_holder, tester_name) or prop.get('override', 0):
+      property_holder.registerAccessor(tester_name, id, List.Tester, accessor_args)
     tester_name = 'hasDefault' + UpperCase(id)
-    if not hasattr(BaseClass, tester_name):
-      setattr(BaseClass, tester_name, tester.dummy_copy(tester_name))
-      BaseClass.security.declareProtected(read_permission, tester_name)
+    if not hasattr(property_holder, tester_name) or prop.get('override', 0):
+      property_holder.registerAccessor(tester_name, id, List.Tester, accessor_args)
+      property_holder.declareProtected(read_permission, tester_name)
     tester_name = '_baseHasDefault' + UpperCase(id)
-    if not hasattr(BaseClass, tester_name):
-      setattr(BaseClass, tester_name, tester.dummy_copy(tester_name))
+    if not hasattr(property_holder, tester_name) or prop.get('override', 0):
+      property_holder.registerAccessor(tester_name, id, List.Tester, accessor_args)
 
     # First Implementation of Boolean Accessor
     tester_name = 'is' + UpperCase(id)
-    if not hasattr(property_holder, tester_name):
+    if not hasattr(property_holder, tester_name) or prop.get('override', 0):
       property_holder.registerAccessor(tester_name, id, Base.Getter,
                      (prop['type'], prop.get('default'), prop.get('storage_id')))
       property_holder.declareProtected(read_permission, tester_name)
     tester_name = '_baseIs' + UpperCase(id)
-    if not hasattr(property_holder, tester_name):
+    if not hasattr(property_holder, tester_name) or prop.get('override', 0):
       property_holder.registerAccessor(tester_name, id, Base.Getter,
                      (prop['type'], prop.get('default'), prop.get('storage_id')))
 
@@ -1978,10 +1978,9 @@ def createCategoryAccessors(property_holder, id,
     property_holder.registerAccessor(accessor_name, id, Category.DefaultGetter, ())
 
   accessor_name = 'has' + UpperCase(id)
-  if not hasattr(BaseClass, accessor_name):
-    tester = Category.Tester(accessor_name, id) # All testers should be created at once at startup
-    setattr(BaseClass, accessor_name, tester)
-    BaseClass.security.declareProtected(read_permission, accessor_name)
+  if not hasattr(property_holder, accessor_name):
+    property_holder.registerAccessor(accessor_name, id, Category.Tester, ())
+    property_holder.declareProtected(read_permission, accessor_name)
 
   setter_name = 'set' + UpperCase(id)
   if not hasattr(property_holder, setter_name):
