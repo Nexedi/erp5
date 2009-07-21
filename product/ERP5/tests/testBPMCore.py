@@ -618,6 +618,10 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
     self.stepTic()
 
   completed_state = 'confirmed'
+  frozen_state = 'planned'
+
+  completed_state_list = [completed_state, frozen_state]
+  frozen_state_list = [frozen_state]
 
   def _createOrderedDeliveredInvoicedBusinessProcess(self):
     # simple business process preparation
@@ -630,7 +634,9 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
     # proper state
     self.delivery_path = self.createBusinessPath(business_process,
         predecessor_value = ordered, successor_value = delivered,
-        trade_phase='default/delivery', completed_state_list = [self.completed_state])
+        trade_phase='default/delivery',
+        completed_state_list = self.completed_state_list,
+        frozen_state_list = self.frozen_state_list)
 
     self.invoice_path = self.createBusinessPath(business_process,
         predecessor_value = delivered, successor_value = invoiced,
@@ -645,14 +651,14 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
 
     self.invoice_path = self.createBusinessPath(business_process,
         predecessor_value = ordered, successor_value = invoiced,
-        trade_phase='default/invoicing', completed_state_list = [
-          self.completed_state])
+        trade_phase='default/invoicing',
+        completed_state_list = self.completed_state_list,
+        frozen_state_list = self.frozen_state_list)
 
     self.delivery_path = self.createBusinessPath(business_process,
         predecessor_value = invoiced, successor_value = delivered,
         trade_phase='default/delivery')
     self.stepTic()
-
 
 class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
   def test_isBuildable_OrderedDeliveredInvoiced(self):
@@ -949,14 +955,12 @@ class TestBPMisCompletedImplementation(TestBPMDummyDeliveryMovementMixin):
 
     self.stepTic()
 
-    # nothing changes
     self.assertEqual(self.delivery_path.isCompleted(order), False)
     self.assertEqual(self.delivery_path.isPartiallyCompleted(order), True)
 
     self.assertEqual(self.invoice_path.isCompleted(order), False)
     self.assertEqual(self.invoice_path.isPartiallyCompleted(order), False)
 
-    # from delivery point of view everything is same
     self.assertEqual(self.delivery_path.isCompleted(delivery), True)
     self.assertEqual(self.delivery_path.isPartiallyCompleted(delivery), True)
 
@@ -1069,9 +1073,200 @@ class TestBPMisCompletedImplementation(TestBPMDummyDeliveryMovementMixin):
     self.assertEqual(self.invoice_path.isCompleted(delivery), True)
     self.assertEqual(self.invoice_path.isPartiallyCompleted(delivery), True)
 
+class TestBPMisFrozenImplementation(TestBPMDummyDeliveryMovementMixin):
+  def test_isFrozen_OrderedDeliveredInvoiced(self):
+    """Test isFrozen for ordered, delivered and invoiced sequence"""
+    self._createOrderedDeliveredInvoicedBusinessProcess()
+
+    # create order and order line to have starting point for business process
+    order = self._createDelivery()
+    order_line = self._createMovement(order)
+
+    # first level rule with simulation movement
+    applied_rule = self.portal.portal_simulation.newContent(
+        portal_type='Applied Rule', causality_value=order)
+
+    simulation_movement = applied_rule.newContent(
+      portal_type = 'Simulation Movement',
+      order_value = order_line,
+      causality_value = self.delivery_path
+    )
+
+    # second level rule with simulation movement
+    invoicing_rule = simulation_movement.newContent(
+        portal_type='Applied Rule')
+    invoicing_simulation_movement = invoicing_rule.newContent(
+        portal_type='Simulation Movement',
+        causality_value = self.invoice_path)
+
+    # split simulation movement for first level applied rule
+    split_simulation_movement = applied_rule.newContent(
+      portal_type = 'Simulation Movement', order_value = order_line,
+      causality_value = self.delivery_path)
+
+    # second level rule with simulation movement for split parent movement
+    split_invoicing_rule = split_simulation_movement.newContent(
+        portal_type='Applied Rule')
+    split_invoicing_simulation_movement = split_invoicing_rule.newContent(
+        portal_type='Simulation Movement',
+        causality_value = self.invoice_path)
+
+    self.stepTic()
+
+    self.assertEqual(self.delivery_path.isFrozen(order), False)
+    self.assertEqual(self.invoice_path.isFrozen(order), False)
+
+    self.assertEqual(simulation_movement.isFrozen(), False)
+    self.assertEqual(invoicing_simulation_movement.isFrozen(), False)
+    self.assertEqual(split_simulation_movement.isFrozen(), False)
+    self.assertEqual(split_invoicing_simulation_movement.isFrozen(), False)
+
+    # add delivery
+    delivery = self._createDelivery(causality_value = order)
+    delivery_line = self._createMovement(delivery)
+
+    # relate not split movement with delivery (deliver it)
+    simulation_movement.edit(delivery_value = delivery_line)
+
+    self.stepTic()
+
+    # nothing changes
+    self.assertEqual(self.delivery_path.isFrozen(order), False)
+    self.assertEqual(self.invoice_path.isFrozen(order), False)
+
+    # from delivery point of view everything is same
+    self.assertEqual(self.delivery_path.isFrozen(delivery), False)
+    self.assertEqual(self.invoice_path.isFrozen(delivery), False)
+
+    self.assertEqual(simulation_movement.isFrozen(), False)
+    self.assertEqual(invoicing_simulation_movement.isFrozen(), False)
+    self.assertEqual(split_simulation_movement.isFrozen(), False)
+    self.assertEqual(split_invoicing_simulation_movement.isFrozen(), False)
+
+    # put delivery in simulation state configured on path (and this state is
+    # available directly on movements)
+
+    delivery.setSimulationState(self.frozen_state)
+
+    self.assertEqual(self.frozen_state, delivery.getSimulationState())
+
+    self.stepTic()
+
+    self.assertEqual(self.delivery_path.isFrozen(order), False)
+    self.assertEqual(self.invoice_path.isFrozen(order), False)
+    self.assertEqual(self.delivery_path.isFrozen(delivery), True)
+    self.assertEqual(self.invoice_path.isFrozen(delivery), False)
+
+    self.assertEqual(simulation_movement.isFrozen(), True)
+    self.assertEqual(invoicing_simulation_movement.isFrozen(), False)
+    self.assertEqual(split_simulation_movement.isFrozen(), False)
+    self.assertEqual(split_invoicing_simulation_movement.isFrozen(), False)
+
+  def test_isFrozen_OrderedInvoicedDelivered(self):
+    """Test isFrozen for ordered, invoiced and invoiced sequence"""
+    self._createOrderedInvoicedDeliveredBusinessProcess()
+
+    order = self._createDelivery()
+    order_line = self._createMovement(order)
+
+    applied_rule = self.portal.portal_simulation.newContent(
+        portal_type='Applied Rule', causality_value=order)
+
+    simulation_movement = applied_rule.newContent(
+      portal_type = 'Simulation Movement',
+      order_value = order_line,
+      causality_value = self.delivery_path
+    )
+
+    invoicing_rule = simulation_movement.newContent(
+        portal_type='Applied Rule')
+    invoicing_simulation_movement = invoicing_rule.newContent(
+        portal_type='Simulation Movement',
+        causality_value = self.invoice_path)
+
+    self.stepTic()
+
+    self.assertEqual(self.delivery_path.isFrozen(order), False)
+    self.assertEqual(self.invoice_path.isFrozen(order), False)
+
+    self.assertEqual(simulation_movement.isFrozen(), False)
+    self.assertEqual(invoicing_simulation_movement.isFrozen(), False)
+
+    delivery = self._createDelivery(causality_value = order)
+    delivery_line = self._createMovement(delivery)
+
+    invoicing_simulation_movement.edit(delivery_value = delivery_line)
+
+    self.stepTic()
+
+    self.assertEqual(self.delivery_path.isFrozen(order), False)
+    self.assertEqual(self.invoice_path.isFrozen(order), False)
+    self.assertEqual(self.delivery_path.isFrozen(delivery), False)
+    self.assertEqual(self.invoice_path.isFrozen(delivery), False)
+
+    self.assertEqual(simulation_movement.isFrozen(), False)
+    self.assertEqual(invoicing_simulation_movement.isFrozen(), False)
+
+    # put delivery in simulation state configured on path (and this state is
+    # available directly on movements)
+
+    delivery.setSimulationState(self.frozen_state)
+
+    self.assertEqual(self.frozen_state, delivery.getSimulationState())
+
+    self.stepTic()
+
+    self.assertEqual(self.delivery_path.isFrozen(order), False)
+    self.assertEqual(self.invoice_path.isFrozen(order), True)
+    self.assertEqual(self.delivery_path.isFrozen(delivery), False)
+    self.assertEqual(self.invoice_path.isFrozen(delivery), True)
+
+    self.assertEqual(simulation_movement.isFrozen(), False)
+    self.assertEqual(invoicing_simulation_movement.isFrozen(), True)
+
+    # now simulate compensation
+
+    compensated_simulation_movement = applied_rule.newContent(
+      portal_type = 'Simulation Movement',
+      order_value = order_line,
+      causality_value = self.delivery_path
+    )
+
+    compensated_invoicing_rule = compensated_simulation_movement.newContent(
+        portal_type='Applied Rule')
+
+    compensated_invoicing_simulation_movement = compensated_invoicing_rule \
+        .newContent(portal_type='Simulation Movement',
+            causality_value = self.invoice_path)
+
+    # and delivery some part of tree
+
+    another_delivery = self._createDelivery(causality_value = delivery)
+    another_delivery_line = self._createMovement(another_delivery)
+
+    simulation_movement.edit(delivery_value=another_delivery_line)
+
+    self.stepTic()
+
+    self.assertEqual(self.delivery_path.isFrozen(order), False)
+
+    self.assertEqual(self.invoice_path.isFrozen(order), False)
+
+    self.assertEqual(self.delivery_path.isFrozen(delivery), False)
+
+    self.assertEqual(self.invoice_path.isFrozen(delivery), True)
+
+    self.assertEqual(simulation_movement.isFrozen(), False)
+    self.assertEqual(invoicing_simulation_movement.isFrozen(), True)
+
+    self.assertEqual(compensated_simulation_movement.isFrozen(), False)
+    self.assertEqual(compensated_invoicing_simulation_movement.isFrozen(),
+        False)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestBPMImplementation))
   suite.addTest(unittest.makeSuite(TestBPMisBuildableImplementation))
   suite.addTest(unittest.makeSuite(TestBPMisCompletedImplementation))
+  suite.addTest(unittest.makeSuite(TestBPMisFrozenImplementation))
   return suite
