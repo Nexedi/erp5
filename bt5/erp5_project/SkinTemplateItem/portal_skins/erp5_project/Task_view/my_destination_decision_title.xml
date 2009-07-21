@@ -12,9 +12,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>title</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -103,10 +101,6 @@
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -127,10 +121,6 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Task_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Requester</string> </value>
                 </item>
               </dictionary>
             </value>
