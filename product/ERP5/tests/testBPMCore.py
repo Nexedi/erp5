@@ -222,16 +222,16 @@ class TestBPMMixin(ERP5TypeTestCase):
 
     itr.validate()
 
-  @reindex
   def afterSetUp(self):
     self.createCategories()
     self.setSystemPreference()
     self.createInvoiceTransationRule()
+    self.stepTic()
 
-  @reindex
   def beforeTearDown(self):
     self.portal.portal_rules.manage_delObjects(
         ids=['test_invoice_transaction_rule'])
+    self.stepTic()
 
 class TestBPMImplementation(TestBPMMixin):
   """Business Process implementation tests"""
@@ -600,30 +600,30 @@ class TestBPMisBuildableImplementation(TestBPMMixin):
   delivery_portal_type = 'Sale Packing List'
   delivery_line_portal_type = 'Sale Packing List Line'
 
+  def _createDelivery(self, **kw):
+    return self.folder.newContent(portal_type='Dummy Delivery', **kw)
+
+  def _createMovement(self, delivery, **kw):
+    return delivery.newContent(portal_type='Dummy Movement', **kw)
+
+  def getBusinessTemplateList(self):
+    return TestBPMMixin.getBusinessTemplateList(self) + ('erp5_dummy_movement', )
+
+  def afterSetUp(self):
+    TestBPMMixin.afterSetUp(self)
+    if not hasattr(self.portal, 'testing_folder'):
+      self.portal.newContent(portal_type='Folder',
+                            id='testing_folder')
+    self.folder = self.portal.testing_folder
+    self.stepTic()
+
+  def beforeTearDown(self):
+    TestBPMMixin.beforeTearDown(self)
+    self.portal.deleteContent(id='testing_folder')
+    self.stepTic()
+    
   def test_isBuildable(self):
     """Test isBuildable implementation for Business Paths and Simulation Movements"""
-
-    # disable interactions in workflow methods to do not have side effects and
-    # to increase readability of assertions and code
-    # FIXME:
-    #  * do it non destructive way
-    #  * trim list
-    #  * or do it other way
-    for workflow_id in (
-        'delivery_causality_interaction_workflow',
-        'delivery_causality_workflow',
-        'delivery_movement_causality_interaction_workflow',
-        'delivery_movement_simulation_interaction_workflow',
-        'delivery_simulation_interaction_workflow',
-        'order_movement_simulation_interaction_workflow',
-        'order_simulation_interaction_workflow',
-        'order_workflow',
-        'packing_list_workflow',
-      ):
-      workflow = getattr(self.portal.portal_workflow, workflow_id)
-      for script in workflow.scripts.objectValues():
-        script.write('return')
-    transaction.commit()
 
     # simple business process preparation
     business_process = self.createBusinessProcess()
@@ -642,10 +642,8 @@ class TestBPMisBuildableImplementation(TestBPMMixin):
         trade_phase='default/invoicing')
 
     # create order and order line to have starting point for business process
-    order = self.portal.getDefaultModule(
-        portal_type=self.order_portal_type).newContent(
-            portal_type=self.order_portal_type)
-    order_line = order.newContent(portal_type=self.order_line_portal_type)
+    order = self._createDelivery()
+    order_line = self._createMovement(order)
 
     # first level rule with simulation movement
     applied_rule = self.portal.portal_simulation.newContent(
@@ -687,11 +685,8 @@ class TestBPMisBuildableImplementation(TestBPMMixin):
         False)
 
     # add delivery
-    delivery = self.portal.getDefaultModule(
-        portal_type=self.delivery_portal_type).newContent(
-            portal_type=self.delivery_portal_type, causality_value = order)
-    delivery_line = delivery.newContent(
-        portal_type=self.delivery_line_portal_type)
+    delivery = self._createDelivery(causality_value = order)
+    delivery_line = self._createMovement(delivery)
 
     # relate not split movement with delivery (deliver it)
     simulation_movement.edit(delivery_value = delivery_line)
@@ -718,8 +713,8 @@ class TestBPMisBuildableImplementation(TestBPMMixin):
 
     # put delivery in simulation state configured on path (and this state is
     # available directly on movements)
-    delivery.plan()
-    delivery.confirm()
+
+    delivery.setSimulationState('confirmed')
 
     self.assertEqual('confirmed', delivery.getSimulationState())
 
