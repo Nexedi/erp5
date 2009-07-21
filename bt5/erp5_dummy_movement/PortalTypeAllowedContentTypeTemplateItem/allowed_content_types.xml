@@ -1,0 +1,5 @@
+<allowed_content_type_list>
+ <portal_type id="Dummy Delivery">
+  <item>Dummy Movement</item>
+ </portal_type>
+</allowed_content_type_list>
