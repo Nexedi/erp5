@@ -595,11 +595,6 @@ class TestBPMImplementation(TestBPMMixin):
 
 class TestBPMisBuildableImplementation(TestBPMMixin):
 
-  order_portal_type = 'Sale Order'
-  order_line_portal_type = 'Sale Order Line'
-  delivery_portal_type = 'Sale Packing List'
-  delivery_line_portal_type = 'Sale Packing List Line'
-
   def _createDelivery(self, **kw):
     return self.folder.newContent(portal_type='Dummy Delivery', **kw)
 
@@ -725,7 +720,7 @@ class TestBPMisBuildableImplementation(TestBPMMixin):
     # delivery_path (for order) is still buildable, as split movement is not
     # delivered yet
     #
-    # invoicing_path (for delivery and order) buildable - in case of order,
+    # invoicing_path (for delivery and order) is buildable - in case of order,
     # because part of tree is buildable
     #
     # split movement for invoicing is not buildable - no proper delivery
