@@ -160,7 +160,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         # specialise_value
         document = self.getParentValue().getSpecialiseValue()
       business_process_list = document.findSpecialiseValueList(\
-          context=self, portal_type_list=['Business Process'])
+          context=context, portal_type_list=['Business Process'])
       business_process = None
       property_dict = {}
       if len(business_process_list):
@@ -289,7 +289,8 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
       if salary_range is not None and calculation_script is None:
         # slice are used only if there is no script found, in case where a
         # script exist, slice should be handle in it
-        model = self.getParentValue()
+        model = context.getSpecialiseValue() # get the closest model from
+                                             # the paysheet
         cell = model.getCell(salary_range)
         if cell is None:
           raise ValueError("Line '%s' (%s) can't find the cell corresponding"+\
@@ -299,7 +300,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         model_slice_min = cell.getQuantityRangeMin()
         model_slice_max = cell.getQuantityRangeMax()
         base_application = tmp_movement.getQuantity(0.0)
-        if base_application < model_slice_min:
+        if base_application <= model_slice_min:
           # if base_application is not in the slice range, quantity is 0
           tmp_movement.setQuantity(0)
         elif base_application-model_slice_min > 0:
