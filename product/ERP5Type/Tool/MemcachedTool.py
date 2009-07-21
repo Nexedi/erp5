@@ -50,7 +50,7 @@ def encodeKey(key):
   # ascii table. Just strip them here to avoid the raise.
   return ''.join([x for x in key if ord(x) > \
                               MEMCACHED_MINIMUM_KEY_CHAR_ORD])
-
+memcached_dict_pool = local()
 if memcache is not None:
   # Real memcache tool
   import memcache
@@ -63,8 +63,6 @@ if memcache is not None:
   UPDATE_ACTION = 'update'
   DELETE_ACTION = 'delete'
   MEMCACHED_MINIMUM_KEY_CHAR_ORD = ord(' ')
-  
-  memcached_dict_pool = local()
 
   class MemcachedDict(TM):
     """
