@@ -194,6 +194,16 @@ class BusinessPath(Path):
     predecessor = self.getPredecessorValue()
     if predecessor is None:
       return result
+    # XXX FIXME TODO
+    # For now isPartiallyCompleted is used, as it was
+    # assumed to not implement isPartiallyBuildable, so in reality
+    # isBuildable is implemented like isPartiallyBuildable
+    #
+    # But in some cases it might be needed to implement
+    # isPartiallyBuildable, than isCompleted have to be used here
+    #
+    # Such cases are Business Processes using sequence not related
+    # to simulation tree with much of compensations
     if predecessor.isPartiallyCompleted(explanation):
       return result
     return False
