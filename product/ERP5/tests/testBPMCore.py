@@ -607,7 +607,8 @@ class TestBPMisBuildableImplementation(TestBPMMixin):
     return delivery.newContent(portal_type='Dummy Movement', **kw)
 
   def getBusinessTemplateList(self):
-    return TestBPMMixin.getBusinessTemplateList(self) + ('erp5_dummy_movement', )
+    return TestBPMMixin.getBusinessTemplateList(self) \
+        + ('erp5_dummy_movement', )
 
   def afterSetUp(self):
     TestBPMMixin.afterSetUp(self)
@@ -621,7 +622,7 @@ class TestBPMisBuildableImplementation(TestBPMMixin):
     TestBPMMixin.beforeTearDown(self)
     self.portal.deleteContent(id='testing_folder')
     self.stepTic()
-    
+
   def test_isBuildable(self):
     """Test isBuildable implementation for Business Paths and Simulation Movements"""
 
@@ -696,7 +697,8 @@ class TestBPMisBuildableImplementation(TestBPMMixin):
     # delivery_path (for order) is still buildable, as split movement is not
     # delivered yet
     #
-    # invoice_path is not yet buildable, delivery is in inproper simulation state
+    # invoice_path is not yet buildable, delivery is in inproper simulation
+    # state
     #
     # delivery_path (for delivery) is not buildable - delivery is already
     # built for those movements
