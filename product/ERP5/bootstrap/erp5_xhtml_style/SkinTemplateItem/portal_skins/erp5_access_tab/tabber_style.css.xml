@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+        <global name="File" module="OFS.Image"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -14,23 +14,19 @@
             <value> <string>http_cache</string> </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts48186920.11</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>tabber_style.css</string> </value>
         </item>
         <item>
-            <key> <string>_vars</string> </key>
-            <value>
-              <dictionary/>
-            </value>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
         </item>
         <item>
-            <key> <string>globals</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>raw</string> </key>
+            <key> <string>data</string> </key>
             <value> <string>/*========================================================================================\n
 **  tabber.js default style\n
 **========================================================================================*/\n
@@ -160,6 +156,14 @@ table tr td {\n
 }\n
 \n
 </string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>2697</long> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
