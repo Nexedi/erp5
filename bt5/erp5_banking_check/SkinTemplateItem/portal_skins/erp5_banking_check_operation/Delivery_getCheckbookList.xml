@@ -79,6 +79,10 @@ dummy = Dummy()\n
 node = kw.get(\'node\',dummy)\n
 vault = kw.get(\'vault\',dummy)\n
 \n
+if limit is None:\n
+  limit = (0, -1)\n
+list_start, list_length = limit\n
+\n
 if item_portal_type_list is None:\n
   item_portal_type_list = ["Checkbook","Check"]\n
 \n
@@ -108,6 +112,7 @@ if listbox is None:\n
     if count is True:\n
       return len(current_tracking_list)\n
 \n
+    item_index = -1\n
     for item in current_tracking_list:\n
       item = item.getObject()\n
       exclude=0\n
@@ -148,8 +153,11 @@ if listbox is None:\n
           item_dict[\'recept_date\'] = item.getStartDate()\n
           item_dict[\'selection\'] = 0\n
           item_dict[\'uid\'] = \'new_%s\' %(item.getUid(),)\n
+          item_index += 1\n
+          if item_index < list_start:\n
+            continue\n
           listbox.append(item_dict)\n
-          if len(listbox) > limit[0]+limit[1]-1:\n
+          if list_length != -1 and len(listbox) >= list_length:\n
             break\n
 \n
 return listbox\n
@@ -230,13 +238,16 @@ return listbox\n
                             <string>node</string>
                             <string>vault</string>
                             <string>None</string>
+                            <string>_getiter_</string>
+                            <string>list_start</string>
+                            <string>list_length</string>
                             <string>context</string>
                             <string>item_list</string>
                             <string>getCurrentTrackingList</string>
                             <string>current_tracking_list</string>
                             <string>True</string>
                             <string>len</string>
-                            <string>_getiter_</string>
+                            <string>item_index</string>
                             <string>item</string>
                             <string>exclude</string>
                             <string>resource</string>
@@ -247,7 +258,7 @@ return listbox\n
                             <string>_write_</string>
                             <string>destination_payment_value</string>
                             <string>internal_bank_account_number</string>
-                            <string>_getitem_</string>
+                            <string>_inplacevar_</string>
                           </tuple>
                         </value>
                     </item>
